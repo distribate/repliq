@@ -1,0 +1,99 @@
+import { Slot } from '@radix-ui/react-slot';
+import { cva, type VariantProps } from 'class-variance-authority';
+import { cn } from '@repo/lib/utils/ui/cn.ts';
+import { ButtonHTMLAttributes, forwardRef } from 'react';
+import { GearLoader } from './gear-loader.tsx';
+
+const buttonVariants = cva(
+  'inline-flex items-center justify-center whitespace-nowrap' +
+  ' text-sm font-medium transition-all' +
+  ' focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2' +
+  ' disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50',
+  {
+    variants: {
+      variant: {
+        default: '',
+        link: 'underline-offset-4 hover:underline',
+        action: 'bg-pink-800 hover:bg-pink-700',
+        positive: 'bg-green-700 hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[2px_2px_0px_2px_#000000]',
+        negative: 'bg-red-700 hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[2px_2px_0px_2px_#000000]',
+        pending: 'bg-contessa-700 hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[2px_2px_0px_2px_#000000]',
+        minecraft: 'border-[2px] text-shark-50 border-black/80 rounded-none shadow-[inset_0px_-2px_1px_rgba(0,0,0,0.4),inset_-0px_2px_1px_rgba(255,255,255,0.4)]',
+      },
+      rounded: {
+        none: "",
+        default: "rounded-md"
+      },
+      size: {
+        full: 'h-fit w-full',
+        default: 'px-4 py-2',
+        sm: 'px-3 py-1',
+        md: 'px-6 py-4',
+        lg: 'px-8',
+        icon: 'w-10',
+      },
+      state: {
+        default: 'bg-shark-900',
+        active: 'bg-caribbean-green-600 hover:bg-caribbean-green-700',
+      },
+      border: {
+        default: 'border-[1px] border-white/10',
+        without: 'border-none',
+      },
+    },
+    defaultVariants: {
+      variant: 'default',
+      size: 'default',
+      rounded: "default",
+      border: 'default',
+    },
+  },
+);
+
+interface Button {
+  asChild?: boolean;
+  pending?: boolean,
+}
+
+export interface ButtonProps
+  extends ButtonHTMLAttributes<HTMLButtonElement>,
+    VariantProps<typeof buttonVariants>, Button {}
+
+const Button = forwardRef<
+  HTMLButtonElement, ButtonProps
+>((
+    {
+      className,
+      variant,
+      rounded,
+      size,
+      border,
+      pending,
+      state,
+      asChild = false,
+      ...props
+    },
+    ref,
+  ) => {
+    const Comp = asChild ? Slot : 'button';
+    
+    return (
+      <Comp
+        className={cn(buttonVariants({ variant, state, rounded, border, size, className }))}
+        ref={ref}
+        {...props}
+      >
+        <div className="flex items-center gap-2">
+          {pending && (
+            <GearLoader height={16} width={16} />
+          )}
+          {props.children}
+        </div>
+      </Comp>
+    );
+  },
+);
+
+Button.displayName = 'Button';
+
+export { Button, buttonVariants };

@@ -1,0 +1,1 @@
+export const USER_IMAGES_BUCKET = "user_images";

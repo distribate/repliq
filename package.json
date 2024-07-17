@@ -1,0 +1,35 @@
+{
+  "private": true,
+  "scripts": {
+    "build": "turbo build",
+    "dev": "turbo dev --filter=skin-proxy --filter=database --filter=web",
+    "start": "yarn workspace web run start",
+    "db-status": "yarn workspace database run status",
+    "gen-types": "yarn workspace database run gen-types",
+    "edge": "yarn workspace database run edge",
+    "db-start": "yarn workspace database run start",
+    "db-stop": "yarn workspace database run stop",
+    "lint": "turbo lint",
+    "type-check": "turbo type-check",
+    "clean": "turbo clean",
+    "skin-proxy": "yarn workspace skin-proxy run dev",
+    "format": "prettier --write \"**/*.{ts,tsx,md}\""
+  },
+  "devDependencies": {
+    "@repo/typescript-config": "*",
+    "eslint": "^9.5.0",
+    "oxlint": "^0.5.3",
+    "prettier": "^3.2.5",
+    "prettier-plugin-tailwindcss": "^0.5.11",
+    "turbo": "^2.0.5"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "name": "fasberry-forum",
+  "packageManager": "yarn@4.3.0",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ]
+}

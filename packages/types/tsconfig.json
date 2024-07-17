@@ -1,0 +1,10 @@
+{
+	"extends": "@repo/typescript-config/base.json",
+	"include": [".", "global.d.ts"],
+	"exclude": ["dist", "build", "node_modules"],
+	"compilerOptions": {
+		"jsx": "preserve",
+		"module": "ESNext",
+		"moduleResolution": "Bundler"
+	}
+}

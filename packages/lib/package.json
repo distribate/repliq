@@ -1,0 +1,25 @@
+{
+  "name": "@repo/lib",
+  "version": "0.0.0",
+  "private": true,
+  "devDependencies": {
+    "@lucia-auth/adapter-postgresql": "^3.1.2",
+    "@neondatabase/serverless": "^0.9.3",
+    "@node-rs/argon2": "^1.8.3",
+    "@node-rs/bcrypt": "^1.10.4",
+    "@repo/assets": "*",
+    "@repo/shared": "*",
+    "@repo/types": "*",
+    "@repo/typescript-config": "*",
+    "@tanstack/react-query": "^5.40.0",
+    "@tanstack/react-query-devtools": "^5.40.0",
+    "@types/bcryptjs": "^2.4.6",
+    "bcryptjs": "^2.4.3",
+    "dayjs": "^1.11.11",
+    "lucia": "^3.2.0",
+    "nanoid": "^5.0.7",
+    "postgres": "^3.4.4",
+    "unplugin-tailwindcss-mangle": "^2.2.2",
+    "usehooks-ts": "^3.1.0"
+  }
+}

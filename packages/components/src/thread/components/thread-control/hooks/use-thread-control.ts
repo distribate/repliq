@@ -1,0 +1,94 @@
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { ThreadModel } from '../../../queries/get-thread.ts';
+import { currentUserQuery } from '@repo/lib/queries/current-user-query.ts';
+import { THREAD_RATING_QUERY_KEY } from '../../thread-bump/queries/thread-rating-query.ts';
+import { updateThreadFields } from '../queries/update-thread-fields.ts';
+import { toast } from '@repo/ui/src/hooks/use-toast.ts';
+import { useRouter } from 'next/navigation';
+import { CURRENT_THREAD_QUERY_KEY } from '../queries/current-thread-query.ts';
+
+export type ThreadControlType = 'comments'
+  | 'permission'
+  | 'content'
+  | 'remove'
+  | 'description'
+  | 'title'
+
+export type ThreadControl = Pick<ThreadModel, 'id'> & {
+  type: ThreadControlType
+}
+
+export type ThreadControlValues = Partial<{
+  comments: boolean,
+  title: string,
+  description: string
+}>
+
+export const useThreadControl = () => {
+  const qc = useQueryClient();
+  
+  const { replace } = useRouter()
+  
+  const { data: currentUser } = currentUserQuery();
+  
+  const updateThreadFieldsMutation = useMutation({
+    mutationFn: async(values: ThreadControl & ThreadControlValues) => {
+      if (!values || !currentUser) return;
+      
+      switch(values.type) {
+        case 'comments':
+          if (typeof values.comments === 'undefined') return;
+          
+          return updateThreadFields({
+            id: values.id,
+            field: { 'comments': values.comments },
+            type: 'comments',
+          });
+        case 'remove':
+          return updateThreadFields({
+            id: values.id,
+            type: 'remove'
+          });
+        case 'title':
+          if (!values.title) return;
+          return updateThreadFields({
+            id: values.id,
+            type: 'title',
+            field: { 'title': values.title, }
+          });
+        case 'description':
+          if (!values.description) return;
+          return updateThreadFields({
+            id: values.id,
+            type: 'description',
+            field: { 'description': values.description }
+          });
+      }
+    },
+    onSuccess: async(data, variables, context) => {
+      if (!variables) return;
+      
+      if (!data) {
+        toast({
+          title: 'Произошла ошибка при обновлении информации!', variant: 'negative',
+        });
+      }
+      
+      if (variables.type === 'remove') {
+        replace("/");
+      }
+      
+      toast({
+        title: 'Информация обновлена!', variant: 'positive',
+      });
+      
+      await Promise.all([
+        qc.invalidateQueries({ queryKey: CURRENT_THREAD_QUERY_KEY(variables.id) }),
+        qc.invalidateQueries({ queryKey: THREAD_RATING_QUERY_KEY(variables.id) })
+      ])
+    },
+    onError: (e) => { throw new Error(e.message); },
+  });
+  
+  return { updateThreadFieldsMutation };
+};

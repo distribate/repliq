@@ -1,0 +1,41 @@
+{
+  "name": "web",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "type-check": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@repo/assets": "*",
+    "@repo/shared": "*",
+    "next": "^14.2.4",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  },
+  "devDependencies": {
+    "@neodx/svg": "^0.7.1",
+    "@next/eslint-plugin-next": "^14.1.1",
+    "@repo/components": "*",
+    "@repo/eslint-config": "*",
+    "@repo/lib": "*",
+    "@repo/tailwind-config": "*",
+    "@repo/types": "*",
+    "@repo/typescript-config": "*",
+    "@repo/ui": "*",
+    "@supabase/ssr": "^0.3.0",
+    "@supabase/supabase-js": "^2.43.4",
+    "@types/node": "^20.11.24",
+    "@types/react": "^18.2.6",
+    "@types/react-dom": "^18.3.0",
+    "autoprefixer": "^10.4.18",
+    "nextjs-toploader": "^1.6.12",
+    "postcss": "^8.4.35",
+    "sharp": "^0.33.4",
+    "tailwindcss": "^3.4.1",
+    "typescript": "^5.4"
+  }
+}
