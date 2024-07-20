@@ -2,23 +2,21 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { THREAD_FORM_QUERY, ThreadFormQuery } from '../queries/thread-form-query.ts';
 import { postThread } from '../queries/post-thread.ts';
 import { toast } from '@repo/ui/src/hooks/use-toast.ts';
-import { currentUserQuery } from '@repo/lib/queries/current-user-query.ts';
+import { CURRENT_USER_QUERY_KEY, CurrentUser } from '@repo/lib/queries/current-user-query.ts';
 import { useRouter } from 'next/navigation';
 import { createClient } from '@repo/lib/utils/supabase/client.ts';
 import { postThreadImages } from '../queries/post-thread-images.ts';
-import { revalidatePath } from "next/cache"
 import { THREAD_URL } from '@repo/shared/constants/routes.ts';
 
 const supabase = createClient()
 
 export const useCreateThread = () => {
   const qc = useQueryClient();
-  
+  const currentUser = qc.getQueryData<CurrentUser>(CURRENT_USER_QUERY_KEY)
   const { replace } = useRouter()
-  const { data: currentUser } = currentUserQuery();
   
   const updateThreadFormMutation = useMutation({
-    mutationFn: async({ formState, values, }: ThreadFormQuery) => {
+    mutationFn: async({ formState, values }: ThreadFormQuery) => {
       qc.setQueryData(THREAD_FORM_QUERY, (prev: ThreadFormQuery) =>
         prev ? {
           ...prev,
@@ -100,9 +98,7 @@ export const useCreateThread = () => {
       return createdThread.thread_id;
     },
     onSuccess: async(data) => {
-      revalidatePath('/');
-      
-      if (data) replace(THREAD_URL + data)
+      if (data) replace(THREAD_URL + data);
     },
     onError: (e) => {
       toast({

@@ -20,10 +20,10 @@ export default async function AdminLayout({
 	if (!user || !session || !isAdmin) redirect("/");
 	
 	return (
-		<div className="w-full flex *:border h-full">
+		<div className="w-full flex h-full">
 			{tickets}
-			{children}
 			{reports}
+			{children}
 		</div>
 	)
 }

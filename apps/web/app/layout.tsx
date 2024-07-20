@@ -1,4 +1,4 @@
-import { Roboto, Ubuntu } from 'next/font/google';
+import { Roboto } from 'next/font/google';
 import { ReactNode } from 'react';
 import { QueryProvider } from '@repo/lib/providers/query-provider';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
@@ -11,11 +11,6 @@ const font = Roboto({
   subsets: [ 'latin', 'cyrillic' ],
   weight: '400'
 })
-
-// const font = Ubuntu({
-//   subsets: [ 'latin', 'cyrillic' ],
-//   weight: '400',
-// });
 
 export async function generateMetadata() {
   return {
@@ -39,7 +34,7 @@ export default function RootLayout({
     <MainPageLoader />
     <QueryProvider>
       {children}
-      <ReactQueryDevtools />
+        <ReactQueryDevtools />
       <Toaster />
     </QueryProvider>
     </body>

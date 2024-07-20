@@ -7,21 +7,14 @@ export const useCreateReport = () => {
 	const qc = useQueryClient();
 	
 	const updateReportValuesMutation = useMutation({
-		mutationFn: async(
-			values: ReportQuery
-		) => {
+		mutationFn: async(values: ReportQuery) => {
 			if (!values) return;
 			
-			const {
-				type,
-				reason,
-				reportedItem
-			} = values;
+			const { type, reason, reportedItem } = values;
 			
 			if (!type) return;
 			
-			qc.setQueryData(
-				REPORT_QUERY_KEY(type),
+			qc.setQueryData(REPORT_QUERY_KEY(type),
 				(prev: ReportQuery) => {
 					return {
 						...prev,
@@ -35,35 +28,22 @@ export const useCreateReport = () => {
 		onSuccess: async (data, variables) => {
 			if (!variables || !variables.type) return;
 			
-			await qc.invalidateQueries({
-				queryKey: REPORT_QUERY_KEY(variables.type)
-			})
+			await qc.invalidateQueries({ queryKey: REPORT_QUERY_KEY(variables.type) })
 		},
-		onError: (e) => {
-			console.error(e.message)
-			throw new Error(e.message)
-		}
+		onError: (e) => { throw new Error(e.message) }
 	})
 	
 	const createReportMutation = useMutation({
-		mutationFn: async(
-			values: Pick<ReportQuery, "type">
-		) => {
-			if (!values) return;
-			
-			if (!values.type) return;
-			
+		mutationFn: async(values: Pick<ReportQuery, "type">) => {
+			if (!values || !values.type) return;
+
 			const reportState = qc.getQueryData<ReportQuery>(
 				REPORT_QUERY_KEY(values.type)
 			);
 			
 			if (!reportState) return;
 			
-			const {
-				reportedItem,
-				type,
-				reason
-			} = reportState
+			const { reportedItem, type, reason } = reportState
 			
 			if (!type || !reportedItem || !reason) return;
 			
@@ -73,13 +53,12 @@ export const useCreateReport = () => {
 				target_id: reportedItem.target_id,
 				target_nickname: reportedItem.target_nickname,
 				target_user_nickname: reportedItem.target_nickname,
-				reason: reason
+				reason
 			})
 			
 			if (!data) {
 				toast({
-					title: "Что-то пошло не так",
-					variant: "negative"
+					title: "Что-то пошло не так", variant: "negative"
 				})
 			}
 			
@@ -90,23 +69,14 @@ export const useCreateReport = () => {
 			
 			if (data) {
 				toast({
-					title: "Заявка создана",
-					variant: "positive"
+					title: "Заявка создана", variant: "positive"
 				})
 			}
 			
-			await qc.resetQueries({
-				queryKey: REPORT_QUERY_KEY(variables.type)
-			})
+			await qc.resetQueries({ queryKey: REPORT_QUERY_KEY(variables.type) })
 		},
-		onError: (e) => {
-			console.error(e.message)
-			throw new Error(e.message)
-		}
+		onError: (e) => { throw new Error(e.message) }
 	})
 	
-	return {
-		updateReportValuesMutation,
-		createReportMutation
-	}
+	return { updateReportValuesMutation, createReportMutation }
 }

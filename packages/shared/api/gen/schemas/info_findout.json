@@ -1,0 +1,1 @@
+{"type":"object","properties":{"user_nickname":{"type":"string","format":"text"},"findout":{"type":"string","format":"text"},"id":{"description":"Note:\nThis is a Primary Key.<pk/>","type":"integer","format":"bigint"}},"required":["id","user_nickname"],"x-readme-ref-name":"info_findout"}

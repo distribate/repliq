@@ -7,8 +7,9 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { postCommentSchema } from "../schemas/post-comment-schema.ts";
 import { createPostCommentInferSchema } from "../types/create-post-comment-types.ts";
-import { currentUserQuery } from "@repo/lib/queries/current-user-query.ts";
+import { CURRENT_USER_QUERY_KEY, CurrentUser } from '@repo/lib/queries/current-user-query.ts';
 import { FormField } from '@repo/ui/src/components/form-field.tsx';
+import { useQueryClient } from '@tanstack/react-query';
 
 export type PostItemFooterProps = {
 	post_id: string
@@ -17,7 +18,9 @@ export type PostItemFooterProps = {
 export const CreatePostCommentForm = ({
 	post_id
 }: PostItemFooterProps) => {
-	const { data: currentUser } = currentUserQuery();
+	const qc = useQueryClient();
+	const currentUser = qc.getQueryData<CurrentUser>(CURRENT_USER_QUERY_KEY)
+	
 	const { updatePostCommentFieldMutation, createPostCommentMutation } = usePostCommentsFormControl()
 
 	const { register, handleSubmit, getValues, reset, formState: { errors, isValid } } = useForm<createPostCommentInferSchema>({

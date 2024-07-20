@@ -2,12 +2,12 @@
 
 import { useCallback, useMemo } from 'react';
 import { Editable, Slate, withReact } from 'slate-react';
-import { createEditor, Descendant } from 'slate';
+import { createEditor } from 'slate';
 import { Leaf } from '../../../../editor/components/leaf.tsx';
 import { DefaultElement } from '../../../../editor/components/default-element.tsx';
 
 type ThreadContentProps = {
-  content: Descendant[]
+  content: any
 }
 
 const initialValue = [

@@ -7,7 +7,9 @@ export const FriendsTrigger = ({
 }: {
 	nickname: string
 }) => {
-	const { data: friends } = friendsQuery(nickname);
+	const { data: friends } = friendsQuery({
+		nickname
+	});
 	
 	return (
 		<span className="inline-flex items-center justify-center max-h-[20px] max-w-[20px] p-2 rounded-sm overflow-hidden bg-emerald-500">

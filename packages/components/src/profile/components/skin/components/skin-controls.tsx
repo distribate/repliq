@@ -34,7 +34,7 @@ const SKIN_CONTROLS: SkinControls[] = [
 ]
 
 export const SkinControls = ({
-	userNicknameByParam
+	reqUserNickname
 }: UserSkinProps) => {
 	const { push } = useRouter();
 	const { data: skinState } = useSkinStateQuery()
@@ -67,7 +67,7 @@ export const SkinControls = ({
 			<Button
 				className="p-2.5"
 				onClick={() => push(
-					`http://localhost:8000/download-skin/${userNicknameByParam}`
+					`http://localhost:8000/download-skin/${reqUserNickname}`
 				)}
 			>
 				<Download size={20}/>

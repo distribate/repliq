@@ -7,11 +7,13 @@ export type PostThread = {
   thread_id: string
 }
 
-type PostThreadProperties = THREAD & Partial<{
+type PostThreadProperties = Omit<THREAD, "content"> & Partial<{
   user_nickname: string,
   category_id: string,
   tags: string[] | null
-}> & PostThread;
+}> & PostThread & {
+  content: any
+};
 
 const supabase = createClient();
 

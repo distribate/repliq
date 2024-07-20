@@ -6,6 +6,7 @@ import Link from "next/link";
 import { ImageWrapper } from "@repo/components/src/wrappers/image-wrapper.tsx";
 import { getCurrentUser } from "@repo/lib/actions/get-current-user.ts";
 import { permanentRedirect } from "next/navigation";
+import { AUTH_REDIRECT } from '@repo/shared/constants/routes.ts';
 
 type AuthLayoutProps = {
 	children: ReactNode
@@ -36,7 +37,7 @@ export default async function AuthLayout({
 
 	const url = await getRandomBackground()
 	
-	if (currentUser) return permanentRedirect("/auth?type=login");
+	if (currentUser) return permanentRedirect(AUTH_REDIRECT)
 	
 	return (
 		<PageWrapper

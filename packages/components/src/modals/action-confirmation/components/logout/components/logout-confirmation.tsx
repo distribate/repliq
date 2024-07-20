@@ -20,9 +20,7 @@ export const LogoutConfirmation = () => {
         title="Отмена"
         actionType="cancel"
         disabled={logOut.isPending}
-        onClick={() => removeDialogMutation.mutate({
-          dialogName: 'logout-confirm',
-        })}
+        onClick={() => removeDialogMutation.mutate( 'logout-confirm')}
       />
     </ConfirmationActionModalTemplate>
   );

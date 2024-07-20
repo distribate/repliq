@@ -28,7 +28,9 @@ const avatarVariants = cva('relative rounded-md overflow-hidden', {
 });
 
 interface Avatar {
-  withBadge?: { active?: boolean, noactive?: boolean },
+  withBadge?: {
+    active?: boolean
+  },
   propHeight?: number,
   propWidth?: number,
   nickname: string

@@ -10,14 +10,15 @@ import { BlockWrapper } from '../../../../wrappers/block-wrapper.tsx';
 import { HoverCardWrapper } from '../../../../wrappers/hover-card-wrapper.tsx';
 import { Ellipsis } from 'lucide-react';
 import { HoverCardItem } from '@repo/ui/src/components/hover-card.tsx';
-import { currentUserQuery } from '@repo/lib/queries/current-user-query.ts';
+import { CURRENT_USER_QUERY_KEY, CurrentUser } from '@repo/lib/queries/current-user-query.ts';
+import { useQueryClient } from '@tanstack/react-query';
 
 export const ThreadCommentItem = ({
   nickname, isAuthor, created_at, content,
   id, replied, thread_id,
 }: ThreadCommentProps) => {
-  
-  const { data: currentUser } = currentUserQuery()
+  const qc = useQueryClient()
+  const currentUser = qc.getQueryData<CurrentUser>(CURRENT_USER_QUERY_KEY)
   
   if (!currentUser) return;
   

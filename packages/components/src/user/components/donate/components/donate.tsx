@@ -21,22 +21,31 @@ export const UserDonate = ({
 		nickname
 	})
 	
-	if (isLoading) return <Skeleton className="h-5 rounded-md w-24"/>
+	if (isLoading) return <Skeleton className="h-5 rounded-md w-24"/>;
 	if (!donate) return;
 	
-	const title = getDonateTitle(donate);
+	const title = getDonateTitle(donate.donate);
+	const favoriteItemImage = donate.favoriteItemImage?.image
 	
 	return (
 		<HoverCardWrapper
 			properties={{ delay: 1000, contentAlign: "center", sideAlign: "right" }}
 			trigger={
-				<CoolMode options={{ particle: Aboba.src, }}>
-					<UserDonateBadge variant={donate}>
+				favoriteItemImage ? (
+					<CoolMode options={{ particle: favoriteItemImage, }}>
+						<UserDonateBadge variant={donate.donate}>
+							<Typography textColor="shark_white" className="font-[Minecraft] text-[12px]">
+								{title}
+							</Typography>
+						</UserDonateBadge>
+					</CoolMode>
+				) : (
+					<UserDonateBadge variant={donate.donate}>
 						<Typography textColor="shark_white" className="font-[Minecraft] text-[12px]">
 							{title}
 						</Typography>
 					</UserDonateBadge>
-				</CoolMode>
+				)
 			}
 			content={
 				<div className="flex flex-col gap-y-2 w-full p-2">

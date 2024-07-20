@@ -1,7 +1,7 @@
 "use client"
 
 import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from "@repo/ui/src/components/resizable.tsx";
-import { ReactNode, useEffect, useRef, useState } from "react";
+import { ReactNode, useCallback, useEffect, useRef, useState } from 'react';
 import { useSidebarControl } from "../sidebar/components/sidebar-layout/hooks/use-sidebar-control.ts";
 import { RESIZABLE_LAYOUT_COOKIE_KEY } from "@repo/shared/keys/cookie.ts";
 import { Sidebar } from "../sidebar/components/sidebar/sidebar.tsx";
@@ -25,17 +25,12 @@ export const ResizableLayout = ({
 		document.cookie = `${RESIZABLE_LAYOUT_COOKIE_KEY}=${JSON.stringify(sizes)}`;
 	};
 	
-	const sidebarRef = useRef<
-		ImperativePanelHandle
-	>(null);
-	
+	const sidebarRef = useRef<ImperativePanelHandle>(null);
 	const [ isClient, setIsClient ] = useState(false)
 	
-	useEffect(() => {
-		setIsClient(true)
-	}, [])
+	useEffect(() => setIsClient(true), [])
 	
-	const handleSizePanel = (size: number) => {
+	const handleSizePanel = useCallback((size: number) => {
 		const sidebarPanel = sidebarRef.current;
 		
 		if (sidebarPanel && size < 11) {
@@ -43,10 +38,9 @@ export const ResizableLayout = ({
 		}
 		
 		updateSidebarPropertiesMutation.mutate({
-			type: "width",
-			values: { width: size }
+			type: "width", values: { width: size }
 		})
-	}
+	}, [])
 	
 	const layoutGroupGap = isDynamic ? 2 : 4;
 	

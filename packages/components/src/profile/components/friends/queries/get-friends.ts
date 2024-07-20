@@ -2,16 +2,17 @@
 
 import { createClient } from "@repo/lib/utils/supabase/server.ts";
 import { FriendsSort } from "../hooks/use-friends-sort.tsx";
+import { FriendsQuery } from './friends-query.ts';
 
 export type RequestFriends = {
-	nickname?: string,
+	nickname: string,
 	orderType?: FriendsSort,
 	ascending?: boolean
 }
 
 export async function getFriends({
 	nickname, orderType, ascending = false
-}: RequestFriends) {
+}: RequestFriends): Promise<FriendsQuery[]> {
 	const supabase = createClient();
 	
 	const { data: friendsData, error: friendsError } = await supabase

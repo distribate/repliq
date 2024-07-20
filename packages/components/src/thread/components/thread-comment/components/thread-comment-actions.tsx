@@ -3,7 +3,7 @@
 import { Typography } from "@repo/ui/src/components/typography.tsx";
 import { useCreateThreadComment } from "../../../../forms/create-thread-comment/hooks/use-create-thread-comment.tsx";
 import { RepliedValuesType } from "../../../../forms/create-thread-comment/queries/create-thread-comment-query.ts";
-import { ReportItem } from "../../../../report/components/report-item.tsx";
+import { ReportCreateModal } from '../../../../modals/report-create-modal.tsx';
 
 type ThreadCommentActionsProps = RepliedValuesType & {
 	thread_id: string
@@ -28,7 +28,7 @@ export const ThreadCommentActions = ({
 			<Typography className="text-shark-300 text-md cursor-pointer" onClick={handleReplyComment}>
 				Ответить
 			</Typography>
-			<ReportItem report_type="comment" threadId={thread_id} targetId={comment_id}/>
+			<ReportCreateModal report_type="comment" threadId={thread_id} targetId={comment_id}/>
 		</div>
 	)
 }

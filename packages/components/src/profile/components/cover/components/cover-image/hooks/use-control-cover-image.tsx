@@ -6,12 +6,16 @@ import {
 import { updateValueOfUploadedImage } from "@repo/lib/utils/storage/update-value-uploaded-image.ts";
 import { IMAGE_COVER_QUERY_KEY } from "../queries/image-cover-query.ts";
 import { nanoid } from "nanoid"
-import { CURRENT_USER_QUERY_KEY, currentUserQuery } from "@repo/lib/queries/current-user-query.ts";
+import { CURRENT_USER_QUERY_KEY, CurrentUser } from '@repo/lib/queries/current-user-query.ts';
 import { REQUESTED_USER_QUERY_KEY } from "@repo/lib/queries/requested-user-query.ts";
 import { USER_IMAGES_BUCKET } from "@repo/shared/constants/buckets.ts"
 import { createTask, registerTaskQueue } from "@repo/lib/helpers/create-task-delay.ts";
 import { useDialog } from "@repo/lib/hooks/use-dialog.ts";
 import { deletePrevImageFromUsers } from "./delete-prev-image.ts";
+import { PROFILE_BACKGROUND_UPDATE_MODAL_NAME } from '../../../../../../modals/profile-background-update-modal.tsx';
+import {
+	PROFILE_BACKGROUND_DEFAULT_IMAGES_MODAL_NAME
+} from '../../../../../../modals/profile-background-default-images-modal.tsx';
 
 type BackgroundImage = {
 	file: File | null
@@ -19,27 +23,27 @@ type BackgroundImage = {
 	customFilename: string
 }>
 
+export type CoverImageInput = {
+	type: "origin" | "library",
+	file: File | null,
+	fileName?: string
+}
+
 export const useControlCoverImage = () => {
 	const qc = useQueryClient()
 	const { removeDialogMutation } = useDialog();
-	const { data: currentUser } = currentUserQuery()
+	const currentUser = qc.getQueryData<CurrentUser>(CURRENT_USER_QUERY_KEY)
 	
 	const handleSuccess = async() => {
 		if (currentUser) {
 			await Promise.all([
-				qc.invalidateQueries({
-					queryKey: REQUESTED_USER_QUERY_KEY(currentUser.nickname)
-				}),
-				qc.invalidateQueries({
-					queryKey: CURRENT_USER_QUERY_KEY
-				})
+				qc.invalidateQueries({ queryKey: REQUESTED_USER_QUERY_KEY(currentUser.nickname) }),
+				qc.invalidateQueries({ queryKey: CURRENT_USER_QUERY_KEY })
 			])
 			
 			const tasks = [
 				createTask(async() => {
-					await qc.invalidateQueries({
-						queryKey: IMAGE_COVER_QUERY_KEY(currentUser.nickname)
-					});
+					await qc.invalidateQueries({ queryKey: IMAGE_COVER_QUERY_KEY(currentUser.nickname) });
 				}, 1000)
 			];
 			
@@ -48,11 +52,7 @@ export const useControlCoverImage = () => {
 	}
 	
 	const deleteBackgroundImageMutation = useMutation({
-		onMutate: () => {
-			removeDialogMutation.mutate({
-				dialogName: "profile-background-update"
-			})
-		},
+		onMutate: () => removeDialogMutation.mutate([PROFILE_BACKGROUND_UPDATE_MODAL_NAME, PROFILE_BACKGROUND_DEFAULT_IMAGES_MODAL_NAME]),
 		mutationFn: async() => {
 			if (!currentUser) return null;
 			
@@ -85,25 +85,16 @@ export const useControlCoverImage = () => {
 			})
 			
 			return false;
-		}, onSuccess: async(data) => {
-			if (data) {
-				return handleSuccess()
-			}
-		}, onError: (e) => {
-			console.log(e);
-			throw e;
-		}
+		},
+		onSuccess: async(data) => {
+			if (data) return handleSuccess();
+		},
+		onError: (e) => { throw new Error(e.message) }
 	})
 	
 	const uploadBackgroundImageMutation = useMutation({
-		onMutate: () => {
-			removeDialogMutation.mutate({
-				dialogName: "profile-background-update"
-			})
-		},
-		mutationFn: async({
-			file, customFilename
-		}: BackgroundImage) => {
+		onMutate: () => removeDialogMutation.mutate(PROFILE_BACKGROUND_UPDATE_MODAL_NAME),
+		mutationFn: async({ file, customFilename }: BackgroundImage) => {
 			if (!currentUser) return;
 			
 			// if upload to existing image from storage (static)
@@ -147,8 +138,7 @@ export const useControlCoverImage = () => {
 						bucket: USER_IMAGES_BUCKET, userId: currentUser.id
 					}),
 					uploadImageToBucket({
-						bucket: USER_IMAGES_BUCKET, folder: "cover",
-						file: file, fileName: fileName
+						bucket: USER_IMAGES_BUCKET, folder: "cover", file, fileName
 					})
 				])
 			
@@ -193,13 +183,9 @@ export const useControlCoverImage = () => {
 			}
 		},
 		onSuccess: async(data) => {
-			if (data) {
-				return handleSuccess()
-			}
+			if (data) return handleSuccess();
 		},
-		onError: (e) => {
-			throw new Error(e.message);
-		}
+		onError: (e) => { throw new Error(e.message) }
 	})
 	
 	return { uploadBackgroundImageMutation, deleteBackgroundImageMutation }

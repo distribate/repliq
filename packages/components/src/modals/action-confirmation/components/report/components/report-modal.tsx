@@ -12,6 +12,7 @@ import {
 import { ConfirmationButton } from '../../../../../buttons/confirmation-action-button.tsx';
 import { ConfirmationActionModalTemplate } from "@repo/components/src/templates/confirmation-action-modal-template.tsx"
 import { useDialog } from '@repo/lib/hooks/use-dialog.ts';
+import { REPOST_CREATE_MODAL } from '../../../../report-create-modal.tsx';
 
 type d = {
 	id: string,
@@ -19,19 +20,18 @@ type d = {
 	user_nickname: string
 }
 
-export const ReportModal = ({
-	report_type, targetId, threadId
-}: {
+type ReportModal = {
 	report_type: Pick<REPORT, "report_type">["report_type"],
 	targetId: string,
 	threadId: string
-}) => {
+}
+
+export const ReportModal = ({
+	report_type, targetId, threadId
+}: ReportModal) => {
 	const qc = useQueryClient();
-	
 	const { data } = reportQuery(report_type);
-	
 	const { removeDialogMutation } = useDialog()
-	
 	const { updateReportValuesMutation,	createReportMutation } = useCreateReport()
 	
 	const targets = qc.getQueryData<any[]>(
@@ -43,16 +43,14 @@ export const ReportModal = ({
 	);
 	
 	const handleReason = (
-		reason: ReportReason,
-		type: Pick<REPORT, "report_type">["report_type"]
+		reason: ReportReason, type: Pick<REPORT, "report_type">["report_type"]
 	) => {
 		console.log(target);
 		
 		if (!target) return;
 		
 		updateReportValuesMutation.mutate({
-			type: type,
-			reason: reason,
+			type, reason,
 			reportedItem: {
 				target_id: target[0].id,
 				target_content: target[0].content,
@@ -78,9 +76,7 @@ export const ReportModal = ({
 				actionType="cancel"
 				disabled={updateReportValuesMutation.isPending}
 				onClick={() => {
-					removeDialogMutation.mutate({
-						dialogName: "report-create"
-					})
+					removeDialogMutation.mutate(REPOST_CREATE_MODAL)
 				}}
 			/>
 		</ConfirmationActionModalTemplate>

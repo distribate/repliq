@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { ThreadModel } from '../../../queries/get-thread.ts';
-import { currentUserQuery } from '@repo/lib/queries/current-user-query.ts';
+import { CURRENT_USER_QUERY_KEY, CurrentUser } from '@repo/lib/queries/current-user-query.ts';
 import { THREAD_RATING_QUERY_KEY } from '../../thread-bump/queries/thread-rating-query.ts';
 import { updateThreadFields } from '../queries/update-thread-fields.ts';
 import { toast } from '@repo/ui/src/hooks/use-toast.ts';
@@ -26,10 +26,8 @@ export type ThreadControlValues = Partial<{
 
 export const useThreadControl = () => {
   const qc = useQueryClient();
-  
+  const currentUser = qc.getQueryData<CurrentUser>(CURRENT_USER_QUERY_KEY)
   const { replace } = useRouter()
-  
-  const { data: currentUser } = currentUserQuery();
   
   const updateThreadFieldsMutation = useMutation({
     mutationFn: async(values: ThreadControl & ThreadControlValues) => {

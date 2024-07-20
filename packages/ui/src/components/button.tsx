@@ -14,15 +14,19 @@ const buttonVariants = cva(
       variant: {
         default: '',
         link: 'underline-offset-4 hover:underline',
-        action: 'bg-pink-800 hover:bg-pink-700',
-        positive: 'bg-green-700 hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[2px_2px_0px_2px_#000000]',
-        negative: 'bg-red-700 hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[2px_2px_0px_2px_#000000]',
-        pending: 'bg-contessa-700 hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[2px_2px_0px_2px_#000000]',
+        action: 'hover:bg-pink-900 bg-pink-800 hover:bg-pink-700',
+        positive: 'hover:bg-green-800 bg-green-700',
+        negative: 'hover:bg-red-800 bg-red-700',
+        pending: 'hover:bg-contessa-800 bg-contessa-700',
         minecraft: 'border-[2px] text-shark-50 border-black/80 rounded-none shadow-[inset_0px_-2px_1px_rgba(0,0,0,0.4),inset_-0px_2px_1px_rgba(255,255,255,0.4)]',
       },
+      effect: {
+        none: '',
+        pressed: 'shadow-[2px_2px_0px_2px_#000000] hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-none',
+      },
       rounded: {
-        none: "",
-        default: "rounded-md"
+        none: '',
+        default: 'rounded-md',
       },
       size: {
         full: 'h-fit w-full',
@@ -33,7 +37,7 @@ const buttonVariants = cva(
         icon: 'w-10',
       },
       state: {
-        default: 'bg-shark-900',
+        default: 'hover:bg-shark-950 bg-shark-900',
         active: 'bg-caribbean-green-600 hover:bg-caribbean-green-700',
       },
       border: {
@@ -44,8 +48,7 @@ const buttonVariants = cva(
     defaultVariants: {
       variant: 'default',
       size: 'default',
-      rounded: "default",
-      border: 'default',
+      rounded: 'default'
     },
   },
 );
@@ -57,13 +60,15 @@ interface Button {
 
 export interface ButtonProps
   extends ButtonHTMLAttributes<HTMLButtonElement>,
-    VariantProps<typeof buttonVariants>, Button {}
+    VariantProps<typeof buttonVariants>, Button {
+}
 
 const Button = forwardRef<
   HTMLButtonElement, ButtonProps
 >((
     {
       className,
+      effect,
       variant,
       rounded,
       size,
@@ -79,7 +84,7 @@ const Button = forwardRef<
     
     return (
       <Comp
-        className={cn(buttonVariants({ variant, state, rounded, border, size, className }))}
+        className={cn(buttonVariants({ variant, state, effect, rounded, border, size, className }))}
         ref={ref}
         {...props}
       >

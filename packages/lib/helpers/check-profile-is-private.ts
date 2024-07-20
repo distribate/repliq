@@ -1,31 +1,24 @@
-"use server"
+'use server';
 
-import { getUserInformation } from "../queries/get-user-information.ts";
-import { checkIsFriend } from "./check-is-friend.ts";
-import { USER } from "@repo/types/entities/entities-type.ts"
+import { checkIsFriend } from './check-is-friend.ts';
+import { CheckProfileStatus } from './check-profile-status.ts';
 
-export async function checkProfileToIsPrivate(
-	requestedUser: USER
-) {
-	const currentUser = await getUserInformation()
-	
-	const currentUserNickname = currentUser.nickname;
+export async function checkProfileIsPrivate({
+	requestedUser, currentUserNickname
+}: CheckProfileStatus) {
 	const requestedUserNickname = requestedUser.nickname;
 	
-	if (!currentUserNickname || !requestedUserNickname) return false;
-	
-	if (currentUserNickname === requestedUserNickname) return false;
+	if (!currentUserNickname || !requestedUserNickname) return true;
+	if (currentUserNickname === requestedUserNickname) return true;
 	
 	switch(requestedUser.visibility) {
 		case 'all':
-			return false;
-		case 'friends':
-			const isFriend = await checkIsFriend({
-				requestedUserNickname: requestedUserNickname
-			})
-			
-			return !isFriend;
-		default:
 			return true;
+		case 'friends':
+			return await checkIsFriend({
+				requestedUserNickname: requestedUserNickname
+			});
+		default:
+			return false;
 	}
 }

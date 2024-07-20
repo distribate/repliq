@@ -124,6 +124,8 @@ export const SignInForm = () => {
 					<div className="flex items-center gap-x-2">
 						<Button
 							variant='minecraft'
+							rounded="none"
+							className="hover:bg-pink-900 bg-pink-800 hover:bg-pink-700"
 							disabled={!isValid || setAuthValuesMutation.isPending}
 						>
 							<Typography textSize="medium" textColor="shark_white" className="uppercase font-semibold">

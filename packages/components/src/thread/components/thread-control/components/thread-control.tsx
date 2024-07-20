@@ -6,13 +6,10 @@ import { Button } from '@repo/ui/src/components/button.tsx';
 import { ThreadControl as ThreadControlType, useThreadControl } from '../hooks/use-thread-control.ts';
 import { DropdownWrapper } from '../../../../wrappers/dropdown-wrapper.tsx';
 import { HoverCardItem } from '@repo/ui/src/components/hover-card.tsx';
-import { DialogWrapper } from '../../../../wrappers/dialog-wrapper.tsx';
-import {
-  ThreadRemoveModal,
-} from '../../../../modals/action-confirmation/components/thread-remove/components/thread-remove-modal.tsx';
 import { Input } from '@repo/ui/src/components/input';
 import { currentThreadQuery } from '../queries/current-thread-query.ts';
 import { useState } from 'react';
+import { ThreadRemoveModal } from '../../../../modals/thread-remove-modal.tsx';
 
 export const ThreadControl = ({
   id: thread_id,
@@ -111,18 +108,7 @@ export const ThreadControl = ({
               </div>
             }
           />
-          <DialogWrapper
-            name="remove-thread"
-            trigger={
-              <Button
-              
-              >
-                Удалить
-              </Button>
-            }
-          >
-            <ThreadRemoveModal id={thread_id} />
-          </DialogWrapper>
+          <ThreadRemoveModal id={thread_id}/>
           <Button onClick={() => {
             updateThreadFieldsMutation.mutate({
               type: 'comments', id: thread_id,

@@ -1,24 +1,7 @@
 import { Typography } from "@repo/ui/src/components/typography.tsx";
 import { userActiveSessionsQuery } from "../queries/user-sessions-query.ts";
-import Barrier from "@repo/assets/images/minecraft/barrier.webp"
-import { ImageWrapper } from "../../../../../../wrappers/image-wrapper.tsx";
 import { UserSessionBlock } from "./user-session-block.tsx";
-import dynamic from "next/dynamic";
-
-const DialogWrapper = dynamic(() =>
-	import("../../../../../../wrappers/dialog-wrapper.tsx")
-	.then(m => m.DialogWrapper)
-)
-
-const TerminateNotActiveSessionsModal = dynamic(() =>
-	import("../../../../../../modals/action-confirmation/components/terminate-session/components/terminate-not-active-sessions-modal.tsx")
-	.then(m => m.TerminateNotActiveSessionsModal)
-)
-
-const HoverCardItem = dynamic(() =>
-	import("@repo/ui/src/components/hover-card.tsx")
-	.then(m => m.HoverCardItem)
-)
+import { TerminateAllSessionsModal } from '../../../../../../modals/user-settings/terminate-all-sessions-modal.tsx';
 
 export const UserActiveSessions = () => {
 	const { data: activeSessions, isError } = userActiveSessionsQuery()
@@ -30,34 +13,19 @@ export const UserActiveSessions = () => {
 	if (isError || !currentSession || !activeSessions) return;
 	
 	return (
-		<div className="flex flex-col gap-y-2 w-full pt-4">
+		<div className="flex flex-col items-center gap-y-4 w-full">
+			<Typography variant="dialogTitle">
+				Управление сессиями
+			</Typography>
 			<div className="flex flex-col gap-y-2 w-full">
 				<div className="flex flex-col gap-y-2 w-full">
-					<Typography className="text-xl text-shark-50 font-semibold px-4">
+					<Typography className="text-base text-shark-50 px-4">
 						Текущая сессия
 					</Typography>
-					<UserSessionBlock{...currentSession}/>
+					<UserSessionBlock {...currentSession}/>
 				</div>
 				{activeSessions.length > 1 && (
-					<DialogWrapper
-						trigger={
-							<HoverCardItem className="gap-2 px-2">
-								<ImageWrapper
-									propSrc={Barrier.src}
-									propAlt="Page private"
-									width={32}
-									className="max-w-[40px] max-h-[40px]"
-									height={32}
-								/>
-								<Typography className="text-base">
-									Выйти с остальных сессий
-								</Typography>
-							</HoverCardItem>
-						}
-						name="terminate-all-not-active-sessions"
-					>
-						<TerminateNotActiveSessionsModal/>
-					</DialogWrapper>
+					<TerminateAllSessionsModal/>
 				)}
 			</div>
 			{activeSessions.length > 1 && (
@@ -68,7 +36,7 @@ export const UserActiveSessions = () => {
 						</Typography>
 					</div>
 					<div className="flex flex-col w-full gap-y-2">
-						<Typography className="text-xl text-shark-50 font-semibold px-4">
+						<Typography className="text-base text-shark-50 px-4">
 							Активные сессии
 						</Typography>
 						<div className="flex flex-col gap-y-1 w-full">

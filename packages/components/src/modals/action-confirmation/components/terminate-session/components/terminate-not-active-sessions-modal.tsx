@@ -2,19 +2,15 @@ import { useTerminateSession } from '../hooks/use-terminate-session.ts';
 import { useDialog } from '@repo/lib/hooks/use-dialog.ts';
 import { ConfirmationActionModalTemplate } from '../../../../../templates/confirmation-action-modal-template.tsx';
 import { ConfirmationButton } from '../../../../../buttons/confirmation-action-button.tsx';
+import { TERMINATE_ALL_SESSIONS_MODAL_NAME } from '../../../../user-settings/terminate-all-sessions-modal.tsx';
 
 export const TerminateNotActiveSessionsModal = () => {
   const { terminateMutation } = useTerminateSession();
   const { removeDialogMutation } = useDialog();
   
   const handleAllTerminate = () => {
-    terminateMutation.mutate({
-      type: 'all',
-    });
-    
-    removeDialogMutation.mutate({
-      dialogName: 'terminate-all-not-active-sessions',
-    });
+    terminateMutation.mutate({ type: 'all' });
+    removeDialogMutation.mutate(TERMINATE_ALL_SESSIONS_MODAL_NAME);
   };
   
   return (
@@ -29,9 +25,7 @@ export const TerminateNotActiveSessionsModal = () => {
         actionType="cancel"
         title="Отмена"
         disabled={terminateMutation.isPending}
-        onClick={() => removeDialogMutation.mutate({
-          dialogName: 'terminate-all-not-active-sessions',
-        })}
+        onClick={() => removeDialogMutation.mutate(TERMINATE_ALL_SESSIONS_MODAL_NAME)}
       />
     </ConfirmationActionModalTemplate>
   );

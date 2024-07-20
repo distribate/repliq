@@ -1,5 +1,5 @@
 export interface SpritesMap {
-    'sprite': 'arrow-left' | 'arrow-right' | 'message' | 'people-flying' | 'people-idle' | 'people-rotate' | 'people-running'
+    'sprite': 'arrow-left' | 'arrow-right' | 'discord' | 'message' | 'people-flying' | 'people-idle' | 'people-rotate' | 'people-running'
   }
 export const SPRITES_META: {
            [Key in keyof SpritesMap]: {
@@ -11,7 +11,7 @@ export const SPRITES_META: {
            }
          } = {
     'sprite': {
-    filePath: 'sprite.f55aadf6.svg',
+    filePath: 'sprite.c3c5aa56.svg',
     items: {
       'arrow-left': {
     viewBox: '0 0 24 24',
@@ -20,6 +20,10 @@ export const SPRITES_META: {
 'arrow-right': {
     viewBox: '0 0 24 24',
     width: 24, height: 24,
+  },
+'discord': {
+    viewBox: '0 0 127.14 96.36',
+    width: 127.14, height: 96.36,
   },
 'message': {
     viewBox: '0 0 24 24',

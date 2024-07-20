@@ -84,9 +84,9 @@ export default async function TopicsTopicPage({
                     <Separator />
                   </>
                 )}
-                <ThreadContent content={thread.content as Descendant[]} />
+                <ThreadContent content={thread.content} />
                 {thread.images && (
-                  <ThreadImages thread_id={thread.id} />
+                  <ThreadImages id={thread.id} />
                 )}
               </div>
             )}

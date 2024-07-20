@@ -216,6 +216,24 @@ export type Database = {
         }
         Relationships: []
       }
+      config_minecraft_items: {
+        Row: {
+          id: number
+          image: string
+          title: string
+        }
+        Insert: {
+          id?: number
+          image: string
+          title: string
+        }
+        Update: {
+          id?: number
+          image?: string
+          title?: string
+        }
+        Relationships: []
+      }
       friends_requests: {
         Row: {
           created_at: string
@@ -470,14 +488,17 @@ export type Database = {
       posts_comments: {
         Row: {
           comment_id: string
+          id: number
           post_id: string
         }
         Insert: {
           comment_id: string
+          id?: number
           post_id: string
         }
         Update: {
           comment_id?: string
+          id?: number
           post_id?: string
         }
         Relationships: [
@@ -491,7 +512,7 @@ export type Database = {
           {
             foreignKeyName: "public_posts_comments_post_id_fkey"
             columns: ["post_id"]
-            isOneToOne: true
+            isOneToOne: false
             referencedRelation: "posts"
             referencedColumns: ["post_id"]
           },
@@ -694,7 +715,7 @@ export type Database = {
         Row: {
           auto_remove: boolean
           comments: boolean
-          content: any
+          content: Json
           created_at: string
           description: string | null
           id: string
@@ -704,7 +725,7 @@ export type Database = {
         Insert: {
           auto_remove?: boolean
           comments?: boolean
-          content?: Json | null
+          content: Json
           created_at?: string
           description?: string | null
           id?: string
@@ -714,7 +735,7 @@ export type Database = {
         Update: {
           auto_remove?: boolean
           comments?: boolean
-          content?: Json | null
+          content?: Json
           created_at?: string
           description?: string | null
           id?: string
@@ -841,6 +862,32 @@ export type Database = {
           },
         ]
       }
+      threads_tags: {
+        Row: {
+          id: number
+          tags: Json[] | null
+          thread_id: string
+        }
+        Insert: {
+          id?: number
+          tags?: Json[] | null
+          thread_id: string
+        }
+        Update: {
+          id?: number
+          tags?: Json[] | null
+          thread_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "public_threads_tags_thread_id_fkey"
+            columns: ["thread_id"]
+            isOneToOne: false
+            referencedRelation: "threads"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       threads_users: {
         Row: {
           thread_id: string
@@ -921,6 +968,38 @@ export type Database = {
           visibility?: Database["public"]["Enums"]["profile_visibility"]
         }
         Relationships: []
+      }
+      users_banned: {
+        Row: {
+          created_at: string
+          id: number
+          nickname: string | null
+          reason: string | null
+          time: string
+        }
+        Insert: {
+          created_at?: string
+          id?: number
+          nickname?: string | null
+          reason?: string | null
+          time: string
+        }
+        Update: {
+          created_at?: string
+          id?: number
+          nickname?: string | null
+          reason?: string | null
+          time?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "public_users_banned_nickname_fkey"
+            columns: ["nickname"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["nickname"]
+          },
+        ]
       }
       users_blocked: {
         Row: {

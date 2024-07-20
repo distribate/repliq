@@ -1,4 +1,5 @@
 import { Tables } from "./supabase";
+import { UserPreferences } from '@repo/lib/helpers/convert-user-preferences-to-map.ts';
 
 export type USER = Tables<"users">
 

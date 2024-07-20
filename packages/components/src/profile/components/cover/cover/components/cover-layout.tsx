@@ -7,13 +7,14 @@ import { useCover } from "../hooks/use-cover.ts";
 import { UserCoverSkeleton } from "./cover-skeleton.tsx";
 import { UserCover } from "./cover.tsx";
 
-type UserCoverProps = {
-	reqUserNickname: string
+export type UserCoverLayoutProps = {
+	reqUserNickname: string,
+	type: "blocked" | "default"
 }
 
 export const UserCoverLayout = ({
-	reqUserNickname
-}: UserCoverProps) => {
+	reqUserNickname, type
+}: UserCoverLayoutProps) => {
 	const { data: coverQueryState } = coverQuery()
 	const { setCoverStateMutation } = useCover()
 	
@@ -34,12 +35,11 @@ export const UserCoverLayout = ({
 				className={`${inView ? 'h-[612px] absolute left-0 top-0 right-0' : 'h-[200px] absolute top-0'}`}
 				onChange={(inView, entry) => {
 					setCoverStateMutation.mutate({
-						inView: inView,
-						entry: entry
+						inView: inView, entry: entry
 					})
 				}}
 			/>
-			{requestedUser && <UserCover requestedUser={requestedUser}/>}
+			{requestedUser && <UserCover requestedUser={requestedUser} type={type}/>}
 		</>
 	)
 }

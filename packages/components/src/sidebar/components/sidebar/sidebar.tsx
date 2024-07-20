@@ -6,7 +6,6 @@ import { SearchInput } from '../sidebar-content/search-area/components/search-in
 import { SidebarFormat, sidebarLayoutQuery } from '../sidebar-layout/queries/sidebar-layout-query.ts';
 import { currentUserQuery } from '@repo/lib/queries/current-user-query.ts';
 import { SidebarSkeleton } from './sidebar-skeleton.tsx';
-import { SearchArea } from '../sidebar-content/search-area/components/search-area.tsx';
 import { SavedThreads } from '../sidebar-content/saved-threads/saved-threads.tsx';
 import { UserMenuTrigger } from '../sidebar-content/user-menu/user-menu-trigger.tsx';
 import { SidebarLogotype } from '../sidebar-content/logotype/sidebar-logotype.tsx';
@@ -15,10 +14,16 @@ import { CreateThread } from '../sidebar-content/create-thread/create-thread.tsx
 import { searchQuery } from '../sidebar-content/search-area/queries/search-query.ts';
 import { SidebarSettings } from '../sidebar-settings/components/sidebar-settings.tsx';
 import { SidebarTarget } from '../sidebar-content/targets/components/sidebar-target.tsx';
+import dynamic from 'next/dynamic';
 
 type SidebarLayoutVariant = Exclude<
   SidebarFormat, 'dynamic'
 >
+
+const SearchArea = dynamic(() =>
+  import("../sidebar-content/search-area/components/search-area.tsx")
+  .then(m => m.SearchArea)
+)
 
 export const Sidebar = () => {
   const { data: sidebarState } = sidebarLayoutQuery();

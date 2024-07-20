@@ -6,6 +6,8 @@ const typographyVariants = cva("whitespace-wrap", {
 		variant: {
 			sectionTitle: "text-xl",
 			pageTitle: "",
+			dialogTitle: "text-xl font-medium text-shark-50 truncate",
+			dialogSubtitle: "text-base font-normal text-shark-50 truncate",
 			subtitle: "",
 			link: "underline underline-offset-4 cursor-pointer"
 		},

@@ -1,5 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { THREAD } from "@repo/types/entities/entities-type"
+import { Descendant } from 'slate';
 
 export const THREAD_FORM_QUERY = ["ui", "thread-form"];
 
@@ -9,12 +10,13 @@ export type ThreadFormQuery = Partial<{
 		status: number | null
 	}>,
 	values: Partial<
-		Omit<THREAD, "id" | "created_at">
+		Omit<THREAD, "id" | "created_at" | "content">
 	> & Partial<{
 		category_id: string,
 		auto_remove_time: string,
 		permission_cost: string,
-		tags: Array<string>
+		tags: Array<string>,
+		content: any
  	}>
 }>
 
@@ -26,7 +28,7 @@ const initial: ThreadFormQuery = {
 	values: {
 		permission: false,
 		auto_remove: false,
-		comments: true
+		comments: true,
 	}
 }
 

@@ -23,7 +23,7 @@ const HoverCardItem = forwardRef<
 	return (
 		<div
 			ref={ref}
-			className="flex hover:bg-white/10 border border-none cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm relative"
+			className={cn('flex hover:bg-white/10 border border-none cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm relative', className)}
 			{...props}
 		/>
 	)

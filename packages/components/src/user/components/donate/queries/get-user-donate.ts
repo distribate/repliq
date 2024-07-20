@@ -19,7 +19,7 @@ export async function getUserDonate({
 	.eq("username", nickname)
 	.single()
 	
-	if (error) return null;
+	if (error) throw new Error(error.message)
 	
 	const donate: DonateType["primary_group"] = data.primary_group;
 	

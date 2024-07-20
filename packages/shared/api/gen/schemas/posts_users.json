@@ -1,0 +1,1 @@
+{"type":"object","properties":{"post_id":{"description":"Note:\nThis is a Primary Key.<pk/>","type":"string","format":"uuid"},"user_nickname":{"description":"Note:\nThis is a Foreign Key to `users.nickname`.<fk table='users' column='nickname'/>","type":"string","format":"text"}},"required":["post_id","user_nickname"],"x-readme-ref-name":"posts_users"}

@@ -1,0 +1,1 @@
+{"type":"object","properties":{"category_id":{"description":"Note:\nThis is a Foreign Key to `category.id`.<fk table='category' column='id'/>","type":"integer","format":"integer"},"thread_id":{"description":"Note:\nThis is a Primary Key.<pk/>","type":"string","format":"uuid"}},"required":["category_id","thread_id"],"x-readme-ref-name":"category_threads"}

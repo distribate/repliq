@@ -3,12 +3,13 @@
 import { PostItemHeader } from "../../../../../../post/components/post-item/components/post-header/post-header.tsx";
 import { PostItemBody } from "../../../../../../post/components/post-item/components/post-body/post-body.tsx";
 import { PostItemFooter } from "../../../../../../post/components/post-item/components/post-footer/post-footer.tsx";
-import { currentUserQuery } from "@repo/lib/queries/current-user-query.ts";
+import { CURRENT_USER_QUERY_KEY, CurrentUser } from '@repo/lib/queries/current-user-query.ts';
 import { postsQuery } from "../queries/posts-query.ts";
 import { BlockWrapper } from "../../../../../../wrappers/block-wrapper.tsx";
 import { UserPostsSkeleton } from "../../../../../../skeletons/user-posts-skeleton.tsx";
 import dynamic from "next/dynamic";
 import { PostComments } from './post-comments.tsx';
+import { useQueryClient } from '@tanstack/react-query';
 
 const PostsNotFound = dynamic(() =>
 	import("../../../../../../templates/section-not-found.tsx")
@@ -28,7 +29,9 @@ type PostsProps = {
 export const Posts = ({
 	nickname, name_color
 }: PostsProps) => {
-	const { data: currentUser } = currentUserQuery()
+	const qc = useQueryClient()
+	const currentUser = qc.getQueryData<CurrentUser>(CURRENT_USER_QUERY_KEY)
+	
 	const { data: posts, isError, isLoading } = postsQuery(nickname)
 	
 	if (isLoading) return <UserPostsSkeleton/>

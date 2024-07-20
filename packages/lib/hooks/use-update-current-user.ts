@@ -1,20 +1,25 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { USER } from '@repo/types/entities/entities-type.ts';
-import { updateUserFields } from '../queries/update-user-fields.ts';
+import { UpdateUserFields, updateUserFields } from '../queries/update-user-fields.ts';
 import { CURRENT_USER_QUERY_KEY, currentUserQuery } from '../queries/current-user-query.ts';
 import { REQUESTED_USER_QUERY_KEY } from '../queries/requested-user-query.ts';
 import { toast } from '@repo/ui/src/hooks/use-toast.ts';
+import { DONATE_QUERY_KEY } from '@repo/components/src/user/components/donate/queries/donate-query.ts';
+import { parseStringToBoolean } from '../helpers/parse-string-to-boolean.ts';
 
 export type AvailableFields = Pick<USER, 'description'
   | 'visibility'
   | 'birthday'
   | 'name_color'
+  | 'favorite_item'
   | 'real_name'
+  | 'preferences'
 >
 
 export type UpdateCurrentUser = {
   field: keyof AvailableFields,
-  value: string | null
+  value: string | null,
+  preferences?: Omit<Extract<UpdateUserFields['preferences'], object>, "oldPreferences">
 }
 
 export const useUpdateCurrentUser = () => {
@@ -26,15 +31,30 @@ export const useUpdateCurrentUser = () => {
     mutationFn: async(values: UpdateCurrentUser) => {
       if (!currentUser || values.value === null) return;
       
-      const { field, value } = values;
+      const { field, value, preferences } = values;
       
       const fieldToUpdate: { [k: string]: string | null } = {
         [field as string]: value,
       };
       
-      return updateUserFields({
-        nickname: currentUser.nickname, id: currentUser.id, field: fieldToUpdate,
-      });
+      if (preferences) {
+        return updateUserFields({
+          nickname: currentUser.nickname,
+          id: currentUser.id,
+          field: fieldToUpdate,
+          preferences: {
+            key: preferences?.key,
+            value: parseStringToBoolean(value),
+            oldPreferences: currentUser.preferences,
+          },
+        });
+      } else {
+        return updateUserFields({
+          nickname: currentUser.nickname,
+          id: currentUser.id,
+          field: fieldToUpdate,
+        });
+      }
     },
     onSuccess: async(data) => {
       if (!currentUser) return;
@@ -42,6 +62,7 @@ export const useUpdateCurrentUser = () => {
       await Promise.all([
         qc.invalidateQueries({ queryKey: CURRENT_USER_QUERY_KEY }),
         qc.invalidateQueries({ queryKey: REQUESTED_USER_QUERY_KEY(currentUser.nickname) }),
+        qc.invalidateQueries({ queryKey: DONATE_QUERY_KEY(currentUser.nickname) }),
       ]);
       
       if (!data) {
@@ -54,13 +75,13 @@ export const useUpdateCurrentUser = () => {
       
       if (data.status === 200 && data) {
         toast({
-          title: 'Изменения сохранены!', variant: 'positive',
+          title: 'Изменения применены', variant: 'positive',
         });
         
         return data;
       }
     },
-    onError: (e) => { throw new Error(e.message) },
+    onError: (e) => { throw new Error(e.message); },
   });
   
   return { updateFieldMutation };

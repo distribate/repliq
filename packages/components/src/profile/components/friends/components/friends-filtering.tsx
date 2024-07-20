@@ -11,7 +11,9 @@ type FriendsFilteringProps = {
 export const FriendsFiltering = ({
 	nickname
 }: FriendsFilteringProps) => {
-	const { data: friends } = friendsQuery(nickname);
+	const { data: friends } = friendsQuery({
+		nickname
+	});
 	
 	if (friends && !friends.length) return null;
 	

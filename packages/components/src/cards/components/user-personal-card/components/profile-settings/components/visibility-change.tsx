@@ -47,6 +47,7 @@ export const ProfileVisibilityChange = ({
 	
 	return (
 		<DropdownWrapper
+			properties={{ contentAlign: 'end', sideAlign: 'right' }}
 			trigger={
 				<Typography className="text-base">
 					{profileVisibilityType}

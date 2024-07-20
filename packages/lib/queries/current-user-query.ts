@@ -2,14 +2,17 @@ import { keepPreviousData, QueryKey, useQuery } from "@tanstack/react-query";
 import { getUserInformation } from "./get-user-information.ts";
 import { USER } from "@repo/types/entities/entities-type.ts"
 import { DonateType } from "@repo/components/src/user/components/donate/queries/get-user-donate.ts";
+import { UserPreferences } from '../helpers/convert-user-preferences-to-map.ts';
 
 export const CURRENT_USER_QUERY_KEY: QueryKey = ["user", "current"]
 
 export type CurrentUser = Omit<USER, "created_at"
 	| "uuid"
 	| "acceptrules"
+	| "preferences"
 > & {
-	donate: DonateType["primary_group"] | null
+	donate: DonateType["primary_group"] | null,
+	preferences: UserPreferences
 }
 
 export const currentUserQuery = () => {

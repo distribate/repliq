@@ -1,0 +1,1 @@
+{"type":"object","properties":{"user_id":{"description":"Note:\nThis is a Primary Key.<pk/>","type":"string","format":"text"}},"required":["user_id"],"x-readme-ref-name":"users_settings"}

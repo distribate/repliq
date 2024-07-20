@@ -17,6 +17,7 @@ import { useAuth } from "../hooks/use-auth.tsx";
 import { AUTH_QUERY_KEY, AuthQuery, authQuery } from "../queries/auth-query.ts";
 import Link from "next/link";
 import { GearLoader } from "@repo/ui/src/components/gear-loader.tsx";
+import { AUTH_REDIRECT } from '@repo/shared/constants/routes.ts';
 
 const SignUpFormTitle = () => {
 	return (
@@ -80,7 +81,7 @@ export const SignUpForm = () => {
 	}
 	
 	const handleRedirect = () => {
-		replace("/auth?type=login");
+		replace(AUTH_REDIRECT);
 		
 		return qc.resetQueries({
 			queryKey: AUTH_QUERY_KEY
@@ -171,6 +172,8 @@ export const SignUpForm = () => {
 					<div className="flex items-center gap-x-2">
 						<Button
 							variant='minecraft'
+							rounded="none"
+							className="hover:bg-pink-900 bg-pink-800 hover:bg-pink-700"
 							disabled={!isValid || setAuthValuesMutation.isPending}
 						>
 							<span className="text-shark-50 text-md uppercase font-semibold">

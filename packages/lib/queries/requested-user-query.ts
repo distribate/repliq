@@ -1,15 +1,13 @@
 import { useQuery } from "@tanstack/react-query";
-import { getRequestedUser } from "./get-requested-user.ts";
+import { getRequestedUser, RequestedUser } from './get-requested-user.ts';
 
 export const REQUESTED_USER_QUERY_KEY = (nickname?: string) => {
 	return [ "user", "requested", nickname ]
 }
 
 export const requestedUserQuery = (nickname?: string) => {
-	return useQuery({
+	return useQuery<RequestedUser | string, Error>({
 		queryKey: REQUESTED_USER_QUERY_KEY(nickname),
-		queryFn: () => getRequestedUser({
-			nickname: nickname
-		})
+		queryFn: () => getRequestedUser({ nickname })
 	})
 }

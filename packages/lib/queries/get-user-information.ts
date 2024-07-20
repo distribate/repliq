@@ -3,6 +3,7 @@
 import { createClient } from "../utils/supabase/server.ts";
 import { getCurrentUser } from "../actions/get-current-user.ts";
 import { DonateType, getUserDonate } from "@repo/components/src/user/components/donate/queries/get-user-donate.ts";
+import { convertUserPreferencesToObject, UserPreferences } from '../helpers/convert-user-preferences-to-map.ts';
 
 export async function getUserInformation() {
 	const supabase = createClient();
@@ -37,5 +38,9 @@ export async function getUserInformation() {
 	if (donate) userDonate = donate;
 	if (error) throw error;
 	
-	return { ...data, donate: userDonate };
+	return {
+		...data,
+		preferences: convertUserPreferencesToObject(data.preferences) as UserPreferences,
+		donate: userDonate
+	};
 }

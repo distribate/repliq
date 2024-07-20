@@ -1,21 +1,27 @@
 import { Button } from "@repo/ui/src/components/button.tsx";
 import { useControlFriend } from "../hooks/use-control-friend.ts";
-import { User } from "lucia";
+import { CURRENT_USER_QUERY_KEY } from '@repo/lib/queries/current-user-query.ts';
+import { useQueryClient } from '@tanstack/react-query';
+import { USER } from '@repo/types/entities/entities-type.ts';
 
 export type FriendButtonProps = {
-	currentUser: User,
-	requestedUserNickname: string
+	reqUserNickname: string
 }
 
 export const OutgoingFriendButton = ({
-	requestedUserNickname, currentUser
+	reqUserNickname
 }: FriendButtonProps) => {
+	const qc = useQueryClient();
+	const currentUser = qc.getQueryData<USER>(CURRENT_USER_QUERY_KEY)
+	
 	const { removeRequestMutation } = useControlFriend()
+	
+	if (!currentUser) return;
 	
 	const handleDeniedFriendReq = () => {
 		removeRequestMutation.mutate({
 			currentUserNickname: currentUser.nickname,
-			requestedUserNickname: requestedUserNickname
+			requestedUserNickname: reqUserNickname
 		})
 	}
 	

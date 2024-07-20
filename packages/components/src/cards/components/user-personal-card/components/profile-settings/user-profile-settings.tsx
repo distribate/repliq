@@ -1,35 +1,38 @@
-import { currentUserQuery } from '@repo/lib/queries/current-user-query.ts';
+import { CURRENT_USER_QUERY_KEY, CurrentUser } from '@repo/lib/queries/current-user-query.ts';
 import { Typography } from '@repo/ui/src/components/typography.tsx';
 import { Separator } from '@repo/ui/src/components/separator.tsx';
 import { ImageWrapper } from '../../../../../wrappers/image-wrapper.tsx';
 import { DescriptionInput } from './components/description-input.tsx';
 import { ProfileVisibilityChange } from './components/visibility-change.tsx';
 import { HoverCardItem } from '@repo/ui/src/components/hover-card.tsx';
-import { DialogWrapper } from '../../../../../wrappers/dialog-wrapper.tsx';
-import { NicknameColorPicker } from './components/nickname-color-picker.tsx';
-import { RealNameChange } from './components/real-name-change.tsx';
 import { DateBirthdayPicker } from './components/date-birthday-picker.tsx';
 import { DropdownWrapper } from '../../../../../wrappers/dropdown-wrapper.tsx';
+import { OutlineCover } from './components/outline-cover.tsx';
+import { useQueryClient } from '@tanstack/react-query';
 
 import Firework from '@repo/assets/images/minecraft/firework.webp';
 import BlueDye from '@repo/assets/images/minecraft/blue_dye.webp';
 import Nametag from '@repo/assets/images/minecraft/nametag.webp';
 import Barrier from '@repo/assets/images/minecraft/barrier.webp';
-import DiamondPickaxe from "@repo/assets/images/minecraft/diamond_pickaxe.webp"
-import Lead from "@repo/assets/images/minecraft/lead.webp"
+import DiamondPickaxe from '@repo/assets/images/minecraft/diamond_pickaxe.webp';
+import Lead from '@repo/assets/images/minecraft/lead.webp';
+import { RealNameChangeModal } from '../../../../../modals/user-settings/real-name-change-modal.tsx';
+import { NicknameColorPickerModal } from '../../../../../modals/user-settings/nickname-color-picker-modal.tsx';
+import { FavoriteItemModal } from '../../../../../modals/user-settings/favorite-item-modal.tsx';
 
 export const UserProfileSettings = () => {
-  const { data: currentUser } = currentUserQuery();
+  const qc = useQueryClient()
+  const currentUser = qc.getQueryData<CurrentUser>(CURRENT_USER_QUERY_KEY)
   
   if (!currentUser) return null;
   
-  const { nickname, name_color, visibility, birthday, donate, real_name } = currentUser;
-  
+  const { nickname, name_color, visibility, favorite_item, birthday, donate, real_name } = currentUser;
+
   const isAccess = donate !== 'default';
   
   return (
     <div className="flex flex-col gap-y-4 items-center w-full">
-      <Typography className="text-xl text-shark-50 font-semibold">Профиль</Typography>
+      <Typography variant="dialogTitle">Профиль</Typography>
       <div className="flex flex-col w-full gap-y-4">
         <DescriptionInput />
         <div className="flex flex-col bg-white/10 w-full py-2 px-4">
@@ -68,7 +71,7 @@ export const UserProfileSettings = () => {
           </div>
           <div className="w-fit">
             <DropdownWrapper
-              properties={{ contentAlign: "end", sideAlign: "right" }}
+              properties={{ contentAlign: 'end', sideAlign: 'right' }}
               trigger={
                 <Typography className="text-base">
                   {birthday ? birthday.toString() : `не указано`}
@@ -86,18 +89,7 @@ export const UserProfileSettings = () => {
             />
             <Typography className="text-base">Реальное имя:</Typography>
           </div>
-          <DialogWrapper
-            name="real-name-change"
-            trigger={
-              <div className="flex items-center gap-1">
-                <Typography className="text-base">
-                  {real_name ? real_name : 'не указано'}
-                </Typography>
-              </div>
-            }
-          >
-            <RealNameChange />
-          </DialogWrapper>
+          <RealNameChangeModal real_name={real_name}/>
         </HoverCardItem>
         
         {/* with donate access*/}
@@ -117,20 +109,7 @@ export const UserProfileSettings = () => {
                 />
                 <Typography className="text-base">Цвет никнейма</Typography>
               </div>
-              <DialogWrapper
-                name="nickname-color-picker"
-                properties={{ dialogContentClassName: 'min-w-[650px]', }}
-                trigger={
-                  <div className="flex items-center gap-1">
-                    <div className="w-4 h-4" style={{ backgroundColor: name_color, }} />
-                    <Typography className="text-base">
-                      {name_color.toString()}
-                    </Typography>
-                  </div>
-                }
-              >
-                <NicknameColorPicker nickname={nickname} name_color={name_color} />
-              </DialogWrapper>
+             <NicknameColorPickerModal nickname={nickname} name_color={name_color}/>
             </HoverCardItem>
             <HoverCardItem className="justify-between w-full">
               <div className="flex gap-x-2 items-center grow">
@@ -142,18 +121,9 @@ export const UserProfileSettings = () => {
                   Обводка вокруг шапки профиля
                 </Typography>
               </div>
-              <DialogWrapper
-                name="outline-profile-cover"
-                trigger={
-                  <div className="flex items-center gap-1">
-                    <Typography className="text-base">
-                      выкл
-                    </Typography>
-                  </div>
-                }
-              >
-                цвет
-              </DialogWrapper>
+              <div className="w-fit">
+                <OutlineCover />
+              </div>
             </HoverCardItem>
             <HoverCardItem className="justify-between w-full">
               <div className="flex gap-x-2 items-center grow">
@@ -165,18 +135,7 @@ export const UserProfileSettings = () => {
                   Любимый предмет
                 </Typography>
               </div>
-              <DialogWrapper
-                name="favorite_item"
-                trigger={
-                  <div className="flex items-center gap-1">
-                    <Typography className="text-base">
-                      ...
-                    </Typography>
-                  </div>
-                }
-              >
-                список
-              </DialogWrapper>
+             <FavoriteItemModal favorite_item={favorite_item}/>
             </HoverCardItem>
           </>
         )}

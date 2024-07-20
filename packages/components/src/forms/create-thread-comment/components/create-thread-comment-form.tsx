@@ -18,10 +18,11 @@ import { FormField } from "@repo/ui/src/components/form-field.tsx";
 import { Textarea } from "@repo/ui/src/components/textarea.tsx";
 import { Button } from "@repo/ui/src/components/button.tsx";
 import { SendHorizontal } from "lucide-react";
-import { currentUserQuery } from "@repo/lib/queries/current-user-query.ts";
+import { CURRENT_USER_QUERY_KEY, CurrentUser } from '@repo/lib/queries/current-user-query.ts';
 import {
 	createThreadCommentQuery
 } from "../queries/create-thread-comment-query.ts";
+import { useQueryClient } from '@tanstack/react-query';
 
 const createThreadCommentFormVariants = cva(
 	"flex flex-col border-white/10 bg-shark-950 overflow-hidden w-full h-full", {
@@ -37,15 +38,14 @@ const createThreadCommentFormVariants = cva(
 	}
 )
 
-interface CreateThreadCommentFormProps extends HTMLAttributes<HTMLFormElement>,
+interface CreateThreadCommentFormProps
+	extends HTMLAttributes<HTMLFormElement>,
 	VariantProps<typeof createThreadCommentFormVariants> {}
 
 const Form = forwardRef<
 	HTMLFormElement, CreateThreadCommentFormProps
 >(({
-	className,
-	variant,
-	...props
+	className, variant, ...props
 }, ref) => {
 	return (
 		<form
@@ -63,7 +63,9 @@ type CreateThreadCommentProps = {
 export const CreateThreadCommentForm = ({
 	thread_id
 }: CreateThreadCommentProps) => {
-	const { data: currentUser } = currentUserQuery()
+	const qc = useQueryClient();
+	const currentUser = qc.getQueryData<CurrentUser>(CURRENT_USER_QUERY_KEY)
+	
 	const { data: createThreadCommentState } = createThreadCommentQuery()
 	
 	const {

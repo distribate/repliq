@@ -6,19 +6,25 @@ export const FRIENDS_QUERY_KEY = (nickname?: string) => {
 	return [ "user", "friends", nickname ]
 }
 
-export const friendsQuery = (
-	nickname?: string,
-) => {
+export type FriendsQuery = {
+	nickname: string,
+	description: string,
+	status: string,
+	name_color: string,
+}
+
+export const friendsQuery = ({
+	nickname
+}: Pick<FriendsQuery, "nickname">) => {
 	const { data: friendSortType } = friendsSortQuery()
 	
-	return useQuery({
+	return useQuery<FriendsQuery[], Error>({
 		queryKey: FRIENDS_QUERY_KEY(nickname),
 		queryFn: () => getFriends({
-			nickname: nickname,
-			orderType: friendSortType.type
+			nickname: nickname, orderType: friendSortType.type
 		}),
-		refetchOnWindowFocus: true,
-		retry: 2,
+		initialData: [],
+		refetchOnWindowFocus: false,
 		placeholderData: keepPreviousData,
 		enabled: !!nickname
 	})
