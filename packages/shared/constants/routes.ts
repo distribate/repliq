@@ -3,4 +3,6 @@ export const SKIN_GET_HEAD = "http://localhost:8000/get-head/"
 
 export const REDIRECT_USER_NOT_EXIST = "/user-not-exist?redirect_nickname="
 export const THREAD_URL = "/thread/"
+export const USER_URL = "/user/"
+export const CATEGORY_URL = "/category/"
 export const AUTH_REDIRECT = "/auth?type=login"

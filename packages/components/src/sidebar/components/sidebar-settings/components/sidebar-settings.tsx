@@ -6,10 +6,6 @@ import { PanelsTopLeft } from 'lucide-react';
 import { HoverCardItem } from '@repo/ui/src/components/hover-card.tsx';
 import { SIDEBAR_FORMATS } from '../constants/sidebar-formats.ts';
 import { DropdownWrapper } from '../../../../wrappers/dropdown-wrapper.tsx';
-import { DialogWrapper } from '../../../../wrappers/dialog-wrapper.tsx';
-import {
-  LogoutConfirmation,
-} from '../../../../modals/action-confirmation/components/logout/components/logout-confirmation.tsx';
 import { NavigationBar } from '../../sidebar-content/navigation/navigation-bar.tsx';
 import { SidebarFormat, sidebarLayoutQuery } from '../../sidebar-layout/queries/sidebar-layout-query.ts';
 import { useSidebarControl } from '../../sidebar-layout/hooks/use-sidebar-control.ts';
@@ -51,8 +47,7 @@ export const SidebarSettings = () => {
                         onClick={(e) => {
                           e.preventDefault();
                           updateSidebarPropertiesMutation.mutate({
-                            type: 'format',
-                            values: { format: format.value },
+                            type: 'format', values: { format: format.value },
                           });
                         }}
                       >
@@ -64,16 +59,13 @@ export const SidebarSettings = () => {
                   </div>
                 }
               />
-              <DialogWrapper
-                name="logout-confirm"
+              <LogoutModal
                 trigger={
                   <HoverCardItem>
                     <Typography className="text-red-400 text-sm">Выйти из аккаунта</Typography>
                   </HoverCardItem>
                 }
-              >
-                <LogoutConfirmation />
-              </DialogWrapper>
+              />
             </div>
           } />
       ) : (
@@ -122,11 +114,7 @@ export const SidebarSettings = () => {
                 }
               />
             </div>
-            <LogoutModal
-              trigger={
-                <LogOut size={18} className="text-shark-300 hover:text-pink-500 cursor-pointer" />
-              }
-            />
+            <LogoutModal trigger={<LogOut size={18} className="text-shark-300 hover:text-pink-500 cursor-pointer" />} />
           </div>
         </>
       )}

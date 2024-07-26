@@ -1,9 +1,9 @@
 import { Typography } from '@repo/ui/src/components/typography.tsx';
-import {
-  RealNameChange
-} from '../../cards/components/user-personal-card/components/profile-settings/components/real-name-change.tsx';
 import { DialogWrapper } from '../../wrappers/dialog-wrapper.tsx';
 import { USER } from '@repo/types/entities/entities-type.ts';
+import {
+  RealNameChange
+} from '../../cards/components/user-personal-card/components/profile-settings/components/real-name-change/components/real-name-change.tsx';
 
 export const REAL_NAME_CHANGE_MODAL_NAME = "real-name-change"
 

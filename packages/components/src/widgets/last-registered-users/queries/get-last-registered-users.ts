@@ -34,7 +34,7 @@ export async function getLastUsers(): Promise<GetLastUsers[] | null> {
     const user = data[i];
     
     const banStatus = await getUserBanned({
-      reqUserNickname: user.nickname,
+      nickname: user.nickname,
     });
     
     if (!banStatus || banStatus.nickname !== user.nickname) users?.push(user);

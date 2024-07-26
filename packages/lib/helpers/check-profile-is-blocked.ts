@@ -23,9 +23,9 @@ async function getUserBlockStatus({
   return data;
 }
 
-export async function checkProfileIsBlocked({
-  requestedUser
-}: Pick<CheckProfileStatus, "requestedUser">): Promise<{ user_1: string, user_2: string } | null> {
+export async function checkProfileIsBlocked(
+  requestedUser: Pick<CheckProfileStatus, "requestedUser">["requestedUser"]
+): Promise<{ user_1: string, user_2: string } | null> {
   const requestedUserNickname = requestedUser.nickname;
   
   if (!requestedUserNickname) return null;

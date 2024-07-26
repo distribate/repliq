@@ -14,7 +14,7 @@ export const GameStatsVisibility = () => {
   
   if (!currentUser) return;
   
-  const preferences = currentUser.preferences;
+  const preferences = currentUser.properties.preferences;
   const preferGameStats = getPreferenceValue(preferences, "gameStatsVisibility")
   
   const handleGameStatsPrefer = (

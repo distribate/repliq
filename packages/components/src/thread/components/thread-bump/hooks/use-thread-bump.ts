@@ -11,7 +11,7 @@ export const useThreadBump = () => {
       if (!values) return;
       
       return updateThreadRating({
-        thread_id: values.thread_id, type: values.type
+        threadId: values.threadId, type: values.type
       })
     },
     onSuccess: async (data, variables, context) => {
@@ -34,7 +34,7 @@ export const useThreadBump = () => {
       }
       
       await qc.invalidateQueries({
-        queryKey: THREAD_RATING_QUERY_KEY(variables.thread_id)
+        queryKey: THREAD_RATING_QUERY_KEY(variables.threadId)
       })
     },
     onError: (e) => { throw new Error(e.message) }

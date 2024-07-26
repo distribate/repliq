@@ -9,9 +9,9 @@ export type PostComments = {
 
 type POST_COMMENT = Tables<'p_comments'>
 
-export async function getPostsComments ({
-  post_id
-}: PostComments) {
+export async function getPostsComments (
+  post_id: PostComments["post_id"]
+): Promise<POST_COMMENT[]> {
   const supabase = createClient();
   
   const { data, error } = await supabase
@@ -21,9 +21,5 @@ export async function getPostsComments ({
   
   if (error) throw new Error(error.message)
   
-  const comments: POST_COMMENT[] = data.map(
-    item => item.p_comments
-  ).flat();
-  
-  return comments
+  return data.flatMap(item => item.p_comments);
 }

@@ -1,10 +1,6 @@
 import { createClient } from '../utils/supabase/server.ts';
 
-export async function getCategory({
-  category_id
-}: {
-  category_id?: string
-}) {
+export async function getCategory(category_id: string) {
   const supabase = createClient();
   
   const { data, error } = await supabase
@@ -15,7 +11,7 @@ export async function getCategory({
   
   if (error) {
     console.error(error.message);
-    throw new Error(error.message);
+    return null
   }
   
   return data;

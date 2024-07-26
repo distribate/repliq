@@ -806,20 +806,20 @@ export type Database = {
       threads_pinned: {
         Row: {
           id: number
-          threads_id: string
+          thread_id: string
         }
         Insert: {
           id?: number
-          threads_id: string
+          thread_id: string
         }
         Update: {
           id?: number
-          threads_id?: string
+          thread_id?: string
         }
         Relationships: [
           {
             foreignKeyName: "public_threads_pinned_threads_id_fkey"
-            columns: ["threads_id"]
+            columns: ["thread_id"]
             isOneToOne: false
             referencedRelation: "threads"
             referencedColumns: ["id"]
@@ -920,7 +920,7 @@ export type Database = {
       }
       users: {
         Row: {
-          acceptrules: boolean | null
+          accept_rules: boolean | null
           birthday: string | null
           cover_image: string | null
           created_at: string
@@ -936,7 +936,7 @@ export type Database = {
           visibility: Database["public"]["Enums"]["profile_visibility"]
         }
         Insert: {
-          acceptrules?: boolean | null
+          accept_rules?: boolean | null
           birthday?: string | null
           cover_image?: string | null
           created_at?: string
@@ -952,7 +952,7 @@ export type Database = {
           visibility?: Database["public"]["Enums"]["profile_visibility"]
         }
         Update: {
-          acceptrules?: boolean | null
+          accept_rules?: boolean | null
           birthday?: string | null
           cover_image?: string | null
           created_at?: string
@@ -1005,20 +1005,20 @@ export type Database = {
         Row: {
           created_at: string
           id: number
-          user_1: string | null
-          user_2: string | null
+          user_1: string
+          user_2: string
         }
         Insert: {
           created_at?: string
           id?: number
-          user_1?: string | null
-          user_2?: string | null
+          user_1: string
+          user_2: string
         }
         Update: {
           created_at?: string
           id?: number
-          user_1?: string | null
-          user_2?: string | null
+          user_1?: string
+          user_2?: string
         }
         Relationships: [
           {
@@ -1067,6 +1067,38 @@ export type Database = {
           {
             foreignKeyName: "public_users_friends_user_2_fkey"
             columns: ["user_2"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["nickname"]
+          },
+        ]
+      }
+      users_requests_timeout: {
+        Row: {
+          created_at: string
+          id: number
+          issued_at: string
+          type: Database["public"]["Enums"]["request_timeout_type"] | null
+          user_nickname: string | null
+        }
+        Insert: {
+          created_at?: string
+          id?: number
+          issued_at: string
+          type?: Database["public"]["Enums"]["request_timeout_type"] | null
+          user_nickname?: string | null
+        }
+        Update: {
+          created_at?: string
+          id?: number
+          issued_at?: string
+          type?: Database["public"]["Enums"]["request_timeout_type"] | null
+          user_nickname?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "public_users_requests_timeout_user_nickname_fkey"
+            columns: ["user_nickname"]
             isOneToOne: false
             referencedRelation: "users"
             referencedColumns: ["nickname"]
@@ -1243,6 +1275,11 @@ export type Database = {
       profile_visibility: "all" | "friends"
       report_reason: "spam" | "offensive"
       report_type: "comment" | "post" | "thread" | "account"
+      request_timeout_type:
+        | "description"
+        | "favorite_item"
+        | "real_name"
+        | "name_color"
       thread_rating_type: "decrement" | "increment"
     }
     CompositeTypes: {

@@ -14,7 +14,7 @@ export const DeleteBackgroundImageButton = () => {
 	return (
 		<Button
 			onClick={() => deleteBackgroundImageMutation.mutate()}
-			disabled={!currentUser.cover_image}
+			disabled={!currentUser.properties.cover_image}
 			className="gap-2 items-center justify-start"
 		>
 			<X size={16} className="text-shark-300"/>

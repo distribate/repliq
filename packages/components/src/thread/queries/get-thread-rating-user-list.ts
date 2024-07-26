@@ -18,7 +18,5 @@ export async function getThreadRatingUserList({
   
   if (userListByRatingError) return null;
   
-  return userListByRating.map(
-    item => item.users
-  ).flat()
+  return userListByRating.flatMap(item => item.users)
 }

@@ -1,5 +1,5 @@
 import { useThreadControl } from '../../../../../thread/components/thread-control/hooks/use-thread-control.ts';
-import { ThreadModel } from '../../../../../thread/queries/get-thread.ts';
+import { ThreadModel } from '../../../../../thread/queries/get-thread-model.ts';
 import { useDialog } from '@repo/lib/hooks/use-dialog.ts';
 import { ConfirmationActionModalTemplate } from '../../../../../templates/confirmation-action-modal-template.tsx';
 import { ConfirmationButton } from '../../../../../buttons/confirmation-action-button.tsx';

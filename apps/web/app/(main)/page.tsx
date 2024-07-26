@@ -13,6 +13,8 @@ import {
 	MainCategoriesListSkeleton
 } from '@repo/components/src/categories/components/main-categories-list-skeleton.tsx';
 
+export const dynamic = 'force-dynamic'
+
 export default async function MainPage() {
 	const { user } = await validateRequest();
 	

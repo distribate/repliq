@@ -1,9 +1,25 @@
 "use server"
 
 import { createClient } from '@repo/lib/utils/supabase/server.ts';
+import { ThreadRequest } from '../types/thread-request-types.ts';
 
 type ThreadImages = {
   thread_id: string
+}
+
+export async function getThreadImagesCount(
+  thread_id: Pick<ThreadRequest, 'thread_id'>["thread_id"]
+) {
+  const supabase = createClient();
+  
+  const { count, error } = await supabase
+  .from('threads_images')
+  .select('images', { count: 'exact', })
+  .eq('thread_id', thread_id);
+  
+  if (error) return null;
+  
+  return count;
 }
 
 export async function getThreadsImages({

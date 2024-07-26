@@ -14,7 +14,7 @@ export const RealNameVisibility = () => {
   
   if (!currentUser) return;
   
-  const preferences = currentUser.preferences;
+  const preferences = currentUser.properties.preferences;
   const preferRealName = getPreferenceValue(preferences, "realNameVisibility")
   
   const handleRealNamePrefer = (

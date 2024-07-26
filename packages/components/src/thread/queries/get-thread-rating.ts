@@ -10,31 +10,31 @@ type ThreadRatingTable = Tables<'threads_rating'>;
 
 export type ThreadRatingResponse = {
   increment: number,
-  decrement: number
-} & Partial<{
+  decrement: number,
   currentType: UpdateThreadRatingType
-}>
+}
 
-type ThreadRating = Pick<ThreadRequest, 'thread_id'>
+type ThreadRating = Pick<ThreadRequest, 'thread_id'>["thread_id"]
 
-export async function getThreadRating({
-  thread_id,
-}: ThreadRating): Promise<ThreadRatingResponse | null> {
+export async function getThreadRating(
+  threadId: ThreadRating
+): Promise<ThreadRatingResponse | null> {
   const supabase = createClient();
-  
   const currentUser = await getCurrentUser();
+  
+  if (!currentUser) return null;
   
   const [ currentType, rating ] = await Promise.all([
     supabase
     .from('threads_rating')
     .select('type')
-    .eq('thread_id', thread_id)
+    .eq('thread_id', threadId)
     .eq('user_id', currentUser?.id)
     .single(),
     supabase
     .from('threads_rating')
     .select('*')
-    .eq('thread_id', thread_id)
+    .eq('thread_id', threadId)
     .returns<ThreadRatingTable[]>(),
   ]);
   
@@ -44,8 +44,8 @@ export async function getThreadRating({
   if (error) return null;
   
   return {
-    increment: data?.filter(item => item.type === 'increment').length,
-    decrement: data?.filter(item => item.type === 'decrement').length,
+    increment: data.filter(item => item.type === 'increment').length || 0,
+    decrement: data.filter(item => item.type === 'decrement').length || 0,
     currentType: current?.type as UpdateThreadRatingType,
   };
 }

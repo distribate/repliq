@@ -1,7 +1,7 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { USER } from '@repo/types/entities/entities-type.ts';
 import { UpdateUserFields, updateUserFields } from '../queries/update-user-fields.ts';
-import { CURRENT_USER_QUERY_KEY, currentUserQuery } from '../queries/current-user-query.ts';
+import { CURRENT_USER_QUERY_KEY, CurrentUser } from '../queries/current-user-query.ts';
 import { REQUESTED_USER_QUERY_KEY } from '../queries/requested-user-query.ts';
 import { toast } from '@repo/ui/src/hooks/use-toast.ts';
 import { DONATE_QUERY_KEY } from '@repo/components/src/user/components/donate/queries/donate-query.ts';
@@ -24,8 +24,7 @@ export type UpdateCurrentUser = {
 
 export const useUpdateCurrentUser = () => {
   const qc = useQueryClient();
-  
-  const { data: currentUser } = currentUserQuery();
+  const currentUser = qc.getQueryData<CurrentUser>(CURRENT_USER_QUERY_KEY);
   
   const updateFieldMutation = useMutation({
     mutationFn: async(values: UpdateCurrentUser) => {
@@ -45,7 +44,7 @@ export const useUpdateCurrentUser = () => {
           preferences: {
             key: preferences?.key,
             value: parseStringToBoolean(value),
-            oldPreferences: currentUser.preferences,
+            oldPreferences: currentUser.properties.preferences,
           },
         });
       } else {
@@ -76,6 +75,14 @@ export const useUpdateCurrentUser = () => {
       if (data.status === 200 && data) {
         toast({
           title: 'Изменения применены', variant: 'positive',
+        });
+        
+        return data;
+      }
+      
+      if (data.status === 400 && data.data === 'Timeout') {
+        toast({
+          title: 'Слишком частое изменение поля', variant: 'negative',
         });
         
         return data;

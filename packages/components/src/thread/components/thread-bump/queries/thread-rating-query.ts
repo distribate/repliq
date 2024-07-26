@@ -8,7 +8,7 @@ export const THREAD_RATING_QUERY_KEY = (thread_id?: string) => {
 export const threadRatingQuery = (thread_id?: string) => {
   return useQuery<ThreadRatingResponse | null, Error>({
     queryKey: THREAD_RATING_QUERY_KEY(thread_id),
-    queryFn: () => getThreadRating({ thread_id }),
+    queryFn: () => getThreadRating(thread_id),
     enabled: !!thread_id
   });
 };

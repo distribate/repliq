@@ -23,11 +23,8 @@ type NicknameColorPickerProps = Pick<USER, 'nickname' | 'name_color'>
 export const NicknameColorPicker = ({
   nickname, name_color,
 }: NicknameColorPickerProps) => {
-  const [ color, setColor ] = useState(parseColor(
-    `hsl(${parseHexToHSL(name_color)})`),
-  );
+  const [ color, setColor ] = useState(parseColor(`hsl(${parseHexToHSL(name_color)})`));
   const [ finalColor, setFinalColor ] = useState(color);
-  
   const { removeDialogMutation } = useDialog();
   const { updateFieldMutation } = useUpdateCurrentUser();
   

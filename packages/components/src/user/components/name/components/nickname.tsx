@@ -15,14 +15,14 @@ const nicknameVariants = cva("font-[Minecraft]", {
 
 export type UserNickname = {
 	nickname: string,
-	nicknameColor: string
+	nicknameColor?: string
 }
 
 interface UserNicknameProps extends HTMLAttributes<HTMLParagraphElement>,
 	VariantProps<typeof nicknameVariants>, UserNickname {}
 
 export const UserNickname = ({
-	nickname, nicknameColor, className, variant, ...props
+	nickname, nicknameColor = '#ffffff', className, variant, ...props
 }: UserNicknameProps) => {
 	return (
 		<Typography

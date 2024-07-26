@@ -3,19 +3,19 @@
 import { createClient } from '../utils/supabase/server.ts';
 
 type GetUserBanned = {
-  reqUserNickname: string
+  nickname: string
 }
 
 export async function getUserBanned({
-  reqUserNickname
+  nickname
 }: GetUserBanned) {
   const supabase = createClient();
   
   const { data, error } = await supabase
-  .from('users_banned')
-  .select('nickname')
-  .eq("nickname", reqUserNickname)
-  .single()
+  .from("users_banned")
+  .select("nickname, reason, time")
+  .eq('nickname', nickname)
+  .single();
   
   if (error) return null;
   

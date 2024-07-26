@@ -11,20 +11,35 @@ import { UserContentSkeleton } from '@repo/components/src/skeletons/user-content
 import { ProfilePrivated } from '@repo/components/src/templates/profile-privated.tsx';
 import { UserSkin } from '@repo/components/src/profile/components/skin/skin.tsx';
 import { checkProfileStatus } from '@repo/lib/helpers/check-profile-status.ts';
-import { UserBanned } from '@repo/components/src/templates/user-banned.tsx';
 import { getBanDetails } from '@repo/lib/helpers/get-ban-details.ts';
 import { UserBlocked } from '@repo/components/src/templates/user-blocked.tsx';
 import { Separator } from '@repo/ui/src/components/separator.tsx';
 import { Asterisk } from '@repo/ui/src/components/asterisk.tsx';
-import {
-  UserPostsSection
-} from '@repo/components/src/profile/components/posts/components/users-posts/components/user-posts-section.tsx';
-import { UserFriendsSection } from '@repo/components/src/profile/components/friends/friends.tsx';
-import { UserTopics } from '@repo/components/src/profile/components/threads/threads.tsx';
-import { UserGameStats } from '@repo/components/src/profile/components/stats/stats/stats.tsx';
+import { UserPostsSection } from '@repo/components/src/profile/components/posts/components/users-posts/components/user-posts-section.tsx';
 import { validateRequest } from '@repo/lib/utils/auth/validate-requests.ts';
 import { checkUserGameStatsVisibility } from '@repo/lib/helpers/check-user-game-stats-visibility.ts';
 import { protectPrivateArea } from '@repo/lib/helpers/protect-private-area.ts';
+import dynamic from 'next/dynamic';
+
+const UserFriendsSection = dynamic(() =>
+  import("@repo/components/src/profile/components/friends/friends.tsx")
+  .then(m => m.UserFriendsSection)
+)
+
+const UserTopics = dynamic(() =>
+  import("@repo/components/src/profile/components/threads/threads.tsx")
+  .then(m => m.UserTopics)
+)
+
+const UserGameStats = dynamic(() =>
+  import("@repo/components/src/profile/components/stats/stats/stats.tsx")
+  .then(m => m.UserGameStats)
+)
+
+const UserBanned = dynamic(() =>
+  import("@repo/components/src/templates/user-banned.tsx")
+  .then(m => m.UserBanned)
+)
 
 export async function generateMetadata({
   params,
@@ -39,11 +54,13 @@ export async function generateMetadata({
 }
 
 export default async function ProfilePage({
-  params,
+  params
 }: PageConventionProps) {
-  const qc = new QueryClient();
-  const { user } = await validateRequest()
+  if (!params) return;
   
+  const qc = new QueryClient();
+  
+  const { user } = await validateRequest()
   if (!user) return;
   
   const { nickname: requestedUserNickname } = params;
@@ -65,7 +82,7 @@ export default async function ProfilePage({
     queryFn: () => getRequestedUser({ nickname: requestedUserNickname }),
   });
   
-  const profileStatus = await checkProfileStatus({ requestedUser });
+  const profileStatus = await checkProfileStatus(requestedUser);
   
   if (profileStatus === 'banned') {
     const banDetails = await getBanDetails({
@@ -78,7 +95,7 @@ export default async function ProfilePage({
   const isBlocked = profileStatus === 'blocked';
   const isPrivated = profileStatus === 'private';
 
-  const isGameStatsShow = await checkUserGameStatsVisibility({
+  const isGameStatsShow = checkUserGameStatsVisibility({
     reqUserNickname: requestedUserNickname, preferences, currentUserNickname
   })
   

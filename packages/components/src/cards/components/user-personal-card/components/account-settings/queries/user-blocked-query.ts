@@ -11,6 +11,6 @@ export const userBlockedQuery = ({
   nickname
 }: UserBlockedQuery) => useQuery({
   queryKey: USER_BLOCKED_QUERY_KEY(nickname),
-  queryFn: () => getUserBlocked({ nickname }),
+  queryFn: () => getUserBlocked(nickname),
   refetchOnWindowFocus: false
 })

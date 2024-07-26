@@ -15,12 +15,10 @@ export const OutlineCover = () => {
   
   if (!currentUser) return;
   
-  const preferences = currentUser.preferences;
+  const preferences = currentUser.properties.preferences;
   const preferOutline = getPreferenceValue(preferences, "coverOutline")
   
-  const handleOutlinePrefer = (
-    e: React.MouseEvent<HTMLDivElement>, value: boolean,
-  ) => {
+  const handleOutlinePrefer = (e: React.MouseEvent<HTMLDivElement>, value: boolean) => {
     e.preventDefault();
     
     updateFieldMutation.mutate({

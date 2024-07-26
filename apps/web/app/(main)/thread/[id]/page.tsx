@@ -1,13 +1,11 @@
 import { Metadata } from 'next';
 import { MetadataType, PageConventionProps } from '@repo/types/config/page-types.ts';
-import { getThread } from '@repo/components/src/thread/queries/get-thread.ts';
 import { Separator } from '@repo/ui/src/components/separator.tsx';
 import { getTopicName } from '@repo/lib/queries/get-thread-name.ts';
 import { BlockWrapper } from '@repo/components/src/wrappers/block-wrapper.tsx';
 import { ThreadControl } from '@repo/components/src/thread/components/thread-control/components/thread-control.tsx';
 import { getCurrentUser } from '@repo/lib/actions/get-current-user.ts';
 import { ThreadContent } from '@repo/components/src/thread/components/thread-content/components/thread-content.tsx';
-import { Descendant } from 'slate';
 import {
   ThreadContentSkeleton,
 } from '@repo/components/src/thread/components/thread-content/components/thread-content-skeleton.tsx';
@@ -23,6 +21,7 @@ import {
 import { ThreadComments } from '@repo/components/src/thread/components/thread-comments/components/thread-comments.tsx';
 import { ThreadImages } from '@repo/components/src/thread/components/thread-images/thread-images.tsx';
 import { Typography } from '@repo/ui/src/components/typography.tsx';
+import { getThreadModel } from '@repo/components/src/thread/queries/get-thread-model.ts';
 
 export async function generateMetadata({
   params,
@@ -33,7 +32,7 @@ export async function generateMetadata({
   
   if (!thread_id) threadTitle = ""
   
-  const title = await getTopicName({ thread_id });
+  const title = await getTopicName(thread_id);
   
   if (title) threadTitle = title.title;
   
@@ -52,8 +51,8 @@ export default async function TopicsTopicPage({
   
   if (!currentUser || !id) return null;
   
-  const thread = await getThread({
-    id, type: 'all',
+  const thread = await getThreadModel({
+    threadId: id, type: 'all',
   });
   
   if (!thread || !thread.nickname) return null;

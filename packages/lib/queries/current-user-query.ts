@@ -6,17 +6,17 @@ import { UserPreferences } from '../helpers/convert-user-preferences-to-map.ts';
 
 export const CURRENT_USER_QUERY_KEY: QueryKey = ["user", "current"]
 
-export type CurrentUser = Omit<USER, "created_at"
-	| "uuid"
-	| "acceptrules"
-	| "preferences"
-> & {
+export type CurrentUser = Omit<USER, "preferences" | "visibility" | "cover_image" | "accept_rules"> & {
 	donate: DonateType["primary_group"] | null,
-	preferences: UserPreferences
+	properties: {
+		preferences: UserPreferences,
+		visibility: Pick<USER, "visibility">["visibility"],
+		cover_image: Pick<USER, 'cover_image'>["cover_image"]
+	}
 }
 
 export const currentUserQuery = () => {
-	return useQuery<CurrentUser, Error>({
+	return useQuery<CurrentUser | null, Error>({
 		queryKey: CURRENT_USER_QUERY_KEY,
 		queryFn: () => getUserInformation(),
 		placeholderData: keepPreviousData

@@ -8,9 +8,9 @@ export type DonateType = {
 	primary_group: Enums<"donate_variants">
 }
 
-export async function getUserDonate({
-	nickname
-}: UserDonate) {
+export async function getUserDonate(
+	nickname: UserDonate["nickname"]
+) {
 	const supabase = createClient();
 	
 	const { data, error } = await supabase

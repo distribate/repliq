@@ -4,11 +4,13 @@ import { Separator } from '@repo/ui/src/components/separator.tsx';
 import { PostCommentItem } from '../../../../../../post/components/post-comment/post-comment-item.tsx';
 import { PostCommentsSkeleton } from './post-comments-skeleton.tsx';
 
+type PostCommentsProps = PostCommentsType & {
+  commentsCount: number
+}
+
 export const PostComments = ({
   post_id, commentsCount
-}: PostCommentsType & {
-  commentsCount: number
-}) => {
+}: PostCommentsProps) => {
   const { data: postComments, isLoading } = postCommentsQuery({
     post_id, comments: commentsCount >= 1
   });

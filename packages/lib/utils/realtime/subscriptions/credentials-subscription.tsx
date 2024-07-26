@@ -1,44 +1,24 @@
-"use client"
-
-import { createClient } from "../../supabase/client.ts";
-import { useQueryClient } from "@tanstack/react-query";
+import { createClient } from "../../supabase/server.ts";
 import { RealtimePostgresChangesPayload } from "@supabase/realtime-js";
 import { Tables } from "@repo/types/entities/supabase.ts"
 import { toast } from "@repo/ui/src/hooks/use-toast.ts";
 import { Typography } from "@repo/ui/src/components/typography.tsx";
-import {
-	USER_ACTIVE_SESSIONS_QUERY_KEY
-} from "@repo/components/src/cards/components/user-personal-card/components/account-settings/queries/user-sessions-query.ts";
-
-type CredentialsSubscription = {
-	user_id: string
-}
 
 type CredentialsPayload = Tables<"users_session">
+type CredentialsSubType<T extends { [key: string]: any }> = RealtimePostgresChangesPayload<T>
 
-export const credentialsSubscription = ({
-	user_id
-}: CredentialsSubscription) => {
+export const credentialsSubscription = (user_id: string) => {
 	const supabase = createClient()
-	const queryClient = useQueryClient();
-	
-	const handleNotifyAboutFriendDeleted = (
-		payload: RealtimePostgresChangesPayload<CredentialsPayload>
-	) => {
-		if (payload.eventType === 'INSERT') {
+
+	const handleNotifyAboutFriendDeleted = (pd: CredentialsSubType<CredentialsPayload>) => {
+		if (pd.eventType === 'INSERT') {
 			toast({
 				title: `Новое уведомление.`,
 				description: (
 					<div className="flex gap-1 items-center">
-						<Typography>
-							В ваш аккаунт кто-то вошёл...
-						</Typography>
+						<Typography>В ваш аккаунт кто-то вошёл...</Typography>
 					</div>
 				)
-			})
-			
-			queryClient.invalidateQueries({
-				queryKey: USER_ACTIVE_SESSIONS_QUERY_KEY
 			})
 		}
 	}

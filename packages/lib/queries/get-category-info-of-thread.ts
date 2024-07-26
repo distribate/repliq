@@ -8,9 +8,9 @@ type CategoryOfThread = {
   }
 }
 
-export async function getCategoryOfThreadTitle({
-  thread_id
-}: ThreadRequest) {
+export async function getCategoryOfThreadTitle(
+  thread_id: ThreadRequest["thread_id"]
+) {
   const supabase = createClient();
   
   const { data, error } = await supabase

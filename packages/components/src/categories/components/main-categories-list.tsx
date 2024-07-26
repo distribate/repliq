@@ -1,4 +1,4 @@
-import { CategoryBlock } from "./category-block.tsx";
+import { Category } from "./category.tsx";
 import { getCategories } from "../queries/get-categories.ts";
 import { Accordion } from "@repo/ui/src/components/accordion.tsx";
 import { SectionGlobal } from '@repo/ui/src/components/section-global.tsx';
@@ -17,9 +17,9 @@ export const MainCategoriesList = async() => {
 				]}
 			>
 				<div className="flex flex-col gap-y-4 w-full">
-					{categories.map((item, i) => (
-						<SectionGlobal key={i} variant="section">
-							<CategoryBlock id={item.id} title={item.title}/>
+					{categories.map(item => (
+						<SectionGlobal key={item.id} variant="section">
+							<Category {...item}/>
 						</SectionGlobal>
 					))}
 				</div>

@@ -15,9 +15,7 @@ export type DonateQuery = {
 async function getDonate({
   nickname,
 }: UserDonate) {
-  const donate = await getUserDonate({
-    nickname,
-  });
+  const donate = await getUserDonate(nickname);
   
   const image = await getFavoriteItem({
     nickname, type: 'nickname',

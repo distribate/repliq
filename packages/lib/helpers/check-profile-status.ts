@@ -13,10 +13,12 @@ export type CheckProfileStatus = {
 
 type ProfileStatusType = 'private' | 'banned' | 'blocked'
 
-export async function checkProfileStatus({
-  requestedUser,
-}: Pick<CheckProfileStatus, 'requestedUser'>): Promise<ProfileStatusType | null> {
+export async function checkProfileStatus(
+  requestedUser: Pick<CheckProfileStatus, 'requestedUser'>["requestedUser"]
+): Promise<ProfileStatusType | null> {
   const currentUser = await getUserInformation();
+  
+  if (!currentUser) return null;
   
   const currentUserNickname = currentUser.nickname;
   const requestedUserNickname = requestedUser.nickname;
@@ -24,15 +26,13 @@ export async function checkProfileStatus({
   if (!currentUserNickname || !requestedUserNickname) return null;
   if (currentUserNickname === requestedUserNickname) return null;
   
-  const bannedType = await checkProfileIsBanned({ requestedUser });
+  const bannedType = await checkProfileIsBanned(requestedUser.nickname);
   
   if (bannedType && bannedType.nickname === requestedUserNickname) {
     return 'banned';
   }
   
-  const blockedType = await checkProfileIsBlocked({
-    requestedUser
-  });
+  const blockedType = await checkProfileIsBlocked(requestedUser);
   
   if (blockedType && blockedType.user_2 === currentUserNickname) {
     return 'blocked';

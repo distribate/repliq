@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { ThreadModel } from '../../../queries/get-thread.ts';
+import { ThreadModel } from '../../../queries/get-thread-model.ts';
 import { CURRENT_USER_QUERY_KEY, CurrentUser } from '@repo/lib/queries/current-user-query.ts';
 import { THREAD_RATING_QUERY_KEY } from '../../thread-bump/queries/thread-rating-query.ts';
 import { updateThreadFields } from '../queries/update-thread-fields.ts';

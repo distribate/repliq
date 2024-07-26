@@ -46,9 +46,7 @@ export const useSidebarControl = () => {
 				})
 			}
 		},
-		onSuccess: async() => {
-			await qc.invalidateQueries({ queryKey: SIDEBAR_LAYOUT_QUERY_KEY })
-		},
+		onSuccess: async() => await qc.invalidateQueries({ queryKey: SIDEBAR_LAYOUT_QUERY_KEY }),
 		onError: (e) => { throw new Error(e.message) }
 	})
 	

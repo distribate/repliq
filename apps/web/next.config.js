@@ -2,6 +2,16 @@
 const svg = require('@neodx/svg/webpack');
 
 module.exports = {
+	async rewrites() {
+		return {
+			beforeFiles: [
+				{
+					source: '/misc/:path*',
+					destination: 'http://localhost:4321/misc/:path*'
+				},
+			],
+		}
+	},
 	images: {
 		remotePatterns: [
 			{
@@ -51,9 +61,10 @@ module.exports = {
 	experimental: {
 		optimizePackageImports: [
 			"@repo/ui",
-			"@repo/components",
+			"@repo/category-threads",
 			"@repo/lib"
 		],
+		instrumentationHook: true,
 		serverComponentsExternalPackages: [
 			"@node-rs/bcrypt",
 			"@node-rs/argon2"

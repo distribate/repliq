@@ -2,12 +2,12 @@
 
 import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from "@repo/ui/src/components/resizable.tsx";
 import { ReactNode, useCallback, useEffect, useRef, useState } from 'react';
-import { useSidebarControl } from "../sidebar/components/sidebar-layout/hooks/use-sidebar-control.ts";
 import { RESIZABLE_LAYOUT_COOKIE_KEY } from "@repo/shared/keys/cookie.ts";
-import { Sidebar } from "../sidebar/components/sidebar/sidebar.tsx";
 import { ImperativePanelHandle } from "react-resizable-panels";
-import { SidebarSkeleton } from "../sidebar/components/sidebar/sidebar-skeleton.tsx";
+import { SidebarSkeleton } from '../sidebar/components/sidebar/sidebar-skeleton.tsx';
+import { Sidebar } from '../sidebar/components/sidebar/sidebar.tsx';
 import { NavigationPanel } from '../navigation/components/navigation-panel.tsx';
+import { useSidebarControl } from '../sidebar/components/sidebar-layout/hooks/use-sidebar-control.ts';
 
 interface ResizableLayout {
 	defaultLayout: number[] | undefined,
