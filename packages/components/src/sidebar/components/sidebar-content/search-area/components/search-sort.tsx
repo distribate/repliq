@@ -7,12 +7,13 @@ import { DropdownMenuItem } from '@repo/ui/src/components/dropdown-menu.tsx';
 import { Separator } from '@repo/ui/src/components/separator.tsx';
 import { AlignJustify, LayoutGrid } from 'lucide-react';
 import { SORT_TYPES } from '../constants/sort-types.ts';
+import { isValue } from '@repo/lib/helpers/check-is-value.ts';
 
 export const SearchSort = () => {
   const { data: searchedState } = searchQuery();
   const { setSearchQueryMutation } = useSearchControl();
   
-  const isValue = (inputType: SearchType) => inputType === searchedState.type;
+  const isSearchType = isValue(searchedState.type);
   
   return (
     <div className="flex">
@@ -40,7 +41,7 @@ export const SearchSort = () => {
                     }}
                   >
                     <sort.icon size={16} className="text-shark-300" />
-                    <Typography className={isValue(sort.value) ? 'text-caribbean-green-500' : ''}>
+                    <Typography className={isSearchType(sort.value) ? 'text-caribbean-green-500' : ''}>
                       {sort.title}
                     </Typography>
                   </DropdownMenuItem>

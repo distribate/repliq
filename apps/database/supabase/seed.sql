@@ -136,50 +136,60 @@ INSERT INTO "public"."AUTH" ("NICKNAME", "LOWERCASENICKNAME", "HASH", "IP", "TOT
 
 
 --
+-- Data for Name: config_minecraft_items; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+INSERT INTO "public"."config_minecraft_items" ("id", "image", "title") VALUES
+	(1, 'allay_spawn_egg.webp', 'Эллей'),
+	(2, 'arrow_of_swiftness.webp', 'Стрела'),
+	(3, 'barrier.webp', 'Барьер'),
+	(4, 'belkoin_wallet.png', 'Белкоин'),
+	(5, 'bust_painting.webp', 'Картина'),
+	(6, 'diamond_pickaxe.webp', 'Алмазная кирка'),
+	(7, 'dirt.webp', 'Земля'),
+	(8, 'elytra.webp', 'Элитры'),
+	(9, 'fancy_feather.webp', 'Перо'),
+	(10, 'firework.webp', 'Фейерверк'),
+	(11, 'iron_helmet.webp', 'Железный шлем'),
+	(12, 'minecart_chest.webp', 'Сундук'),
+	(13, 'missing_texture.webp', 'Ошибка');
+
+
+--
+-- Data for Name: users; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+INSERT INTO "public"."users" ("acceptrules", "birthday", "cover_image", "created_at", "description", "id", "name_color", "nickname", "preferences", "real_name", "status", "uuid", "visibility", "favorite_item") VALUES
+	(true, NULL, 'default/snow-mountain.jpg', '2024-06-22 18:29:11.063752+00', 'Я полежу и встану Для начала, хотя бы на колени', 'c2e8de6f-a450-4ca0-ba50-828bedb053ba', '#ffffff', 'discludness', '{"coverOutline": "false", "friendRequest": "true", "realNameVisibility": "true", "gameStatsVisibility": "true"}', 'Мария', NULL, '5744cd36-94bd-3e2f-9c97-aa564b146417', 'friends', NULL),
+	(true, NULL, 'default/adventure-in-end.jpg', '2024-06-22 21:07:32.429882+00', 'My Flaws Burn Through My Skin Like Demonic Flames from Hell', 'd905f002-1370-44c6-bef3-885063b5332f', '#9EE5DE', 'pureawake', '{"coverOutline": "false", "friendRequest": "true", "realNameVisibility": "true", "gameStatsVisibility": "true"}', 'Руся', NULL, 'a6570be9-f25f-3767-bd09-6588cac34cdb', 'friends', 4),
+	(true, NULL, 'cover/c2508ed9-c992-4eb3-98a6-e149d01c4b2aNw3WWi_TCb2WSdhuV5pzF', '2024-08-25 23:10:56.949548+00', 'Привет', 'c2508ed9-c992-4eb3-98a6-e149d01c4b2a', '#ffffff', 'george_wastaken', '{"coverOutline": "false", "friendRequest": "true", "realNameVisibility": "true", "gameStatsVisibility": "true"}', 'Владислав', NULL, '71fe71d1-0161-32cd-8b57-a76486d69aee', 'all', NULL);
+
+
+--
+-- Data for Name: admins; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+
+
+--
 -- Data for Name: category; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-INSERT INTO "public"."category" ("description", "id", "title") VALUES
-	('', 1, 'Идеи и предложения'),
-	(NULL, 2, 'Сообщество'),
-	(NULL, 3, 'Жалобы'),
-	(NULL, 4, 'Помощь'),
-	(NULL, 5, 'Гайды');
+INSERT INTO "public"."category" ("available", "description", "id", "title") VALUES
+	(true, '', 1, 'Идеи и предложения'),
+	(true, NULL, 2, 'Сообщество'),
+	(true, NULL, 3, 'Жалобы'),
+	(true, NULL, 4, 'Помощь'),
+	(true, NULL, 5, 'Гайды');
 
 
 --
 -- Data for Name: threads; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-INSERT INTO "public"."threads" ("content", "created_at", "description", "title", "comments", "permission", "auto_remove", "id") VALUES
-	('asdasdsdaasd', '2024-07-04 13:50:45.904886', 'test test desc', 'aboba test', true, false, false, 'e9bbc4cd-7668-4bee-aa7a-59d4a147185c'),
-	('привет ;)', '2024-07-04 15:09:51.825165', '', 'Приветственный тред', true, false, false, '64cdce51-53ec-4155-b28e-db2199993343'),
-	('Hey everyone,
-
-With the ongoing trend towards remote work, I wanted to gather some of the best practices that have helped you stay productive and maintain a good work-life balance. Here are a few that work for me:
-
-1. Setting a consistent schedule
-2. Creating a dedicated workspace
-3. Taking regular breaks
-4. Using project management tools
-
-Looking forward to hearing your tips and experiences!
-
-Cheers,
-Alex', '2024-07-04 16:58:44.568804', NULL, 'Best Practices for Remote Work', false, false, false, 'f5232406-c72a-4c61-8046-947bb4e94551'),
-	('Hi book lovers,
-
-As we approach the end of the year, I thought it would be great to share our favorite books from this year. Fiction, non-fiction, self-help, anything goes! What were the books that you couldn’t put down?
-
-Here are mine:
-- “Where the Crawdads Sing” by Delia Owens
-- “Educated” by Tara Westover
-- “The Silent Patient” by Alex Michaelides
-
-Can’t wait to add more to my reading list!
-
-Happy reading,
-Lucas', '2024-07-04 16:59:06.892867', NULL, 'Best Books of the Year', true, true, false, '50d5d02d-cd20-4f54-9756-04269fb2fbd7');
+INSERT INTO "public"."threads" ("id", "title", "created_at", "updated_at", "visibility", "description", "comments", "auto_remove", "content", "permission") VALUES
+	('d0a25fc4-a7d6-4e47-89d4-538cadecf2c9', 'Абоба тайтл (без фото) ', '2024-08-25 13:06:23.662697+00', NULL, 'all', 'Абоба дескрипш', true, false, '[{"type": "paragraph", "children": [{"text": "Абоба контент, "}, {"bold": true, "text": "контентище"}, {"text": ", контент навален успешно"}]}]', false),
+	('b558eb07-d050-462b-8249-b5d34ddb1b9e', 'Абоба тайтл ( фото)', '2024-08-25 13:11:20.921499+00', NULL, 'all', 'Абоба дескрипшн', true, false, '[{"type": "paragraph", "children": [{"text": "Абоба контент, "}, {"bold": true, "text": "контентище"}, {"text": ", навален контент успешно (с "}, {"text": "кошками", "italic": true}, {"text": ")"}]}]', false);
 
 
 --
@@ -187,10 +197,8 @@ Lucas', '2024-07-04 16:59:06.892867', NULL, 'Best Books of the Year', true, true
 --
 
 INSERT INTO "public"."category_threads" ("category_id", "thread_id") VALUES
-	(1, 'e9bbc4cd-7668-4bee-aa7a-59d4a147185c'),
-	(2, '64cdce51-53ec-4155-b28e-db2199993343'),
-	(2, 'f5232406-c72a-4c61-8046-947bb4e94551'),
-	(2, '50d5d02d-cd20-4f54-9756-04269fb2fbd7');
+	(1, 'd0a25fc4-a7d6-4e47-89d4-538cadecf2c9'),
+	(4, 'b558eb07-d050-462b-8249-b5d34ddb1b9e');
 
 
 --
@@ -203,123 +211,132 @@ INSERT INTO "public"."category_threads" ("category_id", "thread_id") VALUES
 -- Data for Name: config_alerts; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-INSERT INTO "public"."config_alerts" ("id", "created_at", "title", "link") VALUES
-	(1, '2024-07-04 12:12:02.483728+00', 'Вступайте в телеграмм-канал проекта!', 'https://t.me/fasberry');
+INSERT INTO "public"."config_alerts" ("created_at", "id", "link", "title") VALUES
+	('2024-07-04 12:12:02.483728+00', 1, 'https://t.me/fasberry', 'Вступайте в телеграмм-канал проекта!');
 
 
 --
 -- Data for Name: config_minecraft_facts; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-INSERT INTO "public"."config_minecraft_facts" ("id", "fact") VALUES
-	(1, 'Изначально Крипер не был мобом — он появился в результате ошибки при создании свиньи. Позже ему изменили текстуру и добавили способность взрываться.'),
-	(2, 'У снежного голема есть лицо за маской из тыквы.'),
-	(3, 'С шансом в 0.01% в главном меню вместо большой надписи "Minecraft" появится название с ошибкой "Minceraft".'),
-	(4, 'Язык Странников Края (Эндермэнов) — английский задом наперед.'),
-	(5, 'Верстак в мире Minecraft можно использовать как компас — на северной его части всегда будет текстура с пилой и молотком, независимо от положения игрока в момент установки блока.'),
-	(6, 'Все коровы в Minecraft — женского пола, так как все дают молоко.'),
-	(7, 'Свинью можно превратить в свинозомби, если по ней ударит молния.'),
-	(8, 'А если ударить молнией в Крипера, то он станет заряженным. Сила и радиус взрыва будут увеличены.'),
-	(9, 'В Странника Края невозможно попасть стрелой из лука, снежком или яйцом. На него также нельзя уронить наковальню.'),
-	(10, 'Однако если выстрелить в него стрелой с эффектом, то, хоть стрела не попадёт в моба, он всё равно получит её эффект.'),
-	(11, 'Сундук невозможно поджечь или сдвинуть поршнем.'),
-	(12, 'Попавший в паутину Ифрит не может стрелять. Также ему можно нанести урон снежками.'),
-	(13, 'Спавн Слизней зависит от фазы луны — больше всего их будет в полнолуние, а в новолуние спавн Слизней приостановлен.'),
-	(14, 'Иероглифы в столе зачарования — не спонтанно нарисованные буквы, а настоящий шифр, имеющий смысл.'),
-	(15, 'Криперы хоть и не имеют рук, но всё равно способны подниматься по лестницам.'),
-	(16, 'Есть заблуждение, что обсидиан невозможно сломать рукой. Это не правда — на его уничтожение в таком случае уйдёт 4 минуты и 10 секунд. Однако сломав его, он не выпадет, так как добывать его, соответственно, можно только алмазной киркой.'),
-	(17, 'Никогда не спите в Нижнем Мире. При взаимодействии с кроватью, она взорвётся и вы получите урон.'),
-	(18, 'В самых ранних версиях игры со скелетов с небольшим шансом мог выпасть колчан. Он позволял стрелять из лука, не тратя стрелы. Данный предмет вскоре удалили, и добавили зачарование "Бесконечность" с тем же эффектом.'),
-	(19, 'Кактус в доме можно использовать вместо мусорного ведра — когда выпавший предмет касается его, он пропадает.'),
-	(20, 'Переименовав моба с помощью бирки, используя имена "Grumm" или "Dinnerbone", вы перевернёте игровую модель данного моба.'),
-	(21, 'Если вы переименуете большого или среднего слизня, то, убив его, более мелкие слизни также сохранят имя, данное "предку".'),
-	(22, 'Самое интересное про бирки: если переименуете овцу в "jeb_", то она станет переливаться радужным цветом. Jeb_ — ник одного из разработчиков игры.'),
-	(23, 'Немного о разработчиках: Notch и Jeb_ (Маркус Перссон и Йенс Бергенстен, соответственно) были включены в 100 самых влиятельных людей планеты 2013 года по версии журнала "Time".'),
-	(24, 'Концептом для чёрно-белой кошки в Minecraft служила настоящая кошка Йенса — Ньютон.'),
-	(25, 'Самые маленькие мобы в игре — детёныш черепахи, чешуйница Края и летучая мышь.'),
-	(26, 'Если умереть в битве с Гастом, или быть в его поле зрения во время смерти, то он всё равно будет в вас стрелять, пока вы не возродитесь.'),
-	(27, 'Надев на голову тыкву, вы спокойно можете смотреть на Странников Края — они не будут вас атаковать.'),
-	(28, 'Обычно с скелетов лук в правой руке, однако с шансом в 5% он может появится в левой.'),
-	(29, 'На Хэллоуин (31 октября) зомби и скелеты могут появится с тыквой или светильником Джека на голове.'),
-	(30, 'А на 24-25 декабря сундуки приобретают праздничный рождественский вид.'),
-	(31, 'Если курица/свинья/корова/овца будут убиты, будучи подожжёными, то мясо, выпавшее с них, будет сразу пожареным.'),
-	(32, 'Скелет-наездник заспавнится на пауке с шансом 1%.'),
-	(33, 'Любые пауки неуязвимы к зелью отравления.'),
-	(34, 'Пещерные пауки появляются только рядом со спавнером.'),
-	(35, 'Ведьма не может сгореть в лаве или утонуть в воде.'),
-	(36, 'Странник Края получают урон от воды. Более того, им можно нанести урон с помощью пузырька с водой.'),
-	(37, 'Изначально зелья должны были вариться в котлах, по позже способ их создания заменили на варочную стойку.'),
-	(38, 'Железный голем может подарить жителям или детям цветок. Это отслыка к аниме "Небесный Замок Лапута".'),
-	(39, 'Железный голем, наряду с Разорителем, — третий моб в игре по количеству здоровья (100 HP). На первом месте Иссушитель (300 HP), а на втором Дракон Края (200 HP).'),
-	(40, 'Снежками можно отталкивать огненные шары Гастов.'),
-	(41, 'Зомби-жителя можно вылечить, если кинуть в него зелье слабости и нажать ПКМ золотым яблоком.'),
-	(42, 'Если поставить ковёр сверху забора, то вы сможете перепрыгнуть такую конструкцию, а вот мобы — нет.'),
-	(43, 'Есть возможность изменить цвет луча маяка. Достаточно поставить блок стекла того цвета, которым вы хотите окрасить луч.'),
-	(44, 'Когда вы находите Портал в Край, то некоторые Очи Края уже буду установлены в рамку. Суть: есть шанс один к триллиону, что все рамки будут заполнены и Портал будет сразу же активированным.'),
-	(45, 'Держа в руках краситель и нажав ПКМ по табличке, вы сможете изменить цвет надписи.'),
-	(46, 'Если песок, гравий или яйцо Дракона упадут на факел, то они выпадут как предмет и их можно будет подобрать.'),
-	(47, 'Лук при максимальном натяжении может сломать лодку и вагонетку'),
-	(48, 'Молоко убирает эффекты яда и зелий'),
-	(49, 'Если песок душ разместить поверх льда, он будет замедлять еще сильнее'),
-	(50, 'Если стрелять через лаву, то стрелы будут наносить еще и повреждения от огня'),
-	(51, 'Тыква на голове отпугивает эндерменов (они не нападают, даже если смотреть прямо на них)'),
-	(52, 'Яйцо дракона можно получить, сдвинув его поршнем'),
-	(53, 'Слизни всегда прыгают только по прямой линии и не могут плавать'),
-	(54, 'Взрыв ТНТ убирает лаву'),
-	(55, 'Если нажать на грибную корову правой кнопкой с зажатой в руке миской, то вы получите тушеные грибы'),
-	(56, 'Если под падающим блоком гравия или песка находится факел, то блоки гравия или песка разрушатся при падении'),
-	(57, 'В дождь рыба ловится лучше'),
-	(58, 'Если предмет бросить в текущую по льду воду, то он поплывет невероятно быстро'),
-	(59, 'Нажимные плиты преграждают распространение воды и лавы'),
-	(60, 'Через сундуки и таблички нельзя увидеть имя игрока'),
-	(61, 'Если эндермена убивает железный голем, то всегда выпадает жемчужина'),
-	(62, 'Рыбу можно ловить и под водой'),
-	(63, 'Адский забор и обычный не соединяются'),
-	(64, 'Обсидиан и админиум нельзя сдвинуть поршнями'),
-	(65, 'Здоровье не восстанавливается, если шкала еды меньше 79%'),
-	(68, 'С помощью кактуса можно уничтожить предмет'),
-	(69, 'Дождь с небольшим шансом заполняет котел'),
-	(70, 'Если около крипера паутина, то отсчет времени до взрыва длится дольше'),
-	(71, 'Во время роста саженцы уничтожают стекло на своем пути'),
-	(72, 'Днем и в полностью освещенной комнате пауки дружелюбны, если на них не напасть'),
-	(73, 'Если поджечь корову или свинью, с них выпадет жареное мясо'),
-	(74, 'Лавовый куб не получает повреждений от падений'),
-	(75, 'Некоторое время назад спрута можно было подоить'),
-	(76, 'Взрыв ТНТ уничтожает 70% предметов вокруг'),
-	(77, 'У яйца есть шанс равный 1/256 одновременно наспавнить четырех куриц'),
-	(78, 'Вагонеткой можно управлять, как машиной, если в вагонетке сидит оседланная свинья, а вы на ней'),
-	(79, 'Таблички, заборы, лестницы, ворота и люки преграждают путь воде по горизонтали и вертикали'),
-	(80, 'Вода и лава текут к ближайшему углублению'),
-	(81, 'На свинозомби не действует лава и огонь'),
-	(82, 'Если кинуть яйцо в спокойного паука, то он все равно останется нейтральным'),
-	(83, 'Во время грозы можно спать, даже если на дворе день'),
-	(84, 'Волки не нападают на криперов'),
-	(66, 'Если криперы и скелеты не в состоянии нападения, они не видят игрока через стекло'),
-	(85, 'В Эндермена невозможно попасть стрелой, яйцом или снежком'),
-	(86, 'Изначально губка обладала способностью впитывать всю жидкость в радиусе 2 блоков. Теперь это просто декорация'),
-	(87, 'Если днем паук упадет и получит повреждение от падения или уколется об кактус, то он снова станет нейтральным'),
-	(88, 'Полублоки не обрывают цепь рэдстоуна'),
-	(89, 'Для того, чтобы разбить обсидиан рукой, нужно 4 минуты и 10 секунд'),
-	(90, 'Если зомби и скелеты стоят на песке душ, то утром они не сгорят'),
-	(91, 'Если под деревянной нажимной плитой находится огонь, то ее можно активировать стрелой'),
-	(92, 'Огненному шару можно нанести критический удар'),
-	(93, 'Съев паучий глаз, вы отравитесь'),
-	(94, 'В отличие от маленьких слизней, маленькие лавовые кубы наносят повреждения игроку'),
-	(95, 'Если огромный слизень сидит в вагонетке, то вагонетку не видно, и толкнуть ее можно только другой вагонеткой'),
-	(96, 'Звуки, которые издает гаст, принадлежат кошке C418'),
-	(97, 'Сундук можно открыть, если над ним расположен другой сундук или не цельный блок (ступени, полублоки, стекло, заборы и т.д.)');
+INSERT INTO "public"."config_minecraft_facts" ("fact", "id") VALUES
+	('Изначально Крипер не был мобом — он появился в результате ошибки при создании свиньи. Позже ему изменили текстуру и добавили способность взрываться.', 1),
+	('У снежного голема есть лицо за маской из тыквы.', 2),
+	('С шансом в 0.01% в главном меню вместо большой надписи "Minecraft" появится название с ошибкой "Minceraft".', 3),
+	('Язык Странников Края (Эндермэнов) — английский задом наперед.', 4),
+	('Верстак в мире Minecraft можно использовать как компас — на северной его части всегда будет текстура с пилой и молотком, независимо от положения игрока в момент установки блока.', 5),
+	('Все коровы в Minecraft — женского пола, так как все дают молоко.', 6),
+	('Свинью можно превратить в свинозомби, если по ней ударит молния.', 7),
+	('А если ударить молнией в Крипера, то он станет заряженным. Сила и радиус взрыва будут увеличены.', 8),
+	('В Странника Края невозможно попасть стрелой из лука, снежком или яйцом. На него также нельзя уронить наковальню.', 9),
+	('Однако если выстрелить в него стрелой с эффектом, то, хоть стрела не попадёт в моба, он всё равно получит её эффект.', 10),
+	('Сундук невозможно поджечь или сдвинуть поршнем.', 11),
+	('Попавший в паутину Ифрит не может стрелять. Также ему можно нанести урон снежками.', 12),
+	('Спавн Слизней зависит от фазы луны — больше всего их будет в полнолуние, а в новолуние спавн Слизней приостановлен.', 13),
+	('Иероглифы в столе зачарования — не спонтанно нарисованные буквы, а настоящий шифр, имеющий смысл.', 14),
+	('Криперы хоть и не имеют рук, но всё равно способны подниматься по лестницам.', 15),
+	('Есть заблуждение, что обсидиан невозможно сломать рукой. Это не правда — на его уничтожение в таком случае уйдёт 4 минуты и 10 секунд. Однако сломав его, он не выпадет, так как добывать его, соответственно, можно только алмазной киркой.', 16),
+	('Никогда не спите в Нижнем Мире. При взаимодействии с кроватью, она взорвётся и вы получите урон.', 17),
+	('В самых ранних версиях игры со скелетов с небольшим шансом мог выпасть колчан. Он позволял стрелять из лука, не тратя стрелы. Данный предмет вскоре удалили, и добавили зачарование "Бесконечность" с тем же эффектом.', 18),
+	('Кактус в доме можно использовать вместо мусорного ведра — когда выпавший предмет касается его, он пропадает.', 19),
+	('Переименовав моба с помощью бирки, используя имена "Grumm" или "Dinnerbone", вы перевернёте игровую модель данного моба.', 20),
+	('Если вы переименуете большого или среднего слизня, то, убив его, более мелкие слизни также сохранят имя, данное "предку".', 21),
+	('Самое интересное про бирки: если переименуете овцу в "jeb_", то она станет переливаться радужным цветом. Jeb_ — ник одного из разработчиков игры.', 22),
+	('Немного о разработчиках: Notch и Jeb_ (Маркус Перссон и Йенс Бергенстен, соответственно) были включены в 100 самых влиятельных людей планеты 2013 года по версии журнала "Time".', 23),
+	('Концептом для чёрно-белой кошки в Minecraft служила настоящая кошка Йенса — Ньютон.', 24),
+	('Самые маленькие мобы в игре — детёныш черепахи, чешуйница Края и летучая мышь.', 25),
+	('Если умереть в битве с Гастом, или быть в его поле зрения во время смерти, то он всё равно будет в вас стрелять, пока вы не возродитесь.', 26),
+	('Надев на голову тыкву, вы спокойно можете смотреть на Странников Края — они не будут вас атаковать.', 27),
+	('Обычно с скелетов лук в правой руке, однако с шансом в 5% он может появится в левой.', 28),
+	('На Хэллоуин (31 октября) зомби и скелеты могут появится с тыквой или светильником Джека на голове.', 29),
+	('А на 24-25 декабря сундуки приобретают праздничный рождественский вид.', 30),
+	('Если курица/свинья/корова/овца будут убиты, будучи подожжёными, то мясо, выпавшее с них, будет сразу пожареным.', 31),
+	('Скелет-наездник заспавнится на пауке с шансом 1%.', 32),
+	('Любые пауки неуязвимы к зелью отравления.', 33),
+	('Пещерные пауки появляются только рядом со спавнером.', 34),
+	('Ведьма не может сгореть в лаве или утонуть в воде.', 35),
+	('Странник Края получают урон от воды. Более того, им можно нанести урон с помощью пузырька с водой.', 36),
+	('Изначально зелья должны были вариться в котлах, по позже способ их создания заменили на варочную стойку.', 37),
+	('Железный голем может подарить жителям или детям цветок. Это отслыка к аниме "Небесный Замок Лапута".', 38),
+	('Железный голем, наряду с Разорителем, — третий моб в игре по количеству здоровья (100 HP). На первом месте Иссушитель (300 HP), а на втором Дракон Края (200 HP).', 39),
+	('Снежками можно отталкивать огненные шары Гастов.', 40),
+	('Зомби-жителя можно вылечить, если кинуть в него зелье слабости и нажать ПКМ золотым яблоком.', 41),
+	('Если поставить ковёр сверху забора, то вы сможете перепрыгнуть такую конструкцию, а вот мобы — нет.', 42),
+	('Есть возможность изменить цвет луча маяка. Достаточно поставить блок стекла того цвета, которым вы хотите окрасить луч.', 43),
+	('Когда вы находите Портал в Край, то некоторые Очи Края уже буду установлены в рамку. Суть: есть шанс один к триллиону, что все рамки будут заполнены и Портал будет сразу же активированным.', 44),
+	('Держа в руках краситель и нажав ПКМ по табличке, вы сможете изменить цвет надписи.', 45),
+	('Если песок, гравий или яйцо Дракона упадут на факел, то они выпадут как предмет и их можно будет подобрать.', 46),
+	('Лук при максимальном натяжении может сломать лодку и вагонетку', 47),
+	('Молоко убирает эффекты яда и зелий', 48),
+	('Если песок душ разместить поверх льда, он будет замедлять еще сильнее', 49),
+	('Если стрелять через лаву, то стрелы будут наносить еще и повреждения от огня', 50),
+	('Тыква на голове отпугивает эндерменов (они не нападают, даже если смотреть прямо на них)', 51),
+	('Яйцо дракона можно получить, сдвинув его поршнем', 52),
+	('Слизни всегда прыгают только по прямой линии и не могут плавать', 53),
+	('Взрыв ТНТ убирает лаву', 54),
+	('Если нажать на грибную корову правой кнопкой с зажатой в руке миской, то вы получите тушеные грибы', 55),
+	('Если под падающим блоком гравия или песка находится факел, то блоки гравия или песка разрушатся при падении', 56),
+	('В дождь рыба ловится лучше', 57),
+	('Если предмет бросить в текущую по льду воду, то он поплывет невероятно быстро', 58),
+	('Нажимные плиты преграждают распространение воды и лавы', 59),
+	('Через сундуки и таблички нельзя увидеть имя игрока', 60),
+	('Если эндермена убивает железный голем, то всегда выпадает жемчужина', 61),
+	('Рыбу можно ловить и под водой', 62),
+	('Адский забор и обычный не соединяются', 63),
+	('Обсидиан и админиум нельзя сдвинуть поршнями', 64),
+	('Здоровье не восстанавливается, если шкала еды меньше 79%', 65),
+	('С помощью кактуса можно уничтожить предмет', 68),
+	('Дождь с небольшим шансом заполняет котел', 69),
+	('Если около крипера паутина, то отсчет времени до взрыва длится дольше', 70),
+	('Во время роста саженцы уничтожают стекло на своем пути', 71),
+	('Днем и в полностью освещенной комнате пауки дружелюбны, если на них не напасть', 72),
+	('Если поджечь корову или свинью, с них выпадет жареное мясо', 73),
+	('Лавовый куб не получает повреждений от падений', 74),
+	('Некоторое время назад спрута можно было подоить', 75),
+	('Взрыв ТНТ уничтожает 70% предметов вокруг', 76),
+	('У яйца есть шанс равный 1/256 одновременно наспавнить четырех куриц', 77),
+	('Вагонеткой можно управлять, как машиной, если в вагонетке сидит оседланная свинья, а вы на ней', 78),
+	('Таблички, заборы, лестницы, ворота и люки преграждают путь воде по горизонтали и вертикали', 79),
+	('Вода и лава текут к ближайшему углублению', 80),
+	('На свинозомби не действует лава и огонь', 81),
+	('Если кинуть яйцо в спокойного паука, то он все равно останется нейтральным', 82),
+	('Во время грозы можно спать, даже если на дворе день', 83),
+	('Волки не нападают на криперов', 84),
+	('Если криперы и скелеты не в состоянии нападения, они не видят игрока через стекло', 66),
+	('В Эндермена невозможно попасть стрелой, яйцом или снежком', 85),
+	('Изначально губка обладала способностью впитывать всю жидкость в радиусе 2 блоков. Теперь это просто декорация', 86),
+	('Если днем паук упадет и получит повреждение от падения или уколется об кактус, то он снова станет нейтральным', 87),
+	('Полублоки не обрывают цепь рэдстоуна', 88),
+	('Для того, чтобы разбить обсидиан рукой, нужно 4 минуты и 10 секунд', 89),
+	('Если зомби и скелеты стоят на песке душ, то утром они не сгорят', 90),
+	('Если под деревянной нажимной плитой находится огонь, то ее можно активировать стрелой', 91),
+	('Огненному шару можно нанести критический удар', 92),
+	('Съев паучий глаз, вы отравитесь', 93),
+	('В отличие от маленьких слизней, маленькие лавовые кубы наносят повреждения игроку', 94),
+	('Если огромный слизень сидит в вагонетке, то вагонетку не видно, и толкнуть ее можно только другой вагонеткой', 95),
+	('Звуки, которые издает гаст, принадлежат кошке C418', 96),
+	('Сундук можно открыть, если над ним расположен другой сундук или не цельный блок (ступени, полублоки, стекло, заборы и т.д.)', 97);
 
 
 --
--- Data for Name: users; Type: TABLE DATA; Schema: public; Owner: postgres
+-- Data for Name: users_friends; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-INSERT INTO "public"."users" ("acceptrules", "birthday", "created_at", "description", "id", "nickname", "status", "uuid", "cover_image", "name_color", "donate_weight", "visibility", "real_name") VALUES
-	(true, NULL, '2024-07-03 16:52:49.047513', 'someday you have to', '10282229-ae9e-4fa5-9237-7bd35dd07120', 'george_wastaken', NULL, '71fe71d1-0161-32cd-8b57-a76486d69aee', 'cover/10282229-ae9e-4fa5-9237-7bd35dd07120TEhn8k1Sn6WninInsS2uH', '#FFFFFF', 0, 'all', NULL),
-	(true, NULL, '2024-07-03 22:10:13.034092', NULL, '988aecf5-28a2-4d62-9625-284b8d401a8b', 'Ded____Inside', NULL, 'e9a7380d-c788-3da9-99ef-f896405d4135', 'cover/988aecf5-28a2-4d62-9625-284b8d401a8bjxS6UPQTGRktAf0pE7bmQ', '#FFFFFF', 0, 'all', NULL),
-	(true, NULL, '2024-06-29 10:22:43.94017', 'абоба полная', '82146009-5574-476a-9254-013937d75132', 'mongoose', NULL, '0e303495-341d-3999-bd9b-2245f39cc0e6', 'cover/82146009-5574-476a-9254-013937d75132p3N8LL_iD0MyzTI0PAMcl', '#FFFFFF', 43, 'all', NULL),
-	(true, NULL, '2024-06-22 21:07:32.429882', 'Я админ', 'd905f002-1370-44c6-bef3-885063b5332f', 'pureawake', NULL, 'a6570be9-f25f-3767-bd09-6588cac34cdb', 'cover/d905f002-1370-44c6-bef3-885063b5332fyLxE87j_txri6BkYmtAO-', '#ffffff', 2, 'friends', NULL),
-	(true, NULL, '2024-06-22 18:29:11.063752', 'я', 'c2e8de6f-a450-4ca0-ba50-828bedb053ba', 'discludness', NULL, '5744cd36-94bd-3e2f-9c97-aa564b146417', 'cover/c2e8de6f-a450-4ca0-ba50-828bedb053baKwbA4Q1JGOeAX2PA9WuAr', '#ffffff', 1, 'friends', NULL);
+INSERT INTO "public"."users_friends" ("id", "user_1", "user_2", "created_at") VALUES
+	('8ddb2acd-bbcb-47ab-bfaa-fe2eee51c437', 'pureawake', 'discludness', '2024-08-27 17:07:08.533304+00'),
+	('a114adab-67a5-4612-9de6-af8b47be63c0', 'george_wastaken', 'pureawake', '2024-08-27 19:17:47.893468+00');
+
+
+--
+-- Data for Name: friends_notes; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+
+
+--
+-- Data for Name: friends_pinned; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
 
 
 --
@@ -332,37 +349,566 @@ INSERT INTO "public"."users" ("acceptrules", "birthday", "created_at", "descript
 -- Data for Name: info_findout; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-INSERT INTO "public"."info_findout" ("user_nickname", "findout", "id") VALUES
-	('Ded____Inside', 'от абобы', 1);
+INSERT INTO "public"."info_findout" ("id", "findout", "user_nickname") VALUES
+	(1, 'от абобы', 'Ded____Inside'),
+	(2, 'телеграм', 'george_wastaken'),
+	(3, 'телеграм', 'george_wastaken'),
+	(4, 'телеграм', 'george_wastaken'),
+	(5, 'телеграм', 'george_wastaken'),
+	(6, 'телеграм', 'george_wastaken');
+
+
+--
+-- Data for Name: luckperms_actions; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+
+
+--
+-- Data for Name: luckperms_group_permissions; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+INSERT INTO "public"."luckperms_group_permissions" ("id", "name", "permission", "value", "server", "world", "expiry", "contexts") VALUES
+	(1, 'default', 'ia.user.craft.*', true, 'global', 'global', 0, '{}'),
+	(2, 'default', 'chatcontrol.channel.join.global.read', true, 'global', 'global', 0, '{}'),
+	(3, 'default', 'lands.role.setting.block_ignite', false, 'global', 'global', 0, '{}'),
+	(4, 'default', 'lands.role.setting.interact_trapdoor', true, 'global', 'global', 0, '{}'),
+	(5, 'default', 'cmi.command.afk', true, 'global', 'global', 0, '{}'),
+	(6, 'default', 'cmi.command.tpdeny', true, 'global', 'global', 0, '{}'),
+	(7, 'default', 'zauctionhouse.history', true, 'global', 'global', 0, '{}'),
+	(8, 'default', 'jobs.world.bisquiteworld', true, 'global', 'global', 0, '{}'),
+	(9, 'default', 'lands.allies.*', false, 'global', 'global', 0, '{}'),
+	(10, 'default', 'cmi.command.homes', true, 'global', 'global', 0, '{}'),
+	(11, 'default', 'playerparticles.fixed.max.3', true, 'global', 'global', 0, '{}'),
+	(12, 'default', 'weight.1', true, 'global', 'global', 0, '{}'),
+	(13, 'default', 'cmi.command.top', true, 'global', 'global', 0, '{}'),
+	(14, 'default', 'zauctionhouse.max.10', true, 'global', 'global', 0, '{}'),
+	(15, 'default', 'lands.role.setting.setting_edit_taxes', true, 'global', 'global', 0, '{}'),
+	(16, 'default', 'bukkit.command.paper.dumpplugins', false, 'global', 'global', 0, '{}'),
+	(17, 'default', 'ia.user.craft.recipe.astral', true, 'global', 'global', 0, '{}'),
+	(18, 'default', 'chatcontrol.channel.join.chat', true, 'global', 'global', 0, '{}'),
+	(19, 'default', 'cmi.command.options', true, 'global', 'global', 0, '{}'),
+	(20, 'default', 'ia.user.image.sign', true, 'global', 'global', 0, '{}'),
+	(21, 'default', 'cmi.command.options.totembossbar', true, 'global', 'global', 0, '{}'),
+	(22, 'default', 'cmi.command.rt', true, 'global', 'global', 0, '{}'),
+	(23, 'default', 'lands.roles.18', true, 'global', 'global', 0, '{}'),
+	(24, 'default', 'ia.user.recipe.recipe', true, 'global', 'global', 0, '{}'),
+	(25, 'default', 'lands.role.setting.attack_player', true, 'global', 'global', 0, '{}'),
+	(26, 'default', 'lands.areas.16', true, 'global', 'global', 0, '{}'),
+	(27, 'default', 'recipe.adamantite.pickaxe', true, 'global', 'global', 0, '{}'),
+	(28, 'default', 'cmi.command.afk.auto', true, 'global', 'global', 0, '{}'),
+	(29, 'default', 'cmi.command.flyc', true, 'global', 'global', 0, '{}'),
+	(30, 'default', 'ia.user.iaemote', true, 'global', 'global', 0, '{}'),
+	(31, 'default', 'prefix.1.:player: ', true, 'global', 'global', 0, '{}'),
+	(32, 'default', 'lands.role.setting.attack_monster', true, 'global', 'global', 0, '{}'),
+	(33, 'default', 'lands.enemies', false, 'global', 'global', 0, '{}'),
+	(34, 'default', 'cmi.command.tpa', true, 'global', 'global', 0, '{}'),
+	(35, 'default', 'chatcontrol.command.spy', true, 'global', 'global', 0, '{}'),
+	(36, 'default', 'ecopets.command.activate', true, 'global', 'global', 0, '{}'),
+	(37, 'default', 'chatcontrol.command.toggle', true, 'global', 'global', 0, '{}'),
+	(38, 'default', 'lands.allies', false, 'global', 'global', 0, '{}'),
+	(39, 'default', 'zauctionhouse_max_5', true, 'global', 'global', 0, '{}'),
+	(40, 'default', 'ia.user.iarecipe', true, 'global', 'global', 0, '{}'),
+	(41, 'default', 'reputation.max.default', true, 'global', 'global', 0, '{}'),
+	(42, 'default', 'lands.setting.snow_melt', true, 'global', 'global', 0, '{}'),
+	(43, 'default', 'adapt.opengui', false, 'global', 'global', 0, '{}'),
+	(44, 'default', 'ia.user.block', true, 'global', 'global', 0, '{}'),
+	(45, 'default', 'lands.setting.monster_spawn', false, 'global', 'global', 0, '{}'),
+	(46, 'default', 'lands.role.setting.setting_edit_various', true, 'global', 'global', 0, '{}'),
+	(47, 'default', 'recipe.platinum.pickaxe', true, 'global', 'global', 0, '{}'),
+	(48, 'default', 'lands.command.*', true, 'global', 'global', 0, '{}'),
+	(49, 'default', 'bukkit.command.plugins', false, 'global', 'global', 0, '{}'),
+	(50, 'default', 'chatcontrol.channel.join.global.write', true, 'global', 'global', 0, '{}'),
+	(51, 'default', 'cmi.command.removehome', true, 'global', 'global', 0, '{}'),
+	(52, 'default', 'mcpets.use', true, 'global', 'global', 0, '{}'),
+	(53, 'default', 'cmi.command.sethome', true, 'global', 'global', 0, '{}'),
+	(54, 'default', 'chatcontrol.command.tell', true, 'global', 'global', 0, '{}'),
+	(55, 'default', 'chatcontrol.receive', true, 'global', 'global', 0, '{}'),
+	(56, 'default', 'lands.role.setting.area_assign', true, 'global', 'global', 0, '{}'),
+	(57, 'default', 'cmi.command.prewards', true, 'global', 'global', 0, '{}'),
+	(58, 'default', 'cmi.command.rankup', false, 'global', 'global', 0, '{}'),
+	(59, 'default', 'displayname.player', true, 'global', 'global', 0, '{}'),
+	(60, 'default', 'mv.bypass.gamemode.BisquiteWorld', true, 'global', 'global', 0, '{}'),
+	(61, 'default', 'ia.user.craft.recipe.adamantite.pickaxe', true, 'global', 'global', 0, '{}'),
+	(62, 'default', 'cmi.command.enchant', true, 'global', 'global', 0, '{}'),
+	(63, 'default', 'jobs.max.1', true, 'global', 'global', 0, '{}'),
+	(64, 'default', 'cmi.command.money', true, 'global', 'global', 0, '{}'),
+	(65, 'default', 'pet.rename', true, 'global', 'global', 0, '{}'),
+	(66, 'default', 'playerparticles.fixed.clear', true, 'global', 'global', 0, '{}'),
+	(67, 'default', 'lands.role.setting.block_place', true, 'global', 'global', 0, '{}'),
+	(68, 'default', 'lands.role.setting.harvest', true, 'global', 'global', 0, '{}'),
+	(69, 'default', 'lands.role.setting.interact_mechanism', true, 'global', 'global', 0, '{}'),
+	(70, 'default', 'cmi.command.dback', true, 'global', 'global', 0, '{}'),
+	(71, 'default', 'cmi.command.sethome.1', true, 'global', 'global', 0, '{}'),
+	(72, 'default', 'cmi.command.msg', true, 'global', 'global', 0, '{}'),
+	(73, 'default', 'lands.enemies.10', false, 'global', 'global', 0, '{}'),
+	(74, 'default', 'cmi.kit.start', true, 'global', 'global', 0, '{}'),
+	(75, 'default', 'scoreboard.default', true, 'global', 'global', 0, '{}'),
+	(76, 'default', 'lands.role.setting.player_untrust', true, 'global', 'global', 0, '{}'),
+	(77, 'default', 'lands.role.setting.block_break', true, 'global', 'global', 0, '{}'),
+	(78, 'default', 'lands.chunks.250', true, 'global', 'global', 0, '{}'),
+	(79, 'default', 'command.alert.info.inform', true, 'global', 'global', 0, '{}'),
+	(80, 'default', 'lands.role.setting.plant', true, 'global', 'global', 0, '{}'),
+	(81, 'default', 'playerparticles.gui', false, 'global', 'global', 0, '{}'),
+	(82, 'default', 'lands.role.setting.land_claim', true, 'global', 'global', 0, '{}'),
+	(83, 'default', 'cmi.command.afk.kickOutIn.1200', true, 'global', 'global', 0, '{}'),
+	(84, 'default', 'cmi.command.options.acceptingpm', true, 'global', 'global', 0, '{}'),
+	(85, 'default', 'zauctionhouse.sell', true, 'global', 'global', 0, '{}'),
+	(86, 'default', 'chatcontrol.command.toggle.on', true, 'global', 'global', 0, '{}'),
+	(87, 'default', 'pet.rename.color', true, 'global', 'global', 0, '{}'),
+	(88, 'default', 'imageframe.rename', true, 'global', 'global', 0, '{}'),
+	(89, 'default', 'cmi.command.options.pvedamagenumbers', true, 'global', 'global', 0, '{}'),
+	(90, 'default', 'mv.bypass.gamemode.BisquiteWorld_nether', true, 'global', 'global', 0, '{}'),
+	(91, 'default', 'lands.player.setting.receive_invites', true, 'global', 'global', 0, '{}'),
+	(92, 'default', 'lands.role.setting.spawn_set', true, 'global', 'global', 0, '{}'),
+	(93, 'default', 'cmi.command.tps', false, 'global', 'global', 0, '{}'),
+	(94, 'default', 'lumberjack.use', true, 'global', 'global', 0, '{}'),
+	(95, 'default', 'lands.role.setting.spawn_teleport', true, 'global', 'global', 0, '{}'),
+	(96, 'default', 'ia.user.image.gui', true, 'global', 'global', 0, '{}'),
+	(97, 'default', 'lands.role.setting.player_ban', true, 'global', 'global', 0, '{}'),
+	(98, 'default', 'ia.user.recipe.recipe.adamantite.pickaxe', true, 'global', 'global', 0, '{}'),
+	(99, 'default', 'lands.role.setting.land_claim_border', true, 'global', 'global', 0, '{}'),
+	(100, 'default', 'lands.role.setting.player_setrole', true, 'global', 'global', 0, '{}'),
+	(101, 'default', 'lands.allies.<number>', false, 'global', 'global', 0, '{}'),
+	(102, 'default', 'cmi.command.options.chatbubble', true, 'global', 'global', 0, '{}'),
+	(103, 'default', 'lands.role.setting.interact_villager', true, 'global', 'global', 0, '{}'),
+	(104, 'default', 'ia.user.image.use.*', false, 'global', 'global', 0, '{}'),
+	(105, 'default', 'cmi.command.tpaccept', true, 'global', 'global', 0, '{}'),
+	(106, 'default', 'chatcontrol.channel.join.standard.write', true, 'global', 'global', 0, '{}'),
+	(107, 'default', 'cmi.command.suicide', true, 'global', 'global', 0, '{}'),
+	(108, 'default', 'chatcontrol.channel.autojoin.standard.read', true, 'global', 'global', 0, '{}'),
+	(109, 'default', 'lands.command.relations', false, 'global', 'global', 0, '{}'),
+	(110, 'default', 'lands.role.setting.land_enter', false, 'global', 'global', 0, '{}'),
+	(111, 'default', 'lands.player.setting.enter_messages', true, 'global', 'global', 0, '{}'),
+	(112, 'default', 'cmi.command.flightcharge', true, 'global', 'global', 0, '{}'),
+	(113, 'default', 'lands.role.setting.setting_edit_role', true, 'global', 'global', 0, '{}'),
+	(114, 'default', 'lands.role.setting.shear', true, 'global', 'global', 0, '{}'),
+	(115, 'default', 'cmi.command.pay', true, 'global', 'global', 0, '{}'),
+	(116, 'default', 'lands.role.setting.vehicle_use', true, 'global', 'global', 0, '{}'),
+	(117, 'default', 'imageframe.create', true, 'global', 'global', 0, '{}'),
+	(118, 'default', 'zauctionhouse.use', true, 'global', 'global', 0, '{}'),
+	(119, 'default', 'jobs.world.bisquiteworld_nether', true, 'global', 'global', 0, '{}'),
+	(120, 'default', 'cmi.command.spawn', true, 'global', 'global', 0, '{}'),
+	(121, 'default', 'ia.user.block.break', true, 'global', 'global', 0, '{}'),
+	(122, 'default', 'lands.player.setting.show_inbox', true, 'global', 'global', 0, '{}'),
+	(123, 'default', 'ia.user.block.break.null', true, 'global', 'global', 0, '{}'),
+	(124, 'default', 'cmi.command.ping', false, 'global', 'global', 0, '{}'),
+	(125, 'default', 'lands.setting.entity_griefing', true, 'global', 'global', 0, '{}'),
+	(126, 'default', 'lands.role.setting.item_pickup', true, 'global', 'global', 0, '{}'),
+	(127, 'default', 'colorbundles.craft', true, 'global', 'global', 0, '{}'),
+	(128, 'default', 'ia.user.image.anvil', true, 'global', 'global', 0, '{}'),
+	(129, 'default', 'cmi.command.sit', true, 'global', 'global', 0, '{}'),
+	(130, 'default', 'lands.setting.animal_spawn', true, 'global', 'global', 0, '{}'),
+	(131, 'default', 'recipe.cobalt.pickaxe', true, 'global', 'global', 0, '{}'),
+	(132, 'default', 'zauctionhouse.tansaction', true, 'global', 'global', 0, '{}'),
+	(133, 'default', 'lands.role.setting.balance_withdraw', true, 'global', 'global', 0, '{}'),
+	(134, 'default', 'lands.role.setting.trample_farmland', true, 'global', 'global', 0, '{}'),
+	(135, 'default', 'lands.setting.phantom_spawn', false, 'global', 'global', 0, '{}'),
+	(136, 'default', 'cmi.command.home', true, 'global', 'global', 0, '{}'),
+	(137, 'default', 'lands.members.10', true, 'global', 'global', 0, '{}'),
+	(138, 'default', 'ia.user.craft.recipe.astral.pickaxe', true, 'global', 'global', 0, '{}'),
+	(139, 'default', 'ia.user.image.hints', true, 'global', 'global', 0, '{}'),
+	(140, 'default', 'zauctionhouse.search', true, 'global', 'global', 0, '{}'),
+	(141, 'default', 'lands.role.setting.interact_door', true, 'global', 'global', 0, '{}'),
+	(142, 'default', 'chatcontrol.channel.autojoin.chat', true, 'global', 'global', 0, '{}'),
+	(143, 'default', 'chatcontrol.command.reply', true, 'global', 'global', 0, '{}'),
+	(144, 'default', 'playerreport.report', true, 'global', 'global', 0, '{}'),
+	(145, 'default', 'playerparticles.particles.max.6', true, 'global', 'global', 0, '{}'),
+	(146, 'default', 'lands.role.setting.attack_animal', true, 'global', 'global', 0, '{}'),
+	(147, 'default', 'chatcontrol.command.ignore', true, 'global', 'global', 0, '{}'),
+	(148, 'default', 'lands.areas.24', true, 'global', 'global', 0, '{}'),
+	(149, 'default', 'cmi.command.helpop', false, 'global', 'global', 0, '{}'),
+	(150, 'default', 'cmi.permisiononerror', false, 'global', 'global', 0, '{}'),
+	(151, 'default', 'tab.scoreboard.toggle', true, 'global', 'global', 0, '{}'),
+	(152, 'default', 'lands.role.setting.interact_container', true, 'global', 'global', 0, '{}'),
+	(153, 'default', 'lands.setting.piston_griefing', true, 'global', 'global', 0, '{}'),
+	(154, 'default', 'cmi.command.t', false, 'global', 'global', 0, '{}'),
+	(155, 'default', 'lands.role.setting.land_rename', true, 'global', 'global', 0, '{}'),
+	(156, 'default', 'lands.role.setting.player_trust', true, 'global', 'global', 0, '{}'),
+	(157, 'default', 'imageframe.create.animated', true, 'global', 'global', 0, '{}'),
+	(158, 'default', 'lands.role.setting.setting_edit_land', true, 'global', 'global', 0, '{}'),
+	(159, 'default', 'lands.setting.plant_growth', true, 'global', 'global', 0, '{}'),
+	(160, 'default', 'mv.bypass.gamemode.BisquiteWorld_the_end', true, 'global', 'global', 0, '{}'),
+	(161, 'default', 'lands.setting.fire_spread', true, 'global', 'global', 0, '{}'),
+	(162, 'default', 'lands.ownlands.2', true, 'global', 'global', 0, '{}'),
+	(163, 'default', 'pet.particle', true, 'global', 'global', 0, '{}'),
+	(164, 'default', 'mv.bypass.gamemode.Offenburg', true, 'global', 'global', 0, '{}'),
+	(165, 'default', 'playerparticles.particles.max.3', true, 'global', 'global', 0, '{}'),
+	(166, 'default', 'ia.user.block.place.*', true, 'global', 'global', 0, '{}'),
+	(167, 'default', 'ecopets.command.deactivate', true, 'global', 'global', 0, '{}'),
+	(168, 'default', 'ia.user.image.book', true, 'global', 'global', 0, '{}'),
+	(169, 'default', 'playerparticles.fixed', true, 'global', 'global', 0, '{}'),
+	(170, 'default', 'cmi.command.me', false, 'global', 'global', 0, '{}'),
+	(171, 'default', 'ticketmanager.command.create', true, 'global', 'global', 0, '{}'),
+	(172, 'default', 'lands.role.setting.fly', true, 'global', 'global', 0, '{}'),
+	(173, 'default', 'cmi.command.baltop', false, 'global', 'global', 0, '{}'),
+	(174, 'default', 'lands.setting.leaf_decay', true, 'global', 'global', 0, '{}'),
+	(175, 'default', 'zauctionhouse.open', true, 'global', 'global', 0, '{}'),
+	(176, 'default', 'lands.role.setting.interact_general', true, 'global', 'global', 0, '{}'),
+	(177, 'default', 'pet.remove', true, 'global', 'global', 0, '{}'),
+	(178, 'default', 'pet.command', false, 'global', 'global', 0, '{}'),
+	(179, 'default', 'chatcontrol.channel.autojoin.global.read', true, 'global', 'global', 0, '{}'),
+	(180, 'default', 'lands.role.setting.elytra', false, 'global', 'global', 0, '{}'),
+	(181, 'default', 'imageframe.info', true, 'global', 'global', 0, '{}'),
+	(182, 'default', 'chatcontrol.command.toggle.off', true, 'global', 'global', 0, '{}'),
+	(183, 'default', 'pet.trail', true, 'global', 'global', 0, '{}'),
+	(184, 'default', 'ia.user.image.chat', true, 'global', 'global', 0, '{}'),
+	(185, 'default', 'imageframe.createlimit.default', true, 'global', 'global', 0, '{}'),
+	(186, 'default', 'chatcontrol.channel.send.global', true, 'global', 'global', 0, '{}'),
+	(187, 'default', 'lands.free.chunks.4', true, 'global', 'global', 0, '{}'),
+	(188, 'default', 'ia.user.image', false, 'global', 'global', 0, '{}'),
+	(189, 'default', 'lands.role.setting.ender_pearl', false, 'global', 'global', 0, '{}'),
+	(190, 'default', 'reputation.give', true, 'global', 'global', 0, '{}'),
+	(191, 'default', 'ia.user.recipe.recipe.astral.pickaxe', true, 'global', 'global', 0, '{}'),
+	(192, 'default', 'cmi.command.options.visibleholograms', true, 'global', 'global', 0, '{}'),
+	(193, 'default', 'lands.enemies.<number>', false, 'global', 'global', 0, '{}'),
+	(194, 'default', 'chatcontrol.channel.join.standard.read', true, 'global', 'global', 0, '{}'),
+	(195, 'default', 'recipe.astral.pickaxe', true, 'global', 'global', 0, '{}'),
+	(196, 'default', 'chatcontrol.channel.send', true, 'global', 'global', 0, '{}'),
+	(197, 'default', 'cmi.command.ranklist', false, 'global', 'global', 0, '{}'),
+	(198, 'default', 'jobs.world.bisquiteworld_the_end', true, 'global', 'global', 0, '{}'),
+	(199, 'default', 'jobs.world.offenburg', false, 'global', 'global', 0, '{}'),
+	(200, 'default', 'lands.chunks.support.5', true, 'global', 'global', 0, '{}'),
+	(201, 'default', 'ia.user.recipe.recipe.astral', true, 'global', 'global', 0, '{}'),
+	(202, 'default', 'cmi.command.rankinfo', false, 'global', 'global', 0, '{}'),
+	(203, 'default', 'pet.use', true, 'global', 'global', 0, '{}'),
+	(204, 'default', 'chatcontrol.receive.announcer', true, 'global', 'global', 0, '{}'),
+	(205, 'default', 'ia.user.recipe.recipe.adamantite', true, 'global', 'global', 0, '{}'),
+	(206, 'default', 'ecopets.command.pets', true, 'global', 'global', 0, '{}'),
+	(207, 'default', 'lands.command.chat', false, 'global', 'global', 0, '{}'),
+	(208, 'default', 'ecopets.command.ecopets', true, 'global', 'global', 0, '{}'),
+	(209, 'default', 'ia.user.block.break.*', true, 'global', 'global', 0, '{}'),
+	(210, 'default', 'ia.user.craft.recipe.adamantite', true, 'global', 'global', 0, '{}'),
+	(211, 'default', 'lands.lands.4', true, 'global', 'global', 0, '{}'),
+	(212, 'default', 'chatcontrol.channel.autojoin.standard.write', true, 'global', 'global', 0, '{}'),
+	(213, 'default', 'zauctionhouse.sell.inventory', true, 'global', 'global', 0, '{}'),
+	(214, 'default', 'pet.see.*', true, 'global', 'global', 0, '{}'),
+	(215, 'dev', 'weight.99', true, 'global', 'global', 0, '{}'),
+	(216, 'dev', 'group.default', true, 'global', 'global', 0, '{}'),
+	(217, 'moder', 'weight.99', true, 'global', 'global', 0, '{}'),
+	(218, 'moder', 'group.default', true, 'global', 'global', 0, '{}'),
+	(219, 'moder', 'prefix.99.:moderator: ', true, 'global', 'global', 0, '{}'),
+	(220, 'moder', 'group.helper', true, 'global', 'global', 0, '{}'),
+	(221, 'loyal', 'cmi.command.itemlore', true, 'global', 'global', 0, '{}'),
+	(222, 'loyal', 'group.default', true, 'global', 'global', 0, '{}'),
+	(223, 'loyal', 'loyal_reward', true, 'global', 'global', 0, '{}'),
+	(224, 'loyal', 'cmi.command.down', true, 'global', 'global', 0, '{}'),
+	(225, 'loyal', 'lands.roles.44', true, 'global', 'global', 0, '{}'),
+	(226, 'loyal', 'imageframe.createlimit.loyal', true, 'global', 'global', 0, '{}'),
+	(227, 'loyal', 'weight.8', true, 'global', 'global', 0, '{}'),
+	(228, 'loyal', 'lands.lands.8', true, 'global', 'global', 0, '{}'),
+	(229, 'loyal', 'cmi.kit.loyal', true, 'global', 'global', 0, '{}'),
+	(230, 'loyal', 'lands.areas.24', true, 'global', 'global', 0, '{}'),
+	(231, 'loyal', 'cmi.command.distance', true, 'global', 'global', 0, '{}'),
+	(232, 'loyal', 'cmi.command.inv.preventmodify', true, 'global', 'global', 0, '{}'),
+	(233, 'loyal', 'group.authentic', true, 'global', 'global', 0, '{}'),
+	(234, 'loyal', 'cmi.command.jump', true, 'global', 'global', 0, '{}'),
+	(235, 'loyal', 'jobs.boost.all.money.1.25', true, 'global', 'global', 0, '{}'),
+	(236, 'loyal', 'lands.ownlands.6', true, 'global', 'global', 0, '{}'),
+	(237, 'loyal', 'cmi.command.heal', true, 'global', 'global', 0, '{}'),
+	(238, 'loyal', 'adapt.boost', true, 'global', 'global', 0, '{}'),
+	(239, 'loyal', 'lands.chunks.420', true, 'global', 'global', 0, '{}'),
+	(240, 'loyal', 'jobs.max.3', true, 'global', 'global', 0, '{}'),
+	(241, 'loyal', 'prefix.8.:loyal: ', true, 'global', 'global', 0, '{}'),
+	(242, 'loyal', 'cmi.command.inv', true, 'global', 'global', 0, '{}'),
+	(243, 'loyal', 'cmi.command.jump.6', true, 'global', 'global', 0, '{}'),
+	(244, 'loyal', 'cmi.command.sethome.3', true, 'global', 'global', 0, '{}'),
+	(245, 'loyal', 'zauctionhouse_max_15', true, 'global', 'global', 0, '{}'),
+	(246, 'loyal', 'cmi.command.itemname', true, 'global', 'global', 0, '{}'),
+	(247, 'loyal', 'lands.members.18', true, 'global', 'global', 0, '{}'),
+	(248, 'authentic', 'lands.role.setting.ender_pearl', true, 'global', 'global', 0, '{}'),
+	(249, 'authentic', 'group.default', true, 'global', 'global', 0, '{}'),
+	(251, 'authentic', 'lands.role.setting.block_ignite', true, 'global', 'global', 0, '{}'),
+	(250, 'arkhont', 'lands.roles.66', true, 'global', 'global', 0, '{}'),
+	(252, 'authentic', 'prefix.4.:authentic: ', true, 'global', 'global', 0, '{}'),
+	(253, 'authentic', 'lands.areas.20', true, 'global', 'global', 0, '{}'),
+	(254, 'arkhont', 'cmi.kit.premium', true, 'global', 'global', 0, '{}'),
+	(255, 'authentic', 'join.msg.chat', true, 'global', 'global', 0, '{}'),
+	(256, 'arkhont', 'mcpet.pet_alchemist', true, 'global', 'global', 0, '{}'),
+	(257, 'authentic', 'zauctionhouse_max_10', true, 'global', 'global', 0, '{}'),
+	(258, 'arkhont', 'group.default', true, 'global', 'global', 0, '{}'),
+	(259, 'authentic', 'lands.roles.34', true, 'global', 'global', 0, '{}'),
+	(260, 'arkhont', 'weight.12', true, 'global', 'global', 0, '{}'),
+	(261, 'authentic', 'displayname.authentic', true, 'global', 'global', 0, '{}'),
+	(262, 'arkhont', 'mcpet.nocsy_baby_moth', true, 'global', 'global', 0, '{}'),
+	(263, 'authentic', 'pv.addon.discs.burn.burnable_check_bypass', true, 'global', 'global', 0, '{}'),
+	(264, 'authentic', 'cmi.command.ender', true, 'global', 'global', 0, '{}'),
+	(265, 'arkhont', 'prefix.12.:arkhont: ', true, 'global', 'global', 0, '{}'),
+	(266, 'authentic', 'authentic_reward', true, 'global', 'global', 0, '{}'),
+	(267, 'arkhont', 'lands.areas.30', true, 'global', 'global', 0, '{}'),
+	(268, 'authentic', 'jobs.boost.all.money.1.15', true, 'global', 'global', 0, '{}'),
+	(269, 'arkhont', 'arkhont_reward', true, 'global', 'global', 0, '{}'),
+	(270, 'authentic', 'pv.addon.discs.burn', true, 'global', 'global', 0, '{}'),
+	(271, 'arkhont', 'lands.ownlands.10', true, 'global', 'global', 0, '{}'),
+	(272, 'authentic', 'quit.msg.chat', true, 'global', 'global', 0, '{}'),
+	(273, 'arkhont', 'zauctionhouse_max_20', true, 'global', 'global', 0, '{}'),
+	(274, 'authentic', 'lands.setting.phantom_spawn', true, 'global', 'global', 0, '{}'),
+	(275, 'arkhont', 'lands.lands.12', true, 'global', 'global', 0, '{}'),
+	(276, 'authentic', 'adapt.boost', true, 'global', 'global', 0, '{}'),
+	(277, 'arkhont', 'jobs.max.5', true, 'global', 'global', 0, '{}'),
+	(278, 'authentic', 'lands.members.14', true, 'global', 'global', 0, '{}'),
+	(279, 'arkhont', 'cmi.command.weather', true, 'global', 'global', 0, '{}'),
+	(280, 'arkhont', 'jobs.boost.all.money.1.45', true, 'global', 'global', 0, '{}'),
+	(281, 'authentic', 'lands.ownlands.4', true, 'global', 'global', 0, '{}'),
+	(282, 'arkhont', 'mcpet.pet_beastmaster', true, 'global', 'global', 0, '{}'),
+	(283, 'authentic', 'cmi.command.anvil', true, 'global', 'global', 0, '{}'),
+	(284, 'arkhont', 'mcpet.pet_mage', true, 'global', 'global', 0, '{}'),
+	(285, 'authentic', 'lands.role.setting.elytra', true, 'global', 'global', 0, '{}'),
+	(286, 'arkhont', 'pv.addon.discs.burn.burnable_check_bypass', true, 'global', 'global', 0, '{}'),
+	(287, 'authentic', 'cmi.command.grindstone', true, 'global', 'global', 0, '{}'),
+	(288, 'arkhont', 'group.authentic', true, 'global', 'global', 0, '{}'),
+	(289, 'authentic', 'cmi.command.workbench', true, 'global', 'global', 0, '{}'),
+	(290, 'arkhont', 'mcpet.nocsy_dodo', true, 'global', 'global', 0, '{}'),
+	(291, 'authentic', 'cmi.command.feed', true, 'global', 'global', 0, '{}'),
+	(292, 'arkhont', 'pv.addon.discs.burn', true, 'global', 'global', 0, '{}'),
+	(293, 'authentic', 'mcpet.capybara_mount', true, 'global', 'global', 0, '{}'),
+	(294, 'arkhont', 'adapt.boost', true, 'global', 'global', 0, '{}'),
+	(295, 'arkhont', 'imageframe.createlimit.arkont', true, 'global', 'global', 0, '{}'),
+	(296, 'authentic', 'lands.setting.monster_spawn', true, 'global', 'global', 0, '{}'),
+	(297, 'arkhont', 'mcpet.pet_druid', true, 'global', 'global', 0, '{}'),
+	(298, 'authentic', 'jobs.max.2', true, 'global', 'global', 0, '{}'),
+	(299, 'arkhont', 'displayname.arkhont', true, 'global', 'global', 0, '{}'),
+	(300, 'authentic', 'mcpet.owl', true, 'global', 'global', 0, '{}'),
+	(301, 'authentic', 'plhide.group.default', true, 'global', 'global', 0, '{}'),
+	(302, 'arkhont', 'mcpet.pet_illusionist', true, 'global', 'global', 0, '{}'),
+	(303, 'arkhont', 'jobs.max.4', true, 'global', 'global', 0, '{}'),
+	(304, 'authentic', 'cmi.command.loom', true, 'global', 'global', 0, '{}'),
+	(305, 'arkhont', 'lands.chunks.540', true, 'global', 'global', 0, '{}'),
+	(306, 'authentic', 'imageframe.createlimit.authentic', true, 'global', 'global', 0, '{}'),
+	(308, 'authentic', 'cmi.command.sethome.2', true, 'global', 'global', 0, '{}'),
+	(307, 'arkhont', 'mcpet.nocsy_moth', true, 'global', 'global', 0, '{}'),
+	(309, 'authentic', 'lands.role.setting.land_enter', true, 'global', 'global', 0, '{}'),
+	(310, 'arkhont', 'cmi.command.sethome.3', true, 'global', 'global', 0, '{}'),
+	(311, 'authentic', 'weight.4', true, 'global', 'global', 0, '{}'),
+	(312, 'arkhont', 'cmi.command.sethome.4', true, 'global', 'global', 0, '{}'),
+	(313, 'authentic', 'lands.lands.6', true, 'global', 'global', 0, '{}'),
+	(314, 'authentic', 'cmi.command.ext', true, 'global', 'global', 0, '{}'),
+	(316, 'authentic', 'lands.setting.waterflow_allow', true, 'global', 'global', 0, '{}'),
+	(315, 'arkhont', 'mcpet.capybara_mount', true, 'global', 'global', 0, '{}'),
+	(317, 'authentic', 'lands.chunks.360', true, 'global', 'global', 0, '{}'),
+	(318, 'arkhont', 'mcpet.pet_archmage', true, 'global', 'global', 0, '{}'),
+	(319, 'authentic', 'cmi.command.hat', true, 'global', 'global', 0, '{}'),
+	(320, 'arkhont', 'mcpet.nocsy_baby_dodo', true, 'global', 'global', 0, '{}'),
+	(321, 'arkhont', 'mcpet.owl', true, 'global', 'global', 0, '{}'),
+	(322, 'arkhont', 'lands.members.26', true, 'global', 'global', 0, '{}'),
+	(323, 'arkhont', 'group.loyal', true, 'global', 'global', 0, '{}'),
+	(324, 'helper', 'weight.99', true, 'global', 'global', 0, '{}'),
+	(325, 'helper', 'group.default', true, 'global', 'global', 0, '{}'),
+	(326, 'helper', 'prefix.99.:helper: ', true, 'global', 'global', 0, '{}');
+
+
+--
+-- Data for Name: luckperms_groups; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+INSERT INTO "public"."luckperms_groups" ("name") VALUES
+	('default'),
+	('dev'),
+	('moder'),
+	('arkhont'),
+	('authentic'),
+	('loyal'),
+	('helper');
+
+
+--
+-- Data for Name: luckperms_players; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+INSERT INTO "public"."luckperms_players" ("uuid", "username", "primary_group") VALUES
+	('f0217e28-01ac-39cb-b842-17ce3a29ae0f', 'onachbiu_bo3pact', 'default'),
+	('01653c38-6d59-35ef-91ce-b1244d1ab19b', 'nefallme', 'default'),
+	('40153959-e152-356a-988a-e8820d683416', 'cocoji', 'default'),
+	('59d15194-eded-33b4-b3b7-3387e43df997', 'avant1garde', 'default'),
+	('5744cd36-94bd-3e2f-9c97-aa564b146417', 'discludness', 'default'),
+	('41e81a49-fa86-31ce-bb71-ea7959e7660e', 'aurastepp', 'default'),
+	('a0799d91-0bb2-33d1-8115-792747b934c8', 'kendrick', 'default'),
+	('a4a7d6d4-8c1b-3635-b55b-017af6c9eeb7', 'ded__inside', 'default'),
+	('c8d7300b-87e2-3a5e-bd3f-6e0905e475e8', 'ruslbeats', 'default'),
+	('690870aa-cd03-369c-ad98-2bccdd8fdfa3', 'mainar', 'default'),
+	('40a5257a-9ed8-31b8-9239-5f316881aafa', 'ferngazer', 'default'),
+	('e3ee3b2d-f744-3807-b123-722aa50b27b9', 'goosebumps', 'default'),
+	('5a69f1f7-624e-3878-bcb6-895d6e7e2e16', 'gluckoz', 'default'),
+	('0c143502-0556-34ad-9880-4e56203d6816', 'cynep_kotleta', 'default'),
+	('1bca077d-5a2a-380a-ba51-fa1e18bd96f6', 'rokema_v2', 'default'),
+	('65b3419d-efb6-36bf-9b6b-05333d8fd8ea', '0rist9sh', 'default'),
+	('b29a1654-898e-3eee-8063-3fbbbdf39df8', 'ezraika', 'default'),
+	('d8263562-2eb8-3d4e-8b3e-7f2198b41bae', 'kyddiekafka', 'default'),
+	('a6570be9-f25f-3767-bd09-6588cac34cdb', 'pureawake', 'arkhont'),
+	('71fe71d1-0161-32cd-8b57-a76486d69aee', 'george_wastaken', 'default');
+
+
+--
+-- Data for Name: luckperms_tracks; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+
+
+--
+-- Data for Name: luckperms_user_permissions; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+INSERT INTO "public"."luckperms_user_permissions" ("id", "uuid", "permission", "value", "server", "world", "expiry", "contexts") VALUES
+	(1, 'f0217e28-01ac-39cb-b842-17ce3a29ae0f', 'group.default', true, 'global', 'global', 0, '{}'),
+	(7, '41e81a49-fa86-31ce-bb71-ea7959e7660e', 'group.default', true, 'global', 'global', 0, '{}'),
+	(8, '40153959-e152-356a-988a-e8820d683416', 'group.default', true, 'global', 'global', 0, '{}'),
+	(6, '5744cd36-94bd-3e2f-9c97-aa564b146417', 'group.default', true, 'global', 'global', 0, '{}'),
+	(9, '41e81a49-fa86-31ce-bb71-ea7959e7660e', 'collection.poster.12', true, 'global', 'global', 0, '{}'),
+	(10, 'f0217e28-01ac-39cb-b842-17ce3a29ae0f', 'collection.poster.1', true, 'global', 'global', 0, '{}'),
+	(11, '40153959-e152-356a-988a-e8820d683416', 'collection.poster.6', true, 'global', 'global', 0, '{}'),
+	(12, '5744cd36-94bd-3e2f-9c97-aa564b146417', 'collection.poster.1', true, 'global', 'global', 0, '{}'),
+	(13, '41e81a49-fa86-31ce-bb71-ea7959e7660e', 'collection.poster.1', true, 'global', 'global', 0, '{}'),
+	(14, '40153959-e152-356a-988a-e8820d683416', 'collection.poster.7', true, 'global', 'global', 0, '{}'),
+	(15, '5744cd36-94bd-3e2f-9c97-aa564b146417', 'collection.poster.3', true, 'global', 'global', 0, '{}'),
+	(16, '40153959-e152-356a-988a-e8820d683416', 'collection.poster.9', true, 'global', 'global', 0, '{}'),
+	(17, '41e81a49-fa86-31ce-bb71-ea7959e7660e', 'collection.poster.14', true, 'global', 'global', 0, '{}'),
+	(18, '40153959-e152-356a-988a-e8820d683416', 'collection.poster.8', true, 'global', 'global', 0, '{}'),
+	(19, '5744cd36-94bd-3e2f-9c97-aa564b146417', 'collection.poster.4', true, 'global', 'global', 0, '{}'),
+	(20, '41e81a49-fa86-31ce-bb71-ea7959e7660e', 'mcpet.nocsy_baby_leopard', true, 'global', 'global', 0, '{}'),
+	(21, '40153959-e152-356a-988a-e8820d683416', 'group.authentic', true, 'global', 'global', 0, '{}'),
+	(22, '5744cd36-94bd-3e2f-9c97-aa564b146417', 'group.authentic', true, 'global', 'global', 0, '{}'),
+	(23, '41e81a49-fa86-31ce-bb71-ea7959e7660e', 'collection.poster.7', true, 'global', 'global', 0, '{}'),
+	(39, '40a5257a-9ed8-31b8-9239-5f316881aafa', 'group.default', true, 'global', 'global', 0, '{}'),
+	(40, '40a5257a-9ed8-31b8-9239-5f316881aafa', 'pet.use.axolotl', true, 'global', 'global', 0, '{}'),
+	(41, '40a5257a-9ed8-31b8-9239-5f316881aafa', 'recipe.ice.helmet', true, 'global', 'global', 0, '{}'),
+	(43, '40a5257a-9ed8-31b8-9239-5f316881aafa', 'pet.use.dog', true, 'global', 'global', 0, '{}'),
+	(44, '40a5257a-9ed8-31b8-9239-5f316881aafa', 'pet.use.cat', true, 'global', 'global', 0, '{}'),
+	(45, '40a5257a-9ed8-31b8-9239-5f316881aafa', 'collection.poster.4', true, 'global', 'global', 0, '{}'),
+	(46, '40a5257a-9ed8-31b8-9239-5f316881aafa', 'recipe.ice.chestplate', true, 'global', 'global', 0, '{}'),
+	(47, '5a69f1f7-624e-3878-bcb6-895d6e7e2e16', 'group.default', true, 'global', 'global', 0, '{}'),
+	(48, '5a69f1f7-624e-3878-bcb6-895d6e7e2e16', 'collection.poster.14', true, 'global', 'global', 0, '{}'),
+	(49, '5a69f1f7-624e-3878-bcb6-895d6e7e2e16', 'pet.use.dog', true, 'global', 'global', 0, '{}'),
+	(50, '5a69f1f7-624e-3878-bcb6-895d6e7e2e16', 'pet.use.cat', true, 'global', 'global', 0, '{}'),
+	(59, 'c8d7300b-87e2-3a5e-bd3f-6e0905e475e8', 'group.default', true, 'global', 'global', 0, '{}'),
+	(60, 'c8d7300b-87e2-3a5e-bd3f-6e0905e475e8', 'group.arkhont', true, 'global', 'global', 0, '{}'),
+	(61, 'c8d7300b-87e2-3a5e-bd3f-6e0905e475e8', 'collection.poster.8', true, 'global', 'global', 0, '{}'),
+	(62, 'c8d7300b-87e2-3a5e-bd3f-6e0905e475e8', 'collection.poster.13', true, 'global', 'global', 0, '{}'),
+	(63, 'c8d7300b-87e2-3a5e-bd3f-6e0905e475e8', 'mcpet.capybara_mount', true, 'global', 'global', 0, '{}'),
+	(64, 'c8d7300b-87e2-3a5e-bd3f-6e0905e475e8', 'collection.poster.1', true, 'global', 'global', 0, '{}'),
+	(65, 'c8d7300b-87e2-3a5e-bd3f-6e0905e475e8', 'collection.poster.11', true, 'global', 'global', 0, '{}'),
+	(66, 'c8d7300b-87e2-3a5e-bd3f-6e0905e475e8', 'collection.poster.14', true, 'global', 'global', 0, '{}'),
+	(67, 'c8d7300b-87e2-3a5e-bd3f-6e0905e475e8', 'collection.poster.6', true, 'global', 'global', 0, '{}'),
+	(68, 'c8d7300b-87e2-3a5e-bd3f-6e0905e475e8', 'collection.poster.5', true, 'global', 'global', 0, '{}'),
+	(69, 'c8d7300b-87e2-3a5e-bd3f-6e0905e475e8', 'collection.poster.9', true, 'global', 'global', 0, '{}'),
+	(70, 'c8d7300b-87e2-3a5e-bd3f-6e0905e475e8', 'collection.poster.4', true, 'global', 'global', 0, '{}'),
+	(71, 'c8d7300b-87e2-3a5e-bd3f-6e0905e475e8', 'collection.poster.10', true, 'global', 'global', 0, '{}'),
+	(111, '65b3419d-efb6-36bf-9b6b-05333d8fd8ea', 'group.default', true, 'global', 'global', 0, '{}'),
+	(112, '65b3419d-efb6-36bf-9b6b-05333d8fd8ea', 'collection.poster.1', true, 'global', 'global', 0, '{}'),
+	(115, 'b29a1654-898e-3eee-8063-3fbbbdf39df8', 'group.default', true, 'global', 'global', 0, '{}'),
+	(121, 'b29a1654-898e-3eee-8063-3fbbbdf39df8', 'pet.use.dog', true, 'global', 'global', 0, '{}'),
+	(122, 'b29a1654-898e-3eee-8063-3fbbbdf39df8', 'pet.use.cat', true, 'global', 'global', 0, '{}'),
+	(5, '59d15194-eded-33b4-b3b7-3387e43df997', 'group.default', true, 'global', 'global', 0, '{}'),
+	(25, '59d15194-eded-33b4-b3b7-3387e43df997', 'pet.use.cat', true, 'global', 'global', 0, '{}'),
+	(84, 'a6570be9-f25f-3767-bd09-6588cac34cdb', 'group.default', true, 'global', 'global', 0, '{}'),
+	(85, 'a6570be9-f25f-3767-bd09-6588cac34cdb', 'pet.use.lgbt', true, 'global', 'global', 0, '{}'),
+	(86, 'a6570be9-f25f-3767-bd09-6588cac34cdb', 'pv.addon.discs.erase', true, 'global', 'global', 0, '{}'),
+	(87, 'a6570be9-f25f-3767-bd09-6588cac34cdb', 'pet.use.clyde', true, 'global', 'global', 0, '{}'),
+	(88, 'a6570be9-f25f-3767-bd09-6588cac34cdb', 'collection.poster.12', true, 'global', 'global', 0, '{}'),
+	(89, 'a6570be9-f25f-3767-bd09-6588cac34cdb', 'join.msg.chat', true, 'global', 'global', 0, '{}'),
+	(90, 'a6570be9-f25f-3767-bd09-6588cac34cdb', 'collection.poster.1', true, 'global', 'global', 0, '{}'),
+	(91, 'a6570be9-f25f-3767-bd09-6588cac34cdb', 'collection.poster.9', true, 'global', 'global', 0, '{}'),
+	(92, 'a6570be9-f25f-3767-bd09-6588cac34cdb', 'meta.lp-editor-key.G8t4xgj/7aRJrjZ+1n8tbJ8ez6U=', true, 'global', 'global', 0, '{}'),
+	(93, 'a6570be9-f25f-3767-bd09-6588cac34cdb', 'pet.use.surpisedvillager', true, 'global', 'global', 0, '{}'),
+	(94, 'a6570be9-f25f-3767-bd09-6588cac34cdb', 'pet.use.pepsi', true, 'global', 'global', 0, '{}'),
+	(95, 'a6570be9-f25f-3767-bd09-6588cac34cdb', 'pv.addon.discs.burn', true, 'global', 'global', 0, '{}'),
+	(96, 'a6570be9-f25f-3767-bd09-6588cac34cdb', 'quit.msg.chat', true, 'global', 'global', 0, '{}'),
+	(97, 'a6570be9-f25f-3767-bd09-6588cac34cdb', 'pet.use.duolingo', true, 'global', 'global', 0, '{}'),
+	(98, 'a6570be9-f25f-3767-bd09-6588cac34cdb', 'pet.use.gardendworf', true, 'global', 'global', 0, '{}'),
+	(99, 'a6570be9-f25f-3767-bd09-6588cac34cdb', 'collection.poster.3', true, 'global', 'global', 0, '{}'),
+	(100, 'a6570be9-f25f-3767-bd09-6588cac34cdb', 'collection.poster.7', true, 'global', 'global', 0, '{}'),
+	(101, 'a6570be9-f25f-3767-bd09-6588cac34cdb', 'You', true, 'because', 'attack', 0, '{"server":["can''''t","he''''s","in","player,","this","wilderness"]}'),
+	(102, 'a6570be9-f25f-3767-bd09-6588cac34cdb', 'collection.poster.8', true, 'global', 'global', 0, '{}'),
+	(103, 'a6570be9-f25f-3767-bd09-6588cac34cdb', 'collection.poster.2', true, 'global', 'global', 0, '{}'),
+	(104, 'a6570be9-f25f-3767-bd09-6588cac34cdb', 'settings.automsg.chat', true, 'global', 'global', 0, '{}'),
+	(105, 'a6570be9-f25f-3767-bd09-6588cac34cdb', 'collection.poster.13', true, 'global', 'global', 0, '{}'),
+	(106, 'a6570be9-f25f-3767-bd09-6588cac34cdb', 'mcpet.capybara_mount', true, 'global', 'global', 0, '{}'),
+	(107, 'a6570be9-f25f-3767-bd09-6588cac34cdb', 'collection.poster.6', true, 'global', 'global', 0, '{}'),
+	(108, 'a6570be9-f25f-3767-bd09-6588cac34cdb', 'lands.player.setting.enter_messages', true, 'global', 'global', 0, '{}'),
+	(109, 'a6570be9-f25f-3767-bd09-6588cac34cdb', 'collection.poster.4', true, 'global', 'global', 0, '{}'),
+	(110, 'a6570be9-f25f-3767-bd09-6588cac34cdb', 'pet.use.orc', true, 'global', 'global', 0, '{}'),
+	(4, '01653c38-6d59-35ef-91ce-b1244d1ab19b', 'group.default', true, 'global', 'global', 0, '{}'),
+	(28, '01653c38-6d59-35ef-91ce-b1244d1ab19b', 'collection.poster.1', true, 'global', 'global', 0, '{}'),
+	(74, '1bca077d-5a2a-380a-ba51-fa1e18bd96f6', 'group.default', true, 'global', 'global', 0, '{}'),
+	(75, '1bca077d-5a2a-380a-ba51-fa1e18bd96f6', 'pet.use.aquarium', true, 'global', 'global', 0, '{}'),
+	(76, '1bca077d-5a2a-380a-ba51-fa1e18bd96f6', 'collection.poster.13', true, 'global', 'global', 0, '{}'),
+	(77, '1bca077d-5a2a-380a-ba51-fa1e18bd96f6', 'collection.poster.1', true, 'global', 'global', 0, '{}'),
+	(78, '1bca077d-5a2a-380a-ba51-fa1e18bd96f6', 'collection.poster.11', true, 'global', 'global', 0, '{}'),
+	(79, '1bca077d-5a2a-380a-ba51-fa1e18bd96f6', 'collection.poster.6', true, 'global', 'global', 0, '{}'),
+	(80, '1bca077d-5a2a-380a-ba51-fa1e18bd96f6', 'pet.use.cat', true, 'global', 'global', 0, '{}'),
+	(81, '1bca077d-5a2a-380a-ba51-fa1e18bd96f6', 'collection.poster.5', true, 'global', 'global', 0, '{}'),
+	(82, '1bca077d-5a2a-380a-ba51-fa1e18bd96f6', 'collection.poster.7', true, 'global', 'global', 0, '{}'),
+	(83, '1bca077d-5a2a-380a-ba51-fa1e18bd96f6', 'collection.poster.4', true, 'global', 'global', 0, '{}'),
+	(3, 'a4a7d6d4-8c1b-3635-b55b-017af6c9eeb7', 'group.default', true, 'global', 'global', 0, '{}'),
+	(30, 'a4a7d6d4-8c1b-3635-b55b-017af6c9eeb7', 'pet.use.dog', true, 'global', 'global', 0, '{}'),
+	(32, 'a4a7d6d4-8c1b-3635-b55b-017af6c9eeb7', 'pet.use.cat', true, 'global', 'global', 0, '{}'),
+	(34, 'a4a7d6d4-8c1b-3635-b55b-017af6c9eeb7', 'collection.poster.3', true, 'global', 'global', 0, '{}'),
+	(35, 'a4a7d6d4-8c1b-3635-b55b-017af6c9eeb7', 'collection.poster.8', true, 'global', 'global', 0, '{}'),
+	(36, 'a4a7d6d4-8c1b-3635-b55b-017af6c9eeb7', 'collection.poster.10', true, 'global', 'global', 0, '{}'),
+	(37, 'a4a7d6d4-8c1b-3635-b55b-017af6c9eeb7', 'collection.poster.2', true, 'global', 'global', 0, '{}'),
+	(38, '690870aa-cd03-369c-ad98-2bccdd8fdfa3', 'group.default', true, 'global', 'global', 0, '{}'),
+	(42, '690870aa-cd03-369c-ad98-2bccdd8fdfa3', 'collection.poster.3', true, 'global', 'global', 0, '{}'),
+	(113, 'd8263562-2eb8-3d4e-8b3e-7f2198b41bae', 'group.default', true, 'global', 'global', 0, '{}'),
+	(114, 'd8263562-2eb8-3d4e-8b3e-7f2198b41bae', 'collection.poster.12', true, 'global', 'global', 0, '{}'),
+	(116, 'd8263562-2eb8-3d4e-8b3e-7f2198b41bae', 'collection.poster.1', true, 'global', 'global', 0, '{}'),
+	(117, 'd8263562-2eb8-3d4e-8b3e-7f2198b41bae', 'collection.poster.11', true, 'global', 'global', 0, '{}'),
+	(118, 'd8263562-2eb8-3d4e-8b3e-7f2198b41bae', 'collection.poster.9', true, 'global', 'global', 0, '{}'),
+	(119, 'd8263562-2eb8-3d4e-8b3e-7f2198b41bae', 'group.authentic', true, 'global', 'global', 0, '{}'),
+	(120, 'd8263562-2eb8-3d4e-8b3e-7f2198b41bae', 'collection.poster.2', true, 'global', 'global', 0, '{}'),
+	(51, 'e3ee3b2d-f744-3807-b123-722aa50b27b9', 'group.default', true, 'global', 'global', 0, '{}'),
+	(52, 'e3ee3b2d-f744-3807-b123-722aa50b27b9', 'collection.poster.14', true, 'global', 'global', 0, '{}'),
+	(53, 'e3ee3b2d-f744-3807-b123-722aa50b27b9', 'collection.poster.6', true, 'global', 'global', 0, '{}'),
+	(54, 'e3ee3b2d-f744-3807-b123-722aa50b27b9', 'collection.poster.3', true, 'global', 'global', 0, '{}'),
+	(55, 'e3ee3b2d-f744-3807-b123-722aa50b27b9', 'collection.poster.7', true, 'global', 'global', 0, '{}'),
+	(56, 'e3ee3b2d-f744-3807-b123-722aa50b27b9', 'collection.poster.8', true, 'global', 'global', 0, '{}'),
+	(57, 'e3ee3b2d-f744-3807-b123-722aa50b27b9', 'collection.poster.10', true, 'global', 'global', 0, '{}'),
+	(58, 'e3ee3b2d-f744-3807-b123-722aa50b27b9', 'collection.poster.2', true, 'global', 'global', 0, '{}'),
+	(2, 'a0799d91-0bb2-33d1-8115-792747b934c8', 'group.default', true, 'global', 'global', 0, '{}'),
+	(24, 'a0799d91-0bb2-33d1-8115-792747b934c8', 'pet.use.dog', true, 'global', 'global', 0, '{}'),
+	(26, 'a0799d91-0bb2-33d1-8115-792747b934c8', 'pet.use.cat', true, 'global', 'global', 0, '{}'),
+	(27, 'a0799d91-0bb2-33d1-8115-792747b934c8', 'collection.poster.4', true, 'global', 'global', 0, '{}'),
+	(29, 'a0799d91-0bb2-33d1-8115-792747b934c8', 'pet.use.suprisedvillager', true, 'global', 'global', 0, '{}'),
+	(31, 'a0799d91-0bb2-33d1-8115-792747b934c8', 'collection.poster.10', true, 'global', 'global', 0, '{}'),
+	(33, 'a0799d91-0bb2-33d1-8115-792747b934c8', 'collection.poster.2', true, 'global', 'global', 0, '{}'),
+	(72, '0c143502-0556-34ad-9880-4e56203d6816', 'group.default', true, 'global', 'global', 0, '{}'),
+	(73, '0c143502-0556-34ad-9880-4e56203d6816', 'pet.use.dog', true, 'global', 'global', 0, '{}');
 
 
 --
 -- Data for Name: p_comments; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
+INSERT INTO "public"."p_comments" ("id", "content", "created_at", "user_nickname") VALUES
+	('e065de94-931d-4524-b697-6bb4cc9af6d7', 'uioyuiyui', '2024-08-25 12:46:39.769671+00', 'pureawake'),
+	('a3695338-adf3-4427-b5d3-c6786d4d89fb', 'шщшщзщзшзщш', '2024-08-25 12:48:08.1004+00', 'pureawake'),
+	('d220c6bd-8790-437e-a43b-bb4a0da70324', 'АХАХАХЫВАПХХЫУПХЫВХПВВПЫПВЫВ', '2024-08-25 12:48:24.597517+00', 'pureawake'),
+	('92151289-b174-42db-ab06-3e7b4e3305b2', 'asdasdsad', '2024-08-25 23:03:57.120235+00', 'discludness');
 
 
 --
 -- Data for Name: posts; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-INSERT INTO "public"."posts" ("content", "post_id", "visibility", "created_at", "comments") VALUES
-	('Сегодня был отличный день! Прогулялся по парку, наслаждался солнечной погодой и встретил старых друзей. Жизнь прекрасна, когда окружен хорошими людьми. 💖', 'a36aa1b6-bbab-426b-8b3e-2c56ee0ecf78', 'all', '2024-06-29 10:57:50.493599+00', true),
-	('🎮 Всем привет! Недавно нашёл в Minecraft новое эпическое подземелье! 🌌 Это просто невероятно! Готовьтесь к приключению и собирайте ресурсы! ⚒️ Сталкивался с новыми, очень сильными мобами, но награды стоят того! 💎 Советую брать с собой больше факелов и зелий, чтобы выжить. 🏰 Кстати, кто уже исследовал это подземелье? Делитесь своими находками и стратегиями! 🚀 Давайте вместе разгадаем все тайны этого места! #Minecraft #Приключения #Подземелье', 'd2a2fd1c-ca8a-4b0a-9793-d448e8bc2682', 'all', '2024-06-29 10:57:50.493599+00', true),
-	('ПОЛНАЯ АБОБА 🤣🤣🤣🤣', 'a3b4a325-c6b8-46b0-9f28-ecc77471b926', 'friends', '2024-06-28 10:57:50+00', true),
-	('uwu 👣', 'dabf5a2a-b9cf-4b7f-a4cb-30b00065497b', 'only', '2024-07-01 11:28:04.306058+00', true),
-	('седня жиденько покакал', 'd62d6377-d383-421d-90cb-839a2777861d', 'all', '2024-06-29 17:23:57.249775+00', true),
-	('А зачем какать? Скажите парни', '39bd527b-17ec-4866-8bf6-2db02177acd3', 'friends', '2024-07-01 11:40:11.187736+00', true),
-	('🎮 Привет, искатели приключений! 🌍 Сегодня нашёл новое подземелье в Minecraft, и это что-то с чем-то! ⚔️ Оно просто огромное и полное опасностей! Сначала пришлось сразиться с кучей скелетов и зомби, а потом ещё и пауки налетели. 😱 Но самое интересное началось, когда нашёл сокровищницу с редкими ресурсами и зачарованным оружием! 💎 Не забудьте взять с собой побольше факелов и зелий исцеления, они там очень пригодятся. 🏰 В центре подземелья есть сложная головоломка, которую мы с друзьями еле-еле разгадали. 🔍 Кто уже проходил это подземелье? Поделитесь своими советами и лайфхаками! Очень интересно, что у кого получилось найти! 🌟 В общем, настоятельно рекомендую всем исследовать это место. Удачи вам и много удачных находок! #Minecraft #Подземелье #Приключения #Исследование #Сокровища', 'c05b6ee8-a7f4-42e4-8e20-e3920a487525', 'only', '2024-06-29 20:57:50+00', true),
-	('ахахх', '2db918c7-ba45-42bc-94ef-4bbf56c8ebbb', 'all', '2024-07-01 17:32:24.717443+00', true),
-	('ПЕРВЫЙ ПОСТ!', 'da69df33-b0a5-4e06-b221-1e1422ed0ed6', 'all', '2024-07-03 17:05:05.169706+00', true),
-	('sddsas', '1a44bd9d-06e1-422d-a761-58abcb5367aa', 'all', '2024-07-03 18:35:04.817232+00', true);
+INSERT INTO "public"."posts" ("comments", "content", "created_at", "post_id", "visibility") VALUES
+	(true, 'Сегодня был отличный день! Прогулялся по парку, наслаждался солнечной погодой и встретил старых друзей. Жизнь прекрасна, когда окружен хорошими людьми. 💖', '2024-06-29 10:57:50.493599+00', 'a36aa1b6-bbab-426b-8b3e-2c56ee0ecf78', 'all'),
+	(true, '🎮 Всем привет! Недавно нашёл в Minecraft новое эпическое подземелье! 🌌 Это просто невероятно! Готовьтесь к приключению и собирайте ресурсы! ⚒️ Сталкивался с новыми, очень сильными мобами, но награды стоят того! 💎 Советую брать с собой больше факелов и зелий, чтобы выжить. 🏰 Кстати, кто уже исследовал это подземелье? Делитесь своими находками и стратегиями! 🚀 Давайте вместе разгадаем все тайны этого места! #Minecraft #Приключения #Подземелье', '2024-06-29 10:57:50.493599+00', 'd2a2fd1c-ca8a-4b0a-9793-d448e8bc2682', 'all'),
+	(true, 'ПОЛНАЯ АБОБА 🤣🤣🤣🤣', '2024-06-28 10:57:50+00', 'a3b4a325-c6b8-46b0-9f28-ecc77471b926', 'friends'),
+	(true, 'uwu 👣', '2024-07-01 11:28:04.306058+00', 'dabf5a2a-b9cf-4b7f-a4cb-30b00065497b', 'only'),
+	(true, 'седня жиденько покакал', '2024-06-29 17:23:57.249775+00', 'd62d6377-d383-421d-90cb-839a2777861d', 'all'),
+	(true, 'А зачем какать? Скажите парни', '2024-07-01 11:40:11.187736+00', '39bd527b-17ec-4866-8bf6-2db02177acd3', 'friends'),
+	(true, '🎮 Привет, искатели приключений! 🌍 Сегодня нашёл новое подземелье в Minecraft, и это что-то с чем-то! ⚔️ Оно просто огромное и полное опасностей! Сначала пришлось сразиться с кучей скелетов и зомби, а потом ещё и пауки налетели. 😱 Но самое интересное началось, когда нашёл сокровищницу с редкими ресурсами и зачарованным оружием! 💎 Не забудьте взять с собой побольше факелов и зелий исцеления, они там очень пригодятся. 🏰 В центре подземелья есть сложная головоломка, которую мы с друзьями еле-еле разгадали. 🔍 Кто уже проходил это подземелье? Поделитесь своими советами и лайфхаками! Очень интересно, что у кого получилось найти! 🌟 В общем, настоятельно рекомендую всем исследовать это место. Удачи вам и много удачных находок! #Minecraft #Подземелье #Приключения #Исследование #Сокровища', '2024-06-29 20:57:50+00', 'c05b6ee8-a7f4-42e4-8e20-e3920a487525', 'only'),
+	(true, 'ахахх', '2024-07-01 17:32:24.717443+00', '2db918c7-ba45-42bc-94ef-4bbf56c8ebbb', 'all'),
+	(true, 'ПЕРВЫЙ ПОСТ!', '2024-07-03 17:05:05.169706+00', 'da69df33-b0a5-4e06-b221-1e1422ed0ed6', 'all'),
+	(true, 'sddsas', '2024-07-03 18:35:04.817232+00', '1a44bd9d-06e1-422d-a761-58abcb5367aa', 'all');
 
 
 --
 -- Data for Name: posts_comments; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
+INSERT INTO "public"."posts_comments" ("comment_id", "id", "post_id") VALUES
+	('a3695338-adf3-4427-b5d3-c6786d4d89fb', 2, 'd2a2fd1c-ca8a-4b0a-9793-d448e8bc2682'),
+	('d220c6bd-8790-437e-a43b-bb4a0da70324', 3, '2db918c7-ba45-42bc-94ef-4bbf56c8ebbb'),
+	('92151289-b174-42db-ab06-3e7b4e3305b2', 4, 'd2a2fd1c-ca8a-4b0a-9793-d448e8bc2682');
 
 
 --
@@ -376,8 +922,13 @@ INSERT INTO "public"."posts_users" ("post_id", "user_nickname") VALUES
 	('a3b4a325-c6b8-46b0-9f28-ecc77471b926', 'pureawake'),
 	('dabf5a2a-b9cf-4b7f-a4cb-30b00065497b', 'discludness'),
 	('2db918c7-ba45-42bc-94ef-4bbf56c8ebbb', 'discludness'),
-	('da69df33-b0a5-4e06-b221-1e1422ed0ed6', 'george_wastaken'),
 	('1a44bd9d-06e1-422d-a761-58abcb5367aa', 'pureawake');
+
+
+--
+-- Data for Name: reports; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
 
 
 --
@@ -392,16 +943,36 @@ INSERT INTO "public"."status" ("user_id", "value") VALUES
 -- Data for Name: t_comments; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-INSERT INTO "public"."t_comments" ("created_at", "id", "content", "user_nickname") VALUES
-	('2024-07-04 14:25:33.786025+00', '5f5825d1-9b4e-4363-853a-ba53a3e41349', 'ХАХАХА ЛОХ БЛЯТЬ', 'mongoose');
+INSERT INTO "public"."t_comments" ("content", "created_at", "user_nickname", "id") VALUES
+	('а когда фото?', '2024-08-25 13:23:02.703634+00', 'pureawake', 2),
+	('скоро', '2024-08-25 13:23:07.409214+00', 'pureawake', 3),
+	('ооо спс', '2024-08-25 13:23:19.080311+00', 'pureawake', 4);
+
+
+--
+-- Data for Name: t_comments_replies; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+INSERT INTO "public"."t_comments_replies" ("created_at", "id", "initiator_comment_id", "recipient_comment_id") VALUES
+	('2024-08-25 13:23:07.482687+00', 1, 3, 2);
 
 
 --
 -- Data for Name: threads_comments; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-INSERT INTO "public"."threads_comments" ("thread_id", "comment_id") VALUES
-	('e9bbc4cd-7668-4bee-aa7a-59d4a147185c', '5f5825d1-9b4e-4363-853a-ba53a3e41349');
+INSERT INTO "public"."threads_comments" ("id", "thread_id", "comment_id") VALUES
+	(1, 'd0a25fc4-a7d6-4e47-89d4-538cadecf2c9', 2),
+	(2, 'd0a25fc4-a7d6-4e47-89d4-538cadecf2c9', 3),
+	(3, 'b558eb07-d050-462b-8249-b5d34ddb1b9e', 4);
+
+
+--
+-- Data for Name: threads_images; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+INSERT INTO "public"."threads_images" ("id", "images", "thread_id") VALUES
+	(1, '{b558eb07-d050-462b-8249-b5d34ddb1b9e-image-0,b558eb07-d050-462b-8249-b5d34ddb1b9e-image-1}', 'b558eb07-d050-462b-8249-b5d34ddb1b9e');
 
 
 --
@@ -411,11 +982,29 @@ INSERT INTO "public"."threads_comments" ("thread_id", "comment_id") VALUES
 
 
 --
+-- Data for Name: threads_rating; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+INSERT INTO "public"."threads_rating" ("id", "type", "thread_id", "user_id") VALUES
+	(4, 'increment', 'b558eb07-d050-462b-8249-b5d34ddb1b9e', 'd905f002-1370-44c6-bef3-885063b5332f'),
+	(6, 'decrement', 'd0a25fc4-a7d6-4e47-89d4-538cadecf2c9', 'c2e8de6f-a450-4ca0-ba50-828bedb053ba'),
+	(7, 'increment', 'b558eb07-d050-462b-8249-b5d34ddb1b9e', 'c2e8de6f-a450-4ca0-ba50-828bedb053ba'),
+	(9, 'decrement', 'd0a25fc4-a7d6-4e47-89d4-538cadecf2c9', 'd905f002-1370-44c6-bef3-885063b5332f');
+
+
+--
 -- Data for Name: threads_stars; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-INSERT INTO "public"."threads_stars" ("id", "user_id", "thread_id") VALUES
-	(1, '988aecf5-28a2-4d62-9625-284b8d401a8b', 'e9bbc4cd-7668-4bee-aa7a-59d4a147185c');
+
+
+--
+-- Data for Name: threads_tags; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+INSERT INTO "public"."threads_tags" ("id", "tags", "thread_id") VALUES
+	(2, '{"\"абоба\"","\"тред\"","\"контентище\"","\"без фото\""}', 'd0a25fc4-a7d6-4e47-89d4-538cadecf2c9'),
+	(6, '{"\"тред\"","\"абоба\"","\"кошки\"","\"контентище\"","\"с фото\""}', 'b558eb07-d050-462b-8249-b5d34ddb1b9e');
 
 
 --
@@ -423,10 +1012,14 @@ INSERT INTO "public"."threads_stars" ("id", "user_id", "thread_id") VALUES
 --
 
 INSERT INTO "public"."threads_users" ("thread_id", "user_nickname") VALUES
-	('e9bbc4cd-7668-4bee-aa7a-59d4a147185c', 'pureawake'),
-	('64cdce51-53ec-4155-b28e-db2199993343', 'pureawake'),
-	('f5232406-c72a-4c61-8046-947bb4e94551', 'mongoose'),
-	('50d5d02d-cd20-4f54-9756-04269fb2fbd7', 'discludness');
+	('d0a25fc4-a7d6-4e47-89d4-538cadecf2c9', 'pureawake'),
+	('b558eb07-d050-462b-8249-b5d34ddb1b9e', 'pureawake');
+
+
+--
+-- Data for Name: users_banned; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
 
 
 --
@@ -436,40 +1029,41 @@ INSERT INTO "public"."threads_users" ("thread_id", "user_nickname") VALUES
 
 
 --
--- Data for Name: users_friends; Type: TABLE DATA; Schema: public; Owner: postgres
+-- Data for Name: users_requests_timeout; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-INSERT INTO "public"."users_friends" ("id", "created_at", "user_1", "user_2") VALUES
-	('f101cd41-285b-4a52-a1ea-87e3b3058999', '2024-07-01 20:19:08.516631+00', 'discludness', 'pureawake');
+INSERT INTO "public"."users_requests_timeout" ("id", "issued_at", "type", "user_nickname", "created_at") VALUES
+	(2, '2024-08-25 12:17:34', 'real_name', 'discludness', '2024-08-25 12:12:34.748549'),
+	(3, '2024-08-25 13:50:25', 'favorite_item', 'pureawake', '2024-08-25 13:45:25.868468'),
+	(4, '2024-08-25 13:54:03', 'favorite_item', 'pureawake', '2024-08-25 13:49:03.087978'),
+	(5, '2024-08-25 22:08:17', 'name_color', 'pureawake', '2024-08-25 22:03:17.985864'),
+	(6, '2024-08-25 22:08:31', 'favorite_item', 'pureawake', '2024-08-25 22:03:31.338357'),
+	(7, '2024-08-25 23:19:45', 'real_name', 'george_wastaken', '2024-08-25 23:14:45.267583'),
+	(8, '2024-08-25 23:19:54', 'description', 'george_wastaken', '2024-08-25 23:14:54.763592'),
+	(9, '2024-08-26 15:05:28', 'name_color', 'pureawake', '2024-08-26 15:00:28.349093');
 
 
 --
 -- Data for Name: users_security; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-INSERT INTO "public"."users_security" ("user_nickname", "email", "token") VALUES
-	('george_wastaken', 'asd@gmail.com', NULL),
-	('pureawake', 'fank.tomphson@gmail.com', NULL),
-	('Ded____Inside', 'adsasdasdasd@gmail.com', NULL);
+INSERT INTO "public"."users_security" ("email", "token", "user_nickname") VALUES
+	('fank.tomphson@gmail.com', NULL, 'pureawake');
 
 
 --
 -- Data for Name: users_session; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-INSERT INTO "public"."users_session" ("expires_at", "id", "user_id", "ua", "browser", "os", "cpu", "isBot", "created_at", "ip") VALUES
-	('2024-07-18 11:25:33.28', 'fvsk6oxqttic5jshns3h4jo7upqgq7akqa76hza6', 'c2e8de6f-a450-4ca0-ba50-828bedb053ba', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36 Edg/126.0.0.0', 'Edge', 'Windows10', 'amd64', false, '2024-07-04 11:25:33.324341+00', NULL),
-	('2024-07-18 10:01:45.492', 'kqqdw5ggoq6ceokp3kqa255dxikqaxaqtfsqlmp3', 'd905f002-1370-44c6-bef3-885063b5332f', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:127.0) Gecko/20100101 Firefox/127.0', 'Firefox', 'Windows10', 'amd64', false, '2024-07-04 10:01:45.544471+00', NULL);
+INSERT INTO "public"."users_session" ("id", "expires_at", "user_id", "browser", "cpu", "ip", "isBot", "os", "ua") VALUES
+	('l4cst67ckgdpi6lkohyuxrybczflbyfbzmc6yui2', '2024-09-08 23:15:04.315+00', 'd905f002-1370-44c6-bef3-885063b5332f', 'Chrome', 'amd64', NULL, false, 'Windows10', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36'),
+	('iqpzfawf7s5vuall2u6halfod7wm5ykxo4bfjm4j', '2024-09-09 20:47:07.001+00', 'c2508ed9-c992-4eb3-98a6-e149d01c4b2a', 'Firefox', 'amd64', NULL, false, 'Windows10', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:129.0) Gecko/20100101 Firefox/129.0'),
+	('wduqs5xixckrxm7ifdof4suqplu6lzzrnxn5qem4', '2024-09-10 10:30:14.51+00', 'c2e8de6f-a450-4ca0-ba50-828bedb053ba', 'Chrome', 'amd64', NULL, false, 'Windows10', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36'),
+	('g6scadwuww2os2eat4du4dh3k6zk54rsopeiqcjy', '2024-09-10 14:15:28.106+00', 'c2e8de6f-a450-4ca0-ba50-828bedb053ba', 'Chrome', 'amd64', NULL, false, 'Windows10', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36');
 
 
 --
 -- Data for Name: users_settings; Type: TABLE DATA; Schema: public; Owner: postgres
---
-
-
-
---
--- Data for Name: users_status; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
 
@@ -480,51 +1074,49 @@ INSERT INTO "public"."users_session" ("expires_at", "id", "user_id", "ua", "brow
 
 INSERT INTO "storage"."buckets" ("id", "name", "owner", "created_at", "updated_at", "public", "avif_autodetection", "file_size_limit", "allowed_mime_types", "owner_id") VALUES
 	('user_images', 'user_images', NULL, '2024-06-24 13:46:39.726137+00', '2024-06-24 13:46:39.726137+00', true, false, 37748736, '{image/*}', NULL),
-	('static', 'static', NULL, '2024-07-03 20:59:29.053004+00', '2024-07-03 20:59:29.053004+00', true, false, 0, '{image/*}', NULL);
+	('static', 'static', NULL, '2024-07-03 20:59:29.053004+00', '2024-07-03 20:59:29.053004+00', true, false, 0, '{image/*}', NULL),
+	('threads', 'threads', NULL, '2024-08-25 13:10:01.705744+00', '2024-08-25 13:10:01.705744+00', true, false, 16777216, '{image/*}', NULL);
 
 
 --
 -- Data for Name: objects; Type: TABLE DATA; Schema: storage; Owner: supabase_storage_admin
 --
 
-INSERT INTO "storage"."objects" ("id", "bucket_id", "name", "owner", "created_at", "updated_at", "last_accessed_at", "metadata", "version", "owner_id") VALUES
-	('70a49a39-3ea5-4563-9d30-cd765b567311', 'user_images', 'cover/26ec9d74-cec1-42f7-a472-28195c6b03d7FBnoGiwwRrn8wtaIH7eEU', NULL, '2024-06-29 17:51:23.421827+00', '2024-06-29 17:51:23.421827+00', '2024-06-29 17:51:23.421827+00', '{"eTag": "\"642a0f4767a0cfa0acb2ac32008473d1\"", "size": 3567250, "mimetype": "image/jpeg", "cacheControl": "max-age=0", "lastModified": "2024-06-29T17:51:23.246Z", "contentLength": 3567250, "httpStatusCode": 200}', 'c3d8ef49-3bb6-4754-86d8-8dd59718fd43', NULL),
-	('ce851e18-3d09-4eca-9e28-cfcc860c0ee3', 'user_images', 'cover/d905f002-1370-44c6-bef3-885063b5332fx2GLOINEWpCUKkYdKfojU', NULL, '2024-06-30 14:47:42.471194+00', '2024-06-30 14:47:42.471194+00', '2024-06-30 14:47:42.471194+00', '{"eTag": "\"df92d5778823890f2504628304907eac\"", "size": 2086518, "mimetype": "image/jpeg", "cacheControl": "max-age=0", "lastModified": "2024-06-30T14:47:42.435Z", "contentLength": 2086518, "httpStatusCode": 200}', '91e04c5b-df8c-460d-abae-652ba3dbf800', NULL),
-	('db749c14-42e6-4ac3-8e9c-94acb9b18568', 'user_images', 'cover/d905f002-1370-44c6-bef3-885063b5332fbuNsPap9twwUajB7B8wiE', NULL, '2024-06-30 15:00:07.536477+00', '2024-06-30 15:00:07.536477+00', '2024-06-30 15:00:07.536477+00', '{"eTag": "\"cc51d1216902f36a48b667c6f45d4f66\"", "size": 2418519, "mimetype": "image/jpeg", "cacheControl": "max-age=0", "lastModified": "2024-06-30T15:00:07.473Z", "contentLength": 2418519, "httpStatusCode": 200}', '35c3e184-fd42-4fc7-994d-3195e2a1956f', NULL),
-	('1d15f6b4-78f1-4003-9926-fefd687beb8d', 'user_images', 'cover/d905f002-1370-44c6-bef3-885063b5332fR3yxvdUK_b9cC7D9_8qmS', NULL, '2024-06-30 19:34:16.6694+00', '2024-06-30 19:34:16.6694+00', '2024-06-30 19:34:16.6694+00', '{"eTag": "\"0ad2451ecf96220041ce60fba13a0741\"", "size": 454344, "mimetype": "image/png", "cacheControl": "max-age=0", "lastModified": "2024-06-30T19:34:16.617Z", "contentLength": 454344, "httpStatusCode": 200}', '9b3ed090-c749-4cf1-b68f-c7af1894e684', NULL),
-	('b8fafe09-f73b-4eeb-964c-46878edbcadf', 'user_images', 'default/render-warden-hide.jpg', NULL, '2024-07-01 05:42:19.710868+00', '2024-07-01 05:42:19.710868+00', '2024-07-01 05:42:19.710868+00', '{"eTag": "\"72569e9110c34d8456d0f5202190f57f\"", "size": 292849, "mimetype": "image/jpeg", "cacheControl": "max-age=3600", "lastModified": "2024-07-01T05:42:19.581Z", "contentLength": 292849, "httpStatusCode": 200}', 'f31494fe-6b66-4be6-85a0-dd0a4d9cb1dc', NULL),
-	('607fcf14-d871-4046-ba4d-3bf32637af4a', 'user_images', 'default/sand-camel.jpg', NULL, '2024-07-01 05:42:19.734484+00', '2024-07-01 05:42:19.734484+00', '2024-07-01 05:42:19.734484+00', '{"eTag": "\"be63da46d059e2fb51e8f40c7107ef6a\"", "size": 311190, "mimetype": "image/jpeg", "cacheControl": "max-age=3600", "lastModified": "2024-07-01T05:42:19.681Z", "contentLength": 311190, "httpStatusCode": 200}', 'ddf3d83d-3041-4350-a647-221a3ee6f599', NULL),
-	('91a01c41-96cf-483c-b1f0-fbf21a269d30', 'user_images', 'default/snow-mountain.jpg', NULL, '2024-07-01 05:42:19.741157+00', '2024-07-01 05:42:19.741157+00', '2024-07-01 05:42:19.741157+00', '{"eTag": "\"332592e326adc249d297baa2b675ca94\"", "size": 299800, "mimetype": "image/jpeg", "cacheControl": "max-age=3600", "lastModified": "2024-07-01T05:42:19.691Z", "contentLength": 299800, "httpStatusCode": 200}', '0be05b92-3698-41ab-b1b5-3a541e3bdb8d', NULL),
-	('2b05ff95-734d-4274-87e4-fdd34e5f386e', 'user_images', 'default/adventure-in-blossom.jpg', NULL, '2024-07-01 05:42:19.74473+00', '2024-07-01 05:42:19.74473+00', '2024-07-01 05:42:19.74473+00', '{"eTag": "\"e9cb1489e81158dfe1cefed74cde2053\"", "size": 600052, "mimetype": "image/jpeg", "cacheControl": "max-age=3600", "lastModified": "2024-07-01T05:42:19.641Z", "contentLength": 600052, "httpStatusCode": 200}', '3e12f55b-dda7-4565-8ddb-be5ef6127071', NULL),
-	('5a01db2a-0bfe-4fa3-b21d-af9623bfe4b5', 'user_images', 'default/village-art.png', NULL, '2024-07-01 05:42:20.229632+00', '2024-07-01 05:42:20.229632+00', '2024-07-01 05:42:20.229632+00', '{"eTag": "\"936e8ea31e9c817bb1702ad0b57362e0\"", "size": 9535096, "mimetype": "image/png", "cacheControl": "max-age=3600", "lastModified": "2024-07-01T05:42:19.931Z", "contentLength": 9535096, "httpStatusCode": 200}', 'fcff7702-7a17-4a80-a96c-f9fda49b9186', NULL),
-	('1cd9ebc5-4c2d-4f36-9483-5329d4636bf9', 'user_images', 'cover/82146009-5574-476a-9254-013937d75132p3N8LL_iD0MyzTI0PAMcl', NULL, '2024-06-29 10:26:16.809462+00', '2024-06-29 10:26:16.809462+00', '2024-06-29 10:26:16.809462+00', '{"eTag": "\"fcd027a8a01310f854d5894c7582d464\"", "size": 46154, "mimetype": "image/jpeg", "cacheControl": "max-age=0", "lastModified": "2024-06-29T10:26:16.792Z", "contentLength": 46154, "httpStatusCode": 200}', '50572888-4149-4442-accd-71f07e6efdc4', NULL),
-	('bbb266ca-fdad-4afd-8ec0-092d654e208d', 'user_images', 'cover/26ec9d74-cec1-42f7-a472-28195c6b03d7jrjz_OPBlWzf-J0eBVHZ-', NULL, '2024-06-29 13:20:04.086573+00', '2024-06-29 13:20:04.086573+00', '2024-06-29 13:20:04.086573+00', '{"eTag": "\"81c5f8ca328637045694722d0ad46b86\"", "size": 2427370, "mimetype": "image/jpeg", "cacheControl": "max-age=0", "lastModified": "2024-06-29T13:20:03.964Z", "contentLength": 2427370, "httpStatusCode": 200}', 'aeb6514e-eb4a-44c3-bc82-5abb9079022a', NULL),
-	('b3e2a53f-f8d1-4e9d-b377-6d821a3d7ae8', 'user_images', 'cover/26ec9d74-cec1-42f7-a472-28195c6b03d7fibag0XpTM7Y7l5EyUoM9', NULL, '2024-06-29 13:32:28.278334+00', '2024-06-29 13:32:28.278334+00', '2024-06-29 13:32:28.278334+00', '{"eTag": "\"fec50d103baf1537cf097cf3200b414e\"", "size": 4946146, "mimetype": "image/jpeg", "cacheControl": "max-age=0", "lastModified": "2024-06-29T13:32:28.143Z", "contentLength": 4946146, "httpStatusCode": 200}', '55362e2f-d7d2-43f3-bb9c-526a17f03f14', NULL),
-	('253a4cc4-d917-48e4-9215-45d909d3499f', 'user_images', 'cover/26ec9d74-cec1-42f7-a472-28195c6b03d7Gi7NjDGT4_aQcSCxRmRub', NULL, '2024-06-29 13:36:06.570743+00', '2024-06-29 13:36:06.570743+00', '2024-06-29 13:36:06.570743+00', '{"eTag": "\"b76388044519fc1a853bffdc173afebf\"", "size": 1897343, "mimetype": "image/jpeg", "cacheControl": "max-age=0", "lastModified": "2024-06-29T13:36:06.457Z", "contentLength": 1897343, "httpStatusCode": 200}', '933e4973-e826-4cfe-9a4d-d78e2de5041a', NULL),
-	('f179f05e-388b-4e20-9838-ff857a3df159', 'user_images', 'cover/d905f002-1370-44c6-bef3-885063b5332fTgrTFK6zqCqw828dp0Jgw', NULL, '2024-07-01 07:33:42.394799+00', '2024-07-01 07:33:42.394799+00', '2024-07-01 07:33:42.394799+00', '{"eTag": "\"5b9917a8a7b47d340daa7a317b7741ff\"", "size": 4018932, "mimetype": "image/png", "cacheControl": "max-age=0", "lastModified": "2024-07-01T07:33:42.278Z", "contentLength": 4018932, "httpStatusCode": 200}', 'e07fc84c-d227-4575-ba8f-d16b9e7e25d6', NULL),
-	('ea991a98-3685-47ca-8d76-1c1b41b19957', 'user_images', 'cover/d905f002-1370-44c6-bef3-885063b5332fPFEKA_7hZpXflBYpIynC8', NULL, '2024-07-01 17:03:42.40523+00', '2024-07-01 17:03:42.40523+00', '2024-07-01 17:03:42.40523+00', '{"eTag": "\"1cac8d39f721d9b4bc41c4c6147d3a44\"", "size": 2660311, "mimetype": "image/png", "cacheControl": "max-age=0", "lastModified": "2024-07-01T17:03:42.325Z", "contentLength": 2660311, "httpStatusCode": 200}', 'dc97eab1-addd-45d6-94ee-20fb87767603', NULL),
-	('da1893d1-5f13-43e9-a804-8658dea1a5d2', 'user_images', 'cover/d905f002-1370-44c6-bef3-885063b5332fFo_yTRnVyE6knrUiAkbQa', NULL, '2024-07-01 17:11:25.696903+00', '2024-07-01 17:11:25.696903+00', '2024-07-01 17:11:25.696903+00', '{"eTag": "\"9e3c315c133bf336d443a7e4999638bd\"", "size": 3752067, "mimetype": "image/png", "cacheControl": "max-age=0", "lastModified": "2024-07-01T17:11:25.589Z", "contentLength": 3752067, "httpStatusCode": 200}', '3f4e1697-8b9c-4928-82ba-2cd1f1661b5c', NULL),
-	('b23a7825-a137-47e7-b75e-f66baea02fe8', 'user_images', 'cover/d905f002-1370-44c6-bef3-885063b5332fV9PWIqjQ_glCpDYv3TVCs', NULL, '2024-07-01 17:12:22.443764+00', '2024-07-01 17:12:22.443764+00', '2024-07-01 17:12:22.443764+00', '{"eTag": "\"39f5b8cacf9dc1674fb79630543ab883\"", "size": 3201033, "mimetype": "image/png", "cacheControl": "max-age=0", "lastModified": "2024-07-01T17:12:22.348Z", "contentLength": 3201033, "httpStatusCode": 200}', 'e9fc3bbe-7c48-4093-abee-242771cad8e9', NULL),
-	('be3f5ef0-0a38-4277-ad93-882c83ea6b0b', 'user_images', 'cover/c2e8de6f-a450-4ca0-ba50-828bedb053baKwbA4Q1JGOeAX2PA9WuAr', NULL, '2024-07-01 17:45:38.322038+00', '2024-07-01 17:45:38.322038+00', '2024-07-01 17:45:38.322038+00', '{"eTag": "\"6363cad935cd3cb165f4efe4c5e0ff91\"", "size": 9983096, "mimetype": "image/png", "cacheControl": "max-age=0", "lastModified": "2024-07-01T17:45:38.143Z", "contentLength": 9983096, "httpStatusCode": 200}', '96b63d63-66bb-4260-bba0-c2850d078aa2', NULL),
-	('5cfbfae7-801e-4915-baff-866f45390ea2', 'user_images', 'cover/a2149fd5-6e29-4c8e-81cb-f923ca54ea1d10tdVd_DYv6BjJyjzqSbA', NULL, '2024-07-03 16:37:12.318599+00', '2024-07-03 16:37:12.318599+00', '2024-07-03 16:37:12.318599+00', '{"eTag": "\"cc40cd03fd74b487ed104cbf3d34cda9\"", "size": 3755403, "mimetype": "image/png", "cacheControl": "max-age=0", "lastModified": "2024-07-03T16:37:12.075Z", "contentLength": 3755403, "httpStatusCode": 200}', '0c473a2a-c9cf-48b4-b092-728f398164bc', NULL),
-	('440fe2fc-2adb-4dc3-b882-bbd0e38c845e', 'user_images', 'cover/10282229-ae9e-4fa5-9237-7bd35dd07120TEhn8k1Sn6WninInsS2uH', NULL, '2024-07-03 17:00:51.995141+00', '2024-07-03 17:00:51.995141+00', '2024-07-03 17:00:51.995141+00', '{"eTag": "\"cc40cd03fd74b487ed104cbf3d34cda9\"", "size": 3755403, "mimetype": "image/png", "cacheControl": "max-age=0", "lastModified": "2024-07-03T17:00:51.871Z", "contentLength": 3755403, "httpStatusCode": 200}', 'fa7bfec7-15e3-4242-9af3-04a590bdafc5', NULL),
-	('c479b3cc-25bd-43c7-859a-a1815c89c589', 'user_images', 'cover/98a33edc-29bc-414e-ae7d-97ccac246749uIGv1nKLkGVU8IsmtEk_s', NULL, '2024-07-03 20:21:31.379758+00', '2024-07-03 20:21:31.379758+00', '2024-07-03 20:21:31.379758+00', '{"eTag": "\"d900570d401cdb00c4c83cbcf371e650\"", "size": 1685041, "mimetype": "image/png", "cacheControl": "max-age=0", "lastModified": "2024-07-03T20:21:31.300Z", "contentLength": 1685041, "httpStatusCode": 200}', '0ac95317-9875-4853-b069-ed27f67dec5a', NULL),
-	('1f7889e4-0cfd-454f-bbca-70f8616e8114', 'static', 'auth_background/4.png', NULL, '2024-07-03 21:00:37.435126+00', '2024-07-03 21:00:37.435126+00', '2024-07-03 21:00:37.435126+00', '{"eTag": "\"9714e664c8a989c95e32e7b15aee5048\"", "size": 2936050, "mimetype": "image/png", "cacheControl": "max-age=3600", "lastModified": "2024-07-03T21:00:36.653Z", "contentLength": 2936050, "httpStatusCode": 200}', '84ec1ac7-3860-4f4a-957a-fe5344892f9b', NULL),
-	('e305060d-bb06-4095-9a33-88e9bcf96c67', 'static', 'auth_background/9.png', NULL, '2024-07-03 21:00:37.478627+00', '2024-07-03 21:00:37.478627+00', '2024-07-03 21:00:37.478627+00', '{"eTag": "\"8d254e540c9acd0851e3d1f8ba95ded8\"", "size": 2826566, "mimetype": "image/png", "cacheControl": "max-age=3600", "lastModified": "2024-07-03T21:00:36.753Z", "contentLength": 2826566, "httpStatusCode": 200}', 'e15e6f96-96d4-4b15-a467-9d3398598975', NULL),
-	('d335648a-fd98-4bf9-987d-ca770dd2da82', 'static', 'auth_background/5.png', NULL, '2024-07-03 21:00:37.539451+00', '2024-07-03 21:00:37.539451+00', '2024-07-03 21:00:37.539451+00', '{"eTag": "\"6be38464014c3c01e1eecc2412b1550e\"", "size": 4375188, "mimetype": "image/png", "cacheControl": "max-age=3600", "lastModified": "2024-07-03T21:00:36.833Z", "contentLength": 4375188, "httpStatusCode": 200}', 'fe5a59c8-3b38-4c86-913e-4e1673d3893b', NULL),
-	('28afd0ca-0b13-42ae-9586-a4dff1c6276d', 'static', 'auth_background/1.png', NULL, '2024-07-03 21:00:37.54232+00', '2024-07-03 21:00:37.54232+00', '2024-07-03 21:00:37.54232+00', '{"eTag": "\"a47eaaca8794d4a2f20f89c1cbd3a1bb\"", "size": 4499515, "mimetype": "image/png", "cacheControl": "max-age=3600", "lastModified": "2024-07-03T21:00:36.843Z", "contentLength": 4499515, "httpStatusCode": 200}', '906e317c-67a1-4308-b514-104171c798f7', NULL),
-	('f7f55003-9752-4775-a787-adea53f611ec', 'static', 'auth_background/2.png', NULL, '2024-07-03 21:00:37.800847+00', '2024-07-03 21:00:37.800847+00', '2024-07-03 21:00:37.800847+00', '{"eTag": "\"68243b551a2c84e9d48d0db374ac8fe8\"", "size": 5301248, "mimetype": "image/png", "cacheControl": "max-age=3600", "lastModified": "2024-07-03T21:00:36.903Z", "contentLength": 5301248, "httpStatusCode": 200}', '2988c7c8-d99a-42a7-b4e1-cfea59e0f2f6', NULL),
-	('e42c9a94-b77f-4254-83e1-c028f8248ca8', 'static', 'auth_background/3.png', NULL, '2024-07-03 21:00:37.968397+00', '2024-07-03 21:00:37.968397+00', '2024-07-03 21:00:37.968397+00', '{"eTag": "\"cab8392d9b8b4f0a31741281c2a2275f\"", "size": 7045514, "mimetype": "image/png", "cacheControl": "max-age=3600", "lastModified": "2024-07-03T21:00:36.913Z", "contentLength": 7045514, "httpStatusCode": 200}', 'e003cd07-9d71-4e5d-aa24-2f25c4d451d3', NULL),
-	('de884758-97f4-4d5f-afb5-c18bbfa83621', 'static', 'auth_background/6.png', NULL, '2024-07-03 21:00:38.101187+00', '2024-07-03 21:00:38.101187+00', '2024-07-03 21:00:38.101187+00', '{"eTag": "\"cca4943019d7e698753d0514eb124b48\"", "size": 1978582, "mimetype": "image/png", "cacheControl": "max-age=3600", "lastModified": "2024-07-03T21:00:37.973Z", "contentLength": 1978582, "httpStatusCode": 200}', '8fc03984-d218-4fc7-a8a0-d428fa75acc3', NULL),
-	('56cca8a7-333e-4c08-a48f-27000b1687b1', 'static', 'auth_background/7.png', NULL, '2024-07-03 21:00:38.182923+00', '2024-07-03 21:00:38.182923+00', '2024-07-03 21:00:38.182923+00', '{"eTag": "\"ac48ae9e8cc67f6a70e88884e32ad51d\"", "size": 3721642, "mimetype": "image/png", "cacheControl": "max-age=3600", "lastModified": "2024-07-03T21:00:38.023Z", "contentLength": 3721642, "httpStatusCode": 200}', '0f137dfc-7c61-4c37-8024-14c30d16cd0e', NULL),
-	('3c338df8-05fb-4cb5-a24b-cc2590e09099', 'static', 'auth_background/8.png', NULL, '2024-07-03 21:00:38.253883+00', '2024-07-03 21:00:38.253883+00', '2024-07-03 21:00:38.253883+00', '{"eTag": "\"b4c67db9a1e448ca2bea11c2b8ed0db9\"", "size": 3248935, "mimetype": "image/png", "cacheControl": "max-age=3600", "lastModified": "2024-07-03T21:00:38.083Z", "contentLength": 3248935, "httpStatusCode": 200}', 'fa1ee9d5-0b0b-4e9c-8167-f5a84e40b1ac', NULL),
-	('35cda75f-ecfd-4c4b-be8e-da400ab31cdc', 'static', 'auth_background/10.png', NULL, '2024-07-03 21:00:38.274622+00', '2024-07-03 21:00:38.274622+00', '2024-07-03 21:00:38.274622+00', '{"eTag": "\"9c0c512a55f17f6d260a374e6b0cd2c0\"", "size": 3870792, "mimetype": "image/png", "cacheControl": "max-age=3600", "lastModified": "2024-07-03T21:00:38.123Z", "contentLength": 3870792, "httpStatusCode": 200}', 'a26c6e6c-0b46-4cd9-abd1-cd9e2fb9195e', NULL),
-	('fca5046d-a9d2-4ed6-8e98-c416afb8645b', 'static', 'auth_background/12.png', NULL, '2024-07-03 21:00:38.702343+00', '2024-07-03 21:00:38.702343+00', '2024-07-03 21:00:38.702343+00', '{"eTag": "\"27fc6c8f9df9a206b72731e241291406\"", "size": 3053204, "mimetype": "image/png", "cacheControl": "max-age=3600", "lastModified": "2024-07-03T21:00:38.593Z", "contentLength": 3053204, "httpStatusCode": 200}', '8374173d-ff68-4a15-a947-6f6be1eff15e', NULL),
-	('a856f132-9ec0-48e5-92a4-37c1ba101217', 'static', 'auth_background/11.png', NULL, '2024-07-03 21:00:38.926079+00', '2024-07-03 21:00:38.926079+00', '2024-07-03 21:00:38.926079+00', '{"eTag": "\"d388b9c2b09e64cb3442da714da2d457\"", "size": 4619452, "mimetype": "image/png", "cacheControl": "max-age=3600", "lastModified": "2024-07-03T21:00:38.643Z", "contentLength": 4619452, "httpStatusCode": 200}', 'c0cf4c4c-f716-4d0e-820f-e43408b14718', NULL),
-	('d9c1ed79-067c-49ec-8acd-d58a83f714c2', 'static', 'auth_background/13.png', NULL, '2024-07-03 21:00:39.0077+00', '2024-07-03 21:00:39.0077+00', '2024-07-03 21:00:39.0077+00', '{"eTag": "\"537db7a74b825ef0efcb83935f02185e\"", "size": 3047281, "mimetype": "image/png", "cacheControl": "max-age=3600", "lastModified": "2024-07-03T21:00:38.923Z", "contentLength": 3047281, "httpStatusCode": 200}', '0373b43b-fb06-4131-b224-0cc5026d86f5', NULL),
-	('01079908-5c65-4b54-869b-8806fad57cc2', 'static', 'auth_background/14.png', NULL, '2024-07-03 21:00:39.379159+00', '2024-07-03 21:00:39.379159+00', '2024-07-03 21:00:39.379159+00', '{"eTag": "\"894a471f0744a3c03f580069a2f8c470\"", "size": 13648699, "mimetype": "image/png", "cacheControl": "max-age=3600", "lastModified": "2024-07-03T21:00:39.093Z", "contentLength": 13648699, "httpStatusCode": 200}', '5a81edb6-324d-4cfd-ad59-51fc35f1aaf7', NULL),
-	('71be45cd-e99f-44c9-8052-05deeea741cc', 'user_images', 'cover/988aecf5-28a2-4d62-9625-284b8d401a8bjxS6UPQTGRktAf0pE7bmQ', NULL, '2024-07-03 22:12:42.091834+00', '2024-07-03 22:12:42.091834+00', '2024-07-03 22:12:42.091834+00', '{"eTag": "\"d900570d401cdb00c4c83cbcf371e650\"", "size": 1685041, "mimetype": "image/png", "cacheControl": "max-age=0", "lastModified": "2024-07-03T22:12:41.989Z", "contentLength": 1685041, "httpStatusCode": 200}', '4bd185dc-b178-4bf0-bd0e-735a6eba8ac9', NULL),
-	('6bd0abd3-e2cd-4567-a77f-6262021b350f', 'user_images', 'cover/d905f002-1370-44c6-bef3-885063b5332fyLxE87j_txri6BkYmtAO-', NULL, '2024-07-04 10:57:58.636947+00', '2024-07-04 10:57:58.636947+00', '2024-07-04 10:57:58.636947+00', '{"eTag": "\"cc40cd03fd74b487ed104cbf3d34cda9\"", "size": 3755403, "mimetype": "image/png", "cacheControl": "max-age=0", "lastModified": "2024-07-04T10:57:58.553Z", "contentLength": 3755403, "httpStatusCode": 200}', 'ca21d1b8-c1ce-498c-970d-071f81920cfc', NULL);
+INSERT INTO "storage"."objects" ("id", "bucket_id", "name", "owner", "created_at", "updated_at", "last_accessed_at", "metadata", "version", "owner_id", "user_metadata") VALUES
+	('2b95342e-3eb0-472f-b53e-304f9f99e85b', 'user_images', 'default/bzzvanet-.jpg', NULL, '2024-08-25 14:29:17.324063+00', '2024-08-25 14:29:17.324063+00', '2024-08-25 14:29:17.324063+00', '{"eTag": "\"047bef878d58bfcb8657da05f66179ac\"", "size": 370631, "mimetype": "image/jpeg", "cacheControl": "max-age=3600", "lastModified": "2024-08-25T14:29:17.287Z", "contentLength": 370631, "httpStatusCode": 200}', '211ec8f9-0d87-4ef6-bd37-3040f21a0497', NULL, NULL),
+	('65b8f68b-679c-4023-8ebb-20ed10811444', 'user_images', 'cover/c2508ed9-c992-4eb3-98a6-e149d01c4b2aNw3WWi_TCb2WSdhuV5pzF', NULL, '2024-08-25 23:12:59.430413+00', '2024-08-25 23:12:59.430413+00', '2024-08-25 23:12:59.430413+00', '{"eTag": "\"c2dd07d463891aa3e1339743adadf22d\"", "size": 3896225, "mimetype": "image/png", "cacheControl": "max-age=0", "lastModified": "2024-08-25T23:12:59.245Z", "contentLength": 3896225, "httpStatusCode": 200}', '091eba30-dfab-4a80-ad20-bef046ddce4f', NULL, '{}'),
+	('a85d5e41-3463-4284-8406-aed2db2d1ae4', 'user_images', 'default/adventure-in-end.jpg', NULL, '2024-08-25 14:30:26.060765+00', '2024-08-25 14:30:26.060765+00', '2024-08-25 14:30:26.060765+00', '{"eTag": "\"ee460c4af3bd442389c48a86d92411f8\"", "size": 317053, "mimetype": "image/jpeg", "cacheControl": "max-age=3600", "lastModified": "2024-08-25T14:30:26.046Z", "contentLength": 317053, "httpStatusCode": 200}', '61a91072-8668-4f83-af61-389fbf760cc4', NULL, NULL),
+	('18b7077b-fe56-4f52-b661-59062a391c83', 'user_images', 'default/render-warden-hide.jpg', NULL, '2024-08-24 19:47:07.320126+00', '2024-08-24 19:47:07.320126+00', '2024-08-24 19:47:07.320126+00', '{"eTag": "\"72569e9110c34d8456d0f5202190f57f\"", "size": 292849, "mimetype": "image/jpeg", "cacheControl": "max-age=3600", "lastModified": "2024-08-24T19:47:07.084Z", "contentLength": 292849, "httpStatusCode": 200}', '2299a6f5-e376-4e5e-89a3-ce70fc5805f3', NULL, NULL),
+	('cd493ad2-9398-4610-9ff6-2daa1640cc73', 'user_images', 'default/village-art.jpg', NULL, '2024-08-24 19:47:07.354842+00', '2024-08-24 19:47:07.354842+00', '2024-08-24 19:47:07.354842+00', '{"eTag": "\"5c6e76ea1077c09f69ce365364fe9bf4\"", "size": 355625, "mimetype": "image/jpeg", "cacheControl": "max-age=3600", "lastModified": "2024-08-24T19:47:07.024Z", "contentLength": 355625, "httpStatusCode": 200}', '165443da-626d-490e-8cf8-8f9d2979a12f', NULL, NULL),
+	('e08dadbe-322d-4fd3-b2f5-24483d17cb76', 'user_images', 'default/snow-mountain.jpg', NULL, '2024-08-24 19:47:07.308209+00', '2024-08-24 19:47:07.308209+00', '2024-08-24 19:47:07.308209+00', '{"eTag": "\"332592e326adc249d297baa2b675ca94\"", "size": 299800, "mimetype": "image/jpeg", "cacheControl": "max-age=3600", "lastModified": "2024-08-24T19:47:07.014Z", "contentLength": 299800, "httpStatusCode": 200}', '2383a69e-f528-4f21-b9df-46aed6f31feb', NULL, NULL),
+	('e7bb9cbf-3a25-453f-a7fc-75b518744619', 'user_images', 'default/sand-adventure.jpg', NULL, '2024-08-24 19:47:07.348843+00', '2024-08-24 19:47:07.348843+00', '2024-08-24 19:47:07.348843+00', '{"eTag": "\"9090d1e3382cc573078a9f3710c00dac\"", "size": 309312, "mimetype": "image/jpeg", "cacheControl": "max-age=3600", "lastModified": "2024-08-24T19:47:07.084Z", "contentLength": 309312, "httpStatusCode": 200}', 'b591626e-5233-4dcd-a0cf-4c801ed887a3', NULL, NULL),
+	('ba0ae506-fb74-42e3-9a9e-a168ee37e805', 'user_images', 'default/bees.jpg', NULL, '2024-08-24 19:47:07.365945+00', '2024-08-24 19:47:07.365945+00', '2024-08-24 19:47:07.365945+00', '{"eTag": "\"2bb01bc64757aceab04b64335a4a1328\"", "size": 533645, "mimetype": "image/jpeg", "cacheControl": "max-age=3600", "lastModified": "2024-08-24T19:47:07.024Z", "contentLength": 533645, "httpStatusCode": 200}', '1ef44733-fb51-40cd-9ddf-6970757239dc', NULL, NULL),
+	('c94e4911-a9a0-4c5a-993c-6e357b932c4b', 'user_images', 'default/sand-camel.jpg', NULL, '2024-08-24 19:47:07.300225+00', '2024-08-24 19:47:07.300225+00', '2024-08-24 19:47:07.300225+00', '{"eTag": "\"be63da46d059e2fb51e8f40c7107ef6a\"", "size": 311190, "mimetype": "image/jpeg", "cacheControl": "max-age=3600", "lastModified": "2024-08-24T19:47:07.014Z", "contentLength": 311190, "httpStatusCode": 200}', '1d45853b-612d-404f-a6c5-dd257efe938f', NULL, NULL),
+	('f88708a5-a922-4160-9257-75692a115b20', 'user_images', 'default/adventure-in-blossom.jpg', NULL, '2024-08-24 19:47:13.70809+00', '2024-08-24 19:47:13.70809+00', '2024-08-24 19:47:13.70809+00', '{"eTag": "\"e9cb1489e81158dfe1cefed74cde2053\"", "size": 600052, "mimetype": "image/jpeg", "cacheControl": "max-age=3600", "lastModified": "2024-08-24T19:47:13.685Z", "contentLength": 600052, "httpStatusCode": 200}', 'e96105c4-36a1-4be5-93b9-61d832be07d7', NULL, NULL),
+	('96ae2bc6-c8ab-419e-af02-5248d8a4025e', 'user_images', 'default/rain-weather.jpg', NULL, '2024-08-24 19:47:16.089968+00', '2024-08-24 19:47:16.089968+00', '2024-08-24 19:47:16.089968+00', '{"eTag": "\"e5c8c76a941035a8cfaf12b8f799ab36\"", "size": 478479, "mimetype": "image/jpeg", "cacheControl": "max-age=3600", "lastModified": "2024-08-24T19:47:16.065Z", "contentLength": 478479, "httpStatusCode": 200}', 'd80f6963-da72-451b-ae96-8a285dbfafce', NULL, NULL),
+	('acc953d9-cfe5-4464-9beb-bdeb9ab6c318', 'threads', 'b558eb07-d050-462b-8249-b5d34ddb1b9e-image-0', NULL, '2024-08-25 13:11:21.58453+00', '2024-08-25 13:11:21.58453+00', '2024-08-25 13:11:21.58453+00', '{"eTag": "\"6b21ad6349de906d6096bc8e974fbb68\"", "size": 28946, "mimetype": "image/jpeg", "cacheControl": "max-age=3600", "lastModified": "2024-08-25T13:11:21.516Z", "contentLength": 28946, "httpStatusCode": 200}', '5ed76f9e-6d36-46aa-9278-540e1d8fcfaf', NULL, '{}'),
+	('08a154fb-501e-443e-bd19-839b318986ad', 'threads', 'b558eb07-d050-462b-8249-b5d34ddb1b9e-image-1', NULL, '2024-08-25 13:11:21.723326+00', '2024-08-25 13:11:21.723326+00', '2024-08-25 13:11:21.723326+00', '{"eTag": "\"48a855855f7b3cbf83a185d339be30ab\"", "size": 32593, "mimetype": "image/jpeg", "cacheControl": "max-age=3600", "lastModified": "2024-08-25T13:11:21.716Z", "contentLength": 32593, "httpStatusCode": 200}', '2487760d-741a-44be-b520-2ba7b487d0af', NULL, '{}'),
+	('3bb0695a-5c4a-4491-8fd6-1295a5d3e596', 'static', 'items/belkoin_wallet.png', NULL, '2024-08-25 13:39:34.272726+00', '2024-08-25 13:39:34.272726+00', '2024-08-25 13:39:34.272726+00', '{"eTag": "\"496ab8ea0fe63690cc39cc488bd58a95\"", "size": 7703, "mimetype": "image/png", "cacheControl": "max-age=3600", "lastModified": "2024-08-25T13:39:34.215Z", "contentLength": 7703, "httpStatusCode": 200}', 'c14b5e0f-000d-48b9-8a2f-5202747836d3', NULL, NULL),
+	('5f8cbea4-ddb0-4237-88fc-7eef2fd2b969', 'static', 'items/fancy_feather.webp', NULL, '2024-08-25 13:39:34.274035+00', '2024-08-25 13:39:34.274035+00', '2024-08-25 13:39:34.274035+00', '{"eTag": "\"7804e81bbebf368f4eaa74e1d43e4586\"", "size": 216, "mimetype": "image/webp", "cacheControl": "max-age=3600", "lastModified": "2024-08-25T13:39:34.215Z", "contentLength": 216, "httpStatusCode": 200}', 'a0ea309d-052d-4d6a-94c5-90040a9a5219', NULL, NULL),
+	('287b4256-d96b-40a7-8f4a-e5fd75cd7053', 'static', 'items/iron_helmet.webp', NULL, '2024-08-25 13:39:34.434278+00', '2024-08-25 13:39:34.434278+00', '2024-08-25 13:39:34.434278+00', '{"eTag": "\"e12b449e3f611b7e5761a9ab9c7fb2d1\"", "size": 120, "mimetype": "image/webp", "cacheControl": "max-age=3600", "lastModified": "2024-08-25T13:39:34.385Z", "contentLength": 120, "httpStatusCode": 200}', '2ff9346f-6586-4202-9794-fd8f9c2b38d7', NULL, NULL),
+	('e9dde739-4c5a-45db-a6cd-ea4c626af42b', 'static', 'items/barrier.webp', NULL, '2024-08-25 13:39:34.746647+00', '2024-08-25 13:39:34.746647+00', '2024-08-25 13:39:34.746647+00', '{"eTag": "\"b3c484b0196a4db5f906bbd483e17aa5\"", "size": 170, "mimetype": "image/webp", "cacheControl": "max-age=3600", "lastModified": "2024-08-25T13:39:34.705Z", "contentLength": 170, "httpStatusCode": 200}', '49455cfd-6177-4f98-b1cf-02a0c2255e85', NULL, NULL),
+	('5016781a-92f9-4008-b045-b1cdd8d8e310', 'static', 'items/diamond_pickaxe.webp', NULL, '2024-08-25 13:39:34.275624+00', '2024-08-25 13:39:34.275624+00', '2024-08-25 13:39:34.275624+00', '{"eTag": "\"2b4c606b1fec45285f8aced7e91979b1\"", "size": 208, "mimetype": "image/webp", "cacheControl": "max-age=3600", "lastModified": "2024-08-25T13:39:34.215Z", "contentLength": 208, "httpStatusCode": 200}', '61fa124d-77d3-4153-8846-31d1353e36f9', NULL, NULL),
+	('bbc6eb87-1a88-4156-8754-06d16df2cf51', 'static', 'items/elytra.webp', NULL, '2024-08-25 13:39:34.377537+00', '2024-08-25 13:39:34.377537+00', '2024-08-25 13:39:34.377537+00', '{"eTag": "\"8258d064c7192324d36f8abc9e996f80\"", "size": 200, "mimetype": "image/webp", "cacheControl": "max-age=3600", "lastModified": "2024-08-25T13:39:34.355Z", "contentLength": 200, "httpStatusCode": 200}', 'd66c5ac7-88b9-46aa-9acc-0f5aad9f7280', NULL, NULL),
+	('08388571-8cab-446b-804d-3c727476dd14', 'static', 'items/firework.webp', NULL, '2024-08-25 13:39:34.31163+00', '2024-08-25 13:39:34.31163+00', '2024-08-25 13:39:34.31163+00', '{"eTag": "\"87792a440b26cff05a2e89eaa4eeca30\"", "size": 156, "mimetype": "image/webp", "cacheControl": "max-age=3600", "lastModified": "2024-08-25T13:39:34.225Z", "contentLength": 156, "httpStatusCode": 200}', '04281066-731c-44b5-b590-bb77a77b4eb7', NULL, NULL),
+	('36b84fae-58f9-48d9-832a-67d31733b857', 'static', 'items/missing_texture.webp', NULL, '2024-08-25 13:39:34.470719+00', '2024-08-25 13:39:34.470719+00', '2024-08-25 13:39:34.470719+00', '{"eTag": "\"f543ead08fdf738b29d4583fd7f10447\"", "size": 54, "mimetype": "image/webp", "cacheControl": "max-age=3600", "lastModified": "2024-08-25T13:39:34.445Z", "contentLength": 54, "httpStatusCode": 200}', '32803215-8c6b-401b-95e6-51800f885ab5', NULL, NULL),
+	('36d8cf29-a25a-463b-baa4-fe8272b1265c', 'static', 'items/allay_spawn_egg.webp', NULL, '2024-08-25 13:39:34.741899+00', '2024-08-25 13:39:34.741899+00', '2024-08-25 13:39:34.741899+00', '{"eTag": "\"03ca41fb820dba152bd67d5a26fe9318\"", "size": 312, "mimetype": "image/webp", "cacheControl": "max-age=3600", "lastModified": "2024-08-25T13:39:34.705Z", "contentLength": 312, "httpStatusCode": 200}', '38f525cf-fd54-45b1-b95c-ec30ab30f174', NULL, NULL),
+	('b484dbff-86a4-4993-9b87-faa945340602', 'static', 'items/bust_painting.webp', NULL, '2024-08-25 13:39:34.316854+00', '2024-08-25 13:39:34.316854+00', '2024-08-25 13:39:34.316854+00', '{"eTag": "\"841f7fee2c27666998c1788f6eeb7b2a\"", "size": 3240, "mimetype": "image/webp", "cacheControl": "max-age=3600", "lastModified": "2024-08-25T13:39:34.255Z", "contentLength": 3240, "httpStatusCode": 200}', 'a93e01b2-8755-4be0-b209-f7bee684fce9', NULL, NULL),
+	('8a8ccd5e-4ebc-4b37-997e-90c9c77bcdcf', 'static', 'items/minecart_chest.webp', NULL, '2024-08-25 13:39:34.458553+00', '2024-08-25 13:39:34.458553+00', '2024-08-25 13:39:34.458553+00', '{"eTag": "\"6946fcbedd07fa61d682736490b5b1f4\"", "size": 326, "mimetype": "image/webp", "cacheControl": "max-age=3600", "lastModified": "2024-08-25T13:39:34.445Z", "contentLength": 326, "httpStatusCode": 200}', '8fd832f6-3807-43c8-8038-df164e9c0e49', NULL, NULL),
+	('e5e38548-b448-4468-8396-385441f2d42c', 'static', 'items/arrow_of_swiftness.webp', NULL, '2024-08-25 13:39:34.722548+00', '2024-08-25 13:39:34.722548+00', '2024-08-25 13:39:34.722548+00', '{"eTag": "\"893982e52694bdf1c2744ef07177d9ba\"", "size": 226, "mimetype": "image/webp", "cacheControl": "max-age=3600", "lastModified": "2024-08-25T13:39:34.685Z", "contentLength": 226, "httpStatusCode": 200}', '7d430e1b-f680-4beb-8f44-b3bbabec019d', NULL, NULL),
+	('07efc1bd-96b5-4d81-8c61-41ef00a30c73', 'static', 'auth_background/6.png', NULL, '2024-08-25 14:17:07.251725+00', '2024-08-25 14:18:02.631706+00', '2024-08-25 14:17:07.251725+00', '{"eTag": "\"c3865e2cf657239d0311c8d322161a35\"", "size": 1094977, "mimetype": "image/png", "cacheControl": "max-age=3600", "lastModified": "2024-08-25T14:18:02.600Z", "contentLength": 1094977, "httpStatusCode": 200}', 'a6535eaf-6cc5-400a-ade5-801298cc0ec1', NULL, NULL),
+	('a71b1a3d-e5cd-47d2-af8a-b61cfce29ea4', 'static', 'auth_background/8.png', NULL, '2024-08-25 14:17:07.574324+00', '2024-08-25 14:18:13.358757+00', '2024-08-25 14:17:07.574324+00', '{"eTag": "\"c2dd07d463891aa3e1339743adadf22d\"", "size": 3896225, "mimetype": "image/png", "cacheControl": "max-age=3600", "lastModified": "2024-08-25T14:18:13.211Z", "contentLength": 3896225, "httpStatusCode": 200}', 'ddbd86b6-db8a-48ea-9c05-70fffbe2c904', NULL, NULL),
+	('7deb5f6a-22b7-4482-a421-f13fbd1feaa3', 'static', 'auth_background/7.png', NULL, '2024-08-25 14:17:07.972215+00', '2024-08-25 14:18:07.273+00', '2024-08-25 14:17:07.972215+00', '{"eTag": "\"593a4ec31bc39e95ed9526a74c6b657c\"", "size": 3891117, "mimetype": "image/png", "cacheControl": "max-age=3600", "lastModified": "2024-08-25T14:18:07.180Z", "contentLength": 3891117, "httpStatusCode": 200}', '1a0398ed-81be-4559-ab5e-91875a3d9b36', NULL, NULL),
+	('3579c622-04cc-4562-b918-18589082d251', 'static', 'auth_background/4.png', NULL, '2024-08-25 14:17:08.173945+00', '2024-08-25 14:17:58.439561+00', '2024-08-25 14:17:08.173945+00', '{"eTag": "\"9ffecd39148de915fa8bef9e84e6d7e3\"", "size": 2553120, "mimetype": "image/png", "cacheControl": "max-age=3600", "lastModified": "2024-08-25T14:17:58.380Z", "contentLength": 2553120, "httpStatusCode": 200}', '6b3f134d-9e99-4626-aa8f-050e7889e002', NULL, NULL),
+	('c6e5ac70-86fa-45b6-a7b4-8a3746b8d901', 'static', 'auth_background/5.png', NULL, '2024-08-25 14:17:08.226694+00', '2024-08-25 14:18:00.651187+00', '2024-08-25 14:17:08.226694+00', '{"eTag": "\"ad3cee4f83b5bce5a2395cf848630d25\"", "size": 4613130, "mimetype": "image/png", "cacheControl": "max-age=3600", "lastModified": "2024-08-25T14:18:00.460Z", "contentLength": 4613130, "httpStatusCode": 200}', 'c9d3fdc5-7919-467e-96d6-5ef32f55808f', NULL, NULL),
+	('806282c3-464b-497e-8ced-54a71def1771', 'static', 'auth_background/3.png', NULL, '2024-08-25 14:17:08.058015+00', '2024-08-25 14:17:53.942505+00', '2024-08-25 14:17:08.058015+00', '{"eTag": "\"edbdb3bfcc5804329e892ec9b5e9b71e\"", "size": 3392696, "mimetype": "image/png", "cacheControl": "max-age=3600", "lastModified": "2024-08-25T14:17:53.750Z", "contentLength": 3392696, "httpStatusCode": 200}', '48fe0b92-60c7-4c19-a678-87db2ea2083d', NULL, NULL),
+	('4cc5aebe-2c84-4b6c-b665-de04347b3313', 'static', 'auth_background/2.png', NULL, '2024-08-25 14:17:08.208272+00', '2024-08-25 14:17:56.09265+00', '2024-08-25 14:17:08.208272+00', '{"eTag": "\"73ce42b8a7db412e78e6d0af84b0d50b\"", "size": 2317700, "mimetype": "image/png", "cacheControl": "max-age=3600", "lastModified": "2024-08-25T14:17:55.990Z", "contentLength": 2317700, "httpStatusCode": 200}', '8002e8ed-17f0-4210-a2a3-ecc9602526e6', NULL, NULL),
+	('eb97ac66-4889-4882-aa70-5be92a233225', 'static', 'auth_background/1.png', NULL, '2024-08-25 14:17:08.206446+00', '2024-08-25 14:17:48.241331+00', '2024-08-25 14:17:08.206446+00', '{"eTag": "\"33ebbf8cb35a1ae8e1fa1aa6b3c5cd9b\"", "size": 4702837, "mimetype": "image/png", "cacheControl": "max-age=3600", "lastModified": "2024-08-25T14:17:47.809Z", "contentLength": 4702837, "httpStatusCode": 200}', '1321ca12-5964-427d-b15b-1d145e53ff47', NULL, NULL),
+	('e9906127-9e63-4911-816a-a78fe7a871bd', 'static', 'items/dirt.webp', NULL, '2024-08-25 13:39:34.283107+00', '2024-08-25 13:39:34.283107+00', '2024-08-25 13:39:34.283107+00', '{"eTag": "\"91b4035180b33e243c720454c6c5e00c\"", "size": 290, "mimetype": "image/webp", "cacheControl": "max-age=3600", "lastModified": "2024-08-25T13:39:34.215Z", "contentLength": 290, "httpStatusCode": 200}', 'df7352ad-d84f-48b3-a680-57867f667ac7', NULL, NULL);
 
 
 --
@@ -550,14 +1142,17 @@ INSERT INTO "storage"."objects" ("id", "bucket_id", "name", "owner", "created_at
 --
 
 INSERT INTO "vault"."secrets" ("id", "name", "description", "secret", "key_id", "nonce", "created_at", "updated_at") VALUES
-	('ac943f29-ef69-470d-86f5-c260d25a21a0', 'decrypted_secrets', '', 'a8D7t/osFhZoiNaEZsD1pq1ugZ6Is/vBT7wG3UQpuZpyQuv9e0p8blUNgdTNWVNKfxKiqmxsXpGw
-dCYGk7G6vBydW2h9JP51kJGn7mVyKM1AOCsnqeYJKl6DHHGODbeK6J5l7Ji1Hdx+YpCOFhklmtXd
-ZXXs6C9ELd66QL8X91+AK+bs6aeq1aXoq/ZFvJhXt23scLkH4385nkOfRG4/fNU26UBECoKs6/gY
-t5rhjMZvv3uCnF7hKr8=', '7d6e5d09-426c-4aed-a6e8-03b0ba43b0e1', '\xbc103d3a5b26955c3a437a4fd37cc405', '2024-06-20 22:49:44.80295+00', '2024-06-20 22:49:44.80295+00'),
-	('c7b9de6a-171c-4c5f-baa9-3baa958de4ec', 'service_role', 'aboba', 'uGJ9DvfG38TiWLlFZdIuWv0hm/DzmTwnAqQQn5AFYpvbXX0/zpuUo7px1N2Kp9lTPzLANZ5XWLCW
-96y2Bc9pFK4VomNw4fHFN/SQR6mbI2CNY1fr/p2yUct5Kt766HE3z/qhxhCVuTiTIrRfV72Jq+N7
-r3ZG3vf0hetsFJcY29ejya0+5tab728UIcb2LkO2qm3IVAb1zLTSx/l6p+efyAW9PKgIqpsRy1xR
-Syx6xAIaHmULB5vfTEiu67AbQj+dfcsk4w==', 'c3729e72-a786-4eff-9cc7-e380f57fcf97', '\x193663f2fed9f240e459f2161b79997b', '2024-06-21 22:16:52.565283+00', '2024-06-24 13:42:41.170653+00');
+	('ac943f29-ef69-470d-86f5-c260d25a21a0', 'decrypted_secrets', '', '9x0cC86YxFxOI42QE+y9EP/TcVzMgoO/6dOJ639XTMYhBtoYPHv5x5f9lhdhxdiiAdZ7eudguGav
+fRpHQ2THSSYL6aoxcC7xJxi+3r7yuHIdCrSoh7jPXfDosKK2j3Gqe/VY5eGh8nKPe2JtJuKxi8m7
+N7kqZkVDp02F6ZO9/LjuRDi2ybFmOaLyXcrN+REjpJr3O7tkd4EVMyxePhuL6SAxY6iEheJbLEdl
+r2QlIoyIIUf/dwC5d2d0b1G4FOMNolzYiXnZmu6L5mHRY19HWW4z6+IXbxYGRgVo8FXnoehUco4L
+z2McQ8NiRuhn5b7QPNelt+lVUDkRW0ajrGEd1eh+FzUH8HE6FNJOa1DCxXNgZjymrNTjd+ZSSw==', '7d6e5d09-426c-4aed-a6e8-03b0ba43b0e1', '\xbc103d3a5b26955c3a437a4fd37cc405', '2024-06-20 22:49:44.80295+00', '2024-06-20 22:49:44.80295+00'),
+	('c7b9de6a-171c-4c5f-baa9-3baa958de4ec', 'service_role', 'aboba', 'G6UG/1jOiimPMM/qMf65TUG+XnxfSHVeZOIlJD1HzGLz9v9dtGZYuPl8OZhuAfawkzxSmJFsTXY8
+EoWgaLIZkZZCTXN1ebR71Kod/iDNnxue7s7e8DPWleN18Wu+PVAdufDpUt+05KswVTUonpg0TvLv
+Y06OYzy5VAmQ9IiPC5S9Zgb/ZLenPPFck/WY2G+EUI2pIdfbglxkd9JH3CDUbC3G8Aevv/E8QI8q
+IRseyr7SCLJK1zT0iNFhBe7AnejvCwNmJRnriVnp3YXlyWIjtBcqXd4kes1wrugZsEph9I22atYu
+Lpa6aJC+dDLWkgKfpl7iCayeTvX7aTgMkaf35dDvdV2MbYVkxBOzIX6snTUHXdBxsVr3hFZvqpTG
+b1CNahueAHg4H3pe0eo=', 'c3729e72-a786-4eff-9cc7-e380f57fcf97', '\x193663f2fed9f240e459f2161b79997b', '2024-06-21 22:16:52.565283+00', '2024-06-24 13:42:41.170653+00');
 
 
 --
@@ -575,6 +1170,13 @@ SELECT pg_catalog.setval('"pgsodium"."key_key_id_seq"', 2, true);
 
 
 --
+-- Name: admins_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('"public"."admins_id_seq"', 1, false);
+
+
+--
 -- Name: category_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
@@ -585,7 +1187,7 @@ SELECT pg_catalog.setval('"public"."category_id_seq"', 1, false);
 -- Name: category_id_seq1; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('"public"."category_id_seq1"', 5, true);
+SELECT pg_catalog.setval('"public"."category_id_seq1"', 1, false);
 
 
 --
@@ -599,21 +1201,133 @@ SELECT pg_catalog.setval('"public"."config_advertisement_id_seq"', 1, false);
 -- Name: config_alerts_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('"public"."config_alerts_id_seq"', 1, true);
+SELECT pg_catalog.setval('"public"."config_alerts_id_seq"', 1, false);
 
 
 --
 -- Name: config_minecraft_facts_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('"public"."config_minecraft_facts_id_seq"', 97, true);
+SELECT pg_catalog.setval('"public"."config_minecraft_facts_id_seq"', 1, false);
+
+
+--
+-- Name: config_minecraft_items_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('"public"."config_minecraft_items_id_seq"', 1, false);
+
+
+--
+-- Name: config_minecraft_items_id_seq1; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('"public"."config_minecraft_items_id_seq1"', 13, true);
 
 
 --
 -- Name: info_findout_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('"public"."info_findout_id_seq"', 2, true);
+SELECT pg_catalog.setval('"public"."info_findout_id_seq"', 6, true);
+
+
+--
+-- Name: luckperms_actions_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('"public"."luckperms_actions_id_seq"', 1, false);
+
+
+--
+-- Name: luckperms_group_permissions_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('"public"."luckperms_group_permissions_id_seq"', 326, true);
+
+
+--
+-- Name: luckperms_user_permissions_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('"public"."luckperms_user_permissions_id_seq"', 122, true);
+
+
+--
+-- Name: posts_comments_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('"public"."posts_comments_id_seq"', 1, false);
+
+
+--
+-- Name: posts_comments_id_seq1; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('"public"."posts_comments_id_seq1"', 4, true);
+
+
+--
+-- Name: reports_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('"public"."reports_id_seq"', 1, false);
+
+
+--
+-- Name: t_comments_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('"public"."t_comments_id_seq"', 4, true);
+
+
+--
+-- Name: t_comments_replies_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('"public"."t_comments_replies_id_seq"', 1, false);
+
+
+--
+-- Name: t_comments_replies_id_seq1; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('"public"."t_comments_replies_id_seq1"', 1, true);
+
+
+--
+-- Name: threads_comments_comment_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('"public"."threads_comments_comment_id_seq"', 1, false);
+
+
+--
+-- Name: threads_comments_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('"public"."threads_comments_id_seq"', 1, false);
+
+
+--
+-- Name: threads_comments_id_seq1; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('"public"."threads_comments_id_seq1"', 3, true);
+
+
+--
+-- Name: threads_images_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('"public"."threads_images_id_seq"', 1, false);
+
+
+--
+-- Name: threads_images_id_seq1; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('"public"."threads_images_id_seq1"', 1, true);
 
 
 --
@@ -624,10 +1338,45 @@ SELECT pg_catalog.setval('"public"."threads_pinned_id_seq"', 1, false);
 
 
 --
+-- Name: threads_rating_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('"public"."threads_rating_id_seq"', 1, false);
+
+
+--
+-- Name: threads_rating_id_seq1; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('"public"."threads_rating_id_seq1"', 9, true);
+
+
+--
 -- Name: threads_stars_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('"public"."threads_stars_id_seq"', 1, true);
+SELECT pg_catalog.setval('"public"."threads_stars_id_seq"', 1, false);
+
+
+--
+-- Name: threads_tags_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('"public"."threads_tags_id_seq"', 1, false);
+
+
+--
+-- Name: threads_tags_id_seq1; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('"public"."threads_tags_id_seq1"', 6, true);
+
+
+--
+-- Name: users_banned_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('"public"."users_banned_id_seq"', 1, false);
 
 
 --
@@ -638,10 +1387,10 @@ SELECT pg_catalog.setval('"public"."users_blocked_id_seq"', 1, false);
 
 
 --
--- Name: users_status_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+-- Name: users_requests_timeout_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('"public"."users_status_id_seq"', 1, false);
+SELECT pg_catalog.setval('"public"."users_requests_timeout_id_seq"', 9, true);
 
 
 --

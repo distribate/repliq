@@ -3,7 +3,7 @@ import { ThreadModel } from '../../../../../thread/queries/get-thread-model.ts';
 import { useDialog } from '@repo/lib/hooks/use-dialog.ts';
 import { ConfirmationActionModalTemplate } from '../../../../../templates/confirmation-action-modal-template.tsx';
 import { ConfirmationButton } from '../../../../../buttons/confirmation-action-button.tsx';
-import { THREAD_REMOVE_MODAL_NAME } from '../../../../thread-remove-modal.tsx';
+import { THREAD_REMOVE_MODAL_NAME } from './thread-remove-modal.tsx';
 
 export const ThreadRemoveConfirmation = ({
   id: thread_id,

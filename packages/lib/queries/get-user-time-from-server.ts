@@ -8,11 +8,7 @@ export type UserTimeFromServer = {
   loginDate: string
 }
 
-export async function getUserTimeFromServer({
-  nickname
-}: {
-  nickname: string
-}): Promise<UserTimeFromServer | null> {
+export async function getUserTimeFromServer(nickname: string): Promise<UserTimeFromServer | null> {
   const supabase = createClient();
   
   const { data, error } = await supabase

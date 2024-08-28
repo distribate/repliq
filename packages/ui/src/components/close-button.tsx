@@ -2,7 +2,7 @@ import { X } from "lucide-react";
 import { cva, VariantProps } from "class-variance-authority";
 import { HTMLAttributes } from "react";
 
-const closeButtonVariants = cva(`absolute hover:bg-red-600 p-2 rounded-md opacity-70 ring-offset-background
+const closeButtonVariants = cva(`absolute hover:bg-red-600 p-2 rounded-lg opacity-70 ring-offset-background
 \t\t\t\t transition-opacity hover:opacity-100 focus:outline-none focus:ring-2
 \t\t\t\t  focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none
 \t\t\t\t   data-[state=open]:bg-accent data-[state=open]:text-muted-foreground`, {

@@ -1,19 +1,39 @@
-import { SKIN_GET_HEAD, SKIN_GET_SKIN } from "@repo/shared/constants/routes.ts"
+import { SKIN_GET_HEAD, SKIN_GET_SKIN } from '@repo/shared/constants/routes.ts';
+// @ts-ignore
+import SteveHead from '@repo/assets/images/minecraft/steve_head.jpg';
+// @ts-ignore
+import SteveSkin from '@repo/assets/images/default.png';
+import { USER } from '@repo/types/entities/entities-type.ts';
 
 type SkinDetails = {
-	type: "skin" | "head",
-	nickname: string
-}
+  type: 'skin' | 'head'
+} & Pick<USER, 'nickname'>
 
-export function getSkinDetails({
-	type, nickname
-}: SkinDetails): string {
-	switch (type) {
-		case "skin":
-			return SKIN_GET_SKIN + nickname;
-		case "head":
-			return SKIN_GET_HEAD + nickname.toLowerCase();
-		default:
-			throw new Error(`Invalid type: ${type}`);
-	}
+export async function getSkinDetails({
+  type, nickname,
+}: SkinDetails) {
+	if (!nickname) throw new Error(`Nickname required`)
+  if (!type) throw new Error(`Invalid type: ${type}`);
+  
+  if (type === 'skin') {
+    const rawSkin = await fetch(SKIN_GET_SKIN + nickname);
+    
+    if (!rawSkin.ok) {
+      return SteveSkin.src as string;
+    }
+    
+    const skinBlob = await rawSkin.blob();
+    return URL.createObjectURL(skinBlob);
+  }
+	
+  if (type === 'head') {
+    const rawHead = await fetch(SKIN_GET_HEAD + nickname.toLowerCase());
+    
+    if (!rawHead.ok) {
+      return SteveHead.src as string;
+    }
+    
+    const headBlob = await rawHead.blob();
+    return URL.createObjectURL(headBlob);
+  }
 }

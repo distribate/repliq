@@ -85,9 +85,7 @@ export async function handleLands({
 		if (membersUUIDs.length) {
 			const nicknames = await getNicknameByUUID(membersUUIDs);
 			
-			members = membersUUIDs.map((
-				uuid, index
-			) => ({
+			members = membersUUIDs.map((uuid, index) => ({
 				uuid,
 				nickname: nicknames[index],
 				chunks: parsedMembers[uuid].chunks

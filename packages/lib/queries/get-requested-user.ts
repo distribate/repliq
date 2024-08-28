@@ -19,19 +19,28 @@ async function getDonateData({
   nickname,
 }: RequestedUserProps) {
   const supabase = createClient();
-  return supabase.from('luckperms_players').select('primary_group').eq('username', nickname).single();
+  return supabase
+  .from('luckperms_players')
+  .select('primary_group')
+  .eq('username', nickname)
+  .single();
 }
 
 async function getMainData({
   nickname,
 }: RequestedUserProps) {
   const supabase = createClient();
-  return supabase.from('users').select().eq('nickname', nickname).returns<USER[]>().single();
+  return supabase
+  .from('users')
+  .select()
+  .eq('nickname', nickname)
+  .returns<USER[]>()
+  .single();
 }
 
-export async function getRequestedUser({
-  nickname
-}: RequestedUserProps): Promise<RequestedUser | string> {
+export async function getRequestedUser(
+  nickname: RequestedUserProps["nickname"]
+): Promise<RequestedUser | string> {
   const currentUser = await getCurrentUser();
   
   let requestedUser: RequestedUser | null = null;

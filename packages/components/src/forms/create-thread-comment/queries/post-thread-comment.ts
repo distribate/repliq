@@ -101,7 +101,7 @@ export async function postThreadComment({
   if (type === 'reply' && recipient_comment_id) {
     const { initiator_comment_id: replyInitiatorCommentId } = await postThreadReplied({
       initiator_comment_id: threadCommentItemId,
-      recipient_comment_id: recipient_comment_id,
+      recipient_comment_id: Number(recipient_comment_id),
     });
     
     if (!replyInitiatorCommentId) return;

@@ -24,28 +24,18 @@ export const friendsSortQuery = () => {
 }
 
 export const useFriendsSort = () => {
-	const queryClient = useQueryClient();
+	const qc = useQueryClient();
 	
 	const setFriendsSortMUtation = useMutation({
 		mutationFn: async(value: FriendsSortQuery) => {
-			queryClient.setQueryData(
-				FRIENDS_SORT_QUERY_KEY,
+			qc.setQueryData(FRIENDS_SORT_QUERY_KEY,
 				(prev: FriendsSortQuery) => {
-					return {
-						...prev,
-						...value
-					}
+					return { ...prev, ...value }
 				}
 			)
 		},
-		onSuccess: async () => {
-			await queryClient.invalidateQueries({
-				queryKey: FRIENDS_SORT_QUERY_KEY
-			})
-		},
-		onError: (e) => {
-			throw e;
-		}
+		onSuccess: async () => await qc.invalidateQueries({ queryKey: FRIENDS_SORT_QUERY_KEY }),
+		onError: (e) => { throw new Error(e.message) }
 	})
 	
 	return { setFriendsSortMUtation }

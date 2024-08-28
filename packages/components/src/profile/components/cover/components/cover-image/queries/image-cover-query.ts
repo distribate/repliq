@@ -1,8 +1,8 @@
 import { getImageUrl } from "@repo/lib/helpers/get-image-from-bucket.ts";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { REQUESTED_USER_QUERY_KEY } from "@repo/lib/queries/requested-user-query.ts";
 import { USER_IMAGES_BUCKET } from "@repo/shared/constants/buckets"
 import { USER } from "@repo/types/entities/entities-type.ts";
+import { REQUESTED_USER_QUERY_KEY } from '../../../cover/queries/requested-user-query.ts';
 
 export const IMAGE_COVER_QUERY_KEY = (nickname: string) => {
 	return [ "user", "cover", nickname ]

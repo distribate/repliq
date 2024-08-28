@@ -2,10 +2,12 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { USER } from '@repo/types/entities/entities-type.ts';
 import { UpdateUserFields, updateUserFields } from '../queries/update-user-fields.ts';
 import { CURRENT_USER_QUERY_KEY, CurrentUser } from '../queries/current-user-query.ts';
-import { REQUESTED_USER_QUERY_KEY } from '../queries/requested-user-query.ts';
 import { toast } from '@repo/ui/src/hooks/use-toast.ts';
 import { DONATE_QUERY_KEY } from '@repo/components/src/user/components/donate/queries/donate-query.ts';
 import { parseStringToBoolean } from '../helpers/parse-string-to-boolean.ts';
+import {
+  REQUESTED_USER_QUERY_KEY
+} from '@repo/components/src/profile/components/cover/cover/queries/requested-user-query.ts';
 
 export type AvailableFields = Pick<USER, 'description'
   | 'visibility'

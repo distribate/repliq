@@ -33,11 +33,7 @@ export async function createRequestTimeout({
   .select()
   .single();
   
-  if (error) {
-    console.error(error.message);
-    return null;
-  }
-  if (!data) return null;
+  if (error || !data) return null;
   
   return data;
 }

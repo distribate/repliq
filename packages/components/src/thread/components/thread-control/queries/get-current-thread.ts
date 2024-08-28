@@ -14,7 +14,9 @@ export async function getCurrentThread({
   .eq('id', threadId)
   .single();
   
-  if (error) throw new Error(error.message);
+  if (error) {
+    throw new Error(error.message);
+  }
   
   return data;
 }

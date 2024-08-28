@@ -12,7 +12,7 @@ import {
 import { ConfirmationButton } from '../../../../../buttons/confirmation-action-button.tsx';
 import { ConfirmationActionModalTemplate } from "@repo/components/src/templates/confirmation-action-modal-template.tsx"
 import { useDialog } from '@repo/lib/hooks/use-dialog.ts';
-import { REPOST_CREATE_MODAL } from '../../../../report-create-modal.tsx';
+import { REPOST_CREATE_MODAL_NAME } from './report-create-modal.tsx';
 
 type d = {
 	id: string,
@@ -76,7 +76,7 @@ export const ReportModal = ({
 				actionType="cancel"
 				disabled={updateReportValuesMutation.isPending}
 				onClick={() => {
-					removeDialogMutation.mutate(REPOST_CREATE_MODAL)
+					removeDialogMutation.mutate(REPOST_CREATE_MODAL_NAME)
 				}}
 			/>
 		</ConfirmationActionModalTemplate>

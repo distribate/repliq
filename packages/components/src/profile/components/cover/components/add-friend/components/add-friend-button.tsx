@@ -1,29 +1,25 @@
 import { Button } from "@repo/ui/src/components/button.tsx";
-import { useControlFriend } from "../hooks/use-control-friend.ts";
-import { FriendButtonProps } from "./outgoing-friend-button.tsx";
-import { useQueryClient } from '@tanstack/react-query';
-import { USER } from '@repo/types/entities/entities-type.ts';
-import { CURRENT_USER_QUERY_KEY } from '@repo/lib/queries/current-user-query.ts';
+import { RequestFriendProperties } from '../types/request-friend-properties-type.ts';
+import { useControlFriend } from '../../../../../../friend/components/request-card/hooks/use-control-friend.ts';
 
 export const AddFriendButton = ({
-	reqUserNickname
-}: FriendButtonProps) => {
-	const qc = useQueryClient();
-	const currentUser = qc.getQueryData<USER>(CURRENT_USER_QUERY_KEY)
-	
-	const { addRequestFriendMutation, } = useControlFriend();
-	
-	if (!currentUser) return;
-	
+	recipient
+}: RequestFriendProperties) => {
+	const { createRequestFriendMutation } = useControlFriend();
+
 	const handleAddFriend = () => {
-		addRequestFriendMutation.mutate({
-			currentUserNickname: currentUser.nickname,
-			requestedUserNickname: reqUserNickname
+		createRequestFriendMutation.mutate({
+			reqUserNickname: recipient
 		})
 	}
 	
 	return (
-		<Button onClick={handleAddFriend} variant="positive">
+		<Button
+			onClick={handleAddFriend}
+			variant="positive"
+			pending={createRequestFriendMutation.isPending}
+			disabled={createRequestFriendMutation.isPending || createRequestFriendMutation.isError}
+		>
 			Добавить в друзья
 		</Button>
 	)

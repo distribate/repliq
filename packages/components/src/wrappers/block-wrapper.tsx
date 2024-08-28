@@ -1,7 +1,7 @@
 import { cva, VariantProps } from 'class-variance-authority';
 import { forwardRef, HTMLAttributes } from 'react';
 
-const blockWrapperVariants = cva('flex rounded-md w-full ', {
+const blockWrapperVariants = cva('flex rounded-lg w-full ', {
   variants: {
     variant: {
       default: '',

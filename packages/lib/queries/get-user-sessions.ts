@@ -6,7 +6,6 @@ import { validateRequest } from "../utils/auth/validate-requests.ts";
 
 export const getUserActiveSessions = async() => {
 	const supabase = createClient();
-	
 	const currentUser = await getCurrentUser();
 	
 	const { session: currentSession } = await validateRequest();

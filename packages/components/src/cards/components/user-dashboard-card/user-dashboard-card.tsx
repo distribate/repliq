@@ -13,7 +13,7 @@ export const UserDashboardCard = ({
   nickname, id, uuid, name_color, created_at
 }: UserDashboardCardProps) => {
   return (
-    <div className="flex items-center w-full p-2 bg-shark-900 rounded-md border border-white/10">
+    <div className="flex items-center w-full p-2 bg-shark-900 rounded-lg border border-white/10">
       <div className="flex gap-2">
         <Avatar nickname={nickname} propHeight={18} propWidth={18} />
         <Typography>{nickname}</Typography>

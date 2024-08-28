@@ -2,8 +2,8 @@
 
 import { threadImagesQuery } from './thread-images-query.ts';
 import { ThreadImagesSkeleton } from './thread-images-skeleton.tsx';
-import { ThreadImageModal } from '../../../modals/thread-image-modal.tsx';
 import { THREAD } from '@repo/types/entities/entities-type.ts';
+import { ThreadImageModal } from '../../../modals/custom/thread-image-modal.tsx';
 
 type ThreadImages = Pick<THREAD, "id">
 

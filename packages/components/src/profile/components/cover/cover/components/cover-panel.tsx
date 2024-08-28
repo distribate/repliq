@@ -8,10 +8,10 @@ import {
   DeleteBackgroundImageButton,
 } from '../../components/cover-image/components/delete-background-image-button.tsx';
 import { ControlPanel } from '../../components/control/components/control-panel.tsx';
-import { ProfileBackgroundUpdateModal } from '../../../../../modals/profile-background-update-modal.tsx';
 import {
   ProfileDescriptionChangeModal,
 } from '../../../../../modals/user-settings/profile-description-change-modal.tsx';
+import { ProfileBackgroundUpdateModal } from '../../../../../modals/custom/profile-background-update-modal.tsx';
 
 const userCoverPanelVariants = cva('relative z-[3] flex bg-transparent gap-x-4 border-none', {
   variants: {
@@ -44,7 +44,7 @@ export const UserCoverPanel = ({
         </div>
       )}
       {isOwner && (
-        <div className="flex items-center gap-x-2 bg-white/10 rounded-md px-4 py-0.5">
+        <div className="flex items-center gap-x-2 bg-shark-800/50 rounded-lg px-4 py-0.5">
           <DropdownWrapper
             properties={{ triggerAsChild: true, contentAlign: 'end', contentClassname: 'w-[196px]' }}
             trigger={

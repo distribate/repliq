@@ -11,9 +11,5 @@ export const ThreadsListByCategory = ({
 	
 	if (!threadsList) return null;
 	
-	return (
-		threadsList.map(thread => (
-			<ThreadCard key={thread.id}/>
-		))
-	)
+	return threadsList.map(thread => <ThreadCard key={thread.id}/>)
 }

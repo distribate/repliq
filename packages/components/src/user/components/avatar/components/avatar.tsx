@@ -12,7 +12,7 @@ import ExpActive from '@repo/assets/images/minecraft/exp-active.webp';
 // @ts-ignore
 import ExpNoActive from '@repo/assets/images/minecraft/exp-noactive.webp';
 
-const avatarVariants = cva('relative rounded-md overflow-hidden', {
+const avatarVariants = cva('relative rounded-md ', {
   variants: {
     variant: {
       default: 'max-w-[68px] max-h-[68px]',
@@ -59,17 +59,18 @@ const Avatar = forwardRef<
   ref,
 ) => {
   const { data: avatarUrl } = userAvatarQuery(nickname);
-  
+
   const activeImage = withBadge?.active ? ExpActive.src : ExpNoActive.src;
   
   return (
     <div className={avatarVariants(({ variant, shadow, border, className }))} ref={ref}{...props}>
       <ImageWrapper
-        propSrc={avatarUrl}
+        propSrc={avatarUrl!}
         width={propWidth}
         height={propHeight}
+        className="rounded-lg"
         loading="eager"
-        propAlt={`user ${nickname}`}
+        propAlt={`user's head`}
       />
       {withBadge && (
         <TooltipWrapper

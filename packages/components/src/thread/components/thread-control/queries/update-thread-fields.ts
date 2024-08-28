@@ -12,7 +12,8 @@ type UpdateThreadFields = ThreadControl & Partial<{
   };
 }>
 
-type UpdateThreadRequestType = RequestOptionsSupabaseClient & ThreadRequest
+type UpdateThreadRequestType = RequestOptionsSupabaseClient
+  & ThreadRequest
 
 async function getThreadCreatorNickname({
   thread_id, supabase
@@ -22,7 +23,10 @@ async function getThreadCreatorNickname({
   .select('user_nickname')
   .eq('thread_id', thread_id)
   .single();
-  if (error) throw new Error(error.message)
+  
+  if (error) {
+    throw new Error(error.message);
+  }
   
   return data;
 }
@@ -35,7 +39,9 @@ async function threadRemove({
   .delete()
   .eq('id', thread_id);
   
-  if (threadRemoveErr) console.log(threadRemoveErr.message);
+  if (threadRemoveErr) {
+    throw new Error(threadRemoveErr.message);
+  }
 }
 
 async function threadImagesRemove({
@@ -47,14 +53,18 @@ async function threadImagesRemove({
   .eq('thread_id', thread_id)
   .single();
   
-  if (existingThreadImagesErr) throw new Error(existingThreadImagesErr.message);
+  if (existingThreadImagesErr) {
+    throw new Error(existingThreadImagesErr.message);
+  };
   
   const { error: removeImagesFromStorage } = await supabase
   .storage
   .from('threads')
   .remove(existingThreadImages.images);
   
-  if (removeImagesFromStorage) throw new Error(removeImagesFromStorage.message);
+  if (removeImagesFromStorage) {
+    throw new Error(removeImagesFromStorage.message);
+  }
   
   const { error: removeImagesFromTable } = await supabase
   .from('threads_images')
@@ -62,7 +72,6 @@ async function threadImagesRemove({
   .eq('thread_id', thread_id);
   
   if (removeImagesFromTable) {
-    console.error(removeImagesFromTable.message)
     throw new Error(removeImagesFromTable.message)
   }
 }
@@ -112,7 +121,7 @@ export async function updateThreadFields({
   .select(fields);
   
   if (error) {
-    console.log(error.message);
+    throw new Error(error.message)
   }
   
   return data;

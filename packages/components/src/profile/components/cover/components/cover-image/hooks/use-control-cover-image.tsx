@@ -7,21 +7,22 @@ import { updateValueOfUploadedImage } from "@repo/lib/utils/storage/update-value
 import { IMAGE_COVER_QUERY_KEY } from "../queries/image-cover-query.ts";
 import { nanoid } from "nanoid"
 import { CURRENT_USER_QUERY_KEY, CurrentUser } from '@repo/lib/queries/current-user-query.ts';
-import { REQUESTED_USER_QUERY_KEY } from "@repo/lib/queries/requested-user-query.ts";
 import { USER_IMAGES_BUCKET } from "@repo/shared/constants/buckets.ts"
 import { createTask, registerTaskQueue } from "@repo/lib/helpers/create-task-delay.ts";
 import { useDialog } from "@repo/lib/hooks/use-dialog.ts";
 import { deletePrevImageFromUsers } from "./delete-prev-image.ts";
-import { PROFILE_BACKGROUND_UPDATE_MODAL_NAME } from '../../../../../../modals/profile-background-update-modal.tsx';
+import { REQUESTED_USER_QUERY_KEY } from '../../../cover/queries/requested-user-query.ts';
+import {
+	PROFILE_BACKGROUND_UPDATE_MODAL_NAME
+} from '../../../../../../modals/custom/profile-background-update-modal.tsx';
 import {
 	PROFILE_BACKGROUND_DEFAULT_IMAGES_MODAL_NAME
-} from '../../../../../../modals/profile-background-default-images-modal.tsx';
+} from '../../../../../../modals/custom/profile-background-default-images-modal.tsx';
 
 type BackgroundImage = {
-	file: File | null
-} & Partial<{
-	customFilename: string
-}>
+	file: File | null,
+	customFilename?: string
+}
 
 export type CoverImageInput = {
 	type: "origin" | "library",
@@ -52,7 +53,10 @@ export const useControlCoverImage = () => {
 	}
 	
 	const deleteBackgroundImageMutation = useMutation({
-		onMutate: () => removeDialogMutation.mutate([PROFILE_BACKGROUND_UPDATE_MODAL_NAME, PROFILE_BACKGROUND_DEFAULT_IMAGES_MODAL_NAME]),
+		onMutate: () => removeDialogMutation.mutate([
+			PROFILE_BACKGROUND_UPDATE_MODAL_NAME,
+			PROFILE_BACKGROUND_DEFAULT_IMAGES_MODAL_NAME
+		]),
 		mutationFn: async() => {
 			if (!currentUser) return null;
 			
@@ -67,21 +71,24 @@ export const useControlCoverImage = () => {
 				
 				if (!result) {
 					toast({
-						title: "Произошла ошибка при удалении фона. Попробуй позже!", variant: "negative"
+						title: "Произошла ошибка при удалении фона. Попробуй позже!",
+						variant: "negative"
 					})
 					
 					return result;
 				}
 				
 				toast({
-					title: "Фон удалён.", variant: "positive"
+					title: "Фон удалён.",
+					variant: "positive"
 				})
 				
 				return result;
 			}
 			
 			toast({
-				title: "Произошла ошибка при удалении фона. Попробуй позже!", variant: "negative"
+				title: "Произошла ошибка при удалении фона. Попробуй позже!",
+				variant: "negative"
 			})
 			
 			return false;
@@ -93,26 +100,36 @@ export const useControlCoverImage = () => {
 	})
 	
 	const uploadBackgroundImageMutation = useMutation({
-		onMutate: () => removeDialogMutation.mutate(PROFILE_BACKGROUND_UPDATE_MODAL_NAME),
-		mutationFn: async({ file, customFilename }: BackgroundImage) => {
+		onMutate: () => removeDialogMutation.mutate(
+			PROFILE_BACKGROUND_UPDATE_MODAL_NAME
+		),
+		mutationFn: async({
+			file, customFilename
+		}: BackgroundImage) => {
 			if (!currentUser) return;
 			
 			// if upload to existing image from storage (static)
 			if (customFilename) {
 				const success = await updateValueOfUploadedImage({
 					table: "users",
-					field: { "cover_image": customFilename },
-					equals: { column: "id", value: currentUser.id }
+					field: {
+						"cover_image": customFilename
+					},
+					equals: {
+						column: "id", value: currentUser.id
+					}
 				})
 				
 				if (!success) {
 					toast({
-						title: "Произошла ошибка при обновлении фона. Попробуйте позже!", variant: "negative"
+						title: "Произошла ошибка при обновлении фона. Попробуйте позже!",
+						variant: "negative"
 					});
 				}
 				
 				toast({
-					title: "Фон успешно обновлен!"
+					title: "Фон успешно обновлен!",
+					variant: "positive"
 				});
 				
 				return { success };
@@ -121,7 +138,8 @@ export const useControlCoverImage = () => {
 			// if custom image from user
 			if (!file) {
 				toast({
-					title: "Выберите файл для фона!", variant: "negative"
+					title: "Выберите файл для фона!",
+					variant: "negative"
 				})
 				
 				return;
@@ -138,13 +156,14 @@ export const useControlCoverImage = () => {
 						bucket: USER_IMAGES_BUCKET, userId: currentUser.id
 					}),
 					uploadImageToBucket({
-						bucket: USER_IMAGES_BUCKET, folder: "cover", file, fileName
+						bucket: USER_IMAGES_BUCKET, folderName: "cover", file, fileName
 					})
 				])
 			
 			if (!deletedPrev) {
 				toast({
-					title: "Произошла ошибка при обновлении фона. Попробуйте позже!", variant: "negative"
+					title: "Произошла ошибка при обновлении фона. Попробуйте позже!",
+					variant: "negative"
 				});
 				
 				return;
@@ -169,14 +188,16 @@ export const useControlCoverImage = () => {
 				
 				if (!success) {
 					toast({
-						title: "Произошла ошибка при обновлении фона. Попробуйте позже!"
+						title: "Произошла ошибка при обновлении фона. Попробуйте позже!",
+						variant: "negative"
 					});
 					
 					return;
 				}
 				
 				toast({
-					title: "Фон успешно обновлен!"
+					title: "Фон успешно обновлен!",
+					variant: "positive"
 				});
 				
 				return { success, path: data.path }

@@ -2,13 +2,7 @@
 
 import { createClient } from '../utils/supabase/server.ts';
 
-type GetUserBanned = {
-  nickname: string
-}
-
-export async function getUserBanned({
-  nickname
-}: GetUserBanned) {
+export async function getUserBanned(nickname: string) {
   const supabase = createClient();
   
   const { data, error } = await supabase

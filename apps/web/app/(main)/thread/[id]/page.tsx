@@ -6,9 +6,6 @@ import { BlockWrapper } from '@repo/components/src/wrappers/block-wrapper.tsx';
 import { ThreadControl } from '@repo/components/src/thread/components/thread-control/components/thread-control.tsx';
 import { getCurrentUser } from '@repo/lib/actions/get-current-user.ts';
 import { ThreadContent } from '@repo/components/src/thread/components/thread-content/components/thread-content.tsx';
-import {
-  ThreadContentSkeleton,
-} from '@repo/components/src/thread/components/thread-content/components/thread-content-skeleton.tsx';
 import { Suspense } from 'react';
 import { dehydrate, HydrationBoundary, QueryClient } from '@tanstack/react-query';
 import { ThreadInfo } from '@repo/components/src/thread/components/thread-info/components/thread-info.tsx';
@@ -22,6 +19,7 @@ import { ThreadComments } from '@repo/components/src/thread/components/thread-co
 import { ThreadImages } from '@repo/components/src/thread/components/thread-images/thread-images.tsx';
 import { Typography } from '@repo/ui/src/components/typography.tsx';
 import { getThreadModel } from '@repo/components/src/thread/queries/get-thread-model.ts';
+import { Skeleton } from '@repo/ui/src/components/skeleton.tsx';
 
 export async function generateMetadata({
   params,
@@ -71,7 +69,7 @@ export default async function TopicsTopicPage({
       <div className="flex flex-col w-full items-start h-full gap-y-4 justify-start">
         <BlockWrapper>
           <Suspense fallback={
-            <ThreadContentSkeleton />
+            <Skeleton className="h-48 w-full" />
           }>
             {thread.content && (
               <div className="flex flex-col gap-y-4 w-full h-full">

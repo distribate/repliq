@@ -9,7 +9,7 @@ export type PostThread = {
 
 type PostThreadProperties = Omit<THREAD, "content"> & Partial<{
   user_nickname: string,
-  category_id: string,
+  category_id: number,
   tags: string[] | null
 }> & PostThread & {
   content: any
@@ -94,7 +94,7 @@ async function postThreadTags({
 
 export async function postThread({
   ...values
-}: Omit<PostThreadProperties, 'thread_id' | 'created_at' | 'id'>) {
+}: Omit<PostThreadProperties, 'thread_id' | 'created_at' | 'id' | "updated_at">) {
   const {
     category_id, content, comments, title, tags,
     permission, description, auto_remove, user_nickname,

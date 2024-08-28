@@ -10,7 +10,7 @@ import { RealNameVisibility } from './components/real-name-visibility.tsx';
 import { GameStatsVisibility } from './components/game-stats-visibility.tsx';
 import { FriendRequest } from './components/friend-request.tsx';
 import { ActiveSessionsModal } from '../../../../../modals/user-settings/active-sessions-modal.tsx';
-import { BlockedListModal } from '../../../../../modals/blocked-list-modal.tsx';
+import { BlockedListModal } from '../../../../../modals/custom/blocked-list-modal.tsx';
 
 export const UserSettingsCard = () => {
   return (

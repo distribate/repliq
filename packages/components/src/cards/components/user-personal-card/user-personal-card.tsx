@@ -4,13 +4,13 @@ import { UserNickname } from '../../../user/components/name/components/nickname.
 import { Separator } from '@repo/ui/src/components/separator.tsx';
 import { CURRENT_USER_QUERY_KEY, CurrentUser } from '@repo/lib/queries/current-user-query.ts';
 import { useQueryClient } from '@tanstack/react-query';
-import { TicketsModal } from '../../../modals/tickets-modal.tsx';
-import { AccountSettingsModal } from '../../../modals/account-settings-modal.tsx';
-import { ProfileSettingsModal } from '../../../modals/profile-settings-modal.tsx';
-import { AdvancedSettingsModal } from '../../../modals/advanced-settings-modal.tsx';
 import { HoverCardItem } from '@repo/ui/src/components/hover-card.tsx';
 import { ImageWrapper } from '../../../wrappers/image-wrapper.tsx';
 import Portfolio from '@repo/assets/images/minecraft/portfolio.webp';
+import { ProfileSettingsModal } from '../../../modals/custom/profile-settings-modal.tsx';
+import { AccountSettingsModal } from '../../../modals/custom/account-settings-modal.tsx';
+import { AdvancedSettingsModal } from '../../../modals/custom/advanced-settings-modal.tsx';
+import { TicketsModal } from '../../../modals/custom/tickets-modal.tsx';
 
 export const UserPersonalCard = () => {
   const qc = useQueryClient();

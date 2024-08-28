@@ -29,7 +29,7 @@ export async function getAvailableMinecraftItems(): Promise<
     const item = data[i];
     
     const url = await getPublicUrlFromStorage({
-      bucket: 'static', fileName: item.image,
+      bucket: 'static', fileName: 'items/' + item.image,
     });
     
     if (url) items.push({ ...item, image: url });

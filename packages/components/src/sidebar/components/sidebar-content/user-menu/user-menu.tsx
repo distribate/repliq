@@ -3,11 +3,10 @@ import { CURRENT_USER_QUERY_KEY, CurrentUser } from '@repo/lib/queries/current-u
 import { Separator } from "@repo/ui/src/components/separator.tsx";
 import { DropdownMenuItem } from "@repo/ui/src/components/dropdown-menu.tsx";
 import { useQueryClient } from '@tanstack/react-query';
-import { UserSettingsModal } from '../../../../modals/user-settings-modal.tsx';
-import { LogoutModal } from '../../../../modals/logout-modal.tsx';
 import { HoverCardItem } from '@repo/ui/src/components/hover-card.tsx';
 import { Typography } from '@repo/ui/src/components/typography.tsx';
-
+import { UserSettingsModal } from '../../../../modals/user-settings/user-settings-modal.tsx';
+import { LogoutModal } from '../../../../modals/action-confirmation/components/logout/components/logout-modal.tsx';
 
 export const UserMenu = () => {
 	const qc = useQueryClient()

@@ -47,9 +47,9 @@ export const useCreateThread = () => {
         return;
       }
       
-      const { title, description, permission, auto_remove, comments, tags, category_id, content } = values;
+      const { title, description, visibility, permission, auto_remove, comments, tags, category_id, content } = values;
       
-      if (!title || !content || !category_id) return;
+      if (!title || !content || !category_id || !visibility) return;
       
       const createdThread = await postThread({
         category_id, title,
@@ -59,7 +59,8 @@ export const useCreateThread = () => {
         description: description ?? null,
         permission: permission ?? false,
         auto_remove: auto_remove ?? false,
-        comments: comments ?? true
+        comments: comments ?? true,
+        visibility
       });
       
       if (images && images.length >= 1 && createdThread) {

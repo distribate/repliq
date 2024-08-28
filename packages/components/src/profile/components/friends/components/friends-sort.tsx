@@ -26,14 +26,10 @@ const FRIENDS_SORT_ITEMS: FriendsSortItems[] = [
 export const FriendsSort = () => {
 	const { setFriendsSortMUtation } = useFriendsSort()
 
-	const handleSort = (
-		e: React.MouseEvent<HTMLDivElement, MouseEvent>, type: FriendsSortType
-	) => {
+	const handleSort = (e: React.MouseEvent<HTMLDivElement, MouseEvent>, type: FriendsSortType) => {
 		e.preventDefault();
 		
-		setFriendsSortMUtation.mutate({
-			type: type
-		})
+		setFriendsSortMUtation.mutate({ type })
 	}
 
 	return (
@@ -46,10 +42,9 @@ export const FriendsSort = () => {
 				}}
 				trigger={
 					<div className="flex items-center gap-1">
-						<Typography>
+						<Typography className="text-shark-300" textSize="medium">
 							По дате добавления
 						</Typography>
-						<List size={26}/>
 					</div>
 				}
 				content={

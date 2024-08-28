@@ -4,9 +4,11 @@ import { createClient } from '../utils/supabase/server.ts';
 import { USER } from '@repo/types/entities/entities-type.ts';
 import { getPublicUrlFromStorage } from '../utils/storage/get-public-url-from-storage.ts';
 
+type FavoriteItemProperties = Pick<USER, 'favorite_item' | "nickname">
+
 export type FavoriteItemType = Partial<{
   type: 'nickname' | 'itemId',
-}> & Partial<Pick<USER, 'favorite_item' | "nickname">>
+}> & Partial<FavoriteItemProperties>
 
 export type FavoriteItem = {
   id: string,
@@ -31,7 +33,7 @@ export async function getFavoriteItem({
     if (!favorite_item) return null;
     
     const { data: favoriteItemById, error: favoriteItemByIdErr } = await query(
-      favorite_item
+      favorite_item.toString()
     );
     
     if (favoriteItemByIdErr || !favoriteItemById) return null;
@@ -60,7 +62,7 @@ export async function getFavoriteItem({
   if (!item) return null;
   
   const url = await getPublicUrlFromStorage({
-    bucket: 'static', fileName: item.image,
+    bucket: 'static', fileName: 'items/' + item.image,
   });
   
   return { title: item.title, id: item.id, image: url };

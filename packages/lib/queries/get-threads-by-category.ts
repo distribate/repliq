@@ -1,12 +1,14 @@
 import { createClient } from "../utils/supabase/server.ts";
 import { THREAD } from "@repo/types/entities/entities-type.ts"
 
-type ThreadsFromCategories = {
-	categoryId: string
-} & Partial<{
+type ThreadsFromCategoriesProperties = {
 	limit: number,
 	range: number[]
-}>
+}
+
+type ThreadsFromCategories = {
+	categoryId: string
+} & Partial<ThreadsFromCategoriesProperties>
 
 export async function getThreadsCategories({
 	categoryId, range, limit = 3
@@ -32,7 +34,5 @@ export async function getThreadsCategories({
 	
 	if (!data.length) return null;
 	
-	return data.map(
-		item => item.threads
-	);
+	return data.map(item => item.threads);
 }

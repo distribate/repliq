@@ -44,7 +44,9 @@ export async function getThreadsImages({
     .from('threads')
     .createSignedUrls(data[0].images, 600);
     
-    if (error) throw new Error(error.message);
+    if (error) {
+      throw new Error(error.message);
+    }
     
     images = signedUrls.map(item => item.signedUrl);
   }

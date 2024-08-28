@@ -1,7 +1,6 @@
 import { coverQuery } from '../queries/cover-query.ts';
 import { CURRENT_USER_QUERY_KEY, CurrentUser } from '@repo/lib/queries/current-user-query.ts';
 import { imageCoverQuery } from '../../components/cover-image/queries/image-cover-query.ts';
-import { USER } from '@repo/types/entities/entities-type.ts';
 import { Avatar } from '../../../../../user/components/avatar/components/avatar.tsx';
 import { useQueryClient } from '@tanstack/react-query';
 import { DONATE_QUERY_KEY, DonateQuery } from '../../../../../user/components/donate/queries/donate-query.ts';

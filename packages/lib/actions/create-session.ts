@@ -5,7 +5,7 @@ import { permanentRedirect } from "next/navigation"
 import { lucia } from "@repo/lib/utils/auth/lucia-instance.ts";
 import bcrypt from "bcryptjs";
 import { setSessionDeviceInfo } from "./set-session-device-info.ts";
-import { getAuthCredentials } from "../queries/get-auth-credentials.ts";
+import { createClient } from "../utils/supabase/server.ts";
 
 export interface ActionResult {
 	error: string | null;
@@ -15,6 +15,16 @@ type SessionAction = {
 	nickname: string,
 	id: string,
 	password: string,
+}
+
+export async function getAuthCredentials(nickname: string) {
+	const supabase = createClient();
+	
+	return supabase
+	.from("AUTH")
+	.select("HASH,NICKNAME")
+	.eq("NICKNAME", nickname)
+	.single();
 }
 
 export async function createSessionAction({

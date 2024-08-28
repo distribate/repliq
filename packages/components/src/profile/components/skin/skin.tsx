@@ -1,23 +1,21 @@
-import { SkinRender } from "./components/skin-render.tsx";
-import { SkinControls } from "./components/skin-controls.tsx";
-import { getSkinDetails } from "@repo/lib/helpers/get-skin-details.ts";
+import { SkinRender } from './components/skin-render.tsx';
+import { SkinControls } from './components/skin-controls.tsx';
+import { Suspense } from 'react';
+import { Skeleton } from '@repo/ui/src/components/skeleton.tsx';
 
 export interface UserSkinProps {
-	reqUserNickname: string
+  reqUserNickname: string;
 }
 
-export const UserSkin = async({
-	reqUserNickname
+export const UserProfileSkin = async({
+  reqUserNickname,
 }: UserSkinProps) => {
-	
-	const skinUrl = getSkinDetails({
-		nickname: reqUserNickname, type: "skin"
-	})
-	
-	return (
-		<div className="flex h-[500px] w-[500px]">
-			<SkinControls reqUserNickname={reqUserNickname}/>
-			<SkinRender textureUrl={skinUrl}/>
-		</div>
-	)
-}
+  return (
+    <div className="flex h-[500px] w-[500px]">
+      <SkinControls reqUserNickname={reqUserNickname} />
+      <Suspense fallback={<Skeleton className="w-24 h-64"/>}>
+        <SkinRender reqUserNickname={reqUserNickname} />
+      </Suspense>
+    </div>
+  );
+};

@@ -9,7 +9,9 @@ import { HoverCardItem } from '@repo/ui/src/components/hover-card.tsx';
 import { Input } from '@repo/ui/src/components/input';
 import { currentThreadQuery } from '../queries/current-thread-query.ts';
 import { useState } from 'react';
-import { ThreadRemoveModal } from '../../../../modals/thread-remove-modal.tsx';
+import {
+  ThreadRemoveModal
+} from '../../../../modals/action-confirmation/components/thread-remove/components/thread-remove-modal.tsx';
 
 export const ThreadControl = ({
   id: thread_id,
@@ -34,9 +36,7 @@ export const ThreadControl = ({
           <DropdownWrapper
             properties={{ sideAlign: 'left', contentAlign: 'start', }}
             trigger={
-              <Button
-              
-              >
+              <Button>
                 Редактировать
               </Button>
             }
@@ -46,7 +46,6 @@ export const ThreadControl = ({
                   properties={{ contentAsChild: true, sideAlign: 'left', contentAlign: 'start', }}
                   trigger={
                     <HoverCardItem
-                    
                     >
                       <Typography>Изменить название</Typography>
                     </HoverCardItem>

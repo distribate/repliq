@@ -3,7 +3,9 @@
 import { Typography } from "@repo/ui/src/components/typography.tsx";
 import { useCreateThreadComment } from "../../../../forms/create-thread-comment/hooks/use-create-thread-comment.tsx";
 import { RepliedValuesType } from "../../../../forms/create-thread-comment/queries/create-thread-comment-query.ts";
-import { ReportCreateModal } from '../../../../modals/report-create-modal.tsx';
+import {
+	ReportCreateModal
+} from '../../../../modals/action-confirmation/components/report/components/report-create-modal.tsx';
 
 type ThreadCommentActionsProps = RepliedValuesType & {
 	thread_id: string

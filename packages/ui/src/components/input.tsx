@@ -1,56 +1,52 @@
-import { forwardRef, InputHTMLAttributes } from "react";
-import { cva, VariantProps } from "class-variance-authority";
+import { forwardRef, InputHTMLAttributes } from 'react';
+import { cva, VariantProps } from 'class-variance-authority';
 
 const inputVariants = cva(
-	"flex min-h-10 w-full px-4 py-1 " +
-	"file:border-0 file:bg-transparent file:text-sm font-normal file:font-medium focus-visible:outline-none " +
-	"focus-visible:ring-0 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50", {
-		variants: {
-			variant: {
-				default: "border-none text-sm text-shark-50 placeholder:text-shark-300",
-				minecraft: "border-[2px] text-shark-100 rounded-none bg-shark-700 text-sm dark:bg-shark-700 font-[Minecraft] placeholder:text-shark-200",
-			},
-			status: {
-				default: "border-black/80",
-				error: "border-red-400"
-			},
-			backgroundType: {
-				default: "bg-white/10",
-				transparent: "bg-transparent"
-			}
-		},
-		defaultVariants: {
-			variant: "default",
-			status: "default",
-			backgroundType: "default"
-		}
-	}
-)
+  'flex min-h-10 w-full px-4 py-1 ' +
+  'file:border-0 file:bg-transparent file:text-sm font-normal file:font-medium focus-visible:outline-none ' +
+  'focus-visible:ring-0 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50', {
+    variants: {
+      variant: {
+        default: 'border-none text-sm text-shark-50 placeholder:text-shark-300',
+        minecraft: 'border-[2px] text-shark-100 rounded-none bg-shark-700 text-sm dark:bg-shark-700 font-[Minecraft] placeholder:text-shark-200',
+      },
+      status: {
+        default: 'border-black/80',
+        error: 'border-red-400',
+      },
+      backgroundType: {
+        default: 'bg-white/10',
+        transparent: 'bg-transparent',
+      },
+    },
+    defaultVariants: {
+      variant: 'default',
+      status: 'default',
+      backgroundType: 'default',
+    },
+  },
+);
 
-export interface InputProps extends InputHTMLAttributes<HTMLInputElement>,
-	VariantProps<typeof inputVariants> {
+export interface InputProps
+  extends InputHTMLAttributes<HTMLInputElement>,
+  VariantProps<typeof inputVariants> {
 }
 
-const Input = forwardRef<HTMLInputElement, InputProps>(({
-			variant,
-			className,
-			status,
-			backgroundType,
-			type
-			, ...props
-		},
-		ref
-	) => {
-		return (
-			<input
-				type={type}
-				className={inputVariants(({ variant, status, backgroundType, className }))}
-				ref={ref}
-				{...props}
-			/>
-		)
-	}
-)
-Input.displayName = "Input"
+export const Input = forwardRef<
+  HTMLInputElement, InputProps
+>(({
+      variant, className, status, backgroundType, type, ...props
+    }, ref,
+  ) => {
+    return (
+      <input
+        type={type}
+        className={inputVariants(({ variant, status, backgroundType, className }))}
+        ref={ref}
+        {...props}
+      />
+    );
+  },
+);
 
-export { Input }
+Input.displayName = 'Input';

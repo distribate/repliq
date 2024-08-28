@@ -10,9 +10,7 @@ export default async function BannedPage() {
   const currentUser = await getCurrentUser()
   if (!currentUser) return null;
   
-  const isBanned = await getUserBanned({
-    nickname: currentUser.nickname
-  })
+  const isBanned = await getUserBanned(currentUser.nickname)
   
   if (isBanned?.nickname !== currentUser?.nickname) redirect('/');
   

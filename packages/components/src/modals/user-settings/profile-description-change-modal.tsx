@@ -4,7 +4,7 @@ import {
 } from '../../cards/components/user-personal-card/components/profile-settings/user-profile-settings.tsx';
 import { DialogWrapper } from '../../wrappers/dialog-wrapper.tsx';
 import BookAndQuill from '@repo/assets/images/minecraft/book_quill.webp';
-import { PROFILE_SETTINGS_MODAL_NAME } from '../profile-settings-modal.tsx';
+import { PROFILE_SETTINGS_MODAL_NAME } from '../custom/profile-settings-modal.tsx';
 
 export const ProfileDescriptionChangeModal = () => {
   return (

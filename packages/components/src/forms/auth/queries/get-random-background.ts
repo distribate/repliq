@@ -1,14 +1,12 @@
 "use server"
 
 import { createClient } from "@repo/lib/utils/supabase/server.ts";
+import AuthBackground from "@repo/assets/images/auth-background.png"
 
-function getRandomArbitrary(min: number, max: number) {
-	return Math.random() * (max - min) + min;
-}
+const getRandomArbitrary = (min: number, max: number) => Math.random() * (max - min) + min;
 
 export async function getRandomBackground() {
 	const supabase = createClient();
-	
 	const randomId = Math.floor(getRandomArbitrary(1, 10));
 	const fileName = `auth_background/${randomId}.png`
 	
@@ -17,8 +15,8 @@ export async function getRandomBackground() {
 	.from('static')
 	.createSignedUrl(fileName, 60)
 	
-	if (error) {
-		return null;
+	if (error || !data) {
+		return AuthBackground.src;
 	}
 
 	return data.signedUrl;

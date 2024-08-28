@@ -6,7 +6,6 @@ import { AvailableFields } from '../hooks/use-update-current-user.ts';
 import { getUserDonate } from '@repo/components/src/user/components/donate/queries/get-user-donate.ts';
 import { keysForCheckDonate } from '@repo/shared/constants/user-fields-donated.ts';
 import { UserPreferences } from '../helpers/convert-user-preferences-to-map.ts';
-import { checkRequestTimeout, RequestTimeoutType } from '../helpers/check-request-timeout.ts';
 import { createRequestTimeout } from '../helpers/set-request-timeout.ts';
 import dayjs from 'dayjs';
 
@@ -23,7 +22,9 @@ export type UpdateUserFields = {
   }
 }
 
-type PostUserPreferences = Pick<UpdateUserFields, 'nickname' | 'id'> & {
+type PostUserPreferences = Pick<
+  UpdateUserFields, 'nickname' | 'id'
+> & {
   value: boolean, key: keyof UserPreferences, oldPreferences: UserPreferences
 }
 
@@ -147,8 +148,5 @@ export async function updateUserFields({
     if (!isSuccess) return;
     
     return { data, status };
-  } catch (e) {
-    console.error(e)
-    throw e;
-  }
+  } catch (e) { throw e }
 }

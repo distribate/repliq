@@ -12,7 +12,7 @@ import { useSidebarControl } from '../../sidebar-layout/hooks/use-sidebar-contro
 import { OpenTicket } from '../../sidebar-content/open-ticket/open-ticket.tsx';
 import { Icon } from '@repo/shared/ui/icon/icon.tsx';
 import Link from 'next/link';
-import { LogoutModal } from '../../../../modals/logout-modal.tsx';
+import { LogoutModal } from '../../../../modals/action-confirmation/components/logout/components/logout-modal.tsx';
 
 export const SidebarSettings = () => {
   const { data: sidebarState } = sidebarLayoutQuery();
@@ -21,7 +21,7 @@ export const SidebarSettings = () => {
   const isValue = (format: SidebarFormat) => format === sidebarState.format;
   
   return (
-    <div className="flex items-center justify-between flex-wrap bg-white/10 self-end rounded-md px-3 py-1 w-full gap-2">
+    <div className="flex items-center justify-between flex-wrap bg-white/10 self-end rounded-lg px-3 py-1 w-full gap-2">
       {isCompact || !isExpanded ? (
         <DropdownWrapper
           properties={{ sideAlign: 'right', contentAlign: 'end' }}

@@ -1,5 +1,5 @@
 import { MailQuestion } from 'lucide-react';
-import { TicketsModal } from '../../../../modals/tickets-modal.tsx';
+import { TicketsModal } from '../../../../modals/custom/tickets-modal.tsx';
 
 export const OpenTicket = () => {
   return (

@@ -1,11 +1,11 @@
 "use client"
 
-import { requestedUserQuery } from "@repo/lib/queries/requested-user-query.ts";
 import { coverQuery } from "../queries/cover-query.ts";
 import { InView } from "react-intersection-observer";
 import { useCover } from "../hooks/use-cover.ts";
 import { UserCoverSkeleton } from "./cover-skeleton.tsx";
 import { UserCover } from "./cover.tsx";
+import { requestedUserQuery } from '../queries/requested-user-query.ts';
 
 export type UserCoverLayoutProps = {
 	reqUserNickname: string,

@@ -8,7 +8,10 @@ import { ThreadModel } from '../../queries/get-thread-model.ts';
 
 type ThreadLayout = {
   children: ReactNode
-} & Pick<ThreadModel, "id" | "nickname" | "title">
+} & Pick<ThreadModel, "id"
+  | "nickname"
+  | "title"
+>
 
 export const ThreadLayout = ({
   children, title, nickname, id

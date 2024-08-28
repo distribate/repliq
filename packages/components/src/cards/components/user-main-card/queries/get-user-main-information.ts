@@ -8,7 +8,7 @@ import { UserCardQuery } from './user-main-card-query.ts';
 import { getUserTimeFromServer } from '@repo/lib/queries/get-user-time-from-server.ts';
 
 async function getFriendsCount({
-  nickname,
+  nickname
 }: UserMainCard): Promise<number> {
   const supabase = createClient();
   
@@ -43,7 +43,7 @@ async function getStats({
   const [threadsCount, friendsCount, joined] = await Promise.all([
     getThreadsCount({ nickname }),
     getFriendsCount({ nickname }),
-    getUserTimeFromServer({ nickname })
+    getUserTimeFromServer(nickname)
   ])
   
   return { friendsCount, threadsCount, joined }
@@ -53,7 +53,7 @@ export async function getUserMainInformation({
   nickname
 }: UserMainCard): Promise<UserCardQuery | null> {
   const [ user, stats ] = await Promise.all([
-    getRequestedUser({ nickname }),
+    getRequestedUser(nickname),
     getStats({ nickname }),
   ]);
   

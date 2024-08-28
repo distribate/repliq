@@ -12,7 +12,8 @@ export const lucia = new Lucia(adapter, {
 	getUserAttributes: (attributes) => {
 		return {
 			id: attributes.id,
-			nickname: attributes.nickname
+			nickname: attributes.nickname,
+			setupTwoFactor: attributes.two_factor_secret !== null
 		};
 	}
 });
@@ -26,5 +27,6 @@ declare module "lucia" {
 
 interface DatabaseUserAttributes {
 	id: string,
-	nickname: string
+	nickname: string,
+	two_factor_secret: string | null;
 }

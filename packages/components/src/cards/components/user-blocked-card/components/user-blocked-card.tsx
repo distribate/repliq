@@ -10,7 +10,7 @@ import { Ellipsis } from 'lucide-react';
 import { HoverCardItem } from '@repo/ui/src/components/hover-card.tsx';
 import { useDeleteFromBlocked } from '../hooks/use-delete-from-blocked.ts';
 import { useDialog } from '@repo/lib/hooks/use-dialog.ts';
-import { UserCardModal } from '../../../../modals/user-card-modal.tsx';
+import { UserCardModal } from '../../../../modals/custom/user-card-modal.tsx';
 
 type UserBlockedCardProps = Pick<USER, 'nickname'
   | 'name_color'> & {
@@ -33,7 +33,7 @@ export const UserBlockedCard = ({
   };
   
   return (
-    <div className="flex items-start justify-between w-full bg-shark-900 rounded-md border border-white/10 p-2">
+    <div className="flex items-start justify-between w-full bg-shark-900 rounded-lg border border-white/10 p-2">
       <div className="flex items-center gap-2 w-fit">
         <Avatar nickname={nickname} propWidth={48} propHeight={48} />
         <UserNickname nickname={nickname} nicknameColor={name_color} />

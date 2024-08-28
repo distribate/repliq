@@ -30,7 +30,7 @@ export default async function AuthPage() {
 		}>
 			{fact && (
 				<div
-					className="flex bg-shark-300 font-[Minecraft] gap-1 relative rounded-md w-full items-start py-2 px-8 animate-fadein overflow-x-scroll max-w-[1020px]">
+					className="flex bg-shark-300 font-[Minecraft] gap-1 relative shadow-[inset_4px_-4px_1px_rgba(0,0,0,0.6),inset_-4px_4px_1px_rgba(255,255,255,0.4)] w-full items-start py-2 px-8 animate-fadein overflow-x-scroll max-w-[1020px]">
 					<Typography className="text-shark-800 text-base font-semibold">
 						Факт:
 					</Typography>

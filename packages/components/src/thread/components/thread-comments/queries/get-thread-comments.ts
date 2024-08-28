@@ -8,7 +8,9 @@ type CommentsReplied = {
   initiatorId: string
 }
 
-type GetCommentsReplied = RequestOptionsSupabaseClient & CommentsReplied
+type GetCommentsReplied = RequestOptionsSupabaseClient
+  & CommentsReplied
+
 type GetCommentMore = RequestOptionsSupabaseClient & {
   commentId: string
 }
@@ -17,7 +19,9 @@ type GetThreadComments = ThreadRequest & {
   comments: boolean
 }
 
-type GetComments = RequestOptionsSupabaseClient & ThreadRequest & RequestDetails
+type GetComments = RequestOptionsSupabaseClient
+  & ThreadRequest
+  & RequestDetails
 
 export async function getCommentsReplied({
   initiatorId, supabase,
@@ -27,6 +31,7 @@ export async function getCommentsReplied({
   .select('recipient_comment_id')
   .eq('initiator_comment_id', initiatorId)
   .single();
+  
   if (error) return null;
   
   return data;
@@ -41,7 +46,9 @@ async function getCommentMore({
   .eq('id', commentId)
   .single();
   
-  if (error) throw new Error(error.message);
+  if (error) {
+    throw new Error(error.message);
+  }
   
   return data;
 }
@@ -56,7 +63,10 @@ async function getComments({
   .order('created_at', {
     referencedTable: 't_comments', ascending,
   });
-  if (error) throw new Error(error.message);
+  
+  if (error) {
+    throw new Error(error.message);
+  }
   
   return data;
 }

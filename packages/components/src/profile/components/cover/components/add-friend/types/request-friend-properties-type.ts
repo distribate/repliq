@@ -1,4 +1,3 @@
 export type RequestFriendProperties = {
-	recipient: string,
-	initiator: string
+	recipient: string
 }

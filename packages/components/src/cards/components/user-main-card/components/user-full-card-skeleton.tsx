@@ -4,7 +4,7 @@ import { Separator } from '@repo/ui/src/components/separator.tsx';
 export const UserFullCardSkeleton = () => {
   return (
     <div
-      className="flex flex-col h-[512px] gap-y-4 relative w-full rounded-md p-4 bg-shark-950 border-[1px] border-white/10 items-center">
+      className="flex flex-col h-[512px] gap-y-4 relative w-full rounded-lg p-4 bg-shark-950 border-[1px] border-white/10 items-center">
       <div className="flex items-center gap-4 w-full">
         <div className="flex relative justify-center p-2 items-center">
           <Skeleton className="w-[104px] h-[104px]" />

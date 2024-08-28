@@ -5,7 +5,7 @@
 @layer base {
   @font-face {
     font-family: "Minecraft";
-    src: url("../../packages/assets/fonts/minecraft.ttf") format("truetype");
+    src: url("../../packages/assets/fonts/Monocraft.ttf") format("truetype");
   }
 
   :root {
@@ -110,13 +110,4 @@
   ::-webkit-scrollbar-thumb {
     @apply bg-[#444444];
   }
-}
-
-.tiptap .is-empty::before {
-  @apply text-shark-300;
-  @apply content-[attr(data-placeholder)];
-  @apply float-left;
-  @apply text-sm;
-  @apply pointer-events-none;
-  @apply h-0;
 }

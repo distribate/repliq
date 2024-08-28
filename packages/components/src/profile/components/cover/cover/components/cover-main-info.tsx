@@ -2,13 +2,12 @@ import { UserNickname } from "../../../../../user/components/name/components/nic
 import { UserDonate } from "../../../../../user/components/donate/components/donate.tsx";
 import { UserRealName } from "../../../../../user/components/real-name/components/real-name.tsx";
 import { useQueryClient } from "@tanstack/react-query";
-import { REQUESTED_USER_QUERY_KEY } from "@repo/lib/queries/requested-user-query.ts";
-import { USER } from "@repo/types/entities/entities-type.ts";
 import { Typography } from "@repo/ui/src/components/typography.tsx";
 import { COVER_QUERY_KEY, CoverQuery } from '../queries/cover-query.ts';
 import { RequestedUser } from '@repo/lib/queries/get-requested-user.ts';
 import { checkUserRealNameVisibility } from '@repo/lib/helpers/check-user-real-name-visibility.ts';
 import { CURRENT_USER_QUERY_KEY, CurrentUser } from '@repo/lib/queries/current-user-query.ts';
+import { REQUESTED_USER_QUERY_KEY } from '../queries/requested-user-query.ts';
 
 interface UserCoverInfo {
 	nickname: string

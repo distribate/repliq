@@ -7,7 +7,7 @@ import { Separator } from '@repo/ui/src/components/separator.tsx';
 import { DropdownWrapper } from '../../../../wrappers/dropdown-wrapper.tsx';
 import { useRouter } from 'next/navigation';
 import { UserCardProps } from '../user-preview-card.tsx';
-import { UserCardModal } from '../../../../modals/user-card-modal.tsx';
+import { UserCardModal } from '../../../../modals/custom/user-card-modal.tsx';
 
 export const UserPreviewCardProperties = ({
   nickname

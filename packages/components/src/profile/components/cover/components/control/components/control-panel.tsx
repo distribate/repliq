@@ -11,7 +11,7 @@ export const ControlPanel = () => {
       <DropdownWrapper
         properties={{ sideAlign: 'bottom', contentAlign: 'end', }}
         trigger={
-          <div className="flex items-center justify-center h-full bg-white/10 rounded-md px-2 py-1">
+          <div className="flex items-center justify-center h-full bg-shark-800/50 rounded-lg px-2 py-1">
             <Ellipsis size={20} className="rotate-90 text-shark-50" />
           </div>
         }

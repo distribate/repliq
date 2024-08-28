@@ -9,10 +9,7 @@ export async function getCategory(category_id: string) {
   .eq("id", category_id)
   .single()
   
-  if (error) {
-    console.error(error.message);
-    return null
-  }
+  if (error) return null
   
   return data;
 }

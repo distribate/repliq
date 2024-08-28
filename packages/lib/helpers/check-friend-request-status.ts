@@ -1,8 +1,8 @@
 import { CURRENT_USER_QUERY_KEY } from '../queries/current-user-query.ts';
-import { friendsQuery } from "@repo/components/src/profile/components/friends/queries/friends-query.ts";
-import { requestsQuery } from "@repo/components/src/profile/components/friends/queries/requests-query.ts";
 import { useQueryClient } from '@tanstack/react-query';
 import { USER } from '@repo/types/entities/entities-type.ts';
+import { requestsQuery } from '@repo/components/src/friends/queries/requests-query.ts';
+import { friendsQuery } from '@repo/components/src/friends/queries/friends-query.ts';
 
 type ReqStatus = "reject"
 	| "accept"

@@ -45,7 +45,6 @@ export async function getPostsByNickname(
 	const { data, error } = await query;
 	
 	if (error) {
-		console.error(error.message)
 		throw new Error(error.message)
 	}
 	

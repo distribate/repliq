@@ -1,61 +1,68 @@
 import Link from "next/link";
 import { Typography } from "@repo/ui/src/components/typography.tsx";
 import { Button } from "@repo/ui/src/components/button.tsx";
-import { FriendRequestCardProps } from "./friend-request-card.tsx";
-import { useControlRequests } from "../hooks/use-control-requests.ts";
+import { useControlFriendRequests } from "../hooks/use-control-friend-requests.ts";
+import { Avatar } from '../../../../user/components/avatar/components/avatar.tsx';
+import { USER_URL } from '@repo/shared/constants/routes.ts';
+import { UserNickname } from '../../../../user/components/name/components/nickname.tsx';
+import { UserDonate } from '../../../../user/components/donate/components/donate.tsx';
+import { FriendRequestProperties } from '../../types/friend-request-types.ts';
 
-export const CardIncomingPart = ({
-	initiator, recipient
-}: Omit<FriendRequestCardProps, "type">) => {
+export const FriendRequestIncomingCard = ({
+	initiator
+}: Pick<FriendRequestProperties, "initiator">) => {
 	const {
 		rejectIncomingRequestMutation,
 		acceptIncomingRequestMutation
-	} = useControlRequests()
+	} = useControlFriendRequests()
 	
 	const handleAcceptReq = () => {
-		acceptIncomingRequestMutation.mutate({
-			initiator: initiator,
-			recipient: recipient
-		})
+		acceptIncomingRequestMutation.mutate(initiator)
 	}
 	
 	const handleRejectReq = () => {
 		rejectIncomingRequestMutation.mutate({
-			initiator: initiator,
-			recipient: recipient
+			initiator, type: "incoming"
 		})
 	}
 	
 	return (
-		<>
-			<div className="flex flex-row w-full items-center gap-1">
-				<Link href={`/user/${initiator}`}>
-					<Typography className="text-pink-500 text-md font-medium">
-						{initiator}
-					</Typography>
-				</Link>
-				<Typography className="text-md font-medium text-shark-50">
-					хочет добавить вас в друзья
-				</Typography>
+		<div
+			key={initiator}
+			className="flex items-center gap-4 w-full bg-shark-950 border border-shark-800 rounded-lg p-4"
+		>
+			<Avatar
+				nickname={initiator}
+				propHeight={112}
+				propWidth={112}
+				className="rounded-lg"
+			/>
+			<div className="flex flex-col gap-y-1 w-fit">
+				<div className="flex items-center gap-1 w-fit">
+					<Link href={USER_URL + initiator} className="flex items-center gap-1">
+						<UserNickname nickname={initiator} className="text-lg" />
+					</Link>
+					<UserDonate nickname={initiator} />
+				</div>
+				<div className="flex items-center mt-2 gap-1 w-fit">
+					<Button
+						onClick={handleAcceptReq}
+						variant="positive"
+					>
+						<Typography textSize="small">
+							Принять заявку
+						</Typography>
+					</Button>
+					<Button
+						onClick={handleRejectReq}
+						variant="negative"
+					>
+						<Typography textSize="small">
+							Отклонить заявку
+						</Typography>
+					</Button>
+				</div>
 			</div>
-			<div className="flex items-center gap-2 w-fit">
-				<Button
-					onClick={handleAcceptReq}
-					className="hover:bg-emerald-700/40 bg-emerald-600/40"
-				>
-					<Typography className="text-md font-bold">
-						принять заявку
-					</Typography>
-				</Button>
-				<Button
-					onClick={handleRejectReq}
-					className="hover:bg-red-700/40 bg-red-600/40"
-				>
-					<Typography className="text-md font-bold">
-						отклонить заявку
-					</Typography>
-				</Button>
-			</div>
-		</>
+		</div>
 	)
 }

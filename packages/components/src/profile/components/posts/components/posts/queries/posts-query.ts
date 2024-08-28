@@ -1,9 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { getPostsByNickname, Posts } from './get-posts-by-user.ts';
 
-export const POSTS_QUERY_KEY = (nickname?: string) => {
-	return [ "user", "posts", nickname ]
-}
+export const POSTS_QUERY_KEY = (nickname?: string) => [ "user", "posts", nickname ]
 
 export type PostsQuery = Posts[]
 

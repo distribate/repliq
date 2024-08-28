@@ -1,7 +1,7 @@
 import { cva, VariantProps } from "class-variance-authority";
 import { forwardRef, HTMLAttributes } from "react";
 
-const badgeVariants = cva(`flex rounded-md text-[12px]
+const badgeVariants = cva(`flex rounded-lg text-[12px]
 		text-shark-50 font-normal bg-caribbean-green-600 outline-none border-none`, {
 	variants: {
 		size: {

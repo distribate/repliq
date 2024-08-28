@@ -1,29 +1,25 @@
 import { Button } from "@repo/ui/src/components/button.tsx";
-import { useControlFriend } from "../hooks/use-control-friend.ts";
-import { FriendButtonProps } from "./outgoing-friend-button.tsx";
-import { CURRENT_USER_QUERY_KEY } from '@repo/lib/queries/current-user-query.ts';
-import { useQueryClient } from '@tanstack/react-query';
-import { USER } from '@repo/types/entities/entities-type.ts';
+import { RequestFriendProperties } from '../types/request-friend-properties-type.ts';
+import { useControlFriend } from '../../../../../../friend/components/request-card/hooks/use-control-friend.ts';
 
 export const DeleteFriendButton = ({
-	reqUserNickname
-}: FriendButtonProps) => {
-	const qc = useQueryClient();
-	const currentUser = qc.getQueryData<USER>(CURRENT_USER_QUERY_KEY)
-	
+	recipient
+}: RequestFriendProperties) => {
 	const { removeFriendFromListMutation } = useControlFriend()
-
-	if (!currentUser) return null;
 	
 	const handleDeleteFriend = () => {
 		removeFriendFromListMutation.mutate({
-			currentUserNickname: currentUser.nickname,
-			requestedUserNickname: reqUserNickname
+			reqUserNickname: recipient
 		})
 	}
 	
 	return (
-		<Button onClick={handleDeleteFriend} variant="negative">
+		<Button
+			onClick={handleDeleteFriend}
+			pending={removeFriendFromListMutation.isPending}
+			disabled={removeFriendFromListMutation.isPending || removeFriendFromListMutation.isError}
+			variant="negative"
+		>
 			Удалить из друзей
 		</Button>
 	)

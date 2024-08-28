@@ -32,12 +32,10 @@ export async function getLastUsers(): Promise<GetLastUsers[] | null> {
   
   for (let i = 0; i < data.length; i++) {
     const user = data[i];
+    const banStatus = await getUserBanned(user.nickname);
     
-    const banStatus = await getUserBanned({
-      nickname: user.nickname,
-    });
-    
-    if (!banStatus || banStatus.nickname !== user.nickname) users?.push(user);
+    if (!banStatus || banStatus.nickname !== user.nickname)
+      users?.push(user);
   }
 
   return users;

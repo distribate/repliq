@@ -46,7 +46,7 @@ export const CreatePostCommentForm = ({
 				propHeight={36}
 				nickname={currentUser.nickname}
 			/>
-			<div className="flex w-full border-[1px] border-white/10 *:w-full rounded-md">
+			<div className="flex w-full border-[1px] border-white/10 *:w-full rounded-lg">
 				<FormField errorMessage={errors?.content?.message}>
 					<Input
 						placeholder="Комментировать"

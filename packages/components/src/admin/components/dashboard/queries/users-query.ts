@@ -5,5 +5,7 @@ export const ADMIN_USERS_QUERY_KEY = ["admin", "users"]
 
 export const usersQuery = () => useQuery({
   queryKey: ADMIN_USERS_QUERY_KEY,
-  queryFn: () => getUsers()
+  queryFn: () => getUsers(),
+  refetchOnWindowFocus: false,
+  retry: 2
 })

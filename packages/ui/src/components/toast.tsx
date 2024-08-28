@@ -26,7 +26,7 @@ ToastViewport.displayName = ToastPrimitives.Viewport.displayName;
 
 export const toastVariants = cva(
   `group pointer-events-auto relative flex w-full items-center justify-between space-x-4 overflow-hidden
-   rounded-md px-4 py-4 pr-4 shadow-lg transition-all border-none data-[state=open]:animate-in
+   rounded-lg px-4 py-4 pr-4 shadow-lg transition-all border-none data-[state=open]:animate-in
    data-[state=closed]:animate-fadeout data-[state=closed]:fade-out-80 data-[state=closed]:slide-out-to-right-full data-[state=open]:slide-in-from-top-full
    data-[state=open]:sm:slide-in-from-bottom-full `,
   {
@@ -54,10 +54,6 @@ const Toast = React.forwardRef<
       className={cn(toastVariants({ variant }), className)}
       {...props}
     >
-      {/*<div className="flex items-center justify-center border-[1px] border-shark-950 rounded-md overflow-hidden w-[24px] h-[24px]">*/}
-      {/*  {variant === 'positive' && <Check size={14} className="text-shark-950"/>}*/}
-      {/*  {variant === 'negative' && <Ban size={14} className="text-shark-950"/>}*/}
-      {/*</div>*/}
       {props.children}
     </ToastPrimitives.Root>
   );

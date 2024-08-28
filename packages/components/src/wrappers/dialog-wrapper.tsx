@@ -1,12 +1,11 @@
 'use client';
 
 import { Dialog, DialogContent, DialogTrigger } from '@repo/ui/src/components/dialog';
-import { forwardRef, ReactNode, useCallback, useMemo } from 'react';
+import { forwardRef, ReactNode } from 'react';
 import { DialogContentProps, DialogProps } from '@radix-ui/react-dialog';
 import { useDialog } from '@repo/lib/hooks/use-dialog.ts';
-import { DIALOG_STATE_QUERY_KEY, dialogParamsQuery } from '@repo/lib/queries/dialog-params-query.ts';
+import { DIALOG_STATE_QUERY_KEY } from '@repo/lib/queries/dialog-params-query.ts';
 import { useQueryClient } from '@tanstack/react-query';
-import { QueryCache } from '@tanstack/react-query'
 
 interface DialogContentExtended extends DialogContentProps {}
 
@@ -40,8 +39,7 @@ export const DialogWrapper = forwardRef<
 ) => {
   const { setDialogIdMutation, removeDialogMutation } = useDialog();
   const qc = useQueryClient()
-  // const dialogParams = qc.getQueryData<string[]>(DIALOG_STATE_QUERY_KEY)
-  const { data: dialogParams } = dialogParamsQuery()
+  const dialogParams = qc.getQueryData<string[]>(DIALOG_STATE_QUERY_KEY)
   
   const isDialogOpen = () => {
     if (!dialogParams) return false;

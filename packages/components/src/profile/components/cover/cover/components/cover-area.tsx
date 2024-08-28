@@ -32,11 +32,16 @@ interface CoverArea {
 	backgroundImage?: string
 }
 
-interface CoverAreaProps extends HTMLAttributes<HTMLDivElement>,
-	VariantProps<typeof coverAreaVariants>, CoverArea {}
+interface CoverAreaProps
+	extends HTMLAttributes<HTMLDivElement>,
+		VariantProps<typeof coverAreaVariants>, CoverArea {
+}
 
 export const CoverArea = ({
 	className, variant, backgroundColor, backgroundImage, border, ...props
 }: CoverAreaProps) => {
-	return <div className={coverAreaVariants(({ variant, border, className, backgroundColor }))} {...props}/>
+	return <div
+		className={coverAreaVariants(({ variant, border, className, backgroundColor }))}
+		{...props
+	}/>
 }

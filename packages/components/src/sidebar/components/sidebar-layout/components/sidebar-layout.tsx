@@ -3,7 +3,7 @@ import { forwardRef, HTMLAttributes } from "react";
 
 export const sidebarLayoutVariants = cva(
 	`flex flex-col justify-between h-full transition-all duration-100
-	 rounded-md ease-in-out border-[1px] border-white/10 overflow-hidden
+	 rounded-lg ease-in-out border-[1px] border-white/10 overflow-hidden
 	 py-6 bg-shark-950 outline-none`,
 	{
 		variants: {

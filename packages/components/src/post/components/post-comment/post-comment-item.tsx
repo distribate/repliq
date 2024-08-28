@@ -16,7 +16,7 @@ export const PostCommentItem = ({
       <Link href={`/user/${user_nickname}`}>
         <Avatar variant="page" propWidth={36} propHeight={36} nickname={user_nickname} />
       </Link>
-      <div className="flex-col p-2 border-[1px] border-white/10 bg-shark-900 rounded-md gap-y-2 w-full">
+      <div className="flex-col p-2 border-[1px] border-white/10 bg-shark-900 rounded-lg gap-y-2 w-full">
         <PostCommentItemHeader id={comment_id} user_nickname={user_nickname} post_id={post_id} />
         <PostCommentBody content={content} />
         <PostCommentItemFooter post_id={post_id} created_at={created_at} user_nickname={user_nickname} id={comment_id} />

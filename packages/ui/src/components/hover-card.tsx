@@ -23,7 +23,7 @@ const HoverCardItem = forwardRef<
 	return (
 		<div
 			ref={ref}
-			className={cn('flex hover:bg-white/10 border border-none cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm relative', className)}
+			className={cn('flex hover:bg-white/10 border border-none cursor-default select-none items-center rounded-lg px-2 py-1.5 text-sm relative', className)}
 			{...props}
 		/>
 	)
@@ -46,7 +46,7 @@ const HoverCardContent = React.forwardRef<
 		align={align}
 		sideOffset={sideOffset}
 		className={cn(
-			"z-50 w-64 rounded-md" +
+			"z-50 w-64 rounded-lg" +
 			" border-[1px] border-white/10 dark:bg-shark-900 bg-shark-900 p-1 shadow-md outline-none" +
 			" data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0" +
 			" data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95" +

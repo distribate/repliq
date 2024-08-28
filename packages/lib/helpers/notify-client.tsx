@@ -6,8 +6,6 @@ import {
   FriendRequestResponseDefault,
 } from '@repo/components/src/templates/friend-request-response.tsx';
 import { invalidateAllFriendsRequests } from './invalidate-friends-requests.ts';
-import { useIsFetching, useQueryClient } from '@tanstack/react-query';
-import { useEffect } from 'react';
 
 export const notifyClientAboutRequest = (pd: any) => {
   toast({

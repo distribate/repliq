@@ -2,7 +2,7 @@ import { ReactNode } from 'react';
 import { cookies } from 'next/headers';
 import { ResizableLayout } from '@repo/components/src/layouts/resizable-layout.tsx';
 import { getCurrentUser } from '@repo/lib/actions/get-current-user.ts';
-import { permanentRedirect, redirect } from 'next/navigation';
+import { redirect } from 'next/navigation';
 import { QueryClient, HydrationBoundary, dehydrate } from '@tanstack/react-query';
 import { CURRENT_USER_QUERY_KEY } from '@repo/lib/queries/current-user-query.ts';
 import { getUserInformation } from '@repo/lib/queries/get-user-information.ts';
@@ -15,7 +15,7 @@ type MainLayoutProps = {
 }
 
 export default async function MainLayout({
-  children,
+  children
 }: MainLayoutProps) {
   const qc = new QueryClient();
   const currentUser = await getCurrentUser();
@@ -26,13 +26,10 @@ export default async function MainLayout({
   
   let defaultLayout: number[] | undefined;
   
-  if (layout) {
+  if (layout)
     defaultLayout = JSON.parse(layout.value);
-  }
   
-  const isBanned = await getUserBanned({
-    nickname: currentUser.nickname
-  })
+  const isBanned = await getUserBanned(currentUser.nickname)
   
   if (isBanned && isBanned.nickname === currentUser.nickname) redirect("/banned");
   

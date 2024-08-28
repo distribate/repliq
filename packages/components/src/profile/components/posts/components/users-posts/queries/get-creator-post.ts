@@ -11,7 +11,9 @@ export async function getCreatorPost(
   .eq("nickname", nickname)
   .single()
   
-  if (error) throw error;
+  if (error) {
+    throw new Error(error.message)
+  }
   
   return data;
 }

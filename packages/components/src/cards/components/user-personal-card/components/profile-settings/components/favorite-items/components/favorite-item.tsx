@@ -25,8 +25,10 @@ const minecraftItemVariants = cva(
   },
 );
 
-interface MinecraftItemProps extends HTMLAttributes<HTMLDivElement>,
-  VariantProps<typeof minecraftItemVariants> {}
+interface MinecraftItemProps
+  extends HTMLAttributes<HTMLDivElement>,
+    VariantProps<typeof minecraftItemVariants> {
+}
 
 const MinecraftItem = forwardRef<
   HTMLDivElement, MinecraftItemProps
@@ -44,9 +46,7 @@ export const FavoriteItem = ({
   id, title, image
 }: FavoriteItem) => {
   const qc = useQueryClient();
-  
   const { updateFieldMutation } = useUpdateCurrentUser()
-  
   const currentUser = qc.getQueryData<USER>(CURRENT_USER_QUERY_KEY);
   
   if (!currentUser) return;
@@ -57,7 +57,9 @@ export const FavoriteItem = ({
     })
   }
   
-  const currentFavoriteItem = currentUser.favorite_item ? currentUser.favorite_item === id.toString() : false;
+  const currentFavoriteItem = currentUser.favorite_item
+    ? currentUser.favorite_item === id
+    : false;
   
   return (
     <MinecraftItem variant={currentFavoriteItem ? 'selected' : 'default'}>

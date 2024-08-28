@@ -33,7 +33,7 @@ export const UserFullCard = ({
     <TiltCard
       tiltMaxAngleY={10}
       tiltMaxAngleX={10}
-      className="flex flex-col h-[512px] gap-y-4 relative w-full rounded-md p-4 bg-shark-950 border-[1px] border-white/10 items-center"
+      className="flex flex-col h-[512px] gap-y-4 relative w-full rounded-lg p-4 bg-shark-950 border-[1px] border-white/10 items-center"
     >
       {!isLoading && (
         <>

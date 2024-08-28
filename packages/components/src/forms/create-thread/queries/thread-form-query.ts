@@ -10,9 +10,9 @@ export type ThreadFormQuery = Partial<{
 		status: number | null
 	}>,
 	values: Partial<
-		Omit<THREAD, "id" | "created_at" | "content">
+		Omit<THREAD, "id" | "created_at" | "content" | "updated_at">
 	> & Partial<{
-		category_id: string,
+		category_id: number,
 		auto_remove_time: string,
 		permission_cost: string,
 		tags: Array<string>,

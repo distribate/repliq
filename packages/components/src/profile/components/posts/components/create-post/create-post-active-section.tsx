@@ -6,10 +6,10 @@ import { PostPublishButton } from '../../../../../forms/create-post/components/p
 
 export const CreatePostActiveSection =  () => {
   return (
-    <div className="flex flex-col w-full pt-8">
-      <div className="flex flex-col py-2">
+    <div className="flex flex-col py-2 w-full">
+      <div className="flex flex-col">
         <Separator orientation="horizontal" />
-        <div className="flex items-center py-2 justify-between w-full">
+        <div className="flex items-center pt-2 justify-between w-full">
           <div className="flex items-center gap-2">
             <PostAdditionalForm />
             <div className="flex gap-4 items-start">
@@ -20,7 +20,6 @@ export const CreatePostActiveSection =  () => {
           <PostPublishButton />
         </div>
       </div>
-      <Separator orientation="horizontal" />
     </div>
   )
 }

@@ -6,7 +6,7 @@ import { useQueryClient } from '@tanstack/react-query';
 import { POSTS_QUERY_KEY, } from '../../../../../profile/components/posts/components/posts/queries/posts-query.ts';
 import { Posts } from '../../../../../profile/components/posts/components/posts/queries/get-posts-by-user.ts';
 import { DropdownWrapper } from '../../../../../wrappers/dropdown-wrapper.tsx';
-import { PostAdditionalModal } from '../../../../../modals/post-additional-modal.tsx';
+import { PostAdditionalModal } from '../../../../../modals/custom/post-additional-modal.tsx';
 
 export type PostControlProps = {
   post_id: string,

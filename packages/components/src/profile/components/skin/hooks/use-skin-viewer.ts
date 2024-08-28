@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef } from "react";
 import { IdleAnimation, RunningAnimation, FlyingAnimation, SkinViewer } from "skinview3d";
-import { useSkinStateQuery } from "../queries/skin-query.ts";
+import { useSkinAnimationQuery } from "../queries/skin-query.ts";
 
 const animationClasses = {
 	idle: IdleAnimation,
@@ -9,7 +9,7 @@ const animationClasses = {
 };
 
 export const useSkinViewer = () => {
-	const { data: skinState } = useSkinStateQuery()
+	const { data: skinState } = useSkinAnimationQuery()
 	
 	const viewerRef = useRef<
 		SkinViewer | null

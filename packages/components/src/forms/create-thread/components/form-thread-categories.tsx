@@ -38,7 +38,9 @@ export const FormThreadCategories = ({
                 if (!categoriesEnabled && open) setCategoriesEnabled(true);
               }}
               onValueChange={(value: string) => {
-                updateThreadFormMutation.mutate({ values: { category_id: value } });
+                updateThreadFormMutation.mutate({ values: {
+                  category_id: Number(value)
+                } });
                 field.onChange(value);
               }}
             >

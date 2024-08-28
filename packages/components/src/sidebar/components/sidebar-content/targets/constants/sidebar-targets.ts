@@ -6,11 +6,11 @@ export const SIDEBAR_TARGETS = [
     link: '/friends',
     icon: UsersRound,
   },
-  {
-    title: 'Клан',
-    link: '/clan',
-    icon: Sword,
-  },
+  // {
+  //   title: 'Клан',
+  //   link: '/clan',
+  //   icon: Sword,
+  // },
   {
     title: 'Ивенты',
     link: '/events',

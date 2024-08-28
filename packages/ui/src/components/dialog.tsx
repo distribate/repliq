@@ -22,7 +22,8 @@ const DialogOverlay = forwardRef<
   <DialogPrimitive.Overlay
     ref={ref}
     className={cn(
-      'fixed inset-0 z-50 bg-black/60 backdrop-blur-xl data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0',
+      'fixed inset-0 z-50 bg-black/60 backdrop-blur-xl data-[state=open]:animate-in' +
+      ' data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0',
       className,
     )}
     {...props}
@@ -48,8 +49,8 @@ const DialogContent = forwardRef<
     <DialogPrimitive.Content
       ref={ref}
       className={cn(
-        'fixed left-[50%] pt-4 top-[50%] z-50 grid w-full rounded-md max-w-lg translate-x-[-50%] translate-y-[-50%]' +
-        ' gap-4 dark:bg-shark-900 bg-shark-900 border-[1px] border-white/10 px-1 pb-1 shadow-lg duration-200 data-[state=open]:animate-in' +
+        'fixed left-[50%] pt-4 top-[50%] max-h-[calc(100%-200px)] overflow-y-auto z-50 grid w-full rounded-lg max-w-lg translate-x-[-50%] translate-y-[-50%]' +
+        ' gap-4 dark:bg-shark-900 bg-shark-900 border border-white/10 px-1 pb-1 shadow-lg duration-200 data-[state=open]:animate-in' +
         ' data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0' +
         ' data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[state=closed]:slide-out-to-left-1/2' +
         ' data-[state=closed]:slide-out-to-top-[48%] data-[state=open]:slide-in-from-left-1/2 data-[state=open]:slide-in-from-top-[48%] ',
@@ -60,7 +61,7 @@ const DialogContent = forwardRef<
       {children}
       {withClose && (
         <DialogPrimitive.Close
-          className="absolute right-4 hover:bg-red-600 p-2 top-4 rounded-md opacity-70 ring-offset-background
+          className="absolute right-4 hover:bg-red-600 p-2 top-4 rounded-lg opacity-70 ring-offset-background
 				 transition-opacity hover:opacity-100 focus:outline-none focus:ring-2
 				  focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none
 				   data-[state=open]:bg-accent data-[state=open]:text-muted-foreground">

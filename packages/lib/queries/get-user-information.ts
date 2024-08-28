@@ -7,7 +7,9 @@ import { convertUserPreferencesToObject, UserPreferences } from '../helpers/conv
 import { getUserBanned } from './get-user-banned.ts';
 import { CurrentUser } from './current-user-query.ts';
 
-export async function getUserInformation(): Promise<CurrentUser | null> {
+export async function getUserInformation(): Promise<
+	CurrentUser | null
+> {
 	const supabase = createClient();
 	const currentUser = await getCurrentUser();
 	
@@ -15,14 +17,14 @@ export async function getUserInformation(): Promise<CurrentUser | null> {
 	
 	let query = supabase
 	.from("users")
-	.select(`id,created_at,uuid,nickname,description,status,birthday,real_name,preferences,cover_image,visibility,name_color,favorite_item`)
+	.select(`
+		id,created_at,uuid,nickname,description,status,birthday,real_name,preferences,cover_image,visibility,name_color,favorite_item
+	`)
 	.eq("nickname", currentUser?.nickname)
 	.eq("id", currentUser?.id)
 	.single()
-
-	const isBanned = await getUserBanned({
-		nickname: currentUser.nickname
-	})
+	
+	const isBanned = await getUserBanned(currentUser.nickname)
 	
 	if (isBanned) return null;
 	
