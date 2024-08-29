@@ -33,7 +33,6 @@ export const useSkinStateQuery = (nickname: string) => {
 			if (!skinUrl) return null;
 			return skinUrl
 		},
-		initialData: null,
 		...queryParams
 	})
 }

@@ -1,7 +1,7 @@
-import { Button } from '@repo/ui/src/components/button.tsx';
 import { THREAD } from '@repo/types/entities/entities-type.ts';
 import { DialogWrapper } from '../../../../../wrappers/dialog-wrapper.tsx';
 import { ThreadRemoveConfirmation } from './thread-remove-confirmation.tsx';
+import { Button } from '@repo/ui/src/components/button.tsx';
 
 export const THREAD_REMOVE_MODAL_NAME = "remove-thread"
 
@@ -14,7 +14,9 @@ export const ThreadRemoveModal = ({
     <DialogWrapper
       name={THREAD_REMOVE_MODAL_NAME}
       trigger={
-        <Button>
+        <Button
+          className="bg-shark-800 hover:bg-shark-700 gap-2 group items-center"
+        >
           Удалить
         </Button>
       }

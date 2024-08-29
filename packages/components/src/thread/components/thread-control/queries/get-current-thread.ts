@@ -2,6 +2,9 @@
 
 import { createClient } from '@repo/lib/utils/supabase/server.ts';
 import { ThreadModel } from '../../../queries/get-thread-model.ts';
+import { Tables } from '@repo/types/entities/supabase.ts';
+
+type GetCurrentThread = Tables<"threads">
 
 export async function getCurrentThread({
   id: threadId
@@ -12,11 +15,11 @@ export async function getCurrentThread({
   .from('threads')
   .select('title, description, comments, permission')
   .eq('id', threadId)
-  .single();
+  .returns<GetCurrentThread[]>()
   
   if (error) {
     throw new Error(error.message);
   }
   
-  return data;
+  return data[0];
 }

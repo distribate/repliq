@@ -11,11 +11,9 @@ export const UserProfileSkin = async({
   reqUserNickname,
 }: UserSkinProps) => {
   return (
-    <div className="flex h-[500px] w-[500px]">
+    <div className="flex h-[500px] w-[500px] gap-2">
       <SkinControls reqUserNickname={reqUserNickname} />
-      <Suspense fallback={<Skeleton className="w-24 h-64"/>}>
-        <SkinRender reqUserNickname={reqUserNickname} />
-      </Suspense>
+      <SkinRender reqUserNickname={reqUserNickname} />
     </div>
   );
 };

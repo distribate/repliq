@@ -10,6 +10,7 @@ export const currentThreadQuery = (
   return useQuery({
     queryKey: CURRENT_THREAD_QUERY_KEY(threadId),
     queryFn: () => getCurrentThread({ id: threadId }),
+    refetchOnWindowFocus: false,
     enabled: !!threadId
   });
 };

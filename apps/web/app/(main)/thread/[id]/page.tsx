@@ -28,14 +28,14 @@ export async function generateMetadata({
   
   let threadTitle: string = '';
   
-  if (!thread_id) threadTitle = ""
+  if (!thread_id) threadTitle = '';
   
   const title = await getTopicName(thread_id);
   
   if (title) threadTitle = title.title;
   
   return {
-    title: threadTitle
+    title: threadTitle,
   };
 }
 
@@ -58,7 +58,7 @@ export default async function TopicsTopicPage({
   await qc.prefetchQuery({
     queryKey: THREAD_COMMENTS_QUERY_KEY(thread.id),
     queryFn: () => getThreadComments({
-      thread_id: thread.id, comments: thread.comments
+      thread_id: thread.id, comments: thread.comments,
     }),
   });
   
@@ -68,9 +68,7 @@ export default async function TopicsTopicPage({
     <div className="flex gap-4 items-start h-full w-full relative">
       <div className="flex flex-col w-full items-start h-full gap-y-4 justify-start">
         <BlockWrapper>
-          <Suspense fallback={
-            <Skeleton className="h-48 w-full" />
-          }>
+          <Suspense fallback={<Skeleton className="h-48 w-full" />}>
             {thread.content && (
               <div className="flex flex-col gap-y-4 w-full h-full">
                 {thread.description && (
@@ -82,20 +80,15 @@ export default async function TopicsTopicPage({
                   </>
                 )}
                 <ThreadContent content={thread.content} />
-                {thread.images && (
-                  <ThreadImages id={thread.id} />
-                )}
+                {thread.images && <ThreadImages id={thread.id} />}
               </div>
             )}
           </Suspense>
         </BlockWrapper>
         <Separator />
         <HydrationBoundary state={dehydrate(qc)}>
-          <ThreadComments
-            thread_author_nickname={thread.nickname}
-            thread_id={thread.id}
-            thread_comments={thread.comments}
-          />
+          <ThreadComments thread_author_nickname={thread.nickname} thread_id={thread.id}
+                          thread_comments={thread.comments} />
         </HydrationBoundary>
       </div>
       <div className="flex flex-col gap-y-4 w-2/4 h-fit sticky top-0">
@@ -103,7 +96,18 @@ export default async function TopicsTopicPage({
           <ThreadInfo {...thread} />
         </BlockWrapper>
         {isThreadCreator && (
-          <ThreadControl id={thread.id} />
+          <BlockWrapper className="flex flex-col !px-0 !py-2 gap-y-4">
+            <div className="flex flex-col gap-y-4 py-2 w-full">
+              <Typography
+                textSize="big"
+                className="font-semibold px-4"
+                textColor="shark_white"
+              >
+                Управление тредом
+              </Typography>
+              <ThreadControl id={thread.id} />
+            </div>
+          </BlockWrapper>
         )}
       </div>
     </div>
