@@ -1,5 +1,6 @@
 'use server';
 
+import "server-only"
 import { createClient } from '@repo/lib/utils/supabase/server.ts';
 import { deleteFriendRequest, RequestProperties } from './delete-friend-request.ts';
 import { getCurrentUser } from '@repo/lib/actions/get-current-user.ts';

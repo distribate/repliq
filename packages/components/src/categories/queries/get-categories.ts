@@ -1,5 +1,6 @@
 "use server"
 
+import "server-only"
 import { createClient } from '@repo/lib/utils/supabase/server.ts';
 import { CATEGORY } from '@repo/types/entities/entities-type.ts';
 import { RequestOptionsSupabaseClient } from '@repo/types/config/request-types.ts';

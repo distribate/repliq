@@ -10,28 +10,25 @@ import { RESIZABLE_LAYOUT_COOKIE_KEY } from '@repo/shared/keys/cookie.ts';
 import { AUTH_REDIRECT } from '@repo/shared/constants/routes.ts';
 import { getUserBanned } from '@repo/lib/queries/get-user-banned.ts';
 
-type MainLayoutProps = {
-  children: ReactNode
-}
+type MainLayoutProps = { children: ReactNode }
 
 export default async function MainLayout({
-  children
+  children,
 }: MainLayoutProps) {
   const qc = new QueryClient();
-  const currentUser = await getCurrentUser();
   
+  const currentUser = await getCurrentUser();
   if (!currentUser) redirect(AUTH_REDIRECT);
   
   const layout = cookies().get(RESIZABLE_LAYOUT_COOKIE_KEY);
-  
   let defaultLayout: number[] | undefined;
+  if (layout) defaultLayout = JSON.parse(layout.value);
   
-  if (layout)
-    defaultLayout = JSON.parse(layout.value);
+  const isBanned = await getUserBanned(currentUser.nickname);
   
-  const isBanned = await getUserBanned(currentUser.nickname)
-  
-  if (isBanned && isBanned.nickname === currentUser.nickname) redirect("/banned");
+  if (isBanned
+    && isBanned.nickname === currentUser.nickname
+  ) redirect('/banned');
   
   await qc.prefetchQuery({
     queryKey: CURRENT_USER_QUERY_KEY,

@@ -24,7 +24,7 @@ export const ThreadByCategoryItem = ({
 
   return (
     <div
-      className="flex gap-y-2 grow group hover:bg-shark-900 rounded-md justify-between transition-all duration-200 px-4 py-3 cursor-pointer">
+      className="flex grow group bg-shark-900 rounded-md justify-between transition-all duration-150 p-3 cursor-pointer">
       <div className="flex flex-col w-full gap-y-2 justify-between">
         <div className="flex items-center min-w-[260px] gap-x-2">
           <Avatar
@@ -32,10 +32,10 @@ export const ThreadByCategoryItem = ({
             className="min-h-[36px] min-w-[36px]"
           />
           <div className="flex flex-col">
-            <Typography textColor="shark_white" className="text-sm font-medium group-hover:duration-300">
+            <Typography textColor="shark_white" className="text-sm font-medium">
               {title}
             </Typography>
-            <Typography className="text-sm text-shark-300 font-medium group-hover:duration-300">
+            <Typography className="text-sm text-shark-300 font-medium">
               {nickname} создал {createdAt}
             </Typography>
           </div>

@@ -5,11 +5,12 @@ import { Skeleton } from '@repo/ui/src/components/skeleton.tsx';
 import { ThreadLayout } from '../../../../thread/components/thread-layout/thread-layout.tsx';
 import { ThreadByCategoryItem } from '../../../../thread/components/thread-card-category/thread-by-category-item.tsx';
 import { ThreadNotFound } from '../../../../templates/threads-not-found.tsx';
+import { getCurrentUser } from '@repo/lib/actions/get-current-user.ts';
 
 type CategoryThreads = Pick<CategoryThreadsQuery, 'categoryId'>
 
 export const CategoryThreads = ({
-  categoryId,
+  categoryId
 }: CategoryThreads) => {
   const { data: categoryThreads, isLoading } = categoryThreadsQuery({
     categoryId, limit: 12

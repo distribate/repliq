@@ -22,7 +22,6 @@ export const UserNotExistCounter = ({
 	useEffect(() => {
 		if (!seconds) {
 			push(`/user/${redirectUser}`);
-			
 			return;
 		}
 		

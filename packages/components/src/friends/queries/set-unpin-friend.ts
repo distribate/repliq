@@ -1,5 +1,6 @@
 'use server';
 
+import "server-only"
 import { createClient } from '@repo/lib/utils/supabase/server.ts';
 import { getCurrentUser } from '@repo/lib/actions/get-current-user.ts';
 import { SetPinFriend } from './set-pin-friend.ts';

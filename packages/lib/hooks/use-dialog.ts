@@ -1,43 +1,49 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { DIALOG_STATE_QUERY_KEY } from '../queries/dialog-params-query.ts';
 
-type DialogNameType = string | string[];
-
 export const useDialog = () => {
   const qc = useQueryClient();
-  
+
   const removeDialogMutation = useMutation({
-    mutationFn: async(dialogName: DialogNameType) => {
-      const currentDialogState = qc.getQueryData<string[]>(DIALOG_STATE_QUERY_KEY);
+    mutationFn: async (dialogName: string | string[]) => {
+      const currDialog = qc.getQueryData<string[]>(DIALOG_STATE_QUERY_KEY) || [];
       
-      if (!currentDialogState) return;
+      if (!dialogName) return;
       
-      if (Array.isArray(dialogName)) {
-        qc.setQueryData(
-          DIALOG_STATE_QUERY_KEY, currentDialogState.filter(item => !dialogName.includes(item))
-        );
-      } else {
-        qc.setQueryData(
-          DIALOG_STATE_QUERY_KEY, currentDialogState.filter(item => item !== dialogName)
-        )
-      }
+      console.log(`Removing dialog: ${dialogName}`);
+      
+      const updatedDialog = typeof dialogName === 'string'
+        ? currDialog.filter(dgs => dgs !== dialogName)
+        : currDialog.filter(dgs => !new Set(dialogName).has(dgs));
+      
+      return qc.setQueryData(
+        DIALOG_STATE_QUERY_KEY,
+        updatedDialog
+      );
     },
-    onSuccess: async() => await qc.invalidateQueries({ queryKey: DIALOG_STATE_QUERY_KEY }),
-    onError: (e) => { throw new Error(e.message) },
+    onSuccess: async (data, variables, context) => {
+      console.log(`Dialog removed successfully: ${variables}`);
+      await qc.invalidateQueries({ queryKey: DIALOG_STATE_QUERY_KEY });
+    },
+    onError: (e) => {
+      console.error(`Error removing dialog: ${e.message}`);
+      throw new Error(e.message);
+    },
   });
   
   const setDialogIdMutation = useMutation({
-    mutationFn: async(dialogName: DialogNameType) => {
-      if (!dialogName) return;
+    mutationFn: async (dialogName: string) => {
+      const currDialog = qc.getQueryData<string[]>(DIALOG_STATE_QUERY_KEY) || [];
       
-      const currentDialogState = qc.getQueryData<string[]>(DIALOG_STATE_QUERY_KEY) || [];
-      
-      if (typeof dialogName === 'string' && !currentDialogState.includes(dialogName)) {
-        qc.setQueryData(DIALOG_STATE_QUERY_KEY, [...currentDialogState, dialogName]);
+      if (!currDialog.includes(dialogName)) {
+        return qc.setQueryData(
+          DIALOG_STATE_QUERY_KEY,
+          [...currDialog, dialogName]
+        );
       }
     },
-    onSuccess: async() => await qc.invalidateQueries({ queryKey: DIALOG_STATE_QUERY_KEY }),
-    onError: (e) => { throw new Error(e.message) },
+    onSuccess: async () => await qc.invalidateQueries({ queryKey: DIALOG_STATE_QUERY_KEY }),
+    onError: (e) => { throw new Error(e.message); },
   });
   
   return { setDialogIdMutation, removeDialogMutation };

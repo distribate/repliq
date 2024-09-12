@@ -1,16 +1,15 @@
 import { UserPageParam } from '@repo/types/config/page-types.ts';
-import { Separator } from '@repo/ui/src/components/separator.tsx';
 import { ThreadsList } from './components/threads-list.tsx';
+import { ProfileSectionLayout } from '../../../layouts/profile-section-layout.tsx';
 
 export const UserProfileThreads = ({
   nickname
 }: UserPageParam) => {
-  
+  if (!nickname) return;
   
   return (
-    <div className="flex flex-col w-full gap-6">
-      <Separator orientation="horizontal" />
+    <ProfileSectionLayout>
       <ThreadsList nickname={nickname} />
-    </div>
+    </ProfileSectionLayout>
   );
 };

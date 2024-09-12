@@ -7,6 +7,7 @@ import {
   CoverImageInput,
   useControlCoverImage,
 } from '../../profile/components/cover/components/cover-image/hooks/use-control-cover-image.tsx';
+import { HoverCardItem } from '@repo/ui/src/components/hover-card.tsx';
 
 export const PROFILE_BACKGROUND_UPDATE_MODAL_NAME = "profile-background-update"
 
@@ -27,10 +28,10 @@ export const ProfileBackgroundUpdateModal = () => {
       properties={{ dialogContentClassName: "max-w-xl" }}
       asChild={true}
       trigger={
-        <Button className="gap-2 relative items-center group justify-start w-full">
+        <HoverCardItem className="gap-2 items-center group">
           <ImageUp size={16} className="text-shark-300 group-hover:text-pink-500"/>
           <Typography>Обновить фон</Typography>
-        </Button>
+        </HoverCardItem>
       }
     >
       <div className="flex flex-col items-center gap-y-4 w-full">

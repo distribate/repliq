@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 import { UserNickname } from '../../../../../../user/components/name/components/nickname.tsx';
 import {
   ColorArea,
@@ -32,7 +32,7 @@ export const NicknameColorPicker = ({
   const currentSelectedColor = finalColor.toString('hex');
   const isIdentity = currentColor === currentSelectedColor;
   
-  const handleUpdateColor = () => {
+  const handleUpdateColor = useCallback(() => {
     updateFieldMutation.mutate({
       value: finalColor.toString('hex'), field: 'name_color',
     });
@@ -40,7 +40,7 @@ export const NicknameColorPicker = ({
     if (isIdentity) return;
     
     removeDialogMutation.mutate(NICKNAME_COLOR_PICKER_MODAL_NAME);
-  };
+  }, [ updateFieldMutation, finalColor, removeDialogMutation ])
   
   return (
     <div className="flex flex-col gap-4 items-center w-full">

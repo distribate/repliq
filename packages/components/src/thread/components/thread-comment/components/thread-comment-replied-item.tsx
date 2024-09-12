@@ -8,16 +8,19 @@ export const ThreadRepliedCommentItem = ({
 }: Pick<ThreadCommentProps, "replied">) => {
 	if (!replied) return null;
 	
+	const repliedMessage = replied.content.length >= 28
+		? replied.content.slice(0, 28) + '...' : replied.content
+	
 	return (
 		<Link href={`#${replied.id}`} className="w-fit">
 			<div className="flex items-center gap-1 cursor-pointer w-fit">
 				<Separator className="w-[3px] !h-[42px]" orientation="vertical"/>
-				<div className="flex flex-col bg-white/10 rounded-md min-w-[120px] w-fit max-w-[300px] p-1 border-[1px] border-shark-900">
+				<div className="flex flex-col bg-white/10 rounded-md min-w-[120px] overflow-hidden w-fit max-w-[300px] p-1 border border-shark-900">
 					<Typography>
 						{replied.user_nickname}
 					</Typography>
 					<Typography>
-						{replied.content}
+						{repliedMessage}
 					</Typography>
 				</div>
 			</div>

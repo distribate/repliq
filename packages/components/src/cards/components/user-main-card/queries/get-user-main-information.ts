@@ -1,5 +1,6 @@
 'use server';
 
+import "server-only"
 import { createClient } from '@repo/lib/utils/supabase/server.ts';
 import { getRequestedUser } from '@repo/lib/queries/get-requested-user.ts';
 import { getFavoriteItem } from '@repo/lib/queries/get-favorite-item.ts';
@@ -17,7 +18,9 @@ async function getFriendsCount({
   .select('*', { count: 'exact' })
   .or(`user_1.eq.${nickname},user_2.eq.${nickname}`)
   
-  if (error) throw new Error(error.message);
+  if (error) {
+    throw new Error(error.message);
+  }
   
   return count ?? 0;
 }

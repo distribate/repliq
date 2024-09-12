@@ -25,8 +25,8 @@ export const FriendButton = ({
   const isFetchingFriends = useIsFetching({ queryKey: FRIENDS_QUERY_KEY(currentUser?.nickname) });
   const reqStatus = checkFriendRequestStatus(reqUserNickname);
   
-  if (isFetchingRq || isFetchingFriends) return (
-    <Skeleton className="h-10 rounded-md w-40" />
+  if (isFetchingRq) return (
+    <Skeleton className="h-10 border border-white/10 rounded-md w-40" />
   );
   
   console.log(`Friend Request Status: ${reqStatus}`);

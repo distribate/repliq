@@ -13,34 +13,41 @@ import { checkProfileStatus } from '@repo/lib/helpers/check-profile-status.ts';
 import { getBanDetails } from '@repo/lib/helpers/get-ban-details.ts';
 import { UserBlocked } from '@repo/components/src/templates/user-blocked.tsx';
 import { Separator } from '@repo/ui/src/components/separator.tsx';
-import { UserProfilePosts } from '@repo/components/src/profile/components/posts/components/users-posts/components/user-profile-posts.tsx';
+import {
+  UserProfilePosts,
+} from '@repo/components/src/profile/components/posts/components/users-posts/components/user-profile-posts.tsx';
 import { validateRequest } from '@repo/lib/utils/auth/validate-requests.ts';
 import { checkUserGameStatsVisibility } from '@repo/lib/helpers/check-user-game-stats-visibility.ts';
 import { protectPrivateArea } from '@repo/lib/helpers/protect-private-area.ts';
 import dynamic from 'next/dynamic';
 import {
-  REQUESTED_USER_QUERY_KEY
+  REQUESTED_USER_QUERY_KEY,
 } from '@repo/components/src/profile/components/cover/cover/queries/requested-user-query.ts';
+import { SectionPrivatedTrigger } from '@repo/components/src/templates/section-privated-trigger.tsx';
+import {
+  UserProfileGameAchievements,
+} from '@repo/components/src/profile/components/achievements/game-achievements.tsx';
+import { UserProfileAccountStats } from '@repo/components/src/profile/components/account-stats/account-stats.tsx';
 
 const UserProfileFriends = dynamic(() =>
-  import("@repo/components/src/profile/components/friends/friends.tsx")
-  .then(m => m.UserProfileFriends)
-)
+  import('@repo/components/src/profile/components/friends/friends.tsx')
+  .then(m => m.UserProfileFriends),
+);
 
 const UserProfileThreads = dynamic(() =>
-  import("@repo/components/src/profile/components/threads/threads.tsx")
-  .then(m => m.UserProfileThreads)
-)
+  import('@repo/components/src/profile/components/threads/threads.tsx')
+  .then(m => m.UserProfileThreads),
+);
 
 const UserProfileGameStats = dynamic(() =>
-  import("@repo/components/src/profile/components/stats/stats/stats.tsx")
-  .then(m => m.UserProfileGameStats)
-)
+  import('@repo/components/src/profile/components/stats/stats/stats.tsx')
+  .then(m => m.UserProfileGameStats),
+);
 
 const UserBanned = dynamic(() =>
-  import("@repo/components/src/templates/user-banned.tsx")
-  .then(m => m.UserBanned)
-)
+  import('@repo/components/src/templates/user-banned.tsx')
+  .then(m => m.UserBanned),
+);
 
 export async function generateMetadata({
   params,
@@ -50,22 +57,23 @@ export async function generateMetadata({
   return {
     title: nickname,
     description: `Профиль игрока ${nickname}`,
-    keywords: [ nickname ? nickname : 'player', 'profile', `profile of ${nickname}`, `fasberry profile player`, `${nickname} profile` ],
+    keywords: [
+      nickname ? nickname : 'player', 'profile',
+      `profile of ${nickname}`, `fasberry profile player`,
+      `${nickname} profile`
+    ],
   };
 }
 
-export default async function ProfilePage({
-  params
-}: PageConventionProps) {
+export default async function ProfilePage({ params }: PageConventionProps) {
   if (!params) return;
   
   const qc = new QueryClient();
   
-  const { user } = await validateRequest()
+  const { user } = await validateRequest();
   if (!user) return;
   
   const { nickname: reqUserNickname } = params;
-  
   const reqUser = await getRequestedUser(reqUserNickname);
   
   if (typeof reqUser === 'string') {
@@ -91,21 +99,26 @@ export default async function ProfilePage({
     return <UserBanned {...banDetails} />;
   }
   
-  const isBlocked = profileStatus === 'blocked';
+  const isBlocked = profileStatus === 'blocked'; // true = banned
   const isPrivated = profileStatus === 'private';
-
-  const isGameStatsShow = checkUserGameStatsVisibility({
-    reqUserNickname: reqUserNickname, preferences, currentUserNickname
-  })
   
-  const isOwner = await protectPrivateArea({ requestedUserNickname: reqUserNickname });
+  const isGameStatsShow = checkUserGameStatsVisibility({
+    reqUserNickname: reqUserNickname, preferences, currentUserNickname,
+  });
+  
+  const isOwner = await protectPrivateArea({
+    requestedUserNickname: reqUserNickname,
+  });
+  
+  const isSectionPrivatedByOwner = !preferences.gameStatsVisibility
+    && (reqUser.nickname === currentUserNickname);
   
   return (
     <div className="flex flex-col w-full relative">
       <HydrationBoundary state={dehydrate(qc)}>
         <UserCoverLayout
           reqUserNickname={reqUserNickname}
-          type={isBlocked ? 'blocked' : 'default'}
+          isBlocked={isBlocked}
         />
       </HydrationBoundary>
       <Suspense fallback={<UserContentSkeleton />}>
@@ -118,17 +131,34 @@ export default async function ProfilePage({
             className="flex flex-col w-full h-full px-12 gap-y-6 pt-6 min-w-[400px] relative z-[4]"
           >
             <TabsList className="flex justify-start gap-2 w-full">
-              <TabsTrigger value="posts">Посты</TabsTrigger>
-              <TabsTrigger value="topics">Треды</TabsTrigger>
-              <TabsTrigger value="friends">Друзья</TabsTrigger>
+              <TabsTrigger value="posts">
+                Посты
+              </TabsTrigger>
+              <TabsTrigger value="topics">
+                Треды
+              </TabsTrigger>
+              <TabsTrigger value="friends">
+                Друзья
+              </TabsTrigger>
               <Separator orientation="vertical" />
-              {isGameStatsShow && <TabsTrigger value="game-stats">Статистика</TabsTrigger>}
-              <TabsTrigger value="achievements">Достижения</TabsTrigger>
-              {isOwner && (<>
-                  <Separator orientation="vertical" />
-                  <TabsTrigger value="account-stats">
-                    Аккаунт
+              {isGameStatsShow && (
+                <div className="relative">
+                  <TabsTrigger value="game-stats" className="peer">
+                    Статистика
                   </TabsTrigger>
+                  {isSectionPrivatedByOwner && <SectionPrivatedTrigger />}
+                </div>
+              )}
+              <TabsTrigger value="achievements">Достижения</TabsTrigger>
+              {isOwner && (
+                <>
+                  <Separator orientation="vertical" />
+                  <div className="relative">
+                    <TabsTrigger value="account-stats" className="peer">
+                      Аккаунт
+                    </TabsTrigger>
+                    <SectionPrivatedTrigger />
+                  </div>
                 </>
               )}
             </TabsList>
@@ -148,12 +178,18 @@ export default async function ProfilePage({
                     <UserProfileGameStats
                       nickname={reqUserNickname}
                       uuid={reqUserUUID}
+                      isSectionPrivatedByOwner={isSectionPrivatedByOwner}
                     />
                   </TabsContent>
                 )}
-                <TabsContent value="account-stats">
-                  <div className="flex flex-col w-full py-6">Account stats</div>
+                <TabsContent value="achievements">
+                  <UserProfileGameAchievements nickname={reqUserNickname} />
                 </TabsContent>
+                {isOwner && (
+                  <TabsContent value="account-stats">
+                    <UserProfileAccountStats />
+                  </TabsContent>
+                )}
               </div>
               <div className="flex flex-col w-1/3 h-full">
                 <UserProfileSkin reqUserNickname={reqUserNickname} />

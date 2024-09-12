@@ -11,6 +11,7 @@ type TicketsModal = {
 export const TicketsModal = ({
   trigger
 }: TicketsModal) => {
+  console.log('tickets-settings render')
   return (
     <DialogWrapper
       name={TICKETS_MODAL_NAME}

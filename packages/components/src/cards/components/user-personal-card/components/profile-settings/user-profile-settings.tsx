@@ -20,40 +20,42 @@ import { NicknameColorPickerModal } from '../../../../../modals/user-settings/ni
 import { FavoriteItemModal } from '../../../../../modals/user-settings/favorite-item-modal.tsx';
 import { ReactNode } from 'react';
 import { ProfileVisibilityChange } from './components/visibility-profile/components/profile-visibility-change.tsx';
+import { DateBirthdayModal } from '../../../../../modals/user-settings/date-birthday-modal.tsx';
 
 type ProfileSetting = {
   title: string,
-  imageSrc: string,
-  children: ReactNode,
+  imageSrc?: string,
+  children?: ReactNode,
 }
 
-const ProfileSetting = ({
-  title, children, imageSrc
+export const UserSettingOption = ({
+  title, children, imageSrc,
 }: ProfileSetting) => {
   return (
     <HoverCardItem className="justify-between w-full">
       <div className="flex gap-x-2 items-center w-full">
-        <ImageWrapper
-          propSrc={imageSrc} propAlt={title} width={32}
-          className="max-w-[40px] max-h-[40px]" height={32}
-        />
+        {imageSrc && (
+          <ImageWrapper
+            propSrc={imageSrc} propAlt={title} width={32}
+            className="max-w-[40px] max-h-[40px]" height={32}
+          />
+        )}
         <Typography className="text-base">{title}</Typography>
       </div>
-      <div className="w-fit">
-        {children}
+      <div className="min-w-fit">
+        {children || ' '}
       </div>
     </HoverCardItem>
-  )
-}
+  );
+};
 
 export const UserProfileSettings = () => {
-  const qc = useQueryClient()
-  const currentUser = qc.getQueryData<CurrentUser>(CURRENT_USER_QUERY_KEY)
+  const qc = useQueryClient();
+  const currentUser = qc.getQueryData<CurrentUser>(CURRENT_USER_QUERY_KEY);
   
   if (!currentUser) return;
   
-  const { nickname, name_color, properties, favorite_item, birthday, donate, real_name } = currentUser;
-  const isAccess = donate !== 'default';
+  const isAccess = currentUser.donate !== 'default';
   
   return (
     <div className="flex flex-col gap-y-4 items-center w-full">
@@ -71,27 +73,18 @@ export const UserProfileSettings = () => {
       </div>
       <Separator />
       <div className="flex flex-col w-full gap-y-4">
-        <ProfileSetting imageSrc={Barrier.src} title="Тип аккаунта:">
-          <ProfileVisibilityChange visibility={properties.visibility} />
-        </ProfileSetting>
+        <UserSettingOption title="Тип аккаунта:" imageSrc={Barrier.src}>
+          <ProfileVisibilityChange />
+        </UserSettingOption>
       </div>
       <Separator />
       <div className="flex flex-col w-full gap-y-4">
-        <ProfileSetting imageSrc={Firework.src} title="День рождения:">
-          <DropdownWrapper
-            properties={{ contentAlign: 'end', sideAlign: 'right' }}
-            trigger={
-              <Typography className="text-base">
-                {birthday ? birthday.toString() : `не указано`}
-              </Typography>
-            }
-            content={<DateBirthdayPicker />}
-          />
-        </ProfileSetting>
-        <ProfileSetting title="Реальное имя:" imageSrc={Nametag.src}>
-          <RealNameChangeModal real_name={real_name}/>
-        </ProfileSetting>
-
+        <UserSettingOption title="День рождения" imageSrc={Firework.src}>
+          <DateBirthdayModal />
+        </UserSettingOption>
+        <UserSettingOption title="Реальное имя" imageSrc={Nametag.src}>
+          <RealNameChangeModal />
+        </UserSettingOption>
         {/* with donate access*/}
         {isAccess && (
           <>
@@ -100,15 +93,15 @@ export const UserProfileSettings = () => {
                 only Authentic+
               </Typography>
             </Separator>
-            <ProfileSetting title="Цвет никнейма" imageSrc={BlueDye.src}>
-              <NicknameColorPickerModal nickname={nickname} name_color={name_color}/>
-            </ProfileSetting>
-            <ProfileSetting title="Обводка вокруг шапки профиля" imageSrc={Lead.src}>
+            <UserSettingOption title="Цвет никнейма" imageSrc={BlueDye.src}>
+              <NicknameColorPickerModal />
+            </UserSettingOption>
+            <UserSettingOption title="Обводка вокруг шапки профиля" imageSrc={Lead.src}>
               <OutlineCover />
-            </ProfileSetting>
-            <ProfileSetting title="Любимый предмет" imageSrc={DiamondPickaxe.src}>
-              <FavoriteItemModal favorite_item={favorite_item}/>
-            </ProfileSetting>
+            </UserSettingOption>
+            <UserSettingOption title="Любимый предмет" imageSrc={DiamondPickaxe.src}>
+              <FavoriteItemModal />
+            </UserSettingOption>
           </>
         )}
       </div>

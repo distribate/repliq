@@ -1,17 +1,18 @@
+import 'server-only';
 import { createClient } from "@repo/lib/utils/supabase/server.ts";
 import { ALERT } from "@repo/types/entities/entities-type.ts"
 
 export async function getAlerts() {
 	const supabase = createClient();
 	
-	let query = supabase
+	const { data, error } = await supabase
 	.from("config_alerts")
 	.select()
 	.returns<ALERT[]>()
 	
-	const { data, error } = await query;
-	
-	if (error) throw error;
+	if (error) {
+		throw new Error(error.message);
+	}
 	
 	return data;
 }

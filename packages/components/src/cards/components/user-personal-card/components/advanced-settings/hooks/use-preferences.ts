@@ -8,11 +8,9 @@ type Preferences = {
 }
 
 export const usePreferences = () => {
-	const [value, setValue] = useLocalStorage<
-		Preferences
-	>(PREFERENCES_KEY, {
-		autoSaveThreads: true
-	});
+	const [value, setValue] = useLocalStorage<Preferences>(
+		PREFERENCES_KEY, { autoSaveThreads: true }
+	);
 	
 	const setAutoSaveThreads = useCallback(() => {
 		setValue({
@@ -20,8 +18,6 @@ export const usePreferences = () => {
 			autoSaveThreads: !value.autoSaveThreads
 		})
 	}, [])
-	
-	
 	
 	return { preferences: value, setAutoSaveThreads }
 }

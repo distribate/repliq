@@ -1,5 +1,6 @@
 "use server"
 
+import "server-only"
 import { createClient } from "@repo/lib/utils/supabase/server.ts";
 
 export async function getThreadsUser(
@@ -18,7 +19,9 @@ export async function getThreadsUser(
 		ascending: false
 	})
 	
-	if (error) throw new Error(error.message)
+	if (error) {
+		throw new Error(error.message);
+	}
 
 	return data.flatMap(item => item.threads)
 }

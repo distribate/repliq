@@ -20,6 +20,12 @@ import { ThreadImages } from '@repo/components/src/thread/components/thread-imag
 import { Typography } from '@repo/ui/src/components/typography.tsx';
 import { getThreadModel } from '@repo/components/src/thread/queries/get-thread-model.ts';
 import { Skeleton } from '@repo/ui/src/components/skeleton.tsx';
+import { ThreadRating } from '@repo/components/src/thread/components/thread-bump/components/thread-rating.tsx';
+import { ThreadShare } from '@repo/components/src/thread/components/thread-share/thread-share.tsx';
+import { ThreadSave } from '@repo/components/src/thread/components/thread-save/thread-save.tsx';
+import {
+  CreateThreadComment,
+} from '@repo/components/src/thread/components/create-thread-comment/components/create-thread-comment.tsx';
 
 export async function generateMetadata({
   params,
@@ -27,21 +33,15 @@ export async function generateMetadata({
   const { id: thread_id } = params;
   
   let threadTitle: string = '';
-  
   if (!thread_id) threadTitle = '';
   
   const title = await getTopicName(thread_id);
-  
   if (title) threadTitle = title.title;
   
-  return {
-    title: threadTitle,
-  };
+  return { title: threadTitle };
 }
 
-export default async function TopicsTopicPage({
-  params,
-}: PageConventionProps) {
+export default async function TopicsTopicPage({ params }: PageConventionProps) {
   const { id } = params;
   
   const qc = new QueryClient();
@@ -65,8 +65,8 @@ export default async function TopicsTopicPage({
   const isThreadCreator = currentUser.nickname === thread.nickname;
   
   return (
-    <div className="flex gap-4 items-start h-full w-full relative">
-      <div className="flex flex-col w-full items-start h-full gap-y-4 justify-start">
+    <div className="flex gap-2 items-start h-full w-full relative">
+      <div className="flex flex-col w-3/4 items-start h-full gap-y-4 justify-start">
         <BlockWrapper>
           <Suspense fallback={<Skeleton className="h-48 w-full" />}>
             {thread.content && (
@@ -86,17 +86,32 @@ export default async function TopicsTopicPage({
           </Suspense>
         </BlockWrapper>
         <Separator />
-        <HydrationBoundary state={dehydrate(qc)}>
-          <ThreadComments thread_author_nickname={thread.nickname} thread_id={thread.id}
-                          thread_comments={thread.comments} />
-        </HydrationBoundary>
+        <div className="flex flex-col w-full h-full gap-y-4 overflow-hidden">
+          <HydrationBoundary state={dehydrate(qc)}>
+            <ThreadComments
+              thread_author_nickname={thread.nickname}
+              thread_id={thread.id}
+              thread_comments={thread.comments}
+            />
+          </HydrationBoundary>
+          <CreateThreadComment thread_id={thread.id} />
+        </div>
       </div>
-      <div className="flex flex-col gap-y-4 w-2/4 h-fit sticky top-0">
+      <div className="flex flex-col gap-y-4 w-1/4 h-fit sticky top-0 overflow-hidden">
         <BlockWrapper className="flex flex-col gap-y-4">
           <ThreadInfo {...thread} />
         </BlockWrapper>
+        <BlockWrapper>
+          <div className="flex justify-between items-center w-full">
+            {thread.rating && <ThreadRating thread_id={thread.id} />}
+            <div className="flex gap-2 items-center h-full">
+              <ThreadShare />
+              <ThreadSave />
+            </div>
+          </div>
+        </BlockWrapper>
         {isThreadCreator && (
-          <BlockWrapper className="flex flex-col !px-0 !py-2 gap-y-4">
+          <div className="flex flex-col border border-shark-700 rounded-lg bg-shark-950 w-full px-0 py-2 gap-y-4">
             <div className="flex flex-col gap-y-4 py-2 w-full">
               <Typography
                 textSize="big"
@@ -105,9 +120,9 @@ export default async function TopicsTopicPage({
               >
                 Управление тредом
               </Typography>
-              <ThreadControl id={thread.id} />
+              <ThreadControl threadId={thread.id} />
             </div>
-          </BlockWrapper>
+          </div>
         )}
       </div>
     </div>

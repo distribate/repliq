@@ -9,13 +9,13 @@ export const LastRegisteredUsers = async() => {
   
   return (
     <div
-      className="flex flex-col gap-y-4 w-full py-6 px-4 rounded-md border-[1px] overflow-hidden border-white/10 bg-shark-950">
+      className="flex flex-col gap-4 w-full py-6 px-4 rounded-lg overflow-hidden bg-shark-950">
       <div className="px-2">
         <Typography textSize="big" textColor="shark_white" className="font-semibold">
           Новые пользователи
         </Typography>
       </div>
-      <div className="flex flex-col gap-y-1 hover:*:bg-shark-900/60 *:rounded-md">
+      <div className="flex flex-col gap-1 hover:*:bg-shark-900/60 *:rounded-md">
         {users.map(user => (
           <UserPreviewCard key={user.nickname} {...user}/>
         ))}

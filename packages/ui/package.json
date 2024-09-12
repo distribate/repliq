@@ -43,6 +43,6 @@
     "cmdk": "^1.0.0",
     "lucide-react": "^0.396.0",
     "react-aria-components": "^1.2.1",
-    "react-resizable-panels": "^2.0.19"
+    "react-resizable-panels": "^2.0.22"
   }
 }

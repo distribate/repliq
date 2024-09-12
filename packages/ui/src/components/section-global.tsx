@@ -4,7 +4,7 @@ import { forwardRef, HTMLAttributes } from "react";
 const sectionGlobalVariants = cva("flex gap-y-4 w-full py-4", {
 	variants: {
 		variant: {
-			section: "flex-col rounded-lg border-[1px] px-4 border-white/10 bg-shark-950",
+			section: "flex-col rounded-md px-4 bg-shark-950",
 			subsection: "flex-col bg-black/60 px-2"
 		}
 	}

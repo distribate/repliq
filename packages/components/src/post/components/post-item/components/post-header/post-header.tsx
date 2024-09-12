@@ -31,7 +31,7 @@ export const PostItemHeader = ({
 	
 	return (
 		<div className="flex justify-between w-full items-center">
-			<div className="flex gap-4 items-center">
+			<div className="flex gap-2 items-center">
 				<Link href={`/user/${nickname}`}>
 					<Avatar variant="page" propHeight={48} propWidth={48} nickname={nickname}/>
 				</Link>

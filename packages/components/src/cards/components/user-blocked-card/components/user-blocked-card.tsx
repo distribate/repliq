@@ -60,14 +60,14 @@ export const UserBlockedCard = ({
               </HoverCardItem>
               <Separator />
               <HoverCardItem onClick={() => {
-                removeDialogMutation.mutate(['blocked-list', 'account-settings', 'settings-card']);
+                removeDialogMutation.mutate([ 'blocked-list', 'account-settings', 'settings-card' ]);
                 replace(`/user/${nickname}`);
               }}>
                 <Typography>
                   Перейти к профилю
                 </Typography>
               </HoverCardItem>
-              <UserCardModal nickname={nickname}/>
+              <UserCardModal nickname={nickname} />
             </div>
           }
         />

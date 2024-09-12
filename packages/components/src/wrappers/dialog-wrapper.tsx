@@ -4,10 +4,11 @@ import { Dialog, DialogContent, DialogTrigger } from '@repo/ui/src/components/di
 import { forwardRef, ReactNode } from 'react';
 import { DialogContentProps, DialogProps } from '@radix-ui/react-dialog';
 import { useDialog } from '@repo/lib/hooks/use-dialog.ts';
-import { DIALOG_STATE_QUERY_KEY } from '@repo/lib/queries/dialog-params-query.ts';
-import { useQueryClient } from '@tanstack/react-query';
+import { dialogParamsQuery } from '@repo/lib/queries/dialog-params-query.ts';
 
-interface DialogContentExtended extends DialogContentProps {}
+interface DialogContentExtended
+  extends DialogContentProps {
+}
 
 interface DialogWrapperProps extends DialogProps {
   trigger: ReactNode;
@@ -23,48 +24,30 @@ interface DialogWrapperProps extends DialogProps {
   dialog?: DialogContentExtended;
 }
 
-export const DialogWrapper = forwardRef<
-  HTMLDivElement, DialogWrapperProps
->((
-  {
-    trigger,
-    children,
-    asChild,
-    name,
-    properties = { dialogTriggerClassName: '', dialogContentClassName: '', withClose: true },
-    dialog,
-    ...dialogProps
-  },
-  ref,
+export const DialogWrapper = forwardRef<HTMLDivElement, DialogWrapperProps>(({
+    trigger, children,
+    asChild, name, properties = { dialogTriggerClassName: '', dialogContentClassName: '', withClose: true },
+    dialog, ...dialogProps
+  }, ref,
 ) => {
   const { setDialogIdMutation, removeDialogMutation } = useDialog();
-  const qc = useQueryClient()
-  const dialogParams = qc.getQueryData<string[]>(DIALOG_STATE_QUERY_KEY)
+  const { data: dialogParams } = dialogParamsQuery();
   
-  const isDialogOpen = () => {
-    if (!dialogParams) return false;
-    
-    return dialogParams.some(dialog => dialog === name);
-  }
+  const isDialogOpen = (): boolean => dialogParams.includes(name);
   
   const handleDialogState = (open: boolean) => {
-    if (open) {
-      setDialogIdMutation.mutate(name);
-    } else {
-      removeDialogMutation.mutate(name);
-    }
-  }
+    if (open) setDialogIdMutation.mutate(name);
+    if (!open) removeDialogMutation.mutate(name);
+  };
   
   return (
     <Dialog
+      defaultOpen={isDialogOpen()}
       open={isDialogOpen()}
       onOpenChange={handleDialogState}
       {...dialogProps}
     >
-      <DialogTrigger
-        asChild={asChild}
-        className={properties?.dialogTriggerClassName}
-      >
+      <DialogTrigger asChild={asChild} className={properties?.dialogTriggerClassName}>
         {trigger}
       </DialogTrigger>
       <DialogContent

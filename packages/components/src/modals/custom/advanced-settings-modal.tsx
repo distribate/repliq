@@ -10,6 +10,7 @@ import {
 export const ADVANCED_SETTINGS_MODAL_NAME = "advanced-settings"
 
 export const AdvancedSettingsModal = () => {
+  console.log('advanced-settings render')
   return (
     <DialogWrapper
       name={ADVANCED_SETTINGS_MODAL_NAME}

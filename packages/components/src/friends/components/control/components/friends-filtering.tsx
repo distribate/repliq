@@ -2,8 +2,9 @@
 
 import { Typography } from '@repo/ui/src/components/typography.tsx';
 import { FriendsFilteringView } from '../../filtering/components/friends-filtering-view.tsx';
-import { FriendsFilteringSearch } from '../../filtering/components/friends-filtering-search.tsx';
 import { FriendsSort } from '../../../../profile/components/friends/components/friends-sort.tsx';
+import { FilteringSearch } from '../../../../filtering/components/filtering-search.tsx';
+import { FriendsSearch } from '../../../../profile/components/friends/components/friends-search.tsx';
 
 export const FriendsFiltering = () => {
   return (
@@ -12,7 +13,9 @@ export const FriendsFiltering = () => {
         Друзья
       </Typography>
       <div className="flex items-center gap-4">
-        <FriendsFilteringSearch />
+        <FilteringSearch>
+          <FriendsSearch/>
+        </FilteringSearch>
         <FriendsFilteringView />
         <FriendsSort />
       </div>

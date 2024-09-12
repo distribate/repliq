@@ -1,7 +1,7 @@
 import { z } from 'zod';
 
 const ACCEPTED_IMAGE_TYPES = [
-  'image/png', 'image/jpg', 'image/jpeg', 'image/webp'
+  'image/png', 'image/jpg', 'image/jpeg', 'image/webp',
 ];
 
 const MAX_IMAGE_SIZE = 5; // MB
@@ -46,4 +46,7 @@ export const createThreadSchema = z.object({
       ACCEPTED_IMAGE_TYPES.includes(file.type),
     );
   }, 'Формат файла не поддерживается.'),
+  previewImages: z
+  .custom<File[]>()
+  .optional(),
 });

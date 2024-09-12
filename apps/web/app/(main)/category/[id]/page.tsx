@@ -74,7 +74,7 @@ export default async function CategoryByIdPage({
             Filtration
           </div>
           <div className="flex flex-col gap-y-2 w-full">
-            <CategoryThreads categoryId={category.id} />
+            <CategoryThreads categoryId={category.id}/>
           </div>
         </BlockWrapper>
       </div>

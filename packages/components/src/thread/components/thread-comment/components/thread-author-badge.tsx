@@ -4,7 +4,7 @@ import { Badge } from "@repo/ui/src/components/badge.tsx";
 export const ThreadAuthorBadge = () => {
 	return (
 		<Badge size="small">
-			<Typography>автор</Typography>
+			<Typography className="font-[Minecraft] leading-4">автор</Typography>
 		</Badge>
 	)
 }

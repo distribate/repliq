@@ -7,7 +7,7 @@ export const ForumStats = async() => {
   
   return (
     <div
-      className="flex flex-col gap-y-4 w-full py-6 px-4 rounded-md border-[1px] overflow-hidden border-white/10 bg-shark-950">
+      className="flex flex-col gap-y-4 w-full py-6 px-4 rounded-lg overflow-hidden bg-shark-950">
       <div className="px-2">
         <Typography textSize="big" textColor="shark_white" className="font-semibold">
           Статистика

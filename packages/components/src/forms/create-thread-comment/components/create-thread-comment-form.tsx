@@ -105,7 +105,7 @@ export const CreateThreadCommentForm = ({
 					propHeight={48}
 					nickname={currentUser.nickname}
 				/>
-				<div className="flex w-full *:w-full border-[1px] border-white/10 rounded-md">
+				<div className="flex w-full *:w-full rounded-md">
 					<FormField>
 						<Textarea
 							id="content"

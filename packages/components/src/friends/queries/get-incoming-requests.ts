@@ -1,5 +1,6 @@
 "use server"
 
+import "server-only"
 import { getRequestsByType } from "./get-requests-by-type.ts";
 
 export async function getIncomingRequests(

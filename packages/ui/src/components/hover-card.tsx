@@ -1,21 +1,24 @@
 "use client"
 
-import * as React from "react"
 import * as HoverCardPrimitive from "@radix-ui/react-hover-card"
-
 import { cn } from "@repo/lib/utils/ui/cn.ts"
-import { forwardRef, HTMLAttributes } from "react";
+import { ComponentPropsWithoutRef, ElementRef, forwardRef, HTMLAttributes } from 'react';
 
 const HoverCard = HoverCardPrimitive.Root
-
 const HoverCardTrigger = HoverCardPrimitive.Trigger
+
+type HoverCardItemProps = Partial<{
+	isActive: boolean
+}>
 
 const HoverCardItem = forwardRef<
 	HTMLDivElement,
 	HTMLAttributes<HTMLDivElement>
+		& HoverCardItemProps
 >((
 	{
 		className,
+		isActive,
 		...props
 	},
 	ref
@@ -23,15 +26,17 @@ const HoverCardItem = forwardRef<
 	return (
 		<div
 			ref={ref}
-			className={cn('flex hover:bg-white/10 border border-none cursor-default select-none items-center rounded-lg px-2 py-1.5 text-sm relative', className)}
+			className={cn(`${isActive && 'text-caribbean-green-500'} flex hover:bg-white/10 border border-none cursor-default select-none items-center rounded-md px-2 py-1.5 text-sm relative`,
+				className
+			)}
 			{...props}
 		/>
 	)
 })
 
-const HoverCardContent = React.forwardRef<
-	React.ElementRef<typeof HoverCardPrimitive.Content>,
-	React.ComponentPropsWithoutRef<typeof HoverCardPrimitive.Content>
+const HoverCardContent = forwardRef<
+	ElementRef<typeof HoverCardPrimitive.Content>,
+	ComponentPropsWithoutRef<typeof HoverCardPrimitive.Content>
 >((
 	{
 		className,

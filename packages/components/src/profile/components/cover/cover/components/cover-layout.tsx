@@ -9,15 +9,14 @@ import { requestedUserQuery } from '../queries/requested-user-query.ts';
 
 export type UserCoverLayoutProps = {
 	reqUserNickname: string,
-	type: "blocked" | "default"
+	isBlocked: boolean
 }
 
 export const UserCoverLayout = ({
-	reqUserNickname, type
+	reqUserNickname, isBlocked
 }: UserCoverLayoutProps) => {
 	const { data: coverQueryState } = coverQuery()
 	const { setCoverStateMutation } = useCover()
-	
 	const { data: requestedUser, isLoading } = requestedUserQuery(
 		reqUserNickname
 	)
@@ -39,7 +38,7 @@ export const UserCoverLayout = ({
 					})
 				}}
 			/>
-			{requestedUser && <UserCover requestedUser={requestedUser} type={type}/>}
+			{requestedUser && <UserCover requestedUser={requestedUser} isBlocked={isBlocked}/>}
 		</>
 	)
 }

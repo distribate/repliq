@@ -4,14 +4,14 @@ import { DropdownWrapper } from '../../../../../wrappers/dropdown-wrapper.tsx';
 import { ImageWrapper } from '../../../../../wrappers/image-wrapper.tsx';
 import Photo from '@repo/assets/images/minecraft/photo.webp';
 import { FriendButton } from '../../components/add-friend/components/friend-button.tsx';
-import {
-  DeleteBackgroundImageButton,
-} from '../../components/cover-image/components/delete-background-image-button.tsx';
 import { ControlPanel } from '../../components/control/components/control-panel.tsx';
 import {
   ProfileDescriptionChangeModal,
 } from '../../../../../modals/user-settings/profile-description-change-modal.tsx';
 import { ProfileBackgroundUpdateModal } from '../../../../../modals/custom/profile-background-update-modal.tsx';
+import {
+  DeleteCoverModal
+} from '../../../../../modals/action-confirmation/components/delete-cover/components/delete-cover-modal.tsx';
 
 const userCoverPanelVariants = cva('relative z-[3] flex bg-transparent gap-x-4 border-none', {
   variants: {
@@ -44,7 +44,7 @@ export const UserCoverPanel = ({
         </div>
       )}
       {isOwner && (
-        <div className="flex items-center gap-x-2 bg-shark-800/50 rounded-lg px-4 py-0.5">
+        <div className="flex items-center gap-x-2 bg-shark-900 h-10 rounded-lg border border-white/10 px-2">
           <DropdownWrapper
             properties={{ triggerAsChild: true, contentAlign: 'end', contentClassname: 'w-[196px]' }}
             trigger={
@@ -61,7 +61,7 @@ export const UserCoverPanel = ({
             content={
               <div className="flex flex-col gap-y-1">
                 <ProfileBackgroundUpdateModal />
-                <DeleteBackgroundImageButton />
+                <DeleteCoverModal/>
               </div>
             }
           />

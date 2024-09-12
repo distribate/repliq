@@ -25,9 +25,7 @@ export const useCreateThread = () => {
         } : prev,
       );
     },
-    onSuccess: async() => {
-      await qc.invalidateQueries({ queryKey: THREAD_FORM_QUERY });
-    },
+    onSuccess: async() => await qc.invalidateQueries({ queryKey: THREAD_FORM_QUERY }),
     onError: (e) => { throw new Error(e.message) },
   });
   
@@ -76,7 +74,9 @@ export const useCreateThread = () => {
             upsert: false,
           });
           
-          if (error) throw new Error(error.message);
+          if (error) {
+            throw new Error(error.message);
+          }
           
           uploadedPaths.push(data.path);
         }

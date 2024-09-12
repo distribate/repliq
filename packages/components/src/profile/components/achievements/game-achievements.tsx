@@ -1,11 +1,12 @@
 import { UserPageParam } from "@repo/types/config/page-types.ts"
+import { ProfileSectionLayout } from '../../../layouts/profile-section-layout.tsx';
 
-export const UserGameAchievements = ({
+export const UserProfileGameAchievements = async({
 	nickname
 }: UserPageParam) => {
 	return (
-		<div className="flex flex-col w-full py-6">
+		<ProfileSectionLayout>
 			Achievements
-		</div>
+		</ProfileSectionLayout>
 	)
 }

@@ -1,5 +1,6 @@
 'use server';
 
+import "server-only"
 import { createClient } from '@repo/lib/utils/supabase/server.ts';
 import { Tables } from '@repo/types/entities/supabase.ts';
 

@@ -12,7 +12,7 @@ const blockWrapperVariants = cva('flex rounded-lg w-full ', {
     },
     borderType: {
       none: 'border-none',
-      default: 'border-[1px] border-white/10',
+      default: 'border border-shark-700',
     },
     padding: {
       default: 'px-4 py-2',
@@ -23,7 +23,7 @@ const blockWrapperVariants = cva('flex rounded-lg w-full ', {
     variant: 'default',
     backgroundColor: 'shark_black',
     padding: 'default',
-    borderType: 'default',
+    borderType: 'none',
   },
 });
 

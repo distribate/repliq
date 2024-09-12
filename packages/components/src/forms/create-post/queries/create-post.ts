@@ -1,5 +1,6 @@
 "use server"
 
+import "server-only"
 import { createClient } from "@repo/lib/utils/supabase/server.ts";
 import { Tables } from "@repo/types/entities/supabase.ts"
 
@@ -21,7 +22,7 @@ export async function createPostReferenced({
 	.select("post_id")
 	.single()
 	
-	if (error) throw error;
+	if (error) throw new Error(error.message);
 	
 	return data;
 }
@@ -45,7 +46,7 @@ export async function createPost({
 	.single()
 	
 	if (error) {
-		console.log(error);
+		console.log(error.message);
 		return false;
 	}
 	

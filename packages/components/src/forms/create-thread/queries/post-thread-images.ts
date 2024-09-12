@@ -1,13 +1,14 @@
 "use server"
 
+import "server-only"
 import { createClient } from '@repo/lib/utils/supabase/server.ts';
 import { PostThread } from './post-thread.ts';
 
+type PostThreadImages = PostThread & { paths: string[] }
+
 export async function postThreadImages({
   thread_id, paths
-}: PostThread & {
-  paths: string[]
-}) {
+}: PostThreadImages) {
   const supabase = createClient();
   
   if (!thread_id || !paths) return;
@@ -20,7 +21,6 @@ export async function postThreadImages({
   .select()
   
   if (error) {
-    console.error(error.message)
     throw new Error(error.message)
   }
   

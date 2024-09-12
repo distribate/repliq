@@ -1,5 +1,6 @@
 "use server"
 
+import "server-only"
 import { getCurrentUser } from '@repo/lib/actions/get-current-user.ts';
 import { getUsers } from '../../admin/components/dashboard/queries/get-users.ts';
 import { getFriends } from './get-friends.ts';

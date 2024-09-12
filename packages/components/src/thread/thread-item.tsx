@@ -10,7 +10,7 @@ export const ThreadItem = async({
   });
   
   if (!thread) return null;
-  
+
   const { nickname, title } = thread;
   
   if (!nickname) return;

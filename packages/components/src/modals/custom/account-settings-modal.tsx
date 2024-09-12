@@ -10,6 +10,7 @@ import {
 export const ACCOUNT_SETTINGS_MODAL_NAME = "account-settings"
 
 export const AccountSettingsModal = () => {
+  console.log('account-settings render')
   return (
     <DialogWrapper
       key={ACCOUNT_SETTINGS_MODAL_NAME}

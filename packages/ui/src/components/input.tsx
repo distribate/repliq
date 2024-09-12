@@ -15,7 +15,7 @@ const inputVariants = cva(
         error: 'border-red-400',
       },
       backgroundType: {
-        default: 'bg-white/10',
+        default: 'bg-shark-800',
         transparent: 'bg-transparent',
       },
     },

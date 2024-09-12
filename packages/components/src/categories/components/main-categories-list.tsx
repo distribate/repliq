@@ -7,7 +7,7 @@ export const MainCategoriesList = async() => {
 	const categories = await getCategories()
 	
 	return (
-		<div className="flex flex-col w-full pr-4 gap-y-4 h-full">
+		<div className="flex flex-col w-full md:w-3/4 gap-y-4 h-full">
 			<Accordion
 				type="multiple"
 				defaultValue={[

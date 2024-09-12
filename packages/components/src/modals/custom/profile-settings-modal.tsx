@@ -10,6 +10,7 @@ import { DialogWrapper } from '../../wrappers/dialog-wrapper.tsx';
 export const PROFILE_SETTINGS_MODAL_NAME = "profile-settings"
 
 export const ProfileSettingsModal = () => {
+  console.log('profile-settings render')
   return (
     <DialogWrapper
       name={PROFILE_SETTINGS_MODAL_NAME}

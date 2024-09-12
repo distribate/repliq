@@ -9,54 +9,64 @@ import { Avatar } from '../../../../../../user/components/avatar/components/avat
 import { BlockWrapper } from '../../../../../../wrappers/block-wrapper.tsx';
 import { StatsLayout } from '../../../stats/stats-layout.tsx';
 import LandsPreview from '@repo/assets/images/minecraft/bust_painting.webp';
+import { StatsBlockWrapper } from '../../../stats/stats-block-wrapper.tsx';
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@repo/ui/src/components/accordion.tsx';
 
 export const LandsStats = ({
-  nickname, uuid,
+  nickname, uuid
 }: StatsRequest) => {
   return (
-    <div className="flex flex-col font-[Minecraft] w-full gap-y-1 rounded-md bg-shark-950 border border-white/10 p-2">
-      <Typography>
-        #1 Aboba City [город]
-      </Typography>
-      <div className="flex items-start gap-1">
-        <div className="flex flex-col ml-2">
-          <Typography>
-            Название: Территория
-          </Typography>
-          <Typography>
-            Описание: Приветствуем на территории
-          </Typography>
-          <Typography>
-            Баланс: 50
-          </Typography>
-          <div className="flex flex-col">
-            <Typography>
-              Участники:
+    <Accordion type="multiple"  className="font-[Minecraft] w-full">
+      <AccordionItem value="test">
+        <StatsBlockWrapper>
+          <AccordionTrigger>
+            <Typography textSize="large" className="text-gold-500">
+              Aboba City [город]
             </Typography>
-            <div className="flex flex-col">
-              <div
-                className="flex items-center gap-2 px-1 rounded-md hover:bg-shark-50/10 py-0.5 cursor-pointer"
-                key={'key-test-unique'}
-              >
-                <Avatar
-                  propHeight={14}
-                  propWidth={14}
-                  nickname="discludness"
-                />
+          </AccordionTrigger>
+          <AccordionContent>
+            <div className="flex items-start gap-1">
+              <div className="flex flex-col">
                 <Typography>
-                  5 чанков
+                  Название: Территория
+                </Typography>
+                <Typography>
+                  Описание: Приветствуем на территории
+                </Typography>
+                <Typography>
+                  Баланс: 50
+                </Typography>
+                <div className="flex flex-col">
+                  <Typography>
+                    Участники:
+                  </Typography>
+                  <div className="flex flex-col">
+                    <div
+                      className="flex items-center gap-2 px-1 rounded-md hover:bg-shark-50/10 py-0.5 cursor-pointer"
+                      key={'key-test-unique'}
+                    >
+                      <Avatar
+                        propHeight={14}
+                        propWidth={14}
+                        nickname="discludness"
+                      />
+                      <Typography>
+                        5 чанков
+                      </Typography>
+                    </div>
+                  </div>
+                </div>
+                <Typography>
+                  Налог: 5
+                </Typography>
+                <Typography>
+                  Заблокированные: 1
                 </Typography>
               </div>
             </div>
-          </div>
-          <Typography>
-            Налог: 5
-          </Typography>
-          <Typography>
-            Заблокированные: 1
-          </Typography>
-        </div>
-      </div>
-    </div>
+          </AccordionContent>
+        </StatsBlockWrapper>
+      </AccordionItem>
+    </Accordion>
   );
 };

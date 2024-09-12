@@ -34,7 +34,7 @@ module.exports = {
 			}
 		],
 	},
-	reactStrictMode: true,
+	reactStrictMode: false,
 	transpilePackages: [
 		'@repo/ui'
 	],

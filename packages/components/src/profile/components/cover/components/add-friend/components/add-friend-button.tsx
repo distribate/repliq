@@ -17,7 +17,6 @@ export const AddFriendButton = ({
 		<Button
 			onClick={handleAddFriend}
 			variant="positive"
-			pending={createRequestFriendMutation.isPending}
 			disabled={createRequestFriendMutation.isPending || createRequestFriendMutation.isError}
 		>
 			Добавить в друзья

@@ -14,7 +14,7 @@ type ViewComponentsType = {
   icon: any
 }
 
-const VIEW_COMPONENTS_TYPE: ViewComponentsType[] = [
+export const VIEW_COMPONENTS_TYPE: ViewComponentsType[] = [
   {
     name: "list",
     title: 'Список',

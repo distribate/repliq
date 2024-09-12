@@ -1,5 +1,6 @@
 "use server"
 
+import "server-only"
 import { createClient } from "@repo/lib/utils/supabase/server.ts";
 
 export async function getAvailableCategories() {

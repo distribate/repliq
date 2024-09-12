@@ -14,10 +14,10 @@ const buttonVariants = cva(
       variant: {
         default: '',
         link: 'underline-offset-4 hover:underline',
-        action: 'hover:bg-pink-900 bg-pink-800 hover:bg-pink-700',
-        positive: 'hover:bg-green-800 bg-green-700',
-        negative: 'hover:bg-red-800 bg-red-700',
-        pending: 'hover:bg-contessa-800 bg-contessa-700',
+        action: 'hover:bg-pink-800 bg-pink-700 border border-pink-400',
+        positive: 'hover:bg-green-800 bg-green-700 border border-green-400',
+        negative: 'hover:bg-red-800 bg-red-700 border border-red-400',
+        pending: 'hover:bg-contessa-800 bg-contessa-700 border border-contessa-400',
         minecraft: 'border-[2px] text-shark-50 border-black/80 rounded-none shadow-[inset_0px_-2px_1px_rgba(0,0,0,0.4),inset_-0px_2px_1px_rgba(255,255,255,0.4)]',
       },
       effect: {
@@ -37,8 +37,8 @@ const buttonVariants = cva(
         icon: 'w-10',
       },
       state: {
-        default: 'hover:bg-shark-950 bg-shark-900',
-        active: 'bg-caribbean-green-600 hover:bg-caribbean-green-700',
+        default: 'bg-shark-800 border border-shark-700',
+        active: 'hover:bg-caribbean-green-800 bg-caribbean-green-700 border border-caribbean-green-400',
       },
       border: {
         default: 'border-[1px] border-white/10',
@@ -48,7 +48,7 @@ const buttonVariants = cva(
     defaultVariants: {
       variant: 'default',
       size: 'default',
-      rounded: 'default'
+      rounded: 'default',
     },
   },
 );
@@ -65,20 +65,9 @@ export interface ButtonProps
 
 const Button = forwardRef<
   HTMLButtonElement, ButtonProps
->((
-    {
-      className,
-      effect,
-      variant,
-      rounded,
-      size,
-      border,
-      pending,
-      state,
-      asChild = false,
-      ...props
-    },
-    ref,
+>(({
+      className, effect, variant, rounded, size, border, pending, state, asChild = false, ...props
+    }, ref,
   ) => {
     const Comp = asChild ? Slot : 'button';
     

@@ -1,6 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
 import { THREAD } from "@repo/types/entities/entities-type"
-import { Descendant } from 'slate';
 
 export const THREAD_FORM_QUERY = ["ui", "thread-form"];
 

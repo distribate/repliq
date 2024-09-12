@@ -31,7 +31,12 @@ export const Category = async({
             {title}
           </Typography>
           <Link href={CATEGORY_URL + id}>
-            <ImageWrapper propSrc={Spyglass.src} propAlt={`перейти к категории ${title}`} width={20} height={20} />
+            <ImageWrapper
+              propSrc={Spyglass.src}
+              propAlt={`перейти к категории ${title}`}
+              width={20}
+              height={20}
+            />
           </Link>
         </div>
       </AccordionTrigger>

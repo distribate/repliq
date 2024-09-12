@@ -1,21 +1,20 @@
 'use server';
 
+import "server-only"
 import { createClient } from '@repo/lib/utils/supabase/server.ts';
 import { ThreadModel } from '../../../queries/get-thread-model.ts';
-import { Tables } from '@repo/types/entities/supabase.ts';
-
-type GetCurrentThread = Tables<"threads">
+import { THREAD } from '@repo/types/entities/entities-type.ts';
 
 export async function getCurrentThread({
   id: threadId
-}: Pick<ThreadModel, 'id'>) {
+}: Pick<ThreadModel, 'id'>): Promise<THREAD> {
   const supabase = createClient();
   
   const { data, error } = await supabase
   .from('threads')
   .select('title, description, comments, permission')
   .eq('id', threadId)
-  .returns<GetCurrentThread[]>()
+  .returns<THREAD[]>()
   
   if (error) {
     throw new Error(error.message);

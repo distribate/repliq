@@ -13,10 +13,10 @@ import { getPreferenceValue } from '@repo/lib/helpers/convert-user-preferences-t
 
 type UserCoverProps = {
   requestedUser: RequestedUser
-} & Pick<UserCoverLayoutProps, 'type'>
+} & Pick<UserCoverLayoutProps, 'isBlocked'>
 
 export const UserCover = ({
-  requestedUser, type
+  requestedUser, isBlocked
 }: UserCoverProps) => {
   const { data: coverQueryState } = coverQuery();
   const qc = useQueryClient();
@@ -61,7 +61,7 @@ export const UserCover = ({
         />
         <UserCoverMainInfo nickname={nickname} />
       </div>
-      {(currentUser && type !== 'blocked') && (
+      {(currentUser && !isBlocked) && (
         <UserCoverPanel
           reqUserNickname={nickname}
           isOwner={isOwner}

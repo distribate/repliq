@@ -1,29 +1,28 @@
-"use client"
+'use client';
 
 import Link from 'next/link';
-import { useSaveLastThread } from '../saved-thread/hooks/use-save-last-thread.tsx';
+import { useHistoryThreads } from '../saved-thread/hooks/use-history-threads.tsx';
 import { THREAD_URL } from '@repo/shared/constants/routes.ts';
 import { ReactNode } from 'react';
 import { ThreadModel } from '../../queries/get-thread-model.ts';
 
 type ThreadLayout = {
-  children: ReactNode
-} & Pick<ThreadModel, "id"
-  | "nickname"
-  | "title"
->
+  children: ReactNode,
+} & Pick<ThreadModel, 'id' | 'nickname' | 'title'>
 
 export const ThreadLayout = ({
-  children, title, nickname, id
+  children, title, nickname, id: threadId
 }: ThreadLayout) => {
-  const { saveThread } = useSaveLastThread()
+  const { saveThread } = useHistoryThreads();
   
   return (
     <Link
-      href={THREAD_URL + id}
-      onClick={() => saveThread({ title, nickname, id })}
+      href={THREAD_URL + threadId}
+      onClick={() => saveThread({
+        title, nickname, threadId
+      })}
     >
       {children}
     </Link>
-  )
-}
+  );
+};

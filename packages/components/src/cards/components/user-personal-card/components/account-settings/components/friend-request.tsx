@@ -33,6 +33,10 @@ export const FriendRequest = () => {
   
   return (
     <DropdownWrapper
+      properties={{
+        contentAlign: 'end',
+        sideAlign: 'right',
+      }}
       trigger={
         <Typography className="text-base">
           {preferFriendRequest ? 'вкл' : 'выкл'}

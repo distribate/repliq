@@ -4,21 +4,24 @@ import { USER } from '@repo/types/entities/entities-type.ts';
 import {
   RealNameChange
 } from '../../cards/components/user-personal-card/components/profile-settings/components/real-name-change/components/real-name-change.tsx';
+import { useQueryClient } from '@tanstack/react-query';
+import { CURRENT_USER_QUERY_KEY, CurrentUser } from '@repo/lib/queries/current-user-query.ts';
 
 export const REAL_NAME_CHANGE_MODAL_NAME = "real-name-change"
 
-type RealNameChangeModal = Pick<USER, "real_name">
-
-export const RealNameChangeModal = ({
-  real_name
-}: RealNameChangeModal) => {
+export const RealNameChangeModal = () => {
+  const qc = useQueryClient();
+  const currentUser = qc.getQueryData<CurrentUser>(CURRENT_USER_QUERY_KEY);
+  
+  const realName = currentUser?.real_name
+  
   return (
     <DialogWrapper
       name={REAL_NAME_CHANGE_MODAL_NAME}
       trigger={
         <div className="flex items-center gap-1">
           <Typography className="text-base">
-            {real_name ? real_name : 'не указано'}
+            {realName ? realName : 'не указано'}
           </Typography>
         </div>
       }

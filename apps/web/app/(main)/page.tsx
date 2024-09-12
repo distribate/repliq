@@ -23,17 +23,17 @@ export default async function MainPage() {
 	const hasAlertsShowing = await hasAlertsShow();
 	
 	return (
-		<main className="flex flex-col w-full gap-4">
+		<main className="flex flex-col w-full gap-2 h-full">
 			{hasAlertsShowing && (
-				<div className="flex flex-col gap-y-2 w-full">
+				<div className="flex flex-col gap-2 w-full">
 					<MainAlertsList/>
 				</div>
 			)}
 			{/*<AdvertisementSection/>*/}
 			<Suspense fallback={<MainCategoriesListSkeleton/>}>
-				<div className="flex lg:flex-row overflow-y-scroll flex-col w-full h-full">
+				<div className="flex lg:flex-row gap-2 flex-col w-full h-full">
 					<MainCategoriesList/>
-					<div className="flex flex-col gap-y-4 w-1/3 h-full">
+					<div className="flex flex-col gap-4 w-full md:w-1/4 h-full">
 						<LastRegisteredUsers/>
 						<ForumStats/>
 					</div>

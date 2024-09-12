@@ -1,5 +1,6 @@
 'use server';
 
+import "server-only"
 import { createClient } from '@repo/lib/utils/supabase/server.ts';
 import { T_COMMENT, THREAD_COMMENT, THREAD_COMMENT_REPLIED } from '@repo/types/entities/entities-type.ts';
 import { CreateThreadCommentType } from './create-thread-comment-query.ts';

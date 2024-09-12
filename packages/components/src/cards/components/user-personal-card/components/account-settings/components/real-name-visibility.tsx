@@ -7,32 +7,45 @@ import { useUpdateCurrentUser } from '@repo/lib/hooks/use-update-current-user.ts
 import { getPreferenceValue } from '@repo/lib/helpers/convert-user-preferences-to-map.ts';
 import { HoverCardItem } from '@repo/ui/src/components/hover-card.tsx';
 
+type RealNamePreferType = {
+  e: React.MouseEvent<HTMLDivElement>,
+  value: boolean,
+}
+
+const REAL_NAME_PREFER_OPTIONS = [
+  { name: 'включить', value: true },
+  { name: 'выключить', value: false },
+];
+
+const REAL_NAME_VISIBILITY_NAME = "realNameVisibility"
+
 export const RealNameVisibility = () => {
-  const qc = useQueryClient()
-  const currentUser = qc.getQueryData<CurrentUser>(CURRENT_USER_QUERY_KEY)
+  const qc = useQueryClient();
+  const currentUser = qc.getQueryData<CurrentUser>(CURRENT_USER_QUERY_KEY);
   const { updateFieldMutation } = useUpdateCurrentUser();
   
   if (!currentUser) return;
   
   const preferences = currentUser.properties.preferences;
-  const preferRealName = getPreferenceValue(preferences, "realNameVisibility")
+  const preferRealName = getPreferenceValue(
+    preferences, REAL_NAME_VISIBILITY_NAME
+  );
   
-  const handleRealNamePrefer = (
-    e: React.MouseEvent<HTMLDivElement>, value: boolean,
-  ) => {
+  const handleRealNamePrefer = (values: RealNamePreferType) => {
+    const { e, value } = values;
+    
     e.preventDefault();
     
     updateFieldMutation.mutate({
       value: value.toString(),
       field: 'preferences',
-      preferences: {
-        value: value, key: 'realNameVisibility',
-      },
+      preferences: { value: value, key: REAL_NAME_VISIBILITY_NAME, },
     });
   };
   
   return (
     <DropdownWrapper
+      properties={{ contentAlign: 'end', sideAlign: 'right' }}
       trigger={
         <Typography className="text-base">
           {preferRealName ? 'видно' : 'скрыто'}
@@ -46,16 +59,15 @@ export const RealNameVisibility = () => {
             </Typography>
           </div>
           <div className="flex flex-col gap-y-2">
-            <HoverCardItem onClick={(e) => handleRealNamePrefer(e, true)}>
-              <Typography className={preferRealName ? 'text-caribbean-green-500' : ''}>
-                включить
-              </Typography>
-            </HoverCardItem>
-            <HoverCardItem onClick={(e) => handleRealNamePrefer(e, false)}>
-              <Typography className={!preferRealName ? 'text-caribbean-green-500' : ''}>
-                выключить
-              </Typography>
-            </HoverCardItem>
+            {REAL_NAME_PREFER_OPTIONS.map(option => (
+              <HoverCardItem
+                key={option.value.toString()}
+                isActive={preferRealName === option.value}
+                onClick={(e) => handleRealNamePrefer({ e, value: option.value })}
+              >
+                <Typography>{option.name}</Typography>
+              </HoverCardItem>
+            ))}
           </div>
         </div>
       }

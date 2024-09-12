@@ -16,7 +16,6 @@ export const DeleteFriendButton = ({
 	return (
 		<Button
 			onClick={handleDeleteFriend}
-			pending={removeFriendFromListMutation.isPending}
 			disabled={removeFriendFromListMutation.isPending || removeFriendFromListMutation.isError}
 			variant="negative"
 		>

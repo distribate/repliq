@@ -8,7 +8,8 @@ const moreWrapperVariants = cva('flex bg-shark-900 rounded-lg items-center justi
     variant: {
       default: 'p-2',
       small: 'p-1',
-    },
+      selected: "h-10 w-10 border border-white/10"
+    }
   },
   defaultVariants: {
     variant: "default"
@@ -18,16 +19,17 @@ const moreWrapperVariants = cva('flex bg-shark-900 rounded-lg items-center justi
 interface MoreWrapper
   extends HTMLAttributes<HTMLDivElement>,
     VariantProps<typeof moreWrapperVariants> {
+  position?: "top-left" | "top-right" | "bottom-left" | "bottom-right"
 }
 
 export const MoreWrapper = forwardRef<
   HTMLDivElement, MoreWrapper
->(({ children, className, variant, ...props }, ref) => {
+>(({ children, className, position, variant, ...props }, ref) => {
     return (
       <DropdownWrapper
         properties={{
-          sideAlign: 'top',
-          contentAlign: 'start',
+          sideAlign: position === 'top-left' || position === 'top-right' ? 'top' : 'bottom',
+          contentAlign: position === 'top-left' || position === 'bottom-left' ? 'end' : 'start',
           contentClassname: 'w-[250px]',
         }}
         trigger={

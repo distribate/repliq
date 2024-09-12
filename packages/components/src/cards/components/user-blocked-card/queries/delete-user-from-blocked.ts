@@ -1,5 +1,6 @@
-'use server';
+"use server"
 
+import "server-only"
 import { createClient } from '@repo/lib/utils/supabase/server.ts';
 
 export type DeleteUserFromBlocked = {
@@ -20,9 +21,9 @@ export async function deleteUserFromBlocked({
   .select("user_1")
   .single();
   
-  if (error) throw new Error(error.message)
-  
-  console.log(data)
-  
+  if (error) {
+    throw new Error(error.message);
+  }
+
   return data;
 }

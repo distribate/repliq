@@ -11,7 +11,7 @@ export const AlertCard = ({
 	return (
 		<div
 			id={title + id}
-			className="flex flex-col gap-y-1 w-full rounded-md border-[1px] py-2 px-6 shadow-sm shadow-shark-900 border-white/10 bg-shark-950 relative"
+			className="flex flex-col gap-y-1 w-full rounded-md py-2 px-6 shadow-sm shadow-shark-900 bg-shark-950 relative"
 		>
 			<Typography textColor="shark_white" textSize="medium">
 				{title}
