@@ -95,6 +95,16 @@ const FormThreadImages = ({
   );
 };
 
+export const CreateThreadFormDebug = () => {
+  const { data: threadFormState } = threadFormQuery()
+  
+  return (
+    <div className="absolute top-2 left-2 z-[2] bg-black text-white p-2 max-w-[300px] h-full">
+      {JSON.stringify(threadFormState, null, 3)}
+    </div>
+  )
+}
+
 export const CreateThreadForm = () => {
   const { data: threadFormState } = threadFormQuery()
   const { createPostThreadMutation } = useCreateThread();

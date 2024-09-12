@@ -8,6 +8,8 @@
     "status": "npx supabase status",
     "gen-types": "npx supabase gen types typescript --local > ../../packages/types/entities/supabase.ts",
     "edge": "npx supabase functions serve --env-file \"supabase/.env\"",
+    "dump-seed": "npx supabase db dump supabase/seed.sql --data-only --local",
+    "dump-schema": "npx supabase db dump supabase/schema.sql --local",
     "start-edge": "npx supabase start && supabase functions serve"
   },
   "devDependencies": {

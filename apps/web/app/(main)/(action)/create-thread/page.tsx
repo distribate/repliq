@@ -1,4 +1,7 @@
-import { CreateThreadForm } from '@repo/components/src/forms/create-thread/components/create-thread-form.tsx';
+import {
+  CreateThreadForm,
+  CreateThreadFormDebug,
+} from '@repo/components/src/forms/create-thread/components/create-thread-form.tsx';
 import { BlockWrapper } from '@repo/components/src/wrappers/block-wrapper.tsx';
 import { Typography } from '@repo/ui/src/components/typography.tsx';
 
@@ -10,6 +13,7 @@ export default async function CreateThreadPage() {
           Создание треда
         </Typography>
       </BlockWrapper>
+      <CreateThreadFormDebug/>
       <CreateThreadForm />
     </div>
   );
