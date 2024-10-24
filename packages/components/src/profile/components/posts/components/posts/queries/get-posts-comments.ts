@@ -15,11 +15,13 @@ export async function getPostsComments (
   const supabase = createClient();
   
   const { data, error } = await supabase
-    .from("posts_comments")
-    .select("comment_id, p_comments(*)")
+    .from("posts_comments_ref")
+    .select("comment_id, posts_comments(*)")
     .eq("post_id", post_id)
   
-  if (error) throw new Error(error.message)
+  if (error) {
+    throw new Error(error.message);
+  }
   
-  return data.flatMap(item => item.p_comments);
+  return data.flatMap(item => item.posts_comments);
 }

@@ -8,16 +8,20 @@ const inputVariants = cva(
     variants: {
       variant: {
         default: 'border-none text-sm text-shark-50 placeholder:text-shark-300',
-        minecraft: 'border-[2px] text-shark-100 rounded-none bg-shark-700 text-sm dark:bg-shark-700 font-[Minecraft] placeholder:text-shark-200',
+        minecraft: 'border-[2px] text-shark-100 rounded-none bg-shark-800 text-sm dark:bg-shark-800 font-[Minecraft] placeholder:text-shark-200',
       },
       status: {
         default: 'border-black/80',
         error: 'border-red-400',
       },
       backgroundType: {
-        default: 'bg-shark-800',
+        default: 'bg-shark-900',
         transparent: 'bg-transparent',
       },
+      roundedType: {
+        none: "rounded-none",
+        default: "rounded-[8px]"
+      }
     },
     defaultVariants: {
       variant: 'default',
@@ -29,19 +33,19 @@ const inputVariants = cva(
 
 export interface InputProps
   extends InputHTMLAttributes<HTMLInputElement>,
-  VariantProps<typeof inputVariants> {
+    VariantProps<typeof inputVariants> {
 }
 
 export const Input = forwardRef<
   HTMLInputElement, InputProps
->(({
-      variant, className, status, backgroundType, type, ...props
-    }, ref,
+>((
+    { variant, className, status, backgroundType, roundedType, type, ...props },
+    ref,
   ) => {
     return (
       <input
         type={type}
-        className={inputVariants(({ variant, status, backgroundType, className }))}
+        className={inputVariants(({ variant, status, backgroundType, roundedType, className }))}
         ref={ref}
         {...props}
       />

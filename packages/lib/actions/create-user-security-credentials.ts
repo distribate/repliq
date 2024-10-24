@@ -1,5 +1,6 @@
 "use server"
 
+import "server-only"
 import { createClient } from "../utils/supabase/server.ts";
 
 export type SecurityCredentials = Partial<{
@@ -18,12 +19,12 @@ export async function createUserSecurityCredentials({
 	
 	const { data, error, status } = await supabase
 	.from("users_security")
-	.insert({
-		user_nickname: nickname, email, token
-	})
+	.insert({ user_nickname: nickname, email, token })
 	.single()
 	
-	if (error) return null;
+	if (error) {
+		return null;
+	}
 	
 	return true;
 }

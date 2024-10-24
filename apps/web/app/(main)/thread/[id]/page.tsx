@@ -26,13 +26,14 @@ import { ThreadSave } from '@repo/components/src/thread/components/thread-save/t
 import {
   CreateThreadComment,
 } from '@repo/components/src/thread/components/create-thread-comment/components/create-thread-comment.tsx';
+import { ContentNotFound } from '@repo/components/src/templates/section-not-found.tsx';
 
 export async function generateMetadata({
   params,
 }: MetadataType): Promise<Metadata> {
   const { id: thread_id } = params;
   
-  let threadTitle: string = '';
+  let threadTitle: string = 'Не найдено';
   if (!thread_id) threadTitle = '';
   
   const title = await getTopicName(thread_id);
@@ -41,7 +42,9 @@ export async function generateMetadata({
   return { title: threadTitle };
 }
 
-export default async function TopicsTopicPage({ params }: PageConventionProps) {
+export default async function TopicsTopicPage({
+  params,
+}: PageConventionProps) {
   const { id } = params;
   
   const qc = new QueryClient();
@@ -53,7 +56,9 @@ export default async function TopicsTopicPage({ params }: PageConventionProps) {
     threadId: id, type: 'all',
   });
   
-  if (!thread || !thread.nickname) return null;
+  if (!thread || !thread.nickname) {
+    return <ContentNotFound title="Тред не найден. Возможно он уже удален"/>
+  }
   
   await qc.prefetchQuery({
     queryKey: THREAD_COMMENTS_QUERY_KEY(thread.id),
@@ -111,7 +116,7 @@ export default async function TopicsTopicPage({ params }: PageConventionProps) {
           </div>
         </BlockWrapper>
         {isThreadCreator && (
-          <div className="flex flex-col border border-shark-700 rounded-lg bg-shark-950 w-full px-0 py-2 gap-y-4">
+          <div className="flex flex-col rounded-lg bg-shark-950 w-full px-0 py-2 gap-y-4">
             <div className="flex flex-col gap-y-4 py-2 w-full">
               <Typography
                 textSize="big"
@@ -120,7 +125,7 @@ export default async function TopicsTopicPage({ params }: PageConventionProps) {
               >
                 Управление тредом
               </Typography>
-              <ThreadControl threadId={thread.id} />
+              <ThreadControl id={thread.id} />
             </div>
           </div>
         )}

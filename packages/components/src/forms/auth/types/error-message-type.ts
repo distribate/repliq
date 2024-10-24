@@ -1,21 +1,21 @@
 import { z } from "zod";
 import { authorizationSchema, registrationSchema } from "../schemas/authorization-schema.ts";
 
-export type AuthMessages = "notfound"
-	| "incorrectpass"
+export type AuthMessages = "notFound"
+	| "incorrectPassword"
 	| "something"
 	| "created"
-	| "alreadyServer"
-	| "alreadyUsers"
+	| "alreadyOriginal"
+	| "alreadyForum"
 	| null;
 
 export interface ErrorMessageMap {
-	notfound: string;
-	incorrectpass: string;
+	notFound: string;
+	incorrectPassword: string;
 	something: string;
 	created: string,
-	alreadyServer: string,
-	alreadyUsers: string
+	alreadyOriginal: string,
+	alreadyForum: string
 }
 
 export type zodSignInForm = z.infer<typeof authorizationSchema>

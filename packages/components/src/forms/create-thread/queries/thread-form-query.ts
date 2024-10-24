@@ -4,10 +4,6 @@ import { THREAD } from "@repo/types/entities/entities-type"
 export const THREAD_FORM_QUERY = ["ui", "thread-form"];
 
 export type ThreadFormQuery = Partial<{
-	formState: Partial<{
-		error: string | null,
-		status: number | null
-	}>,
 	values: Partial<
 		Omit<THREAD, "id" | "created_at" | "content" | "updated_at">
 	> & Partial<{
@@ -15,19 +11,17 @@ export type ThreadFormQuery = Partial<{
 		auto_remove_time: string,
 		permission_cost: string,
 		tags: Array<string>,
-		content: any
+		content: any,
+		previewImages: string[]
  	}>
 }>
 
 const initial: ThreadFormQuery = {
-	formState: {
-		error: null,
-		status: null,
-	},
 	values: {
 		permission: false,
 		auto_remove: false,
 		comments: true,
+		visibility: "all"
 	}
 }
 

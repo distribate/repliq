@@ -9,7 +9,7 @@ export async function getThreadCommentsCount(
   const supabase = createClient();
   
   const { error, count } = await supabase
-  .from('threads_comments')
+  .from('threads_comments_ref')
   .select('comment_id', { count: 'exact' })
   .eq('thread_id', threadId);
   

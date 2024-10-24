@@ -1,22 +1,13 @@
 'use server';
 
+import 'server-only';
 import { createClient } from '@repo/lib/utils/supabase/server.ts';
-import { ThreadControl } from '../hooks/use-thread-control.ts';
 import { getCurrentUser } from '@repo/lib/actions/get-current-user.ts';
-import { RequestOptionsSupabaseClient } from '@repo/types/config/request-types.ts';
-import { ThreadRequest } from '../../../types/thread-request-types.ts';
-
-type UpdateThreadFields = ThreadControl & Partial<{
-  field: {
-    [key: string]: string | boolean | null;
-  };
-}>
-
-type UpdateThreadRequestType = RequestOptionsSupabaseClient
-  & ThreadRequest
+import { UpdateThreadFields, UpdateThreadRequestType } from '../types/update-thread-request-types.ts';
+import { removeThread } from './remove-thread.ts';
 
 async function getThreadCreatorNickname({
-  thread_id, supabase
+  thread_id, supabase,
 }: UpdateThreadRequestType) {
   const { data, error } = await supabase
   .from('threads_users')
@@ -25,55 +16,11 @@ async function getThreadCreatorNickname({
   .single();
   
   if (error) {
+    console.error(error.message);
     throw new Error(error.message);
   }
   
   return data;
-}
-
-async function threadRemove({
-  thread_id, supabase
-}: UpdateThreadRequestType) {
-  const { error: threadRemoveErr } = await supabase
-  .from('threads')
-  .delete()
-  .eq('id', thread_id);
-  
-  if (threadRemoveErr) {
-    throw new Error(threadRemoveErr.message);
-  }
-}
-
-async function threadImagesRemove({
-  thread_id, supabase
-}: UpdateThreadRequestType) {
-  const { data: existingThreadImages, error: existingThreadImagesErr } = await supabase
-  .from('threads_images')
-  .select('images')
-  .eq('thread_id', thread_id)
-  .single();
-  
-  if (existingThreadImagesErr) {
-    throw new Error(existingThreadImagesErr.message);
-  };
-  
-  const { error: removeImagesFromStorage } = await supabase
-  .storage
-  .from('threads')
-  .remove(existingThreadImages.images);
-  
-  if (removeImagesFromStorage) {
-    throw new Error(removeImagesFromStorage.message);
-  }
-  
-  const { error: removeImagesFromTable } = await supabase
-  .from('threads_images')
-  .delete()
-  .eq('thread_id', thread_id);
-  
-  if (removeImagesFromTable) {
-    throw new Error(removeImagesFromTable.message)
-  }
 }
 
 export async function updateThreadFields({
@@ -82,31 +29,24 @@ export async function updateThreadFields({
   const supabase = createClient();
   const currentUser = await getCurrentUser();
   
-  if (!currentUser) return;
+  if (!currentUser || !thread_id) return;
   
   const threadCreator = await getThreadCreatorNickname({
     thread_id, supabase
-  })
+  });
   
-  if (!threadCreator || threadCreator.user_nickname !== currentUser.nickname) return;
+  if (!threadCreator
+    || threadCreator.user_nickname !== currentUser.nickname
+  ) return;
   
   if (type === 'remove') {
-    await Promise.all([
-      threadRemove({
-        thread_id, supabase
-      }),
-      threadImagesRemove({
-        thread_id, supabase
-      })
-    ])
-
-    return true;
+    return await removeThread({ thread_id, supabase });
   }
   
   if (!field) return;
   
   const fields = Object.keys(field).join(',');
-  
+
   const updateFields = Object
   .entries(field)
   .reduce((acc, [ key, value ]) => {
@@ -121,7 +61,8 @@ export async function updateThreadFields({
   .select(fields);
   
   if (error) {
-    throw new Error(error.message)
+    console.error(error.message);
+    throw new Error(error.message);
   }
   
   return data;

@@ -22,9 +22,7 @@ export async function deleteImageFromBucket({
 }: DeleteProperties) {
 	const supabase = createClient()
 	
-	const coverImageUrl = await deletePrevImageFromUsers({
-		userId: userId
-	})
+	const coverImageUrl = await deletePrevImageFromUsers({ userId })
 	
 	if (coverImageUrl) {
 		const { data, error } = await supabase
@@ -33,7 +31,6 @@ export async function deleteImageFromBucket({
 		.remove([ coverImageUrl ])
 		
 		if (error) return false;
-		
 		if (data) return true;
 	}
 }
@@ -56,7 +53,9 @@ export async function uploadImageToBucket({
 		cacheControl: '0', upsert: true
 	})
 	
-	if (error) return { error };
+	if (error) return {
+		error
+	};
 	
 	const path = data.path
 	

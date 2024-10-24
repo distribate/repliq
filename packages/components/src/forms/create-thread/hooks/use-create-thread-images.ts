@@ -1,49 +1,59 @@
-import { useForm } from 'react-hook-form';
-import { zodCreateThreadForm } from '../types/create-thread-form-types.ts';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { createThreadSchema } from '../schemas/create-thread-schema.ts';
-import { threadFormQuery } from '../queries/thread-form-query.ts';
+import { useCreateThread } from './use-create-thread.tsx';
+import { ChangeEvent } from 'react';
 
 type CreateThreadImageControl = {
-  type: "add" | "delete",
-  e: React.MouseEvent<SVGSVGElement, MouseEvent>,
-  index: number
+  type: 'add' | 'delete',
+  e: React.MouseEvent<SVGSVGElement, MouseEvent> | ChangeEvent<HTMLInputElement>,
+  index?: number,
+  resetField?: Function,
+  setValue?: Function,
+  images: File[] | null
 }
 
 export const useCreateThreadImages = () => {
-  const { data: threadFormState } = threadFormQuery();
+  const { updateThreadFormMutation } = useCreateThread();
   
-  const {
-    control, handleSubmit, resetField, watch,
-    formState: { errors, isValid }, setValue
-  } = useForm<zodCreateThreadForm>({
-    mode: 'onChange',
-    resolver: zodResolver(createThreadSchema),
-    defaultValues: {
-      comments: threadFormState.values?.comments || true,
-      description: '', title: '', permission: false,
-      auto_remove: false, category: '',
-    },
-  });
-  
-  const formImages = watch('images');
-  const previewFormImages = Array.from(formImages || [])
-  console.log(formImages, '\n\n', previewFormImages)
-  
-  const handleDeleteImage = (values: Omit<CreateThreadImageControl, "type">) => {
-    const { e, index } = values;
+  const handleControlImage = (
+    values: CreateThreadImageControl,
+  ) => {
+    const { e, index, type, images, resetField, setValue } = values;
     e.preventDefault();
     
-    if (!formImages) return;
-    if (formImages.length <= 1) {
-      resetField('images');
-    }
+    if (!images || images.length === 0) return;
     
-    const updatedFormImages = Array.from(formImages).filter((_, i) => i !== index);
-    setValue("previewImages", updatedFormImages);
+    if (type === 'add') {
+      const convertedFileList = images
+      .map(file => URL.createObjectURL(file));
+      
+      updateThreadFormMutation.mutate({
+        values: {
+          previewImages: convertedFileList,
+        },
+      });
+      
+    } else if (type === 'delete' && index !== undefined && resetField && setValue) {
+      if (images.length <= 1) {
+        resetField('images');
+        updateThreadFormMutation.mutate({
+          values: {
+            previewImages: [],
+          },
+        });
+      } else {
+        const updatedFormImages = images
+        .filter((_, i) => i !== index);
+        
+        setValue("images", updatedFormImages)
+        
+        updateThreadFormMutation.mutate({
+          values: {
+            previewImages: updatedFormImages
+              .map(file => URL.createObjectURL(file)),
+          },
+        });
+      }
+    }
   };
   
-  return {
-    handleDeleteImage, control, handleSubmit, previewFormImages, errors, isValid, formImages
-  }
-}
+  return { handleControlImage };
+};

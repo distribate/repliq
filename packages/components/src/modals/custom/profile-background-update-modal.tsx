@@ -1,4 +1,3 @@
-import { Button } from '@repo/ui/src/components/button.tsx';
 import { CloudUpload, ImageUp } from 'lucide-react';
 import { Typography } from '@repo/ui/src/components/typography.tsx';
 import { ProfileBackgroundDefaultImagesModal } from './profile-background-default-images-modal.tsx';

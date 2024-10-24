@@ -29,7 +29,7 @@ module.exports = {
 			{
 				protocol: "http",
 				hostname: "127.0.0.1",
-				port: "54321",
+				port: "54341",
 				pathname: '/storage/**'
 			}
 		],
@@ -68,6 +68,9 @@ module.exports = {
 		serverComponentsExternalPackages: [
 			"@node-rs/bcrypt",
 			"@node-rs/argon2"
-		]
+		],
+		serverActions: {
+			bodySizeLimit: '15mb',
+		},
 	}
 };

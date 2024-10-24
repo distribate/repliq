@@ -7,21 +7,36 @@ import { HoverCardItem } from '@repo/ui/src/components/hover-card.tsx';
 import { Typography } from '@repo/ui/src/components/typography.tsx';
 import { LogoutModal } from '../../../../../modals/action-confirmation/components/logout/components/logout-modal.tsx';
 import { UserSettingsModal } from '../../../../../modals/user-settings/user-settings-modal.tsx';
+import { useEffect, useState } from 'react';
+import { checkAdminPermission } from '@repo/lib/actions/check-admin-permission.ts';
 
 const COLLECTION_LINKS = [
-	{
-		name: "Мои темы",
-		query: "threads"
-	},
-	{
-		name: "Мои сообщения",
-		query: "messages"
-	},
-	{
-		name: "Сохранненое",
-		query: "saved"
-	},
+	{ name: "Мои темы", query: "threads" },
+	{ name: "Мои сообщения", query: "messages" },
+	{ name: "Сохранненое",query: "saved" },
 ]
+
+const AdminButton = () => {
+	const [isAdmin, setIsAdmin] = useState<boolean>();
+	
+	useEffect(() => {
+		checkAdminPermission()
+		.then(result => setIsAdmin(result));
+	}, []);
+	
+	if (!isAdmin) return null;
+	
+	return (
+		<>
+			<Link href="/admin">
+				<DropdownMenuItem>
+					К панели админа
+				</DropdownMenuItem>
+			</Link>
+			<Separator/>
+		</>
+	)
+}
 
 export const UserMenu = () => {
 	const qc = useQueryClient()
@@ -50,6 +65,7 @@ export const UserMenu = () => {
 			<Separator/>
 			<UserSettingsModal/>
 			<Separator/>
+			<AdminButton/>
 			<LogoutModal
 				trigger={
 					<HoverCardItem>

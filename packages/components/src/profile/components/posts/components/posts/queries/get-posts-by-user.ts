@@ -66,7 +66,7 @@ export async function getPostsByNickname(
 		const selectedPost = item.posts;
 		
 		const { count, error: postCommentsError } = await supabase
-		.from("posts_comments")
+		.from("posts_comments_ref")
 		.select("post_id", { count: "exact" })
 		.eq("post_id", selectedPost.post_id);
 		

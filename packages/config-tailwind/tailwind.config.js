@@ -18,6 +18,13 @@ module.exports = {
 			current: 'currentColor',
 			inherit: colors.inherit
 		},
+		borderRadius: {
+			none: "0",
+			sm: "16px",
+			md: "24px",
+			lg: "28px",
+			xl: "32px"
+		},
 		extend: {
 			backgroundImage: {
 				'gradient-radial': 'radial-gradient(var(--gradient-color-stops))',

@@ -12,7 +12,8 @@ type ThreadContentProps = {
 
 const initialValue = [
   {
-    type: 'paragraph', children: [ {
+    type: 'paragraph',
+    children: [ {
       text: 'Произошла ошибка при загрузке контента!',
     } ],
   },

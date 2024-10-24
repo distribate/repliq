@@ -18,11 +18,11 @@ export async function getSearchingFriends() {
   ])
   
   if (!users) return null;
-  if (!friends) return users.filter(
+  if (!friends) return users.data.filter(
     u => u.nickname !== currentUser.nickname
   );
   
-  const searchingFriends = users.filter(u =>
+  const searchingFriends = users.data.filter(u =>
     u.nickname !== currentUser.nickname
      && !friends.some(
        friend => friend.nickname === u.nickname

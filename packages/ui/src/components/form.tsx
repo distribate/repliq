@@ -48,7 +48,7 @@ const FormAuthErrorMessage = ({
     <div className="py-0.5 px-2">
 			<ErrorField
         message={errorMessage}
-        variant={type === 'created' ? 'success' : type === 'alreadyServer' ? 'success' : 'error'}
+        variant={type === 'created' ? 'success' : type === 'alreadyOriginal' ? 'success' : 'error'}
       />
     </div>
   )

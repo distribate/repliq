@@ -1,17 +1,18 @@
 import { Typography } from '@repo/ui/src/components/typography.tsx';
 import { Input } from '@repo/ui/src/components/input.tsx';
 import { FormField } from '@repo/ui/src/components/form-field.tsx';
-import { CreateThreadProps } from '../types/create-thread-form-types.ts';
 import { useCreateThread } from '../hooks/use-create-thread.tsx';
 import { Controller } from 'react-hook-form';
+import { useCreateThreadImages } from '../hooks/use-create-thread-images.ts';
+import { FormChildsProps } from './create-thread-form.tsx';
 
 export const FormThreadDescription = ({
-  errors, control
-}: CreateThreadProps) => {
+  control, errors
+}: FormChildsProps) => {
   const { updateThreadFormMutation } = useCreateThread();
   
   return (
-    <FormField errorMessage={errors}>
+    <FormField errorMessage={errors?.description?.message}>
       <div className="flex flex-col">
         <Typography textColor="shark_white" textSize="medium">
           Описание (опционально)
@@ -21,28 +22,25 @@ export const FormThreadDescription = ({
         </Typography>
       </div>
       <Controller
-        name="description"
         control={control}
-        render={({ field: { onChange, ref, value } }) => {
-          return (
-            <Input
-              ref={ref}
-              className="rounded-md"
-              value={value}
-              placeholder="абоба дескрипшн..."
-              status={errors ? 'error' : 'default'}
-              onChange={(e) => {
-                updateThreadFormMutation.mutate({
-                  values: {
-                    description: value,
-                  },
-                });
-                
-                onChange(e);
-              }}
-            />
-          );
-        }}
+        name="description"
+        render={({ field: { onChange, name, ref } }) => (
+          <Input
+            name={name}
+            ref={ref}
+            className="rounded-md"
+            placeholder="абоба дескрипшн..."
+            status={errors ? 'error' : 'default'}
+            onChange={e => {
+              onChange(e)
+              return updateThreadFormMutation.mutate({
+                values: {
+                  description: e.target.value,
+                },
+              });
+            }}
+          />
+        )}
       />
     </FormField>
   );

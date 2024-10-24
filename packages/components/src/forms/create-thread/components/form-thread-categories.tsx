@@ -8,10 +8,12 @@ import { useState } from 'react';
 import { useCreateThread } from '../hooks/use-create-thread.tsx';
 import { threadFormQuery } from '../queries/thread-form-query.ts';
 import { CreateThreadProps } from '../types/create-thread-form-types.ts';
+import { useCreateThreadImages } from '../hooks/use-create-thread-images.ts';
+import { FormChildsProps } from './create-thread-form.tsx';
 
 export const FormThreadCategories = ({
   errors, control,
-}: CreateThreadProps) => {
+}: FormChildsProps) => {
   const [ categoriesEnabled, setCategoriesEnabled ] = useState<boolean>(false);
   const { data: availableCategories } = availableCategoriesQuery({
     enabled: categoriesEnabled,
@@ -21,7 +23,7 @@ export const FormThreadCategories = ({
   const { data: threadFormState } = threadFormQuery();
   
   return (
-    <FormField errorMessage={errors}>
+    <FormField errorMessage={errors?.category?.message}>
       <div className="flex flex-col">
         <Typography textColor="shark_white" textSize="medium">Категория</Typography>
         <Typography className="text-shark-300" textSize="small">
@@ -38,9 +40,11 @@ export const FormThreadCategories = ({
                 if (!categoriesEnabled && open) setCategoriesEnabled(true);
               }}
               onValueChange={(value: string) => {
-                updateThreadFormMutation.mutate({ values: {
-                  category_id: Number(value)
-                } });
+                updateThreadFormMutation.mutate({
+                  values: {
+                    category_id: Number(value),
+                  },
+                });
                 field.onChange(value);
               }}
             >
@@ -51,7 +55,7 @@ export const FormThreadCategories = ({
                   </Typography>
                 ) : (
                   availableCategories?.find(
-                    item => item.id.toString() === threadFormState.values?.category_id,
+                    item => item.id === threadFormState.values?.category_id,
                   )?.title
                 )}
               </SelectTrigger>

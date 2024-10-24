@@ -12,7 +12,7 @@ import ExpActive from '@repo/assets/images/minecraft/exp-active.webp';
 // @ts-ignore
 import ExpNoActive from '@repo/assets/images/minecraft/exp-noactive.webp';
 
-const avatarVariants = cva('relative rounded-md ', {
+const avatarVariants = cva('relative rounded-sm ', {
   variants: {
     variant: {
       default: 'max-w-[68px] max-h-[68px]',
@@ -68,7 +68,7 @@ const Avatar = forwardRef<
         propSrc={avatarUrl!}
         width={propWidth}
         height={propHeight}
-        className="rounded-lg"
+        className="rounded-sm"
         loading="eager"
         propAlt={`user's head`}
       />

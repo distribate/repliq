@@ -16,7 +16,7 @@ export const SidebarTarget = () => {
           {isCompact || !isExpanded ? (
             <div className="flex relative w-[50px] h-[50px]">
               <Button
-                border="default"
+                state="default"
                 className="group gap-2 w-full justify-start"
                 onClick={() => { replace(target.link) }}
               >
@@ -24,14 +24,15 @@ export const SidebarTarget = () => {
               </Button>
               {pathname === target.link && (
                 <div
-                  className="absolute -right-1 bg-gradient-to-br from-biloba-flower-300 to-biloba-flower-500 w-[4px] rounded-3xl h-full" />
+                  className="absolute -right-1 bg-gradient-to-br from-biloba-flower-300 to-biloba-flower-500 w-[4px] rounded-3xl h-full"
+                />
               )}
             </div>
           ) : (
             <div className="flex relative w-full h-12">
               <Button
-                border="default"
-                onClick={() => {replace(target.link);}}
+                state="default"
+                onClick={() => {replace(target.link)}}
                 className="group gap-2 w-full justify-start"
               >
                 <target.icon size={20} className="group-hover:text-pink-500 transition-all ease-in text-shark-300" />
@@ -41,7 +42,8 @@ export const SidebarTarget = () => {
               </Button>
               {pathname === target.link && (
                 <div
-                  className="absolute -right-4 bg-gradient-to-br from-biloba-flower-300 to-biloba-flower-500 w-[4px] rounded-3xl h-full" />
+                  className="absolute -right-4 bg-gradient-to-br from-biloba-flower-300 to-biloba-flower-500 w-[4px] rounded-3xl h-full"
+                />
               )}
             </div>
           )}

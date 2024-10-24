@@ -34,19 +34,5 @@ export const createThreadSchema = z.object({
   auto_remove: z.boolean(),
   comments: z.boolean(),
   images: z
-  .custom<FileList>()
-  .optional()
-  .refine((files) => {
-    return Array.from(files ?? []).every(
-      (file) => sizeInMB(file.size) <= MAX_IMAGE_SIZE,
-    );
-  }, `Максимальный размер изображения - ${MAX_IMAGE_SIZE}MB`)
-  .refine((files) => {
-    return Array.from(files ?? []).every((file) =>
-      ACCEPTED_IMAGE_TYPES.includes(file.type),
-    );
-  }, 'Формат файла не поддерживается.'),
-  previewImages: z
-  .custom<File[]>()
-  .optional(),
+  .custom<File[] | null>()
 });

@@ -1,5 +1,6 @@
 "use server"
 
+import "server-only"
 import { USER } from "@repo/types/entities/entities-type.ts"
 import { createClient } from "../utils/supabase/server.ts";
 
@@ -17,12 +18,12 @@ export async function createUserAdditionalCredentials({
 	if (findout) {
 		const { data, error } = await supabase
 		.from("info_findout")
-		.insert({
-			user_nickname: nickname, findout
-		})
+		.insert({ user_nickname: nickname, findout })
 		.select()
 		
-		if (error) return null;
+		if (error) {
+			return null;
+		}
 		
 		return data;
 	}
@@ -34,10 +35,10 @@ export async function createUserAdditionalCredentials({
 		.eq("nickname", nickname)
 		.select()
 		
-		if (error) return null;
+		if (error) {
+			return null;
+		}
 		
 		return data;
 	}
-	
-	return;
 }

@@ -1,5 +1,6 @@
 "use server"
 
+import "server-only"
 import { cookies } from "next/headers"
 import { permanentRedirect } from "next/navigation"
 import { lucia } from "@repo/lib/utils/auth/lucia-instance.ts";
@@ -20,11 +21,7 @@ type SessionAction = {
 export async function getAuthCredentials(nickname: string) {
 	const supabase = createClient();
 	
-	return supabase
-	.from("AUTH")
-	.select("HASH,NICKNAME")
-	.eq("NICKNAME", nickname)
-	.single();
+	return supabase.from("AUTH").select("HASH,NICKNAME").eq("NICKNAME", nickname).single();
 }
 
 export async function createSessionAction({

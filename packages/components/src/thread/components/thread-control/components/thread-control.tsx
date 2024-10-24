@@ -1,156 +1,83 @@
-'use client';
-
-import { Typography } from '@repo/ui/src/components/typography.tsx';
+import { ThreadControlProps } from '../types/thread-control-types.ts';
+import { Dialog, DialogContent, DialogTrigger } from '@repo/ui/src/components/dialog.tsx';
+import { ThreadControlVisibility } from './thread-control-visibility.tsx';
+import { ThreadControlPermission } from './thread-control-permission.tsx';
+import { ThreadControlAutoHide } from './thread-control-autohide.tsx';
 import { Button } from '@repo/ui/src/components/button.tsx';
-import { ThreadControl as ThreadControlType, useThreadControl } from '../hooks/use-thread-control.ts';
-import { DropdownWrapper } from '../../../../wrappers/dropdown-wrapper.tsx';
-import { HoverCardItem } from '@repo/ui/src/components/hover-card.tsx';
-import { Input } from '@repo/ui/src/components/input';
-import { currentThreadQuery } from '../queries/current-thread-query.ts';
-import { useState } from 'react';
-import {
-  ThreadRemoveModal,
-} from '../../../../modals/action-confirmation/components/thread-remove/components/thread-remove-modal.tsx';
-import { THREAD } from '@repo/types/entities/entities-type.ts';
-import { Separator } from '@repo/ui/src/components/separator.tsx';
-
-type ThreadControlProps = {
-  threadId: Pick<ThreadControlType, 'id'>['id']
-}
-
-const ThreadControlEdit = ({
-  ...currentThread
-}: THREAD) => {
-  const [ titleValue, setTitleValue ] = useState('');
-  const [ descriptionValue, setDescriptionValue ] = useState('');
-  const { updateThreadFieldsMutation } = useThreadControl();
-  
-  if (!currentThread) return;
-  
-  const handleSaveEditedInfo = (
-    type: ThreadControlType['type'],
-  ) => {
-    const value = type === 'title'
-      ? titleValue : type === 'description'
-        ? descriptionValue : null;
-    
-    if (!value) return;
-    
-    updateThreadFieldsMutation.mutate({
-      type: type, id: currentThread.id, title: value,
-    });
-  };
-  
-  const isPendingEdit = updateThreadFieldsMutation.isPending || updateThreadFieldsMutation.isError;
-  
-  return (
-    <div className="flex flex-col gap-y-2">
-      <Typography textSize="small" className="text-shark-300 px-2 pt-2">
-        Редактирование треда
-      </Typography>
-      <div className="flex flex-col gap-y-2 justify-between">
-        <DropdownWrapper
-          properties={{
-            contentAsChild: true, sideAlign: 'left', contentAlign: 'start',
-          }}
-          trigger={
-            <HoverCardItem>
-              Изменить название
-            </HoverCardItem>
-          }
-          content={
-            <div className="flex flex-col gap-y-1 items-start w-full">
-              <Input
-                placeholder={currentThread.title}
-                className="rounded-md"
-                maxLength={64}
-                onChange={(e) => setTitleValue(e.target.value)}
-              />
-              <Button
-                state="default"
-                disabled={isPendingEdit}
-                pending={isPendingEdit}
-                onClick={() => handleSaveEditedInfo('title')}
-              >
-                Сохранить
-              </Button>
-            </div>
-          }
-        />
-        <DropdownWrapper
-          properties={{ contentAsChild: true, sideAlign: 'left', contentAlign: 'start' }}
-          trigger={
-            <HoverCardItem>
-              Изменить описание
-            </HoverCardItem>
-          }
-          content={
-            <div className="flex flex-col gap-y-1 items-start w-full">
-              <Input
-                placeholder={currentThread.description || 'Описание'}
-                className="rounded-md"
-                maxLength={96}
-                onChange={(e) => setDescriptionValue(e.target.value)}
-              />
-              <Button
-                state="default"
-                disabled={isPendingEdit}
-                pending={isPendingEdit}
-                onClick={() => handleSaveEditedInfo('description')}
-              >
-                Сохранить
-              </Button>
-            </div>
-          }
-        />
-        <HoverCardItem>
-          Изменить контент
-        </HoverCardItem>
-        <Separator/>
-        <ThreadRemoveModal id={currentThread.id} />
-      </div>
-    </div>
-  );
-};
+import { ThreadControlMain } from './thread-control-main.tsx';
+import { EyeOff, PencilLine, StickyNote, TimerReset } from 'lucide-react';
+import { Typography } from '@repo/ui/src/components/typography.tsx';
 
 export const ThreadControl = ({
-  threadId,
-}: ThreadControlProps) => {
-  const { data: currentThread } = currentThreadQuery(threadId);
-  const { updateThreadFieldsMutation } = useThreadControl();
-  
-  if (!currentThread) return;
-  
-  const handleToggleThreadComments = () => {
-    updateThreadFieldsMutation.mutate({
-        type: 'comments', id: threadId,
-        comments: !currentThread.comments || false,
-      },
-    );
-  };
-  
+  id: threadId,
+}: Pick<ThreadControlProps, 'id'>) => {
   return (
     <div className="flex flex-col items-center px-4 gap-2 w-full">
-      <DropdownWrapper
-        properties={{ sideAlign: 'left', contentAlign: 'start', contentClassname: "w-[240px]" }}
-        trigger={
-          <Button className="w-full" state="default">
-            Редактировать
-          </Button>
-        }
-        content={<ThreadControlEdit {...currentThread} />}
-      />
-      <Button
-        className="w-full"
-        state="default"
-        pending={updateThreadFieldsMutation.isPending}
-        disabled={updateThreadFieldsMutation.isPending || updateThreadFieldsMutation.isError}
-        onClick={handleToggleThreadComments}
-      >
-        <Typography>
-          {currentThread.comments ? 'Выкл. комментарии' : 'Вкл. комментарии'}
-        </Typography>
-      </Button>
+      <div className="flex items-center gap-2 w-full">
+        <Dialog>
+          <DialogTrigger className="w-full">
+            <Button
+              className="w-full"
+              state="default"
+            >
+              <div className="flex items-center gap-2">
+                <EyeOff size={20} />
+                <Typography>Видимость треда</Typography>
+              </div>
+            </Button>
+          </DialogTrigger>
+          <DialogContent className="p-0 max-w-4xl">
+            <ThreadControlVisibility />
+          </DialogContent>
+        </Dialog>
+        <Dialog>
+          <DialogTrigger className="w-full">
+            <Button
+              className="w-full"
+              state="default"
+            >
+              <div className="flex items-center gap-2">
+                <StickyNote size={20} />
+                <Typography>Права</Typography>
+              </div>
+            </Button>
+          </DialogTrigger>
+          <DialogContent className="p-0 max-w-4xl">
+            <ThreadControlPermission />
+          </DialogContent>
+        </Dialog>
+      </div>
+      <div className="flex items-center gap-2 w-full">
+        <Dialog>
+          <DialogTrigger>
+            <Button
+              className="w-full"
+              state="default"
+            >
+              <div className="flex items-center gap-2">
+                <TimerReset size={20} />
+                <Typography>Авто-удаление</Typography>
+              </div>
+            </Button>
+          </DialogTrigger>
+          <DialogContent className="p-0 max-w-4xl">
+            <ThreadControlAutoHide />
+          </DialogContent>
+        </Dialog>
+        <Dialog>
+          <DialogTrigger className="w-full">
+            <Button className="w-full" state="default">
+              <div className="flex items-center gap-2">
+                <PencilLine size={20} />
+                <Typography>Редактировать</Typography>
+              </div>
+            </Button>
+          </DialogTrigger>
+          <DialogContent className="p-0 max-w-4xl">
+            <ThreadControlMain id={threadId} />
+          </DialogContent>
+        </Dialog>
+      </div>
     </div>
   );
 };

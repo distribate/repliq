@@ -6,13 +6,9 @@ import { updateThreadFields } from '../queries/update-thread-fields.ts';
 import { toast } from '@repo/ui/src/hooks/use-toast.ts';
 import { useRouter } from 'next/navigation';
 import { CURRENT_THREAD_QUERY_KEY } from '../queries/current-thread-query.ts';
+import { revalidatePath } from "next/cache"
 
-export type ThreadControlType = 'comments'
-  | 'permission'
-  | 'content'
-  | 'remove'
-  | 'description'
-  | 'title'
+export type ThreadControlType = 'comments' | 'permission' | 'content' | 'remove' | 'description' | 'title'
 
 export type ThreadControl = Pick<ThreadModel, 'id'> & {
   type: ThreadControlType
@@ -49,6 +45,7 @@ export const useThreadControl = () => {
           });
         case 'title':
           if (!values.title) return;
+          
           return updateThreadFields({
             id: values.id,
             type: 'title',
@@ -56,6 +53,7 @@ export const useThreadControl = () => {
           });
         case 'description':
           if (!values.description) return;
+          
           return updateThreadFields({
             id: values.id,
             type: 'description',
@@ -67,20 +65,21 @@ export const useThreadControl = () => {
       if (!variables) return;
       
       if (!data) {
-        toast({
-          title: 'Произошла ошибка при обновлении информации!', variant: 'negative',
+        return toast({
+          title: 'Произошла ошибка при обновлении', variant: 'negative',
         });
       }
       
-      if (variables.type === 'remove') {
-        replace("/");
-      }
-      
       toast({
-        title: 'Информация обновлена!', variant: 'positive',
+        title: 'Обновлено', variant: 'positive',
       });
       
-      await Promise.all([
+      if (variables.type === 'remove') {
+        replace("/");
+        return revalidatePath("/")
+      }
+      
+      return await Promise.all([
         qc.invalidateQueries({ queryKey: CURRENT_THREAD_QUERY_KEY(variables.id) }),
         qc.invalidateQueries({ queryKey: THREAD_RATING_QUERY_KEY(variables.id) })
       ])

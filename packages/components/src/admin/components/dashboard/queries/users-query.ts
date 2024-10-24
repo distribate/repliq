@@ -1,11 +1,14 @@
-import { useQuery } from '@tanstack/react-query';
-import { getUsers } from './get-users.ts';
+import { keepPreviousData, useQuery } from '@tanstack/react-query';
+import { GetUsers, getUsers } from './get-users.ts';
 
 export const ADMIN_USERS_QUERY_KEY = ["admin", "users"]
 
-export const usersQuery = () => useQuery({
+type UsersQuery = GetUsers
+
+export const usersQuery = (filters: UsersQuery) => useQuery({
   queryKey: ADMIN_USERS_QUERY_KEY,
-  queryFn: () => getUsers(),
+  queryFn: () => getUsers(filters),
   refetchOnWindowFocus: false,
-  retry: 2
+  placeholderData: keepPreviousData,
+  retry: 1
 })

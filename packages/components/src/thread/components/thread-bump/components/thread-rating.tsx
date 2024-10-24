@@ -25,11 +25,11 @@ export const ThreadRating = ({
   );
   
   const sumRating = threadRating.decrement + threadRating.increment;
-
+  
   return (
     <div className="flex flex-col items-center w-fit gap-1">
       <div
-        className="flex items-center rounded-md border-shark-700 border bg-shark-900/60 overflow-hidden">
+        className="flex items-center rounded-[8px] bg-shark-900/60 overflow-hidden">
         <ThreadRatingActionItem
           currentRatingType={threadRating.currentType}
           threadId={threadId}
@@ -45,10 +45,10 @@ export const ThreadRating = ({
           icon={Minus}
         />
       </div>
-      <div className="h-[4px] overflow-hidden w-full rounded-md">
+      <div className="h-[4px] overflow-hidden w-full rounded-[8px]">
         <Progress
           value={percentRating}
-          className={sumRating > 0 ? 'bg-shark-900 *:bg-shark-300' : ''}
+          className={sumRating > 0 ? 'bg-shark-800 *:bg-shark-300' : 'bg-shark-800 '}
         />
       </div>
     </div>

@@ -30,7 +30,10 @@ export async function postThreadCategory({
   .select('thread_id')
   .single();
   
-  if (error) throw new Error(error.message);
+  if (error) {
+    console.error(error.message)
+    throw new Error(error.message);
+  }
   
   return data;
 }
@@ -47,7 +50,10 @@ export async function postThreadNickname({
   .select('thread_id')
   .single();
   
-  if (error) throw new Error(error.message);
+  if (error) {
+    console.error(error.message)
+    throw new Error(error.message);
+  }
   
   return data;
 }
@@ -80,6 +86,8 @@ async function postThreadTags({
 }: Pick<PostThreadProperties, 'thread_id' | 'tags'>) {
   const { tags, thread_id } = values;
   
+  if (!tags) return;
+  
   const { data, error } = await supabase
   .from('threads_tags')
   .insert({
@@ -88,7 +96,10 @@ async function postThreadTags({
   .select('id')
   .single();
   
-  if (error) throw new Error(error.message);
+  if (error) {
+    console.error(error.message)
+    throw new Error(error.message);
+  }
   
   return data;
 }

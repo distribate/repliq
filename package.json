@@ -2,7 +2,7 @@
   "private": true,
   "scripts": {
     "build": "turbo build",
-    "dev": "turbo dev --filter=skin-proxy --filter=database --filter=web",
+    "dev": "turbo dev --filter=skin-proxy --filter=web",
     "start": "yarn workspace web run start",
     "db-status": "yarn workspace database run status",
     "db-dump-schema": "yarn workspace database run dump-schema",

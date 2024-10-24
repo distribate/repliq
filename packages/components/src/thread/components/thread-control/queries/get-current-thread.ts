@@ -12,7 +12,7 @@ export async function getCurrentThread({
   
   const { data, error } = await supabase
   .from('threads')
-  .select('title, description, comments, permission')
+  .select('id, title, description, comments, permission')
   .eq('id', threadId)
   .returns<THREAD[]>()
   

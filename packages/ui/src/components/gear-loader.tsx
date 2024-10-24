@@ -8,7 +8,7 @@ type GearLoaderProps = Partial<{
 }>
 
 export const GearLoader = ({
-	height = 40, width = 40
+	height = 36, width = 36
 }: GearLoaderProps) => {
 	return (
 		<div className={`w-[${width}px] h-[${height}px]`}>

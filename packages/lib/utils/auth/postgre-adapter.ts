@@ -1,7 +1,7 @@
 import { PostgresJsAdapter } from "@lucia-auth/adapter-postgresql";
 import postgres from "postgres";
 
-const connectionString = "postgresql://postgres:postgres@127.0.0.1:54322/postgres"
+const connectionString = "postgresql://postgres:postgres@127.0.0.1:54342/postgres"
 const usersTable = "users"
 const usersSessionTable = "users_session"
 

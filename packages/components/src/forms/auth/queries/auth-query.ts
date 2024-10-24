@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { AuthMessages } from "../types/error-message-type.ts";
 
-type AuthType = "signin" | "signup";
+type AuthType = "sign-in" | "sign-up";
 
 export type AuthQuery = {
 	type?: AuthType,

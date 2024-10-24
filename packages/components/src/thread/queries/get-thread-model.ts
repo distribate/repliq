@@ -1,5 +1,6 @@
 'use server';
 
+import "server-only"
 import { THREAD, USER } from '@repo/types/entities/entities-type.ts';
 import { getThreadRating, ThreadRatingResponse } from './get-thread-rating.ts';
 import { getThreadImagesCount } from './get-thread-images.ts';

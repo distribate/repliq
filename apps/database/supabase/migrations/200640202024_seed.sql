@@ -125,8 +125,11 @@ INSERT INTO "public"."AUTH" ("NICKNAME", "LOWERCASENICKNAME", "HASH", "IP", "TOT
 	('pureawake', 'pureawake', '$2a$10$w9TxhJ2oNDrYGEsHoHLyOuFSt7c5v2HnvB6jlWGQbxByMNUEfqsCS', '', '', 1718971371558, 'a6570be9-f25f-3767-bd09-6588cac34cdb', '', '127.0.0.1', 1719011751146, 1718971371658),
 	('discludness', 'discludness', '$2a$10$UZvSj3o43iIom/pD3Za.5uJ22tJQ53Yp/jWj6Mh1P9Hlsb2Kix.YW', '', '', 1719011985850, '5744cd36-94bd-3e2f-9c97-aa564b146417', '', '127.0.0.1', 1719011985963, 1719011985950),
 	('george_wastaken', 'george_wastaken', '$2a$10$kLoqV7OroOPD40IXYWr0V.XiY4goBk/w4zvk1Eork3.KGRSE2LGNa', '', '', 1719656230968, '71fe71d1-0161-32cd-8b57-a76486d69aee', '', '127.0.0.1', 1719656231085, 1719656231070),
-	('mongoose', 'mongoose', '$2a$10$4.jDKk1rZUDKBuxS8B.ajeXaQzxx0Tq.baiRHAjL7is1O9CTCZywK', '', '', 1719656421413, '0e303495-341d-3999-bd9b-2245f39cc0e6', '', '127.0.0.1', 1719656421507, 1719656421498),
-	('Ded____Inside', 'ded____inside', '$2a$10$yDHRmU8Ro2hv5yGmeXEBH.r7JMP23KAvvl01kmdKc9DkvLC.tRONu', '127.0.0.1', '', 1720034051747, 'e9a7380d-c788-3da9-99ef-f896405d4135', '', '127.0.0.1', 1720034051848, 1720034051835);
+	('Ded____Inside', 'ded____inside', '$2a$10$yDHRmU8Ro2hv5yGmeXEBH.r7JMP23KAvvl01kmdKc9DkvLC.tRONu', '', '', 1720034051747, 'e9a7380d-c788-3da9-99ef-f896405d4135', '', '127.0.0.1', 1720034051848, 1720034051835),
+	('kendrick', 'kendrick', '$2a$10$NmsKxbUOI2dk2KgU4mIbqOn7SBCXk31BdVZseuYpXjXUTIp9F30rS', '', '', 1724859627495, 'a0799d91-0bb2-33d1-8115-792747b934c8', '', '127.0.0.1', 1724859627631, 1724859627592),
+	('borbuse', 'borbuse', '$2a$10$vxApHUdFZ9aAk33YpeEpieVDwn/5a2sTxSFICnkD0AE0pIuGBjuKi', '', '', 1724859772261, '45d682c0-526e-3a95-8fb2-ec2e9c16ab90', '', '127.0.0.1', 1724859772381, 1724859772337),
+	('ferngazer', 'ferngazer', '$2a$10$.b7LoMk0R.W1UWHNVDMyku5KmONDiAHn5SYR2kw.0q0rDtla2rl5S', '', '', 1724859835068, '40a5257a-9ed8-31b8-9239-5f316881aafa', '', '127.0.0.1', 1724859835176, 1724859835136),
+	('distribate', 'distribate', '$2a$10$ODh1Xd35xIypPiss/URPxOfnaC2wkRN3gB9yp5uwx0vy89bKwBqdG', '127.0.0.1', '', 1729013782548, 'c1686a0f-5f76-3694-84d7-c40ba8bf8174', '', '127.0.0.1', 1729013782702, 1729013782648);
 
 
 --
@@ -160,9 +163,13 @@ INSERT INTO "public"."config_minecraft_items" ("id", "image", "title") VALUES
 --
 
 INSERT INTO "public"."users" ("acceptrules", "birthday", "cover_image", "created_at", "description", "id", "name_color", "nickname", "preferences", "real_name", "status", "uuid", "visibility", "favorite_item") VALUES
-	(true, NULL, 'default/snow-mountain.jpg', '2024-06-22 18:29:11.063752+00', 'Я полежу и встану Для начала, хотя бы на колени', 'c2e8de6f-a450-4ca0-ba50-828bedb053ba', '#ffffff', 'discludness', '{"coverOutline": "false", "friendRequest": "true", "realNameVisibility": "true", "gameStatsVisibility": "true"}', 'Мария', NULL, '5744cd36-94bd-3e2f-9c97-aa564b146417', 'friends', NULL),
-	(true, NULL, 'default/adventure-in-end.jpg', '2024-06-22 21:07:32.429882+00', 'My Flaws Burn Through My Skin Like Demonic Flames from Hell', 'd905f002-1370-44c6-bef3-885063b5332f', '#9EE5DE', 'pureawake', '{"coverOutline": "false", "friendRequest": "true", "realNameVisibility": "true", "gameStatsVisibility": "true"}', 'Руся', NULL, 'a6570be9-f25f-3767-bd09-6588cac34cdb', 'friends', 4),
-	(true, NULL, 'cover/c2508ed9-c992-4eb3-98a6-e149d01c4b2aNw3WWi_TCb2WSdhuV5pzF', '2024-08-25 23:10:56.949548+00', 'Привет', 'c2508ed9-c992-4eb3-98a6-e149d01c4b2a', '#ffffff', 'george_wastaken', '{"coverOutline": "false", "friendRequest": "true", "realNameVisibility": "true", "gameStatsVisibility": "true"}', 'Владислав', NULL, '71fe71d1-0161-32cd-8b57-a76486d69aee', 'all', NULL);
+	(true, NULL, 'default/bees.jpg', '2024-10-15 17:37:04.629915+00', NULL, 'ffbc7e08-1838-4d80-8931-713168de7c20', '#9AF9DC', 'distribate', '{"coverOutline": "true", "friendRequest": "false", "realNameVisibility": "true", "gameStatsVisibility": "false"}', 'Руся', NULL, 'c1686a0f-5f76-3694-84d7-c40ba8bf8174', 'all', 10),
+	(true, NULL, 'cover/c2e8de6f-a450-4ca0-ba50-828bedb053bal4NAWYsBowZ5s6HwUnGFq', '2024-06-22 18:29:11.063752+00', 'Я полежу и встану Для начала, хотя бы на колени', 'c2e8de6f-a450-4ca0-ba50-828bedb053ba', '#ffffff', 'discludness', '{"coverOutline": "false", "friendRequest": "true", "realNameVisibility": "true", "gameStatsVisibility": "true"}', 'Мария', NULL, '5744cd36-94bd-3e2f-9c97-aa564b146417', 'friends', NULL),
+	(true, NULL, 'default/adventure-in-end.jpg', '2024-06-22 21:07:32.429882+00', 'My Flaws Burn Through My Skin Like Demonic Flames from Hell', 'd905f002-1370-44c6-bef3-885063b5332f', '#F2DEF2', 'pureawake', '{"coverOutline": "false", "friendRequest": "true", "realNameVisibility": "true", "gameStatsVisibility": "true"}', 'Руся', NULL, 'a6570be9-f25f-3767-bd09-6588cac34cdb', 'friends', 6),
+	(true, NULL, 'cover/c2508ed9-c992-4eb3-98a6-e149d01c4b2aNw3WWi_TCb2WSdhuV5pzF', '2024-08-25 23:10:56.949548+00', 'Привет', 'c2508ed9-c992-4eb3-98a6-e149d01c4b2a', '#ffffff', 'george_wastaken', '{"coverOutline": "false", "friendRequest": "true", "realNameVisibility": "true", "gameStatsVisibility": "true"}', 'Владислав', NULL, '71fe71d1-0161-32cd-8b57-a76486d69aee', 'all', NULL),
+	(true, NULL, NULL, '2024-08-28 15:46:21.066781+00', NULL, '45d2de08-a28a-482f-9c0a-3d0ef166aa8f', '#ffffff', 'ferngazer', '{"coverOutline": "false", "friendRequest": "true", "realNameVisibility": "true", "gameStatsVisibility": "true"}', NULL, NULL, '40a5257a-9ed8-31b8-9239-5f316881aafa', 'all', NULL),
+	(true, NULL, 'default/render-warden-hide.jpg', '2024-08-28 15:47:23.653119+00', 'шмебьюлок', 'e0e2fb96-9de7-430b-80df-59398a20b95d', '#ffffff', 'kendrick', '{"coverOutline": "false", "friendRequest": "true", "realNameVisibility": "true", "gameStatsVisibility": "true"}', NULL, NULL, 'a0799d91-0bb2-33d1-8115-792747b934c8', 'all', NULL),
+	(true, NULL, 'default/sand-camel.jpg', '2024-08-28 15:44:43.14115+00', NULL, '73c4acab-b1ab-430b-bc42-d6da78ab1092', '#ffffff', 'borbuse', '{"coverOutline": "false", "friendRequest": "true", "realNameVisibility": "true", "gameStatsVisibility": "true"}', NULL, NULL, '45d682c0-526e-3a95-8fb2-ec2e9c16ab90', 'all', NULL);
 
 
 --
@@ -189,7 +196,11 @@ INSERT INTO "public"."category" ("available", "description", "id", "title") VALU
 
 INSERT INTO "public"."threads" ("id", "title", "created_at", "updated_at", "visibility", "description", "comments", "auto_remove", "content", "permission") VALUES
 	('d0a25fc4-a7d6-4e47-89d4-538cadecf2c9', 'Абоба тайтл (без фото) ', '2024-08-25 13:06:23.662697+00', NULL, 'all', 'Абоба дескрипш', true, false, '[{"type": "paragraph", "children": [{"text": "Абоба контент, "}, {"bold": true, "text": "контентище"}, {"text": ", контент навален успешно"}]}]', false),
-	('b558eb07-d050-462b-8249-b5d34ddb1b9e', 'Абоба тайтл ( фото)', '2024-08-25 13:11:20.921499+00', NULL, 'all', 'Абоба дескрипшн', true, false, '[{"type": "paragraph", "children": [{"text": "Абоба контент, "}, {"bold": true, "text": "контентище"}, {"text": ", навален контент успешно (с "}, {"text": "кошками", "italic": true}, {"text": ")"}]}]', false);
+	('b558eb07-d050-462b-8249-b5d34ddb1b9e', 'Абоба тайтл ( фото)', '2024-08-25 13:11:20.921499+00', NULL, 'all', 'Абоба дескрипшн', true, false, '[{"type": "paragraph", "children": [{"text": "Абоба контент, "}, {"bold": true, "text": "контентище"}, {"text": ", навален контент успешно (с "}, {"text": "кошками", "italic": true}, {"text": ")"}]}]', false),
+	('f0a49e6e-ae3c-4934-a217-5c0dafada849', '123123123123', '2024-09-14 15:52:08.703896+00', NULL, 'all', '123123123123', true, false, '[{"type": "paragraph", "children": [{"text": "jkjkljkljkljkljkljkljklkjljkljkljklkljjkljkl"}]}]', false),
+	('ea82edea-b220-4a93-8712-db27ae168bb9', 'fghfghghfgfhfgh', '2024-09-14 15:50:36.414145+00', NULL, 'all', 'hgffghgfhfghfgh', true, false, '[{"type": "paragraph", "children": [{"text": ";'''';;'';'';'';''hjfghfghfghfghfghhfgfghyuihjkhjk"}]}]', false),
+	('18896a50-3e1a-43d8-b415-446b757ee97f', 'привет тест название для треда', '2024-10-15 18:15:27.453828+00', NULL, 'all', '', false, false, '[{"type": "paragraph", "children": [{"bold": true, "text": "прррр"}, {"text": "пиетфывфывыфвфывфывф"}, {"bold": true, "text": "ывфывфывфывфывфывфыв"}]}]', false),
+	('1a19b4c2-7d58-40f7-a372-9b220fcf5e78', 'sadasdasdasdasdasdasdasdasdasdasd', '2024-10-15 18:04:45.446144+00', NULL, 'all', '', true, false, '[{"type": "paragraph", "children": [{"text": "asdasdasdasdasdasdadsasdasdsdadasasd"}]}]', false);
 
 
 --
@@ -198,7 +209,11 @@ INSERT INTO "public"."threads" ("id", "title", "created_at", "updated_at", "visi
 
 INSERT INTO "public"."category_threads" ("category_id", "thread_id") VALUES
 	(1, 'd0a25fc4-a7d6-4e47-89d4-538cadecf2c9'),
-	(4, 'b558eb07-d050-462b-8249-b5d34ddb1b9e');
+	(4, 'b558eb07-d050-462b-8249-b5d34ddb1b9e'),
+	(3, 'ea82edea-b220-4a93-8712-db27ae168bb9'),
+	(5, 'f0a49e6e-ae3c-4934-a217-5c0dafada849'),
+	(2, '1a19b4c2-7d58-40f7-a372-9b220fcf5e78'),
+	(3, '18896a50-3e1a-43d8-b415-446b757ee97f');
 
 
 --
@@ -323,8 +338,11 @@ INSERT INTO "public"."config_minecraft_facts" ("fact", "id") VALUES
 --
 
 INSERT INTO "public"."users_friends" ("id", "user_1", "user_2", "created_at") VALUES
-	('8ddb2acd-bbcb-47ab-bfaa-fe2eee51c437', 'pureawake', 'discludness', '2024-08-27 17:07:08.533304+00'),
-	('a114adab-67a5-4612-9de6-af8b47be63c0', 'george_wastaken', 'pureawake', '2024-08-27 19:17:47.893468+00');
+	('746a482d-989f-4165-93f3-2132b47caf6d', 'pureawake', 'george_wastaken', '2024-08-28 14:36:28.529934+00'),
+	('b94dbf6b-1347-43eb-9543-95912bbb5643', 'discludness', 'pureawake', '2024-08-28 14:36:38.228442+00'),
+	('21c69ada-24f9-4245-9ccd-b7430db18f5a', 'kendrick', 'pureawake', '2024-08-28 17:17:25.618714+00'),
+	('498c6997-6165-48bd-b1d0-94bd55d3509b', 'kendrick', 'borbuse', '2024-08-28 17:20:42.654173+00'),
+	('3f65586c-e15a-4577-acb2-e26ee7af7f97', 'kendrick', 'discludness', '2024-09-04 21:20:55.97048+00');
 
 
 --
@@ -337,12 +355,17 @@ INSERT INTO "public"."users_friends" ("id", "user_1", "user_2", "created_at") VA
 -- Data for Name: friends_pinned; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
+INSERT INTO "public"."friends_pinned" ("id", "created_at", "initiator", "recipient", "friend_id") VALUES
+	('b499b798-ca64-426e-8ccd-f051dd2638ab', '2024-09-10 22:18:36.384216+00', 'discludness', 'pureawake', 'b94dbf6b-1347-43eb-9543-95912bbb5643');
 
 
 --
 -- Data for Name: friends_requests; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
+INSERT INTO "public"."friends_requests" ("created_at", "initiator", "recipient", "id") VALUES
+	('2024-08-28 17:16:59.76032+00', 'kendrick', 'ferngazer', '04994e24-6ed0-47e7-b588-2184167bdcde'),
+	('2024-08-28 17:17:52.719319+00', 'kendrick', 'george_wastaken', '039332c3-8e99-4548-93dd-cfac011a7c9b');
 
 
 --
@@ -352,10 +375,10 @@ INSERT INTO "public"."users_friends" ("id", "user_1", "user_2", "created_at") VA
 INSERT INTO "public"."info_findout" ("id", "findout", "user_nickname") VALUES
 	(1, 'от абобы', 'Ded____Inside'),
 	(2, 'телеграм', 'george_wastaken'),
-	(3, 'телеграм', 'george_wastaken'),
-	(4, 'телеграм', 'george_wastaken'),
-	(5, 'телеграм', 'george_wastaken'),
-	(6, 'телеграм', 'george_wastaken');
+	(7, 'от абобы', 'borbuse'),
+	(8, 'от абобы', 'ferngazer'),
+	(9, 'от абобы', 'kendrick'),
+	(10, 'я владелец', 'distribate');
 
 
 --
@@ -735,7 +758,10 @@ INSERT INTO "public"."luckperms_players" ("uuid", "username", "primary_group") V
 	('b29a1654-898e-3eee-8063-3fbbbdf39df8', 'ezraika', 'default'),
 	('d8263562-2eb8-3d4e-8b3e-7f2198b41bae', 'kyddiekafka', 'default'),
 	('a6570be9-f25f-3767-bd09-6588cac34cdb', 'pureawake', 'arkhont'),
-	('71fe71d1-0161-32cd-8b57-a76486d69aee', 'george_wastaken', 'default');
+	('71fe71d1-0161-32cd-8b57-a76486d69aee', 'george_wastaken', 'default'),
+	('0e303495-341d-3999-bd9b-2245f39cc0e6', 'mongoose', 'default'),
+	('45d682c0-526e-3a95-8fb2-ec2e9c16ab90', 'borbuse', 'default'),
+	('c1686a0f-5f76-3694-84d7-c40ba8bf8174', 'distribate', 'authentic');
 
 
 --
@@ -946,7 +972,10 @@ INSERT INTO "public"."status" ("user_id", "value") VALUES
 INSERT INTO "public"."t_comments" ("content", "created_at", "user_nickname", "id") VALUES
 	('а когда фото?', '2024-08-25 13:23:02.703634+00', 'pureawake', 2),
 	('скоро', '2024-08-25 13:23:07.409214+00', 'pureawake', 3),
-	('ооо спс', '2024-08-25 13:23:19.080311+00', 'pureawake', 4);
+	('ооо спс', '2024-08-25 13:23:19.080311+00', 'pureawake', 4),
+	('XZsaXZsaXZsaXZsaXZsaXZsaXZsaXZsaXZsaXZsaXZsaXZsaXZsaXZsaXZsaXZsaXZsaXZsaXZsaXZsaXZsaXZsaXZsaXZsaXZsaXZsaXZsaXZsaXZsaXZsaXZsaXZsa', '2024-09-04 16:34:29.459349+00', 'pureawake', 5),
+	('sddsfasd
+', '2024-09-04 17:39:49.147801+00', 'pureawake', 6);
 
 
 --
@@ -954,7 +983,8 @@ INSERT INTO "public"."t_comments" ("content", "created_at", "user_nickname", "id
 --
 
 INSERT INTO "public"."t_comments_replies" ("created_at", "id", "initiator_comment_id", "recipient_comment_id") VALUES
-	('2024-08-25 13:23:07.482687+00', 1, 3, 2);
+	('2024-08-25 13:23:07.482687+00', 1, 3, 2),
+	('2024-09-04 17:39:49.217042+00', 2, 6, 5);
 
 
 --
@@ -964,7 +994,9 @@ INSERT INTO "public"."t_comments_replies" ("created_at", "id", "initiator_commen
 INSERT INTO "public"."threads_comments" ("id", "thread_id", "comment_id") VALUES
 	(1, 'd0a25fc4-a7d6-4e47-89d4-538cadecf2c9', 2),
 	(2, 'd0a25fc4-a7d6-4e47-89d4-538cadecf2c9', 3),
-	(3, 'b558eb07-d050-462b-8249-b5d34ddb1b9e', 4);
+	(3, 'b558eb07-d050-462b-8249-b5d34ddb1b9e', 4),
+	(4, 'b558eb07-d050-462b-8249-b5d34ddb1b9e', 5),
+	(5, 'b558eb07-d050-462b-8249-b5d34ddb1b9e', 6);
 
 
 --
@@ -972,7 +1004,9 @@ INSERT INTO "public"."threads_comments" ("id", "thread_id", "comment_id") VALUES
 --
 
 INSERT INTO "public"."threads_images" ("id", "images", "thread_id") VALUES
-	(1, '{b558eb07-d050-462b-8249-b5d34ddb1b9e-image-0,b558eb07-d050-462b-8249-b5d34ddb1b9e-image-1}', 'b558eb07-d050-462b-8249-b5d34ddb1b9e');
+	(1, '{b558eb07-d050-462b-8249-b5d34ddb1b9e-image-0,b558eb07-d050-462b-8249-b5d34ddb1b9e-image-1}', 'b558eb07-d050-462b-8249-b5d34ddb1b9e'),
+	(2, '{ea82edea-b220-4a93-8712-db27ae168bb9-image-0}', 'ea82edea-b220-4a93-8712-db27ae168bb9'),
+	(3, '{f0a49e6e-ae3c-4934-a217-5c0dafada849-image-0,f0a49e6e-ae3c-4934-a217-5c0dafada849-image-1}', 'f0a49e6e-ae3c-4934-a217-5c0dafada849');
 
 
 --
@@ -986,10 +1020,11 @@ INSERT INTO "public"."threads_images" ("id", "images", "thread_id") VALUES
 --
 
 INSERT INTO "public"."threads_rating" ("id", "type", "thread_id", "user_id") VALUES
-	(4, 'increment', 'b558eb07-d050-462b-8249-b5d34ddb1b9e', 'd905f002-1370-44c6-bef3-885063b5332f'),
-	(6, 'decrement', 'd0a25fc4-a7d6-4e47-89d4-538cadecf2c9', 'c2e8de6f-a450-4ca0-ba50-828bedb053ba'),
-	(7, 'increment', 'b558eb07-d050-462b-8249-b5d34ddb1b9e', 'c2e8de6f-a450-4ca0-ba50-828bedb053ba'),
-	(9, 'decrement', 'd0a25fc4-a7d6-4e47-89d4-538cadecf2c9', 'd905f002-1370-44c6-bef3-885063b5332f');
+	(12, 'increment', 'b558eb07-d050-462b-8249-b5d34ddb1b9e', '73c4acab-b1ab-430b-bc42-d6da78ab1092'),
+	(86, 'increment', 'b558eb07-d050-462b-8249-b5d34ddb1b9e', 'c2e8de6f-a450-4ca0-ba50-828bedb053ba'),
+	(90, 'decrement', 'd0a25fc4-a7d6-4e47-89d4-538cadecf2c9', 'c2e8de6f-a450-4ca0-ba50-828bedb053ba'),
+	(98, 'decrement', 'b558eb07-d050-462b-8249-b5d34ddb1b9e', 'd905f002-1370-44c6-bef3-885063b5332f'),
+	(100, 'increment', 'd0a25fc4-a7d6-4e47-89d4-538cadecf2c9', 'd905f002-1370-44c6-bef3-885063b5332f');
 
 
 --
@@ -1004,7 +1039,9 @@ INSERT INTO "public"."threads_rating" ("id", "type", "thread_id", "user_id") VAL
 
 INSERT INTO "public"."threads_tags" ("id", "tags", "thread_id") VALUES
 	(2, '{"\"абоба\"","\"тред\"","\"контентище\"","\"без фото\""}', 'd0a25fc4-a7d6-4e47-89d4-538cadecf2c9'),
-	(6, '{"\"тред\"","\"абоба\"","\"кошки\"","\"контентище\"","\"с фото\""}', 'b558eb07-d050-462b-8249-b5d34ddb1b9e');
+	(6, '{"\"тред\"","\"абоба\"","\"кошки\"","\"контентище\"","\"с фото\""}', 'b558eb07-d050-462b-8249-b5d34ddb1b9e'),
+	(7, '{"\"\""}', 'ea82edea-b220-4a93-8712-db27ae168bb9'),
+	(8, '{"\"\""}', 'f0a49e6e-ae3c-4934-a217-5c0dafada849');
 
 
 --
@@ -1013,13 +1050,19 @@ INSERT INTO "public"."threads_tags" ("id", "tags", "thread_id") VALUES
 
 INSERT INTO "public"."threads_users" ("thread_id", "user_nickname") VALUES
 	('d0a25fc4-a7d6-4e47-89d4-538cadecf2c9', 'pureawake'),
-	('b558eb07-d050-462b-8249-b5d34ddb1b9e', 'pureawake');
+	('b558eb07-d050-462b-8249-b5d34ddb1b9e', 'pureawake'),
+	('ea82edea-b220-4a93-8712-db27ae168bb9', 'pureawake'),
+	('f0a49e6e-ae3c-4934-a217-5c0dafada849', 'pureawake'),
+	('1a19b4c2-7d58-40f7-a372-9b220fcf5e78', 'distribate'),
+	('18896a50-3e1a-43d8-b415-446b757ee97f', 'distribate');
 
 
 --
 -- Data for Name: users_banned; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
+INSERT INTO "public"."users_banned" ("id", "nickname", "reason", "time", "created_at") VALUES
+	(1, 'kendrick', 'лох', '2024-09-04 22:36:41+00', '2024-09-03 22:36:49.933635+00');
 
 
 --
@@ -1040,7 +1083,21 @@ INSERT INTO "public"."users_requests_timeout" ("id", "issued_at", "type", "user_
 	(6, '2024-08-25 22:08:31', 'favorite_item', 'pureawake', '2024-08-25 22:03:31.338357'),
 	(7, '2024-08-25 23:19:45', 'real_name', 'george_wastaken', '2024-08-25 23:14:45.267583'),
 	(8, '2024-08-25 23:19:54', 'description', 'george_wastaken', '2024-08-25 23:14:54.763592'),
-	(9, '2024-08-26 15:05:28', 'name_color', 'pureawake', '2024-08-26 15:00:28.349093');
+	(9, '2024-08-26 15:05:28', 'name_color', 'pureawake', '2024-08-26 15:00:28.349093'),
+	(10, '2024-08-28 17:24:35', 'description', 'kendrick', '2024-08-28 17:19:35.999292'),
+	(11, '2024-09-03 13:10:18', 'favorite_item', 'pureawake', '2024-09-03 13:05:18.104704'),
+	(12, '2024-09-03 21:24:59', 'name_color', 'pureawake', '2024-09-03 21:19:59.068943'),
+	(13, '2024-09-04 14:55:28', 'name_color', 'pureawake', '2024-09-04 14:50:28.480882'),
+	(14, '2024-09-04 21:24:11', 'favorite_item', 'pureawake', '2024-09-04 21:19:11.183587'),
+	(15, '2024-10-15 17:44:43', 'name_color', 'distribate', '2024-10-15 17:39:43.956134'),
+	(16, '2024-10-15 17:44:50', 'favorite_item', 'distribate', '2024-10-15 17:39:50.780924'),
+	(17, '2024-10-15 17:44:56', 'real_name', 'distribate', '2024-10-15 17:39:56.536793');
+
+
+--
+-- Data for Name: users_saved_threads; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
 
 
 --
@@ -1056,10 +1113,13 @@ INSERT INTO "public"."users_security" ("email", "token", "user_nickname") VALUES
 --
 
 INSERT INTO "public"."users_session" ("id", "expires_at", "user_id", "browser", "cpu", "ip", "isBot", "os", "ua") VALUES
-	('l4cst67ckgdpi6lkohyuxrybczflbyfbzmc6yui2', '2024-09-08 23:15:04.315+00', 'd905f002-1370-44c6-bef3-885063b5332f', 'Chrome', 'amd64', NULL, false, 'Windows10', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36'),
-	('iqpzfawf7s5vuall2u6halfod7wm5ykxo4bfjm4j', '2024-09-09 20:47:07.001+00', 'c2508ed9-c992-4eb3-98a6-e149d01c4b2a', 'Firefox', 'amd64', NULL, false, 'Windows10', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:129.0) Gecko/20100101 Firefox/129.0'),
+	('shfyorcivdcjtcfynbfutjasbayhuzqmz3xrfcbs', '2024-09-22 17:53:24.226+00', 'c2508ed9-c992-4eb3-98a6-e149d01c4b2a', 'Firefox', 'amd64', NULL, false, 'Windows10', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:129.0) Gecko/20100101 Firefox/129.0'),
 	('wduqs5xixckrxm7ifdof4suqplu6lzzrnxn5qem4', '2024-09-10 10:30:14.51+00', 'c2e8de6f-a450-4ca0-ba50-828bedb053ba', 'Chrome', 'amd64', NULL, false, 'Windows10', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36'),
-	('g6scadwuww2os2eat4du4dh3k6zk54rsopeiqcjy', '2024-09-10 14:15:28.106+00', 'c2e8de6f-a450-4ca0-ba50-828bedb053ba', 'Chrome', 'amd64', NULL, false, 'Windows10', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36');
+	('g6scadwuww2os2eat4du4dh3k6zk54rsopeiqcjy', '2024-09-10 14:15:28.106+00', 'c2e8de6f-a450-4ca0-ba50-828bedb053ba', 'Chrome', 'amd64', NULL, false, 'Windows10', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36'),
+	('mf4jzvcs2bhym7fjpkpgrm2y5bh4hbhlyddcrjpj', '2024-09-11 00:27:19.803+00', 'c2508ed9-c992-4eb3-98a6-e149d01c4b2a', 'Chrome', 'amd64', NULL, false, 'Windows10', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36'),
+	('xbu7fdjysvop5kcnnxd3dugxmsyjt5dckdq2odei', '2024-09-24 22:20:49.384+00', 'd905f002-1370-44c6-bef3-885063b5332f', 'Chrome', 'amd64', NULL, false, 'Windows10', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36'),
+	('ethbbwfuo5v3mlayfskiksbhw4z6r57hcgz4fadd', '2024-09-28 12:42:08.33+00', 'd905f002-1370-44c6-bef3-885063b5332f', 'Chrome', 'amd64', NULL, false, 'Windows10', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36'),
+	('kww44ungl2tswwtyaxdxwurl6w7o6rklcwzbnuyr', '2024-10-29 17:37:12.412+00', 'ffbc7e08-1838-4d80-8931-713168de7c20', 'Firefox', 'amd64', NULL, false, 'Windows10', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:130.0) Gecko/20100101 Firefox/130.0');
 
 
 --
@@ -1085,7 +1145,13 @@ INSERT INTO "storage"."buckets" ("id", "name", "owner", "created_at", "updated_a
 INSERT INTO "storage"."objects" ("id", "bucket_id", "name", "owner", "created_at", "updated_at", "last_accessed_at", "metadata", "version", "owner_id", "user_metadata") VALUES
 	('2b95342e-3eb0-472f-b53e-304f9f99e85b', 'user_images', 'default/bzzvanet-.jpg', NULL, '2024-08-25 14:29:17.324063+00', '2024-08-25 14:29:17.324063+00', '2024-08-25 14:29:17.324063+00', '{"eTag": "\"047bef878d58bfcb8657da05f66179ac\"", "size": 370631, "mimetype": "image/jpeg", "cacheControl": "max-age=3600", "lastModified": "2024-08-25T14:29:17.287Z", "contentLength": 370631, "httpStatusCode": 200}', '211ec8f9-0d87-4ef6-bd37-3040f21a0497', NULL, NULL),
 	('65b8f68b-679c-4023-8ebb-20ed10811444', 'user_images', 'cover/c2508ed9-c992-4eb3-98a6-e149d01c4b2aNw3WWi_TCb2WSdhuV5pzF', NULL, '2024-08-25 23:12:59.430413+00', '2024-08-25 23:12:59.430413+00', '2024-08-25 23:12:59.430413+00', '{"eTag": "\"c2dd07d463891aa3e1339743adadf22d\"", "size": 3896225, "mimetype": "image/png", "cacheControl": "max-age=0", "lastModified": "2024-08-25T23:12:59.245Z", "contentLength": 3896225, "httpStatusCode": 200}', '091eba30-dfab-4a80-ad20-bef046ddce4f', NULL, '{}'),
+	('4c45aacc-92a7-42cd-a20c-9b83aafcb764', 'user_images', 'cover/e0e2fb96-9de7-430b-80df-59398a20b95dmnIyjoMBpeG_Ax7p3dGB7', NULL, '2024-08-28 17:18:32.446133+00', '2024-08-28 17:18:32.446133+00', '2024-08-28 17:18:32.446133+00', '{"eTag": "\"33ebbf8cb35a1ae8e1fa1aa6b3c5cd9b\"", "size": 4702837, "mimetype": "image/png", "cacheControl": "max-age=0", "lastModified": "2024-08-28T17:18:32.223Z", "contentLength": 4702837, "httpStatusCode": 200}', '91b9fc96-d76b-463c-93a9-000e2ef494fd', NULL, '{}'),
+	('2aefc661-cef2-4250-83e4-cfa75a59bc86', 'user_images', 'cover/c2e8de6f-a450-4ca0-ba50-828bedb053bal4NAWYsBowZ5s6HwUnGFq', NULL, '2024-09-10 22:20:35.635016+00', '2024-09-10 22:20:35.635016+00', '2024-09-10 22:20:35.635016+00', '{"eTag": "\"86f2c8744ef418a474ded11af287b231\"", "size": 75123, "mimetype": "image/jpeg", "cacheControl": "max-age=0", "lastModified": "2024-09-10T22:20:35.522Z", "contentLength": 75123, "httpStatusCode": 200}', '37c961e3-ba03-4886-922b-304c15796c85', NULL, '{}'),
+	('74ed9b2f-65de-41e4-ba36-2cf0866159e3', 'threads', 'ea82edea-b220-4a93-8712-db27ae168bb9-image-0', NULL, '2024-09-14 15:50:38.560756+00', '2024-09-14 15:50:38.560756+00', '2024-09-14 15:50:38.560756+00', '{"eTag": "\"ad3cee4f83b5bce5a2395cf848630d25\"", "size": 4613130, "mimetype": "image/png", "cacheControl": "max-age=3600", "lastModified": "2024-09-14T15:50:38.061Z", "contentLength": 4613130, "httpStatusCode": 200}', 'e0872678-79e5-4911-ba24-560b1d45ef52', NULL, '{}'),
+	('6dde649e-aeeb-4d89-bef0-e650b55e7e6c', 'user_images', 'cover/ffbc7e08-1838-4d80-8931-713168de7c20zhADK_wQS39LWc_xlzXdl', NULL, '2024-10-15 17:39:03.907756+00', '2024-10-15 17:39:03.907756+00', '2024-10-15 17:39:03.907756+00', '{"eTag": "\"5efb479df5173ba0fbc30a6e8a3ea4dd\"", "size": 3180693, "mimetype": "image/png", "cacheControl": "max-age=0", "lastModified": "2024-10-15T17:39:03.789Z", "contentLength": 3180693, "httpStatusCode": 200}', 'b5e48969-c892-410b-8c72-9b6d86303eaa', NULL, '{}'),
 	('a85d5e41-3463-4284-8406-aed2db2d1ae4', 'user_images', 'default/adventure-in-end.jpg', NULL, '2024-08-25 14:30:26.060765+00', '2024-08-25 14:30:26.060765+00', '2024-08-25 14:30:26.060765+00', '{"eTag": "\"ee460c4af3bd442389c48a86d92411f8\"", "size": 317053, "mimetype": "image/jpeg", "cacheControl": "max-age=3600", "lastModified": "2024-08-25T14:30:26.046Z", "contentLength": 317053, "httpStatusCode": 200}', '61a91072-8668-4f83-af61-389fbf760cc4', NULL, NULL),
+	('da6f23db-09e6-445d-b2fa-a689408eb9c4', 'threads', 'f0a49e6e-ae3c-4934-a217-5c0dafada849-image-0', NULL, '2024-09-14 15:52:09.002036+00', '2024-09-14 15:52:09.002036+00', '2024-09-14 15:52:09.002036+00', '{"eTag": "\"86f2c8744ef418a474ded11af287b231\"", "size": 75123, "mimetype": "image/jpeg", "cacheControl": "max-age=3600", "lastModified": "2024-09-14T15:52:08.980Z", "contentLength": 75123, "httpStatusCode": 200}', '06ddefa0-931f-4fd6-b6a7-38080326dca7', NULL, '{}'),
+	('4be6f104-6986-4edb-9b83-457aee692474', 'threads', 'f0a49e6e-ae3c-4934-a217-5c0dafada849-image-1', NULL, '2024-09-14 15:52:09.252436+00', '2024-09-14 15:52:09.252436+00', '2024-09-14 15:52:09.252436+00', '{"eTag": "\"2bb01bc64757aceab04b64335a4a1328\"", "size": 533645, "mimetype": "image/jpeg", "cacheControl": "max-age=3600", "lastModified": "2024-09-14T15:52:09.200Z", "contentLength": 533645, "httpStatusCode": 200}', '19dc6af2-bddd-4879-8a11-726917c9186a', NULL, '{}'),
 	('18b7077b-fe56-4f52-b661-59062a391c83', 'user_images', 'default/render-warden-hide.jpg', NULL, '2024-08-24 19:47:07.320126+00', '2024-08-24 19:47:07.320126+00', '2024-08-24 19:47:07.320126+00', '{"eTag": "\"72569e9110c34d8456d0f5202190f57f\"", "size": 292849, "mimetype": "image/jpeg", "cacheControl": "max-age=3600", "lastModified": "2024-08-24T19:47:07.084Z", "contentLength": 292849, "httpStatusCode": 200}', '2299a6f5-e376-4e5e-89a3-ce70fc5805f3', NULL, NULL),
 	('cd493ad2-9398-4610-9ff6-2daa1640cc73', 'user_images', 'default/village-art.jpg', NULL, '2024-08-24 19:47:07.354842+00', '2024-08-24 19:47:07.354842+00', '2024-08-24 19:47:07.354842+00', '{"eTag": "\"5c6e76ea1077c09f69ce365364fe9bf4\"", "size": 355625, "mimetype": "image/jpeg", "cacheControl": "max-age=3600", "lastModified": "2024-08-24T19:47:07.024Z", "contentLength": 355625, "httpStatusCode": 200}', '165443da-626d-490e-8cf8-8f9d2979a12f', NULL, NULL),
 	('e08dadbe-322d-4fd3-b2f5-24483d17cb76', 'user_images', 'default/snow-mountain.jpg', NULL, '2024-08-24 19:47:07.308209+00', '2024-08-24 19:47:07.308209+00', '2024-08-24 19:47:07.308209+00', '{"eTag": "\"332592e326adc249d297baa2b675ca94\"", "size": 299800, "mimetype": "image/jpeg", "cacheControl": "max-age=3600", "lastModified": "2024-08-24T19:47:07.014Z", "contentLength": 299800, "httpStatusCode": 200}', '2383a69e-f528-4f21-b9df-46aed6f31feb', NULL, NULL),
@@ -1229,7 +1295,7 @@ SELECT pg_catalog.setval('"public"."config_minecraft_items_id_seq1"', 13, true);
 -- Name: info_findout_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('"public"."info_findout_id_seq"', 6, true);
+SELECT pg_catalog.setval('"public"."info_findout_id_seq"', 10, true);
 
 
 --
@@ -1278,7 +1344,7 @@ SELECT pg_catalog.setval('"public"."reports_id_seq"', 1, false);
 -- Name: t_comments_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('"public"."t_comments_id_seq"', 4, true);
+SELECT pg_catalog.setval('"public"."t_comments_id_seq"', 6, true);
 
 
 --
@@ -1292,7 +1358,7 @@ SELECT pg_catalog.setval('"public"."t_comments_replies_id_seq"', 1, false);
 -- Name: t_comments_replies_id_seq1; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('"public"."t_comments_replies_id_seq1"', 1, true);
+SELECT pg_catalog.setval('"public"."t_comments_replies_id_seq1"', 2, true);
 
 
 --
@@ -1313,7 +1379,7 @@ SELECT pg_catalog.setval('"public"."threads_comments_id_seq"', 1, false);
 -- Name: threads_comments_id_seq1; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('"public"."threads_comments_id_seq1"', 3, true);
+SELECT pg_catalog.setval('"public"."threads_comments_id_seq1"', 5, true);
 
 
 --
@@ -1327,7 +1393,7 @@ SELECT pg_catalog.setval('"public"."threads_images_id_seq"', 1, false);
 -- Name: threads_images_id_seq1; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('"public"."threads_images_id_seq1"', 1, true);
+SELECT pg_catalog.setval('"public"."threads_images_id_seq1"', 3, true);
 
 
 --
@@ -1348,7 +1414,7 @@ SELECT pg_catalog.setval('"public"."threads_rating_id_seq"', 1, false);
 -- Name: threads_rating_id_seq1; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('"public"."threads_rating_id_seq1"', 9, true);
+SELECT pg_catalog.setval('"public"."threads_rating_id_seq1"', 103, true);
 
 
 --
@@ -1369,7 +1435,7 @@ SELECT pg_catalog.setval('"public"."threads_tags_id_seq"', 1, false);
 -- Name: threads_tags_id_seq1; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('"public"."threads_tags_id_seq1"', 6, true);
+SELECT pg_catalog.setval('"public"."threads_tags_id_seq1"', 9, true);
 
 
 --
@@ -1377,6 +1443,13 @@ SELECT pg_catalog.setval('"public"."threads_tags_id_seq1"', 6, true);
 --
 
 SELECT pg_catalog.setval('"public"."users_banned_id_seq"', 1, false);
+
+
+--
+-- Name: users_banned_id_seq1; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('"public"."users_banned_id_seq1"', 1, true);
 
 
 --
@@ -1390,7 +1463,7 @@ SELECT pg_catalog.setval('"public"."users_blocked_id_seq"', 1, false);
 -- Name: users_requests_timeout_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('"public"."users_requests_timeout_id_seq"', 9, true);
+SELECT pg_catalog.setval('"public"."users_requests_timeout_id_seq"', 17, true);
 
 
 --

@@ -8,49 +8,54 @@ import { createClient } from '@repo/lib/utils/supabase/client.ts';
 import { postThreadImages } from '../queries/post-thread-images.ts';
 import { THREAD_URL } from '@repo/shared/constants/routes.ts';
 
-const supabase = createClient()
+const supabase = createClient();
+
+type CreatePostThreadMutation = Partial<{
+  images: File[] | null
+}>
 
 export const useCreateThread = () => {
   const qc = useQueryClient();
-  const currentUser = qc.getQueryData<CurrentUser>(CURRENT_USER_QUERY_KEY)
-  const { replace } = useRouter()
+  const currentUser = qc.getQueryData<CurrentUser>(CURRENT_USER_QUERY_KEY);
+  const { replace } = useRouter();
   
   const updateThreadFormMutation = useMutation({
-    mutationFn: async({ formState, values }: ThreadFormQuery) => {
-      qc.setQueryData(THREAD_FORM_QUERY, (prev: ThreadFormQuery) =>
-        prev ? {
+    mutationFn: async({ values }: ThreadFormQuery) => {
+      return qc.setQueryData(THREAD_FORM_QUERY, (prev: ThreadFormQuery) => {
+        return {
           ...prev,
-          values: { ...prev.values, ...values },
-          formState: { ...prev.formState, ...formState },
-        } : prev,
-      );
+          values: {
+            ...prev.values,
+            ...values
+          }
+        }
+      })
     },
     onSuccess: async() => await qc.invalidateQueries({ queryKey: THREAD_FORM_QUERY }),
-    onError: (e) => { throw new Error(e.message) },
+    onError: (e) => { throw new Error(e.message); },
   });
   
   const createPostThreadMutation = useMutation({
-    mutationFn: async({ images }: Partial<{ images: File[] | null }>) => {
+    mutationFn: async({ images }: CreatePostThreadMutation) => {
       if (!currentUser) return;
       
       const form = qc.getQueryData<ThreadFormQuery>(THREAD_FORM_QUERY);
+      const uploadedPaths: string[] = [];
       const values = form?.values;
-      const uploadedPaths: string[] = []
       
       if (!form || !values) {
-        toast({
-          title: 'Форма должна быть заполнена', variant: 'negative',
-        });
-        
-        return;
+        return toast({ title: 'Форма должна быть заполнена', variant: 'negative' });
       }
       
-      const { title, description, visibility, permission, auto_remove, comments, tags, category_id, content } = values;
+      const {
+        title, description, visibility, permission,
+        auto_remove, comments, tags, category_id, content,
+      } = values;
       
       if (!title || !content || !category_id || !visibility) return;
       
       const createdThread = await postThread({
-        category_id, title,
+        category_id, title, visibility,
         user_nickname: currentUser.nickname,
         tags: tags ? tags : null,
         content: JSON.stringify(content),
@@ -58,7 +63,6 @@ export const useCreateThread = () => {
         permission: permission ?? false,
         auto_remove: auto_remove ?? false,
         comments: comments ?? true,
-        visibility
       });
       
       if (images && images.length >= 1 && createdThread) {
@@ -82,33 +86,23 @@ export const useCreateThread = () => {
         }
         
         await postThreadImages({
-          thread_id: createdThread.thread_id, paths: uploadedPaths
-        })
+          thread_id: createdThread.thread_id, paths: uploadedPaths,
+        });
       }
       
       if (!createdThread) {
-        toast({
-          title: "Произошла ошибка при публикации поста.",
-          description: "Пожалуйста, перезагрузите страницу, сохранив контент!",
-          variant: "negative"
-        })
-        
-        return;
+        return toast({
+          title: 'Произошла ошибка при публикации поста.',
+          description: 'Пожалуйста, перезагрузите страницу, сохранив контент!',
+          variant: 'negative',
+        });
       }
       
       return createdThread.thread_id;
     },
-    onSuccess: async(data) => {
-      if (data) replace(THREAD_URL + data);
-    },
-    onError: (e) => {
-      toast({
-        title: 'Что-то пошло не так!', variant: 'negative',
-      });
-      
-      throw new Error(e.message);
-    },
+    onSuccess: async(data) => data ? replace(THREAD_URL + data) : null,
+    onError: (e) => {throw new Error(e.message) },
   });
   
   return { updateThreadFormMutation, createPostThreadMutation };
-}
+};

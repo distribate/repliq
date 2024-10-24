@@ -40,7 +40,9 @@ export const AdditionalSections = () => {
             <AccordionContent>
               <div className="flex flex-col gap-y-2">
                 <div className="flex flex-col">
-                  <Typography textColor="shark_white" textSize="medium">Теги</Typography>
+                  <Typography textColor="shark_white" textSize="medium">
+                    Теги
+                  </Typography>
                   <Typography className="text-shark-300" textSize="small">
                     (теги для поиска треда, перечисление через запятую)
                   </Typography>
@@ -50,7 +52,9 @@ export const AdditionalSections = () => {
                   className="min-h-[100px] max-h-[200px] bg-shark-900 py-2"
                   onChange={(e) => {
                     updateThreadFormMutation.mutate({
-                      values: { tags: parseStringToArray(e.target.value) }
+                      values: {
+                        tags: parseStringToArray(e.target.value)
+                      }
                     })
                   }}
                 />

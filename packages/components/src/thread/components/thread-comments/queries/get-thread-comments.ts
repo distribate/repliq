@@ -1,5 +1,6 @@
 'use server';
 
+import "server-only"
 import { createClient } from '@repo/lib/utils/supabase/server.ts';
 import { ThreadRequest } from '../../../types/thread-request-types.ts';
 import { RequestDetails, RequestOptionsSupabaseClient } from '@repo/types/config/request-types.ts';
@@ -27,7 +28,7 @@ export async function getCommentsReplied({
   initiatorId, supabase,
 }: GetCommentsReplied) {
   const { data, error } = await supabase
-  .from('t_comments_replies')
+  .from('threads_comments_replies')
   .select('recipient_comment_id')
   .eq('initiator_comment_id', initiatorId)
   .single();
@@ -41,7 +42,7 @@ async function getCommentMore({
   commentId, supabase,
 }: GetCommentMore) {
   const { data, error } = await supabase
-  .from('t_comments')
+  .from('thread_comments')
   .select(`id,content,user_nickname`)
   .eq('id', commentId)
   .single();
@@ -57,11 +58,11 @@ async function getComments({
   supabase, thread_id: threadId, ascending
 }: GetComments) {
   const { data, error } = await supabase
-  .from('threads_comments')
-  .select(`comment_id, t_comments(id,created_at,user_nickname,content)`)
+  .from('threads_comments_ref')
+  .select(`comment_id, threads_comments(id,created_at,user_nickname,content)`)
   .eq('thread_id', threadId)
   .order('created_at', {
-    referencedTable: 't_comments', ascending,
+    referencedTable: 'threads_comments', ascending,
   });
   
   if (error) {
@@ -82,7 +83,7 @@ export async function getThreadComments({
     thread_id, ascending: true, supabase
   })
   
-  const rawComments = data.flatMap(item => item.t_comments);
+  const rawComments = data.flatMap(item => item.threads_comments);
 
   return await Promise.all(
     rawComments.map(async(item) => {
