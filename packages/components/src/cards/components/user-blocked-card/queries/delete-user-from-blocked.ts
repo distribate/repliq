@@ -11,9 +11,9 @@ export type DeleteUserFromBlocked = {
 export async function deleteUserFromBlocked({
   currentUserNickname, targetUserNickname
 }: DeleteUserFromBlocked) {
-  const supabase = createClient();
+  const api = createClient();
   
-  const { data, error } = await supabase
+  const { data, error } = await api
   .from('users_blocked')
   .delete()
   .eq('user_1', currentUserNickname)

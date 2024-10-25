@@ -1,13 +1,13 @@
 'use server';
 
 import { getUserInformation } from '../queries/get-user-information.ts';
-import { USER } from '@repo/types/entities/entities-type.ts';
+import { UserEntity } from '@repo/types/entities/entities-type.ts';
 import { checkProfileIsPrivate } from './check-profile-is-private.ts';
 import { checkProfileIsBlocked } from './check-profile-is-blocked.ts';
 import { checkProfileIsBanned } from './check-profile-is-banned.ts';
 
 export type CheckProfileStatus = {
-  requestedUser: USER,
+  requestedUser: UserEntity,
   currentUserNickname?: string
 }
 

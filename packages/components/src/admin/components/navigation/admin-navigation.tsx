@@ -7,6 +7,7 @@ export const AdminNavigation = async () => {
       <AdminNavigationBadge title="Конфигурации" paramValue="configs"/>
       <AdminNavigationBadge title="Репорты" paramValue="reports"/>
       <AdminNavigationBadge title="Тикеты" paramValue="tickets"/>
+      <AdminNavigationBadge title="Cтатистика" paramValue="stats"/>
     </div>
   )
 }

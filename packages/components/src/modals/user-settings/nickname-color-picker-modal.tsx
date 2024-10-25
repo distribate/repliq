@@ -3,7 +3,6 @@ import { Typography } from '@repo/ui/src/components/typography.tsx';
 import {
   NicknameColorPicker
 } from '../../cards/components/user-personal-card/components/profile-settings/components/nickname-color-picker.tsx';
-import { USER } from '@repo/types/entities/entities-type.ts';
 import { CURRENT_USER_QUERY_KEY, CurrentUser } from '@repo/lib/queries/current-user-query.ts';
 import { useQueryClient } from '@tanstack/react-query';
 

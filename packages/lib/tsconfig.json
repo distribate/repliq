@@ -1,6 +1,6 @@
 {
   "extends": "@repo/typescript-config/base.json",
-  "include": ["."],
+  "include": [".", "declare.ts"],
   "exclude": ["dist", "build", "node_modules"],
   "compilerOptions": {
     "jsx": "preserve",

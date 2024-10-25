@@ -40,7 +40,9 @@ const AdminButton = () => {
 
 export const UserMenu = () => {
 	const qc = useQueryClient()
-	const currentUser = qc.getQueryData<CurrentUser>(CURRENT_USER_QUERY_KEY)
+	const currentUser = qc.getQueryData<CurrentUser>(
+		CURRENT_USER_QUERY_KEY
+	)
 
 	if (!currentUser) return null;
 	

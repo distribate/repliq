@@ -1,13 +1,11 @@
 import { SKIN_GET_HEAD, SKIN_GET_SKIN } from '@repo/shared/constants/routes.ts';
-// @ts-ignore
 import SteveHead from '@repo/assets/images/minecraft/steve_head.jpg';
-// @ts-ignore
 import SteveSkin from '@repo/assets/images/default.png';
-import { USER } from '@repo/types/entities/entities-type.ts';
+import { UserEntity } from '@repo/types/entities/entities-type.ts';
 
 type SkinDetails = {
   type: 'skin' | 'head'
-} & Pick<USER, 'nickname'>
+} & Pick<UserEntity, 'nickname'>
 
 export async function getSkinDetails({
   type, nickname,

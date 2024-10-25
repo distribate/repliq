@@ -1,5 +1,5 @@
 import { Typography } from '@repo/ui/src/components/typography.tsx';
-import { USER } from '@repo/types/entities/entities-type.ts';
+import { UserEntity } from '@repo/types/entities/entities-type.ts';
 import { HoverCardItem } from '@repo/ui/src/components/hover-card.tsx';
 import { ReactNode } from 'react';
 import { DialogWrapper } from '../../wrappers/dialog-wrapper.tsx';
@@ -12,7 +12,7 @@ type UserCardModalProperties = {
   trigger: ReactNode
 }
 
-type UserCardModal = Pick<USER, 'nickname'>
+type UserCardModal = Pick<UserEntity, 'nickname'>
   & Partial<UserCardModalProperties>
 
 export const UserCardModal = ({

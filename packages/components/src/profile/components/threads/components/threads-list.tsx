@@ -8,7 +8,7 @@ import { Separator } from '@repo/ui/src/components/separator.tsx';
 import dayjs from 'dayjs';
 import { threadsQuery } from '../queries/threads-query.ts';
 import { ThreadsSkeleton } from './threads-skeleton.tsx';
-import { USER } from '@repo/types/entities/entities-type.ts';
+import { UserEntity } from '@repo/types/entities/entities-type.ts';
 import { ContentNotFound } from '../../../../templates/section-not-found.tsx';
 import { FilteringSearch } from '../../../../filtering/components/filtering-search.tsx';
 import React, { ChangeEvent, forwardRef, useCallback, useState } from 'react';
@@ -51,7 +51,7 @@ const ThreadsFiltering = forwardRef<
 
 export const ThreadsList = ({
   nickname
-}: Pick<USER, "nickname">) => {
+}: Pick<UserEntity, "nickname">) => {
   const { data: userTopics, isLoading } = threadsQuery(nickname);
   
   if (isLoading) return <ThreadsSkeleton />;

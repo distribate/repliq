@@ -1,10 +1,9 @@
 import { Typography } from '@repo/ui/src/components/typography.tsx';
 import Link from 'next/link';
-import { CURRENT_USER_QUERY_KEY } from '@repo/lib/queries/current-user-query.ts';
+import { CURRENT_USER_QUERY_KEY, CurrentUser } from '@repo/lib/queries/current-user-query.ts';
 import { Avatar } from '../../../user/components/avatar/components/avatar.tsx';
 import { UserDonate } from '../../../user/components/donate/components/donate.tsx';
 import { useQueryClient } from '@tanstack/react-query';
-import { USER } from '@repo/types/entities/entities-type.ts';
 import { UserNickname } from '../../../user/components/name/components/nickname.tsx';
 import { Separator } from '@repo/ui/src/components/separator.tsx';
 import { UserCardModal } from '../../../modals/custom/user-card-modal.tsx';
@@ -17,7 +16,9 @@ export const FriendProfileCard = ({
   nickname
 }: FriendCardProps) => {
   const qc = useQueryClient();
-  const currentUser = qc.getQueryData<USER>(CURRENT_USER_QUERY_KEY);
+  const currentUser = qc.getQueryData<CurrentUser>(
+    CURRENT_USER_QUERY_KEY
+  );
   
   if (!currentUser) return null;
   

@@ -3,13 +3,13 @@
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { Typography } from '@repo/ui/src/components/typography.tsx';
 
-type Sections = "reports" | "tickets" | "configs" | "main"
+export type AdminSections = "reports" | "tickets" | "configs" | "main" | "stats"
 
 const SECTION_QUERY_KEY = "section"
 
 type AdminNavigationBadgeProps = {
   title: string,
-  paramValue: Sections
+  paramValue: AdminSections
 }
 
 export const AdminNavigationBadge = ({

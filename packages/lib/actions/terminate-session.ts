@@ -1,8 +1,18 @@
 "use server"
 
+import "server-only"
 import { createClient } from "../utils/supabase/server.ts";
 import { validateRequest } from "../utils/auth/validate-requests.ts";
-import { Session } from "@repo/types/entities/entities-type.ts"
+
+export type Session = {
+	id: string,
+	user_id: string,
+	browser: string,
+	os: string,
+	isBot: boolean,
+	ua: string,
+	cpu: string
+}
 
 export type TerminateSession = {
 	session_id: string,
@@ -21,7 +31,7 @@ export async function terminateAllSessions({
 	
 	const { data: allActiveSessions } = await supabase
 	.from("users_session")
-	.select("id, user_id, browser, os, isBot, ua, cpu")
+	.select()
 	.neq("id", currentSession.id)
 	.returns<Session[]>()
 	
@@ -35,7 +45,9 @@ export async function terminateAllSessions({
 		.select("id")
 		.returns<Pick<Session, "id">>()
 		
-		if (error) return null;
+		if (error) {
+			return null;
+		}
 		
 		return data;
 	}
@@ -44,12 +56,11 @@ export async function terminateAllSessions({
 export async function terminateSession({
 	session_id
 }: Pick<TerminateSession, "session_id">) {
+	const { user } = await validateRequest();
+	if (!user) return;
+	
 	const supabase = createClient()
 	
-	const { user } = await validateRequest();
-
-	if (!user) return;
-
 	const { data, error } = await supabase
 	.from("users_session")
 	.delete()
@@ -57,7 +68,9 @@ export async function terminateSession({
 	.select("id")
 	.single()
 	
-	if (error) throw error;
+	if (error) {
+		throw new Error(error.message);
+	}
 	
 	return data;
 }

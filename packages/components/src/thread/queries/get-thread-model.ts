@@ -1,7 +1,7 @@
 'use server';
 
 import "server-only"
-import { THREAD, USER } from '@repo/types/entities/entities-type.ts';
+import { ThreadEntity, UserEntity } from '@repo/types/entities/entities-type.ts';
 import { getThreadRating, ThreadRatingResponse } from './get-thread-rating.ts';
 import { getThreadImagesCount } from './get-thread-images.ts';
 import { getThreadCreator } from './get-thread-creator.ts';
@@ -15,7 +15,7 @@ type ThreadModelDetails = {
   images: boolean
 }
 
-export type ThreadModel = THREAD & Pick<USER, 'nickname'> & ThreadModelDetails
+export type ThreadModel = ThreadEntity & Pick<UserEntity, 'nickname'> & ThreadModelDetails
 
 type GetThreadModel = {
   type: ThreadRequestType

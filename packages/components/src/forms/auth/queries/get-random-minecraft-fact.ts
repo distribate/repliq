@@ -1,18 +1,17 @@
 "use server"
 
 import "server-only"
-import { createClient } from "@repo/lib/utils/supabase/server.ts";
+import { createClient } from '@repo/lib/utils/supabase/server.ts';
 
 function getRandomArbitrary(min: number, max: number) {
 	return Math.random() * (max - min) + min;
 }
 
 export async function getRandomMinecraftFact() {
-	const supabase = createClient();
-	
 	const randomId = getRandomArbitrary(1, 97);
+	const api = createClient();
 	
-	const { data, error } = await supabase
+	const { data, error } = await api
 	.from("config_minecraft_facts")
 	.select("fact")
 	.eq("id", Math.floor(randomId))

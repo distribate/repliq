@@ -1,9 +1,9 @@
 "use server"
 
 import { Database, Tables } from '@repo/types/entities/supabase.ts';
-import { createClient } from "@repo/lib/utils/supabase/server.ts";
 import { getCurrentUser } from "@repo/lib/actions/get-current-user.ts";
 import { checkIsFriend } from "@repo/lib/helpers/check-is-friend.ts";
+import { createClient } from '@repo/lib/utils/supabase/server.ts';
 
 type RawPosts = {
 	posts: Tables<"posts">
@@ -21,14 +21,14 @@ export type Posts = {
 export async function getPostsByNickname(
 	nickname?: string, limit?: number
 ): Promise<Posts[] | null> {
-	const supabase = createClient()
 	const currentUser = await getCurrentUser();
-	
 	if (!currentUser || !nickname) return null;
+	
+	const api = createClient();
 	
 	const currentUserNickname = currentUser.nickname;
 	
-	let query = supabase
+	let query = api
 	.from("posts_users")
 	.select(`
 		post_id,
@@ -65,7 +65,7 @@ export async function getPostsByNickname(
 	const updatedPosts = await Promise.all(posts.map(async (item) => {
 		const selectedPost = item.posts;
 		
-		const { count, error: postCommentsError } = await supabase
+		const { count, error: postCommentsError } = await api
 		.from("posts_comments_ref")
 		.select("post_id", { count: "exact" })
 		.eq("post_id", selectedPost.post_id);

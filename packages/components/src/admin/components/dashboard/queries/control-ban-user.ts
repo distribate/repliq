@@ -1,16 +1,16 @@
 'use server';
 
-import { createClient } from '@repo/lib/utils/supabase/server.ts';
 import { BanUser } from '../types/ban-user-types.ts';
+import { createClient } from '@repo/lib/utils/supabase/server.ts';
 
 export async function controlBanUser({
   type, nickname, parameters,
 }: BanUser) {
-  const supabase = createClient();
-  
   if (!type) return;
   
-  let query = supabase.from('users_banned');
+  const api = createClient();
+  
+  let query = api.from('users_banned');
   
   switch(type) {
     case 'ban':

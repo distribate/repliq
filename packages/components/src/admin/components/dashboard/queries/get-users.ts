@@ -1,8 +1,8 @@
 'use server';
 
 import "server-only"
-import { createClient } from '@repo/lib/utils/supabase/server.ts';
 import { Tables } from '@repo/types/entities/supabase';
+import { createClient } from '@repo/lib/utils/supabase/server.ts';
 
 type Users = Pick<Tables<"users">, "id" | "nickname" | "name_color" | "uuid" | "created_at" | "description">
 
@@ -12,9 +12,9 @@ export type GetUsers = {
 }
 
 export async function getUsers(filter?: GetUsers) {
-  const supabase = createClient();
+  const api = createClient();
   
-  let query = supabase
+  let query = api
   .from('users')
   .select("id, nickname, uuid, created_at, name_color, description", {
     count: "exact"

@@ -1,13 +1,13 @@
 import { Typography } from '@repo/ui/src/components/typography.tsx';
 import { PageConventionProps } from '@repo/types/config/page-types.ts';
+import { AdminSections } from '@repo/components/src/admin/components/navigation/admin-navigation-badge.tsx';
 
 export default async function AdminTicketsPage({
 	searchParams
 }: PageConventionProps) {
-	const { section } = searchParams;
+	const section = searchParams.section as AdminSections;
 	
 	if (!section) return null;
-	
 	if (section !== 'tickets') return null;
 	
 	return (

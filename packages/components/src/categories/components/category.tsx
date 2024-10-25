@@ -7,7 +7,7 @@ import { ThreadNotFound } from '../../templates/threads-not-found.tsx';
 import { CATEGORY_URL } from '@repo/shared/constants/routes.ts';
 import { CategoryModel } from '../queries/get-categories.ts';
 import { getThreadsCategories } from '@repo/lib/queries/get-threads-by-category.ts';
-import { THREAD } from '@repo/types/entities/entities-type.ts';
+import { ThreadEntity } from '@repo/types/entities/entities-type.ts';
 import { ThreadItem } from '../../thread/thread-item.tsx';
 
 type CategoryBlockProps = CategoryModel
@@ -15,7 +15,7 @@ type CategoryBlockProps = CategoryModel
 export const Category = async({
   title, id, threads: hasThreads,
 }: CategoryBlockProps) => {
-  let threads: THREAD[] | null = [];
+  let threads: ThreadEntity[] | null = [];
   
   if (hasThreads) {
     threads = await getThreadsCategories({

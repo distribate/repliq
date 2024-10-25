@@ -1,8 +1,8 @@
 'use server';
 
 import "server-only"
-import { createClient } from '@repo/lib/utils/supabase/server.ts';
 import { getCurrentUser } from '@repo/lib/actions/get-current-user.ts';
+import { createClient } from '@repo/lib/utils/supabase/server.ts';
 
 export type RequestProperties = {
   initiator: string
@@ -11,7 +11,6 @@ export type RequestProperties = {
 export async function deleteFriendRequest(
   friend_id: string
 ) {
-  const supabase = createClient();
   const currentUser = await getCurrentUser();
   
   if (!currentUser) return {
@@ -20,7 +19,9 @@ export async function deleteFriendRequest(
     error: 'Not authorized.',
   };
   
-  const { error, status } = await supabase
+  const api = createClient();
+  
+  const { error, status } = await api
   .from('friends_requests')
   .delete()
   .eq("id", friend_id)

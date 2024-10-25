@@ -33,6 +33,10 @@
   .main-section::-webkit-scrollbar-thumb {
     @apply bg-shark-800 m-4 rounded-lg;
   }
+
+  .hover-select-effect {
+    @apply hover:bg-white/10 cursor-pointer border border-shark-700 duration-300 hover:duration-300;
+  }
 }
 
 @layer base {

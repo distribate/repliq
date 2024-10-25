@@ -1,26 +1,22 @@
 'use server';
 
-import "server-only"
-import { createClient } from '@repo/lib/utils/supabase/server.ts';
+import 'server-only';
 import { getCurrentUser } from '@repo/lib/actions/get-current-user.ts';
-import { Tables } from '@repo/types/entities/supabase.ts';
+import { PostCommentEntity, PostCommentRefEntity } from '@repo/types/entities/entities-type.ts';
+import { createClient } from '@repo/lib/utils/supabase/server.ts';
 
-type POST_COMMENT = Tables<'p_comments'>
-type POST_COMMENTS = Tables<'posts_comments'>
-
-export type PostComment = Pick<POST_COMMENT, 'content'>
-type PostCommentRef = Pick<POST_COMMENTS, 'post_id' | 'comment_id'>
+type PostComment = Pick<PostCommentEntity, 'content'>
+type PostCommentRef = Pick<PostCommentRefEntity, 'post_id' | 'comment_id'>
 
 async function postComment({
   content,
 }: PostComment) {
-  const supabase = createClient();
-  
   const currentUser = await getCurrentUser();
-  
   if (!currentUser) return;
   
-  const { data, error } = await supabase
+  const api = createClient();
+  
+  const { data, error } = await api
   .from('p_comments')
   .insert({
     content,
@@ -30,7 +26,6 @@ async function postComment({
   .single();
   
   if (error) {
-    console.log(error.message);
     throw new Error(error.message);
   }
   
@@ -40,9 +35,9 @@ async function postComment({
 async function postCommentReferenced({
   post_id, comment_id,
 }: PostCommentRef) {
-  const supabase = createClient();
+  const api = createClient();
   
-  const { data, error } = await supabase
+  const { data, error } = await api
   .from('posts_comments')
   .insert({
     post_id, comment_id,
@@ -51,7 +46,6 @@ async function postCommentReferenced({
   .single();
   
   if (error) {
-    console.log(error.message);
     throw new Error(error.message);
   }
   
@@ -63,24 +57,20 @@ export async function createCommentReferenced({
 }: PostComment & {
   post_id: string
 }) {
-  try {
-    const comment = await postComment({
-      content,
-    });
-    
-    if (!comment) return;
-    
-    const post_comment = await postCommentReferenced({
-      post_id,
-      comment_id: comment.id,
-    });
-    
-    if (!post_comment) {
-      throw new Error("Dont post comment created")
-    }
-    
-    return post_comment;
-  } catch (e) {
-    console.error(e);
+  const comment = await postComment({
+    content,
+  });
+  
+  if (!comment) return;
+  
+  const post_comment = await postCommentReferenced({
+    post_id,
+    comment_id: comment.id,
+  });
+  
+  if (!post_comment) {
+    throw new Error('Dont post comment created');
   }
+  
+  return post_comment;
 }

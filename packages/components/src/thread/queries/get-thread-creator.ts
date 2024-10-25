@@ -1,15 +1,17 @@
 "use server"
 
-import { USER } from '@repo/types/entities/entities-type.ts';
-import { createClient } from '@repo/lib/utils/supabase/server.ts';
+import { UserEntity } from '@repo/types/entities/entities-type.ts';
 import { ThreadRequest } from '../types/thread-request-types.ts';
+import { createClient } from '@repo/lib/utils/supabase/server.ts';
+
+type GetThreadCreator = Pick<UserEntity, 'name_color' | 'nickname'> | null
 
 export async function getThreadCreator(
   threadId: Pick<ThreadRequest, 'thread_id'>["thread_id"]
-): Promise<Pick<USER, 'name_color' | 'nickname'> | null> {
-  const supabase = createClient();
+): Promise<GetThreadCreator> {
+  const api = createClient();
   
-  const { data, error } = await supabase
+  const { data, error } = await api
   .from('threads_users')
   .select('*, users(nickname)')
   .eq('thread_id', threadId);

@@ -1,5 +1,5 @@
-import { COMMENT } from '@repo/types/entities/entities-type.ts';
+import { PostCommentEntity } from '@repo/types/entities/entities-type.ts';
 
-export type CommentItemProps = COMMENT & {
+export type CommentItemProps = PostCommentEntity & {
   post_id: string
 }

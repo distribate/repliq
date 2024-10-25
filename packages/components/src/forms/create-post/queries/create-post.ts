@@ -1,8 +1,8 @@
 "use server"
 
 import "server-only"
-import { createClient } from "@repo/lib/utils/supabase/server.ts";
 import { Tables } from "@repo/types/entities/supabase.ts"
+import { createClient } from '@repo/lib/utils/supabase/server.ts';
 
 type Posts = Tables<"posts">
 
@@ -11,9 +11,9 @@ export type Post = Pick<Posts, "content" | "visibility">
 export async function createPostReferenced({
 	visibility, content
 }: Post) {
-	const supabase = createClient()
+	const api = createClient();
 	
-	const { data, error } = await supabase
+	const { data, error } = await api
 	.from("posts")
 	.insert<Post>({
 		content: content,
@@ -35,9 +35,9 @@ type CreatePost = {
 export async function createPost({
 	post_id, user_nickname
 }: CreatePost) {
-	const supabase = createClient()
+	const api = createClient();
 	
-	const { error } = await supabase
+	const { error } = await api
 	.from("posts_users")
 	.insert<CreatePost>({
 		post_id: post_id,

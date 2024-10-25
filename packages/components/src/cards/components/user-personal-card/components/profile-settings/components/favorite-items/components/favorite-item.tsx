@@ -2,8 +2,7 @@ import { Typography } from '@repo/ui/src/components/typography.tsx';
 import { Tables } from '@repo/types/entities/supabase.ts';
 import { ImageWrapper } from '../../../../../../../../wrappers/image-wrapper.tsx';
 import { useQueryClient } from '@tanstack/react-query';
-import { USER } from '@repo/types/entities/entities-type.ts';
-import { CURRENT_USER_QUERY_KEY } from '@repo/lib/queries/current-user-query.ts';
+import { CURRENT_USER_QUERY_KEY, CurrentUser } from '@repo/lib/queries/current-user-query.ts';
 import { cva, VariantProps } from 'class-variance-authority';
 import { forwardRef, HTMLAttributes } from 'react';
 import { useUpdateCurrentUser } from '@repo/lib/hooks/use-update-current-user.ts';
@@ -47,7 +46,7 @@ export const FavoriteItem = ({
 }: FavoriteItem) => {
   const qc = useQueryClient();
   const { updateFieldMutation } = useUpdateCurrentUser()
-  const currentUser = qc.getQueryData<USER>(CURRENT_USER_QUERY_KEY);
+  const currentUser = qc.getQueryData<CurrentUser>(CURRENT_USER_QUERY_KEY);
   
   if (!currentUser) return;
   

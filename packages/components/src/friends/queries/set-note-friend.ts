@@ -1,9 +1,9 @@
 "use server"
 
 import "server-only"
-import { createClient } from '@repo/lib/utils/supabase/server.ts';
 import { getCurrentUser } from '@repo/lib/actions/get-current-user.ts';
 import { Tables } from '@repo/types/entities/supabase.ts';
+import { createClient } from '@repo/lib/utils/supabase/server.ts';
 
 export type SetNote = Pick<Tables<"friends_notes">, "friend_id" | "note" | "recipient">
 
@@ -12,11 +12,13 @@ export async function setNoteFriend({
 }: SetNote & {
   isNoted: boolean // if friend already have a note
 }) {
-  const supabase = createClient();
   const currentUser = await getCurrentUser();
+  if (!currentUser) return;
+  
+  const api = createClient();
   
   if (!isNoted) {
-    const { data, error, status } = await supabase
+    const { data, error, status } = await api
     .from("friends_notes")
     .insert({
       friend_id: friend_id,
@@ -32,7 +34,7 @@ export async function setNoteFriend({
     return { data, status }
   }
   
-  const { data, error, status } = await supabase
+  const { data, error, status } = await api
   .from("friends_notes")
   .update({
     note: note

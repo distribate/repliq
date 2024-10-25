@@ -3,9 +3,9 @@
 import { createClient } from '../utils/supabase/server.ts';
 
 export async function getAuthBackgroundImages() {
-  const supabase = createClient();
+  const api = createClient();
   
-  const { data, error } = await supabase
+  const { data, error } = await api
   .storage
   .from('static')
   .list('auth_background', {

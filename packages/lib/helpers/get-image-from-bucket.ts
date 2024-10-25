@@ -1,5 +1,6 @@
 "use server"
 
+import "server-only"
 import { createClient } from "../utils/supabase/server.ts";
 
 type ImageUrlProperties = {
@@ -21,5 +22,5 @@ export async function getImageUrl({
 	
 	if (error) return null;
 	
-	return url.signedUrl
+	return url.signedUrl;
 }

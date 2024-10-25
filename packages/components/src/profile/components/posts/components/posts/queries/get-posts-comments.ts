@@ -1,20 +1,18 @@
 "use server"
 
+import { PostCommentEntity } from '@repo/types/entities/entities-type.ts';
 import { createClient } from '@repo/lib/utils/supabase/server.ts';
-import { Tables } from '@repo/types/entities/supabase.ts';
 
 export type PostComments = {
   post_id: string
 }
 
-type POST_COMMENT = Tables<'p_comments'>
-
 export async function getPostsComments (
   post_id: PostComments["post_id"]
-): Promise<POST_COMMENT[]> {
-  const supabase = createClient();
+): Promise<PostCommentEntity[]> {
+  const api = createClient();
   
-  const { data, error } = await supabase
+  const { data, error } = await api
     .from("posts_comments_ref")
     .select("comment_id, posts_comments(*)")
     .eq("post_id", post_id)

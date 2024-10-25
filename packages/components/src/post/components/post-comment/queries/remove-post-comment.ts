@@ -1,8 +1,8 @@
 'use server';
 
 import "server-only"
-import { createClient } from '@repo/lib/utils/supabase/server.ts';
 import { getCurrentUser } from '@repo/lib/actions/get-current-user.ts';
+import { createClient } from '@repo/lib/utils/supabase/server.ts';
 
 type RemovePostComment = {
   comment_id: string,
@@ -12,9 +12,9 @@ type RemovePostComment = {
 async function removePostCommentReferenced({
   comment_id, nickname,
 }: RemovePostComment) {
-  const supabase = createClient();
+  const api = createClient();
   
-  const { data, error } = await supabase
+  const { data, error } = await api
   .from('p_comments')
   .delete()
   .eq('id', comment_id)

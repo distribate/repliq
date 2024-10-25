@@ -29,6 +29,7 @@ const typographyVariants = cva("whitespace-wrap", {
 			black: "text-black",
 			pink: "text-pink",
 			purple: "text-purple",
+			gray: "text-shark-300"
 		},
 		textShadow: {
 			small: "[text-shadow:_1px_1px_0_rgb(0_0_0_/_10%)]",

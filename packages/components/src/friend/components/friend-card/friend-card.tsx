@@ -5,13 +5,13 @@ import { UserNickname } from '../../../user/components/name/components/nickname.
 import { UserRealName } from '../../../user/components/real-name/components/real-name.tsx';
 import { UserDonate } from '../../../user/components/donate/components/donate.tsx';
 import { Typography } from '@repo/ui/src/components/typography.tsx';
-import { USER } from '@repo/types/entities/entities-type.ts';
+import { UserEntity } from '@repo/types/entities/entities-type.ts';
 import type { FriendsQuery } from '../../../friends/queries/friends-query.ts';
 import { FriendCardControl } from './components/friend-card-control.tsx';
 import { Pin } from 'lucide-react';
 import { FriendCardNote } from './components/friend-card-note.tsx';
 
-export type FriendCardProps = Pick<USER, 'nickname' | 'real_name' | 'description'>
+export type FriendCardProps = Pick<UserEntity, 'nickname' | 'real_name' | 'description'>
   & FriendsQuery
 
 export const FriendCard = ({

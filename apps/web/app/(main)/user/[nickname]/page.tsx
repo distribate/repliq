@@ -65,7 +65,9 @@ export async function generateMetadata({
   };
 }
 
-export default async function ProfilePage({ params }: PageConventionProps) {
+export default async function ProfilePage({
+  params
+}: PageConventionProps) {
   if (!params) return;
   
   const qc = new QueryClient();

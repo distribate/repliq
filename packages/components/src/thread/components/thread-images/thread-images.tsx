@@ -2,10 +2,10 @@
 
 import { threadImagesQuery } from './thread-images-query.ts';
 import { ThreadImagesSkeleton } from './thread-images-skeleton.tsx';
-import { THREAD } from '@repo/types/entities/entities-type.ts';
+import { ThreadEntity } from '@repo/types/entities/entities-type.ts';
 import { ThreadImageModal } from '../../../modals/custom/thread-image-modal.tsx';
 
-type ThreadImages = Pick<THREAD, "id">
+type ThreadImages = Pick<ThreadEntity, "id">
 
 export const ThreadImages = ({
   id: threadId

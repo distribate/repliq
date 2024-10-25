@@ -1,19 +1,19 @@
 "use server"
 
 import "server-only"
-import { createClient } from '@repo/lib/utils/supabase/server.ts';
 import { PostThread } from './post-thread.ts';
+import { createClient } from '@repo/lib/utils/supabase/server.ts';
 
 type PostThreadImages = PostThread & { paths: string[] }
 
 export async function postThreadImages({
   thread_id, paths
 }: PostThreadImages) {
-  const supabase = createClient();
-  
   if (!thread_id || !paths) return;
   
-  const { data, error } = await supabase
+  const api = createClient();
+  
+  const { data, error } = await api
   .from('threads_images')
   .insert({
     thread_id: thread_id, images: paths

@@ -3,10 +3,10 @@
 import { Typography } from '@repo/ui/src/components/typography.tsx';
 import { TabsList, TabsTrigger } from '@repo/ui/src/components/tabs.tsx';
 import { Separator } from '@repo/ui/src/components/separator.tsx';
-import { USER } from '@repo/types/entities/entities-type.ts';
+import { UserEntity } from '@repo/types/entities/entities-type.ts';
 import { FriendsIncomingTrigger, FriendsOutgoingTrigger, FriendsTrigger } from './friends-triggers.tsx';
 
-export type FriendsControlProps = Pick<USER, "nickname">
+export type FriendsControlProps = Pick<UserEntity, "nickname">
 
 export const FriendsControl = ({
   nickname,

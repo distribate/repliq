@@ -1,15 +1,17 @@
 'use server';
 
 import 'server-only';
-import { createClient } from '@repo/lib/utils/supabase/server.ts';
 import { getCurrentUser } from '@repo/lib/actions/get-current-user.ts';
 import { UpdateThreadFields, UpdateThreadRequestType } from '../types/update-thread-request-types.ts';
 import { removeThread } from './remove-thread.ts';
+import { createClient } from '@repo/lib/utils/supabase/server.ts';
 
 async function getThreadCreatorNickname({
-  thread_id, supabase,
+  thread_id,
 }: UpdateThreadRequestType) {
-  const { data, error } = await supabase
+  const api = createClient();
+  
+  const { data, error } = await api
   .from('threads_users')
   .select('user_nickname')
   .eq('thread_id', thread_id)
@@ -26,13 +28,12 @@ async function getThreadCreatorNickname({
 export async function updateThreadFields({
   id: thread_id, type, field,
 }: UpdateThreadFields) {
-  const supabase = createClient();
   const currentUser = await getCurrentUser();
   
   if (!currentUser || !thread_id) return;
   
   const threadCreator = await getThreadCreatorNickname({
-    thread_id, supabase
+    thread_id
   });
   
   if (!threadCreator
@@ -40,7 +41,7 @@ export async function updateThreadFields({
   ) return;
   
   if (type === 'remove') {
-    return await removeThread({ thread_id, supabase });
+    return await removeThread({ thread_id });
   }
   
   if (!field) return;
@@ -54,7 +55,9 @@ export async function updateThreadFields({
     return acc;
   }, {} as { [key: string]: string | null | boolean });
   
-  const { data, error } = await supabase
+  const api = createClient();
+  
+  const { data, error } = await api
   .from('threads')
   .update(updateFields)
   .eq('id', thread_id)

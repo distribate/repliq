@@ -1,8 +1,8 @@
 'use server';
 
 import "server-only"
-import { createClient } from '@repo/lib/utils/supabase/server.ts';
 import { Tables } from '@repo/types/entities/supabase.ts';
+import { createClient } from '@repo/lib/utils/supabase/server.ts';
 
 export type FriendsRequests = 'incoming' | 'outgoing';
 
@@ -16,11 +16,11 @@ export type GetRequestsByType = Tables<"friends_requests">
 export async function getRequestsByType({
   type, nickname,
 }: RequestsProperties) {
-  const supabase = createClient();
-  
   const requestType = type === 'incoming' ? 'recipient' : 'initiator';
   
-  return supabase
+  const api = createClient();
+  
+  return api
   .from('friends_requests')
   .select('id, recipient, initiator, created_at')
   .eq(requestType, nickname)

@@ -1,7 +1,7 @@
 import { Button } from "@repo/ui/src/components/button.tsx";
 import { useCreateReport } from "../hooks/use-create-report.ts";
 import { REPORT_REASONS } from "../../../../../report/constants/report-reason.ts";
-import { REPORT } from "@repo/types/entities/entities-type.ts"
+import { ReportEntity } from "@repo/types/entities/entities-type.ts"
 import { ReportReason } from "../../../../../report/types/report-types.ts";
 import { reportQuery } from "../../../../../report/queries/report-query.ts";
 import { useQueryClient } from "@tanstack/react-query";
@@ -21,7 +21,7 @@ type d = {
 }
 
 type ReportModal = {
-	report_type: Pick<REPORT, "report_type">["report_type"],
+	report_type: Pick<ReportEntity, "report_type">["report_type"],
 	targetId: string,
 	threadId: string
 }
@@ -43,7 +43,7 @@ export const ReportModal = ({
 	);
 	
 	const handleReason = (
-		reason: ReportReason, type: Pick<REPORT, "report_type">["report_type"]
+		reason: ReportReason, type: Pick<ReportEntity, "report_type">["report_type"]
 	) => {
 		console.log(target);
 		

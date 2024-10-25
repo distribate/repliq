@@ -24,12 +24,9 @@ export const useCreateThread = () => {
       return qc.setQueryData(THREAD_FORM_QUERY, (prev: ThreadFormQuery) => {
         return {
           ...prev,
-          values: {
-            ...prev.values,
-            ...values
-          }
-        }
-      })
+          values: { ...prev.values, ...values },
+        };
+      });
     },
     onSuccess: async() => await qc.invalidateQueries({ queryKey: THREAD_FORM_QUERY }),
     onError: (e) => { throw new Error(e.message); },
@@ -44,7 +41,10 @@ export const useCreateThread = () => {
       const values = form?.values;
       
       if (!form || !values) {
-        return toast({ title: 'Форма должна быть заполнена', variant: 'negative' });
+        return toast({
+          title: 'Форма должна быть заполнена',
+          variant: 'negative',
+        });
       }
       
       const {
@@ -101,7 +101,7 @@ export const useCreateThread = () => {
       return createdThread.thread_id;
     },
     onSuccess: async(data) => data ? replace(THREAD_URL + data) : null,
-    onError: (e) => {throw new Error(e.message) },
+    onError: (e) => {throw new Error(e.message); },
   });
   
   return { updateThreadFormMutation, createPostThreadMutation };

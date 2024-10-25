@@ -8,7 +8,6 @@ export async function checkAdminPermission(): Promise<boolean> {
 	const supabase = createClient();
 	
 	const { user } = await validateRequest()
-	
 	if (!user) return false;
 	
 	const { data, error } = await supabase

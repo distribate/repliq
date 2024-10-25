@@ -1,10 +1,10 @@
 'use server';
 
-import { createClient } from '@repo/lib/utils/supabase/server.ts';
 import { Tables } from '@repo/types/entities/supabase.ts';
 import { UpdateThreadRatingType } from './post-thread-rating.ts';
 import { getCurrentUser } from '@repo/lib/actions/get-current-user.ts';
 import { ThreadRequest } from '../types/thread-request-types.ts';
+import { createClient } from '@repo/lib/utils/supabase/server.ts';
 
 type ThreadRatingTable = Tables<'threads_rating'>;
 
@@ -19,19 +19,19 @@ type ThreadRating = Pick<ThreadRequest, 'thread_id'>["thread_id"]
 export async function getThreadRating(
   threadId: ThreadRating
 ): Promise<ThreadRatingResponse | null> {
-  const supabase = createClient();
   const currentUser = await getCurrentUser();
-  
   if (!currentUser) return null;
   
+  const api = createClient();
+  
   const [ currentType, rating ] = await Promise.all([
-    supabase
+    api
     .from('threads_rating')
     .select('type')
     .eq('thread_id', threadId)
     .eq('user_id', currentUser?.id)
     .single(),
-    supabase
+    api
     .from('threads_rating')
     .select('*')
     .eq('thread_id', threadId)

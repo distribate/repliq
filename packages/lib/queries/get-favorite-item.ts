@@ -1,10 +1,10 @@
 'use server';
 
 import { createClient } from '../utils/supabase/server.ts';
-import { USER } from '@repo/types/entities/entities-type.ts';
+import { UserEntity } from '@repo/types/entities/entities-type.ts';
 import { getPublicUrlFromStorage } from '../utils/storage/get-public-url-from-storage.ts';
 
-type FavoriteItemProperties = Pick<USER, 'favorite_item' | "nickname">
+type FavoriteItemProperties = Pick<UserEntity, 'favorite_item' | "nickname">
 
 export type FavoriteItemType = Partial<{
   type: 'nickname' | 'itemId',

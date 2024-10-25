@@ -1,11 +1,11 @@
 import { View } from 'lucide-react';
-import { THREAD } from '@repo/types/entities/entities-type.ts';
+import { ThreadEntity } from '@repo/types/entities/entities-type.ts';
 import { DialogWrapper } from '../../wrappers/dialog-wrapper.tsx';
 import { ImageWrapper } from '../../wrappers/image-wrapper.tsx';
 
 export const THREAD_IMAGE_MODAL_NAME = (threadId: string, index: number) => `thread-image-${threadId}-${index}`
 
-type ThreadImageModal = Pick<THREAD, "id"> & {
+type ThreadImageModal = Pick<ThreadEntity, "id"> & {
   image: string,
   index: number
 }

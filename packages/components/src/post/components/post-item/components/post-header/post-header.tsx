@@ -2,13 +2,13 @@ import { Typography } from "@repo/ui/src/components/typography.tsx";
 import { Avatar } from "../../../../../user/components/avatar/components/avatar.tsx";
 import { CURRENT_USER_QUERY_KEY, CurrentUser } from '@repo/lib/queries/current-user-query.ts';
 import { UserNickname } from "../../../../../user/components/name/components/nickname.tsx";
-import { USER } from "@repo/types/entities/entities-type.ts"
+import { UserEntity } from "@repo/types/entities/entities-type.ts"
 import Link from "next/link";
 import dayjs from "dayjs"
 import dynamic from 'next/dynamic';
 import { useQueryClient } from '@tanstack/react-query';
 
-type PostItemHeaderProps = Pick<USER, "nickname"
+type PostItemHeaderProps = Pick<UserEntity, "nickname"
 	| "created_at"
 	| "name_color"
 	| "id"

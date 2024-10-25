@@ -1,5 +1,5 @@
 import { createClient } from "../utils/supabase/server.ts";
-import { THREAD } from "@repo/types/entities/entities-type.ts"
+import { ThreadEntity } from "@repo/types/entities/entities-type.ts"
 
 type ThreadsFromCategoriesProperties = {
 	limit: number,
@@ -12,7 +12,7 @@ type ThreadsFromCategories = {
 
 export async function getThreadsCategories({
 	categoryId, range, limit = 3
-}: ThreadsFromCategories): Promise<THREAD[] | null> {
+}: ThreadsFromCategories): Promise<ThreadEntity[] | null> {
 	const supabase = createClient();
 	
 	let query = supabase
@@ -20,17 +20,14 @@ export async function getThreadsCategories({
 	.select("*, threads(*)")
 	.eq("category_id", categoryId)
 	
-	if (limit) {
-		query.limit(limit)
-	}
-	
-	if (range) {
-		query.range(range[0], range[1])
-	}
+	if (limit) query.limit(limit)
+	if (range) query.range(range[0], range[1])
 	
 	const { data, error } = await query;
 	
-	if (error) throw error;
+	if (error) {
+		throw new Error(error.message);
+	}
 	
 	if (!data.length) return null;
 	

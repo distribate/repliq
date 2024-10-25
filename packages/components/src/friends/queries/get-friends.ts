@@ -1,11 +1,11 @@
 'use server';
 
 import "server-only"
-import { createClient } from '@repo/lib/utils/supabase/server.ts';
 import { FriendsQuery } from './friends-query.ts';
 import { Tables } from '@repo/types/entities/supabase.ts';
 import type { FriendsSort } from '../../profile/components/friends/hooks/use-friends-sort.tsx';
 import { getCurrentUser } from '@repo/lib/actions/get-current-user.ts';
+import { createClient } from '@repo/lib/utils/supabase/server.ts';
 
 export type RequestFriends = {
   nickname: string,
@@ -19,12 +19,12 @@ type FriendsPinnedDetails = Tables<'friends_pinned'>
 type FriendsNotedDetails = Tables<"friends_notes">
 
 async function getNotedFriends() {
-  const supabase = createClient();
   const currentUser = await getCurrentUser();
-  
   if (!currentUser) return;
   
-  const { data, error } = await supabase
+  const api = createClient();
+  
+  const { data, error } = await api
   .from('friends_notes')
   .select()
   .eq('initiator', currentUser.nickname)
@@ -38,12 +38,12 @@ async function getNotedFriends() {
 }
 
 async function getPinnedFriends() {
-  const supabase = createClient();
   const currentUser = await getCurrentUser();
-  
   if (!currentUser) return;
   
-  const { data, error } = await supabase
+  const api = createClient();
+  
+  const { data, error } = await api
   .from('friends_pinned')
   .select()
   .eq('initiator', currentUser.nickname)
@@ -59,9 +59,9 @@ async function getPinnedFriends() {
 export async function getFriends({
   nickname, orderType, ascending = false,
 }: RequestFriends): Promise<FriendsQuery[] | null> {
-  const supabase = createClient();
+  const api = createClient();
   
-  const { data: friendsData, error: friendsError } = await supabase
+  const { data: friendsData, error: friendsError } = await api
   .from('users_friends')
   .select(`id, user_1, user_2, created_at`)
   .or(`user_1.eq.${nickname},user_2.eq.${nickname}`)
@@ -85,7 +85,7 @@ export async function getFriends({
     if (user_2 !== nickname) friendNicknames.add(user_2);
   });
   
-  let query = supabase
+  let query = api
   .from('users')
   .select(`nickname, description, status, name_color, real_name`)
   .in('nickname', Array.from(friendNicknames))

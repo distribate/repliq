@@ -1,15 +1,15 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { USER } from '@repo/types/entities/entities-type.ts';
+import { UserEntity } from '@repo/types/entities/entities-type.ts';
 import { UpdateUserFields, updateUserFields } from '../queries/update-user-fields.ts';
 import { CURRENT_USER_QUERY_KEY, CurrentUser } from '../queries/current-user-query.ts';
 import { toast } from '@repo/ui/src/hooks/use-toast.ts';
 import { DONATE_QUERY_KEY } from '@repo/components/src/user/components/donate/queries/donate-query.ts';
 import { parseStringToBoolean } from '../helpers/parse-string-to-boolean.ts';
 import {
-  REQUESTED_USER_QUERY_KEY
+  REQUESTED_USER_QUERY_KEY,
 } from '@repo/components/src/profile/components/cover/cover/queries/requested-user-query.ts';
 
-export type AvailableFields = Pick<USER, 'description'
+export type AvailableFields = Pick<UserEntity, 'description'
   | 'visibility'
   | 'birthday'
   | 'name_color'
@@ -21,12 +21,14 @@ export type AvailableFields = Pick<USER, 'description'
 export type UpdateCurrentUser = {
   field: keyof AvailableFields,
   value: string | null,
-  preferences?: Omit<Extract<UpdateUserFields['preferences'], object>, "oldPreferences">
+  preferences?: Omit<Extract<UpdateUserFields['preferences'], object>, 'oldPreferences'>
 }
 
 export const useUpdateCurrentUser = () => {
   const qc = useQueryClient();
-  const currentUser = qc.getQueryData<CurrentUser>(CURRENT_USER_QUERY_KEY);
+  const currentUser = qc.getQueryData<CurrentUser>(
+    CURRENT_USER_QUERY_KEY
+  );
   
   const updateFieldMutation = useMutation({
     mutationFn: async(values: UpdateCurrentUser) => {
@@ -66,17 +68,15 @@ export const useUpdateCurrentUser = () => {
         qc.invalidateQueries({ queryKey: DONATE_QUERY_KEY(currentUser.nickname) }),
       ]);
       
-      if (!data) {
-        toast({
-          title: 'Произошла ошибка при обновлении. Повторите позже!', variant: 'negative',
-        });
-        
-        return;
-      }
+      if (!data) return toast({
+        title: 'Произошла ошибка при обновлении. Повторите позже!',
+        variant: 'negative',
+      });
       
       if (data.status === 200 && data) {
         toast({
-          title: 'Изменения применены', variant: 'positive',
+          title: 'Изменения применены',
+          variant: 'positive',
         });
         
         return data;

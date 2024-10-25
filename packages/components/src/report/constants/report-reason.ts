@@ -7,11 +7,9 @@ type ReportReasons = {
 
 export const REPORT_REASONS: ReportReasons[] = [
 	{
-		title: "Спам",
-		type: "spam"
+		title: "Спам", type: "spam"
 	},
 	{
-		title: "Оскорбления",
-		type: "offensive"
-	}
+		title: "Оскорбления", type: "offensive"
+	},
 ]

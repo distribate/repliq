@@ -2,11 +2,14 @@
 
 import "server-only"
 import { UpdateThreadRequestType } from '../types/update-thread-request-types.ts';
+import { createClient } from '@repo/lib/utils/supabase/server.ts';
 
 async function threadRemove({
-  thread_id, supabase,
+  thread_id
 }: UpdateThreadRequestType): Promise<boolean> {
-  const { error: threadRemoveErr } = await supabase
+  const api = createClient();
+  
+  const { error: threadRemoveErr } = await api
   .from('threads')
   .delete()
   .eq('id', thread_id);
@@ -20,9 +23,11 @@ async function threadRemove({
 }
 
 async function threadImagesRemove({
-  thread_id, supabase,
+  thread_id
 }: UpdateThreadRequestType) {
-  const { data: existingThreadImages, status, error: existingThreadImagesErr } = await supabase
+  const api = createClient();
+  
+  const { data: existingThreadImages, status, error: existingThreadImagesErr } = await api
   .from('threads_images')
   .select('images')
   .eq('thread_id', thread_id)
@@ -37,7 +42,7 @@ async function threadImagesRemove({
     return
   }
   
-  const { error: removeImagesFromStorage } = await supabase
+  const { error: removeImagesFromStorage } = await api
   .storage
   .from('threads')
   .remove(existingThreadImages.images);
@@ -47,7 +52,7 @@ async function threadImagesRemove({
     throw new Error(removeImagesFromStorage.message);
   }
   
-  const { error: removeImagesFromTable } = await supabase
+  const { error: removeImagesFromTable } = await api
   .from('threads_images')
   .delete()
   .eq('thread_id', thread_id);
@@ -59,10 +64,10 @@ async function threadImagesRemove({
 }
 
 export async function removeThread({
-  thread_id, supabase
+  thread_id
 }: UpdateThreadRequestType) {
-  await threadImagesRemove({ thread_id, supabase });
-  await threadRemove({ thread_id, supabase });
+  await threadImagesRemove({ thread_id });
+  await threadRemove({ thread_id });
   
   return true;
 }

@@ -4,28 +4,8 @@ import { toast } from '@repo/ui/src/hooks/use-toast.ts';
 import { encode } from 'base64-arraybuffer';
 import { deleteAuthImage } from '../queries/delete-auth-image.ts';
 import { useRouter } from 'next/navigation';
-
-function getArrayBuffer(file: File): Promise<ArrayBuffer> {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    
-    reader.onloadend = () => {
-      const result = reader.result as ArrayBuffer;
-      resolve(result);
-    };
-    
-    reader.onerror = (error) => {
-      reject(error);
-    };
-    
-    reader.readAsArrayBuffer(file);
-  });
-}
-
-function getFileSizeInMB(file: File): number {
-  const sizeInBytes = file.size;
-  return sizeInBytes / (1024 * 1024);
-}
+import { getArrayBuffer } from '@repo/lib/helpers/ger-array-buffer.ts';
+import { getFileSizeInMB } from '@repo/lib/helpers/get-file-size.ts';
 
 export const useAuthBackgroundImage = () => {
   const { refresh } = useRouter()

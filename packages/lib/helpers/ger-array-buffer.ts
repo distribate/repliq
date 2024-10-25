@@ -1,9 +1,9 @@
-export function getBase64(file: File): Promise<string> {
+export function getArrayBuffer(file: File): Promise<ArrayBuffer> {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
     
     reader.onloadend = () => {
-      const result = reader.result as string;
+      const result = reader.result as ArrayBuffer;
       resolve(result);
     };
     
@@ -11,6 +11,6 @@ export function getBase64(file: File): Promise<string> {
       reject(error);
     };
     
-    reader.readAsDataURL(file);
+    reader.readAsArrayBuffer(file);
   });
 }

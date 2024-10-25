@@ -1,6 +1,5 @@
-import { CURRENT_USER_QUERY_KEY } from '../queries/current-user-query.ts';
+import { CURRENT_USER_QUERY_KEY, CurrentUser } from '../queries/current-user-query.ts';
 import { useQueryClient } from '@tanstack/react-query';
-import { USER } from '@repo/types/entities/entities-type.ts';
 import { requestsQuery } from '@repo/components/src/friends/queries/requests-query.ts';
 import { friendsQuery } from '@repo/components/src/friends/queries/friends-query.ts';
 
@@ -14,7 +13,9 @@ export function checkFriendRequestStatus(
 	reqUserNickname?: string
 ): ReqStatus | null {
 	const qc = useQueryClient();
-	const currentUser = qc.getQueryData<USER>(CURRENT_USER_QUERY_KEY);
+	const currentUser = qc.getQueryData<CurrentUser>(
+		CURRENT_USER_QUERY_KEY
+	);
 	
 	if (!currentUser) return null;
 	

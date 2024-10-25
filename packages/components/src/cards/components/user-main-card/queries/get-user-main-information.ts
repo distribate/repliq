@@ -1,19 +1,19 @@
 'use server';
 
 import "server-only"
-import { createClient } from '@repo/lib/utils/supabase/server.ts';
 import { getRequestedUser } from '@repo/lib/queries/get-requested-user.ts';
 import { getFavoriteItem } from '@repo/lib/queries/get-favorite-item.ts';
 import { UserMainCard } from '../types/user-main-card-types.ts';
 import { UserCardQuery } from './user-main-card-query.ts';
 import { getUserTimeFromServer } from '@repo/lib/queries/get-user-time-from-server.ts';
+import { createClient } from '@repo/lib/utils/supabase/server.ts';
 
 async function getFriendsCount({
   nickname
 }: UserMainCard): Promise<number> {
-  const supabase = createClient();
+  const api = createClient();
   
-  const { count, error } = await supabase
+  const { count, error } = await api
   .from('users_friends')
   .select('*', { count: 'exact' })
   .or(`user_1.eq.${nickname},user_2.eq.${nickname}`)
@@ -28,9 +28,9 @@ async function getFriendsCount({
 async function getThreadsCount({
   nickname,
 }: UserMainCard): Promise<number> {
-  const supabase = createClient();
+  const api = createClient();
   
-  const { count, error } = await supabase
+  const { count, error } = await api
   .from('threads_users')
   .select('*', { count: 'exact' })
   .eq('user_nickname', nickname);

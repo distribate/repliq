@@ -1,8 +1,8 @@
-import { USER } from '@repo/types/entities/entities-type.ts';
+import { UserEntity } from '@repo/types/entities/entities-type.ts';
 import { createClient } from '@repo/lib/utils/supabase/server.ts';
 import { getUserBanned } from '@repo/lib/queries/get-user-banned.ts';
 
-type GetLastUsers = Pick<USER, 'nickname'
+type GetLastUsers = Pick<UserEntity, 'nickname'
   | 'created_at'
   | 'name_color'
   | 'description'
@@ -27,15 +27,17 @@ export async function getLastUsers(): Promise<GetLastUsers[] | null> {
     ascending: false,
   });
   
-  if (error) throw error;
+  if (error) {
+    throw new Error(error.message);
+  }
+  
   if (!data.length) return null;
   
   for (let i = 0; i < data.length; i++) {
     const user = data[i];
     const banStatus = await getUserBanned(user.nickname);
     
-    if (!banStatus || banStatus.nickname !== user.nickname)
-      users?.push(user);
+    if (!banStatus || banStatus.nickname !== user.nickname) users?.push(user);
   }
 
   return users;

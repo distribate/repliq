@@ -1,9 +1,8 @@
 'use server';
 
-import { createClient } from '@repo/lib/utils/supabase/server.ts';
 import { getCurrentUser } from '@repo/lib/actions/get-current-user.ts';
 import { ThreadRequest } from '../types/thread-request-types.ts';
-import { RequestOptionsSupabaseClient } from '@repo/types/config/request-types.ts';
+import { createClient } from '@repo/lib/utils/supabase/server.ts';
 
 export type UpdateThreadRatingType = 'increment' | 'decrement'
 
@@ -14,7 +13,7 @@ export type UpdateThreadRating = {
 
 type UpdateThreadRatingError = 'alreadyRating' | 'default'
 
-type RatingType = RequestOptionsSupabaseClient & {
+type RatingType = {
   threadId: string,
   currentUserId: string
 }
@@ -22,9 +21,11 @@ type RatingType = RequestOptionsSupabaseClient & {
 type PostRating = RatingType & UpdateThreadRating
 
 async function deleteDecrementRating({
-  currentUserId, threadId, supabase
+  currentUserId, threadId
 }: RatingType) {
-  const { error } = await supabase
+  const api = createClient();
+  
+  const { error } = await api
   .from('threads_rating')
   .delete()
   .eq('thread_id', threadId)
@@ -34,21 +35,26 @@ async function deleteDecrementRating({
 }
 
 async function deleteIncrementRating({
-  supabase, currentUserId, threadId
+  currentUserId, threadId
 }: RatingType) {
-  const { error } = await supabase
+  const api = createClient();
+  
+  const { error } = await api
   .from('threads_rating')
   .delete()
   .eq('thread_id', threadId)
   .eq("user_id", currentUserId)
   .eq('type', 'increment');
+  
   if (error) throw new Error(error.message)
 }
 
 async function postRating({
-  currentUserId, threadId, supabase, type
+  currentUserId, threadId, type
 }: PostRating) {
-  const { data: threadsRating, error: threadsRatingsErr, statusText } = await supabase
+  const api = createClient();
+  
+  const { data: threadsRating, error: threadsRatingsErr, statusText } = await api
   .from('threads_rating')
   .insert({
     thread_id: threadId,
@@ -59,7 +65,7 @@ async function postRating({
   .single();
   
   if (threadsRatingsErr || statusText === 'Conflict') {
-    const { error: threadsRatingsErr } = await supabase
+    const { error: threadsRatingsErr } = await api
     .from('threads_rating')
     .delete()
     .eq('thread_id', threadId)
@@ -77,7 +83,6 @@ async function postRating({
 export async function updateThreadRating({
   type, threadId,
 }: UpdateThreadRating): Promise<boolean | UpdateThreadRatingError> {
-  const supabase = createClient();
   const currentUser = await getCurrentUser();
   
   if (!currentUser || !threadId) return 'default';
@@ -85,17 +90,17 @@ export async function updateThreadRating({
   switch(type) {
     case 'increment':
       await deleteDecrementRating({
-        currentUserId: currentUser.id, threadId: threadId, supabase
+        currentUserId: currentUser.id, threadId: threadId
       })
       break;
     case 'decrement':
       await deleteIncrementRating({
-        threadId: threadId, currentUserId: currentUser.id, supabase
+        threadId: threadId, currentUserId: currentUser.id
       })
       break;
   }
   
   return await postRating({
-    type, supabase, currentUserId: currentUser.id, threadId: threadId
+    type, currentUserId: currentUser.id, threadId: threadId
   })
 }

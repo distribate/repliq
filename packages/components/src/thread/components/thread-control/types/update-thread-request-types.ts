@@ -8,5 +8,4 @@ export type UpdateThreadFields = ThreadControl & Partial<{
   };
 }>
 
-export type UpdateThreadRequestType = RequestOptionsSupabaseClient
-  & ThreadRequest
+export type UpdateThreadRequestType = ThreadRequest

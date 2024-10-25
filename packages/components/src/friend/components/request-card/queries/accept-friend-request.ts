@@ -1,19 +1,19 @@
 'use server';
 
 import "server-only"
-import { createClient } from '@repo/lib/utils/supabase/server.ts';
 import { deleteFriendRequest, RequestProperties } from './delete-friend-request.ts';
 import { getCurrentUser } from '@repo/lib/actions/get-current-user.ts';
+import { createClient } from '@repo/lib/utils/supabase/server.ts';
 
 async function addFieldToFields({
   initiator,
 }: RequestProperties) {
   const currentUser = await getCurrentUser();
-  const supabase = createClient();
-  
   if (!currentUser) return;
   
-  return supabase
+  const api = createClient();
+  
+  return api
   .from('users_friends')
   .insert({
     user_1: initiator,

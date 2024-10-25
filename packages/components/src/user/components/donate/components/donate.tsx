@@ -12,7 +12,8 @@ import Link from "next/link";
 import { Skeleton } from '@repo/ui/src/components/skeleton.tsx';
 import { UserDonateBadge } from './donate-badge.tsx';
 
-const getDonateTitle = (donate: DonateType["primary_group"]) => DONATE_GROUPS[donate]
+const getDonateTitle = (donate: DonateType["primary_group"]) =>
+	DONATE_GROUPS[donate]
 
 export const UserDonate = ({
 	nickname

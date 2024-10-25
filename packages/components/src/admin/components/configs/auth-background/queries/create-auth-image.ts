@@ -1,8 +1,8 @@
 'use server'
 
-import { createClient } from '@repo/lib/utils/supabase/server.ts';
 import { decode } from 'base64-arraybuffer'
 import { nanoid } from 'nanoid';
+import { createClient } from '@repo/lib/utils/supabase/server.ts';
 
 type CreateAuthImageResult = {
   error: 'limit' | 'no-data'
@@ -11,11 +11,11 @@ type CreateAuthImageResult = {
 export async function createAuthImage(
   files: string[]
 ): Promise<CreateAuthImageResult> {
-  const supabase = createClient();
-  
   if (!files.length) {
     return { error: 'no-data' };
   }
+  
+  const api = createClient();
   
   let imagesId: string[] = [];
   
@@ -24,7 +24,7 @@ export async function createAuthImage(
     
     const randomId = nanoid();
     
-    const { data, error } = await supabase
+    const { data, error } = await api
     .storage
     .from('static')
     .upload(`auth_background/auth-image-${randomId}.png`, decodedFile, {
@@ -32,8 +32,6 @@ export async function createAuthImage(
     });
     
     if (error) {
-      console.error(error.message)
-      
       return {
         error: 'no-data',
       };

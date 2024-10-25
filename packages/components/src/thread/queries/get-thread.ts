@@ -6,9 +6,9 @@ import { createClient } from '@repo/lib/utils/supabase/server.ts';
 export async function getThread(
   threadId: Pick<ThreadRequest, 'thread_id'>['thread_id'],
 ) {
-  const supabase = createClient();
+  const api = createClient();
   
-  const { data, error } = await supabase
+  const { data, error } = await api
   .from('threads')
   .select('*')
   .eq('id', threadId);

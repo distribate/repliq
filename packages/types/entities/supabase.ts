@@ -43,7 +43,7 @@ export type Database = {
         Insert: {
           admin_id: string
           created_at?: string
-          id: number
+          id?: number
         }
         Update: {
           admin_id?: string
@@ -183,23 +183,37 @@ export type Database = {
       config_alerts: {
         Row: {
           created_at: string
+          creator: string
+          description: string | null
           id: number
           link: string | null
           title: string
         }
         Insert: {
           created_at?: string
-          id: number
+          creator: string
+          description?: string | null
+          id?: number
           link?: string | null
           title: string
         }
         Update: {
           created_at?: string
+          creator?: string
+          description?: string | null
           id?: number
           link?: string | null
           title?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "config_alerts_creator_fkey"
+            columns: ["creator"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["nickname"]
+          },
+        ]
       }
       config_minecraft_facts: {
         Row: {
@@ -381,7 +395,15 @@ export type Database = {
           id?: number
           user_nickname?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "info_findout_user_nickname_fkey"
+            columns: ["user_nickname"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["nickname"]
+          },
+        ]
       }
       luckperms_actions: {
         Row: {
@@ -527,7 +549,31 @@ export type Database = {
         }
         Relationships: []
       }
-      p_comments: {
+      posts: {
+        Row: {
+          comments: boolean
+          content: string | null
+          created_at: string
+          post_id: string
+          visibility: Database["public"]["Enums"]["post_visibility"]
+        }
+        Insert: {
+          comments?: boolean
+          content?: string | null
+          created_at?: string
+          post_id?: string
+          visibility?: Database["public"]["Enums"]["post_visibility"]
+        }
+        Update: {
+          comments?: boolean
+          content?: string | null
+          created_at?: string
+          post_id?: string
+          visibility?: Database["public"]["Enums"]["post_visibility"]
+        }
+        Relationships: []
+      }
+      posts_comments: {
         Row: {
           content: string
           created_at: string
@@ -556,31 +602,7 @@ export type Database = {
           },
         ]
       }
-      posts: {
-        Row: {
-          comments: boolean
-          content: string | null
-          created_at: string
-          post_id: string
-          visibility: Database["public"]["Enums"]["post_visibility"]
-        }
-        Insert: {
-          comments?: boolean
-          content?: string | null
-          created_at?: string
-          post_id?: string
-          visibility?: Database["public"]["Enums"]["post_visibility"]
-        }
-        Update: {
-          comments?: boolean
-          content?: string | null
-          created_at?: string
-          post_id?: string
-          visibility?: Database["public"]["Enums"]["post_visibility"]
-        }
-        Relationships: []
-      }
-      posts_comments: {
+      posts_comments_ref: {
         Row: {
           comment_id: string
           id: number
@@ -601,7 +623,7 @@ export type Database = {
             foreignKeyName: "posts_comments_comment_id_fkey"
             columns: ["comment_id"]
             isOneToOne: false
-            referencedRelation: "p_comments"
+            referencedRelation: "posts_comments"
             referencedColumns: ["id"]
           },
           {
@@ -733,71 +755,6 @@ export type Database = {
         }
         Relationships: []
       }
-      t_comments: {
-        Row: {
-          content: string
-          created_at: string
-          id: number
-          user_nickname: string
-        }
-        Insert: {
-          content: string
-          created_at?: string
-          id?: number
-          user_nickname: string
-        }
-        Update: {
-          content?: string
-          created_at?: string
-          id?: number
-          user_nickname?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "t_comments_user_nickname_fkey"
-            columns: ["user_nickname"]
-            isOneToOne: false
-            referencedRelation: "users"
-            referencedColumns: ["nickname"]
-          },
-        ]
-      }
-      t_comments_replies: {
-        Row: {
-          created_at: string
-          id: number
-          initiator_comment_id: number
-          recipient_comment_id: number
-        }
-        Insert: {
-          created_at?: string
-          id?: number
-          initiator_comment_id: number
-          recipient_comment_id: number
-        }
-        Update: {
-          created_at?: string
-          id?: number
-          initiator_comment_id?: number
-          recipient_comment_id?: number
-        }
-        Relationships: [
-          {
-            foreignKeyName: "t_comments_replies_initiator_comment_id_fkey"
-            columns: ["initiator_comment_id"]
-            isOneToOne: false
-            referencedRelation: "t_comments"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "t_comments_replies_recipient_comment_id_fkey"
-            columns: ["recipient_comment_id"]
-            isOneToOne: false
-            referencedRelation: "t_comments"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
       threads: {
         Row: {
           auto_remove: boolean
@@ -839,6 +796,45 @@ export type Database = {
       }
       threads_comments: {
         Row: {
+          content: string
+          created_at: string
+          id: number
+          thread_id: string
+          user_nickname: string
+        }
+        Insert: {
+          content: string
+          created_at?: string
+          id?: number
+          thread_id: string
+          user_nickname: string
+        }
+        Update: {
+          content?: string
+          created_at?: string
+          id?: number
+          thread_id?: string
+          user_nickname?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "t_comments_thread_id_fkey"
+            columns: ["thread_id"]
+            isOneToOne: false
+            referencedRelation: "threads"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "t_comments_user_nickname_fkey"
+            columns: ["user_nickname"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["nickname"]
+          },
+        ]
+      }
+      threads_comments_ref: {
+        Row: {
           comment_id: number
           id: number
           thread_id: string
@@ -858,7 +854,7 @@ export type Database = {
             foreignKeyName: "threads_comments_comment_id_fkey"
             columns: ["comment_id"]
             isOneToOne: false
-            referencedRelation: "t_comments"
+            referencedRelation: "threads_comments"
             referencedColumns: ["id"]
           },
           {
@@ -866,6 +862,42 @@ export type Database = {
             columns: ["thread_id"]
             isOneToOne: false
             referencedRelation: "threads"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      threads_comments_replies: {
+        Row: {
+          created_at: string
+          id: number
+          initiator_comment_id: number
+          recipient_comment_id: number
+        }
+        Insert: {
+          created_at?: string
+          id?: number
+          initiator_comment_id: number
+          recipient_comment_id: number
+        }
+        Update: {
+          created_at?: string
+          id?: number
+          initiator_comment_id?: number
+          recipient_comment_id?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "t_comments_replies_initiator_comment_id_fkey"
+            columns: ["initiator_comment_id"]
+            isOneToOne: false
+            referencedRelation: "threads_comments"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "t_comments_replies_recipient_comment_id_fkey"
+            columns: ["recipient_comment_id"]
+            isOneToOne: false
+            referencedRelation: "threads_comments"
             referencedColumns: ["id"]
           },
         ]

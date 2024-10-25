@@ -1,8 +1,8 @@
 "use server"
 
 import { UserDonate } from "../types/user-donate-types.ts";
-import { createClient } from "@repo/lib/utils/supabase/server.ts";
 import { Enums } from "@repo/types/entities/supabase.ts";
+import { createClient } from '@repo/lib/utils/supabase/server.ts';
 
 export type DonateType = {
 	primary_group: Enums<"donate_variants">

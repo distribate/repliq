@@ -1,17 +1,19 @@
 'use server';
 
 import "server-only"
-import { createClient } from '@repo/lib/utils/supabase/server.ts';
 import { getCurrentUser } from '@repo/lib/actions/get-current-user.ts';
 import { SetPinFriend } from './set-pin-friend.ts';
+import { createClient } from '@repo/lib/utils/supabase/server.ts';
 
 export async function setUnpinFriend({
   recipient, friend_id,
 }: SetPinFriend) {
-  const supabase = createClient();
   const currentUser = await getCurrentUser();
+  if (!currentUser) return;
   
-  const { data, error, status } = await supabase
+  const api = createClient();
+  
+  const { data, error, status } = await api
   .from('friends_pinned')
   .delete()
   .eq('friend_id', friend_id)

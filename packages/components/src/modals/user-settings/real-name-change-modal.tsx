@@ -1,6 +1,5 @@
 import { Typography } from '@repo/ui/src/components/typography.tsx';
 import { DialogWrapper } from '../../wrappers/dialog-wrapper.tsx';
-import { USER } from '@repo/types/entities/entities-type.ts';
 import {
   RealNameChange
 } from '../../cards/components/user-personal-card/components/profile-settings/components/real-name-change/components/real-name-change.tsx';

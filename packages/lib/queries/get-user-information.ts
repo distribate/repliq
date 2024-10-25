@@ -1,19 +1,18 @@
 "use server"
 
-import { createClient } from "../utils/supabase/server.ts";
 import { getCurrentUser } from "../actions/get-current-user.ts";
 import { DonateType, getUserDonate } from "@repo/components/src/user/components/donate/queries/get-user-donate.ts";
 import { convertUserPreferencesToObject, UserPreferences } from '../helpers/convert-user-preferences-to-map.ts';
 import { getUserBanned } from './get-user-banned.ts';
 import { CurrentUser } from './current-user-query.ts';
+import { createClient } from '../utils/supabase/server.ts';
 
 export async function getUserInformation(): Promise<
 	CurrentUser | null
 > {
-	const supabase = createClient();
 	const currentUser = await getCurrentUser();
-	
 	if (!currentUser) return null;
+	const supabase = createClient();
 	
 	let query = supabase
 	.from("users")

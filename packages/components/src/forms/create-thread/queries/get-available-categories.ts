@@ -1,12 +1,12 @@
 "use server"
 
 import "server-only"
-import { createClient } from "@repo/lib/utils/supabase/server.ts";
+import { createClient } from '@repo/lib/utils/supabase/server.ts';
 
 export async function getAvailableCategories() {
-	const supabase = createClient();
+	const api = createClient();
 	
-	const { data, error } = await supabase
+	const { data, error } = await api
 		.from("category")
 		.select("id, title, description")
 		.eq("available", true)

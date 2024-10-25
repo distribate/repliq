@@ -1,9 +1,8 @@
 "use server"
 
 import "server-only"
+import { CategoryEntity } from '@repo/types/entities/entities-type.ts';
 import { createClient } from '@repo/lib/utils/supabase/server.ts';
-import { CATEGORY } from '@repo/types/entities/entities-type.ts';
-import { RequestOptionsSupabaseClient } from '@repo/types/config/request-types.ts';
 
 export type CategoryModel = {
 	threads: boolean,
@@ -11,14 +10,16 @@ export type CategoryModel = {
 	id: number
 }
 
-type GetCategoryThreadsCount = RequestOptionsSupabaseClient & {
+type GetCategoryThreadsCount = {
 	categoryId: number
 }
 
 async function getCategoryThreadsCount({
-	categoryId, supabase
+	categoryId
 }: GetCategoryThreadsCount): Promise<boolean> {
-	const { error, count } = await supabase
+	const api = createClient();
+	
+	const { error, count } = await api
 	.from("category_threads")
 	.select("thread_id", { count: "exact"})
 	.eq("category_id", categoryId)
@@ -30,18 +31,20 @@ async function getCategoryThreadsCount({
 }
 
 export async function getCategories(): Promise<CategoryModel[]> {
-	const supabase = createClient();
+	const api = createClient();
 	
-	const { data, error } = await supabase
+	const { data, error } = await api
 	.from("category")
 	.select()
-	.returns<CATEGORY[]>()
+	.returns<CategoryEntity[]>()
 	
-	if (error) throw new Error(error.message);
+	if (error) {
+		throw new Error(error.message);
+	}
 
 	return await Promise.all(data.map(async(category) => {
 		const hasThreads = await getCategoryThreadsCount({
-			categoryId: category.id, supabase
+			categoryId: category.id
 		});
 		
 		return {

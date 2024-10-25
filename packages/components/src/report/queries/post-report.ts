@@ -1,13 +1,11 @@
 "use server"
 
-import { REPORT } from "@repo/types/entities/entities-type"
-import { createClient } from "@repo/lib/utils/supabase/server.ts";
+import { ReportEntity } from "@repo/types/entities/entities-type"
 import { validateRequest } from "@repo/lib/utils/auth/validate-requests.ts";
+import { createClient } from '@repo/lib/utils/supabase/server.ts';
 
-type PostReportType = Omit<REPORT, "id"
-		| "created_at"
-		| "user_nickname"
-		| "reported_item"
+type PostReportType = Omit<ReportEntity, "id"
+	| "created_at" | "user_nickname" | "reported_item"
 > & PostReportItem
 
 export type PostReportItem = {
@@ -20,7 +18,8 @@ export async function postReport({
 	target_id, target_nickname, target_content,
 	reason, target_user_nickname, report_type
 }: PostReportType) {
-	const supabase = createClient();
+	const { user } = await validateRequest();
+	if (!user) return;
 	
 	let reported_item: PostReportItem | null = null;
 	
@@ -32,11 +31,9 @@ export async function postReport({
 		target_nickname: target_nickname
 	}
 	
-	const { user } = await validateRequest();
+	const api = createClient();
 	
-	if (!user) return;
-	
-	const { data, error: e } = await supabase
+	const { data, error } = await api
 	.from("reports")
 	.insert({
 		reason,
@@ -46,11 +43,10 @@ export async function postReport({
 		user_nickname: user.nickname
 	})
 	.select()
-	.returns<REPORT>()
+	.returns<ReportEntity>()
 	
-	if (e) {
-		console.error(e.message)
-		throw new Error(e.message)
+	if (error) {
+		throw new Error(error.message)
 	}
 	
 	return data;

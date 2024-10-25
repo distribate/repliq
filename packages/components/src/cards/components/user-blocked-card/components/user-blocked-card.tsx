@@ -1,4 +1,4 @@
-import { USER } from '@repo/types/entities/entities-type.ts';
+import { UserEntity } from '@repo/types/entities/entities-type.ts';
 import { useRouter } from 'next/navigation';
 import { Avatar } from '../../../../user/components/avatar/components/avatar.tsx';
 import { UserNickname } from '../../../../user/components/name/components/nickname.tsx';
@@ -12,8 +12,7 @@ import { useDeleteFromBlocked } from '../hooks/use-delete-from-blocked.ts';
 import { useDialog } from '@repo/lib/hooks/use-dialog.ts';
 import { UserCardModal } from '../../../../modals/custom/user-card-modal.tsx';
 
-type UserBlockedCardProps = Pick<USER, 'nickname'
-  | 'name_color'> & {
+type UserBlockedCardProps = Pick<UserEntity, 'nickname' | 'name_color'> & {
   time: string
 }
 
@@ -24,11 +23,13 @@ export const UserBlockedCard = ({
   const { replace } = useRouter();
   const { removeDialogMutation } = useDialog();
   
-  const handleDeleteFromBlocked = (e: React.MouseEvent<HTMLDivElement>, nickname: string) => {
+  const handleDeleteFromBlocked = (
+    e: React.MouseEvent<HTMLDivElement>, nickname: string
+  ) => {
     e.preventDefault();
     
     deleteUserFromBlockedMutation.mutate({
-      targetUserNickname: nickname,
+      targetUserNickname: nickname
     });
   };
   

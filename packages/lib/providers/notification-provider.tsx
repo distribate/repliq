@@ -11,7 +11,6 @@ export const NotificationProvider = ({
 }: NotificationProviderProps) => {
 	// friendsSubscribeEvents(nickname);
 	// credentialsSubscription(user_id)
-	//
 	
 	return children
 }

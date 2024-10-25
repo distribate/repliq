@@ -1,7 +1,7 @@
 "use server"
 
-import { createClient } from '@repo/lib/utils/supabase/server.ts';
 import { getCurrentUser } from '@repo/lib/actions/get-current-user.ts';
+import { createClient } from '@repo/lib/utils/supabase/server.ts';
 
 type RemovePost = {
   post_id: string,
@@ -11,13 +11,12 @@ type RemovePost = {
 export async function removePost({
   post_id, nickname
 }: RemovePost) {
-  const supabase = createClient();
-  
   const currentUser = await getCurrentUser()
-  
   if (!currentUser) return;
   
-  const { data: postCreator, error: postCreatorError } = await supabase
+  const api = createClient();
+  
+  const { data: postCreator, error: postCreatorError } = await api
     .from("posts_users")
     .select("user_nickname")
     .eq("post_id", post_id)
@@ -30,7 +29,7 @@ export async function removePost({
   if (postCreator.user_nickname !== nickname) return;
   
   try {
-    const { data, error } = await supabase
+    const { data, error } = await api
     .from("posts")
     .delete()
     .eq("post_id", post_id)
