@@ -1,6 +1,6 @@
 "use server"
 
-import { createClient } from '@repo/lib/utils/supabase/server.ts';
+import { createClient } from '@repo/lib/utils/api/server.ts';
 import { getThreadModel, ThreadModel } from '../../../../thread/queries/get-thread-model.ts';
 
 export type RequestProperties = {

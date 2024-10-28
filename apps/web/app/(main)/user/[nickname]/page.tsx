@@ -1,5 +1,4 @@
 import { Metadata } from 'next';
-import { MetadataType, PageConventionProps } from '@repo/types/config/page-types.ts';
 import { dehydrate, HydrationBoundary, QueryClient } from '@tanstack/react-query';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@repo/ui/src/components/tabs.tsx';
 import { getRequestedUser } from '@repo/lib/queries/get-requested-user.ts';
@@ -28,6 +27,7 @@ import {
   UserProfileGameAchievements,
 } from '@repo/components/src/profile/components/achievements/game-achievements.tsx';
 import { UserProfileAccountStats } from '@repo/components/src/profile/components/account-stats/account-stats.tsx';
+import { MetadataType, PageConventionProps } from '@repo/types/global';
 
 const UserProfileFriends = dynamic(() =>
   import('@repo/components/src/profile/components/friends/friends.tsx')
@@ -105,7 +105,7 @@ export default async function ProfilePage({
   const isPrivated = profileStatus === 'private';
   
   const isGameStatsShow = checkUserGameStatsVisibility({
-    reqUserNickname: reqUserNickname, preferences, currentUserNickname,
+    reqUserNickname, preferences, currentUserNickname
   });
   
   const isOwner = await protectPrivateArea({

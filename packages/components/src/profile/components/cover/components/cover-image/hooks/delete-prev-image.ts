@@ -1,6 +1,6 @@
 "use server"
 
-import { createClient } from "@repo/lib/utils/supabase/server.ts";
+import { createClient } from "@repo/lib/utils/api/server.ts";
 import { DeleteProperties } from "@repo/lib/utils/storage/upload-image-to-bucket.ts";
 
 export async function deletePrevImageFromUsers({

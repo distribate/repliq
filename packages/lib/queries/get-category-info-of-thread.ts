@@ -1,4 +1,4 @@
-import { createClient } from '../utils/supabase/server.ts';
+import { createClient } from "@repo/lib/utils/api/server.ts";
 import { ThreadRequest } from '@repo/components/src/thread/types/thread-request-types.ts';
 
 type CategoryOfThread = {

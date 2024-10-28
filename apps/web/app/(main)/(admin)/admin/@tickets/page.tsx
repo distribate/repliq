@@ -1,6 +1,6 @@
 import { Typography } from '@repo/ui/src/components/typography.tsx';
-import { PageConventionProps } from '@repo/types/config/page-types.ts';
 import { AdminSections } from '@repo/components/src/admin/components/navigation/admin-navigation-badge.tsx';
+import { PageConventionProps } from '@repo/types/global';
 
 export default async function AdminTicketsPage({
 	searchParams

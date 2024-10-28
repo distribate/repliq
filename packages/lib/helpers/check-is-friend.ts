@@ -1,7 +1,7 @@
 "use server"
 
 import { getCurrentUser } from "../actions/get-current-user.ts";
-import { createClient } from "../utils/supabase/server.ts";
+import { createClient } from "@repo/lib/utils/api/server.ts";
 
 type CheckIsFriend = {
 	requestedUserNickname: string

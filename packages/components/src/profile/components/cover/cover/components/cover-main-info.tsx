@@ -9,15 +9,14 @@ import { checkUserRealNameVisibility } from '@repo/lib/helpers/check-user-real-n
 import { CURRENT_USER_QUERY_KEY, CurrentUser } from '@repo/lib/queries/current-user-query.ts';
 import { REQUESTED_USER_QUERY_KEY } from '../queries/requested-user-query.ts';
 
-interface UserCoverInfo {
+type UserCoverInfoProps = {
 	nickname: string
 }
 
 export const UserCoverMainInfo = ({
 	nickname
-}: UserCoverInfo) => {
+}: UserCoverInfoProps) => {
 	const qc = useQueryClient()
-	
 	const currentUser = qc.getQueryData<CurrentUser>(CURRENT_USER_QUERY_KEY)
 	const reqUser = qc.getQueryData<RequestedUser>(REQUESTED_USER_QUERY_KEY(nickname));
 	const coverState = qc.getQueryData<CoverQuery>(COVER_QUERY_KEY)
@@ -37,7 +36,11 @@ export const UserCoverMainInfo = ({
 		<div className="flex flex-col self-end justify-between h-1/2 gap-y-1">
 			<div className="flex flex-col">
 				<div className="flex items-center gap-1">
-					<UserNickname nickname={nickname} nicknameColor={name_color} className={`${inView ? 'text-3xl' : 'text-xl'}`} />
+					<UserNickname
+						nickname={nickname}
+						nicknameColor={name_color}
+						className={`${inView ? 'text-3xl' : 'text-xl'}`}
+					/>
 					<UserDonate nickname={nickname}/>
 				</div>
 				{(real_name && isRealNameShow) && <UserRealName real_name={real_name}/>}

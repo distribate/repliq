@@ -1,4 +1,4 @@
-import { createClient } from '@repo/lib/utils/supabase/server.ts';
+import { createClient } from '@repo/lib/utils/api/server.ts';
 
 export async function getCreatorPost(
   nickname: string

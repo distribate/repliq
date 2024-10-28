@@ -4,11 +4,10 @@ import { postThread } from '../queries/post-thread.ts';
 import { toast } from '@repo/ui/src/hooks/use-toast.ts';
 import { CURRENT_USER_QUERY_KEY, CurrentUser } from '@repo/lib/queries/current-user-query.ts';
 import { useRouter } from 'next/navigation';
-import { createClient } from '@repo/lib/utils/supabase/client.ts';
-import { postThreadImages } from '../queries/post-thread-images.ts';
 import { THREAD_URL } from '@repo/shared/constants/routes.ts';
-
-const supabase = createClient();
+import { getArrayBuffer } from '@repo/lib/helpers/ger-array-buffer.ts';
+import { encode } from 'base64-arraybuffer';
+import { blobUrlToFile } from '@repo/lib/helpers/blobUrlToFile.ts';
 
 type CreatePostThreadMutation = Partial<{
   images: File[] | null
@@ -17,7 +16,7 @@ type CreatePostThreadMutation = Partial<{
 export const useCreateThread = () => {
   const qc = useQueryClient();
   const currentUser = qc.getQueryData<CurrentUser>(CURRENT_USER_QUERY_KEY);
-  const { replace } = useRouter();
+  const { push } = useRouter();
   
   const updateThreadFormMutation = useMutation({
     mutationFn: async({ values }: ThreadFormQuery) => {
@@ -33,11 +32,10 @@ export const useCreateThread = () => {
   });
   
   const createPostThreadMutation = useMutation({
-    mutationFn: async({ images }: CreatePostThreadMutation) => {
+    mutationFn: async() => {
       if (!currentUser) return;
       
       const form = qc.getQueryData<ThreadFormQuery>(THREAD_FORM_QUERY);
-      const uploadedPaths: string[] = [];
       const values = form?.values;
       
       if (!form || !values) {
@@ -48,14 +46,38 @@ export const useCreateThread = () => {
       }
       
       const {
-        title, description, visibility, permission,
-        auto_remove, comments, tags, category_id, content,
+        title, description, visibility, permission, auto_remove,
+        comments, tags, category_id, content, images
       } = values;
       
       if (!title || !content || !category_id || !visibility) return;
+  
+      let threadConvertedToBase64Images: Array<string> | null = [];
+      let threadRawImages: Array<File> | null = []
       
+      if (images) {
+        for (let i = 0; i < images.length; i++) {
+          const rawImageItem = await blobUrlToFile(images[i]);
+          
+          threadRawImages.push(rawImageItem)
+        }
+        
+        if (threadRawImages) {
+          for (let i = 0; i < threadRawImages.length; i++) {
+            const imageItem = await getArrayBuffer(threadRawImages[i]);
+            const encodedImageItem = encode(imageItem);
+            
+            threadConvertedToBase64Images.push(encodedImageItem);
+          }
+        } else {
+          threadConvertedToBase64Images = null;
+        }
+      }
+  
       const createdThread = await postThread({
-        category_id, title, visibility,
+        category_id,
+        title,
+        visibility,
         user_nickname: currentUser.nickname,
         tags: tags ? tags : null,
         content: JSON.stringify(content),
@@ -63,32 +85,8 @@ export const useCreateThread = () => {
         permission: permission ?? false,
         auto_remove: auto_remove ?? false,
         comments: comments ?? true,
+        base64Files: threadConvertedToBase64Images
       });
-      
-      if (images && images.length >= 1 && createdThread) {
-        for (let i = 0; i < images.length; i++) {
-          const image = images[i];
-          const fileName = createdThread.thread_id + `-image-` + i;
-          
-          const { data, error } = await supabase
-          .storage
-          .from('threads')
-          .upload(fileName, image, {
-            cacheControl: '3600',
-            upsert: false,
-          });
-          
-          if (error) {
-            throw new Error(error.message);
-          }
-          
-          uploadedPaths.push(data.path);
-        }
-        
-        await postThreadImages({
-          thread_id: createdThread.thread_id, paths: uploadedPaths,
-        });
-      }
       
       if (!createdThread) {
         return toast({
@@ -100,8 +98,30 @@ export const useCreateThread = () => {
       
       return createdThread.thread_id;
     },
-    onSuccess: async(data) => data ? replace(THREAD_URL + data) : null,
-    onError: (e) => {throw new Error(e.message); },
+    onSuccess: async(data) => {
+      if (!data) return toast({
+        title: 'Произошла ошибка при создании треда',
+        variant: 'negative',
+      });
+      
+      toast({
+        title: 'Тред создан',
+        variant: 'positive',
+      });
+      
+      const formValues = qc.getQueryData<ThreadFormQuery>(THREAD_FORM_QUERY);
+
+      if (formValues && formValues.values && formValues.values.images) {
+        for (let i = 0; i < formValues.values.images.length; i++) {
+          URL.revokeObjectURL(formValues.values.images[i]);
+        }
+      }
+      
+      qc.resetQueries({ queryKey: THREAD_FORM_QUERY })
+      
+      return push(THREAD_URL + data);
+    },
+    onError: (e) => { throw new Error(e.message) },
   });
   
   return { updateThreadFormMutation, createPostThreadMutation };

@@ -1,15 +1,16 @@
-"use client"
+"use server"
 
-import { createClient } from "../supabase/client.ts";
 import {
 	deletePrevImageFromUsers
 } from "@repo/components/src/profile/components/cover/components/cover-image/hooks/delete-prev-image.ts";
+import { createClient } from "@repo/lib/utils/api/server.ts";
+import { decode } from 'base64-arraybuffer';
 
 type UploadProperties = {
 	bucket: string,
 	folderName?: string | null,
 	fileName: string,
-	file: File | null
+	file: string
 }
 
 export type DeleteProperties = {
@@ -20,12 +21,12 @@ export type DeleteProperties = {
 export async function deleteImageFromBucket({
 	userId, bucket
 }: DeleteProperties) {
-	const supabase = createClient()
+	const api = createClient()
 	
 	const coverImageUrl = await deletePrevImageFromUsers({ userId })
 	
 	if (coverImageUrl) {
-		const { data, error } = await supabase
+		const { data, error } = await api
 		.storage
 		.from(bucket)
 		.remove([ coverImageUrl ])
@@ -38,24 +39,23 @@ export async function deleteImageFromBucket({
 export async function uploadImageToBucket({
 	bucket, fileName, file, folderName
 }: UploadProperties): Promise<{ path?: string, error?: Error }> {
-	const supabase = createClient()
+	const api = createClient()
 	
 	if (!file) return {
 		error: new Error("Изображение не выбрано!")
 	};
 	
 	const folderPath = folderName ? folderName + '/' + fileName : fileName;
+	const decodedFile = decode(file)
 	
-	const { data, error } = await supabase
+	const { data, error } = await api
 	.storage
 	.from(bucket)
-	.upload(folderPath, file, {
+	.upload(folderPath, decodedFile, {
 		cacheControl: '0', upsert: true
 	})
 	
-	if (error) return {
-		error
-	};
+	if (error) return { error };
 	
 	const path = data.path
 	

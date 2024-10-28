@@ -2,7 +2,7 @@
 
 import "server-only"
 import { UserEntity } from "@repo/types/entities/entities-type.ts"
-import { createClient } from "../utils/supabase/server.ts";
+import { createClient } from "@repo/lib/utils/api/server.ts";
 
 type AdditionalCredentials = Pick<UserEntity, "nickname"> & Partial<{
 	findout?: string

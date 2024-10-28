@@ -2,7 +2,7 @@
 
 import { decode } from 'base64-arraybuffer'
 import { nanoid } from 'nanoid';
-import { createClient } from '@repo/lib/utils/supabase/server.ts';
+import { createClient } from "@repo/lib/utils/api/server.ts";
 
 type CreateAuthImageResult = {
   error: 'limit' | 'no-data'

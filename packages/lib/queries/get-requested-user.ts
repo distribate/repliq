@@ -5,7 +5,7 @@ import { UserEntity } from '@repo/types/entities/entities-type.ts';
 import { getCurrentUser } from '../actions/get-current-user.ts';
 import { REDIRECT_USER_NOT_EXIST } from '@repo/shared/constants/routes.ts';
 import { convertUserPreferencesToObject, UserPreferences } from '../helpers/convert-user-preferences-to-map.ts';
-import { createClient } from '../utils/supabase/server.ts';
+import { createClient } from "@repo/lib/utils/api/server.ts";
 
 type RequestedUserProps = {
   nickname?: string,

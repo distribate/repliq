@@ -2,7 +2,7 @@
 
 import "server-only"
 import { CategoryEntity } from '@repo/types/entities/entities-type.ts';
-import { createClient } from '@repo/lib/utils/supabase/server.ts';
+import { createClient } from '@repo/lib/utils/api/server.ts';
 
 export type CategoryModel = {
 	threads: boolean,

@@ -2,7 +2,7 @@
 
 import { UserEntity } from '@repo/types/entities/entities-type.ts';
 import { ThreadRequest } from '../types/thread-request-types.ts';
-import { createClient } from '@repo/lib/utils/supabase/server.ts';
+import { createClient } from '@repo/lib/utils/api/server.ts';
 
 type GetThreadCreator = Pick<UserEntity, 'name_color' | 'nickname'> | null
 

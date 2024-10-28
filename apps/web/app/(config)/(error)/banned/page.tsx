@@ -12,7 +12,9 @@ export default async function BannedPage() {
   
   const isBanned = await getUserBanned(currentUser.nickname)
   
-  if (isBanned?.nickname !== currentUser?.nickname) redirect('/');
+  if (isBanned?.nickname !== currentUser?.nickname) {
+    return redirect('/');
+  }
   
   return (
     <div className="flex w-full relative h-screen items-center justify-center">

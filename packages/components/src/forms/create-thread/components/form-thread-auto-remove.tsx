@@ -4,8 +4,7 @@ import { Toggle } from '@repo/ui/src/components/toggle.tsx';
 import { FormField } from '@repo/ui/src/components/form-field.tsx';
 import { threadFormQuery } from '../queries/thread-form-query.ts';
 import { useCreateThread } from '../hooks/use-create-thread.tsx';
-import { useCreateThreadImages } from '../hooks/use-create-thread-images.ts';
-import { FormChildsProps } from './create-thread-form.tsx';
+import { FormChildsProps } from '../types/create-thread-form-types.ts';
 
 export const FormThreadAutoRemove = ({
   control, errors

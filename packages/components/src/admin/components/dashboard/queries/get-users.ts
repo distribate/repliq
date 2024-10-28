@@ -1,10 +1,16 @@
 'use server';
 
 import "server-only"
-import { Tables } from '@repo/types/entities/supabase';
-import { createClient } from '@repo/lib/utils/supabase/server.ts';
+import { createClient } from "@repo/lib/utils/api/server.ts";
+import { UserEntity } from '@repo/types/entities/entities-type.ts';
 
-type Users = Pick<Tables<"users">, "id" | "nickname" | "name_color" | "uuid" | "created_at" | "description">
+type Users = Pick<UserEntity, "id"
+  | "nickname"
+  | "name_color"
+  | "uuid"
+  | "created_at"
+  | "description"
+>
 
 export type GetUsers = {
   range?: number[],

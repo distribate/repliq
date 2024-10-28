@@ -4,7 +4,7 @@ import { Trash2 } from 'lucide-react';
 import { Button } from './button.tsx';
 
 const deleteButtonVariants = cva(
-  'rounded-md hover:bg-shark-600 items-center duration-150 hover:duration-150 justify-center bg-shark-700 cursor-pointer overflow-hidden flex', {
+  'rounded-md hover:bg-shark-600 items-center duration-150 z-[3] hover:duration-150 justify-center bg-shark-700 cursor-pointer overflow-hidden flex', {
   variants: {
     variant: {
       invisible: "opacity-0 group-hover:opacity-100 absolute top-2 right-1 group-hover:duration-150"

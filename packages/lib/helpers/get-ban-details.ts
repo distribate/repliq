@@ -1,24 +1,23 @@
 'use server';
 
 import 'server-only';
-import { createClient } from '../utils/supabase/server.ts';
-import { UserEntity } from '@repo/types/entities/entities-type.ts';
-import { Tables } from '@repo/types/entities/supabase.ts';
+import { createClient } from "@repo/lib/utils/api/server.ts";
+import { BanEntity, UserEntity } from '@repo/types/entities/entities-type.ts';
 
 type GetBanDetails = Pick<UserEntity, 'nickname'>
 
-export type PromiseBanDetails = Omit<Tables<'users_banned'>, 'id' | 'created_at'>
+export type BanDetails = Omit<BanEntity, 'id' | 'created_at' | "reason">
 
 export async function getBanDetails({
   nickname,
-}: GetBanDetails): Promise<PromiseBanDetails> {
-  const supabase = createClient();
+}: GetBanDetails): Promise<BanDetails> {
+  const api = createClient();
   
-  const { data, error } = await supabase
+  const { data, error } = await api
   .from('users_banned')
-  .select('reason, nickname, time')
+  .select()
   .eq('nickname', nickname)
-  .returns<PromiseBanDetails>()
+  .returns<BanDetails>()
   .single();
   
   if (error) {

@@ -1,7 +1,7 @@
 "use server"
 
 import { getCurrentUser } from '@repo/lib/actions/get-current-user.ts';
-import { createClient } from '@repo/lib/utils/supabase/server.ts';
+import { createClient } from '@repo/lib/utils/api/server.ts';
 
 type RemovePost = {
   post_id: string,

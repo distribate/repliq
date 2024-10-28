@@ -11,8 +11,8 @@ import { FormThreadComments } from './form-thread-comments.tsx';
 import { FormThreadDescription } from './form-thread-description.tsx';
 import { FormThreadTitle } from './form-thread-title.tsx';
 import dynamic from 'next/dynamic';
-import { Control, FieldErrors, useForm } from 'react-hook-form';
-import { zodCreateThreadForm } from '../types/create-thread-form-types.ts';
+import { useForm } from 'react-hook-form';
+import { FormChildsProps, zodCreateThreadForm } from '../types/create-thread-form-types.ts';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { createThreadSchema } from '../schemas/create-thread-schema.ts';
 import { DebugPanel } from '../../../debug/debug-panel.tsx';
@@ -37,16 +37,14 @@ const AdditionalSections = dynamic(() =>
   .then(m => m.AdditionalSections),
 );
 
-export type FormChildsProps = {
-  control: Control<zodCreateThreadForm, any>,
-  errors: FieldErrors<zodCreateThreadForm>
-}
-
 export const CreateThreadForm = () => {
   const { data: threadFormState } = threadFormQuery();
   const { createPostThreadMutation } = useCreateThread();
   
-  const { control, handleSubmit, setValue, resetField, getValues, formState: { errors, isValid } } = useForm<zodCreateThreadForm>({
+  const {
+    control, handleSubmit, setValue, resetField,
+    getValues, formState: { errors, isValid }
+  } = useForm<zodCreateThreadForm>({
     mode: 'onChange',
     resolver: zodResolver(createThreadSchema),
     defaultValues: {
@@ -55,16 +53,11 @@ export const CreateThreadForm = () => {
   });
   
   const onSubmit = () => {
-    const formImages = getValues('images');
-    
-    createPostThreadMutation.mutate({
-      images: Array.from(formImages || []),
-    });
+    return createPostThreadMutation.mutate();
   };
   
   const formChildsObj: FormChildsProps = {
-    errors: errors,
-    control: control,
+    errors, control
   };
 
   return (
@@ -78,10 +71,7 @@ export const CreateThreadForm = () => {
         <div
           className="flex flex-col gap-y-4 flex-grow-0 min-w-0 w-full lg:w-3/4"
         >
-          <BlockWrapper
-            className="flex flex-col gap-y-6 w-full
-            overflow-hidden !p-4"
-          >
+          <BlockWrapper className="flex flex-col gap-y-6 w-full overflow-hidden !p-4">
             <FormThreadTitle {...formChildsObj} />
             <FormThreadDescription {...formChildsObj} />
             <FormThreadContent {...formChildsObj} />
@@ -94,16 +84,10 @@ export const CreateThreadForm = () => {
           </BlockWrapper>
           <AdditionalSections />
         </div>
-        <BlockWrapper
-          className="flex flex-col gap-y-4 w-full lg:!w-1/4
-          flex-grow-0 sticky min-w-0 !p-4 top-0 h-fit"
-        >
+        <BlockWrapper className="flex flex-col gap-y-4 w-full lg:!w-1/4 flex-grow-0 sticky min-w-0 !p-4 top-0 h-fit">
           <FormThreadCategories {...formChildsObj} />
           <Separator />
-          <div
-            className="flex flex-col gap-4 items-start h-full
-            *:rounded-md *:w-full"
-          >
+          <div className="flex flex-col gap-4 items-start h-full *:rounded-md *:w-full">
             <FormThreadComments {...formChildsObj} />
             {/*<FormThreadAutoRemove {...formChildsObj} />*/}
             {/*<FormThreadPermissions {...formChildsObj} />*/}

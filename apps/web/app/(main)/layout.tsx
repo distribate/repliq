@@ -10,7 +10,9 @@ import { RESIZABLE_LAYOUT_COOKIE_KEY } from '@repo/shared/keys/cookie.ts';
 import { AUTH_REDIRECT } from '@repo/shared/constants/routes.ts';
 import { getUserBanned } from '@repo/lib/queries/get-user-banned.ts';
 
-type MainLayoutProps = { children: ReactNode }
+type MainLayoutProps = {
+  children: ReactNode
+}
 
 export default async function MainLayout({
   children,

@@ -3,8 +3,7 @@ import { Typography } from '@repo/ui/src/components/typography.tsx';
 import { Input } from '@repo/ui/src/components/input.tsx';
 import { useCreateThread } from '../hooks/use-create-thread.tsx';
 import { Controller } from 'react-hook-form';
-import { useCreateThreadImages } from '../hooks/use-create-thread-images.ts';
-import { FormChildsProps } from './create-thread-form.tsx';
+import { FormChildsProps } from '../types/create-thread-form-types.ts';
 
 export const FormThreadTitle = ({
   control, errors,

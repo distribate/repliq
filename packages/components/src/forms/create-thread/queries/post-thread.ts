@@ -1,14 +1,15 @@
 'use server';
 
-import "server-only"
+import 'server-only';
 import { ThreadEntity } from '@repo/types/entities/entities-type';
-import { createClient } from '@repo/lib/utils/supabase/server.ts';
+import { createClient } from '@repo/lib/utils/api/server.ts';
+import { postThreadImages } from './post-thread-images.ts';
 
 export type PostThread = {
   thread_id: string
 }
 
-type PostThreadProperties = Omit<ThreadEntity, "content"> & Partial<{
+type PostThreadProperties = Omit<ThreadEntity, 'content'> & Partial<{
   user_nickname: string,
   category_id: number,
   tags: string[] | null
@@ -106,28 +107,40 @@ async function postThreadTags({
   return data;
 }
 
+type PostThreadType = Omit<PostThreadProperties, 'thread_id' | 'created_at' | 'id' | 'updated_at'> & {
+  base64Files: Array<string> | null
+}
+
 export async function postThread({
   ...values
-}: Omit<PostThreadProperties,
-  'thread_id' | 'created_at' | 'id' | "updated_at">
-) {
+}: PostThreadType) {
   const {
-    category_id, content, comments, title, tags,
-    permission, description, auto_remove, user_nickname,
+    category_id, content, comments, title, tags, permission,
+    description, auto_remove, user_nickname, base64Files
   } = values;
   
   if (!content || !title || !user_nickname) return;
   
   const { id } = await postThreadItem({
-    content: JSON.parse(content), comments,
-    auto_remove, title, description, permission,
+    content: JSON.parse(content),
+    comments,
+    auto_remove,
+    title,
+    description,
+    permission
   });
   
   if (!id) return;
   
-  await postThreadNickname({ thread_id: id, user_nickname, })
-  await postThreadCategory({ thread_id: id, category_id, })
-  await postThreadTags({ thread_id: id, tags, })
+  console.log(base64Files)
+  
+  if (base64Files) {
+    await postThreadImages({ thread_id: id, base64Files });
+  }
+  
+  await postThreadNickname({ thread_id: id, user_nickname });
+  await postThreadCategory({ thread_id: id, category_id });
+  await postThreadTags({ thread_id: id, tags });
   
   return { thread_id: id };
 }

@@ -3,7 +3,7 @@
 import "server-only"
 import { getCurrentUser } from '@repo/lib/actions/get-current-user.ts';
 import { SetPinFriend } from './set-pin-friend.ts';
-import { createClient } from '@repo/lib/utils/supabase/server.ts';
+import { createClient } from '@repo/lib/utils/api/server.ts';
 
 export async function setUnpinFriend({
   recipient, friend_id,

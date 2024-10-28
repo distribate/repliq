@@ -1,6 +1,6 @@
 'use server';
 
-import { createClient } from '../utils/supabase/server.ts';
+import { createClient } from "@repo/lib/utils/api/server.ts";
 import { convertMsToFormattedTimestamp } from '../helpers/convert-ms-to-timestampz-format.ts';
 
 export type UserTimeFromServer = {

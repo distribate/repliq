@@ -7,9 +7,7 @@ import { availableCategoriesQuery } from '../queries/available-query.ts';
 import { useState } from 'react';
 import { useCreateThread } from '../hooks/use-create-thread.tsx';
 import { threadFormQuery } from '../queries/thread-form-query.ts';
-import { CreateThreadProps } from '../types/create-thread-form-types.ts';
-import { useCreateThreadImages } from '../hooks/use-create-thread-images.ts';
-import { FormChildsProps } from './create-thread-form.tsx';
+import { FormChildsProps } from '../types/create-thread-form-types.ts';
 
 export const FormThreadCategories = ({
   errors, control,

@@ -17,9 +17,7 @@ export const UserCoverLayout = ({
 }: UserCoverLayoutProps) => {
 	const { data: coverQueryState } = coverQuery()
 	const { setCoverStateMutation } = useCover()
-	const { data: requestedUser, isLoading } = requestedUserQuery(
-		reqUserNickname
-	)
+	const { data: requestedUser, isLoading } = requestedUserQuery(reqUserNickname)
 	
 	if (typeof requestedUser === 'string') return null;
 	

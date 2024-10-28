@@ -1,5 +1,4 @@
 import { Metadata } from 'next';
-import { MetadataType, PageConventionProps } from '@repo/types/config/page-types.ts';
 import { Separator } from '@repo/ui/src/components/separator.tsx';
 import { getTopicName } from '@repo/lib/queries/get-thread-name.ts';
 import { BlockWrapper } from '@repo/components/src/wrappers/block-wrapper.tsx';
@@ -27,6 +26,9 @@ import {
   CreateThreadComment,
 } from '@repo/components/src/thread/components/create-thread-comment/components/create-thread-comment.tsx';
 import { ContentNotFound } from '@repo/components/src/templates/section-not-found.tsx';
+import { MetadataType, PageConventionProps } from '@repo/types/global';
+
+export const dynamic = 'force-dynamic';
 
 export async function generateMetadata({
   params,

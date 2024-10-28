@@ -2,7 +2,7 @@
 
 import { UserDonate } from "../types/user-donate-types.ts";
 import { Enums } from "@repo/types/entities/supabase.ts";
-import { createClient } from '@repo/lib/utils/supabase/server.ts';
+import { createClient } from "@repo/lib/utils/api/server.ts";
 
 export type DonateType = {
 	primary_group: Enums<"donate_variants">

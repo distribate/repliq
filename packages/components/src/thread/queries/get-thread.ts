@@ -1,7 +1,7 @@
 "use server"
 
 import { ThreadRequest } from '../types/thread-request-types.ts';
-import { createClient } from '@repo/lib/utils/supabase/server.ts';
+import { createClient } from '@repo/lib/utils/api/server.ts';
 
 export async function getThread(
   threadId: Pick<ThreadRequest, 'thread_id'>['thread_id'],

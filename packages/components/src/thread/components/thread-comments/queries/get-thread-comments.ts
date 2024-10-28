@@ -2,8 +2,12 @@
 
 import "server-only"
 import { ThreadRequest } from '../../../types/thread-request-types.ts';
-import { RequestDetails } from '@repo/types/config/request-types.ts';
-import { createClient } from '@repo/lib/utils/supabase/server.ts';
+import { createClient } from "@repo/lib/utils/api/server.ts";
+
+export type RequestDetails = Partial<{
+  ascending: boolean,
+  referencedTable: string
+}>
 
 type GetCommentsReplied = {
   initiatorId: string
@@ -41,7 +45,7 @@ async function getCommentMore({
   const api = createClient();
   
   const { data, error } = await api
-  .from('thread_comments')
+  .from('threads_comments')
   .select(`id,content,user_nickname`)
   .eq('id', commentId)
   .single();

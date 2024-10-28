@@ -3,7 +3,7 @@
 import "server-only"
 import { ThreadCommentEntity, ThreadCommentEntityRef, ThreadCommentRepliedEntity } from '@repo/types/entities/entities-type.ts';
 import { CreateThreadCommentType } from './create-thread-comment-query.ts';
-import { createClient } from '@repo/lib/utils/supabase/server.ts';
+import { createClient } from '@repo/lib/utils/api/server.ts';
 
 export async function postThreadReplied({
   initiator_comment_id, recipient_comment_id,
@@ -11,7 +11,7 @@ export async function postThreadReplied({
   const api = createClient();
   
   const { data, error } = await api
-  .from('t_comments_replies')
+  .from('threads_comments_replies')
   .insert({
     initiator_comment_id,
     recipient_comment_id,
@@ -27,15 +27,14 @@ export async function postThreadReplied({
 }
 
 export async function postThreadCommentItem({
-  user_nickname, content,
-}: Pick<ThreadCommentEntity, 'content' | 'user_nickname'>) {
+  user_nickname, content, thread_id
+}: Pick<ThreadCommentEntity, 'content' | 'user_nickname' | "thread_id">) {
   const api = createClient();
   
   const { data, error } = await api
-  .from('t_comments')
+  .from('threads_comments')
   .insert({
-    user_nickname,
-    content,
+    user_nickname, content, thread_id
   })
   .select('id')
   .single();
@@ -53,7 +52,7 @@ export async function postThreadCommentThreads({
   const api = createClient();
   
   const { data, error } = await api
-  .from('threads_comments')
+  .from('threads_comments_ref')
   .insert({
     comment_id, thread_id,
   })
@@ -89,8 +88,7 @@ export async function postThreadComment({
   if (!data || !data.comments || error) return;
   
   const { id: threadCommentItemId } = await postThreadCommentItem({
-    user_nickname,
-    content,
+    user_nickname, content, thread_id
   });
   
   if (!threadCommentItemId) return;
@@ -109,8 +107,7 @@ export async function postThreadComment({
   }
   
   const { comment_id: threadCommentThreadsId } = await postThreadCommentThreads({
-    comment_id: threadCommentItemId,
-    thread_id
+    comment_id: threadCommentItemId, thread_id
   });
   
   if (threadCommentItemId !== threadCommentThreadsId) return;

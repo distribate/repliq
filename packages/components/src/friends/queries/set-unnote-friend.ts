@@ -3,7 +3,7 @@
 import "server-only"
 import { getCurrentUser } from '@repo/lib/actions/get-current-user.ts';
 import { SetNote } from './set-note-friend.ts';
-import { createClient } from '@repo/lib/utils/supabase/server.ts';
+import { createClient } from '@repo/lib/utils/api/server.ts';
 
 export async function setUnNoteFriend({
   recipient, friend_id

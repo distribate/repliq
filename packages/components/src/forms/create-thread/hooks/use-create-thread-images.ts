@@ -1,9 +1,9 @@
 import { useCreateThread } from './use-create-thread.tsx';
 import { ChangeEvent } from 'react';
 
-type CreateThreadImageControl = {
+export type CreateThreadImageControl = {
   type: 'add' | 'delete',
-  e: React.MouseEvent<SVGSVGElement, MouseEvent> | ChangeEvent<HTMLInputElement>,
+  e: React.MouseEvent<HTMLButtonElement, MouseEvent> | ChangeEvent<HTMLInputElement>,
   index?: number,
   resetField?: Function,
   setValue?: Function,
@@ -27,28 +27,28 @@ export const useCreateThreadImages = () => {
       
       updateThreadFormMutation.mutate({
         values: {
-          previewImages: convertedFileList,
+          images: convertedFileList,
         },
       });
       
     } else if (type === 'delete' && index !== undefined && resetField && setValue) {
       if (images.length <= 1) {
         resetField('images');
+        
         updateThreadFormMutation.mutate({
           values: {
-            previewImages: [],
+            images: [],
           },
         });
       } else {
-        const updatedFormImages = images
-        .filter((_, i) => i !== index);
+        const updatedFormImages = images.filter((_, i) => i !== index);
         
         setValue("images", updatedFormImages)
         
         updateThreadFormMutation.mutate({
           values: {
-            previewImages: updatedFormImages
-              .map(file => URL.createObjectURL(file)),
+            images: updatedFormImages
+            .map(file => URL.createObjectURL(file)),
           },
         });
       }

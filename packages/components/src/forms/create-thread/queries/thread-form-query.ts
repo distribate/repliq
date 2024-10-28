@@ -4,15 +4,13 @@ import { ThreadEntity } from "@repo/types/entities/entities-type"
 export const THREAD_FORM_QUERY = ["ui", "thread-form"];
 
 export type ThreadFormQuery = Partial<{
-	values: Partial<
-		Omit<ThreadEntity, "id" | "created_at" | "content" | "updated_at">
-	> & Partial<{
+	values: Partial<Omit<ThreadEntity, "id" | "created_at" | "content" | "updated_at">> & Partial<{
 		category_id: number,
 		auto_remove_time: string,
 		permission_cost: string,
 		tags: Array<string>,
 		content: any,
-		previewImages: string[]
+		images: Array<string>
  	}>
 }>
 

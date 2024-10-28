@@ -1,6 +1,6 @@
 'use server';
 
-import { createClient } from '@repo/lib/utils/supabase/server.ts';
+import { createClient } from '@repo/lib/utils/api/server.ts';
 import { UserEntity } from '@repo/types/entities/entities-type.ts';
 
 type GetUserBlocked = {

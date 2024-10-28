@@ -1,4 +1,3 @@
-import { UserPageParam } from '@repo/types/config/page-types.ts';
 import { Suspense } from 'react';
 import { GeneralStats } from '../components/general/components/general-stats.tsx';
 import { LandsStats } from '../components/lands/components/lands-stats.tsx';
@@ -7,6 +6,7 @@ import { LandsStatsSkeleton } from '../components/lands/components/lands-stats-s
 import { SectionPrivatedContent } from '../../../../templates/section-privated-content.tsx';
 import { ProfileSectionLayout } from '../../../../layouts/profile-section-layout.tsx';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@repo/ui/src/components/tabs.tsx';
+import { UserPageParam } from '@repo/types/global';
 
 type UserProfileGameStatsProps = UserPageParam & {
   isSectionPrivatedByOwner: boolean

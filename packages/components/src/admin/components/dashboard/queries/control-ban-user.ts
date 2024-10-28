@@ -1,8 +1,7 @@
 'use server';
 
 import { BanUser } from '../types/ban-user-types.ts';
-import { createClient } from '@repo/lib/utils/supabase/server.ts';
-
+import { createClient } from "@repo/lib/utils/api/server.ts";
 export async function controlBanUser({
   type, nickname, parameters,
 }: BanUser) {

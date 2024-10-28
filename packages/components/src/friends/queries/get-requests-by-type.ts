@@ -2,7 +2,7 @@
 
 import "server-only"
 import { Tables } from '@repo/types/entities/supabase.ts';
-import { createClient } from '@repo/lib/utils/supabase/server.ts';
+import { createClient } from "@repo/lib/utils/api/server.ts";
 
 export type FriendsRequests = 'incoming' | 'outgoing';
 

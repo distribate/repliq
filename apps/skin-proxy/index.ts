@@ -63,4 +63,4 @@ async function start() {
 	}
 }
 
-start()
+start().then()

@@ -2,7 +2,7 @@
 
 import "server-only"
 import { UpdateThreadRequestType } from '../types/update-thread-request-types.ts';
-import { createClient } from '@repo/lib/utils/supabase/server.ts';
+import { createClient } from '@repo/lib/utils/api/server.ts';
 
 async function threadRemove({
   thread_id

@@ -1,9 +1,9 @@
 import { Metadata } from "next";
-import { MetadataType } from "@repo/types/config/page-types.ts"
 import { Typography } from "@repo/ui/src/components/typography.tsx";
 import { getRandomMinecraftFact } from "@repo/components/src/forms/auth/queries/get-random-minecraft-fact.ts";
 import { Suspense } from "react";
 import { Skeleton } from "@repo/ui/src/components/skeleton.tsx";
+import { MetadataType } from '@repo/types/global';
 
 export const generateMetadata = ({
 	searchParams

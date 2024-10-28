@@ -1,6 +1,6 @@
 "use server"
 
-import { createClient } from "../utils/supabase/server.ts";
+import { createClient } from "@repo/lib/utils/api/server.ts";
 import { getCurrentUser } from "../actions/get-current-user.ts";
 import { validateRequest } from "../utils/auth/validate-requests.ts";
 

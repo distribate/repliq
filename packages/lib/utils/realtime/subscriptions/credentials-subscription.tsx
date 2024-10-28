@@ -1,4 +1,4 @@
-import { createClient } from "../../supabase/server.ts";
+import { createClient } from "@repo/lib/utils/api/server.ts";
 import { RealtimePostgresChangesPayload } from "@supabase/realtime-js";
 import { Tables } from "@repo/types/entities/supabase.ts"
 import { toast } from "@repo/ui/src/hooks/use-toast.ts";

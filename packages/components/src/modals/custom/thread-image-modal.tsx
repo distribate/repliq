@@ -15,9 +15,7 @@ export const ThreadImageModal = ({
 }: ThreadImageModal) => {
   return (
     <DialogWrapper
-      properties={{
-        dialogContentClassName: "!p-0"
-      }}
+      properties={{ dialogContentClassName: "!p-0" }}
       name={THREAD_IMAGE_MODAL_NAME(threadId, index)}
       trigger={
         <div className="relative flex justify-center items-center w-[300px] group h-[150px] overflow-hidden object-cover rounded-md">

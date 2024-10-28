@@ -5,7 +5,7 @@ import { FriendsQuery } from './friends-query.ts';
 import { Tables } from '@repo/types/entities/supabase.ts';
 import type { FriendsSort } from '../../profile/components/friends/hooks/use-friends-sort.tsx';
 import { getCurrentUser } from '@repo/lib/actions/get-current-user.ts';
-import { createClient } from '@repo/lib/utils/supabase/server.ts';
+import { createClient } from "@repo/lib/utils/api/server.ts";
 
 export type RequestFriends = {
   nickname: string,

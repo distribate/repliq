@@ -1,7 +1,7 @@
 "use server"
 
 import "server-only"
-import { createClient } from "../utils/supabase/server.ts";
+import { createClient } from "@repo/lib/utils/api/server.ts";
 import { validateRequest } from "../utils/auth/validate-requests.ts";
 
 export type Session = {
@@ -22,14 +22,14 @@ export type TerminateSession = {
 export async function terminateAllSessions({
 	user_id
 }: Pick<TerminateSession, "user_id">) {
-	const supabase = createClient();
+	const api = createClient();
 	
 	const { user, session: currentSession } = await validateRequest();
 	
 	if (!user || !currentSession) return;
 	if (user.id !== user_id) return;
 	
-	const { data: allActiveSessions } = await supabase
+	const { data: allActiveSessions } = await api
 	.from("users_session")
 	.select()
 	.neq("id", currentSession.id)
@@ -38,7 +38,7 @@ export async function terminateAllSessions({
 	if (!allActiveSessions) return;
 	
 	for (const session of allActiveSessions) {
-		const { data, error } = await supabase
+		const { data, error } = await api
 		.from("users_session")
 		.delete()
 		.eq("id", session.id)

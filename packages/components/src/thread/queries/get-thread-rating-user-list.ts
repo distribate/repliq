@@ -1,4 +1,4 @@
-import { createClient } from '@repo/lib/utils/supabase/server.ts';
+import { createClient } from '@repo/lib/utils/api/server.ts';
 import { ThreadRequest } from '../types/thread-request-types.ts';
 
 type ThreadRatingUserUserList = Pick<ThreadRequest, "thread_id">

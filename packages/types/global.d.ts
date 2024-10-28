@@ -6,6 +6,32 @@ declare module "jpeg"
 declare module "jpg"
 declare module "webp"
 
+export type PageConventionProps = {
+  params: {
+    id: string,
+    nickname: string
+  }
+  searchParams: {
+    [key: string]: string | string[] | undefined
+  }
+}
+
+export type MetadataType = {
+  params: {
+    id?: string,
+    title?: string,
+    nickname?: string
+  }
+  searchParams: {
+    [key: string]: string | string[] | undefined
+  }
+}
+
+export type UserPageParam = {
+  nickname: string;
+  uuid?: string
+}
+
 export type CustomEditor = BaseEditor & ReactEditor & HistoryEditor
 
 declare module "bcryptjs"

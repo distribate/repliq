@@ -1,7 +1,7 @@
 "use server"
 
 import "server-only"
-import { createClient } from "../utils/supabase/server.ts";
+import { createClient } from "@repo/lib/utils/api/server.ts";
 
 export type SecurityCredentials = Partial<{
 	email: string,

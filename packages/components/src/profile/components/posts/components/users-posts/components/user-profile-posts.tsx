@@ -1,5 +1,4 @@
 import { HydrationBoundary, dehydrate, QueryClient } from '@tanstack/react-query';
-import { UserPageParam } from '@repo/types/config/page-types.ts';
 import { getCurrentUser } from '@repo/lib/actions/get-current-user.ts';
 import { Suspense } from 'react';
 import { protectPrivateArea } from '@repo/lib/helpers/protect-private-area.ts';
@@ -10,6 +9,7 @@ import { UserPostsSkeleton } from '../../../../../../skeletons/user-posts-skelet
 import { Posts } from '../../posts/components/posts.tsx';
 import { CreatePostSection } from '../../create-post/create-post-section.tsx';
 import { ProfileSectionLayout } from '../../../../../../layouts/profile-section-layout.tsx';
+import { UserPageParam } from '@repo/types/global';
 
 export const UserProfilePosts = async({
   nickname,
@@ -36,10 +36,7 @@ export const UserProfilePosts = async({
     >
       <HydrationBoundary state={dehydrate(qc)}>
         <Suspense fallback={<UserPostsSkeleton />}>
-          <Posts
-            nickname={creatorPost.nickname}
-            name_color={creatorPost.name_color}
-          />
+          <Posts nickname={creatorPost.nickname} name_color={creatorPost.name_color} />
         </Suspense>
       </HydrationBoundary>
     </ProfileSectionLayout>

@@ -3,7 +3,7 @@
 import { Database, Tables } from '@repo/types/entities/supabase.ts';
 import { getCurrentUser } from "@repo/lib/actions/get-current-user.ts";
 import { checkIsFriend } from "@repo/lib/helpers/check-is-friend.ts";
-import { createClient } from '@repo/lib/utils/supabase/server.ts';
+import { createClient } from '@repo/lib/utils/api/server.ts';
 
 type RawPosts = {
 	posts: Tables<"posts">

@@ -4,7 +4,7 @@ import { Tables } from '@repo/types/entities/supabase.ts';
 import { UpdateThreadRatingType } from './post-thread-rating.ts';
 import { getCurrentUser } from '@repo/lib/actions/get-current-user.ts';
 import { ThreadRequest } from '../types/thread-request-types.ts';
-import { createClient } from '@repo/lib/utils/supabase/server.ts';
+import { createClient } from '@repo/lib/utils/api/server.ts';
 
 type ThreadRatingTable = Tables<'threads_rating'>;
 

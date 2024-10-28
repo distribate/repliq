@@ -1,9 +1,8 @@
-import { createClient } from '../../supabase/server.ts';
+import { createClient } from "@repo/lib/utils/api/server.ts";
 import { RealtimePostgresChangesPayload } from '@supabase/realtime-js';
 import { Tables } from '@repo/types/entities/supabase.ts';
 import { invalidateAllFriendsRequests } from '../../../helpers/invalidate-friends-requests.ts';
 import { notifyClientAboutAccept, notifyClientAboutRequest } from '../../../helpers/notify-client.tsx';
-import { QueryClient } from '@tanstack/react-query';
 
 type FriendsRequestsTable = Tables<'friends_requests'>
 type UserFriendsTable = Tables<'users_friends'>

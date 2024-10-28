@@ -1,7 +1,7 @@
 "use server"
 
 import "server-only"
-import { createClient } from '@repo/lib/utils/supabase/server.ts';
+import { createClient } from '@repo/lib/utils/api/server.ts';
 
 function getRandomArbitrary(min: number, max: number) {
 	return Math.random() * (max - min) + min;

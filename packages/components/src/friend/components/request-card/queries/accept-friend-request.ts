@@ -3,7 +3,7 @@
 import "server-only"
 import { deleteFriendRequest, RequestProperties } from './delete-friend-request.ts';
 import { getCurrentUser } from '@repo/lib/actions/get-current-user.ts';
-import { createClient } from '@repo/lib/utils/supabase/server.ts';
+import { createClient } from "@repo/lib/utils/api/server.ts";
 
 async function addFieldToFields({
   initiator,

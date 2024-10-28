@@ -1,6 +1,6 @@
 "use server"
 
-import { createClient } from '../supabase/server.ts';
+import { createClient } from "@repo/lib/utils/api/server.ts";
 
 type PublicUrlFromStorage = {
   bucket: string,

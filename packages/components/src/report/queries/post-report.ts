@@ -2,7 +2,7 @@
 
 import { ReportEntity } from "@repo/types/entities/entities-type"
 import { validateRequest } from "@repo/lib/utils/auth/validate-requests.ts";
-import { createClient } from '@repo/lib/utils/supabase/server.ts';
+import { createClient } from '@repo/lib/utils/api/server.ts';
 
 type PostReportType = Omit<ReportEntity, "id"
 	| "created_at" | "user_nickname" | "reported_item"

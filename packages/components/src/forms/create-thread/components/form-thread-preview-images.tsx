@@ -1,25 +1,27 @@
-import { useCreateThreadImages } from '../hooks/use-create-thread-images.ts';
+import { CreateThreadImageControl, useCreateThreadImages } from '../hooks/use-create-thread-images.ts';
 import { threadFormQuery } from '../queries/thread-form-query.ts';
 import { Typography } from '@repo/ui/src/components/typography.tsx';
 import dynamic from 'next/dynamic';
-import { FormChildsProps } from './create-thread-form.tsx';
+import { FormChildsProps } from '../types/create-thread-form-types.ts';
 
 const FormPreviewImageModal = dynamic(() =>
   import('../../../modals/custom/form-preview-image-modal.tsx')
   .then(m => m.FormPreviewImageModal),
 );
 
-export const FormThreadPreviewImages = ({
-  errors, resetField, images, setValue
-}: FormChildsProps & {
+type FormThreadPreviewImagesProps = FormChildsProps & {
   resetField: Function,
   setValue: Function,
   images: File[] | null
-}) => {
+}
+
+export const FormThreadPreviewImages = ({
+  errors, resetField, images, setValue,
+}: FormThreadPreviewImagesProps) => {
   const { handleControlImage } = useCreateThreadImages();
   const { data: threadFormState } = threadFormQuery();
   
-  const previewFormImages = threadFormState.values?.previewImages;
+  const previewFormImages = threadFormState.values?.images;
   const threadTitle = threadFormState.values?.title;
   
   if (!previewFormImages
@@ -27,10 +29,10 @@ export const FormThreadPreviewImages = ({
   ) return;
   
   const handleDeleteImage = (
-    e: React.MouseEvent<SVGSVGElement, MouseEvent>, index: number,
+    e: Pick<CreateThreadImageControl, 'e'>['e'], index: number,
   ) => {
     return handleControlImage({
-      index, e, type: 'delete', resetField, images, setValue
+      index, e, type: 'delete', resetField, images, setValue,
     });
   };
   
@@ -40,12 +42,12 @@ export const FormThreadPreviewImages = ({
         <Typography textColor="shark_white" textSize="medium">
           Прикрепленные изображения
         </Typography>
-        <div className="flex items-center gap-2 w-fit">
+        <div className="flex flex-wrap items-start justify-start gap-4">
           {previewFormImages.map((image, i) => (
             <FormPreviewImageModal
               key={i}
               image={image}
-              modalTarget={`Thread ${threadTitle || "XXX"}. Image ${i}`}
+              modalTarget={`Thread ${threadTitle || 'XXX'}. Image ${i}`}
               handleDeleteImage={(e) => handleDeleteImage(e, i)}
             />
           ))}

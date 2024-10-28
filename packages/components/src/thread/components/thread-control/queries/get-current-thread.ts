@@ -3,7 +3,7 @@
 import "server-only"
 import { ThreadModel } from '../../../queries/get-thread-model.ts';
 import { ThreadEntity } from '@repo/types/entities/entities-type.ts';
-import { createClient } from '@repo/lib/utils/supabase/server.ts';
+import { createClient } from '@repo/lib/utils/api/server.ts';
 
 export async function getCurrentThread({
   id: threadId

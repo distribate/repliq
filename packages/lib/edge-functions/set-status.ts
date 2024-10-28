@@ -1,9 +1,9 @@
 "use server"
 
-import { createClient } from "../utils/supabase/server.ts";
+import { createClient } from "@repo/lib/utils/api/server.ts";
 
 export async function setStatus(id: string) {
-	const supabase = createClient()
+	const api = createClient()
 	
-	return supabase.rpc('set_status', { p_user_id: id, p_value: true })
+	return api.rpc('set_status', { p_user_id: id, p_value: true })
 }

@@ -1,6 +1,6 @@
 'use server';
 
-import { createClient } from '../utils/supabase/server.ts';
+import { createClient } from "@repo/lib/utils/api/server.ts";
 import { getCurrentUser } from '../actions/get-current-user.ts';
 import { AvailableFields } from '../hooks/use-update-current-user.ts';
 import { getUserDonate } from '@repo/components/src/user/components/donate/queries/get-user-donate.ts';

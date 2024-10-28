@@ -18,6 +18,8 @@ import {
 import {
   PROFILE_BACKGROUND_DEFAULT_IMAGES_MODAL_NAME,
 } from '../../../../../../modals/custom/profile-background-default-images-modal.tsx';
+import { getArrayBuffer } from '@repo/lib/helpers/ger-array-buffer.ts';
+import { encode } from 'base64-arraybuffer';
 
 type BackgroundImage = {
   file: File | null,
@@ -144,12 +146,14 @@ export const useControlCoverImage = () => {
       
       if (!fileName) return;
       
+      const encodedFile = encode(await getArrayBuffer(file));
+      
       const [ deletedPrev, data ] = await Promise.all([
         deleteImageFromBucket({
           bucket: USER_IMAGES_BUCKET, userId: currentUser.id,
         }),
         uploadImageToBucket({
-          bucket: USER_IMAGES_BUCKET, folderName: 'cover', file, fileName,
+          bucket: USER_IMAGES_BUCKET, folderName: 'cover', file: encodedFile, fileName,
         }),
       ]);
       

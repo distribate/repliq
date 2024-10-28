@@ -4,8 +4,6 @@ import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from '@repo/ui/s
 import { ReactNode, useEffect, useRef, useState } from 'react';
 import { RESIZABLE_LAYOUT_COOKIE_KEY } from '@repo/shared/keys/cookie.ts';
 import { ImperativePanelHandle } from 'react-resizable-panels';
-import { NavigationPanel } from '../navigation/components/navigation-panel.tsx';
-import { coverQuery } from '../profile/components/cover/cover/queries/cover-query.ts';
 import { useMediaQuery } from '@repo/lib/hooks/use-media-query.ts';
 import dynamic from 'next/dynamic';
 import { SidebarDesktopSkeleton } from '../sidebar/desktop/components/sidebar/sidebar-desktop-skeleton.tsx';
@@ -82,8 +80,6 @@ export const SidebarMain = ({
 export const AreaMain = ({
   children, defaultSize,
 }: PanelsProps & { children: ReactNode }) => {
-  const { data: coverState } = coverQuery();
-  
   return (
     <ResizablePanel
       id="main"
@@ -93,10 +89,7 @@ export const AreaMain = ({
       maxSize={96}
       className="flex flex-col gap-y-2 !pb-4 !overflow-visible !min-h-screen !max-h-screen"
     >
-      {coverState.inView && <NavigationPanel />}
-      <div className="flex flex-col pr-2 gap-y-4 h-full
-          w-full main-section overflow-x-hidden overflow-y-scroll"
-      >
+      <div className="flex flex-col gap-y-4 h-full w-full main-section overflow-x-hidden overflow-y-scroll">
         {children}
       </div>
     </ResizablePanel>
@@ -108,8 +101,8 @@ export const ResizableLayout = ({
 }: ResizableLayout) => {
   const matches = useMediaQuery('(min-width: 768px)')
   const { isDynamic } = useSidebarControl();
-  const layoutGroupGap = isDynamic ? 1 : 2;
   const [ isClient, setIsClient ] = useState(false);
+  const layoutGroupGap = isDynamic ? 1 : 2;
   
   useEffect(() => {setIsClient(true)}, []);
   
@@ -117,7 +110,7 @@ export const ResizableLayout = ({
     document.cookie = `${RESIZABLE_LAYOUT_COOKIE_KEY}=${JSON.stringify(sizes)}`;
   };
   
-  if (!isClient) return;
+  if (!isClient) return null;
   
   return (
     <>

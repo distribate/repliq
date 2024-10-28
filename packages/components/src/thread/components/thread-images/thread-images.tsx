@@ -13,11 +13,14 @@ export const ThreadImages = ({
   const { data: threadImages, isLoading } = threadImagesQuery(threadId);
   
   if (isLoading) return <ThreadImagesSkeleton />;
-  if (threadImages && !threadImages.length) return null;
+  
+  if (!threadImages
+    || (threadImages && !threadImages.length)
+  ) return null;
   
   return (
     <div className="flex items-start w-full gap-2">
-      {threadImages?.map((image, i) => (
+      {threadImages.map((image, i) => (
         <ThreadImageModal key={i} image={image} index={i} id={threadId}/>
       ))}
     </div>

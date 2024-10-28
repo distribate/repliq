@@ -1,27 +1,22 @@
 'use server';
 
-import { createClient } from '../utils/supabase/server.ts';
-import { Tables } from '@repo/types/entities/supabase.ts';
+import { createClient } from "@repo/lib/utils/api/server.ts";
 import { getPublicUrlFromStorage } from '../utils/storage/get-public-url-from-storage.ts';
+import { MinecraftItemEntity } from '@repo/types/entities/entities-type.ts';
 
-type MINECRAFT_ITEMS = Tables<'config_minecraft_items'>
-
-export type AvailableMinecraftItem = Omit<MINECRAFT_ITEMS, 'image'> & {
-  image: string
-}
-
-export async function getAvailableMinecraftItems(): Promise<
-  AvailableMinecraftItem[] | null
-> {
+export async function getAvailableMinecraftItems(): Promise<MinecraftItemEntity[] | null> {
   const supabase = createClient();
   
-  let items: AvailableMinecraftItem[] = [];
+  let items: MinecraftItemEntity[] = [];
   
   const { data, error } = await supabase
   .from('config_minecraft_items')
-  .select('id, title, image');
+  .select()
+  .returns<MinecraftItemEntity[]>()
   
-  if (error) throw new Error(error.message);
+  if (error) {
+    throw new Error(error.message);
+  }
   
   if (!data) return null;
   
@@ -29,10 +24,12 @@ export async function getAvailableMinecraftItems(): Promise<
     const item = data[i];
     
     const url = await getPublicUrlFromStorage({
-      bucket: 'static', fileName: 'items/' + item.image,
+      bucket: 'static', fileName: item.image,
     });
     
-    if (url) items.push({ ...item, image: url });
+    if (url) items.push({
+      ...item, image: url
+    });
   }
   
   return items;

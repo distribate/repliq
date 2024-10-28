@@ -1,6 +1,6 @@
 'use server';
 
-import { createClient } from '../utils/supabase/server.ts';
+import { createClient } from "@repo/lib/utils/api/server.ts";
 import { CheckProfileStatus } from './check-profile-status.ts';
 
 type GetUserBlockStatus = {

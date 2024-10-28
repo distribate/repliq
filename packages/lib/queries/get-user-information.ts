@@ -5,7 +5,7 @@ import { DonateType, getUserDonate } from "@repo/components/src/user/components/
 import { convertUserPreferencesToObject, UserPreferences } from '../helpers/convert-user-preferences-to-map.ts';
 import { getUserBanned } from './get-user-banned.ts';
 import { CurrentUser } from './current-user-query.ts';
-import { createClient } from '../utils/supabase/server.ts';
+import { createClient } from "@repo/lib/utils/api/server.ts";
 
 export async function getUserInformation(): Promise<
 	CurrentUser | null

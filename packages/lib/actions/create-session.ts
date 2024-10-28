@@ -6,7 +6,7 @@ import { permanentRedirect } from "next/navigation"
 import { lucia } from "@repo/lib/utils/auth/lucia-instance.ts";
 import bcrypt from "bcryptjs";
 import { setSessionDeviceInfo } from "./set-session-device-info.ts";
-import { createClient } from "../utils/supabase/server.ts";
+import { createClient } from "@repo/lib/utils/api/server.ts";
 
 export interface ActionResult {
 	error: string | null;

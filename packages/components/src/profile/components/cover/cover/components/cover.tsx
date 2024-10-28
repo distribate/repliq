@@ -21,14 +21,8 @@ export const UserCover = ({
   const { data: coverQueryState } = coverQuery();
   const qc = useQueryClient();
   const currentUser = qc.getQueryData<CurrentUser>(CURRENT_USER_QUERY_KEY);
-  
-  const userDonate = qc.getQueryData<DonateQuery>(
-    DONATE_QUERY_KEY(requestedUser.nickname),
-  );
-  
-  const { data: url } = imageCoverQuery({
-    nickname: requestedUser.nickname,
-  });
+  const userDonate = qc.getQueryData<DonateQuery>(DONATE_QUERY_KEY(requestedUser.nickname),);
+  const { data: url } = imageCoverQuery({ nickname: requestedUser.nickname, });
   
   if (!currentUser) return;
   
@@ -40,15 +34,14 @@ export const UserCover = ({
   const nickname = requestedUser.nickname;
   const preferences = requestedUser.preferences;
   const preferOutline = getPreferenceValue(preferences, "coverOutline")
+  const backgroundImage = url ? `url(${url})` : ''
   
   return (
     <CoverArea
       variant={inView ? 'full' : 'compact'}
       backgroundColor={url ? 'transparent' : 'gray'}
       border={userDonate && preferOutline ? userDonate.donate : 'default'}
-      style={{
-        backgroundImage: url ? `url(${url})` : '',
-      }}
+      style={{ backgroundImage: backgroundImage }}
     >
       <div className="z-[2] absolute w-full h-full right-0 top-0 bottom-0 left-0 bg-black/40" />
       <div className="flex gap-x-6 z-[3] relative items-start">
@@ -57,11 +50,10 @@ export const UserCover = ({
           propHeight={imageHeight}
           propWidth={imageHeight}
           nickname={nickname}
-          withBadge={{ active: false }}
         />
         <UserCoverMainInfo nickname={nickname} />
       </div>
-      {(currentUser && !isBlocked) && (
+      {!isBlocked && (
         <UserCoverPanel
           reqUserNickname={nickname}
           isOwner={isOwner}

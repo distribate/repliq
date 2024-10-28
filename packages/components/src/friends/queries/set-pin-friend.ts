@@ -3,7 +3,7 @@
 import "server-only"
 import { getCurrentUser } from '@repo/lib/actions/get-current-user.ts';
 import { Tables } from '@repo/types/entities/supabase.ts';
-import { createClient } from '@repo/lib/utils/supabase/server.ts';
+import { createClient } from '@repo/lib/utils/api/server.ts';
 
 export type SetPinFriend = Pick<Tables<"friends_pinned">, "friend_id" | "recipient">
 

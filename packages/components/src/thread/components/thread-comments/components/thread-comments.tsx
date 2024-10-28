@@ -24,7 +24,7 @@ export const ThreadComments = ({
   if (!thread_comments) return <CommentsDisabled />;
   
   return (
-    <div className="flex flex-col justify-center h-full items-center w-full">
+    <div className="flex flex-col justify-center items-center w-full">
       <div className={`flex w-fit bg-shark-700 rounded-md px-2 py-0.5 ${!nonComments && 'mb-2'}`}>
         {nonComments ? (
           <Typography textSize="medium" textColor="shark_white" className="font-semibold">
@@ -37,9 +37,7 @@ export const ThreadComments = ({
         )}
       </div>
       <div className="flex flex-col items-start gap-y-2 w-full">
-        {isLoading ? (
-          <ThreadCommentsSkeleton />
-        ) : (
+        {isLoading ? <ThreadCommentsSkeleton /> : (
           threadComments?.map((comment, i) => (
             <ThreadCommentItem
               key={i}

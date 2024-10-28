@@ -1,22 +1,13 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { verifyRequestOrigin } from "lucia";
-import { updateSession } from '@repo/lib/utils/supabase/middleware'
 import { ALERTS_COOKIE_KEY } from "@repo/shared/keys/cookie.ts"
 
 export async function middleware(request: NextRequest) {
 	if (request.method === "GET") return NextResponse.next();
 	
 	const hasAlertsShowing = request.cookies.has(ALERTS_COOKIE_KEY)
-	// const sidebarFormat = request.cookies.has('sidebar');
-
 	const response = NextResponse.next()
-
-	// console.log(sidebarFormat)
-	
-	// if (!sidebarFormat) {
-	// 	response.cookies.set('sidebar', 'dynamic');
-	// }
 	
 	if (!hasAlertsShowing) {
 		response.cookies.set(ALERTS_COOKIE_KEY, 'show');
@@ -32,8 +23,6 @@ export async function middleware(request: NextRequest) {
 			status: 403
 		});
 	}
-	
-	await updateSession(request)
 	
 	return response;
 }

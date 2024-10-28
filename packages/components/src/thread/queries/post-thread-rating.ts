@@ -2,7 +2,7 @@
 
 import { getCurrentUser } from '@repo/lib/actions/get-current-user.ts';
 import { ThreadRequest } from '../types/thread-request-types.ts';
-import { createClient } from '@repo/lib/utils/supabase/server.ts';
+import { createClient } from '@repo/lib/utils/api/server.ts';
 
 export type UpdateThreadRatingType = 'increment' | 'decrement'
 

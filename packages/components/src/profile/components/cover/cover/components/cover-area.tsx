@@ -1,8 +1,8 @@
 import { cva, VariantProps } from "class-variance-authority";
-import { HTMLAttributes, memo } from "react";
+import { HTMLAttributes } from "react";
 
 const coverAreaVariants = cva(
-	"flex w-full bg-center rounded-xl mt-[4px] overflow-hidden bg-cover bg-no-repeat items-center justify-between px-12 py-6", {
+	"flex w-full bg-center rounded-lg mt-[4px] overflow-hidden bg-cover bg-no-repeat items-center justify-between px-12 py-6", {
 		variants: {
 			variant: {
 				full: "relative z-[3] min-h-[414px] max-h-[414px]",
@@ -32,16 +32,12 @@ interface CoverArea {
 	backgroundImage?: string
 }
 
-interface CoverAreaProps
-	extends HTMLAttributes<HTMLDivElement>,
-		VariantProps<typeof coverAreaVariants>, CoverArea {
+interface CoverAreaProps extends HTMLAttributes<HTMLDivElement>,
+	VariantProps<typeof coverAreaVariants>, CoverArea {
 }
 
 export const CoverArea = ({
 	className, variant, backgroundColor, backgroundImage, border, ...props
 }: CoverAreaProps) => {
-	return <div
-		className={coverAreaVariants(({ variant, border, className, backgroundColor }))}
-		{...props
-	}/>
+	return <div className={coverAreaVariants(({ variant, border, className, backgroundColor }))} {...props}/>
 }

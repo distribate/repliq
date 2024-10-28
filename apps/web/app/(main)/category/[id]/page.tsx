@@ -1,4 +1,3 @@
-import { MetadataType, PageConventionProps } from '@repo/types/config/page-types.ts';
 import { notFound, redirect } from 'next/navigation';
 import { Typography } from '@repo/ui/src/components/typography.tsx';
 import { Metadata } from 'next';
@@ -13,6 +12,7 @@ import {
   CATEGORY_THREADS_QUERY_KEY,
 } from '@repo/components/src/categories/components/category-threads/queries/category-threads-query.ts';
 import { getThreadsCategories } from '@repo/lib/queries/get-threads-by-category.ts';
+import { MetadataType, PageConventionProps } from '@repo/types/global';
 
 export async function generateMetadata({
   params,

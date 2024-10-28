@@ -232,16 +232,19 @@ export type Database = {
       }
       config_minecraft_items: {
         Row: {
+          description: string | null
           id: number
           image: string
           title: string
         }
         Insert: {
+          description?: string | null
           id?: number
           image: string
           title: string
         }
         Update: {
+          description?: string | null
           id?: number
           image?: string
           title?: string

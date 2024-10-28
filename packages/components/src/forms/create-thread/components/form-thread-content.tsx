@@ -13,7 +13,7 @@ import { Leaf } from '../../../editor/components/leaf.tsx';
 import { useCreateThread } from '../hooks/use-create-thread.tsx';
 import { useCreateThreadImages } from '../hooks/use-create-thread-images.ts';
 import { ImagePlus } from 'lucide-react';
-import { FormChildsProps } from './create-thread-form.tsx';
+import { FormChildsProps } from '../types/create-thread-form-types.ts';
 
 const initialValue = [ {
   type: 'paragraph',
