@@ -1,6 +1,5 @@
 'use server';
 
-import "server-only"
 import { UserEntity } from '@repo/types/entities/entities-type.ts';
 import { getCurrentUser } from '../actions/get-current-user.ts';
 import { REDIRECT_USER_NOT_EXIST } from '@repo/shared/constants/routes.ts';
@@ -16,9 +15,7 @@ export type RequestedUser = Omit<UserEntity, 'preferences'> & {
   preferences: UserPreferences
 }
 
-async function getDonateData({
-  nickname,
-}: RequestedUserProps) {
+async function getDonateData(nickname: RequestedUserProps["nickname"]) {
   const api = createClient();
   
   return api
@@ -28,9 +25,7 @@ async function getDonateData({
   .single();
 }
 
-async function getMainData({
-  nickname,
-}: RequestedUserProps) {
+async function getMainData(nickname: RequestedUserProps["nickname"]) {
   const api = createClient();
   
   return api
@@ -49,8 +44,8 @@ export async function getRequestedUser(
   let requestedUser: RequestedUser | null = null;
   
   const [ donate, main ] = await Promise.all([
-    getDonateData({ nickname }),
-    getMainData({ nickname }),
+    getDonateData(nickname),
+    getMainData(nickname),
   ]);
   
   const { data: donateData } = donate;

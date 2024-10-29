@@ -17,7 +17,6 @@ export async function checkProfileStatus(
   requestedUser: Pick<CheckProfileStatus, 'requestedUser'>["requestedUser"]
 ): Promise<ProfileStatusType | null> {
   const currentUser = await getUserInformation();
-  
   if (!currentUser) return null;
   
   const currentUserNickname = currentUser.nickname;

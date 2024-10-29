@@ -11,12 +11,11 @@ export async function checkIsFriend({
 	requestedUserNickname,
 }: CheckIsFriend): Promise<boolean> {
 	const currentUser = await getCurrentUser();
-	
-	const supabase = createClient();
-	
 	if (!currentUser) return false;
 	
-	const { data, error } = await supabase
+	const api = createClient();
+	
+	const { data, error } = await api
 		.from("users_friends")
 		.select("user_1,user_2")
 		.or(`user_1.eq.${requestedUserNickname},user_2.eq.${requestedUserNickname}`);

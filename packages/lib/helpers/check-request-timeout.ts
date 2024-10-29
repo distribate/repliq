@@ -17,8 +17,6 @@ export async function checkRequestTimeout({
   isAllowed: boolean,
   status: number
 } | null> {
-  const supabase = createClient();
-  
   const { user, session } = await validateRequest();
   
   if (!user || !session) return null;
@@ -26,7 +24,9 @@ export async function checkRequestTimeout({
   
   if (!type.includes(type as RequestTimeoutType)) return null;
   
-  const { data, error, status } = await supabase
+  const api = createClient();
+  
+  const { data, error, status } = await api
   .from('users_requests_timeout')
   .select('type, user_nickname')
   .eq('user_nickname', nickname)

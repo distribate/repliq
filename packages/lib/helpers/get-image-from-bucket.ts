@@ -11,11 +11,11 @@ type ImageUrlProperties = {
 export async function getImageUrl({
 	bucket, fileName
 }: ImageUrlProperties): Promise<string | null> {
-	const supabase = createClient()
+	const api = createClient()
 	
 	if (!fileName) return null;
 	
-	const { data: url, error } = await supabase
+	const { data: url, error } = await api
 	.storage
 	.from(bucket)
 	.createSignedUrl(fileName, 600)

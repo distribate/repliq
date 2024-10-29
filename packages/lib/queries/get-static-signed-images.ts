@@ -10,9 +10,9 @@ type GetStaticSignedImages = {
 export async function getStaticImages({
   fileName
 }: GetStaticSignedImages): Promise<string | null> {
-  const supabase = createClient();
+  const api = createClient();
   
-  const { data } = await supabase
+  const { data } = await api
   .storage
   .from('static')
   .createSignedUrl(fileName, 60)

@@ -7,14 +7,13 @@ import { getUserBanned } from './get-user-banned.ts';
 import { CurrentUser } from './current-user-query.ts';
 import { createClient } from "@repo/lib/utils/api/server.ts";
 
-export async function getUserInformation(): Promise<
-	CurrentUser | null
-> {
+export async function getUserInformation(): Promise<CurrentUser | null> {
 	const currentUser = await getCurrentUser();
 	if (!currentUser) return null;
-	const supabase = createClient();
 	
-	let query = supabase
+	const api = createClient();
+	
+	let query = api
 	.from("users")
 	.select(`
 		id,created_at,uuid,nickname,description,status,birthday,real_name,preferences,cover_image,visibility,name_color,favorite_item
@@ -37,7 +36,10 @@ export async function getUserInformation(): Promise<
 	let userDonate: DonateType["primary_group"] | null = null;
 	
 	if (donate) userDonate = donate;
-	if (error) throw error;
+	
+	if (error) {
+		throw new Error(error.message)
+	}
 	
 	return {
 		id: data.id,

@@ -19,11 +19,11 @@ export type FavoriteItem = {
 export async function getFavoriteItem({
   favorite_item, type = 'itemId', nickname
 }: FavoriteItemType): Promise<FavoriteItem | null> {
-  const supabase = createClient();
+  const api = createClient();
   
   let item: FavoriteItem | null = null;
   
-  let query = (id: string) => supabase
+  let query = (id: string) => api
   .from('config_minecraft_items')
   .select('title, image, id')
   .eq('id', id)
@@ -42,7 +42,7 @@ export async function getFavoriteItem({
   }
   
   if (type === 'nickname') {
-    const { data: favoriteItemIdByNickname } = await supabase
+    const { data: favoriteItemIdByNickname } = await api
       .from("users")
       .select("favorite_item")
       .eq("nickname", nickname)

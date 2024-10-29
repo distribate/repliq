@@ -10,9 +10,9 @@ type GetUserBlockStatus = {
 async function getUserBlockStatus({
   reqUserNickname,
 }: GetUserBlockStatus) {
-  const supabase = createClient();
+  const api = createClient();
   
-  const { data, error } = await supabase
+  const { data, error } = await api
   .from('users_blocked')
   .select('user_1, user_2')
   .or(`user_1.eq.${reqUserNickname},user_2.eq.${reqUserNickname}`)

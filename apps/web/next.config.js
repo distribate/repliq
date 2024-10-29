@@ -2,6 +2,24 @@
 const svg = require('@neodx/svg/webpack');
 
 module.exports = {
+	reactStrictMode: false,
+	transpilePackages: [
+		'@repo/ui'
+	],
+	experimental: {
+		optimizePackageImports: [
+			"@repo/ui",
+			"@repo/lib"
+		],
+		instrumentationHook: true,
+		serverComponentsExternalPackages: [
+			"@node-rs/bcrypt",
+			"@node-rs/argon2"
+		],
+		serverActions: {
+			bodySizeLimit: '15mb',
+		},
+	},
 	async rewrites() {
 		return {
 			beforeFiles: [
@@ -34,10 +52,6 @@ module.exports = {
 			}
 		],
 	},
-	reactStrictMode: false,
-	transpilePackages: [
-		'@repo/ui'
-	],
 	webpack: (config, {isServer}) => {
 		if (!isServer) {
 			config.plugins.push(
@@ -57,24 +71,5 @@ module.exports = {
 			);
 		}
 		return config;
-	},
-	experimental: {
-		optimizePackageImports: [
-			"@repo/ui",
-			"@repo/lib"
-		],
-		instrumentationHook: true,
-		serverComponentsExternalPackages: [
-			"@node-rs/bcrypt",
-			"@node-rs/argon2"
-		],
-		serverActions: {
-			bodySizeLimit: '15mb',
-		},
-	},
-	compiler: {
-		transpilePackages: ['@repo/ui', '@repo/lib'],
-		swcMinify: true,
-		removeConsole: true,
-	},
+	}
 };

@@ -1,9 +1,9 @@
 import { createClient } from "@repo/lib/utils/api/server.ts";
 
 export async function getCategory(category_id: string) {
-  const supabase = createClient();
+  const api = createClient();
   
-  const { data, error } = await supabase
+  const { data, error } = await api
   .from("category")
   .select("title, description, id")
   .eq("id", category_id)

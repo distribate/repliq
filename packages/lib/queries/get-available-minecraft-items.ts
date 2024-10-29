@@ -5,11 +5,11 @@ import { getPublicUrlFromStorage } from '../utils/storage/get-public-url-from-st
 import { MinecraftItemEntity } from '@repo/types/entities/entities-type.ts';
 
 export async function getAvailableMinecraftItems(): Promise<MinecraftItemEntity[] | null> {
-  const supabase = createClient();
+  const api = createClient();
   
   let items: MinecraftItemEntity[] = [];
   
-  const { data, error } = await supabase
+  const { data, error } = await api
   .from('config_minecraft_items')
   .select()
   .returns<MinecraftItemEntity[]>()

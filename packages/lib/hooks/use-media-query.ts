@@ -10,15 +10,13 @@ const IS_SERVER = typeof window === 'undefined'
 
 export function useMediaQuery(
   query: string,
-  {
-    defaultValue = false,
-    initializeWithValue = true,
-  }: UseMediaQueryOptions = {},
+  { defaultValue = false, initializeWithValue = true, }: UseMediaQueryOptions = {},
 ): boolean {
   const getMatches = (query: string): boolean => {
     if (IS_SERVER) {
       return defaultValue
     }
+    
     return window.matchMedia(query).matches
   }
   
