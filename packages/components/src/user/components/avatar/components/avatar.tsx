@@ -6,10 +6,7 @@ import { Typography } from '@repo/ui/src/components/typography.tsx';
 import { userAvatarQuery } from '../queries/avatar-query.ts';
 import { ImageWrapper } from '../../../../wrappers/image-wrapper.tsx';
 import { TooltipWrapper } from '../../../../wrappers/tooltip-wrapper.tsx';
-
-// @ts-ignore
 import ExpActive from '@repo/assets/images/minecraft/exp-active.webp';
-// @ts-ignore
 import ExpNoActive from '@repo/assets/images/minecraft/exp-noactive.webp';
 
 const avatarVariants = cva('relative rounded-sm ', {
@@ -41,21 +38,9 @@ export interface AvatarProps
     VariantProps<typeof avatarVariants>, Avatar {
 }
 
-const Avatar = forwardRef<
+export const Avatar = forwardRef<
   HTMLDivElement, AvatarProps
->((
-  {
-    className,
-    children,
-    withBadge,
-    variant,
-    shadow,
-    propWidth,
-    propHeight,
-    border,
-    nickname,
-    ...props
-  },
+>(({ className, children, withBadge, variant, shadow, propWidth, propHeight, border, nickname, ...props },
   ref,
 ) => {
   const { data: avatarUrl } = userAvatarQuery(nickname);
@@ -70,7 +55,7 @@ const Avatar = forwardRef<
         height={propHeight}
         className="rounded-sm"
         loading="eager"
-        propAlt={`user's head`}
+        propAlt=""
       />
       {withBadge && (
         <TooltipWrapper
@@ -81,7 +66,7 @@ const Avatar = forwardRef<
           trigger={
             <ImageWrapper
               propSrc={activeImage}
-              propAlt="Status"
+              propAlt=""
               width={32}
               height={32}
             />
@@ -100,5 +85,3 @@ const Avatar = forwardRef<
     </div>
   );
 });
-
-export { Avatar };

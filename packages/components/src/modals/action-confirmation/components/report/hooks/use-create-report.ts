@@ -3,6 +3,8 @@ import { REPORT_QUERY_KEY, ReportQuery } from "../../../../../report/queries/rep
 import { postReport } from "../../../../../report/queries/post-report.ts";
 import { toast } from "@repo/ui/src/hooks/use-toast.ts";
 
+export const CREATE_REPORT_MUTATION_KEY = ["create-report"]
+
 export const useCreateReport = () => {
 	const qc = useQueryClient();
 	
@@ -34,6 +36,7 @@ export const useCreateReport = () => {
 	})
 	
 	const createReportMutation = useMutation({
+		mutationKey: CREATE_REPORT_MUTATION_KEY,
 		mutationFn: async(values: Pick<ReportQuery, "type">) => {
 			if (!values || !values.type) return;
 
@@ -57,7 +60,7 @@ export const useCreateReport = () => {
 			})
 			
 			if (!data) {
-				toast({
+				return toast({
 					title: "Что-то пошло не так", variant: "negative"
 				})
 			}
@@ -67,11 +70,9 @@ export const useCreateReport = () => {
 		onSuccess: async (data, variables, context) => {
 			if (!variables || !variables.type) return;
 			
-			if (data) {
-				toast({
-					title: "Заявка создана", variant: "positive"
-				})
-			}
+			toast({
+				title: "Заявка создана", variant: "positive"
+			})
 			
 			await qc.resetQueries({ queryKey: REPORT_QUERY_KEY(variables.type) })
 		},

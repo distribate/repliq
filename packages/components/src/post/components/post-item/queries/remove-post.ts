@@ -1,5 +1,6 @@
-"use server"
+'use server';
 
+import "server-only"
 import { getCurrentUser } from '@repo/lib/actions/get-current-user.ts';
 import { createClient } from '@repo/lib/utils/api/server.ts';
 
@@ -9,35 +10,33 @@ type RemovePost = {
 }
 
 export async function removePost({
-  post_id, nickname
+  post_id, nickname,
 }: RemovePost) {
-  const currentUser = await getCurrentUser()
+  const currentUser = await getCurrentUser();
   if (!currentUser) return;
   
   const api = createClient();
   
   const { data: postCreator, error: postCreatorError } = await api
-    .from("posts_users")
-    .select("user_nickname")
-    .eq("post_id", post_id)
-    .single()
+  .from('posts_users')
+  .select('user_nickname')
+  .eq('post_id', post_id)
+  .single();
   
   if (postCreatorError) {
-    throw new Error(postCreatorError.message)
+    throw new Error(postCreatorError.message);
   }
   
   if (postCreator.user_nickname !== nickname) return;
   
-  try {
-    const { data, error } = await api
-    .from("posts")
-    .delete()
-    .eq("post_id", post_id)
-    
-    if (error) console.error(error.message)
-    
-    return data;
-  } catch (e) {
-    console.error(e)
+  const { data, error } = await api
+  .from('posts')
+  .delete()
+  .eq('post_id', post_id);
+  
+  if (error) {
+    throw new Error(error.message);
   }
+  
+  return data;
 }

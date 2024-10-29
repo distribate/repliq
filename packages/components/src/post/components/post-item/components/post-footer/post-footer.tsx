@@ -8,7 +8,7 @@ export const PostItemFooter = ({
 	const qc = useQueryClient()
 	const currentUser = qc.getQueryData<CurrentUser>(CURRENT_USER_QUERY_KEY)
 	
-	if (!currentUser) return;
+	if (!currentUser) return null;
 	
 	return <CreatePostCommentForm post_id={post_id}/>
 }

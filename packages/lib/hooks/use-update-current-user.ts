@@ -24,6 +24,8 @@ export type UpdateCurrentUser = {
   preferences?: Omit<Extract<UpdateUserFields['preferences'], object>, 'oldPreferences'>
 }
 
+export const UPDATE_FIELD_MUTATION_KEY = ["user-update-field"]
+
 export const useUpdateCurrentUser = () => {
   const qc = useQueryClient();
   const currentUser = qc.getQueryData<CurrentUser>(
@@ -31,6 +33,7 @@ export const useUpdateCurrentUser = () => {
   );
   
   const updateFieldMutation = useMutation({
+    mutationKey: UPDATE_FIELD_MUTATION_KEY,
     mutationFn: async(values: UpdateCurrentUser) => {
       if (!currentUser || values.value === null) return;
       

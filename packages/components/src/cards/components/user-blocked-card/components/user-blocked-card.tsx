@@ -9,8 +9,8 @@ import { DropdownWrapper } from '../../../../wrappers/dropdown-wrapper.tsx';
 import { Ellipsis } from 'lucide-react';
 import { HoverCardItem } from '@repo/ui/src/components/hover-card.tsx';
 import { useDeleteFromBlocked } from '../hooks/use-delete-from-blocked.ts';
-import { useDialog } from '@repo/lib/hooks/use-dialog.ts';
 import { UserCardModal } from '../../../../modals/custom/user-card-modal.tsx';
+import { USER_URL } from '@repo/shared/constants/routes.ts';
 
 type UserBlockedCardProps = Pick<UserEntity, 'nickname' | 'name_color'> & {
   time: string
@@ -21,7 +21,6 @@ export const UserBlockedCard = ({
 }: UserBlockedCardProps) => {
   const { deleteUserFromBlockedMutation } = useDeleteFromBlocked();
   const { replace } = useRouter();
-  const { removeDialogMutation } = useDialog();
   
   const handleDeleteFromBlocked = (
     e: React.MouseEvent<HTMLDivElement>, nickname: string
@@ -60,10 +59,7 @@ export const UserBlockedCard = ({
                 </Typography>
               </HoverCardItem>
               <Separator />
-              <HoverCardItem onClick={() => {
-                removeDialogMutation.mutate([ 'blocked-list', 'account-settings', 'settings-card' ]);
-                replace(`/user/${nickname}`);
-              }}>
+              <HoverCardItem onClick={() => replace(USER_URL + nickname)}>
                 <Typography>
                   Перейти к профилю
                 </Typography>

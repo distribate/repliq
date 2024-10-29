@@ -1,5 +1,4 @@
 import { Typography } from '@repo/ui/src/components/typography.tsx';
-import { PageConventionProps } from '@repo/types/config/page-types.ts';
 import {
   AuthBackgroundImages,
 } from '@repo/components/src/admin/components/configs/auth-background/components/auth-bg-images.tsx';
@@ -9,6 +8,7 @@ import { AdminSections } from '@repo/components/src/admin/components/navigation/
 import {
   MinecraftItemsList
 } from '@repo/components/src/admin/components/configs/minecraft-items/components/minecraft-items-list.tsx';
+import { PageConventionProps } from '@repo/types/global';
 
 export const dynamic = 'force-dynamic';
 

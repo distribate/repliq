@@ -18,8 +18,8 @@ export const PostControl = ({
   post_id, nickname, name_color
 }: PostControlProps) => {
   const qc = useQueryClient();
-  
   const { controlPostMutation } = useControlPost();
+  
   const posts = qc.getQueryData<Posts[]>(POSTS_QUERY_KEY(nickname));
   const post = posts?.filter(item => item.post_id === post_id);
   

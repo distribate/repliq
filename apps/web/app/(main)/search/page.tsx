@@ -1,5 +1,5 @@
 import { Input } from '@repo/ui/src/components/input';
-import { PageConventionProps } from '@repo/types/config/page-types.ts';
+import { PageConventionProps } from '@repo/types/global';
 
 type SearchBrowseTypeKeys = 'users' | 'threads';
 

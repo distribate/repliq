@@ -1,5 +1,3 @@
-"use client"
-
 import { Typography } from "@repo/ui/src/components/typography.tsx";
 import { useCreateThreadComment } from "../../../../forms/create-thread-comment/hooks/use-create-thread-comment.tsx";
 import { RepliedValuesType } from "../../../../forms/create-thread-comment/queries/create-thread-comment-query.ts";
@@ -30,7 +28,11 @@ export const ThreadCommentActions = ({
 			<Typography className="text-shark-300 text-md cursor-pointer" onClick={handleReplyComment}>
 				Ответить
 			</Typography>
-			<ReportCreateModal report_type="comment" threadId={thread_id} targetId={comment_id}/>
+			<ReportCreateModal
+				report_type="comment"
+				threadId={thread_id}
+				targetId={comment_id}
+			/>
 		</div>
 	)
 }

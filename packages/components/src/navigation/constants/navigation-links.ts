@@ -5,19 +5,15 @@ export type NavigationLinkProps = {
 
 export const NAVIGATION_LINKS: NavigationLinkProps[] = [
   {
-    title: 'Главная',
-    href: '/',
+    title: 'Главная', href: '/',
   },
   {
-    title: 'Рейтинги',
-    href: '/ratings',
+    title: 'Рейтинги', href: '/ratings',
   },
   {
-    title: 'Территории',
-    href: '/lands',
+    title: 'Территории', href: '/lands',
   },
   {
-    title: 'Треды',
-    href: '/threads',
+    title: 'Треды', href: '/threads',
   }
 ];

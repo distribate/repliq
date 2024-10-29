@@ -1,8 +1,6 @@
 import { ReactNode } from 'react';
-import { DialogWrapper } from '../../wrappers/dialog-wrapper.tsx';
 import { TicketsMenu } from '../../cards/components/user-personal-card/components/tickets/tickets-menu.tsx';
-
-export const TICKETS_MODAL_NAME = "tickets"
+import { Dialog, DialogContent, DialogTrigger } from '@repo/ui/src/components/dialog.tsx';
 
 type TicketsModal = {
   trigger: ReactNode
@@ -11,13 +9,14 @@ type TicketsModal = {
 export const TicketsModal = ({
   trigger
 }: TicketsModal) => {
-  console.log('tickets-settings render')
   return (
-    <DialogWrapper
-      name={TICKETS_MODAL_NAME}
-      trigger={trigger}
-    >
-      <TicketsMenu/>
-    </DialogWrapper>
+    <Dialog>
+      <DialogTrigger>
+        {trigger}
+      </DialogTrigger>
+      <DialogContent>
+        <TicketsMenu/>
+      </DialogContent>
+    </Dialog>
   )
 }

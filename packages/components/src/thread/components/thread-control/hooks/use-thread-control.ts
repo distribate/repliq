@@ -20,12 +20,15 @@ export type ThreadControlValues = Partial<{
   description: string
 }>
 
+export const THREAD_CONTROL_MUTATION_KEY = ["thread-control-update"]
+
 export const useThreadControl = () => {
   const qc = useQueryClient();
   const currentUser = qc.getQueryData<CurrentUser>(CURRENT_USER_QUERY_KEY)
-  const { replace } = useRouter()
+  const { replace, refresh } = useRouter()
   
   const updateThreadFieldsMutation = useMutation({
+    mutationKey: THREAD_CONTROL_MUTATION_KEY,
     mutationFn: async(values: ThreadControl & ThreadControlValues) => {
       if (!values || !currentUser) return;
       
@@ -70,19 +73,17 @@ export const useThreadControl = () => {
         });
       }
       
-      toast({
-        title: 'Обновлено', variant: 'positive',
-      });
-      
       if (variables.type === 'remove') {
         replace("/");
         return revalidatePath("/")
       }
       
-      return await Promise.all([
+      await Promise.all([
         qc.invalidateQueries({ queryKey: CURRENT_THREAD_QUERY_KEY(variables.id) }),
         qc.invalidateQueries({ queryKey: THREAD_RATING_QUERY_KEY(variables.id) })
       ])
+      
+      return refresh();
     },
     onError: (e) => { throw new Error(e.message); },
   });

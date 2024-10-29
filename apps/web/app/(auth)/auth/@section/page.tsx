@@ -1,9 +1,9 @@
 import { SignUpForm } from "@repo/components/src/forms/auth/components/sign-up.tsx";
-import { PageConventionProps } from "@repo/types/config/page-types.ts"
 import { redirect } from "next/navigation";
 import { SignInForm } from "@repo/components/src/forms/auth/components/sign-in.tsx";
 import { AUTH_REDIRECT } from '@repo/shared/constants/routes.ts';
 import { Typography } from '@repo/ui/src/components/typography.tsx';
+import { PageConventionProps } from '@repo/types/global';
 
 const SignInFormTitle = () => {
 	return (

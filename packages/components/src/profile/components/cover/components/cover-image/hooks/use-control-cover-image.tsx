@@ -9,15 +9,8 @@ import { nanoid } from 'nanoid';
 import { CURRENT_USER_QUERY_KEY, CurrentUser } from '@repo/lib/queries/current-user-query.ts';
 import { USER_IMAGES_BUCKET } from '@repo/shared/constants/buckets.ts';
 import { createTask, registerTaskQueue } from '@repo/lib/helpers/create-task-delay.ts';
-import { useDialog } from '@repo/lib/hooks/use-dialog.ts';
 import { deletePrevImageFromUsers } from './delete-prev-image.ts';
 import { REQUESTED_USER_QUERY_KEY } from '../../../cover/queries/requested-user-query.ts';
-import {
-  PROFILE_BACKGROUND_UPDATE_MODAL_NAME,
-} from '../../../../../../modals/custom/profile-background-update-modal.tsx';
-import {
-  PROFILE_BACKGROUND_DEFAULT_IMAGES_MODAL_NAME,
-} from '../../../../../../modals/custom/profile-background-default-images-modal.tsx';
 import { getArrayBuffer } from '@repo/lib/helpers/ger-array-buffer.ts';
 import { encode } from 'base64-arraybuffer';
 
@@ -32,9 +25,11 @@ export type CoverImageInput = {
   fileName?: string
 }
 
+export const USER_COVER_DELETE_IMAGE_MUTATION_KEY = ["user-cover-delete"]
+export const USER_COVER_UPDATE_IMAGE_MUTATION_KEY = ["user-cover-update"]
+
 export const useControlCoverImage = () => {
   const qc = useQueryClient();
-  const { removeDialogMutation } = useDialog();
   const currentUser = qc.getQueryData<CurrentUser>(CURRENT_USER_QUERY_KEY);
   
   const handleSuccess = async() => {
@@ -55,10 +50,7 @@ export const useControlCoverImage = () => {
   };
   
   const deleteBackgroundImageMutation = useMutation({
-    onMutate: () => removeDialogMutation.mutate([
-      PROFILE_BACKGROUND_UPDATE_MODAL_NAME,
-      PROFILE_BACKGROUND_DEFAULT_IMAGES_MODAL_NAME,
-    ]),
+    mutationKey: USER_COVER_DELETE_IMAGE_MUTATION_KEY,
     mutationFn: async() => {
       if (!currentUser) return null;
       
@@ -102,9 +94,7 @@ export const useControlCoverImage = () => {
   });
   
   const uploadBackgroundImageMutation = useMutation({
-    onMutate: () => removeDialogMutation.mutate(
-      PROFILE_BACKGROUND_UPDATE_MODAL_NAME,
-    ),
+    mutationKey: USER_COVER_UPDATE_IMAGE_MUTATION_KEY,
     mutationFn: async({
       file, customFilename,
     }: BackgroundImage) => {

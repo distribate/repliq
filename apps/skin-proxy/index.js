@@ -60,4 +60,4 @@ function start() {
         }
     });
 }
-start();
+start().then();

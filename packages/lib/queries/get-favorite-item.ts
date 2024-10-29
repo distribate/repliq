@@ -62,7 +62,7 @@ export async function getFavoriteItem({
   if (!item) return null;
   
   const url = await getPublicUrlFromStorage({
-    bucket: 'static', fileName: 'items/' + item.image,
+    bucket: 'static', fileName: item.image,
   });
   
   return { title: item.title, id: item.id, image: url };

@@ -3,11 +3,11 @@
 import "server-only"
 import { ThreadEntity, UserEntity } from '@repo/types/entities/entities-type.ts';
 import { getThreadRating, ThreadRatingResponse } from './get-thread-rating.ts';
-import { getThreadImagesCount } from './get-thread-images.ts';
 import { getThreadCreator } from './get-thread-creator.ts';
 import { ThreadRequest, ThreadRequestType } from '../types/thread-request-types.ts';
 import { getThreadCommentsCount } from './get-thread-comments-count.ts';
 import { getThread } from './get-thread.ts';
+import { getThreadImagesCount } from './get-thread-images-count.ts';
 
 type ThreadModelDetails = {
   commentsCount: number,
@@ -15,7 +15,9 @@ type ThreadModelDetails = {
   images: boolean
 }
 
-export type ThreadModel = ThreadEntity & Pick<UserEntity, 'nickname'> & ThreadModelDetails
+export type ThreadModel = ThreadEntity
+  & Pick<UserEntity, 'nickname'>
+  & ThreadModelDetails
 
 type GetThreadModel = {
   type: ThreadRequestType

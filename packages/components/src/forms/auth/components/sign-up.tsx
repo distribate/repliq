@@ -7,7 +7,7 @@ import { Button } from '@repo/ui/src/components/button.tsx';
 import { useRouter } from 'next/navigation';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { registrationSchema } from '../schemas/authorization-schema.ts';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { FormAuthErrorMessage } from '@repo/ui/src/components/form.tsx';
 import { Typography } from '@repo/ui/src/components/typography.tsx';
 import { useQueryClient } from '@tanstack/react-query';
@@ -19,6 +19,9 @@ import Link from 'next/link';
 import { GearLoader } from '@repo/ui/src/components/gear-loader.tsx';
 import { AUTH_REDIRECT } from '@repo/shared/constants/routes.ts';
 import { SignTipProps } from '../types/form-types.ts';
+import Image from 'next/image';
+import EnderPearl from "@repo/assets/images/minecraft/ender_pearl.webp"
+import EyeOfEnder from "@repo/assets/images/minecraft/eye_of_ender.webp"
 
 const SignUpTip = ({
   handleRedirect,
@@ -51,6 +54,7 @@ export const SignUpForm = () => {
   const { data: authState } = authQuery();
   const { setAuthValuesMutation } = useAuth();
   const { replace } = useRouter();
+  const [ passwordType, setPasswordType ] = useState<'text' | 'password'>('password');
   
   const { register, resetField, formState: { errors, isValid }, handleSubmit, reset } = useForm<
     zodSignUpForm
@@ -85,7 +89,7 @@ export const SignUpForm = () => {
   
   const handleRedirect = () => {
     replace(AUTH_REDIRECT);
-    return qc.resetQueries({ queryKey: AUTH_QUERY_KEY, });
+    return qc.resetQueries({ queryKey: AUTH_QUERY_KEY });
   };
   
   return (
@@ -110,16 +114,23 @@ export const SignUpForm = () => {
           errorMessage={errors?.password?.message}
           label={{ name: 'Пароль', for: 'password' }}
         >
-          <Input
-            id="password"
-            type="password"
-            className="!bg-shark-900"
-            placeholder="игровой пароль"
-            autoComplete="new-password"
-            status={errors.password ? 'error' : 'default'}
-            variant="minecraft"
-            {...register('password')}
-          />
+          <div className="flex items-center gap-2 justify-center">
+            <Input
+              id="password"
+              type="password"
+              className="!bg-shark-900"
+              placeholder="игровой пароль"
+              autoComplete="new-password"
+              status={errors.password ? 'error' : 'default'}
+              variant="minecraft"
+              {...register('password')}
+            />
+            {passwordType === 'password' ? (
+              <Image className="cursor-pointer" src={EnderPearl} alt="" width={36} height={36} onClick={() => setPasswordType("text")} />
+            ) : (
+              <Image className="cursor-pointer" src={EyeOfEnder} alt="" width={36} height={36} onClick={() => setPasswordType("password")}/>
+            )}
+          </div>
         </FormField>
         <FormField
           label={{ name: 'Почта', for: 'email' }}

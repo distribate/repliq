@@ -1,18 +1,28 @@
 import { ImageWrapper } from '../../wrappers/image-wrapper.tsx';
 import { Typography } from '@repo/ui/src/components/typography.tsx';
-import { DialogWrapper } from '../../wrappers/dialog-wrapper.tsx';
 import { HoverCardItem } from '@repo/ui/src/components/hover-card.tsx';
+import Barrier from '@repo/assets/images/minecraft/barrier.webp';
+import { ConfirmationActionModalTemplate } from '../../templates/confirmation-action-modal-template.tsx';
+import { ConfirmationButton } from '../../buttons/confirmation-action-button.tsx';
 import {
-  TerminateNotActiveSessionsModal
-} from '../action-confirmation/components/terminate-session/components/terminate-not-active-sessions-modal.tsx';
-import Barrier from "@repo/assets/images/minecraft/barrier.webp"
+  TERMINATE_SESSIONS_MUTATION_KEY,
+  useTerminateSession,
+} from '../action-confirmation/components/terminate-session/hooks/use-terminate-session.ts';
+import { DynamicModal } from '../dynamic-modal.tsx';
+import { DialogClose } from '@repo/ui/src/components/dialog.tsx';
 
-export const TERMINATE_ALL_SESSIONS_MODAL_NAME = "terminate-all-not-active-sessions"
+export const TERMINATE_ALL_SESSIONS_MODAL_NAME = 'terminate-all-not-active-sessions';
 
 export const TerminateAllSessionsModal = () => {
+  const { terminateMutation } = useTerminateSession();
+  
+  const handleAllTerminate = () => {
+    return terminateMutation.mutate({ type: 'all' });
+  };
+  
   return (
-    <DialogWrapper
-      name={TERMINATE_ALL_SESSIONS_MODAL_NAME}
+    <DynamicModal
+      mutationKey={TERMINATE_SESSIONS_MUTATION_KEY}
       trigger={
         <HoverCardItem className="gap-2 px-2">
           <ImageWrapper
@@ -27,8 +37,23 @@ export const TerminateAllSessionsModal = () => {
           </Typography>
         </HoverCardItem>
       }
-    >
-      <TerminateNotActiveSessionsModal/>
-    </DialogWrapper>
-  )
-}
+      content={
+        <ConfirmationActionModalTemplate title="Уверены, что хотите уничтожить все остальные сессии?">
+          <ConfirmationButton
+            actionType="continue"
+            title="Да, уничтожить"
+            onClick={handleAllTerminate}
+            disabled={terminateMutation.isPending}
+          />
+          <DialogClose>
+            <ConfirmationButton
+              actionType="cancel"
+              title="Отмена"
+              disabled={terminateMutation.isPending}
+            />
+          </DialogClose>
+        </ConfirmationActionModalTemplate>
+      }
+    />
+  );
+};

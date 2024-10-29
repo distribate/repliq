@@ -61,7 +61,6 @@ module.exports = {
 	experimental: {
 		optimizePackageImports: [
 			"@repo/ui",
-			"@repo/category-threads",
 			"@repo/lib"
 		],
 		instrumentationHook: true,
@@ -72,5 +71,10 @@ module.exports = {
 		serverActions: {
 			bodySizeLimit: '15mb',
 		},
-	}
+	},
+	compiler: {
+		transpilePackages: ['@repo/ui', '@repo/lib'],
+		swcMinify: true,
+		removeConsole: true,
+	},
 };

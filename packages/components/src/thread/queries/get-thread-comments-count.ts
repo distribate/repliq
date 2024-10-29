@@ -10,7 +10,9 @@ export async function getThreadCommentsCount(
   
   const { error, count } = await api
   .from('threads_comments_ref')
-  .select('comment_id', { count: 'exact' })
+  .select('comment_id', {
+    count: 'exact'
+  })
   .eq('thread_id', threadId);
   
   if (error) return null;

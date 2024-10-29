@@ -7,36 +7,28 @@ export const useThreadRating = () => {
   const qc = useQueryClient();
   
   const updateThreadRatingMutation = useMutation({
-    mutationFn: async (values: UpdateThreadRating) => {
+    mutationFn: async(values: UpdateThreadRating) => {
       if (!values) return;
       
       return updateThreadRating({
-        threadId: values.threadId, type: values.type
-      })
+        threadId: values.threadId, type: values.type,
+      });
     },
-    onSuccess: async (data, variables, context) => {
+    onSuccess: async(data, variables) => {
       if (!data || !variables) return;
       
-      if (data === 'alreadyRating') {
-        toast({
-          title: "Вы уже оценивали тред", variant: "negative"
-        })
-        
-        return;
-      }
+      if (data === 'alreadyRating') return toast({
+        title: 'Вы уже оценивали тред', variant: 'negative',
+      });
       
-      if (data === 'default') {
-        toast({
-          title: "Что-то пошло не так!", variant: "negative"
-        })
-        
-        return;
-      }
+      if (data === 'default') return toast({
+        title: 'Что-то пошло не так!', variant: 'negative',
+      });
       
-      await qc.invalidateQueries({ queryKey: THREAD_RATING_QUERY_KEY(variables.threadId) })
+      await qc.invalidateQueries({ queryKey: THREAD_RATING_QUERY_KEY(variables.threadId) });
     },
-    onError: (e) => { throw new Error(e.message) }
-  })
+    onError: (e) => { throw new Error(e.message); },
+  });
   
   return { updateThreadRatingMutation };
-}
+};

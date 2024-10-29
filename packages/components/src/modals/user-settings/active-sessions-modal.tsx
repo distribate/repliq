@@ -3,7 +3,6 @@ import { Skeleton } from '@repo/ui/src/components/skeleton.tsx';
 import {
   UserActiveSessions,
 } from '../../cards/components/user-personal-card/components/account-settings/components/user-active-sessions.tsx';
-import { DialogWrapper } from '../../wrappers/dialog-wrapper.tsx';
 import {
   userActiveSessionsQuery,
 } from '../../cards/components/user-personal-card/components/account-settings/queries/user-sessions-query.ts';
@@ -11,16 +10,14 @@ import YellowCandle from '@repo/assets/images/minecraft/yellow_candle.webp';
 import {
   UserSettingOption,
 } from '../../cards/components/user-personal-card/components/profile-settings/user-profile-settings.tsx';
-
-export const ACTIVE_SESSIONS_MODAL_NAME = 'active-sessions';
+import { Dialog, DialogContent, DialogTrigger } from '@repo/ui/src/components/dialog.tsx';
 
 export const ActiveSessionsModal = () => {
   const { data: activeSessions, isLoading } = userActiveSessionsQuery();
   
   return (
-    <DialogWrapper
-      name={ACTIVE_SESSIONS_MODAL_NAME}
-      trigger={
+    <Dialog>
+      <DialogTrigger>
         <UserSettingOption title="Активные сессии" imageSrc={YellowCandle.src}>
           {isLoading ? (
             <Skeleton className="rounded-md h-4 w-4" />
@@ -30,9 +27,10 @@ export const ActiveSessionsModal = () => {
             </Typography>
           )}
         </UserSettingOption>
-      }
-    >
-      <UserActiveSessions />
-    </DialogWrapper>
+      </DialogTrigger>
+      <DialogContent>
+        <UserActiveSessions />
+      </DialogContent>
+    </Dialog>
   );
 };

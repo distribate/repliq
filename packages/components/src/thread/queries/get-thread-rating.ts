@@ -14,38 +14,32 @@ export type ThreadRatingResponse = {
   currentType: UpdateThreadRatingType
 }
 
-type ThreadRating = Pick<ThreadRequest, 'thread_id'>["thread_id"]
+type ThreadRating = Pick<ThreadRequest, 'thread_id'>['thread_id']
 
 export async function getThreadRating(
-  threadId: ThreadRating
+  threadId: ThreadRating,
 ): Promise<ThreadRatingResponse | null> {
   const currentUser = await getCurrentUser();
   if (!currentUser) return null;
   
   const api = createClient();
   
-  const [ currentType, rating ] = await Promise.all([
-    api
-    .from('threads_rating')
-    .select('type')
-    .eq('thread_id', threadId)
-    .eq('user_id', currentUser?.id)
-    .single(),
-    api
-    .from('threads_rating')
-    .select('*')
-    .eq('thread_id', threadId)
-    .returns<ThreadRatingTable[]>(),
-  ]);
+  const { data: currentUserRatingType } = await api
+  .from('threads_rating')
+  .select('type')
+  .eq('thread_id', threadId)
+  .eq('user_id', currentUser?.id)
+  .single();
   
-  const { data: current } = currentType;
-  const { data, error } = rating;
-  
-  if (error) return null;
+  const { data: currentRating } = await api
+  .from('threads_rating')
+  .select('*')
+  .eq('thread_id', threadId)
+  .returns<ThreadRatingTable[]>();
   
   return {
-    increment: data.filter(item => item.type === 'increment').length || 0,
-    decrement: data.filter(item => item.type === 'decrement').length || 0,
-    currentType: current?.type as UpdateThreadRatingType,
+    increment: currentRating?.filter(item => item.type === 'increment').length || 0,
+    decrement: currentRating?.filter(item => item.type === 'decrement').length || 0,
+    currentType: currentUserRatingType?.type as UpdateThreadRatingType,
   };
 }

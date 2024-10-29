@@ -1,23 +1,49 @@
 import { ReactNode } from 'react';
 import { FriendCardProps } from '../../../../../friend/components/friend-card/friend-card.tsx';
-import { DialogWrapper } from '../../../../../wrappers/dialog-wrapper.tsx';
-import { DeleteFriendConfirmation } from './delete-friend-confirmation.tsx';
+import { ConfirmationActionModalTemplate } from '../../../../../templates/confirmation-action-modal-template.tsx';
+import { ConfirmationButton } from '../../../../../buttons/confirmation-action-button.tsx';
+import {
+  useControlFriend,
+  USER_FRIEND_DELETE_MUTATION_KEY,
+} from '../../../../../friend/components/request-card/hooks/use-control-friend.ts';
+import { DynamicModal } from '../../../../dynamic-modal.tsx';
+import { DialogClose } from '@repo/ui/src/components/dialog.tsx';
 
 type DeleteFriendModal = {
   trigger: ReactNode
-} & Pick<FriendCardProps, 'friend_id' | "nickname">
-
-export const DELETE_FRIEND_MODAL_NAME = "delete-friend"
+} & Pick<FriendCardProps, 'friend_id' | 'nickname'>
 
 export const DeleteFriendModal = ({
-  friend_id, trigger, nickname
+  friend_id, trigger, nickname,
 }: DeleteFriendModal) => {
+  const { removeFriendFromListMutation } = useControlFriend();
+  
+  const handleDeleteFriend = () => {
+    return removeFriendFromListMutation.mutate({ friend_id, reqUserNickname: nickname });
+  };
+  
   return (
-    <DialogWrapper
-      name={DELETE_FRIEND_MODAL_NAME}
+    <DynamicModal
+      mutationKey={USER_FRIEND_DELETE_MUTATION_KEY}
       trigger={trigger}
-    >
-      <DeleteFriendConfirmation friend_id={friend_id} nickname={nickname} />
-    </DialogWrapper>
+      content={
+        <ConfirmationActionModalTemplate title="Подтверждение действия">
+          <ConfirmationButton
+            title="Удалить"
+            actionType="continue"
+            onClick={handleDeleteFriend}
+            disabled={removeFriendFromListMutation.isPending}
+            pending={removeFriendFromListMutation.isPending}
+          />
+          <DialogClose>
+            <ConfirmationButton
+              title="Отмена"
+              actionType="cancel"
+              disabled={removeFriendFromListMutation.isPending}
+            />
+          </DialogClose>
+        </ConfirmationActionModalTemplate>
+      }
+    />
   );
 };

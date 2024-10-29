@@ -47,7 +47,6 @@ export const FormThreadPreviewImages = ({
             <FormPreviewImageModal
               key={i}
               image={image}
-              modalTarget={`Thread ${threadTitle || 'XXX'}. Image ${i}`}
               handleDeleteImage={(e) => handleDeleteImage(e, i)}
             />
           ))}

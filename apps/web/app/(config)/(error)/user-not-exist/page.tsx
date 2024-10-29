@@ -1,14 +1,11 @@
-import { PageConventionProps } from "@repo/types/config/page-types"
 import Image from "next/image";
 import Link from "next/link";
 import { PageWrapper } from "@repo/components/src/wrappers/page-wrapper";
-// @ts-ignore
 import AdventureInBlossom from "@repo/assets/images/adventure-in-blossom.jpg"
-// @ts-ignore
 import Compass from "@repo/assets/images/minecraft/compass.webp"
-// @ts-ignore
 import Spyglass from "@repo/assets/images/minecraft/spyglass.webp"
 import { UserNotExistCounter } from "@repo/components/src/templates/user-not-exist-counter";
+import { PageConventionProps } from '@repo/types/global';
 
 export default async function UserNotExistPage({
 	searchParams

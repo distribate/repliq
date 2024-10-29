@@ -7,7 +7,6 @@ import { DonateType } from "../queries/get-user-donate.ts";
 import { DONATE_GROUPS } from "../constants/donate-aliases.ts";
 import { HoverCardWrapper } from "../../../../wrappers/hover-card-wrapper.tsx";
 import { CoolMode } from "@repo/ui/src/components/particle-effect.tsx";
-import Aboba from "@repo/assets/images/minecraft/barrier.webp"
 import Link from "next/link";
 import { Skeleton } from '@repo/ui/src/components/skeleton.tsx';
 import { UserDonateBadge } from './donate-badge.tsx';

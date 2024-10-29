@@ -23,7 +23,8 @@ export const ThreadRatingActionItem = ({
   return (
     <div
       onClick={() => handleThreadBump(ratingType)}
-      className={`${isValue(ratingType) ? 'bg-white/10' : ''} flex items-center gap-1 py-1 px-4 *:transition-all *:duration-150 group cursor-pointer`}
+      className={`${isValue(ratingType) ? 'bg-white/10' : ''}
+      flex items-center gap-1 py-1 px-4 *:transition-all *:duration-150 group cursor-pointer`}
     >
       <Icon className="text-shark-300" size={20} />
       <Typography className="text-shark-50">

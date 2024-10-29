@@ -11,11 +11,14 @@ type TerminateSessionMutation = {
   type?: 'single' | 'all'
 }
 
+export const TERMINATE_SESSIONS_MUTATION_KEY = ["terminate-all-sessions"]
+
 export const useTerminateSession = () => {
   const qc = useQueryClient();
   const currentUser = qc.getQueryData<CurrentUser>(CURRENT_USER_QUERY_KEY);
   
   const terminateMutation = useMutation({
+    mutationKey: TERMINATE_SESSIONS_MUTATION_KEY,
       mutationFn: async({ values, type }: TerminateSessionMutation) => {
         if (!currentUser || !type) return;
         

@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react';
+import { useState } from 'react';
 import { UserNickname } from '../../../../../../user/components/name/components/nickname.tsx';
 import {
   ColorArea,
@@ -11,12 +11,8 @@ import { Typography } from '@repo/ui/src/components/typography.tsx';
 import { Separator } from '@repo/ui/src/components/separator.tsx';
 import { Button } from '@repo/ui/src/components/button.tsx';
 import { useUpdateCurrentUser } from '@repo/lib/hooks/use-update-current-user.ts';
-import { useDialog } from '@repo/lib/hooks/use-dialog.ts';
 import { UserEntity } from '@repo/types/entities/entities-type.ts';
 import { parseHexToHSL } from '@repo/lib/helpers/converter-colors.ts';
-import {
-  NICKNAME_COLOR_PICKER_MODAL_NAME
-} from '../../../../../../modals/user-settings/nickname-color-picker-modal.tsx';
 
 type NicknameColorPickerProps = Pick<UserEntity, 'nickname' | 'name_color'>
 
@@ -25,22 +21,19 @@ export const NicknameColorPicker = ({
 }: NicknameColorPickerProps) => {
   const [ color, setColor ] = useState(parseColor(`hsl(${parseHexToHSL(name_color)})`));
   const [ finalColor, setFinalColor ] = useState(color);
-  const { removeDialogMutation } = useDialog();
   const { updateFieldMutation } = useUpdateCurrentUser();
   
   const currentColor = name_color.toString();
   const currentSelectedColor = finalColor.toString('hex');
   const isIdentity = currentColor === currentSelectedColor;
   
-  const handleUpdateColor = useCallback(() => {
-    updateFieldMutation.mutate({
-      value: finalColor.toString('hex'), field: 'name_color',
-    });
-    
+  const handleUpdateColor = () => {
     if (isIdentity) return;
     
-    removeDialogMutation.mutate(NICKNAME_COLOR_PICKER_MODAL_NAME);
-  }, [ updateFieldMutation, finalColor, removeDialogMutation ])
+    return updateFieldMutation.mutate({
+      value: finalColor.toString('hex'), field: 'name_color',
+    });
+  }
   
   return (
     <div className="flex flex-col gap-4 items-center w-full">

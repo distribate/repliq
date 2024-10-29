@@ -71,7 +71,7 @@ async function getComments({
   });
   
   if (error) {
-    throw new Error(error.message);
+    throw new Error(error.message)
   }
   
   return data;
@@ -86,7 +86,9 @@ export async function getThreadComments({
     thread_id, ascending: true
   })
   
-  const rawComments = data.flatMap(item => item.threads_comments);
+  const rawComments = data.flatMap(
+    item => item.threads_comments
+  );
 
   return await Promise.all(
     rawComments.map(async(item) => {

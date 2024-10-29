@@ -24,7 +24,6 @@ import {
 } from '@repo/components/src/friends/components/lists/components/friends-searching-list.tsx';
 import { FriendsControl } from '@repo/components/src/friends/components/control/components/friends-control.tsx';
 import { FriendsStatistics } from '@repo/components/src/friends/components/control/components/friends-statistics.tsx';
-import { PageLoader } from '@repo/ui/src/components/page-loader.tsx';
 
 type FriendsLayout = {
   children: ReactNode

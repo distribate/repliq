@@ -1,24 +1,19 @@
 import { deleteSession } from "@repo/lib/actions/delete-session.ts";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
+import { useRouter } from 'next/navigation';
+import { AUTH_REDIRECT } from '@repo/shared/constants/routes.ts';
 
-export const LOGOUT_MUTATION_KEY = ["logout-state"]
+export const LOGOUT_MUTATION_KEY = ["logout"]
 
 export const useLogout = () => {
-	const queryClient = useQueryClient();
+	const { push } = useRouter()
 	
-	const logOut = useMutation({
+	const logOutMutation = useMutation({
 		mutationKey: LOGOUT_MUTATION_KEY,
-		mutationFn: async() => {
-			await deleteSession();
-		},
-		onSuccess: async (data) => {
-			await queryClient.resetQueries();
-		},
-		onError: (e) => {
-			console.log(e);
-			throw e;
-		}
+		mutationFn: async() => deleteSession(),
+		onSuccess: async () => push(AUTH_REDIRECT),
+		onError: (e) => {throw new Error(e.message);}
 	})
 	
-	return { logOut }
+	return { logOutMutation }
 }

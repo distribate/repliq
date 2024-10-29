@@ -1,20 +1,16 @@
 import { HoverCardItem } from '@repo/ui/src/components/hover-card.tsx';
 import { Typography } from '@repo/ui/src/components/typography.tsx';
-import BookAndQuill from "@repo/assets/images/minecraft/book_quill.webp"
+import BookAndQuill from '@repo/assets/images/minecraft/book_quill.webp';
 import { ImageWrapper } from '../../wrappers/image-wrapper.tsx';
 import {
-  UserProfileSettings
+  UserProfileSettings,
 } from '../../cards/components/user-personal-card/components/profile-settings/user-profile-settings.tsx';
-import { DialogWrapper } from '../../wrappers/dialog-wrapper.tsx';
-
-export const PROFILE_SETTINGS_MODAL_NAME = "profile-settings"
+import { Dialog, DialogContent, DialogTrigger } from '@repo/ui/src/components/dialog.tsx';
 
 export const ProfileSettingsModal = () => {
-  console.log('profile-settings render')
   return (
-    <DialogWrapper
-      name={PROFILE_SETTINGS_MODAL_NAME}
-      trigger={
+    <Dialog>
+      <DialogTrigger>
         <HoverCardItem className="justify-between w-full">
           <div className="flex gap-x-2 items-center w-full">
             <ImageWrapper
@@ -27,9 +23,10 @@ export const ProfileSettingsModal = () => {
             <Typography className="text-base">Профиль</Typography>
           </div>
         </HoverCardItem>
-      }
-    >
-      <UserProfileSettings/>
-    </DialogWrapper>
-  )
-}
+      </DialogTrigger>
+      <DialogContent>
+        <UserProfileSettings />
+      </DialogContent>
+    </Dialog>
+  );
+};

@@ -1,20 +1,16 @@
 import { HoverCardItem } from '@repo/ui/src/components/hover-card.tsx';
 import { Typography } from '@repo/ui/src/components/typography.tsx';
-import Campfire from "@repo/assets/images/minecraft/campfire.webp"
-import { DialogWrapper } from '../../wrappers/dialog-wrapper.tsx';
+import Campfire from '@repo/assets/images/minecraft/campfire.webp';
 import { ImageWrapper } from '../../wrappers/image-wrapper.tsx';
 import {
-  UserAdvancedSettings
+  UserAdvancedSettings,
 } from '../../cards/components/user-personal-card/components/advanced-settings/user-advanced-settings.tsx';
-
-export const ADVANCED_SETTINGS_MODAL_NAME = "advanced-settings"
+import { Dialog, DialogContent, DialogTrigger } from '@repo/ui/src/components/dialog.tsx';
 
 export const AdvancedSettingsModal = () => {
-  console.log('advanced-settings render')
   return (
-    <DialogWrapper
-      name={ADVANCED_SETTINGS_MODAL_NAME}
-      trigger={
+    <Dialog>
+      <DialogTrigger>
         <HoverCardItem className="justify-between w-full">
           <div className="flex gap-x-2 items-center w-full">
             <ImageWrapper
@@ -27,9 +23,10 @@ export const AdvancedSettingsModal = () => {
             <Typography className="text-base">Прочее</Typography>
           </div>
         </HoverCardItem>
-      }
-    >
-      <UserAdvancedSettings/>
-    </DialogWrapper>
-  )
-}
+      </DialogTrigger>
+      <DialogContent>
+        <UserAdvancedSettings />
+      </DialogContent>
+    </Dialog>
+  );
+};

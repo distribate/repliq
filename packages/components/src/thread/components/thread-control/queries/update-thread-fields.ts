@@ -18,7 +18,6 @@ async function getThreadCreatorNickname({
   .single();
   
   if (error) {
-    console.error(error.message);
     throw new Error(error.message);
   }
   
@@ -64,7 +63,6 @@ export async function updateThreadFields({
   .select(fields);
   
   if (error) {
-    console.error(error.message);
     throw new Error(error.message);
   }
   

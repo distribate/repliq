@@ -13,10 +13,6 @@ import {
 import { REQUESTS_QUERY_KEY } from '../../../../friends/queries/requests-query.ts';
 import { FRIENDS_QUERY_KEY, FriendsQuery } from '../../../../friends/queries/friends-query.ts';
 import { REQUESTS_INCOMING_QUERY_KEY } from '../../../../friends/queries/requests-incoming-query.ts';
-import { useDialog } from '@repo/lib/hooks/use-dialog.ts';
-import {
-	DELETE_FRIEND_MODAL_NAME
-} from '../../../../modals/action-confirmation/components/delete-friend/components/delete-friend-modal.tsx';
 import { setPinFriend } from '../../../../friends/queries/set-pin-friend.ts';
 import { setUnpinFriend } from '../../../../friends/queries/set-unpin-friend.ts';
 import { setNoteFriend } from '../../../../friends/queries/set-note-friend.ts';
@@ -31,11 +27,12 @@ type SetFriendNote = ControlFriendProperties & {
 	note: string;
 };
 
+export const USER_FRIEND_DELETE_MUTATION_KEY = ["user-friend-delete-list"]
+
 export const useControlFriend = () => {
 	const qc = useQueryClient();
 	const currentUser = qc.getQueryData<CurrentUser>(CURRENT_USER_QUERY_KEY)
 	const friends = qc.getQueryData<FriendsQuery[]>(FRIENDS_QUERY_KEY(currentUser?.nickname))
-	const { removeDialogMutation } = useDialog()
 	
 	const invalidateAllRequests = async() => {
 		await Promise.all([
@@ -189,12 +186,11 @@ export const useControlFriend = () => {
 	});
 	
 	const removeFriendFromListMutation = useMutation({
+		mutationKey: USER_FRIEND_DELETE_MUTATION_KEY,
 		mutationFn: async ({ reqUserNickname, friend_id }: ControlFriendProperties) => {
 			const id = resolveFriendId(reqUserNickname, friend_id);
 			
 			if (!id) return;
-			
-			removeDialogMutation.mutate(DELETE_FRIEND_MODAL_NAME);
 			
 			await handleFriendAction(
 				() => deleteFriend(id),

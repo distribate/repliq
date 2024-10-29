@@ -75,16 +75,15 @@ export default async function TopicsTopicPage({
     <div className="flex gap-2 items-start h-full w-full relative">
       <div className="flex flex-col w-3/4 items-start h-full gap-y-4 justify-start">
         <BlockWrapper>
-          <Suspense fallback={<Skeleton className="h-48 w-full" />}>
+          <Suspense fallback={<Skeleton className="h-56 w-full" />}>
             {thread.content && (
-              <div className="flex flex-col gap-y-4 w-full h-full">
+              <div className="flex flex-col py-4 gap-y-6 w-full h-full">
                 {thread.description && (
-                  <>
-                    <Typography textSize="medium" textColor="shark_white">
+                  <div className="flex flex-col w-full">
+                    <Typography textSize="large" textColor="shark_white">
                       {thread.description}
                     </Typography>
-                    <Separator />
-                  </>
+                  </div>
                 )}
                 <ThreadContent content={thread.content} />
                 {thread.images && <ThreadImages id={thread.id} />}
@@ -94,14 +93,24 @@ export default async function TopicsTopicPage({
         </BlockWrapper>
         <Separator />
         <div className="flex flex-col w-full h-full gap-y-4 overflow-hidden">
-          <HydrationBoundary state={dehydrate(qc)}>
-            <ThreadComments
-              thread_author_nickname={thread.nickname}
-              thread_id={thread.id}
-              thread_comments={thread.comments}
-            />
-          </HydrationBoundary>
-          <CreateThreadComment thread_id={thread.id} />
+          {thread.comments ? (
+            <>
+              <HydrationBoundary state={dehydrate(qc)}>
+                <ThreadComments
+                  thread_author_nickname={thread.nickname}
+                  thread_id={thread.id}
+                  thread_comments={thread.comments}
+                />
+              </HydrationBoundary>
+              <CreateThreadComment thread_id={thread.id} />
+            </>
+          ) : (
+            <div className={`flex self-center w-fit bg-shark-700 rounded-md px-2 py-0.5 mb-2`}>
+              <Typography textSize="medium" textColor="shark_white" className="font-semibold">
+                Комментирование отключено
+              </Typography>
+            </div>
+          )}
         </div>
       </div>
       <div className="flex flex-col gap-y-4 w-1/4 h-fit sticky top-0 overflow-hidden">

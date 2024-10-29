@@ -15,7 +15,6 @@ async function threadRemove({
   .eq('id', thread_id);
   
   if (threadRemoveErr) {
-    console.error(threadRemoveErr.message)
     throw new Error(threadRemoveErr.message);
   }
   
@@ -34,7 +33,6 @@ async function threadImagesRemove({
   .single();
   
   if (existingThreadImagesErr && status !== 406) {
-    console.error(existingThreadImagesErr.message)
     throw new Error(existingThreadImagesErr.message);
   }
   
@@ -48,7 +46,6 @@ async function threadImagesRemove({
   .remove(existingThreadImages.images);
   
   if (removeImagesFromStorage) {
-    console.error(removeImagesFromStorage.message)
     throw new Error(removeImagesFromStorage.message);
   }
   
@@ -58,7 +55,6 @@ async function threadImagesRemove({
   .eq('thread_id', thread_id);
   
   if (removeImagesFromTable) {
-    console.error(removeImagesFromTable.message)
     throw new Error(removeImagesFromTable.message);
   }
 }

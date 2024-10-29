@@ -7,9 +7,7 @@ type PostItemBodyProps = {
 export const PostItemBody = ({
 	content
 }: PostItemBodyProps) => {
-
-	if (!content) return;
-
+	if (!content) return null;
 	return (
 		<div className="flex w-full">
 			<Typography>{content}</Typography>

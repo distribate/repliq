@@ -1,6 +1,5 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { removePost } from '../queries/remove-post.ts';
-import { useDialog } from '@repo/lib/hooks/use-dialog.ts';
 import { POSTS_QUERY_KEY } from '../../../../profile/components/posts/components/posts/queries/posts-query.ts';
 import { CURRENT_USER_QUERY_KEY, CurrentUser } from '@repo/lib/queries/current-user-query.ts';
 
@@ -19,7 +18,6 @@ type ControlPost = {
 export const useControlPost = () => {
   const qc = useQueryClient();
   const currentUser = qc.getQueryData<CurrentUser>(CURRENT_USER_QUERY_KEY)
-  const { setDialogIdMutation } = useDialog()
   
   const controlPostMutation = useMutation({
     mutationFn: async(values: ControlPost) => {
@@ -33,7 +31,7 @@ export const useControlPost = () => {
 	      case 'edit':
 					
 	      case 'dialog':
-		      setDialogIdMutation.mutate(`post-dialog-${values.post_id}`)
+		   
       }
     },
     onSuccess: async(data, variables, context) => {

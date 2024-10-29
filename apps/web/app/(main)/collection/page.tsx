@@ -1,6 +1,6 @@
-import { PageConventionProps } from '@repo/types/config/page-types.ts';
 import { BlockWrapper } from '@repo/components/src/wrappers/block-wrapper.tsx';
 import { Typography } from '@repo/ui/src/components/typography.tsx';
+import { PageConventionProps } from '@repo/types/global';
 
 export default async function CollectionPage({
   searchParams,

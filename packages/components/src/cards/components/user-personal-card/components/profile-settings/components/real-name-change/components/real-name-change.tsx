@@ -8,10 +8,8 @@ import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { FormField } from "@repo/ui/src/components/form-field.tsx";
-import { useDialog } from "@repo/lib/hooks/use-dialog.ts";
 import { useQueryClient } from '@tanstack/react-query';
 import { realNameSchema } from '../schemas/real-name-schema.ts';
-import { REAL_NAME_CHANGE_MODAL_NAME } from '../../../../../../../../modals/user-settings/real-name-change-modal.tsx';
 
 export type zodRealNameInfer = z.infer<typeof realNameSchema>;
 
@@ -19,7 +17,6 @@ export const RealNameChange = () => {
 	const qc = useQueryClient()
 	const currentUser = qc.getQueryData<CurrentUser>(CURRENT_USER_QUERY_KEY);
 	const { updateFieldMutation } = useUpdateCurrentUser()
-	const { removeDialogMutation } = useDialog()
 	
 	const { register, formState: { errors, isValid }, getValues, watch } = useForm<zodRealNameInfer>({
 		resolver: zodResolver(realNameSchema),
@@ -35,13 +32,11 @@ export const RealNameChange = () => {
 		
 		const value = getValues("name")
 		
-		updateFieldMutation.mutate({
-			field: "real_name", value: value
-		})
-		
 		if (isIdentity) return;
 		
-		removeDialogMutation.mutate(REAL_NAME_CHANGE_MODAL_NAME)
+		return updateFieldMutation.mutate({
+			field: "real_name", value: value
+		})
 	}
 	
 	if (!currentUser) return;

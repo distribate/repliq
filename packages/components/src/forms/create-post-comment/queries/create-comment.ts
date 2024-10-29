@@ -17,7 +17,7 @@ async function postComment({
   const api = createClient();
   
   const { data, error } = await api
-  .from('p_comments')
+  .from('posts_comments')
   .insert({
     content,
     user_nickname: currentUser.nickname,
@@ -38,7 +38,7 @@ async function postCommentReferenced({
   const api = createClient();
   
   const { data, error } = await api
-  .from('posts_comments')
+  .from('posts_comments_ref')
   .insert({
     post_id, comment_id,
   })

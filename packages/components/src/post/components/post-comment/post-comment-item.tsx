@@ -4,16 +4,16 @@ import { PostCommentItemFooter } from './components/post-comment-footer/post-com
 import { Avatar } from '../../../user/components/avatar/components/avatar.tsx';
 import { CommentItemProps } from './types/post-comment-types.ts';
 import Link from 'next/link';
+import { USER_URL } from '@repo/shared/constants/routes.ts';
 
 export const PostCommentItem = ({
   content, id: comment_id, user_nickname, created_at, post_id
 }: CommentItemProps) => {
-  
   if (!comment_id) return;
   
   return (
     <div className="flex flex-row gap-2 group items-end justify-between w-full">
-      <Link href={`/user/${user_nickname}`}>
+      <Link href={USER_URL + user_nickname}>
         <Avatar variant="page" propWidth={36} propHeight={36} nickname={user_nickname} />
       </Link>
       <div className="flex-col p-2 bg-shark-900 rounded-md gap-y-2 w-full">

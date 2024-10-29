@@ -1,20 +1,18 @@
 import { HoverCardItem } from '@repo/ui/src/components/hover-card.tsx';
-import { DialogWrapper } from '../../wrappers/dialog-wrapper.tsx';
 import { UserPersonalCard } from '../../cards/components/user-personal-card/user-personal-card.tsx';
-
-export const USER_SETTINGS_MODAL_NAME = 'settings-card'
+import { Dialog, DialogContent, DialogTrigger } from '@repo/ui/src/components/dialog.tsx';
 
 export const UserSettingsModal = () => {
   return (
-    <DialogWrapper
-      name={USER_SETTINGS_MODAL_NAME}
-      trigger={
+    <Dialog>
+      <DialogTrigger>
         <HoverCardItem>
           Настройки
         </HoverCardItem>
-      }
-    >
-      <UserPersonalCard/>
-    </DialogWrapper>
+      </DialogTrigger>
+      <DialogContent>
+        <UserPersonalCard/>
+      </DialogContent>
+    </Dialog>
   )
 }
