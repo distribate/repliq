@@ -24,7 +24,7 @@ export const ThreadImageModal = ({
           />
         </div>
       </DialogTrigger>
-      <DialogContent>
+      <DialogContent className="p-0 max-w-2xl">
         <ImageWrapper
           propSrc={image}
           propAlt={`image `}

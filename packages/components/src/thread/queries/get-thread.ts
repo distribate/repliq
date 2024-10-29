@@ -10,8 +10,8 @@ export async function getThread(
   
   const { data, error } = await api
   .from('threads')
-  .select('*')
-  .eq('id', threadId);
+  .select()
+  .eq('id', threadId)
   
   if (error) return null;
   

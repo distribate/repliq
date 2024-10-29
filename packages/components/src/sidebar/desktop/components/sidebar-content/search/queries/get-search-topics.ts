@@ -1,28 +1,29 @@
 "use server"
 
 import { createClient } from '@repo/lib/utils/api/server.ts';
-
-type SearchTopics = {
-	searchedValue: string,
-	limit?: number,
-	range?: number[]
-}
+import { SearchTypes } from '../types/search-types.ts';
 
 export async function getSearchTopics({
 	searchedValue, range, limit
-}: SearchTopics) {
-	const supabase = createClient()
+}: SearchTypes) {
+	const api = createClient()
 	
-	let query = supabase
+	let query = api
 	.from('threads')
 	.select("title, id")
 	.ilike('title', `%${searchedValue}%`)
 
-	if (limit) return query.limit(limit);
+	if (limit) query.limit(limit);
 	
-	if (range && range.length === 2) return query.range(
+	if (range && range.length === 2) query.range(
 		range[0], range[1]
 	);
 	
-	return query;
+	const { data: searchedThreads, error } = await query;
+	
+	if (error) {
+		throw new Error(error.message)
+	}
+	
+	return searchedThreads;
 }

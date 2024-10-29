@@ -16,7 +16,7 @@ export const ThreadComments = ({
   thread_id, thread_author_nickname, thread_comments,
 }: ThreadCommentsProps) => {
   const { data: threadComments, isLoading } = threadCommentsQuery(
-    thread_id, thread_comments,
+    thread_id, thread_comments
   );
   
   const nonComments = thread_comments && !threadComments?.length || false;
@@ -36,9 +36,9 @@ export const ThreadComments = ({
           </Typography>
         )}
       </div>
-      <div className="flex flex-col items-start gap-y-2 w-full">
-        {isLoading ? <ThreadCommentsSkeleton /> : (
-          threadComments?.map((comment, i) => (
+      {isLoading ? <ThreadCommentsSkeleton /> : (
+        <div className="flex flex-col items-start gap-y-2 w-full">
+          {threadComments?.map((comment, i) => (
             <ThreadCommentItem
               key={i}
               thread_id={thread_id}
@@ -49,9 +49,9 @@ export const ThreadComments = ({
               isAuthor={comment.user_nickname === thread_author_nickname}
               created_at={comment.created_at}
             />
-          ))
-        )}
-      </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 };

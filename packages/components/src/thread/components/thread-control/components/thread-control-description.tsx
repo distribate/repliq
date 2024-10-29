@@ -12,7 +12,9 @@ export const ThreadControlDescription = ({
   
   const handleSaveEditedInfo = () => {
     return updateThreadFieldsMutation.mutate({
-      type: 'description', id: threadId, title: descriptionValue,
+      type: 'description',
+      id: threadId,
+      description: descriptionValue
     });
   };
   

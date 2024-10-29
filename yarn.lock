@@ -6949,6 +6949,7 @@ __metadata:
     base64-arraybuffer: "npm:^1.0.2"
     bcryptjs: "npm:^2.4.3"
     dayjs: "npm:^1.11.11"
+    ky: "npm:^1.7.2"
     lucia: "npm:^3.2.0"
     nanoid: "npm:^5.0.7"
     postgres: "npm:^3.4.4"

@@ -28,7 +28,6 @@ export async function updateThreadFields({
   id: thread_id, type, field,
 }: UpdateThreadFields) {
   const currentUser = await getCurrentUser();
-  
   if (!currentUser || !thread_id) return;
   
   const threadCreator = await getThreadCreatorNickname({

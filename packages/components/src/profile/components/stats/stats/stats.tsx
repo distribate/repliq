@@ -32,7 +32,7 @@ export const UserProfileGameStats = async({
           </Suspense>
           <Suspense fallback={<LandsStatsSkeleton />}>
             <TabsContent value="lands">
-              <LandsStats nickname={nickname} uuid={uuid} />
+              <LandsStats uuid={uuid} />
             </TabsContent>
           </Suspense>
         </div>

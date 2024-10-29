@@ -10,9 +10,6 @@ export const ThreadInfo = async(thread: ThreadModel) => {
   
   return (
     <div className="flex flex-col gap-6 py-2">
-      <Typography textSize="big" className="font-semibold" textColor="shark_white">
-        {thread.title}
-      </Typography>
       <div className="flex flex-col items-start gap-1">
         <div className="flex items-center gap-1">
           <Typography>Категория:</Typography>
@@ -22,11 +19,6 @@ export const ThreadInfo = async(thread: ThreadModel) => {
             </Typography>
           </Link>
         </div>
-        <Typography>Пользователь:&nbsp;
-          <Link href={USER_URL + thread.nickname}>
-            {thread.nickname}
-          </Link>
-        </Typography>
         <Typography>
           Опубликовано: {dayjs(thread.created_at).fromNow()}
         </Typography>

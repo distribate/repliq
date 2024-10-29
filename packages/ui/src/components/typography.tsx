@@ -13,7 +13,7 @@ const typographyVariants = cva("whitespace-wrap", {
 		},
 		font: {
 			default: "font-[]",
-			pixy: "font-[Pixy]"
+			pixy: "font-[Monocraft]"
 		},
 		textSize: {
 			small: "text-sm",

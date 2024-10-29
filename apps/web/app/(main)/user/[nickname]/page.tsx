@@ -70,8 +70,6 @@ export default async function ProfilePage({
 }: PageConventionProps) {
   if (!params) return;
   
-  const qc = new QueryClient();
-  
   const { user } = await validateRequest();
   if (!user) return;
   
@@ -85,6 +83,8 @@ export default async function ProfilePage({
   const { nickname: currentUserNickname } = user;
   const preferences = reqUser.preferences;
   const reqUserUUID = reqUser.uuid;
+  
+  const qc = new QueryClient();
   
   await qc.prefetchQuery({
     queryKey: REQUESTED_USER_QUERY_KEY(reqUserNickname),
@@ -151,7 +151,9 @@ export default async function ProfilePage({
                   {isSectionPrivatedByOwner && <SectionPrivatedTrigger />}
                 </div>
               )}
-              <TabsTrigger value="achievements">Достижения</TabsTrigger>
+              <TabsTrigger value="achievements">
+                Достижения
+              </TabsTrigger>
               {isOwner && (
                 <>
                   <Separator orientation="vertical" />

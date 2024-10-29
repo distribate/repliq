@@ -117,7 +117,7 @@ export const SignUpForm = () => {
           <div className="flex items-center gap-2 justify-center">
             <Input
               id="password"
-              type="password"
+              type={passwordType}
               className="!bg-shark-900"
               placeholder="игровой пароль"
               autoComplete="new-password"

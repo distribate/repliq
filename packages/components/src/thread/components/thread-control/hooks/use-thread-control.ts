@@ -31,7 +31,7 @@ export const useThreadControl = () => {
     mutationKey: THREAD_CONTROL_MUTATION_KEY,
     mutationFn: async(values: ThreadControl & ThreadControlValues) => {
       if (!values || !currentUser) return;
-      
+
       switch(values.type) {
         case 'comments':
           if (typeof values.comments === 'undefined') return;
@@ -64,10 +64,8 @@ export const useThreadControl = () => {
           });
       }
     },
-    onSuccess: async(data, variables, context) => {
-      if (!variables) return;
-      
-      if (!data) {
+    onSuccess: async(data, variables) => {
+      if (!data || !variables) {
         return toast({
           title: 'Произошла ошибка при обновлении', variant: 'negative',
         });

@@ -5,12 +5,25 @@ import { StatsRequest } from '../../../types/stats-types.ts';
 import { ImageWrapper } from '../../../../../../wrappers/image-wrapper.tsx';
 import CharismWallet from '@repo/assets/images/minecraft/charism_wallet.png';
 import BelkoinWallet from '@repo/assets/images/minecraft/belkoin_wallet.png';
-import { ReactNode } from 'react';
 import { StatsBlockWrapper } from '../../../stats/stats-block-wrapper.tsx';
+import { generalStatsQuery } from '../queries/general-stats-query.ts';
+import dayjs from '@repo/lib/utils/dayjs/dayjs-instance.ts';
 
 export const GeneralStats = ({
   nickname, uuid
 }: StatsRequest) => {
+  const { data: user } = generalStatsQuery({
+    nickname, uuid
+  })
+  
+  if (!user) return;
+  
+  const cmi = user.cmi;
+  const wallet = user.wallet;
+  const reputation = user.reputation;
+  
+  if (!cmi || !reputation || !wallet) return;
+  
   return (
     <div className="flex flex-col gap-y-2">
       <div className="grid font-[Minecraft] grid-cols-2 grid-rows-2 gap-2 w-full h-fit">
@@ -20,10 +33,10 @@ export const GeneralStats = ({
           </Typography>
           <div className="flex flex-col w-full">
             <Typography>
-              Реальный ник: {nickname}
+              Реальный ник: {cmi.username}
             </Typography>
             <Typography>
-              Псевдоним: нет
+              Псевдоним: {cmi.displayName ? cmi.displayName : "нет"}
             </Typography>
           </div>
         </StatsBlockWrapper>
@@ -34,7 +47,7 @@ export const GeneralStats = ({
           <div className="flex flex-col w-full">
             <div className="flex items-center gap-1">
               <Typography>
-                Харизма: 2
+                Харизма: {cmi.balance}
               </Typography>
               <ImageWrapper
                 propSrc={CharismWallet.src}
@@ -45,7 +58,7 @@ export const GeneralStats = ({
             </div>
             <div className="flex items-center gap-1">
               <Typography>
-                Белкоины: 600
+                Белкоины: {wallet.points}
               </Typography>
               <ImageWrapper
                 propSrc={BelkoinWallet.src}
@@ -75,7 +88,7 @@ export const GeneralStats = ({
           </Typography>
           <div className="flex flex-col w-full">
             <Typography>
-              Наиграно: 505 часов
+              Наиграно: {dayjs.duration(Number(cmi.totalPlayTime)).asHours().toFixed()} часа(-ов)
             </Typography>
             <Typography>
               Смертей: 2
@@ -88,11 +101,11 @@ export const GeneralStats = ({
           </Typography>
           <div className="flex flex-col w-full">
             <Typography>
-              Игровая репутация: 5
+              Игровая репутация: {reputation.reputationScore}
             </Typography>
-            <Typography>
-              Лайков на тредах: 1
-            </Typography>
+            {/*<Typography>*/}
+            {/*  Лайков на тредах: 1*/}
+            {/*</Typography>*/}
           </div>
         </StatsBlockWrapper>
       </div>
