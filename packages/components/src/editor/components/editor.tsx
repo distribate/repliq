@@ -1,22 +1,28 @@
-import { BaseEditor, Editor, Transforms } from 'slate';
+import { BaseEditor, Editor, Transforms, Element } from 'slate';
 
 export const CustomEditor = {
   isItalicMarkActive(editor: BaseEditor) {
     const marks = Editor.marks(editor);
-    // @ts-ignore
     return marks ? marks.italic === true : false;
   },
   
   isBoldMarkActive(editor: BaseEditor) {
     const marks = Editor.marks(editor);
-    // @ts-ignore
     return marks ? marks.bold === true : false;
   },
   
+  isUnderlineMarkActive(editor: BaseEditor) {
+    const marks = Editor.marks(editor);
+    return marks ? marks.underline === true : false;
+  },
+  
+  isStrikeMarkActive(editor: BaseEditor) {
+    const marks = Editor.marks(editor);
+    return marks ? marks.strike === true : false;
+  },
+  
   isCodeBlockActive(editor: BaseEditor) {
-    // @ts-ignore
     const [ match ] = Editor.nodes(editor, {
-      // @ts-ignore
       match: n => n.type === 'code',
     });
     
@@ -24,7 +30,7 @@ export const CustomEditor = {
   },
   
   toggleItalicMark(editor: BaseEditor) {
-    const isActive = CustomEditor.isItalicMarkActive(editor);
+    const isActive = this.isItalicMarkActive(editor);
     
     if (isActive) {
       Editor.removeMark(editor, 'italic');
@@ -34,7 +40,7 @@ export const CustomEditor = {
   },
   
   toggleBoldMark(editor: BaseEditor) {
-    const isActive = CustomEditor.isBoldMarkActive(editor);
+    const isActive = this.isBoldMarkActive(editor);
     
     if (isActive) {
       Editor.removeMark(editor, 'bold');
@@ -43,18 +49,34 @@ export const CustomEditor = {
     }
   },
   
+  toggleUnderlineMark(editor: BaseEditor) {
+    const isActive = this.isUnderlineMarkActive(editor);
+    
+    if (isActive) {
+      Editor.removeMark(editor, 'underline');
+    } else {
+      Editor.addMark(editor, 'underline', true);
+    }
+  },
+  
+  toggleStrikeMark(editor: BaseEditor) {
+    const isActive = this.isStrikeMarkActive(editor);
+    
+    if (isActive) {
+      Editor.removeMark(editor, 'strike');
+    } else {
+      Editor.addMark(editor, 'strike', true);
+    }
+  },
+  
   toggleCodeBlock(editor: BaseEditor) {
-    const isActive = CustomEditor.isCodeBlockActive(editor);
+    const isActive = this.isCodeBlockActive(editor)
     
     Transforms.setNodes(
       editor,
+      { type: isActive ? 'paragraph' : 'code', },
       {
-        // @ts-ignore
-        type: isActive ? null : 'code',
-      },
-      {
-        // @ts-ignore
-        match: n => Editor.isBlock(editor, n),
+        match: n => Element.isElement(n) && Editor.isBlock(editor, n),
       },
     );
   },

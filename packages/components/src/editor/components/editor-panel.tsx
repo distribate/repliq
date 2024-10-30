@@ -1,75 +1,92 @@
 import { CustomEditor } from './editor.tsx';
 import { BaseEditor } from 'slate';
 import { Button } from '@repo/ui/src/components/button.tsx';
-import { TooltipWrapper } from '../../wrappers/tooltip-wrapper.tsx';
 import { ReactNode } from 'react';
+import { Typography } from '@repo/ui/src/components/typography.tsx';
+import { Separator } from '@repo/ui/src/components/separator.tsx';
 
 type EditorPanelProps = {
   editor: BaseEditor
 } & Partial<{
-  withImage: {
-    trigger: ReactNode,
-    content: ReactNode
-  }
+  withImage: ReactNode
 }>
-
-const WithImage = ({
-  withImage,
-}: Omit<EditorPanelProps, 'editor'>) => {
-  if (!withImage) return;
-  return (
-    <TooltipWrapper
-      trigger={withImage.trigger}
-      content={withImage.content}
-    />
-  );
-};
 
 export const EditorPanel = ({
   editor, withImage,
 }: EditorPanelProps) => {
   return (
-    <div className="flex bg-shark-700 w-fit rounded-md items-center">
-      <WithImage withImage={withImage} />
+    <div className="flex bg-shark-900 w-fit rounded-md items-center">
+      {withImage && (
+        <>
+          {withImage}
+          <Separator orientation="vertical" />
+        </>
+      )}
       <Button
         title="Выделить жирным"
         type="button"
+        className="w-12 hover:bg-shark-800"
         onMouseDown={event => {
           event.preventDefault();
           CustomEditor.toggleBoldMark(editor);
         }}
       >
-        B
-      </Button>
-      <Button
-        title="Выделить в виде кода"
-        type="button"
-        onMouseDown={event => {
-          event.preventDefault();
-          CustomEditor.toggleCodeBlock(editor);
-        }}
-      >
-        C
+        <Typography textColor="gray">
+          B
+        </Typography>
       </Button>
       <Button
         title="Выделить курсивом"
         type="button"
+        className="w-12 hover:bg-shark-800"
         onMouseDown={event => {
           event.preventDefault();
           CustomEditor.toggleItalicMark(editor);
         }}
       >
-        I
+        <Typography textColor="gray">
+          I
+        </Typography>
       </Button>
       <Button
         title="Выделить подчеркнутым"
         type="button"
+        className="w-12 hover:bg-shark-800"
+        onMouseDown={event => {
+          event.preventDefault();
+          CustomEditor.toggleUnderlineMark(editor);
+        }}
+      >
+        <Typography textColor="gray">
+          U
+        </Typography>
+      </Button>
+      <Button
+        title="Выделить зачеркнутым"
+        type="button"
+        className="w-12 hover:bg-shark-800"
+        onMouseDown={event => {
+          event.preventDefault();
+          CustomEditor.toggleStrikeMark(editor);
+        }}
+      >
+        <Typography textColor="gray">
+          S
+        </Typography>
+      </Button>
+      <Separator orientation="vertical" />
+      <Button
+        title="Выделить в виде кода"
+        type="button"
+        className="w-12 hover:bg-shark-800"
         onMouseDown={event => {
           event.preventDefault();
           CustomEditor.toggleCodeBlock(editor);
         }}
       >
-        U
+        <Typography textColor="gray">
+          {'</>'}
+        </Typography>
       </Button>
     </div>
   );

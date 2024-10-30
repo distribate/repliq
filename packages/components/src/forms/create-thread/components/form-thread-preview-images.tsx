@@ -21,9 +21,10 @@ export const FormThreadPreviewImages = ({
   const { handleControlImage } = useCreateThreadImages();
   const { data: threadFormState } = threadFormQuery();
   
-  const previewFormImages = threadFormState.values?.images;
-  const threadTitle = threadFormState.values?.title;
+  if (!threadFormState.values) return null;
   
+  const previewFormImages = threadFormState.values.images;
+
   if (!previewFormImages
     || previewFormImages && previewFormImages.length === 0
   ) return;
@@ -39,7 +40,7 @@ export const FormThreadPreviewImages = ({
   return (
     <>
       <div className="flex flex-col items-start gap-2 w-full">
-        <Typography textColor="shark_white" textSize="medium">
+        <Typography textColor="shark_white" textSize="large">
           Прикрепленные изображения
         </Typography>
         <div className="flex flex-wrap items-start justify-start gap-4">

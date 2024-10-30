@@ -37,6 +37,11 @@
   .hover-select-effect {
     @apply hover:bg-white/10 cursor-pointer border border-shark-700 duration-300 hover:duration-300;
   }
+
+  .form-editor {
+    @apply relative px-4 py-2 bg-shark-900 outline-none focus-visible:ring-0 focus-visible:outline-none
+    !text-[15px] border border-transparent text-shark-50 focus-visible:border-caribbean-green-200/40 rounded-md min-h-[160px] whitespace-pre-wrap break-words;
+  }
 }
 
 @layer base {

@@ -1,14 +1,6 @@
 import { forwardRef, HTMLAttributes } from "react";
 import { Typography } from "./typography.tsx";
 
-const FieldErrorMessage = ({ message }: { message?: string }) => {
-	return (
-		<span className="text-red-600 text-sm font-normal">
-			{message}
-		</span>
-	)
-}
-
 interface FormFieldProps
 	extends HTMLAttributes<HTMLDivElement> {
 	label?: {
@@ -21,18 +13,15 @@ interface FormFieldProps
 
 const FormField = forwardRef<
 	HTMLDivElement, FormFieldProps
->((
-	{
-		className,
-		errorMessage,
-		label,
-		children,
-		...props
-	},
+>(({ className, errorMessage, label, children, ...props },
 	ref
 ) => {
 	return (
-		<div ref={ref} className="flex flex-col gap-y-1" {...props}>
+		<div
+			ref={ref}
+			className="flex flex-col gap-y-1"
+			{...props}
+		>
 			{label && (
 				<>
 					<label htmlFor={label.for}/>
@@ -46,7 +35,9 @@ const FormField = forwardRef<
 			)}
 			{children}
 			{errorMessage && (
-				<FieldErrorMessage message={errorMessage}/>
+				<span className="text-red-600 text-[16px] font-normal">
+					{errorMessage}
+				</span>
 			)}
 		</div>
 	)

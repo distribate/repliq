@@ -1,10 +1,10 @@
 'use client';
 
-import { useCallback, useMemo } from 'react';
+import { useMemo } from 'react';
 import { Editable, Slate, withReact } from 'slate-react';
 import { createEditor } from 'slate';
-import { Leaf } from '../../../../editor/components/leaf.tsx';
-import { DefaultElement } from '../../../../editor/components/default-element.tsx';
+import { RenderElement } from '../../../../editor/components/render-element.tsx';
+import { RenderLeaf } from '../../../../editor/components/render-leaf.tsx';
 
 type ThreadContentProps = {
   content: any
@@ -26,22 +26,11 @@ export const ThreadContent = ({
     createEditor()), [],
   );
   
-  const renderElement = useCallback(({ ...props }) => {
-    switch(props.element.type) {
-      default:
-        return <DefaultElement {...props} />;
-    }
-  }, []);
-  
-  const renderLeaf = useCallback(({ ...props }) => {
-    return <Leaf {...props} />;
-  }, []);
-  
   return (
     <Slate editor={editor} initialValue={content || initialValue}>
       <Editable
-        renderLeaf={renderLeaf}
-        renderElement={renderElement}
+        renderLeaf={props => <RenderLeaf {...props} children={props.children}/>}
+        renderElement={props => <RenderElement {...props} children={props.children}/>}
         readOnly
         placeholder="Something"
       />

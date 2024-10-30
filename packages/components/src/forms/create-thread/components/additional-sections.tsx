@@ -13,16 +13,18 @@ export const AdditionalSections = () => {
   const { updateThreadFormMutation } = useCreateThread();
   const { data: threadFormState } = threadFormQuery()
   
+  if (!threadFormState.values) return;
+  
   return (
     <>
-      {threadFormState.values?.auto_remove && (
+      {threadFormState.values.auto_remove && (
         <div className="flex flex-col gap-y-2 w-full rounded-md p-6 bg-shark-950">
           <Typography textColor="shark_white" textSize="big">
             Настройка авто-удаления
           </Typography>
         </div>
       )}
-      {threadFormState.values?.permission && (
+      {threadFormState.values.permission && (
         <div className="flex flex-col gap-y-2 w-full rounded-md p-6 bg-shark-950">
           <Typography textColor="shark_white" textSize="big">
             Настройка хайда
@@ -40,10 +42,10 @@ export const AdditionalSections = () => {
             <AccordionContent>
               <div className="flex flex-col gap-y-2">
                 <div className="flex flex-col">
-                  <Typography textColor="shark_white" textSize="medium">
+                  <Typography textColor="shark_white" textSize="large">
                     Теги
                   </Typography>
-                  <Typography className="text-shark-300" textSize="small">
+                  <Typography className="text-shark-300" textSize="medium">
                     (теги для поиска треда, перечисление через запятую)
                   </Typography>
                 </div>

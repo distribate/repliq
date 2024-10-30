@@ -1,4 +1,3 @@
-import { FormField } from '@repo/ui/src/components/form-field.tsx';
 import { Typography } from '@repo/ui/src/components/typography.tsx';
 import { Input } from '@repo/ui/src/components/input.tsx';
 import { useCreateThread } from '../hooks/use-create-thread.tsx';
@@ -11,13 +10,10 @@ export const FormThreadTitle = ({
   const { updateThreadFormMutation } = useCreateThread();
   
   return (
-    <FormField errorMessage={errors?.title?.message}>
+    <div className="flex flex-col gap-y-1 w-full">
       <div className="flex flex-col">
-        <Typography textColor="shark_white" textSize="medium">
+        <Typography textColor="shark_white" textSize="large">
           Заголовок
-        </Typography>
-        <Typography className="text-shark-300" textSize="small">
-          (должен быть внятным и коротким)
         </Typography>
       </div>
       <Controller
@@ -27,11 +23,13 @@ export const FormThreadTitle = ({
           <Input
             name={name}
             ref={ref}
+            variant="form"
             className="rounded-md"
             placeholder="абоба тайтл..."
             status={errors ? 'error' : 'default'}
             onChange={e => {
               onChange(e);
+              
               return updateThreadFormMutation.mutate({
                 values: {
                   title: e.target.value,
@@ -41,6 +39,11 @@ export const FormThreadTitle = ({
           />
         )}
       />
-    </FormField>
+      {errors.title && (
+        <span className="text-red-600 text-[16px] font-normal">
+          {errors.title.message}
+        </span>
+      )}
+    </div>
   );
 };

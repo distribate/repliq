@@ -2,13 +2,13 @@ import { forwardRef, InputHTMLAttributes } from 'react';
 import { cva, VariantProps } from 'class-variance-authority';
 
 const inputVariants = cva(
-  'flex min-h-10 w-full px-4 py-1 ' +
-  'file:border-0 file:bg-transparent file:text-sm font-normal file:font-medium focus-visible:outline-none ' +
+  'flex min-h-10 w-full px-4 py-1 file:border-0 file:bg-transparent file:text-sm font-normal file:font-medium focus-visible:outline-none ' +
   'focus-visible:ring-0 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50', {
     variants: {
       variant: {
         default: 'border-none text-sm text-shark-50 placeholder:text-shark-300',
         minecraft: 'border-[2px] text-shark-100 rounded-none bg-shark-800 text-sm dark:bg-shark-800 font-[Minecraft] placeholder:text-shark-200',
+        form: "h-12 border border-transparent focus-visible:border-caribbean-green-200/40 text-[16px] placeholder:text-shark-300"
       },
       status: {
         default: 'border-black/80',

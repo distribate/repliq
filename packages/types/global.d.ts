@@ -1,10 +1,23 @@
-import { BaseEditor, BaseElement, Editor, Element, Node } from 'slate'
+import { BaseEditor, ParagraphElement, HistoryEditor } from 'slate'
 import { ReactEditor } from 'slate-react'
 
 declare module "png"
 declare module "jpeg"
 declare module "jpg"
 declare module "webp"
+declare module "bcryptjs"
+
+declare module 'slate' {
+  export interface CustomTypes {
+    Editor: CustomEditor
+    Element: CustomElement
+    Text: CustomText,
+  }
+  
+  export interface BaseElement {
+    type: string;
+  }
+}
 
 export type PageConventionProps = {
   params: {
@@ -33,27 +46,24 @@ export type UserPageParam = {
 }
 
 export type CustomEditor = BaseEditor & ReactEditor & HistoryEditor
-
-declare module "bcryptjs"
-
 export type CustomElement = ParagraphElement
 
 type CustomText = FormattedText;
 
+export type OperationType = 'insert_node'
+  | 'merge_node'
+  | 'move_node'
+  | 'remove_node'
+  | 'set_node'
+  | 'split_node'
+  | 'set_selection'
+  | 'insert_text'
+  | 'remove_text'
+
 export type FormattedText = {
   text: string;
-  bold?: true,
-  italic?: true
-}
-
-declare module 'slate' {
-  export interface CustomTypes {
-    Editor: CustomEditor
-    Element: CustomElement
-    Text: CustomText,
-  }
-  
-  export interface BaseElement {
-    type: string;
-  }
+  bold?: boolean,
+  underline?: boolean,
+  italic?: boolean,
+  strike?: boolean
 }

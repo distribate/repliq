@@ -12,52 +12,58 @@ import { FormChildsProps } from '../types/create-thread-form-types.ts';
 export const FormThreadCategories = ({
   errors, control,
 }: FormChildsProps) => {
-  const [ categoriesEnabled, setCategoriesEnabled ] = useState<boolean>(false);
-  const { data: availableCategories } = availableCategoriesQuery({
-    enabled: categoriesEnabled,
-  });
-  
-  const { updateThreadFormMutation } = useCreateThread();
+  const [ enabled, setEnabled ] = useState<boolean>(false);
+  const { data: availableCategories } = availableCategoriesQuery(enabled);
   const { data: threadFormState } = threadFormQuery();
+  const { updateThreadFormMutation } = useCreateThread();
+  
+  if (!threadFormState.values) return;
+  
+  const handleValueChange = (
+    value: string, onChange: (v: string) => void,
+  ) => {
+    onChange(value);
+    
+    return updateThreadFormMutation.mutate({
+      values: { category_id: Number(value) },
+    });
+  };
+  
+  const isActive = threadFormState.values.category_id;
+  const selectedCategoryId = threadFormState.values.category_id;
+  const selectedCategoryTitle = availableCategories?.find(
+    item => item.id === selectedCategoryId,
+  )?.title || null
   
   return (
     <FormField errorMessage={errors?.category?.message}>
       <div className="flex flex-col">
-        <Typography textColor="shark_white" textSize="medium">Категория</Typography>
-        <Typography className="text-shark-300" textSize="small">
+        <Typography textColor="shark_white" textSize="large">Категория</Typography>
+        <Typography className="text-shark-300" textSize="medium">
           (категория, близкая к тематике поста)
         </Typography>
       </div>
       <Controller
         control={control}
         name="category"
-        render={({ field }) => {
+        render={({ field: { onChange } }) => {
           return (
             <Select
-              onOpenChange={(open: boolean) => {
-                if (!categoriesEnabled && open) setCategoriesEnabled(true);
-              }}
-              onValueChange={(value: string) => {
-                updateThreadFormMutation.mutate({
-                  values: {
-                    category_id: Number(value),
-                  },
-                });
-                field.onChange(value);
-              }}
+              onOpenChange={open => (!enabled && open) ? setEnabled(true) : undefined}
+              onValueChange={value => handleValueChange(value, onChange)}
             >
-              <SelectTrigger className="bg-shark-900">
+              <SelectTrigger className={`${isActive ? 'bg-shark-50' : 'bg-shark-800'} flex justify-center `}>
                 {!threadFormState.values?.category_id ? (
-                  <Typography textSize="medium" textColor="shark_white">
+                  <Typography textSize="medium" textColor={isActive ? 'shark_black' : 'shark_white'}>
                     Категория не выбрана
                   </Typography>
                 ) : (
-                  availableCategories?.find(
-                    item => item.id === threadFormState.values?.category_id,
-                  )?.title
+                  <Typography textSize="medium" textColor={isActive ? 'shark_black' : 'shark_white'}>
+                    {selectedCategoryTitle}
+                  </Typography>
                 )}
               </SelectTrigger>
-              <AvailableCategories categoriesEnabled={categoriesEnabled} />
+              <AvailableCategories enabled={enabled} />
             </Select>
           );
         }}

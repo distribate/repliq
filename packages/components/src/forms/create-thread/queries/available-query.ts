@@ -1,13 +1,11 @@
 import { useQuery } from "@tanstack/react-query";
 import { getAvailableCategories } from "./get-available-categories.ts";
 
-export const availableCategoriesQuery = ({
-	enabled = false
-}: {
-	enabled: boolean
-}) => {
+export const AVAILABLE_CATEGORIES_QUERY_KEY = ["ui", "available-categories"]
+
+export const availableCategoriesQuery = (enabled: boolean) => {
 	return useQuery({
-		queryKey: ["ui", "available-categories"],
+		queryKey: AVAILABLE_CATEGORIES_QUERY_KEY,
 		queryFn: () => getAvailableCategories(),
 		refetchOnWindowFocus: false,
 		enabled: enabled

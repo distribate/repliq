@@ -1,15 +1,6 @@
 import { z } from 'zod';
 
-const ACCEPTED_IMAGE_TYPES = [
-  'image/png', 'image/jpg', 'image/jpeg', 'image/webp',
-];
-
-const MAX_IMAGE_SIZE = 5; // MB
-
-const sizeInMB = (sizeInBytes: number, decimalsNum = 2) => {
-  const result = sizeInBytes / (1024 * 1024);
-  return +result.toFixed(decimalsNum);
-};
+export const THREAD_CONTENT_LIMIT = 1224;
 
 export const createThreadSchema = z.object({
   category: z.string().min(1, {
@@ -20,19 +11,25 @@ export const createThreadSchema = z.object({
   }).max(64, {
     message: 'Максимум 64 символа',
   }),
-  description: z.string().min(5, {
-    message: 'Слишком короткое описание',
-  }).max(80, {
-    message: 'Максимум 80 символов',
-  }).or(z.string().max(0)),
+  description: z.string()
+  .transform(val => (val.length < 1 ? undefined : val))
+  .refine(
+    val => typeof val === "undefined" || val.length >= 5,
+    { message: "Слишком короткое описание" }
+  )
+  .refine(
+    val => typeof val === "undefined" || val.length <= 80,
+    { message: "Максимум 80 символов" }
+  )
+  .optional(),
   content: z.string().min(36, {
     message: 'Слишком короткое содержание',
-  }).max(3128, {
+  }).max(THREAD_CONTENT_LIMIT, {
     message: 'Превышено максимальное количество символов',
   }),
   permission: z.boolean(),
   auto_remove: z.boolean(),
   comments: z.boolean(),
   images: z
-  .custom<File[] | null>()
+  .custom<File[] | null>(),
 });
