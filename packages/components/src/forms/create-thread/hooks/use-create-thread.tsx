@@ -1,17 +1,13 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { THREAD_FORM_QUERY, ThreadFormQuery } from '../queries/thread-form-query.ts';
 import { postThread } from '../queries/post-thread.ts';
-import { toast } from '@repo/ui/src/hooks/use-toast.ts';
+import { toast } from 'sonner';
 import { CURRENT_USER_QUERY_KEY, CurrentUser } from '@repo/lib/queries/current-user-query.ts';
 import { useRouter } from 'next/navigation';
 import { THREAD_URL } from '@repo/shared/constants/routes.ts';
 import { getArrayBuffer } from '@repo/lib/helpers/ger-array-buffer.ts';
 import { encode } from 'base64-arraybuffer';
 import { blobUrlToFile } from '@repo/lib/helpers/blobUrlToFile.ts';
-
-type CreatePostThreadMutation = Partial<{
-  images: File[] | null
-}>
 
 export const useCreateThread = () => {
   const qc = useQueryClient();
@@ -39,10 +35,7 @@ export const useCreateThread = () => {
       const values = form?.values;
       
       if (!form || !values) {
-        return toast({
-          title: 'Форма должна быть заполнена',
-          variant: 'negative',
-        });
+        return toast.error('Форма должна быть заполнена');
       }
       
       const {
@@ -89,25 +82,15 @@ export const useCreateThread = () => {
       });
       
       if (!createdThread) {
-        return toast({
-          title: 'Произошла ошибка при публикации поста.',
-          description: 'Пожалуйста, перезагрузите страницу, сохранив контент!',
-          variant: 'negative',
-        });
+        return toast.error('Произошла ошибка при публикации поста.');
       }
       
       return createdThread.thread_id;
     },
     onSuccess: async(data) => {
-      if (!data) return toast({
-        title: 'Произошла ошибка при создании треда',
-        variant: 'negative',
-      });
+      if (!data) return toast.error('Произошла ошибка при создании треда');
       
-      toast({
-        title: 'Тред создан',
-        variant: 'positive',
-      });
+      toast.success('Тред создан');
       
       const formValues = qc.getQueryData<ThreadFormQuery>(THREAD_FORM_QUERY);
 

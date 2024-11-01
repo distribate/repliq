@@ -9,16 +9,17 @@ import { getThreadCommentsCount } from './get-thread-comments-count.ts';
 import { getThread } from './get-thread.ts';
 import { getThreadImagesCount } from './get-thread-images-count.ts';
 import { createClient } from '@repo/lib/utils/api/server.ts';
+import { getCurrentUser } from '@repo/lib/actions/get-current-user.ts';
 
 type ThreadModelDetails = {
   commentsCount: number,
   rating: ThreadRatingResponse | null,
   images: boolean
   threadTags: Array<string> | null
+  views: number
 }
 
-export type ThreadModel = ThreadEntity
-  & Pick<UserEntity, 'nickname'> & ThreadModelDetails
+export type ThreadModel = ThreadEntity & Pick<UserEntity, 'nickname'> & ThreadModelDetails
 
 type GetThreadModel = {
   type: ThreadRequestType
@@ -42,14 +43,41 @@ async function getThreadTags(threadId: string) {
   return data.tags;
 }
 
+async function postThreadView(threadId: string) {
+  const currentUser = await getCurrentUser();
+  if (!currentUser) return;
+  
+  const api = createClient();
+  
+  await api
+  .from('threads_views')
+  .insert({ user_id: currentUser.id, thread_id: threadId });
+}
+
+async function getThreadViews(threadId: string): Promise<number> {
+  const api = createClient();
+  
+  const { count, error } = await api
+  .from('threads_views')
+  .select('*', { count: 'exact' })
+  .eq('thread_id', threadId);
+  
+  if (error) {
+    return 0;
+  }
+  
+  return count ? count : 0;
+}
+
 export async function getThreadModel({
-  threadId, type = 'only_thread',
+  threadId, type,
 }: GetThreadModel): Promise<ThreadModel | null> {
   let thread: ThreadModel | null;
   let nickname: string = '';
   let commentsCount: number = 0;
   let images: boolean = false; // if existing images of thread
   let rating: ThreadRatingResponse | null = null;
+  let views: number = 0;
   
   if (!threadId) return null;
   
@@ -72,11 +100,16 @@ export async function getThreadModel({
   nickname = threadCreator.nickname;
   commentsCount = threadCommentsCount || 0;
   
+  if (type === 'page') {
+    await postThreadView(threadId);
+    views = await getThreadViews(threadId);
+  }
+  
   if (!thread) return null;
   
   rating = await getThreadRating(threadId);
   
   return {
-    ...thread, nickname, threadTags, commentsCount, images, rating,
+    ...thread, nickname, threadTags, commentsCount, views, images, rating,
   };
 }

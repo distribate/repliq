@@ -254,6 +254,17 @@ module.exports = {
 						transform: "translate3d(0, 0, 0)",
 					},
 				},
+				"flash-fade": {
+					"0%": {
+						"background-color": "#b0b0b0"
+					},
+					"10%": {
+						"background-color": "#6d6d6d"
+					},
+					"100%": {
+						"background-color": "#212121"
+					}
+				},
 				"fade-in-top-right": {
 					"0%": {
 						opacity: 0,
@@ -264,7 +275,6 @@ module.exports = {
 						transform: "translate3d(0, 0, 0)",
 					},
 				},
-				
 				"fade-in-bottom-left": {
 					"0%": {
 						opacity: 0,
@@ -457,6 +467,7 @@ module.exports = {
 				fadeoutright: 'fade-out-right 1s ease-in-out 0.25s 1',
 				fadeoutup: 'fade-out-up 1s ease-in-out 0.25s 1',
 				'highlight': 'highlight 2s ease-out',
+				"flash-fade": "flash-fade 3s ease-out 1"
 			},
 		},
 	},

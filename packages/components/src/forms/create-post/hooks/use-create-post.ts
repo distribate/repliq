@@ -1,7 +1,7 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { createPost, createPostReferenced, Post } from '../queries/create-post.ts';
 import { CURRENT_USER_QUERY_KEY, CurrentUser } from '@repo/lib/queries/current-user-query.ts';
-import { toast } from '@repo/ui/src/hooks/use-toast.ts';
+import { toast } from 'sonner';
 import { POSTS_QUERY_KEY } from '../../../profile/components/posts/components/posts/queries/posts-query.ts';
 import { POST_FORM_FIELD_QUERY_KEY } from '../queries/post-form-query.ts';
 
@@ -25,17 +25,11 @@ export const useCreatePost = () => {
           post_id: post_id, user_nickname: currentUser.nickname,
         });
         
-        if (!isSuccess) {
-          toast({
-            title: 'Произошла ошибка при публикации поста. Попробуйте позже!', variant: 'negative',
-          });
-          
-          return;
-        }
-        
-        toast({
-          title: 'Опубликовано', variant: 'positive',
+        if (!isSuccess) return toast.error('Произошла ошибка при публикации поста. Попробуйте позже!', {
+          description: 'Попробуйте попытку позже',
         });
+        
+        return toast.success('Опубликовано');
       }
     },
     onSuccess: async() => {

@@ -2,10 +2,10 @@
 
 import "server-only"
 import { FriendsQuery } from './friends-query.ts';
-import { Tables } from '@repo/types/entities/supabase.ts';
 import type { FriendsSort } from '../../profile/components/friends/hooks/use-friends-sort.tsx';
 import { getCurrentUser } from '@repo/lib/actions/get-current-user.ts';
 import { createClient } from "@repo/lib/utils/api/server.ts";
+import { FriendEntity, FriendNotesEntity, FriendPinnedEntity } from '@repo/types/entities/entities-type.ts';
 
 export type RequestFriends = {
   nickname: string,
@@ -14,9 +14,6 @@ export type RequestFriends = {
 }
 
 type FriendDetails = Omit<FriendsQuery, 'friend_id' | 'created_at'>
-type FriendsDataDetails = Tables<'users_friends'>
-type FriendsPinnedDetails = Tables<'friends_pinned'>
-type FriendsNotedDetails = Tables<"friends_notes">
 
 async function getNotedFriends() {
   const currentUser = await getCurrentUser();
@@ -28,7 +25,7 @@ async function getNotedFriends() {
   .from('friends_notes')
   .select()
   .eq('initiator', currentUser.nickname)
-  .returns<FriendsNotedDetails[]>();
+  .returns<FriendNotesEntity[]>();
   
   if (error) {
     throw new Error(error.message);
@@ -47,7 +44,7 @@ async function getPinnedFriends() {
   .from('friends_pinned')
   .select()
   .eq('initiator', currentUser.nickname)
-  .returns<FriendsPinnedDetails[]>();
+  .returns<FriendPinnedEntity[]>();
   
   if (error) {
     throw new Error(error.message);
@@ -65,7 +62,7 @@ export async function getFriends({
   .from('users_friends')
   .select(`id, user_1, user_2, created_at`)
   .or(`user_1.eq.${nickname},user_2.eq.${nickname}`)
-  .returns<FriendsDataDetails[]>();
+  .returns<FriendEntity[]>();
   
   const [pinnedFriends, notedFriends] = await Promise.all([
     getPinnedFriends(),

@@ -1,6 +1,6 @@
 import { useMutation } from '@tanstack/react-query';
 import { createAuthImage } from '../queries/create-auth-image.ts';
-import { toast } from '@repo/ui/src/hooks/use-toast.ts';
+import { toast } from 'sonner';
 import { encode } from 'base64-arraybuffer';
 import { deleteAuthImage } from '../queries/delete-auth-image.ts';
 import { useRouter } from 'next/navigation';
@@ -15,15 +15,9 @@ export const useAuthBackgroundImage = () => {
       return await deleteAuthImage(imageName)
     },
     onSuccess: async (data, variables) => {
-      if (!data) return toast({
-        title: "Произошла ошибка при удалении изображения",
-        variant: "negative"
-      })
+      if (!data) return toast.error("Произошла ошибка при удалении изображения")
       
-      toast({
-        title: "Изображение удалено",
-        variant: "positive"
-      })
+      toast.success("Изображение удалено")
       
       return refresh()
     },
@@ -55,27 +49,17 @@ export const useAuthBackgroundImage = () => {
       return createAuthImage(base64Files);
     },
     onSuccess: async(data, variables) => {
-      if (!data) return toast({
-        title: 'Произошла ошибка при загрузке изображения',
-        variant: 'negative',
-      });
+      if (!data) return toast.error( 'Произошла ошибка при загрузке изображения');
       
       if (!Array.isArray(data)) {
-        if (data.error === 'no-data') return toast({
-          title: 'Что-то пошло не так при загрузке изображений. Попробуйте позже',
-          variant: 'negative',
+        if (data.error === 'no-data') return toast.error( 'Что-то пошло не так при загрузке изображений.', {
+          description: 'Попробуйте попытку позже',
         });
         
-        if (data.error === 'limit') return toast({
-          title: 'Изображений может быть только 50!',
-          variant: 'negative',
-        });
+        if (data.error === 'limit') return toast.info('Изображений может быть только 50!');
       }
       
-      toast({
-        title: 'Изображение загружено',
-        variant: 'positive',
-      });
+      toast.success('Изображение загружено');
       
       return refresh()
     },

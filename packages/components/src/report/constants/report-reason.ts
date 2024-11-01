@@ -7,6 +7,9 @@ type ReportReasons = {
 
 export const REPORT_REASONS: ReportReasons[] = [
 	{
+		title: "Не нравится", type: "dont-like"
+	},
+	{
 		title: "Спам", type: "spam"
 	},
 	{

@@ -36,24 +36,24 @@ export type Database = {
     Tables: {
       admins: {
         Row: {
-          admin_id: string
           created_at: string
           id: number
+          user_id: string
         }
         Insert: {
-          admin_id: string
           created_at?: string
           id?: number
+          user_id: string
         }
         Update: {
-          admin_id?: string
           created_at?: string
           id?: number
+          user_id?: string
         }
         Relationships: [
           {
-            foreignKeyName: "admins_admin_id_fkey"
-            columns: ["admin_id"]
+            foreignKeyName: "admins_user_id_fkey"
+            columns: ["user_id"]
             isOneToOne: false
             referencedRelation: "users"
             referencedColumns: ["id"]
@@ -552,6 +552,32 @@ export type Database = {
         }
         Relationships: []
       }
+      moderators: {
+        Row: {
+          created_at: string
+          id: number
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          id?: number
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          id?: number
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "moderators_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       posts: {
         Row: {
           comments: boolean
@@ -671,27 +697,30 @@ export type Database = {
       reports: {
         Row: {
           created_at: string
+          description: string | null
           id: number
-          reason: string | null
-          report_type: string | null
+          reason: Database["public"]["Enums"]["report_reason"]
+          report_type: Database["public"]["Enums"]["report_type"] | null
           reported_item: Json | null
           target_user_nickname: string | null
           user_nickname: string | null
         }
         Insert: {
           created_at?: string
-          id: number
-          reason?: string | null
-          report_type?: string | null
+          description?: string | null
+          id?: number
+          reason?: Database["public"]["Enums"]["report_reason"]
+          report_type?: Database["public"]["Enums"]["report_type"] | null
           reported_item?: Json | null
           target_user_nickname?: string | null
           user_nickname?: string | null
         }
         Update: {
           created_at?: string
+          description?: string | null
           id?: number
-          reason?: string | null
-          report_type?: string | null
+          reason?: Database["public"]["Enums"]["report_reason"]
+          report_type?: Database["public"]["Enums"]["report_type"] | null
           reported_item?: Json | null
           target_user_nickname?: string | null
           user_nickname?: string | null
@@ -801,6 +830,7 @@ export type Database = {
         Row: {
           content: string
           created_at: string
+          edited: boolean
           id: number
           thread_id: string
           user_nickname: string
@@ -808,6 +838,7 @@ export type Database = {
         Insert: {
           content: string
           created_at?: string
+          edited?: boolean
           id?: number
           thread_id: string
           user_nickname: string
@@ -815,6 +846,7 @@ export type Database = {
         Update: {
           content?: string
           created_at?: string
+          edited?: boolean
           id?: number
           thread_id?: string
           user_nickname?: string
@@ -1079,6 +1111,32 @@ export type Database = {
           },
         ]
       }
+      threads_views: {
+        Row: {
+          created_at: string
+          id: number
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          id?: number
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          id?: number
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "threads_views_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       users: {
         Row: {
           acceptrules: boolean | null
@@ -1203,6 +1261,35 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "users"
             referencedColumns: ["nickname"]
+          },
+        ]
+      }
+      users_cover: {
+        Row: {
+          created_at: string
+          id: number
+          image_id: string | null
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          id?: number
+          image_id?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          id?: number
+          image_id?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "users_cover_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
           },
         ]
       }
@@ -1452,7 +1539,7 @@ export type Database = {
         | "moder"
       post_visibility: "all" | "only" | "friends"
       profile_visibility: "all" | "friends"
-      report_reason: "spam" | "offensive"
+      report_reason: "spam" | "offensive" | "dont-like"
       report_type: "comment" | "post" | "thread" | "account"
       request_timeout_type:
         | "description"

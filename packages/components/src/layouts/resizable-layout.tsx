@@ -120,7 +120,8 @@ export const ResizableLayout = ({
           autoSaveId="conditional"
           suppressHydrationWarning
           onLayout={onLayout}
-          className={`flex w-full min-h-screen max-h-screen p-2 h-full
+          style={{ overflow: 'clip' }}
+          className={`flex w-full min-h-screen h-screen max-h-screen p-2
             gap-${layoutGroupGap} overflow-hidden`}
         >
           <SidebarMain defaultSize={defaultLayout[0]} />

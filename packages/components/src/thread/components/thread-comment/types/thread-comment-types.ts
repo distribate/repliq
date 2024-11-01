@@ -1,13 +1,19 @@
 export type ThreadCommentProps = {
 	nickname: string,
 	isAuthor: boolean,
-	id: string,
+	id: number,
 	created_at: string,
 	thread_id: string,
 	content: string,
+	edited: boolean,
 	replied: {
-		id: string,
+		id: number,
 		user_nickname: string,
 		content: string
 	} | null
+}
+
+export type ThreadCommentControlType = {
+	threadId: string,
+	commentId: number
 }

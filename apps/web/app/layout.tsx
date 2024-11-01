@@ -2,7 +2,7 @@ import { PT_Sans } from 'next/font/google';
 import { ReactNode } from 'react';
 import { QueryProvider } from '@repo/lib/providers/query-provider';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
-import { Toaster } from '@repo/ui/src/components/toaster.tsx';
+import { Toaster } from 'sonner';
 import { MainPageLoader } from '@repo/ui/src/components/main-page-loader.tsx';
 import '../globals.css';
 import '@repo/ui/ui.css';
@@ -33,7 +33,18 @@ export default function RootLayout({
     <QueryProvider>
       {children}
       <ReactQueryDevtools />
-      <Toaster />
+      <Toaster
+        expand={false}
+        position="bottom-center"
+        toastOptions={{
+          classNames: {
+            error: 'bg-red-400 border-none',
+            success: 'bg-emerald-500 text-shark-50 border-none',
+            warning: 'text-yellow-400 border-none',
+            info: 'bg-blue-400 border-none',
+          },
+        }}
+      />
     </QueryProvider>
     </body>
     </html>

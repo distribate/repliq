@@ -4,9 +4,9 @@ import "server-only"
 import { createClient } from "@repo/lib/utils/api/server.ts";
 import { validateRequest } from '../utils/auth/validate-requests.ts';
 import { RequestTimeoutType } from './check-request-timeout.ts';
-import { Tables } from '@repo/types/entities/supabase.ts';
+import { RequestEntity } from '@repo/types/entities/entities-type.ts';
 
-type CreateRequestTimeout = Pick<Tables<"users_requests_timeout">,
+type CreateRequestTimeout = Pick<RequestEntity,
   "user_nickname" | "issued_at"> & {
   type: string
 }

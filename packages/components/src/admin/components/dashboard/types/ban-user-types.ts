@@ -1,9 +1,9 @@
-import { Tables } from '@repo/types/entities/supabase.ts';
+import { BanEntity } from '@repo/types/entities/entities-type.ts';
 
 export type BanUser = {
   type: "ban" | "unban",
   nickname: string,
-  parameters?: Partial<Omit<Tables<"users_banned">, "id"
+  parameters?: Partial<Omit<BanEntity, "id"
     | "created_at"
     | "nickname">
   >

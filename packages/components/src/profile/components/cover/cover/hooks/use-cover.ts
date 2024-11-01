@@ -10,9 +10,7 @@ export const useCover = () => {
 				return { ...prev, ...values }
 			})
 		},
-		onSuccess: async () => {
-			await qc.invalidateQueries({ queryKey: COVER_QUERY_KEY })
-		}
+		onSuccess: async () => await qc.invalidateQueries({ queryKey: COVER_QUERY_KEY })
 	})
 	
 	return { setCoverStateMutation }

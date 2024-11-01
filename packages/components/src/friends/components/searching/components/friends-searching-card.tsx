@@ -3,10 +3,10 @@ import { USER_URL } from '@repo/shared/constants/routes.ts';
 import { Avatar } from '../../../../user/components/avatar/components/avatar.tsx';
 import { Typography } from '@repo/ui/src/components/typography.tsx';
 import { UserDonate } from '../../../../user/components/donate/components/donate.tsx';
-import { Tables } from '@repo/types/entities/supabase.ts';
 import { FriendsSearchingCardAction } from './friends-searching-card-action.tsx';
+import { UserEntity } from '@repo/types/entities/entities-type.ts';
 
-export type FriendsSearchingCardProps = Pick<Tables<'users'>, 'id'
+export type FriendsSearchingCardProps = Pick<UserEntity, 'id'
   | 'nickname'
   | 'name_color'
   | 'uuid'

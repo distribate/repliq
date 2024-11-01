@@ -13,10 +13,12 @@ export async function checkAdminPermission(): Promise<boolean> {
 	const { data, error } = await api
 	.from("admins")
 	.select("id")
-	.eq("admin_id", user.id)
+	.eq("user_id", user.id)
 	.single()
 	
-	if (error) return false;
+	if (error) {
+		return false;
+	}
 	
 	return !!data;
 }

@@ -1,7 +1,7 @@
 "use client"
 
 import { QueryKey, useMutation, useQueryClient } from '@tanstack/react-query';
-import { toast } from "@repo/ui/src/hooks/use-toast.ts";
+import { toast } from "sonner";
 import { deleteFriend } from "../queries/delete-friend.ts";
 import { createFriendRequest } from "../queries/create-friend-request.ts";
 import { CURRENT_USER_QUERY_KEY, CurrentUser } from '@repo/lib/queries/current-user-query.ts';
@@ -54,14 +54,18 @@ export const useControlFriend = () => {
 			const { status } = await action();
 			
 			if (status === 200 || status === 204 || status === 201) {
-				toast({ title: successMessage, variant: "positive" });
+				toast.success(successMessage);
 				
-				if (invalidateKey) await qc.invalidateQueries({ queryKey: invalidateKey });
+				if (invalidateKey) {
+					return qc.invalidateQueries({ queryKey: invalidateKey });
+				}
 			} else {
-				toast({ title: errorMessage, variant: "negative" });
+				return toast.error(errorMessage);
 			}
 		} catch (error) {
-			if (error instanceof Error) throw new Error(error.message)
+			if (error instanceof Error) {
+				throw new Error(error.message);
+			}
 		}
 	};
 	

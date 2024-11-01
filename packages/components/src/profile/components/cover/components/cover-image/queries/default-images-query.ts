@@ -6,8 +6,6 @@ export const DEFAULT_IMAGES_QUERY = ["ui", "cover", "default-images"]
 export const defaultImagesQuery = () => useQuery({
   queryKey: DEFAULT_IMAGES_QUERY,
   queryFn: () => getListFilesInBucket({
-    bucket: "user_images",
-    folderName: "default",
-    signed: true
+    bucket: "user_images", folderName: "default", signed: true
   })
 })

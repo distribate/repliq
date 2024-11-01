@@ -1,27 +1,29 @@
-import { ImageWrapper } from '../../wrappers/image-wrapper.tsx';
 import {
-  UserProfileSettings
+  UserProfileSettings,
 } from '../../cards/components/user-personal-card/components/profile-settings/user-profile-settings.tsx';
-import BookAndQuill from '@repo/assets/images/minecraft/book_quill.webp';
 import { Dialog, DialogContent, DialogTrigger } from '@repo/ui/src/components/dialog.tsx';
+import { Button } from '@repo/ui/src/components/button.tsx';
+import BookAndQuill from '@repo/assets/images/minecraft/book_quill.webp';
+import { ImageWrapper } from '../../wrappers/image-wrapper.tsx';
 
 export const ProfileDescriptionChangeModal = () => {
   return (
     <Dialog>
       <DialogTrigger>
-        <div className="rounded-md min-w-[30px] min-h-[30px] p-1 cursor-pointer">
+        <Button title="Настройка профиля" type="button" className="px-6 hover:bg-shark-800">
           <ImageWrapper
             propSrc={BookAndQuill?.src}
-            width={26}
-            height={26}
-            loading="eager"
-            propAlt="Change description"
+            width={24}
+            className="w-[24px] h-[24px]"
+            height={24}
+            loading="lazy"
+            propAlt=""
           />
-        </div>
+        </Button>
       </DialogTrigger>
       <DialogContent>
         <UserProfileSettings />
       </DialogContent>
     </Dialog>
-  )
-}
+  );
+};

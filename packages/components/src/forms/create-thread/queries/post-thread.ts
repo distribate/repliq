@@ -132,8 +132,6 @@ export async function postThread({
   
   if (!id) return;
   
-  console.log(base64Files)
-  
   if (base64Files) {
     await postThreadImages({ thread_id: id, base64Files });
   }

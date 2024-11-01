@@ -13,9 +13,9 @@ type ThreadsFromCategories = {
 export async function getThreadsCategories({
 	categoryId, range, limit = 3
 }: ThreadsFromCategories): Promise<ThreadEntity[] | null> {
-	const supabase = createClient();
+	const api = createClient();
 	
-	let query = supabase
+	let query = api
 	.from("category_threads")
 	.select("*, threads(*)")
 	.eq("category_id", categoryId)

@@ -1,15 +1,15 @@
 import { DropdownWrapper } from './dropdown-wrapper.tsx';
 import { MoreVertical } from 'lucide-react';
-import { forwardRef, HTMLAttributes, ReactNode } from 'react';
+import { forwardRef, HTMLAttributes } from 'react';
 import { cva, VariantProps } from 'class-variance-authority';
 
-const moreWrapperVariants = cva('flex bg-shark-900 rounded-lg items-center justify-center', {
+const moreWrapperVariants = cva('flex  bg-shark-900/20 rounded-sm items-center justify-center', {
   variants: {
     variant: {
       default: 'p-2',
       small: 'p-1',
       selected: "h-10 w-10 border border-white/10"
-    }
+    },
   },
   defaultVariants: {
     variant: "default"

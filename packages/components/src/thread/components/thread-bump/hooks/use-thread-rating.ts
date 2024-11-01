@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { UpdateThreadRating, updateThreadRating } from '../../../queries/post-thread-rating.ts';
-import { toast } from '@repo/ui/src/hooks/use-toast.ts';
+import { toast } from 'sonner';
 import { THREAD_RATING_QUERY_KEY } from '../queries/thread-rating-query.ts';
 
 export const useThreadRating = () => {
@@ -17,13 +17,8 @@ export const useThreadRating = () => {
     onSuccess: async(data, variables) => {
       if (!data || !variables) return;
       
-      if (data === 'alreadyRating') return toast({
-        title: 'Вы уже оценивали тред', variant: 'negative',
-      });
-      
-      if (data === 'default') return toast({
-        title: 'Что-то пошло не так!', variant: 'negative',
-      });
+      if (data === 'alreadyRating') return toast.error("Вы уже оценивали тред");
+      if (data === 'default') return toast.error("Что-то пошло не так!");
       
       await qc.invalidateQueries({ queryKey: THREAD_RATING_QUERY_KEY(variables.threadId) });
     },

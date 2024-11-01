@@ -22,7 +22,9 @@ export const CustomEditor = {
   },
   
   isCodeBlockActive(editor: BaseEditor) {
+    // @ts-ignore
     const [ match ] = Editor.nodes(editor, {
+      // @ts-ignore
       match: n => n.type === 'code',
     });
     

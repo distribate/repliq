@@ -2,7 +2,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { UserEntity } from '@repo/types/entities/entities-type.ts';
 import { UpdateUserFields, updateUserFields } from '../queries/update-user-fields.ts';
 import { CURRENT_USER_QUERY_KEY, CurrentUser } from '../queries/current-user-query.ts';
-import { toast } from '@repo/ui/src/hooks/use-toast.ts';
+import { toast } from 'sonner';
 import { DONATE_QUERY_KEY } from '@repo/components/src/user/components/donate/queries/donate-query.ts';
 import { parseStringToBoolean } from '../helpers/parse-string-to-boolean.ts';
 import {
@@ -71,24 +71,18 @@ export const useUpdateCurrentUser = () => {
         qc.invalidateQueries({ queryKey: DONATE_QUERY_KEY(currentUser.nickname) }),
       ]);
       
-      if (!data) return toast({
-        title: 'Произошла ошибка при обновлении. Повторите позже!',
-        variant: 'negative',
+      if (!data) return toast.error("Произошла ошибка при обновлении.", {
+        description: 'Повторите попытку позже',
       });
       
       if (data.status === 200 && data) {
-        toast({
-          title: 'Изменения применены',
-          variant: 'positive',
-        });
+        toast.success("Изменения применены");
         
         return data;
       }
       
       if (data.status === 400 && data.data === 'Timeout') {
-        toast({
-          title: 'Слишком частое изменение поля', variant: 'negative',
-        });
+        toast.error("Слишком частое изменение поля");
         
         return data;
       }

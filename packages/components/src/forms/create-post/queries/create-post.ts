@@ -1,12 +1,10 @@
 "use server"
 
 import "server-only"
-import { Tables } from "@repo/types/entities/supabase.ts"
 import { createClient } from "@repo/lib/utils/api/server.ts";
+import { PostEntity } from '@repo/types/entities/entities-type.ts';
 
-type Posts = Tables<"posts">
-
-export type Post = Pick<Posts, "content" | "visibility">
+export type Post = Pick<PostEntity, "content" | "visibility">
 
 export async function createPostReferenced({
 	visibility, content
@@ -22,7 +20,9 @@ export async function createPostReferenced({
 	.select("post_id")
 	.single()
 	
-	if (error) throw new Error(error.message);
+	if (error) {
+		throw new Error(error.message);
+	}
 	
 	return data;
 }
@@ -46,7 +46,6 @@ export async function createPost({
 	.single()
 	
 	if (error) {
-		console.log(error.message);
 		return false;
 	}
 	

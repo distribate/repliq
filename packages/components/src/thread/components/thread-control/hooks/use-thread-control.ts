@@ -3,7 +3,7 @@ import { ThreadModel } from '../../../queries/get-thread-model.ts';
 import { CURRENT_USER_QUERY_KEY, CurrentUser } from '@repo/lib/queries/current-user-query.ts';
 import { THREAD_RATING_QUERY_KEY } from '../../thread-bump/queries/thread-rating-query.ts';
 import { updateThreadFields } from '../queries/update-thread-fields.ts';
-import { toast } from '@repo/ui/src/hooks/use-toast.ts';
+import { toast } from 'sonner';
 import { useRouter } from 'next/navigation';
 import { CURRENT_THREAD_QUERY_KEY } from '../queries/current-thread-query.ts';
 import { revalidatePath } from "next/cache"
@@ -66,9 +66,7 @@ export const useThreadControl = () => {
     },
     onSuccess: async(data, variables) => {
       if (!data || !variables) {
-        return toast({
-          title: 'Произошла ошибка при обновлении', variant: 'negative',
-        });
+        return toast.error("Произошла ошибка при обновлении");
       }
       
       if (variables.type === 'remove') {

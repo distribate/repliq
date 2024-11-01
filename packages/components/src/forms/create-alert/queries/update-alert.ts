@@ -1,9 +1,9 @@
 "use server"
 
-import { Tables } from '@repo/types/entities/supabase.ts';
 import { createClient } from "@repo/lib/utils/api/server.ts";
+import { AlertEntity } from '@repo/types/entities/entities-type.ts';
 
-export type UpdateAlert = Omit<Tables<"config_alerts">, "creator" | "created_at">
+export type UpdateAlert = Omit<AlertEntity, "creator" | "created_at">
 
 export async function updateAlert({
   id, link, title, description

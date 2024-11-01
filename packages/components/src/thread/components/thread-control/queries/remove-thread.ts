@@ -35,9 +35,9 @@ async function threadImagesRemove({
   if (existingThreadImagesErr && status !== 406) {
     throw new Error(existingThreadImagesErr.message);
   }
-  
-  if (!existingThreadImages) {
-    return
+
+  if (!existingThreadImages || !existingThreadImages.images || existingThreadImages.images.length === 0) {
+    return;
   }
   
   const { error: removeImagesFromStorage } = await api

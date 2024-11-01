@@ -2,10 +2,10 @@
 
 import "server-only"
 import { getCurrentUser } from '@repo/lib/actions/get-current-user.ts';
-import { Tables } from '@repo/types/entities/supabase.ts';
 import { createClient } from '@repo/lib/utils/api/server.ts';
+import { FriendPinnedEntity } from '@repo/types/entities/entities-type.ts';
 
-export type SetPinFriend = Pick<Tables<"friends_pinned">, "friend_id" | "recipient">
+export type SetPinFriend = Pick<FriendPinnedEntity, "friend_id" | "recipient">
 
 export async function setPinFriend({
   recipient, friend_id

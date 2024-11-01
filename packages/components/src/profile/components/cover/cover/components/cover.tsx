@@ -1,5 +1,4 @@
 import { coverQuery } from '../queries/cover-query.ts';
-import { CURRENT_USER_QUERY_KEY, CurrentUser } from '@repo/lib/queries/current-user-query.ts';
 import { imageCoverQuery } from '../../components/cover-image/queries/image-cover-query.ts';
 import { Avatar } from '../../../../../user/components/avatar/components/avatar.tsx';
 import { useQueryClient } from '@tanstack/react-query';
@@ -18,19 +17,13 @@ type UserCoverProps = {
 export const UserCover = ({
   requestedUser, isBlocked
 }: UserCoverProps) => {
-  const { data: coverQueryState } = coverQuery();
   const qc = useQueryClient();
-  const currentUser = qc.getQueryData<CurrentUser>(CURRENT_USER_QUERY_KEY);
-  const userDonate = qc.getQueryData<DonateQuery>(DONATE_QUERY_KEY(requestedUser.nickname),);
+  const { data: coverQueryState } = coverQuery();
   const { data: url } = imageCoverQuery({ nickname: requestedUser.nickname, });
-  
-  if (!currentUser) return;
+  const userDonate = qc.getQueryData<DonateQuery>(DONATE_QUERY_KEY(requestedUser.nickname),);
   
   const inView = coverQueryState.inView;
-  const isOwner = currentUser?.nickname === requestedUser?.nickname;
-  
   const imageHeight = inView ? 168 : 76;
-  
   const nickname = requestedUser.nickname;
   const preferences = requestedUser.preferences;
   const preferOutline = getPreferenceValue(preferences, "coverOutline")
@@ -53,13 +46,7 @@ export const UserCover = ({
         />
         <UserCoverMainInfo nickname={nickname} />
       </div>
-      {!isBlocked && (
-        <UserCoverPanel
-          reqUserNickname={nickname}
-          isOwner={isOwner}
-          variant={inView ? 'end' : 'default'}
-        />
-      )}
+      {!isBlocked && <UserCoverPanel reqUserNickname={nickname} variant={inView ? 'end' : 'default'} />}
     </CoverArea>
   );
 };

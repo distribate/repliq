@@ -10,24 +10,25 @@ import { ProfilePrivated } from '@repo/components/src/templates/profile-privated
 import { UserProfileSkin } from '@repo/components/src/profile/components/skin/skin.tsx';
 import { checkProfileStatus } from '@repo/lib/helpers/check-profile-status.ts';
 import { getBanDetails } from '@repo/lib/helpers/get-ban-details.ts';
-import { UserBlocked } from '@repo/components/src/templates/user-blocked.tsx';
 import { Separator } from '@repo/ui/src/components/separator.tsx';
-import {
-  UserProfilePosts,
-} from '@repo/components/src/profile/components/posts/components/users-posts/components/user-profile-posts.tsx';
+import { UserProfilePosts } from '@repo/components/src/profile/components/posts/components/users-posts/components/user-profile-posts.tsx';
 import { validateRequest } from '@repo/lib/utils/auth/validate-requests.ts';
 import { checkUserGameStatsVisibility } from '@repo/lib/helpers/check-user-game-stats-visibility.ts';
 import { protectPrivateArea } from '@repo/lib/helpers/protect-private-area.ts';
-import dynamic from 'next/dynamic';
-import {
-  REQUESTED_USER_QUERY_KEY,
-} from '@repo/components/src/profile/components/cover/cover/queries/requested-user-query.ts';
-import { SectionPrivatedTrigger } from '@repo/components/src/templates/section-privated-trigger.tsx';
-import {
-  UserProfileGameAchievements,
-} from '@repo/components/src/profile/components/achievements/game-achievements.tsx';
+import { REQUESTED_USER_QUERY_KEY, } from '@repo/components/src/profile/components/cover/cover/queries/requested-user-query.ts';
 import { UserProfileAccountStats } from '@repo/components/src/profile/components/account-stats/account-stats.tsx';
 import { MetadataType, PageConventionProps } from '@repo/types/global';
+import dynamic from 'next/dynamic';
+
+const UserProfileGameAchievements = dynamic(() =>
+  import("@repo/components/src/profile/components/achievements/game-achievements.tsx")
+  .then(m => m.UserProfileGameAchievements)
+)
+
+const UserBlocked = dynamic(() =>
+  import("@repo/components/src/templates/user-blocked.tsx")
+  .then(m => m.UserBlocked)
+)
 
 const UserProfileFriends = dynamic(() =>
   import('@repo/components/src/profile/components/friends/friends.tsx')
@@ -48,6 +49,11 @@ const UserBanned = dynamic(() =>
   import('@repo/components/src/templates/user-banned.tsx')
   .then(m => m.UserBanned),
 );
+
+const SectionPrivatedTrigger = dynamic(() =>
+  import("@repo/components/src/templates/section-privated-trigger.tsx")
+  .then(m => m.SectionPrivatedTrigger)
+)
 
 export async function generateMetadata({
   params,

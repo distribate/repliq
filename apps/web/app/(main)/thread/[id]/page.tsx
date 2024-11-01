@@ -1,5 +1,4 @@
 import { Metadata } from 'next';
-import { Separator } from '@repo/ui/src/components/separator.tsx';
 import { getTopicName } from '@repo/lib/queries/get-thread-name.ts';
 import { BlockWrapper } from '@repo/components/src/wrappers/block-wrapper.tsx';
 import { ThreadControl } from '@repo/components/src/thread/components/thread-control/components/thread-control.tsx';
@@ -36,6 +35,7 @@ import {
   FriendButton,
 } from '@repo/components/src/profile/components/cover/components/add-friend/components/friend-button.tsx';
 import { ThreadMore } from '@repo/components/src/thread/components/thread-more/components/thread-more.tsx';
+import { Eye } from 'lucide-react';
 
 export async function generateMetadata({
   params,
@@ -63,7 +63,7 @@ export default async function TopicsTopicPage({
   const qc = new QueryClient();
   
   const thread = await getThreadModel({
-    threadId: id, type: 'all',
+    threadId: id, type: 'page',
   });
   
   if (!thread || !thread.nickname) {
@@ -72,9 +72,7 @@ export default async function TopicsTopicPage({
   
   await qc.prefetchQuery({
     queryKey: THREAD_COMMENTS_QUERY_KEY(thread.id),
-    queryFn: () => getThreadComments({
-      thread_id: thread.id, comments: thread.comments,
-    }),
+    queryFn: () => getThreadComments(thread.id)
   });
   
   const isThreadCreator = currentUser.nickname === thread.nickname;
@@ -93,6 +91,12 @@ export default async function TopicsTopicPage({
                 {thread.images && <ThreadImages id={thread.id} />}
               </div>
             )}
+            <div className="flex items-center mt-2 w-fit gap-1 self-end">
+              <Eye size={18} className="text-shark-300"/>
+              <Typography textSize="small" textColor="gray">
+                {thread.views}
+              </Typography>
+            </div>
           </Suspense>
         </BlockWrapper>
         <BlockWrapper padding="without">
@@ -103,17 +107,17 @@ export default async function TopicsTopicPage({
             nickname={thread.nickname}
           />
         </BlockWrapper>
-        <div className="flex flex-col w-full h-full gap-y-4 overflow-hidden">
+        <div className="flex flex-col w-full h-full gap-y-4">
           {thread.comments ? (
             <>
               <HydrationBoundary state={dehydrate(qc)}>
                 <ThreadComments
-                  thread_author_nickname={thread.nickname}
-                  thread_id={thread.id}
-                  thread_comments={thread.comments}
+                  threadAuthorNickname={thread.nickname}
+                  threadId={thread.id}
+                  comments={thread.comments}
                 />
               </HydrationBoundary>
-              <CreateThreadComment thread_id={thread.id} />
+              <CreateThreadComment />
             </>
           ) : (
             <div className="flex w-fit self-center bg-shark-700 rounded-md px-2 py-0.5 mb-2">

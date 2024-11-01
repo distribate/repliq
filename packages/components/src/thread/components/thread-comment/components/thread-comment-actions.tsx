@@ -1,38 +1,46 @@
 import { Typography } from "@repo/ui/src/components/typography.tsx";
-import { useCreateThreadComment } from "../../../../forms/create-thread-comment/hooks/use-create-thread-comment.tsx";
-import { RepliedValuesType } from "../../../../forms/create-thread-comment/queries/create-thread-comment-query.ts";
-import {
-	ReportCreateModal
-} from '../../../../modals/action-confirmation/components/report/components/report-create-modal.tsx';
+import { useCreateThreadComment } from "@repo/components/src/forms/create-thread-comment/hooks/use-create-thread-comment.tsx";
+import { RepliedValuesType } from "@repo/components/src/forms/create-thread-comment/queries/create-thread-comment-query.ts";
+import { ThreadModel } from '../../../queries/get-thread-model.ts';
+import dynamic from 'next/dynamic';
 
-type ThreadCommentActionsProps = RepliedValuesType & {
-	thread_id: string
+type ThreadCommentActionsProps = RepliedValuesType & Pick<ThreadModel, "id"> & {
+	isCommentOwner: boolean
 }
 
+const ReportCreateModal = dynamic(() =>
+	import("@repo/components/src/modals/action-confirmation/components/report/components/report-create-modal.tsx")
+	.then(m => m.ReportCreateModal)
+)
+
 export const ThreadCommentActions = ({
-	comment_id, comment_nickname, comment_content, thread_id
+	commentId, commentNickname, commentContent, id: threadId, isCommentOwner
 }: ThreadCommentActionsProps) => {
 	const { updateCreateThreadCommentMutation } = useCreateThreadComment();
 	
 	const handleReplyComment = () => {
 		updateCreateThreadCommentMutation.mutate({
 			type: "reply",
-			repliedValues: {
-				comment_id, comment_nickname, comment_content
-			}
+			repliedValues: { commentId, commentNickname, commentContent }
 		})
 	}
 
 	return (
 		<div className="flex items-center gap-4">
-			<Typography className="text-shark-300 text-md cursor-pointer" onClick={handleReplyComment}>
+			<Typography
+				className="text-shark-300 text-md cursor-pointer"
+				onClick={handleReplyComment}
+			>
 				Ответить
 			</Typography>
-			<ReportCreateModal
-				report_type="comment"
-				threadId={thread_id}
-				targetId={comment_id}
-			/>
+			{!isCommentOwner && (
+				<ReportCreateModal
+					reportType="comment"
+					threadId={threadId}
+					targetNickname={commentNickname}
+					targetId={commentId}
+				/>
+			)}
 		</div>
 	)
 }

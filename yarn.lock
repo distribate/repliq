@@ -12780,6 +12780,7 @@ __metadata:
     oxlint: "npm:^0.5.3"
     prettier: "npm:^3.2.5"
     prettier-plugin-tailwindcss: "npm:^0.5.11"
+    sonner: "npm:^1.5.0"
     turbo: "npm:^2.2.3"
   languageName: unknown
   linkType: soft
@@ -20498,6 +20499,16 @@ __metadata:
   dependencies:
     atomic-sleep: "npm:^1.0.0"
   checksum: 10c0/7b467f2bc8af7ff60bf210382f21c59728cc4b769af9b62c31dd88723f5cc472752d2320736cc366acc7c765ddd5bec3072c033b0faf249923f576a7453ba9d3
+  languageName: node
+  linkType: hard
+
+"sonner@npm:^1.5.0":
+  version: 1.5.0
+  resolution: "sonner@npm:1.5.0"
+  peerDependencies:
+    react: ^18.0.0
+    react-dom: ^18.0.0
+  checksum: 10c0/9561b5861bede7f874cc442e447a68c8bfa6e4eadad603bc04e38db35a8b8108741f595a12c9856742062bae230ffedf73122015940491f482c5aa9e68ee85e0
   languageName: node
   linkType: hard
 

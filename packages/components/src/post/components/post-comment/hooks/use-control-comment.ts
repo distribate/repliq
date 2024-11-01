@@ -2,7 +2,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { removePostComment } from '../queries/remove-post-comment.ts';
 import { CURRENT_USER_QUERY_KEY, CurrentUser } from '@repo/lib/queries/current-user-query.ts';
 import { POST_COMMENTS_QUERY_KEY, } from '../../../../profile/components/posts/components/posts/queries/posts-comments-query.ts';
-import { toast } from '@repo/ui/src/hooks/use-toast.ts';
+import { toast } from 'sonner';
 
 type ControlCommentType = 'remove' | 'edit';
 
@@ -31,8 +31,8 @@ export const useControlComment = () => {
     },
     onSuccess: async(data, variables) => {
       if (!data || !variables) {
-        toast({
-          title: 'Произошла ошибка', variant: 'negative',
+        toast('Произошла ошибка', {
+          className: 'negative',
         });
       }
       

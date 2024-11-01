@@ -6,11 +6,13 @@ import { ThreadCommentActions } from './thread-comment-actions.tsx';
 import { ThreadCommentProps } from '../types/thread-comment-types.ts';
 import { ThreadRepliedCommentItem } from './thread-comment-replied-item.tsx';
 import { CURRENT_USER_QUERY_KEY, CurrentUser } from '@repo/lib/queries/current-user-query.ts';
-import { useQueryClient } from '@tanstack/react-query';
-import Link from 'next/link';
+import { useMutationState, useQueryClient } from '@tanstack/react-query';
 import { USER_URL } from '@repo/shared/constants/routes.ts';
-import dynamic from 'next/dynamic';
 import { Badge } from '@repo/ui/src/components/badge.tsx';
+import { SELECT_COMMENT_MUTATION_KEY } from '../hooks/use-highlight.ts';
+import { useEffect, useState } from 'react';
+import Link from 'next/link';
+import dynamic from 'next/dynamic';
 
 const ThreadCommentMoreActions = dynamic(() =>
   import("./thread-comment-more-actions.tsx")
@@ -18,26 +20,51 @@ const ThreadCommentMoreActions = dynamic(() =>
 )
 
 export const ThreadCommentItem = ({
-  nickname, isAuthor, created_at, content,
-  id, replied, thread_id,
+  nickname: threadCommentNickname, isAuthor, created_at, content, id, replied, thread_id, edited
 }: ThreadCommentProps) => {
   const qc = useQueryClient();
   const currentUser = qc.getQueryData<CurrentUser>(CURRENT_USER_QUERY_KEY);
+  const [active, setActive] = useState<boolean>(false)
+
+  const data = useMutationState({
+    filters: { mutationKey: SELECT_COMMENT_MUTATION_KEY(id) },
+    select: m => m.state.status,
+  })
+  
+  const mutationStatus = data[data.length - 1]
+
+  useEffect(() => {
+    if (mutationStatus === 'success') {
+      setActive(true);
+      
+      const timeoutId = setTimeout(() => setActive(false), 2000);
+      
+      return () => clearTimeout(timeoutId);
+    }
+  }, [mutationStatus]);
+
   if (!currentUser) return null;
   
-  const isCommentOwner = currentUser.nickname === nickname;
+  const isCommentOwner = currentUser.nickname === threadCommentNickname;
   const createdAt = dayjs(created_at).fromNow()
   
   return (
     <div
-      id={id}
-      className="flex flex-col h-fit gap-y-4 px-4 py-2 rounded-md bg-shark-950 relative min-w-[450px] w-fit max-w-[80%]"
+      id={id.toString()}
+      className={`${active && 'animate-flash-fade'}
+       flex flex-col h-fit gap-y-4 px-4 py-2 rounded-md bg-shark-950 relative min-w-[450px] w-fit max-w-[80%]`}
     >
-      {isCommentOwner && <ThreadCommentMoreActions />}
+      {isCommentOwner && (
+        <ThreadCommentMoreActions
+          commentId={id}
+          threadId={thread_id}
+          content={content}
+        />
+      )}
       <div className="flex items-center gap-2">
-        <Link href={USER_URL + nickname}>
+        <Link href={USER_URL + threadCommentNickname}>
           <Avatar
-            nickname={nickname}
+            nickname={threadCommentNickname}
             propWidth={42}
             propHeight={42}
             className="min-h-[42px] min-w-[42px]"
@@ -46,7 +73,7 @@ export const ThreadCommentItem = ({
         <div className="flex justify-between w-full">
           <div className="flex flex-col">
             <div className="flex items-center gap-1">
-              <UserNickname nickname={nickname} />
+              <UserNickname nickname={threadCommentNickname} />
               {isAuthor && (
                 <Badge size="small">
                   <Typography className="font-[Minecraft] leading-4">
@@ -60,17 +87,25 @@ export const ThreadCommentItem = ({
         </div>
       </div>
       <div className="flex flex-col gap-y-2 h-fit w-full">
-        {replied && <ThreadRepliedCommentItem replied={replied} />}
+        {replied && <ThreadRepliedCommentItem replied={replied}/>}
         <div className="whitespace-normal break-words">
           <Typography className="text-balance">{content}</Typography>
         </div>
       </div>
-      <ThreadCommentActions
-        thread_id={thread_id}
-        comment_id={id}
-        comment_nickname={nickname}
-        comment_content={content}
-      />
+      <div className="flex items-center justify-between w-full">
+        <ThreadCommentActions
+          id={thread_id}
+          isCommentOwner={isCommentOwner}
+          commentId={id}
+          commentNickname={threadCommentNickname}
+          commentContent={content}
+        />
+        {edited && (
+          <Typography textColor="gray" textSize="small">
+            [изменено]
+          </Typography>
+        )}
+      </div>
     </div>
   );
 };

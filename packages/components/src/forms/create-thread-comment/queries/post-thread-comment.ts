@@ -69,7 +69,7 @@ export async function postThreadCommentThreads({
 type PostThreadComment = Pick<ThreadCommentEntity,
   'thread_id' | "content" | "user_nickname"> & {
   type: CreateThreadCommentType,
-  recipient_comment_id?: string
+  recipient_comment_id?: Pick<ThreadCommentRepliedEntity, "recipient_comment_id">["recipient_comment_id"]
 }
 
 export async function postThreadComment({
@@ -85,7 +85,9 @@ export async function postThreadComment({
     .eq("id", thread_id)
     .single()
   
-  if (!data || !data.comments || error) return;
+  if (error || !data) {
+    throw new Error(error.message);
+  }
   
   const { id: threadCommentItemId } = await postThreadCommentItem({
     user_nickname, content, thread_id

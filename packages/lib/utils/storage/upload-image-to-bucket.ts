@@ -41,10 +41,6 @@ export async function uploadImageToBucket({
 }: UploadProperties): Promise<{ path?: string, error?: Error }> {
 	const api = createClient()
 	
-	if (!file) return {
-		error: new Error("Изображение не выбрано!")
-	};
-	
 	const folderPath = folderName ? folderName + '/' + fileName : fileName;
 	const decodedFile = decode(file)
 	
@@ -52,10 +48,14 @@ export async function uploadImageToBucket({
 	.storage
 	.from(bucket)
 	.upload(folderPath, decodedFile, {
-		cacheControl: '0', upsert: true
+		cacheControl: '0',
+		upsert: true,
+		contentType: "image/png"
 	})
 	
-	if (error) return { error };
+	if (error) return {
+		error
+	};
 	
 	const path = data.path
 	

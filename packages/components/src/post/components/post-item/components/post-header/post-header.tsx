@@ -4,7 +4,7 @@ import { CURRENT_USER_QUERY_KEY, CurrentUser } from '@repo/lib/queries/current-u
 import { UserNickname } from "../../../../../user/components/name/components/nickname.tsx";
 import { UserEntity } from "@repo/types/entities/entities-type.ts"
 import Link from "next/link";
-import dayjs from "dayjs"
+import dayjs from "@repo/lib/utils/dayjs/dayjs-instance.ts"
 import dynamic from 'next/dynamic';
 import { useQueryClient } from '@tanstack/react-query';
 import { USER_URL } from '@repo/shared/constants/routes.ts';
@@ -41,7 +41,7 @@ export const PostItemHeader = ({
 						<UserNickname nickname={nickname} nicknameColor={name_color} className="text-base font-medium" />
 					</Link>
 					<Typography className="text-shark-200 text-sm">
-						{dayjs(created_at).format('DD.MM.YYYY HH:mm')}
+						{dayjs(created_at).fromNow()}
 					</Typography>
 				</div>
 			</div>

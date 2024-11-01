@@ -7,21 +7,18 @@ import { useCreateThreadComment } from "../../../../forms/create-thread-comment/
 export const ReplyComment = () => {
 	const { data: createThreadCommentState } = createThreadCommentQuery()
 	const { updateCreateThreadCommentMutation } = useCreateThreadComment()
-	
 	const values = createThreadCommentState?.repliedValues;
-	
-	if (createThreadCommentState.type === 'single') return null;
 	
 	if (!values) return;
 	
-	const { comment_nickname, comment_content } = values;
+	if (createThreadCommentState.type === 'single') return null;
+	
+	const { commentNickname, commentContent } = values;
 	
 	const handleCommentType = () => {
-		updateCreateThreadCommentMutation.mutate({
+		return updateCreateThreadCommentMutation.mutate({
 			type: "single",
-			repliedValues: {
-				comment_id: '', comment_nickname: '', comment_content: ''
-			}
+			repliedValues: null
 		})
 	}
 	
@@ -30,11 +27,11 @@ export const ReplyComment = () => {
 			<Reply size={26}/>
 			<div className="flex flex-col items-start">
 				<Typography textSize="small">
-					Ответить {comment_nickname}
+					Ответить {commentNickname}
 				</Typography>
 				<div className="flex max-w-[120px]">
 					<Typography className="text-shark-300 truncate">
-						{comment_content}
+						{commentContent}
 					</Typography>
 				</div>
 			</div>

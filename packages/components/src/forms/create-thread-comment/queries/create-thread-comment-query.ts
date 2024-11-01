@@ -9,32 +9,28 @@ type CreateThreadComment = {
 export type CreateThreadCommentType = "single" | "reply"
 
 export type RepliedValuesType = {
-	comment_id: string,
-	comment_nickname: string,
-	comment_content: string
+	commentId: number,
+	commentNickname: string,
+	commentContent: string
 }
 
 export type CreateThreadCommentQuery = Partial<{
+	threadId: string
 	type: CreateThreadCommentType,
-	repliedValues: RepliedValuesType,
+	repliedValues: RepliedValuesType | null,
 	formState: Partial<{
-		error: string | null,
-		status: string | null,
 		active: boolean
 	}>,
 	values: Partial<CreateThreadComment>
 }>
 
-const initial: CreateThreadCommentQuery = {
+export const initialThreadCommentData: CreateThreadCommentQuery = {
 	type: "single",
-	formState: {
-		error: null,
-		status: null,
-		active: false
-	},
+	formState: { active: false },
 	values: {
-		content: ""
-	}
+		content: undefined
+	},
+	repliedValues: null
 }
 
 export const createThreadCommentQuery = () => {
@@ -42,8 +38,7 @@ export const createThreadCommentQuery = () => {
 		queryKey: CREATE_THREAD_COMMENT_QUERY_KEY,
 		staleTime: Infinity,
 		gcTime: Infinity,
-		initialData: initial,
-		refetchOnWindowFocus: false,
-		refetchOnMount: false
+		initialData: initialThreadCommentData,
+		refetchOnMount: true
 	})
 }

@@ -1,4 +1,4 @@
-import { MutationKey, MutationStatus, useMutationState, useQueryClient } from '@tanstack/react-query';
+import { useQueryClient } from '@tanstack/react-query';
 import { CURRENT_USER_QUERY_KEY, CurrentUser } from '@repo/lib/queries/current-user-query.ts';
 import { HoverCardItem } from '@repo/ui/src/components/hover-card.tsx';
 import { X } from 'lucide-react';
@@ -26,11 +26,10 @@ export const DeleteCoverModal = () => {
   
   return (
     <DynamicModal
+      withLoader
       mutationKey={USER_COVER_DELETE_IMAGE_MUTATION_KEY}
       trigger={
-        <HoverCardItem
-          className="gap-2 items-center group"
-        >
+        <HoverCardItem className="gap-2 items-center group">
           <X size={16} className="text-shark-300 group-hover:text-pink-500" />
           <Typography>Удалить фон</Typography>
         </HoverCardItem>

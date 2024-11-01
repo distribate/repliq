@@ -7,24 +7,23 @@ import { CommentsDisabled } from '../../../../templates/comments-disabled.tsx';
 import { threadCommentsQuery } from '../queries/thread-comments-query.ts';
 
 type ThreadCommentsProps = {
-  thread_id: string,
-  thread_author_nickname: string,
-  thread_comments: boolean
+  threadId: string,
+  threadAuthorNickname: string,
+  comments: boolean
 }
 
 export const ThreadComments = ({
-  thread_id, thread_author_nickname, thread_comments,
+  threadId, threadAuthorNickname, comments,
 }: ThreadCommentsProps) => {
-  const { data: threadComments, isLoading } = threadCommentsQuery(
-    thread_id, thread_comments
-  );
+  const { data: threadComments, isLoading } = threadCommentsQuery({ threadId, comments });
   
-  const nonComments = thread_comments && !threadComments?.length || false;
+  if (!threadComments) return;
+  if (!comments) return <CommentsDisabled />;
   
-  if (!thread_comments) return <CommentsDisabled />;
+  const nonComments = comments && threadComments.length === 0
   
   return (
-    <div className="flex flex-col justify-center items-center w-full">
+    <div className="flex flex-col items-center w-full">
       <div className={`flex w-fit bg-shark-700 rounded-md px-2 py-0.5 ${!nonComments && 'mb-2'}`}>
         {nonComments ? (
           <Typography textSize="medium" textColor="shark_white" className="font-semibold">
@@ -38,15 +37,16 @@ export const ThreadComments = ({
       </div>
       {isLoading ? <ThreadCommentsSkeleton /> : (
         <div className="flex flex-col items-start gap-y-2 w-full">
-          {threadComments?.map((comment, i) => (
+          {threadComments.map((comment, i) => (
             <ThreadCommentItem
               key={i}
-              thread_id={thread_id}
+              thread_id={threadId}
               id={comment.id}
               replied={comment.replied}
+              edited={comment.edited}
               content={comment.content}
               nickname={comment.user_nickname}
-              isAuthor={comment.user_nickname === thread_author_nickname}
+              isAuthor={comment.user_nickname === threadAuthorNickname}
               created_at={comment.created_at}
             />
           ))}

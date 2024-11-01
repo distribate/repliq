@@ -29,9 +29,9 @@ export async function getListFilesInBucket({
   },
   signed = false
 }: GetListFilesInBucket) {
-  const supabase = createClient();
+  const api = createClient();
   
-  const { data: rawRetriviedImages, error } = await supabase.storage
+  const { data: rawRetriviedImages, error } = await api.storage
   .from(bucket)
   .list(folderName, {
     limit: properties.limit,
@@ -51,7 +51,7 @@ export async function getListFilesInBucket({
   if (!rawRetriviedImages || rawRetriviedImages.length === 0) return null;
   
   if (signed) {
-    const { data: signedURLS, error } = await supabase
+    const { data: signedURLS, error } = await api
     .storage
     .from(bucket)
     .createSignedUrls(rawRetriviedImages.map(image =>

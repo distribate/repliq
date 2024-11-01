@@ -1,11 +1,11 @@
 "use server"
 
 import { createClient } from "@repo/lib/utils/api/server.ts";
-import { Tables } from '@repo/types/entities/supabase.ts';
 import { decode } from 'base64-arraybuffer';
 import { nanoid } from 'nanoid';
+import { MinecraftItemEntity } from '@repo/types/entities/entities-type.ts';
 
-export type CreateMinecraftItem = Omit<Tables<"config_minecraft_items">, "id">
+export type CreateMinecraftItem = Omit<MinecraftItemEntity, "id">
 
 async function uploadMinecraftItemImage(file: string) {
   const api = createClient();

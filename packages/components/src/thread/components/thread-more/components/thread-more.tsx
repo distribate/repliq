@@ -10,28 +10,26 @@ import { USER_URL } from '@repo/shared/constants/routes.ts';
 import { Avatar } from '../../../../user/components/avatar/components/avatar.tsx';
 import { UserNickname } from '../../../../user/components/name/components/nickname.tsx';
 import { Button } from '@repo/ui/src/components/button.tsx';
+import { useRouter } from 'next/navigation';
 
-type ThreadMoreProps = Pick<ThreadModel, 'threadTags' | 'description' | 'created_at' | 'nickname'>
+type ThreadMoreProps = Pick<ThreadModel, 'threadTags'
+  | 'description'
+  | 'created_at'
+  | 'nickname'
+>
 
 export const ThreadMore = ({
   threadTags, description, created_at, nickname,
 }: ThreadMoreProps) => {
-  const [ expand, setExpand ] = useState<'more-info' | 'no-active'>('no-active');
-  
-  const handleAccordion = () => {
-    if (expand === 'no-active') {
-      return setExpand('more-info');
-    }
-    
-    setExpand('no-active');
-  };
+  const [ expand, setExpand ] = useState<boolean>(false);
+  const { push } = useRouter()
   
   return (
-    <Accordion type="single" collapsible className="w-full p-0 m-0">
-      <AccordionItem value={expand} className="w-full px-4">
+    <Accordion value={expand ? "more" : "."} type="single" collapsible className="w-full p-0 m-0">
+      <AccordionItem value="more" className="w-full px-4">
         <AccordionTrigger
           className="flex items-center justify-start gap-4 w-full"
-          onClick={handleAccordion}
+          onClick={() => setExpand(prev => !prev)}
         >
           <Typography>
             {dayjs(created_at).fromNow()}
@@ -67,12 +65,12 @@ export const ThreadMore = ({
               </div>
             </div>
             <div className="flex items-center gap-2 w-full">
-              <Button state="default">
+              <Button onClick={() => push(USER_URL + nickname)} state="default">
                 <Typography>
                   Профиль
                 </Typography>
               </Button>
-              <Button state="default">
+              <Button onClick={() => push(`/search?type=threads&user=${nickname}`)} state="default">
                 <Typography>
                   Треды
                 </Typography>
@@ -81,7 +79,7 @@ export const ThreadMore = ({
           </div>
           <div
             className="cursor-pointer"
-            onClick={() => setExpand('no-active')}
+            onClick={() => setExpand(false)}
           >
             <Typography textSize="medium">
               Скрыть

@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { toast } from '@repo/ui/src/hooks/use-toast.ts';
+import { toast } from 'sonner';
 import {
   deleteImageFromBucket, uploadImageToBucket,
 } from '@repo/lib/utils/storage/upload-image-to-bucket.ts';
@@ -25,34 +25,34 @@ export type CoverImageInput = {
   fileName?: string
 }
 
-export const USER_COVER_DELETE_IMAGE_MUTATION_KEY = ["user-cover-delete"]
-export const USER_COVER_UPDATE_IMAGE_MUTATION_KEY = ["user-cover-update"]
+export const USER_COVER_DELETE_IMAGE_MUTATION_KEY = [ 'user-cover-delete' ];
+export const USER_COVER_UPDATE_IMAGE_MUTATION_KEY = [ 'user-cover-update' ];
 
 export const useControlCoverImage = () => {
   const qc = useQueryClient();
   const currentUser = qc.getQueryData<CurrentUser>(CURRENT_USER_QUERY_KEY);
   
-  const handleSuccess = async() => {
-    if (currentUser) {
-      await Promise.all([
-        qc.invalidateQueries({ queryKey: REQUESTED_USER_QUERY_KEY(currentUser.nickname) }),
-        qc.invalidateQueries({ queryKey: CURRENT_USER_QUERY_KEY }),
-      ]);
-      
-      const tasks = [
-        createTask(async() => {
-          await qc.invalidateQueries({ queryKey: IMAGE_COVER_QUERY_KEY(currentUser.nickname) });
-        }, 1000),
-      ];
-      
-      registerTaskQueue(tasks);
-    }
+  const revalidateUserQueries = async() => {
+    if (!currentUser) return;
+    
+    await Promise.all([
+      qc.invalidateQueries({ queryKey: REQUESTED_USER_QUERY_KEY(currentUser.nickname) }),
+      qc.invalidateQueries({ queryKey: CURRENT_USER_QUERY_KEY }),
+    ]);
+    
+    const tasks = [
+      createTask(async() => {
+        await qc.invalidateQueries({ queryKey: IMAGE_COVER_QUERY_KEY(currentUser.nickname) });
+      }, 1000),
+    ];
+    
+    registerTaskQueue(tasks);
   };
   
   const deleteBackgroundImageMutation = useMutation({
     mutationKey: USER_COVER_DELETE_IMAGE_MUTATION_KEY,
     mutationFn: async() => {
-      if (!currentUser) return null;
+      if (!currentUser) return;
       
       const data = await deletePrevImageFromUsers({
         userId: currentUser.id,
@@ -64,32 +64,25 @@ export const useControlCoverImage = () => {
         });
         
         if (!result) {
-          toast({
-            title: 'Произошла ошибка при удалении фона. Попробуй позже!',
-            variant: 'negative',
+          toast.error('Произошла ошибка при удалении фона.', {
+            description: 'Попробуйте попытку позже!',
           });
           
           return result;
         }
         
-        toast({
-          title: 'Фон удалён.',
-          variant: 'positive',
-        });
+        toast.success('Фон удалён.');
         
         return result;
       }
       
-      toast({
-        title: 'Произошла ошибка при удалении фона. Попробуй позже!',
-        variant: 'negative',
+      toast.error('Произошла ошибка при удалении фона. Попробуй позже!', {
+        description: 'Попробуйте попытку позже!',
       });
       
       return false;
     },
-    onSuccess: async(data) => {
-      if (data) return handleSuccess();
-    },
+    onSuccess: async(data) => data ? revalidateUserQueries() : undefined,
     onError: (e) => { throw new Error(e.message); },
   });
   
@@ -112,75 +105,63 @@ export const useControlCoverImage = () => {
           },
         });
         
-        if (!success) return toast({
-          title: 'Произошла ошибка при обновлении фона. Попробуйте позже!',
-          variant: 'negative',
+        if (!success) return toast('Произошла ошибка при обновлении фона', {
+          description: 'Попробуйте попытку позже!',
         });
         
-        toast({
-          title: 'Фон успешно обновлен!',
-          variant: 'positive',
-        });
+        toast.success('Фон шапки профиля обновлен');
         
         return { success };
       }
       
       // if custom image from user
-      if (!file) return toast({
-        title: 'Выберите файл для фона!',
-        variant: 'negative',
-      });
+      if (!file) return toast.error('Выберите изображение');
       
-      const uniqueId = nanoid();
+      const uniqueId = nanoid(3);
       const fileName = currentUser.id + uniqueId;
       
       if (!fileName) return;
       
-      const encodedFile = encode(await getArrayBuffer(file));
+      const arrayBufferedFile = await getArrayBuffer(file);
+      const encodedFile = encode(arrayBufferedFile);
       
-      const [ deletedPrev, data ] = await Promise.all([
-        deleteImageFromBucket({
-          bucket: USER_IMAGES_BUCKET, userId: currentUser.id,
-        }),
-        uploadImageToBucket({
-          bucket: USER_IMAGES_BUCKET, folderName: 'cover', file: encodedFile, fileName,
-        }),
-      ]);
-      
-      if (!deletedPrev) return toast({
-        title: 'Произошла ошибка при обновлении фона. Попробуйте позже!',
-        variant: 'negative',
+      const deletedPrev = await deleteImageFromBucket({
+        bucket: USER_IMAGES_BUCKET, userId: currentUser.id,
       });
       
-      if (data.error) return toast({
-        title: 'Произошла ошибка при обновлении фона. Попробуйте позже!',
-        variant: 'negative',
+      if (!deletedPrev) return toast.error('Произошла ошибка при обновлении фона.', {
+        description: 'Попробуйте попытку позже!',
+      });
+      
+      const data = await uploadImageToBucket({
+        bucket: USER_IMAGES_BUCKET, folderName: 'cover', file: encodedFile, fileName,
+      });
+      
+      if (data.error) return toast.error('Произошла ошибка при обновлении фона.', {
         description: <p>{data.error.message}</p>,
       });
       
       if (data.path) {
         const success = await updateValueOfUploadedImage({
           table: 'users',
-          field: { 'cover_image': data.path },
-          equals: { column: 'id', value: currentUser.id },
+          field: {
+            'cover_image': data.path,
+          },
+          equals: {
+            column: 'id', value: currentUser.id,
+          },
         });
         
-        if (!success) return toast({
-          title: 'Произошла ошибка при обновлении фона. Попробуйте позже!',
-          variant: 'negative',
+        if (!success) return toast.error('Произошла ошибка при обновлении фона.', {
+          description: 'Попробуйте попытку позже!',
         });
         
-        toast({
-          title: 'Фон успешно обновлен!',
-          variant: 'positive',
-        });
+        toast.success('Фон шапки профиля обновлен!');
         
         return { success, path: data.path };
       }
     },
-    onSuccess: async(data) => {
-      if (data) return handleSuccess();
-    },
+    onSuccess: async(data) => data ? revalidateUserQueries() : undefined,
     onError: (e) => { throw new Error(e.message); },
   });
   

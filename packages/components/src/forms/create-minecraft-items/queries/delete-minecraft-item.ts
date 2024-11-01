@@ -1,9 +1,9 @@
 "use server"
 
 import { createClient } from "@repo/lib/utils/api/server.ts";
-import { Tables } from '@repo/types/entities/supabase.ts';
+import { MinecraftItemEntity } from '@repo/types/entities/entities-type.ts';
 
-export type DeleteMinecraftItem = Pick<Tables<"config_minecraft_items">, "id" | "image">
+export type DeleteMinecraftItem = Pick<MinecraftItemEntity, "id" | "image">
 
 async function getImageFromMinecraftItem(id: number) {
   const api = createClient();

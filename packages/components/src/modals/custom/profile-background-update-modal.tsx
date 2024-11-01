@@ -16,11 +16,14 @@ export const ProfileBackgroundUpdateModal = () => {
   }: Omit<CoverImageInput, "fileName">) => {
     if (!type || !file) return;
     
-    if (type === 'origin') return uploadBackgroundImageMutation.mutateAsync({ file })
+    if (type === 'origin') {
+      return uploadBackgroundImageMutation.mutateAsync({ file });
+    }
   }
   
   return (
     <DynamicModal
+      withLoader
       mutationKey={USER_COVER_UPDATE_IMAGE_MUTATION_KEY}
       contentClassName="max-w-xl"
       trigger={

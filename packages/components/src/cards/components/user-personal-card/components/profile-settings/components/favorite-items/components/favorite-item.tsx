@@ -1,17 +1,13 @@
 import { Typography } from '@repo/ui/src/components/typography.tsx';
-import { Tables } from '@repo/types/entities/supabase.ts';
 import { ImageWrapper } from '../../../../../../../../wrappers/image-wrapper.tsx';
 import { useQueryClient } from '@tanstack/react-query';
 import { CURRENT_USER_QUERY_KEY, CurrentUser } from '@repo/lib/queries/current-user-query.ts';
 import { cva, VariantProps } from 'class-variance-authority';
 import { forwardRef, HTMLAttributes } from 'react';
 import { useUpdateCurrentUser } from '@repo/lib/hooks/use-update-current-user.ts';
+import { MinecraftItemEntity } from '@repo/types/entities/entities-type.ts';
 
-// type FavoriteItemType<T> = {
-//   [K in keyof T as `favorite${Capitalize<string & K>}`]: T[K];
-// };
-
-type FavoriteItem = Tables<'config_minecraft_items'>
+type FavoriteItem = MinecraftItemEntity
 
 const minecraftItemVariants = cva(
   'flex group relative max-w-[256px] max-h-[112px] overflow-hidden items-center justify-center', {

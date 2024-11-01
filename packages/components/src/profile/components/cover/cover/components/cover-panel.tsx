@@ -8,20 +8,33 @@ import { ControlPanel } from '../../components/control/components/control-panel.
 import {
   ProfileDescriptionChangeModal,
 } from '../../../../../modals/user-settings/profile-description-change-modal.tsx';
-import { ProfileBackgroundUpdateModal } from '../../../../../modals/custom/profile-background-update-modal.tsx';
-import {
-  DeleteCoverModal
-} from '../../../../../modals/action-confirmation/components/delete-cover/components/delete-cover-modal.tsx';
+import dynamic from 'next/dynamic';
+import { CURRENT_USER_QUERY_KEY, CurrentUser } from '@repo/lib/queries/current-user-query.ts';
+import { useQueryClient } from '@tanstack/react-query';
+import Image from 'next/image';
+import { Button } from '@repo/ui/src/components/button.tsx';
+
+const ProfileBackgroundUpdateModal = dynamic(() =>
+  import('@repo/components/src/modals/custom/profile-background-update-modal.tsx')
+  .then(m => m.ProfileBackgroundUpdateModal),
+);
+
+const DeleteCoverModal = dynamic(() =>
+  import('@repo/components/src/modals/action-confirmation/components/delete-cover/components/delete-cover-modal.tsx')
+  .then(m => m.DeleteCoverModal),
+);
 
 const userCoverPanelVariants = cva('relative z-[3] flex bg-transparent gap-x-4 border-none', {
   variants: {
-    variant: { default: '', end: 'self-end justify-end' },
+    variant: {
+      default: '',
+      end: 'self-end justify-end',
+    },
   },
 });
 
 interface UserCover {
-  reqUserNickname: string,
-  isOwner: boolean
+  reqUserNickname: string;
 }
 
 interface UserCoverPanelProps
@@ -30,13 +43,17 @@ interface UserCoverPanelProps
 }
 
 export const UserCoverPanel = ({
-  variant, className, reqUserNickname, isOwner, ...props
+  variant, className, reqUserNickname, ...props
 }: UserCoverPanelProps) => {
+  const qc = useQueryClient();
+  const currentUser = qc.getQueryData<CurrentUser>(CURRENT_USER_QUERY_KEY);
+  
+  if (!currentUser) return null;
+  
+  const isOwner = currentUser?.nickname === reqUserNickname;
+  
   return (
-    <div
-      className={userCoverPanelVariants(({ variant, className }))}
-      {...props}
-    >
+    <div className={userCoverPanelVariants(({ variant, className }))} {...props}>
       {!isOwner && (
         <div className="flex items-center gap-2">
           <FriendButton reqUserNickname={reqUserNickname} />
@@ -44,24 +61,27 @@ export const UserCoverPanel = ({
         </div>
       )}
       {isOwner && (
-        <div className="flex items-center gap-x-2 bg-shark-900 h-10 rounded-lg border border-white/10 px-2">
+        <div className="flex items-center bg-shark-900/10 backdrop-blur-lg h-10 rounded-lg">
           <DropdownWrapper
-            properties={{ triggerAsChild: true, contentAlign: 'end', contentClassname: 'w-[196px]' }}
+            properties={{
+              triggerAsChild: true, contentAlign: 'end', contentClassname: 'w-[200px]',
+            }}
             trigger={
-              <div className="rounded-md p-1 cursor-pointer">
-                <ImageWrapper
-                  propSrc={Photo?.src}
-                  width={26}
-                  height={26}
-                  loading="eager"
-                  propAlt="Change cover image"
+              <Button title="Настройка шапки профиля" type="button" className="px-6 hover:bg-shark-800">
+                <Image
+                  src={Photo?.src}
+                  width={48}
+                  className="w-[24px] h-[24px]"
+                  height={48}
+                  loading="lazy"
+                  alt=""
                 />
-              </div>
+              </Button>
             }
             content={
               <div className="flex flex-col gap-y-1">
                 <ProfileBackgroundUpdateModal />
-                <DeleteCoverModal/>
+                <DeleteCoverModal />
               </div>
             }
           />

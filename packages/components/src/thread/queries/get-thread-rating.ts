@@ -1,12 +1,10 @@
 'use server';
 
-import { Tables } from '@repo/types/entities/supabase.ts';
 import { UpdateThreadRatingType } from './post-thread-rating.ts';
 import { getCurrentUser } from '@repo/lib/actions/get-current-user.ts';
 import { ThreadRequest } from '../types/thread-request-types.ts';
 import { createClient } from '@repo/lib/utils/api/server.ts';
-
-type ThreadRatingTable = Tables<'threads_rating'>;
+import { ThreadRatingEntity } from '@repo/types/entities/entities-type.ts';
 
 export type ThreadRatingResponse = {
   increment: number,
@@ -35,7 +33,7 @@ export async function getThreadRating(
   .from('threads_rating')
   .select('*')
   .eq('thread_id', threadId)
-  .returns<ThreadRatingTable[]>();
+  .returns<ThreadRatingEntity[]>();
   
   return {
     increment: currentRating?.filter(item => item.type === 'increment').length || 0,

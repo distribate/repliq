@@ -1,6 +1,6 @@
 import { useMutation } from '@tanstack/react-query';
 import { CreateMinecraftItem, createMinecraftItem } from '../queries/create-minecraft-item.ts';
-import { toast } from '@repo/ui/src/hooks/use-toast.ts';
+import { toast } from 'sonner';
 import { useRouter } from 'next/navigation';
 import { deleteMinecraftItem, DeleteMinecraftItem } from '../queries/delete-minecraft-item.ts';
 import { encode } from 'base64-arraybuffer';
@@ -27,15 +27,9 @@ export const useMinecraftItems = () => {
       });
     },
     onSuccess: async(data, variables, context) => {
-      if (!data) return toast({
-        title: 'Произошла ошибка при создании предмета',
-        variant: 'negative',
-      });
+      if (!data) return toast.error('Произошла ошибка при создании предмета');
       
-      toast({
-        title: 'Предмет создан',
-        variant: 'positive',
-      });
+      toast.success('Предмет создан');
       
       return refresh();
     },
@@ -48,10 +42,7 @@ export const useMinecraftItems = () => {
     mutationKey: MINECRAFT_DELETE_ITEM_MUTATION_KEY,
     mutationFn: async(values: DeleteMinecraftItem) => deleteMinecraftItem(values),
     onSuccess: async(data, variables, context) => {
-      if (!data) return toast({
-        title: 'Произошла ошибка при удалении предмета',
-        variant: 'negative',
-      });
+      if (!data) return toast.error('Произошла ошибка при удалении предмета');
       
       return refresh();
     },

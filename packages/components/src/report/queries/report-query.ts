@@ -3,23 +3,25 @@ import { ReportEntity } from "@repo/types/entities/entities-type.ts"
 import { PostReportItem } from "./post-report.ts";
 import { ReportReason } from "../types/report-types.ts";
 
-export const REPORT_QUERY_KEY = (
-	type: Pick<ReportEntity, "report_type">["report_type"]
-) => [ "ui", "report", type ]
+export const REPORT_QUERY_KEY = [ "ui", "report" ]
 
 export type ReportQuery = Partial<{
 	type: Pick<ReportEntity, "report_type">["report_type"],
 	reportedItem: PostReportItem,
-	reason: ReportReason
+	reason: ReportReason,
+	description?: string
 }>
 
-export const reportQuery = (
-	type: Pick<ReportEntity, "report_type">["report_type"]
-) => {
+const initial: ReportQuery = {
+	type: null
+}
+
+export const reportQuery = () => {
 	return useQuery<ReportQuery, Error>({
-		queryKey: REPORT_QUERY_KEY(type),
+		queryKey: REPORT_QUERY_KEY,
 		gcTime: Infinity,
 		staleTime: Infinity,
+		initialData: initial,
 		refetchOnWindowFocus: false
 	})
 }

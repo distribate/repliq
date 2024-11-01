@@ -1,4 +1,3 @@
-import { Tables } from '@repo/types/entities/supabase.ts';
 import { Avatar } from '../../../user/components/avatar/components/avatar.tsx';
 import { Typography } from '@repo/ui/src/components/typography.tsx';
 import { Grip } from 'lucide-react';
@@ -7,8 +6,9 @@ import { HoverCardItem } from '@repo/ui/src/components/hover-card.tsx';
 import { Separator } from '@repo/ui/src/components/separator.tsx';
 import { useRouter } from 'next/navigation';
 import { USER_URL } from '@repo/shared/constants/routes.ts';
+import { UserEntity } from '@repo/types/entities/entities-type.ts';
 
-type UserDashboardCardProps = Pick<Tables<'users'>, 'nickname'
+type UserDashboardCardProps = Pick<UserEntity, 'nickname'
   | 'id' | 'uuid' | 'name_color' | 'created_at'
 >
 

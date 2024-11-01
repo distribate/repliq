@@ -20,7 +20,9 @@ export default async function MainLayout({
   const qc = new QueryClient();
   
   const currentUser = await getCurrentUser();
-  if (!currentUser) redirect(AUTH_REDIRECT);
+  if (!currentUser) {
+    return redirect(AUTH_REDIRECT);
+  }
   
   const layout = cookies().get(RESIZABLE_LAYOUT_COOKIE_KEY);
   let defaultLayout: number[] | undefined;
@@ -30,7 +32,7 @@ export default async function MainLayout({
   
   if (isBanned
     && isBanned.nickname === currentUser.nickname
-  ) redirect('/banned');
+  ) return redirect('/banned');
   
   await qc.prefetchQuery({
     queryKey: CURRENT_USER_QUERY_KEY,

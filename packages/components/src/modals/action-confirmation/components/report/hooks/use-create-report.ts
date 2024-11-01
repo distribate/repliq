@@ -1,83 +1,61 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { REPORT_QUERY_KEY, ReportQuery } from "../../../../../report/queries/report-query.ts";
-import { postReport } from "../../../../../report/queries/post-report.ts";
-import { toast } from "@repo/ui/src/hooks/use-toast.ts";
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { REPORT_QUERY_KEY, ReportQuery } from '../../../../../report/queries/report-query.ts';
+import { postReport } from '../../../../../report/queries/post-report.ts';
+import { toast } from 'sonner';
+import { CURRENT_USER_QUERY_KEY, CurrentUser } from '@repo/lib/queries/current-user-query.ts';
 
-export const CREATE_REPORT_MUTATION_KEY = ["create-report"]
+export const CREATE_REPORT_MUTATION_KEY = [ 'create-report' ];
 
 export const useCreateReport = () => {
-	const qc = useQueryClient();
-	
-	const updateReportValuesMutation = useMutation({
-		mutationFn: async(values: ReportQuery) => {
-			if (!values) return;
-			
-			const { type, reason, reportedItem } = values;
-			
-			if (!type) return;
-			
-			qc.setQueryData(REPORT_QUERY_KEY(type),
-				(prev: ReportQuery) => {
-					return {
-						...prev,
-						reason: reason ?? prev.reason,
-						type: type ?? prev.type,
-						reportedItem: reportedItem ?? prev.reportedItem
-					}
-				}
-			)
-		},
-		onSuccess: async (data, variables) => {
-			if (!variables || !variables.type) return;
-			
-			await qc.invalidateQueries({ queryKey: REPORT_QUERY_KEY(variables.type) })
-		},
-		onError: (e) => { throw new Error(e.message) }
-	})
-	
-	const createReportMutation = useMutation({
-		mutationKey: CREATE_REPORT_MUTATION_KEY,
-		mutationFn: async(values: Pick<ReportQuery, "type">) => {
-			if (!values || !values.type) return;
+  const qc = useQueryClient();
+  const currentUser = qc.getQueryData<CurrentUser>(CURRENT_USER_QUERY_KEY);
+  
+  const updateReportValuesMutation = useMutation({
+    mutationFn: async(values: ReportQuery) => {
+      qc.setQueryData(REPORT_QUERY_KEY, (prev: ReportQuery) => {
+        return { ...prev, ...values };
+      });
+    },
+    onSuccess: () => qc.invalidateQueries({ queryKey: REPORT_QUERY_KEY }),
+    onError: e => { throw new Error(e.message); },
+  });
+  
+  const createReportMutation = useMutation({
+    mutationKey: CREATE_REPORT_MUTATION_KEY,
+    mutationFn: async() => {
+      const reportState = qc.getQueryData<ReportQuery>(
+        REPORT_QUERY_KEY
+      );
+      
+      if (!reportState || !currentUser) return;
 
-			const reportState = qc.getQueryData<ReportQuery>(
-				REPORT_QUERY_KEY(values.type)
-			);
-			
-			if (!reportState) return;
-			
-			const { reportedItem, type, reason } = reportState
-			
-			if (!type || !reportedItem || !reason) return;
-			
-			const data = await postReport({
-				report_type: type,
-				target_content: reportedItem.target_content,
-				target_id: reportedItem.target_id,
-				target_nickname: reportedItem.target_nickname,
-				target_user_nickname: reportedItem.target_nickname,
-				reason
-			})
-			
-			if (!data) {
-				return toast({
-					title: "Что-то пошло не так", variant: "negative"
-				})
-			}
-			
-			return data;
-		},
-		onSuccess: async (data, variables, context) => {
-			if (!variables || !variables.type) return;
-			
-			toast({
-				title: "Заявка создана", variant: "positive"
-			})
-			
-			await qc.resetQueries({ queryKey: REPORT_QUERY_KEY(variables.type) })
-		},
-		onError: (e) => { throw new Error(e.message) }
-	})
-	
-	return { updateReportValuesMutation, createReportMutation }
-}
+      if (currentUser.nickname === reportState.reportedItem?.targetNickname) {
+        return "self-reported";
+      }
+      
+      const { reportedItem, type, reason, description } = reportState;
+      
+      if (!type || !reportedItem || !reason) return;
+      
+      return postReport({
+        report_type: type,
+        targetContent: reportedItem.targetContent,
+        targetId: reportedItem.targetId,
+        targetNickname: reportedItem.targetNickname,
+        reason,
+        description: description ?? null,
+      });
+    },
+    onSuccess: async(data) => {
+      if (data === 'self-reported') return toast.error('Вы не можете пожаловаться сами на себя!')
+      if (!data) return toast.error('Произошла ошибка при создании репорта');
+      
+      toast.success('Заявка создана');
+      
+      return qc.resetQueries({ queryKey: REPORT_QUERY_KEY });
+    },
+    onError: e => { throw new Error(e.message); }
+  });
+  
+  return { updateReportValuesMutation, createReportMutation };
+};
