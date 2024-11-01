@@ -10,7 +10,8 @@ import { AuthMessages, ErrorMessageMap } from "@repo/components/src/forms/auth/t
 
 const Form = FormProvider
 
-const formAuthErrorMessageVariants = cva("text-md font-normal [text-shadow:_1px_1px_0_rgb(0_0_0_/_10%)]", {
+const formAuthErrorMessageVariants = cva(
+  "text-md font-normal [text-shadow:_1px_1px_0_rgb(0_0_0_/_10%)]", {
   variants: {
     variant: {
       error: "text-red-600",
@@ -27,7 +28,9 @@ interface ErrorFieldProps extends HTMLAttributes<HTMLSpanElement>,
   message: string;
 }
 
-const ErrorField = ({ variant, className, message, ...props }: ErrorFieldProps) => {
+const ErrorField = ({
+  variant, className, message, ...props
+}: ErrorFieldProps) => {
   return (
     <span className={formAuthErrorMessageVariants({ variant, className })} {...props}>
       {message}
@@ -36,14 +39,11 @@ const ErrorField = ({ variant, className, message, ...props }: ErrorFieldProps) 
 }
 
 const FormAuthErrorMessage = ({
-  type,
-  messages
+  type, messages
 }: {
-  type: AuthMessages,
-  messages: ErrorMessageMap
+  type: AuthMessages, messages: ErrorMessageMap
 }) => {
   const errorMessage = getFormErrorMessage(type, messages);
-
   return (
     <div className="py-0.5 px-2">
 			<ErrorField
@@ -68,14 +68,9 @@ const FormField = <
 }
 
 const FormItem = forwardRef<
-  HTMLDivElement,
-  HTMLAttributes<HTMLDivElement>
->(({
-  className,
-  ...props
-}, ref) => {
+  HTMLDivElement, HTMLAttributes<HTMLDivElement>
+>(({ className, ...props }, ref) => {
   const id = useId()
-
   return (
     <FormItemContext.Provider value={{ id }}>
       <div
@@ -89,14 +84,9 @@ const FormItem = forwardRef<
 FormItem.displayName = "FormItem"
 
 const FormLabel = forwardRef<
-  ElementRef<typeof LabelPrimitive.Root>,
-  ComponentPropsWithoutRef<typeof LabelPrimitive.Root>
->(({
-  className,
-  ...props
-}, ref) => {
+  ElementRef<typeof LabelPrimitive.Root>, ComponentPropsWithoutRef<typeof LabelPrimitive.Root>
+>(({ className, ...props }, ref) => {
   const { error, formItemId } = useFormField()
-
   return (
     <Label
       ref={ref}
@@ -109,13 +99,9 @@ const FormLabel = forwardRef<
 FormLabel.displayName = "FormLabel"
 
 const FormControl = forwardRef<
-  ElementRef<typeof Slot>,
-  ComponentPropsWithoutRef<typeof Slot>
->(({
-  ...props
-}, ref) => {
+  ElementRef<typeof Slot>, ComponentPropsWithoutRef<typeof Slot>
+>(({ ...props }, ref) => {
   const { error, formItemId, formDescriptionId, formMessageId } = useFormField()
-
   return (
     <Slot
       ref={ref}
@@ -133,14 +119,9 @@ const FormControl = forwardRef<
 FormControl.displayName = "FormControl"
 
 const FormDescription = forwardRef<
-  HTMLParagraphElement,
-  HTMLAttributes<HTMLParagraphElement>
->(({
-  className,
-  ...props
-}, ref) => {
+  HTMLParagraphElement, HTMLAttributes<HTMLParagraphElement>
+>(({ className, ...props }, ref) => {
   const { formDescriptionId } = useFormField()
-
   return (
     <p
       ref={ref}
@@ -153,13 +134,8 @@ const FormDescription = forwardRef<
 FormDescription.displayName = "FormDescription"
 
 const FormMessage = forwardRef<
-  HTMLParagraphElement,
-  HTMLAttributes<HTMLParagraphElement>
->(({
-  className,
-  children,
-  ...props
-}, ref) => {
+  HTMLParagraphElement, HTMLAttributes<HTMLParagraphElement>
+>(({ className, children, ...props }, ref) => {
   const { error, formMessageId } = useFormField()
   const body = error ? String(error?.message) : children
 

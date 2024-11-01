@@ -1,8 +1,8 @@
 import { coverQuery } from '../queries/cover-query.ts';
 import { imageCoverQuery } from '../../components/cover-image/queries/image-cover-query.ts';
-import { Avatar } from '../../../../../user/components/avatar/components/avatar.tsx';
+import { Avatar } from '#user/components/avatar/components/avatar.tsx';
 import { useQueryClient } from '@tanstack/react-query';
-import { DONATE_QUERY_KEY, DonateQuery } from '../../../../../user/components/donate/queries/donate-query.ts';
+import { DONATE_QUERY_KEY, DonateQuery } from '#user/components/donate/queries/donate-query.ts';
 import { CoverArea } from './cover-area.tsx';
 import { UserCoverMainInfo } from './cover-main-info.tsx';
 import { UserCoverPanel } from './cover-panel.tsx';

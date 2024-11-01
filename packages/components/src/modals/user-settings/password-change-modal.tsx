@@ -1,6 +1,6 @@
 import {
   UserSettingOption
-} from '../../cards/components/user-personal-card/components/profile-settings/user-profile-settings.tsx';
+} from '#cards/components/user-personal-card/components/profile-settings/user-profile-settings.tsx';
 import GoldIngot from "@repo/assets/images/minecraft/gold_ingot.webp"
 import { Dialog, DialogContent, DialogTrigger } from '@repo/ui/src/components/dialog.tsx';
 

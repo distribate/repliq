@@ -1,11 +1,8 @@
 import { BaseEditor, ParagraphElement, HistoryEditor } from 'slate'
 import { ReactEditor } from 'slate-react'
 
-declare module "png"
-declare module "jpeg"
-declare module "jpg"
-declare module "webp"
 declare module "bcryptjs"
+declare module "tailwindcss/colors"
 
 declare module 'slate' {
   export interface CustomTypes {
@@ -48,7 +45,13 @@ export type UserPageParam = {
 export type CustomEditor = BaseEditor & ReactEditor & HistoryEditor
 export type CustomElement = ParagraphElement
 
-type CustomText = FormattedText;
+type CustomText = {
+  text: string;
+  bold?: boolean,
+  underline?: boolean,
+  italic?: boolean,
+  strike?: boolean
+}
 
 export type OperationType = 'insert_node'
   | 'merge_node'
@@ -59,11 +62,3 @@ export type OperationType = 'insert_node'
   | 'set_selection'
   | 'insert_text'
   | 'remove_text'
-
-export type FormattedText = {
-  text: string;
-  bold?: boolean,
-  underline?: boolean,
-  italic?: boolean,
-  strike?: boolean
-}

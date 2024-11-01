@@ -1,17 +1,15 @@
-import { ImageWrapper } from '../../wrappers/image-wrapper.tsx';
+import { ImageWrapper } from '#wrappers/image-wrapper.tsx';
 import { Typography } from '@repo/ui/src/components/typography.tsx';
 import { HoverCardItem } from '@repo/ui/src/components/hover-card.tsx';
 import Barrier from '@repo/assets/images/minecraft/barrier.webp';
-import { ConfirmationActionModalTemplate } from '../../templates/confirmation-action-modal-template.tsx';
-import { ConfirmationButton } from '../../buttons/confirmation-action-button.tsx';
+import { ConfirmationActionModalTemplate } from '#templates/confirmation-action-modal-template.tsx';
+import { ConfirmationButton } from '#buttons/confirmation-action-button.tsx';
 import {
   TERMINATE_SESSIONS_MUTATION_KEY,
   useTerminateSession,
 } from '../action-confirmation/components/terminate-session/hooks/use-terminate-session.ts';
 import { DynamicModal } from '../dynamic-modal.tsx';
 import { DialogClose } from '@repo/ui/src/components/dialog.tsx';
-
-export const TERMINATE_ALL_SESSIONS_MODAL_NAME = 'terminate-all-not-active-sessions';
 
 export const TerminateAllSessionsModal = () => {
   const { terminateMutation } = useTerminateSession();

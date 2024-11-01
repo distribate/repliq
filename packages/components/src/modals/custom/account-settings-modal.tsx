@@ -1,10 +1,10 @@
 import { HoverCardItem } from '@repo/ui/src/components/hover-card.tsx';
 import { Typography } from '@repo/ui/src/components/typography.tsx';
 import MinecartWithChest from "@repo/assets/images/minecraft/minecart_chest.webp"
-import { ImageWrapper } from '../../wrappers/image-wrapper.tsx';
+import { ImageWrapper } from '#wrappers/image-wrapper.tsx';
 import {
   UserSettingsCard
-} from '../../cards/components/user-personal-card/components/account-settings/user-settings-card.tsx';
+} from '#cards/components/user-personal-card/components/account-settings/user-settings-card.tsx';
 import { Dialog, DialogContent, DialogTrigger } from '@repo/ui/src/components/dialog.tsx';
 
 export const AccountSettingsModal = () => {

@@ -1,11 +1,11 @@
 import { X } from "lucide-react";
-import { Avatar } from "../../../../user/components/avatar/components/avatar.tsx";
+import { Avatar } from '#user/components/avatar/components/avatar.tsx';
 import Link from "next/link";
 import { Typography } from "@repo/ui/src/components/typography.tsx";
 import React from "react";
 import { useHistoryThreads } from "../hooks/use-history-threads.tsx";
 import { ThreadHistoryType } from "../types/thread-history-types.ts";
-import { HoverCardWrapper } from "../../../../wrappers/hover-card-wrapper.tsx";
+import { HoverCardWrapper } from '#wrappers/hover-card-wrapper.tsx';
 import { THREAD_URL } from '@repo/shared/constants/routes.ts';
 
 type ThreadHistoryProps = {

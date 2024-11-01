@@ -4,7 +4,7 @@ import { CURRENT_USER_QUERY_KEY, CurrentUser } from '@repo/lib/queries/current-u
 import {
   CREATE_THREAD_COMMENT_QUERY_KEY,
   createThreadCommentQuery,
-} from '../../../../forms/create-thread-comment/queries/create-thread-comment-query.ts';
+} from '#forms/create-thread-comment/queries/create-thread-comment-query.ts';
 import { ReplyComment } from './reply-comment.tsx';
 import { useQueryClient } from '@tanstack/react-query';
 import {
@@ -22,7 +22,7 @@ export const CreateThreadComment = () => {
   const type = createThreadCommentState.type || 'single';
   
   useEffect(() => {
-    qc.resetQueries({ queryKey: CREATE_THREAD_COMMENT_QUERY_KEY })
+    qc.resetQueries({ queryKey: CREATE_THREAD_COMMENT_QUERY_KEY }).then()
   }, []);
   
   return (

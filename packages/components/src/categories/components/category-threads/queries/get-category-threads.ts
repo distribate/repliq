@@ -43,7 +43,7 @@ export async function getCategoryThreads({
     const thread = mappedThreads[i];
     
     const threadModel = await getThreadModel({
-      threadId: thread.id, type: "all"
+      threadId: thread.id, withViews: false
     })
     
     if (!threadModel) return threads = [];

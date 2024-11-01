@@ -7,19 +7,19 @@ import { useState } from 'react';
 import { ThreadModel } from '../../../queries/get-thread-model.ts';
 import Link from 'next/link';
 import { USER_URL } from '@repo/shared/constants/routes.ts';
-import { Avatar } from '../../../../user/components/avatar/components/avatar.tsx';
-import { UserNickname } from '../../../../user/components/name/components/nickname.tsx';
+import { Avatar } from '#user/components/avatar/components/avatar.tsx';
+import { UserNickname } from '#user/components/name/components/nickname.tsx';
 import { Button } from '@repo/ui/src/components/button.tsx';
 import { useRouter } from 'next/navigation';
 
-type ThreadMoreProps = Pick<ThreadModel, 'threadTags'
+type ThreadMoreProps = Pick<ThreadModel, 'tags'
   | 'description'
   | 'created_at'
-  | 'nickname'
+  | 'owner'
 >
 
 export const ThreadMore = ({
-  threadTags, description, created_at, nickname,
+  tags, description, created_at, owner,
 }: ThreadMoreProps) => {
   const [ expand, setExpand ] = useState<boolean>(false);
   const { push } = useRouter()
@@ -34,9 +34,9 @@ export const ThreadMore = ({
           <Typography>
             {dayjs(created_at).fromNow()}
           </Typography>
-          {threadTags && (
+          {tags && (
             <div className="flex items-center gap-2">
-              {threadTags.map((tag, idx) => (
+              {tags.map((tag, idx) => (
                 <Typography key={idx} className="text-caribbean-green-300">
                   #{tag}
                 </Typography>
@@ -52,12 +52,12 @@ export const ThreadMore = ({
           )}
           <div className="flex flex-col mt-2 mb-6 gap-y-4 w-full">
             <div className="flex items-center gap-2 w-fit">
-              <Link href={USER_URL + nickname}>
-                <Avatar nickname={nickname} propWidth={36} propHeight={36} />
+              <Link href={USER_URL + owner.nickname}>
+                <Avatar nickname={owner.nickname} propWidth={36} propHeight={36} />
               </Link>
               <div className="flex flex-col w-fit">
-                <Link href={USER_URL + nickname}>
-                  <UserNickname nickname={nickname} />
+                <Link href={USER_URL + owner.nickname}>
+                  <UserNickname nickname={owner.nickname} />
                 </Link>
                 <Typography textSize="small" textColor="gray">
                   2 треда
@@ -65,12 +65,15 @@ export const ThreadMore = ({
               </div>
             </div>
             <div className="flex items-center gap-2 w-full">
-              <Button onClick={() => push(USER_URL + nickname)} state="default">
+              <Button onClick={() => push(USER_URL + owner.nickname)} state="default">
                 <Typography>
                   Профиль
                 </Typography>
               </Button>
-              <Button onClick={() => push(`/search?type=threads&user=${nickname}`)} state="default">
+              <Button
+                onClick={() => push(`/search?type=threads&user=${owner.nickname}`)}
+                state="default"
+              >
                 <Typography>
                   Треды
                 </Typography>

@@ -5,7 +5,7 @@ import { useCallback } from 'react';
 import { ThreadHistoryType } from '../types/thread-history-types.ts';
 import {
   usePreferences,
-} from '../../../../cards/components/user-personal-card/components/advanced-settings/hooks/use-preferences.ts';
+} from '#cards/components/user-personal-card/components/advanced-settings/hooks/use-preferences.ts';
 import { useQueryClient } from '@tanstack/react-query';
 import { CURRENT_USER_QUERY_KEY, CurrentUser } from '@repo/lib/queries/current-user-query.ts';
 

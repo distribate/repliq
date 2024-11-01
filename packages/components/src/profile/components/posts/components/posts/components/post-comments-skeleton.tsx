@@ -1,6 +1,6 @@
 import { Separator } from '@repo/ui/src/components/separator.tsx';
 import { Skeleton } from '@repo/ui/src/components/skeleton.tsx';
-import { BlockWrapper } from '../../../../../../wrappers/block-wrapper.tsx';
+import { BlockWrapper } from '#wrappers/block-wrapper.tsx';
 
 const PostCommentSkeleton = () => {
   return (

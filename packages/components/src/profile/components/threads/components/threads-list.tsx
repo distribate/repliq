@@ -3,30 +3,26 @@
 import Link from 'next/link';
 import { THREAD_URL } from '@repo/shared/constants/routes.ts';
 import { Typography } from '@repo/ui/src/components/typography.tsx';
-import { ArrowUp, ArrowUpRight, LayoutGrid, MessageSquare, MessageSquareOff, Search } from 'lucide-react';
+import { ArrowUp, ArrowUpRight, LayoutGrid, MessageSquare, MessageSquareOff } from 'lucide-react';
 import { Separator } from '@repo/ui/src/components/separator.tsx';
 import dayjs from 'dayjs';
 import { threadsQuery } from '../queries/threads-query.ts';
 import { ThreadsSkeleton } from './threads-skeleton.tsx';
 import { UserEntity } from '@repo/types/entities/entities-type.ts';
-import { ContentNotFound } from '../../../../templates/section-not-found.tsx';
-import { FilteringSearch } from '../../../../filtering/components/filtering-search.tsx';
+import { ContentNotFound } from '#templates/section-not-found.tsx';
+import { FilteringSearch } from '#filtering/components/filtering-search.tsx';
 import React, { ChangeEvent, forwardRef, useCallback, useState } from 'react';
 import { useDebounce } from '@repo/lib/hooks/use-debounce.ts';
 import { Input } from '@repo/ui/src/components/input.tsx';
-import { DropdownWrapper } from '../../../../wrappers/dropdown-wrapper.tsx';
-import { SelectedWrapper } from '../../../../wrappers/selected-wrapper.tsx';
+import { DropdownWrapper } from '#wrappers/dropdown-wrapper.tsx';
+import { SelectedWrapper } from '#wrappers/selected-wrapper.tsx';
 import { DropdownMenuItem } from '@repo/ui/src/components/dropdown-menu.tsx';
-import { VIEW_COMPONENTS_TYPE } from '../../../../friends/components/filtering/components/friends-filtering-view.tsx';
+import { VIEW_COMPONENTS_TYPE } from '#friends/components/filtering/components/friends-filtering-view.tsx';
 
 const ThreadsFiltering = forwardRef<
   HTMLInputElement
 >((props, ref) => {
   const [ value, setValue ] = useState('');
-  
-  const debouncedHandleSearch = useCallback(useDebounce((val: string) => {
-  
-  }, 100), []);
   
   const handleSearchInput = (e: ChangeEvent<
     HTMLInputElement
@@ -34,7 +30,6 @@ const ThreadsFiltering = forwardRef<
     const { value } = e.target;
     
     setValue(value);
-    debouncedHandleSearch(value);
   };
   
   return (

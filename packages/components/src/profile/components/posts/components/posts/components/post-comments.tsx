@@ -1,7 +1,7 @@
 import { postCommentsQuery } from '../queries/posts-comments-query.ts';
 import { PostComments as PostCommentsType } from '../queries/get-posts-comments.ts';
 import { Separator } from '@repo/ui/src/components/separator.tsx';
-import { PostCommentItem } from '../../../../../../post/components/post-comment/post-comment-item.tsx';
+import { PostCommentItem } from '#post/components/post-comment/post-comment-item.tsx';
 import { PostCommentsSkeleton } from './post-comments-skeleton.tsx';
 
 type PostCommentsProps = PostCommentsType & {

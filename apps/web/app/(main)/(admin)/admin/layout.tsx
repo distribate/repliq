@@ -1,6 +1,6 @@
 import { ReactNode } from 'react';
 import { validateRequest } from '@repo/lib/utils/auth/validate-requests.ts';
-import { redirect } from 'next/navigation';
+import { permanentRedirect } from 'next/navigation';
 import { checkAdminPermission } from '@repo/lib/actions/check-admin-permission.ts';
 import { AdminNavigation } from '@repo/components/src/admin/components/navigation/admin-navigation.tsx';
 import { Metadata } from 'next';
@@ -15,21 +15,21 @@ type AdminLayoutProps = {
 
 export const metadata: Metadata = {
   title: 'Админ-панель',
-}
+};
 
 export default async function AdminLayout({
   tickets, children, reports, configs, stats,
 }: AdminLayoutProps) {
-  const isAdmin = await checkAdminPermission();
-  
-  if (!isAdmin) {
-    return redirect('/');
-  }
-  
   const { user, session } = await validateRequest();
   
   if (!user || !session) {
-    return redirect('/');
+    return permanentRedirect('/');
+  }
+  
+  const isAdmin = await checkAdminPermission();
+  
+  if (!isAdmin) {
+    return permanentRedirect('/');
   }
   
   return (

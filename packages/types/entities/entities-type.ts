@@ -1,4 +1,4 @@
-import { Tables } from "./supabase";
+import { Database, Tables } from './gen-supabase.ts';
 
 export type UserEntity = Tables<"users">
 export type FriendEntity = Tables<"users_friends">
@@ -19,3 +19,9 @@ export type ThreadRatingEntity = Tables<"threads_rating">
 export type ReportEntity = Tables<"reports">
 export type BanEntity = Tables<"users_banned">
 export type RequestEntity = Tables<"users_requests_timeout">
+
+export type ProfileVisibilityEnum = Database["public"]["Enums"]["profile_visibility"]
+export type PostVisibilityEnum = Database['public']['Enums']['post_visibility']
+export type ReportReasonEnum = Database["public"]["Enums"]["report_reason"]
+export type ThreadRatingEnum = Database["public"]["Enums"]["thread_rating_type"]
+export type DonateVariantsEnum = Database["public"]['Enums']['donate_variants']

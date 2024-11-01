@@ -2,7 +2,7 @@ import { Typography } from '@repo/ui/src/components/typography.tsx';
 import { HoverCardItem } from '@repo/ui/src/components/hover-card.tsx';
 import { Separator } from '@repo/ui/src/components/separator.tsx';
 import { Ban, FlagTriangleLeft } from 'lucide-react';
-import { MoreWrapper } from '../../../../../../wrappers/more-wrapper.tsx';
+import { MoreWrapper } from '#wrappers/more-wrapper.tsx';
 
 export const ControlPanel = () => {
   return (

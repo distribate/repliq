@@ -1,11 +1,11 @@
 import { Typography } from '@repo/ui/src/components/typography.tsx';
 import { Plus, Minus } from 'lucide-react';
-import { DropdownWrapper } from '../../../../../../wrappers/dropdown-wrapper.tsx';
+import { DropdownWrapper } from '#wrappers/dropdown-wrapper.tsx';
 import { Button } from '@repo/ui/src/components/button.tsx';
 import {
   useControlFriendRequests,
-} from '../../../../../../friend/components/request-card/hooks/use-control-friend-requests.ts';
-import { RequestProperties } from '../../../../../../friend/components/request-card/queries/delete-friend-request.ts';
+} from '#friend/components/request-card/hooks/use-control-friend-requests.ts';
+import { RequestProperties } from '#friend/components/request-card/queries/delete-friend-request.ts';
 
 export const IncomingFriendButton = ({
   initiator,

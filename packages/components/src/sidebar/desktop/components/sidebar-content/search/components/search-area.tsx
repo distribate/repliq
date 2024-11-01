@@ -1,7 +1,7 @@
 import { searchQuery, SearchTopic, SearchUser } from '../queries/search-query.ts';
 import { SearchResultsSkeleton } from './search-results-skeleton.tsx';
-import { SearchAreaNotFound } from '../../../../../../templates/search-area-not-found.tsx';
-import { SearchUserItem } from '../../../../../../cards/components/search/search-user-card.tsx';
+import { SearchAreaNotFound } from '#templates/search-area-not-found.tsx';
+import { SearchUserItem } from '#cards/components/search/search-user-card.tsx';
 import { Typography } from '@repo/ui/src/components/typography.tsx';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';

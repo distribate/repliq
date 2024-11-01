@@ -1,8 +1,8 @@
 import { Separator } from '@repo/ui/src/components/separator.tsx';
-import { PostAdditionalForm } from '../../../../../forms/create-post/components/post-additional-form.tsx';
-import { PostPhotoForm } from '../../../../../forms/create-post/components/post-photo-form.tsx';
-import { PostVideoForm } from '../../../../../forms/create-post/components/post-video-form.tsx';
-import { PostPublishButton } from '../../../../../forms/create-post/components/post-publish-button.tsx';
+import { PostAdditionalForm } from '#forms/create-post/components/post-additional-form.tsx';
+import { PostPhotoForm } from '#forms/create-post/components/post-photo-form.tsx';
+import { PostVideoForm } from '#forms/create-post/components/post-video-form.tsx';
+import { PostPublishButton } from '#forms/create-post/components/post-publish-button.tsx';
 
 export const CreatePostActiveSection =  () => {
   return (

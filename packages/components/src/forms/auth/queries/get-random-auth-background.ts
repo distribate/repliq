@@ -1,9 +1,8 @@
 "use server"
 
-import "server-only"
 import AuthBackground from "@repo/assets/images/auth-background.png"
 import { getStaticImages } from '@repo/lib/queries/get-static-signed-images.ts';
-import { getAuthImagesCount } from '../../../admin/components/configs/auth-background/queries/get-auth-images-count.ts';
+import { getAuthImagesCount } from '#admin/components/configs/auth-background/queries/get-auth-images-count.ts';
 import { getAuthBackgroundImages } from '@repo/lib/queries/get-auth-background-images.ts';
 
 const getRandomArbitrary = (min: number, max: number) =>

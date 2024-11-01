@@ -19,11 +19,7 @@ interface BadgeProps extends HTMLAttributes<HTMLDivElement>,
 
 export const Badge = forwardRef<
 	HTMLDivElement, BadgeProps
->(({
-	className,
-	size,
-	...props
-}, ref) => {
+>(({ className, size, ...props }, ref) => {
 	return (
 		<div
 			ref={ref}

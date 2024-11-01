@@ -2,7 +2,7 @@
 
 import { Typography } from '@repo/ui/src/components/typography.tsx';
 import { StatsRequest } from '../../../types/stats-types.ts';
-import { ImageWrapper } from '../../../../../../wrappers/image-wrapper.tsx';
+import { ImageWrapper } from '#wrappers/image-wrapper.tsx';
 import CharismWallet from '@repo/assets/images/minecraft/charism_wallet.png';
 import BelkoinWallet from '@repo/assets/images/minecraft/belkoin_wallet.png';
 import { StatsBlockWrapper } from '../../../stats/stats-block-wrapper.tsx';

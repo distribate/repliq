@@ -1,12 +1,12 @@
 import { Typography } from '@repo/ui/src/components/typography.tsx';
-import { Avatar } from '../../../user/components/avatar/components/avatar.tsx';
+import { Avatar } from '#user/components/avatar/components/avatar.tsx';
 import { ThreadModel } from '../../queries/get-thread-model.ts';
 import dayjs from '@repo/lib/utils/dayjs/dayjs-instance.ts';
 import { Separator } from '@repo/ui/src/components/separator.tsx';
 import { ArrowDown, ArrowUp, MessageSquare, MessageSquareOff } from 'lucide-react';
 
 type TopicByCategoryItemProps = Pick<ThreadModel, 'title'
-  | 'nickname'
+  | 'owner'
   | 'created_at'
   | 'commentsCount'
   | 'rating'
@@ -16,9 +16,9 @@ type TopicByCategoryItemProps = Pick<ThreadModel, 'title'
 export const ThreadByCategoryItem = ({
   ...thread
 }: TopicByCategoryItemProps) => {
-  const { nickname, created_at, title, rating, commentsCount, comments } = thread;
+  const { owner, created_at, title, rating, commentsCount, comments } = thread;
   
-  if (!nickname || !rating) return null;
+  if (!owner || !rating) return null;
   
   const createdAt = dayjs(created_at).from(dayjs());
 
@@ -28,7 +28,7 @@ export const ThreadByCategoryItem = ({
       <div className="flex flex-col w-full gap-y-2 justify-between">
         <div className="flex items-center min-w-[260px] gap-x-2">
           <Avatar
-            nickname={nickname} propWidth={36} propHeight={36}
+            nickname={owner.nickname} propWidth={36} propHeight={36}
             className="min-h-[36px] min-w-[36px]"
           />
           <div className="flex flex-col">
@@ -36,7 +36,7 @@ export const ThreadByCategoryItem = ({
               {title}
             </Typography>
             <Typography className="text-sm text-shark-300 font-medium">
-              {nickname} создал {createdAt}
+              {owner.nickname} создал {createdAt}
             </Typography>
           </div>
         </div>

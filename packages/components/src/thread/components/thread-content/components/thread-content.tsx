@@ -3,8 +3,8 @@
 import { useMemo } from 'react';
 import { Editable, Slate, withReact } from 'slate-react';
 import { createEditor } from 'slate';
-import { RenderElement } from '../../../../editor/components/render-element.tsx';
-import { RenderLeaf } from '../../../../editor/components/render-leaf.tsx';
+import { RenderElement } from '#editor/components/render-element.tsx';
+import { RenderLeaf } from '#editor/components/render-leaf.tsx';
 
 type ThreadContentProps = {
   content: any

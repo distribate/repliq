@@ -2,7 +2,7 @@ import Logotype from "@repo/assets/images/logotype.png"
 import Link from "next/link";
 import { Typography } from "@repo/ui/src/components/typography.tsx";
 import { useSidebarControl } from '../../sidebar-layout/hooks/use-sidebar-control.ts';
-import { ImageWrapper } from '../../../../../wrappers/image-wrapper.tsx';
+import { ImageWrapper } from '#wrappers/image-wrapper.tsx';
 
 export const SidebarLogotype = () => {
 	const { isCompact, isExpanded } = useSidebarControl()

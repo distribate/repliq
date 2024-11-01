@@ -3,7 +3,7 @@
 import { Typography } from '@repo/ui/src/components/typography.tsx';
 import { ThreadCommentItem } from '../../thread-comment/components/thread-comment-item.tsx';
 import { ThreadCommentsSkeleton } from './thread-comments-skeleton.tsx';
-import { CommentsDisabled } from '../../../../templates/comments-disabled.tsx';
+import { CommentsDisabled } from '#templates/comments-disabled.tsx';
 import { threadCommentsQuery } from '../queries/thread-comments-query.ts';
 
 type ThreadCommentsProps = {

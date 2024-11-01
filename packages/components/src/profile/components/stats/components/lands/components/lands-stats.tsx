@@ -3,7 +3,7 @@
 import { Typography } from '@repo/ui/src/components/typography.tsx';
 import { StatsRequest } from '../../../types/stats-types.ts';
 import { landsStatsQuery } from '../queries/lands-stats-query.ts';
-import { Avatar } from '../../../../../../user/components/avatar/components/avatar.tsx';
+import { Avatar } from '#user/components/avatar/components/avatar.tsx';
 import { StatsBlockWrapper } from '../../../stats/stats-block-wrapper.tsx';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@repo/ui/src/components/accordion.tsx';
 import { LandsStatsNotFound } from './lands-stats-not-found.tsx';
@@ -18,7 +18,7 @@ export const LandsStats = ({
   return (
     <Accordion type="multiple" className="font-[Minecraft] w-full">
       {lands.map(land => (
-        <AccordionItem value={land.ulid}>
+        <AccordionItem key={land.ulid} value={land.ulid}>
           <StatsBlockWrapper>
             <AccordionTrigger>
               <Typography textSize="large" className="text-gold-500">

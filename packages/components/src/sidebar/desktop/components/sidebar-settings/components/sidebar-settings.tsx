@@ -9,16 +9,17 @@ import { NavigationBar } from '../../sidebar-content/navigation/navigation-bar.t
 import { OpenTicket } from '../../sidebar-content/open-ticket/open-ticket.tsx';
 import { Icon } from '@repo/shared/ui/icon/icon.tsx';
 import Link from 'next/link';
-import { DropdownWrapper } from '../../../../../wrappers/dropdown-wrapper.tsx';
+import { DropdownWrapper } from '#wrappers/dropdown-wrapper.tsx';
 import { SidebarFormat, sidebarLayoutQuery } from '../../sidebar-layout/queries/sidebar-layout-query.ts';
 import { useSidebarControl } from '../../sidebar-layout/hooks/use-sidebar-control.ts';
-import { LogoutModal } from '../../../../../modals/action-confirmation/components/logout/components/logout-modal.tsx';
+import { LogoutModal } from '#modals/action-confirmation/components/logout/components/logout-modal.tsx';
 
 export const SidebarSettings = () => {
   const { data: sidebarState } = sidebarLayoutQuery();
   const { updateSidebarPropertiesMutation, isCompact, isExpanded } = useSidebarControl();
   
-  const isValue = (format: SidebarFormat) => format === sidebarState.format;
+  const isValue = (format: SidebarFormat) =>
+    format === sidebarState.format;
   
   return (
     <div className="flex items-center justify-between flex-wrap bg-white/10 h-[50px] self-end rounded-lg px-3 py-1 w-full gap-2">

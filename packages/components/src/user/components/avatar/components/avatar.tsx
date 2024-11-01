@@ -4,8 +4,8 @@ import { cva, VariantProps } from 'class-variance-authority';
 import { forwardRef, HTMLAttributes } from 'react';
 import { Typography } from '@repo/ui/src/components/typography.tsx';
 import { userAvatarQuery } from '../queries/avatar-query.ts';
-import { ImageWrapper } from '../../../../wrappers/image-wrapper.tsx';
-import { TooltipWrapper } from '../../../../wrappers/tooltip-wrapper.tsx';
+import { ImageWrapper } from '#wrappers/image-wrapper.tsx';
+import { TooltipWrapper } from '#wrappers/tooltip-wrapper.tsx';
 import ExpActive from '@repo/assets/images/minecraft/exp-active.webp';
 import ExpNoActive from '@repo/assets/images/minecraft/exp-noactive.webp';
 

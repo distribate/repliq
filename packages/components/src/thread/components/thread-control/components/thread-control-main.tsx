@@ -4,7 +4,7 @@ import { Typography } from '@repo/ui/src/components/typography.tsx';
 import { currentThreadQuery } from '../queries/current-thread-query.ts';
 import {
   ThreadRemoveModal,
-} from '../../../../modals/action-confirmation/components/thread-remove/components/thread-remove-modal.tsx';
+} from '#modals/action-confirmation/components/thread-remove/components/thread-remove-modal.tsx';
 import { Separator } from '@repo/ui/src/components/separator.tsx';
 import { ThreadControlProps } from '../types/thread-control-types.ts';
 import { ThreadControlTitle } from './thread-control-title.tsx';

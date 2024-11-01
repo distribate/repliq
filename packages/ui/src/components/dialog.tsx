@@ -6,11 +6,8 @@ import { cn } from '@repo/lib/utils/ui/cn.ts';
 import { ComponentPropsWithoutRef, ElementRef, forwardRef, HTMLAttributes } from 'react';
 
 const Dialog = DialogPrimitive.Root;
-
 const DialogTrigger = DialogPrimitive.Trigger;
-
 const DialogPortal = DialogPrimitive.Portal;
-
 const DialogClose = DialogPrimitive.Close;
 
 const DialogOverlay = forwardRef<
@@ -61,10 +58,9 @@ const DialogContent = forwardRef<
       {children}
       {withClose && (
         <DialogPrimitive.Close
-          className="absolute right-4 hover:bg-red-600 p-2 top-4 rounded-lg opacity-70 ring-offset-background
-				 transition-opacity hover:opacity-100 focus:outline-none focus:ring-2
-				  focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none
-				   data-[state=open]:bg-accent data-[state=open]:text-muted-foreground">
+          className="absolute right-4 hover:bg-red-600 p-2 top-4 rounded-lg opacity-70
+				   transition-opacity hover:opacity-100 focus:outline-none focus:ring-2
+				   disabled:pointer-events-none data-[state=open]:bg-shark-900 data-[state=open]:text-shark-50">
           <X className="h-4 w-4" />
           <span className="sr-only">Close</span>
         </DialogPrimitive.Close>
@@ -130,7 +126,7 @@ const DialogDescription = forwardRef<
 ) => (
   <DialogPrimitive.Description
     ref={ref}
-    className={cn('text-sm text-muted-foreground', className)}
+    className={cn('text-sm text-shark-50', className)}
     {...props}
   />
 ));

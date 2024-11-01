@@ -5,7 +5,7 @@ import { createClient } from '@repo/lib/utils/api/server.ts';
 
 export async function getThreadImagesCount(
   thread_id: Pick<ThreadRequest, 'thread_id'>['thread_id'],
-) {
+): Promise<number | null> {
   const api = createClient();
   
   const { count, error } = await api
@@ -13,7 +13,9 @@ export async function getThreadImagesCount(
   .select('images', { count: 'exact' })
   .eq('thread_id', thread_id);
   
-  if (error) return null;
+  if (error) {
+    return null;
+  }
   
-  return count;
+  return count || 0;
 }

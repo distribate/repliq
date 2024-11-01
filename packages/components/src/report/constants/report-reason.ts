@@ -1,8 +1,8 @@
-import { ReportReason } from "../types/report-types.ts";
+import { ReportReasonEnum } from '@repo/types/entities/entities-type.ts';
 
 type ReportReasons = {
 	title: string,
-	type: ReportReason
+	type: ReportReasonEnum
 }
 
 export const REPORT_REASONS: ReportReasons[] = [

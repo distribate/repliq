@@ -13,10 +13,12 @@ export async function getThreadCreator(
   
   const { data, error } = await api
   .from('threads_users')
-  .select('*, users(nickname)')
-  .eq('thread_id', threadId);
+  .select('*, users(nickname, name_color)')
+  .eq('thread_id', threadId)
   
-  if (error) return null;
+  if (error) {
+    return null;
+  }
   
-  return data.map(item => item.users)[0];
+  return data.map(user => user.users)[0] as GetThreadCreator;
 }

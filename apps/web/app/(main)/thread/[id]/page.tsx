@@ -55,27 +55,26 @@ export default async function TopicsTopicPage({
   params,
 }: PageConventionProps) {
   const { id } = params;
-  if (!id) return null;
-  
   const currentUser = await getCurrentUser();
-  if (!currentUser) return null;
   
-  const qc = new QueryClient();
+  if (!currentUser || !id) return null;
   
   const thread = await getThreadModel({
-    threadId: id, type: 'page',
+    threadId: id, withViews: true
   });
   
-  if (!thread || !thread.nickname) {
+  if (!thread || !thread.owner) {
     return <ContentNotFound title="Тред не найден. Возможно он уже удален" />;
   }
+  
+  const qc = new QueryClient();
   
   await qc.prefetchQuery({
     queryKey: THREAD_COMMENTS_QUERY_KEY(thread.id),
     queryFn: () => getThreadComments(thread.id)
   });
   
-  const isThreadCreator = currentUser.nickname === thread.nickname;
+  const isThreadCreator = currentUser.nickname === thread.owner.nickname;
   
   return (
     <div className="flex gap-2 items-start h-full w-full relative">
@@ -102,9 +101,9 @@ export default async function TopicsTopicPage({
         <BlockWrapper padding="without">
           <ThreadMore
             description={thread.description}
-            threadTags={thread.threadTags}
+            tags={thread.tags}
             created_at={thread.created_at}
-            nickname={thread.nickname}
+            owner={thread.owner}
           />
         </BlockWrapper>
         <div className="flex flex-col w-full h-full gap-y-4">
@@ -112,7 +111,7 @@ export default async function TopicsTopicPage({
             <>
               <HydrationBoundary state={dehydrate(qc)}>
                 <ThreadComments
-                  threadAuthorNickname={thread.nickname}
+                  threadAuthorNickname={thread.owner.nickname}
                   threadId={thread.id}
                   comments={thread.comments}
                 />
@@ -135,12 +134,12 @@ export default async function TopicsTopicPage({
         <BlockWrapper>
           <div className="flex items-center justify-between w-full">
             <div className="flex items-center gap-2 w-full">
-              <Link href={USER_URL + thread.nickname}>
-                <Avatar nickname={thread.nickname} propWidth={36} propHeight={36} />
+              <Link href={USER_URL + thread.owner.nickname}>
+                <Avatar nickname={thread.owner.nickname} propWidth={36} propHeight={36} />
               </Link>
               <div className="flex flex-col w-fit">
-                <Link href={USER_URL + thread.nickname}>
-                  <UserNickname nickname={thread.nickname} />
+                <Link href={USER_URL + thread.owner.nickname}>
+                  <UserNickname nickname={thread.owner.nickname} />
                 </Link>
                 <Typography textSize="small" textColor="gray">
                   2 треда
@@ -155,7 +154,7 @@ export default async function TopicsTopicPage({
               </Button>
             )}
             {!isThreadCreator && (
-              <FriendButton reqUserNickname={thread.nickname} />
+              <FriendButton reqUserNickname={thread.owner.nickname} />
             )}
           </div>
         </BlockWrapper>

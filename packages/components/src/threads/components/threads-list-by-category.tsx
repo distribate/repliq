@@ -1,5 +1,5 @@
 import { ThreadEntity } from "@repo/types/entities/entities-type.ts"
-import { ThreadCard } from "../../thread/components/thread-card/components/thread-card.tsx";
+import { ThreadCard } from '#thread/components/thread-card/components/thread-card.tsx';
 
 type ThreadsListByCategoryProps = {
 	threadsList: ThreadEntity[] | null

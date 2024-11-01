@@ -3,8 +3,8 @@ import { GeneralStats } from '../components/general/components/general-stats.tsx
 import { LandsStats } from '../components/lands/components/lands-stats.tsx';
 import { GeneralStatsSkeleton } from '../components/general/components/general-stats-skeleton.tsx';
 import { LandsStatsSkeleton } from '../components/lands/components/lands-stats-skeleton.tsx';
-import { SectionPrivatedContent } from '../../../../templates/section-privated-content.tsx';
-import { ProfileSectionLayout } from '../../../../layouts/profile-section-layout.tsx';
+import { SectionPrivatedContent } from '#templates/section-privated-content.tsx';
+import { ProfileSectionLayout } from '#layouts/profile-section-layout.tsx';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@repo/ui/src/components/tabs.tsx';
 import { UserPageParam } from '@repo/types/global';
 

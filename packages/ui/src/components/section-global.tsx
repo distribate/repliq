@@ -16,11 +16,7 @@ interface SectionGlobalProps extends HTMLAttributes<HTMLDivElement>,
 
 const SectionGlobal = forwardRef<
 	HTMLDivElement, SectionGlobalProps
->((
-	{
-		variant, className, ...props
-	}, ref
-) => {
+>(({ variant, className, ...props }, ref) => {
 	return <div className={sectionGlobalVariants(({ variant, className }))} ref={ref}{...props}/>
 })
 

@@ -1,26 +1,23 @@
 import { CURRENT_USER_QUERY_KEY, CurrentUser } from '@repo/lib/queries/current-user-query.ts';
 import { Typography } from '@repo/ui/src/components/typography.tsx';
 import { Separator } from '@repo/ui/src/components/separator.tsx';
-import { ImageWrapper } from '../../../../../wrappers/image-wrapper.tsx';
+import { ImageWrapper } from '#wrappers/image-wrapper.tsx';
 import { DescriptionInput } from './components/description-input.tsx';
 import { HoverCardItem } from '@repo/ui/src/components/hover-card.tsx';
-import { DateBirthdayPicker } from './components/date-birthday-picker.tsx';
-import { DropdownWrapper } from '../../../../../wrappers/dropdown-wrapper.tsx';
 import { OutlineCover } from './components/outline-cover.tsx';
 import { useQueryClient } from '@tanstack/react-query';
-
 import Firework from '@repo/assets/images/minecraft/firework.webp';
 import BlueDye from '@repo/assets/images/minecraft/blue_dye.webp';
 import Nametag from '@repo/assets/images/minecraft/nametag.webp';
 import Barrier from '@repo/assets/images/minecraft/barrier.webp';
 import DiamondPickaxe from '@repo/assets/images/minecraft/diamond_pickaxe.webp';
 import Lead from '@repo/assets/images/minecraft/lead.webp';
-import { RealNameChangeModal } from '../../../../../modals/user-settings/real-name-change-modal.tsx';
-import { NicknameColorPickerModal } from '../../../../../modals/user-settings/nickname-color-picker-modal.tsx';
-import { FavoriteItemModal } from '../../../../../modals/user-settings/favorite-item-modal.tsx';
+import { RealNameChangeModal } from '#modals/user-settings/real-name-change-modal.tsx';
+import { NicknameColorPickerModal } from '#modals/user-settings/nickname-color-picker-modal.tsx';
+import { FavoriteItemModal } from '#modals/user-settings/favorite-item-modal.tsx';
 import { ReactNode } from 'react';
 import { ProfileVisibilityChange } from './components/visibility-profile/components/profile-visibility-change.tsx';
-import { DateBirthdayModal } from '../../../../../modals/user-settings/date-birthday-modal.tsx';
+import { DateBirthdayModal } from '#modals/user-settings/date-birthday-modal.tsx';
 
 type ProfileSetting = {
   title: string,

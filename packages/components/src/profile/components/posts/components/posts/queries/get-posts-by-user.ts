@@ -1,10 +1,9 @@
 "use server"
 
-import { Database } from '@repo/types/entities/supabase.ts';
 import { getCurrentUser } from "@repo/lib/actions/get-current-user.ts";
 import { checkIsFriend } from "@repo/lib/helpers/check-is-friend.ts";
 import { createClient } from '@repo/lib/utils/api/server.ts';
-import { PostEntity } from '@repo/types/entities/entities-type.ts';
+import { PostEntity, PostVisibilityEnum } from '@repo/types/entities/entities-type.ts';
 
 type RawPosts = {
 	posts: PostEntity
@@ -16,7 +15,7 @@ export type Posts = {
 	content: string | null;
 	created_at: string;
 	post_id: string;
-	visibility: Database['public']['Enums']['post_visibility'];
+	visibility: PostVisibilityEnum;
 }
 
 export async function getPostsByNickname(

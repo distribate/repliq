@@ -2,13 +2,13 @@ import Link from 'next/link';
 import { AccordionContent, AccordionItem, AccordionTrigger } from '@repo/ui/src/components/accordion.tsx';
 import { Typography } from '@repo/ui/src/components/typography.tsx';
 import Spyglass from '@repo/assets/images/minecraft/spyglass.webp';
-import { ImageWrapper } from '../../wrappers/image-wrapper.tsx';
-import { ThreadNotFound } from '../../templates/threads-not-found.tsx';
+import { ImageWrapper } from '#wrappers/image-wrapper.tsx';
+import { ThreadNotFound } from '#templates/threads-not-found.tsx';
 import { CATEGORY_URL } from '@repo/shared/constants/routes.ts';
 import { CategoryModel } from '../queries/get-categories.ts';
 import { getThreadsCategories } from '@repo/lib/queries/get-threads-by-category.ts';
 import { ThreadEntity } from '@repo/types/entities/entities-type.ts';
-import { ThreadItem } from '../../thread/thread-item.tsx';
+import { ThreadItem } from '#thread/thread-item.tsx';
 
 type CategoryBlockProps = CategoryModel
 

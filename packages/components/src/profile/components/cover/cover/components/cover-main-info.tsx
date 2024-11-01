@@ -1,6 +1,6 @@
-import { UserNickname } from "../../../../../user/components/name/components/nickname.tsx";
-import { UserDonate } from "../../../../../user/components/donate/components/donate.tsx";
-import { UserRealName } from "../../../../../user/components/real-name/components/real-name.tsx";
+import { UserNickname } from '#user/components/name/components/nickname.tsx';
+import { UserDonate } from '#user/components/donate/components/donate.tsx';
+import { UserRealName } from '#user/components/real-name/components/real-name.tsx';
 import { useQueryClient } from "@tanstack/react-query";
 import { Typography } from "@repo/ui/src/components/typography.tsx";
 import { COVER_QUERY_KEY, CoverQuery } from '../queries/cover-query.ts';

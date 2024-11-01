@@ -6,17 +6,17 @@ export const ThreadItem = async({
   id,
 }: Pick<ThreadModel, 'id'>) => {
   const thread = await getThreadModel({
-    type: 'all', threadId: id,
+    withViews: false, threadId: id,
   });
   
   if (!thread) return null;
 
-  const { nickname, title } = thread;
+  const { owner, title } = thread;
   
-  if (!nickname) return;
+  if (!owner) return;
   
   return (
-    <ThreadLayout id={id} title={title} nickname={nickname}>
+    <ThreadLayout id={id} title={title} owner={owner}>
       <ThreadByCategoryItem {...thread} />
     </ThreadLayout>
   );

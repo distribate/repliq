@@ -694,6 +694,42 @@ export type Database = {
           },
         ]
       }
+      profile_views: {
+        Row: {
+          created_at: string
+          id: number
+          target_user_id: string | null
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          id?: number
+          target_user_id?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          id?: number
+          target_user_id?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "profile_views_target_user_id_fkey"
+            columns: ["target_user_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "profile_views_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       reports: {
         Row: {
           created_at: string
@@ -806,7 +842,7 @@ export type Database = {
           content: Json
           created_at?: string
           description?: string | null
-          id?: string
+          id: string
           permission?: boolean
           title: string
           updated_at?: string | null
@@ -853,14 +889,14 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "t_comments_thread_id_fkey"
+            foreignKeyName: "threads_comments_thread_id_fkey"
             columns: ["thread_id"]
             isOneToOne: false
             referencedRelation: "threads"
             referencedColumns: ["id"]
           },
           {
-            foreignKeyName: "t_comments_user_nickname_fkey"
+            foreignKeyName: "threads_comments_user_nickname_fkey"
             columns: ["user_nickname"]
             isOneToOne: false
             referencedRelation: "users"
@@ -893,7 +929,7 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
-            foreignKeyName: "threads_comments_thread_id_fkey"
+            foreignKeyName: "threads_comments_ref_thread_id_fkey"
             columns: ["thread_id"]
             isOneToOne: false
             referencedRelation: "threads"
@@ -922,14 +958,14 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "t_comments_replies_initiator_comment_id_fkey"
+            foreignKeyName: "threads_comments_replies_initiator_comment_id_fkey"
             columns: ["initiator_comment_id"]
             isOneToOne: false
             referencedRelation: "threads_comments"
             referencedColumns: ["id"]
           },
           {
-            foreignKeyName: "t_comments_replies_recipient_comment_id_fkey"
+            foreignKeyName: "threads_comments_replies_recipient_comment_id_fkey"
             columns: ["recipient_comment_id"]
             isOneToOne: false
             referencedRelation: "threads_comments"
@@ -1115,19 +1151,29 @@ export type Database = {
         Row: {
           created_at: string
           id: number
+          thread_id: string
           user_id: string | null
         }
         Insert: {
           created_at?: string
           id?: number
+          thread_id: string
           user_id?: string | null
         }
         Update: {
           created_at?: string
           id?: number
+          thread_id?: string
           user_id?: string | null
         }
         Relationships: [
+          {
+            foreignKeyName: "threads_views_thread_id_fkey"
+            columns: ["thread_id"]
+            isOneToOne: false
+            referencedRelation: "threads"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "threads_views_user_id_fkey"
             columns: ["user_id"]
@@ -1232,64 +1278,35 @@ export type Database = {
         Row: {
           created_at: string | null
           id: number
-          user_1: string
-          user_2: string
+          initiator: string
+          recipient: string
         }
         Insert: {
           created_at?: string | null
-          id: number
-          user_1: string
-          user_2: string
+          id?: number
+          initiator: string
+          recipient: string
         }
         Update: {
           created_at?: string | null
           id?: number
-          user_1?: string
-          user_2?: string
+          initiator?: string
+          recipient?: string
         }
         Relationships: [
           {
-            foreignKeyName: "users_blocked_user_1_fkey"
-            columns: ["user_1"]
+            foreignKeyName: "users_blocked_initiator_fkey"
+            columns: ["initiator"]
             isOneToOne: false
             referencedRelation: "users"
             referencedColumns: ["nickname"]
           },
           {
-            foreignKeyName: "users_blocked_user_2_fkey"
-            columns: ["user_2"]
+            foreignKeyName: "users_blocked_recipient_fkey"
+            columns: ["recipient"]
             isOneToOne: false
             referencedRelation: "users"
             referencedColumns: ["nickname"]
-          },
-        ]
-      }
-      users_cover: {
-        Row: {
-          created_at: string
-          id: number
-          image_id: string | null
-          user_id: string | null
-        }
-        Insert: {
-          created_at?: string
-          id?: number
-          image_id?: string | null
-          user_id?: string | null
-        }
-        Update: {
-          created_at?: string
-          id?: number
-          image_id?: string | null
-          user_id?: string | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "users_cover_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "users"
-            referencedColumns: ["id"]
           },
         ]
       }

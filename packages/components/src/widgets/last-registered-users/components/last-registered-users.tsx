@@ -1,5 +1,5 @@
 import { Typography } from '@repo/ui/src/components/typography.tsx';
-import { UserPreviewCard } from '../../../cards/components/user-preview-card/user-preview-card.tsx';
+import { UserPreviewCard } from '#cards/components/user-preview-card/user-preview-card.tsx';
 import { getLastUsers } from '../queries/get-last-registered-users.ts';
 
 export const LastRegisteredUsers = async() => {

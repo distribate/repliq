@@ -1,30 +1,30 @@
 'use client';
 
-import { PostItemHeader } from '../../../../../../post/components/post-item/components/post-header/post-header.tsx';
-import { PostItemBody } from '../../../../../../post/components/post-item/components/post-body/post-body.tsx';
-import { PostItemFooter } from '../../../../../../post/components/post-item/components/post-footer/post-footer.tsx';
+import { PostItemHeader } from '#post/components/post-item/components/post-header/post-header.tsx';
+import { PostItemBody } from '#post/components/post-item/components/post-body/post-body.tsx';
+import { PostItemFooter } from '#post/components/post-item/components/post-footer/post-footer.tsx';
 import { CURRENT_USER_QUERY_KEY, CurrentUser } from '@repo/lib/queries/current-user-query.ts';
 import { postsQuery } from '../queries/posts-query.ts';
-import { BlockWrapper } from '../../../../../../wrappers/block-wrapper.tsx';
-import { UserPostsSkeleton } from '../../../../../../skeletons/user-posts-skeleton.tsx';
+import { BlockWrapper } from '#wrappers/block-wrapper.tsx';
+import { UserPostsSkeleton } from '#skeletons/user-posts-skeleton.tsx';
 import dynamic from 'next/dynamic';
 import { PostComments } from './post-comments.tsx';
 import { useQueryClient } from '@tanstack/react-query';
 import { Typography } from '@repo/ui/src/components/typography.tsx';
-import { FilteringSearch } from '../../../../../../filtering/components/filtering-search.tsx';
+import { FilteringSearch } from '#filtering/components/filtering-search.tsx';
 import { Input } from '@repo/ui/src/components/input.tsx';
 import React, { ChangeEvent, forwardRef, useCallback, useState } from 'react';
 import { useDebounce } from '@repo/lib/hooks/use-debounce.ts';
-import { DropdownWrapper } from '../../../../../../wrappers/dropdown-wrapper.tsx';
+import { DropdownWrapper } from '#wrappers/dropdown-wrapper.tsx';
 import { DropdownMenuItem } from '@repo/ui/src/components/dropdown-menu.tsx';
 
 const ContentNotFound = dynamic(() =>
-  import('../../../../../../templates/section-not-found.tsx')
+  import('#templates/section-not-found.tsx')
   .then(m => m.ContentNotFound),
 );
 
 const SomethingError = dynamic(() =>
-  import('../../../../../../templates/something-error.tsx')
+  import('#templates/something-error.tsx')
   .then(m => m.SomethingError),
 );
 

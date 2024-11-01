@@ -1,9 +1,9 @@
-import { HoverCardWrapper } from '../../../wrappers/hover-card-wrapper.tsx';
+import { HoverCardWrapper } from '#wrappers/hover-card-wrapper.tsx';
 import Link from 'next/link';
 import { UserEntity } from '@repo/types/entities/entities-type.ts';
-import { Avatar } from '../../../user/components/avatar/components/avatar.tsx';
-import { UserNickname } from '../../../user/components/name/components/nickname.tsx';
-import { UserDonate } from '../../../user/components/donate/components/donate.tsx';
+import { Avatar } from '#user/components/avatar/components/avatar.tsx';
+import { UserNickname } from '#user/components/name/components/nickname.tsx';
+import { UserDonate } from '#user/components/donate/components/donate.tsx';
 import { Separator } from '@repo/ui/src/components/separator.tsx';
 import dynamic from 'next/dynamic';
 

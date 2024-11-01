@@ -2,27 +2,18 @@ import { ThreadModel } from '../../../queries/get-thread-model.ts';
 import { getCategoryOfThreadTitle } from '@repo/lib/queries/get-category-info-of-thread.ts';
 import { Typography } from '@repo/ui/src/components/typography.tsx';
 import Link from 'next/link';
-import { CATEGORY_URL, USER_URL } from '@repo/shared/constants/routes.ts';
-import dayjs from '@repo/lib/utils/dayjs/dayjs-instance.ts';
+import { CATEGORY_URL } from '@repo/shared/constants/routes.ts';
 
 export const ThreadInfo = async(thread: ThreadModel) => {
   const categoryByTitle = await getCategoryOfThreadTitle(thread.id);
   
   return (
-    <div className="flex flex-col gap-6 py-2">
-      <div className="flex flex-col items-start gap-1">
-        <div className="flex items-center gap-1">
-          <Typography>Категория:</Typography>
-          <Link href={CATEGORY_URL + categoryByTitle.id}>
-            <Typography className="font-medium">
-              {categoryByTitle.title}
-            </Typography>
-          </Link>
-        </div>
-        <Typography>
-          Опубликовано: {dayjs(thread.created_at).fromNow()}
+    <div className="flex py-2">
+      <Link href={CATEGORY_URL + categoryByTitle.id}>
+        <Typography className="font-medium" textSize="large">
+          {categoryByTitle.title}
         </Typography>
-      </div>
+      </Link>
     </div>
   );
-}
+};

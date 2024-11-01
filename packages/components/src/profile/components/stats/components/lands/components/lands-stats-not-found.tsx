@@ -1,4 +1,4 @@
-import { BlockWrapper } from '../../../../../../wrappers/block-wrapper.tsx';
+import { BlockWrapper } from '#wrappers/block-wrapper.tsx';
 import { Typography } from '@repo/ui/src/components/typography.tsx';
 
 export const LandsStatsNotFound = () => {

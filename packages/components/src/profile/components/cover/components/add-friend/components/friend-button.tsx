@@ -8,8 +8,8 @@ import { AddFriendButton } from './add-friend-button.tsx';
 import { DeleteFriendButton } from './delete-friend-button.tsx';
 import { useIsFetching, useQueryClient } from '@tanstack/react-query';
 import { Skeleton } from '@repo/ui/src/components/skeleton.tsx';
-import { REQUESTS_QUERY_KEY } from '../../../../../../friends/queries/requests-query.ts';
-import { FRIENDS_QUERY_KEY } from '../../../../../../friends/queries/friends-query.ts';
+import { REQUESTS_QUERY_KEY } from '#friends/queries/requests-query.ts';
+import { FRIENDS_QUERY_KEY } from '#friends/queries/friends-query.ts';
 
 export type FriendButtonProps = {
   reqUserNickname: string

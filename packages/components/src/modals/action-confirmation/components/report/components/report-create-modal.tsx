@@ -9,13 +9,13 @@ import { DialogClose } from '@repo/ui/src/components/dialog.tsx';
 import { ConfirmationButton } from '@repo/components/src/buttons/confirmation-action-button.tsx';
 import { useQueryClient } from '@tanstack/react-query';
 import { REPORT_QUERY_KEY, reportQuery } from '@repo/components/src/report/queries/report-query.ts';
-import { ReportReason } from '@repo/components/src/report/types/report-types.ts';
 import { useState } from 'react';
 import { POSTS_QUERY_KEY, PostsQuery } from '@repo/components/src/profile/components/posts/components/posts/queries/posts-query.ts';
 import { toast } from 'sonner';
 import { THREAD_COMMENTS_QUERY_KEY, } from '@repo/components/src/thread/components/thread-comments/queries/thread-comments-query.ts';
 import { ThreadComment } from '@repo/components/src/thread/components/thread-comments/queries/get-thread-comments.ts';
 import { Textarea } from '@repo/ui/src/components/textarea.tsx';
+import { ReportReasonEnum } from '@repo/types/entities/entities-type.ts';
 
 export type ReportItemProps = {
   reportType: ReportsReportType,
@@ -73,7 +73,7 @@ export const ReportCreateModal = ({
   };
   
   const handleReason = (
-    reason: ReportReason
+    reason: ReportReasonEnum
   ) => {
     setStage('description');
     updateReportValuesMutation.mutate({ reason });

@@ -1,11 +1,11 @@
 'use client';
 
 import { useEffect, useRef } from 'react';
-import { PostTextForm } from '../../../../../forms/create-post/components/post-text-form.tsx';
-import { usePostFormControl } from '../../../../../forms/create-post/hooks/use-post-form-control.ts';
-import { Avatar } from '../../../../../user/components/avatar/components/avatar.tsx';
-import { BlockWrapper } from '../../../../../wrappers/block-wrapper.tsx';
-import { postFormQuery } from '../../../../../forms/create-post/queries/post-form-query.ts';
+import { PostTextForm } from '#forms/create-post/components/post-text-form.tsx';
+import { usePostFormControl } from '#forms/create-post/hooks/use-post-form-control.ts';
+import { Avatar } from '#user/components/avatar/components/avatar.tsx';
+import { BlockWrapper } from '#wrappers/block-wrapper.tsx';
+import { postFormQuery } from '#forms/create-post/queries/post-form-query.ts';
 import dynamic from 'next/dynamic';
 import { useQueryClient } from '@tanstack/react-query';
 import { CURRENT_USER_QUERY_KEY, CurrentUser } from '@repo/lib/queries/current-user-query.ts';

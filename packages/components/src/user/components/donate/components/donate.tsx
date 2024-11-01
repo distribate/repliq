@@ -5,8 +5,8 @@ import { Typography } from "@repo/ui/src/components/typography.tsx";
 import { UserDonate as UserDonateType } from "../types/user-donate-types.ts";
 import { DonateType } from "../queries/get-user-donate.ts";
 import { DONATE_GROUPS } from "../constants/donate-aliases.ts";
-import { HoverCardWrapper } from "../../../../wrappers/hover-card-wrapper.tsx";
-import { CoolMode } from "@repo/ui/src/components/particle-effect.tsx";
+import { HoverCardWrapper } from '#wrappers/hover-card-wrapper.tsx';
+import { ParticleEffect } from "@repo/ui/src/components/particle-effect.tsx";
 import Link from "next/link";
 import { Skeleton } from '@repo/ui/src/components/skeleton.tsx';
 import { UserDonateBadge } from './donate-badge.tsx';
@@ -32,13 +32,13 @@ export const UserDonate = ({
 			properties={{ delay: 1000, contentAlign: "center", sideAlign: "right" }}
 			trigger={
 				favoriteItemImage ? (
-					<CoolMode options={{ particle: favoriteItemImage, }}>
+					<ParticleEffect options={{ particle: favoriteItemImage, }}>
 						<UserDonateBadge variant={donate.donate}>
 							<Typography textColor="shark_white" className="font-[Minecraft] text-[12px]">
 								{title}
 							</Typography>
 						</UserDonateBadge>
-					</CoolMode>
+					</ParticleEffect>
 				) : (
 					<UserDonateBadge variant={donate.donate}>
 						<Typography textColor="shark_white" className="font-[Minecraft] text-[12px]">

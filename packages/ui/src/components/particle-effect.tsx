@@ -1,6 +1,6 @@
 "use client"
 
-import { cloneElement, ReactElement, ReactNode, RefObject, useEffect, useRef } from "react";
+import { cloneElement, ReactElement, ReactNode, useEffect, useRef } from "react";
 
 export interface BaseParticle {
 	element: HTMLElement | SVGSVGElement;
@@ -227,7 +227,7 @@ interface CoolModeProps {
 	options?: CoolParticleOptions;
 }
 
-export const CoolMode = ({
+export const ParticleEffect = ({
 	children, options
 }: CoolModeProps) => {
 	const ref = useRef<HTMLElement>(null);
@@ -238,7 +238,5 @@ export const CoolMode = ({
 		}
 	}, [options]);
 	
-	return cloneElement(children as ReactElement, {
-		ref
-	});
+	return cloneElement(children as ReactElement, { ref });
 };

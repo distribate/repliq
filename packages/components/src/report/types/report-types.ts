@@ -1,3 +1,3 @@
-import { Enums } from "@repo/types/entities/supabase.ts"
+import { ReportReasonEnum } from '@repo/types/entities/entities-type.ts';
 
-export type ReportReason = Enums<"report_reason">
+export type ReportReason = ReportReasonEnum

@@ -5,10 +5,10 @@ import { createClient } from "@repo/lib/utils/api/server.ts";
 import { validateRequest } from "../utils/auth/validate-requests.ts";
 
 export async function checkAdminPermission(): Promise<boolean> {
-	const api = createClient();
-	
 	const { user } = await validateRequest()
 	if (!user) return false;
+	
+	const api = createClient();
 	
 	const { data, error } = await api
 	.from("admins")

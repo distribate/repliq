@@ -1,6 +1,6 @@
 import { Typography } from "@repo/ui/src/components/typography.tsx";
-import { ThreadHistory } from '../../../../../thread/components/saved-thread/components/thread-history.tsx';
-import { useHistoryThreads } from '../../../../../thread/components/saved-thread/hooks/use-history-threads.tsx';
+import { ThreadHistory } from '#thread/components/saved-thread/components/thread-history.tsx';
+import { useHistoryThreads } from '#thread/components/saved-thread/hooks/use-history-threads.tsx';
 import { Separator } from '@repo/ui/src/components/separator.tsx';
 import { useSidebarControl } from '../../sidebar-layout/hooks/use-sidebar-control.ts';
 

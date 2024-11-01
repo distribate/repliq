@@ -8,20 +8,19 @@ import { ThreadModel } from '../../queries/get-thread-model.ts';
 
 type ThreadLayout = {
   children: ReactNode,
-} & Pick<ThreadModel, 'id' | 'nickname' | 'title'>
+} & Pick<ThreadModel, 'id' | 'owner' | 'title'>
 
 export const ThreadLayout = ({
-  children, title, nickname, id: threadId
+  children, title, owner, id: threadId
 }: ThreadLayout) => {
   const { saveThread } = useHistoryThreads();
   
+  const handleSaveThread = () => {
+    return saveThread({ title, nickname: owner.nickname, threadId })
+  }
+  
   return (
-    <Link
-      href={THREAD_URL + threadId}
-      onClick={() => saveThread({
-        title, nickname, threadId
-      })}
-    >
+    <Link href={THREAD_URL + threadId} onClick={handleSaveThread}>
       {children}
     </Link>
   );

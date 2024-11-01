@@ -1,8 +1,8 @@
 import { Reply } from 'lucide-react';
 import { Typography } from "@repo/ui/src/components/typography.tsx";
-import { createThreadCommentQuery } from "../../../../forms/create-thread-comment/queries/create-thread-comment-query.ts";
+import { createThreadCommentQuery } from '#forms/create-thread-comment/queries/create-thread-comment-query.ts';
 import { CloseButton } from "@repo/ui/src/components/close-button.tsx";
-import { useCreateThreadComment } from "../../../../forms/create-thread-comment/hooks/use-create-thread-comment.tsx";
+import { useCreateThreadComment } from '#forms/create-thread-comment/hooks/use-create-thread-comment.tsx';
 
 export const ReplyComment = () => {
 	const { data: createThreadCommentState } = createThreadCommentQuery()

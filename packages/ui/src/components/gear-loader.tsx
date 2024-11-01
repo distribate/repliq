@@ -1,6 +1,5 @@
 // @ts-ignore
 import Gear from "@repo/assets/gifs/minecraft-gear.gif"
-import Image from "next/image";
 
 type GearLoaderProps = Partial<{
 	height: number,
@@ -12,9 +11,9 @@ export const GearLoader = ({
 }: GearLoaderProps) => {
 	return (
 		<div className={`w-[${width}px] h-[${height}px]`}>
-			<Image
-				alt="Pending..."
-				src={Gear}
+			<img
+				alt=""
+				src={Gear.src}
 				width={width}
 				height={height}
 				loading="eager"

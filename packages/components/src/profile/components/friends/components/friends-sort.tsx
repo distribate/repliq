@@ -1,9 +1,8 @@
 "use client"
 
-import { List } from "lucide-react";
 import { Typography } from "@repo/ui/src/components/typography.tsx";
 import { DropdownMenuItem } from "@repo/ui/src/components/dropdown-menu.tsx";
-import { DropdownWrapper } from "../../../../wrappers/dropdown-wrapper.tsx";
+import { DropdownWrapper } from '#wrappers/dropdown-wrapper.tsx';
 import { FriendsSort as FriendsSortType, useFriendsSort } from "../hooks/use-friends-sort.tsx";
 import React from "react";
 

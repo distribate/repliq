@@ -1,4 +1,4 @@
-import { MoreWrapper } from '../../../../wrappers/more-wrapper.tsx';
+import { MoreWrapper } from '#wrappers/more-wrapper.tsx';
 import { HoverCardItem } from '@repo/ui/src/components/hover-card.tsx';
 import { useControlThreadComment } from '../hooks/use-control-thread-comment.ts';
 import { useState } from 'react';

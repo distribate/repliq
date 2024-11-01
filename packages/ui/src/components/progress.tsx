@@ -5,8 +5,7 @@ import { cn } from "@repo/lib/utils/ui/cn"
 import { ComponentPropsWithoutRef, ElementRef, forwardRef } from 'react';
 
 const Progress = forwardRef<
-  ElementRef<typeof ProgressPrimitive.Root>,
-  ComponentPropsWithoutRef<typeof ProgressPrimitive.Root>
+  ElementRef<typeof ProgressPrimitive.Root>, ComponentPropsWithoutRef<typeof ProgressPrimitive.Root>
 >(({ className, value, ...props }, ref) => (
   <ProgressPrimitive.Root
     ref={ref}

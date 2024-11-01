@@ -1,6 +1,6 @@
 import { ReactNode } from 'react';
 import { Typography } from '@repo/ui/src/components/typography.tsx';
-import { ImageWrapper } from '../../../../wrappers/image-wrapper.tsx';
+import { ImageWrapper } from '#wrappers/image-wrapper.tsx';
 
 type StatsTemplate = {
   title: string,
@@ -13,7 +13,9 @@ export const StatsLayout = ({
 }: StatsTemplate) => {
   return (
     <div
-      className="flex flex-col gap-4 lg:flex-row justify-center items-center lg:justify-between w-full overflow-hidden bg-shark-950 border border-white/10 rounded-md">
+      className="flex flex-col gap-4 lg:flex-row justify-center items-center lg:justify-between w-full overflow-hidden
+      bg-shark-950 border border-white/10 rounded-md"
+    >
       <div className="flex flex-col gap-y-4 h-full p-4 w-full">
         <Typography textSize="big" className="font-semibold">
           {title}

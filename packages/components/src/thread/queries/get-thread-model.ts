@@ -4,7 +4,7 @@ import 'server-only';
 import { ThreadEntity, UserEntity } from '@repo/types/entities/entities-type.ts';
 import { getThreadRating, ThreadRatingResponse } from './get-thread-rating.ts';
 import { getThreadCreator } from './get-thread-creator.ts';
-import { ThreadRequest, ThreadRequestType } from '../types/thread-request-types.ts';
+import { ThreadRequest } from '../types/thread-request-types.ts';
 import { getThreadCommentsCount } from './get-thread-comments-count.ts';
 import { getThread } from './get-thread.ts';
 import { getThreadImagesCount } from './get-thread-images-count.ts';
@@ -15,19 +15,19 @@ type ThreadModelDetails = {
   commentsCount: number,
   rating: ThreadRatingResponse | null,
   images: boolean
-  threadTags: Array<string> | null
-  views: number
+  owner: Pick<UserEntity, 'nickname' | "name_color">
+  tags: Array<string> | null
+  views: number | null
 }
 
-export type ThreadModel = ThreadEntity & Pick<UserEntity, 'nickname'> & ThreadModelDetails
+export type ThreadModel = ThreadEntity & ThreadModelDetails
 
 type GetThreadModel = {
-  type: ThreadRequestType
-} & {
+  withViews: boolean
   threadId: Pick<ThreadRequest, 'thread_id'>['thread_id']
 }
 
-async function getThreadTags(threadId: string) {
+async function getThreadTags(threadId: string): Promise<null | string[]> {
   const api = createClient();
   
   const { data, error } = await api
@@ -36,11 +36,9 @@ async function getThreadTags(threadId: string) {
   .eq('thread_id', threadId)
   .single();
   
-  if (error) {
-    return null;
-  }
+  if (error) return null;
   
-  return data.tags;
+  return data.tags as string[];
 }
 
 async function postThreadView(threadId: string) {
@@ -62,54 +60,42 @@ async function getThreadViews(threadId: string): Promise<number> {
   .select('*', { count: 'exact' })
   .eq('thread_id', threadId);
   
-  if (error) {
-    return 0;
-  }
+  if (error) return 0;
   
   return count ? count : 0;
 }
 
 export async function getThreadModel({
-  threadId, type,
+  threadId, withViews
 }: GetThreadModel): Promise<ThreadModel | null> {
-  let thread: ThreadModel | null;
-  let nickname: string = '';
-  let commentsCount: number = 0;
   let images: boolean = false; // if existing images of thread
-  let rating: ThreadRatingResponse | null = null;
-  let views: number = 0;
+  let views: number | null = null;
   
   if (!threadId) return null;
   
-  const [ threadItem, threadImagesCount, threadCreator, threadCommentsCount ] = await Promise.all([
+  const [ thread, threadImagesCount, threadCreator, commentsCount, tags, rating ] = await Promise.all([
     getThread(threadId),
     getThreadImagesCount(threadId),
     getThreadCreator(threadId),
     getThreadCommentsCount(threadId),
+    getThreadTags(threadId),
+    getThreadRating(threadId),
   ]);
   
+  if (!thread || !threadCreator) return null;
+  
   if (threadImagesCount && threadImagesCount >= 1) {
-    images = true;
+    images = true
   }
   
-  const threadTags = await getThreadTags(threadId);
-  
-  if (!threadItem || !threadCreator) return null;
-  
-  thread = threadItem[0];
-  nickname = threadCreator.nickname;
-  commentsCount = threadCommentsCount || 0;
-  
-  if (type === 'page') {
+  if (withViews) {
     await postThreadView(threadId);
     views = await getThreadViews(threadId);
   }
-  
-  if (!thread) return null;
-  
-  rating = await getThreadRating(threadId);
-  
+
   return {
-    ...thread, nickname, threadTags, commentsCount, views, images, rating,
-  };
+    ...thread,
+    owner: threadCreator,
+    commentsCount, tags, views, images, rating
+  }
 }

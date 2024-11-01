@@ -1,5 +1,5 @@
-import { Database } from '@repo/types/entities/supabase.ts';
+import { PostVisibilityEnum } from '@repo/types/entities/entities-type.ts';
 
 export type ProfileVisibilityChangeType = {
-  visibility: Database["public"]["Enums"]["profile_visibility"]
+  visibility: PostVisibilityEnum
 }

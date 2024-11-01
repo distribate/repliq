@@ -1,13 +1,12 @@
 import { cva, VariantProps } from 'class-variance-authority';
 import { HTMLAttributes } from 'react';
-import { DropdownWrapper } from '../../../../../wrappers/dropdown-wrapper.tsx';
-import { ImageWrapper } from '../../../../../wrappers/image-wrapper.tsx';
+import { DropdownWrapper } from '#wrappers/dropdown-wrapper.tsx';
 import Photo from '@repo/assets/images/minecraft/photo.webp';
 import { FriendButton } from '../../components/add-friend/components/friend-button.tsx';
 import { ControlPanel } from '../../components/control/components/control-panel.tsx';
 import {
   ProfileDescriptionChangeModal,
-} from '../../../../../modals/user-settings/profile-description-change-modal.tsx';
+} from '#modals/user-settings/profile-description-change-modal.tsx';
 import dynamic from 'next/dynamic';
 import { CURRENT_USER_QUERY_KEY, CurrentUser } from '@repo/lib/queries/current-user-query.ts';
 import { useQueryClient } from '@tanstack/react-query';

@@ -1,14 +1,14 @@
 {
-  "name": "@repo/tailwind-config",
+  "name": "@repo/config-tailwind",
   "version": "0.0.0",
   "private": true,
   "exports": {
-    "./tailwind.config": "./tailwind.config.js"
+    "./tailwind.config": "./tailwind.config.ts"
   },
   "dependencies": {
-    "@repo/typescript-config": "*",
+    "@repo/config-typescript": "*",
     "tailwind-merge": "latest",
-    "tailwindcss": "^3.4.4",
+    "tailwindcss": "^3.4.14",
     "tailwindcss-animate": "^1.0.7"
   }
 }

@@ -1,7 +1,7 @@
 "use client"
 
-import { Avatar } from '../../../user/components/avatar/components/avatar.tsx';
-import { ImageWrapper } from '../../../wrappers/image-wrapper.tsx';
+import { Avatar } from '#user/components/avatar/components/avatar.tsx';
+import { ImageWrapper } from '#wrappers/image-wrapper.tsx';
 import Logotype from '@repo/assets/images/logotype.png';
 import Inspector from '@repo/assets/images/minecraft/block_inspect.webp';
 import BottleEnchanting from '@repo/assets/images/minecraft/bottle_enchanting.webp';

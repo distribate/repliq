@@ -1,11 +1,11 @@
 "use server"
 
-import { UserDonate } from "../types/user-donate-types.ts";
-import { Enums } from "@repo/types/entities/supabase.ts";
+import { UserDonate } from "../types/user-donate-types.ts";;
 import { createClient } from "@repo/lib/utils/api/server.ts";
+import { DonateVariantsEnum } from '@repo/types/entities/entities-type.ts';
 
 export type DonateType = {
-	primary_group: Enums<"donate_variants">
+	primary_group: DonateVariantsEnum
 }
 
 export async function getUserDonate(

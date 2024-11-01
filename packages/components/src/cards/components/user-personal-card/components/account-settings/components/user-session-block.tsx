@@ -2,7 +2,7 @@ import Image from "next/image";
 import { Typography } from "@repo/ui/src/components/typography.tsx";
 import BlockGold from "@repo/assets/images/minecraft/block_gold.webp"
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { TerminateSessionModal } from '../../../../../../modals/user-settings/terminate-session-modal.tsx';
+import { TerminateSessionModal } from '#modals/user-settings/terminate-session-modal.tsx';
 import { Session } from '@repo/lib/actions/terminate-session.ts';
 
 export type UserSessionBlockProps = Partial<Session> & {

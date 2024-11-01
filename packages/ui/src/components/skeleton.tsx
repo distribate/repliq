@@ -2,8 +2,7 @@ import { cn } from '@repo/lib/utils/ui/cn.ts';
 import { HTMLAttributes } from 'react';
 
 export function Skeleton({
-  className,
-  ...props
+  className, ...props
 }: HTMLAttributes<HTMLDivElement>) {
   return (
     <div

@@ -1,19 +1,20 @@
 'use client';
 
-import { FriendProfileCard } from '../../../../friend/components/friend-card/friend-profile-card.tsx';
+import { FriendProfileCard } from '#friend/components/friend-card/friend-profile-card.tsx';
 import { friendsSortQuery } from '../hooks/use-friends-sort.tsx';
-import { SomethingError } from '../../../../templates/something-error.tsx';
-import { FriendProfileCardSkeleton } from '../../../../friend/components/friend-card/friend-profile-card-skeleton.tsx';
-import { FilteredNotFound } from '../../../../templates/filtered-not-found.tsx';
-import { RequestFriends } from '../../../../friends/queries/get-friends.ts';
-import { friendsQuery } from '../../../../friends/queries/friends-query.ts';
-import { ContentNotFound } from '../../../../templates/section-not-found.tsx';
+import { SomethingError } from '#templates/something-error.tsx';
+import { FriendProfileCardSkeleton } from '#friend/components/friend-card/friend-profile-card-skeleton.tsx';
+import { FilteredNotFound } from '#templates/filtered-not-found.tsx';
+import { RequestFriends } from '#friends/queries/get-friends.ts';
+import { friendsQuery } from '#friends/queries/friends-query.ts';
+import { ContentNotFound } from '#templates/section-not-found.tsx';
 
 type FriendsSearch = {
   nickname: string
 }
 
-const filterFriendsByNickname = (data: FriendsSearch[], query: string) => data.filter(
+const filterFriendsByNickname =
+  (data: FriendsSearch[], query: string) => data.filter(
   item => item.nickname.startsWith(query)
 );
 
@@ -46,10 +47,7 @@ export const FriendsList = ({
       ))}
       {!isLoading && (
         friends?.map((friend, i) => (
-          <FriendProfileCard
-            key={i}
-            nickname={friend.nickname}
-          />
+          <FriendProfileCard key={i} nickname={friend.nickname} />
         ))
       )}
     </div>

@@ -2,7 +2,7 @@
 
 import { createClient } from "@repo/lib/utils/api/server.ts";
 import { validateRequest } from '../utils/auth/validate-requests.ts';
-import { Enums } from '@repo/types/entities/supabase.ts';
+import { Enums } from '@repo/types/entities/gen-supabase.ts';
 
 type CheckRequestTimeout = {
   type: string,

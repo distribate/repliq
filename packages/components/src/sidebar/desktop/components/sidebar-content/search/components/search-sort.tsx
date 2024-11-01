@@ -7,7 +7,7 @@ import { Separator } from '@repo/ui/src/components/separator.tsx';
 import { AlignJustify, LayoutGrid } from 'lucide-react';
 import { SORT_TYPES } from '../constants/sort-types.ts';
 import { isValue } from '@repo/lib/helpers/check-is-value.ts';
-import { DropdownWrapper } from '../../../../../../wrappers/dropdown-wrapper.tsx';
+import { DropdownWrapper } from '#wrappers/dropdown-wrapper.tsx';
 
 export const SearchSort = () => {
   const { data: searchedState } = searchQuery();

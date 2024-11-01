@@ -6,7 +6,7 @@ import { searchQuery } from '../queries/search-query.ts';
 import Inspector from '@repo/assets/images/minecraft/block_inspect.webp';
 import { SearchSort } from './search-sort.tsx';
 import { Separator } from '@repo/ui/src/components/separator.tsx';
-import { ImageWrapper } from '../../../../../../wrappers/image-wrapper.tsx';
+import { ImageWrapper } from '#wrappers/image-wrapper.tsx';
 
 export const SearchInput = () => {
   const { handleSearchMutation, setSearchQueryMutation, } = useSearchControl();
