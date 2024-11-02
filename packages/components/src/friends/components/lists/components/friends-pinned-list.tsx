@@ -1,13 +1,19 @@
-import { FriendCard } from '../../../../friend/components/friend-card/friend-card.tsx';
-import type { FriendsQuery } from '../../../queries/friends-query.ts';
+import { friendsQuery, FriendsQuery } from '../../../queries/friends-query.ts';
+import { FriendCard } from '#friend/components/friend-card/components/friend-card.tsx';
+import { UserEntity } from '@repo/types/entities/entities-type.ts';
+import { FriendsAllListSkeleton } from '#friends/components/lists/components/friends-all-list-skeleton.tsx';
 
-type FriendsPinnedListProps = {
-  pinnedFriends: FriendsQuery[]
-}
+type FriendsPinnedListProps = Pick<UserEntity, "nickname">
 
 export const FriendsPinnedList = ({
-  pinnedFriends
+  nickname
 }: FriendsPinnedListProps) => {
+  const { data: friends, isLoading } = friendsQuery(nickname);
+  
+  if (isLoading) return <FriendsAllListSkeleton />;
+  
+  const pinnedFriends = friends?.filter(f => f.isPinned) || null;
+  
   if (!pinnedFriends || pinnedFriends && !pinnedFriends.length) {
     return null;
   }

@@ -2,11 +2,10 @@ import { Typography } from '@repo/ui/src/components/typography.tsx';
 import React, { useCallback } from 'react';
 import { DropdownMenuItem } from '@repo/ui/src/components/dropdown-menu.tsx';
 import { useUpdateCurrentUser } from '@repo/lib/hooks/use-update-current-user.ts';
-import { DropdownWrapper } from '../../../../../../../../wrappers/dropdown-wrapper.tsx';
+import { DropdownWrapper } from '#wrappers/dropdown-wrapper.tsx';
 import { VISIBILITY_FORMATS } from '../constants/visibility-formats.ts';
 import { ProfileVisibilityChangeType } from '../types/visibility-types.ts';
-import { useQueryClient } from '@tanstack/react-query';
-import { CURRENT_USER_QUERY_KEY, CurrentUser } from '@repo/lib/queries/current-user-query.ts';
+import { getUser } from '@repo/lib/helpers/get-user.ts';
 
 type VisibilityProps = {
   e: React.MouseEvent<HTMLDivElement, MouseEvent>,
@@ -14,8 +13,7 @@ type VisibilityProps = {
 }
 
 export const ProfileVisibilityChange = () => {
-  const qc = useQueryClient();
-  const currentUser = qc.getQueryData<CurrentUser>(CURRENT_USER_QUERY_KEY);
+  const currentUser = getUser();
   const { updateFieldMutation } = useUpdateCurrentUser();
   const visibility = currentUser?.properties.visibility;
   const profileVisibilityType = visibility === 'all'

@@ -1,13 +1,12 @@
 import { Typography } from "@repo/ui/src/components/typography.tsx";
-import { Avatar } from "../../../../../user/components/avatar/components/avatar.tsx";
-import { CURRENT_USER_QUERY_KEY, CurrentUser } from '@repo/lib/queries/current-user-query.ts';
-import { UserNickname } from "../../../../../user/components/name/components/nickname.tsx";
+import { Avatar } from '#user/components/avatar/components/avatar.tsx';
+import { UserNickname } from '#user/components/name/components/nickname.tsx';
 import { UserEntity } from "@repo/types/entities/entities-type.ts"
 import Link from "next/link";
 import dayjs from "@repo/lib/utils/dayjs/dayjs-instance.ts"
 import dynamic from 'next/dynamic';
-import { useQueryClient } from '@tanstack/react-query';
 import { USER_URL } from '@repo/shared/constants/routes.ts';
+import { getUser } from '@repo/lib/helpers/get-user.ts';
 
 type PostItemHeaderProps = Pick<UserEntity, "nickname"
 	| "created_at"
@@ -23,8 +22,7 @@ const PostControl = dynamic(() =>
 export const PostItemHeader = ({
 	nickname, created_at, name_color, id: post_id
 }: PostItemHeaderProps) => {
-	const qc = useQueryClient()
-	const currentUser = qc.getQueryData<CurrentUser>(CURRENT_USER_QUERY_KEY)
+	const currentUser = getUser();
 	
 	if (!currentUser) return null;
 	

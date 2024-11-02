@@ -8,14 +8,23 @@ export const DONATE_QUERY_KEY = (nickname?: string) => {
 };
 
 export type DonateQuery = {
-  donate: DonateType['primary_group'],
-  favoriteItemImage: FavoriteItem | null
+  nickname: Pick<UserDonate, 'nickname'>['nickname']
+  existingDonate?: DonateType['primary_group'],
 }
 
 async function getDonate({
-  nickname,
-}: UserDonate) {
-  const donate = await getUserDonate(nickname);
+  nickname, existingDonate
+}: DonateQuery): Promise<{
+  donate: DonateType['primary_group'],
+  favoriteItemImage: FavoriteItem | null
+}> {
+  let donate: DonateType['primary_group'];
+  
+  if (!existingDonate) {
+    donate = await getUserDonate(nickname);
+  } else {
+    donate = existingDonate;
+  }
   
   const image = await getFavoriteItem({
     nickname, type: 'nickname',
@@ -25,11 +34,11 @@ async function getDonate({
 }
 
 export const donateQuery = ({
-  nickname,
-}: UserDonate) => {
-  return useQuery<DonateQuery, Error>({
+  nickname, existingDonate,
+}: DonateQuery) => {
+  return useQuery({
     queryKey: DONATE_QUERY_KEY(nickname),
-    queryFn: () => getDonate({ nickname }),
-    refetchOnWindowFocus: false,
+    queryFn: () => getDonate({ nickname, existingDonate }),
+    refetchOnWindowFocus: false
   });
 };

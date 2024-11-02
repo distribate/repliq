@@ -1,13 +1,10 @@
-import { CURRENT_USER_QUERY_KEY, CurrentUser } from '@repo/lib/queries/current-user-query.ts';
-import { CreatePostCommentForm, PostItemFooterProps } from "../../../../../forms/create-post-comment/components/create-post-comment-form.tsx";
-import { useQueryClient } from '@tanstack/react-query';
+import { CreatePostCommentForm, PostItemFooterProps } from '#forms/create-post-comment/components/create-post-comment-form.tsx';
+import { getUser } from '@repo/lib/helpers/get-user.ts';
 
 export const PostItemFooter = ({
 	post_id
 }: PostItemFooterProps) => {
-	const qc = useQueryClient()
-	const currentUser = qc.getQueryData<CurrentUser>(CURRENT_USER_QUERY_KEY)
-	
+	const currentUser = getUser();
 	if (!currentUser) return null;
 	
 	return <CreatePostCommentForm post_id={post_id}/>

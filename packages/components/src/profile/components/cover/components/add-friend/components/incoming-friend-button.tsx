@@ -2,22 +2,21 @@ import { Typography } from '@repo/ui/src/components/typography.tsx';
 import { Plus, Minus } from 'lucide-react';
 import { DropdownWrapper } from '#wrappers/dropdown-wrapper.tsx';
 import { Button } from '@repo/ui/src/components/button.tsx';
-import {
-  useControlFriendRequests,
-} from '#friend/components/request-card/hooks/use-control-friend-requests.ts';
-import { RequestProperties } from '#friend/components/request-card/queries/delete-friend-request.ts';
+import { FriendRequestProperties } from '#friend/components/friend-card/types/friend-request-types.ts';
+import { useControlFriendRequests } from '#friend/components/friend-card/hooks/use-control-friend-requests.ts';
 
 export const IncomingFriendButton = ({
-  initiator,
-}: RequestProperties) => {
+  initiator
+}: Pick<FriendRequestProperties, "initiator">) => {
   const { rejectIncomingRequestMutation, acceptIncomingRequestMutation } = useControlFriendRequests();
   
-  const handleAcceptReq = () => acceptIncomingRequestMutation.mutate(
-    initiator
-  );
-  const handleRejectReq = () => rejectIncomingRequestMutation.mutate({
-    initiator, type: "incoming"
-  });
+  const handleAcceptRequest = () => {
+    return acceptIncomingRequestMutation.mutate(initiator);
+  }
+  
+  const handleRejectRequest = () => {
+    return rejectIncomingRequestMutation.mutate(initiator);
+  }
   
   return (
     <DropdownWrapper
@@ -32,10 +31,9 @@ export const IncomingFriendButton = ({
       content={
         <div className="flex flex-col gap-y-1 *:w-full w-full">
           <Button
-            onClick={handleAcceptReq}
+            onClick={handleAcceptRequest}
             className="flex justify-start items-center bg-shark-800 gap-2 group"
             disabled={acceptIncomingRequestMutation.isPending || acceptIncomingRequestMutation.isError}
-            pending={acceptIncomingRequestMutation.isPending}
           >
             <Plus size={16} className="text-shark-300" />
             <Typography>
@@ -43,10 +41,9 @@ export const IncomingFriendButton = ({
             </Typography>
           </Button>
           <Button
-            onClick={handleRejectReq}
+            onClick={handleRejectRequest}
             className="flex justify-start items-center bg-shark-800 gap-2 group"
             disabled={rejectIncomingRequestMutation.isPending || rejectIncomingRequestMutation.isError}
-            pending={rejectIncomingRequestMutation.isPending}
           >
             <Minus size={16} className="text-shark-300" />
             <Typography>

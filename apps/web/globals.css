@@ -42,6 +42,14 @@
     @apply relative px-4 py-2 bg-shark-900 outline-none focus-visible:ring-0 focus-visible:outline-none
     !text-[15px] border border-transparent text-shark-50 focus-visible:border-caribbean-green-200/40 rounded-md min-h-[160px] whitespace-pre-wrap break-words;
   }
+
+  .minecraft-panel {
+    @apply shadow-[inset_4px_-4px_1px_rgba(0,0,0,0.6),inset_-4px_4px_1px_rgba(255,255,255,0.4)] bg-shark-300;
+  }
+
+  .friend-card {
+    @apply relative w-full bg-shark-950 border-b border-shark-800 rounded-lg p-4;
+  }
 }
 
 @layer base {

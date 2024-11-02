@@ -2,11 +2,9 @@
 
 import { friendsFilteringQuery } from '../../filtering/queries/friends-filtering-query.ts';
 import { requestsIncomingQuery } from '../../../queries/requests-incoming-query.ts';
-import { ContentNotFound } from '../../../../templates/section-not-found.tsx';
-import {
-  FriendRequestIncomingCard
-} from '../../../../friend/components/request-card/components/friend-request-card-incoming.tsx';
+import { ContentNotFound } from '#templates/section-not-found.tsx';
 import { FriendsListLayout } from './friends-list-layout.tsx';
+import { FriendCardIncoming } from '#friend/components/friend-card/components/friend-card-incoming.tsx';
 
 export const FriendsIncomingList = () => {
   const { data: friendsFiltering } = friendsFilteringQuery()
@@ -19,7 +17,7 @@ export const FriendsIncomingList = () => {
   return (
     <FriendsListLayout variant={friendsFiltering.viewType}>
       {incomingFriends.map(friend => (
-        <FriendRequestIncomingCard key={friend.initiator} {...friend} />
+        <FriendCardIncoming key={friend.initiator} {...friend} />
       ))}
     </FriendsListLayout>
   );

@@ -1,14 +1,14 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { REPORT_QUERY_KEY, ReportQuery } from '../../../../../report/queries/report-query.ts';
-import { postReport } from '../../../../../report/queries/post-report.ts';
+import { REPORT_QUERY_KEY, ReportQuery } from '#report/queries/report-query.ts';
+import { postReport } from '#report/queries/post-report.ts';
 import { toast } from 'sonner';
-import { CURRENT_USER_QUERY_KEY, CurrentUser } from '@repo/lib/queries/current-user-query.ts';
+import { getUser } from '@repo/lib/helpers/get-user.ts';
 
 export const CREATE_REPORT_MUTATION_KEY = [ 'create-report' ];
 
 export const useCreateReport = () => {
   const qc = useQueryClient();
-  const currentUser = qc.getQueryData<CurrentUser>(CURRENT_USER_QUERY_KEY);
+  const currentUser = getUser();
   
   const updateReportValuesMutation = useMutation({
     mutationFn: async(values: ReportQuery) => {

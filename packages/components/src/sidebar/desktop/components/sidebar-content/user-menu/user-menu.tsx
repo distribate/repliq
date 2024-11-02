@@ -1,8 +1,6 @@
 import Link from 'next/link';
-import { CURRENT_USER_QUERY_KEY, CurrentUser } from '@repo/lib/queries/current-user-query.ts';
 import { Separator } from '@repo/ui/src/components/separator.tsx';
 import { DropdownMenuItem } from '@repo/ui/src/components/dropdown-menu.tsx';
-import { useQueryClient } from '@tanstack/react-query';
 import { HoverCardItem } from '@repo/ui/src/components/hover-card.tsx';
 import { Typography } from '@repo/ui/src/components/typography.tsx';
 import { LogoutModal } from '#modals/action-confirmation/components/logout/components/logout-modal.tsx';
@@ -10,6 +8,7 @@ import { UserSettingsModal } from '#modals/user-settings/user-settings-modal.tsx
 import { useEffect, useState } from 'react';
 import { checkAdminPermission } from '@repo/lib/actions/check-admin-permission.ts';
 import { USER_URL } from '@repo/shared/constants/routes.ts';
+import { getUser } from '@repo/lib/helpers/get-user.ts';
 
 const COLLECTION_LINKS = [
   { name: 'Мои темы', query: 'threads' },
@@ -40,10 +39,7 @@ const AdminButton = () => {
 };
 
 export const UserMenu = () => {
-  const qc = useQueryClient();
-  const currentUser = qc.getQueryData<CurrentUser>(
-    CURRENT_USER_QUERY_KEY,
-  );
+  const currentUser = getUser();
   
   if (!currentUser) return null;
   

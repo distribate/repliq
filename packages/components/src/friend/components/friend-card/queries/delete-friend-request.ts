@@ -1,22 +1,21 @@
 'use server';
 
-import "server-only"
+import 'server-only';
 import { getCurrentUser } from '@repo/lib/actions/get-current-user.ts';
-import { createClient } from "@repo/lib/utils/api/server.ts";
+import { createClient } from '@repo/lib/utils/api/server.ts';
 
-export type RequestProperties = {
-  initiator: string
+type DeleteFriendRequest = {
+  status: number,
+  error: 'not-authorized' | null
 }
 
 export async function deleteFriendRequest(
-  friend_id: string
-) {
+  friend_id: string,
+): Promise<DeleteFriendRequest> {
   const currentUser = await getCurrentUser();
   
   if (!currentUser) return {
-    status: 400,
-    data: null,
-    error: 'Not authorized.',
+    status: 400, error: 'not-authorized',
   };
   
   const api = createClient();
@@ -24,11 +23,11 @@ export async function deleteFriendRequest(
   const { error, status } = await api
   .from('friends_requests')
   .delete()
-  .eq("id", friend_id)
+  .eq('id', friend_id);
   
   if (error) {
-    throw new Error(error.message)
+    throw new Error(error.message);
   }
   
-  return { status }
+  return { error: null, status, };
 }

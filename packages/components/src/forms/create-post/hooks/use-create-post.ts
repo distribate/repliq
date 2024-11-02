@@ -1,15 +1,15 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { createPost, createPostReferenced, Post } from '../queries/create-post.ts';
-import { CURRENT_USER_QUERY_KEY, CurrentUser } from '@repo/lib/queries/current-user-query.ts';
 import { toast } from 'sonner';
-import { POSTS_QUERY_KEY } from '../../../profile/components/posts/components/posts/queries/posts-query.ts';
+import { POSTS_QUERY_KEY } from '#profile/components/posts/components/posts/queries/posts-query.ts';
 import { POST_FORM_FIELD_QUERY_KEY } from '../queries/post-form-query.ts';
+import { getUser } from '@repo/lib/helpers/get-user.ts';
 
 export const CREATE_POST_MUTATION_QUERY_KEY = [ 'ui', 'create-post-field-mn' ];
 
 export const useCreatePost = () => {
   const qc = useQueryClient();
-  const currentUser = qc.getQueryData<CurrentUser>(CURRENT_USER_QUERY_KEY);
+  const currentUser = getUser();
   
   const createPostMutation = useMutation({
     mutationKey: CREATE_POST_MUTATION_QUERY_KEY,

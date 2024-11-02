@@ -1,12 +1,10 @@
-import Link from 'next/link';
-import { Avatar } from '../../../user/components/avatar/components/avatar.tsx';
-import { UserNickname } from '../../../user/components/name/components/nickname.tsx';
-import { UserDonate } from '../../../user/components/donate/components/donate.tsx';
-import { USER_URL } from '@repo/shared/constants/routes.ts';
+import Link from "next/link";
+import { USER_URL } from "@repo/shared/constants/routes.ts";
+import { Avatar } from "#user/components/avatar/components/avatar.tsx";
+import { UserNickname } from "#user/components/name/components/nickname.tsx";
+import { UserDonate } from "#user/components/donate/components/donate.tsx";
 
-export const SearchUserItem = ({
-  nickname, nicknameColor,
-}: UserNickname) => {
+export const SearchUserItem = ({ nickname, nicknameColor }: UserNickname) => {
   return (
     <Link
       href={USER_URL + nickname}

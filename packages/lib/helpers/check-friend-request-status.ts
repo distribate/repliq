@@ -1,60 +1,41 @@
-import { CURRENT_USER_QUERY_KEY, CurrentUser } from '../queries/current-user-query.ts';
-import { useQueryClient } from '@tanstack/react-query';
 import { requestsQuery } from '@repo/components/src/friends/queries/requests-query.ts';
 import { friendsQuery } from '@repo/components/src/friends/queries/friends-query.ts';
+import { getUser } from '#helpers/get-user.ts';
 
-type ReqStatus = "reject"
-	| "accept"
-	| "deny"
-	| "default"
-	| "friend"
+export type RequestStatus = "reject" | "accept" | "deny" | "default" | "friend" | null
 
 export function checkFriendRequestStatus(
 	reqUserNickname?: string
-): ReqStatus | null {
-	const qc = useQueryClient();
-	const currentUser = qc.getQueryData<CurrentUser>(
-		CURRENT_USER_QUERY_KEY
-	);
-	
-	if (!currentUser) return null;
-	
-	const { data: rq } = requestsQuery(currentUser.nickname);
-	const { data: friends } = friendsQuery({
-		nickname: currentUser.nickname
-	})
-	
-	if (!currentUser) return null;
+): RequestStatus | null {
+	const currentUser = getUser();
+	if (!currentUser || !reqUserNickname) return null;
 	
 	const currentUserNickname = currentUser.nickname;
 	
-	const inComingRequests = rq?.filter(
-		i => i.recipient === currentUserNickname
-	);
+	const { data: requests } = requestsQuery(currentUserNickname);
+	const { data: friends } = friendsQuery(currentUserNickname);
 	
-	const outgoingRequests = rq?.filter(
-		i => i.initiator === currentUserNickname
-	);
+	if (!requests) return "default";
 	
-	if (outgoingRequests && outgoingRequests.length) {
-		if (outgoingRequests.some(
-			item => item.recipient === reqUserNickname &&
-				item.initiator === currentUserNickname
-		)) return "deny"
+	if (friends?.some(friend => friend.nickname === reqUserNickname)) {
+		return 'friend';
 	}
 	
-	if (inComingRequests && inComingRequests.length) {
-		if (inComingRequests.some(
-			item => item.recipient === currentUserNickname &&
-				item.initiator === reqUserNickname
-		)) return "accept"
-	}
-	
-	const isFriend = friends?.some(
-		item => item.nickname === reqUserNickname
+	const hasOutgoingRequest = requests.some(
+		req => req.initiator === currentUserNickname && req.recipient === reqUserNickname
 	);
 	
-	if (isFriend) return "friend";
+	if (hasOutgoingRequest) {
+		return 'deny';
+	}
 	
-	return "default"
+	const hasIncomingRequest = requests.some(
+		req => req.initiator === reqUserNickname && req.recipient === currentUserNickname
+	);
+	
+	if (hasIncomingRequest) {
+		return 'accept';
+	}
+	
+	return "default";
 }

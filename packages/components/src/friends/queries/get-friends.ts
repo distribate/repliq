@@ -2,78 +2,46 @@
 
 import "server-only"
 import { FriendsQuery } from './friends-query.ts';
-import type { FriendsSort } from '../../profile/components/friends/hooks/use-friends-sort.tsx';
-import { getCurrentUser } from '@repo/lib/actions/get-current-user.ts';
+import type { FriendsSort } from '#profile/components/friends/hooks/use-friends-sort.tsx';
 import { createClient } from "@repo/lib/utils/api/server.ts";
-import { FriendEntity, FriendNotesEntity, FriendPinnedEntity } from '@repo/types/entities/entities-type.ts';
+import { FriendEntity, UserEntity } from '@repo/types/entities/entities-type.ts';
+import { getNotedFriends } from '#friends/queries/get-noted-friends.ts';
+import { getPinnedFriends } from '#friends/queries/get-pinned-friends.ts';
 
-export type RequestFriends = {
-  nickname: string,
-  orderType?: FriendsSort,
-  ascending?: boolean
-}
+export type RequestFriends = Pick<UserEntity, "nickname"> & Partial<{
+  orderType: FriendsSort,
+  ascending: boolean
+}>
 
 type FriendDetails = Omit<FriendsQuery, 'friend_id' | 'created_at'>
 
-async function getNotedFriends() {
-  const currentUser = await getCurrentUser();
-  if (!currentUser) return;
-  
-  const api = createClient();
-  
-  const { data, error } = await api
-  .from('friends_notes')
-  .select()
-  .eq('initiator', currentUser.nickname)
-  .returns<FriendNotesEntity[]>();
-  
-  if (error) {
-    throw new Error(error.message);
-  }
-  
-  return data;
-}
-
-async function getPinnedFriends() {
-  const currentUser = await getCurrentUser();
-  if (!currentUser) return;
-  
-  const api = createClient();
-  
-  const { data, error } = await api
-  .from('friends_pinned')
-  .select()
-  .eq('initiator', currentUser.nickname)
-  .returns<FriendPinnedEntity[]>();
-  
-  if (error) {
-    throw new Error(error.message);
-  }
-  
-  return data;
-}
-
 export async function getFriends({
-  nickname, orderType, ascending = false,
+  nickname, orderType, ascending = false
 }: RequestFriends): Promise<FriendsQuery[] | null> {
   const api = createClient();
   
-  const { data: friendsData, error: friendsError } = await api
+  let friendsQuery = api
   .from('users_friends')
   .select(`id, user_1, user_2, created_at`)
   .or(`user_1.eq.${nickname},user_2.eq.${nickname}`)
-  .returns<FriendEntity[]>();
+  .returns<FriendEntity[]>()
   
-  const [pinnedFriends, notedFriends] = await Promise.all([
-    getPinnedFriends(),
-    getNotedFriends()
-  ])
-
+  if (ascending && orderType) {
+    friendsQuery = friendsQuery.order(orderType, { ascending });
+  }
+  
+  const { data: friendsData, error: friendsError } = await friendsQuery
+  
   if (friendsError) {
     throw new Error(`Error fetching friends: ${friendsError.message}`);
   }
   
   if (!friendsData) return null;
+  
+  const [pinnedFriends, notedFriends] = await Promise.all([
+    getPinnedFriends(),
+    getNotedFriends()
+  ])
   
   const friendNicknames = new Set<string>();
   
@@ -82,13 +50,13 @@ export async function getFriends({
     if (user_2 !== nickname) friendNicknames.add(user_2);
   });
   
-  let query = api
+  let usersQuery = api
   .from('users')
   .select(`nickname, description, status, name_color, real_name`)
   .in('nickname', Array.from(friendNicknames))
   .returns<FriendDetails[]>();
   
-  const { data: friendsDetails, error: userError } = await query;
+  const { data: friendsDetails, error: userError } = await usersQuery;
   
   if (userError) {
     throw new Error(`Error fetching user details: ${userError.message}`);
@@ -96,8 +64,7 @@ export async function getFriends({
   
   const friends = friendsData.map(friend => {
     const friendNickname = friend.user_1 === nickname
-      ? friend.user_2
-      : friend.user_1;
+      ? friend.user_2 : friend.user_1;
     
     const friendDetails = friendsDetails.find(
       fd => fd.nickname === friendNickname,

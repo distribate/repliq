@@ -1,64 +1,32 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { FRIENDS_FILTERING_QUERY_KEY, FriendsFilteringQuery } from '../queries/friends-filtering-query.ts';
 
-type FriendsActionType = 'view' | 'sort' | 'search'
-
+type FriendsActionType = 'view' | 'sort' | 'search' | 'list';
 type FriendsActionMutation = {
-  type: FriendsActionType,
-  value: string
-    | Pick<FriendsFilteringQuery, 'sortType'>
-    | Pick<FriendsFilteringQuery, 'viewType'>
-    | null
-}
+  type: FriendsActionType;
+  value: string | Partial<FriendsFilteringQuery>;
+};
 
 export const useFriendSort = () => {
   const qc = useQueryClient();
   
-  const setSearchValue = () => {
-  
-  };
-  
-  const setViewType = (value: Pick<FriendsFilteringQuery, 'viewType'>) => {
-    qc.setQueryData(
-      FRIENDS_FILTERING_QUERY_KEY,
-      (prev: FriendsFilteringQuery) => {
-        return {
-          ...prev, viewType: value,
-        };
-      },
-    );
-  };
-  
-  const setSortType = (value: Pick<FriendsFilteringQuery, 'sortType'>) => {
-    qc.setQueryData(
-      FRIENDS_FILTERING_QUERY_KEY,
-      (prev: FriendsFilteringQuery) => {
-        return {
-          ...prev, sortType: value,
-        };
-      },
-    );
+  const updateQueryData = (type: FriendsActionType, value: Partial<FriendsFilteringQuery>) => {
+    qc.setQueryData(FRIENDS_FILTERING_QUERY_KEY, (prev: FriendsFilteringQuery) => ({
+      ...prev,
+      [type + 'Type']: value,
+    }));
   };
   
   const setValueMutation = useMutation({
-    mutationFn: async({ value, type }: FriendsActionMutation) => {
-      if (!type) return;
-      if (!value && type === 'search') return;
-      
-      if (type === 'sort') {
-        setSortType(value as Pick<FriendsFilteringQuery, "sortType">)
+    mutationFn: async ({ value, type }: FriendsActionMutation) => {
+      if (type && value && type !== 'search') {
+        updateQueryData(type, value as Partial<FriendsFilteringQuery>);
       }
       
-      if (type === 'view') {
-        setViewType(value as Pick<FriendsFilteringQuery, "viewType">)
-      }
       
-      if (type === 'search') {
-      
-      }
     },
-    onSuccess: async() => await qc.invalidateQueries({ queryKey: FRIENDS_FILTERING_QUERY_KEY }),
-    onError: (e) => { throw new Error(e.message); },
+    onSuccess: () => qc.invalidateQueries({ queryKey: FRIENDS_FILTERING_QUERY_KEY }),
+    onError: e => {throw new Error(e.message) },
   });
   
   return { setValueMutation };

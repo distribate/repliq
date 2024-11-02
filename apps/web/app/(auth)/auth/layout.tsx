@@ -17,7 +17,7 @@ export default async function AuthLayout({
 }: AuthLayoutProps) {
   const currentUser = await getCurrentUser();
   const url = await getRandomAuthBackground();
-  
+	
   if (currentUser) {
     return permanentRedirect(AUTH_REDIRECT);
   }

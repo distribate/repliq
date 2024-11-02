@@ -1,5 +1,3 @@
-"use server"
-
 import AuthBackground from "@repo/assets/images/auth-background.png"
 import { getStaticImages } from '@repo/lib/queries/get-static-signed-images.ts';
 import { getAuthImagesCount } from '#admin/components/configs/auth-background/queries/get-auth-images-count.ts';

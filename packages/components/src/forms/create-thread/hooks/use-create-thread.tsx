@@ -2,16 +2,16 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { THREAD_FORM_QUERY, ThreadFormQuery } from '../queries/thread-form-query.ts';
 import { postThread } from '../queries/post-thread.ts';
 import { toast } from 'sonner';
-import { CURRENT_USER_QUERY_KEY, CurrentUser } from '@repo/lib/queries/current-user-query.ts';
 import { useRouter } from 'next/navigation';
 import { THREAD_URL } from '@repo/shared/constants/routes.ts';
 import { getArrayBuffer } from '@repo/lib/helpers/ger-array-buffer.ts';
 import { encode } from 'base64-arraybuffer';
 import { blobUrlToFile } from '@repo/lib/helpers/blobUrlToFile.ts';
+import { getUser } from '@repo/lib/helpers/get-user.ts';
 
 export const useCreateThread = () => {
   const qc = useQueryClient();
-  const currentUser = qc.getQueryData<CurrentUser>(CURRENT_USER_QUERY_KEY);
+  const currentUser = getUser();
   const { push } = useRouter();
   
   const updateThreadFormMutation = useMutation({

@@ -2,13 +2,12 @@ import { QueryKey, useMutation, useQuery, useQueryClient } from "@tanstack/react
 
 export const FRIENDS_SORT_QUERY_KEY: QueryKey = [ "friends-sort-state" ];
 
-export type FriendsSort = "created_at"
-	// | "donate"
+export type FriendsSort = "created_at" | "donate"
 
-type FriendsSortQuery = {
-	type?: FriendsSort,
-	search?: string
-}
+type FriendsSortQuery = Partial<{
+	type: FriendsSort,
+	search: string
+}>
 
 const initial: FriendsSortQuery = {
 	type: "created_at"
@@ -34,8 +33,8 @@ export const useFriendsSort = () => {
 				}
 			)
 		},
-		onSuccess: async () => await qc.invalidateQueries({ queryKey: FRIENDS_SORT_QUERY_KEY }),
-		onError: (e) => { throw new Error(e.message) }
+		onSuccess: () => qc.invalidateQueries({ queryKey: FRIENDS_SORT_QUERY_KEY }),
+		onError: e => { throw new Error(e.message) }
 	})
 	
 	return { setFriendsSortMUtation }

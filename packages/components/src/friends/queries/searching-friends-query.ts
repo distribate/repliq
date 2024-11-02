@@ -1,17 +1,17 @@
-import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { keepPreviousData, useQuery } from '@tanstack/react-query';
 import { getSearchingFriends } from './get-searching-friends.ts';
-import { CURRENT_USER_QUERY_KEY, CurrentUser } from '@repo/lib/queries/current-user-query.ts';
+import { getUser } from '@repo/lib/helpers/get-user.ts';
 
-export const SEARCHING_FRIENDS_QUERY_KEY = (nickname?: string) => ["user", "friends", "searching", nickname]
+export const SEARCHING_FRIENDS_QUERY_KEY = (nickname?: string) =>
+  ["user", "friends", "searching", nickname]
 
 export const searchingFriends = () => {
-  const qc = useQueryClient()
-  const currentUser = qc.getQueryData<CurrentUser>(CURRENT_USER_QUERY_KEY)
+  const currentUser = getUser();
   
   return useQuery({
     queryKey: SEARCHING_FRIENDS_QUERY_KEY(currentUser?.nickname),
     queryFn: () => getSearchingFriends(),
-    refetchOnWindowFocus: true,
-    retryOnMount: true
+    refetchOnWindowFocus: false,
+    placeholderData: keepPreviousData
   })
 }

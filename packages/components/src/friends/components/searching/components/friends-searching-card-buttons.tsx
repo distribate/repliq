@@ -1,19 +1,15 @@
-import {
-  RequestFriendProperties
-} from '../../../../profile/components/cover/components/add-friend/types/request-friend-properties-type.ts';
-import { useControlFriend } from '../../../../friend/components/request-card/hooks/use-control-friend.ts';
 import { Button } from '@repo/ui/src/components/button.tsx';
 import { Plus, RotateCcw } from 'lucide-react';
+import { FriendRequestProperties } from '#friend/components/friend-card/types/friend-request-types.ts';
+import { useControlFriendRequests } from '#friend/components/friend-card/hooks/use-control-friend-requests.ts';
 
 export const FriendsSearchingCardActionDeny = ({
   recipient
-}: RequestFriendProperties) => {
-  const { deleteRequestMutation } = useControlFriend()
+}: Pick<FriendRequestProperties, "recipient">) => {
+  const { rejectOutgoingRequestMutation } = useControlFriendRequests()
   
   const handleDeniedFriendReq = () => {
-    deleteRequestMutation.mutate({
-      reqUserNickname: recipient
-    })
+    return rejectOutgoingRequestMutation.mutate(recipient)
   }
   
   return (
@@ -21,8 +17,7 @@ export const FriendsSearchingCardActionDeny = ({
       onClick={handleDeniedFriendReq}
       variant="pending"
       className="!p-2 rounded-lg"
-      pending={deleteRequestMutation.isPending}
-      disabled={deleteRequestMutation.isPending || deleteRequestMutation.isError}
+      disabled={rejectOutgoingRequestMutation.isPending || rejectOutgoingRequestMutation.isError}
     >
       <RotateCcw size={20} className="text-shark-950" />
     </Button>
@@ -31,14 +26,14 @@ export const FriendsSearchingCardActionDeny = ({
 
 export const FriendsSearchingCardActionAdd = ({
   recipient
-}: RequestFriendProperties) => {
-  const { createRequestFriendMutation } = useControlFriend();
+}: Pick<FriendRequestProperties, "recipient">) => {
+  const { createRequestFriendMutation } = useControlFriendRequests();
   
-  const handleAddFriend = (e: React.MouseEvent<HTMLButtonElement>) => {
+  const handleAddFriend = (
+    e: React.MouseEvent<HTMLButtonElement>
+  ) => {
     e.preventDefault();
-    createRequestFriendMutation.mutate({
-      reqUserNickname: recipient
-    });
+    return createRequestFriendMutation.mutate(recipient);
   };
   
   return (
@@ -46,7 +41,6 @@ export const FriendsSearchingCardActionAdd = ({
       onClick={handleAddFriend}
       variant="positive"
       className="!p-2 rounded-lg"
-      pending={createRequestFriendMutation.isPending}
       disabled={createRequestFriendMutation.isPending || createRequestFriendMutation.isError}
     >
       <Plus size={20} className="text-shark-950" />

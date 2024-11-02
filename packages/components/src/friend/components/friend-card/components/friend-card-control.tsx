@@ -1,37 +1,34 @@
 import { Button } from '@repo/ui/src/components/button.tsx';
 import { Typography } from '@repo/ui/src/components/typography.tsx';
-import { MoreWrapper } from '../../../../wrappers/more-wrapper.tsx';
+import { MoreWrapper } from '#wrappers/more-wrapper.tsx';
 import { DropdownMenuItem } from '@repo/ui/src/components/dropdown-menu.tsx';
-import { Pin, Tag } from 'lucide-react';
-import { FriendCardProps } from '../friend-card.tsx';
+import { Pin, Tag, Trash } from 'lucide-react';
 import {
   DeleteFriendModal,
-} from '../../../../modals/action-confirmation/components/delete-friend/components/delete-friend-modal.tsx';
-import { UserCardModal } from '../../../../modals/custom/user-card-modal.tsx';
-import { useControlFriend } from '../../request-card/hooks/use-control-friend.ts';
+} from '#modals/action-confirmation/components/delete-friend/components/delete-friend-modal.tsx';
+import { UserCardModal } from '#modals/custom/user-card-modal.tsx';
 import { FriendCardControlNote } from './friend-card-control-note.tsx';
+import { useRouter } from 'next/navigation';
+import { USER_URL } from '@repo/shared/constants/routes.ts';
+import { Separator } from '@repo/ui/src/components/separator.tsx';
+import { FriendsQuery } from '#friends/queries/friends-query.ts';
+import { useControlFriend } from '#friend/components/friend-card/hooks/use-control-friend.ts';
 
 export const FriendCardControl = ({
   nickname: reqUserNickname, friend_id, isPinned,
-}: Pick<FriendCardProps, 'friend_id' | 'nickname' | 'isPinned'>) => {
+}: Pick<FriendsQuery, 'friend_id' | 'nickname' | 'isPinned'>) => {
   const { setFriendPinnedMutation, setFriendUnpinMutation } = useControlFriend();
+  const { push } = useRouter()
   
   return (
     <div className="flex items-center mt-2 gap-1 w-fit">
-      <DeleteFriendModal
-        friend_id={friend_id}
-        nickname={reqUserNickname}
-        trigger={
-          <Button
-            asChild
-            variant="negative"
-          >
-            <Typography textSize="small">
-              Удалить из друзей
-            </Typography>
-          </Button>
-        }
-      />
+      <Button
+        className="h-8 px-4"
+        variant="positive"
+        onClick={() => push(USER_URL + reqUserNickname)}
+      >
+        <Typography textSize="small">К профилю</Typography>
+      </Button>
       <MoreWrapper>
         <UserCardModal
           nickname={reqUserNickname}
@@ -39,9 +36,7 @@ export const FriendCardControl = ({
           trigger={
             <DropdownMenuItem className="flex justify-start items-center gap-2 group">
               <Tag size={16} className="text-shark-300" />
-              <Typography textSize="small">
-                Показать карточку профиля
-              </Typography>
+              <Typography textSize="small">Показать карточку профиля</Typography>
             </DropdownMenuItem>
           }
         />
@@ -53,9 +48,7 @@ export const FriendCardControl = ({
             className="flex justify-start items-center gap-2 group"
           >
             <Pin size={16} className="text-shark-300" />
-            <Typography textSize="small" className="text-caribbean-green-500">
-              Открепить
-            </Typography>
+            <Typography textSize="small" className="text-caribbean-green-500">Открепить</Typography>
           </DropdownMenuItem>
         ) : (
           <DropdownMenuItem
@@ -65,12 +58,21 @@ export const FriendCardControl = ({
             className="flex justify-start items-center gap-2 group"
           >
             <Pin size={16} className="text-shark-300" />
-            <Typography textSize="small">
-              Закрепить
-            </Typography>
+            <Typography textSize="small">Закрепить</Typography>
           </DropdownMenuItem>
         )}
         <FriendCardControlNote nickname={reqUserNickname}/>
+        <Separator/>
+        <DeleteFriendModal
+          friend_id={friend_id}
+          nickname={reqUserNickname}
+          trigger={
+            <DropdownMenuItem className="flex justify-start items-center gap-2 group">
+              <Trash size={16} className="text-red-500"/>
+              <Typography textSize="small" className="text-red-500">Удалить из друзей</Typography>
+            </DropdownMenuItem>
+          }
+        />
       </MoreWrapper>
     </div>
   );

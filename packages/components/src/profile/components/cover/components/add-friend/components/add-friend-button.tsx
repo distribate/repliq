@@ -1,18 +1,16 @@
 "use client"
 
 import { Button } from "@repo/ui/src/components/button.tsx";
-import { RequestFriendProperties } from '../types/request-friend-properties-type.ts';
-import { useControlFriend } from '#friend/components/request-card/hooks/use-control-friend.ts';
+import { FriendRequestProperties } from '#friend/components/friend-card/types/friend-request-types.ts';
+import { useControlFriendRequests } from '#friend/components/friend-card/hooks/use-control-friend-requests.ts';
 
 export const AddFriendButton = ({
 	recipient
-}: RequestFriendProperties) => {
-	const { createRequestFriendMutation } = useControlFriend();
+}: Pick<FriendRequestProperties, "recipient">) => {
+	const { createRequestFriendMutation } = useControlFriendRequests();
 
 	const handleAddFriend = () => {
-		createRequestFriendMutation.mutate({
-			reqUserNickname: recipient
-		})
+		return createRequestFriendMutation.mutate(recipient)
 	}
 	
 	return (

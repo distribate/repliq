@@ -1,11 +1,10 @@
 import { Typography } from '@repo/ui/src/components/typography.tsx';
-import { ImageWrapper } from '../../../../../../../../wrappers/image-wrapper.tsx';
-import { useQueryClient } from '@tanstack/react-query';
-import { CURRENT_USER_QUERY_KEY, CurrentUser } from '@repo/lib/queries/current-user-query.ts';
+import { ImageWrapper } from '#wrappers/image-wrapper.tsx';
 import { cva, VariantProps } from 'class-variance-authority';
 import { forwardRef, HTMLAttributes } from 'react';
 import { useUpdateCurrentUser } from '@repo/lib/hooks/use-update-current-user.ts';
 import { MinecraftItemEntity } from '@repo/types/entities/entities-type.ts';
+import { getUser } from '@repo/lib/helpers/get-user.ts';
 
 type FavoriteItem = MinecraftItemEntity
 
@@ -40,11 +39,10 @@ const MinecraftItem = forwardRef<
 export const FavoriteItem = ({
   id, title, image
 }: FavoriteItem) => {
-  const qc = useQueryClient();
+  const currentUser = getUser();
   const { updateFieldMutation } = useUpdateCurrentUser()
-  const currentUser = qc.getQueryData<CurrentUser>(CURRENT_USER_QUERY_KEY);
   
-  if (!currentUser) return;
+  if (!currentUser) return null;
   
   const handleFavoriteItem = (value: number) => {
     updateFieldMutation.mutate({

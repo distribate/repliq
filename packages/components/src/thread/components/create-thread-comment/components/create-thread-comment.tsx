@@ -1,6 +1,5 @@
 'use client';
 
-import { CURRENT_USER_QUERY_KEY, CurrentUser } from '@repo/lib/queries/current-user-query.ts';
 import {
   CREATE_THREAD_COMMENT_QUERY_KEY,
   createThreadCommentQuery,
@@ -11,10 +10,11 @@ import {
   CreateThreadCommentForm,
 } from '@repo/components/src/forms/create-thread-comment/components/create-thread-comment-form.tsx';
 import { useEffect } from 'react';
+import { getUser } from '@repo/lib/helpers/get-user.ts';
 
 export const CreateThreadComment = () => {
   const qc = useQueryClient();
-  const currentUser = qc.getQueryData<CurrentUser>(CURRENT_USER_QUERY_KEY);
+  const currentUser = getUser();
   const { data: createThreadCommentState } = createThreadCommentQuery();
 
   if (!createThreadCommentState || !currentUser) return null;

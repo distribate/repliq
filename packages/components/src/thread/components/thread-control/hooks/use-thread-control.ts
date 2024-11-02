@@ -1,12 +1,12 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { ThreadModel } from '../../../queries/get-thread-model.ts';
-import { CURRENT_USER_QUERY_KEY, CurrentUser } from '@repo/lib/queries/current-user-query.ts';
 import { THREAD_RATING_QUERY_KEY } from '../../thread-bump/queries/thread-rating-query.ts';
 import { updateThreadFields } from '../queries/update-thread-fields.ts';
 import { toast } from 'sonner';
 import { useRouter } from 'next/navigation';
 import { CURRENT_THREAD_QUERY_KEY } from '../queries/current-thread-query.ts';
 import { revalidatePath } from "next/cache"
+import { getUser } from '@repo/lib/helpers/get-user.ts';
 
 export type ThreadControlType = 'comments' | 'permission' | 'content' | 'remove' | 'description' | 'title'
 
@@ -24,7 +24,7 @@ export const THREAD_CONTROL_MUTATION_KEY = ["thread-control-update"]
 
 export const useThreadControl = () => {
   const qc = useQueryClient();
-  const currentUser = qc.getQueryData<CurrentUser>(CURRENT_USER_QUERY_KEY)
+  const currentUser = getUser();
   const { replace, refresh } = useRouter()
   
   const updateThreadFieldsMutation = useMutation({

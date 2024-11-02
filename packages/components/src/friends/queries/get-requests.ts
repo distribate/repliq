@@ -2,8 +2,13 @@
 
 import "server-only"
 import { createClient } from "@repo/lib/utils/api/server.ts";
+import { FriendsRequestsProperties } from '#friends/types/friends-requests-types.ts';
 
-export async function getRequests(nickname?: string) {
+export async function getRequests(
+	nickname: Pick<FriendsRequestsProperties, "nickname">["nickname"]
+) {
+	if (!nickname) return;
+	
 	const api = createClient();
 	
 	const { data, error } = await api

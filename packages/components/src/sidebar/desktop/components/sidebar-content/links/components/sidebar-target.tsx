@@ -5,7 +5,7 @@ import { SIDEBAR_TARGETS } from '../constants/sidebar-targets.ts';
 import { useSidebarControl } from '../../../sidebar-layout/hooks/use-sidebar-control.ts';
 
 export const SidebarTarget = () => {
-  const { replace } = useRouter();
+  const { push } = useRouter();
   const pathname = usePathname()
   const { isCompact, isExpanded } = useSidebarControl();
   
@@ -18,7 +18,7 @@ export const SidebarTarget = () => {
               <Button
                 state="default"
                 className="group gap-2 w-full justify-start"
-                onClick={() => { replace(target.link) }}
+                onClick={() => push(target.link)}
               >
                 <target.icon size={20} className="group-hover:text-pink-500 transition-all ease-in text-shark-300" />
               </Button>
@@ -32,7 +32,7 @@ export const SidebarTarget = () => {
             <div className="flex relative w-full h-12">
               <Button
                 state="default"
-                onClick={() => {replace(target.link)}}
+                onClick={() => push(target.link)}
                 className="group gap-2 w-full justify-start"
               >
                 <target.icon size={20} className="group-hover:text-pink-500 transition-all ease-in text-shark-300" />

@@ -1,11 +1,10 @@
-import { useQueryClient } from '@tanstack/react-query';
-import { CURRENT_USER_QUERY_KEY, CurrentUser } from '@repo/lib/queries/current-user-query.ts';
 import { useUpdateCurrentUser } from '@repo/lib/hooks/use-update-current-user.ts';
 import { getPreferenceValue } from '@repo/lib/helpers/convert-user-preferences-to-map.ts';
 import React, { useCallback } from 'react';
-import { DropdownWrapper } from '../../../../../../wrappers/dropdown-wrapper.tsx';
+import { DropdownWrapper } from '#wrappers/dropdown-wrapper.tsx';
 import { Typography } from '@repo/ui/src/components/typography.tsx';
 import { HoverCardItem } from '@repo/ui/src/components/hover-card.tsx';
+import { getUser } from '@repo/lib/helpers/get-user.ts';
 
 type GameStatsVisibilityProps = {
   e: React.MouseEvent<HTMLDivElement>,
@@ -20,11 +19,10 @@ const GAME_STATS_VISIBLITY_OPTIONS = [
 const GAME_STATS_VISIBLITY_NAME = "gameStatsVisibility"
 
 export const GameStatsVisibility = () => {
-  const qc = useQueryClient();
-  const currentUser = qc.getQueryData<CurrentUser>(CURRENT_USER_QUERY_KEY);
+  const currentUser = getUser();
   const { updateFieldMutation } = useUpdateCurrentUser();
   
-  if (!currentUser) return;
+  if (!currentUser) return null;
   
   const preferences = currentUser.properties.preferences;
   const preferGameStats = getPreferenceValue(

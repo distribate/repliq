@@ -1,4 +1,4 @@
-import { Avatar } from "../../../user/components/avatar/components/avatar.tsx";
+import { Avatar } from '#user/components/avatar/components/avatar.tsx';
 import { Input } from "@repo/ui/src/components/input.tsx";
 import { Button } from "@repo/ui/src/components/button.tsx";
 import { SendHorizontal } from "lucide-react";
@@ -7,9 +7,8 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { postCommentSchema } from "../schemas/post-comment-schema.ts";
 import { createPostCommentInferSchema } from "../types/create-post-comment-types.ts";
-import { CURRENT_USER_QUERY_KEY, CurrentUser } from '@repo/lib/queries/current-user-query.ts';
 import { FormField } from '@repo/ui/src/components/form-field.tsx';
-import { useQueryClient } from '@tanstack/react-query';
+import { getUser } from '@repo/lib/helpers/get-user.ts';
 
 export type PostItemFooterProps = {
 	post_id: string
@@ -18,9 +17,7 @@ export type PostItemFooterProps = {
 export const CreatePostCommentForm = ({
 	post_id
 }: PostItemFooterProps) => {
-	const qc = useQueryClient();
-	const currentUser = qc.getQueryData<CurrentUser>(CURRENT_USER_QUERY_KEY)
-	
+	const currentUser = getUser();
 	const { updatePostCommentFieldMutation, createPostCommentMutation } = usePostCommentsFormControl()
 
 	const { register, handleSubmit, getValues, reset, formState: { errors, isValid } } = useForm<createPostCommentInferSchema>({

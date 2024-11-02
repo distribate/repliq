@@ -1,8 +1,7 @@
 "use client"
 
-import { donateQuery } from "../queries/donate-query.ts";
+import { DonateQuery, donateQuery } from '../queries/donate-query.ts';
 import { Typography } from "@repo/ui/src/components/typography.tsx";
-import { UserDonate as UserDonateType } from "../types/user-donate-types.ts";
 import { DonateType } from "../queries/get-user-donate.ts";
 import { DONATE_GROUPS } from "../constants/donate-aliases.ts";
 import { HoverCardWrapper } from '#wrappers/hover-card-wrapper.tsx';
@@ -15,14 +14,14 @@ const getDonateTitle = (donate: DonateType["primary_group"]) =>
 	DONATE_GROUPS[donate]
 
 export const UserDonate = ({
-	nickname
-}: UserDonateType) => {
-	const { data: donate, isLoading } = donateQuery({
-		nickname
+	nickname, existingDonate
+}: DonateQuery) => {
+	const { data: donate,  isLoading } = donateQuery({
+		nickname, existingDonate
 	})
 	
 	if (isLoading) return <Skeleton className="h-5 rounded-md w-24"/>;
-	if (!donate) return;
+	if (!donate) return null;
 	
 	const title = getDonateTitle(donate.donate);
 	const favoriteItemImage = donate.favoriteItemImage?.image

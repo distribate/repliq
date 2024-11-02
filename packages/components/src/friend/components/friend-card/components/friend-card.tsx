@@ -1,25 +1,29 @@
-import { Avatar } from '../../../user/components/avatar/components/avatar.tsx';
 import Link from 'next/link';
 import { USER_URL } from '@repo/shared/constants/routes.ts';
-import { UserNickname } from '../../../user/components/name/components/nickname.tsx';
-import { UserRealName } from '../../../user/components/real-name/components/real-name.tsx';
-import { UserDonate } from '../../../user/components/donate/components/donate.tsx';
+import { UserNickname } from '#user/components/name/components/nickname.tsx';
+import { UserRealName } from '#user/components/real-name/components/real-name.tsx';
+import { UserDonate } from '#user/components/donate/components/donate.tsx';
 import { Typography } from '@repo/ui/src/components/typography.tsx';
 import { UserEntity } from '@repo/types/entities/entities-type.ts';
-import type { FriendsQuery } from '../../../friends/queries/friends-query.ts';
-import { FriendCardControl } from './components/friend-card-control.tsx';
+import { FriendCardLayout } from '#friend/components/friend-card/components/friend-card-layout.tsx';
+import { FriendsQuery } from '#friends/queries/friends-query.ts';
+import { FriendCardControl } from '#friend/components/friend-card/components/friend-card-control.tsx';
+import { FriendCardNote } from '#friend/components/friend-card/components/friend-card-note.tsx';
 import { Pin } from 'lucide-react';
-import { FriendCardNote } from './components/friend-card-note.tsx';
 
-export type FriendCardProps = Pick<UserEntity, 'nickname' | 'real_name' | 'description'>
-  & FriendsQuery
+export type FriendCardProps = Pick<UserEntity, 'nickname'
+  | 'real_name' | 'description'
+> & FriendsQuery;
 
 export const FriendCard = ({
-  nickname, real_name, description, friend_id, isPinned, note
+  ...friend
 }: FriendCardProps) => {
+  const {
+    real_name, description, nickname, name_color, friend_id, note, status, isPinned, created_at
+  } = friend;
+  
   return (
-    <div className="flex relative items-center gap-4 w-full bg-shark-950 border border-shark-800 rounded-lg p-4">
-      <Avatar nickname={nickname} propHeight={112} propWidth={112} className="rounded-lg" />
+    <FriendCardLayout nickname={nickname}>
       <div className="flex flex-col gap-y-1 w-fit">
         <div className="flex items-center gap-1 w-fit">
           <Link href={USER_URL + nickname} className="flex items-center gap-1">
@@ -28,9 +32,11 @@ export const FriendCard = ({
           </Link>
           <UserDonate nickname={nickname} />
         </div>
-        <div className="flex items-center w-fit">
-          <Typography>{description}</Typography>
-        </div>
+        {description && (
+          <div className="flex items-center w-fit">
+            <Typography>{description}</Typography>
+          </div>
+        )}
         <FriendCardControl friend_id={friend_id} nickname={nickname} isPinned={isPinned} />
         {(isPinned || !!note) && (
           <div className="flex items-end gap-4 absolute right-4 bottom-4">
@@ -39,6 +45,6 @@ export const FriendCard = ({
           </div>
         )}
       </div>
-    </div>
+    </FriendCardLayout>
   );
 };

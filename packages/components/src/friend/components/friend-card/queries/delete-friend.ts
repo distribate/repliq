@@ -4,12 +4,16 @@ import "server-only"
 import { getCurrentUser } from '@repo/lib/actions/get-current-user.ts';
 import { createClient } from "@repo/lib/utils/api/server.ts";
 
-export async function deleteFriend(friend_id: string) {
+type DeleteFriend = {
+  error: "not-authorized" | null,
+  status: number
+}
+
+export async function deleteFriend(friend_id: string): Promise<DeleteFriend> {
   const currentUser = await getCurrentUser();
 
   if (!currentUser) return {
-    status: 400,
-    error: 'Not authorized.',
+    status: 400, error: 'not-authorized',
   };
   
   const api = createClient();
@@ -23,5 +27,7 @@ export async function deleteFriend(friend_id: string) {
     throw new Error(error.message)
   }
   
-  return { status }
+  console.log(status)
+  
+  return { error: null, status }
 }

@@ -1,12 +1,12 @@
 import { DropdownMenuItem } from '@repo/ui/src/components/dropdown-menu.tsx';
 import { Pen } from 'lucide-react';
 import { Typography } from '@repo/ui/src/components/typography.tsx';
-import { DropdownWrapper } from '../../../../wrappers/dropdown-wrapper.tsx';
+import { DropdownWrapper } from '#wrappers/dropdown-wrapper.tsx';
 import { Input } from '@repo/ui/src/components/input';
 import { Button } from '@repo/ui/src/components/button.tsx';
 import { useState } from 'react';
-import { useControlFriend } from '../../request-card/hooks/use-control-friend.ts';
-import { FriendCardProps } from '../friend-card.tsx';
+import { FriendCardProps } from '#friend/components/friend-card/components/friend-card.tsx';
+import { useControlFriend } from '#friend/components/friend-card/hooks/use-control-friend.ts';
 
 type FriendCardControlNote = Pick<FriendCardProps, "nickname">
 
@@ -15,6 +15,11 @@ export const FriendCardControlNote = ({
 }: FriendCardControlNote) => {
   const [value, setValue] = useState<string>('')
   const { setFriendNoteMutation } = useControlFriend()
+  
+  const handleAddNote = () => {
+    if (value.length <= 1) return;
+    return setFriendNoteMutation.mutate({ reqUserNickname, note: value })
+  }
   
   return (
     <DropdownWrapper
@@ -26,9 +31,7 @@ export const FriendCardControlNote = ({
       trigger={
         <DropdownMenuItem className="flex justify-start items-center gap-2 group">
           <Pen size={16} className="text-shark-300" />
-          <Typography textSize="small">
-            Добавить заметку
-          </Typography>
+          <Typography textSize="small">Добавить заметку</Typography>
         </DropdownMenuItem>
       }
       content={
@@ -47,10 +50,7 @@ export const FriendCardControlNote = ({
             </Typography>
             <Button
               disabled={setFriendNoteMutation.isPending || setFriendNoteMutation.isError}
-              pending={setFriendNoteMutation.isPending}
-              onClick={() => setFriendNoteMutation.mutate({
-                reqUserNickname, note: value
-              })}
+              onClick={handleAddNote}
               className="bg-shark-800 hover:bg-shark-700"
             >
               Сохранить

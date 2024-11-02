@@ -1,15 +1,13 @@
-import { useQueryClient } from '@tanstack/react-query';
-import { CURRENT_USER_QUERY_KEY, CurrentUser } from '@repo/lib/queries/current-user-query.ts';
 import { useUpdateCurrentUser } from '@repo/lib/hooks/use-update-current-user.ts';
 import { getPreferenceValue } from '@repo/lib/helpers/convert-user-preferences-to-map.ts';
 import React from 'react';
-import { DropdownWrapper } from '../../../../../../wrappers/dropdown-wrapper.tsx';
+import { DropdownWrapper } from '#wrappers/dropdown-wrapper.tsx';
 import { Typography } from '@repo/ui/src/components/typography.tsx';
 import { HoverCardItem } from '@repo/ui/src/components/hover-card.tsx';
+import { getUser } from '@repo/lib/helpers/get-user.ts';
 
 export const FriendRequest = () => {
-  const qc = useQueryClient()
-  const currentUser = qc.getQueryData<CurrentUser>(CURRENT_USER_QUERY_KEY)
+  const currentUser = getUser();
   const { updateFieldMutation } = useUpdateCurrentUser();
   
   if (!currentUser) return;
@@ -33,10 +31,7 @@ export const FriendRequest = () => {
   
   return (
     <DropdownWrapper
-      properties={{
-        contentAlign: 'end',
-        sideAlign: 'right',
-      }}
+      properties={{ contentAlign: 'end', sideAlign: 'right', }}
       trigger={
         <Typography className="text-base">
           {preferFriendRequest ? 'вкл' : 'выкл'}

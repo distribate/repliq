@@ -1,8 +1,8 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { removePostComment } from '../queries/remove-post-comment.ts';
-import { CURRENT_USER_QUERY_KEY, CurrentUser } from '@repo/lib/queries/current-user-query.ts';
-import { POST_COMMENTS_QUERY_KEY, } from '../../../../profile/components/posts/components/posts/queries/posts-comments-query.ts';
+import { POST_COMMENTS_QUERY_KEY, } from '#profile/components/posts/components/posts/queries/posts-comments-query.ts';
 import { toast } from 'sonner';
+import { getUser } from '@repo/lib/helpers/get-user.ts';
 
 type ControlCommentType = 'remove' | 'edit';
 
@@ -14,7 +14,7 @@ type ControlComment = {
 
 export const useControlComment = () => {
   const qc = useQueryClient();
-  const currentUser = qc.getQueryData<CurrentUser>(CURRENT_USER_QUERY_KEY)
+  const currentUser = getUser();
   
   const controlCommentMutation = useMutation({
     mutationFn: async(values: ControlComment) => {

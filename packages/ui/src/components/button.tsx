@@ -26,7 +26,7 @@ const buttonVariants = cva(
       },
       rounded: {
         none: '',
-        default: 'rounded-lg',
+        default: 'rounded-md',
       },
       size: {
         full: 'h-fit w-full',

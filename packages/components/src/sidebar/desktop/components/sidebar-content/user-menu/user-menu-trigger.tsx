@@ -1,19 +1,17 @@
 import { SidebarItem } from "../../sidebar-item/sidebar-item.tsx";
 import { UserMenu } from "./user-menu.tsx";
-import { CURRENT_USER_QUERY_KEY, CurrentUser } from '@repo/lib/queries/current-user-query.ts';
-import { useQueryClient } from '@tanstack/react-query';
 import { useSidebarControl } from '../../sidebar-layout/hooks/use-sidebar-control.ts';
-import { Avatar } from '../../../../../user/components/avatar/components/avatar.tsx';
-import { DropdownWrapper } from '../../../../../wrappers/dropdown-wrapper.tsx';
-import { UserDonate } from '../../../../../user/components/donate/components/donate.tsx';
-import { UserNickname } from '../../../../../user/components/name/components/nickname.tsx';
+import { Avatar } from '#user/components/avatar/components/avatar.tsx';
+import { DropdownWrapper } from '#wrappers/dropdown-wrapper.tsx';
+import { UserDonate } from '#user/components/donate/components/donate.tsx';
+import { UserNickname } from '#user/components/name/components/nickname.tsx';
+import { getUser } from '@repo/lib/helpers/get-user.ts';
 
 export const UserMenuTrigger = () => {
-	const qc = useQueryClient()
-	const currentUser = qc.getQueryData<CurrentUser>(CURRENT_USER_QUERY_KEY)
+	const currentUser = getUser();
 	const { isExpanded, isCompact } = useSidebarControl();
 	
-	if (!currentUser) return;
+	if (!currentUser) return null;
 	
 	return (
 		<DropdownWrapper

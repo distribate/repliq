@@ -15,7 +15,7 @@ export async function getStaticImages({
   const { data } = await api
   .storage
   .from('static')
-  .createSignedUrl(fileName, 60)
+  .createSignedUrl(fileName, 10)
   
   if (!data || !data.signedUrl) return null;
   

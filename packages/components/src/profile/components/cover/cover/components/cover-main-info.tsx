@@ -6,8 +6,8 @@ import { Typography } from "@repo/ui/src/components/typography.tsx";
 import { COVER_QUERY_KEY, CoverQuery } from '../queries/cover-query.ts';
 import { RequestedUser } from '@repo/lib/queries/get-requested-user.ts';
 import { checkUserRealNameVisibility } from '@repo/lib/helpers/check-user-real-name-visibility.ts';
-import { CURRENT_USER_QUERY_KEY, CurrentUser } from '@repo/lib/queries/current-user-query.ts';
 import { REQUESTED_USER_QUERY_KEY } from '../queries/requested-user-query.ts';
+import { getUser } from '@repo/lib/helpers/get-user.ts';
 
 type UserCoverInfoProps = {
 	nickname: string
@@ -17,7 +17,7 @@ export const UserCoverMainInfo = ({
 	nickname
 }: UserCoverInfoProps) => {
 	const qc = useQueryClient()
-	const currentUser = qc.getQueryData<CurrentUser>(CURRENT_USER_QUERY_KEY)
+	const currentUser = getUser();
 	const reqUser = qc.getQueryData<RequestedUser>(REQUESTED_USER_QUERY_KEY(nickname));
 	const coverState = qc.getQueryData<CoverQuery>(COVER_QUERY_KEY)
 	

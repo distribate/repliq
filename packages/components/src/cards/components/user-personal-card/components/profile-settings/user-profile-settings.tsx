@@ -1,11 +1,9 @@
-import { CURRENT_USER_QUERY_KEY, CurrentUser } from '@repo/lib/queries/current-user-query.ts';
 import { Typography } from '@repo/ui/src/components/typography.tsx';
 import { Separator } from '@repo/ui/src/components/separator.tsx';
 import { ImageWrapper } from '#wrappers/image-wrapper.tsx';
 import { DescriptionInput } from './components/description-input.tsx';
 import { HoverCardItem } from '@repo/ui/src/components/hover-card.tsx';
 import { OutlineCover } from './components/outline-cover.tsx';
-import { useQueryClient } from '@tanstack/react-query';
 import Firework from '@repo/assets/images/minecraft/firework.webp';
 import BlueDye from '@repo/assets/images/minecraft/blue_dye.webp';
 import Nametag from '@repo/assets/images/minecraft/nametag.webp';
@@ -18,6 +16,7 @@ import { FavoriteItemModal } from '#modals/user-settings/favorite-item-modal.tsx
 import { ReactNode } from 'react';
 import { ProfileVisibilityChange } from './components/visibility-profile/components/profile-visibility-change.tsx';
 import { DateBirthdayModal } from '#modals/user-settings/date-birthday-modal.tsx';
+import { getUser } from '@repo/lib/helpers/get-user.ts';
 
 type ProfileSetting = {
   title: string,
@@ -47,10 +46,8 @@ export const UserSettingOption = ({
 };
 
 export const UserProfileSettings = () => {
-  const qc = useQueryClient();
-  const currentUser = qc.getQueryData<CurrentUser>(CURRENT_USER_QUERY_KEY);
-  
-  if (!currentUser) return;
+  const currentUser = getUser();
+  if (!currentUser) return null;
   
   const isAccess = currentUser.donate !== 'default';
   

@@ -1,5 +1,5 @@
 import { Typography } from '@repo/ui/src/components/typography.tsx';
-import { Avatar } from '../../../../user/components/avatar/components/avatar.tsx';
+import { Avatar } from '#user/components/avatar/components/avatar.tsx';
 
 export const FriendsStatistics = () => {
   return (

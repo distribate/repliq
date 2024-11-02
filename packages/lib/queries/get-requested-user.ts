@@ -1,13 +1,15 @@
-'use server';
+"use server"
 
 import { UserEntity } from '@repo/types/entities/entities-type.ts';
 import { getCurrentUser } from '../actions/get-current-user.ts';
 import { REDIRECT_USER_NOT_EXIST } from '@repo/shared/constants/routes.ts';
 import { convertUserPreferencesToObject, UserPreferences } from '../helpers/convert-user-preferences-to-map.ts';
 import { createClient } from "@repo/lib/utils/api/server.ts";
+import { redirect } from 'next/navigation';
 
 type RequestedUserProps = {
   nickname?: string,
+  withDonate?: boolean
 }
 
 export type RequestedUser = Omit<UserEntity, 'preferences'> & {
@@ -38,7 +40,7 @@ async function getMainData(nickname: RequestedUserProps["nickname"]) {
 
 export async function getRequestedUser(
   nickname: RequestedUserProps["nickname"]
-): Promise<RequestedUser | string> {
+): Promise<RequestedUser | null> {
   const currentUser = await getCurrentUser();
   
   let requestedUser: RequestedUser | null = null;
@@ -52,9 +54,11 @@ export async function getRequestedUser(
   const { data: mainData, error: mainDataError } = main;
   
   if (!donateData || mainDataError || !mainData) {
-    if (currentUser) return `${REDIRECT_USER_NOT_EXIST}${currentUser.nickname}&timeout=5`;
+    if (currentUser) {
+      return redirect(`${REDIRECT_USER_NOT_EXIST}${currentUser.nickname}&timeout=5)}`);
+    }
     
-    return `/not-found`;
+    return null;
   }
   
   requestedUser = {

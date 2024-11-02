@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-export const THREAD_CONTENT_LIMIT = 1224;
+export const THREAD_CONTENT_LIMIT = 4096;
 
 export const createThreadSchema = z.object({
   category: z.string().min(1, {

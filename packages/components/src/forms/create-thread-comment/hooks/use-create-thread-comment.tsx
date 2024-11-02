@@ -4,13 +4,13 @@ import {
   CreateThreadCommentQuery, initialThreadCommentData,
 } from '../queries/create-thread-comment-query.ts';
 import { postThreadComment } from '../queries/post-thread-comment.ts';
-import { CURRENT_USER_QUERY_KEY, CurrentUser } from '@repo/lib/queries/current-user-query.ts';
 import { toast } from 'sonner';
-import { THREAD_COMMENTS_QUERY_KEY } from '../../../thread/components/thread-comments/queries/thread-comments-query.ts';
+import { THREAD_COMMENTS_QUERY_KEY } from '#thread/components/thread-comments/queries/thread-comments-query.ts';
+import { getUser } from '@repo/lib/helpers/get-user.ts';
 
 export const useCreateThreadComment = () => {
   const qc = useQueryClient();
-  const currentUser = qc.getQueryData<CurrentUser>(CURRENT_USER_QUERY_KEY);
+  const currentUser = getUser();
   
   const updateCreateThreadCommentMutation = useMutation({
     mutationFn: async({

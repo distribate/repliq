@@ -2,12 +2,12 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import {
   USER_BLOCKED_QUERY_KEY
 } from '../../user-personal-card/components/account-settings/queries/user-blocked-query.ts';
-import { CURRENT_USER_QUERY_KEY, CurrentUser } from '@repo/lib/queries/current-user-query.ts';
 import { deleteUserFromBlocked, DeleteUserFromBlocked } from '../queries/delete-user-from-blocked.ts';
+import { getUser } from '@repo/lib/helpers/get-user.ts';
 
 export const useDeleteFromBlocked = () => {
   const qc = useQueryClient();
-  const currentUser = qc.getQueryData<CurrentUser>(CURRENT_USER_QUERY_KEY)
+  const currentUser = getUser();
   
   const deleteUserFromBlockedMutation = useMutation({
     mutationFn: async(values: Pick<DeleteUserFromBlocked, "targetUserNickname">) => {

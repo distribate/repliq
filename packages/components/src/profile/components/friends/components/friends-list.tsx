@@ -1,17 +1,16 @@
 'use client';
 
-import { FriendProfileCard } from '#friend/components/friend-card/friend-profile-card.tsx';
 import { friendsSortQuery } from '../hooks/use-friends-sort.tsx';
 import { SomethingError } from '#templates/something-error.tsx';
-import { FriendProfileCardSkeleton } from '#friend/components/friend-card/friend-profile-card-skeleton.tsx';
 import { FilteredNotFound } from '#templates/filtered-not-found.tsx';
 import { RequestFriends } from '#friends/queries/get-friends.ts';
 import { friendsQuery } from '#friends/queries/friends-query.ts';
 import { ContentNotFound } from '#templates/section-not-found.tsx';
+import { UserEntity } from '@repo/types/entities/entities-type.ts';
+import { FriendProfileCardSkeleton } from '#friend/components/friend-card/components/friend-profile-card-skeleton.tsx';
+import { FriendProfileCard } from '#friend/components/friend-card/components/friend-profile-card.tsx';
 
-type FriendsSearch = {
-  nickname: string
-}
+type FriendsSearch = Pick<UserEntity, "nickname" | "name_color">
 
 const filterFriendsByNickname =
   (data: FriendsSearch[], query: string) => data.filter(
@@ -22,9 +21,9 @@ export const FriendsList = ({
   nickname
 }: RequestFriends) => {
   const { data: friendsSortState } = friendsSortQuery();
-  const { data: friendsData, isLoading, isError } = friendsQuery({ nickname });
+  const { data: friendsData, isLoading, isError } = friendsQuery(nickname);
   
-  if (isError) return <SomethingError />;
+  if (isError || !nickname) return <SomethingError />;
   
   if (!friendsData) {
     return <ContentNotFound title="Друзей пока нет." />;
@@ -38,16 +37,18 @@ export const FriendsList = ({
     return <FilteredNotFound value={friendsSortState.search} />;
   }
   
-  if (!nickname) return;
-  
   return (
     <div className="grid auto-rows-auto grid-cols-3 gap-2 w-full">
-      {isLoading && Array.from({ length: 3 }).map((_, i) => (
-        <FriendProfileCardSkeleton key={i} />
-      ))}
+      {isLoading && (
+        <>
+          <FriendProfileCardSkeleton />
+          <FriendProfileCardSkeleton />
+          <FriendProfileCardSkeleton />
+        </>
+      )}
       {!isLoading && (
-        friends?.map((friend, i) => (
-          <FriendProfileCard key={i} nickname={friend.nickname} />
+        friends.map((friend, i) => (
+          <FriendProfileCard key={i} nickname={friend.nickname} name_color={friend.name_color} />
         ))
       )}
     </div>

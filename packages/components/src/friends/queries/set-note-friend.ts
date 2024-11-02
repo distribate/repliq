@@ -7,11 +7,13 @@ import { FriendNotesEntity } from '@repo/types/entities/entities-type.ts';
 
 export type SetNote = Pick<FriendNotesEntity, "friend_id" | "note" | "recipient">
 
+type SetNoteFriend = SetNote & {
+  isNoted: boolean // if friend already have a note
+}
+
 export async function setNoteFriend({
   recipient, friend_id, note, isNoted
-}: SetNote & {
-  isNoted: boolean // if friend already have a note
-}) {
+}: SetNoteFriend) {
   const currentUser = await getCurrentUser();
   if (!currentUser) return;
   
@@ -36,9 +38,7 @@ export async function setNoteFriend({
   
   const { data, error, status } = await api
   .from("friends_notes")
-  .update({
-    note: note
-  })
+  .update({ note: note })
   .eq("recipient", recipient)
   .eq("friend_id", friend_id)
   .eq("initiator", currentUser?.nickname)

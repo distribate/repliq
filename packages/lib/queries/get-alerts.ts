@@ -1,4 +1,3 @@
-import 'server-only';
 import { createClient } from "@repo/lib/utils/api/server.ts";
 import { AlertEntity } from "@repo/types/entities/entities-type.ts"
 

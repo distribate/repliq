@@ -2,22 +2,20 @@
 
 import React, { FormEvent, useEffect, useState } from 'react';
 import { useCreateThreadComment } from '../hooks/use-create-thread-comment.tsx';
-import { Avatar } from '../../../user/components/avatar/components/avatar.tsx';
+import { Avatar } from '#user/components/avatar/components/avatar.tsx';
 import { FormField } from '@repo/ui/src/components/form-field.tsx';
 import { Button } from '@repo/ui/src/components/button.tsx';
 import { SendHorizontal } from 'lucide-react';
-import { CURRENT_USER_QUERY_KEY, CurrentUser } from '@repo/lib/queries/current-user-query.ts';
 import { createThreadCommentQuery } from '../queries/create-thread-comment-query.ts';
-import { useQueryClient } from '@tanstack/react-query';
 import { Input } from '@repo/ui/src/components/input.tsx';
 import { CreateThreadCommentFormLayout } from './create-thread-comment-form-layout.tsx';
 import { useParams } from "next/navigation"
+import { getUser } from '@repo/lib/helpers/get-user.ts';
 
 export const THREAD_COMMENT_MAX_LIMIT = 312;
 
 export const CreateThreadCommentForm = () => {
-  const qc = useQueryClient();
-  const currentUser = qc.getQueryData<CurrentUser>(CURRENT_USER_QUERY_KEY);
+  const currentUser = getUser();
   const { data: createThreadCommentState } = createThreadCommentQuery();
   const { updateCreateThreadCommentMutation, createThreadCommentMutation } = useCreateThreadComment();
   const [ error, setError ] = useState<'max-limit' | null>(null);

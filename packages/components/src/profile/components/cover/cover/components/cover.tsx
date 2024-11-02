@@ -33,7 +33,7 @@ export const UserCover = ({
     <CoverArea
       variant={inView ? 'full' : 'compact'}
       backgroundColor={url ? 'transparent' : 'gray'}
-      border={userDonate && preferOutline ? userDonate.donate : 'default'}
+      border={userDonate && preferOutline ? userDonate.existingDonate : 'default'}
       style={{ backgroundImage: backgroundImage }}
     >
       <div className="z-[2] absolute w-full h-full right-0 top-0 bottom-0 left-0 bg-black/40" />

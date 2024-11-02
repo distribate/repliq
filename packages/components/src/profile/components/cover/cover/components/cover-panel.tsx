@@ -8,10 +8,9 @@ import {
   ProfileDescriptionChangeModal,
 } from '#modals/user-settings/profile-description-change-modal.tsx';
 import dynamic from 'next/dynamic';
-import { CURRENT_USER_QUERY_KEY, CurrentUser } from '@repo/lib/queries/current-user-query.ts';
-import { useQueryClient } from '@tanstack/react-query';
 import Image from 'next/image';
 import { Button } from '@repo/ui/src/components/button.tsx';
+import { getUser } from '@repo/lib/helpers/get-user.ts';
 
 const ProfileBackgroundUpdateModal = dynamic(() =>
   import('@repo/components/src/modals/custom/profile-background-update-modal.tsx')
@@ -44,8 +43,7 @@ interface UserCoverPanelProps
 export const UserCoverPanel = ({
   variant, className, reqUserNickname, ...props
 }: UserCoverPanelProps) => {
-  const qc = useQueryClient();
-  const currentUser = qc.getQueryData<CurrentUser>(CURRENT_USER_QUERY_KEY);
+  const currentUser = getUser();
   
   if (!currentUser) return null;
   

@@ -6,6 +6,8 @@ import { convertUserPreferencesToObject, UserPreferences } from '../helpers/conv
 import { getUserBanned } from './get-user-banned.ts';
 import { CurrentUser } from './current-user-query.ts';
 import { createClient } from "@repo/lib/utils/api/server.ts";
+import { permanentRedirect } from 'next/navigation';
+import { BANNED_REDIRECT } from '@repo/shared/constants/routes.ts';
 
 export async function getUserInformation(): Promise<CurrentUser | null> {
 	const currentUser = await getCurrentUser();
@@ -24,7 +26,9 @@ export async function getUserInformation(): Promise<CurrentUser | null> {
 	
 	const isBanned = await getUserBanned(currentUser.nickname)
 	
-	if (isBanned) return null;
+	if (isBanned) {
+		return permanentRedirect(BANNED_REDIRECT)
+	}
 	
 	const [user, donate] = await Promise.all([
 		query,
@@ -35,7 +39,9 @@ export async function getUserInformation(): Promise<CurrentUser | null> {
 	
 	let userDonate: DonateType["primary_group"] | null = null;
 	
-	if (donate) userDonate = donate;
+	if (donate) {
+		userDonate = donate;
+	}
 	
 	if (error) {
 		throw new Error(error.message)

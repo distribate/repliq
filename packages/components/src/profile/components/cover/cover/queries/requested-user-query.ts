@@ -4,7 +4,7 @@ import { getRequestedUser, RequestedUser } from '@repo/lib/queries/get-requested
 export const REQUESTED_USER_QUERY_KEY = (nickname?: string) => [ "user", "requested", nickname ]
 
 export const requestedUserQuery = (nickname?: string) => {
-	return useQuery<RequestedUser | string, Error>({
+	return useQuery<RequestedUser | null, Error>({
 		queryKey: REQUESTED_USER_QUERY_KEY(nickname),
 		queryFn: () => getRequestedUser(nickname)
 	})

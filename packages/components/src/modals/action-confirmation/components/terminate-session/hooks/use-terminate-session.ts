@@ -1,10 +1,10 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { terminateAllSessions, TerminateSession, terminateSession } from '@repo/lib/actions/terminate-session.ts';
-import { CURRENT_USER_QUERY_KEY, CurrentUser } from '@repo/lib/queries/current-user-query.ts';
 import {
   USER_ACTIVE_SESSIONS_QUERY_KEY,
-} from '../../../../../cards/components/user-personal-card/components/account-settings/queries/user-sessions-query.ts';
+} from '#cards/components/user-personal-card/components/account-settings/queries/user-sessions-query.ts';
 import { permanentRedirect, RedirectType } from 'next/navigation';
+import { getUser } from '@repo/lib/helpers/get-user.ts';
 
 type TerminateSessionMutation = {
   values?: Pick<TerminateSession, 'session_id'>,
@@ -15,7 +15,7 @@ export const TERMINATE_SESSIONS_MUTATION_KEY = ["terminate-all-sessions"]
 
 export const useTerminateSession = () => {
   const qc = useQueryClient();
-  const currentUser = qc.getQueryData<CurrentUser>(CURRENT_USER_QUERY_KEY);
+  const currentUser = getUser();
   
   const terminateMutation = useMutation({
     mutationKey: TERMINATE_SESSIONS_MUTATION_KEY,

@@ -1,19 +1,17 @@
-import { DropdownWrapper } from '../../../../../../wrappers/dropdown-wrapper.tsx';
+import { DropdownWrapper } from '#wrappers/dropdown-wrapper.tsx';
 import { Typography } from '@repo/ui/src/components/typography.tsx';
-import { CURRENT_USER_QUERY_KEY, CurrentUser } from '@repo/lib/queries/current-user-query.ts';
 import { useUpdateCurrentUser } from '@repo/lib/hooks/use-update-current-user.ts';
 import { HoverCardItem } from '@repo/ui/src/components/hover-card.tsx';
 import React from 'react';
-import { HoverCardWrapper } from '../../../../../../wrappers/hover-card-wrapper.tsx';
-import { useQueryClient } from '@tanstack/react-query';
+import { HoverCardWrapper } from '#wrappers/hover-card-wrapper.tsx';
 import { getPreferenceValue } from '@repo/lib/helpers/convert-user-preferences-to-map.ts';
+import { getUser } from '@repo/lib/helpers/get-user.ts';
 
 export const OutlineCover = () => {
-  const qc = useQueryClient()
-  const currentUser = qc.getQueryData<CurrentUser>(CURRENT_USER_QUERY_KEY)
+  const currentUser = getUser();
   const { updateFieldMutation } = useUpdateCurrentUser();
   
-  if (!currentUser) return;
+  if (!currentUser) return null;
   
   const preferences = currentUser.properties.preferences;
   const preferOutline = getPreferenceValue(preferences, "coverOutline")

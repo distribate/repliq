@@ -3,11 +3,8 @@
 import { useLocalStorage } from '@repo/lib/hooks/use-local-storage.ts';
 import { useCallback } from 'react';
 import { ThreadHistoryType } from '../types/thread-history-types.ts';
-import {
-  usePreferences,
-} from '#cards/components/user-personal-card/components/advanced-settings/hooks/use-preferences.ts';
-import { useQueryClient } from '@tanstack/react-query';
-import { CURRENT_USER_QUERY_KEY, CurrentUser } from '@repo/lib/queries/current-user-query.ts';
+import { usePreferences } from '#cards/components/user-personal-card/components/advanced-settings/hooks/use-preferences.ts';
+import { getUser } from '@repo/lib/helpers/get-user.ts';
 
 export const SAVED_LAST_THREADS_KEY = 'history-threads';
 
@@ -16,8 +13,7 @@ export const useHistoryThreads = () => {
 		SAVED_LAST_THREADS_KEY, []
   );
   
-  const qc = useQueryClient();
-  const currentUser = qc.getQueryData<CurrentUser>(CURRENT_USER_QUERY_KEY);
+  const currentUser = getUser();
   const { preferences } = usePreferences();
   
   const saveThread = useCallback(({

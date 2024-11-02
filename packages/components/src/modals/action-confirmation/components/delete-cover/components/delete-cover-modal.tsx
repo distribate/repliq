@@ -1,19 +1,17 @@
-import { useQueryClient } from '@tanstack/react-query';
-import { CURRENT_USER_QUERY_KEY, CurrentUser } from '@repo/lib/queries/current-user-query.ts';
 import { HoverCardItem } from '@repo/ui/src/components/hover-card.tsx';
 import { X } from 'lucide-react';
 import { Typography } from '@repo/ui/src/components/typography.tsx';
-import { ConfirmationButton } from '../../../../../buttons/confirmation-action-button.tsx';
-import { ConfirmationActionModalTemplate } from '../../../../../templates/confirmation-action-modal-template.tsx';
+import { ConfirmationButton } from '#buttons/confirmation-action-button.tsx';
+import { ConfirmationActionModalTemplate } from '#templates/confirmation-action-modal-template.tsx';
 import {
   useControlCoverImage, USER_COVER_DELETE_IMAGE_MUTATION_KEY,
-} from '../../../../../profile/components/cover/components/cover-image/hooks/use-control-cover-image.tsx';
+} from '#profile/components/cover/components/cover-image/hooks/use-control-cover-image.tsx';
 import { DialogClose } from '@repo/ui/src/components/dialog.tsx';
 import { DynamicModal } from '../../../../dynamic-modal.tsx';
+import { getUser } from '@repo/lib/helpers/get-user.ts';
 
 export const DeleteCoverModal = () => {
-  const qc = useQueryClient();
-  const currentUser = qc.getQueryData<CurrentUser>(CURRENT_USER_QUERY_KEY)
+  const currentUser = getUser();
   const { deleteBackgroundImageMutation } = useControlCoverImage();
   
   if (!currentUser) return null;

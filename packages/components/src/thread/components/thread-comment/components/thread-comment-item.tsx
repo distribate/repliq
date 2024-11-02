@@ -5,14 +5,14 @@ import { Typography } from '@repo/ui/src/components/typography.tsx';
 import { ThreadCommentActions } from './thread-comment-actions.tsx';
 import { ThreadCommentProps } from '../types/thread-comment-types.ts';
 import { ThreadRepliedCommentItem } from './thread-comment-replied-item.tsx';
-import { CURRENT_USER_QUERY_KEY, CurrentUser } from '@repo/lib/queries/current-user-query.ts';
-import { useMutationState, useQueryClient } from '@tanstack/react-query';
+import { useMutationState } from '@tanstack/react-query';
 import { USER_URL } from '@repo/shared/constants/routes.ts';
 import { Badge } from '@repo/ui/src/components/badge.tsx';
 import { SELECT_COMMENT_MUTATION_KEY } from '../hooks/use-highlight.ts';
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import dynamic from 'next/dynamic';
+import { getUser } from '@repo/lib/helpers/get-user.ts';
 
 const ThreadCommentMoreActions = dynamic(() =>
   import("./thread-comment-more-actions.tsx")
@@ -22,8 +22,7 @@ const ThreadCommentMoreActions = dynamic(() =>
 export const ThreadCommentItem = ({
   nickname: threadCommentNickname, isAuthor, created_at, content, id, replied, thread_id, edited
 }: ThreadCommentProps) => {
-  const qc = useQueryClient();
-  const currentUser = qc.getQueryData<CurrentUser>(CURRENT_USER_QUERY_KEY);
+  const currentUser = getUser();
   const [active, setActive] = useState<boolean>(false)
 
   const data = useMutationState({

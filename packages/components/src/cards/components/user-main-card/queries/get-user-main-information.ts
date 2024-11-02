@@ -60,7 +60,7 @@ export async function getUserMainInformation({
     getStats({ nickname }),
   ]);
   
-  if (typeof user === 'string') return null;
+  if (!user) return null;
   
   const item = await getFavoriteItem({
     favorite_item: user.favorite_item

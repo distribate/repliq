@@ -11,13 +11,12 @@ import { ThreadsSkeleton } from './threads-skeleton.tsx';
 import { UserEntity } from '@repo/types/entities/entities-type.ts';
 import { ContentNotFound } from '#templates/section-not-found.tsx';
 import { FilteringSearch } from '#filtering/components/filtering-search.tsx';
-import React, { ChangeEvent, forwardRef, useCallback, useState } from 'react';
-import { useDebounce } from '@repo/lib/hooks/use-debounce.ts';
+import { ChangeEvent, forwardRef, useState } from 'react';
 import { Input } from '@repo/ui/src/components/input.tsx';
 import { DropdownWrapper } from '#wrappers/dropdown-wrapper.tsx';
 import { SelectedWrapper } from '#wrappers/selected-wrapper.tsx';
 import { DropdownMenuItem } from '@repo/ui/src/components/dropdown-menu.tsx';
-import { VIEW_COMPONENTS_TYPE } from '#friends/components/filtering/components/friends-filtering-view.tsx';
+import { VIEW_COMPONENTS_TYPE } from '#friends/components/filtering/contants/view-components-type.ts';
 
 const ThreadsFiltering = forwardRef<
   HTMLInputElement

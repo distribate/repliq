@@ -1,12 +1,11 @@
 import { Ellipsis } from "lucide-react";
 import { Typography } from "@repo/ui/src/components/typography.tsx";
 import { HoverCardItem } from "@repo/ui/src/components/hover-card.tsx";
-import { CURRENT_USER_QUERY_KEY, CurrentUser } from '@repo/lib/queries/current-user-query.ts';
-import { DropdownWrapper } from '../../../../../wrappers/dropdown-wrapper.tsx';
+import { DropdownWrapper } from '#wrappers/dropdown-wrapper.tsx';
 import { CommentItemProps } from '../../types/post-comment-types.ts';
 import { useControlComment } from '../../hooks/use-control-comment.ts';
 import { Separator } from '@repo/ui/src/components/separator.tsx';
-import { useQueryClient } from '@tanstack/react-query';
+import { getUser } from '@repo/lib/helpers/get-user.ts';
 
 type PostCommentItemAdditional = Pick<CommentItemProps, "id"
 	| "user_nickname"
@@ -16,8 +15,7 @@ type PostCommentItemAdditional = Pick<CommentItemProps, "id"
 export const PostCommentItemAdditional = ({
 	id: comment_id, user_nickname, post_id
 }: PostCommentItemAdditional) => {
-	const qc = useQueryClient()
-	const currentUser = qc.getQueryData<CurrentUser>(CURRENT_USER_QUERY_KEY)
+	const currentUser = getUser();
 	const { controlCommentMutation } = useControlComment()
 	
 	if (!currentUser) return;

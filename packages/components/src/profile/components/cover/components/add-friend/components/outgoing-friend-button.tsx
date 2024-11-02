@@ -1,24 +1,21 @@
 import { Button } from "@repo/ui/src/components/button.tsx";
-import { RequestFriendProperties } from '../types/request-friend-properties-type.ts';
-import { useControlFriend } from '#friend/components/request-card/hooks/use-control-friend.ts';
+import { useControlFriendRequests } from '#friend/components/friend-card/hooks/use-control-friend-requests.ts';
+import { FriendRequestProperties } from '#friend/components/friend-card/types/friend-request-types.ts';
 
 export const OutgoingFriendButton = ({
 	recipient
-}: RequestFriendProperties) => {
-	const { deleteRequestMutation } = useControlFriend()
+}: Pick<FriendRequestProperties, "recipient">) => {
+	const { rejectOutgoingRequestMutation } = useControlFriendRequests()
 	
 	const handleDeniedFriendReq = () => {
-		deleteRequestMutation.mutate({
-			reqUserNickname: recipient
-		})
+		return rejectOutgoingRequestMutation.mutate(recipient);
 	}
 	
 	return (
 		<Button
 			onClick={handleDeniedFriendReq}
 			variant="pending"
-			pending={deleteRequestMutation.isPending}
-			disabled={deleteRequestMutation.isPending || deleteRequestMutation.isError}
+			disabled={rejectOutgoingRequestMutation.isPending || rejectOutgoingRequestMutation.isError}
 		>
 			Отменить заявку
 		</Button>

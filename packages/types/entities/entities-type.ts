@@ -1,6 +1,10 @@
 import { Database, Tables } from './gen-supabase.ts';
+import { DonateType } from '@repo/components/src/user/components/donate/queries/get-user-donate.ts';
 
 export type UserEntity = Tables<"users">
+export type ExtendedUserEntity = Tables<"users"> & {
+  donate: DonateType["primary_group"]
+}
 export type FriendEntity = Tables<"users_friends">
 export type FriendRequestEntity = Tables<"friends_requests">
 export type FriendPinnedEntity = Tables<"friends_pinned">

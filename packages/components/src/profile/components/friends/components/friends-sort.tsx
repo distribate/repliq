@@ -16,28 +16,28 @@ const FRIENDS_SORT_ITEMS: FriendsSortItems[] = [
 		title: "По дате добавления",
 		value: "created_at"
 	},
-	// {
-	// 	title: "По привилегии",
-	// 	value: "donate"
-	// }
+	{
+		title: "По привилегии",
+		value: "donate"
+	}
 ]
 
 export const FriendsSort = () => {
 	const { setFriendsSortMUtation } = useFriendsSort()
 
-	const handleSort = (e: React.MouseEvent<HTMLDivElement, MouseEvent>, type: FriendsSortType) => {
+	const handleSort = (
+		e: React.MouseEvent<HTMLDivElement, MouseEvent>, type: FriendsSortType
+	) => {
 		e.preventDefault();
 		
-		setFriendsSortMUtation.mutate({ type })
+		return setFriendsSortMUtation.mutate({ type })
 	}
 
 	return (
 		<div className="w-fit">
 			<DropdownWrapper
 				properties={{
-					sideAlign: "bottom",
-					contentAlign: "end",
-					contentClassname: "w-[200px]"
+					sideAlign: "bottom", contentAlign: "end", contentClassname: "w-[200px]"
 				}}
 				trigger={
 					<div className="flex items-center gap-1">

@@ -12,8 +12,8 @@ const typographyVariants = cva('whitespace-wrap', {
       link: 'underline underline-offset-4 cursor-pointer',
     },
     font: {
-      default: 'font-[]',
-      pixy: 'font-[Monocraft]',
+      default: '',
+      minecraft: 'font-[Minecraft]',
     },
     textSize: {
       small: 'text-sm',

@@ -1,18 +1,16 @@
-import { useQueryClient } from '@tanstack/react-query';
-import { CURRENT_USER_QUERY_KEY, CurrentUser } from '@repo/lib/queries/current-user-query.ts';
 import { Typography } from '@repo/ui/src/components/typography.tsx';
 import { Fragment } from 'react';
 import {
   userBlockedQuery,
-} from '../../cards/components/user-personal-card/components/account-settings/queries/user-blocked-query.ts';
-import { UserBlockedCard } from '../../cards/components/user-blocked-card/components/user-blocked-card.tsx';
+} from '#cards/components/user-personal-card/components/account-settings/queries/user-blocked-query.ts';
+import { UserBlockedCard } from '#cards/components/user-blocked-card/components/user-blocked-card.tsx';
 import { Dialog, DialogContent, DialogTrigger } from '@repo/ui/src/components/dialog.tsx';
+import { getUser } from '@repo/lib/helpers/get-user.ts';
 
 export const BlockedListModal = () => {
-  const qc = useQueryClient();
-  const currentUser = qc.getQueryData<CurrentUser>(CURRENT_USER_QUERY_KEY);
+  const currentUser = getUser();
   
-  if (!currentUser) return;
+  if (!currentUser) return null;
   
   const { data: userBlocked } = userBlockedQuery({
     nickname: currentUser.nickname,

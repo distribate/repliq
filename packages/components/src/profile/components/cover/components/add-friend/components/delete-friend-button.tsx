@@ -1,22 +1,20 @@
 import { Button } from "@repo/ui/src/components/button.tsx";
-import { RequestFriendProperties } from '../types/request-friend-properties-type.ts';
-import { useControlFriend } from '#friend/components/request-card/hooks/use-control-friend.ts';
+import { useControlFriendRequests } from '#friend/components/friend-card/hooks/use-control-friend-requests.ts';
+import { FriendRequestProperties } from '#friend/components/friend-card/types/friend-request-types.ts';
 
 export const DeleteFriendButton = ({
-	recipient
-}: RequestFriendProperties) => {
-	const { removeFriendFromListMutation } = useControlFriend()
+	recipient: reqUserNickname
+}: Pick<FriendRequestProperties, "recipient">) => {
+	const { removeFriendMutation } = useControlFriendRequests()
 	
 	const handleDeleteFriend = () => {
-		removeFriendFromListMutation.mutate({
-			reqUserNickname: recipient
-		})
+		return removeFriendMutation.mutate({ reqUserNickname })
 	}
 	
 	return (
 		<Button
 			onClick={handleDeleteFriend}
-			disabled={removeFriendFromListMutation.isPending || removeFriendFromListMutation.isError}
+			disabled={removeFriendMutation.isPending || removeFriendMutation.isError}
 			variant="negative"
 		>
 			Удалить из друзей

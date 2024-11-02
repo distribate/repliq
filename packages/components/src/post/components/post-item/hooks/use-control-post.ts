@@ -1,7 +1,7 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { removePost } from '../queries/remove-post.ts';
-import { POSTS_QUERY_KEY } from '../../../../profile/components/posts/components/posts/queries/posts-query.ts';
-import { CURRENT_USER_QUERY_KEY, CurrentUser } from '@repo/lib/queries/current-user-query.ts';
+import { POSTS_QUERY_KEY } from '#profile/components/posts/components/posts/queries/posts-query.ts';
+import { getUser } from '@repo/lib/helpers/get-user.ts';
 
 type ControlPostType = 'remove'
   | 'edit'
@@ -17,7 +17,7 @@ type ControlPost = {
 
 export const useControlPost = () => {
   const qc = useQueryClient();
-  const currentUser = qc.getQueryData<CurrentUser>(CURRENT_USER_QUERY_KEY)
+  const currentUser = getUser();
   
   const controlPostMutation = useMutation({
     mutationFn: async(values: ControlPost) => {

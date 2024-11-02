@@ -1,7 +1,7 @@
 import { cva, VariantProps } from 'class-variance-authority';
 import { forwardRef, HTMLAttributes } from 'react';
 
-const friendsListLayoutVariants = cva("flex gap-2", {
+const friendsListLayoutVariants = cva("flex gap-2 h-full", {
   variants: {
     variant: {
       grid: "grid grid-cols-2 auto-rows-auto",

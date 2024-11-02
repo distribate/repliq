@@ -1,33 +1,31 @@
-"use server"
+'use server';
 
-import "server-only"
+import 'server-only';
 import { getCurrentUser } from '@repo/lib/actions/get-current-user.ts';
-import { getUsers } from '../../admin/components/dashboard/queries/get-users.ts';
+import { ExtendedUsers, getUsers } from '#admin/components/dashboard/queries/get-users.ts';
 import { getFriends } from './get-friends.ts';
 
-export async function getSearchingFriends() {
-  const currentUser = await getCurrentUser();
+export type SearchingFriend = Omit<ExtendedUsers, "uuid">
 
+export async function getSearchingFriends(): Promise<SearchingFriend[] | null> {
+  const currentUser = await getCurrentUser();
   if (!currentUser) return null;
   
-  const [users, friends ] = await Promise.all([
-    getUsers(),
-    getFriends({
-      nickname: currentUser.nickname
-    })
-  ])
+  const [ users, friends ] = await Promise.all([
+    getUsers({ withDonate: true }),
+    getFriends({ nickname: currentUser.nickname }),
+  ]);
   
   if (!users) return null;
-  if (!friends) return users.data.filter(
-    u => u.nickname !== currentUser.nickname
-  );
   
-  const searchingFriends = users.data.filter(u =>
-    u.nickname !== currentUser.nickname
-     && !friends.some(
-       friend => friend.nickname === u.nickname
-      )
-  );
-
-  return searchingFriends;
+  if (!friends) return users.data.filter(
+    u => u.nickname !== currentUser.nickname,
+  ) as ExtendedUsers[];
+  
+  return users.data.filter(u =>
+      u.nickname !== currentUser.nickname
+      && !friends.some(
+        friend => friend.nickname === u.nickname,
+      ),
+  ) as ExtendedUsers[];
 }

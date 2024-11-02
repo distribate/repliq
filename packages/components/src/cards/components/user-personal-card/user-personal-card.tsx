@@ -1,21 +1,18 @@
 import { Typography } from '@repo/ui/src/components/typography.tsx';
-import { Avatar } from '../../../user/components/avatar/components/avatar.tsx';
-import { UserNickname } from '../../../user/components/name/components/nickname.tsx';
+import { Avatar } from '#user/components/avatar/components/avatar.tsx';
+import { UserNickname } from '#user/components/name/components/nickname.tsx';
 import { Separator } from '@repo/ui/src/components/separator.tsx';
-import { CURRENT_USER_QUERY_KEY, CurrentUser } from '@repo/lib/queries/current-user-query.ts';
-import { useQueryClient } from '@tanstack/react-query';
 import Portfolio from '@repo/assets/images/minecraft/portfolio.webp';
-import { ProfileSettingsModal } from '../../../modals/custom/profile-settings-modal.tsx';
-import { AccountSettingsModal } from '../../../modals/custom/account-settings-modal.tsx';
-import { AdvancedSettingsModal } from '../../../modals/custom/advanced-settings-modal.tsx';
-import { TicketsModal } from '../../../modals/custom/tickets-modal.tsx';
+import { ProfileSettingsModal } from '#modals/custom/profile-settings-modal.tsx';
+import { AccountSettingsModal } from '#modals/custom/account-settings-modal.tsx';
+import { AdvancedSettingsModal } from '#modals/custom/advanced-settings-modal.tsx';
+import { TicketsModal } from '#modals/custom/tickets-modal.tsx';
 import { UserSettingOption } from './components/profile-settings/user-profile-settings.tsx';
+import { getUser } from '@repo/lib/helpers/get-user.ts';
 
 const UserPersonalCardHeader = () => {
-  const qc = useQueryClient();
-  const currentUser = qc.getQueryData<CurrentUser>(CURRENT_USER_QUERY_KEY);
-  
-  if (!currentUser) return;
+  const currentUser = getUser();
+  if (!currentUser) return null;
   
   const { nickname, name_color } = currentUser;
   

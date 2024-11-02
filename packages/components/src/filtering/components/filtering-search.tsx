@@ -1,9 +1,11 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { SelectedWrapper } from '../../wrappers/selected-wrapper.tsx';
+"use client"
+
+import { ReactNode, useEffect, useRef, useState } from 'react';
+import { SelectedWrapper } from '#wrappers/selected-wrapper.tsx';
 import { Search } from 'lucide-react';
 
 type FilteringSearch = {
-  children: React.ReactNode;
+  children: ReactNode;
 }
 
 export const FilteringSearch = ({

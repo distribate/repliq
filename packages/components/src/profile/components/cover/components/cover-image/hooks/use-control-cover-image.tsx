@@ -6,13 +6,14 @@ import {
 import { updateValueOfUploadedImage } from '@repo/lib/utils/storage/update-value-uploaded-image.ts';
 import { IMAGE_COVER_QUERY_KEY } from '../queries/image-cover-query.ts';
 import { nanoid } from 'nanoid';
-import { CURRENT_USER_QUERY_KEY, CurrentUser } from '@repo/lib/queries/current-user-query.ts';
+import { CURRENT_USER_QUERY_KEY } from '@repo/lib/queries/current-user-query.ts';
 import { USER_IMAGES_BUCKET } from '@repo/shared/constants/buckets.ts';
 import { createTask, registerTaskQueue } from '@repo/lib/helpers/create-task-delay.ts';
 import { deletePrevImageFromUsers } from './delete-prev-image.ts';
 import { REQUESTED_USER_QUERY_KEY } from '../../../cover/queries/requested-user-query.ts';
 import { getArrayBuffer } from '@repo/lib/helpers/ger-array-buffer.ts';
 import { encode } from 'base64-arraybuffer';
+import { getUser } from '@repo/lib/helpers/get-user.ts';
 
 type BackgroundImage = {
   file: File | null,
@@ -30,7 +31,7 @@ export const USER_COVER_UPDATE_IMAGE_MUTATION_KEY = [ 'user-cover-update' ];
 
 export const useControlCoverImage = () => {
   const qc = useQueryClient();
-  const currentUser = qc.getQueryData<CurrentUser>(CURRENT_USER_QUERY_KEY);
+  const currentUser = getUser();
   
   const revalidateUserQueries = async() => {
     if (!currentUser) return;

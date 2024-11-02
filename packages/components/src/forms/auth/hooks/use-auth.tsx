@@ -6,6 +6,7 @@ import { mutationOptions } from '@repo/shared/options/mutation-options.ts';
 import { createUserSecurityCredentials } from '@repo/lib/actions/create-user-security-credentials.ts';
 import { AUTH_QUERY_KEY, AuthQuery } from '../queries/auth-query.ts';
 import { createUserAdditionalCredentials } from '@repo/lib/actions/create-user-additional-credentials.ts';
+import { CURRENT_USER_QUERY_KEY } from '@repo/lib/queries/current-user-query.ts';
 
 export const useAuth = () => {
   const qc = useQueryClient();
@@ -137,7 +138,10 @@ export const useAuth = () => {
         }
       }
     },
-    onSuccess: async() => await qc.invalidateQueries({ queryKey: AUTH_QUERY_KEY }),
+    onSuccess: async() => {
+      await qc.prefetchQuery({ queryKey: CURRENT_USER_QUERY_KEY })
+      await qc.invalidateQueries({ queryKey: AUTH_QUERY_KEY })
+    },
     onError: (e) => { throw new Error(e.message); },
   });
   

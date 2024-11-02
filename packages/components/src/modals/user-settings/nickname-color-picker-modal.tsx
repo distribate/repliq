@@ -1,17 +1,15 @@
 import { Typography } from '@repo/ui/src/components/typography.tsx';
 import {
   NicknameColorPicker
-} from '../../cards/components/user-personal-card/components/profile-settings/components/nickname-color-picker.tsx';
-import { CURRENT_USER_QUERY_KEY, CurrentUser } from '@repo/lib/queries/current-user-query.ts';
-import { useQueryClient } from '@tanstack/react-query';
+} from '#cards/components/user-personal-card/components/profile-settings/components/nickname-color-picker.tsx';
 import { DynamicModal } from '../dynamic-modal.tsx';
 import { UPDATE_FIELD_MUTATION_KEY } from '@repo/lib/hooks/use-update-current-user.ts';
+import { getUser } from '@repo/lib/helpers/get-user.ts';
 
 export const NicknameColorPickerModal = () => {
-  const qc = useQueryClient();
-  const currentUser = qc.getQueryData<CurrentUser>(CURRENT_USER_QUERY_KEY);
+  const currentUser = getUser();
   
-  if (!currentUser) return;
+  if (!currentUser) return null;
   
   const nameColor = currentUser?.name_color;
   const nickname = currentUser?.nickname;

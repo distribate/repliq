@@ -1,13 +1,14 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { UserEntity } from '@repo/types/entities/entities-type.ts';
 import { UpdateUserFields, updateUserFields } from '../queries/update-user-fields.ts';
-import { CURRENT_USER_QUERY_KEY, CurrentUser } from '../queries/current-user-query.ts';
+import { CURRENT_USER_QUERY_KEY } from '../queries/current-user-query.ts';
 import { toast } from 'sonner';
 import { DONATE_QUERY_KEY } from '@repo/components/src/user/components/donate/queries/donate-query.ts';
 import { parseStringToBoolean } from '../helpers/parse-string-to-boolean.ts';
 import {
   REQUESTED_USER_QUERY_KEY,
 } from '@repo/components/src/profile/components/cover/cover/queries/requested-user-query.ts';
+import { getUser } from '#helpers/get-user.ts';
 
 export type AvailableFields = Pick<UserEntity, 'description'
   | 'visibility'
@@ -28,9 +29,7 @@ export const UPDATE_FIELD_MUTATION_KEY = ["user-update-field"]
 
 export const useUpdateCurrentUser = () => {
   const qc = useQueryClient();
-  const currentUser = qc.getQueryData<CurrentUser>(
-    CURRENT_USER_QUERY_KEY
-  );
+  const currentUser = getUser();
   
   const updateFieldMutation = useMutation({
     mutationKey: UPDATE_FIELD_MUTATION_KEY,

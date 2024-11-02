@@ -7,8 +7,7 @@ import { Avatar } from '#user/components/avatar/components/avatar.tsx';
 import { BlockWrapper } from '#wrappers/block-wrapper.tsx';
 import { postFormQuery } from '#forms/create-post/queries/post-form-query.ts';
 import dynamic from 'next/dynamic';
-import { useQueryClient } from '@tanstack/react-query';
-import { CURRENT_USER_QUERY_KEY, CurrentUser } from '@repo/lib/queries/current-user-query.ts';
+import { getUser } from '@repo/lib/helpers/get-user.ts';
 
 const CreatePostActiveSection = dynamic(() =>
   import('./create-post-active-section.tsx')
@@ -16,8 +15,7 @@ const CreatePostActiveSection = dynamic(() =>
 );
 
 export const CreatePostSection = () => {
-  const qc = useQueryClient()
-  const currentUser = qc.getQueryData<CurrentUser>(CURRENT_USER_QUERY_KEY)
+  const currentUser = getUser();
   const postFieldRef = useRef<HTMLDivElement | null>(null);
   const { postFormFieldsMutation } = usePostFormControl();
   const { data: postFieldStatus } = postFormQuery();
