@@ -93,21 +93,22 @@ export default async function ProfilePage({
   
   const { nickname: currentUserNickname } = user;
   const { nickname: reqUserNickname } = params;
-  const reqUser = await getRequestedUser(reqUserNickname);
   
-  if (!reqUser) return
+  const requestedUser = await getRequestedUser(reqUserNickname);
+  if (!requestedUser) return
   
-  const preferences = reqUser.preferences;
-  const reqUserUUID = reqUser.uuid;
+  const preferences = requestedUser.preferences;
+  const reqUserUUID = requestedUser.uuid;
   
   const qc = new QueryClient();
   
-  await qc.prefetchQuery({
-    queryKey: REQUESTED_USER_QUERY_KEY(reqUserNickname),
-    queryFn: () => getRequestedUser(reqUserNickname),
-  });
-  
-  const profileStatus = await checkProfileStatus(reqUser);
+  const [_, profileStatus] = await Promise.all([
+    qc.prefetchQuery({
+      queryKey: REQUESTED_USER_QUERY_KEY(reqUserNickname),
+      queryFn: () => getRequestedUser(reqUserNickname),
+    }),
+    checkProfileStatus(requestedUser)
+  ])
   
   if (profileStatus === 'banned') {
     const banDetails = await getBanDetails({
@@ -129,7 +130,7 @@ export default async function ProfilePage({
   });
   
   const isSectionPrivatedByOwner = !preferences.gameStatsVisibility
-    && (reqUser.nickname === currentUserNickname);
+    && (requestedUser.nickname === currentUserNickname);
   
   return (
     <div className="flex flex-col w-full relative">

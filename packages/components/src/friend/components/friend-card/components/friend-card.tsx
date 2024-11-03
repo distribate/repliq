@@ -11,9 +11,7 @@ import { FriendCardControl } from '#friend/components/friend-card/components/fri
 import { FriendCardNote } from '#friend/components/friend-card/components/friend-card-note.tsx';
 import { Pin } from 'lucide-react';
 
-export type FriendCardProps = Pick<UserEntity, 'nickname'
-  | 'real_name' | 'description'
-> & FriendsQuery;
+export type FriendCardProps = Pick<UserEntity, 'nickname' | 'real_name' | 'description'> & FriendsQuery;
 
 export const FriendCard = ({
   ...friend
@@ -27,7 +25,7 @@ export const FriendCard = ({
       <div className="flex flex-col gap-y-1 w-fit">
         <div className="flex items-center gap-1 w-fit">
           <Link href={USER_URL + nickname} className="flex items-center gap-1">
-            <UserNickname nickname={nickname} className="text-lg" />
+            <UserNickname nickname={nickname} className="text-lg" nicknameColor={name_color}/>
             {real_name && <UserRealName real_name={real_name} with_annotation={false} />}
           </Link>
           <UserDonate nickname={nickname} />

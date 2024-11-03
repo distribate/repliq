@@ -1,6 +1,7 @@
 import { z } from 'zod';
 
 export const THREAD_CONTENT_LIMIT = 4096;
+export const THREAD_CONTENT_LIMIT_WITH_IMAGES = 1500;
 
 export const createThreadSchema = z.object({
   category: z.string().min(1, {
@@ -30,6 +31,16 @@ export const createThreadSchema = z.object({
   permission: z.boolean(),
   auto_remove: z.boolean(),
   comments: z.boolean(),
-  images: z
-  .custom<File[] | null>(),
+  images: z.custom<File[] | null>(),
+}).superRefine((data, ctx) => {
+  const contentLimit = data.images && data.images.length > 0
+    ? THREAD_CONTENT_LIMIT_WITH_IMAGES : THREAD_CONTENT_LIMIT;
+  
+  if (data.content.length > contentLimit) {
+    ctx.addIssue({
+      code: 'custom',
+      path: ['content'],
+      message: `Превышено максимальное количество символов (${contentLimit})`,
+    });
+  }
 });

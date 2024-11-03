@@ -11,7 +11,7 @@ import { SidebarDesktop } from '../sidebar/desktop/components/sidebar/sidebar-de
 import { useSidebarControl } from '../sidebar/desktop/components/sidebar-layout/hooks/use-sidebar-control.ts';
 
 interface ResizableLayout {
-  defaultLayout: number[] | undefined,
+  defaultLayout: number[],
   children: ReactNode
 }
 
@@ -19,8 +19,6 @@ const SidebarMobile = dynamic(() =>
   import("../sidebar/mobile/components/sidebar-mobile.tsx")
   .then(m => m.SidebarMobile)
 )
-
-export const DEFAULT_LAYOUT_SIZES = [ 16, 84 ];
 
 type PanelsProps = {
   defaultSize: number
@@ -97,13 +95,13 @@ export const AreaMain = ({
 };
 
 export const ResizableLayout = ({
-  defaultLayout = DEFAULT_LAYOUT_SIZES, children,
+  defaultLayout, children,
 }: ResizableLayout) => {
   const matches = useMediaQuery('(min-width: 768px)')
   const { isDynamic } = useSidebarControl();
   const [ isClient, setIsClient ] = useState(false);
   const layoutGroupGap = isDynamic ? 1 : 2;
-  
+
   useEffect(() => {setIsClient(true)}, []);
   
   const onLayout = (sizes: number[]) => {

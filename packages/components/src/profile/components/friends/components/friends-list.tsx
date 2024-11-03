@@ -7,8 +7,8 @@ import { RequestFriends } from '#friends/queries/get-friends.ts';
 import { friendsQuery } from '#friends/queries/friends-query.ts';
 import { ContentNotFound } from '#templates/section-not-found.tsx';
 import { UserEntity } from '@repo/types/entities/entities-type.ts';
-import { FriendProfileCardSkeleton } from '#friend/components/friend-card/components/friend-profile-card-skeleton.tsx';
 import { FriendProfileCard } from '#friend/components/friend-card/components/friend-profile-card.tsx';
+import { Skeleton } from '@repo/ui/src/components/skeleton.tsx';
 
 type FriendsSearch = Pick<UserEntity, "nickname" | "name_color">
 
@@ -16,6 +16,24 @@ const filterFriendsByNickname =
   (data: FriendsSearch[], query: string) => data.filter(
   item => item.nickname.startsWith(query)
 );
+
+const FriendProfileCardSkeleton = () => {
+  return (
+    <div className="flex flex-col gap-y-4 w-full p-4 rounded-lg">
+      <div className="flex items-center gap-2">
+        <Skeleton className="w-[46px] h-[46px]"/>
+        <div className="flex flex-col">
+          <Skeleton className="w-[89px] h-[46px]"/>
+          <Skeleton className="w-[68px] h-[46px]"/>
+        </div>
+      </div>
+      <div className="flex flex-col">
+        <Skeleton className="w-[126px] h-[46px]"/>
+        <Skeleton className="w-[45px] h-[46px]"/>
+      </div>
+    </div>
+  )
+}
 
 export const FriendsList = ({
   nickname

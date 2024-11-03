@@ -1,8 +1,7 @@
 import { Button } from '@repo/ui/src/components/button.tsx';
 import { Typography } from '@repo/ui/src/components/typography.tsx';
 import { MoreWrapper } from '#wrappers/more-wrapper.tsx';
-import { DropdownMenuItem } from '@repo/ui/src/components/dropdown-menu.tsx';
-import { Pin, Tag, Trash } from 'lucide-react';
+import { Tag, Trash } from 'lucide-react';
 import {
   DeleteFriendModal,
 } from '#modals/action-confirmation/components/delete-friend/components/delete-friend-modal.tsx';
@@ -12,13 +11,15 @@ import { useRouter } from 'next/navigation';
 import { USER_URL } from '@repo/shared/constants/routes.ts';
 import { Separator } from '@repo/ui/src/components/separator.tsx';
 import { FriendsQuery } from '#friends/queries/friends-query.ts';
-import { useControlFriend } from '#friend/components/friend-card/hooks/use-control-friend.ts';
+import { FriendCardControlPin } from '#friend/components/friend-card/components/friend-card-control-pin.tsx';
+import { HoverCardItem } from '@repo/ui/src/components/hover-card.tsx';
+
+export type FriendCardControlProps = Pick<FriendsQuery, 'friend_id' | 'nickname' | 'isPinned'>
 
 export const FriendCardControl = ({
   nickname: reqUserNickname, friend_id, isPinned,
-}: Pick<FriendsQuery, 'friend_id' | 'nickname' | 'isPinned'>) => {
-  const { setFriendPinnedMutation, setFriendUnpinMutation } = useControlFriend();
-  const { push } = useRouter()
+}: FriendCardControlProps) => {
+  const { push } = useRouter();
   
   return (
     <div className="flex items-center mt-2 gap-1 w-fit">
@@ -29,48 +30,32 @@ export const FriendCardControl = ({
       >
         <Typography textSize="small">К профилю</Typography>
       </Button>
-      <MoreWrapper>
+      <MoreWrapper
+        properties={{
+          sideAlign: "right", contentAlign: "start", contentAsChild: true, contentClassname: 'w-[250px]'
+        }}
+      >
         <UserCardModal
           nickname={reqUserNickname}
           withCustomTrigger={true}
           trigger={
-            <DropdownMenuItem className="flex justify-start items-center gap-2 group">
+            <HoverCardItem className="flex justify-start items-center gap-2 group">
               <Tag size={16} className="text-shark-300" />
               <Typography textSize="small">Показать карточку профиля</Typography>
-            </DropdownMenuItem>
+            </HoverCardItem>
           }
         />
-        {isPinned ? (
-          <DropdownMenuItem
-            onClick={() => setFriendUnpinMutation.mutate({
-              reqUserNickname,
-            })}
-            className="flex justify-start items-center gap-2 group"
-          >
-            <Pin size={16} className="text-shark-300" />
-            <Typography textSize="small" className="text-caribbean-green-500">Открепить</Typography>
-          </DropdownMenuItem>
-        ) : (
-          <DropdownMenuItem
-            onClick={() => setFriendPinnedMutation.mutate({
-              reqUserNickname,
-            })}
-            className="flex justify-start items-center gap-2 group"
-          >
-            <Pin size={16} className="text-shark-300" />
-            <Typography textSize="small">Закрепить</Typography>
-          </DropdownMenuItem>
-        )}
-        <FriendCardControlNote nickname={reqUserNickname}/>
-        <Separator/>
+        <FriendCardControlPin nickname={reqUserNickname} isPinned={isPinned} />
+        <FriendCardControlNote nickname={reqUserNickname} />
+        <Separator />
         <DeleteFriendModal
           friend_id={friend_id}
           nickname={reqUserNickname}
           trigger={
-            <DropdownMenuItem className="flex justify-start items-center gap-2 group">
-              <Trash size={16} className="text-red-500"/>
+            <HoverCardItem className="flex justify-start items-center gap-2 group">
+              <Trash size={16} className="text-red-500" />
               <Typography textSize="small" className="text-red-500">Удалить из друзей</Typography>
-            </DropdownMenuItem>
+            </HoverCardItem>
           }
         />
       </MoreWrapper>

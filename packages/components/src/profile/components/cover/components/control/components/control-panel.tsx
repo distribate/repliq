@@ -6,7 +6,13 @@ import { MoreWrapper } from '#wrappers/more-wrapper.tsx';
 
 export const ControlPanel = () => {
   return (
-    <MoreWrapper variant="selected" position="bottom-left">
+    <MoreWrapper
+      variant="selected"
+      properties={{
+        sideAlign: 'left',
+        contentAlign: 'end',
+      }}
+    >
       <div className="flex flex-col gap-y-1 *:w-full w-full items-start">
         <HoverCardItem className="group gap-2">
           <Ban size={16} className="text-shark-300" />

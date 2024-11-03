@@ -1,8 +1,6 @@
 import { dehydrate, HydrationBoundary, QueryClient } from '@tanstack/react-query';
 import { getCurrentUser } from '@repo/lib/actions/get-current-user.ts';
 import { REQUESTS_INCOMING_QUERY_KEY } from '@repo/components/src/friends/queries/requests-incoming-query.ts';
-import { REQUESTS_QUERY_KEY } from '@repo/components/src/friends/queries/requests-query.ts';
-import { getRequests } from '@repo/components/src/friends/queries/get-requests.ts';
 import { REQUESTS_OUTGOING_QUERY_KEY } from '@repo/components/src/friends/queries/requests-outgoing-query.ts';
 import { Suspense } from 'react';
 import {
@@ -37,10 +35,6 @@ export default async function FriendsPage() {
       queryFn: () => getRequestsByType({
         type: 'incoming', nickname: currentUser?.nickname,
       }),
-    }),
-    qc.prefetchQuery({
-      queryKey: REQUESTS_QUERY_KEY(nickname),
-      queryFn: () => getRequests(nickname),
     }),
     qc.prefetchQuery({
       queryKey: REQUESTS_OUTGOING_QUERY_KEY(nickname),

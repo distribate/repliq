@@ -11,9 +11,9 @@ import { ImagePlus } from 'lucide-react';
 import { FormChildsProps } from '../types/create-thread-form-types.ts';
 import { Button } from '@repo/ui/src/components/button.tsx';
 import { OperationType } from '@repo/types/global';
-import { handleEventKeyDown } from '../../../editor/helpers/handle-event-keydown.ts';
-import { RenderElement } from '../../../editor/components/render-element.tsx';
-import { RenderLeaf } from '../../../editor/components/render-leaf.tsx';
+import { handleEventKeyDown } from '#editor/helpers/handle-event-keydown.ts';
+import { RenderElement } from '#editor/components/render-element.tsx';
+import { RenderLeaf } from '#editor/components/render-leaf.tsx';
 import { threadFormQuery } from '../queries/thread-form-query.ts';
 import { THREAD_CONTENT_LIMIT } from '../schemas/create-thread-schema.ts';
 

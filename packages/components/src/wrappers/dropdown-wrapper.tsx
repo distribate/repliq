@@ -1,7 +1,7 @@
 import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from "@repo/ui/src/components/dropdown-menu.tsx";
 import { ReactNode } from "react";
 
-interface DropdownWrapperProps {
+export interface DropdownWrapperProps {
 	trigger: ReactNode,
 	content: ReactNode,
 	properties?: Partial<{
