@@ -28,33 +28,32 @@ export const useCreateReport = () => {
       );
       
       if (!reportState || !currentUser) return;
-
+      
       if (currentUser.nickname === reportState.reportedItem?.targetNickname) {
-        return "self-reported";
+        return 'self-reported';
       }
       
       const { reportedItem, type, reason, description } = reportState;
       
       if (!type || !reportedItem || !reason) return;
       
+      const { targetNickname, targetId, targetContent } = reportedItem;
+      
       return postReport({
         report_type: type,
-        targetContent: reportedItem.targetContent,
-        targetId: reportedItem.targetId,
-        targetNickname: reportedItem.targetNickname,
-        reason,
+        targetContent, targetId, targetNickname, reason,
         description: description ?? null,
       });
     },
     onSuccess: async(data) => {
-      if (data === 'self-reported') return toast.error('Вы не можете пожаловаться сами на себя!')
+      if (data === 'self-reported') return toast.error('Вы не можете пожаловаться сами на себя!');
       if (!data) return toast.error('Произошла ошибка при создании репорта');
       
       toast.success('Заявка создана');
       
       return qc.resetQueries({ queryKey: REPORT_QUERY_KEY });
     },
-    onError: e => { throw new Error(e.message); }
+    onError: e => { throw new Error(e.message); },
   });
   
   return { updateReportValuesMutation, createReportMutation };

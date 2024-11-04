@@ -15,13 +15,9 @@ export const FriendsSearch = forwardRef<
     setFriendsSortMUtation.mutate({ search: val });
   }, 100), []);
   
-  const handleSearchInput = (e: ChangeEvent<
-    HTMLInputElement
-  >) => {
-    const { value } = e.target;
-    
-    setValue(value);
-    debouncedHandleSearch(value);
+  const handleSearchInput = (e: ChangeEvent<HTMLInputElement>) => {
+    setValue(e.target.value);
+    debouncedHandleSearch(e.target.value);
   };
   
   return (

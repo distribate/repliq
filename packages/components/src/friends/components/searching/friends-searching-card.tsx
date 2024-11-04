@@ -4,9 +4,9 @@ import { Typography } from '@repo/ui/src/components/typography.tsx';
 import { UserDonate } from '#user/components/donate/components/donate.tsx';
 import { ExtendedUserEntity } from '@repo/types/entities/entities-type.ts';
 import { UserNickname } from '#user/components/name/components/nickname.tsx';
-import { FriendButton } from '#profile/components/cover/components/add-friend/components/friend-button.tsx';
 import { Button } from '@repo/ui/src/components/button.tsx';
 import { useRouter } from 'next/navigation';
+import { FriendButton } from '#buttons/friends/friend-button.tsx';
 
 export type FriendsSearchingCardProps = Pick<ExtendedUserEntity, 'id'
   | 'nickname' | 'name_color' | 'description' | 'donate'

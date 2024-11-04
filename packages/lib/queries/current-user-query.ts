@@ -7,7 +7,7 @@ import { UserPreferences } from '../helpers/convert-user-preferences-to-map.ts';
 export const CURRENT_USER_QUERY_KEY: QueryKey = ["user", "current"]
 
 export type CurrentUser = Omit<UserEntity, "preferences"
-	| "visibility" | "cover_image" | "acceptrules"
+	| "visibility" | "acceptrules"
 > & {
 	donate: DonateType["primary_group"] | null,
 	properties: {

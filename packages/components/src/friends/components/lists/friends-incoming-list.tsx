@@ -1,10 +1,10 @@
 'use client';
 
-import { friendsFilteringQuery } from '../../filtering/queries/friends-filtering-query.ts';
-import { requestsIncomingQuery } from '../../../queries/requests-incoming-query.ts';
 import { ContentNotFound } from '#templates/section-not-found.tsx';
 import { FriendsListLayout } from './friends-list-layout.tsx';
 import { FriendCardIncoming } from '#friend/components/friend-card/components/friend-card-incoming.tsx';
+import { friendsFilteringQuery } from '#friends/components/filtering/queries/friends-filtering-query.ts';
+import { requestsIncomingQuery } from '#friends/queries/requests-incoming-query.ts';
 
 export const FriendsIncomingList = () => {
   const { data: friendsFiltering } = friendsFilteringQuery()

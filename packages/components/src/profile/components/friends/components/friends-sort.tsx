@@ -13,12 +13,10 @@ type FriendsSortItems = {
 
 const FRIENDS_SORT_ITEMS: FriendsSortItems[] = [
 	{
-		title: "По дате добавления",
-		value: "created_at"
+		title: "По дате добавления", value: "created_at"
 	},
 	{
-		title: "По привилегии",
-		value: "donate"
+		title: "По привилегии", value: "donate"
 	}
 ]
 

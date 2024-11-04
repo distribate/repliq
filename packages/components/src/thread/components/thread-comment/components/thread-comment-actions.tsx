@@ -19,7 +19,7 @@ export const ThreadCommentActions = ({
 	const { updateCreateThreadCommentMutation } = useCreateThreadComment();
 	
 	const handleReplyComment = () => {
-		updateCreateThreadCommentMutation.mutate({
+		return updateCreateThreadCommentMutation.mutate({
 			type: "reply",
 			repliedValues: { commentId, commentNickname, commentContent }
 		})

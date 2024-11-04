@@ -9,19 +9,26 @@ import { DialogClose } from '@repo/ui/src/components/dialog.tsx';
 import { ConfirmationButton } from '@repo/components/src/buttons/confirmation-action-button.tsx';
 import { useQueryClient } from '@tanstack/react-query';
 import { REPORT_QUERY_KEY, reportQuery } from '@repo/components/src/report/queries/report-query.ts';
-import { useState } from 'react';
-import { POSTS_QUERY_KEY, PostsQuery } from '@repo/components/src/profile/components/posts/components/posts/queries/posts-query.ts';
+import React, { useState } from 'react';
+import {
+  POSTS_QUERY_KEY,
+  PostsQuery,
+} from '@repo/components/src/profile/components/posts/components/posts/queries/posts-query.ts';
 import { toast } from 'sonner';
-import { THREAD_COMMENTS_QUERY_KEY, } from '@repo/components/src/thread/components/thread-comments/queries/thread-comments-query.ts';
+import {
+  THREAD_COMMENTS_QUERY_KEY,
+} from '@repo/components/src/thread/components/thread-comments/queries/thread-comments-query.ts';
 import { ThreadComment } from '@repo/components/src/thread/components/thread-comments/queries/get-thread-comments.ts';
 import { Textarea } from '@repo/ui/src/components/textarea.tsx';
 import { ReportReasonEnum } from '@repo/types/entities/entities-type.ts';
+import { FlagTriangleLeft } from 'lucide-react';
+import { HoverCardItem } from '@repo/ui/src/components/hover-card.tsx';
 
 export type ReportItemProps = {
   reportType: ReportsReportType,
   targetNickname: string,
   threadId?: string,
-  targetId: string | number;
+  targetId?: string | number;
 }
 
 export const ReportCreateModal = ({
@@ -56,13 +63,15 @@ export const ReportCreateModal = ({
       
       id = selectedComment.id;
       content = selectedComment.content;
+    } else if (reportType === 'account') {
+      id = targetNickname;
     }
     
-    if (!id || !content || !targetId) return;
+    if (!id) return;
     
     setStage('reason');
     
-    updateReportValuesMutation.mutate({
+    return updateReportValuesMutation.mutate({
       type: reportType,
       reportedItem: {
         targetNickname: targetNickname,
@@ -73,30 +82,29 @@ export const ReportCreateModal = ({
   };
   
   const handleReason = (
-    reason: ReportReasonEnum
+    reason: ReportReasonEnum,
   ) => {
     setStage('description');
     updateReportValuesMutation.mutate({ reason });
   };
   
   const onChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    console.log(e.target.value)
-    updateReportValuesMutation.mutate({ description: e.target.value });
+    return updateReportValuesMutation.mutate({ description: e.target.value });
   };
   
   const createReport = () => {
     setStage('reason');
-    createReportMutation.mutate();
+    return createReportMutation.mutate();
   };
   
   const onClose = () => {
     setStage('reason');
-    return qc.resetQueries({ queryKey: REPORT_QUERY_KEY })
+    return qc.resetQueries({ queryKey: REPORT_QUERY_KEY });
   };
   
   const dialogTitle = stage === 'reason'
     ? 'Укажите причину нарушения' : stage === 'description'
-      ? 'Укажите описание нарушения' : "";
+      ? 'Укажите описание нарушения' : '';
   
   return (
     <DynamicModal
@@ -104,12 +112,10 @@ export const ReportCreateModal = ({
       contentClassName="max-w-md"
       mutationKey={CREATE_REPORT_MUTATION_KEY}
       trigger={
-        <Typography
-          onClick={updateReportValues}
-          className="text-red-500 text-md cursor-pointer"
-        >
-          Пожаловаться
-        </Typography>
+        <HoverCardItem className="group gap-2" onClick={updateReportValues}>
+          <FlagTriangleLeft size={16} className="text-red-500" />
+          <Typography className="text-red-500" textSize="small">Пожаловаться</Typography>
+        </HoverCardItem>
       }
       content={
         <ConfirmationActionModalTemplate title={dialogTitle}>
@@ -132,7 +138,7 @@ export const ReportCreateModal = ({
             {stage === 'description' && (
               <div className="flex flex-col gap-y-2 w-full">
                 <Textarea
-                  value={reportState.description || ""}
+                  value={reportState.description || ''}
                   className="resize-y min-h-12 text-[15px] max-h-36 bg-shark-900 py-2"
                   placeholder="Описание"
                   onChange={onChange}

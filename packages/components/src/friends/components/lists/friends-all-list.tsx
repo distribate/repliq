@@ -1,13 +1,13 @@
 'use client';
 
 import { FriendsPinnedList } from './friends-pinned-list.tsx';
-import { FriendsAllListSkeleton } from './friends-all-list-skeleton.tsx';
-import { friendsFilteringQuery } from '../../filtering/queries/friends-filtering-query.ts';
-import { FriendsQuery, friendsQuery } from '../../../queries/friends-query.ts';
 import { ContentNotFound } from '#templates/section-not-found.tsx';
 import { FriendsListLayout } from './friends-list-layout.tsx';
-import { FriendsListProps } from '#friends/components/lists/components/friends-list.tsx';
 import { FriendCard } from '#friend/components/friend-card/components/friend-card.tsx';
+import { friendsQuery, FriendsQuery } from '#friends/queries/friends-query.ts';
+import { FriendsListProps } from '#friends/components/lists/friends-list.tsx';
+import { friendsFilteringQuery } from '#friends/components/filtering/queries/friends-filtering-query.ts';
+import { FriendsAllListSkeleton } from '#skeletons/friends-all-list-skeleton.tsx';
 
 type FriendsNotPinnedListProps = {
   friends: FriendsQuery[]

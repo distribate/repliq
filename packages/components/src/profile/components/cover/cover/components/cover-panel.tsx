@@ -1,16 +1,20 @@
 import { cva, VariantProps } from 'class-variance-authority';
-import { HTMLAttributes } from 'react';
+import { HTMLAttributes, Suspense } from 'react';
 import { DropdownWrapper } from '#wrappers/dropdown-wrapper.tsx';
 import Photo from '@repo/assets/images/minecraft/photo.webp';
-import { FriendButton } from '../../components/add-friend/components/friend-button.tsx';
-import { ControlPanel } from '../../components/control/components/control-panel.tsx';
-import {
-  ProfileDescriptionChangeModal,
-} from '#modals/user-settings/profile-description-change-modal.tsx';
+import { ProfileDescriptionChangeModal } from '#modals/user-settings/profile-description-change-modal.tsx';
 import dynamic from 'next/dynamic';
 import Image from 'next/image';
 import { Button } from '@repo/ui/src/components/button.tsx';
 import { getUser } from '@repo/lib/helpers/get-user.ts';
+import { MoreWrapper } from '#wrappers/more-wrapper.tsx';
+import { HoverCardItem } from '@repo/ui/src/components/hover-card.tsx';
+import { Ban } from 'lucide-react';
+import { Typography } from '@repo/ui/src/components/typography.tsx';
+import { Separator } from '@repo/ui/src/components/separator.tsx';
+import { FriendButton } from '#buttons/friends/friend-button.tsx';
+import { ReportCreateModal } from '#modals/action-confirmation/components/report/components/report-create-modal.tsx';
+import { Skeleton } from '@repo/ui/src/components/skeleton.tsx';
 
 const ProfileBackgroundUpdateModal = dynamic(() =>
   import('@repo/components/src/modals/custom/profile-background-update-modal.tsx')
@@ -44,17 +48,31 @@ export const UserCoverPanel = ({
   variant, className, reqUserNickname, ...props
 }: UserCoverPanelProps) => {
   const currentUser = getUser();
-  
   if (!currentUser) return null;
   
-  const isOwner = currentUser?.nickname === reqUserNickname;
+  const isOwner = currentUser.nickname === reqUserNickname;
   
   return (
     <div className={userCoverPanelVariants(({ variant, className }))} {...props}>
       {!isOwner && (
         <div className="flex items-center gap-2">
           <FriendButton reqUserNickname={reqUserNickname} />
-          <ControlPanel />
+          <MoreWrapper
+            variant="selected"
+            properties={{ sideAlign: 'left', contentAlign: 'end' }}
+          >
+            <div className="flex flex-col gap-y-1 *:w-full w-full items-start">
+              <HoverCardItem className="group gap-2">
+                <Ban size={16} className="text-shark-300" />
+                <Typography>Добавить в черный список</Typography>
+              </HoverCardItem>
+              <Separator />
+              <ReportCreateModal
+                reportType="account"
+                targetNickname={reqUserNickname}
+              />
+            </div>
+          </MoreWrapper>
         </div>
       )}
       {isOwner && (
@@ -77,8 +95,12 @@ export const UserCoverPanel = ({
             }
             content={
               <div className="flex flex-col gap-y-1">
-                <ProfileBackgroundUpdateModal />
-                <DeleteCoverModal />
+                <Suspense fallback={<Skeleton className="h-16" />}>
+                  <ProfileBackgroundUpdateModal />
+                </Suspense>
+                <Suspense fallback={<Skeleton className="h-16" />}>
+                  <DeleteCoverModal />
+                </Suspense>
               </div>
             }
           />

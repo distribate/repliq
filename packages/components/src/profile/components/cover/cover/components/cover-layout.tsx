@@ -8,16 +8,16 @@ import { UserCover } from "./cover.tsx";
 import { requestedUserQuery } from '../queries/requested-user-query.ts';
 
 export type UserCoverLayoutProps = {
-	reqUserNickname: string,
+	requestedUserNickname: string,
 	isBlocked: boolean
 }
 
 export const UserCoverLayout = ({
-	reqUserNickname, isBlocked
+	requestedUserNickname, isBlocked
 }: UserCoverLayoutProps) => {
 	const { data: coverQueryState } = coverQuery()
 	const { setCoverStateMutation } = useCover()
-	const { data: requestedUser, isLoading } = requestedUserQuery(reqUserNickname)
+	const { data: requestedUser, isLoading } = requestedUserQuery(requestedUserNickname)
 	
 	if (typeof requestedUser === 'string') return null;
 	

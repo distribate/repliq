@@ -1,5 +1,5 @@
 import { ImageWrapper } from '../../../../../../wrappers/image-wrapper.tsx';
-import { CoverImageInput, useControlCoverImage } from '../hooks/use-control-cover-image.tsx';
+import { CoverImageInput, useControlCoverImage } from '../hooks/use-control-cover-image.ts';
 import { defaultImagesQuery } from '../queries/default-images-query.ts';
 import { LibraryBackgroundImageItem } from './library-background-image-item.tsx';
 

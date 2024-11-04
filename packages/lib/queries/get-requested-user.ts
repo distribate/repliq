@@ -42,12 +42,13 @@ export async function getRequestedUser(
   nickname: RequestedUserProps["nickname"]
 ): Promise<RequestedUser | null> {
   const currentUser = await getCurrentUser();
+  if (!currentUser) return null;
   
   let requestedUser: RequestedUser | null = null;
   
   const [ donate, main ] = await Promise.all([
     getDonateData(nickname),
-    getMainData(nickname),
+    getMainData(nickname)
   ]);
   
   const { data: donateData } = donate;

@@ -130,6 +130,18 @@ export const useControlFriendRequests = () => {
         toast.success('Заявка отправлена');
         return invalidateAllFriendsRequests();
       } else if (createRequest && createRequest.error) {
+        if (createRequest.error === 'blocked-by-user') {
+          return toast.error('Невозможно добавить этого игрока в друзья', {
+            description: "Этот пользователь вас заблокировал"
+          });
+        }
+        
+        if (createRequest.error === 'user-blocked') {
+          return toast.error('Невозможно добавить этого игрока в друзья', {
+            description: "Вы заблокировали данного пользователя"
+          });
+        }
+        
         return toast.error('Произошла ошибка. Повторите попытку', {
           description: createRequest.error,
         });

@@ -14,7 +14,7 @@ type PostReportType = Omit<ReportEntity, 'id'
 export type PostReportItem = {
   targetId: string | number,
   targetNickname: string,
-  targetContent: string
+  targetContent: string | null
 }
 
 export async function postReport({
@@ -25,7 +25,7 @@ export async function postReport({
   
   let reported_item: PostReportItem | null = null;
   
-  if (!targetNickname || !targetContent || !targetId) return;
+  if (!targetNickname || !targetId) return;
   if (user.nickname === targetNickname) return;
 	
   reported_item = {

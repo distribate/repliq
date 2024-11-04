@@ -24,11 +24,10 @@ export const UserProfilePosts = async({
     queryFn: () => getPostsByNickname(nickname),
   });
   
-  const isOwner = await protectPrivateArea({
-    requestedUserNickname: nickname
-  });
-  
-  const creatorPost = await getCreatorPost(nickname);
+  const [ isOwner, creatorPost ] = await Promise.all([
+    protectPrivateArea(nickname),
+    getCreatorPost(nickname),
+  ]);
   
   return (
     <ProfileSectionLayout
@@ -36,11 +35,11 @@ export const UserProfilePosts = async({
         (currentUser && isOwner) && <CreatePostSection />
       }
     >
-      <HydrationBoundary state={dehydrate(qc)}>
-        <Suspense fallback={<UserPostsSkeleton />}>
+      <Suspense fallback={<UserPostsSkeleton />}>
+        <HydrationBoundary state={dehydrate(qc)}>
           <Posts nickname={creatorPost.nickname} name_color={creatorPost.name_color} />
-        </Suspense>
-      </HydrationBoundary>
+        </HydrationBoundary>
+      </Suspense>
     </ProfileSectionLayout>
   );
 };

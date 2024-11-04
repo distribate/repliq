@@ -31,11 +31,9 @@ import Link from 'next/link';
 import { USER_URL } from '@repo/shared/constants/routes.ts';
 import { UserNickname } from '@repo/components/src/user/components/name/components/nickname.tsx';
 import { Button } from '@repo/ui/src/components/button.tsx';
-import {
-  FriendButton,
-} from '@repo/components/src/profile/components/cover/components/add-friend/components/friend-button.tsx';
 import { ThreadMore } from '@repo/components/src/thread/components/thread-more/components/thread-more.tsx';
 import { Eye } from 'lucide-react';
+import { FriendButton } from '@repo/components/src/buttons/friends/friend-button.tsx';
 
 export async function generateMetadata({
   params,

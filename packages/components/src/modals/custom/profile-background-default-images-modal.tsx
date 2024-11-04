@@ -6,7 +6,7 @@ import {
 import { DynamicModal } from '../dynamic-modal.tsx';
 import {
   USER_COVER_DELETE_IMAGE_MUTATION_KEY
-} from '../../profile/components/cover/components/cover-image/hooks/use-control-cover-image.tsx';
+} from '../../profile/components/cover/components/cover-image/hooks/use-control-cover-image.ts';
 
 export const ProfileBackgroundDefaultImagesModal = () => {
   return (

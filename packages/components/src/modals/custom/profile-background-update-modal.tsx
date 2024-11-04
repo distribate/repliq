@@ -4,7 +4,7 @@ import { ProfileBackgroundDefaultImagesModal } from './profile-background-defaul
 import {
   CoverImageInput,
   useControlCoverImage, USER_COVER_UPDATE_IMAGE_MUTATION_KEY,
-} from '../../profile/components/cover/components/cover-image/hooks/use-control-cover-image.tsx';
+} from '#profile/components/cover/components/cover-image/hooks/use-control-cover-image.ts';
 import { HoverCardItem } from '@repo/ui/src/components/hover-card.tsx';
 import { DynamicModal } from '../dynamic-modal.tsx';
 
@@ -17,7 +17,7 @@ export const ProfileBackgroundUpdateModal = () => {
     if (!type || !file) return;
     
     if (type === 'origin') {
-      return uploadBackgroundImageMutation.mutateAsync({ file });
+      return uploadBackgroundImageMutation.mutate({ file, customFilename: null });
     }
   }
   

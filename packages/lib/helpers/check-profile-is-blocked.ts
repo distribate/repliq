@@ -1,21 +1,14 @@
 'use server';
 
 import { createClient } from "@repo/lib/utils/api/server.ts";
-import { CheckProfileStatus } from './check-profile-status.ts';
 
-type GetUserBlockStatus = {
-  reqUserNickname: string
-}
-
-async function getUserBlockStatus({
-  reqUserNickname,
-}: GetUserBlockStatus) {
+async function getUserBlockStatus(requestedUserNickname: string) {
   const api = createClient();
   
   const { data, error } = await api
   .from('users_blocked')
-  .select('user_1, user_2')
-  .or(`user_1.eq.${reqUserNickname},user_2.eq.${reqUserNickname}`)
+  .select('initiator, recipient')
+  .or(`initiator.eq.${requestedUserNickname},recipient.eq.${requestedUserNickname}`)
   .single()
   
   if (error) return null;
@@ -23,16 +16,17 @@ async function getUserBlockStatus({
   return data;
 }
 
+export type CheckProfileIsBlocked = {
+  recipient: string,
+  initiator: string
+}
+
 export async function checkProfileIsBlocked(
-  requestedUser: Pick<CheckProfileStatus, "requestedUser">["requestedUser"]
-): Promise<{ user_1: string, user_2: string } | null> {
-  const requestedUserNickname = requestedUser.nickname;
-  
+  requestedUserNickname: string
+): Promise<CheckProfileIsBlocked | null> {
   if (!requestedUserNickname) return null;
   
-  const result = await getUserBlockStatus({
-    reqUserNickname: requestedUserNickname,
-  });
+  const result = await getUserBlockStatus(requestedUserNickname);
   
   if (!result) return null;
   

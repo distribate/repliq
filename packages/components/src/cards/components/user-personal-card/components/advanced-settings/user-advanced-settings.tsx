@@ -3,10 +3,10 @@ import CopperHorn from "@repo/assets/images/minecraft/copper-horn.webp"
 import { useCallback, useEffect, useState } from "react";
 import { hasAlertsShow } from "@repo/lib/actions/has-alerts.ts";
 import { setAlerts } from "@repo/lib/actions/set-alerts.ts";
-import { disableAlerts } from "@repo/lib/actions/disable-alerts.ts";
 import { usePreferences } from "./hooks/use-preferences.ts";
 import Paper from "@repo/assets/images/minecraft/paper.webp"
 import { UserSettingOption } from '../profile-settings/user-profile-settings.tsx';
+import { disableAlerts } from '#alert/queries/disable-alerts.ts';
 
 export const UserAdvancedSettings = () => {
 	const [isAlerts, setIsAlerts] = useState<boolean | null>(null);

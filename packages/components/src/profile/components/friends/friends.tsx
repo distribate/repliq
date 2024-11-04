@@ -14,12 +14,10 @@ export const UserProfileFriends = async({
   
   const qc = new QueryClient();
   
-  await Promise.all([
-    qc.prefetchQuery({
-      queryKey: REQUESTS_QUERY_KEY(nickname),
-      queryFn: () => getRequests(nickname),
-    }),
-  ]);
+  await qc.prefetchQuery({
+    queryKey: REQUESTS_QUERY_KEY(nickname),
+    queryFn: () => getRequests(nickname),
+  })
   
   return (
     <ProfileSectionLayout>

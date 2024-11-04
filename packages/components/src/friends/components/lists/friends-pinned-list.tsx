@@ -1,7 +1,7 @@
-import { friendsQuery, FriendsQuery } from '../../../queries/friends-query.ts';
 import { FriendCard } from '#friend/components/friend-card/components/friend-card.tsx';
 import { UserEntity } from '@repo/types/entities/entities-type.ts';
-import { FriendsAllListSkeleton } from '#friends/components/lists/components/friends-all-list-skeleton.tsx';
+import { friendsQuery } from '#friends/queries/friends-query.ts';
+import { FriendsAllListSkeleton } from '#skeletons/friends-all-list-skeleton.tsx';
 
 type FriendsPinnedListProps = Pick<UserEntity, "nickname">
 

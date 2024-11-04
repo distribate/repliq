@@ -55,6 +55,7 @@ export async function getUserInformation(): Promise<CurrentUser | null> {
 		nickname: data.nickname,
 		favorite_item: data.favorite_item,
 		uuid: data.uuid,
+		cover_image: data.cover_image,
 		real_name: data.real_name,
 		description: data.description,
 		birthday: data.birthday,

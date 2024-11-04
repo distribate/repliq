@@ -1,9 +1,9 @@
 'use client';
 
-import { searchingFriends } from '../../../queries/searching-friends-query.ts';
 import { ContentNotFound } from '#templates/section-not-found.tsx';
-import { FriendsSearchingCard } from '../../searching/components/friends-searching-card.tsx';
-import { FriendsAllListSkeleton } from '#friends/components/lists/components/friends-all-list-skeleton.tsx';
+import { searchingFriends } from '#friends/queries/searching-friends-query.ts';
+import { FriendsSearchingCard } from '#friends/components/searching/friends-searching-card.tsx';
+import { FriendsAllListSkeleton } from '#skeletons/friends-all-list-skeleton.tsx';
 
 export const FriendsSearchingList = () => {
   const { data: searchingUsers, isLoading } = searchingFriends();

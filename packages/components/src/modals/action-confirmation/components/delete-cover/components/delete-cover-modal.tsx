@@ -5,7 +5,7 @@ import { ConfirmationButton } from '#buttons/confirmation-action-button.tsx';
 import { ConfirmationActionModalTemplate } from '#templates/confirmation-action-modal-template.tsx';
 import {
   useControlCoverImage, USER_COVER_DELETE_IMAGE_MUTATION_KEY,
-} from '#profile/components/cover/components/cover-image/hooks/use-control-cover-image.tsx';
+} from '#profile/components/cover/components/cover-image/hooks/use-control-cover-image.ts';
 import { DialogClose } from '@repo/ui/src/components/dialog.tsx';
 import { DynamicModal } from '../../../../dynamic-modal.tsx';
 import { getUser } from '@repo/lib/helpers/get-user.ts';

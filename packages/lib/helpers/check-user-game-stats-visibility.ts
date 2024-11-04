@@ -5,15 +5,15 @@ import {
 type CheckUserGameStatsVisibility = {
   preferences: UserPreferences,
   currentUserNickname: string,
-  reqUserNickname: string
+  requestedUserNickname: string
 }
 
 export function checkUserGameStatsVisibility({
-  preferences, currentUserNickname, reqUserNickname
+  preferences, currentUserNickname, requestedUserNickname
 }: CheckUserGameStatsVisibility): boolean {
   const gameStatsShow = getPreferenceValue(preferences, "gameStatsVisibility")
 
-  if (currentUserNickname === reqUserNickname) return true;
+  if (currentUserNickname === requestedUserNickname) return true;
   
   return gameStatsShow;
 }
