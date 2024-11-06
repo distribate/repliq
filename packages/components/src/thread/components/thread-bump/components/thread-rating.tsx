@@ -3,14 +3,12 @@
 import { Minus, Plus } from 'lucide-react';
 import { Progress } from '@repo/ui/src/components/progress.tsx';
 import { threadRatingQuery } from '../queries/thread-rating-query.ts';
-import { ThreadRequest } from '../../../types/thread-request-types.ts';
 import { ThreadRatingSkeleton } from './thread-rating-skeleton.tsx';
 import { calculatePercentage } from '@repo/lib/helpers/calculate-percentage.ts';
 import { ThreadRatingActionItem } from './thread-rating-action-item.tsx';
+import { ThreadEntity } from '@repo/types/entities/entities-type.ts';
 
-export const ThreadRating = ({
-  thread_id: threadId,
-}: Pick<ThreadRequest, 'thread_id'>) => {
+export const ThreadRating = (threadId: Pick<ThreadEntity, 'id'>["id"]) => {
   const { data: threadRating, isLoading } = threadRatingQuery(threadId);
   
   if (isLoading) return <ThreadRatingSkeleton />;

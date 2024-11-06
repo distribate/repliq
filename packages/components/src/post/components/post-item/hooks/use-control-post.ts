@@ -2,16 +2,12 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { removePost } from '../queries/remove-post.ts';
 import { POSTS_QUERY_KEY } from '#profile/components/posts/components/posts/queries/posts-query.ts';
 import { getUser } from '@repo/lib/helpers/get-user.ts';
+import { PostEntity } from '@repo/types/entities/entities-type.ts';
 
-type ControlPostType = 'remove'
-  | 'edit'
-  | 'dialog'
-  | 'comments'
-  | 'pin'
+type ControlPostType = 'remove' | 'edit' | 'comments' | 'pin'
 
-type ControlPost = {
+type ControlPost = Pick<PostEntity, "id"> & {
   type: ControlPostType,
-  post_id: string,
   nickname: string
 }
 
@@ -26,22 +22,22 @@ export const useControlPost = () => {
       switch(values.type) {
         case 'remove':
           return removePost({
-            post_id: values.post_id, nickname: values.nickname,
+            id: values.id, nickname: values.nickname,
           });
 	      case 'edit':
-					
-	      case 'dialog':
-		   
+       
       }
     },
     onSuccess: async(data, variables, context) => {
 			if (!variables || !currentUser) return;
 			
 			if (variables.type === 'remove') {
-				await qc.invalidateQueries({ queryKey: POSTS_QUERY_KEY(currentUser.nickname)})
+				return qc.invalidateQueries({
+          queryKey: POSTS_QUERY_KEY(currentUser.nickname)
+        })
 			}
     },
-    onError: (e) => { throw new Error(e.message) },
+    onError: e => { throw new Error(e.message) },
   });
   
   return { controlPostMutation };

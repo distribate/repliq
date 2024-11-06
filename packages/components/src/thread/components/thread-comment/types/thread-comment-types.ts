@@ -12,8 +12,3 @@ export type ThreadCommentProps = {
 		content: string
 	} | null
 }
-
-export type ThreadCommentControlType = {
-	threadId: string,
-	commentId: number
-}

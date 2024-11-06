@@ -1,7 +1,6 @@
 'use server';
 
 import "server-only"
-import { FriendsQuery } from './friends-query.ts';
 import type { FriendsSort } from '#profile/components/friends/hooks/use-friends-sort.tsx';
 import { createClient } from "@repo/lib/utils/api/server.ts";
 import { FriendEntity, UserEntity } from '@repo/types/entities/entities-type.ts';
@@ -13,11 +12,19 @@ export type RequestFriends = Pick<UserEntity, "nickname"> & Partial<{
   ascending: boolean
 }>
 
-type FriendDetails = Omit<FriendsQuery, 'friend_id' | 'created_at'>
+type FriendDetails = {
+  friend_id: string,
+  created_at: string,
+  isPinned: boolean,
+  note: string | null
+}
+
+export type UserFriends = FriendDetails
+  & Pick<UserEntity, "nickname" | "status" | "description" | "real_name" | "name_color">
 
 export async function getFriends({
   nickname, orderType, ascending = false
-}: RequestFriends): Promise<FriendsQuery[] | null> {
+}: RequestFriends): Promise<UserFriends[] | null> {
   const api = createClient();
   
   let friendsQuery = api
@@ -54,7 +61,7 @@ export async function getFriends({
   .from('users')
   .select(`nickname, description, status, name_color, real_name`)
   .in('nickname', Array.from(friendNicknames))
-  .returns<FriendDetails[]>();
+  .returns<UserFriends[]>();
   
   const { data: friendsDetails, error: userError } = await usersQuery;
   
@@ -95,7 +102,7 @@ export async function getFriends({
       real_name: friendDetails.real_name,
     };
   }).filter(
-    (friend): friend is FriendsQuery => friend !== null,
+    (friend): friend is UserFriends => friend !== null,
   ); // Filter out null values
   
   if (friends.length === 0) {

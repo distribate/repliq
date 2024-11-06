@@ -2,7 +2,6 @@
 
 import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from '@repo/ui/src/components/resizable.tsx';
 import { ReactNode, useEffect, useRef, useState } from 'react';
-import { RESIZABLE_LAYOUT_COOKIE_KEY } from '@repo/shared/keys/cookie.ts';
 import { ImperativePanelHandle } from 'react-resizable-panels';
 import { useMediaQuery } from '@repo/lib/hooks/use-media-query.ts';
 import dynamic from 'next/dynamic';
@@ -104,10 +103,6 @@ export const ResizableLayout = ({
 
   useEffect(() => {setIsClient(true)}, []);
   
-  const onLayout = (sizes: number[]) => {
-    document.cookie = `${RESIZABLE_LAYOUT_COOKIE_KEY}=${JSON.stringify(sizes)}`;
-  };
-  
   if (!isClient) return null;
   
   return (
@@ -117,7 +112,6 @@ export const ResizableLayout = ({
           direction="horizontal"
           autoSaveId="conditional"
           suppressHydrationWarning
-          onLayout={onLayout}
           style={{ overflow: 'clip' }}
           className={`flex w-full min-h-screen h-screen max-h-screen p-2
             gap-${layoutGroupGap} overflow-hidden`}

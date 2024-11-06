@@ -1,14 +1,14 @@
 'use server';
 
 import { getCurrentUser } from '@repo/lib/actions/get-current-user.ts';
-import { ThreadRequest } from '../types/thread-request-types.ts';
 import { createClient } from '@repo/lib/utils/api/server.ts';
+import { ThreadEntity } from '@repo/types/entities/entities-type.ts';
 
 export type UpdateThreadRatingType = 'increment' | 'decrement'
 
 export type UpdateThreadRating = {
   type: UpdateThreadRatingType,
-  threadId: Pick<ThreadRequest, 'thread_id'>['thread_id']
+  threadId: Pick<ThreadEntity, 'id'>["id"]
 }
 
 type UpdateThreadRatingError = 'alreadyRating' | 'default'
@@ -31,7 +31,10 @@ async function deleteDecrementRating({
   .eq('thread_id', threadId)
   .eq("user_id", currentUserId)
   .eq('type', 'decrement');
-  if (error) throw new Error(error.message)
+  
+  if (error) {
+    throw new Error(error.message);
+  }
 }
 
 async function deleteIncrementRating({
@@ -46,7 +49,9 @@ async function deleteIncrementRating({
   .eq("user_id", currentUserId)
   .eq('type', 'increment');
   
-  if (error) throw new Error(error.message)
+  if (error) {
+    throw new Error(error.message);
+  }
 }
 
 async function postRating({
@@ -100,7 +105,7 @@ export async function updateThreadRating({
       break;
   }
   
-  return await postRating({
+  return postRating({
     type, currentUserId: currentUser.id, threadId: threadId
   })
 }

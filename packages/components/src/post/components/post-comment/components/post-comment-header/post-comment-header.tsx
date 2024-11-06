@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { PostCommentItemAdditional } from "./post-comment-additional.tsx";
-import { UserNickname } from '../../../../../user/components/name/components/nickname.tsx';
+import { UserNickname } from '#user/components/name/components/nickname.tsx';
 import { CommentItemProps } from '../../types/post-comment-types.ts';
 
 type PostCommentItemHeader = Pick<CommentItemProps, "user_nickname" | "id" | "post_id">

@@ -1,24 +1,22 @@
 "use server"
 
-import { UserEntity } from '@repo/types/entities/entities-type.ts';
-import { ThreadRequest } from '../types/thread-request-types.ts';
 import { createClient } from '@repo/lib/utils/api/server.ts';
-
-type GetThreadCreator = Pick<UserEntity, 'name_color' | 'nickname'> | null
+import { ThreadEntity, UserEntity } from '@repo/types/entities/entities-type.ts';
 
 export async function getThreadCreator(
-  threadId: Pick<ThreadRequest, 'thread_id'>["thread_id"]
-): Promise<GetThreadCreator> {
+  threadId: Pick<ThreadEntity, 'id'>["id"]
+): Promise<Pick<UserEntity, "nickname" | "name_color"> | null> {
   const api = createClient();
   
   const { data, error } = await api
   .from('threads_users')
-  .select('*, users(nickname, name_color)')
+  .select('users!inner(nickname, name_color)')
   .eq('thread_id', threadId)
+  .single();
   
-  if (error) {
-    return null;
-  }
+  if (error) return null;
   
-  return data.map(user => user.users)[0] as GetThreadCreator;
+  const user = Array.isArray(data.users) ? data.users[0] : data.users;
+  
+  return user
 }

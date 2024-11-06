@@ -3,13 +3,7 @@
 import { getCurrentUser } from "../actions/get-current-user.ts";
 import { createClient } from "@repo/lib/utils/api/server.ts";
 
-type CheckIsFriend = {
-	requestedUserNickname: string
-}
-
-export async function checkIsFriend({
-	requestedUserNickname,
-}: CheckIsFriend): Promise<boolean> {
+export async function checkIsFriend(requestedUserNickname: string): Promise<boolean> {
 	const currentUser = await getCurrentUser();
 	if (!currentUser) return false;
 	

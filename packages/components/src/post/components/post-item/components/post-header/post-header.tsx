@@ -20,10 +20,9 @@ const PostControl = dynamic(() =>
 )
 
 export const PostItemHeader = ({
-	nickname, created_at, name_color, id: post_id
+	nickname, created_at, name_color, id
 }: PostItemHeaderProps) => {
 	const currentUser = getUser();
-	
 	if (!currentUser) return null;
 	
 	const isOwner = currentUser.nickname === nickname;
@@ -44,7 +43,7 @@ export const PostItemHeader = ({
 				</div>
 			</div>
 			{isOwner && (
-				<PostControl post_id={post_id} nickname={nickname} name_color={name_color}/>
+				<PostControl id={id} nickname={nickname} name_color={name_color}/>
 			)}
 		</div>
 	)

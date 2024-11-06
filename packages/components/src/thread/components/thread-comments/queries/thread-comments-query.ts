@@ -1,19 +1,21 @@
 import { useQuery } from "@tanstack/react-query";
-import { getThreadComments, ThreadComment } from './get-thread-comments.ts';
+import { getThreadComments } from './get-thread-comments.ts';
+import { ThreadCommentEntity } from '@repo/types/entities/entities-type.ts';
 
-export const THREAD_COMMENTS_QUERY_KEY = (thread_id?: string) => ["ui", "thread-comments", thread_id]
+export const THREAD_COMMENTS_QUERY_KEY = (thread_id?: string) =>
+	["ui", "thread-comments", thread_id]
 
-type ThreadCommentsQuery = {
-	threadId: string,
+type ThreadCommentsQuery = Pick<ThreadCommentEntity, "thread_id"> & {
 	comments: boolean
 }
 
 export const threadCommentsQuery = ({
-	threadId, comments
+	thread_id, comments
 }: ThreadCommentsQuery) => {
-	return useQuery<ThreadComment[] | undefined>({
-		queryKey: THREAD_COMMENTS_QUERY_KEY(threadId),
-		queryFn: () => getThreadComments(threadId),
-		enabled: comments && !!threadId
+	return useQuery({
+		queryKey: THREAD_COMMENTS_QUERY_KEY(thread_id),
+		queryFn: () => getThreadComments(thread_id),
+		refetchOnWindowFocus: false,
+		enabled: comments && !!thread_id
 	})
 }

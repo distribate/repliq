@@ -8,7 +8,9 @@ type FriendsPinnedListProps = Pick<UserEntity, "nickname">
 export const FriendsPinnedList = ({
   nickname
 }: FriendsPinnedListProps) => {
-  const { data: friends, isLoading } = friendsQuery(nickname);
+  const { data: friends, isLoading } = friendsQuery({
+    nickname
+  });
   
   if (isLoading) return <FriendsAllListSkeleton />;
   

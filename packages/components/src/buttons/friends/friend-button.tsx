@@ -18,6 +18,7 @@ export const FriendButton = ({
 }: FriendButtonProps) => {
   const [ currentRequestStatus, setCurrentRequestStatus ] = useState<RequestStatus | null>(null);
   const currentUser = getUser();
+  if (!currentUser) return null;
   
   const reqStatus = checkFriendRequestStatus(reqUserNickname);
   
@@ -25,8 +26,9 @@ export const FriendButton = ({
     setCurrentRequestStatus(reqStatus);
   }, [ reqStatus ]);
   
-  if (!currentRequestStatus) return <Skeleton className="h-10 border border-white/10 rounded-md w-56" />;
-  if (!currentUser) return null;
+  if (!currentRequestStatus) {
+    return <Skeleton className="h-10 border border-white/10 rounded-md w-56" />;
+  }
   
   return (
     <>

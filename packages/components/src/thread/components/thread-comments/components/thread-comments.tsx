@@ -5,22 +5,22 @@ import { ThreadCommentItem } from '../../thread-comment/components/thread-commen
 import { ThreadCommentsSkeleton } from './thread-comments-skeleton.tsx';
 import { CommentsDisabled } from '#templates/comments-disabled.tsx';
 import { threadCommentsQuery } from '../queries/thread-comments-query.ts';
+import { ThreadCommentEntity } from '@repo/types/entities/entities-type.ts';
 
-type ThreadCommentsProps = {
-  threadId: string,
+type ThreadCommentsProps = Pick<ThreadCommentEntity, 'thread_id'> & {
   threadAuthorNickname: string,
   comments: boolean
 }
 
 export const ThreadComments = ({
-  threadId, threadAuthorNickname, comments,
+  thread_id, threadAuthorNickname, comments,
 }: ThreadCommentsProps) => {
-  const { data: threadComments, isLoading } = threadCommentsQuery({ threadId, comments });
+  const { data: threadComments, isLoading } = threadCommentsQuery({ thread_id, comments });
   
   if (!threadComments) return;
   if (!comments) return <CommentsDisabled />;
   
-  const nonComments = comments && threadComments.length === 0
+  const nonComments = comments && threadComments.length === 0;
   
   return (
     <div className="flex flex-col items-center w-full">
@@ -40,7 +40,7 @@ export const ThreadComments = ({
           {threadComments.map((comment, i) => (
             <ThreadCommentItem
               key={i}
-              thread_id={threadId}
+              thread_id={thread_id}
               id={comment.id}
               replied={comment.replied}
               edited={comment.edited}

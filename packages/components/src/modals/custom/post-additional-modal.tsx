@@ -2,28 +2,28 @@ import { HoverCardItem } from '@repo/ui/src/components/hover-card.tsx';
 import Link from 'next/link';
 import { Typography } from '@repo/ui/src/components/typography.tsx';
 import dayjs from 'dayjs';
-import { PostControlProps } from '../../post/components/post-item/components/post-header/post-control.tsx';
-import { Posts } from '../../profile/components/posts/components/posts/queries/get-posts-by-user.ts';
-import { BlockWrapper } from '../../wrappers/block-wrapper.tsx';
-import { Avatar } from '../../user/components/avatar/components/avatar.tsx';
-import { UserNickname } from '../../user/components/name/components/nickname.tsx';
-import { PostItemBody } from '../../post/components/post-item/components/post-body/post-body.tsx';
+import { PostControlProps } from '#post/components/post-item/components/post-header/post-control.tsx';
+import { BlockWrapper } from '#wrappers/block-wrapper.tsx';
+import { Avatar } from '#user/components/avatar/components/avatar.tsx';
+import { UserNickname } from '#user/components/name/components/nickname.tsx';
+import { PostItemBody } from '#post/components/post-item/components/post-body/post-body.tsx';
 import { Dialog, DialogContent, DialogTrigger } from '@repo/ui/src/components/dialog.tsx';
 import { USER_URL } from '@repo/shared/constants/routes.ts';
+import { PostEntity } from '@repo/types/entities/entities-type.ts';
 
 type PostAdditionalModal = PostControlProps & {
-  post: Posts[],
+  post: PostEntity[],
 }
 
 export const PostAdditionalModal = ({
-  post_id, post, name_color, nickname,
+  id, post, name_color, nickname,
 }: PostAdditionalModal) => {
   return (
     <Dialog>
       <DialogTrigger>
         <HoverCardItem>Открыть в окне</HoverCardItem>
       </DialogTrigger>
-      <DialogContent id={post_id} className="max-w-4xl !p-0">
+      <DialogContent id={id} className="max-w-4xl !p-0">
         <BlockWrapper className="flex flex-col gap-y-4">
           <div className="flex justify-between w-full items-center">
             <div className="flex gap-4 items-center">

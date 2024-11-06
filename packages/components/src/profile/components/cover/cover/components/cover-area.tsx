@@ -12,7 +12,7 @@ const coverAreaVariants = cva(
 				transparent: "bg-transparent",
 				gray: "bg-shark-800"
 			},
-			border: {
+			outline: {
 				default: "border-none",
 				arkhont: "border-arkhont-background border-[2px]",
 				authentic: "border-authentic-background border-[2px]",
@@ -23,7 +23,7 @@ const coverAreaVariants = cva(
 			}
 		},
 		defaultVariants: {
-			border: "default"
+			outline: "default"
 		}
 	}
 )
@@ -37,7 +37,7 @@ interface CoverAreaProps extends HTMLAttributes<HTMLDivElement>,
 }
 
 export const CoverArea = ({
-	className, variant, backgroundColor, backgroundImage, border, ...props
+	className, variant, backgroundColor, backgroundImage, outline, ...props
 }: CoverAreaProps) => {
-	return <div className={coverAreaVariants(({ variant, border, className, backgroundColor }))} {...props}/>
+	return <div className={coverAreaVariants(({ variant, outline, className, backgroundColor }))} {...props}/>
 }

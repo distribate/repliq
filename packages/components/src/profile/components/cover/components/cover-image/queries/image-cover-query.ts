@@ -6,13 +6,7 @@ import { REQUESTED_USER_QUERY_KEY } from '../../../cover/queries/requested-user-
 
 export const IMAGE_COVER_QUERY_KEY = (nickname: string) => [ "user", "cover", nickname ]
 
-type CoverImageQuery = {
-	nickname: string
-}
-
-export const imageCoverQuery = ({
-	nickname
-}: CoverImageQuery) => {
+export const imageCoverQuery = (nickname: string) => {
 	const qc = useQueryClient();
 	
 	const requestedUser = qc.getQueryData<UserEntity>(

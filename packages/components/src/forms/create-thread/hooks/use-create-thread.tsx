@@ -23,8 +23,8 @@ export const useCreateThread = () => {
         };
       });
     },
-    onSuccess: async() => await qc.invalidateQueries({ queryKey: THREAD_FORM_QUERY }),
-    onError: (e) => { throw new Error(e.message); },
+    onSuccess: () => qc.invalidateQueries({ queryKey: THREAD_FORM_QUERY }),
+    onError: e => { throw new Error(e.message); },
   });
   
   const createPostThreadMutation = useMutation({
@@ -68,9 +68,8 @@ export const useCreateThread = () => {
       }
   
       const createdThread = await postThread({
-        category_id,
-        title,
-        visibility,
+        category_id, title, visibility,
+        isImages: !!threadConvertedToBase64Images,
         user_nickname: currentUser.nickname,
         tags: tags ? tags : null,
         content: JSON.stringify(content),

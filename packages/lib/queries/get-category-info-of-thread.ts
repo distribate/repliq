@@ -1,5 +1,5 @@
 import { createClient } from "@repo/lib/utils/api/server.ts";
-import { ThreadRequest } from '@repo/components/src/thread/types/thread-request-types.ts';
+import { ThreadEntity } from '@repo/types/entities/entities-type.ts';
 
 type CategoryOfThread = {
   category: {
@@ -9,7 +9,7 @@ type CategoryOfThread = {
 }
 
 export async function getCategoryOfThreadTitle(
-  thread_id: ThreadRequest["thread_id"]
+  thread_id: Pick<ThreadEntity, 'id'>["id"]
 ) {
   const api = createClient();
   

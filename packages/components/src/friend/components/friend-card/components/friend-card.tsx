@@ -6,12 +6,12 @@ import { UserDonate } from '#user/components/donate/components/donate.tsx';
 import { Typography } from '@repo/ui/src/components/typography.tsx';
 import { UserEntity } from '@repo/types/entities/entities-type.ts';
 import { FriendCardLayout } from '#friend/components/friend-card/components/friend-card-layout.tsx';
-import { FriendsQuery } from '#friends/queries/friends-query.ts';
 import { FriendCardControl } from '#friend/components/friend-card/components/friend-card-control.tsx';
 import { FriendCardNote } from '#friend/components/friend-card/components/friend-card-note.tsx';
 import { Pin } from 'lucide-react';
+import { UserFriends } from '#friends/queries/get-friends.ts';
 
-export type FriendCardProps = Pick<UserEntity, 'nickname' | 'real_name' | 'description'> & FriendsQuery;
+export type FriendCardProps = Pick<UserEntity, 'nickname' | 'real_name' | 'description'> & UserFriends;
 
 export const FriendCard = ({
   ...friend

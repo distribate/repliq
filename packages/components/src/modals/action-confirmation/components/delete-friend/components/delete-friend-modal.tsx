@@ -3,13 +3,13 @@ import { ConfirmationActionModalTemplate } from '#templates/confirmation-action-
 import { ConfirmationButton } from '#buttons/confirmation-action-button.tsx';
 import { DynamicModal } from '../../../../dynamic-modal.tsx';
 import { DialogClose } from '@repo/ui/src/components/dialog.tsx';
-import { FriendsQuery } from '#friends/queries/friends-query.ts';
 import { useControlFriendRequests } from '#friend/components/friend-card/hooks/use-control-friend-requests.ts';
 import { USER_FRIEND_DELETE_MUTATION_KEY } from '#friend/components/friend-card/hooks/use-control-friend.ts';
+import { UserFriends } from '#friends/queries/get-friends.ts';
 
 type DeleteFriendModal = {
   trigger: ReactNode
-} & Pick<FriendsQuery, 'friend_id' | 'nickname'>
+} & Pick<UserFriends, 'friend_id' | 'nickname'>
 
 export const DeleteFriendModal = ({
   friend_id, trigger, nickname,

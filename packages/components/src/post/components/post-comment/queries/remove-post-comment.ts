@@ -1,52 +1,28 @@
 'use server';
 
-import "server-only"
-import { getCurrentUser } from '@repo/lib/actions/get-current-user.ts';
 import { createClient } from '@repo/lib/utils/api/server.ts';
+import { PostCommentEntity } from '@repo/types/entities/entities-type.ts';
+import { validateOwner } from '@repo/lib/helpers/validate-owner.ts';
 
-type RemovePostComment = {
-  comment_id: string,
-  nickname: string
-}
+export type RemovePostComment = Pick<PostCommentEntity, "id">
 
-async function removePostCommentReferenced({
-  comment_id, nickname,
+export async function removePostComment({
+  id
 }: RemovePostComment) {
+  const isValid = await validateOwner({ id, type: "posts_comments" });
+  if (!isValid) return;
+  
   const api = createClient();
   
   const { data, error } = await api
-  .from('p_comments')
+  .from('posts_comments')
   .delete()
-  .eq('id', comment_id)
-  .eq('user_nickname', nickname)
+  .eq('id', id)
   .select();
   
   if (error) {
-    console.error(error.message);
     throw new Error(error.message);
   }
   
   return data;
-}
-
-export async function removePostComment({
-  nickname, comment_id,
-}: RemovePostComment) {
-  const currentUser = await getCurrentUser();
-  
-  if (!currentUser) return;
-  
-  if (currentUser.nickname !== nickname) return;
-  
-  try {
-    const result = await removePostCommentReferenced({
-      comment_id, nickname,
-    });
-    
-    if (!result) return;
-    
-    return result;
-  } catch (e) {
-    console.error(e);
-  }
 }

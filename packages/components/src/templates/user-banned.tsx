@@ -12,7 +12,7 @@ export const UserBanned = ({
 }: BanDetails) => {
   return (
     <div className="flex flex-col w-full h-full">
-      <CoverArea variant="full" backgroundColor="gray" border="default">
+      <CoverArea variant="full" backgroundColor="gray" outline="default">
         <div className="z-[2] absolute w-full h-full right-0 top-0 bottom-0 left-0 bg-black/40" />
         <div className="flex gap-x-6 z-[3] relative items-start">
           <Image src={MissingTexture} alt="" height={168} width={168} className="rounded-md"/>

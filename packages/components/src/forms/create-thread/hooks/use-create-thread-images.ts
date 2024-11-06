@@ -1,5 +1,5 @@
 import { useCreateThread } from './use-create-thread.tsx';
-import { ChangeEvent } from 'react';
+import React, { ChangeEvent } from 'react';
 
 export type CreateThreadImageControl = {
   type: 'add' | 'delete',

@@ -14,7 +14,7 @@ export function mutationOptions<
 	
 	return {
 		onMutate: (variables) => {
-			let mutationKey = "";
+			let _mutationKey = "";
 			
 			// Object containing the maximum number of allowed mutations for each query key.
 			// If a query key is not present, it defaults to 1 (only one mutation at a time)
@@ -26,7 +26,7 @@ export function mutationOptions<
 			const currentMutationCount = qc.isMutating({
 				// Find all mutations that match the current mutation
 				predicate(mutation) {
-					mutationKey = JSON.stringify(mutation.options.mutationKey);
+					_mutationKey = JSON.stringify(mutation.options.mutationKey);
 					// because the variables are objects, we need to use a deep comparison
 					return mutation.state.variables === variables;
 				},

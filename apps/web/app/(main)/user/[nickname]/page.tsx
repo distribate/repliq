@@ -15,9 +15,15 @@ import {
 } from '@repo/components/src/profile/components/cover/cover/queries/requested-user-query.ts';
 import { MetadataType, PageConventionProps } from '@repo/types/global';
 import dynamic from 'next/dynamic';
-import { UserCoverSkeleton } from '@repo/components/src/profile/components/cover/cover/components/cover-skeleton.tsx';
 import type { User } from 'lucia';
 import { UserPostsSkeleton } from '@repo/components/src/skeletons/user-posts-skeleton.tsx';
+import { UserCoverSkeleton } from '@repo/components/src/skeletons/user-cover-skeleton.tsx';
+import { BLOCKED_QUERY_KEY } from '@repo/lib/queries/blocked-user-query.ts';
+import { checkProfileIsBlocked } from '@repo/lib/helpers/check-profile-is-blocked.ts';
+import { getRequests } from '@repo/components/src/friends/queries/get-requests.ts';
+import { REQUESTS_QUERY_KEY } from '@repo/components/src/friends/queries/requests-query.ts';
+import { FRIENDS_QUERY_KEY } from '@repo/components/src/friends/queries/friends-query.ts';
+import { getFriends } from '@repo/components/src/friends/queries/get-friends.ts';
 
 const UserProfilePosts = dynamic(() =>
   import('@repo/components/src/profile/components/posts/components/users-posts/components/user-profile-posts.tsx')
@@ -191,7 +197,11 @@ export default async function ProfilePage({
   
   const qc = new QueryClient();
   
-  const [ _, profileStatus ] = await Promise.all([
+  const [ _, __, profileStatus ] = await Promise.all([
+    qc.prefetchQuery({
+      queryKey: BLOCKED_QUERY_KEY(requestedUserNickname),
+      queryFn: () => checkProfileIsBlocked(requestedUserNickname)
+    }),
     qc.prefetchQuery({
       queryKey: REQUESTED_USER_QUERY_KEY(requestedUserNickname),
       queryFn: () => getRequestedUser(requestedUserNickname),
@@ -211,14 +221,24 @@ export default async function ProfilePage({
     || profileStatus === 'user-blocked';
   const isPrivated = profileStatus === 'private';
   
+  await Promise.all([
+    qc.prefetchQuery({
+      queryKey: REQUESTS_QUERY_KEY(user.nickname),
+      queryFn: () => getRequests(user.nickname)
+    }),
+    qc.prefetchQuery({
+      queryKey: FRIENDS_QUERY_KEY(user.nickname),
+      queryFn: () => getFriends({
+        nickname: user.nickname, orderType: "created_at"
+      })
+    })
+  ])
+  
   return (
     <div className="flex flex-col w-full relative">
       <Suspense fallback={<UserCoverSkeleton />}>
         <HydrationBoundary state={dehydrate(qc)}>
-          <UserCoverLayout
-            requestedUserNickname={requestedUserNickname}
-            isBlocked={isBlocked}
-          />
+          <UserCoverLayout requestedUserNickname={requestedUserNickname} />
         </HydrationBoundary>
       </Suspense>
       {isBlocked && (

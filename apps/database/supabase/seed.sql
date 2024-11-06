@@ -168,9 +168,9 @@ INSERT INTO "public"."users" ("acceptrules", "birthday", "cover_image", "created
 	(true, NULL, 'default/render-warden-hide.jpg', '2024-08-28 15:47:23.653119+00', 'шмебьюлок', 'e0e2fb96-9de7-430b-80df-59398a20b95d', '#ffffff', 'kendrick', '{"coverOutline": "false", "friendRequest": "true", "realNameVisibility": "true", "gameStatsVisibility": "true"}', NULL, NULL, 'a0799d91-0bb2-33d1-8115-792747b934c8', 'all', NULL),
 	(true, NULL, 'default/sand-camel.jpg', '2024-08-28 15:44:43.14115+00', NULL, '73c4acab-b1ab-430b-bc42-d6da78ab1092', '#ffffff', 'borbuse', '{"coverOutline": "false", "friendRequest": "true", "realNameVisibility": "true", "gameStatsVisibility": "true"}', NULL, NULL, '45d682c0-526e-3a95-8fb2-ec2e9c16ab90', 'all', NULL),
 	(true, NULL, 'default/adventure-in-end.jpg', '2024-06-22 21:07:32.429882+00', 'My Flaws Burn Through My Skin Like Demonic Flames from Hell', 'd905f002-1370-44c6-bef3-885063b5332f', '#F2DEF2', 'pureawake', '{"coverOutline": "false", "friendRequest": "true", "realNameVisibility": "true", "gameStatsVisibility": "true"}', 'Руся', NULL, 'a6570be9-f25f-3767-bd09-6588cac34cdb', 'friends', 8),
-	(true, NULL, 'default/adventure-in-blossom.jpg', '2024-06-22 18:29:11.063752+00', 'Я полежу и встану Для начала, хотя бы на колени', 'c2e8de6f-a450-4ca0-ba50-828bedb053ba', '#ffffff', 'discludness', '{"coverOutline": "false", "friendRequest": "true", "realNameVisibility": "true", "gameStatsVisibility": "true"}', 'Мария', NULL, '5744cd36-94bd-3e2f-9c97-aa564b146417', 'friends', NULL),
+	(true, NULL, 'cover/ffbc7e08-1838-4d80-8931-713168de7c20WCj', '2024-10-15 17:37:04.629915+00', NULL, 'ffbc7e08-1838-4d80-8931-713168de7c20', '#0CE4A3', 'distribate', '{"coverOutline": "true", "friendRequest": "true", "realNameVisibility": "false", "gameStatsVisibility": "false"}', 'Руся', NULL, 'c1686a0f-5f76-3694-84d7-c40ba8bf8174', 'all', 1),
 	(true, NULL, NULL, '2024-08-25 23:10:56.949548+00', 'Привет', 'c2508ed9-c992-4eb3-98a6-e149d01c4b2a', '#ffffff', 'george_wastaken', '{"coverOutline": "false", "friendRequest": "true", "realNameVisibility": "true", "gameStatsVisibility": "true"}', 'Владислав', NULL, '71fe71d1-0161-32cd-8b57-a76486d69aee', 'friends', NULL),
-	(true, NULL, 'cover/ffbc7e08-1838-4d80-8931-713168de7c20Y0T', '2024-10-15 17:37:04.629915+00', NULL, 'ffbc7e08-1838-4d80-8931-713168de7c20', '#0CE4A3', 'distribate', '{"coverOutline": "true", "friendRequest": "true", "realNameVisibility": "false", "gameStatsVisibility": "false"}', 'Руся', NULL, 'c1686a0f-5f76-3694-84d7-c40ba8bf8174', 'all', 1);
+	(true, NULL, 'cover/c2e8de6f-a450-4ca0-ba50-828bedb053baDGz', '2024-06-22 18:29:11.063752+00', '', 'c2e8de6f-a450-4ca0-ba50-828bedb053ba', '#ffffff', 'discludness', '{"coverOutline": "false", "friendRequest": "true", "realNameVisibility": "true", "gameStatsVisibility": "true"}', 'Мария', NULL, '5744cd36-94bd-3e2f-9c97-aa564b146417', 'all', NULL);
 
 
 --
@@ -199,10 +199,10 @@ INSERT INTO "public"."category" ("available", "description", "id", "title") VALU
 
 INSERT INTO "public"."threads" ("id", "title", "created_at", "updated_at", "visibility", "description", "comments", "auto_remove", "content", "permission") VALUES
 	('dbf53dcf-add8-425d-883a-d71ece170515', 'Монахов заворкал', '2024-11-02 22:34:50.57391+00', NULL, 'all', NULL, true, false, '[{"type": "paragraph", "children": [{"text": "Егор Монахов, амбициозный молодой веб-разработчик, начинал свой путь с простых веб-страниц и заголовков, созданных в блокноте. Его мечта была стать мастером адаптивной и стильной вёрстки. Однажды он услышал о Русе Белкине — мастере своего дела, который творил чудеса с помощью HTML и TailwindCSS. Русь был известен в небольших кругах как тот, кто мог преобразить обычный макет в шедевр минимализма и функциональности."}]}, {"type": "paragraph", "children": [{"text": ""}]}, {"type": "paragraph", "children": [{"text": "Егор записался на курс к Руси, где обучение было не только информативным, но и практичным. Белкин заставлял своих учеников каждый день кодить до тех пор, пока их пальцы не начнут бегать по клавиатуре так же естественно, как у музыканта по клавишам пианино. Русь показывал, как можно использовать утилитарные классы TailwindCSS для создания анимаций, адаптивных сеток и сложных компонентов без лишних стилей и путаницы в CSS."}]}, {"type": "paragraph", "children": [{"text": ""}]}, {"type": "paragraph", "children": [{"text": "Дни и ночи проходили за практикой. Егор научился создавать сложные макеты и понимать, что за каждым классом в TailwindCSS кроется целый мир возможностей. Его работы становились всё лучше, и в один день пришёл момент истины."}]}, {"type": "paragraph", "children": [{"text": ""}]}, {"type": "paragraph", "children": [{"text": "Однажды утром Егор получил сообщение в Telegram: \"Нужна срочная вёрстка лендинга для крупного стартапа. Сроки — вчера. Подробности — вечером\". Сердце Егора заколотилось быстрее. Это был его первый серьёзный заказ! Он понимал, что вся его работа под руководством Руси Белкина вела к этому моменту."}]}, {"type": "paragraph", "children": [{"text": ""}]}, {"type": "paragraph", "children": [{"text": "Егор открыл макет. Страницы пестрели сложными блоками, анимациями и адаптивностью, которая должна была работать на любом устройстве. Однако его не испугали детали. С уверенной улыбкой он приступил к работе, используя свои навыки, отточенные месяцами практики."}]}, {"type": "paragraph", "children": [{"text": ""}]}, {"type": "paragraph", "children": [{"text": "Каждый элемент был вёрстан с учётом производительности, каждая анимация была плавной благодаря возможностям TailwindCSS. Егор применил подходы, которые он перенял у Руси, включая семантику HTML и понимание UX."}]}, {"type": "paragraph", "children": [{"text": ""}]}, {"type": "paragraph", "children": [{"text": "Через несколько дней работы без сна, с бесконечными кружками кофе и напоминаниями от Руси Белкина, что качество превыше всего, лендинг был готов. Когда Егор отправил проект заказчику, ответ пришёл немедленно: \"Это именно то, что мы искали! Спасибо за такую качественную и быструю работу\"."}]}, {"type": "paragraph", "children": [{"text": ""}]}, {"type": "paragraph", "children": [{"text": "Этот проект стал для Егора первым большим шагом в профессиональной карьере. Он понял, что время, проведённое за обучением и практика под руководством Руси Белкина, было бесценным и дало ему уверенность и мастерство, о котором он мечтал."}]}]', false),
+	('75a961d6-4166-45e5-9a43-642e4dcb54f1', 'тест тред форматинг', '2024-10-30 19:17:34.721328+00', NULL, 'all', 'Описание треда крутое очень да да да ', false, false, '[{"type": "paragraph", "children": [{"bold": true, "text": "Привет, я абоба"}]}, {"type": "paragraph", "children": [{"bold": true, "text": ""}]}, {"type": "code", "children": [{"text": "также абоба"}]}, {"type": "paragraph", "children": [{"text": ""}]}, {"type": "paragraph", "children": [{"text": "ахахфыхахфыах"}]}, {"type": "paragraph", "children": [{"text": ""}]}, {"type": "paragraph", "children": [{"text": "подчеркнуто", "underline": true}]}, {"type": "paragraph", "children": [{"text": "", "underline": true}]}, {"type": "paragraph", "children": [{"text": "италик", "italic": true}]}]', false),
 	('764d84f2-4610-4208-b12f-cc98b510802b', 'ТРЕД СВЕТЛОЛИКАГО', '2024-10-28 21:12:58.904832+00', NULL, 'all', 'dasdasdasdasdasdasd', true, false, '[{"type": "paragraph", "children": [{"text": "asdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasd"}]}]', false),
 	('db2f82ca-e82f-4861-a750-c303b007ed65', 'ТРЕД ДЕЛОРИАНА', '2024-10-28 21:20:30.753753+00', NULL, 'all', '', false, false, '[{"type": "paragraph", "children": [{"text": "ДЕЛОРИАН ДЕЛОРИАН ТЕЛЕГРАММ АККАУУНТ КРУМАН"}]}]', false),
 	('a006faae-0dde-483a-af8e-d66fef569467', 'МОНАХОВ ДАУН ЗНАЛИ??', '2024-10-31 06:18:13.78922+00', NULL, 'all', 'Описание первого тестовго треда', true, false, '[{"type": "paragraph", "children": [{"text": "Монахов, ти где? Я тут фывфывфывфывфывфыв"}]}]', false),
-	('75a961d6-4166-45e5-9a43-642e4dcb54f1', 'тест тред форматинг', '2024-10-30 19:17:34.721328+00', NULL, 'all', 'Описание треда крутое очень да да да ', true, false, '[{"type": "paragraph", "children": [{"bold": true, "text": "Привет, я абоба"}]}, {"type": "paragraph", "children": [{"bold": true, "text": ""}]}, {"type": "code", "children": [{"text": "также абоба"}]}, {"type": "paragraph", "children": [{"text": ""}]}, {"type": "paragraph", "children": [{"text": "ахахфыхахфыах"}]}, {"type": "paragraph", "children": [{"text": ""}]}, {"type": "paragraph", "children": [{"text": "подчеркнуто", "underline": true}]}, {"type": "paragraph", "children": [{"text": "", "underline": true}]}, {"type": "paragraph", "children": [{"text": "италик", "italic": true}]}]', false),
 	('a867a362-8b75-4c36-9e57-1a32efcf49ba', 'Вид на город', '2024-10-29 00:46:08.063786+00', NULL, 'all', '', true, false, '[{"type": "paragraph", "children": [{"text": "Вид на какой-то город. "}, {"bold": true, "text": "Очень атмосферно!"}]}]', false),
 	('7e7586b2-ebc3-44ba-8721-022029a9a9bb', 'чипсики и депозит', '2024-10-31 21:12:25.329562+00', NULL, 'all', NULL, true, false, '[{"type": "paragraph", "children": [{"text": "закупился на хаях чипсики купил хихихихи"}]}]', false);
 
@@ -343,7 +343,6 @@ INSERT INTO "public"."config_minecraft_facts" ("fact", "id") VALUES
 --
 
 INSERT INTO "public"."users_friends" ("id", "user_1", "user_2", "created_at") VALUES
-	('b94dbf6b-1347-43eb-9543-95912bbb5643', 'discludness', 'pureawake', '2024-08-28 14:36:38.228442+00'),
 	('21c69ada-24f9-4245-9ccd-b7430db18f5a', 'kendrick', 'pureawake', '2024-08-28 17:17:25.618714+00'),
 	('498c6997-6165-48bd-b1d0-94bd55d3509b', 'kendrick', 'borbuse', '2024-08-28 17:20:42.654173+00'),
 	('3f65586c-e15a-4577-acb2-e26ee7af7f97', 'kendrick', 'discludness', '2024-09-04 21:20:55.97048+00');
@@ -359,8 +358,6 @@ INSERT INTO "public"."users_friends" ("id", "user_1", "user_2", "created_at") VA
 -- Data for Name: friends_pinned; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-INSERT INTO "public"."friends_pinned" ("id", "created_at", "initiator", "recipient", "friend_id") VALUES
-	('b499b798-ca64-426e-8ccd-f051dd2638ab', '2024-09-10 22:18:36.384216+00', 'discludness', 'pureawake', 'b94dbf6b-1347-43eb-9543-95912bbb5643');
 
 
 --
@@ -368,7 +365,9 @@ INSERT INTO "public"."friends_pinned" ("id", "created_at", "initiator", "recipie
 --
 
 INSERT INTO "public"."friends_requests" ("created_at", "initiator", "recipient", "id") VALUES
-	('2024-08-28 17:16:59.76032+00', 'kendrick', 'ferngazer', '04994e24-6ed0-47e7-b588-2184167bdcde');
+	('2024-08-28 17:16:59.76032+00', 'kendrick', 'ferngazer', '04994e24-6ed0-47e7-b588-2184167bdcde'),
+	('2024-11-04 12:31:08.171857+00', 'george_wastaken', 'pureawake', '5784151b-e39c-41f1-9c83-9cf36a8c40e1'),
+	('2024-11-04 19:07:32.84892+00', 'distribate', 'kendrick', '8fb14518-9f8a-4c8c-b7d6-cf590190e7a4');
 
 
 --
@@ -911,7 +910,7 @@ INSERT INTO "public"."luckperms_user_permissions" ("id", "uuid", "permission", "
 -- Data for Name: posts; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-INSERT INTO "public"."posts" ("comments", "content", "created_at", "post_id", "visibility") VALUES
+INSERT INTO "public"."posts" ("comments", "content", "created_at", "id", "visibility") VALUES
 	(true, 'Сегодня был отличный день! Прогулялся по парку, наслаждался солнечной погодой и встретил старых друзей. Жизнь прекрасна, когда окружен хорошими людьми. 💖', '2024-06-29 10:57:50.493599+00', 'a36aa1b6-bbab-426b-8b3e-2c56ee0ecf78', 'all'),
 	(true, '🎮 Всем привет! Недавно нашёл в Minecraft новое эпическое подземелье! 🌌 Это просто невероятно! Готовьтесь к приключению и собирайте ресурсы! ⚒️ Сталкивался с новыми, очень сильными мобами, но награды стоят того! 💎 Советую брать с собой больше факелов и зелий, чтобы выжить. 🏰 Кстати, кто уже исследовал это подземелье? Делитесь своими находками и стратегиями! 🚀 Давайте вместе разгадаем все тайны этого места! #Minecraft #Приключения #Подземелье', '2024-06-29 10:57:50.493599+00', 'd2a2fd1c-ca8a-4b0a-9793-d448e8bc2682', 'all'),
 	(true, 'ПОЛНАЯ АБОБА 🤣🤣🤣🤣', '2024-06-28 10:57:50+00', 'a3b4a325-c6b8-46b0-9f28-ecc77471b926', 'friends'),
@@ -919,54 +918,32 @@ INSERT INTO "public"."posts" ("comments", "content", "created_at", "post_id", "v
 	(true, 'седня жиденько покакал', '2024-06-29 17:23:57.249775+00', 'd62d6377-d383-421d-90cb-839a2777861d', 'all'),
 	(true, 'А зачем какать? Скажите парни', '2024-07-01 11:40:11.187736+00', '39bd527b-17ec-4866-8bf6-2db02177acd3', 'friends'),
 	(true, '🎮 Привет, искатели приключений! 🌍 Сегодня нашёл новое подземелье в Minecraft, и это что-то с чем-то! ⚔️ Оно просто огромное и полное опасностей! Сначала пришлось сразиться с кучей скелетов и зомби, а потом ещё и пауки налетели. 😱 Но самое интересное началось, когда нашёл сокровищницу с редкими ресурсами и зачарованным оружием! 💎 Не забудьте взять с собой побольше факелов и зелий исцеления, они там очень пригодятся. 🏰 В центре подземелья есть сложная головоломка, которую мы с друзьями еле-еле разгадали. 🔍 Кто уже проходил это подземелье? Поделитесь своими советами и лайфхаками! Очень интересно, что у кого получилось найти! 🌟 В общем, настоятельно рекомендую всем исследовать это место. Удачи вам и много удачных находок! #Minecraft #Подземелье #Приключения #Исследование #Сокровища', '2024-06-29 20:57:50+00', 'c05b6ee8-a7f4-42e4-8e20-e3920a487525', 'only'),
-	(true, 'ахахх', '2024-07-01 17:32:24.717443+00', '2db918c7-ba45-42bc-94ef-4bbf56c8ebbb', 'all'),
 	(true, 'ПЕРВЫЙ ПОСТ!', '2024-07-03 17:05:05.169706+00', 'da69df33-b0a5-4e06-b221-1e1422ed0ed6', 'all'),
 	(true, 'sddsas', '2024-07-03 18:35:04.817232+00', '1a44bd9d-06e1-422d-a761-58abcb5367aa', 'all'),
-	(true, 'Ебал мать андреева', '2024-10-31 21:02:06.255348+00', '00e11035-5051-4594-b787-2077a5b7456f', 'all');
+	(true, 'Ебал мать андреева', '2024-10-31 21:02:06.255348+00', '00e11035-5051-4594-b787-2077a5b7456f', 'all'),
+	(true, 'В подводке к новости в X журналисты либерального издания написали, что «животное погибло». В реальности власти усыпили Арахиса после того, как насильно изъяли его у хозяина (https://t.me/svtvnews/60323). 
+', '2024-11-04 12:01:03.221598+00', '1e535aa9-3864-4c98-b3e1-18d006e71603', 'all');
 
 
 --
 -- Data for Name: posts_comments; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-INSERT INTO "public"."posts_comments" ("id", "content", "created_at", "user_nickname") VALUES
-	('e065de94-931d-4524-b697-6bb4cc9af6d7', 'uioyuiyui', '2024-08-25 12:46:39.769671+00', 'pureawake'),
-	('a3695338-adf3-4427-b5d3-c6786d4d89fb', 'шщшщзщзшзщш', '2024-08-25 12:48:08.1004+00', 'pureawake'),
-	('d220c6bd-8790-437e-a43b-bb4a0da70324', 'АХАХАХЫВАПХХЫУПХЫВХПВВПЫПВЫВ', '2024-08-25 12:48:24.597517+00', 'pureawake'),
-	('92151289-b174-42db-ab06-3e7b4e3305b2', 'asdasdsad', '2024-08-25 23:03:57.120235+00', 'discludness'),
-	('f75fac61-d592-4353-aa25-0fe3d587a5d0', 'круто', '2024-10-29 00:43:09.333945+00', 'discludness'),
-	('238e3706-48bd-42e7-bc75-a7f569a86f6d', 'hjkhjkkl', '2024-11-01 23:57:52.29381+00', 'distribate'),
-	('7b5eb6e4-5894-4982-9867-7eea35c1719a', 'hjkjhkjk', '2024-11-01 23:58:53.535686+00', 'distribate'),
-	('d8752911-9530-455b-9c53-02a06abd7c5b', 'круто', '2024-11-02 01:14:20.595212+00', 'george_wastaken');
-
-
---
--- Data for Name: posts_comments_ref; Type: TABLE DATA; Schema: public; Owner: postgres
---
-
-INSERT INTO "public"."posts_comments_ref" ("comment_id", "id", "post_id") VALUES
-	('a3695338-adf3-4427-b5d3-c6786d4d89fb', 2, 'd2a2fd1c-ca8a-4b0a-9793-d448e8bc2682'),
-	('d220c6bd-8790-437e-a43b-bb4a0da70324', 3, '2db918c7-ba45-42bc-94ef-4bbf56c8ebbb'),
-	('92151289-b174-42db-ab06-3e7b4e3305b2', 4, 'd2a2fd1c-ca8a-4b0a-9793-d448e8bc2682'),
-	('f75fac61-d592-4353-aa25-0fe3d587a5d0', 5, 'a36aa1b6-bbab-426b-8b3e-2c56ee0ecf78'),
-	('238e3706-48bd-42e7-bc75-a7f569a86f6d', 6, '00e11035-5051-4594-b787-2077a5b7456f'),
-	('7b5eb6e4-5894-4982-9867-7eea35c1719a', 7, '00e11035-5051-4594-b787-2077a5b7456f'),
-	('d8752911-9530-455b-9c53-02a06abd7c5b', 8, '00e11035-5051-4594-b787-2077a5b7456f');
 
 
 --
 -- Data for Name: posts_users; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-INSERT INTO "public"."posts_users" ("post_id", "user_nickname") VALUES
-	('d2a2fd1c-ca8a-4b0a-9793-d448e8bc2682', 'pureawake'),
-	('c05b6ee8-a7f4-42e4-8e20-e3920a487525', 'pureawake'),
-	('a36aa1b6-bbab-426b-8b3e-2c56ee0ecf78', 'discludness'),
-	('a3b4a325-c6b8-46b0-9f28-ecc77471b926', 'pureawake'),
-	('dabf5a2a-b9cf-4b7f-a4cb-30b00065497b', 'discludness'),
-	('2db918c7-ba45-42bc-94ef-4bbf56c8ebbb', 'discludness'),
-	('1a44bd9d-06e1-422d-a761-58abcb5367aa', 'pureawake'),
-	('00e11035-5051-4594-b787-2077a5b7456f', 'distribate');
+INSERT INTO "public"."posts_users" ("post_id", "user_nickname", "created_at") VALUES
+	('d2a2fd1c-ca8a-4b0a-9793-d448e8bc2682', 'pureawake', '2024-11-04 18:12:01.416188+00'),
+	('c05b6ee8-a7f4-42e4-8e20-e3920a487525', 'pureawake', '2024-11-04 18:12:01.416188+00'),
+	('a36aa1b6-bbab-426b-8b3e-2c56ee0ecf78', 'discludness', '2024-11-04 18:12:01.416188+00'),
+	('a3b4a325-c6b8-46b0-9f28-ecc77471b926', 'pureawake', '2024-11-04 18:12:01.416188+00'),
+	('dabf5a2a-b9cf-4b7f-a4cb-30b00065497b', 'discludness', '2024-11-04 18:12:01.416188+00'),
+	('1a44bd9d-06e1-422d-a761-58abcb5367aa', 'pureawake', '2024-11-04 18:12:01.416188+00'),
+	('00e11035-5051-4594-b787-2077a5b7456f', 'distribate', '2024-11-04 18:12:01.416188+00'),
+	('1e535aa9-3864-4c98-b3e1-18d006e71603', 'distribate', '2024-11-04 18:12:01.416188+00');
 
 
 --
@@ -986,7 +963,8 @@ INSERT INTO "public"."reports" ("created_at", "id", "reason", "report_type", "re
 	('2024-10-31 23:49:17.907339+00', 7, 'offensive', 'comment', '{"targetId": 11, "targetContent": "ХАХФЫХАХФЫА СВЕТЛОЛИКИЙ", "targetNickname": "discludness"}', 'discludness', 'distribate', NULL),
 	('2024-11-01 00:14:43.479811+00', 8, 'spam', 'comment', '{"targetId": 14, "targetContent": "cxadsadsdsd", "targetNickname": "distribate"}', 'distribate', 'discludness', NULL),
 	('2024-11-01 00:21:58.292602+00', 9, 'dont-like', 'comment', '{"targetId": 35, "targetContent": "Да-да. Нет-нет.", "targetNickname": "distribate"}', 'distribate', 'pureawake', NULL),
-	('2024-11-01 18:18:06.368207+00', 10, 'spam', 'comment', '{"targetId": 11, "targetContent": "ХАХФЫХАХФЫА СВЕТЛОЛИКИЙ", "targetNickname": "discludness"}', 'discludness', 'distribate', NULL);
+	('2024-11-01 18:18:06.368207+00', 10, 'spam', 'comment', '{"targetId": 11, "targetContent": "ХАХФЫХАХФЫА СВЕТЛОЛИКИЙ", "targetNickname": "discludness"}', 'discludness', 'distribate', NULL),
+	('2024-11-04 14:49:20.895431+00', 11, 'spam', 'account', '{"targetId": "borbuse", "targetContent": null, "targetNickname": "borbuse"}', 'borbuse', 'distribate', NULL);
 
 
 --
@@ -1025,19 +1003,6 @@ INSERT INTO "public"."threads_comments" ("content", "created_at", "user_nickname
 	('Нет-нет.', '2024-10-31 15:10:01.139798+00', 'distribate', 28, 'a006faae-0dde-483a-af8e-d66fef569467', true),
 	('Да-да. Нет-нет.', '2024-10-31 20:59:27.804925+00', 'distribate', 35, '764d84f2-4610-4208-b12f-cc98b510802b', true),
 	('hjhjkhj', '2024-10-31 18:24:27.963071+00', 'distribate', 30, '75a961d6-4166-45e5-9a43-642e4dcb54f1', true);
-
-
---
--- Data for Name: threads_comments_ref; Type: TABLE DATA; Schema: public; Owner: postgres
---
-
-INSERT INTO "public"."threads_comments_ref" ("id", "thread_id", "comment_id") VALUES
-	(6, '764d84f2-4610-4208-b12f-cc98b510802b', 8),
-	(7, '764d84f2-4610-4208-b12f-cc98b510802b', 9),
-	(9, '764d84f2-4610-4208-b12f-cc98b510802b', 11),
-	(25, 'a006faae-0dde-483a-af8e-d66fef569467', 27),
-	(26, 'a006faae-0dde-483a-af8e-d66fef569467', 28),
-	(33, '764d84f2-4610-4208-b12f-cc98b510802b', 35);
 
 
 --
@@ -1081,7 +1046,9 @@ INSERT INTO "public"."threads_rating" ("id", "type", "thread_id", "user_id") VAL
 	(144, 'increment', '764d84f2-4610-4208-b12f-cc98b510802b', 'c2e8de6f-a450-4ca0-ba50-828bedb053ba'),
 	(154, 'increment', '764d84f2-4610-4208-b12f-cc98b510802b', 'ffbc7e08-1838-4d80-8931-713168de7c20'),
 	(165, 'increment', '75a961d6-4166-45e5-9a43-642e4dcb54f1', 'ffbc7e08-1838-4d80-8931-713168de7c20'),
-	(169, 'increment', 'a006faae-0dde-483a-af8e-d66fef569467', 'ffbc7e08-1838-4d80-8931-713168de7c20');
+	(169, 'increment', 'a006faae-0dde-483a-af8e-d66fef569467', 'ffbc7e08-1838-4d80-8931-713168de7c20'),
+	(203, 'decrement', 'db2f82ca-e82f-4861-a750-c303b007ed65', 'c2e8de6f-a450-4ca0-ba50-828bedb053ba'),
+	(204, 'increment', 'a867a362-8b75-4c36-9e57-1a32efcf49ba', 'c2e8de6f-a450-4ca0-ba50-828bedb053ba');
 
 
 --
@@ -1107,14 +1074,14 @@ INSERT INTO "public"."threads_tags" ("id", "tags", "thread_id") VALUES
 -- Data for Name: threads_users; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-INSERT INTO "public"."threads_users" ("thread_id", "user_nickname") VALUES
-	('764d84f2-4610-4208-b12f-cc98b510802b', 'pureawake'),
-	('db2f82ca-e82f-4861-a750-c303b007ed65', 'pureawake'),
-	('a867a362-8b75-4c36-9e57-1a32efcf49ba', 'discludness'),
-	('75a961d6-4166-45e5-9a43-642e4dcb54f1', 'distribate'),
-	('a006faae-0dde-483a-af8e-d66fef569467', 'distribate'),
-	('7e7586b2-ebc3-44ba-8721-022029a9a9bb', 'distribate'),
-	('dbf53dcf-add8-425d-883a-d71ece170515', 'distribate');
+INSERT INTO "public"."threads_users" ("thread_id", "user_nickname", "created_at") VALUES
+	('764d84f2-4610-4208-b12f-cc98b510802b', 'pureawake', '2024-11-04 18:11:39.742069+00'),
+	('db2f82ca-e82f-4861-a750-c303b007ed65', 'pureawake', '2024-11-04 18:11:39.742069+00'),
+	('a867a362-8b75-4c36-9e57-1a32efcf49ba', 'discludness', '2024-11-04 18:11:39.742069+00'),
+	('a006faae-0dde-483a-af8e-d66fef569467', 'distribate', '2024-11-04 18:11:39.742069+00'),
+	('7e7586b2-ebc3-44ba-8721-022029a9a9bb', 'distribate', '2024-11-04 18:11:39.742069+00'),
+	('dbf53dcf-add8-425d-883a-d71ece170515', 'distribate', '2024-11-04 18:11:39.742069+00'),
+	('75a961d6-4166-45e5-9a43-642e4dcb54f1', 'distribate', '2024-10-04 18:11:39+00');
 
 
 --
@@ -1137,7 +1104,8 @@ INSERT INTO "public"."threads_views" ("id", "created_at", "user_id", "thread_id"
 	(126, '2024-11-02 01:14:58.235716+00', 'c2508ed9-c992-4eb3-98a6-e149d01c4b2a', 'a867a362-8b75-4c36-9e57-1a32efcf49ba'),
 	(127, '2024-11-02 01:15:03.889564+00', 'c2508ed9-c992-4eb3-98a6-e149d01c4b2a', '7e7586b2-ebc3-44ba-8721-022029a9a9bb'),
 	(168, '2024-11-02 17:06:54.463105+00', 'c2508ed9-c992-4eb3-98a6-e149d01c4b2a', '764d84f2-4610-4208-b12f-cc98b510802b'),
-	(169, '2024-11-02 22:34:51.517917+00', 'ffbc7e08-1838-4d80-8931-713168de7c20', 'dbf53dcf-add8-425d-883a-d71ece170515');
+	(169, '2024-11-02 22:34:51.517917+00', 'ffbc7e08-1838-4d80-8931-713168de7c20', 'dbf53dcf-add8-425d-883a-d71ece170515'),
+	(250, '2024-11-04 19:30:02.473213+00', 'c2e8de6f-a450-4ca0-ba50-828bedb053ba', 'db2f82ca-e82f-4861-a750-c303b007ed65');
 
 
 --
@@ -1152,6 +1120,8 @@ INSERT INTO "public"."users_banned" ("id", "nickname", "reason", "time", "create
 -- Data for Name: users_blocked; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
+INSERT INTO "public"."users_blocked" ("id", "initiator", "recipient", "created_at") VALUES
+	(2, 'distribate', 'george_wastaken', '2024-11-04 12:32:07.501354');
 
 
 --
@@ -1181,7 +1151,8 @@ INSERT INTO "public"."users_requests_timeout" ("id", "issued_at", "type", "user_
 	(21, '2024-10-29 00:29:26', 'name_color', 'distribate', '2024-10-29 00:24:26.632461'),
 	(22, '2024-10-29 01:15:08', 'favorite_item', 'distribate', '2024-10-29 01:10:08.613199'),
 	(23, '2024-10-29 16:11:27', 'favorite_item', 'pureawake', '2024-10-29 16:06:27.181734'),
-	(24, '2024-11-02 01:33:57', 'favorite_item', 'distribate', '2024-11-02 01:28:57.396055');
+	(24, '2024-11-02 01:33:57', 'favorite_item', 'distribate', '2024-11-02 01:28:57.396055'),
+	(25, '2024-11-04 19:17:50', 'description', 'discludness', '2024-11-04 19:12:50.677906');
 
 
 --
@@ -1208,8 +1179,8 @@ INSERT INTO "public"."users_session" ("id", "expires_at", "user_id", "browser", 
 	('xbu7fdjysvop5kcnnxd3dugxmsyjt5dckdq2odei', '2024-09-24 22:20:49.384+00', 'd905f002-1370-44c6-bef3-885063b5332f', 'Chrome', 'amd64', NULL, false, 'Windows10', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36'),
 	('ethbbwfuo5v3mlayfskiksbhw4z6r57hcgz4fadd', '2024-09-28 12:42:08.33+00', 'd905f002-1370-44c6-bef3-885063b5332f', 'Chrome', 'amd64', NULL, false, 'Windows10', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36'),
 	('kww44ungl2tswwtyaxdxwurl6w7o6rklcwzbnuyr', '2024-10-29 17:37:12.412+00', 'ffbc7e08-1838-4d80-8931-713168de7c20', 'Firefox', 'amd64', NULL, false, 'Windows10', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:130.0) Gecko/20100101 Firefox/130.0'),
-	('oivypy4ohwkmepgor6buzv3a4uqa75csx7yz5qp2', '2024-11-16 00:08:30.504+00', 'ffbc7e08-1838-4d80-8931-713168de7c20', 'Firefox', 'amd64', NULL, false, 'Windows10', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:132.0) Gecko/20100101 Firefox/132.0'),
-	('aroaote6pobpbac6oh5777d526qpp4qmxttmwb6d', '2024-11-16 01:13:12.317+00', 'c2508ed9-c992-4eb3-98a6-e149d01c4b2a', 'Chrome', 'amd64', NULL, false, 'Windows10', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36');
+	('aroaote6pobpbac6oh5777d526qpp4qmxttmwb6d', '2024-11-16 01:13:12.317+00', 'c2508ed9-c992-4eb3-98a6-e149d01c4b2a', 'Chrome', 'amd64', NULL, false, 'Windows10', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36'),
+	('w56f4lwvrhgfdzqgvyygrsrx6ezqgyxe6oh7ccph', '2024-11-18 19:07:52.631+00', 'c2e8de6f-a450-4ca0-ba50-828bedb053ba', 'Firefox', 'amd64', NULL, false, 'Windows10', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:132.0) Gecko/20100101 Firefox/132.0');
 
 
 --
@@ -1237,6 +1208,9 @@ INSERT INTO "storage"."objects" ("id", "bucket_id", "name", "owner", "created_at
 	('371830d2-7470-4d49-a760-97e1dfbb4c87', 'static', 'items/iron_helmet.webp', NULL, '2024-10-22 12:20:01.450912+00', '2024-10-22 12:20:01.450912+00', '2024-10-22 12:20:01.450912+00', '{"eTag": "\"e12b449e3f611b7e5761a9ab9c7fb2d1\"", "size": 120, "mimetype": "image/webp", "cacheControl": "max-age=3600", "lastModified": "2024-10-22T12:20:01.434Z", "contentLength": 120, "httpStatusCode": 200}', '750b2116-4ce6-471e-abfa-3af3d0141f2f', NULL, NULL),
 	('3f27234d-e072-456a-9604-79f2ed14e523', 'static', 'auth_background/1.png', NULL, '2024-10-22 12:37:57.784746+00', '2024-10-22 12:38:01.14169+00', '2024-10-22 12:37:57.784746+00', '{"eTag": "\"537db7a74b825ef0efcb83935f02185e\"", "size": 3047281, "mimetype": "image/png", "cacheControl": "max-age=3600", "lastModified": "2024-10-22T12:38:01.056Z", "contentLength": 3047281, "httpStatusCode": 200}', '8804d4d8-ae1d-44c9-86b6-bb6397fa3c77', NULL, NULL),
 	('c99bc8f5-b447-4242-a30e-284cb7c1d2a8', 'static', 'auth_background/6.png', NULL, '2024-10-22 12:37:19.956836+00', '2024-10-22 12:37:19.956836+00', '2024-10-22 12:37:19.956836+00', '{"eTag": "\"d4392e76cabd6aeb3061c6f27fadbb06\"", "size": 2774801, "mimetype": "image/png", "cacheControl": "max-age=3600", "lastModified": "2024-10-22T12:37:19.824Z", "contentLength": 2774801, "httpStatusCode": 200}', '3a7a99ff-3a71-47ca-9dd1-467f91ab3066', NULL, NULL),
+	('dbde270a-dc0a-463a-92bf-4cc3431b9ac7', 'user_images', 'cover/.emptyFolderPlaceholder', NULL, '2024-11-04 14:17:19.668571+00', '2024-11-04 14:17:19.668571+00', '2024-11-04 14:17:19.668571+00', '{"eTag": "\"d41d8cd98f00b204e9800998ecf8427e\"", "size": 0, "mimetype": "application/octet-stream", "cacheControl": "max-age=3600", "lastModified": "2024-11-04T14:17:19.647Z", "contentLength": 0, "httpStatusCode": 200}', 'b9eac0b5-3e8e-4b24-ac75-3afe0181169b', NULL, '{}'),
+	('d42d7f93-334a-4dca-9302-59989dad77cd', 'user_images', 'default/village.webp', NULL, '2024-11-04 14:17:23.002927+00', '2024-11-04 14:17:23.002927+00', '2024-11-04 14:17:23.002927+00', '{"eTag": "\"0a3141db353736679cd1631549d3ef9c\"", "size": 182188, "mimetype": "image/webp", "cacheControl": "max-age=3600", "lastModified": "2024-11-04T14:17:22.957Z", "contentLength": 182188, "httpStatusCode": 200}', 'e21bda48-2a5c-441e-96b4-eb33e1696a62', NULL, NULL),
+	('deb1429a-2f0f-4956-9f01-71c4aec2bfb3', 'user_images', 'default/village-art.jpg', NULL, '2024-11-04 14:17:23.10658+00', '2024-11-04 14:17:23.10658+00', '2024-11-04 14:17:23.10658+00', '{"eTag": "\"5c6e76ea1077c09f69ce365364fe9bf4\"", "size": 355625, "mimetype": "image/jpeg", "cacheControl": "max-age=3600", "lastModified": "2024-11-04T14:17:23.067Z", "contentLength": 355625, "httpStatusCode": 200}', 'c3a5e289-e9a9-4ce7-bda3-59b08433e485', NULL, NULL),
 	('0fa736eb-67cd-47e7-ab0f-8ae8ee510666', 'threads', '.emptyFolderPlaceholder', NULL, '2024-10-23 22:06:06.627184+00', '2024-10-23 22:06:06.627184+00', '2024-10-23 22:06:06.627184+00', '{"eTag": "\"d41d8cd98f00b204e9800998ecf8427e\"", "size": 0, "mimetype": "application/octet-stream", "cacheControl": "max-age=3600", "lastModified": "2024-10-23T22:06:06.532Z", "contentLength": 0, "httpStatusCode": 200}', '13444e84-c77f-4fde-bde2-1231d6670e61', NULL, '{}'),
 	('b2a8fc55-0f76-42bd-81b7-608c0dc1ea70', 'static', 'items/missing_texture.webp', NULL, '2024-10-22 12:20:38.425663+00', '2024-10-22 12:20:38.425663+00', '2024-10-22 12:20:38.425663+00', '{"eTag": "\"f543ead08fdf738b29d4583fd7f10447\"", "size": 54, "mimetype": "image/webp", "cacheControl": "max-age=3600", "lastModified": "2024-10-22T12:20:38.405Z", "contentLength": 54, "httpStatusCode": 200}', '3140c5b2-d34f-4ec9-9002-58b3bbf335a3', NULL, NULL),
 	('4f71144d-9162-4dfc-84da-d0d85c96d8bb', 'static', 'items/dirt.webp', NULL, '2024-10-22 12:20:54.394316+00', '2024-10-22 12:20:54.394316+00', '2024-10-22 12:20:54.394316+00', '{"eTag": "\"91b4035180b33e243c720454c6c5e00c\"", "size": 290, "mimetype": "image/webp", "cacheControl": "max-age=3600", "lastModified": "2024-10-22T12:20:54.374Z", "contentLength": 290, "httpStatusCode": 200}', '9632556a-83e8-4d11-89e6-821d786c92a7', NULL, NULL),
@@ -1249,20 +1223,23 @@ INSERT INTO "storage"."objects" ("id", "bucket_id", "name", "owner", "created_at
 	('ceb03da1-40f6-4295-83a5-1feac2777762', 'threads', 'a006faae-0dde-483a-af8e-d66fef569467-dO', NULL, '2024-10-31 06:18:14.03031+00', '2024-10-31 06:18:14.03031+00', '2024-10-31 06:18:14.03031+00', '{"eTag": "\"6103b38f6aa8cea4cc2385fd1266bd64\"", "size": 135645, "mimetype": "image/png", "cacheControl": "max-age=3600", "lastModified": "2024-10-31T06:18:14.005Z", "contentLength": 135645, "httpStatusCode": 200}', '71fa6478-541b-45f5-a052-a9bc575a1b29', NULL, '{}'),
 	('cb867f9e-5997-4d55-82d5-dd8fb21e69e7', 'threads', '7e7586b2-ebc3-44ba-8721-022029a9a9bb-Lq', NULL, '2024-10-31 21:12:26.514487+00', '2024-10-31 21:12:26.514487+00', '2024-10-31 21:12:26.514487+00', '{"eTag": "\"8ebfb4a93786cc666da73b7a97e0f6e3\"", "size": 180576, "mimetype": "image/png", "cacheControl": "max-age=3600", "lastModified": "2024-10-31T21:12:26.318Z", "contentLength": 180576, "httpStatusCode": 200}', '01852ac9-c496-47cd-9a6f-f63c94084b9a', NULL, '{}'),
 	('d919dc00-ea73-49ff-b402-8f640b16450c', 'threads', 'dbf53dcf-add8-425d-883a-d71ece170515-jM', NULL, '2024-11-02 22:34:51.162186+00', '2024-11-02 22:34:51.162186+00', '2024-11-02 22:34:51.162186+00', '{"eTag": "\"2159bc588cdfe36fa5ebdfced95672a3\"", "size": 194765, "mimetype": "image/png", "cacheControl": "max-age=3600", "lastModified": "2024-11-02T22:34:50.998Z", "contentLength": 194765, "httpStatusCode": 200}', 'fdd93916-74a6-48bd-b35e-de7b5e8e6b84', NULL, '{}'),
-	('b98e368f-b059-4d73-a753-8e2667a85b61', 'user_images', 'cover/.emptyFolderPlaceholder', NULL, '2024-10-22 12:04:13.526745+00', '2024-10-22 12:04:13.526745+00', '2024-10-22 12:04:13.526745+00', '{"eTag": "\"d41d8cd98f00b204e9800998ecf8427e\"", "size": 0, "mimetype": "application/octet-stream", "cacheControl": "max-age=3600", "lastModified": "2024-10-22T12:04:13.497Z", "contentLength": 0, "httpStatusCode": 200}', 'aa9e1f45-6b4e-460a-a673-5b92e5ac2fc9', NULL, '{}'),
+	('b268249f-9abc-433a-aa15-70dd39415ce9', 'user_images', 'default/3rd-NovaFive.jpg', NULL, '2024-11-04 14:17:23.013888+00', '2024-11-04 14:17:23.013888+00', '2024-11-04 14:17:23.013888+00', '{"eTag": "\"1d38c1719823ca8438ccd645de0f56f3\"", "size": 234857, "mimetype": "image/jpeg", "cacheControl": "max-age=3600", "lastModified": "2024-11-04T14:17:22.957Z", "contentLength": 234857, "httpStatusCode": 200}', '529ca7da-8f65-4bb5-8ac8-3dc644f1523a', NULL, NULL),
+	('bb49cab6-dd3d-43c9-b8e2-c98db10810b8', 'user_images', 'default/adventure-in-end.jpg', NULL, '2024-11-04 14:17:23.164971+00', '2024-11-04 14:17:23.164971+00', '2024-11-04 14:17:23.164971+00', '{"eTag": "\"ee460c4af3bd442389c48a86d92411f8\"", "size": 317053, "mimetype": "image/jpeg", "cacheControl": "max-age=3600", "lastModified": "2024-11-04T14:17:23.137Z", "contentLength": 317053, "httpStatusCode": 200}', 'bf42469d-8f23-41e6-a26a-7eb58a4eefc3', NULL, NULL),
+	('789af3c7-a021-4adb-92e9-b60073db6071', 'user_images', 'cover/ffbc7e08-1838-4d80-8931-713168de7c20WCj', NULL, '2024-11-04 14:31:42.649286+00', '2024-11-04 14:31:42.649286+00', '2024-11-04 14:31:42.649286+00', '{"eTag": "\"1340680881e16e9257e69dc05a946311\"", "size": 1609091, "mimetype": "image/png", "cacheControl": "max-age=0", "lastModified": "2024-11-04T14:31:42.604Z", "contentLength": 1609091, "httpStatusCode": 200}', '67d83280-252b-4eeb-86a6-1a16cb6b3538', NULL, '{}'),
 	('5e94584b-a524-4976-959e-79c9fe032626', 'static', 'items/shield.png', NULL, '2024-10-22 12:23:58.319791+00', '2024-10-22 12:23:58.319791+00', '2024-10-22 12:23:58.319791+00', '{"eTag": "\"4c563b22e87972691326034b8dc731db\"", "size": 342, "mimetype": "image/png", "cacheControl": "max-age=3600", "lastModified": "2024-10-22T12:23:58.300Z", "contentLength": 342, "httpStatusCode": 200}', 'aca2621e-885a-4f12-b591-23ba4787c1da', NULL, NULL),
-	('c9f5b7bc-2c7c-4071-a0f8-757d8b45c8db', 'user_images', 'default/adventure-in-end.jpg', NULL, '2024-10-22 12:08:54.034834+00', '2024-10-22 12:08:54.034834+00', '2024-10-22 12:08:54.034834+00', '{"eTag": "\"ee460c4af3bd442389c48a86d92411f8\"", "size": 317053, "mimetype": "image/jpeg", "cacheControl": "max-age=3600", "lastModified": "2024-10-22T12:08:53.996Z", "contentLength": 317053, "httpStatusCode": 200}', 'a8d94748-a5bd-4473-a1d6-485a0576932f', NULL, NULL),
-	('7f047244-33e2-4dd0-b1c7-a6c5b342b8fe', 'user_images', 'default/adventure-in-blossom.jpg', NULL, '2024-10-22 12:08:54.0519+00', '2024-10-22 12:08:54.0519+00', '2024-10-22 12:08:54.0519+00', '{"eTag": "\"e9cb1489e81158dfe1cefed74cde2053\"", "size": 600052, "mimetype": "image/jpeg", "cacheControl": "max-age=3600", "lastModified": "2024-10-22T12:08:53.996Z", "contentLength": 600052, "httpStatusCode": 200}', 'aea8cc78-ef14-4a5d-b4af-71863b88c975', NULL, NULL),
-	('237e1f3a-83ae-4055-82db-d8a5ba02d612', 'user_images', 'default/sand-camel.jpg', NULL, '2024-10-22 12:09:43.543984+00', '2024-10-22 12:09:43.543984+00', '2024-10-22 12:09:43.543984+00', '{"eTag": "\"be63da46d059e2fb51e8f40c7107ef6a\"", "size": 311190, "mimetype": "image/jpeg", "cacheControl": "max-age=3600", "lastModified": "2024-10-22T12:09:43.508Z", "contentLength": 311190, "httpStatusCode": 200}', 'cb6eb5e3-9251-454e-948b-145b88cba100', NULL, NULL),
 	('1a24f8db-7448-4325-9a64-428cebd998eb', 'threads', '764d84f2-4610-4208-b12f-cc98b510802b-oe', NULL, '2024-10-28 21:12:59.046414+00', '2024-10-28 21:12:59.046414+00', '2024-10-28 21:12:59.046414+00', '{"eTag": "\"360641edf1af3d42bebb377ae633a466\"", "size": 59907, "mimetype": "image/png", "cacheControl": "max-age=3600", "lastModified": "2024-10-28T21:12:59.034Z", "contentLength": 59907, "httpStatusCode": 200}', '79c4978d-dbd6-42da-846f-98f4de7c617e', NULL, '{}'),
 	('251d0c1f-1c09-4a95-91fb-2defa351d1f6', 'threads', '764d84f2-4610-4208-b12f-cc98b510802b-IC', NULL, '2024-10-28 21:12:59.184038+00', '2024-10-28 21:12:59.184038+00', '2024-10-28 21:12:59.184038+00', '{"eTag": "\"55b4e13a72c0e1fc6ac283373babfd2a\"", "size": 305917, "mimetype": "image/png", "cacheControl": "max-age=3600", "lastModified": "2024-10-28T21:12:59.154Z", "contentLength": 305917, "httpStatusCode": 200}', '32177106-d3af-4d35-95fc-c91d4532d769', NULL, '{}'),
-	('c76505e6-4383-4ec7-9a60-43fbd2c349d8', 'user_images', 'cover/ffbc7e08-1838-4d80-8931-713168de7c20Y0T', NULL, '2024-11-02 22:37:35.530723+00', '2024-11-02 22:37:35.530723+00', '2024-11-02 22:37:35.530723+00', '{"eTag": "\"360641edf1af3d42bebb377ae633a466\"", "size": 59907, "mimetype": "image/png", "cacheControl": "max-age=0", "lastModified": "2024-11-02T22:37:35.521Z", "contentLength": 59907, "httpStatusCode": 200}', 'efa538b3-a2eb-4ad2-8611-93ea5fe58e80', NULL, '{}'),
 	('e5713e18-fc54-472b-8b30-4bacafc490b0', 'static', 'auth_background/3.png', NULL, '2024-10-22 12:37:20.432059+00', '2024-10-22 12:37:20.432059+00', '2024-10-22 12:37:20.432059+00', '{"eTag": "\"972143f523d284a6654804f35f951323\"", "size": 9222514, "mimetype": "image/png", "cacheControl": "max-age=3600", "lastModified": "2024-10-22T12:37:19.874Z", "contentLength": 9222514, "httpStatusCode": 200}', 'e944abab-9594-4064-b826-3383945d42f4', NULL, NULL),
 	('1524686c-dbd9-4fe1-a493-884e6482a7b2', 'static', 'auth_background/7.png', NULL, '2024-10-22 12:37:19.616236+00', '2024-10-22 12:37:33.650714+00', '2024-10-22 12:37:19.616236+00', '{"eTag": "\"304772779a1cc2562cd6789a34b11438\"", "size": 85500, "mimetype": "image/jpeg", "cacheControl": "max-age=3600", "lastModified": "2024-10-22T12:37:33.635Z", "contentLength": 85500, "httpStatusCode": 200}', 'b1948329-180e-43b2-94d1-023b21d676c7', NULL, NULL),
-	('cb54a229-f45c-4cbc-bc39-723d2b04f575', 'user_images', 'default/village-art.jpg', NULL, '2024-10-22 12:09:53.436164+00', '2024-10-22 12:09:53.436164+00', '2024-10-22 12:09:53.436164+00', '{"eTag": "\"5c6e76ea1077c09f69ce365364fe9bf4\"", "size": 355625, "mimetype": "image/jpeg", "cacheControl": "max-age=3600", "lastModified": "2024-10-22T12:09:53.418Z", "contentLength": 355625, "httpStatusCode": 200}', '648f31a6-59a4-4d0e-9b14-545d9e86216d', NULL, NULL),
+	('5ac45850-a3d4-46f6-b2c5-7848d1860f15', 'user_images', 'default/rain-weather.jpg', NULL, '2024-11-04 14:17:23.051653+00', '2024-11-04 14:17:23.051653+00', '2024-11-04 14:17:23.051653+00', '{"eTag": "\"e5c8c76a941035a8cfaf12b8f799ab36\"", "size": 478479, "mimetype": "image/jpeg", "cacheControl": "max-age=3600", "lastModified": "2024-11-04T14:17:22.957Z", "contentLength": 478479, "httpStatusCode": 200}', 'a6fbce55-738c-40d8-907b-e9302dcdf7e5', NULL, NULL),
+	('70c25a3d-c955-4de8-991e-e4273ca8bc09', 'user_images', 'default/sand-camel.jpg', NULL, '2024-11-04 14:17:23.169625+00', '2024-11-04 14:17:23.169625+00', '2024-11-04 14:17:23.169625+00', '{"eTag": "\"be63da46d059e2fb51e8f40c7107ef6a\"", "size": 311190, "mimetype": "image/jpeg", "cacheControl": "max-age=3600", "lastModified": "2024-11-04T14:17:23.137Z", "contentLength": 311190, "httpStatusCode": 200}', 'd8d9be78-563c-48df-9e91-f9b5ffcfff22', NULL, NULL),
+	('35b73a69-aeb3-4331-a161-b4de6a480d9e', 'user_images', 'cover/c2e8de6f-a450-4ca0-ba50-828bedb053baDGz', NULL, '2024-11-04 19:11:48.587489+00', '2024-11-04 19:11:48.587489+00', '2024-11-04 19:11:48.587489+00', '{"eTag": "\"2795d7ca6e4eb8be48908c2bac82fc14\"", "size": 1078170, "mimetype": "image/png", "cacheControl": "max-age=0", "lastModified": "2024-11-04T19:11:48.322Z", "contentLength": 1078170, "httpStatusCode": 200}', '65376c15-7f0c-4f9f-994d-b69d201daba1', NULL, '{}'),
 	('a769f40a-47e0-4f6c-a04f-ce7839328415', 'static', 'items/belkoin_wallet.png', NULL, '2024-10-22 12:23:58.320096+00', '2024-10-22 12:23:58.320096+00', '2024-10-22 12:23:58.320096+00', '{"eTag": "\"496ab8ea0fe63690cc39cc488bd58a95\"", "size": 7703, "mimetype": "image/png", "cacheControl": "max-age=3600", "lastModified": "2024-10-22T12:23:58.300Z", "contentLength": 7703, "httpStatusCode": 200}', '74d344e6-7ead-4b7b-98b7-e558d5e68128', NULL, NULL),
 	('ebe8b873-5e28-4796-bbee-e2dff1445b72', 'threads', 'db2f82ca-e82f-4861-a750-c303b007ed65-Mw', NULL, '2024-10-28 21:20:31.014228+00', '2024-10-28 21:20:31.014228+00', '2024-10-28 21:20:31.014228+00', '{"eTag": "\"f5a0a573e8748a85b1a6834a2b5fda51\"", "size": 96737, "mimetype": "image/png", "cacheControl": "max-age=3600", "lastModified": "2024-10-28T21:20:30.986Z", "contentLength": 96737, "httpStatusCode": 200}', '9fb29679-01d5-4921-bd09-513115914ee2', NULL, '{}'),
 	('968b335d-8e12-4d7f-a397-948926411515', 'static', 'items/minecraft-item-iyO', NULL, '2024-10-29 01:09:54.561485+00', '2024-10-29 01:09:54.561485+00', '2024-10-29 01:09:54.561485+00', '{"eTag": "\"f375d4394e55f2eb35622c5462ba08db\"", "size": 254, "mimetype": "image/png", "cacheControl": "max-age=3600", "lastModified": "2024-10-29T01:09:54.536Z", "contentLength": 254, "httpStatusCode": 200}', 'c7ab52f1-542d-40d9-b290-ccf16f6bc7b3', NULL, '{}'),
+	('2c96bda4-55cf-4cf1-9b82-5811ce04f422', 'user_images', 'default/render-warden-hide.jpg', NULL, '2024-11-04 14:17:23.04689+00', '2024-11-04 14:17:23.04689+00', '2024-11-04 14:17:23.04689+00', '{"eTag": "\"72569e9110c34d8456d0f5202190f57f\"", "size": 292849, "mimetype": "image/jpeg", "cacheControl": "max-age=3600", "lastModified": "2024-11-04T14:17:22.947Z", "contentLength": 292849, "httpStatusCode": 200}', 'bda241d8-a329-4db7-9fff-3fcdc4b44cec', NULL, NULL),
+	('5f5a7562-a789-4b86-969f-03a37183bfb2', 'user_images', 'default/sand-adventure.jpg', NULL, '2024-11-04 14:17:23.179253+00', '2024-11-04 14:17:23.179253+00', '2024-11-04 14:17:23.179253+00', '{"eTag": "\"9090d1e3382cc573078a9f3710c00dac\"", "size": 309312, "mimetype": "image/jpeg", "cacheControl": "max-age=3600", "lastModified": "2024-11-04T14:17:23.147Z", "contentLength": 309312, "httpStatusCode": 200}', '3e0d4271-8dec-402b-a4d7-944e58643ea2', NULL, NULL),
+	('f984f2d1-04f6-42c2-919c-c94c03070f78', 'user_images', 'default/snow-mountain.jpg', NULL, '2024-11-04 14:17:23.251194+00', '2024-11-04 14:17:23.251194+00', '2024-11-04 14:17:23.251194+00', '{"eTag": "\"332592e326adc249d297baa2b675ca94\"", "size": 299800, "mimetype": "image/jpeg", "cacheControl": "max-age=3600", "lastModified": "2024-11-04T14:17:23.227Z", "contentLength": 299800, "httpStatusCode": 200}', '190ee0fa-3d56-42d1-967c-499ff817b47e', NULL, NULL),
 	('352a5666-ca14-4e62-8dbb-77fdaf17cd20', 'static', 'items/bust_painting.webp', NULL, '2024-10-22 12:17:39.816513+00', '2024-10-22 12:17:39.816513+00', '2024-10-22 12:17:39.816513+00', '{"eTag": "\"841f7fee2c27666998c1788f6eeb7b2a\"", "size": 3240, "mimetype": "image/webp", "cacheControl": "max-age=3600", "lastModified": "2024-10-22T12:17:39.799Z", "contentLength": 3240, "httpStatusCode": 200}', 'e9a37bbb-c610-40f9-a7b4-7dd1dcb6d15b', NULL, NULL),
 	('0daf32e5-6676-4657-8e73-990a2167301d', 'static', 'items/diamond_pickaxe.webp', NULL, '2024-10-22 12:18:14.691539+00', '2024-10-22 12:18:14.691539+00', '2024-10-22 12:18:14.691539+00', '{"eTag": "\"2b4c606b1fec45285f8aced7e91979b1\"", "size": 208, "mimetype": "image/webp", "cacheControl": "max-age=3600", "lastModified": "2024-10-22T12:18:14.680Z", "contentLength": 208, "httpStatusCode": 200}', '3d0801b5-282c-4d03-a429-180deda893c1', NULL, NULL),
 	('69896888-0079-409c-950a-df392d56f47c', 'static', 'auth_background/2.png', NULL, '2024-10-22 12:37:19.92645+00', '2024-10-22 12:37:19.92645+00', '2024-10-22 12:37:19.92645+00', '{"eTag": "\"4fbcbb774cc03fe315b8c6f2fa522a56\"", "size": 3980952, "mimetype": "image/png", "cacheControl": "max-age=3600", "lastModified": "2024-10-22T12:37:19.754Z", "contentLength": 3980952, "httpStatusCode": 200}', '92ed97a5-5c15-4b0b-bae2-cb32df734257', NULL, NULL),
@@ -1270,7 +1247,9 @@ INSERT INTO "storage"."objects" ("id", "bucket_id", "name", "owner", "created_at
 	('53194d41-5213-4420-8bd8-476ac757d7b4', 'static', 'items/allay_spawn_egg.webp', NULL, '2024-10-22 12:18:53.726074+00', '2024-10-22 12:18:53.726074+00', '2024-10-22 12:18:53.726074+00', '{"eTag": "\"03ca41fb820dba152bd67d5a26fe9318\"", "size": 312, "mimetype": "image/webp", "cacheControl": "max-age=3600", "lastModified": "2024-10-22T12:18:53.712Z", "contentLength": 312, "httpStatusCode": 200}', '31038228-df1e-4e37-911a-98a74fb90220', NULL, NULL),
 	('fa51748f-8d38-41d1-a38d-8ec6f93e6b49', 'static', 'auth_background/8.png', NULL, '2024-10-22 12:37:20.174833+00', '2024-10-22 12:37:20.174833+00', '2024-10-22 12:37:20.174833+00', '{"eTag": "\"381684100c67cde5784b90d4dfc64b57\"", "size": 3267956, "mimetype": "image/png", "cacheControl": "max-age=3600", "lastModified": "2024-10-22T12:37:20.054Z", "contentLength": 3267956, "httpStatusCode": 200}', '0eaf96ea-5ebf-49c7-b6f4-0620b75bd7dc', NULL, NULL),
 	('7cdfbaab-7548-492c-b0c9-5f500b2f28fc', 'static', 'items/elytra.webp', NULL, '2024-10-22 12:19:13.061259+00', '2024-10-22 12:19:13.061259+00', '2024-10-22 12:19:13.061259+00', '{"eTag": "\"8258d064c7192324d36f8abc9e996f80\"", "size": 200, "mimetype": "image/webp", "cacheControl": "max-age=3600", "lastModified": "2024-10-22T12:19:13.043Z", "contentLength": 200, "httpStatusCode": 200}', '4e8cc72a-e19e-4c7d-b289-65e6b215480d', NULL, NULL),
-	('8b1f8f6f-9190-47a6-8f30-153b2337d616', 'static', 'items/fancy_feather.webp', NULL, '2024-10-22 12:19:29.472318+00', '2024-10-22 12:19:29.472318+00', '2024-10-22 12:19:29.472318+00', '{"eTag": "\"7804e81bbebf368f4eaa74e1d43e4586\"", "size": 216, "mimetype": "image/webp", "cacheControl": "max-age=3600", "lastModified": "2024-10-22T12:19:29.454Z", "contentLength": 216, "httpStatusCode": 200}', 'fd5cf5e3-1afe-4f28-ba85-b1dc7f673600', NULL, NULL);
+	('8b1f8f6f-9190-47a6-8f30-153b2337d616', 'static', 'items/fancy_feather.webp', NULL, '2024-10-22 12:19:29.472318+00', '2024-10-22 12:19:29.472318+00', '2024-10-22 12:19:29.472318+00', '{"eTag": "\"7804e81bbebf368f4eaa74e1d43e4586\"", "size": 216, "mimetype": "image/webp", "cacheControl": "max-age=3600", "lastModified": "2024-10-22T12:19:29.454Z", "contentLength": 216, "httpStatusCode": 200}', 'fd5cf5e3-1afe-4f28-ba85-b1dc7f673600', NULL, NULL),
+	('0a7d6854-1351-4cb9-8cf2-bee7ba7ba344', 'user_images', 'default/adventure-in-blossom.jpg', NULL, '2024-11-04 14:17:23.051001+00', '2024-11-04 14:17:23.051001+00', '2024-11-04 14:17:23.051001+00', '{"eTag": "\"e9cb1489e81158dfe1cefed74cde2053\"", "size": 600052, "mimetype": "image/jpeg", "cacheControl": "max-age=3600", "lastModified": "2024-11-04T14:17:22.957Z", "contentLength": 600052, "httpStatusCode": 200}', '3de95eea-0009-48af-a08b-d2741d42a18c', NULL, NULL),
+	('536bbadd-b074-4d0a-89a1-693d357d47ae', 'user_images', 'default/bzzvanet-.jpg', NULL, '2024-11-04 14:17:23.055941+00', '2024-11-04 14:17:23.055941+00', '2024-11-04 14:17:23.055941+00', '{"eTag": "\"047bef878d58bfcb8657da05f66179ac\"", "size": 370631, "mimetype": "image/jpeg", "cacheControl": "max-age=3600", "lastModified": "2024-11-04T14:17:22.977Z", "contentLength": 370631, "httpStatusCode": 200}', '16caed3f-d101-430a-af41-7cc4e6e29f4e', NULL, NULL);
 
 
 --
@@ -1429,17 +1408,10 @@ SELECT pg_catalog.setval('"public"."moderators_id_seq"', 1, false);
 
 
 --
--- Name: posts_comments_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
---
-
-SELECT pg_catalog.setval('"public"."posts_comments_id_seq"', 1, false);
-
-
---
 -- Name: posts_comments_id_seq1; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('"public"."posts_comments_id_seq1"', 8, true);
+SELECT pg_catalog.setval('"public"."posts_comments_id_seq1"', 36, true);
 
 
 --
@@ -1460,14 +1432,14 @@ SELECT pg_catalog.setval('"public"."reports_id_seq"', 1, false);
 -- Name: reports_id_seq1; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('"public"."reports_id_seq1"', 10, true);
+SELECT pg_catalog.setval('"public"."reports_id_seq1"', 11, true);
 
 
 --
 -- Name: t_comments_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('"public"."t_comments_id_seq"', 35, true);
+SELECT pg_catalog.setval('"public"."t_comments_id_seq"', 37, true);
 
 
 --
@@ -1482,27 +1454,6 @@ SELECT pg_catalog.setval('"public"."t_comments_replies_id_seq"', 1, false);
 --
 
 SELECT pg_catalog.setval('"public"."t_comments_replies_id_seq1"', 8, true);
-
-
---
--- Name: threads_comments_comment_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
---
-
-SELECT pg_catalog.setval('"public"."threads_comments_comment_id_seq"', 1, false);
-
-
---
--- Name: threads_comments_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
---
-
-SELECT pg_catalog.setval('"public"."threads_comments_id_seq"', 1, false);
-
-
---
--- Name: threads_comments_id_seq1; Type: SEQUENCE SET; Schema: public; Owner: postgres
---
-
-SELECT pg_catalog.setval('"public"."threads_comments_id_seq1"', 33, true);
 
 
 --
@@ -1537,7 +1488,7 @@ SELECT pg_catalog.setval('"public"."threads_rating_id_seq"', 1, false);
 -- Name: threads_rating_id_seq1; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('"public"."threads_rating_id_seq1"', 200, true);
+SELECT pg_catalog.setval('"public"."threads_rating_id_seq1"', 204, true);
 
 
 --
@@ -1565,7 +1516,7 @@ SELECT pg_catalog.setval('"public"."threads_tags_id_seq1"', 24, true);
 -- Name: threads_views_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('"public"."threads_views_id_seq"', 222, true);
+SELECT pg_catalog.setval('"public"."threads_views_id_seq"', 275, true);
 
 
 --
@@ -1593,14 +1544,14 @@ SELECT pg_catalog.setval('"public"."users_blocked_id_seq"', 1, false);
 -- Name: users_blocked_id_seq1; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('"public"."users_blocked_id_seq1"', 1, false);
+SELECT pg_catalog.setval('"public"."users_blocked_id_seq1"', 10, true);
 
 
 --
 -- Name: users_requests_timeout_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('"public"."users_requests_timeout_id_seq"', 24, true);
+SELECT pg_catalog.setval('"public"."users_requests_timeout_id_seq"', 25, true);
 
 
 --

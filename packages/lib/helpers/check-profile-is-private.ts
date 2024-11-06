@@ -15,9 +15,7 @@ export async function checkProfileIsPrivate({
 		case 'all':
 			return true;
 		case 'friends':
-			return await checkIsFriend({
-				requestedUserNickname: requestedUserNickname
-			});
+			return await checkIsFriend(requestedUserNickname);
 		default:
 			return false;
 	}

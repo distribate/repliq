@@ -18,16 +18,15 @@ export const UserCoverMainInfo = ({
 }: UserCoverInfoProps) => {
 	const qc = useQueryClient()
 	const currentUser = getUser();
-	const reqUser = qc.getQueryData<RequestedUser>(REQUESTED_USER_QUERY_KEY(nickname));
+	const requestedUser = qc.getQueryData<RequestedUser>(REQUESTED_USER_QUERY_KEY(nickname));
 	const coverState = qc.getQueryData<CoverQuery>(COVER_QUERY_KEY)
 	
-	if (!reqUser || !coverState || !currentUser) return;
+	if (!requestedUser || !coverState || !currentUser) return;
 	
-	const { inView } = coverState;
-	const { description, real_name, name_color, preferences } = reqUser;
+	const { description, real_name, name_color, preferences } = requestedUser;
 	
 	const isRealNameShow = checkUserRealNameVisibility({
-		reqUserNickname: reqUser.nickname,
+		reqUserNickname: requestedUser.nickname,
 		preferences,
 		currentUserNickname: currentUser.nickname
 	})
@@ -39,7 +38,7 @@ export const UserCoverMainInfo = ({
 					<UserNickname
 						nickname={nickname}
 						nicknameColor={name_color}
-						className={`${inView ? 'text-3xl' : 'text-xl'}`}
+						className={coverState.inView ? 'text-3xl' : 'text-xl'}
 					/>
 					<UserDonate nickname={nickname}/>
 				</div>

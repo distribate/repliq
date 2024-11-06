@@ -18,7 +18,7 @@ export const FriendProfileCard = ({
   if (!currentUser) return null;
   
   return (
-    <div className="flex flex-col gap-y-4 w-full bg-shark-950 border border-shark-800 *:px-4 py-4 rounded-lg">
+    <div className="flex flex-col gap-y-4 w-full bg-shark-950 *:px-4 py-4 rounded-lg">
       <div className="flex items-start justify-between w-full">
         <div className="flex gap-2 items-center">
           <Avatar propHeight={46} propWidth={46} nickname={nickname} />

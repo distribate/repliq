@@ -6,35 +6,35 @@ import { DONATE_QUERY_KEY, DonateQuery } from '#user/components/donate/queries/d
 import { CoverArea } from './cover-area.tsx';
 import { UserCoverMainInfo } from './cover-main-info.tsx';
 import { UserCoverPanel } from './cover-panel.tsx';
-import { UserCoverLayoutProps } from './cover-layout.tsx';
 import { RequestedUser } from '@repo/lib/queries/get-requested-user.ts';
 import { getPreferenceValue } from '@repo/lib/helpers/convert-user-preferences-to-map.ts';
 
 type UserCoverProps = {
   requestedUser: RequestedUser
-} & Pick<UserCoverLayoutProps, 'isBlocked'>
+}
 
 export const UserCover = ({
-  requestedUser, isBlocked
+  requestedUser
 }: UserCoverProps) => {
   const qc = useQueryClient();
   const { data: coverQueryState } = coverQuery();
-  const { data: url } = imageCoverQuery({ nickname: requestedUser.nickname, });
-  const userDonate = qc.getQueryData<DonateQuery>(DONATE_QUERY_KEY(requestedUser.nickname),);
+  const { data: url } = imageCoverQuery(requestedUser.nickname);
+  const userDonate = qc.getQueryData<DonateQuery>(DONATE_QUERY_KEY(requestedUser.nickname));
   
-  const inView = coverQueryState.inView;
-  const imageHeight = inView ? 168 : 76;
+  const imageHeight = coverQueryState.inView ? 168 : 76;
   const nickname = requestedUser.nickname;
   const preferences = requestedUser.preferences;
-  const preferOutline = getPreferenceValue(preferences, "coverOutline")
-  const backgroundImage = url ? `url(${url})` : ''
+  const preferOutline = getPreferenceValue(preferences, 'coverOutline');
+  const backgroundImage = url ? `url(${url})` : '';
+  const backgroundColor = url ? 'transparent' : 'gray';
+  const coverOutline = userDonate && preferOutline ? userDonate.existingDonate : 'default';
   
   return (
     <CoverArea
-      variant={inView ? 'full' : 'compact'}
-      backgroundColor={url ? 'transparent' : 'gray'}
-      border={userDonate && preferOutline ? userDonate.existingDonate : 'default'}
-      style={{ backgroundImage: backgroundImage }}
+      variant={coverQueryState.inView ? 'full' : 'compact'}
+      backgroundColor={backgroundColor}
+      outline={coverOutline}
+      style={{ backgroundImage }}
     >
       <div className="z-[2] absolute w-full h-full right-0 top-0 bottom-0 left-0 bg-black/40" />
       <div className="flex gap-x-6 z-[3] relative items-start">
@@ -46,7 +46,10 @@ export const UserCover = ({
         />
         <UserCoverMainInfo nickname={nickname} />
       </div>
-      {!isBlocked && <UserCoverPanel reqUserNickname={nickname} variant={inView ? 'end' : 'default'} />}
+      <UserCoverPanel
+        requestedNickname={nickname}
+        variant={coverQueryState.inView ? 'end' : 'default'}
+      />
     </CoverArea>
   );
 };

@@ -1,12 +1,12 @@
 "use server"
 
 import "server-only"
-import { UpdateThreadRequestType } from '../types/update-thread-request-types.ts';
 import { createClient } from '@repo/lib/utils/api/server.ts';
+import { ThreadEntity } from '@repo/types/entities/entities-type.ts';
 
 async function threadRemove({
-  thread_id
-}: UpdateThreadRequestType): Promise<boolean> {
+  id: thread_id
+}: Pick<ThreadEntity, 'id'>): Promise<boolean> {
   const api = createClient();
   
   const { error: threadRemoveErr } = await api
@@ -22,8 +22,8 @@ async function threadRemove({
 }
 
 async function threadImagesRemove({
-  thread_id
-}: UpdateThreadRequestType) {
+  id: thread_id
+}: Pick<ThreadEntity, 'id'>) {
   const api = createClient();
   
   const { data: existingThreadImages, status, error: existingThreadImagesErr } = await api
@@ -60,10 +60,10 @@ async function threadImagesRemove({
 }
 
 export async function removeThread({
-  thread_id
-}: UpdateThreadRequestType) {
-  await threadImagesRemove({ thread_id });
-  await threadRemove({ thread_id });
+  id
+}: Pick<ThreadEntity, 'id'>) {
+  await threadImagesRemove({ id });
+  await threadRemove({ id });
   
   return true;
 }

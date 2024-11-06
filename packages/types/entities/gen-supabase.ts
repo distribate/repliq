@@ -580,24 +580,24 @@ export type Database = {
       }
       posts: {
         Row: {
-          comments: boolean
           content: string | null
           created_at: string
-          post_id: string
+          id: string
+          isComments: boolean
           visibility: Database["public"]["Enums"]["post_visibility"]
         }
         Insert: {
-          comments?: boolean
           content?: string | null
           created_at?: string
-          post_id?: string
+          id?: string
+          isComments?: boolean
           visibility?: Database["public"]["Enums"]["post_visibility"]
         }
         Update: {
-          comments?: boolean
           content?: string | null
           created_at?: string
-          post_id?: string
+          id?: string
+          isComments?: boolean
           visibility?: Database["public"]["Enums"]["post_visibility"]
         }
         Relationships: []
@@ -606,19 +606,22 @@ export type Database = {
         Row: {
           content: string
           created_at: string
-          id: string
+          id: number
+          post_id: string
           user_nickname: string
         }
         Insert: {
           content: string
           created_at?: string
-          id?: string
+          id?: number
+          post_id: string
           user_nickname: string
         }
         Update: {
           content?: string
           created_at?: string
-          id?: string
+          id?: number
+          post_id?: string
           user_nickname?: string
         }
         Relationships: [
@@ -629,51 +632,28 @@ export type Database = {
             referencedRelation: "users"
             referencedColumns: ["nickname"]
           },
-        ]
-      }
-      posts_comments_ref: {
-        Row: {
-          comment_id: string
-          id: number
-          post_id: string
-        }
-        Insert: {
-          comment_id: string
-          id?: number
-          post_id: string
-        }
-        Update: {
-          comment_id?: string
-          id?: number
-          post_id?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "posts_comments_comment_id_fkey"
-            columns: ["comment_id"]
-            isOneToOne: false
-            referencedRelation: "posts_comments"
-            referencedColumns: ["id"]
-          },
           {
             foreignKeyName: "posts_comments_post_id_fkey"
             columns: ["post_id"]
             isOneToOne: false
             referencedRelation: "posts"
-            referencedColumns: ["post_id"]
+            referencedColumns: ["id"]
           },
         ]
       }
       posts_users: {
         Row: {
+          created_at: string
           post_id: string
           user_nickname: string
         }
         Insert: {
+          created_at?: string
           post_id: string
           user_nickname: string
         }
         Update: {
+          created_at?: string
           post_id?: string
           user_nickname?: string
         }
@@ -683,7 +663,7 @@ export type Database = {
             columns: ["post_id"]
             isOneToOne: false
             referencedRelation: "posts"
-            referencedColumns: ["post_id"]
+            referencedColumns: ["id"]
           },
           {
             foreignKeyName: "posts_users_user_nickname_fkey"
@@ -831,6 +811,7 @@ export type Database = {
           created_at: string
           description: string | null
           id: string
+          isImages: boolean
           permission: boolean
           title: string
           updated_at: string | null
@@ -842,7 +823,8 @@ export type Database = {
           content: Json
           created_at?: string
           description?: string | null
-          id: string
+          id?: string
+          isImages?: boolean
           permission?: boolean
           title: string
           updated_at?: string | null
@@ -855,6 +837,7 @@ export type Database = {
           created_at?: string
           description?: string | null
           id?: string
+          isImages?: boolean
           permission?: boolean
           title?: string
           updated_at?: string | null
@@ -901,39 +884,6 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "users"
             referencedColumns: ["nickname"]
-          },
-        ]
-      }
-      threads_comments_ref: {
-        Row: {
-          comment_id: number
-          id: number
-          thread_id: string
-        }
-        Insert: {
-          comment_id?: number
-          id?: number
-          thread_id: string
-        }
-        Update: {
-          comment_id?: number
-          id?: number
-          thread_id?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "threads_comments_comment_id_fkey"
-            columns: ["comment_id"]
-            isOneToOne: false
-            referencedRelation: "threads_comments"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "threads_comments_ref_thread_id_fkey"
-            columns: ["thread_id"]
-            isOneToOne: false
-            referencedRelation: "threads"
-            referencedColumns: ["id"]
           },
         ]
       }
@@ -1119,14 +1069,17 @@ export type Database = {
       }
       threads_users: {
         Row: {
+          created_at: string
           thread_id: string
           user_nickname: string
         }
         Insert: {
+          created_at?: string
           thread_id: string
           user_nickname: string
         }
         Update: {
+          created_at?: string
           thread_id?: string
           user_nickname?: string
         }

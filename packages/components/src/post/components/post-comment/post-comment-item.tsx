@@ -1,7 +1,7 @@
 import { PostCommentItemHeader } from './components/post-comment-header/post-comment-header.tsx';
 import { PostCommentBody } from './components/post-comment-body/post-comment-body.tsx';
 import { PostCommentItemFooter } from './components/post-comment-footer/post-comment-footer.tsx';
-import { Avatar } from '../../../user/components/avatar/components/avatar.tsx';
+import { Avatar } from '#user/components/avatar/components/avatar.tsx';
 import { CommentItemProps } from './types/post-comment-types.ts';
 import Link from 'next/link';
 import { USER_URL } from '@repo/shared/constants/routes.ts';

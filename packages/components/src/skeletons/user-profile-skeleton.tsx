@@ -1,5 +1,5 @@
-import { UserCoverSkeleton } from "../profile/components/cover/cover/components/cover-skeleton.tsx";
-import { UserContentSkeleton } from "./user-content-skeleton.tsx";
+import { UserCoverSkeleton } from '#skeletons/user-cover-skeleton.tsx';
+import { UserContentSkeleton } from '#skeletons/user-content-skeleton.tsx';
 
 export const UserProfileSkeleton = () => {
 	return (

@@ -90,7 +90,7 @@ export const Posts = ({
             Посты
           </Typography>
           <Typography textSize="medium" className="text-shark-300">
-            (всего {posts?.length})
+            [всего {posts?.length || 0}]
           </Typography>
         </div>
         <div className="flex items-center gap-4 w-fit">
@@ -137,15 +137,15 @@ export const Posts = ({
       {posts?.map((post, i) => (
         <BlockWrapper className="flex flex-col gap-y-4" key={i}>
           <PostItemHeader
-            id={post.post_id}
+            id={post.id}
             name_color={name_color}
             nickname={nickname}
             created_at={post.created_at}
           />
           <PostItemBody content={post.content} />
-          <PostComments post_id={post.post_id} commentsCount={post.commentsCount} />
+          <PostComments id={post.id} commentsCount={post.commentsCount} />
           {currentUser && (
-            <PostItemFooter post_id={post.post_id} />
+            <PostItemFooter id={post.id} />
           )}
         </BlockWrapper>
       ))}

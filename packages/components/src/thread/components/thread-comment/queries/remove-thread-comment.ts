@@ -1,22 +1,24 @@
 'use server';
 
 import { createClient } from '@repo/lib/utils/api/server.ts';
-import { getCurrentUser } from '@repo/lib/actions/get-current-user.ts';
-import { ThreadCommentControlType } from '../types/thread-comment-types.ts';
+import { validateOwner } from '@repo/lib/helpers/validate-owner.ts';
+import { ThreadCommentEntity } from '@repo/types/entities/entities-type.ts';
+
+export type RemoveThreadComment = Omit<Pick<ThreadCommentEntity, "thread_id" | "id" | "content">, "content">
 
 export async function removeThreadComment({
-  commentId, threadId
-}: ThreadCommentControlType) {
-  const currentUser = await getCurrentUser();
-  if (!currentUser) return;
+  id, thread_id
+}: RemoveThreadComment) {
+  const isValid = await validateOwner({ type: "threads_comments", id })
+  if (!isValid) return;
   
   const api = createClient();
   
   const { data, error } = await api
-  .from('threads_comments_ref')
+  .from('threads_comments')
   .delete()
-  .eq('thread_id', threadId)
-  .eq("comment_id", commentId)
+  .eq('thread_id', thread_id)
+  .eq("id", id)
   .select()
   .single();
   

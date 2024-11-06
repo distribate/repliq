@@ -10,11 +10,11 @@ import { FriendCardControlNote } from './friend-card-control-note.tsx';
 import { useRouter } from 'next/navigation';
 import { USER_URL } from '@repo/shared/constants/routes.ts';
 import { Separator } from '@repo/ui/src/components/separator.tsx';
-import { FriendsQuery } from '#friends/queries/friends-query.ts';
 import { FriendCardControlPin } from '#friend/components/friend-card/components/friend-card-control-pin.tsx';
 import { HoverCardItem } from '@repo/ui/src/components/hover-card.tsx';
+import { UserFriends } from '#friends/queries/get-friends.ts';
 
-export type FriendCardControlProps = Pick<FriendsQuery, 'friend_id' | 'nickname' | 'isPinned'>
+export type FriendCardControlProps = Pick<UserFriends, 'friend_id' | 'nickname' | 'isPinned'>
 
 export const FriendCardControl = ({
   nickname: reqUserNickname, friend_id, isPinned,

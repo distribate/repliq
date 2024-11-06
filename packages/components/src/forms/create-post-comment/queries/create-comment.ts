@@ -2,14 +2,15 @@
 
 import 'server-only';
 import { getCurrentUser } from '@repo/lib/actions/get-current-user.ts';
-import { PostCommentEntity, PostCommentRefEntity } from '@repo/types/entities/entities-type.ts';
+import { PostCommentEntity } from '@repo/types/entities/entities-type.ts';
 import { createClient } from "@repo/lib/utils/api/server.ts";
 
-type PostComment = Pick<PostCommentEntity, 'content'>
-type PostCommentRef = Pick<PostCommentRefEntity, 'post_id' | 'comment_id'>
+type PostComment = Pick<PostCommentEntity, "content"> & {
+  post_id: string
+}
 
-async function postComment({
-  content,
+export async function postComment({
+  content, post_id
 }: PostComment) {
   const currentUser = await getCurrentUser();
   if (!currentUser) return;
@@ -19,8 +20,8 @@ async function postComment({
   const { data, error } = await api
   .from('posts_comments')
   .insert({
-    content,
-    user_nickname: currentUser.nickname,
+    content, user_nickname: currentUser.nickname,
+    post_id
   })
   .select('id')
   .single();
@@ -30,47 +31,4 @@ async function postComment({
   }
   
   return data;
-}
-
-async function postCommentReferenced({
-  post_id, comment_id,
-}: PostCommentRef) {
-  const api = createClient();
-  
-  const { data, error } = await api
-  .from('posts_comments_ref')
-  .insert({
-    post_id, comment_id,
-  })
-  .select()
-  .single();
-  
-  if (error) {
-    throw new Error(error.message);
-  }
-  
-  return data;
-}
-
-export async function createCommentReferenced({
-  content, post_id,
-}: PostComment & {
-  post_id: string
-}) {
-  const comment = await postComment({
-    content,
-  });
-  
-  if (!comment) return;
-  
-  const post_comment = await postCommentReferenced({
-    post_id,
-    comment_id: comment.id,
-  });
-  
-  if (!post_comment) {
-    throw new Error('Dont post comment created');
-  }
-  
-  return post_comment;
 }

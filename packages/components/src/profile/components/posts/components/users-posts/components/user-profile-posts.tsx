@@ -21,7 +21,9 @@ export const UserProfilePosts = async({
   
   await qc.prefetchQuery({
     queryKey: POSTS_QUERY_KEY(nickname),
-    queryFn: () => getPostsByNickname(nickname),
+    queryFn: () => getPostsByNickname({
+      nickname, limit: 10
+    }),
   });
   
   const [ isOwner, creatorPost ] = await Promise.all([

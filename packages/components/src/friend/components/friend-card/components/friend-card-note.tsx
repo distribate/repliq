@@ -1,10 +1,10 @@
 import { SelectedWrapper } from '#wrappers/selected-wrapper.tsx';
 import { X } from 'lucide-react';
 import { Typography } from '@repo/ui/src/components/typography.tsx';
-import { FriendsQuery } from '#friends/queries/friends-query.ts';
 import { useControlFriend } from '#friend/components/friend-card/hooks/use-control-friend.ts';
+import { UserFriends } from '#friends/queries/get-friends.ts';
 
-type FriendCardNoteProps = Pick<FriendsQuery, 'friend_id' | 'nickname'> & {
+type FriendCardNoteProps = Pick<UserFriends, 'friend_id' | 'nickname'> & {
   note: string | null
 }
 

@@ -35,10 +35,12 @@ export async function createFriendRequest(requestedUserNickname: string): Promis
   const { count } = await api
   .from('users_friends')
   .select('*', { count: 'exact' })
-  .eq('user_1', currentUser)
+  .eq('user_1', currentUser.nickname)
   .eq('user_2', requestedUserNickname);
   
   const isExisting: boolean = count ? count !== 0 : false;
+  
+  console.log(count, isExisting)
   
   if (isExisting) return {
     status: 400, error: 'already-friends',

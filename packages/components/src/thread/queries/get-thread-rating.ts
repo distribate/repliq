@@ -2,9 +2,8 @@
 
 import { UpdateThreadRatingType } from './post-thread-rating.ts';
 import { getCurrentUser } from '@repo/lib/actions/get-current-user.ts';
-import { ThreadRequest } from '../types/thread-request-types.ts';
 import { createClient } from '@repo/lib/utils/api/server.ts';
-import { ThreadRatingEntity } from '@repo/types/entities/entities-type.ts';
+import { ThreadEntity, ThreadRatingEntity } from '@repo/types/entities/entities-type.ts';
 
 export type ThreadRatingResponse = {
   increment: number,
@@ -12,14 +11,10 @@ export type ThreadRatingResponse = {
   currentType: UpdateThreadRatingType
 }
 
-type ThreadRating = Pick<ThreadRequest, 'thread_id'>['thread_id']
-
-export async function getThreadRating(
-  threadId: ThreadRating,
-): Promise<ThreadRatingResponse | null> {
+export async function getThreadRating(threadId?: Pick<ThreadEntity, 'id'>["id"]): Promise<ThreadRatingResponse | null> {
   const currentUser = await getCurrentUser();
-  if (!currentUser) return null;
-  
+  if (!currentUser || !threadId) return null;
+
   const api = createClient();
   
   const { data: currentUserRatingType } = await api

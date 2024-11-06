@@ -11,8 +11,7 @@ import { useQueryClient } from '@tanstack/react-query';
 import { REPORT_QUERY_KEY, reportQuery } from '@repo/components/src/report/queries/report-query.ts';
 import React, { useState } from 'react';
 import {
-  POSTS_QUERY_KEY,
-  PostsQuery,
+  POSTS_QUERY_KEY
 } from '@repo/components/src/profile/components/posts/components/posts/queries/posts-query.ts';
 import { toast } from 'sonner';
 import {
@@ -23,6 +22,7 @@ import { Textarea } from '@repo/ui/src/components/textarea.tsx';
 import { ReportReasonEnum } from '@repo/types/entities/entities-type.ts';
 import { FlagTriangleLeft } from 'lucide-react';
 import { HoverCardItem } from '@repo/ui/src/components/hover-card.tsx';
+import { PostsByUser } from '#profile/components/posts/components/posts/queries/get-posts-by-user.ts';
 
 export type ReportItemProps = {
   reportType: ReportsReportType,
@@ -44,14 +44,14 @@ export const ReportCreateModal = ({
     let content: string | null = null;
     
     if (reportType === 'post') {
-      const selectedPosts = qc.getQueryData<PostsQuery>(POSTS_QUERY_KEY(targetNickname));
-      const selectedPost = selectedPosts?.find(post => post.post_id === targetId);
+      const selectedPosts = qc.getQueryData<PostsByUser[] | null>(POSTS_QUERY_KEY(targetNickname));
+      const selectedPost = selectedPosts?.find(post => post.id === targetId);
       
       if (!selectedPost) {
         return toast.error('Не выбран targetId');
       }
       
-      id = selectedPost.post_id;
+      id = selectedPost.id;
       content = selectedPost.content;
     } else if (reportType === 'comment' && threadId) {
       const selectedComments = qc.getQueryData<ThreadComment[]>(THREAD_COMMENTS_QUERY_KEY(threadId));

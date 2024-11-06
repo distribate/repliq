@@ -3,25 +3,25 @@ import { HoverCardItem } from '@repo/ui/src/components/hover-card.tsx';
 import { Separator } from '@repo/ui/src/components/separator.tsx';
 import { useControlPost } from '../../hooks/use-control-post.ts';
 import { useQueryClient } from '@tanstack/react-query';
-import { POSTS_QUERY_KEY, } from '../../../../../profile/components/posts/components/posts/queries/posts-query.ts';
-import { Posts } from '../../../../../profile/components/posts/components/posts/queries/get-posts-by-user.ts';
-import { DropdownWrapper } from '../../../../../wrappers/dropdown-wrapper.tsx';
-import { PostAdditionalModal } from '../../../../../modals/custom/post-additional-modal.tsx';
+import { POSTS_QUERY_KEY, } from '#profile/components/posts/components/posts/queries/posts-query.ts';
+import { DropdownWrapper } from '#wrappers/dropdown-wrapper.tsx';
+import { PostAdditionalModal } from '#modals/custom/post-additional-modal.tsx';
+import { PostEntity, UserEntity } from '@repo/types/entities/entities-type.ts';
 
-export type PostControlProps = {
-  post_id: string,
-  nickname: string,
-  name_color: string
-}
+export type PostControlProps = Pick<PostEntity, "id"> & Pick<UserEntity,  "nickname" | "name_color">
 
 export const PostControl = ({
-  post_id, nickname, name_color
+  id, nickname, name_color
 }: PostControlProps) => {
   const qc = useQueryClient();
   const { controlPostMutation } = useControlPost();
   
-  const posts = qc.getQueryData<Posts[]>(POSTS_QUERY_KEY(nickname));
-  const post = posts?.filter(item => item.post_id === post_id);
+  const posts = qc.getQueryData<PostEntity[]>(POSTS_QUERY_KEY(nickname));
+  const post = posts?.filter(item => item.id === id);
+  
+  const handleRemovePost = () => {
+    return controlPostMutation.mutate({ type: 'remove', id, nickname, })
+  }
   
   return (
     <div className="w-fit">
@@ -30,11 +30,7 @@ export const PostControl = ({
         trigger={<Ellipsis size={22} className="text-shark-200 cursor-pointer" />}
         content={
           <div className="flex flex-col gap-y-2">
-            <HoverCardItem
-              onClick={(e) => {
-                controlPostMutation.mutate({ type: 'remove', post_id, nickname, });
-              }}
-            >
+            <HoverCardItem onClick={handleRemovePost}>
               Удалить пост
             </HoverCardItem>
             <HoverCardItem>Редактировать пост</HoverCardItem>
@@ -43,7 +39,7 @@ export const PostControl = ({
             <Separator />
             {post && (
               <PostAdditionalModal
-                post_id={post_id}
+                id={id}
                 post={post}
                 nickname={nickname}
                 name_color={name_color}

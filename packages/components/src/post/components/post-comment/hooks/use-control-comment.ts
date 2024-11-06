@@ -1,14 +1,13 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { removePostComment } from '../queries/remove-post-comment.ts';
+import { RemovePostComment, removePostComment } from '../queries/remove-post-comment.ts';
 import { POST_COMMENTS_QUERY_KEY, } from '#profile/components/posts/components/posts/queries/posts-comments-query.ts';
 import { toast } from 'sonner';
 import { getUser } from '@repo/lib/helpers/get-user.ts';
 
 type ControlCommentType = 'remove' | 'edit';
 
-type ControlComment = {
+type ControlComment = RemovePostComment & {
   type: ControlCommentType,
-  comment_id: string,
   post_id: string
 }
 
@@ -22,9 +21,7 @@ export const useControlComment = () => {
       
       switch(values.type) {
         case 'remove':
-          return removePostComment({
-            comment_id: values.comment_id, nickname: currentUser.nickname,
-          });
+          return removePostComment({ id: values.id });
         case 'edit':
         
       }

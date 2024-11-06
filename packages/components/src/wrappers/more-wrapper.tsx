@@ -3,12 +3,12 @@ import { MoreVertical } from 'lucide-react';
 import { forwardRef, HTMLAttributes } from 'react';
 import { cva, VariantProps } from 'class-variance-authority';
 
-const moreWrapperVariants = cva('flex bg-shark-900/30 rounded-sm items-center justify-center', {
+const moreWrapperVariants = cva('flex bg-shark-900/10 backdrop-blur-lg rounded-md items-center justify-center', {
   variants: {
     variant: {
       default: 'p-2',
       small: 'p-1',
-      selected: 'h-10 w-10 border border-white/10',
+      medium: 'h-10 w-10',
     },
   },
   defaultVariants: {

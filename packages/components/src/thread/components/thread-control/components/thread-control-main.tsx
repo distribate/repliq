@@ -16,7 +16,6 @@ export const ThreadControlMain = ({
   id: threadId,
 }: Pick<ThreadControlProps, 'id'>) => {
   const { data: currentThread } = currentThreadQuery(threadId);
-  
   if (!currentThread) return null;
   
   return (

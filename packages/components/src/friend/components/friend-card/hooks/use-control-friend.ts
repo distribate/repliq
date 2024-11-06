@@ -4,7 +4,7 @@ import { QueryKey, useMutation, useQueryClient } from '@tanstack/react-query';
 import { SEARCHING_FRIENDS_QUERY_KEY } from '#friends/queries/searching-friends-query.ts';
 import { REQUESTS_OUTGOING_QUERY_KEY, } from '#friends/queries/requests-outgoing-query.ts';
 import { REQUESTS_QUERY_KEY } from '#friends/queries/requests-query.ts';
-import { FRIENDS_QUERY_KEY, FriendsQuery } from '#friends/queries/friends-query.ts';
+import { FRIENDS_QUERY_KEY } from '#friends/queries/friends-query.ts';
 import { REQUESTS_INCOMING_QUERY_KEY } from '#friends/queries/requests-incoming-query.ts';
 import { setPinFriend } from '#friends/queries/set-pin-friend.ts';
 import { setUnpinFriend } from '#friends/queries/set-unpin-friend.ts';
@@ -13,6 +13,7 @@ import { setUnNoteFriend } from '#friends/queries/set-unnote-friend.ts';
 import { getUser } from '@repo/lib/helpers/get-user.ts';
 import { ControlFriendProperties } from '#friend/components/friend-card/types/friend-request-types.ts';
 import { resolveFriendId } from '#friend/components/friend-card/helpers/resolve-friend-id.ts';
+import { UserFriends } from '#friends/queries/get-friends.ts';
 
 type SetFriendNote = ControlFriendProperties & {
   note: string;
@@ -63,7 +64,7 @@ export const useControlFriend = () => {
       if (friend_id) {
         friendId = friend_id
       } else {
-        const friends = qc.getQueryData<FriendsQuery[]>(FRIENDS_QUERY_KEY(currentUser.nickname));
+        const friends = qc.getQueryData<UserFriends[]>(FRIENDS_QUERY_KEY(currentUser.nickname));
         if (!friends) return null;
         
         const friend = resolveFriendId(friends, reqUserNickname)
@@ -97,7 +98,7 @@ export const useControlFriend = () => {
       if (friend_id) {
         friendId = friend_id
       } else {
-        const friends = qc.getQueryData<FriendsQuery[]>(FRIENDS_QUERY_KEY(currentUser.nickname));
+        const friends = qc.getQueryData<UserFriends[]>(FRIENDS_QUERY_KEY(currentUser.nickname));
         if (!friends) return null;
         
         const friend = resolveFriendId(friends, reqUserNickname)
@@ -108,7 +109,7 @@ export const useControlFriend = () => {
  
       if (!friendId || !note || !currentUser) return;
       
-      const friends = qc.getQueryData<FriendsQuery[]>(
+      const friends = qc.getQueryData<UserFriends[]>(
         FRIENDS_QUERY_KEY(currentUser.nickname),
       );
       
@@ -139,7 +140,7 @@ export const useControlFriend = () => {
       if (friend_id) {
         friendId = friend_id
       } else {
-        const friends = qc.getQueryData<FriendsQuery[]>(FRIENDS_QUERY_KEY(currentUser.nickname));
+        const friends = qc.getQueryData<UserFriends[]>(FRIENDS_QUERY_KEY(currentUser.nickname));
         if (!friends) return null;
         
         const friend = resolveFriendId(friends, reqUserNickname)
@@ -173,7 +174,7 @@ export const useControlFriend = () => {
       if (friend_id) {
         friendId = friend_id
       } else {
-        const friends = qc.getQueryData<FriendsQuery[]>(FRIENDS_QUERY_KEY(currentUser.nickname));
+        const friends = qc.getQueryData<UserFriends[]>(FRIENDS_QUERY_KEY(currentUser.nickname));
         if (!friends) return null;
         
         const friend = resolveFriendId(friends, reqUserNickname)

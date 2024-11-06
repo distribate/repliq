@@ -2,19 +2,18 @@
 
 import 'server-only';
 import { getCurrentUser } from '@repo/lib/actions/get-current-user.ts';
-import { UpdateThreadFields, UpdateThreadRequestType } from '../types/update-thread-request-types.ts';
+import { UpdateThreadFields } from '../types/update-thread-request-types.ts';
 import { removeThread } from './remove-thread.ts';
 import { createClient } from '@repo/lib/utils/api/server.ts';
+import { ThreadEntity } from '@repo/types/entities/entities-type.ts';
 
-async function getThreadCreatorNickname({
-  thread_id,
-}: UpdateThreadRequestType) {
+async function getThreadCreatorNickname(threadId: Pick<ThreadEntity, 'id'>["id"]) {
   const api = createClient();
   
   const { data, error } = await api
   .from('threads_users')
   .select('user_nickname')
-  .eq('thread_id', thread_id)
+  .eq('thread_id', threadId)
   .single();
   
   if (error) {
@@ -25,21 +24,19 @@ async function getThreadCreatorNickname({
 }
 
 export async function updateThreadFields({
-  id: thread_id, type, field,
+  id: threadId, type, field,
 }: UpdateThreadFields) {
   const currentUser = await getCurrentUser();
-  if (!currentUser || !thread_id) return;
+  if (!currentUser) return;
   
-  const threadCreator = await getThreadCreatorNickname({
-    thread_id
-  });
+  const threadCreator = await getThreadCreatorNickname(threadId);
   
   if (!threadCreator
     || threadCreator.user_nickname !== currentUser.nickname
   ) return;
   
   if (type === 'remove') {
-    return await removeThread({ thread_id });
+    return removeThread({ id: threadId });
   }
   
   if (!field) return;
@@ -58,7 +55,7 @@ export async function updateThreadFields({
   const { data, error } = await api
   .from('threads')
   .update(updateFields)
-  .eq('id', thread_id)
+  .eq('id', threadId)
   .select(fields);
   
   if (error) {

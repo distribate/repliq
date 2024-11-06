@@ -1,25 +1,17 @@
 import { ReactNode } from 'react';
-import { cookies } from 'next/headers';
 import { ResizableLayout } from '@repo/components/src/layouts/resizable-layout.tsx';
 import { getCurrentUser } from '@repo/lib/actions/get-current-user.ts';
 import { redirect } from 'next/navigation';
 import { HydrationBoundary, dehydrate, QueryClient } from '@tanstack/react-query';
 import { CURRENT_USER_QUERY_KEY } from '@repo/lib/queries/current-user-query.ts';
 import { getUserInformation } from '@repo/lib/queries/get-user-information.ts';
-import { RESIZABLE_LAYOUT_COOKIE_KEY } from '@repo/shared/keys/cookie.ts';
 import { AUTH_REDIRECT, BANNED_REDIRECT } from '@repo/shared/constants/routes.ts';
 import { getUserBanned } from '@repo/lib/queries/get-user-banned.ts';
 import { NotificationProvider } from '@repo/lib/providers/notification-provider.tsx';
+import { getLayoutSizes } from '@repo/lib/helpers/get-layout-sizes.ts';
 
 type MainLayoutProps = {
   children: ReactNode
-}
-
-const DEFAULT_LAYOUT_SIZES = [ 16, 84 ];
-
-function getLayoutSizes(): number[] {
-  const layout = cookies().get(RESIZABLE_LAYOUT_COOKIE_KEY);
-  return layout ? JSON.parse(layout.value) as number[] : DEFAULT_LAYOUT_SIZES;
 }
 
 export default async function MainLayout({
@@ -38,7 +30,7 @@ export default async function MainLayout({
     queryFn: () => getUserInformation(),
   });
   
-  const defaultLayout = getLayoutSizes()
+  const defaultLayout = await getLayoutSizes()
   
   return (
     <HydrationBoundary state={dehydrate(qc)}>

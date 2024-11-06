@@ -55,8 +55,8 @@ export const ThreadCommentItem = ({
     >
       {isCommentOwner && (
         <ThreadCommentMoreActions
-          commentId={id}
-          threadId={thread_id}
+          id={id}
+          thread_id={thread_id}
           content={content}
         />
       )}

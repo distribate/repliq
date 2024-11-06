@@ -13,7 +13,7 @@ export function checkFriendRequestStatus(
 	const currentUserNickname = currentUser.nickname;
 	
 	const { data: requests } = requestsQuery(currentUserNickname);
-	const { data: friends } = friendsQuery(currentUserNickname);
+	const { data: friends } = friendsQuery({ nickname: currentUserNickname });
 	
 	if (!requests) return "default";
 	

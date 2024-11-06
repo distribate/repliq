@@ -4,17 +4,14 @@ import 'server-only';
 import { ThreadEntity, UserEntity } from '@repo/types/entities/entities-type.ts';
 import { getThreadRating, ThreadRatingResponse } from './get-thread-rating.ts';
 import { getThreadCreator } from './get-thread-creator.ts';
-import { ThreadRequest } from '../types/thread-request-types.ts';
 import { getThreadCommentsCount } from './get-thread-comments-count.ts';
 import { getThread } from './get-thread.ts';
-import { getThreadImagesCount } from './get-thread-images-count.ts';
 import { createClient } from '@repo/lib/utils/api/server.ts';
 import { getCurrentUser } from '@repo/lib/actions/get-current-user.ts';
 
 type ThreadModelDetails = {
   commentsCount: number,
   rating: ThreadRatingResponse | null,
-  images: boolean
   owner: Pick<UserEntity, 'nickname' | "name_color">
   tags: Array<string> | null
   views: number | null
@@ -24,7 +21,7 @@ export type ThreadModel = ThreadEntity & ThreadModelDetails
 
 type GetThreadModel = {
   withViews: boolean
-  threadId: Pick<ThreadRequest, 'thread_id'>['thread_id']
+  threadId: Pick<ThreadEntity, 'id'>["id"]
 }
 
 async function getThreadTags(threadId: string): Promise<null | string[]> {
@@ -68,14 +65,12 @@ async function getThreadViews(threadId: string): Promise<number> {
 export async function getThreadModel({
   threadId, withViews
 }: GetThreadModel): Promise<ThreadModel | null> {
-  let images: boolean = false; // if existing images of thread
   let views: number | null = null;
   
   if (!threadId) return null;
   
-  const [ thread, threadImagesCount, threadCreator, commentsCount, tags, rating ] = await Promise.all([
+  const [ thread, threadCreator, commentsCount, tags, rating ] = await Promise.all([
     getThread(threadId),
-    getThreadImagesCount(threadId),
     getThreadCreator(threadId),
     getThreadCommentsCount(threadId),
     getThreadTags(threadId),
@@ -84,18 +79,13 @@ export async function getThreadModel({
   
   if (!thread || !threadCreator) return null;
   
-  if (threadImagesCount && threadImagesCount >= 1) {
-    images = true
-  }
-  
   if (withViews) {
     await postThreadView(threadId);
     views = await getThreadViews(threadId);
   }
 
   return {
-    ...thread,
-    owner: threadCreator,
-    commentsCount, tags, views, images, rating
+    ...thread, commentsCount, tags, views, rating,
+    owner: threadCreator
   }
 }

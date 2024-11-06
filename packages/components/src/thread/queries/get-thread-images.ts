@@ -1,15 +1,12 @@
 'use server';
 
 import { createClient } from '@repo/lib/utils/api/server.ts';
+import { ThreadEntity } from '@repo/types/entities/entities-type.ts';
 
-type ThreadImages = {
-  thread_id: string
-}
+type ThreadImages = Pick<ThreadEntity, "id">
 
-export async function getThreadsImages({
-  thread_id,
-}: ThreadImages): Promise<string[] | null> {
-  if (!thread_id) return null;
+export async function getThreadsImages(id: ThreadImages["id"]): Promise<string[] | null> {
+  if (!id) return null;
   
   let images: string[] | null = [];
   
@@ -18,7 +15,7 @@ export async function getThreadsImages({
   const { data, error } = await api
   .from('threads_images')
   .select('images')
-  .eq('thread_id', thread_id)
+  .eq('thread_id', id)
   .single()
   
   if (error) {

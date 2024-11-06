@@ -1,7 +1,7 @@
 'use server';
 
 import "server-only"
-import { ThreadCommentEntity, ThreadCommentEntityRef, ThreadCommentRepliedEntity } from '@repo/types/entities/entities-type.ts';
+import { ThreadCommentEntity, ThreadCommentRepliedEntity } from '@repo/types/entities/entities-type.ts';
 import { CreateThreadCommentType } from './create-thread-comment-query.ts';
 import { createClient } from '@repo/lib/utils/api/server.ts';
 
@@ -46,26 +46,6 @@ export async function postThreadCommentItem({
   return data;
 }
 
-export async function postThreadCommentThreads({
-  comment_id, thread_id,
-}: Pick<ThreadCommentEntityRef, 'thread_id' | 'comment_id'>) {
-  const api = createClient();
-  
-  const { data, error } = await api
-  .from('threads_comments_ref')
-  .insert({
-    comment_id, thread_id,
-  })
-  .select('comment_id')
-  .single();
-  
-  if (error) {
-    throw new Error(error.message);
-  }
-  
-  return data;
-}
-
 type PostThreadComment = Pick<ThreadCommentEntity,
   'thread_id' | "content" | "user_nickname"> & {
   type: CreateThreadCommentType,
@@ -89,17 +69,17 @@ export async function postThreadComment({
     throw new Error(error.message);
   }
   
-  const { id: threadCommentItemId } = await postThreadCommentItem({
+  const { id: commentItemId } = await postThreadCommentItem({
     user_nickname, content, thread_id
   });
   
-  if (!threadCommentItemId) return;
+  if (!commentItemId) return;
   
   let initiator_comment_id: string | null = null;
   
   if (type === 'reply' && recipient_comment_id) {
     const { initiator_comment_id: replyInitiatorCommentId } = await postThreadReplied({
-      initiator_comment_id: threadCommentItemId,
+      initiator_comment_id: commentItemId,
       recipient_comment_id: Number(recipient_comment_id),
     });
     
@@ -108,13 +88,5 @@ export async function postThreadComment({
     initiator_comment_id = replyInitiatorCommentId;
   }
   
-  const { comment_id: threadCommentThreadsId } = await postThreadCommentThreads({
-    comment_id: threadCommentItemId, thread_id
-  });
-  
-  if (threadCommentItemId !== threadCommentThreadsId) return;
-  
-  const comment_id: string = threadCommentThreadsId;
-  
-  return { initiator_comment_id, comment_id };
+  return { initiator_comment_id, comment_id: commentItemId };
 }

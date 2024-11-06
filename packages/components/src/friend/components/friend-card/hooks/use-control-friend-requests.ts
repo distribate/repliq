@@ -8,7 +8,7 @@ import { SEARCHING_FRIENDS_QUERY_KEY } from '#friends/queries/searching-friends-
 import { REQUESTS_INCOMING_QUERY_KEY, requestsIncomingQuery } from '#friends/queries/requests-incoming-query.ts';
 import { REQUESTS_OUTGOING_QUERY_KEY, requestsOutgoingQuery } from '#friends/queries/requests-outgoing-query.ts';
 import { REQUESTS_QUERY_KEY } from '#friends/queries/requests-query.ts';
-import { FRIENDS_QUERY_KEY, FriendsQuery } from '#friends/queries/friends-query.ts';
+import { FRIENDS_QUERY_KEY } from '#friends/queries/friends-query.ts';
 import { getUser } from '@repo/lib/helpers/get-user.ts';
 import { useRouter } from 'next/navigation';
 import { USER_FRIEND_DELETE_MUTATION_KEY } from '#friend/components/friend-card/hooks/use-control-friend.ts';
@@ -16,6 +16,7 @@ import { ControlFriendProperties } from '#friend/components/friend-card/types/fr
 import { createFriendRequest } from '#friend/components/friend-card/queries/create-friend-request.ts';
 import { resolveFriendId } from '#friend/components/friend-card/helpers/resolve-friend-id.ts';
 import { deleteFriend } from '#friend/components/friend-card/queries/delete-friend.ts';
+import { UserFriends } from '#friends/queries/get-friends.ts';
 
 export const useControlFriendRequests = () => {
   const qc = useQueryClient();
@@ -160,7 +161,7 @@ export const useControlFriendRequests = () => {
       if (friend_id) {
         friendId = friend_id;
       } else {
-        const friends = qc.getQueryData<FriendsQuery[]>(FRIENDS_QUERY_KEY(currentUser.nickname));
+        const friends = qc.getQueryData<UserFriends[]>(FRIENDS_QUERY_KEY(currentUser.nickname));
         if (!friends) return;
         
         const friend = resolveFriendId(friends, reqUserNickname);

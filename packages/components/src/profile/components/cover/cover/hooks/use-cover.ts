@@ -6,11 +6,12 @@ export const useCover = () => {
 	
 	const setCoverStateMutation = useMutation({
 		mutationFn: async (values: CoverQuery) => {
-			qc.setQueryData(COVER_QUERY_KEY, (prev: CoverQuery) => {
-				return { ...prev, ...values }
-			})
+			return qc.setQueryData(COVER_QUERY_KEY,
+				(prev: CoverQuery) => ({ ...prev, ...values })
+			)
 		},
-		onSuccess: async () => await qc.invalidateQueries({ queryKey: COVER_QUERY_KEY })
+		onSuccess: () => qc.invalidateQueries({ queryKey: COVER_QUERY_KEY }),
+		onError: e => { throw new Error(e.message)}
 	})
 	
 	return { setCoverStateMutation }

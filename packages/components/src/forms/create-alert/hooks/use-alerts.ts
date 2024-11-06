@@ -14,43 +14,37 @@ export const useAlerts = () => {
   const addAlertMutation = useMutation({
     mutationKey: ALERT_CREATE_MUTATION_KEY,
     mutationFn: async (values: CreateAlert) => createAlert(values),
-    onSuccess: async (data, variables, context) => {
+    onSuccess: async (data) => {
       if (!data) return toast.error("Произошла ошибка при создании объявления")
       
       toast.success("Объявление создано")
       
       return refresh()
     },
-    onError: (e) => {
-      throw new Error(e.message)
-    }
+    onError: e => {throw new Error(e.message)}
   })
   
   const deleteAlertMutation = useMutation({
     mutationFn: async (alertId: number) => deleteAlert(alertId),
-    onSuccess: async (data, variables, context) => {
+    onSuccess: async (data) => {
       if (!data) return toast.error("Произошла ошибка при удалении объявления")
       
       return refresh()
     },
-    onError: (e) => {
-      throw new Error(e.message)
-    }
+    onError: e => {throw new Error(e.message)}
   })
   
   const updateAlertMutation = useMutation({
     mutationKey: ALERT_UPDATE_MUTATION_KEY,
     mutationFn: async (values: UpdateAlert) => updateAlert(values),
-    onSuccess: async (data, variables, context) => {
+    onSuccess: async (data) => {
       if (!data) return toast.error("Произошла ошибка при обновлении")
       
       toast.success("Объявление обновлено")
       
       return refresh()
     },
-    onError: (e) => {
-      throw new Error(e.message)
-    }
+    onError: e => {throw new Error(e.message)}
   })
   
   return { addAlertMutation, deleteAlertMutation, updateAlertMutation }

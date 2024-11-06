@@ -110,7 +110,7 @@ export default async function TopicsTopicPage({
               <HydrationBoundary state={dehydrate(qc)}>
                 <ThreadComments
                   threadAuthorNickname={thread.owner.nickname}
-                  threadId={thread.id}
+                  thread_id={thread.id}
                   comments={thread.comments}
                 />
               </HydrationBoundary>
