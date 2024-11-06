@@ -8,7 +8,13 @@ import { calculatePercentage } from '@repo/lib/helpers/calculate-percentage.ts';
 import { ThreadRatingActionItem } from './thread-rating-action-item.tsx';
 import { ThreadEntity } from '@repo/types/entities/entities-type.ts';
 
-export const ThreadRating = (threadId: Pick<ThreadEntity, 'id'>["id"]) => {
+type ThreadRatingProps = {
+  threadId: Pick<ThreadEntity, 'id'>["id"]
+}
+
+export const ThreadRating = ({
+  threadId
+}: ThreadRatingProps) => {
   const { data: threadRating, isLoading } = threadRatingQuery(threadId);
   
   if (isLoading) return <ThreadRatingSkeleton />;

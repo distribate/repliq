@@ -1,12 +1,13 @@
 import { CloudUpload, ImageUp } from 'lucide-react';
 import { Typography } from '@repo/ui/src/components/typography.tsx';
 import { ProfileBackgroundDefaultImagesModal } from './profile-background-default-images-modal.tsx';
-import {
-  CoverImageInput,
-  useControlCoverImage, USER_COVER_UPDATE_IMAGE_MUTATION_KEY,
-} from '#profile/components/cover/components/cover-image/hooks/use-control-cover-image.ts';
 import { HoverCardItem } from '@repo/ui/src/components/hover-card.tsx';
 import { DynamicModal } from '../dynamic-modal.tsx';
+import {
+  CoverImageInput,
+  useControlCoverImage,
+  USER_COVER_UPDATE_IMAGE_MUTATION_KEY,
+} from '#profile/components/cover/hooks/use-control-cover-image.ts';
 
 export const ProfileBackgroundUpdateModal = () => {
   const { uploadBackgroundImageMutation } = useControlCoverImage();

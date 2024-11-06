@@ -1,8 +1,8 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { RemovePostComment, removePostComment } from '../queries/remove-post-comment.ts';
-import { POST_COMMENTS_QUERY_KEY, } from '#profile/components/posts/components/posts/queries/posts-comments-query.ts';
 import { toast } from 'sonner';
 import { getUser } from '@repo/lib/helpers/get-user.ts';
+import { POST_COMMENTS_QUERY_KEY } from '#post/components/post-comments/queries/post-comments-query.ts';
 
 type ControlCommentType = 'remove' | 'edit';
 
@@ -33,11 +33,11 @@ export const useControlComment = () => {
         });
       }
       
-      await qc.invalidateQueries({
+      return qc.invalidateQueries({
         queryKey: POST_COMMENTS_QUERY_KEY(variables.post_id),
       });
     },
-    onError: (e) => { throw new Error(e.message) },
+    onError: e => { throw new Error(e.message) },
   });
   
   return { controlCommentMutation };

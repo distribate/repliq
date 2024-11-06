@@ -8,6 +8,8 @@ import { getUserInformation } from '@repo/lib/queries/get-user-information.ts';
 import { AUTH_REDIRECT, BANNED_REDIRECT } from '@repo/shared/constants/routes.ts';
 import { getUserBanned } from '@repo/lib/queries/get-user-banned.ts';
 import { NotificationProvider } from '@repo/lib/providers/notification-provider.tsx';
+import { cookies } from 'next/headers';
+import { RESIZABLE_LAYOUT_COOKIE_KEY } from '@repo/shared/keys/cookie.ts';
 import { getLayoutSizes } from '@repo/lib/helpers/get-layout-sizes.ts';
 
 type MainLayoutProps = {

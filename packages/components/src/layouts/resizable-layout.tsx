@@ -100,7 +100,11 @@ export const ResizableLayout = ({
   const { isDynamic } = useSidebarControl();
   const [ isClient, setIsClient ] = useState(false);
   const layoutGroupGap = isDynamic ? 1 : 2;
-
+  
+  const onLayout = (sizes: number[]) => {
+    document.cookie = `react-resizable-panels:layout=${JSON.stringify(sizes)}`;
+  };
+  
   useEffect(() => {setIsClient(true)}, []);
   
   if (!isClient) return null;
@@ -109,6 +113,7 @@ export const ResizableLayout = ({
     <>
       {matches ? (
         <ResizablePanelGroup
+          onLayout={onLayout}
           direction="horizontal"
           autoSaveId="conditional"
           suppressHydrationWarning

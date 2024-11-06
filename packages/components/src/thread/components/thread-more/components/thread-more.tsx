@@ -12,7 +12,8 @@ import { UserNickname } from '#user/components/name/components/nickname.tsx';
 import { Button } from '@repo/ui/src/components/button.tsx';
 import { useRouter } from 'next/navigation';
 
-type ThreadMoreProps = Pick<ThreadModel, 'tags'
+type ThreadMoreProps = Pick<ThreadModel,
+  | 'tags'
   | 'description'
   | 'created_at'
   | 'owner'
@@ -31,9 +32,7 @@ export const ThreadMore = ({
           className="flex items-center justify-start gap-4 w-full"
           onClick={() => setExpand(prev => !prev)}
         >
-          <Typography>
-            {dayjs(created_at).fromNow()}
-          </Typography>
+          <Typography>{dayjs(created_at).fromNow()}</Typography>
           {tags && (
             <div className="flex items-center gap-2">
               {tags.map((tag, idx) => (
@@ -65,18 +64,19 @@ export const ThreadMore = ({
               </div>
             </div>
             <div className="flex items-center gap-2 w-full">
-              <Button onClick={() => push(USER_URL + owner.nickname)} state="default">
-                <Typography>
-                  Профиль
-                </Typography>
+              <Button
+                className="px-4"
+                onClick={() => push(USER_URL + owner.nickname)}
+                state="default"
+              >
+                <Typography>Профиль</Typography>
               </Button>
               <Button
                 onClick={() => push(`/search?type=threads&user=${owner.nickname}`)}
                 state="default"
+                className="px-4"
               >
-                <Typography>
-                  Треды
-                </Typography>
+                <Typography>Треды</Typography>
               </Button>
             </div>
           </div>

@@ -16,8 +16,8 @@ export function mutationOptions<
 		onMutate: (variables) => {
 			let _mutationKey = "";
 			
-			// Object containing the maximum number of allowed mutations for each query key.
-			// If a query key is not present, it defaults to 1 (only one mutation at a time)
+			// Object containing the maximum number of allowed mutations for each queries key.
+			// If a queries key is not present, it defaults to 1 (only one mutation at a time)
 			const maxConcurrentMutations = {
 				["foo"]: 1,
 			};

@@ -1,9 +1,8 @@
 import { createClient } from "@repo/lib/utils/api/server.ts";
-import { ThreadRequest } from '@repo/components/src/thread/types/thread-request-types.ts';
+import { ThreadEntity } from '@repo/types/entities/entities-type.ts';
 
-export async function getTopicName(thread_id: ThreadRequest["thread_id"]) {
-  if (!thread_id) return null;
-  
+export async function getTopicName(thread_id?: Pick<ThreadEntity, "id">["id"]) {
+  if (!thread_id) return;
   const api = createClient();
   
   const { data, error } = await api

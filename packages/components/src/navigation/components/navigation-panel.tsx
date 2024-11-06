@@ -1,4 +1,4 @@
-import { BlockWrapper } from '../../wrappers/block-wrapper.tsx';
+import { BlockWrapper } from '#wrappers/block-wrapper.tsx';
 import { Separator } from '@repo/ui/src/components/separator.tsx';
 import { Fragment } from 'react';
 import { NAVIGATION_LINKS } from '../constants/navigation-links.ts';

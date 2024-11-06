@@ -10,10 +10,7 @@ const animationClasses = {
 
 export const useSkinViewer = () => {
 	const { data: skinState } = useSkinAnimationQuery()
-	
-	const viewerRef = useRef<
-		SkinViewer | null
-	>(null);
+	const viewerRef = useRef<SkinViewer | null>(null);
 	
 	let animation: typeof IdleAnimation
 		| typeof RunningAnimation

@@ -2,7 +2,6 @@ import { Metadata } from 'next';
 import { dehydrate, HydrationBoundary, QueryClient } from '@tanstack/react-query';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@repo/ui/src/components/tabs.tsx';
 import { getRequestedUser, RequestedUser } from '@repo/lib/queries/get-requested-user.ts';
-import { UserCoverLayout } from '@repo/components/src/profile/components/cover/cover/components/cover-layout.tsx';
 import { Suspense } from 'react';
 import { checkProfileStatus, ProfileStatusBlockedType } from '@repo/lib/helpers/check-profile-status.ts';
 import { getBanDetails } from '@repo/lib/helpers/get-ban-details.ts';
@@ -10,9 +9,6 @@ import { Separator } from '@repo/ui/src/components/separator.tsx';
 import { validateRequest } from '@repo/lib/utils/auth/validate-requests.ts';
 import { checkUserGameStatsVisibility } from '@repo/lib/helpers/check-user-game-stats-visibility.ts';
 import { protectPrivateArea } from '@repo/lib/helpers/protect-private-area.ts';
-import {
-  REQUESTED_USER_QUERY_KEY,
-} from '@repo/components/src/profile/components/cover/cover/queries/requested-user-query.ts';
 import { MetadataType, PageConventionProps } from '@repo/types/global';
 import dynamic from 'next/dynamic';
 import type { User } from 'lucia';
@@ -24,14 +20,18 @@ import { getRequests } from '@repo/components/src/friends/queries/get-requests.t
 import { REQUESTS_QUERY_KEY } from '@repo/components/src/friends/queries/requests-query.ts';
 import { FRIENDS_QUERY_KEY } from '@repo/components/src/friends/queries/friends-query.ts';
 import { getFriends } from '@repo/components/src/friends/queries/get-friends.ts';
+import {
+  REQUESTED_USER_QUERY_KEY
+} from '@repo/components/src/profile/components/cover/queries/requested-user-query.ts';
+import { UserCoverLayout } from '@repo/components/src/profile/components/cover/components/cover-layout.tsx';
 
 const UserProfilePosts = dynamic(() =>
-  import('@repo/components/src/profile/components/posts/components/users-posts/components/user-profile-posts.tsx')
-  .then(m => m.UserProfilePosts),
+  import('@repo/components/src/profile/components/posts/components/posts/components/profile-posts.tsx')
+  .then(m => m.ProfilePosts),
 );
 
 const UserProfileAccountStats = dynamic(() =>
-  import('@repo/components/src/profile/components/account-stats/account-stats.tsx')
+  import('@repo/components/src/profile/components/account-stats/components/profile-account-stats.tsx')
   .then(m => m.UserProfileAccountStats),
 );
 
@@ -41,7 +41,7 @@ const ProfilePrivated = dynamic(() =>
 );
 
 const UserProfileGameAchievements = dynamic(() =>
-  import('@repo/components/src/profile/components/achievements/game-achievements.tsx')
+  import('@repo/components/src/profile/components/achievements/components/profile-game-achievements.tsx')
   .then(m => m.UserProfileGameAchievements),
 );
 
@@ -51,17 +51,17 @@ const UserBlocked = dynamic(() =>
 );
 
 const UserProfileFriends = dynamic(() =>
-  import('@repo/components/src/profile/components/friends/friends.tsx')
+  import('@repo/components/src/profile/components/friends/components/profile-friends.tsx')
   .then(m => m.UserProfileFriends),
 );
 
 const UserProfileThreads = dynamic(() =>
-  import('@repo/components/src/profile/components/threads/threads.tsx')
+  import('@repo/components/src/profile/components/threads/components/profile-threads.tsx')
   .then(m => m.UserProfileThreads),
 );
 
 const UserProfileGameStats = dynamic(() =>
-  import('@repo/components/src/profile/components/stats/stats/stats.tsx')
+  import('@repo/components/src/profile/components/stats/components/profile-stats.tsx')
   .then(m => m.UserProfileGameStats),
 );
 
@@ -71,7 +71,7 @@ const UserBanned = dynamic(() =>
 );
 
 const UserProfileSkin = dynamic(() =>
-  import('@repo/components/src/profile/components/skin/skin.tsx')
+  import('@repo/components/src/profile/components/skin/components/profile-skin.tsx')
   .then(m => m.UserProfileSkin),
 );
 

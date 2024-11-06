@@ -7,5 +7,6 @@ export const blockedUserQuery = (requestedNickname: string) => useQuery({
   queryKey: BLOCKED_QUERY_KEY(requestedNickname),
   queryFn: () => checkProfileIsBlocked(requestedNickname),
   enabled: !!requestedNickname,
-  refetchOnWindowFocus: false
+  refetchOnWindowFocus: false,
+  retry: 1
 })

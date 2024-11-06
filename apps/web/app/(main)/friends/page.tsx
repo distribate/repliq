@@ -3,16 +3,26 @@ import { getCurrentUser } from '@repo/lib/actions/get-current-user.ts';
 import { REQUESTS_INCOMING_QUERY_KEY } from '@repo/components/src/friends/queries/requests-incoming-query.ts';
 import { REQUESTS_OUTGOING_QUERY_KEY } from '@repo/components/src/friends/queries/requests-outgoing-query.ts';
 import { FilteringSearch } from '@repo/components/src/filtering/components/filtering-search.tsx';
-import { FriendsSearch } from '@repo/components/src/profile/components/friends/components/friends-search.tsx';
-import { FriendsFilteringView, } from '@repo/components/src/friends/components/filtering/components/friends-filtering-view.tsx';
-import { FriendsSort } from '@repo/components/src/profile/components/friends/components/friends-sort.tsx';
+import {
+  FriendsFilteringView,
+} from '@repo/components/src/friends/components/filtering/components/friends-filtering-view.tsx';
 import { Separator } from '@repo/ui/src/components/separator.tsx';
 import { FriendsTab } from '@repo/components/src/friends/components/control/components/friends-tab.tsx';
 import { getRequestsByType } from '@repo/components/src/friends/queries/get-requests-by-type.ts';
 import { BlockWrapper } from '@repo/components/src/wrappers/block-wrapper.tsx';
-import { FriendsAllCountIndicator, FriendsIncomingRequestsIndicator, FriendsOutgoingRequstsIndicator } from '@repo/components/src/friends/components/control/components/friends-indicators.tsx';
+import {
+  FriendsAllCountIndicator,
+  FriendsIncomingRequestsIndicator,
+  FriendsOutgoingRequstsIndicator,
+} from '@repo/components/src/friends/components/control/components/friends-indicators.tsx';
 import { FriendsStatistics } from '@repo/components/src/friends/components/control/components/friends-statistics.tsx';
 import { FriendsList } from '@repo/components/src/friends/components/lists/friends-list.tsx';
+import {
+  ProfileFriendsFilteringSearch,
+} from '@repo/components/src/profile/components/friends/components/profile-friends-filtering-search.tsx';
+import {
+  ProfileFriendsFiltering,
+} from '@repo/components/src/profile/components/friends/components/profile-friends-filtering.tsx';
 
 export default async function FriendsPage() {
   const currentUser = await getCurrentUser();
@@ -42,10 +52,10 @@ export default async function FriendsPage() {
           <div className="flex flex-col w-full h-full gap-4">
             <div className="flex items-center gap-4">
               <FilteringSearch>
-                <FriendsSearch />
+                <ProfileFriendsFilteringSearch />
               </FilteringSearch>
               <FriendsFilteringView />
-              <FriendsSort />
+              <ProfileFriendsFiltering />
             </div>
             <FriendsList nickname={nickname} />
           </div>

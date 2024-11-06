@@ -3,27 +3,10 @@
 import "server-only"
 import { createClient } from '@repo/lib/utils/api/server.ts';
 import { ThreadEntity } from '@repo/types/entities/entities-type.ts';
+import { getCurrentUser } from '@repo/lib/actions/get-current-user.ts';
+import { validateThreadOwner } from '#thread/components/thread-control/queries/validate-thread-owner.ts';
 
-async function threadRemove({
-  id: thread_id
-}: Pick<ThreadEntity, 'id'>): Promise<boolean> {
-  const api = createClient();
-  
-  const { error: threadRemoveErr } = await api
-  .from('threads')
-  .delete()
-  .eq('id', thread_id);
-  
-  if (threadRemoveErr) {
-    throw new Error(threadRemoveErr.message);
-  }
-  
-  return !threadRemoveErr;
-}
-
-async function threadImagesRemove({
-  id: thread_id
-}: Pick<ThreadEntity, 'id'>) {
+async function threadImagesRemove(thread_id: Pick<ThreadEntity, 'id'>["id"]) {
   const api = createClient();
   
   const { data: existingThreadImages, status, error: existingThreadImagesErr } = await api
@@ -36,7 +19,10 @@ async function threadImagesRemove({
     throw new Error(existingThreadImagesErr.message);
   }
 
-  if (!existingThreadImages || !existingThreadImages.images || existingThreadImages.images.length === 0) {
+  if (!existingThreadImages
+    || !existingThreadImages.images
+    || existingThreadImages.images.length === 0
+  ) {
     return;
   }
   
@@ -48,22 +34,32 @@ async function threadImagesRemove({
   if (removeImagesFromStorage) {
     throw new Error(removeImagesFromStorage.message);
   }
-  
-  const { error: removeImagesFromTable } = await api
-  .from('threads_images')
-  .delete()
-  .eq('thread_id', thread_id);
-  
-  if (removeImagesFromTable) {
-    throw new Error(removeImagesFromTable.message);
-  }
 }
 
 export async function removeThread({
   id
 }: Pick<ThreadEntity, 'id'>) {
-  await threadImagesRemove({ id });
-  await threadRemove({ id });
+  const currentUser = await getCurrentUser();
+  if (!currentUser) return;
+  
+  const isValid = await validateThreadOwner({
+    threadId: id, currentUserNickname: currentUser.nickname
+  })
+  
+  if (!isValid) return;
+  
+  const api = createClient();
+  
+  await threadImagesRemove(id);
+  
+  const { error } = await api
+  .from('threads')
+  .delete()
+  .eq('id', id);
+  
+  if (error) {
+    throw new Error(error.message);
+  }
   
   return true;
 }

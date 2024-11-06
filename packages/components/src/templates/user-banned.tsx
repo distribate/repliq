@@ -1,11 +1,11 @@
 "use client"
 
 import { BanDetails } from '@repo/lib/helpers/get-ban-details.ts';
-import { CoverArea } from '../profile/components/cover/cover/components/cover-area.tsx';
 import Image from 'next/image';
 import MissingTexture from "@repo/assets/images/minecraft/missing_texture.webp"
 import { Typography } from '@repo/ui/src/components/typography.tsx';
 import dayjs from '@repo/lib/utils/dayjs/dayjs-instance.ts';
+import { CoverArea } from '#profile/components/cover/components/cover-area.tsx';
 
 export const UserBanned = ({
   nickname, time

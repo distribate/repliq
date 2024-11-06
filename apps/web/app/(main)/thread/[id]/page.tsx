@@ -34,6 +34,7 @@ import { Button } from '@repo/ui/src/components/button.tsx';
 import { ThreadMore } from '@repo/components/src/thread/components/thread-more/components/thread-more.tsx';
 import { Eye } from 'lucide-react';
 import { FriendButton } from '@repo/components/src/buttons/friends/friend-button.tsx';
+import { Descendant } from 'slate';
 
 export async function generateMetadata({
   params,
@@ -84,8 +85,8 @@ export default async function TopicsTopicPage({
                 <Typography textSize="big" className="font-semibold" textColor="shark_white">
                   {thread.title}
                 </Typography>
-                <ThreadContent content={thread.content} />
-                {thread.images && <ThreadImages id={thread.id} />}
+                <ThreadContent content={thread.content as Descendant[]} />
+                {thread.isImages && <ThreadImages id={thread.id} />}
               </div>
             )}
             <div className="flex items-center mt-2 w-fit gap-1 self-end">
@@ -158,7 +159,7 @@ export default async function TopicsTopicPage({
         </BlockWrapper>
         <BlockWrapper>
           <div className="flex justify-between items-center w-full">
-            {thread.rating && <ThreadRating thread_id={thread.id} />}
+            {thread.rating && <ThreadRating threadId={thread.id} />}
             <div className="flex gap-2 items-center h-full">
               <ThreadShare />
               <ThreadSave />

@@ -1,18 +1,18 @@
 import { useQuery } from "@tanstack/react-query";
-import { getPostsByNickname } from './get-posts-by-user.ts';
+import { getPostsByNickname, GetPostsByUser } from './get-posts-by-user.ts';
 
 export const POSTS_QUERY_KEY = (nickname?: string) =>
 	[ "user", "posts", nickname ]
 
-export type PostsQuery = {
+export type PostsQuery = GetPostsByUser
 
-}
-
-export const postsQuery = (nickname?: string, limit?: number) => {
+export const postsQuery = ({
+	limit, nickname, range, ascending
+}: PostsQuery) => {
 	return useQuery({
 		queryKey: POSTS_QUERY_KEY(nickname),
 		queryFn: () => getPostsByNickname({
-			nickname, limit
+			nickname, limit, ascending, range
 		}),
 		refetchOnWindowFocus: false,
 		enabled: !!nickname

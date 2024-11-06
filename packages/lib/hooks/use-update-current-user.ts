@@ -5,10 +5,10 @@ import { CURRENT_USER_QUERY_KEY } from '../queries/current-user-query.ts';
 import { toast } from 'sonner';
 import { DONATE_QUERY_KEY } from '@repo/components/src/user/components/donate/queries/donate-query.ts';
 import { parseStringToBoolean } from '../helpers/parse-string-to-boolean.ts';
-import {
-  REQUESTED_USER_QUERY_KEY,
-} from '@repo/components/src/profile/components/cover/cover/queries/requested-user-query.ts';
 import { getUser } from '#helpers/get-user.ts';
+import {
+  REQUESTED_USER_QUERY_KEY
+} from '@repo/components/src/profile/components/cover/queries/requested-user-query.ts';
 
 export type AvailableFields = Pick<UserEntity, 'description'
   | 'visibility'

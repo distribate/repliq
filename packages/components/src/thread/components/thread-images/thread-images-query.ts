@@ -8,6 +8,8 @@ export const threadImagesQuery = (thread_id: string) => {
   return useQuery({
     queryFn: () => getThreadsImages(thread_id),
     queryKey: THREAD_IMAGES_QUERY_KEY(thread_id),
-    refetchOnWindowFocus: false
+    refetchOnWindowFocus: false,
+    retry: 1,
+    enabled: !!thread_id
   })
 }

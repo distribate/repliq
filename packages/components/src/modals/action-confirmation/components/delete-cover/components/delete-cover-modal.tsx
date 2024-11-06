@@ -3,12 +3,13 @@ import { X } from 'lucide-react';
 import { Typography } from '@repo/ui/src/components/typography.tsx';
 import { ConfirmationButton } from '#buttons/confirmation-action-button.tsx';
 import { ConfirmationActionModalTemplate } from '#templates/confirmation-action-modal-template.tsx';
-import {
-  useControlCoverImage, USER_COVER_DELETE_IMAGE_MUTATION_KEY,
-} from '#profile/components/cover/components/cover-image/hooks/use-control-cover-image.ts';
 import { DialogClose } from '@repo/ui/src/components/dialog.tsx';
 import { DynamicModal } from '../../../../dynamic-modal.tsx';
 import { getUser } from '@repo/lib/helpers/get-user.ts';
+import {
+  useControlCoverImage,
+  USER_COVER_DELETE_IMAGE_MUTATION_KEY,
+} from '#profile/components/cover/hooks/use-control-cover-image.ts';
 
 export const DeleteCoverModal = () => {
   const currentUser = getUser();

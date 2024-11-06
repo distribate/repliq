@@ -22,10 +22,7 @@ export async function getListFilesInBucket({
   properties = {
     limit: 50,
     offset: 0,
-    sortBy: {
-      col: "name",
-      order: "asc"
-    }
+    sortBy: { col: "name", order: "asc" }
   },
   signed = false
 }: GetListFilesInBucket) {

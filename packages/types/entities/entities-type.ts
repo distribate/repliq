@@ -27,3 +27,9 @@ export type PostVisibilityEnum = Database['public']['Enums']['post_visibility']
 export type ReportReasonEnum = Database["public"]["Enums"]["report_reason"]
 export type ThreadRatingEnum = Database["public"]["Enums"]["thread_rating_type"]
 export type DonateVariantsEnum = Database["public"]['Enums']['donate_variants']
+
+export type RequestDetails = Partial<{
+  range: number[],
+  limit: number,
+  ascending: boolean
+}>

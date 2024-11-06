@@ -8,12 +8,10 @@ export const ThreadInfo = async(thread: ThreadModel) => {
   const categoryByTitle = await getCategoryOfThreadTitle(thread.id);
   
   return (
-    <div className="flex py-2">
-      <Link href={CATEGORY_URL + categoryByTitle.id}>
-        <Typography className="font-medium" textSize="large">
-          {categoryByTitle.title}
-        </Typography>
-      </Link>
-    </div>
+    <Link href={CATEGORY_URL + categoryByTitle.id} className="flex py-2">
+      <Typography className="font-medium" textSize="large">
+        {categoryByTitle.title}
+      </Typography>
+    </Link>
   );
 };

@@ -5,23 +5,7 @@ import { getCurrentUser } from '@repo/lib/actions/get-current-user.ts';
 import { UpdateThreadFields } from '../types/update-thread-request-types.ts';
 import { removeThread } from './remove-thread.ts';
 import { createClient } from '@repo/lib/utils/api/server.ts';
-import { ThreadEntity } from '@repo/types/entities/entities-type.ts';
-
-async function getThreadCreatorNickname(threadId: Pick<ThreadEntity, 'id'>["id"]) {
-  const api = createClient();
-  
-  const { data, error } = await api
-  .from('threads_users')
-  .select('user_nickname')
-  .eq('thread_id', threadId)
-  .single();
-  
-  if (error) {
-    throw new Error(error.message);
-  }
-  
-  return data;
-}
+import { getThreadCreator } from '#thread/queries/get-thread-creator.ts';
 
 export async function updateThreadFields({
   id: threadId, type, field,
@@ -29,10 +13,10 @@ export async function updateThreadFields({
   const currentUser = await getCurrentUser();
   if (!currentUser) return;
   
-  const threadCreator = await getThreadCreatorNickname(threadId);
+  const threadCreator = await getThreadCreator(threadId);
   
   if (!threadCreator
-    || threadCreator.user_nickname !== currentUser.nickname
+    || threadCreator.nickname !== currentUser.nickname
   ) return;
   
   if (type === 'remove') {

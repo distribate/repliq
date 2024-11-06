@@ -5,22 +5,19 @@ type SkinControls = {
   icon: SkinIconType,
 }
 
-type SkinIconType = "sprite/people-idle"
-  | "sprite/people-running"
-  | "sprite/people-flying"
-
+type SkinIconType =
+  | 'sprite/people-idle'
+  | 'sprite/people-running'
+  | 'sprite/people-flying'
 
 export const SKIN_ANIMATIONS: SkinControls[] = [
   {
-    animation: "idle",
-    icon: "sprite/people-idle"
+    animation: 'idle', icon: 'sprite/people-idle',
   },
   {
-    animation: "run",
-    icon: "sprite/people-running",
+    animation: 'run', icon: 'sprite/people-running',
   },
   {
-    animation: "flying",
-    icon: "sprite/people-flying"
-  }
-]
+    animation: 'flying', icon: 'sprite/people-flying',
+  },
+];

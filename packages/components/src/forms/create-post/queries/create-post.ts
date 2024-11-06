@@ -1,53 +1,54 @@
-"use server"
+'use server';
 
-import "server-only"
-import { createClient } from "@repo/lib/utils/api/server.ts";
+import 'server-only';
+import { createClient } from '@repo/lib/utils/api/server.ts';
 import { PostEntity } from '@repo/types/entities/entities-type.ts';
+import { getCurrentUser } from '@repo/lib/actions/get-current-user.ts';
 
-export type Post = Pick<PostEntity, "content" | "visibility">
-
-export async function createPostReferenced({
-	visibility, content
-}: Post) {
-	const api = createClient();
-	
-	const { data, error } = await api
-	.from("posts")
-	.insert<Post>({
-		content: content,
-		visibility: visibility
-	})
-	.select("post_id")
-	.single()
-	
-	if (error) {
-		throw new Error(error.message);
-	}
-	
-	return data;
+type CreatePost = Pick<PostEntity, 'id'> & {
+  user_nickname: string
 }
 
-type CreatePost = {
-	post_id: string,
-	user_nickname: string
+async function createPostUsers({
+  id: post_id, user_nickname
+}: CreatePost) {
+  const api = createClient();
+  
+  const { error } = await api
+  .from('posts_users')
+  .insert({
+    post_id, user_nickname
+  })
+  .single();
+  
+  return !error;
 }
 
 export async function createPost({
-	post_id, user_nickname
-}: CreatePost) {
-	const api = createClient();
-	
-	const { error } = await api
-	.from("posts_users")
-	.insert<CreatePost>({
-		post_id: post_id,
-		user_nickname: user_nickname
-	})
-	.single()
-	
-	if (error) {
-		return false;
-	}
-	
-	return true;
+  visibility, content
+}: Pick<PostEntity, 'content' | 'visibility'>) {
+  const currentUser = await getCurrentUser();
+  if (!currentUser) return;
+  
+  const api = createClient();
+  
+  const { data, error } = await api
+  .from('posts')
+  .insert({
+    content, visibility,
+  })
+  .select('id')
+  .single();
+  
+  if (error) {
+    throw new Error(error.message);
+  }
+  
+  const userPost = await createPostUsers({
+    id: data.id, user_nickname: currentUser.nickname
+  })
+  
+  if (!userPost) return;
+  
+  return data;
 }

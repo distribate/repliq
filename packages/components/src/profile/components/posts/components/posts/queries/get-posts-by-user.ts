@@ -3,13 +3,11 @@
 import { getCurrentUser } from '@repo/lib/actions/get-current-user.ts';
 import { checkIsFriend } from '@repo/lib/helpers/check-is-friend.ts';
 import { createClient } from '@repo/lib/utils/api/server.ts';
-import { PostEntity } from '@repo/types/entities/entities-type.ts';
+import { PostEntity, RequestDetails } from '@repo/types/entities/entities-type.ts';
 
-type GetPostsByUser = Partial<{
-  nickname: string,
-  limit: number,
-  ascending: boolean
-}>
+export type GetPostsByUser = Partial<{
+  nickname: string
+}> & RequestDetails
 
 export type PostsByUser = PostEntity & {
   commentsCount: number
@@ -50,21 +48,23 @@ export async function getPostsByNickname({
   }
   
   const isFriend = await checkIsFriend(nickname);
-
-  return data
-  .map(item => {
+  
+  return data.map(item => {
     const { comments, ...postWithoutComments } = item.posts;
+    const commentsCount = comments && comments.length > 0 ? comments[0].count : 0
     
-    return {
-      ...postWithoutComments,
-      commentsCount: comments && comments.length > 0 ? comments[0].count : 0,
-    };
+    return { ...postWithoutComments, commentsCount, };
   })
   .filter(post => {
-    return (
-      currentUser.nickname === nickname ||
-      post.visibility === 'all' ||
-      (isFriend && post.visibility === 'friends')
-    );
+    switch (post.visibility) {
+      case 'all':
+        return true;
+      case 'only':
+        return currentUser.nickname === nickname;
+      case 'friends':
+        return isFriend;
+      default:
+        return false;
+    }
   });
 }

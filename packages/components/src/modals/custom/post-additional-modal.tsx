@@ -2,21 +2,21 @@ import { HoverCardItem } from '@repo/ui/src/components/hover-card.tsx';
 import Link from 'next/link';
 import { Typography } from '@repo/ui/src/components/typography.tsx';
 import dayjs from 'dayjs';
-import { PostControlProps } from '#post/components/post-item/components/post-header/post-control.tsx';
 import { BlockWrapper } from '#wrappers/block-wrapper.tsx';
 import { Avatar } from '#user/components/avatar/components/avatar.tsx';
 import { UserNickname } from '#user/components/name/components/nickname.tsx';
-import { PostItemBody } from '#post/components/post-item/components/post-body/post-body.tsx';
 import { Dialog, DialogContent, DialogTrigger } from '@repo/ui/src/components/dialog.tsx';
 import { USER_URL } from '@repo/shared/constants/routes.ts';
 import { PostEntity } from '@repo/types/entities/entities-type.ts';
+import { PostItemBody } from '#post/components/post-item/components/post-body.tsx';
+import { PostControlProps } from '#post/components/post-item/components/post-control.tsx';
 
 type PostAdditionalModal = PostControlProps & {
   post: PostEntity[],
 }
 
 export const PostAdditionalModal = ({
-  id, post, name_color, nickname,
+  id, post, nickname,
 }: PostAdditionalModal) => {
   return (
     <Dialog>
@@ -32,7 +32,7 @@ export const PostAdditionalModal = ({
               </Link>
               <div className="flex flex-col gap-y-1">
                 <Link href={USER_URL + nickname}>
-                  <UserNickname nickname={nickname} nicknameColor={name_color} className="text-base font-medium" />
+                  <UserNickname nickname={nickname} className="text-base font-medium" />
                 </Link>
                 <Typography className="text-shark-200 text-sm">
                   {dayjs(post[0].created_at).format('DD.MM.YYYY HH:mm')}
