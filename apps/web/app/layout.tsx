@@ -21,11 +21,9 @@ export async function generateMetadata() {
   };
 }
 
-type RootLayoutProps = Readonly<{ children: ReactNode }>
-
 export default function RootLayout({
   children,
-}: RootLayoutProps) {
+}: { children: ReactNode }) {
   return (
     <html lang="ru">
     <body className={font.className}>

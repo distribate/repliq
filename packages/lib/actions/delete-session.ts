@@ -11,9 +11,7 @@ export async function deleteSession(): Promise<ActionResult> {
 	const { session } = await validateRequest();
 
 	if (!session) {
-		return {
-			error: "Unauthorized..."
-		};
+		return { error: "Unauthorized..." };
 	}
 
 	await lucia.invalidateSession(session.id);

@@ -1,4 +1,4 @@
-export const blobUrlToFile = (blobUrl:string): Promise<File> => {
+export const blobUrlToFile = (blobUrl: string): Promise<File> => {
   return new Promise((resolve) => {
     fetch(blobUrl).then((res) => {
       res.blob().then((blob) => {

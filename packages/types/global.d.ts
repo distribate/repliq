@@ -53,7 +53,8 @@ type CustomText = {
   strike?: boolean
 }
 
-export type OperationType = 'insert_node'
+export type OperationType =
+  | 'insert_node'
   | 'merge_node'
   | 'move_node'
   | 'remove_node'

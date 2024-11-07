@@ -9,7 +9,7 @@ import { TooltipWrapper } from '#wrappers/tooltip-wrapper.tsx';
 import ExpActive from '@repo/assets/images/minecraft/exp-active.webp';
 import ExpNoActive from '@repo/assets/images/minecraft/exp-noactive.webp';
 
-const avatarVariants = cva('relative rounded-sm ', {
+const avatarVariants = cva('relative rounded-sm', {
   variants: {
     variant: {
       default: 'max-w-[68px] max-h-[68px]',
@@ -63,14 +63,7 @@ export const Avatar = forwardRef<
             triggerClassname: 'rounded-full min-w-[18px] min-h-[18px] absolute -bottom-2 -right-2 max-h-[32px] max-w-[32px]',
             sideAlign: 'bottom',
           }}
-          trigger={
-            <ImageWrapper
-              propSrc={activeImage}
-              propAlt=""
-              width={32}
-              height={32}
-            />
-          }
+          trigger={<ImageWrapper propSrc={activeImage} propAlt="" width={32} height={32} />}
           content={
             <Typography>
               {withBadge.active ? (

@@ -15,16 +15,11 @@ type CreateUserSecurityCredentials = {
 export async function createUserSecurityCredentials({
 	nickname, email, token
 }: CreateUserSecurityCredentials) {
-	const supabase = createClient();
+	const api = createClient();
 	
-	const { data, error, status } = await supabase
+	const { error } = await api
 	.from("users_security")
 	.insert({ user_nickname: nickname, email, token })
-	.single()
 	
-	if (error) {
-		return null;
-	}
-	
-	return true;
+	return !error;
 }

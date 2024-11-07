@@ -1,46 +1,36 @@
-import { X } from 'lucide-react';
-import {
-  selectedSessionIdQuery,
-  UserSessionBlockProps,
-  useSelectSessionId,
-} from '../../cards/components/user-personal-card/components/account-settings/components/user-session-block.tsx';
 import { DynamicModal } from '../dynamic-modal.tsx';
-import { ConfirmationActionModalTemplate } from '../../templates/confirmation-action-modal-template.tsx';
-import { ConfirmationButton } from '../../buttons/confirmation-action-button.tsx';
+import { ConfirmationActionModalTemplate } from '#templates/confirmation-action-modal-template.tsx';
+import { ConfirmationButton } from '#buttons/confirmation-action-button.tsx';
 import {
   TERMINATE_SESSIONS_MUTATION_KEY, useTerminateSession,
 } from '../action-confirmation/components/terminate-session/hooks/use-terminate-session.ts';
 import { DialogClose } from '@repo/ui/src/components/dialog.tsx';
+import { DeleteButton } from '@repo/ui/src/components/detele-button.tsx';
 
-type TerminateSessionModal = Pick<UserSessionBlockProps, "id">
+type TerminateSessionModalProps = {
+  session_uuid: string
+}
 
 export const TerminateSessionModal = ({
-  id
-}: TerminateSessionModal) => {
-  const { setValueMutation } = useSelectSessionId()
-  const { terminateMutation } = useTerminateSession();
-  const { data: selectedSessionId } = selectedSessionIdQuery();
+  session_uuid,
+}: TerminateSessionModalProps) => {
+  if (!session_uuid) return null;
   
-  if (!selectedSessionId) return null;
+  const { terminateMutation } = useTerminateSession();
   
   const handleTerminate = () => {
-    terminateMutation.mutate({
-      type: 'single',
-      values: {
-        session_id: selectedSessionId
-      },
-    });
+    return terminateMutation.mutate({ type: 'single', session_uuid });
   };
-  
-  if (!id) return;
   
   return (
     <DynamicModal
       mutationKey={TERMINATE_SESSIONS_MUTATION_KEY}
       trigger={
-        <div onClick={() => setValueMutation.mutate(id)} className="cursor-pointer">
-          <X className="h-4 w-4 text-shark-200 hover:text-shark-50" />
-        </div>
+        <DeleteButton
+          title="Удалить изображение"
+          disabled={terminateMutation.isPending}
+          variant="invisible"
+        />
       }
       content={
         <ConfirmationActionModalTemplate title="Уверены, что хотите уничтожить эту сессию?">
@@ -60,5 +50,5 @@ export const TerminateSessionModal = ({
         </ConfirmationActionModalTemplate>
       }
     />
-  )
-}
+  );
+};

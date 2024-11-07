@@ -1,1 +1,0 @@
-{"type":"object","properties":{"id":{"description":"Note:\nThis is a Primary Key.<pk/>","type":"integer","format":"bigint"},"created_at":{"type":"string","format":"timestamp with time zone","default":"now()"},"title":{"type":"string","format":"text"},"link":{"type":"string","format":"text"}},"required":["created_at","id","title"],"x-readme-ref-name":"config_alerts"}

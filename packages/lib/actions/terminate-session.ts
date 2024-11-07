@@ -3,74 +3,76 @@
 import "server-only"
 import { createClient } from "@repo/lib/utils/api/server.ts";
 import { validateRequest } from "../utils/auth/validate-requests.ts";
+import { getCurrentUser } from '#actions/get-current-user.ts';
+import { UsersSessionEntity } from '@repo/types/entities/entities-type.ts';
 
-export type Session = {
-	id: string,
-	user_id: string,
-	browser: string,
-	os: string,
-	isBot: boolean,
-	ua: string,
-	cpu: string
-}
+export type TerminateSession = Pick<UsersSessionEntity, "user_id" | "uuid">
 
-export type TerminateSession = {
-	session_id: string,
-	user_id: string
-}
-
-export async function terminateAllSessions({
-	user_id
-}: Pick<TerminateSession, "user_id">) {
+export async function terminateAllSessions() {
+	const currentUser = await getCurrentUser()
+	if (!currentUser) return;
+	
 	const api = createClient();
 	
 	const { user, session: currentSession } = await validateRequest();
 	
 	if (!user || !currentSession) return;
-	if (user.id !== user_id) return;
+	if (user.id !== currentUser.id) return;
 	
 	const { data: allActiveSessions } = await api
 	.from("users_session")
 	.select()
 	.neq("id", currentSession.id)
-	.returns<Session[]>()
+	.eq("user_id", currentUser.id)
+	.returns<UsersSessionEntity[]>()
 	
 	if (!allActiveSessions) return;
 	
+	let allSuccess = true;
+	
 	for (const session of allActiveSessions) {
-		const { data, error } = await api
+		const { error } = await api
 		.from("users_session")
 		.delete()
-		.eq("id", session.id)
-		.select("id")
-		.returns<Pick<Session, "id">>()
+		.eq("uuid", session.uuid)
+		.eq("user_id", currentUser.id)
 		
 		if (error) {
-			return null;
+			console.error(`Error deleting session ${session.uuid}:`, error);
+			allSuccess = false;
 		}
-		
-		return data;
+	}
+	
+	console.log(allSuccess)
+	
+	if (allSuccess) {
+		return allSuccess;
+	} else {
+		allSuccess = false;
+		return allSuccess;
 	}
 }
 
 export async function terminateSession({
-	session_id
-}: Pick<TerminateSession, "session_id">) {
+	uuid
+}: Pick<TerminateSession, "uuid">) {
 	const { user } = await validateRequest();
 	if (!user) return;
 	
-	const supabase = createClient()
+	const currentUser = await getCurrentUser()
+	if (!currentUser) return;
 	
-	const { data, error } = await supabase
+	const api = createClient()
+	
+	const { error } = await api
 	.from("users_session")
 	.delete()
-	.eq("id", session_id)
-	.select("id")
-	.single()
+	.eq("uuid", uuid)
+	.eq("user_id", currentUser.id)
 	
 	if (error) {
 		throw new Error(error.message);
 	}
 	
-	return data;
+	return !!error;
 }

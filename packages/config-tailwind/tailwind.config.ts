@@ -243,6 +243,11 @@ module.exports = {
 						transform: "translate3d(0, 0, 0)",
 					},
 				},
+				"shimmer": {
+					"100%": {
+						"transform": "translateX(100%)",
+					},
+				},
 			},
 			animation: {
 				"accordion-down": "accordion-down 0.2s ease-out",

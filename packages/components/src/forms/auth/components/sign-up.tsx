@@ -59,7 +59,7 @@ export const SignUpForm = () => {
   const { register, resetField, formState: { errors, isValid }, handleSubmit, reset } = useForm<
     zodSignUpForm
   >({
-    mode: 'onChange',
+    mode: 'onSubmit',
     resolver: zodResolver(registrationSchema),
     defaultValues: {
       password: '', nickname: '', email: '', findout: '', acceptRules: false,

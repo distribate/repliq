@@ -1,1 +1,0 @@
-{"type":"object","properties":{"description":{"type":"string","format":"text"},"id":{"description":"Note:\nThis is a Primary Key.<pk/>","type":"integer","format":"bigint"},"title":{"type":"string","format":"text"},"available":{"type":"boolean","format":"boolean","default":true}},"required":["available","id","title"],"x-readme-ref-name":"category"}

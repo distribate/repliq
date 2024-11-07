@@ -1,7 +1,7 @@
 import { Typography } from "@repo/ui/src/components/typography.tsx";
 import { userActiveSessionsQuery } from "../queries/user-sessions-query.ts";
 import { UserSessionBlock } from "./user-session-block.tsx";
-import { TerminateAllSessionsModal } from '../../../../../../modals/user-settings/terminate-all-sessions-modal.tsx';
+import { TerminateAllSessionsModal } from '#modals/user-settings/terminate-all-sessions-modal.tsx';
 
 export const UserActiveSessions = () => {
 	const { data: activeSessions, isError } = userActiveSessionsQuery()

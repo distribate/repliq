@@ -7,6 +7,7 @@ import { lucia } from "@repo/lib/utils/auth/lucia-instance.ts";
 import bcrypt from "bcryptjs";
 import { setSessionDeviceInfo } from "./set-session-device-info.ts";
 import { createClient } from "@repo/lib/utils/api/server.ts";
+import { USER_URL } from '@repo/shared/constants/routes.ts';
 
 export interface ActionResult {
 	error: string | null;
@@ -19,17 +20,14 @@ type SessionAction = {
 }
 
 export async function getAuthCredentials(nickname: string) {
-	const supabase = createClient();
-	
-	return supabase.from("AUTH").select("HASH,NICKNAME").eq("NICKNAME", nickname).single();
+	const api = createClient();
+	return api.from("AUTH").select("HASH,NICKNAME").eq("NICKNAME", nickname).single();
 }
 
 export async function createSessionAction({
 	nickname, id, password
 }: SessionAction): Promise<ActionResult | null> {
-	const existingUser = await getAuthCredentials(
-		nickname
-	);
+	const existingUser = await getAuthCredentials(nickname);
 	
 	if (!existingUser.data) return {
 		error: "Incorrect password or nickname"
@@ -40,9 +38,7 @@ export async function createSessionAction({
 	);
 	
 	if (!validPassword) {
-		return {
-			error: "Incorrect username or password"
-		}
+		return { error: "Incorrect username or password" }
 	}
 	
 	const session = await lucia.createSession(id, {});
@@ -54,5 +50,5 @@ export async function createSessionAction({
 		sessionCookie.name, sessionCookie.value, sessionCookie.attributes
 	);
 	
-	permanentRedirect(`/user/` + existingUser.data.NICKNAME);
+	permanentRedirect(USER_URL + existingUser.data.NICKNAME);
 }

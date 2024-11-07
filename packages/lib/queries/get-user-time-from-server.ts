@@ -9,9 +9,9 @@ export type UserTimeFromServer = {
 }
 
 export async function getUserTimeFromServer(nickname: string): Promise<UserTimeFromServer | null> {
-  const supabase = createClient();
+  const api = createClient();
   
-  const { data, error } = await supabase
+  const { data, error } = await api
   .from('AUTH')
   .select('REGDATE, LOGINDATE')
   .eq('NICKNAME', nickname)

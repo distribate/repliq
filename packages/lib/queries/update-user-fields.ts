@@ -6,8 +6,6 @@ import { AvailableFields } from '../hooks/use-update-current-user.ts';
 import { getUserDonate } from '@repo/components/src/user/components/donate/queries/get-user-donate.ts';
 import { keysForCheckDonate } from '@repo/shared/constants/user-fields-donated.ts';
 import { UserPreferences } from '../helpers/convert-user-preferences-to-map.ts';
-import { createRequestTimeout } from '../helpers/set-request-timeout.ts';
-import dayjs from 'dayjs';
 import { postUserPreferences } from './post-user-preferences.ts';
 
 export type UpdateUserFields = {
@@ -26,7 +24,7 @@ export type UpdateUserFields = {
 export async function updateUserFields({
   field, nickname, id, preferences,
 }: UpdateUserFields) {
-  const supabase = createClient();
+  const api = createClient();
   const currentUser = await getCurrentUser();
   
   if (!currentUser) return;
@@ -90,7 +88,7 @@ export async function updateUserFields({
   
   if (!isAccess) return;
   
-  const { data, error, status } = await supabase
+  const { data, error, status } = await api
   .from('users')
   .update(updateFields)
   .eq('nickname', nickname)
@@ -100,22 +98,6 @@ export async function updateUserFields({
   if (error) {
     throw new Error(error.message);
   }
-  
-  let isSuccess: boolean = false;
-  
-  for (const field in updateFields) {
-    const issuedTime = dayjs().add(5, 'minute');
-    
-    const requestTimeout = await createRequestTimeout({
-      type: field,
-      issued_at: dayjs(issuedTime).toString(),
-      user_nickname: nickname,
-    });
-    
-    isSuccess = !!requestTimeout;
-  }
-  
-  if (!isSuccess) return;
   
   return { data, status };
 }

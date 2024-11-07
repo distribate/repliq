@@ -7,10 +7,8 @@ import { CURRENT_USER_QUERY_KEY } from '@repo/lib/queries/current-user-query.ts'
 import { getUserInformation } from '@repo/lib/queries/get-user-information.ts';
 import { AUTH_REDIRECT, BANNED_REDIRECT } from '@repo/shared/constants/routes.ts';
 import { getUserBanned } from '@repo/lib/queries/get-user-banned.ts';
-import { NotificationProvider } from '@repo/lib/providers/notification-provider.tsx';
 import { cookies } from 'next/headers';
 import { RESIZABLE_LAYOUT_COOKIE_KEY } from '@repo/shared/keys/cookie.ts';
-import { getLayoutSizes } from '@repo/lib/helpers/get-layout-sizes.ts';
 
 type MainLayoutProps = {
   children: ReactNode
@@ -32,15 +30,16 @@ export default async function MainLayout({
     queryFn: () => getUserInformation(),
   });
   
-  const defaultLayout = await getLayoutSizes()
+  const layout = cookies().get(RESIZABLE_LAYOUT_COOKIE_KEY);
+  
+  let defaultLayout;
+  if (layout) defaultLayout = JSON.parse(layout.value);
   
   return (
-    <HydrationBoundary state={dehydrate(qc)}>
-      <NotificationProvider>
-        <ResizableLayout defaultLayout={defaultLayout}>
-          {children}
-        </ResizableLayout>
-      </NotificationProvider>
-    </HydrationBoundary>
+    <ResizableLayout defaultLayout={defaultLayout}>
+      <HydrationBoundary state={dehydrate(qc)}>
+        {children}
+      </HydrationBoundary>
+    </ResizableLayout>
   );
 }

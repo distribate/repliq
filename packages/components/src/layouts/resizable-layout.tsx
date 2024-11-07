@@ -8,6 +8,7 @@ import dynamic from 'next/dynamic';
 import { SidebarDesktopSkeleton } from '../sidebar/desktop/components/sidebar/sidebar-desktop-skeleton.tsx';
 import { SidebarDesktop } from '../sidebar/desktop/components/sidebar/sidebar-desktop.tsx';
 import { useSidebarControl } from '../sidebar/desktop/components/sidebar-layout/hooks/use-sidebar-control.ts';
+import { RESIZABLE_LAYOUT_COOKIE_KEY } from '@repo/shared/keys/cookie.ts';
 
 interface ResizableLayout {
   defaultLayout: number[],
@@ -93,21 +94,23 @@ export const AreaMain = ({
   );
 };
 
+export const DEFAULT_LAYOUT_SIZES = [ 16, 84 ];
+
 export const ResizableLayout = ({
-  defaultLayout, children,
+  defaultLayout = DEFAULT_LAYOUT_SIZES, children,
 }: ResizableLayout) => {
   const matches = useMediaQuery('(min-width: 768px)')
   const { isDynamic } = useSidebarControl();
   const [ isClient, setIsClient ] = useState(false);
   const layoutGroupGap = isDynamic ? 1 : 2;
   
-  const onLayout = (sizes: number[]) => {
-    document.cookie = `react-resizable-panels:layout=${JSON.stringify(sizes)}`;
-  };
-  
   useEffect(() => {setIsClient(true)}, []);
   
   if (!isClient) return null;
+  
+  const onLayout = (sizes: number[]) => {
+    document.cookie = `${RESIZABLE_LAYOUT_COOKIE_KEY}=${JSON.stringify(sizes)}`;
+  };
   
   return (
     <>

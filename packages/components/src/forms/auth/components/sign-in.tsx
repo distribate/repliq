@@ -68,7 +68,7 @@ export const SignInForm = () => {
   const { register, handleSubmit, reset, resetField, formState: { errors, isValid } } = useForm<
     zodSignInForm
   >({
-    mode: 'onChange',
+    mode: 'onSubmit',
     resolver: zodResolver(authorizationSchema),
     defaultValues: {
       password: '', nickname: '',

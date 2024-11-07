@@ -10,7 +10,8 @@ import {
   REQUESTED_USER_QUERY_KEY
 } from '@repo/components/src/profile/components/cover/queries/requested-user-query.ts';
 
-export type AvailableFields = Pick<UserEntity, 'description'
+export type AvailableFields = Pick<UserEntity,
+  | 'description'
   | 'visibility'
   | 'birthday'
   | 'name_color'
@@ -64,18 +65,18 @@ export const useUpdateCurrentUser = () => {
     onSuccess: async(data) => {
       if (!currentUser) return;
       
-      await Promise.all([
-        qc.invalidateQueries({ queryKey: CURRENT_USER_QUERY_KEY }),
-        qc.invalidateQueries({ queryKey: REQUESTED_USER_QUERY_KEY(currentUser.nickname) }),
-        qc.invalidateQueries({ queryKey: DONATE_QUERY_KEY(currentUser.nickname) }),
-      ]);
-      
       if (!data) return toast.error("Произошла ошибка при обновлении.", {
         description: 'Повторите попытку позже',
       });
       
       if (data.status === 200 && data) {
         toast.success("Изменения применены");
+        
+        await Promise.all([
+          qc.invalidateQueries({ queryKey: CURRENT_USER_QUERY_KEY }),
+          qc.invalidateQueries({ queryKey: REQUESTED_USER_QUERY_KEY(currentUser.nickname) }),
+          qc.invalidateQueries({ queryKey: DONATE_QUERY_KEY(currentUser.nickname) }),
+        ]);
         
         return data;
       }

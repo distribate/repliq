@@ -13,7 +13,7 @@ type PostUserPreferences = Pick<
 export async function postUserPreferences({
   value, nickname, id, oldPreferences, key,
 }: PostUserPreferences) {
-  const supabase = createClient();
+  const api = createClient();
   
   const transformedPreferences = Object
   .entries(oldPreferences)
@@ -27,7 +27,7 @@ export async function postUserPreferences({
     [key as string]: value.toString(),
   };
   
-  const { data, error, status } = await supabase
+  const { data, error, status } = await api
   .from('users')
   .update({ preferences: updateFields })
   .eq('nickname', nickname)

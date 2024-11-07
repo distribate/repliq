@@ -1404,6 +1404,7 @@ export type Database = {
           os: string | null
           ua: string | null
           user_id: string
+          uuid: string
         }
         Insert: {
           browser?: string | null
@@ -1415,6 +1416,7 @@ export type Database = {
           os?: string | null
           ua?: string | null
           user_id: string
+          uuid?: string
         }
         Update: {
           browser?: string | null
@@ -1426,6 +1428,7 @@ export type Database = {
           os?: string | null
           ua?: string | null
           user_id?: string
+          uuid?: string
         }
         Relationships: [
           {

@@ -4,36 +4,44 @@ import { createClient } from "@repo/lib/utils/api/server.ts";
 import { userAgent } from "next/server";
 import { headers } from "next/headers";
 
+function parseIPv6toIPv4(ip: string): string {
+	if (ip.startsWith('::ffff:')) {
+		return ip.replace('::ffff:', '');
+	}
+	return ip;
+}
+
 export async function setSessionDeviceInfo(
-	user_id: string,
-	session_id: string
+	user_id: string, session_id: string
 ) {
-	const supabase = createClient();
+	const api = createClient();
 	
-	const {
-		ua,
-		browser,
-		isBot,
-		cpu,
-		os
-	} = userAgent({
+	const { ua, browser, isBot, cpu, os } = userAgent({
 		headers: headers()
 	})
 	
 	const operationSystem = os.name && os.version ? os.name + os.version
 		: os.name ? os.name : os.version ? os.version : '';
 	
-	const { data, error, status } = await supabase
+	const IPv6 = headers().get("x-forwarded-for") ?? null
+	let IPv4: string | null = null;
+	
+	if (IPv6) {
+		IPv4 = parseIPv6toIPv4(IPv6)
+	}
+	
+	const { error } = await api
 	.from("users_session")
 	.update({
-		ua, browser: browser.name, isBot,
-		cpu: cpu.architecture, os: operationSystem
+		ua,
+		ip: IPv4,
+		browser: browser.name,
+		isBot,
+		cpu: cpu.architecture,
+		os: operationSystem
 	})
 	.eq("user_id", user_id)
 	.eq("id", session_id)
-	.select()
 	
-	if (error) throw error;
-	
-	return !!data;
+	return !!error;
 }

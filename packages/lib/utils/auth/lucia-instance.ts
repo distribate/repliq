@@ -15,6 +15,12 @@ export const lucia = new Lucia(adapter, {
 			nickname: attributes.nickname,
 			setupTwoFactor: attributes.two_factor_secret !== null
 		};
+	},
+	getSessionAttributes: (attributes) => {
+		return {
+			// @ts-ignore
+			uuid: attributes.uuid
+		}
 	}
 });
 

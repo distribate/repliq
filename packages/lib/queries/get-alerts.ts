@@ -8,9 +8,9 @@ type GetAlerts = {
 }
 
 export async function getAlerts(filter?: GetAlerts) {
-  const supabase = createClient();
+  const api = createClient();
   
-  let query = supabase
+  let query = api
   .from("config_alerts")
   .select()
   .returns<AlertEntity[]>()

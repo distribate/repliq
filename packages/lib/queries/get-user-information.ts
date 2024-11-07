@@ -18,10 +18,11 @@ export async function getUserInformation(): Promise<CurrentUser | null> {
 	let query = api
 	.from("users")
 	.select(`
-		id,created_at,uuid,nickname,description,status,birthday,real_name,preferences,cover_image,visibility,name_color,favorite_item
+		id,created_at,uuid,nickname,description,status,birthday,real_name,
+		preferences,cover_image,visibility,name_color,favorite_item
 	`)
-	.eq("nickname", currentUser?.nickname)
-	.eq("id", currentUser?.id)
+	.eq("nickname", currentUser.nickname)
+	.eq("id", currentUser.id)
 	.single()
 	
 	const isBanned = await getUserBanned(currentUser.nickname)

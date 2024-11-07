@@ -13,9 +13,7 @@ export const getCurrentUser = cache(async() => {
     return null
   }
   
-  const { user, session } = await lucia.validateSession(
-    sessionId,
-  );
+  const { user, session } = await lucia.validateSession(sessionId);
   
   try {
     if (session && session.fresh) {
@@ -28,8 +26,7 @@ export const getCurrentUser = cache(async() => {
       const sessionCookie = lucia.createBlankSessionCookie();
       cookies().set(sessionCookie.name, sessionCookie.value, sessionCookie.attributes);
     }
-  } catch {
-  }
+  } catch {}
   
   return user;
 });

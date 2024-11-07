@@ -3,7 +3,7 @@ export const parseStringToBoolean = (input: string): boolean => {
     return true
   } else if (input === 'false') {
     return false
-  } else {
-    throw new Error(`Invalid boolean string: ${input}`);
   }
+  
+  throw new Error(`Invalid boolean string: ${input}`);
 };

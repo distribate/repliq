@@ -16,9 +16,7 @@ export async function checkAdminPermission(): Promise<boolean> {
 	.eq("user_id", user.id)
 	.single()
 	
-	if (error) {
-		return false;
-	}
+	if (error) return false;
 	
 	return !!data;
 }
