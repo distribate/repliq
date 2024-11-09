@@ -7,6 +7,8 @@ node_modules
 
 .idea
 
+./apps/database/supabase/migrations
+
 # Local env files
 .env
 .env.local
