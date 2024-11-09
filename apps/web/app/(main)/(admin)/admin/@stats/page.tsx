@@ -1,6 +1,7 @@
 import { AdminSections } from '@repo/components/src/admin/components/navigation/admin-navigation-badge.tsx';
 import { Typography } from '@repo/ui/src/components/typography.tsx';
 import { PageConventionProps } from '@repo/types/global';
+import { Metadata } from 'next';
 
 export default async function AdminStatsPage({
   searchParams,

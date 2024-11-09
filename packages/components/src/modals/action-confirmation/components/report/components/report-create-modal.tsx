@@ -1,5 +1,4 @@
 import { Typography } from '@repo/ui/src/components/typography.tsx';
-import { ReportsReportType } from '@repo/shared/api/gen';
 import { DynamicModal } from '@repo/components/src/modals/dynamic-modal.tsx';
 import { CREATE_REPORT_MUTATION_KEY, useCreateReport } from '../hooks/use-create-report.ts';
 import { ConfirmationActionModalTemplate } from '@repo/components/src/templates/confirmation-action-modal-template.tsx';
@@ -19,13 +18,13 @@ import {
 } from '@repo/components/src/thread/components/thread-comments/queries/thread-comments-query.ts';
 import { ThreadComment } from '@repo/components/src/thread/components/thread-comments/queries/get-thread-comments.ts';
 import { Textarea } from '@repo/ui/src/components/textarea.tsx';
-import { ReportReasonEnum } from '@repo/types/entities/entities-type.ts';
+import { ReportEntity, ReportReasonEnum } from '@repo/types/entities/entities-type.ts';
 import { FlagTriangleLeft } from 'lucide-react';
 import { HoverCardItem } from '@repo/ui/src/components/hover-card.tsx';
 import { PostsByUser } from '#profile/components/posts/components/posts/queries/get-posts-by-user.ts';
 
 export type ReportItemProps = {
-  reportType: ReportsReportType,
+  reportType: Pick<ReportEntity, "report_type">["report_type"],
   targetNickname: string,
   threadId?: string,
   targetId?: string | number;

@@ -4,11 +4,6 @@ import { ImageWrapper } from '#wrappers/image-wrapper.tsx';
 import { DescriptionInput } from './components/description-input.tsx';
 import { HoverCardItem } from '@repo/ui/src/components/hover-card.tsx';
 import { OutlineCover } from './components/outline-cover.tsx';
-import Firework from '@repo/assets/images/minecraft/firework.webp';
-import BlueDye from '@repo/assets/images/minecraft/blue_dye.webp';
-import Nametag from '@repo/assets/images/minecraft/nametag.webp';
-import Barrier from '@repo/assets/images/minecraft/barrier.webp';
-import DiamondPickaxe from '@repo/assets/images/minecraft/diamond_pickaxe.webp';
 import Lead from '@repo/assets/images/minecraft/lead.webp';
 import { RealNameChangeModal } from '#modals/user-settings/real-name-change-modal.tsx';
 import { NicknameColorPickerModal } from '#modals/user-settings/nickname-color-picker-modal.tsx';
@@ -67,18 +62,12 @@ export const UserProfileSettings = () => {
       </div>
       <Separator />
       <div className="flex flex-col w-full gap-y-4">
-        <UserSettingOption title="Тип аккаунта:" imageSrc={Barrier.src}>
-          <ProfileVisibilityChange />
-        </UserSettingOption>
+        <ProfileVisibilityChange />
       </div>
       <Separator />
       <div className="flex flex-col w-full gap-y-4">
-        <UserSettingOption title="День рождения" imageSrc={Firework.src}>
-          <DateBirthdayModal />
-        </UserSettingOption>
-        <UserSettingOption title="Реальное имя" imageSrc={Nametag.src}>
-          <RealNameChangeModal />
-        </UserSettingOption>
+        <DateBirthdayModal />
+        <RealNameChangeModal />
         {/* with donate access*/}
         {isAccess && (
           <>
@@ -87,15 +76,11 @@ export const UserProfileSettings = () => {
                 only Authentic+
               </Typography>
             </Separator>
-            <UserSettingOption title="Цвет никнейма" imageSrc={BlueDye.src}>
-              <NicknameColorPickerModal />
-            </UserSettingOption>
+            <NicknameColorPickerModal />
             <UserSettingOption title="Обводка вокруг шапки профиля" imageSrc={Lead.src}>
               <OutlineCover />
             </UserSettingOption>
-            <UserSettingOption title="Любимый предмет" imageSrc={DiamondPickaxe.src}>
-              <FavoriteItemModal />
-            </UserSettingOption>
+            <FavoriteItemModal />
           </>
         )}
       </div>

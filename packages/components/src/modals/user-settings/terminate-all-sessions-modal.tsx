@@ -16,7 +16,7 @@ export const TerminateAllSessionsModal = () => {
   
   const handleAllTerminate = () => {
     return terminateMutation.mutate({ type: 'all' });
-  };
+  }
   
   return (
     <DynamicModal
@@ -53,5 +53,5 @@ export const TerminateAllSessionsModal = () => {
         </ConfirmationActionModalTemplate>
       }
     />
-  );
+  )
 };

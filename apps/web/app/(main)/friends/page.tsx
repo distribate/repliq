@@ -23,6 +23,11 @@ import {
 import {
   ProfileFriendsFiltering,
 } from '@repo/components/src/profile/components/friends/components/profile-friends-filtering.tsx';
+import { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: "Друзья"
+}
 
 export default async function FriendsPage() {
   const currentUser = await getCurrentUser();

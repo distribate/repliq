@@ -5,6 +5,10 @@ import {
 import { DynamicModal } from '../dynamic-modal.tsx';
 import { UPDATE_FIELD_MUTATION_KEY } from '@repo/lib/hooks/use-update-current-user.ts';
 import { getUser } from '@repo/lib/helpers/get-user.ts';
+import {
+  UserSettingOption
+} from '#cards/components/user-personal-card/components/profile-settings/user-profile-settings.tsx';
+import Nametag from '@repo/assets/images/minecraft/nametag.webp';
 
 export const RealNameChangeModal = () => {
   const currentUser = getUser();
@@ -16,11 +20,13 @@ export const RealNameChangeModal = () => {
     <DynamicModal
       mutationKey={UPDATE_FIELD_MUTATION_KEY}
       trigger={
-        <div className="flex items-center gap-1">
-          <Typography className="text-base">
-            {realName ? realName : 'не указано'}
-          </Typography>
-        </div>
+        <UserSettingOption title="Реальное имя" imageSrc={Nametag.src}>
+          <div className="flex items-center gap-1">
+            <Typography className="text-base">
+              {realName ? realName : 'не указано'}
+            </Typography>
+          </div>
+        </UserSettingOption>
       }
       content={<RealNameChange />}
     />

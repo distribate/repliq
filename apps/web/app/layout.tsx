@@ -6,18 +6,19 @@ import { Toaster } from 'sonner';
 import { MainPageLoader } from '@repo/ui/src/components/main-page-loader.tsx';
 import '../globals.css';
 import '@repo/ui/ui.css';
+import { Metadata } from 'next';
 
 const font = PT_Sans({
   subsets: [ 'latin', 'cyrillic' ],
   weight: [ '400', '700' ],
 });
 
-export async function generateMetadata() {
+export async function generateMetadata(): Promise<Metadata> {
   return {
     title: {
       template: '%s | Fasberry',
       default: 'Форум | Fasberry',
-    },
+    }
   };
 }
 

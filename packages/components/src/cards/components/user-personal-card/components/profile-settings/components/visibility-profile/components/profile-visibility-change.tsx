@@ -6,6 +6,11 @@ import { DropdownWrapper } from '#wrappers/dropdown-wrapper.tsx';
 import { VISIBILITY_FORMATS } from '../constants/visibility-formats.ts';
 import { ProfileVisibilityChangeType } from '../types/visibility-types.ts';
 import { getUser } from '@repo/lib/helpers/get-user.ts';
+import {
+  UserSettingOption,
+} from '#cards/components/user-personal-card/components/profile-settings/user-profile-settings.tsx';
+import Barrier from '@repo/assets/images/minecraft/barrier.webp';
+import { DynamicModal } from '#modals/dynamic-modal.tsx';
 
 type VisibilityProps = {
   e: React.MouseEvent<HTMLDivElement, MouseEvent>,
@@ -27,12 +32,16 @@ export const ProfileVisibilityChange = () => {
     updateFieldMutation.mutate({
       field: 'visibility', value: type,
     });
-  }, [ updateFieldMutation ])
+  }, [ updateFieldMutation ]);
   
   return (
-    <DropdownWrapper
-      properties={{ contentAlign: 'end', sideAlign: 'right', }}
-      trigger={<Typography className="text-base">{profileVisibilityType}</Typography>}
+    <DynamicModal
+      mutationKey={["ASDSAD"]}
+      trigger={
+        <UserSettingOption title="Тип аккаунта:" imageSrc={Barrier.src}>
+          <Typography className="text-base">{profileVisibilityType}</Typography>
+        </UserSettingOption>
+      }
       content={
         <div className="flex flex-col gap-y-4">
           <Typography className="text-shark-300 text-sm px-2 pt-2">
