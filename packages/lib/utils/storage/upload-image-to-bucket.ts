@@ -3,12 +3,18 @@
 import { createClient } from '@repo/lib/utils/api/server.ts';
 import { decode } from 'base64-arraybuffer';
 import { USER_IMAGES_BUCKET } from '@repo/shared/constants/buckets.ts';
+import { getCurrentUser } from '#actions/get-current-user.ts';
 
 type UploadProperties = {
   bucket: string,
   folderName?: string | null,
   fileName: string,
   file: string
+}
+
+type UploadImageToBucket = {
+  path: string | null,
+  error: Error | null
 }
 
 function parseString(input: string): {
@@ -26,16 +32,27 @@ function parseString(input: string): {
   return { beforeSlash: parts[0], afterSlash: null, };
 }
 
-type DeleteCoverImageFromBucket = {
-  currentCoverImage: string | null
-}
-
-export async function deleteCoverImageFromBucket({
-  currentCoverImage
-}: DeleteCoverImageFromBucket): Promise<boolean> {
+export async function deleteCoverImageFromBucket(): Promise<boolean> {
+  const currentUser = await getCurrentUser()
+  if (!currentUser) return false;
+  
   const api = createClient();
   
-  if (!currentCoverImage) return true;
+  const { data, error } = await api
+  .from("users")
+  .select("cover_image")
+  .eq("nickname", currentUser.nickname)
+  .single()
+  
+  if (error) {
+    throw new Error(error.message)
+  }
+  
+  const currentCoverImage = data.cover_image;
+  
+  if (!currentCoverImage) {
+    return true;
+  }
   
   const parsedUrl = parseString(currentCoverImage);
   if (!parsedUrl.beforeSlash) return false;
@@ -58,16 +75,12 @@ export async function deleteCoverImageFromBucket({
   return false;
 }
 
-type UploadImageToBucket = {
-  path: string | null,
-  error: Error | null
-}
-
 export async function uploadCoverImageInBucket({
   bucket, fileName, file, folderName,
 }: UploadProperties): Promise<UploadImageToBucket> {
-  const api = createClient();
+  await deleteCoverImageFromBucket();
   
+  const api = createClient();
   const folderPath = folderName ? folderName + '/' + fileName : fileName;
   const decodedFile = decode(file);
   

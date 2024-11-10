@@ -5,6 +5,7 @@ import { PostThread } from './post-thread.ts';
 import { createClient } from '@repo/lib/utils/api/server.ts';
 import { decode } from 'base64-arraybuffer';
 import { nanoid } from 'nanoid';
+import { THREADS_IMAGES_BUCKET } from '@repo/shared/constants/buckets.ts';
 
 type PostThreadImages = PostThread & {
   base64Files: string[]
@@ -26,7 +27,7 @@ async function uploadThreadImage({
   
   const { data, error } = await api
   .storage
-  .from('threads')
+  .from(THREADS_IMAGES_BUCKET)
   .upload(fileName, decodedFile, {
     contentType: "image/png"
   });

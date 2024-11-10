@@ -8,7 +8,7 @@ type FilteringSearch = {
   children: ReactNode;
 }
 
-export const FilteringSearch = ({
+export const FilteringSearchWrapper = ({
   children
 }: FilteringSearch) => {
   const [ isInputVisible, setIsInputVisible ] = useState(false);

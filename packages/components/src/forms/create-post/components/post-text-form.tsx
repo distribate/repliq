@@ -4,17 +4,15 @@ import { usePostFormControl } from "../hooks/use-post-form-control.ts";
 import { postSchema } from "../schemas/post-field-schema.ts";
 import { Textarea } from "@repo/ui/src/components/textarea.tsx";
 import { postFormQuery } from "../queries/post-form-query.ts";
-import { createPostFormInferSchema } from "../types/create-post-form-types.ts";
+import { z } from 'zod';
+
+type createPostFormInferSchema = z.infer<typeof postSchema>;
 
 export const PostTextForm = () => {
 	const { postFormFieldsMutation } = usePostFormControl()
 	const { data: fieldQuery } = postFormQuery()
 	
-	const {
-		register,
-		getValues,
-		reset
-	} = useForm<createPostFormInferSchema>({
+	const { register, getValues, reset } = useForm<createPostFormInferSchema>({
 		resolver: zodResolver(postSchema),
 		defaultValues: {
 			content: "", visibility: fieldQuery.visibility || "all"

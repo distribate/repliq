@@ -14,15 +14,10 @@ export async function removePostComment({
   
   const api = createClient();
   
-  const { data, error } = await api
+  const { error } = await api
   .from('posts_comments')
   .delete()
   .eq('id', id)
-  .select();
   
-  if (error) {
-    throw new Error(error.message);
-  }
-  
-  return data;
+  return !error;
 }

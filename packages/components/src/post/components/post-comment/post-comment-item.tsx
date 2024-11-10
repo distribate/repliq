@@ -9,8 +9,6 @@ import { PostCommentEntity } from '@repo/types/entities/entities-type.ts';
 export const PostCommentItem = ({
   content, id: comment_id, user_nickname, created_at, post_id
 }: PostCommentEntity) => {
-  if (!comment_id) return;
-  
   return (
     <div className="flex flex-row gap-2 group items-end justify-between w-full">
       <Link href={USER_URL + user_nickname}>

@@ -580,24 +580,30 @@ export type Database = {
       }
       posts: {
         Row: {
-          content: string | null
+          content: string
           created_at: string
           id: string
           isComments: boolean
+          isPinned: boolean
+          isUpdated: boolean
           visibility: Database["public"]["Enums"]["post_visibility"]
         }
         Insert: {
-          content?: string | null
+          content: string
           created_at?: string
           id?: string
           isComments?: boolean
+          isPinned?: boolean
+          isUpdated?: boolean
           visibility?: Database["public"]["Enums"]["post_visibility"]
         }
         Update: {
-          content?: string | null
+          content?: string
           created_at?: string
           id?: string
           isComments?: boolean
+          isPinned?: boolean
+          isUpdated?: boolean
           visibility?: Database["public"]["Enums"]["post_visibility"]
         }
         Relationships: []
@@ -639,6 +645,13 @@ export type Database = {
             referencedRelation: "posts"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "posts_comments_post_id_fkey"
+            columns: ["post_id"]
+            isOneToOne: false
+            referencedRelation: "posts_with_comments_and_view_counts"
+            referencedColumns: ["id"]
+          },
         ]
       }
       posts_users: {
@@ -666,11 +679,61 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
+            foreignKeyName: "posts_users_post_id_fkey"
+            columns: ["post_id"]
+            isOneToOne: false
+            referencedRelation: "posts_with_comments_and_view_counts"
+            referencedColumns: ["id"]
+          },
+          {
             foreignKeyName: "posts_users_user_nickname_fkey"
             columns: ["user_nickname"]
             isOneToOne: false
             referencedRelation: "users"
             referencedColumns: ["nickname"]
+          },
+        ]
+      }
+      posts_views: {
+        Row: {
+          created_at: string
+          id: number
+          post_id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: number
+          post_id: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: number
+          post_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "posts_views_post_id_fkey"
+            columns: ["post_id"]
+            isOneToOne: false
+            referencedRelation: "posts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "posts_views_post_id_fkey"
+            columns: ["post_id"]
+            isOneToOne: false
+            referencedRelation: "posts_with_comments_and_view_counts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "posts_views_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
           },
         ]
       }
@@ -1457,7 +1520,29 @@ export type Database = {
       }
     }
     Views: {
-      [_ in never]: never
+      posts_with_comments_and_view_counts: {
+        Row: {
+          comments_count: number | null
+          content: string | null
+          created_at: string | null
+          id: string | null
+          isComments: boolean | null
+          isPinned: boolean | null
+          isUpdated: boolean | null
+          user_nickname: string | null
+          views_count: number | null
+          visibility: Database["public"]["Enums"]["post_visibility"] | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "posts_users_user_nickname_fkey"
+            columns: ["user_nickname"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["nickname"]
+          },
+        ]
+      }
     }
     Functions: {
       check_and_insert_user: {

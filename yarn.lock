@@ -860,6 +860,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@babel/runtime@npm:^7.0.0":
+  version: 7.26.0
+  resolution: "@babel/runtime@npm:7.26.0"
+  dependencies:
+    regenerator-runtime: "npm:^0.14.0"
+  checksum: 10c0/12c01357e0345f89f4f7e8c0e81921f2a3e3e101f06e8eaa18a382b517376520cd2fa8c237726eb094dab25532855df28a7baaf1c26342b52782f6936b07c287
+  languageName: node
+  linkType: hard
+
 "@babel/runtime@npm:^7.13.10":
   version: 7.24.7
   resolution: "@babel/runtime@npm:7.24.7"
@@ -6049,6 +6058,8 @@ __metadata:
     "@turbo/gen": "npm:^1.12.4"
     "@types/eslint": "npm:^8.56.5"
     "@types/node": "npm:^20.11.24"
+    "@types/react-window": "npm:^1"
+    "@types/react-window-infinite-loader": "npm:^1"
     class-variance-authority: "npm:^0.7.0"
     clsx: "npm:^2.1.1"
     eslint: "npm:^8.57.0"
@@ -6061,6 +6072,8 @@ __metadata:
     react-image-crop: "npm:^11.0.5"
     react-intersection-observer: "npm:^9.10.2"
     react-skinview3d: "npm:^5.1.0"
+    react-window: "npm:^1.8.10"
+    react-window-infinite-loader: "npm:^1.0.9"
     slate: "npm:^0.103.0"
     slate-react: "npm:^0.107.0"
     sonner: "npm:^1.5.0"
@@ -6866,6 +6879,25 @@ __metadata:
   dependencies:
     "@types/react": "npm:*"
   checksum: 10c0/6c90d2ed72c5a0e440d2c75d99287e4b5df3e7b011838cdc03ae5cd518ab52164d86990e73246b9d812eaf02ec351d74e3b4f5bd325bf341e13bf980392fd53b
+  languageName: node
+  linkType: hard
+
+"@types/react-window-infinite-loader@npm:^1":
+  version: 1.0.9
+  resolution: "@types/react-window-infinite-loader@npm:1.0.9"
+  dependencies:
+    "@types/react": "npm:*"
+    "@types/react-window": "npm:*"
+  checksum: 10c0/d4f0b1c36cbca7d01c50740c942275f3e6dadb13b0aa563c266e8ecdfbaa338fdb623cc59635fcbb7e37938dc295cb6d2949e9f9aff6098faf2089d2e3752da6
+  languageName: node
+  linkType: hard
+
+"@types/react-window@npm:*, @types/react-window@npm:^1":
+  version: 1.8.8
+  resolution: "@types/react-window@npm:1.8.8"
+  dependencies:
+    "@types/react": "npm:*"
+  checksum: 10c0/2170a3957752603e8b994840c5d31b72ddf94c427c0f42b0175b343cc54f50fe66161d8871e11786ec7a59906bd33861945579a3a8f745455a3744268ec1069f
   languageName: node
   linkType: hard
 
@@ -13642,6 +13674,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"memoize-one@npm:>=3.1.1 <6":
+  version: 5.2.1
+  resolution: "memoize-one@npm:5.2.1"
+  checksum: 10c0/fd22dbe9a978a2b4f30d6a491fc02fb90792432ad0dab840dc96c1734d2bd7c9cdeb6a26130ec60507eb43230559523615873168bcbe8fafab221c30b11d54c1
+  languageName: node
+  linkType: hard
+
 "merge-stream@npm:^2.0.0":
   version: 2.0.0
   resolution: "merge-stream@npm:2.0.0"
@@ -16296,6 +16335,29 @@ __metadata:
     "@types/react":
       optional: true
   checksum: 10c0/6d66f3bdb65e1ec79089f80314da97c9a005087a04ee034255a5de129a4c0d9fd0bf99fa7bf642781ac2dc745ca687aae3de082bd8afdd0d117bc953241e15ad
+  languageName: node
+  linkType: hard
+
+"react-window-infinite-loader@npm:^1.0.9":
+  version: 1.0.9
+  resolution: "react-window-infinite-loader@npm:1.0.9"
+  peerDependencies:
+    react: ^15.3.0 || ^16.0.0-alpha || ^17.0.0 || ^18.0.0
+    react-dom: ^15.3.0 || ^16.0.0-alpha || ^17.0.0 || ^18.0.0
+  checksum: 10c0/4ffe7e31cde1e9fc353beb5b0a0c9a2a3b20459d13fbda8f0501d8fa4a1e869342dd276f3cb5538527a598eb5d669d8629dccf42d13f114faf0a8ad611de0bf7
+  languageName: node
+  linkType: hard
+
+"react-window@npm:^1.8.10":
+  version: 1.8.10
+  resolution: "react-window@npm:1.8.10"
+  dependencies:
+    "@babel/runtime": "npm:^7.0.0"
+    memoize-one: "npm:>=3.1.1 <6"
+  peerDependencies:
+    react: ^15.0.0 || ^16.0.0 || ^17.0.0 || ^18.0.0
+    react-dom: ^15.0.0 || ^16.0.0 || ^17.0.0 || ^18.0.0
+  checksum: 10c0/eda9afb667d9784513dcc2755b65edf3a1412e7877975322993c1382908aaef0c0b948b7e3b2d705e353306556274d90f7ab19ac40aef2184fa39d4c1e2232ea
   languageName: node
   linkType: hard
 

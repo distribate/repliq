@@ -66,37 +66,30 @@ export const ProfileFriends = ({
   const currentFriends = qc.getQueryData<UserFriends[]>(FRIENDS_QUERY_KEY(nickname));
   
   useEffect(() => {
-    if (!currentFriends) {
-      setEnabled(true);
-    }
+    if (!currentFriends) setEnabled(true);
   }, [ currentFriends ]);
   
-  const { data: fetchedFriends, isLoading, isError } = friendsQuery({
-    nickname, enabled,
-  });
+  const { data: fetchedFriends, isLoading, isError } = friendsQuery({ nickname, enabled });
   
   if (isError) return <SomethingError />;
   
   const friendsData = currentFriends || fetchedFriends;
+  const notFound = !currentFriends
   
   return (
     <div className="flex flex-col gap-4 w-full h-full">
-      <div className="flex items-center gap-1 w-fit">
-        <Typography textColor="shark_white" className="text-lg font-semibold">
-          Друзья
-        </Typography>
-        <Typography textSize="medium" className="text-shark-300">
-          [всего: {friendsData?.length || 0}]
-        </Typography>
-      </div>
-      {(isLoading && !currentFriends) ? (
-        <FriendsListSkeleton />
+      {(!notFound && !isLoading) && (
+        <div className="flex items-center gap-1 w-fit">
+          <Typography textColor="shark_white" className="text-lg font-semibold">
+            Друзья
+          </Typography>
+        </div>
+      )}
+      {isLoading && <FriendsListSkeleton />}
+      {friendsData ? (
+        <ProfileFriendsList friends={friendsData} />
       ) : (
-        friendsData ? (
-          <ProfileFriendsList friends={friendsData} />
-        ) : (
-          <ContentNotFound title="Друзей нет" />
-        )
+        <ContentNotFound title="Друзей нет" />
       )}
     </div>
   );

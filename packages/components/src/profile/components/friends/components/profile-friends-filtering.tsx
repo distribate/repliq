@@ -5,20 +5,7 @@ import { DropdownMenuItem } from "@repo/ui/src/components/dropdown-menu.tsx";
 import { DropdownWrapper } from '#wrappers/dropdown-wrapper.tsx';
 import { FriendsSort as FriendsSortType, useFriendsSort } from "../hooks/use-friends-sort.tsx";
 import React from "react";
-
-type FriendsSortItems = {
-	title: string,
-	value: FriendsSortType
-}
-
-const FRIENDS_SORT_ITEMS: FriendsSortItems[] = [
-	{
-		title: "По дате добавления", value: "created_at"
-	},
-	{
-		title: "По привилегии", value: "donate"
-	}
-]
+import { FRIENDS_SORT } from '#profile/components/friends/constants/friends-filtering.ts';
 
 export const ProfileFriendsFiltering = () => {
 	const { setFriendsSortMUtation } = useFriendsSort()
@@ -39,9 +26,7 @@ export const ProfileFriendsFiltering = () => {
 				}}
 				trigger={
 					<div className="flex items-center gap-1">
-						<Typography className="text-shark-300" textSize="medium">
-							По дате добавления
-						</Typography>
+						<Typography className="text-shark-300" textSize="medium">По дате добавления</Typography>
 					</div>
 				}
 				content={
@@ -50,7 +35,7 @@ export const ProfileFriendsFiltering = () => {
 							Фильтровать по
 						</Typography>
 						<div className="flex flex-col gap-y-2">
-							{FRIENDS_SORT_ITEMS.map((item, i) => (
+							{FRIENDS_SORT.map((item, i) => (
 								<DropdownMenuItem
 									key={i}
 									onClick={(e) => handleSort(e, item.value)}

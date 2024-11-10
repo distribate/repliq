@@ -4,11 +4,32 @@ import { getCurrentUser } from '@repo/lib/actions/get-current-user.ts';
 import { createClient } from '@repo/lib/utils/api/server.ts';
 import { checkProfileIsBlocked } from '@repo/lib/helpers/check-profile-is-blocked.ts';
 import { getBlockType, ProfileStatusBlockedType } from '@repo/lib/helpers/check-profile-status.ts';
+import { parseStringToBoolean } from '@repo/lib/helpers/parse-string-to-boolean.ts';
 
 type CreateFriendRequest = {
   status: number,
-  error: 'already-friends' | 'not-authorized' | ProfileStatusBlockedType | null
+  error: 'already-friends' | 'not-authorized' | ProfileStatusBlockedType | "user-not-accept" | null
 };
+
+async function validateUserFriendRequest(nickname: string) {
+  const api = createClient()
+  
+  const { data, error } = await api
+    .from("users")
+    .select("preferences")
+    .eq("nickname", nickname)
+    .single()
+  
+  if (error) {
+    throw new Error(error.message)
+  }
+  
+  const preferences: { friendRequest: string } = data.preferences
+  
+  const isRequest = parseStringToBoolean(preferences.friendRequest)
+  
+  return isRequest ? isRequest : false
+}
 
 export async function createFriendRequest(requestedUserNickname: string): Promise<CreateFriendRequest> {
   const currentUser = await getCurrentUser();
@@ -40,10 +61,14 @@ export async function createFriendRequest(requestedUserNickname: string): Promis
   
   const isExisting: boolean = count ? count !== 0 : false;
   
-  console.log(count, isExisting)
-  
   if (isExisting) return {
     status: 400, error: 'already-friends',
+  };
+  
+  const userIsAcceptFriends = await validateUserFriendRequest(requestedUserNickname)
+  
+  if (!userIsAcceptFriends) return {
+    status: 400, error: "user-not-accept"
   };
   
   const { error, status } = await api

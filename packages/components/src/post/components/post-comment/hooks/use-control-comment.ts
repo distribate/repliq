@@ -27,11 +27,7 @@ export const useControlComment = () => {
       }
     },
     onSuccess: async(data, variables) => {
-      if (!data || !variables) {
-        toast('Произошла ошибка', {
-          className: 'negative',
-        });
-      }
+      if (!data || !variables) return toast.error('Произошла ошибка');
       
       return qc.invalidateQueries({
         queryKey: POST_COMMENTS_QUERY_KEY(variables.post_id),

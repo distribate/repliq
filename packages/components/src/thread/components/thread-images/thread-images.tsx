@@ -34,7 +34,7 @@ export const ThreadImages = ({
   return (
     <div className="flex items-start w-full gap-2">
       {threadImages.map((image, i) => (
-        <ThreadImageModal key={i} image={image} id={id}/>
+        <ThreadImageModal key={i} image={image}/>
       ))}
     </div>
   );

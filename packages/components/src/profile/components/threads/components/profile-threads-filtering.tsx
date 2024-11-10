@@ -1,5 +1,4 @@
 import { Typography } from '@repo/ui/src/components/typography.tsx';
-import { FilteringSearch } from '#filtering/components/filtering-search.tsx';
 import { DropdownWrapper } from '#wrappers/dropdown-wrapper.tsx';
 import { SelectedWrapper } from '#wrappers/selected-wrapper.tsx';
 import { LayoutGrid } from 'lucide-react';
@@ -7,6 +6,7 @@ import { VIEW_COMPONENTS_TYPE } from '#friends/components/filtering/contants/vie
 import { DropdownMenuItem } from '@repo/ui/src/components/dropdown-menu.tsx';
 import { ChangeEvent, forwardRef, useState } from 'react';
 import { Input } from '@repo/ui/src/components/input.tsx';
+import { FilteringSearchWrapper } from '#wrappers/filtering-search-wrapper.tsx';
 
 type ProfileThreasdFilteringProps = {
   threadsLength: number
@@ -26,9 +26,9 @@ export const ProfileThreadsFiltering = ({
         </Typography>
       </div>
       <div className="flex items-center gap-4 w-fit">
-        <FilteringSearch>
+        <FilteringSearchWrapper>
           <ProfileThreadsFilteringSearch />
-        </FilteringSearch>
+        </FilteringSearchWrapper>
       </div>
       <div className="w-fit">
         <DropdownWrapper

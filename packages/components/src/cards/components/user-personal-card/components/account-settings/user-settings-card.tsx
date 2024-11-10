@@ -8,11 +8,11 @@ import WildArmorTrim from '@repo/assets/images/minecraft/wild_armor_trim_ыmithi
 import { RealNameVisibility } from './components/real-name-visibility.tsx';
 import { GameStatsVisibility } from './components/game-stats-visibility.tsx';
 import { FriendRequest } from './components/friend-request.tsx';
-import { ActiveSessionsModal } from '../../../../../modals/user-settings/active-sessions-modal.tsx';
-import { BlockedListModal } from '../../../../../modals/custom/blocked-list-modal.tsx';
+import { ActiveSessionsModal } from '#modals/user-settings/active-sessions-modal.tsx';
+import { BlockedListModal } from '#modals/custom/blocked-list-modal.tsx';
 import { UserSettingOption } from '../profile-settings/user-profile-settings.tsx';
-import { EmailChangeModal } from '../../../../../modals/user-settings/email-change-modal.tsx';
-import { PasswordChangeModal } from '../../../../../modals/user-settings/password-change-modal.tsx';
+import { EmailChangeModal } from '#modals/user-settings/email-change-modal.tsx';
+import { PasswordChangeModal } from '#modals/user-settings/password-change-modal.tsx';
 
 export const UserSettingsCard = () => {
   return (
@@ -26,8 +26,8 @@ export const UserSettingsCard = () => {
             Защита
           </Typography>
           <div className="flex flex-col gap-y-2 w-full">
-            <EmailChangeModal />
-            <PasswordChangeModal/>
+            {/*<EmailChangeModal />*/}
+            {/*<PasswordChangeModal/>*/}
             <ActiveSessionsModal />
             <div className="flex flex-col bg-white/10 w-full py-2 px-4">
               <Typography className="text-base text-shark-200">

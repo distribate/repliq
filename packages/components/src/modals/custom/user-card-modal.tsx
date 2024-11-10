@@ -5,25 +5,27 @@ import { ReactNode } from 'react';
 import { UserFullCard } from '#cards/components/user-main-card/components/user-full-card.tsx';
 import { Dialog, DialogContent, DialogTrigger } from '@repo/ui/src/components/dialog.tsx';
 
-type UserCardModalProperties = {
-  withCustomTrigger: boolean,
-  trigger: ReactNode
+type UserCardModalProperties =
+  | {
+  withCustomTrigger?: false | undefined;
+  trigger?: never;
 }
+  | {
+  withCustomTrigger: true;
+  trigger: ReactNode;
+};
 
-type UserCardModal = Pick<UserEntity, 'nickname'>
-  & Partial<UserCardModalProperties>
+type UserCardModal = Pick<UserEntity, 'nickname'> & UserCardModalProperties
 
 export const UserCardModal = ({
-  nickname, trigger, withCustomTrigger = false,
+  nickname, trigger, withCustomTrigger = false
 }: UserCardModal) => {
   return (
     <Dialog>
       <DialogTrigger>
         {withCustomTrigger ? trigger : (
           <HoverCardItem>
-            <Typography>
-              Показать карточку профиля
-            </Typography>
+            <Typography>Показать карточку профиля</Typography>
           </HoverCardItem>
         )}
       </DialogTrigger>

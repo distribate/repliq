@@ -6,38 +6,44 @@ import { usePostCommentsFormControl } from '../hooks/use-post-comments-form-cont
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { postCommentSchema } from '../schemas/post-comment-schema.ts';
-import { createPostCommentInferSchema } from '../types/create-post-comment-types.ts';
 import { FormField } from '@repo/ui/src/components/form-field.tsx';
 import { getUser } from '@repo/lib/helpers/get-user.ts';
 import { PostEntity } from '@repo/types/entities/entities-type.ts';
+import {
+  POST_COMMENT_FIELD_QUERY_KEY,
+  PostCommentField,
+} from '#forms/create-post-comment/queries/post-comment-field-query.ts';
+import { useQueryClient } from '@tanstack/react-query';
+import { z } from 'zod';
+
+type createPostCommentInferSchema = z.infer<typeof postCommentSchema>
 
 export const CreatePostCommentForm = ({
-  id,
+  id: postId
 }: Pick<PostEntity, 'id'>) => {
   const currentUser = getUser();
-  const { updatePostCommentFieldMutation, createPostCommentMutation } = usePostCommentsFormControl();
+  const qc = useQueryClient();
+  const { createPostCommentMutation } = usePostCommentsFormControl();
   
-  const {
-    register,
-    handleSubmit,
-    getValues,
-    reset,
-    formState: { errors, isValid },
-  } = useForm<createPostCommentInferSchema>({
+  const { register, handleSubmit, getValues, reset, formState: { errors, isValid } } = useForm<createPostCommentInferSchema>({
+    mode: "onChange",
     resolver: zodResolver(postCommentSchema),
     defaultValues: { content: '' },
   });
   
   const onSubmit = () => {
     reset();
-    createPostCommentMutation.mutate(id);
+    createPostCommentMutation.mutate(postId);
   };
   
   const onChange = () => {
-    return updatePostCommentFieldMutation.mutate({
-      post_id: id,
-      content: getValues('content'),
-    });
+    return qc.setQueryData(
+      POST_COMMENT_FIELD_QUERY_KEY(postId),
+      (prev: PostCommentField) => ({
+        ...prev, post_id: postId,
+        content: getValues('content'),
+      }),
+    );
   };
   
   if (!currentUser) return null;
@@ -60,7 +66,7 @@ export const CreatePostCommentForm = ({
             maxLength={128}
             backgroundType="transparent"
             {...register('content', {
-              maxLength: 128, onChange: onChange
+              maxLength: 128, onChange: onChange,
             })}
           />
         </FormField>

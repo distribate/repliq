@@ -16,10 +16,7 @@ async function createPostUsers({
   
   const { error } = await api
   .from('posts_users')
-  .insert({
-    post_id, user_nickname
-  })
-  .single();
+  .insert({ post_id, user_nickname })
   
   return !error;
 }
@@ -34,9 +31,7 @@ export async function createPost({
   
   const { data, error } = await api
   .from('posts')
-  .insert({
-    content, visibility,
-  })
+  .insert({ content, visibility, })
   .select('id')
   .single();
   

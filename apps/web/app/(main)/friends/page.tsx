@@ -2,7 +2,6 @@ import { dehydrate, HydrationBoundary, QueryClient } from '@tanstack/react-query
 import { getCurrentUser } from '@repo/lib/actions/get-current-user.ts';
 import { REQUESTS_INCOMING_QUERY_KEY } from '@repo/components/src/friends/queries/requests-incoming-query.ts';
 import { REQUESTS_OUTGOING_QUERY_KEY } from '@repo/components/src/friends/queries/requests-outgoing-query.ts';
-import { FilteringSearch } from '@repo/components/src/filtering/components/filtering-search.tsx';
 import {
   FriendsFilteringView,
 } from '@repo/components/src/friends/components/filtering/components/friends-filtering-view.tsx';
@@ -24,6 +23,7 @@ import {
   ProfileFriendsFiltering,
 } from '@repo/components/src/profile/components/friends/components/profile-friends-filtering.tsx';
 import { Metadata } from 'next';
+import { FilteringSearchWrapper } from '@repo/components/src/wrappers/filtering-search-wrapper.tsx';
 
 export const metadata: Metadata = {
   title: "Друзья"
@@ -56,9 +56,9 @@ export default async function FriendsPage() {
         <BlockWrapper className="flex w-4/6 *:w-full !p-4 h-full">
           <div className="flex flex-col w-full h-full gap-4">
             <div className="flex items-center gap-4">
-              <FilteringSearch>
+              <FilteringSearchWrapper>
                 <ProfileFriendsFilteringSearch />
-              </FilteringSearch>
+              </FilteringSearchWrapper>
               <FriendsFilteringView />
               <ProfileFriendsFiltering />
             </div>

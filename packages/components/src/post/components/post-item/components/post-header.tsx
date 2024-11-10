@@ -6,24 +6,19 @@ import Link from 'next/link';
 import dayjs from '@repo/lib/utils/dayjs/dayjs-instance.ts';
 import dynamic from 'next/dynamic';
 import { USER_URL } from '@repo/shared/constants/routes.ts';
-import { getUser } from '@repo/lib/helpers/get-user.ts';
+import { Pin } from 'lucide-react';
 
 const PostControl = dynamic(() =>
   import('./post-control.tsx')
   .then(m => m.PostControl),
 );
 
-type PostItemHeaderProps = Pick<UserEntity, 'nickname' | 'created_at' | 'id'>
-  & Pick<PostEntity, 'visibility'>
+type PostItemHeaderProps = Pick<UserEntity, 'nickname' | 'created_at'>
+  & Pick<PostEntity, 'visibility' | 'id' | 'isPinned'>
 
 export const PostItemHeader = ({
-  nickname, created_at, id, visibility,
+  nickname, created_at, id: postId, visibility, isPinned
 }: PostItemHeaderProps) => {
-  const currentUser = getUser();
-  if (!currentUser) return null;
-  
-  const isOwner = currentUser.nickname === nickname;
-  
   return (
     <div className="flex justify-between w-full items-center">
       <div className="flex gap-2 items-center">
@@ -40,13 +35,14 @@ export const PostItemHeader = ({
                 {visibility === 'only' ? 'видно только вам' : 'видно только друзьям'}
               </Typography>
             )}
+            {isPinned && <Pin size={18} className="text-gold-500" />}
           </div>
           <Typography className="text-shark-200 text-sm">
             {dayjs(created_at).fromNow()}
           </Typography>
         </div>
       </div>
-      {isOwner && <PostControl id={id} nickname={nickname} />}
+      <PostControl id={postId} nickname={nickname} />
     </div>
   );
 };

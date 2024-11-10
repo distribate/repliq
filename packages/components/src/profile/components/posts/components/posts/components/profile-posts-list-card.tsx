@@ -1,31 +1,43 @@
-import { PostsByUser } from '#profile/components/posts/components/posts/queries/get-posts-by-user.ts';
-import { getUser } from '@repo/lib/helpers/get-user.ts';
+import { OverridedPosts } from '#profile/components/posts/components/posts/queries/get-posts.ts';
 import { BlockWrapper } from '#wrappers/block-wrapper.tsx';
-import React from 'react';
 import { ProfilePostsListProps } from '#profile/components/posts/components/posts/components/profile-posts-list.tsx';
 import { PostComments } from '#post/components/post-comments/components/post-comments.tsx';
 import { PostItemHeader } from '#post/components/post-item/components/post-header.tsx';
 import { PostItemBody } from '#post/components/post-item/components/post-body.tsx';
-import { PostItemFooter } from '#post/components/post-item/components/post-footer.tsx';
+import { CreatePostCommentForm } from '#forms/create-post-comment/components/create-post-comment-form.tsx';
+import { PostFooter } from '#post/components/post-item/components/post-footer.tsx';
 
-type ProfilePostsListCardProps = PostsByUser & ProfilePostsListProps
+type ProfilePostsListCardProps = OverridedPosts & ProfilePostsListProps
 
 export const ProfilePostsListCard = ({
-  id, commentsCount, isComments, created_at, visibility, content, nickname,
+ ...values
 }: ProfilePostsListCardProps) => {
-  const currentUser = getUser();
+  const {
+    id, content, isComments, isPinned, created_at, visibility, nickname,
+    isViewed, comments_count, isUpdated, views_count
+  } = values;
   
   return (
-    <BlockWrapper className="flex flex-col gap-y-4">
-      <PostItemHeader
+    <BlockWrapper className="flex flex-col gap-y-2">
+      <div className="flex flex-col gap-y-4">
+        <PostItemHeader
+          id={id}
+          nickname={nickname}
+          isPinned={isPinned}
+          visibility={visibility}
+          created_at={created_at}
+        />
+        <PostItemBody content={content} id={id} />
+      </div>
+      <PostFooter
+        isViewed={isViewed}
         id={id}
-        visibility={visibility}
+        views_count={views_count}
+        isUpdated={isUpdated}
         nickname={nickname}
-        created_at={created_at}
       />
-      <PostItemBody content={content} />
-      <PostComments id={id} commentsCount={commentsCount} />
-      {currentUser && <PostItemFooter id={id} />}
+      <PostComments id={id} comments_count={comments_count} />
+      {isComments && <CreatePostCommentForm id={id} />}
     </BlockWrapper>
   );
 };

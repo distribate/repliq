@@ -52,15 +52,7 @@ export const useControlCoverImage = () => {
   
   const deleteBackgroundImageMutation = useMutation({
     mutationKey: USER_COVER_DELETE_IMAGE_MUTATION_KEY,
-    mutationFn: async() => {
-      if (!currentUser) return;
-      
-      const currentCoverImage = currentUser.cover_image;
-      
-      return deleteCoverImageFromBucket({
-        currentCoverImage,
-      });
-    },
+    mutationFn: async() => deleteCoverImageFromBucket(),
     onSuccess: async(data) => {
       if (!currentUser) return;
       
@@ -115,17 +107,6 @@ export const useControlCoverImage = () => {
         const fileName = `${currentUser.id}${uniqueId}`;
         const arrayBufferedFile = await getArrayBuffer(file);
         const encodedFile = encode(arrayBufferedFile);
-        
-        const deletedPrev = await deleteCoverImageFromBucket({
-          currentCoverImage: currentUser.cover_image,
-        });
-        
-        if (!deletedPrev) {
-          toast.error('Произошла ошибка при обновлении фона.', {
-            description: 'Попробуйте попытку позже!',
-          });
-          return;
-        }
         
         return uploadCoverImageInBucket({
           bucket: USER_IMAGES_BUCKET,

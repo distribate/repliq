@@ -9,11 +9,14 @@ type DynamicModalProps = {
   mutationKey: MutationKey,
   status?: MutationStatus,
   contentClassName?: string,
-  withLoader?: boolean
+  withLoader?: boolean,
+  freeze?: boolean,
 }
 
 export const DynamicModal = ({
-  content, trigger, status = 'success', mutationKey, contentClassName, withLoader,
+  content, trigger, mutationKey, contentClassName, withLoader,
+  freeze = false,
+  status = 'success',
 }: DynamicModalProps) => {
   const [ open, setOpen ] = useState<boolean>(false);
   
@@ -25,10 +28,16 @@ export const DynamicModal = ({
   const mutationStatus = data[data.length - 1];
   
   useEffect(() => {
-    if (mutationStatus === status) setOpen(false);
+    if (mutationStatus === status) {
+      setOpen(false);
+    }
   }, [ mutationStatus ]);
   
   const handleOpen = (o: boolean) => {
+    if (freeze && !o) {
+      return;
+    }
+    
     setOpen(o)
   };
   

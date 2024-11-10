@@ -7,25 +7,6 @@ import { POST_COMMENTS_QUERY_KEY } from '#post/components/post-comments/queries/
 export const usePostCommentsFormControl = () => {
   const qc = useQueryClient();
   
-  const updatePostCommentFieldMutation = useMutation({
-    mutationFn: async(values: PostCommentField) => {
-      if (!values.post_id) return;
-      
-      return qc.setQueryData(
-        POST_COMMENT_FIELD_QUERY_KEY(values.post_id),
-        (prev: PostCommentField) => ({ ...prev, ...values }),
-      );
-    },
-    onSuccess: (data, variables) => {
-      if (!variables || !variables.post_id) return;
-      
-      return qc.invalidateQueries({
-        queryKey: POST_COMMENT_FIELD_QUERY_KEY(variables.post_id),
-      });
-    },
-    onError: e => { throw new Error(e.message); },
-  });
-  
   const createPostCommentMutation = useMutation({
     mutationFn: async(post_id: string) => {
       const formField = qc.getQueryData<PostCommentField>(
@@ -36,9 +17,7 @@ export const usePostCommentsFormControl = () => {
         return toast.error('Что-то пошло не так!');
       }
       
-      return postComment({
-        post_id, content: formField.content,
-      });
+      return postComment({ post_id, content: formField.content, });
     },
     onSuccess: async(data, variables) => {
       if (!data || !variables) {
@@ -50,5 +29,5 @@ export const usePostCommentsFormControl = () => {
     onError: e => { throw new Error(e.message); },
   });
   
-  return { updatePostCommentFieldMutation, createPostCommentMutation };
+  return { createPostCommentMutation };
 };

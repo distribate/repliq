@@ -1,32 +1,24 @@
 'use server';
 
-import "server-only"
-import { getCurrentUser } from '@repo/lib/actions/get-current-user.ts';
+import 'server-only';
 import { createClient } from '@repo/lib/utils/api/server.ts';
-import { PostEntity } from '@repo/types/entities/entities-type.ts';
+import { validatePostOwner } from '#post/components/post-item/queries/validate-owner-post.ts';
+import { ControlPost } from '#post/components/post-item/types/control-post-types.ts';
 
-type RemovePost = Pick<PostEntity, "id"> & {
-  nickname: string
-}
+type RemovePost = ControlPost
 
 export async function removePost({
-  id, nickname,
+  id: postId
 }: RemovePost) {
-  const currentUser = await getCurrentUser();
-  if (!currentUser) return;
+  const isValid = await validatePostOwner({ postId })
+  if (!isValid) return
   
   const api = createClient();
   
-  if (currentUser.nickname !== nickname) return;
-  
-  const { data, error } = await api
+  const { error } = await api
   .from('posts')
   .delete()
-  .eq('id', id)
+  .eq('id', postId);
   
-  if (error) {
-    throw new Error(error.message);
-  }
-  
-  return data;
+  return !error;
 }

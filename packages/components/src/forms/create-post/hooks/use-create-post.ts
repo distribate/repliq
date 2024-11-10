@@ -11,9 +11,7 @@ export const useCreatePost = () => {
   const currentUser = getUser();
   
   const createPostMutation = useMutation({
-    mutationFn: async({
-      content, visibility
-    }: Pick<PostEntity, 'content' | 'visibility'>) => createPost({ content, visibility }),
+    mutationFn: async({ content, visibility }: Pick<PostEntity, 'content' | 'visibility'>) => createPost({ content, visibility }),
     onSuccess: async(data) => {
       if (!currentUser) return;
       

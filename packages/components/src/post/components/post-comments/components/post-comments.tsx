@@ -6,7 +6,7 @@ import { BlockWrapper } from '#wrappers/block-wrapper.tsx';
 import { postCommentsQuery } from '#post/components/post-comments/queries/post-comments-query.ts';
 
 type PostCommentsProps = Pick<PostEntity, "id"> & {
-  commentsCount: number
+  comments_count: number
 }
 
 const PostCommentSkeleton = () => {
@@ -32,7 +32,7 @@ const PostCommentSkeleton = () => {
   );
 };
 
-export const PostCommentsSkeleton = () => {
+const PostCommentsSkeleton = () => {
   return (
     <>
       <Separator />
@@ -45,10 +45,10 @@ export const PostCommentsSkeleton = () => {
 };
 
 export const PostComments = ({
-  id, commentsCount
+  id: postId, comments_count
 }: PostCommentsProps) => {
   const { data: postComments, isLoading } = postCommentsQuery({
-    id, comments: commentsCount >= 1
+    id: postId, comments: comments_count >= 1
   });
   
   if (isLoading) return <PostCommentsSkeleton />;

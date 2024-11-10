@@ -1,27 +1,36 @@
-import React, { ChangeEvent, forwardRef, useCallback, useState } from 'react';
-import { useDebounce } from '@repo/lib/hooks/use-debounce.ts';
+import { ChangeEvent, forwardRef, useState } from 'react';
 import { Input } from '@repo/ui/src/components/input.tsx';
 import { Typography } from '@repo/ui/src/components/typography.tsx';
-import { FilteringSearch } from '#filtering/components/filtering-search.tsx';
 import { DropdownWrapper } from '#wrappers/dropdown-wrapper.tsx';
 import { DropdownMenuItem } from '@repo/ui/src/components/dropdown-menu.tsx';
+import { useQueryClient } from '@tanstack/react-query';
+import {
+  POSTS_FILTERING_QUERY_KEY, postsFilteringQuery,
+  PostsFilteringQuery,
+} from '#profile/components/posts/components/posts/queries/posts-filtering-query.ts';
+import { useDebounce } from '@repo/lib/hooks/use-debounce.ts';
+import { FilteringSearchWrapper } from '#wrappers/filtering-search-wrapper.tsx';
+import { POSTS_SORT, PostSort } from '#profile/components/posts/components/posts/constants/posts-filtering.ts';
 
 const ProfilePostsFilteringSearch = forwardRef<
   HTMLInputElement
 >((props, ref) => {
-  const [ value, setValue ] = useState('');
+  const qc = useQueryClient();
+  const [ value, setValue ] = useState<string>('');
   
-  const debouncedHandleSearch = useCallback(useDebounce((val: string) => {
+  const updateQuery = (value: string) => {
+    return qc.setQueryData(POSTS_FILTERING_QUERY_KEY, (prev: PostsFilteringQuery) => ({
+      ...prev, searchQuery: value,
+    }));
+  };
   
-  }, 100), []);
+  const debouncedUpdateQuery = useDebounce(updateQuery, 300);
   
-  const handleSearchInput = (e: ChangeEvent<
-    HTMLInputElement
-  >) => {
+  const handleSearchInput = (e: ChangeEvent<HTMLInputElement>) => {
     const { value } = e.target;
-    
-    setValue(value);
-    debouncedHandleSearch(value);
+    const convertedValue = value.replace(/ {3,}/g, '  ');
+    setValue(convertedValue);
+    debouncedUpdateQuery(convertedValue);
   };
   
   return (
@@ -29,40 +38,41 @@ const ProfilePostsFilteringSearch = forwardRef<
       ref={ref}
       className="rounded-lg"
       value={value}
-      placeholder="Поиск по названию"
+      maxLength={64}
+      placeholder="Поиск по содержанию"
       onChange={handleSearchInput}
       {...props}
     />
   );
 });
 
-const POSTS_SORT_ITEMS = [
-  {
-    title: 'По дате публикации', value: 'created_at',
-  },
-];
-
-type ProfilePostsFilteringProps = {
-  postsLength: number
-}
-
-export const ProfilePostsFiltering = ({
-  postsLength,
-}: ProfilePostsFilteringProps) => {
+export const ProfilePostsFiltering = () => {
+  const { data: filteringState } = postsFilteringQuery()
+  const qc = useQueryClient();
+  
+  const handleSortType = (type: Pick<PostSort, 'value'>['value']) => {
+    return qc.setQueryData<PostsFilteringQuery | undefined>(POSTS_FILTERING_QUERY_KEY,
+      (prev) => ({
+      ...prev,
+      filteringType: type,
+        searchQuery: prev?.searchQuery ?? null,
+    }));
+  };
+  
+  const currentFilteringType = filteringState.filteringType;
+  const isValue = (type: Pick<PostSort, "value">["value"]) => currentFilteringType === type;
+  
   return (
     <div className="flex w-full justify-between items-center">
       <div className="flex items-center gap-1 w-fit">
         <Typography textColor="shark_white" className="text-lg font-semibold">
           Посты
         </Typography>
-        <Typography textSize="medium" className="text-shark-300">
-          [всего {postsLength}]
-        </Typography>
       </div>
       <div className="flex items-center gap-4 w-fit">
-        <FilteringSearch>
+        <FilteringSearchWrapper>
           <ProfilePostsFilteringSearch />
-        </FilteringSearch>
+        </FilteringSearchWrapper>
         <div className="w-fit">
           <DropdownWrapper
             properties={{
@@ -70,8 +80,10 @@ export const ProfilePostsFiltering = ({
             }}
             trigger={
               <div className="flex items-center gap-1">
-                <Typography className="text-shark-300" textSize="medium">
-                  {POSTS_SORT_ITEMS[0].title}
+                <Typography textColor="gray" textSize="medium">
+                  {POSTS_SORT.find(item => item.value === currentFilteringType)?.title
+                    || POSTS_SORT[0].title
+                  }
                 </Typography>
               </div>
             }
@@ -81,12 +93,12 @@ export const ProfilePostsFiltering = ({
                   Фильтровать по
                 </Typography>
                 <div className="flex flex-col gap-y-2">
-                  {POSTS_SORT_ITEMS.map((item, i) => (
+                  {POSTS_SORT.map(item => (
                     <DropdownMenuItem
-                      key={i}
-                      // onClick={(e) => handleSort(e, item.value)}
+                      key={item.value}
+                      onClick={() => handleSortType(item.value)}
                     >
-                      <Typography>
+                      <Typography className={isValue(item.value) ? 'text-caribbean-green-500' : 'text-shark-50'}>
                         {item.title}
                       </Typography>
                     </DropdownMenuItem>

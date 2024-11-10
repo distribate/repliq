@@ -137,6 +137,12 @@ export const useControlFriendRequests = () => {
           });
         }
         
+        if (createRequest.error === 'user-not-accept') {
+          return toast.error("Невозможно добавить этого игрока в друзья", {
+            description: "Этот пользователь не принимает заявки в друзья"
+          })
+        }
+        
         if (createRequest.error === 'user-blocked') {
           return toast.error('Невозможно добавить этого игрока в друзья', {
             description: "Вы заблокировали данного пользователя"

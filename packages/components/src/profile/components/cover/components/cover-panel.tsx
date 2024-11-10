@@ -14,6 +14,9 @@ import { ReportCreateModal } from '#modals/action-confirmation/components/report
 import { Skeleton } from '@repo/ui/src/components/skeleton.tsx';
 import { BlockUserModal } from '#modals/action-confirmation/components/block-user/components/block-user-modal.tsx';
 import { blockedUserQuery } from '@repo/lib/queries/blocked-user-query.ts';
+import { useQueryClient } from '@tanstack/react-query';
+import { REQUESTED_USER_QUERY_KEY } from '#profile/components/cover/queries/requested-user-query.ts';
+import { RequestedUser } from '@repo/lib/queries/get-requested-user.ts';
 
 const ProfileBackgroundUpdateModal = dynamic(() =>
     import('@repo/components/src/modals/custom/profile-background-update-modal.tsx')
@@ -45,21 +48,26 @@ export const UserCoverPanel = ({
   variant, className, requestedNickname, ...props
 }: UserCoverPanelProps) => {
   const currentUser = getUser();
+  const qc = useQueryClient();
   if (!currentUser) return null;
   
   const { data: blockedState, isLoading } = blockedUserQuery(requestedNickname);
   
   const isBlocked = blockedState?.recipient === requestedNickname || false;
   const youIsBlocked = blockedState?.initiator === requestedNickname || false;
+  const requestedUser = qc.getQueryData<RequestedUser>(REQUESTED_USER_QUERY_KEY(requestedNickname));
+  const userFriendPreference = requestedUser?.preferences.friendRequest as boolean;
   
   const isOwner = currentUser.nickname === requestedNickname;
   
   return (
     <div className={userCoverPanelVariants(({ variant, className }))} {...props}>
       <div className="flex items-center gap-2">
-        {!isLoading && (
-          (!isOwner && (!isBlocked && !youIsBlocked)) && (
-            <FriendButton reqUserNickname={requestedNickname} />
+        {userFriendPreference && (
+          !isLoading && (
+            (!isOwner && (!isBlocked && !youIsBlocked)) && (
+              <FriendButton reqUserNickname={requestedNickname} />
+            )
           )
         )}
         {!isOwner && (
@@ -69,7 +77,7 @@ export const UserCoverPanel = ({
           >
             <div className="flex flex-col gap-y-1 *:w-full w-full items-start">
               {(!isLoading && (!youIsBlocked)) && (
-                <BlockUserModal requestedNickname={requestedNickname}/>
+                <BlockUserModal requestedNickname={requestedNickname} />
               )}
               {!isLoading && (
                 (!youIsBlocked) && (

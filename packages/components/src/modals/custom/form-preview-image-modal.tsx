@@ -1,6 +1,7 @@
-import { ImageWrapper } from '../../wrappers/image-wrapper.tsx';
+import { ImageWrapper } from '#wrappers/image-wrapper.tsx';
 import { DeleteButton } from '@repo/ui/src/components/detele-button.tsx';
 import { Dialog, DialogContent, DialogTrigger } from '@repo/ui/src/components/dialog.tsx';
+import React from 'react';
 
 type FormPreviewImageModalProps = {
   image: string,
@@ -28,7 +29,7 @@ export const FormPreviewImageModal = ({
       <DialogContent>
         <ImageWrapper
           propSrc={image}
-          propAlt={propAlt || 'Preview Image'}
+          propAlt={propAlt || ''}
           width={1920}
           height={1080}
           className="w-full h-full"
