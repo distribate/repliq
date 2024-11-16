@@ -6,12 +6,9 @@ export const CURRENT_THREAD_QUERY_KEY = (threadId: string) =>
   [ 'ui', 'thread', threadId ];
 
 export const currentThreadQuery = (
-  threadId: Pick<ThreadModel, 'id'>['id']
-) => {
-  return useQuery({
-    queryKey: CURRENT_THREAD_QUERY_KEY(threadId),
-    queryFn: () => getCurrentThread(threadId),
-    refetchOnWindowFocus: false,
-    enabled: !!threadId
-  });
-};
+  threadId: Pick<ThreadModel, 'id'>['id'],
+) => useQuery({
+  queryKey: CURRENT_THREAD_QUERY_KEY(threadId),
+  queryFn: () => getCurrentThread(threadId),
+  refetchOnWindowFocus: false,
+});

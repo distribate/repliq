@@ -3,10 +3,14 @@ import { cookies } from 'next/headers'
 
 export function createClient() {
 	const cookieStore = cookies();
-
+	
+	if (!process.env.SUPABASE_SERVICE_ROLE_KEY) {
+		throw new Error('SUPABASE_SERVICE_ROLE_KEY is not defined in .env');
+	}
+	
 	return createServerClient(
 		process.env.NEXT_PUBLIC_SUPABASE_URL!,
-		process.env.NEXT_PUBLIC_SUPABASE_SERVICE_ROLE_KEY!,
+		process.env.SUPABASE_SERVICE_ROLE_KEY,
 		{
 			// global: {
 			// 	fetch: (url: any, options = {}) => {

@@ -2,49 +2,35 @@
 
 import 'server-only';
 import { getCurrentUser } from '@repo/lib/actions/get-current-user.ts';
-import { UpdateThreadFields } from '../types/update-thread-request-types.ts';
-import { removeThread } from './remove-thread.ts';
 import { createClient } from '@repo/lib/utils/api/server.ts';
-import { getThreadCreator } from '#thread/queries/get-thread-creator.ts';
+import { validateThreadOwner } from '#thread/components/thread-control/queries/validate-thread-owner.ts';
+import {
+  ThreadControlQueryValues,
+} from '#thread/components/thread-control/queries/thread-control-query.ts';
 
-export async function updateThreadFields({
-  id: threadId, type, field,
-}: UpdateThreadFields) {
+type UpdateThread = {
+  threadId: string,
+  values: ThreadControlQueryValues
+}
+
+export async function updateThread({
+  threadId, values
+}: UpdateThread) {
   const currentUser = await getCurrentUser();
   if (!currentUser) return;
   
-  const threadCreator = await getThreadCreator(threadId);
+  const isValid = await validateThreadOwner({
+    threadId, currentUserNickname: currentUser.nickname
+  });
   
-  if (!threadCreator
-    || threadCreator.nickname !== currentUser.nickname
-  ) return;
-  
-  if (type === 'remove') {
-    return removeThread({ id: threadId });
-  }
-  
-  if (!field) return;
-  
-  const fields = Object.keys(field).join(',');
-
-  const updateFields = Object
-  .entries(field)
-  .reduce((acc, [ key, value ]) => {
-    acc[key] = value;
-    return acc;
-  }, {} as { [key: string]: string | null | boolean });
+  if (!isValid) return;
   
   const api = createClient();
   
-  const { data, error } = await api
+  const { error } = await api
   .from('threads')
-  .update(updateFields)
+  .update(values)
   .eq('id', threadId)
-  .select(fields);
   
-  if (error) {
-    throw new Error(error.message);
-  }
-  
-  return data;
+  return !error;
 }

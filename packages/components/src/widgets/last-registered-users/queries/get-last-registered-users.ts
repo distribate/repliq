@@ -11,7 +11,7 @@ type GetLastUsers = Pick<UserEntity, 'nickname'
 export async function getLastUsers(): Promise<GetLastUsers[] | null> {
   const supabase = createClient();
   
-  let users: GetLastUsers[] | null = [];
+  let users: GetLastUsers[] | null = null;
   
   const { data, error } = await supabase
   .from('users')
@@ -31,7 +31,9 @@ export async function getLastUsers(): Promise<GetLastUsers[] | null> {
     throw new Error(error.message);
   }
   
-  if (!data.length) return null;
+  if (!data) return null;
+  
+  users = []
   
   for (let i = 0; i < data.length; i++) {
     const user = data[i];

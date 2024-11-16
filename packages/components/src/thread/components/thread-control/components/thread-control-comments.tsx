@@ -1,36 +1,37 @@
 import { useThreadControl } from '../hooks/use-thread-control.ts';
-import { Button } from '@repo/ui/src/components/button.tsx';
 import { MessageCircle, MessageCircleOff } from 'lucide-react';
 import { Typography } from '@repo/ui/src/components/typography.tsx';
-import { ThreadControlProps } from '../types/thread-control-types.ts';
+import { ThreadControlFields } from '../types/thread-control-types.ts';
+import { Toggle } from '@repo/ui/src/components/toggle.tsx';
 
 export const ThreadControlComments = ({
-  id: threadId, comments: currentComments,
-}: Pick<ThreadControlProps, 'id' | 'comments'>) => {
-  const { updateThreadFieldsMutation } = useThreadControl();
+  isComments: currentIsComments,
+}: Pick<ThreadControlFields, 'isComments'>) => {
+  const { setThreadNewValuesMutation } = useThreadControl();
   
   const handleToggleThreadComments = () => {
-    return updateThreadFieldsMutation.mutate({
-      type: 'comments', id: threadId, comments: !currentComments,
+    return setThreadNewValuesMutation.mutate({
+      values: { isComments: !currentIsComments }
     });
   };
   
-  const buttonDisabled = updateThreadFieldsMutation.isPending || updateThreadFieldsMutation.isError;
+  const disabled = setThreadNewValuesMutation.isPending || setThreadNewValuesMutation.isError;
   
   return (
-    <Button
-      className="w-fit"
-      state="default"
-      disabled={buttonDisabled}
-      onClick={handleToggleThreadComments}
-    >
-      <div className="flex items-center gap-2">
-        {!currentComments
+    <div className="flex flex-col items-start gap-2 w-full">
+      <Typography textColor="gray">Комментарование треда</Typography>
+      <Toggle
+        variant="outline"
+        pressed={currentIsComments}
+        onPressedChange={handleToggleThreadComments}
+        disabled={disabled}
+        aria-label="Комментирование"
+      >
+        {!currentIsComments
           ? <MessageCircleOff size={20} className="text-red-500" />
           : <MessageCircle size={20} className="text-green-500" />
         }
-        <Typography>Комментарии</Typography>
-      </div>
-    </Button>
+      </Toggle>
+    </div>
   );
 };

@@ -1,8 +1,9 @@
 {
   "$schema": "https://turbo.build/schema.json",
   "globalDependencies": [
-    "**/.env.*local"
+    "**/.env"
   ],
+  "envMode": "strict",
   "ui": "stream",
   "tasks": {
     "build": {

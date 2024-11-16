@@ -2,25 +2,35 @@
 
 import { Typography } from '@repo/ui/src/components/typography.tsx';
 import { ThreadCommentItem } from '../../thread-comment/components/thread-comment-item.tsx';
-import { ThreadCommentsSkeleton } from './thread-comments-skeleton.tsx';
-import { CommentsDisabled } from '#templates/comments-disabled.tsx';
 import { threadCommentsQuery } from '../queries/thread-comments-query.ts';
 import { ThreadCommentEntity } from '@repo/types/entities/entities-type.ts';
+import { Skeleton } from '@repo/ui/src/components/skeleton.tsx';
 
 type ThreadCommentsProps = Pick<ThreadCommentEntity, 'thread_id'> & {
   threadAuthorNickname: string,
-  comments: boolean
+  isComments: boolean
+}
+
+const skeletonArray = Array.from({ length: 3 });
+
+const ThreadCommentsSkeleton = () => {
+  return (
+    <div className="flex flex-col items-start gap-y-2 w-full">
+      {skeletonArray.map((_, i) => (
+        <Skeleton key={i} className="h-[80px] w-full" />
+      ))}
+    </div>
+  )
 }
 
 export const ThreadComments = ({
-  thread_id, threadAuthorNickname, comments,
+  thread_id, threadAuthorNickname, isComments,
 }: ThreadCommentsProps) => {
-  const { data: threadComments, isLoading } = threadCommentsQuery({ thread_id, comments });
+  const { data: threadComments, isLoading } = threadCommentsQuery({ thread_id, isComments });
   
-  if (!threadComments) return;
-  if (!comments) return <CommentsDisabled />;
+  if (!threadComments) return null;
   
-  const nonComments = comments && threadComments.length === 0;
+  const nonComments = isComments && threadComments.length === 0;
   
   return (
     <div className="flex flex-col items-center w-full">

@@ -59,7 +59,9 @@ export async function getFriends({
   
   let usersQuery = api
   .from('users')
-  .select(`nickname, description, status, name_color, real_name`)
+  .select(`
+    nickname, description, status, name_color, real_name
+  `)
   .in('nickname', Array.from(friendNicknames))
   .returns<UserFriends[]>();
   

@@ -11,18 +11,27 @@ type CategoryThreads = Pick<CategoryThreadsQuery, 'categoryId'>
 export const CategoryThreads = ({
   categoryId
 }: CategoryThreads) => {
-  const { data: categoryThreads, isLoading } = categoryThreadsQuery({
-    categoryId, limit: 12
-  });
+  const { data: categoryThreads, isLoading } = categoryThreadsQuery({ categoryId });
   
-  if (categoryThreads && !categoryThreads.length) return <ThreadNotFound/>
+  if (!categoryThreads) return <ThreadNotFound/>
   
   return (
     <div className="flex flex-col gap-y-2 w-full h-full">
-      {isLoading && Array.from({ length: 12 }).map((_, i) => (
-        <Skeleton key={i} className="h-16 w-full" />
-      ))}
-      {categoryThreads && categoryThreads.map(thread => (
+      {isLoading && (
+        <>
+          <Skeleton className="h-16 w-full" />
+          <Skeleton className="h-16 w-full" />
+          <Skeleton className="h-16 w-full" />
+          <Skeleton className="h-16 w-full" />
+          <Skeleton className="h-16 w-full" />
+          <Skeleton className="h-16 w-full" />
+          <Skeleton className="h-16 w-full" />
+          <Skeleton className="h-16 w-full" />
+          <Skeleton className="h-16 w-full" />
+          <Skeleton className="h-16 w-full" />
+        </>
+      )}
+      {categoryThreads.map(thread => (
         <ThreadLayout id={thread.id} title={thread.title} owner={thread.owner}>
           <ThreadByCategoryItem {...thread} />
         </ThreadLayout>

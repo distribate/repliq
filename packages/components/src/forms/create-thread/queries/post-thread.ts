@@ -4,18 +4,17 @@ import 'server-only';
 import { ThreadEntity } from '@repo/types/entities/entities-type';
 import { createClient } from '@repo/lib/utils/api/server.ts';
 import { postThreadImages } from './post-thread-images.ts';
+import { getCurrentUser } from '@repo/lib/actions/get-current-user.ts';
 
 export type PostThread = {
   thread_id: string
 }
 
 type PostThreadProperties = Omit<ThreadEntity, 'content'> & Partial<{
-  user_nickname: string,
   category_id: number,
-  tags: string[] | null
-}> & PostThread & {
+  tags: string[] | null,
   content: any
-};
+}> & PostThread
 
 export async function postThreadCategory({
   thread_id, category_id,
@@ -24,10 +23,7 @@ export async function postThreadCategory({
   
   const { data, error } = await api
   .from('category_threads')
-  .insert({
-    category_id: category_id,
-    thread_id: thread_id,
-  })
+  .insert({ category_id, thread_id, })
   .select('thread_id')
   .single();
   
@@ -39,16 +35,16 @@ export async function postThreadCategory({
 }
 
 export async function postThreadNickname({
-  thread_id, user_nickname,
-}: Pick<PostThreadProperties, 'thread_id' | 'user_nickname'>) {
+  thread_id
+}: Pick<PostThreadProperties, 'thread_id'>) {
+  const currentUser = await getCurrentUser();
+  if (!currentUser) return;
+  
   const api = createClient();
   
   const { data, error } = await api
   .from('threads_users')
-  .insert({
-    thread_id: thread_id,
-    user_nickname: user_nickname,
-  })
+  .insert({ thread_id, user_nickname: currentUser.nickname, })
   .select('thread_id')
   .single();
   
@@ -62,16 +58,14 @@ export async function postThreadNickname({
 export async function postThreadItem({
   ...values
 }: Partial<Omit<ThreadEntity, 'id' | 'created_at'>>) {
-  const { comments, auto_remove, content, permission, description, title } = values;
+  const { isComments, auto_remove, content, permission, description, title } = values;
   
   const api = createClient();
   
   const { data, error } = await api
   .from('threads')
   .insert({
-    title: title, description: description,
-    content: content, comments: comments,
-    permission: permission, auto_remove: auto_remove,
+    title, description, content, isComments, permission, auto_remove,
   })
   .select('id')
   .single();
@@ -94,9 +88,7 @@ async function postThreadTags({
   
   const { data, error } = await api
   .from('threads_tags')
-  .insert({
-    thread_id, tags,
-  })
+  .insert({ thread_id, tags, })
   .select('id')
   .single();
   
@@ -107,23 +99,29 @@ async function postThreadTags({
   return data;
 }
 
-type PostThreadType = Omit<PostThreadProperties, 'thread_id' | 'created_at' | 'id' | 'updated_at'> & {
+type PostThreadType = Omit<PostThreadProperties,
+  | 'thread_id'
+  | 'created_at'
+  | 'id'
+  | 'updated_at'
+  | "isUpdated"
+> & {
   base64Files: Array<string> | null
 }
 
 export async function postThread({
   ...values
 }: PostThreadType) {
-  const {
-    category_id, content, comments, title, tags, permission,
-    description, auto_remove, user_nickname, base64Files
-  } = values;
+  const currentUser = await getCurrentUser();
+  if (!currentUser) return;
   
-  if (!content || !title || !user_nickname) return;
+  const { category_id, content, isComments, title, tags, permission, description, auto_remove, base64Files } = values;
+  
+  if (!content || !title) return;
   
   const { id } = await postThreadItem({
     content: JSON.parse(content),
-    comments,
+    isComments,
     auto_remove,
     title,
     description,
@@ -136,7 +134,7 @@ export async function postThread({
     await postThreadImages({ thread_id: id, base64Files });
   }
   
-  await postThreadNickname({ thread_id: id, user_nickname });
+  await postThreadNickname({ thread_id: id });
   await postThreadCategory({ thread_id: id, category_id });
   await postThreadTags({ thread_id: id, tags });
   

@@ -18,7 +18,7 @@ const initial: ThreadFormQuery = {
 	values: {
 		permission: false,
 		auto_remove: false,
-		comments: true,
+		isComments: true,
 		visibility: "all"
 	}
 }

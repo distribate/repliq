@@ -13,55 +13,60 @@ import { Button } from '@repo/ui/src/components/button.tsx';
 import { useRouter } from 'next/navigation';
 
 type ThreadMoreProps = Pick<ThreadModel,
-  | 'tags'
-  | 'description'
-  | 'created_at'
-  | 'owner'
+  | 'tags' | 'description' | 'created_at' | 'owner'
 >
 
 export const ThreadMore = ({
   tags, description, created_at, owner,
 }: ThreadMoreProps) => {
   const [ expand, setExpand ] = useState<boolean>(false);
-  const { push } = useRouter()
+  const { push } = useRouter();
   
   return (
-    <Accordion value={expand ? "more" : "."} type="single" collapsible className="w-full p-0 m-0">
+    <Accordion
+      value={expand ? 'more' : '.'}
+      type="single" collapsible
+      className="w-full p-0 m-0"
+    >
       <AccordionItem value="more" className="w-full px-4">
         <AccordionTrigger
-          className="flex items-center justify-start gap-4 w-full"
+          withChevron={false}
+          className="flex items-center justify-between w-full"
           onClick={() => setExpand(prev => !prev)}
         >
-          <Typography>{dayjs(created_at).fromNow()}</Typography>
-          {tags && (
-            <div className="flex items-center gap-2">
-              {tags.map((tag, idx) => (
-                <Typography key={idx} className="text-caribbean-green-300">
-                  #{tag}
-                </Typography>
-              ))}
-            </div>
-          )}
+          <div className="flex items-center gap-4 justify-start">
+            <Typography>{dayjs(created_at).fromNow()}</Typography>
+            {tags && (
+              <div className="flex items-center gap-1">
+                {tags.map((tag, idx) => (
+                  <div key={idx} className="flex px-2 py-0.5 bg-white/10 rounded-sm items-center justify-center">
+                    <Typography className="leading-5 text-caribbean-green-300">#{tag}</Typography>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
         </AccordionTrigger>
         <AccordionContent>
-          {description && (
-            <Typography textSize="large" textColor="shark_white" className="mb-6">
-              {description}
-            </Typography>
-          )}
+          <div className="flex mb-6 w-fit">
+            {description ? (
+              <Typography textSize="large" textColor="shark_white">
+                {description}
+              </Typography>
+            ) : (
+              <Typography textColor="gray" textSize="medium" className="italic">
+                У треда нет описания
+              </Typography>
+            )}
+          </div>
           <div className="flex flex-col mt-2 mb-6 gap-y-4 w-full">
-            <div className="flex items-center gap-2 w-fit">
+            <div className="flex items-end gap-2 w-fit">
               <Link href={USER_URL + owner.nickname}>
                 <Avatar nickname={owner.nickname} propWidth={36} propHeight={36} />
               </Link>
-              <div className="flex flex-col w-fit">
-                <Link href={USER_URL + owner.nickname}>
-                  <UserNickname nickname={owner.nickname} />
-                </Link>
-                <Typography textSize="small" textColor="gray">
-                  2 треда
-                </Typography>
-              </div>
+              <Link href={USER_URL + owner.nickname}>
+                <UserNickname nickname={owner.nickname} />
+              </Link>
             </div>
             <div className="flex items-center gap-2 w-full">
               <Button
@@ -80,13 +85,8 @@ export const ThreadMore = ({
               </Button>
             </div>
           </div>
-          <div
-            className="cursor-pointer"
-            onClick={() => setExpand(false)}
-          >
-            <Typography textSize="medium">
-              Скрыть
-            </Typography>
+          <div className="cursor-pointer" onClick={() => setExpand(false)}>
+            <Typography textSize="medium">Скрыть</Typography>
           </div>
         </AccordionContent>
       </AccordionItem>

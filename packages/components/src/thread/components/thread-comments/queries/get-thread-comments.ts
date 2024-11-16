@@ -1,18 +1,16 @@
 'use server';
 
 import { createClient } from '@repo/lib/utils/api/server.ts';
-import { ThreadCommentEntity, ThreadCommentRepliedEntity, ThreadEntity } from '@repo/types/entities/entities-type.ts';
-
-export type RequestDetails = Partial<{
-  ascending: boolean,
-  referencedTable: string
-}>
+import {
+  RequestDetails,
+  ThreadCommentEntity,
+  ThreadCommentRepliedEntity,
+  ThreadEntity,
+} from '@repo/types/entities/entities-type.ts';
 
 type GetCommentsReplied = {
   initiatorId: Pick<ThreadCommentRepliedEntity, "initiator_comment_id">["initiator_comment_id"]
 }
-
-type GetCommentMore = Pick<ThreadComment, "id">
 
 type GetComments = Pick<ThreadEntity, 'id'> & RequestDetails
 
@@ -24,9 +22,7 @@ export type ThreadComment = RepliedDetails & ThreadCommentEntity
 
 export async function getCommentsReplied({
   initiatorId
-}: GetCommentsReplied): Promise<
-  Pick<ThreadCommentRepliedEntity, "recipient_comment_id"> | null
-> {
+}: GetCommentsReplied) {
   const api = createClient();
   
   const { data, error } = await api
@@ -37,12 +33,12 @@ export async function getCommentsReplied({
   
   if (error) return null;
   
-  return data
+  return data as Pick<ThreadCommentRepliedEntity, "recipient_comment_id">
 }
 
 async function getComment({
   id: comment_id
-}: GetCommentMore) {
+}: Pick<ThreadComment, "id">) {
   const api = createClient();
   
   const { data, error } = await api
@@ -77,12 +73,12 @@ async function getComments({
 }
 
 export async function getThreadComments(threadId: string): Promise<ThreadComment[] | null> {
-  const comments = await getComments({
+  const threadComments = await getComments({
     id: threadId, ascending: true
   });
   
   return await Promise.all(
-    comments.map(async(comment) => {
+    threadComments.map(async(comment) => {
       const replied = await getCommentsReplied({
         initiatorId: comment.id,
       });

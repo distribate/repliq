@@ -8,7 +8,7 @@ import { Separator } from '@repo/ui/src/components/separator.tsx';
 import dayjs from '@repo/lib/utils/dayjs/dayjs-instance.ts';
 
 export const ProfileThreadsListCard = ({
-  created_at, id, title, comments, commentsCount, rating,
+  created_at, id, title, isComments, commentsCount, rating,
 }: UserThreads) => {
   return (
     <div
@@ -37,7 +37,7 @@ export const ProfileThreadsListCard = ({
         </div>
         <div className="flex flex-col items-center justify-center gap-2">
           <div className="flex items-center gap-4 w-full">
-            {comments ? (
+            {isComments ? (
               <div className="flex items-center gap-1">
                 <Typography textSize="medium" textColor="shark_white">
                   {commentsCount}

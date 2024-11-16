@@ -14,7 +14,7 @@ export const FormThreadComments = ({
   
   if (!threadFormState.values) return;
   
-  const isActive = threadFormState.values.comments;
+  const isActive = threadFormState.values.isComments;
   
   return (
     <FormField errorMessage={errors?.comments?.message}>
@@ -39,7 +39,7 @@ export const FormThreadComments = ({
                   onChange(checked);
                   
                   return updateThreadFormMutation.mutate({
-                    values: { comments: checked },
+                    values: { isComments: checked },
                   });
                 }}
               >

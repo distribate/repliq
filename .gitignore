@@ -6,8 +6,8 @@ node_modules
 .pnp.js
 
 .idea
-
-./apps/database/supabase/migrations
+data
+.migrations
 
 # Local env files
 .env

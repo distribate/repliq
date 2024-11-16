@@ -5,6 +5,14 @@ import getSkinRoute from './routes/get-skins.js';
 import getHeadRoute from './routes/get-head.js';
 import downloadSkin from './routes/download-skin.js';
 import fastifyEnv from '@fastify/env';
+import * as dotenv from 'dotenv';
+import { resolve, dirname } from 'path';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
+dotenv.config({ path: resolve(__dirname, '../../../.env') });
 
 declare module 'fastify' {
   interface FastifyInstance {
@@ -12,9 +20,7 @@ declare module 'fastify' {
   }
 }
 
-export const server = fastify({
-  logger: false,
-});
+export const server = fastify({ logger: false });
 
 const options = {
   confKey: 'config', schema: envSchema,
@@ -52,13 +58,17 @@ server.register(getHeadRoute);
 server.register(downloadSkin);
 
 async function start() {
+  if (!process.env.SKIN_PROXY_PORT) {
+    throw new Error('SKIN_PROXY_PORT is not defined in .env');
+  }
+  
   try {
-    await server.listen({
-      port: 8000,
-    });
+    const port = Number(process.env.SKIN_PROXY_PORT)
     
+    await server.listen({ port });
+    
+    console.log(`Skin Proxy started on ${port} port`)
     console.log(server.printRoutes());
-    console.log(`.env variables:\n${JSON.stringify(server.config)}`);
   } catch (err) {
     console.error('Error starting server:', err);
     process.exit(1);

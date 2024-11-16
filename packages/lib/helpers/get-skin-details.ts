@@ -9,10 +9,7 @@ type SkinDetails = {
 
 export async function getSkinDetails({
   type, nickname,
-}: SkinDetails) {
-	if (!nickname) throw new Error(`Nickname required`)
-  if (!type) throw new Error(`Invalid type: ${type}`);
-  
+}: SkinDetails): Promise<string> {
   if (type === 'skin') {
     const rawSkin = await fetch(SKIN_GET_SKIN + nickname);
     
@@ -22,9 +19,7 @@ export async function getSkinDetails({
     
     const skinBlob = await rawSkin.blob();
     return URL.createObjectURL(skinBlob);
-  }
-	
-  if (type === 'head') {
+  } else {
     const rawHead = await fetch(SKIN_GET_HEAD + nickname.toLowerCase());
     
     if (!rawHead.ok) {

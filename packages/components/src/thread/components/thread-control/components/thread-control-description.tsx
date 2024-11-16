@@ -1,43 +1,43 @@
-import { useState } from 'react';
-import { useThreadControl } from '../hooks/use-thread-control.ts';
+import React, { useState } from 'react';
 import { Input } from '@repo/ui/src/components/input.tsx';
-import { Button } from '@repo/ui/src/components/button.tsx';
-import { ThreadControlProps } from '../types/thread-control-types.ts';
+import { ThreadControlFields } from '../types/thread-control-types.ts';
+import { Typography } from '@repo/ui/src/components/typography.tsx';
+import { Info } from 'lucide-react';
+import { useThreadControl } from '#thread/components/thread-control/hooks/use-thread-control.ts';
 
 export const ThreadControlDescription = ({
-  id: threadId, description: currentDescription,
-}: Pick<ThreadControlProps, "id" | "description">) => {
-  const [ descriptionValue, setDescriptionValue ] = useState('');
-  const { updateThreadFieldsMutation } = useThreadControl();
+  description: currentDescription,
+}: Pick<ThreadControlFields, 'description'>) => {
+  const { setThreadNewValuesMutation } = useThreadControl()
+  const [ descriptionValue, setDescriptionValue ] = useState(currentDescription || "");
   
-  const handleSaveEditedInfo = () => {
-    return updateThreadFieldsMutation.mutate({
-      type: 'description',
-      id: threadId,
-      description: descriptionValue
-    });
-  };
-  
-  const isPendingEdit = updateThreadFieldsMutation.isPending || updateThreadFieldsMutation.isError;
-  const isIdentity = !descriptionValue || descriptionValue === currentDescription
+  const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { value } = e.target;
+    
+    setDescriptionValue(value)
+    
+    setThreadNewValuesMutation.mutate({
+      values: { description: value }
+    })
+  }
   
   return (
     <div className="flex items-center gap-2 w-full">
-      <Input
-        placeholder={currentDescription || 'Введите описание'}
-        roundedType="default"
-        value={descriptionValue}
-        maxLength={96}
-        onChange={(e) => setDescriptionValue(e.target.value)}
-      />
-      <Button
-        state="default"
-        disabled={isPendingEdit || isIdentity}
-        pending={isPendingEdit}
-        onClick={handleSaveEditedInfo}
-      >
-        Сохранить
-      </Button>
+      <div className="flex flex-col w-full pt-2 pb-1 border border-shark-700 rounded-md">
+        <div className="flex items-center gap-1 px-4">
+          <Typography textColor="gray">Описание</Typography>
+          <Info size={14} className="text-shark-300" />
+        </div>
+        <Input
+          placeholder={currentDescription || 'Введите описание'}
+          roundedType="default"
+          value={descriptionValue}
+          backgroundType="transparent"
+          className="!text-[16px]"
+          maxLength={96}
+          onChange={onChange}
+        />
+      </div>
     </div>
   );
 };

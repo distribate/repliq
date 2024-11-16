@@ -1,5 +1,5 @@
 import { Typography } from '@repo/ui/src/components/typography.tsx';
-import { EditorPanel } from '../../../editor/components/editor-panel.tsx';
+import { EditorPanel } from '#editor/components/editor-panel.tsx';
 import { Editable, RenderPlaceholderProps, Slate, withReact } from 'slate-react';
 import { serializeNodes } from '@repo/lib/helpers/serialize-nodes.ts';
 import { Controller, useController } from 'react-hook-form';
@@ -10,12 +10,12 @@ import { useCreateThreadImages } from '../hooks/use-create-thread-images.ts';
 import { ImagePlus } from 'lucide-react';
 import { FormChildsProps } from '../types/create-thread-form-types.ts';
 import { Button } from '@repo/ui/src/components/button.tsx';
-import { OperationType } from '@repo/types/global';
 import { handleEventKeyDown } from '#editor/helpers/handle-event-keydown.ts';
 import { RenderElement } from '#editor/components/render-element.tsx';
 import { RenderLeaf } from '#editor/components/render-leaf.tsx';
 import { threadFormQuery } from '../queries/thread-form-query.ts';
 import { THREAD_CONTENT_LIMIT } from '../schemas/create-thread-schema.ts';
+import { handleOnChangeEditor } from '#editor/helpers/handle-on-change.ts';
 
 const initialValue = [ {
   type: 'paragraph', children: [ { text: '' } ],
@@ -40,14 +40,10 @@ export const FormThreadContent = ({
   );
   
   const handleOnChange = (value: Descendant[]) => {
-    const isAstChange = editor.operations.some(
-      (op: { type: OperationType; }) => 'set_selection' !== op.type,
-    );
+    const isAstChange = handleOnChangeEditor(editor, value)
     
     if (isAstChange) {
-      return updateThreadFormMutation.mutate({
-        values: { content: value },
-      });
+      return updateThreadFormMutation.mutate({ values: { content: value }, });
     }
   };
   

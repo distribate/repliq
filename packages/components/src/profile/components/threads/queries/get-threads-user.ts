@@ -11,7 +11,7 @@ export type GetThreadsUser = {
   order?: 'created_at' | 'views' | 'rating'
 }
 
-export type UserThreads = Pick<ThreadEntity, 'id' | 'title' | 'comments' | 'created_at'> & {
+export type UserThreads = Pick<ThreadEntity, 'id' | 'title' | 'isComments' | 'created_at'> & {
   commentsCount: number,
   rating: number
 }
@@ -23,7 +23,7 @@ export async function getThreadsUser({
   
   let query = api
   .from('threads_users')
-  .select(`thread_id, threads(id,title,comments,created_at)`)
+  .select(`thread_id, threads(id,title,isComments,created_at)`)
   .eq('user_nickname', nickname);
   
   query.order(order, {

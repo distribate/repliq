@@ -10,13 +10,13 @@ type TopicByCategoryItemProps = Pick<ThreadModel, 'title'
   | 'created_at'
   | 'commentsCount'
   | 'rating'
-  | 'comments'
+  | 'isComments'
 >
 
 export const ThreadByCategoryItem = ({
   ...thread
 }: TopicByCategoryItemProps) => {
-  const { owner, created_at, title, rating, commentsCount, comments } = thread;
+  const { owner, created_at, title, rating, commentsCount, isComments } = thread;
   
   if (!owner || !rating) return null;
   
@@ -43,7 +43,7 @@ export const ThreadByCategoryItem = ({
       </div>
       <div className="flex items-center gap-x-2 rounded-md px-2 py-1 border-white/10 border-[1px]">
         <div className="flex items-center gap-1 w-[26px]">
-          {comments ? (
+          {isComments ? (
             <>
               <MessageSquare className="text-shark-300" size={16} />
               <Typography className="text-shark-300 text-sm font-normal">

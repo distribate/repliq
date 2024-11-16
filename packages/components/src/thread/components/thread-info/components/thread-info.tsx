@@ -4,8 +4,14 @@ import { Typography } from '@repo/ui/src/components/typography.tsx';
 import Link from 'next/link';
 import { CATEGORY_URL } from '@repo/shared/constants/routes.ts';
 
-export const ThreadInfo = async(thread: ThreadModel) => {
-  const categoryByTitle = await getCategoryOfThreadTitle(thread.id);
+type ThreadInfoProps = Pick<ThreadModel, "id">
+
+export const ThreadInfo = async({
+  id: threadId
+}: ThreadInfoProps) => {
+  const categoryByTitle = await getCategoryOfThreadTitle(threadId);
+  
+  if (!categoryByTitle) return null;
   
   return (
     <Link href={CATEGORY_URL + categoryByTitle.id} className="flex py-2">

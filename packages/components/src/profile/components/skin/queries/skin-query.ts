@@ -25,22 +25,17 @@ const queryParams = {
   gcTime: Infinity,
 };
 
-export const useSkinStateQuery = (nickname: string) => {
-  return useQuery({
-    queryKey: SKIN_STATE_QUERY_KEY(nickname),
-    queryFn: async() => {
-      const skinUrl = await getSkinDetails({ type: 'skin', nickname });
-      return skinUrl ?? null;
-    },
-    enabled: !!nickname,
-    ...queryParams,
-  });
-};
+export const useSkinStateQuery = (nickname: string) => useQuery({
+  queryKey: SKIN_STATE_QUERY_KEY(nickname),
+  queryFn: () => getSkinDetails({ type: 'skin', nickname }),
+  enabled: !!nickname,
+  ...queryParams,
+});
 
-export const useSkinAnimationQuery = () => {
-  return useQuery<Omit<SkinStateQuery, 'skinUrl'>, Error>({
-    queryKey: SKIN_ANIMATION_QUERY_KEY,
-    initialData: initial,
-    ...queryParams,
-  });
-};
+export const useSkinAnimationQuery = () => useQuery<
+  Omit<SkinStateQuery, 'skinUrl'>, Error
+>({
+  queryKey: SKIN_ANIMATION_QUERY_KEY,
+  initialData: initial,
+  ...queryParams,
+});

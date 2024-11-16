@@ -61,7 +61,7 @@ export async function postThreadComment({
   
   const { data, error } = await api
     .from("threads")
-    .select("comments")
+    .select("isComments")
     .eq("id", thread_id)
     .single()
   

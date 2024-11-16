@@ -22,8 +22,7 @@ const blockWrapperVariants = cva('flex rounded-lg w-full ', {
   defaultVariants: {
     variant: 'default',
     backgroundColor: 'shark_black',
-    padding: 'default',
-    borderType: 'none',
+    padding: 'default'
   },
 });
 
