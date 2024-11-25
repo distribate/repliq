@@ -9,16 +9,13 @@ export const ReplyComment = () => {
 	const { updateCreateThreadCommentMutation } = useCreateThreadComment()
 	const values = createThreadCommentState?.repliedValues;
 	
-	if (!values) return;
-	
-	if (createThreadCommentState.type === 'single') return null;
+	if (createThreadCommentState.type === 'single' || !values) return null;
 	
 	const { commentNickname, commentContent } = values;
 	
 	const handleCommentType = () => {
 		return updateCreateThreadCommentMutation.mutate({
-			type: "single",
-			repliedValues: null
+			type: "single", repliedValues: null
 		})
 	}
 	

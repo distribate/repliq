@@ -12,9 +12,7 @@ export async function updateAlert({
   
   const { data, error } = await api
   .from("config_alerts")
-  .update({
-    title, link, description
-  })
+  .update({ title, link, description })
   .eq("id", id)
   .select()
   .single()

@@ -1,17 +1,17 @@
-import { searchQuery, SearchTopic, SearchUser } from '../queries/search-query.ts';
-import { SearchResultsSkeleton } from './search-results-skeleton.tsx';
+import { searchQuery, SearchThread, SearchUser } from '../queries/search-query.ts';
 import { SearchAreaNotFound } from '#templates/search-area-not-found.tsx';
 import { SearchUserItem } from '#cards/components/search/search-user-card.tsx';
 import { Typography } from '@repo/ui/src/components/typography.tsx';
-import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { THREAD_URL } from '@repo/shared/constants/routes.ts';
 import { ThreadEntity } from '@repo/types/entities/entities-type.ts';
+import { Skeleton } from '@repo/ui/src/components/skeleton.tsx';
+import { SEARCH_SIDEBAR_LIMIT } from '@repo/shared/constants/limits.ts';
 
-type SearchCardTopicProps = Pick<ThreadEntity, "id" | "title">
+type SearchCardTopicProps = Pick<ThreadEntity, 'id' | 'title'>
 
 const SearchCardTopic = ({
-	title, id
+  title, id,
 }: SearchCardTopicProps) => {
   return (
     <Link href={THREAD_URL + id} className="flex items-center gap-2 p-2 bg-shark-900 rounded-md">
@@ -20,48 +20,72 @@ const SearchCardTopic = ({
   );
 };
 
+const SearchItemSkeleton = () => {
+  return (
+    <div className="flex items-center px-2 py-2 gap-2">
+      <Skeleton className="rounded-none w-4 h-4"/>
+      <div className="flex items-center gap-1">
+        <Skeleton className="h-5 w-24"/>
+        <Skeleton className="h-5 w-16 "/>
+      </div>
+    </div>
+  )
+}
+
+const SearchAreaSkeleton = () => {
+  return (
+    <div className="flex flex-col gap-2 w-full max-h-[400px] overflow-y-scroll">
+      <SearchItemSkeleton />
+      <SearchItemSkeleton />
+      <SearchItemSkeleton />
+    </div>
+  );
+};
+
 export const SearchArea = () => {
-  const { data: searched, isFetching } = searchQuery();
-  const { push } = useRouter();
+  const { data: searchState, isLoading } = searchQuery();
+
+  if (isLoading) return <SearchAreaSkeleton />;
   
-  const typeIsUsers = searched.type === 'users';
-  const typeIsTopics = searched.type === 'threads';
+  const typeIsUsers = searchState.type === 'users';
+  const typeIsTopics = searchState.type === 'threads';
   
-  if (!searched.results || !searched.value) return null;
+  if (!searchState.queryValue) return null;
   
   return (
-    <div className="flex flex-col gap-1 w-full max-h-[400px] overflow-y-scroll">
-      {searched.results && searched.results.length === 0 ? (
-        <SearchAreaNotFound searchValue={searched.value || null} />
+    <div className="flex flex-col gap-2 w-full max-h-[400px] overflow-y-scroll">
+      {!searchState.results ? (
+        <SearchAreaNotFound searchValue={searchState.queryValue || null} />
       ) : (
-        isFetching ? <SearchResultsSkeleton /> : (
-          <>
-            {typeIsUsers && (
-              (searched.results as SearchUser[]).map((item => (
-                <SearchUserItem
-                  key={item.nickname}
-                  nicknameColor={item.name_color}
-                  nickname={item.nickname}
-                />
-              )))
-            )}
-            {typeIsTopics && (
-              (searched.results as SearchTopic[]).map((item => (
-                <SearchCardTopic key={item.id} {...item} />
-              )))
-            )}
-            {searched.results.length >= 5 && (
-              <div
-                onClick={() => push(`/search?type=${searched.type}`)}
-                className="cursor-pointer"
-              >
-                <Typography textColor="gray" textSize="small">
-                  показать больше
-                </Typography>
-              </div>
-            )}
-          </>
-        )
+        <>
+          {typeIsUsers && (
+            (searchState.results as SearchUser[]).map((item => (
+              <SearchUserItem
+                key={item.nickname}
+                nicknameColor={item.name_color}
+                nickname={item.nickname}
+              />
+            )))
+          )}
+          {typeIsTopics && (
+            (searchState.results as SearchThread[]).map((item => (
+              <SearchCardTopic key={item.id} {...item} />
+            )))
+          )}
+          {searchState.results.length >= SEARCH_SIDEBAR_LIMIT && (
+            <Link href={{
+              pathname: "/search",
+              query: {
+                type: searchState.type,
+                queryValue: searchState.queryValue
+              }
+            }}>
+              <Typography textColor="gray" textSize="small">
+                показать больше
+              </Typography>
+            </Link>
+          )}
+        </>
       )}
     </div>
   );

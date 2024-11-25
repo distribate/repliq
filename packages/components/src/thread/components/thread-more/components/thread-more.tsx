@@ -10,18 +10,30 @@ import { USER_URL } from '@repo/shared/constants/routes.ts';
 import { Avatar } from '#user/components/avatar/components/avatar.tsx';
 import { UserNickname } from '#user/components/name/components/nickname.tsx';
 import { Button } from '@repo/ui/src/components/button.tsx';
-import { useRouter } from 'next/navigation';
 
 type ThreadMoreProps = Pick<ThreadModel,
   | 'tags' | 'description' | 'created_at' | 'owner'
 >
 
+type ThreadTagProps = {
+  tag: string
+}
+
+const ThreadTag = ({
+  tag,
+}: ThreadTagProps) => {
+  return (
+    <div className="flex px-2 py-0.5 bg-shark-700/20 rounded-sm items-center justify-center">
+      <Typography className="leading-5" textColor="gray">#{tag}</Typography>
+    </div>
+  );
+};
+
 export const ThreadMore = ({
   tags, description, created_at, owner,
 }: ThreadMoreProps) => {
   const [ expand, setExpand ] = useState<boolean>(false);
-  const { push } = useRouter();
-  
+
   return (
     <Accordion
       value={expand ? 'more' : '.'}
@@ -38,11 +50,7 @@ export const ThreadMore = ({
             <Typography>{dayjs(created_at).fromNow()}</Typography>
             {tags && (
               <div className="flex items-center gap-1">
-                {tags.map((tag, idx) => (
-                  <div key={idx} className="flex px-2 py-0.5 bg-white/10 rounded-sm items-center justify-center">
-                    <Typography className="leading-5 text-caribbean-green-300">#{tag}</Typography>
-                  </div>
-                ))}
+                {tags.map((tag, idx) => <ThreadTag key={idx} tag={tag} />)}
               </div>
             )}
           </div>
@@ -69,20 +77,23 @@ export const ThreadMore = ({
               </Link>
             </div>
             <div className="flex items-center gap-2 w-full">
-              <Button
-                className="px-4"
-                onClick={() => push(USER_URL + owner.nickname)}
-                state="default"
+              <Link href={USER_URL + owner.nickname}>
+                <Button className="px-6" state="default">
+                  <Typography className="text-[16px]">Профиль</Typography>
+                </Button>
+              </Link>
+              <Link
+                href={{
+                  pathname: '/search',
+                  query: {
+                    type: 'threads', user: owner.nickname,
+                  },
+                }}
               >
-                <Typography>Профиль</Typography>
-              </Button>
-              <Button
-                onClick={() => push(`/search?type=threads&user=${owner.nickname}`)}
-                state="default"
-                className="px-4"
-              >
-                <Typography>Треды</Typography>
-              </Button>
+                <Button state="default" className="px-6">
+                  <Typography className="text-[16px]">Треды</Typography>
+                </Button>
+              </Link>
             </div>
           </div>
           <div className="cursor-pointer" onClick={() => setExpand(false)}>

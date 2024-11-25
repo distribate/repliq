@@ -14,20 +14,17 @@ import { SidebarFormat, sidebarLayoutQuery } from '../../sidebar-layout/queries/
 import { useSidebarControl } from '../../sidebar-layout/hooks/use-sidebar-control.ts';
 import { LogoutModal } from '#modals/action-confirmation/components/logout/components/logout-modal.tsx';
 
+const isValue = (i: SidebarFormat, o: SidebarFormat) => i === o;
+
 export const SidebarSettings = () => {
   const { data: sidebarState } = sidebarLayoutQuery();
   const { updateSidebarPropertiesMutation, isCompact, isExpanded } = useSidebarControl();
   
-  const isValue = (format: SidebarFormat) =>
-    format === sidebarState.format;
-  
   return (
-    <div className="flex items-center justify-between flex-wrap bg-white/10 h-[50px] self-end rounded-lg px-3 py-1 w-full gap-2">
+    <div className="flex items-center justify-between flex-wrap bg-shark-700 max-h-[48px] self-end rounded-md px-3 py-1 w-full gap-2">
       {isCompact || !isExpanded ? (
         <DropdownWrapper
-          properties={{
-            sideAlign: 'right', contentAlign: 'end',
-          }}
+          properties={{ sideAlign: 'right', contentAlign: 'end' }}
           trigger={
             <div className="flex justify-center items-center">
               <PanelsTopLeft size={18} className="text-shark-300 cursor-pointer" />
@@ -38,7 +35,7 @@ export const SidebarSettings = () => {
               <DropdownWrapper
                 properties={{ sideAlign: 'right', contentAlign: 'end' }}
                 trigger={
-                  <DropdownMenuItem onClick={(e) => {e.preventDefault();}}>
+                  <DropdownMenuItem onClick={e => e.preventDefault()}>
                     <Typography>Режим сайдбара</Typography>
                   </DropdownMenuItem>
                 }
@@ -50,11 +47,12 @@ export const SidebarSettings = () => {
                         onClick={(e) => {
                           e.preventDefault();
                           updateSidebarPropertiesMutation.mutate({
-                            type: 'format', values: { format: format.value },
+                            type: 'format',
+                            values: { format: format.value },
                           });
                         }}
                       >
-                        <Typography className={isValue(format.value) ? 'text-caribbean-green-500' : ''}>
+                        <Typography className={isValue(sidebarState.format, format.value) ? 'text-caribbean-green-500' : ''}>
                           {format.title}
                         </Typography>
                       </DropdownMenuItem>
@@ -70,11 +68,11 @@ export const SidebarSettings = () => {
                 }
               />
             </div>
-          } />
+          }
+        />
       ) : (
         <>
           <div className="flex items-center gap-2">
-            <OpenTicket />
             <Link href={`https://discord.gg/X4x6Unj89g`} target="_blank">
               <Icon name="sprite/discord" className="text-md text-shark-300 hover:text-pink-500" />
             </Link>
@@ -107,7 +105,7 @@ export const SidebarSettings = () => {
                             });
                           }}
                         >
-                          <Typography className={isValue(format.value) ? 'text-caribbean-green-500' : ''}>
+                          <Typography className={isValue(sidebarState.format, format.value) ? 'text-caribbean-green-500' : ''}>
                             {format.title}
                           </Typography>
                         </DropdownMenuItem>
@@ -117,11 +115,6 @@ export const SidebarSettings = () => {
                 }
               />
             </div>
-            <LogoutModal
-              trigger={
-                <LogOut size={18} className="text-shark-300 cursor-pointer" />
-              }
-            />
           </div>
         </>
       )}

@@ -1,6 +1,7 @@
 import { Button } from "@repo/ui/src/components/button.tsx";
 import { useCreatePost } from "../hooks/use-create-post.ts";
 import { postFormQuery } from "../queries/post-form-query.ts";
+import { POST_CONTENT_LIMIT } from '@repo/shared/constants/limits.ts';
 
 export const PostPublishButton = () => {
 	const { data: fieldQuery } = postFormQuery()
@@ -11,19 +12,19 @@ export const PostPublishButton = () => {
 			return;
 		}
 		
-		createPostMutation.mutate({
+		return createPostMutation.mutate({
 			content: fieldQuery.content,
 			visibility: fieldQuery.visibility || "all"
 		})
 	}
 	
-	const formFieldLength = fieldQuery.length || 0;
+	const formFieldLength = fieldQuery?.content?.length || 0;
 	
 	return (
 		<Button
 			onClick={handlePublishPost}
 			variant="action"
-			disabled={formFieldLength <= 1 || createPostMutation.isPending}
+			disabled={formFieldLength <= POST_CONTENT_LIMIT[0] || createPostMutation.isPending}
 		>
 			Опубликовать
 		</Button>

@@ -16,9 +16,7 @@ export async function createAlert({
   
   const { data, error } = await api
   .from("config_alerts")
-  .insert({
-    creator: currentUser.nickname, link, title, description
-  })
+  .insert({ creator: currentUser.nickname, link, title, description })
   .select()
   .single()
   

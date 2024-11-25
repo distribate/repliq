@@ -34,10 +34,10 @@ export const ForumStats = async() => {
           </Typography>
           <div className="flex flex-col gap-y-1 w-full">
             <Typography>
-              - создано за сегодня: 0
+              - создано за сегодня: {stats.topicsCreatedToday}
             </Typography>
             <Typography>
-              - всего: {stats.topicsCreatedToday}
+              - всего: {stats.topicsCreatedAll}
             </Typography>
           </div>
         </div>

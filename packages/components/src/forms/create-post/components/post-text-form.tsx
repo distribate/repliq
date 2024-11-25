@@ -15,7 +15,7 @@ export const PostTextForm = () => {
 	const { register, getValues, reset } = useForm<createPostFormInferSchema>({
 		resolver: zodResolver(postSchema),
 		defaultValues: {
-			content: "", visibility: fieldQuery.visibility || "all"
+			visibility: fieldQuery.visibility || "all"
 		}
 	});
 	
@@ -40,7 +40,7 @@ export const PostTextForm = () => {
 						})
 					},
 					maxLength: 300,
-					value: fieldQuery.content,
+					value: fieldQuery.content || "",
 					pattern: /^(?!.* {3}).*$/i
 				})}
 			/>

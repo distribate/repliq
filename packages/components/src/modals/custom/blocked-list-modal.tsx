@@ -9,12 +9,9 @@ import { getUser } from '@repo/lib/helpers/get-user.ts';
 
 export const BlockedListModal = () => {
   const currentUser = getUser();
-  
   if (!currentUser) return null;
   
-  const { data: userBlocked } = userBlockedQuery({
-    nickname: currentUser.nickname,
-  });
+  const { data: userBlocked } = userBlockedQuery(currentUser.nickname);
   
   return (
     <Dialog>
@@ -28,22 +25,24 @@ export const BlockedListModal = () => {
           <Typography variant="dialogTitle" className="px-4">
             Черный список
           </Typography>
-          {userBlocked && !userBlocked.length && (
+          {!userBlocked && (
             <div className="self-start w-full px-2">
               <Typography className="text-shark-300" textSize="small">список пуст</Typography>
             </div>
           )}
-          <div className="flex flex-col gap-y-1 w-full overflow-y-scroll max-h-[600px]">
-            {userBlocked?.map(user => (
-              <Fragment key={user.id}>
-                <UserBlockedCard
-                  name_color={user.name_color}
-                  nickname={user.nickname}
-                  time={user.added_at}
-                />
-              </Fragment>
-            ))}
-          </div>
+          {userBlocked && (
+            <div className="flex flex-col gap-y-1 w-full overflow-y-scroll max-h-[600px]">
+              {userBlocked.map(user => (
+                <Fragment key={user.id}>
+                  <UserBlockedCard
+                    name_color={user.name_color}
+                    nickname={user.nickname}
+                    time={user.added_at}
+                  />
+                </Fragment>
+              ))}
+            </div>
+          )}
         </div>
       </DialogContent>
     </Dialog>

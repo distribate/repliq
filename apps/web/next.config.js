@@ -35,19 +35,19 @@ module.exports = {
 			{
 				protocol: 'http',
 				hostname: 'localhost',
-				port: '8000',
+				port: '9500',
 				pathname: '/get-skin/**',
 			},
 			{
 				protocol: 'http',
 				hostname: 'localhost',
-				port: '8000',
+				port: '9500',
 				pathname: '/get-head/**',
 			},
 			{
 				protocol: "http",
 				hostname: "127.0.0.1",
-				port: "54341",
+				port: "8000",
 				pathname: '/storage/**'
 			}
 		],

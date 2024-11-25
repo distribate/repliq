@@ -12,9 +12,9 @@ export const FormThreadAutoRemove = ({
   const { data: threadFormState } = threadFormQuery();
   const { updateThreadFormMutation } = useCreateThread();
   
-  if (!threadFormState.values) return;
+  if (!threadFormState) return;
   
-  const isActive = threadFormState.values.auto_remove;
+  const isActive = threadFormState.auto_remove;
   
   return (
     <FormField errorMessage={errors?.auto_remove?.message}>
@@ -33,13 +33,12 @@ export const FormThreadAutoRemove = ({
           render={({ field: { onChange } }) => {
             return (
               <Toggle
-                className={isActive ? "bg-shark-50" : "bg-shark-800"}
                 defaultPressed={isActive || false}
                 onPressedChange={(checked: boolean) => {
                   onChange(checked);
                   
                   return updateThreadFormMutation.mutate({
-                    values: { auto_remove: checked },
+                    auto_remove: checked,
                   });
                 }}
               >

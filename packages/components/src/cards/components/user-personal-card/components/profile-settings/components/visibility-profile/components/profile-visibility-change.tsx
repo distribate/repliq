@@ -1,8 +1,6 @@
 import { Typography } from '@repo/ui/src/components/typography.tsx';
 import React, { useCallback } from 'react';
-import { DropdownMenuItem } from '@repo/ui/src/components/dropdown-menu.tsx';
-import { useUpdateCurrentUser } from '@repo/lib/hooks/use-update-current-user.ts';
-import { DropdownWrapper } from '#wrappers/dropdown-wrapper.tsx';
+import { UPDATE_FIELD_MUTATION_KEY, useUpdateCurrentUser } from '@repo/lib/hooks/use-update-current-user.ts';
 import { VISIBILITY_FORMATS } from '../constants/visibility-formats.ts';
 import { ProfileVisibilityChangeType } from '../types/visibility-types.ts';
 import { getUser } from '@repo/lib/helpers/get-user.ts';
@@ -11,6 +9,7 @@ import {
 } from '#cards/components/user-personal-card/components/profile-settings/user-profile-settings.tsx';
 import Barrier from '@repo/assets/images/minecraft/barrier.webp';
 import { DynamicModal } from '#modals/dynamic-modal.tsx';
+import { HoverCardItem } from '@repo/ui/src/components/hover-card.tsx';
 
 type VisibilityProps = {
   e: React.MouseEvent<HTMLDivElement, MouseEvent>,
@@ -20,7 +19,7 @@ type VisibilityProps = {
 export const ProfileVisibilityChange = () => {
   const currentUser = getUser();
   const { updateFieldMutation } = useUpdateCurrentUser();
-  const visibility = currentUser?.properties.visibility;
+  const visibility = currentUser?.visibility;
   const profileVisibilityType = visibility === 'all'
     ? 'открытый' : 'закрытый';
   
@@ -36,7 +35,7 @@ export const ProfileVisibilityChange = () => {
   
   return (
     <DynamicModal
-      mutationKey={["ASDSAD"]}
+      mutationKey={UPDATE_FIELD_MUTATION_KEY}
       trigger={
         <UserSettingOption title="Тип аккаунта:" imageSrc={Barrier.src}>
           <Typography className="text-base">{profileVisibilityType}</Typography>
@@ -49,14 +48,14 @@ export const ProfileVisibilityChange = () => {
           </Typography>
           <div className="flex flex-col gap-y-2">
             {VISIBILITY_FORMATS.map((item) => (
-              <DropdownMenuItem
+              <HoverCardItem
                 key={item.value}
                 onClick={(e) => handleVisibility({ e: e, type: item.value })}
               >
                 <Typography className={visibility === item.value ? 'text-caribbean-green-500' : ''}>
                   {item.title}
                 </Typography>
-              </DropdownMenuItem>
+              </HoverCardItem>
             ))}
           </div>
         </div>

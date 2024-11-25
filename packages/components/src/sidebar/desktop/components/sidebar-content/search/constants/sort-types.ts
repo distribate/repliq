@@ -1,9 +1,9 @@
 import { Folder, UsersRound } from 'lucide-react';
-import { SearchType } from '../queries/search-query.ts';
+import { SearchQuery, SearchType } from '../queries/search-query.ts';
 
 type SortType = {
   title: string,
-  value: SearchType,
+  value: Pick<SearchQuery, "type">["type"],
   icon: any
 }
 

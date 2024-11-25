@@ -13,7 +13,7 @@ export const OutlineCover = () => {
   
   if (!currentUser) return null;
   
-  const preferences = currentUser.properties.preferences;
+  const preferences = currentUser.preferences;
   const preferOutline = getPreferenceValue(preferences, "coverOutline")
   
   const handleOutlinePrefer = (e: React.MouseEvent<HTMLDivElement>, value: boolean) => {

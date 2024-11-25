@@ -23,7 +23,7 @@ export const RealNameVisibility = () => {
   
   if (!currentUser) return null;
   
-  const preferences = currentUser.properties.preferences;
+  const preferences = currentUser.preferences;
   const preferRealName = getPreferenceValue(
     preferences, REAL_NAME_VISIBILITY_NAME
   );

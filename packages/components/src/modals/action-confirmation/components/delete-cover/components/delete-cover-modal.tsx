@@ -21,7 +21,7 @@ export const DeleteCoverModal = () => {
     return deleteBackgroundImageMutation.mutate();
   };
   
-  if (!currentUser.properties.cover_image) return null;
+  if (!currentUser.cover_image) return null;
   
   return (
     <DynamicModal

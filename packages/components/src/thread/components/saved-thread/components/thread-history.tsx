@@ -8,7 +8,7 @@ import { ThreadHistoryType } from "../types/thread-history-types.ts";
 import { HoverCardWrapper } from '#wrappers/hover-card-wrapper.tsx';
 import { THREAD_URL } from '@repo/shared/constants/routes.ts';
 
-type ThreadHistoryProps = {
+export type ThreadHistoryProps = {
 	type: "compact" | "full",
 	index?: number,
 } & ThreadHistoryType

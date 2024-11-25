@@ -1,11 +1,17 @@
 import { useQuery } from '@tanstack/react-query';
+import { createQueryKey } from '@repo/lib/helpers/query-key-builder.ts';
 
 export type PostsFilteringQuery = {
   searchQuery: string | null,
   filteringType: "created_at" | "views"
 }
 
-export const POSTS_FILTERING_QUERY_KEY = [ 'ui', 'posts', 'filter' ];
+export const POSTS_FILTERING_QUERY_KEY = createQueryKey("ui", ["posts", "filtering"])
+
+const initial: PostsFilteringQuery = {
+  searchQuery: null,
+  filteringType: "created_at"
+}
 
 export const postsFilteringQuery = () => useQuery<
   PostsFilteringQuery, Error
@@ -13,8 +19,5 @@ export const postsFilteringQuery = () => useQuery<
   queryKey: POSTS_FILTERING_QUERY_KEY,
   refetchOnWindowFocus: false,
   retry: 1,
-  initialData: {
-    searchQuery: null,
-    filteringType: "created_at"
-  }
+  initialData: initial
 });

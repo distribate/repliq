@@ -1,16 +1,24 @@
-"use client";
+'use client';
 
-import { Textarea } from "@repo/ui/src/components/textarea";
-import { ChangeEvent, useRef } from "react";
+import { Textarea } from '@repo/ui/src/components/textarea';
+import { ChangeEvent, TextareaHTMLAttributes, useRef } from 'react';
+import { cn } from '@repo/lib/utils/ui/cn.ts';
 
-export default function AutogrowingTextarea() {
+interface AutogrowingTextareaProps
+  extends TextareaHTMLAttributes<HTMLTextAreaElement> {
+}
+
+export default function AutogrowingTextarea({
+  onChange,
+  ...props
+}: AutogrowingTextareaProps) {
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
   const defaultRows = 1;
-  const maxRows = undefined; // You can set a max number of rows
+  const maxRows = undefined;
   
   const handleInput = (e: ChangeEvent<HTMLTextAreaElement>) => {
     const textarea = e.target;
-    textarea.style.height = "auto";
+    textarea.style.height = 'auto';
     
     const style = window.getComputedStyle(textarea);
     const borderHeight = parseInt(style.borderTopWidth) + parseInt(style.borderBottomWidth);
@@ -22,17 +30,21 @@ export default function AutogrowingTextarea() {
     const newHeight = Math.min(textarea.scrollHeight + borderHeight, maxHeight);
     
     textarea.style.height = `${newHeight}px`;
+    
+    if (onChange) {
+      onChange(e);
+    }
   };
   
   return (
     <div className="space-y-2">
       <Textarea
         id="textarea-19"
-        placeholder="Leave a comment"
         ref={textareaRef}
         onChange={handleInput}
         rows={defaultRows}
-        className="min-h-[none] resize-none"
+        className={cn('min-h-[none] resize-none ', props.className)}
+        {...props}
       />
     </div>
   );

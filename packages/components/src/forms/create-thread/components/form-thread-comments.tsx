@@ -12,9 +12,9 @@ export const FormThreadComments = ({
   const { data: threadFormState } = threadFormQuery();
   const { updateThreadFormMutation } = useCreateThread();
   
-  if (!threadFormState.values) return;
+  if (!threadFormState) return null;
   
-  const isActive = threadFormState.values.isComments;
+  const isActive = threadFormState.isComments;
   
   return (
     <FormField errorMessage={errors?.comments?.message}>
@@ -33,14 +33,11 @@ export const FormThreadComments = ({
           render={({ field: { onChange } }) => {
             return (
               <Toggle
-                className={isActive ? 'bg-shark-50' : 'bg-shark-800'}
-                defaultPressed={isActive || true}
-                onPressedChange={(checked: boolean) => {
+                pressed={isActive}
+                defaultPressed={isActive}
+                onPressedChange={checked => {
                   onChange(checked);
-                  
-                  return updateThreadFormMutation.mutate({
-                    values: { isComments: checked },
-                  });
+                  return updateThreadFormMutation.mutate({ isComments: checked });
                 }}
               >
                 <Typography textColor={isActive ? 'shark_black' : 'shark_white'} textSize="medium">

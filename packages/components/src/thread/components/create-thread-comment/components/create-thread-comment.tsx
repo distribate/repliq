@@ -15,9 +15,11 @@ import { getUser } from '@repo/lib/helpers/get-user.ts';
 export const CreateThreadComment = () => {
   const qc = useQueryClient();
   const currentUser = getUser();
+  if (!currentUser) return;
+  
   const { data: createThreadCommentState } = createThreadCommentQuery();
 
-  if (!createThreadCommentState || !currentUser) return null;
+  if (!createThreadCommentState) return null;
   
   const type = createThreadCommentState.type || 'single';
   

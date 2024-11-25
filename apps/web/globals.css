@@ -50,6 +50,10 @@
   .friend-card {
     @apply relative w-full bg-shark-950 border-b border-shark-800 rounded-lg p-4;
   }
+
+  .biloba-gradient {
+    @apply bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-biloba-flower-500 via-biloba-flower-500/30 to-transparent;
+  }
 }
 
 @layer base {

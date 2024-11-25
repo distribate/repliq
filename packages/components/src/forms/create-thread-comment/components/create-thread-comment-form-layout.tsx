@@ -26,9 +26,7 @@ interface CreateThreadCommentFormProps
 
 export const CreateThreadCommentFormLayout = forwardRef<
   HTMLFormElement, CreateThreadCommentFormProps
->(({
-  className, variant, state, ...props
-}, ref) => {
+>(({ className, variant, state, ...props }, ref) => {
   return (
     <form
       ref={ref}

@@ -7,7 +7,7 @@ import { CURRENT_THREAD_QUERY_KEY } from '../queries/current-thread-query.ts';
 import { revalidatePath } from 'next/cache';
 import {
   THREAD_CONTROL_QUERY_KEY,
-  ThreadControlQuery, ThreadControlQueryValues,
+  ThreadControlQuery, ThreadControlQueryValues
 } from '#thread/components/thread-control/queries/thread-control-query.ts';
 import { removeThread } from '#thread/components/thread-control/queries/remove-thread.ts';
 
@@ -19,13 +19,10 @@ export const useThreadControl = () => {
   
   const setThreadNewValuesMutation = useMutation({
     mutationFn: async(values: ThreadControlQuery) => {
-      return qc.setQueryData(
-        THREAD_CONTROL_QUERY_KEY,
-        (prev: ThreadControlQuery) => ({
-          state: { ...prev.state, ...values.state, },
-          values: { ...prev.values, ...values.values },
-        }),
-      );
+      return qc.setQueryData(THREAD_CONTROL_QUERY_KEY, (prev: ThreadControlQuery) => ({
+        state: { ...prev.state, ...values.state },
+        values: { ...prev.values, ...values.values },
+      }));
     },
     onError: e => { throw new Error(e.message);},
   });
@@ -57,8 +54,11 @@ export const useThreadControl = () => {
   });
   
   const removeThreadMutation = useMutation({
+    mutationKey: THREAD_CONTROL_MUTATION_KEY,
     mutationFn: async(threadId: string) => removeThread({ id: threadId }),
     onSuccess: async(data, variables) => {
+      if (!data) return toast.error("Произошла ошибка при удалении треда")
+      
       await Promise.all([
         qc.resetQueries({ queryKey: CURRENT_THREAD_QUERY_KEY(variables) }),
         qc.resetQueries({ queryKey: THREAD_RATING_QUERY_KEY(variables) }),

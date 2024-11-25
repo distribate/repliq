@@ -9,9 +9,7 @@ export const PostAdditionalForm = () => {
 	const { data: fieldQuery } = postFormQuery()
 	
 	const handleVisiblityOption = (type: VisibilityPost) => {
-		postFormFieldsMutation.mutate({
-			visibility: type
-		})
+		return postFormFieldsMutation.mutate({ visibility: type })
 	}
 	
 	const visibilityCurrent = fieldQuery.visibility || "all";
@@ -23,9 +21,7 @@ export const PostAdditionalForm = () => {
 	return (
 		<Select
 			defaultValue={visibilityCurrent}
-			onValueChange={(value: VisibilityPost) => {
-				handleVisiblityOption(value)
-			}}
+			onValueChange={(value: VisibilityPost) => handleVisiblityOption(value)}
 		>
 			<SelectTrigger className="w-fit">
 				<Typography textShadow="small" className="text-md text-shark-50">

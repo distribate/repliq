@@ -40,7 +40,6 @@ const AdminButton = () => {
 
 export const UserMenu = () => {
   const currentUser = getUser();
-  
   if (!currentUser) return null;
   
   return (
@@ -56,9 +55,7 @@ export const UserMenu = () => {
           key={collection.name}
           href={{
             pathname: '/collection',
-            query: {
-              type: collection.query,
-            },
+            query: { type: collection.query, },
           }}
         >
           <DropdownMenuItem>

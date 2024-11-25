@@ -2,18 +2,14 @@
 
 import { createClient } from '@repo/lib/utils/api/server.ts';
 import { getThreadModel, ThreadModel } from '#thread/queries/get-thread-model.ts';
-
-export type RequestProperties = {
-  range: number[],
-  limit: number,
-}
+import { RequestDetails } from '@repo/types/entities/entities-type.ts';
 
 export type GetCategoryThreads = {
-  categoryId: string
-} & Partial<RequestProperties>
+  category_id: string
+} & Partial<RequestDetails>
 
 export async function getCategoryThreads({
-  categoryId, range, limit = 12
+  category_id, range, limit = 12
 }: GetCategoryThreads): Promise<ThreadModel[] | null> {
   const api = createClient()
   
@@ -22,14 +18,16 @@ export async function getCategoryThreads({
   let query = api
   .from("category_threads")
   .select("category_id, thread_id, threads(id)")
-  .eq("category_id", categoryId)
+  .eq("category_id", category_id)
   
   if (range) query.range(range[0], range[1])
   if (limit) query.limit(limit)
   
   const { data, error } = await query;
   
-  if (error) throw new Error(error.message)
+  if (error) {
+    throw new Error(error.message);
+  }
   
   const mappedThreads = data.flatMap(item => item.threads)
   
@@ -37,10 +35,7 @@ export async function getCategoryThreads({
   
   for (let i = 0; i < mappedThreads.length; i++) {
     const thread = mappedThreads[i];
-    
-    const threadModel = await getThreadModel({
-      threadId: thread.id, withViews: false
-    })
+    const threadModel = await getThreadModel({ id: thread.id })
     
     if (!threadModel) return threads
     

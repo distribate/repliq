@@ -30,27 +30,23 @@ export async function generateMetadata({
   
   title = category.title;
   
-  return {
-    title: title,
-  };
+  return { title };
 }
 
 export default async function CategoryByIdPage({
   params,
 }: PageConventionProps) {
   const { id } = params;
-  if (!id) redirect('/');
-  
-  const qc = new QueryClient();
+  if (!id) return redirect('/');
   
   const category = await getCategory(id);
   if (!category) return notFound();
   
+  const qc = new QueryClient();
+  
   await qc.prefetchQuery({
     queryKey: CATEGORY_THREADS_QUERY_KEY(category.id),
-    queryFn: () => getThreadsCategories({
-      categoryId: category.id,
-    }),
+    queryFn: () => getThreadsCategories({ categoryId: category.id, })
   });
   
   return (
@@ -74,7 +70,7 @@ export default async function CategoryByIdPage({
             Filtration
           </div>
           <div className="flex flex-col gap-y-2 w-full">
-            <CategoryThreads categoryId={category.id}/>
+            <CategoryThreads category_id={category.id}/>
           </div>
         </BlockWrapper>
       </div>

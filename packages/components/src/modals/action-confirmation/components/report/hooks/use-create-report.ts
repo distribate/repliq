@@ -11,10 +11,10 @@ export const useCreateReport = () => {
   const currentUser = getUser();
   
   const updateReportValuesMutation = useMutation({
-    mutationFn: async(values: ReportQuery) => {
-      qc.setQueryData(REPORT_QUERY_KEY, (prev: ReportQuery) => {
-        return { ...prev, ...values };
-      });
+    mutationFn: async(values: Partial<ReportQuery>) => {
+      return qc.setQueryData(REPORT_QUERY_KEY,
+        (prev: ReportQuery) => ({ ...prev, ...values })
+      );
     },
     onSuccess: () => qc.invalidateQueries({ queryKey: REPORT_QUERY_KEY }),
     onError: e => { throw new Error(e.message); },
@@ -24,7 +24,7 @@ export const useCreateReport = () => {
     mutationKey: CREATE_REPORT_MUTATION_KEY,
     mutationFn: async() => {
       const reportState = qc.getQueryData<ReportQuery>(
-        REPORT_QUERY_KEY
+        REPORT_QUERY_KEY,
       );
       
       if (!reportState || !currentUser) return;

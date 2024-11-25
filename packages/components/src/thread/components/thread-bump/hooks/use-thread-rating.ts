@@ -22,7 +22,7 @@ export const useThreadRating = () => {
       
       await qc.invalidateQueries({ queryKey: THREAD_RATING_QUERY_KEY(variables.threadId) });
     },
-    onError: (e) => { throw new Error(e.message); },
+    onError: e => { throw new Error(e.message); },
   });
   
   return { updateThreadRatingMutation };

@@ -27,6 +27,9 @@ export default function RootLayout({
 }: { children: ReactNode }) {
   return (
     <html lang="ru">
+    {/*<head>*/}
+    {/*  <script src="https://unpkg.com/react-scan/dist/auto.global.js" async />*/}
+    {/*</head>*/}
     <body className={font.className}>
     <MainPageLoader />
     <QueryProvider>
@@ -37,10 +40,10 @@ export default function RootLayout({
         position="bottom-center"
         toastOptions={{
           classNames: {
-            error: 'bg-red-400 border-none',
-            success: 'bg-emerald-500 text-shark-50 border-none',
-            warning: 'text-yellow-400 border-none',
-            info: 'bg-blue-400 border-none',
+            error: 'bg-red-400/80 backdrop-blur-lg border-none',
+            success: 'bg-emerald-500/80 backdrop-blur-lg text-shark-50 border-none',
+            warning: 'bg-shark-900/80 backdrop-blur-lg text-yellow-400 border-none',
+            info: 'bg-blue-400/80 backdrop-blur-lg border-none',
           },
         }}
       />

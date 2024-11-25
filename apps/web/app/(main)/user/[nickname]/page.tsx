@@ -197,17 +197,20 @@ export default async function ProfilePage({
   
   const qc = new QueryClient();
   
-  const [ _, __, profileStatus ] = await Promise.all([
+  const [ _, profileStatus ] = await Promise.all([
     qc.prefetchQuery({
       queryKey: BLOCKED_QUERY_KEY(requestedUserNickname),
       queryFn: () => checkProfileIsBlocked(requestedUserNickname)
     }),
-    qc.prefetchQuery({
-      queryKey: REQUESTED_USER_QUERY_KEY(requestedUserNickname),
-      queryFn: () => getRequestedUser(requestedUserNickname),
-    }),
     checkProfileStatus(requestedUser),
   ]);
+  
+  if (requestedUser.nickname !== user.nickname) {
+    await qc.prefetchQuery({
+      queryKey: REQUESTED_USER_QUERY_KEY(requestedUserNickname),
+      queryFn: () => getRequestedUser(requestedUserNickname),
+    })
+  }
   
   if (profileStatus === 'banned') {
     const banDetails = await getBanDetails({

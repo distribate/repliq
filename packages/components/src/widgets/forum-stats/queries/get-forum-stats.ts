@@ -1,9 +1,9 @@
 import { createClient } from '@repo/lib/utils/api/server.ts';
 
 export async function getForumStats() {
-  let usersRegisteredForum: number | null;
-  let usersRegisteredServer: number | null;
-  let topicsCreatedToday: number | null;
+  let usersRegisteredForum: number;
+  let usersRegisteredServer: number;
+  let topicsCreatedToday: number;
   let topicsCreatedAll: number;
   
   const api = createClient();
@@ -12,7 +12,7 @@ export async function getForumStats() {
   .from('users')
   .select('*', {
     count: 'exact', head: true,
-  })
+  });
   
   const { count: usersServer } = await api
   .from('AUTH')
@@ -24,11 +24,19 @@ export async function getForumStats() {
   .from('threads')
   .select('*', {
     count: 'exact', head: true,
-  });
+  })
+  .gte('created_at', new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString());
   
-  usersRegisteredForum = usersForum || null;
-  usersRegisteredServer = usersServer || null;
-  topicsCreatedToday = topicsToday || null;
+  const { count: topicsAll } = await api
+  .from('threads')
+  .select('*', {
+    count: 'exact', head: true,
+  })
   
-  return { usersRegisteredForum, usersRegisteredServer, topicsCreatedToday };
+  usersRegisteredForum = usersForum || 0;
+  usersRegisteredServer = usersServer || 0;
+  topicsCreatedToday = topicsToday || 0;
+  topicsCreatedAll = topicsAll || 0
+  
+  return { usersRegisteredForum, usersRegisteredServer, topicsCreatedToday, topicsCreatedAll };
 }

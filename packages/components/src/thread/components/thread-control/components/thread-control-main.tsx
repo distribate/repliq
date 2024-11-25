@@ -28,7 +28,7 @@ export const ThreadControlMain = ({
         <ThreadControlDescription description={currentThread.description} />
         <ThreadControlComments isComments={currentThread.isComments} />
         <div className="flex items-center gap-2 justify-end w-full">
-          <ThreadControlSave threadId={threadId} isValid={true} />
+          <ThreadControlSave threadId={threadId} />
           <ThreadRemoveModal id={currentThread.id} />
         </div>
       </div>

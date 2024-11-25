@@ -61,5 +61,5 @@ export async function removeThread({
     throw new Error(error.message);
   }
   
-  return true;
+  return !error;
 }

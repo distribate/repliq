@@ -8,12 +8,12 @@ import { Button } from '@repo/ui/src/components/button.tsx';
 import { useRouter } from 'next/navigation';
 import { FriendButton } from '#buttons/friends/friend-button.tsx';
 
-export type FriendsSearchingCardProps = Pick<ExtendedUserEntity, 'id'
-  | 'nickname' | 'name_color' | 'description' | 'donate'
+export type FriendsSearchingCardProps = Pick<ExtendedUserEntity,
+  'nickname' | 'name_color' | 'description' | 'donate'
 >
 
 export const FriendsSearchingCard = ({
-  nickname, id, name_color, description, donate,
+  nickname, name_color, description, donate,
 }: FriendsSearchingCardProps) => {
   const { push } = useRouter();
   

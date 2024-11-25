@@ -1,5 +1,5 @@
 import { Input } from '@repo/ui/src/components/input.tsx';
-import { ChangeEvent, useCallback } from 'react';
+import { ChangeEvent, DragEvent, useCallback, useState } from 'react';
 import { useSearchControl } from '../hooks/use-search-control.tsx';
 import { useDebounce } from '@repo/lib/hooks/use-debounce.ts';
 import { searchQuery } from '../queries/search-query.ts';
@@ -9,33 +9,31 @@ import { Separator } from '@repo/ui/src/components/separator.tsx';
 import { ImageWrapper } from '#wrappers/image-wrapper.tsx';
 
 export const SearchInput = () => {
-  const { handleSearchMutation, setSearchQueryMutation, } = useSearchControl();
+  const { setSearchQueryMutation } = useSearchControl();
   const { data: searched } = searchQuery();
+  const [ value, setValue ] = useState<string>('');
   
-  const debouncedHandleSearch = useCallback(useDebounce((val: string) => {
-    handleSearchMutation.mutate(val);
-  }, 400), []);
+  const updateQuery = (queryValue: string) => {
+    return setSearchQueryMutation.mutate({ queryValue })
+  }
+  
+  const debounceUpdateQuery = useDebounce(updateQuery, 300)
   
   const handleSearchInput = (e: ChangeEvent<HTMLInputElement>) => {
     const { value: raw } = e.target;
+    let value: string = raw;
     
-    let value: string;
+    if (searched.type === 'users') value = raw.replace(' ', '');
     
-    if (searched.type === 'users') {
-      value = raw.replace(' ', '');
-    }
-    
-    value = raw;
-    
-    setSearchQueryMutation.mutate({ value: value, });
-    debouncedHandleSearch(value);
+    setValue(value)
+    debounceUpdateQuery(value)
   };
   
   return (
     <>
       <Separator />
-      <div className="flex bg-shark-800 items-center px-2 w-full justify-between rounded-md">
-        <div className="flex items-center gap-1">
+      <div className="flex bg-shark-700/80 items-center px-2 w-full justify-between rounded-md">
+        <div className="flex items-center">
           <div className="flex items-center rounded-md w-[44px]">
             <ImageWrapper
               propSrc={Inspector.src}
@@ -47,10 +45,13 @@ export const SearchInput = () => {
             />
           </div>
           <Input
+            onDrop={e => e.preventDefault()}
+            onDragOver={e => e.preventDefault()}
             backgroundType="transparent"
-            value={searched.value}
+            value={value}
+            type="text"
             onChange={handleSearchInput}
-            className="rounded-md !px-0 w-full"
+            className="!px-0 w-full"
             placeholder="Поиск"
           />
         </div>

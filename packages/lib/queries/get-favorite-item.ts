@@ -4,11 +4,12 @@ import { createClient } from "@repo/lib/utils/api/server.ts";
 import { UserEntity } from '@repo/types/entities/entities-type.ts';
 import { getPublicUrlFromStorage } from '../utils/storage/get-public-url-from-storage.ts';
 
-type FavoriteItemProperties = Pick<UserEntity, 'favorite_item' | "nickname">
+type FavoriteItemProperties = Pick<UserEntity, 'favorite_item'>
 
-export type FavoriteItemType = Partial<{
+export type FavoriteItemType = Partial<FavoriteItemProperties & {
   type: 'nickname' | 'itemId',
-}> & Partial<FavoriteItemProperties>
+  nickname: string
+}>
 
 export type FavoriteItem = {
   id: string,

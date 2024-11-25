@@ -10,6 +10,7 @@ export function useDebounce<T extends (...args: any[]) => void>(
 			clearTimeout(timeoutRef.current);
 		}
 		
+		// @ts-ignore
 		timeoutRef.current = setTimeout(() => {
 			func(...args);
 		}, delay);

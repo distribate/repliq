@@ -3,10 +3,9 @@ import { EditorPanel } from '#editor/components/editor-panel.tsx';
 import { Editable, RenderPlaceholderProps, Slate, withReact } from 'slate-react';
 import { serializeNodes } from '@repo/lib/helpers/serialize-nodes.ts';
 import { Controller, useController } from 'react-hook-form';
-import { useState } from 'react';
+import { useState, ChangeEvent } from 'react';
 import { createEditor, Descendant } from 'slate';
-import { useCreateThread } from '../hooks/use-create-thread.tsx';
-import { useCreateThreadImages } from '../hooks/use-create-thread-images.ts';
+import { getContentLimit, useCreateThread } from '../hooks/use-create-thread.tsx';
 import { ImagePlus } from 'lucide-react';
 import { FormChildsProps } from '../types/create-thread-form-types.ts';
 import { Button } from '@repo/ui/src/components/button.tsx';
@@ -14,8 +13,8 @@ import { handleEventKeyDown } from '#editor/helpers/handle-event-keydown.ts';
 import { RenderElement } from '#editor/components/render-element.tsx';
 import { RenderLeaf } from '#editor/components/render-leaf.tsx';
 import { threadFormQuery } from '../queries/thread-form-query.ts';
-import { THREAD_CONTENT_LIMIT } from '../schemas/create-thread-schema.ts';
 import { handleOnChangeEditor } from '#editor/helpers/handle-on-change.ts';
+import { THREAD_CONTENT_LIMIT_DEFAULT, THREAD_IMAGES_LIMIT_DEFAULT } from '@repo/shared/constants/limits.ts';
 
 const initialValue = [ {
   type: 'paragraph', children: [ { text: '' } ],
@@ -30,8 +29,7 @@ const FormThreadContentPlaceholder = ({
 export const FormThreadContent = ({
   errors, control,
 }: FormChildsProps) => {
-  const { updateThreadFormMutation } = useCreateThread();
-  const { handleControlImage } = useCreateThreadImages();
+  const { updateThreadFormMutation, handleControlImage } = useCreateThread();
   const [ editor ] = useState(() => withReact(createEditor()));
   const { data: threadFormValues } = threadFormQuery();
   
@@ -42,10 +40,25 @@ export const FormThreadContent = ({
   const handleOnChange = (value: Descendant[]) => {
     const isAstChange = handleOnChangeEditor(editor, value)
     
-    if (isAstChange) {
-      return updateThreadFormMutation.mutate({ values: { content: value }, });
-    }
+    if (isAstChange) updateThreadFormMutation.mutate({ content: value });
   };
+  
+  const handleAddImages = (
+    e: ChangeEvent<HTMLInputElement>,
+    onChange: (...event: any[]) => void
+  ) => {
+    const images = e.target.files ? Array
+    .from(e.target.files)
+    .slice(THREAD_IMAGES_LIMIT_DEFAULT[0], THREAD_IMAGES_LIMIT_DEFAULT[1]) as Array<File> : null;
+    
+    onChange(images);
+    e.preventDefault()
+    
+    return handleControlImage({ type: 'add', images });
+  }
+  
+  const contentLength = (threadFormValues && threadFormValues.content)
+    ? serializeNodes(threadFormValues.content).length : 0
   
   return (
     <div className="flex flex-col gap-y-1 w-full max-w-full overflow-hidden">
@@ -65,21 +78,16 @@ export const FormThreadContent = ({
               <Controller
                 name="images"
                 control={control}
-                render={({ field: { name, ref, onChange } }) => (
+                render={({ field }) => (
                   <input
                     type="file"
-                    name={name}
+                    name={field.name}
                     title="Загрузить изображения"
-                    ref={ref}
+                    ref={field.ref}
                     accept="image/*"
                     multiple
                     className="absolute cursor-pointer right-0 top-0 left-0 bottom-0 opacity-0 w-full"
-                    onChange={(e) => {
-                      const images = e.target.files
-                        ? Array.from(e.target.files).slice(0, 2) as File[] : [];
-                      onChange(images);
-                      return handleControlImage({ e, type: 'add', images });
-                    }}
+                    onChange={e => handleAddImages(e, field.onChange)}
                   />
                 )}
               />
@@ -98,15 +106,12 @@ export const FormThreadContent = ({
             renderPlaceholder={props => <FormThreadContentPlaceholder {...props} children={props.children} />}
             onKeyDown={event => handleEventKeyDown({ event, editor })}
             placeholder="Напишите что-нибудь"
-            className="form-editor"
+            className="form-editor !max-w-6xl"
             disableDefaultStyles={true}
           />
         </Slate>
         <Typography textSize="small" textColor="gray" className="self-end">
-          {(threadFormValues.values && threadFormValues.values.content)
-            ? serializeNodes(threadFormValues.values.content).length
-            : 0}/{THREAD_CONTENT_LIMIT
-        }
+          {contentLength}/{threadFormValues.images ? getContentLimit(threadFormValues.images) : THREAD_CONTENT_LIMIT_DEFAULT[2]}
         </Typography>
       </div>
       {errors.content && (

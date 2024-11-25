@@ -12,7 +12,7 @@ export const FriendRequest = () => {
   
   if (!currentUser) return;
   
-  const preferences = currentUser.properties.preferences;
+  const preferences = currentUser.preferences;
   const preferFriendRequest = getPreferenceValue(preferences, "friendRequest")
   
   const handleFriendRequestPrefer = (

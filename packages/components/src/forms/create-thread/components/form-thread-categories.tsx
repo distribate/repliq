@@ -17,20 +17,23 @@ export const FormThreadCategories = ({
   const { data: threadFormState } = threadFormQuery();
   const { updateThreadFormMutation } = useCreateThread();
   
-  if (!threadFormState.values) return;
+  if (!threadFormState) return;
   
   const handleValueChange = (
     value: string, onChange: (v: string) => void,
   ) => {
     onChange(value);
-    
-    return updateThreadFormMutation.mutate({
-      values: { category_id: Number(value) },
-    });
+    return updateThreadFormMutation.mutate({ category_id: Number(value) });
   };
   
-  const isActive = threadFormState.values.category_id;
-  const selectedCategoryId = threadFormState.values.category_id;
+  const handleOpen = (o: boolean) => {
+    if (o && !enabled) {
+      setEnabled(true)
+    }
+  }
+  
+  const isActive = threadFormState.category_id;
+  const selectedCategoryId = threadFormState.category_id;
   const selectedCategoryTitle = availableCategories?.find(
     item => item.id === selectedCategoryId,
   )?.title || null
@@ -49,11 +52,13 @@ export const FormThreadCategories = ({
         render={({ field: { onChange } }) => {
           return (
             <Select
-              onOpenChange={open => (!enabled && open) ? setEnabled(true) : undefined}
-              onValueChange={value => handleValueChange(value, onChange)}
+              onOpenChange={handleOpen}
+              onValueChange={v => handleValueChange(v, onChange)}
             >
-              <SelectTrigger className={`${isActive ? 'bg-shark-50' : 'bg-shark-800'} flex justify-center `}>
-                {!threadFormState.values?.category_id ? (
+              <SelectTrigger
+                className={`${isActive ? 'bg-shark-50' : 'bg-shark-800'} flex justify-center `}
+              >
+                {!threadFormState.category_id ? (
                   <Typography textSize="medium" textColor={isActive ? 'shark_black' : 'shark_white'}>
                     Категория не выбрана
                   </Typography>

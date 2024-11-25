@@ -1,13 +1,11 @@
-import { CreateThreadImageControl, useCreateThreadImages } from '../hooks/use-create-thread-images.ts';
 import { threadFormQuery } from '../queries/thread-form-query.ts';
 import { Typography } from '@repo/ui/src/components/typography.tsx';
-import dynamic from 'next/dynamic';
 import { FormChildsProps } from '../types/create-thread-form-types.ts';
-
-const FormPreviewImageModal = dynamic(() =>
-  import('../../../modals/custom/form-preview-image-modal.tsx')
-  .then(m => m.FormPreviewImageModal),
-);
+import { Dialog, DialogContent, DialogTrigger } from '@repo/ui/src/components/dialog.tsx';
+import { DeleteButton } from '@repo/ui/src/components/detele-button.tsx';
+import { ImageWrapper } from '#wrappers/image-wrapper.tsx';
+import React, { ChangeEvent } from 'react';
+import { useCreateThread } from '#forms/create-thread/hooks/use-create-thread.tsx';
 
 type FormThreadPreviewImagesProps = FormChildsProps & {
   resetField: Function,
@@ -18,23 +16,18 @@ type FormThreadPreviewImagesProps = FormChildsProps & {
 export const FormThreadPreviewImages = ({
   errors, resetField, images, setValue,
 }: FormThreadPreviewImagesProps) => {
-  const { handleControlImage } = useCreateThreadImages();
+  const { handleControlImage } = useCreateThread();
   const { data: threadFormState } = threadFormQuery();
   
-  if (!threadFormState.values) return null;
+  if (!threadFormState || !threadFormState.images) return null;
   
-  const previewFormImages = threadFormState.values.images;
-
-  if (!previewFormImages
-    || previewFormImages && previewFormImages.length === 0
-  ) return;
+  const previewFormImages = threadFormState.images;
   
   const handleDeleteImage = (
-    e: Pick<CreateThreadImageControl, 'e'>['e'], index: number,
+    e: React.MouseEvent<HTMLButtonElement, MouseEvent> | ChangeEvent<HTMLInputElement>, index: number,
   ) => {
-    return handleControlImage({
-      index, e, type: 'delete', resetField, images, setValue,
-    });
+    e.preventDefault();
+    return handleControlImage({ index, type: 'delete', resetField, images, setValue });
   };
   
   return (
@@ -45,11 +38,32 @@ export const FormThreadPreviewImages = ({
         </Typography>
         <div className="flex flex-wrap items-start justify-start gap-4">
           {previewFormImages.map((image, i) => (
-            <FormPreviewImageModal
-              key={i}
-              image={image}
-              handleDeleteImage={(e) => handleDeleteImage(e, i)}
-            />
+            <Dialog>
+              <DialogTrigger>
+                <div className="relative w-fit group overflow-hidden">
+                  <DeleteButton
+                    onClick={e => handleDeleteImage(e, i)}
+                    variant="invisible"
+                  />
+                  <ImageWrapper
+                    propSrc={image}
+                    propAlt={''}
+                    width={1200}
+                    height={1200}
+                    className="max-w-[140px] h-fit rounded-md"
+                  />
+                </div>
+              </DialogTrigger>
+              <DialogContent className="p-0">
+                <img
+                  src={image}
+                  alt={''}
+                  width={1920}
+                  height={1080}
+                  className="w-full h-full"
+                />
+              </DialogContent>
+            </Dialog>
           ))}
         </div>
       </div>

@@ -36,10 +36,10 @@ export default async function MainLayout({
   if (layout) defaultLayout = JSON.parse(layout.value);
   
   return (
-    <ResizableLayout defaultLayout={defaultLayout}>
-      <HydrationBoundary state={dehydrate(qc)}>
+    <HydrationBoundary state={dehydrate(qc)}>
+      <ResizableLayout defaultLayout={defaultLayout}>
         {children}
-      </HydrationBoundary>
-    </ResizableLayout>
+      </ResizableLayout>
+    </HydrationBoundary>
   );
 }

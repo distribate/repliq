@@ -1,6 +1,4 @@
 import { Avatar } from '#user/components/avatar/components/avatar.tsx';
-import { useQueryClient } from '@tanstack/react-query';
-import { DONATE_QUERY_KEY, DonateQuery } from '#user/components/donate/queries/donate-query.ts';
 import { CoverArea } from './cover-area.tsx';
 import { UserCoverMainInfo } from './cover-main-info.tsx';
 import { UserCoverPanel } from './cover-panel.tsx';
@@ -8,26 +6,26 @@ import { RequestedUser } from '@repo/lib/queries/get-requested-user.ts';
 import { getPreferenceValue } from '@repo/lib/helpers/convert-user-preferences-to-map.ts';
 import { coverQuery } from '#profile/components/cover/queries/cover-query.ts';
 import { imageCoverQuery } from '#profile/components/cover/queries/image-cover-query.ts';
+import { CurrentUser } from '@repo/lib/queries/current-user-query.ts';
 
 type UserCoverProps = {
-  requestedUser: RequestedUser
+  requestedUser: RequestedUser | CurrentUser
 }
 
 export const UserCover = ({
   requestedUser
 }: UserCoverProps) => {
-  const qc = useQueryClient();
   const { data: coverQueryState } = coverQuery();
   const { data: url } = imageCoverQuery(requestedUser.nickname);
-  const userDonate = qc.getQueryData<DonateQuery>(DONATE_QUERY_KEY(requestedUser.nickname));
   
+  const userDonate = requestedUser.donate;
   const imageHeight = coverQueryState.inView ? 168 : 76;
   const nickname = requestedUser.nickname;
   const preferences = requestedUser.preferences;
   const preferOutline = getPreferenceValue(preferences, 'coverOutline');
   const backgroundImage = url ? `url(${url})` : '';
   const backgroundColor = url ? 'transparent' : 'gray';
-  const coverOutline = userDonate && preferOutline ? userDonate.existingDonate : 'default';
+  const coverOutline = (userDonate && preferOutline) ? userDonate : 'default';
   
   return (
     <CoverArea

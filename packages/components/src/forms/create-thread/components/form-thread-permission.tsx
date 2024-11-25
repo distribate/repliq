@@ -12,9 +12,9 @@ export const FormThreadPermissions = ({
   const { data: threadFormState } = threadFormQuery();
   const { updateThreadFormMutation } = useCreateThread();
   
-  if (!threadFormState.values) return;
+  if (!threadFormState) return;
   
-  const isActive = threadFormState.values.permission;
+  const isActive = threadFormState.permission;
   
   return (
     <FormField errorMessage={errors?.permission?.message}>
@@ -33,14 +33,10 @@ export const FormThreadPermissions = ({
           render={({ field: { onChange } }) => {
             return (
               <Toggle
-                className={isActive ? "bg-shark-50" : "bg-shark-800"}
                 defaultPressed={isActive || false}
                 onPressedChange={(checked: boolean) => {
                   onChange(checked);
-                  
-                  return updateThreadFormMutation.mutate({
-                    values: { permission: checked, },
-                  })
+                  return updateThreadFormMutation.mutate({ permission: checked })
                 }}
               >
                 <Typography textColor={isActive ? 'shark_black' : 'shark_white'} textSize="medium">

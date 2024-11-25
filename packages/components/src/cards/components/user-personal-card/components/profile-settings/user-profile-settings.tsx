@@ -68,7 +68,6 @@ export const UserProfileSettings = () => {
       <div className="flex flex-col w-full gap-y-4">
         <DateBirthdayModal />
         <RealNameChangeModal />
-        {/* with donate access*/}
         {isAccess && (
           <>
             <Separator className="relative bg-authentic-background brightness-150 mb-2">

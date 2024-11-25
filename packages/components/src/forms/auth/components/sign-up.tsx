@@ -79,11 +79,9 @@ export const SignUpForm = () => {
   }: NonNullable<AuthQuery['values']>) => {
     if (!email || !acceptRules) return;
     
-    setAuthValuesMutation.mutate({
+    return setAuthValuesMutation.mutate({
       type: 'sign-up',
-      values: {
-        nickname, password, acceptRules, email, findout,
-      },
+      values: { nickname, password, acceptRules, email, findout, },
     });
   };
   

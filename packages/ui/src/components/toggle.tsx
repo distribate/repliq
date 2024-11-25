@@ -8,12 +8,12 @@ import { ComponentPropsWithoutRef, ElementRef, forwardRef } from 'react';
 const toggleVariants = cva(
   `inline-flex items-center justify-center rounded-lg text-sm font-medium
    transition-colors focus-visible:outline-none disabled:pointer-events-none disabled:opacity-50
-   data-[state=on]:bg-shark-900 data-[state=on]:text-shark-50`,
+   data-[state=off]:bg-shark-800 data-[state=off]:text-shark-50 data-[state=on]:bg-shark-50 data-[state=on]:text-shark-800`,
   {
     variants: {
       variant: {
         default: "bg-transparent",
-        outline: "border border-shark-700/20 bg-transparent hover:bg-accent hover:text-accent-foreground",
+        outline: "border border-shark-700/20 bg-transparent",
       },
       size: {
         default: "h-10 px-3",
@@ -22,7 +22,6 @@ const toggleVariants = cva(
       },
     },
     defaultVariants: {
-      variant: "default",
       size: "default",
     },
   }

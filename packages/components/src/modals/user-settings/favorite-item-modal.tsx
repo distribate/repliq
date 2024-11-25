@@ -14,13 +14,12 @@ import {
 
 export const FavoriteItemModal = () => {
   const currentUser = getUser();
-  const favoriteItemId = currentUser?.favorite_item;
-  
-  const { data: favoriteItem } = favoriteItemQuery({
-    favorite_item: favoriteItemId,
-  });
-  
   if (!currentUser) return null;
+  
+  const favoriteItemId = currentUser.favorite_item;
+  const { data: favoriteItem } = favoriteItemQuery({
+    favorite_item: favoriteItemId
+  });
   
   return (
     <Dialog>

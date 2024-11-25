@@ -1,48 +1,46 @@
-import { Input } from '@repo/ui/src/components/input';
-import { PageConventionProps } from '@repo/types/global';
+import { SearchNavigationBadge } from '@repo/components/src/search/components/search-navigation-badge.tsx';
+import { Skeleton } from '@repo/ui/src/components/skeleton.tsx';
+import { SearchPageResults } from '@repo/components/src/search/components/search-page-results.tsx';
+import dynamic from 'next/dynamic';
+import {
+  SearchType
+} from '@repo/components/src/sidebar/desktop/components/sidebar-content/search/queries/search-query.ts';
 
-type SearchBrowseTypeKeys = 'users' | 'threads';
+const SearchPageInput = dynamic(
+  () =>
+    import('@repo/components/src/search/components/search-page-input')
+    .then(m => m.SearchPageInput),
+  {
+    loading: () => <Skeleton className="h-full w-full" />,
+  },
+);
 
-const SEARCH_BROWSE_TYPE: Record<SearchBrowseTypeKeys, SearchBrowseTypeKeys> = {
-  users: 'users',
-  threads: 'threads',
-};
+type SearchPageProps = {
+  searchParams: {
+    type: SearchType
+  }
+}
 
 export default async function SearchPage({
   searchParams,
-}: PageConventionProps) {
+}: SearchPageProps) {
   const { type } = searchParams;
   
-  const query: boolean = typeof type === "string"
-    && (type in SEARCH_BROWSE_TYPE);
+  const searchType = type ?? "all"
   
   return (
-    <div className="flex flex-col gap-y-2 w-full">
-      {!query ? (
-        <>
-          <div className="flex items-center py-4 px-2 h-[80px] bg-shark-950 w-full rounded-lg">
-            <Input
-              placeholder="Поиск..."
-              className="w-full h-full !rounded-md text-xl"
-              backgroundType="transparent"
-            />
-          </div>
-          
-        </>
-      ) : (
-        <>
-          {type === SEARCH_BROWSE_TYPE['users'] && (
-            <>
-              Users
-            </>
-          )}
-          {type === SEARCH_BROWSE_TYPE['threads'] && (
-            <>
-              Threads
-            </>
-          )}
-        </>
-      )}
+    <div className="flex flex-col gap-y-4 w-full">
+      <div className="flex items-center py-4 px-2 h-[80px] bg-shark-950 w-full rounded-lg">
+        <SearchPageInput />
+      </div>
+      <div className="flex items-center gap-2 w-fit">
+        <SearchNavigationBadge title="Все" paramValue="all" />
+        <SearchNavigationBadge title="Игроки" paramValue="users" />
+        <SearchNavigationBadge title="Треды" paramValue="threads" />
+      </div>
+      <div className="mt-4 w-full h-full">
+        <SearchPageResults type={searchType}/>
+      </div>
     </div>
   );
 }

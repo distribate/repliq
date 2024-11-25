@@ -1,8 +1,8 @@
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
 import { getPosts, GetPosts, OverridedPosts, PostsByUser } from './get-posts.ts';
+import { createQueryKey } from '@repo/lib/helpers/query-key-builder.ts';
 
-export const POSTS_QUERY_KEY = (nickname?: string) =>
-  [ 'user', 'posts', nickname ];
+export const POSTS_QUERY_KEY = (nickname: string) => createQueryKey('user', [ 'posts' ], nickname);
 
 export type PostsQuery = GetPosts
 
@@ -13,25 +13,22 @@ export type PostsQueryPromise = {
 
 export const postsQuery = ({
   limit, nickname, range, ascending, searchQuery, filteringType,
-}: PostsQuery) => {
-  return useQuery<PostsQueryPromise, Error>({
-    queryKey: POSTS_QUERY_KEY(nickname),
-    queryFn: async() => {
-      const postsData = await getPosts({
-        nickname, limit, ascending, range, searchQuery, filteringType,
-      });
-      
-      const meta: Pick<PostsByUser, 'meta'>['meta'] = {
-        count: postsData?.meta.count ?? 0,
-      };
-      
-      return { data: postsData?.data, meta, };
-    },
-    refetchOnWindowFocus: false,
-    refetchOnMount: false,
-    staleTime: 50000,
-    placeholderData: keepPreviousData,
-    retry: 1,
-    enabled: !!nickname,
-  });
-};
+}: PostsQuery) => useQuery<PostsQueryPromise, Error>({
+  queryKey: POSTS_QUERY_KEY(nickname),
+  queryFn: async() => {
+    const postsData = await getPosts({
+      nickname, limit, ascending, range, searchQuery, filteringType,
+    });
+    
+    const meta: Pick<PostsByUser, 'meta'>['meta'] = {
+      count: postsData?.meta.count ?? 0,
+    };
+    
+    return { data: postsData?.data, meta };
+  },
+  refetchOnWindowFocus: false,
+  refetchOnMount: false,
+  staleTime: 50000,
+  placeholderData: keepPreviousData,
+  retry: 1,
+});

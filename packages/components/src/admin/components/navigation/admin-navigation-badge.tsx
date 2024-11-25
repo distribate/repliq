@@ -1,7 +1,7 @@
 "use client"
 
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
-import { Typography } from '@repo/ui/src/components/typography.tsx';
+import { NavigationBadge } from '#navigation/components/navigation-badge.tsx';
 
 export type AdminSections = "reports" | "tickets" | "configs" | "main" | "stats"
 
@@ -43,16 +43,5 @@ export const AdminNavigationBadge = ({
     return paramValue === searchParams.get(SECTION_QUERY_KEY)
   }
   
-  return (
-    <div
-      onClick={handleSection}
-      data-state={isActive() ? 'active' : 'disabled'}
-      className="flex items-center duration-150 ease-in data-[state=active]:bg-shark-50/80
-       data-[state=disabled]:bg-shark-900/80 backdrop-filter-lg group cursor-pointer justify-center px-6 py-1 rounded-[18px]"
-    >
-      <Typography className="duration-150 group-hover:duration-150 group-data-[state=active]:text-black font-medium text-[18px]">
-        {title}
-      </Typography>
-    </div>
-  )
+  return <NavigationBadge onClick={handleSection} isActive={isActive()} title={title}/>
 }

@@ -46,7 +46,7 @@ export default async function TopicsTopicPage({
   const currentUser = await getCurrentUser();
   if (!currentUser || !threadId) return redirect('/');
   
-  const thread = await getThreadModel({ threadId, withViews: true });
+  const thread = await getThreadModel({ id: threadId, postViews: true });
   
   if (!thread) return <ContentNotFound title="Тред не найден. Возможно он уже удален" />;
   
@@ -96,7 +96,7 @@ export default async function TopicsTopicPage({
             owner={thread.owner}
           />
         </BlockWrapper>
-        <div className="flex flex-col w-full h-full gap-y-4">
+        <div className="flex flex-col w-full h-full mt-2 gap-y-4">
           <ThreadComments
             threadAuthorNickname={thread.owner.nickname}
             thread_id={thread.id}

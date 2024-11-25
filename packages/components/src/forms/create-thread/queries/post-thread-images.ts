@@ -1,29 +1,28 @@
 "use server"
 
 import "server-only"
-import { PostThread } from './post-thread.ts';
 import { createClient } from '@repo/lib/utils/api/server.ts';
 import { decode } from 'base64-arraybuffer';
 import { nanoid } from 'nanoid';
 import { THREADS_IMAGES_BUCKET } from '@repo/shared/constants/buckets.ts';
 
-type PostThreadImages = PostThread & {
-  base64Files: string[]
+export type PostThreadImages = {
+  thread_id: string
+  base64Files: Array<string>
 }
 
-type UploadThreadImage = {
+type UploadThreadImage = Pick<PostThreadImages, "thread_id"> & {
   base64File: string,
-  threadId: string
 }
 
 async function uploadThreadImage({
-  base64File, threadId
+  base64File, thread_id
 }: UploadThreadImage) {
   const api = createClient()
   
   const decodedFile = decode(base64File)
   const randomFileNameId = nanoid(2);
-  const fileName = `${threadId}-${randomFileNameId}`;
+  const fileName = `${thread_id}-${randomFileNameId}`;
   
   const { data, error } = await api
   .storage
@@ -42,14 +41,13 @@ async function uploadThreadImage({
 export async function postThreadImages({
   thread_id, base64Files
 }: PostThreadImages) {
-  if (!thread_id || !base64Files) return;
-  
-  const api = createClient();
   let uploadedFiles: Array<string> | null = [];
+  
+  const api = createClient()
   
   for(let i = 0; i < base64Files.length; i++) {
     const uploaded = await uploadThreadImage({
-      base64File: base64Files[i], threadId: thread_id
+      base64File: base64Files[i], thread_id
     })
     
     if (!uploaded) return;
@@ -61,10 +59,7 @@ export async function postThreadImages({
   
   const { data, error } = await api
   .from('threads_images')
-  .insert({
-    thread_id: thread_id,
-    images: uploadedFiles
-  })
+  .insert({ thread_id, images: uploadedFiles })
   .select()
   
   if (error) {

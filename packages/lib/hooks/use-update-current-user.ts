@@ -51,7 +51,7 @@ export const useUpdateCurrentUser = () => {
           preferences: {
             key: preferences?.key,
             value: parseStringToBoolean(value),
-            oldPreferences: currentUser.properties.preferences,
+            oldPreferences: currentUser.preferences,
           },
         });
       } else {

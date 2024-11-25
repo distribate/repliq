@@ -5,7 +5,7 @@ const coverAreaVariants = cva(
 	"flex w-full bg-center rounded-lg mt-[4px] overflow-hidden bg-cover bg-no-repeat items-center justify-between px-12 py-6", {
 		variants: {
 			variant: {
-				full: "relative z-[3] min-h-[414px] max-h-[414px]",
+				full: "relative z-[3] min-h-[414px] h-[414px] max-h-[414px]",
 				compact: "sticky top-0 z-[5] min-h-[112px] max-h-[112px]"
 			},
 			backgroundColor: {

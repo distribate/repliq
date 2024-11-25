@@ -25,6 +25,7 @@ export const UserNotExistCounter = ({
 			return;
 		}
 		
+		// @ts-ignore
 		timerIdRef.current = setInterval(() => {
 			setSeconds(prevSeconds => {
 				if (prevSeconds <= 1) {

@@ -11,7 +11,7 @@ export const SIDEBAR_DEFAULT_SIZE = 12.1;
 
 type SidebarMutation = {
 	type: "width" | "format",
-	values: SidebarQuery
+	values: Partial<SidebarQuery>
 }
 
 export const useSidebarControl = () => {
@@ -32,22 +32,22 @@ export const useSidebarControl = () => {
 			
 			if (type === 'format' && values.format) {
 				qc.setQueryData(
-					SIDEBAR_LAYOUT_QUERY_KEY, (prev: SidebarQuery) => {
-						return { ...prev, format: values.format, width: SIDEBAR_DEFAULT_SIZE }
-					}
+					SIDEBAR_LAYOUT_QUERY_KEY, (prev: SidebarQuery) => ({
+						...prev, format: values.format, width: SIDEBAR_DEFAULT_SIZE
+					})
 				)
 				
 				setValue({ format: values.format })
 			}
 			
 			if (type === 'width') {
-				qc.setQueryData(SIDEBAR_LAYOUT_QUERY_KEY, (prev: SidebarQuery) => {
-					return { ...prev, ...values }
-				})
+				return qc.setQueryData(SIDEBAR_LAYOUT_QUERY_KEY, (prev: SidebarQuery) => ({
+					...prev, ...values
+				}))
 			}
 		},
-		onSuccess: async() => await qc.invalidateQueries({ queryKey: SIDEBAR_LAYOUT_QUERY_KEY }),
-		onError: (e) => { throw new Error(e.message) }
+		onSuccess: () => qc.invalidateQueries({ queryKey: SIDEBAR_LAYOUT_QUERY_KEY }),
+		onError: e => { throw new Error(e.message) }
 	})
 	
 	return { updateSidebarPropertiesMutation, isExpanded, isDynamic, isFull, isCompact }

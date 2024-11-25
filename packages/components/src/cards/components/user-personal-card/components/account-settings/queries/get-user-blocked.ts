@@ -21,11 +21,7 @@ export async function getUserBlocked(
     .select("created_at, user_2, users!public_users_blocked_user_2_fkey(*)")
     .eq("user_1", nickname)
     .returns<
-      {
-        created_at: string;
-        user_2: string;
-        users: UserEntity[];
-      }[]
+      { created_at: string; user_2: string; users: UserEntity[]; }[]
     >();
 
   if (error) return null;

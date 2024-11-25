@@ -1,5 +1,6 @@
-import { QueryKey, useQuery } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 import { getSkinDetails } from '@repo/lib/helpers/get-skin-details.ts';
+import { createQueryKey } from '@repo/lib/helpers/query-key-builder.ts';
 
 export type SkinAnimation = 'idle' | 'run' | 'flying'
 
@@ -10,9 +11,8 @@ export type SkinStateQuery = {
   rotate: boolean
 }>
 
-export const SKIN_ANIMATION_QUERY_KEY: QueryKey = [ 'ui', 'skin-state' ];
-export const SKIN_STATE_QUERY_KEY = (nickname?: string): QueryKey =>
-  [ 'ui', 'skin-state', nickname ];
+export const SKIN_ANIMATION_QUERY_KEY = createQueryKey("ui", ["skin-state", "animation"])
+export const SKIN_STATE_QUERY_KEY = (nickname: string) => createQueryKey("ui", ["skin-state"], nickname)
 
 const initial: Omit<SkinStateQuery, 'skinUrl'> = {
   animation: 'idle',

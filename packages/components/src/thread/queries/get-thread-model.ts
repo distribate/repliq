@@ -17,9 +17,8 @@ type ThreadModelDetails = {
 
 export type ThreadModel = ThreadEntity & ThreadModelDetails
 
-type GetThreadModel = {
-  withViews: boolean
-  threadId: Pick<ThreadEntity, 'id'>['id']
+type GetThreadModel = Pick<ThreadEntity, 'id'> & {
+  postViews?: boolean
 }
 
 async function postThreadView(threadId: string) {
@@ -66,7 +65,7 @@ async function getThread(
 }
 
 export async function getThreadModel({
-  threadId, withViews,
+  id: threadId, postViews = false
 }: GetThreadModel): Promise<ThreadModel | null> {
   const [ thread, threadCreator, rating ] = await Promise.all([
     getThread(threadId),
@@ -76,9 +75,7 @@ export async function getThreadModel({
   
   if (!thread || !threadCreator) return null;
   
-  if (withViews) {
-    await postThreadView(threadId);
-  }
+  if (postViews) await postThreadView(threadId);
   
   return {
     ...thread,

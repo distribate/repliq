@@ -1,31 +1,30 @@
-import { Button } from '@repo/ui/src/components/button.tsx';
 import { Pencil } from 'lucide-react';
 import { Typography } from '@repo/ui/src/components/typography.tsx';
-import { useRouter } from 'next/navigation';
 import { useSidebarControl } from '../../sidebar-layout/hooks/use-sidebar-control.ts';
+import Link from 'next/link';
+import { CREATE_THREAD_URL } from '@repo/shared/constants/routes.ts';
 
 const CreateThreadButton = ({ type }: { type: "compact" | "full"}) => {
-  const { replace } = useRouter();
-  
   return (
-    <Button
-      className="group gap-2 w-full justify-start bg-shark-800"
-      onClick={() => { replace('/create-thread'); }}
+    <Link
+      href={CREATE_THREAD_URL}
+      className="inline-flex items-center px-4 cursor-pointer py-2.5 rounded-md bg-shark-700 hover:bg-shark-600 group gap-2 w-full justify-start"
     >
-      <Pencil size={18} className="group-hover:text-pink-500 text-shark-300" />
+      <Pencil size={20} className="text-shark-300" />
       {type === 'full' && (
-        <Typography textSize="small">Создать тред</Typography>
+        <Typography className="text-[15px] font-medium">Создать тред</Typography>
       )}
-    </Button>
+    </Link>
   );
 };
 
 export const CreateThread = () => {
   const { isCompact, isExpanded } = useSidebarControl();
+  const isCollapsed = isCompact || !isExpanded;
   
   return (
     <div className="w-full">
-      {isCompact || !isExpanded ? (
+      {isCollapsed ? (
         <div className="flex w-[50px] h-[50px]">
           <CreateThreadButton type="compact" />
         </div>

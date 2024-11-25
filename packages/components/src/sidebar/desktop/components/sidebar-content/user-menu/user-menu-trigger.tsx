@@ -1,4 +1,3 @@
-import { SidebarItem } from "../../sidebar-item/sidebar-item.tsx";
 import { UserMenu } from "./user-menu.tsx";
 import { useSidebarControl } from '../../sidebar-layout/hooks/use-sidebar-control.ts';
 import { Avatar } from '#user/components/avatar/components/avatar.tsx';
@@ -9,14 +8,17 @@ import { getUser } from '@repo/lib/helpers/get-user.ts';
 
 export const UserMenuTrigger = () => {
 	const currentUser = getUser();
-	const { isExpanded, isCompact } = useSidebarControl();
-	
 	if (!currentUser) return null;
+	
+	const { isExpanded, isCompact } = useSidebarControl();
 	
 	return (
 		<DropdownWrapper
 			trigger={
-				<SidebarItem variant={!isCompact ? 'expanded' : isExpanded ? 'expanded' : 'compacted'}>
+				<div
+					className={`flex gap-x-3 items-center hover:bg-shark-800 rounded-md w-full
+					${!isCompact ? 'justify-start' : isExpanded ? 'justify-start' : 'justify-center'}`}
+				>
 					<Avatar
 						variant="default"
 						border="withBorder"
@@ -35,7 +37,7 @@ export const UserMenuTrigger = () => {
 							<UserDonate nickname={currentUser.nickname}/>
 						</div>
 					)}
-				</SidebarItem>
+				</div>
 			}
 			content={<UserMenu/>}
 		/>

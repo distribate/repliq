@@ -3,7 +3,7 @@ import { Input } from '@repo/ui/src/components/input.tsx';
 import { Button } from '@repo/ui/src/components/button.tsx';
 import { Typography } from '@repo/ui/src/components/typography.tsx';
 import { DialogClose } from '@repo/ui/src/components/dialog.tsx';
-import { useEffect, useState } from 'react';
+import { useEffect, ChangeEvent, useState } from 'react';
 import Image from 'next/image';
 import { Image as ImageIcon } from 'lucide-react';
 
@@ -22,12 +22,10 @@ export const MinecraftItemCreateForm = () => {
   });
   
   const handleInputChange = (
-    field: keyof typeof itemValues,
-  ) => (
-    e: React.ChangeEvent<HTMLInputElement>,
+    e: ChangeEvent<HTMLInputElement>, field: keyof typeof itemValues,
   ) => {
     setItemValues(prev => ({ ...prev, [field]: e.target.value }));
-  };
+  }
   
   useEffect(() => {
     if (itemValues.title.length >= 3 && !itemValues.image) setTipShow(true);
@@ -49,7 +47,7 @@ export const MinecraftItemCreateForm = () => {
     setItemValues({ title: '', image: null, description: '' });
   };
   
-  const handleAuthImage = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleAuthImage = (e: ChangeEvent<HTMLInputElement>) => {
     if (!e.target.files) return;
     
     const image = e.target.files[0];
@@ -72,7 +70,7 @@ export const MinecraftItemCreateForm = () => {
             placeholder="Название"
             roundedType="default"
             value={itemValues.title}
-            onChange={handleInputChange('title')}
+            onChange={e => handleInputChange(e, 'title')}
           />
           {tipShow && (
             <Typography textColor="gray" textSize="medium">

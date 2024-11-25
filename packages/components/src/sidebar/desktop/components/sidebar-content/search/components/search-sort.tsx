@@ -18,11 +18,7 @@ export const SearchSort = () => {
   return (
     <div className="flex">
       <DropdownWrapper
-        properties={{
-          sideAlign: 'right',
-          contentAlign: 'start',
-          contentClassname: 'min-w-[180px]',
-        }}
+        properties={{ sideAlign: 'right', contentAlign: 'start', contentClassname: 'min-w-[180px]', }}
         trigger={<List size={20} className="text-shark-300" />}
         content={
           <div className="flex flex-col gap-y-2 w-full">
@@ -37,7 +33,7 @@ export const SearchSort = () => {
                     className="items-center gap-1"
                     onClick={(e) => {
                       e.preventDefault();
-                      setSearchQueryMutation.mutate({ type: sort.value, });
+                      setSearchQueryMutation.mutate({ type: sort.value });
                     }}
                   >
                     <sort.icon size={16} className="text-shark-300" />

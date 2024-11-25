@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { ChangeEvent, useState } from 'react';
 import { Input } from '@repo/ui/src/components/input.tsx';
 import { ThreadControlFields } from '../types/thread-control-types.ts';
 import { Info } from 'lucide-react';
@@ -11,11 +11,12 @@ export const ThreadControlTitle = ({
   const [ titleValue, setTitleValue ] = useState<string>(currentTitle);
   const { setThreadNewValuesMutation } = useThreadControl()
   
-  const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const onChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { value } = e.target;
-    
     setTitleValue(value)
-    setThreadNewValuesMutation.mutate({
+    
+    return setThreadNewValuesMutation.mutate({
+      state: { isValid: value.length > 2 },
       values: { title: value }
     })
   }

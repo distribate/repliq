@@ -5,7 +5,7 @@ export const usePostFormControl = () => {
   const qc = useQueryClient();
   
   const postFormFieldsMutation = useMutation({
-    mutationFn: async(values: CreatePostFieldType) => {
+    mutationFn: async(values: Partial<CreatePostFieldType>) => {
       return qc.setQueryData(
         POST_FORM_FIELD_QUERY_KEY,
         (prev: CreatePostFieldType) => ({ ...prev, ...values }),

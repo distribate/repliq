@@ -6,9 +6,9 @@ import { createClient } from '@repo/lib/utils/api/server.ts';
 import { PostEntity, RequestDetails } from '@repo/types/entities/entities-type.ts';
 import { PostsFilteringQuery } from '#profile/components/posts/components/posts/queries/posts-filtering-query.ts';
 
-export type GetPosts = Partial<{
+export type GetPosts = {
   nickname: string
-}> & RequestDetails & Partial<PostsFilteringQuery>
+} & RequestDetails & Partial<PostsFilteringQuery>
 
 export type OverridedPosts = PostEntity & {
   comments_count: number,

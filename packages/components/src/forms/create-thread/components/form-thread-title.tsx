@@ -29,12 +29,7 @@ export const FormThreadTitle = ({
             status={errors ? 'error' : 'default'}
             onChange={e => {
               onChange(e);
-              
-              return updateThreadFormMutation.mutate({
-                values: {
-                  title: e.target.value,
-                },
-              });
+              return updateThreadFormMutation.mutate({ title: e.target.value, });
             }}
           />
         )}

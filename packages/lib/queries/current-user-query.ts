@@ -10,15 +10,13 @@ export type CurrentUser = Omit<UserEntity, 'preferences'
   | 'visibility' | 'acceptrules'
 > & {
   donate: DonateType['primary_group'] | null,
-  properties: {
-    preferences: UserPreferences,
-    visibility: Pick<UserEntity, 'visibility'>['visibility'],
-    cover_image: Pick<UserEntity, 'cover_image'>['cover_image']
-  }
+  preferences: UserPreferences,
+  visibility: Pick<UserEntity, 'visibility'>['visibility'],
+  cover_image: Pick<UserEntity, 'cover_image'>['cover_image']
 }
 
 export const currentUserQuery = () => useQuery({
   queryKey: CURRENT_USER_QUERY_KEY,
   queryFn: () => getUserInformation(),
-  placeholderData: keepPreviousData
+  placeholderData: keepPreviousData,
 });

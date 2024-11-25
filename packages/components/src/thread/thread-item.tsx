@@ -3,20 +3,13 @@ import { ThreadByCategoryItem } from './components/thread-card-category/thread-b
 import { ThreadLayout } from './components/thread-layout/thread-layout.tsx';
 
 export const ThreadItem = async({
-  id,
+  id: threadId,
 }: Pick<ThreadModel, 'id'>) => {
-  const thread = await getThreadModel({
-    withViews: false, threadId: id,
-  });
-  
+  const thread = await getThreadModel({ id: threadId });
   if (!thread) return null;
-
-  const { owner, title } = thread;
-  
-  if (!owner) return;
   
   return (
-    <ThreadLayout id={id} title={title} owner={owner}>
+    <ThreadLayout id={threadId} title={thread.title} owner={thread.owner}>
       <ThreadByCategoryItem {...thread} />
     </ThreadLayout>
   );

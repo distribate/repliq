@@ -13,11 +13,9 @@ export const ThreadControlDescription = ({
   
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = e.target;
-    
     setDescriptionValue(value)
-    
-    setThreadNewValuesMutation.mutate({
-      values: { description: value }
+    return setThreadNewValuesMutation.mutate({
+      values: { description: value.length < 1 ? null : value }
     })
   }
   

@@ -13,25 +13,28 @@ import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import dynamic from 'next/dynamic';
 import { getUser } from '@repo/lib/helpers/get-user.ts';
+import { ThreadCommentItemContent } from '#thread/components/thread-comment/components/thread-comment-item-content.tsx';
 
 const ThreadCommentMoreActions = dynamic(() =>
-  import("./thread-comment-more-actions.tsx")
-  .then(m => m.ThreadCommentMoreActions)
-)
+  import('./thread-comment-more-actions.tsx')
+  .then(m => m.ThreadCommentMoreActions),
+);
 
 export const ThreadCommentItem = ({
-  nickname: threadCommentNickname, isAuthor, created_at, content, id, replied, thread_id, edited
+  nickname: threadCommentNickname, isAuthor, created_at, content, id, replied, thread_id, edited,
 }: ThreadCommentProps) => {
   const currentUser = getUser();
-  const [active, setActive] = useState<boolean>(false)
-
+  if (!currentUser) return null;
+  
+  const [ active, setActive ] = useState<boolean>(false);
+  
   const data = useMutationState({
     filters: { mutationKey: SELECT_COMMENT_MUTATION_KEY(id) },
     select: m => m.state.status,
-  })
+  });
   
-  const mutationStatus = data[data.length - 1]
-
+  const mutationStatus = data[data.length - 1];
+  
   useEffect(() => {
     if (mutationStatus === 'success') {
       setActive(true);
@@ -40,12 +43,10 @@ export const ThreadCommentItem = ({
       
       return () => clearTimeout(timeoutId);
     }
-  }, [mutationStatus]);
-
-  if (!currentUser) return null;
+  }, [ mutationStatus ]);
   
   const isCommentOwner = currentUser.nickname === threadCommentNickname;
-  const createdAt = dayjs(created_at).fromNow()
+  const createdAt = dayjs(created_at).fromNow();
   
   return (
     <div
@@ -53,13 +54,7 @@ export const ThreadCommentItem = ({
       className={`${active && 'animate-flash-fade'}
        flex flex-col h-fit gap-y-4 px-4 py-2 rounded-md bg-shark-950 relative min-w-[450px] w-fit max-w-[80%]`}
     >
-      {isCommentOwner && (
-        <ThreadCommentMoreActions
-          id={id}
-          thread_id={thread_id}
-          content={content}
-        />
-      )}
+      {isCommentOwner && <ThreadCommentMoreActions id={id} thread_id={thread_id} />}
       <div className="flex items-center gap-2">
         <Link href={USER_URL + threadCommentNickname}>
           <Avatar
@@ -85,12 +80,13 @@ export const ThreadCommentItem = ({
           </div>
         </div>
       </div>
-      <div className="flex flex-col gap-y-2 h-fit w-full">
-        {replied && <ThreadRepliedCommentItem replied={replied}/>}
-        <div className="whitespace-normal break-words">
-          <Typography className="text-balance">{content}</Typography>
-        </div>
-      </div>
+      <ThreadCommentItemContent
+        content={content}
+        replied={replied}
+        isOwner={isCommentOwner}
+        id={id}
+        thread_id={thread_id}
+      />
       <div className="flex items-center justify-between w-full">
         <ThreadCommentActions
           id={thread_id}
@@ -99,11 +95,7 @@ export const ThreadCommentItem = ({
           commentNickname={threadCommentNickname}
           commentContent={content}
         />
-        {edited && (
-          <Typography textColor="gray" textSize="small">
-            [изменено]
-          </Typography>
-        )}
+        {edited && <Typography textColor="gray" textSize="small">[изменено]</Typography>}
       </div>
     </div>
   );

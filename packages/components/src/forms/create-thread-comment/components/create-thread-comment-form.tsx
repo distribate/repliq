@@ -1,6 +1,6 @@
 'use client';
 
-import React, { FormEvent, useEffect, useState } from 'react';
+import { ChangeEvent, FormEvent, useEffect, useState } from 'react';
 import { useCreateThreadComment } from '../hooks/use-create-thread-comment.tsx';
 import { Avatar } from '#user/components/avatar/components/avatar.tsx';
 import { FormField } from '@repo/ui/src/components/form-field.tsx';
@@ -9,52 +9,57 @@ import { SendHorizontal } from 'lucide-react';
 import { createThreadCommentQuery } from '../queries/create-thread-comment-query.ts';
 import { Input } from '@repo/ui/src/components/input.tsx';
 import { CreateThreadCommentFormLayout } from './create-thread-comment-form-layout.tsx';
-import { useParams } from "next/navigation"
+import { useParams } from 'next/navigation';
 import { getUser } from '@repo/lib/helpers/get-user.ts';
+import { COMMENT_LIMIT } from '@repo/shared/constants/limits.ts';
 
-export const THREAD_COMMENT_MAX_LIMIT = 312;
+type CreateThreadCommentParams = { id: string }
+type CreateThreadCommentFormError = 'max-limit' | null
 
 export const CreateThreadCommentForm = () => {
   const currentUser = getUser();
+  const params = useParams<CreateThreadCommentParams>();
+  if (!params.id || !currentUser) return null;
+  
+  const [ error, setError ] = useState<CreateThreadCommentFormError>(null);
   const { data: createThreadCommentState } = createThreadCommentQuery();
   const { updateCreateThreadCommentMutation, createThreadCommentMutation } = useCreateThreadComment();
-  const [ error, setError ] = useState<'max-limit' | null>(null);
-  const params = useParams<{ id: string }>()
   
-  if (!currentUser || !createThreadCommentState.values || !params.id) return null;
+  if (!createThreadCommentState) return null;
   
   const onSubmit = (e: FormEvent) => {
     e.preventDefault();
     
-    const content = createThreadCommentState.values?.content;
-    if (content && content.length > 2) createThreadCommentMutation.mutate();
-  };
-  
-  const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    updateCreateThreadCommentMutation.mutate({ values: { content: e.target.value }, });
-  };
-  
-  useEffect(() => {
-    if (params.id) {
-      updateCreateThreadCommentMutation.mutate({ threadId: params.id })
-    }
-  }, [params]);
-  
-  useEffect(() => {
-    const content = createThreadCommentState.values?.content || '';
+    const content = createThreadCommentState.content;
     
-    if (content.length >= THREAD_COMMENT_MAX_LIMIT) {
-      setError('max-limit');
-    } else if (error && content.length < THREAD_COMMENT_MAX_LIMIT) {
-      setError(null);
-    } else if (content.length === 0) {
-      updateCreateThreadCommentMutation.mutate({ values: { content: undefined } });
+    if (content && content.length > COMMENT_LIMIT[0]) {
+      return createThreadCommentMutation.mutate();
     }
-  }, [ createThreadCommentState.values?.content ]);
+  };
+  
+  const onChange = (e: ChangeEvent<HTMLInputElement>) => {
+    return updateCreateThreadCommentMutation.mutate({ content: e.target.value });
+  };
+  
+  useEffect(() => {
+    if (params.id) updateCreateThreadCommentMutation.mutate({ threadId: params.id });
+  }, [ params ]);
+  
+  useEffect(() => {
+    const content = createThreadCommentState.content;
+    
+    if (!content) return;
+    
+    if (content.length >= COMMENT_LIMIT[1]) {
+      setError('max-limit');
+    } else if (error && content.length < COMMENT_LIMIT[1]) {
+      setError(null);
+    }
+  }, [ createThreadCommentState.content ]);
   
   const type = createThreadCommentState.type || 'single';
-  const isValid = createThreadCommentState.values.content
-    && createThreadCommentState.values.content.length >= 5;
+  const isValid = createThreadCommentState.content
+    && createThreadCommentState.content.length >= COMMENT_LIMIT[0];
   
   return (
     <CreateThreadCommentFormLayout
@@ -79,8 +84,8 @@ export const CreateThreadCommentForm = () => {
               placeholder="Напишите что-нибудь"
               className="w-full min-h-[36px] max-h-[200px]"
               onChange={onChange}
-              value={createThreadCommentState.values.content || ""}
-              maxLength={THREAD_COMMENT_MAX_LIMIT}
+              value={createThreadCommentState.content || ''}
+              maxLength={COMMENT_LIMIT[1]}
             />
           </FormField>
         </div>

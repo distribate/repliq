@@ -13,7 +13,6 @@ import {
 } from '@repo/ui/src/components/context-menu.tsx';
 import { PencilLine } from 'lucide-react';
 import { Typography } from '@repo/ui/src/components/typography.tsx';
-import { BlockWrapper } from '#wrappers/block-wrapper.tsx';
 import {
   THREAD_CONTROL_QUERY_KEY,
   threadControlQuery,
@@ -46,7 +45,6 @@ export const ThreadContent = ({
   const { data: controlState } = threadControlQuery();
   const { setThreadNewValuesMutation } = useThreadControl();
   const [ editor ] = useState<ReactEditor>(() => withReact(createEditor()));
-  
   const { control } = useForm();
   
   const { field: { onChange } } = useController(
@@ -54,14 +52,21 @@ export const ThreadContent = ({
   );
   
   const handleContentEdit = () => {
-    return setThreadNewValuesMutation.mutate({ state: { isContenteditable: true } })
+    return setThreadNewValuesMutation.mutate({
+      state: { isContenteditable: true }
+    })
   };
   
   const handleOnChange = (value: Descendant[]) => {
     const isAstChange = handleOnChangeEditor(editor, value);
     
     if (isAstChange) {
-      return setThreadNewValuesMutation.mutate({ values: { content: value } });
+      return setThreadNewValuesMutation.mutate({
+        state: {
+          isValid: controlState.values ? controlState.values.content !== content : false
+        },
+        values: { content: value }
+      });
     }
   };
   
@@ -74,9 +79,9 @@ export const ThreadContent = ({
   const isTriggered: boolean = controlState?.state?.isContenteditable ? controlState.state.isContenteditable : false;
   
   return (
-    <div className={`${isReadOnly ? '' : '!bg-shark-800'} px-4  w-full h-full flex !rounded-none`}>
+    <div className={`${isReadOnly ? '' : '!bg-shark-800'} px-4 w-full h-full flex !rounded-none`}>
       <ContextMenu>
-        <ContextMenuTrigger>
+        <ContextMenuTrigger className="w-full">
           <Slate
             editor={editor}
             initialValue={content || initialValue}
@@ -92,15 +97,9 @@ export const ThreadContent = ({
             />
           </Slate>
           {isTriggered && (
-            <div className="flex mt-4 items-center gap-2 w-full justify-end">
-              <ThreadControlSave
-                threadId={threadId}
-                isValid={!controlState.values}
-              />
-              <Button
-                variant="negative"
-                onClick={handleCancelEdit}
-              >
+            <div className="flex my-4 items-center gap-2 w-full justify-end">
+              <ThreadControlSave threadId={threadId} />
+              <Button variant="negative" onClick={handleCancelEdit}>
                 <Typography>Отменить</Typography>
               </Button>
             </div>

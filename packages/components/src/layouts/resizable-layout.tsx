@@ -38,7 +38,7 @@ export const SidebarMain = ({
       sidebarPanel.collapse();
     }
     
-    updateSidebarPropertiesMutation.mutate({
+    return updateSidebarPropertiesMutation.mutate({
       type: 'width', values: { width: size },
     });
   }

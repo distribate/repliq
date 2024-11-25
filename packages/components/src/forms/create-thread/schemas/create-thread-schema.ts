@@ -1,31 +1,36 @@
 import { z } from 'zod';
-
-export const THREAD_CONTENT_LIMIT = 4096;
-export const THREAD_CONTENT_LIMIT_WITH_IMAGES = 1500;
+import {
+  THREAD_CONTENT_LIMIT_DEFAULT,
+  THREAD_DESCRIPTION_LIMIT,
+  THREAD_TITLE_LIMIT,
+} from '@repo/shared/constants/limits.ts';
+import { getContentLimit } from '#forms/create-thread/hooks/use-create-thread.tsx';
 
 export const createThreadSchema = z.object({
   category: z.string().min(1, {
     message: 'Выберите категорию!',
   }),
-  title: z.string().min(4, {
+  title: z.string().min(THREAD_TITLE_LIMIT[0], {
     message: 'Слишком короткий заголовок',
-  }).max(64, {
+  }).max(THREAD_TITLE_LIMIT[1], {
     message: 'Максимум 64 символа',
   }),
   description: z.string()
-  .transform(val => (val.length < 1 ? undefined : val))
+  .transform(val => (val.length > 1 ? val : undefined))
   .refine(
-    val => typeof val === "undefined" || val.length >= 5,
+    val => typeof val === "undefined" || val.length >= THREAD_DESCRIPTION_LIMIT[0],
     { message: "Слишком короткое описание" }
   )
   .refine(
-    val => typeof val === "undefined" || val.length <= 80,
+    val => typeof val === "undefined" || val.length <= THREAD_DESCRIPTION_LIMIT[1],
     { message: "Максимум 80 символов" }
   )
   .optional(),
-  content: z.string().min(36, {
+  content: z.string()
+  .min(THREAD_CONTENT_LIMIT_DEFAULT[0], {
     message: 'Слишком короткое содержание',
-  }).max(THREAD_CONTENT_LIMIT, {
+  })
+  .max(THREAD_CONTENT_LIMIT_DEFAULT[2], {
     message: 'Превышено максимальное количество символов',
   }),
   permission: z.boolean(),
@@ -33,8 +38,7 @@ export const createThreadSchema = z.object({
   comments: z.boolean(),
   images: z.custom<File[] | null>(),
 }).superRefine((data, ctx) => {
-  const contentLimit = data.images && data.images.length > 0
-    ? THREAD_CONTENT_LIMIT_WITH_IMAGES : THREAD_CONTENT_LIMIT;
+  const contentLimit = getContentLimit(data.images)
   
   if (data.content.length > contentLimit) {
     ctx.addIssue({

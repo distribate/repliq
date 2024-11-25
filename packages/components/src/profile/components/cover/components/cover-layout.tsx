@@ -16,28 +16,24 @@ export const UserCoverLayout = ({
 }: UserCoverLayoutProps) => {
   const { data: coverQueryState } = coverQuery();
   const { setCoverStateMutation } = useCover();
-  const { data: requestedUser, isLoading } = requestedUserQuery(requestedUserNickname);
   
-  if (typeof requestedUser === 'string') return null;
-  
-  const inView = coverQueryState.inView;
+  const { data: requestedUser, isLoading } = requestedUserQuery({
+    nickname: requestedUserNickname
+  });
   
   if (isLoading) return <UserCoverSkeleton />;
+  
+  const inView = coverQueryState?.inView;
   
   return (
     <>
       <InView
         as="div"
         className={`${inView ? 'h-[612px] absolute left-0 top-0 right-0' : 'h-[200px] absolute top-0'}`}
-        onChange={(inView, entry) => {
-          setCoverStateMutation.mutate({
-            inView: inView, entry: entry,
-          });
-        }}
+        onChange={(inView, entry) =>
+          setCoverStateMutation.mutate({ inView, entry, })}
       />
-      {requestedUser && (
-        <UserCover requestedUser={requestedUser}  />
-      )}
+      {requestedUser && <UserCover requestedUser={requestedUser}  />}
     </>
   );
 };

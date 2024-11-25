@@ -1,0 +1,32 @@
+import { keepPreviousData, useQuery } from '@tanstack/react-query';
+import { createQueryKey } from '@repo/lib/helpers/query-key-builder.ts';
+import { SearchThread, SearchUser } from '#sidebar/desktop/components/sidebar-content/search/queries/search-query.ts';
+import { SEARCH_PAGE_LIMIT } from '@repo/shared/constants/limits.ts';
+
+export const SEARCH_PAGE_QUERY_KEY = createQueryKey("ui", ["search-page-state"])
+
+export type SearchResultsAll = Array<SearchUser | SearchThread>
+export type SearchResult = SearchUser | SearchThread;
+
+export type SearchPageQuery = {
+  queryValue: string | null,
+  results: Array<SearchThread | SearchUser> | null,
+  limit: number,
+  isLimited: boolean,
+  user: string | null
+}
+
+const initial: SearchPageQuery = {
+  queryValue: null,
+  user: null,
+  results: null,
+  isLimited: false,
+  limit: SEARCH_PAGE_LIMIT
+}
+
+export const searchPageQuery = () => useQuery<SearchPageQuery>({
+  queryKey: SEARCH_PAGE_QUERY_KEY,
+  initialData: initial,
+  refetchOnWindowFocus: false,
+  placeholderData: keepPreviousData
+})

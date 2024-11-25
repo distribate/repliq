@@ -1,15 +1,22 @@
 {
 	"compilerOptions": {
-		"target": "es2016",
+		"lib": ["ESNext"],
+		"target": "ESNext",
 		"module": "ESNext",
-		"moduleResolution": "node",
+		"moduleDetection": "force",
+		"moduleResolution": "bundler",
 		"outDir": "./dist",
+		"allowImportingTsExtensions": true,
+		"verbatimModuleSyntax": true,
 		"rootDir": "./",
 		"esModuleInterop": true,
 		"forceConsistentCasingInFileNames": true,
 		"strict": true,
-		"noEmit": false,
+		"noEmit": true,
 		"skipLibCheck": true,
+		"noUnusedLocals": false,
+		"noUnusedParameters": false,
+		"noPropertyAccessFromIndexSignature": true,
 		"baseUrl": ".",
 		"paths": {
 			"#*": ["./*"]

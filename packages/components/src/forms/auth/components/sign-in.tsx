@@ -18,11 +18,11 @@ import { AUTH_QUERY_KEY, AuthQuery, authQuery } from '../queries/auth-query.ts';
 import { GearLoader } from '@repo/ui/src/components/gear-loader.tsx';
 import { SignTipProps } from '../types/form-types.ts';
 import Image from 'next/image';
-import EnderPearl from "@repo/assets/images/minecraft/ender_pearl.webp"
-import EyeOfEnder from "@repo/assets/images/minecraft/eye_of_ender.webp"
+import EnderPearl from '@repo/assets/images/minecraft/ender_pearl.webp';
+import EyeOfEnder from '@repo/assets/images/minecraft/eye_of_ender.webp';
 
 const SignInTip = ({
-  handleRedirect
+  handleRedirect,
 }: SignTipProps) => {
   return (
     <div className="flex flex-col mt-6 gap-y-4">
@@ -63,7 +63,7 @@ export const SignInForm = () => {
   const { data: authState } = authQuery();
   const { setAuthValuesMutation } = useAuth();
   const { replace } = useRouter();
-  const [passwordType, setPasswordType] = useState<"text" | "password">("password");
+  const [ passwordType, setPasswordType ] = useState<'text' | 'password'>('password');
   
   const { register, handleSubmit, reset, resetField, formState: { errors, isValid } } = useForm<
     zodSignInForm
@@ -86,11 +86,10 @@ export const SignInForm = () => {
   const onSubmit = ({
     nickname, password,
   }: Pick<NonNullable<AuthQuery['values']>, 'nickname' | 'password'>) => {
-    setAuthValuesMutation.mutate({
-      type: 'sign-in', values: { nickname, password, },
-    }, {
-      onSuccess: async() => await qc.invalidateQueries({ queryKey: AUTH_QUERY_KEY })
-    });
+    return setAuthValuesMutation.mutate(
+      { type: 'sign-in', values: { nickname, password }, },
+      { onSuccess: async() => await qc.invalidateQueries({ queryKey: AUTH_QUERY_KEY }), },
+    );
   };
   
   const handleRedirect = () => {
@@ -135,9 +134,11 @@ export const SignInForm = () => {
               {...register('password')}
             />
             {passwordType === 'password' ? (
-              <Image className="cursor-pointer" src={EnderPearl} alt="" width={36} height={36} onClick={() => setPasswordType("text")} />
+              <Image className="cursor-pointer" src={EnderPearl} alt="" width={36} height={36}
+                     onClick={() => setPasswordType('text')} />
             ) : (
-              <Image className="cursor-pointer" src={EyeOfEnder} alt="" width={36} height={36} onClick={() => setPasswordType("password")}/>
+              <Image className="cursor-pointer" src={EyeOfEnder} alt="" width={36} height={36}
+                     onClick={() => setPasswordType('password')} />
             )}
           </div>
         </FormField>

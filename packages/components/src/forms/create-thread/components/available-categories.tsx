@@ -10,41 +10,45 @@ type AvailableCategoriesProps = {
 const AvailableCategoriesSkeleton = () => {
   return (
     <>
-      <Skeleton className="h-6 rounded-md px-2 py-1 "/>
-      <Skeleton className="h-6 rounded-md px-2 py-1 "/>
-      <Skeleton className="h-6 rounded-md px-2 py-1 "/>
-      <Skeleton className="h-6 rounded-md px-2 py-1 "/>
-      <Skeleton className="h-6 rounded-md px-2 py-1 "/>
+      <Skeleton className="h-6 rounded-md px-2 py-1 " />
+      <Skeleton className="h-6 rounded-md px-2 py-1 " />
+      <Skeleton className="h-6 rounded-md px-2 py-1 " />
+      <Skeleton className="h-6 rounded-md px-2 py-1 " />
+      <Skeleton className="h-6 rounded-md px-2 py-1 " />
     </>
-  )
-}
+  );
+};
 
 export const AvailableCategories = ({
-  enabled
+  enabled,
 }: AvailableCategoriesProps) => {
   const { data: availableCategories, isLoading } = availableCategoriesQuery(enabled);
   
   return (
-    <SelectContent side="right" align="start" className="max-h-[300px] overflow-y-scroll">
+    <SelectContent side="bottom" align="center" className="max-h-[300px] z-[5] overflow-y-scroll">
       <div className="flex flex-col gap-y-4 p-1">
         <Typography className="text-shark-300" textSize="large">
           Доступные категории
         </Typography>
         <div className="flex flex-col gap-y-2">
-          {isLoading ? <AvailableCategoriesSkeleton /> : (
-            availableCategories ? (
-              availableCategories.map(category => (
+          {isLoading && <AvailableCategoriesSkeleton />}
+          {!isLoading && (
+            <>
+              {availableCategories && availableCategories.map(category => (
                 <SelectItem
+                  withCheck={false}
                   key={category.id}
-                  value={category.id}
-                  className="flex w-full p-2 bg-shark-800 rounded-md group"
+                  value={category.id.toString()}
+                  className="flex w-full p-2 group"
                 >
                   <Typography textColor="shark_white" textSize="medium">
                     {category.title}
                   </Typography>
                 </SelectItem>
-              ))
-            ) : <Typography>Категорий нет.</Typography>
+              ))}
+              {!availableCategories &&
+                <Typography textColor="shark_white" textSize="medium">Категорий нет.</Typography>}
+            </>
           )}
         </div>
       </div>

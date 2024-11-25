@@ -3,8 +3,7 @@ import { UserPreviewCard } from '#cards/components/user-preview-card/user-previe
 import { getLastUsers } from '../queries/get-last-registered-users.ts';
 
 export const LastRegisteredUsers = async() => {
-  const users = await getLastUsers();
-  
+  const users = await getLastUsers({ limit: 6 });
   if (!users) return null;
   
   return (
