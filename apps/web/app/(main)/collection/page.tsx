@@ -14,7 +14,6 @@ export default async function CollectionPage({
           Ваша коллекция
         </Typography>
       </BlockWrapper>
-      {JSON.stringify(searchParams)}
     </div>
   );
 }

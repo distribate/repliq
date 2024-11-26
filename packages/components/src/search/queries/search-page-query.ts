@@ -13,15 +13,15 @@ export type SearchPageQuery = {
   results: Array<SearchThread | SearchUser> | null,
   limit: number,
   isLimited: boolean,
-  user: string | null
+  type: "user" | "title"
 }
 
 const initial: SearchPageQuery = {
   queryValue: null,
-  user: null,
   results: null,
   isLimited: false,
-  limit: SEARCH_PAGE_LIMIT
+  limit: SEARCH_PAGE_LIMIT,
+  type: "title"
 }
 
 export const searchPageQuery = () => useQuery<SearchPageQuery>({

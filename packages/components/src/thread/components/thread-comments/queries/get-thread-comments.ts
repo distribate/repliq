@@ -18,6 +18,10 @@ type RepliedDetails = {
   replied: Pick<ThreadCommentEntity, "id" | "content" | "user_nickname"> | null;
 }
 
+type GetThreadComments = {
+  threadId: string
+} & RequestDetails
+
 export type ThreadComment = RepliedDetails & ThreadCommentEntity
 
 export async function getCommentsReplied({
@@ -55,27 +59,38 @@ async function getComment({
 }
 
 async function getComments({
-  id: threadId, ascending
+  id: threadId, range, limit, ascending
 }: GetComments) {
   const api = createClient();
   
-  const { data, error } = await api
+  let query = api
   .from('threads_comments')
   .select(`id,created_at,user_nickname,content,edited`)
   .eq('thread_id', threadId)
   .order('created_at', { ascending });
   
+  if (range) query.range(range[0], range[1])
+  if (limit) query.limit(limit)
+
+  const { data, error } = await query;
+  
   if (error) {
     throw new Error(error.message);
   }
   
+  if (!data.length) return null;
+  
   return data as ThreadComment[]
 }
 
-export async function getThreadComments(threadId: string): Promise<ThreadComment[] | null> {
+export async function getThreadComments({
+  threadId, ...filter
+}: GetThreadComments): Promise<ThreadComment[] | null> {
   const threadComments = await getComments({
-    id: threadId, ascending: true
+    id: threadId, ascending: true, ...filter
   });
+  
+  if (!threadComments) return null;
   
   return await Promise.all(
     threadComments.map(async(comment) => {

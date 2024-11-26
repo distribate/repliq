@@ -17,15 +17,15 @@ export const usePostCommentsFormControl = () => {
         return toast.error('Что-то пошло не так!');
       }
       
-      return postComment({ post_id, content: formField.content, });
+      // return postComment({ post_id, content: formField.content, });
     },
-    onSuccess: async(data, variables) => {
-      if (!data || !variables) {
-        return toast.error('Произошла ошибка при создании комментария');
-      }
-      
-      return qc.invalidateQueries({ queryKey: POST_COMMENTS_QUERY_KEY(variables) })
-    },
+    // onSuccess: async(data, variables) => {
+    //   if (!data || !variables) {
+    //     return toast.error('Произошла ошибка при создании комментария');
+    //   }
+    //
+    //   return qc.invalidateQueries({ queryKey: POST_COMMENTS_QUERY_KEY(variables) })
+    // },
     onError: e => { throw new Error(e.message); },
   });
   

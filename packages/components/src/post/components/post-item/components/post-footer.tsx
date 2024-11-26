@@ -86,12 +86,10 @@ export const PostFooter = ({
     <div className="flex w-full gap-4 justify-end items-center">
       {isUpdated && (
         <Typography textSize="small" textColor="gray" className="self-end">
-          (изменено)
+         [изменено]
         </Typography>
       )}
-      {isOwner ? (
-        <PostFooterWithViewsList postId={id} views_count={views_count} />
-      ) : (
+      {isOwner ? <PostFooterWithViewsList postId={id} views_count={views_count} /> : (
         <PostFooterViews views_count={views_count} />
       )}
     </div>

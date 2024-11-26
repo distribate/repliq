@@ -84,7 +84,7 @@ export const ProfilePostsList = ({
           {posts.map(post => (
             <ProfilePostsListCard key={post.id} nickname={nickname} {...post} />
           ))}
-          {hasMore && <div ref={ref} className="h-[2px] w-full relative" />}
+          {hasMore && <div ref={ref} className="h-[1px] w-full relative" />}
         </>
       )}
     </div>

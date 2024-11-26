@@ -7,25 +7,29 @@ import { getPreferenceValue } from '@repo/lib/helpers/convert-user-preferences-t
 import { coverQuery } from '#profile/components/cover/queries/cover-query.ts';
 import { imageCoverQuery } from '#profile/components/cover/queries/image-cover-query.ts';
 import { CurrentUser } from '@repo/lib/queries/current-user-query.ts';
+import dynamic from 'next/dynamic';
 
 type UserCoverProps = {
   requestedUser: RequestedUser | CurrentUser
 }
 
+const UserCoverWatermark = dynamic(() =>
+  import("@repo/components/src/profile/components/cover/components/cover-watermark.tsx")
+  .then(m => m.UserCoverWatermark)
+)
+
 export const UserCover = ({
-  requestedUser
+  requestedUser,
 }: UserCoverProps) => {
   const { data: coverQueryState } = coverQuery();
-  const { data: url } = imageCoverQuery(requestedUser.nickname);
+  const { data: url, isLoading } = imageCoverQuery(requestedUser.nickname);
+
+  const preferOutline = getPreferenceValue(requestedUser.preferences, 'coverOutline');
+  const coverOutline = (requestedUser.donate && preferOutline) ? requestedUser.donate : 'default';
   
-  const userDonate = requestedUser.donate;
-  const imageHeight = coverQueryState.inView ? 168 : 76;
-  const nickname = requestedUser.nickname;
-  const preferences = requestedUser.preferences;
-  const preferOutline = getPreferenceValue(preferences, 'coverOutline');
   const backgroundImage = url ? `url(${url})` : '';
   const backgroundColor = url ? 'transparent' : 'gray';
-  const coverOutline = (userDonate && preferOutline) ? userDonate : 'default';
+  const imageHeight = coverQueryState.inView ? 168 : 76;
   
   return (
     <CoverArea
@@ -34,18 +38,19 @@ export const UserCover = ({
       outline={coverOutline}
       style={{ backgroundImage }}
     >
+      {(!url && !isLoading) && <UserCoverWatermark/>}
       <div className="z-[2] absolute w-full h-full right-0 top-0 bottom-0 left-0 bg-black/40" />
-      <div className="flex gap-x-6 z-[3] relative items-start">
+      <div className="flex gap-x-6 z-[4] relative items-start">
         <Avatar
           variant="page"
           propHeight={imageHeight}
           propWidth={imageHeight}
-          nickname={nickname}
+          nickname={requestedUser.nickname}
         />
-        <UserCoverMainInfo nickname={nickname} />
+        <UserCoverMainInfo nickname={requestedUser.nickname} />
       </div>
       <UserCoverPanel
-        requestedNickname={nickname}
+        requestedNickname={requestedUser.nickname}
         variant={coverQueryState.inView ? 'end' : 'default'}
       />
     </CoverArea>

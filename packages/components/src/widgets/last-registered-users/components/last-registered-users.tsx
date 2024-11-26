@@ -3,22 +3,19 @@ import { UserPreviewCard } from '#cards/components/user-preview-card/user-previe
 import { getLastUsers } from '../queries/get-last-registered-users.ts';
 
 export const LastRegisteredUsers = async() => {
-  const users = await getLastUsers({ limit: 6 });
+  const users = await getLastUsers({ limit: 8 });
   if (!users) return null;
   
   return (
     <div
-      className="flex flex-col gap-4 w-full py-6 px-4 rounded-lg overflow-hidden bg-shark-950">
-      <div className="px-2">
-        <Typography textSize="big" textColor="shark_white" className="font-semibold">
-          Новые пользователи
-        </Typography>
-      </div>
-      <div className="flex flex-col gap-1 hover:*:bg-shark-900/60 *:rounded-md">
-        {users.map(user => (
-          <UserPreviewCard key={user.nickname} {...user}/>
-        ))}
+      className="flex flex-col gap-4 w-full py-6 px-4 rounded-lg overflow-hidden bg-primary-color"
+    >
+      <Typography textSize="big" textColor="shark_white" className="font-semibold">
+        Новые пользователи
+      </Typography>
+      <div className="grid grid-cols-7 grid-rows-1 gap-2 justify-between w-full">
+        {users.map(user => <UserPreviewCard key={user.nickname} {...user} />)}
       </div>
     </div>
-  )
-}
+  );
+};

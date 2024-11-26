@@ -72,7 +72,7 @@ export const AdditionalSections = () => {
       {/*    </Typography>*/}
       {/*  </div>*/}
       {/*)}*/}
-      <div className="flex flex-col gap-y-2 w-full rounded-md px-6 py-2 bg-shark-950">
+      <div className="flex flex-col gap-y-2 w-full rounded-md px-6 py-2 bg-primary-color">
         <Accordion type="single" collapsible>
           <AccordionItem value="show-more">
             <AccordionTrigger>

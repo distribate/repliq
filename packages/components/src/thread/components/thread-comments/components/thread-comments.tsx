@@ -5,47 +5,74 @@ import { ThreadCommentItem } from '../../thread-comment/components/thread-commen
 import { threadCommentsQuery } from '../queries/thread-comments-query.ts';
 import { ThreadCommentEntity } from '@repo/types/entities/entities-type.ts';
 import { Skeleton } from '@repo/ui/src/components/skeleton.tsx';
+import { useInView } from 'react-intersection-observer';
+import { useEffect } from 'react';
 
 type ThreadCommentsProps = Pick<ThreadCommentEntity, 'thread_id'> & {
   threadAuthorNickname: string,
   isComments: boolean
 }
 
-const skeletonArray = Array.from({ length: 3 });
-
-const ThreadCommentsSkeleton = () => {
-  return (
-    <div className="flex flex-col items-start gap-y-2 w-full">
-      {skeletonArray.map((_, i) => (
-        <Skeleton key={i} className="h-[80px] w-full" />
-      ))}
-    </div>
-  )
+type ThreadCommentsHeaderProps = {
+  nonComments: boolean
 }
+
+const ThreadCommentsHeader = ({
+  nonComments,
+}: ThreadCommentsHeaderProps) => {
+  return (
+    <div className="flex w-fit bg-shark-800 rounded-md px-2 py-0.5">
+      {nonComments ? (
+        <Typography textSize="medium" textColor="shark_white" className="font-semibold">
+          Комментариев еще нет...
+        </Typography>
+      ) : (
+        <Typography textSize="medium" textColor="shark_white" className="font-semibold">
+          Обсуждение началось
+        </Typography>
+      )}
+    </div>
+  );
+};
+
+export const ThreadCommentsSkeleton = () => {
+  return (
+    <div className="flex flex-col gap-y-2 items-center w-full">
+      <Skeleton className="h-8 w-44"/>
+      <div className="flex flex-col items-start gap-y-2 w-full">
+        <Skeleton className="h-[120px] w-full" />
+        <Skeleton className="h-[120px] w-full" />
+        <Skeleton className="h-[120px] w-full" />
+      </div>
+    </div>
+  );
+};
 
 export const ThreadComments = ({
   thread_id, threadAuthorNickname, isComments,
 }: ThreadCommentsProps) => {
-  const { data: threadComments, isLoading } = threadCommentsQuery({ thread_id, isComments });
+  const { inView, ref } = useInView({
+    threshold: 0
+  })
   
-  if (!threadComments) return null;
+  const { data: threadComments, isLoading } = threadCommentsQuery({
+    thread_id, isComments
+  });
   
-  const nonComments = isComments && threadComments.length === 0;
+  useEffect(() => {
+    if (inView) {
+    
+    }
+  }, []);
+  
+  if (isLoading) return <ThreadCommentsSkeleton/>
+  
+  const nonComments = isComments && !threadComments;
   
   return (
     <div className="flex flex-col items-center w-full">
-      <div className={`flex w-fit bg-shark-700 rounded-md px-2 py-0.5 ${!nonComments && 'mb-2'}`}>
-        {nonComments ? (
-          <Typography textSize="medium" textColor="shark_white" className="font-semibold">
-            Комментариев еще нет...
-          </Typography>
-        ) : (
-          <Typography textSize="medium" textColor="shark_white" className="font-semibold">
-            Обсуждение началось
-          </Typography>
-        )}
-      </div>
-      {isLoading ? <ThreadCommentsSkeleton /> : (
+      <ThreadCommentsHeader nonComments={nonComments} />
+      {threadComments && (
         <div className="flex flex-col items-start gap-y-2 w-full">
           {threadComments.map((comment, i) => (
             <ThreadCommentItem
@@ -60,6 +87,7 @@ export const ThreadComments = ({
               created_at={comment.created_at}
             />
           ))}
+          <div ref={ref} className="h-[1px] w-full border"/>
         </div>
       )}
     </div>

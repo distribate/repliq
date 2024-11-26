@@ -8,7 +8,7 @@ const blockWrapperVariants = cva('flex rounded-lg w-full ', {
     },
     backgroundColor: {
       shark_white: 'bg-shark-900',
-      shark_black: 'bg-shark-950',
+      shark_black: 'bg-primary-color',
     },
     borderType: {
       none: 'border-none',
@@ -32,14 +32,7 @@ interface BlockWrapperProps extends HTMLAttributes<HTMLDivElement>,
 
 export const BlockWrapper = forwardRef<
   HTMLDivElement, BlockWrapperProps
->(({
-  className,
-  backgroundColor,
-  variant,
-  padding,
-  borderType,
-  ...props
-}, ref) => {
+>(({ className, backgroundColor, variant, padding, borderType, ...props }, ref) => {
   return (
     <div
       ref={ref}

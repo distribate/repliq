@@ -10,29 +10,19 @@ import { SearchType } from '#sidebar/desktop/components/sidebar-content/search/q
 export const SearchPageInput = () => {
   const searchParams = useSearchParams();
   const paramQueryValue = searchParams.get('queryValue');
-  const [ value, setValue ] = useState<string>(paramQueryValue || '');
   const searchType = searchParams.get('type') as SearchType ?? 'all';
-  const userByParam = searchParams.get('user') as string || null;
-  const { setValueMutation } = useSearchPage(searchType);
-  
-  useEffect(() => {
-    if (paramQueryValue) setValue(paramQueryValue);
-    if (userByParam) setValueMutation.mutate({ user: userByParam });
-  }, []);
+  const [ value, setValue ] = useState<string>(paramQueryValue || '');
+  const { setValueMutation } = useSearchPage();
   
   useEffect(() => {
     setValueMutation.mutate({ queryValue: value });
   }, [ searchType ]);
   
-  const updateQuery = (queryValue: string) => {
-    return setValueMutation.mutate({ queryValue });
-  };
-  
+  const updateQuery = (queryValue: string) => setValueMutation.mutate({ queryValue });
   const debounceUpdateQuery = useDebounce(updateQuery, 300);
   
   const handleSearch = (e: ChangeEvent<HTMLInputElement>) => {
     const { value } = e.target;
-    
     setValue(value);
     debounceUpdateQuery(value);
   };
@@ -41,7 +31,7 @@ export const SearchPageInput = () => {
     <Input
       value={value}
       placeholder="Поиск..."
-      className="w-full h-full !rounded-md text-xl"
+      className="w-full h-[80px] !p-0 !rounded-md text-xl"
       backgroundType="transparent"
       onChange={handleSearch}
     />

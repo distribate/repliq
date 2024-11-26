@@ -4,29 +4,28 @@ import { BlockWrapper } from '@repo/components/src/wrappers/block-wrapper.tsx';
 import { ThreadControl } from '@repo/components/src/thread/components/thread-control/components/thread-control.tsx';
 import { getCurrentUser } from '@repo/lib/actions/get-current-user.ts';
 import { ThreadContent } from '@repo/components/src/thread/components/thread-content/components/thread-content.tsx';
-import { ThreadComments } from '@repo/components/src/thread/components/thread-comments/components/thread-comments.tsx';
 import { ThreadImages } from '@repo/components/src/thread/components/thread-images/thread-images.tsx';
 import { Typography } from '@repo/ui/src/components/typography.tsx';
 import { getThreadModel } from '@repo/components/src/thread/queries/get-thread-model.ts';
 import { ThreadRating } from '@repo/components/src/thread/components/thread-bump/components/thread-rating.tsx';
 import { ThreadShare } from '@repo/components/src/thread/components/thread-share/thread-share.tsx';
 import { ThreadSave } from '@repo/components/src/thread/components/thread-save/thread-save.tsx';
-import {
-  CreateThreadComment,
-} from '@repo/components/src/thread/components/create-thread-comment/components/create-thread-comment.tsx';
-import { ContentNotFound } from '@repo/components/src/templates/section-not-found.tsx';
 import { MetadataType, PageConventionProps } from '@repo/types/global';
 import { Button } from '@repo/ui/src/components/button.tsx';
 import { ThreadMore } from '@repo/components/src/thread/components/thread-more/components/thread-more.tsx';
 import { Eye } from 'lucide-react';
 import { FriendButton } from '@repo/components/src/buttons/friends/friend-button.tsx';
 import { Descendant } from 'slate';
-import { CommentsDisabled } from '@repo/components/src/templates/comments-disabled.tsx';
 import { redirect } from 'next/navigation';
 import { ThreadCreator } from '@repo/components/src/thread/components/thread-creator/components/thread-creator.tsx';
 import { Suspense } from 'react';
 import { Skeleton } from '@repo/ui/src/components/skeleton.tsx';
 import dayjsInstance from '@repo/lib/utils/dayjs/dayjs-instance.ts';
+import dynamic from 'next/dynamic';
+import {
+  ThreadCommentsSkeleton,
+} from '@repo/components/src/thread/components/thread-comments/components/thread-comments.tsx';
+import { validateRequest } from '@repo/lib/utils/auth/validate-requests.ts';
 
 export async function generateMetadata({
   params,
@@ -39,89 +38,99 @@ export async function generateMetadata({
   return { title };
 }
 
+const ContentNotFound = dynamic(() =>
+  import('@repo/components/src/templates/section-not-found.tsx')
+  .then(m => m.ContentNotFound),
+);
+
+const CommentsDisabled = dynamic(() =>
+  import('@repo/components/src/templates/comments-disabled.tsx').then(m => m.CommentsDisabled),
+);
+
+const CreateThreadComment = dynamic(() =>
+  import('@repo/components/src/thread/components/create-thread-comment/components/create-thread-comment.tsx')
+  .then(m => m.CreateThreadComment),
+);
+
+const ThreadComments = dynamic(() =>
+    import('@repo/components/src/thread/components/thread-comments/components/thread-comments.tsx')
+    .then(m => m.ThreadComments), {
+    loading: () => <ThreadCommentsSkeleton />,
+  },
+);
+
 export default async function TopicsTopicPage({
   params,
 }: PageConventionProps) {
   const { id: threadId } = params;
-  const currentUser = await getCurrentUser();
-  if (!currentUser || !threadId) return redirect('/');
+  const { user, session } = await validateRequest();
+  if (!user || !session || !threadId) return redirect('/');
   
   const thread = await getThreadModel({ id: threadId, postViews: true });
   
   if (!thread) return <ContentNotFound title="Тред не найден. Возможно он уже удален" />;
   
-  const isThreadCreator = currentUser.nickname === thread.owner.nickname;
+  const {
+    id, title, content, description, owner, tags, rating,
+    isImages, isComments, isUpdated, updated_at, created_at
+  } = thread;
+  
+  const isThreadCreator = user.nickname === owner.nickname;
+  const dateCreated = dayjsInstance(created_at).fromNow();
   
   return (
     <div className="flex gap-2 items-start h-full w-full relative">
       <div className="flex flex-col min-w-3/4 w-3/4 max-w-3/4 items-start h-full justify-start">
-        <div className="flex flex-col gap-6 rounded-lg w-full py-6 bg-shark-950">
+        <div className="flex flex-col gap-6 rounded-lg w-full py-6 bg-primary-color">
           <div className="flex flex-col w-fit px-4">
             <Typography textSize="very_big" className="font-semibold" textColor="shark_white">
-              {thread.title}
+              {title}
             </Typography>
             <Typography textColor="gray">
-              тема создана <span className="text-caribbean-green-400">{dayjsInstance(thread.created_at).fromNow()}</span> в категории ...
+              тема создана <span className="text-caribbean-green-400">{dateCreated}</span> в категории ...
             </Typography>
           </div>
-          {thread.content && (
-            <ThreadContent
-              id={thread.id}
-              content={thread.content as Descendant[]}
-              isOwner={isThreadCreator}
-            />
-          )}
-          {thread.isImages && <ThreadImages id={thread.id} />}
+          {content && <ThreadContent id={id} content={content as Descendant[]} isOwner={isThreadCreator} />}
+          {isImages && <ThreadImages id={id} />}
           <div className="flex items-center justify-end w-full gap-3 px-4">
             <div className="flex items-center w-fit gap-1">
               <Eye size={18} className="text-shark-300" />
-              <Typography textSize="small" textColor="gray">
-                {thread.views}
-              </Typography>
+              <Typography textSize="small" textColor="gray">{thread.views}</Typography>
             </div>
-            {thread.isUpdated && (
+            {(isUpdated && updated_at) && (
               <div className="flex items-center w-fit gap-1">
                 <Typography textSize="small" textColor="gray">
-                  изменено в {thread.updated_at || 0}
+                  изменено в {thread.updated_at}
                 </Typography>
               </div>
             )}
           </div>
         </div>
         <BlockWrapper padding="without" className="mt-4">
-          <ThreadMore
-            description={thread.description}
-            tags={thread.tags}
-            created_at={thread.created_at}
-            owner={thread.owner}
-          />
+          <ThreadMore description={description} tags={tags} created_at={created_at} owner={owner} />
         </BlockWrapper>
         <div className="flex flex-col w-full h-full mt-2 gap-y-4">
-          <ThreadComments
-            threadAuthorNickname={thread.owner.nickname}
-            thread_id={thread.id}
-            isComments={thread.isComments}
-          />
-          {thread.isComments ? <CreateThreadComment /> : <CommentsDisabled />}
+          <ThreadComments threadAuthorNickname={owner.nickname} thread_id={id} isComments={isComments} />
+          {isComments ? <CreateThreadComment /> : <CommentsDisabled />}
         </div>
       </div>
       <div className="flex flex-col gap-y-4 min-w-1/4 w-1/4 max-w-1/4 h-fit sticky top-0 overflow-hidden">
         <BlockWrapper>
           <div className="flex items-center justify-between w-full">
             <Suspense fallback={<Skeleton className="h-48 w-full" />}>
-              <ThreadCreator owner={thread.owner} />
+              <ThreadCreator owner={owner} />
             </Suspense>
             {isThreadCreator ? (
-              <Button state="default" className="px-4">
+              <Button state="default" className="px-6">
                 <Typography>Это вы</Typography>
               </Button>
-            ) : <FriendButton reqUserNickname={thread.owner.nickname} />}
+            ) : <FriendButton reqUserNickname={owner.nickname} />}
           </div>
         </BlockWrapper>
         <BlockWrapper>
           <div className="flex justify-between items-center w-full">
             <Suspense fallback={<Skeleton className="h-16 w-full" />}>
-              {thread.rating && <ThreadRating threadId={thread.id} />}
+              {rating && <ThreadRating threadId={id} />}
             </Suspense>
             <div className="flex gap-2 items-center h-full">
               <ThreadShare />
@@ -129,7 +138,7 @@ export default async function TopicsTopicPage({
             </div>
           </div>
         </BlockWrapper>
-        {isThreadCreator && <ThreadControl id={thread.id} />}
+        {isThreadCreator && <ThreadControl id={id} />}
       </div>
     </div>
   );

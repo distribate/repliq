@@ -6,18 +6,10 @@ import {
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { getSearchResults } from '#search/queries/get-search-results.ts';
 import { SEARCH_SIDEBAR_LIMIT } from '@repo/shared/constants/limits.ts';
-import { useSearchParams } from 'next/navigation';
-
-type HandleSearchMutation = {
-  queryValue: string | null,
-  user: string | null
-}
 
 export const useSearchControl = () => {
   const qc = useQueryClient();
   const { data: searchState } = searchQuery();
-  const params = useSearchParams();
-  const userByParam = params.get('user') ?? null;
   
   const setSearchQueryMutation = useMutation({
     mutationFn: async(values: Partial<SearchQuery>) => {
@@ -30,27 +22,23 @@ export const useSearchControl = () => {
       );
     },
     onSuccess: async(_, variables) => {
-      if (!variables.queryValue && !userByParam) {
-        qc.setQueryData(SEARCH_QUERY_KEY, (prev: SearchQuery) => ({
+      if (!variables.queryValue) {
+        return qc.setQueryData(SEARCH_QUERY_KEY, (prev: SearchQuery) => ({
           ...prev, results: null,
         }));
-        return;
       }
       
-      handleSearchMutation.mutate({
-        queryValue: variables.queryValue ?? null,
-        user: userByParam
-      });
+      handleSearchMutation.mutate(variables.queryValue);
     },
     onError: e => { throw new Error(e.message); },
   });
   
   const handleSearchMutation = useMutation({
-    mutationFn: async({ user, queryValue }: HandleSearchMutation) => {
+    mutationFn: async(queryValue: string) => {
       if (!searchState.type) return;
       return getSearchResults({
         value: queryValue,
-        type: searchState.type, user,
+        type: searchState.type,
         limit: SEARCH_SIDEBAR_LIMIT,
       });
     },

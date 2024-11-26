@@ -79,8 +79,8 @@ const ContextMenuItem = React.forwardRef<
     ref={ref}
     className={cn(
       "relative flex cursor-default select-none" +
-      " items-center rounded-md hover:bg-white/10 border border-none px-2 py-1.5 text-sm outline-none" +
-      " focus:bg-white/10 data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
+      " items-center rounded-md hover:bg-secondary-color border border-none px-2 py-1.5 text-sm outline-none" +
+      " focus:bg-secondary-color data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
       inset && "pl-8",
       className
     )}

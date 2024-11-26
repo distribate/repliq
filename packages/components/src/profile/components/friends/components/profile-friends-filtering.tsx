@@ -14,7 +14,6 @@ export const ProfileFriendsFiltering = () => {
 		e: React.MouseEvent<HTMLDivElement, MouseEvent>, type: FriendsSortType
 	) => {
 		e.preventDefault();
-		
 		return setFriendsSortMUtation.mutate({ type })
 	}
 
@@ -35,14 +34,9 @@ export const ProfileFriendsFiltering = () => {
 							Фильтровать по
 						</Typography>
 						<div className="flex flex-col gap-y-2">
-							{FRIENDS_SORT.map((item, i) => (
-								<DropdownMenuItem
-									key={i}
-									onClick={(e) => handleSort(e, item.value)}
-								>
-									<Typography>
-										{item.title}
-									</Typography>
+							{FRIENDS_SORT.map(item => (
+								<DropdownMenuItem key={item.value} onClick={e => handleSort(e, item.value)}>
+									<Typography>{item.title}</Typography>
 								</DropdownMenuItem>
 							))}
 						</div>

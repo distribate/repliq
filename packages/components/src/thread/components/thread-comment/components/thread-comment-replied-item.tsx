@@ -25,7 +25,7 @@ export const ThreadRepliedCommentItem = ({
       <div className="flex items-center gap-1 cursor-pointer w-fit">
         <Separator className="w-[3px] !h-[42px]" orientation="vertical" />
         <div
-          className="flex flex-col bg-white/10 rounded-md min-w-[120px] overflow-hidden w-fit max-w-[300px] py-1 px-2 border border-shark-900"
+          className="flex flex-col bg-secondary-color rounded-md min-w-[120px] overflow-hidden w-fit max-w-[300px] py-1 px-2 border border-shark-900"
         >
           <Typography>{replied.user_nickname}</Typography>
           <Typography textColor="gray">{repliedMessage}</Typography>

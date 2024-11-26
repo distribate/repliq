@@ -17,7 +17,7 @@ export const AuthBackgroundImagesAddButton = () => {
   
   return (
     <div
-      className="flex items-center justify-center bg-transparent border hover:bg-white/10
+      className="flex items-center justify-center bg-transparent border hover:bg-secondary-color
       duration-300 border-shark-700 w-[116px] relative h-[116px] rounded-md"
     >
       {addAuthImageFileMutation.isPending ? (

@@ -29,10 +29,11 @@ export default function NotFound() {
 					Ничего не найдено ;(
 				</p>
 				<div
-					className="flex py-0.5 rounded-xl items-center gap-1 justify-between bg-white/30 backdrop-blur-md overflow-hidden">
+					className="flex py-0.5 rounded-xl items-center gap-1 justify-between bg-white/30 backdrop-blur-md overflow-hidden"
+				>
 					<Link href="/">
 						<div
-							className="flex px-3 gap-1 cursor-pointer items-center hover:bg-white/10 transition-all duration-150 ease-in max-h-[42px]">
+							className="flex px-3 gap-1 cursor-pointer items-center hover:bg-secondary-color transition-all duration-150 ease-in max-h-[42px]">
 							<Image
 								src={Compass}
 								width={48}

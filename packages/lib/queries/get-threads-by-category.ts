@@ -1,14 +1,9 @@
 import { createClient } from "@repo/lib/utils/api/server.ts";
-import { ThreadEntity } from "@repo/types/entities/entities-type.ts"
-
-type ThreadsFromCategoriesProperties = {
-	limit: number,
-	range: number[]
-}
+import { RequestDetails, ThreadEntity } from '@repo/types/entities/entities-type.ts';
 
 type ThreadsFromCategories = {
-	categoryId: string
-} & Partial<ThreadsFromCategoriesProperties>
+	categoryId: number
+} & RequestDetails
 
 export async function getThreadsCategories({
 	categoryId, range, limit = 3

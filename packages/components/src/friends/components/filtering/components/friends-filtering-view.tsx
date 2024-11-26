@@ -3,7 +3,6 @@
 import { LayoutGrid } from 'lucide-react';
 import { Typography } from '@repo/ui/src/components/typography.tsx';
 import { DropdownMenuItem } from '@repo/ui/src/components/dropdown-menu.tsx';
-import React from 'react';
 import { DropdownWrapper } from '#wrappers/dropdown-wrapper.tsx';
 import { SelectedWrapper } from '#wrappers/selected-wrapper.tsx';
 import { useFriendSort } from '../hooks/use-friends-sort.ts';
@@ -24,9 +23,7 @@ export const FriendsFilteringView = () => {
   return (
     <div className="w-fit">
       <DropdownWrapper
-        properties={{
-          sideAlign: 'bottom', contentAlign: 'end', contentClassname: 'w-[200px]',
-        }}
+        properties={{ sideAlign: 'bottom', contentAlign: 'end', contentClassname: 'w-[200px]', }}
         trigger={
           <SelectedWrapper>
             <LayoutGrid size={20} className="text-shark-300" />

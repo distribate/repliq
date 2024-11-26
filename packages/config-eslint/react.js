@@ -15,7 +15,8 @@ module.exports = {
   extends: [
     "@vercel/style-guide/eslint/browser",
     "@vercel/style-guide/eslint/typescript",
-    "@vercel/style-guide/eslint/react"
+    "@vercel/style-guide/eslint/react",
+    "react-compiler"
   ].map(require.resolve),
   parserOptions: {
     project,
@@ -37,6 +38,7 @@ module.exports = {
   // add rules configurations here
   rules: {
     "import/no-default-export": "off",
+    "react-compiler/react-compiler": "error"
   },
   overrides: [
     {

@@ -10,8 +10,6 @@ import { validateRequest } from '@repo/lib/utils/auth/validate-requests.ts';
 import { checkUserGameStatsVisibility } from '@repo/lib/helpers/check-user-game-stats-visibility.ts';
 import { protectPrivateArea } from '@repo/lib/helpers/protect-private-area.ts';
 import { MetadataType, PageConventionProps } from '@repo/types/global';
-import dynamic from 'next/dynamic';
-import type { User } from 'lucia';
 import { UserPostsSkeleton } from '@repo/components/src/skeletons/user-posts-skeleton.tsx';
 import { UserCoverSkeleton } from '@repo/components/src/skeletons/user-cover-skeleton.tsx';
 import { BLOCKED_QUERY_KEY } from '@repo/lib/queries/blocked-user-query.ts';
@@ -20,10 +18,10 @@ import { getRequests } from '@repo/components/src/friends/queries/get-requests.t
 import { REQUESTS_QUERY_KEY } from '@repo/components/src/friends/queries/requests-query.ts';
 import { FRIENDS_QUERY_KEY } from '@repo/components/src/friends/queries/friends-query.ts';
 import { getFriends } from '@repo/components/src/friends/queries/get-friends.ts';
-import {
-  REQUESTED_USER_QUERY_KEY
-} from '@repo/components/src/profile/components/cover/queries/requested-user-query.ts';
+import { REQUESTED_USER_QUERY_KEY } from '@repo/components/src/profile/components/cover/queries/requested-user-query.ts';
 import { UserCoverLayout } from '@repo/components/src/profile/components/cover/components/cover-layout.tsx';
+import dynamic from 'next/dynamic';
+import type { User } from 'lucia';
 
 const UserProfilePosts = dynamic(() =>
   import('@repo/components/src/profile/components/posts/components/posts/components/profile-posts.tsx')
@@ -185,14 +183,13 @@ const ProfileContentPage = async({
 export default async function ProfilePage({
   params,
 }: PageConventionProps) {
-  if (!params) return;
-  
-  const { user } = await validateRequest();
-  if (!user) return;
-  
   const { nickname: requestedUserNickname } = params;
+  if (!requestedUserNickname) return;
   
-  const requestedUser = await getRequestedUser(requestedUserNickname);
+  const { user, session } = await validateRequest();
+  if (!user || !session) return;
+  
+  const requestedUser = await getRequestedUser(requestedUserNickname)
   if (!requestedUser) return;
   
   const qc = new QueryClient();
@@ -205,7 +202,7 @@ export default async function ProfilePage({
     checkProfileStatus(requestedUser),
   ]);
   
-  if (requestedUser.nickname !== user.nickname) {
+  if (requestedUserNickname !== user.nickname) {
     await qc.prefetchQuery({
       queryKey: REQUESTED_USER_QUERY_KEY(requestedUserNickname),
       queryFn: () => getRequestedUser(requestedUserNickname),
@@ -220,8 +217,7 @@ export default async function ProfilePage({
     return <UserBanned {...banDetails} />;
   }
   
-  const isBlocked = profileStatus === 'blocked-by-user'
-    || profileStatus === 'user-blocked';
+  const isBlocked = profileStatus === 'blocked-by-user' || profileStatus === 'user-blocked';
   const isPrivated = profileStatus === 'private';
   
   await Promise.all([
@@ -244,16 +240,9 @@ export default async function ProfilePage({
           <UserCoverLayout requestedUserNickname={requestedUserNickname} />
         </HydrationBoundary>
       </Suspense>
-      {isBlocked && (
-        <UserBlocked blockedType={profileStatus as ProfileStatusBlockedType} />
-      )}
+      {isBlocked && <UserBlocked blockedType={profileStatus as ProfileStatusBlockedType} />}
       {isPrivated && <ProfilePrivated />}
-      {(!isPrivated && !profileStatus) && (
-        <ProfileContentPage
-          requestedUser={requestedUser}
-          currentUser={user}
-        />
-      )}
+      {(!isPrivated && !profileStatus) && <ProfileContentPage requestedUser={requestedUser} currentUser={user} />}
     </div>
   );
 }

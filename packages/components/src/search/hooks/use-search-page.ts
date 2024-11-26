@@ -1,20 +1,32 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { SEARCH_PAGE_QUERY_KEY, SearchPageQuery } from '#search/queries/search-page-query.ts';
+import { SEARCH_PAGE_QUERY_KEY, searchPageQuery, SearchPageQuery } from '#search/queries/search-page-query.ts';
 import { SearchType } from '#sidebar/desktop/components/sidebar-content/search/queries/search-query.ts';
 import { getSearchResults } from '#search/queries/get-search-results.ts';
 import { SEARCH_PAGE_LIMIT } from '@repo/shared/constants/limits.ts';
 import { useSearchParams } from 'next/navigation';
+import { useEffect } from 'react';
 
 export const SEARCH_PAGE_RESULTS_MUTATION_KEY = [ 'search-page-results' ];
 
 type HandleSearchMutation = {
-  queryValue: string | null,
-  limit: number
+  queryValue: string,
+  limit: number,
+  threadsType: Pick<SearchPageQuery, "type">["type"]
 }
 
-export const useSearchPage = (searchType: SearchType) => {
+export const useSearchPage = () => {
   const qc = useQueryClient();
-  const userByParam = useSearchParams().get('user') as string || null;
+  const params = useSearchParams()
+  const searchType = params.get('type') as SearchType ?? 'all';
+  const threadsSearchType = params.get("user") ?? null;
+  const { data: searchState } = searchPageQuery()
+  
+  useEffect(() => {
+    if (threadsSearchType) setValueMutation.mutate({
+      type: threadsSearchType ? "user" : "title",
+      queryValue: threadsSearchType
+    })
+  }, [threadsSearchType]);
   
   const setValueMutation = useMutation({
     mutationFn: async(values: Partial<SearchPageQuery>) => {
@@ -24,28 +36,23 @@ export const useSearchPage = (searchType: SearchType) => {
       }));
     },
     onSuccess: async(_, variables) => {
-      if (!variables.queryValue && searchType !== 'threads') {
-        qc.setQueryData(SEARCH_PAGE_QUERY_KEY, (prev: SearchPageQuery) => ({
+      if (!variables.queryValue) {
+        return qc.setQueryData(SEARCH_PAGE_QUERY_KEY, (prev: SearchPageQuery) => ({
           ...prev, results: null,
         }));
-        return;
       }
       
-      const limit = variables.limit ?? 10;
+      const limit = variables.limit ?? SEARCH_PAGE_LIMIT;
       
-      handleSearchMutation.mutate({
-        limit, queryValue: variables.queryValue ?? null,
-      });
+      handleSearchMutation.mutate({ queryValue: variables.queryValue, limit, threadsType: searchState.type });
     },
     onError: e => { throw new Error(e.message);},
   });
   
   const handleSearchMutation = useMutation({
     mutationKey: SEARCH_PAGE_RESULTS_MUTATION_KEY,
-    mutationFn: async({ limit, queryValue }: HandleSearchMutation) =>
-      getSearchResults({
-        type: searchType, value: queryValue, limit, user: userByParam
-      }),
+    mutationFn: async({ queryValue, limit, threadsType }: HandleSearchMutation) =>
+      getSearchResults({ type: searchType, value: queryValue, limit, threadsType }),
     onSuccess: async(data) => {
       if (!data) return;
       

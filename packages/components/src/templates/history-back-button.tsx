@@ -10,7 +10,7 @@ export const HistoryBackButton = () => {
 	return (
 		<div
 			onClick={back}
-			className="flex px-3 gap-1 cursor-pointer items-center hover:bg-white/10 transition-all duration-150 ease-in max-h-[42px]"
+			className="flex px-3 gap-1 cursor-pointer items-center hover:bg-secondary-color transition-all duration-150 ease-in max-h-[42px]"
 		>
 			<Image
 				src={Spyglass}

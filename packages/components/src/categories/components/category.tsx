@@ -10,17 +10,13 @@ import { getThreadsCategories } from '@repo/lib/queries/get-threads-by-category.
 import { ThreadEntity } from '@repo/types/entities/entities-type.ts';
 import { ThreadItem } from '#thread/thread-item.tsx';
 
-type CategoryBlockProps = CategoryModel
-
 export const Category = async({
-  title, id, threads: hasThreads,
-}: CategoryBlockProps) => {
-  let threads: ThreadEntity[] | null = [];
+  title, id: categoryId, hasThreads
+}: CategoryModel) => {
+  let threads: ThreadEntity[] | null = null
   
   if (hasThreads) {
-    threads = await getThreadsCategories({
-      categoryId: id.toString(), limit: 3,
-    });
+    threads = await getThreadsCategories({ categoryId, limit: 3 });
   }
   
   return (
@@ -30,13 +26,8 @@ export const Category = async({
           <Typography textSize="very_big" textColor="shark_white" className="font-bold">
             {title}
           </Typography>
-          <Link href={CATEGORY_URL + id}>
-            <ImageWrapper
-              propSrc={Spyglass.src}
-              propAlt={`перейти к категории ${title}`}
-              width={20}
-              height={20}
-            />
+          <Link href={CATEGORY_URL + categoryId}>
+            <ImageWrapper propSrc={Spyglass.src} propAlt={`перейти к категории ${title}`} width={20} height={20} />
           </Link>
         </div>
       </AccordionTrigger>
@@ -47,7 +38,9 @@ export const Category = async({
               Темы
             </Typography>
             <div className="flex flex-col gap-y-2 w-full h-full">
-              {threads.map(item => <ThreadItem key={item.id} id={item.id} />)}
+              {threads.map(item =>
+                <ThreadItem key={item.id} id={item.id} />)
+              }
             </div>
           </div>
         </AccordionContent>

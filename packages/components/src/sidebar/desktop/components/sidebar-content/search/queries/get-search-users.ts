@@ -2,11 +2,9 @@
 
 import { createClient } from '@repo/lib/utils/api/server.ts';
 import { SearchTypes } from '../types/search-types.ts';
+import { RequestDetails } from '@repo/types/entities/entities-type.ts';
 
-type GetSearchUsers = Pick<SearchTypes, "searchedValue"> & {
-	limit?: number,
-	range?: Array<number>,
-}
+type GetSearchUsers = Pick<SearchTypes, "searchedValue"> & RequestDetails
 
 export async function getSearchUsers({
 	searchedValue, range, limit

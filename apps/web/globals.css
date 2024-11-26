@@ -9,6 +9,16 @@
   }
 }
 
+@layer theme {
+  .bg-primary-color {
+    @apply bg-shark-950/60
+  }
+
+  .bg-secondary-color {
+    @apply bg-shark-700/60;
+  }
+}
+
 @layer components {
   .nickname-color-picker .react-colorful {
     @apply w-auto;
@@ -35,7 +45,7 @@
   }
 
   .hover-select-effect {
-    @apply hover:bg-white/10 cursor-pointer border border-shark-700 duration-300 hover:duration-300;
+    @apply hover:bg-shark-700/60 cursor-pointer border border-shark-700 duration-300 hover:duration-300;
   }
 
   .form-editor {

@@ -44,7 +44,7 @@ export const useControlCoverImage = () => {
     const tasks = [
       createTask(async() => {
         await qc.invalidateQueries({ queryKey: IMAGE_COVER_QUERY_KEY(currentUser.nickname) });
-      }, 400),
+      }, 1000),
     ];
     
     registerTaskQueue(tasks);
@@ -62,7 +62,7 @@ export const useControlCoverImage = () => {
       
       toast.success('Фон удалён.');
       
-      await updateValueOfUploadedImage({
+      updateValueOfUploadedImage({
         table: 'users',
         field: {
           'cover_image': null,
@@ -91,7 +91,7 @@ export const useControlCoverImage = () => {
       
       // if upload to existing image from storage (static)
       if (customFilename && !file) {
-        return await updateValueOfUploadedImage({
+        return updateValueOfUploadedImage({
           table: 'users',
           field: {
             'cover_image': customFilename,
@@ -156,7 +156,7 @@ export const useControlCoverImage = () => {
           }
           
           toast.success('Фон шапки профиля обновлен!');
-          await revalidateUserQueries();
+          revalidateUserQueries();
           return { success, path: data.path };
         }
       }

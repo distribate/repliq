@@ -1,10 +1,8 @@
 import { OverridedPosts } from '#profile/components/posts/components/posts/queries/get-posts.ts';
 import { BlockWrapper } from '#wrappers/block-wrapper.tsx';
 import { ProfilePostsListProps } from '#profile/components/posts/components/posts/components/profile-posts-list.tsx';
-import { PostComments } from '#post/components/post-comments/components/post-comments.tsx';
 import { PostItemHeader } from '#post/components/post-item/components/post-header.tsx';
 import { PostItemBody } from '#post/components/post-item/components/post-body.tsx';
-import { CreatePostCommentForm } from '#forms/create-post-comment/components/create-post-comment-form.tsx';
 import { PostFooter } from '#post/components/post-item/components/post-footer.tsx';
 
 type ProfilePostsListCardProps = OverridedPosts & ProfilePostsListProps
@@ -13,8 +11,8 @@ export const ProfilePostsListCard = ({
  ...values
 }: ProfilePostsListCardProps) => {
   const {
-    id, content, isComments, isPinned, created_at, visibility, nickname,
-    isViewed, comments_count, isUpdated, views_count
+    id, content, isPinned, created_at, visibility, nickname,
+    isViewed, isUpdated, views_count
   } = values;
   
   return (
@@ -36,8 +34,8 @@ export const ProfilePostsListCard = ({
         isUpdated={isUpdated}
         nickname={nickname}
       />
-      <PostComments id={id} comments_count={comments_count} />
-      {isComments && <CreatePostCommentForm id={id} />}
+      {/*<PostComments id={id} comments_count={comments_count} />*/}
+      {/*{isComments && <CreatePostCommentForm id={id} />}*/}
     </BlockWrapper>
   );
 };

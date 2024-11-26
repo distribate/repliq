@@ -51,7 +51,7 @@ export const UserProfileSettings = () => {
       <Typography variant="dialogTitle">Профиль</Typography>
       <div className="flex flex-col w-full gap-y-4">
         <DescriptionInput />
-        <div className="flex flex-col bg-white/10 w-full py-2 px-4">
+        <div className="flex flex-col bg-secondary-color w-full py-2 px-4">
           <Typography className="text-base text-shark-200">
             Расскажи о своем возрасте или чем занимаешься?
           </Typography>

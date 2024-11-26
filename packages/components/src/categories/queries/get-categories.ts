@@ -5,7 +5,7 @@ import { CategoryEntity } from '@repo/types/entities/entities-type.ts';
 import { createClient } from '@repo/lib/utils/api/server.ts';
 
 export type CategoryModel = {
-	threads: boolean,
+	hasThreads: boolean,
 	title: string,
 	id: number
 }
@@ -50,7 +50,7 @@ export async function getCategories(): Promise<CategoryModel[]> {
 		return {
 			id: category.id,
 			title: category.title,
-			threads: hasThreads
+			hasThreads
 		};
 	}))
 }

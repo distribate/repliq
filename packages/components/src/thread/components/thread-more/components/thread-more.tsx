@@ -23,7 +23,7 @@ const ThreadTag = ({
   tag,
 }: ThreadTagProps) => {
   return (
-    <div className="flex px-2 py-0.5 bg-shark-700/20 rounded-sm items-center justify-center">
+    <div className="flex px-2 py-0.5 bg-secondary-color rounded-sm items-center justify-center">
       <Typography className="leading-5" textColor="gray">#{tag}</Typography>
     </div>
   );

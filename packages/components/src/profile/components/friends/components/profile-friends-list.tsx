@@ -1,7 +1,6 @@
 'use client';
 
 import { friendsSortQuery } from '../hooks/use-friends-sort.tsx';
-import { SomethingError } from '#templates/something-error.tsx';
 import { FilteredNotFound } from '#templates/filtered-not-found.tsx';
 import { RequestFriends, UserFriends } from '#friends/queries/get-friends.ts';
 import { FRIENDS_QUERY_KEY, friendsQuery } from '#friends/queries/friends-query.ts';
@@ -10,10 +9,19 @@ import { UserEntity } from '@repo/types/entities/entities-type.ts';
 import { FriendProfileCard } from '#friend/components/friend-card/components/friend-profile-card.tsx';
 import { Skeleton } from '@repo/ui/src/components/skeleton.tsx';
 import { useQueryClient } from '@tanstack/react-query';
-import { useEffect, useState } from 'react';
 import { Typography } from '@repo/ui/src/components/typography.tsx';
+import dynamic from 'next/dynamic';
+
+const SomethingError = dynamic(() =>
+  import("#templates/something-error.tsx")
+  .then(m => m.SomethingError)
+)
 
 type FriendsSearch = Pick<UserEntity, 'nickname' | 'name_color'>
+
+type FriendsListLayout = {
+  friends: UserFriends[]
+}
 
 const filterFriendsByNickname = (data: FriendsSearch[], query: string) => data
 .filter(
@@ -32,10 +40,6 @@ const FriendsListSkeleton = () => {
   );
 };
 
-type FriendsListLayout = {
-  friends: UserFriends[]
-}
-
 const ProfileFriendsList = ({
   friends: friendsData,
 }: FriendsListLayout) => {
@@ -45,15 +49,15 @@ const ProfileFriendsList = ({
     friendsData, friendsSortState.search,
   ) : friendsData;
   
-  if (friends && friends.length === 0) {
+  if (friends && !friends.length) {
     return <FilteredNotFound value={friendsSortState.search} />;
   }
   
   return (
     <div className="grid auto-rows-auto grid-cols-3 gap-2 w-full">
-      {friends.map((friend, i) => (
+      {friends.map((friend, i) =>
         <FriendProfileCard key={i} nickname={friend.nickname} name_color={friend.name_color} />
-      ))}
+      )}
     </div>
   );
 };
@@ -61,15 +65,10 @@ const ProfileFriendsList = ({
 export const ProfileFriends = ({
   nickname,
 }: RequestFriends) => {
-  const [ enabled, setEnabled ] = useState(false);
   const qc = useQueryClient();
   const currentFriends = qc.getQueryData<UserFriends[]>(FRIENDS_QUERY_KEY(nickname));
   
-  useEffect(() => {
-    if (!currentFriends) setEnabled(true);
-  }, [ currentFriends ]);
-  
-  const { data: fetchedFriends, isLoading, isError } = friendsQuery({ nickname, enabled });
+  const { data: fetchedFriends, isLoading, isError } = friendsQuery({ nickname, enabled: !currentFriends });
   
   if (isError) return <SomethingError />;
   

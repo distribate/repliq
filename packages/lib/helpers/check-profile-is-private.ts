@@ -2,10 +2,16 @@
 
 import { checkIsFriend } from './check-is-friend.ts';
 import { CheckProfileStatus } from './check-profile-status.ts';
+import { RequestedUser } from '#queries/get-requested-user.ts';
+
+type CheckProfileIsPrivate = {
+	requestedUser: RequestedUser;
+	currentUserNickname: string
+}
 
 export async function checkProfileIsPrivate({
 	requestedUser, currentUserNickname
-}: CheckProfileStatus) {
+}: CheckProfileIsPrivate) {
 	const requestedUserNickname = requestedUser.nickname;
 	
 	if (!currentUserNickname || !requestedUserNickname) return true;

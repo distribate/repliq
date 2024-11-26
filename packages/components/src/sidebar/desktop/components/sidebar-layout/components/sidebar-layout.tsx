@@ -4,7 +4,7 @@ import { forwardRef, HTMLAttributes } from "react";
 export const sidebarLayoutVariants = cva(
 	`flex flex-col justify-between h-full transition-all duration-100
 	 rounded-lg ease-in-out overflow-hidden
-	 pt-6 pb-2 bg-shark-950 outline-none relative`,
+	 pt-6 pb-2 bg-primary-color outline-none relative`,
 	{
 		variants: {
 			variant: {
@@ -27,12 +27,7 @@ interface SidebarLayoutProps
 
 export const SidebarLayout = forwardRef<
 	HTMLDivElement, SidebarLayoutProps
->(({
-	variant,
-	className,
-	padding,
-	...props
-}, ref) => {
+>(({ variant, className, padding, ...props }, ref) => {
 	return (
 		<div
 			ref={ref}

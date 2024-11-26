@@ -29,7 +29,7 @@ export const UserSettingsCard = () => {
             {/*<EmailChangeModal />*/}
             {/*<PasswordChangeModal/>*/}
             <ActiveSessionsModal />
-            <div className="flex flex-col bg-white/10 w-full py-2 px-4">
+            <div className="flex flex-col bg-secondary-color w-full py-2 px-4">
               <Typography className="text-base text-shark-200">
                 Управление текущими сессиями
               </Typography>
@@ -54,7 +54,7 @@ export const UserSettingsCard = () => {
             <UserSettingOption title="Черный список" imageSrc={IronHelmet.src}>
               <BlockedListModal />
             </UserSettingOption>
-            <div className="flex flex-col bg-white/10 w-full py-2 px-4">
+            <div className="flex flex-col bg-secondary-color w-full py-2 px-4">
               <Typography className="text-base text-shark-200">
                 Приватность профиля и аккаунта
               </Typography>

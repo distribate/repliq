@@ -20,7 +20,7 @@ export const ReplyComment = () => {
 	}
 	
 	return (
-		<div className="flex relative items-center gap-4 rounded-t-md bg-white/10 px-4 py-2 w-full">
+		<div className="flex relative items-center gap-4 rounded-t-md bg-secondary-color px-4 py-2 w-full">
 			<Reply size={26}/>
 			<div className="flex flex-col items-start">
 				<Typography textSize="small">

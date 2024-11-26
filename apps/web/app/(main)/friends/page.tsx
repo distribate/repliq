@@ -1,5 +1,4 @@
 import { dehydrate, HydrationBoundary, QueryClient } from '@tanstack/react-query';
-import { getCurrentUser } from '@repo/lib/actions/get-current-user.ts';
 import { REQUESTS_INCOMING_QUERY_KEY } from '@repo/components/src/friends/queries/requests-incoming-query.ts';
 import { REQUESTS_OUTGOING_QUERY_KEY } from '@repo/components/src/friends/queries/requests-outgoing-query.ts';
 import {
@@ -14,26 +13,29 @@ import {
   FriendsIncomingRequestsIndicator,
   FriendsOutgoingRequstsIndicator,
 } from '@repo/components/src/friends/components/control/components/friends-indicators.tsx';
-import { FriendsStatistics } from '@repo/components/src/friends/components/control/components/friends-statistics.tsx';
 import { FriendsList } from '@repo/components/src/friends/components/lists/friends-list.tsx';
-import {
-  ProfileFriendsFilteringSearch,
-} from '@repo/components/src/profile/components/friends/components/profile-friends-filtering-search.tsx';
 import {
   ProfileFriendsFiltering,
 } from '@repo/components/src/profile/components/friends/components/profile-friends-filtering.tsx';
 import { Metadata } from 'next';
 import { FilteringSearchWrapper } from '@repo/components/src/wrappers/filtering-search-wrapper.tsx';
+import dynamic from 'next/dynamic';
+import { validateRequest } from '@repo/lib/utils/auth/validate-requests.ts';
 
 export const metadata: Metadata = {
-  title: "Друзья"
-}
+  title: 'Друзья',
+};
+
+const ProfileFriendsFilteringSearch = dynamic(() =>
+  import('@repo/components/src/profile/components/friends/components/profile-friends-filtering-search.tsx')
+  .then(m => m.ProfileFriendsFilteringSearch),
+);
 
 export default async function FriendsPage() {
-  const currentUser = await getCurrentUser();
-  if (!currentUser) return null;
+  const { user, session } = await validateRequest();
+  if (!user || !session) return null;
   
-  const nickname = currentUser.nickname;
+  const nickname = user.nickname;
   
   const qc = new QueryClient();
   
@@ -79,7 +81,7 @@ export default async function FriendsPage() {
             <Separator />
             <FriendsTab type="search" title="Поиск друзей" />
           </BlockWrapper>
-          <FriendsStatistics />
+          {/*<FriendsStatistics />*/}
         </div>
       </HydrationBoundary>
     </div>

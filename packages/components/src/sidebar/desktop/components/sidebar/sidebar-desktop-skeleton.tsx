@@ -5,7 +5,7 @@ export const SidebarDesktopSkeleton = () => {
 	return (
 		<div className={`flex flex-col justify-between
 		  px-3 rounded-lg overflow-hidden min-h-screen h-full py-6
-			bg-shark-950 outline-none w-[300px]`}
+			bg-primary-color outline-none w-[300px]`}
 		>
 			<div className="flex flex-col gap-y-4 items-center justify-center">
 				<div className="flex flex-row items-center gap-4">

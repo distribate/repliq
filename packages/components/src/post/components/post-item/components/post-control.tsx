@@ -33,10 +33,10 @@ export const PostControl = ({
     return controlPostMutation.mutate({ type: 'remove', id: postId });
   };
   
-  const handleComments = () => {
-    if (!post) return;
-    return controlPostMutation.mutate({ type: 'comments', isComments: post.isComments, id: postId });
-  };
+  // const handleComments = () => {
+  //   if (!post) return;
+  //   return controlPostMutation.mutate({ type: 'comments', isComments: post.isComments, id: postId });
+  // };
   
   const handleEditContent = () => {
     if (!post) return;
@@ -74,11 +74,11 @@ export const PostControl = ({
                     {isPinned ? `Открепить пост` : `Закрепить пост`}
                   </Typography>
                 </HoverCardItem>
-                <HoverCardItem onClick={handleComments}>
-                  <Typography className={`${isComments && 'text-caribbean-green-500'}`}>
-                    {isComments ? `Выключить комментарии` : `Включить комментарии`}
-                  </Typography>
-                </HoverCardItem>
+                {/*<HoverCardItem onClick={handleComments}>*/}
+                {/*  <Typography className={`${isComments && 'text-caribbean-green-500'}`}>*/}
+                {/*    {isComments ? `Выключить комментарии` : `Включить комментарии`}*/}
+                {/*  </Typography>*/}
+                {/*</HoverCardItem>*/}
                 <HoverCardItem onClick={handleRemovePost}>
                   <Typography>
                     Удалить пост

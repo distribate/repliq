@@ -3,24 +3,21 @@
 import { createClient } from '@repo/lib/utils/api/server.ts';
 import { SearchTypes } from '../types/search-types.ts';
 import { ThreadEntity } from '@repo/types/entities/entities-type.ts';
+import { SearchPageQuery } from '#search/queries/search-page-query.ts';
 
-type GetSearchThreads = {
-  user: string | null
-} & Omit<SearchTypes, 'searchedValue'> & {
-  searchedValue: string | null
-}
+type GetSearchThreads = Omit<SearchTypes, 'searchedValue'> & {
+  searchedValue: string
+} & Pick<SearchPageQuery, "type">
 
 type SearchedThread = Pick<ThreadEntity, "id" | "title">
 
 export async function getSearchThreads({
-  searchedValue, range, limit,  user,
+  searchedValue, range, limit, type
 }: GetSearchThreads) {
-  if (!searchedValue && !user) return [];
-  
   const api = createClient();
   
   const buildQuery = () => {
-    const query = !!user
+    const query = type === 'title'
       ? api
       .from('threads')
       .select('title, id')
@@ -28,7 +25,7 @@ export async function getSearchThreads({
       : api
       .from('threads_users')
       .select('thread_id, threads(title, id)')
-      .eq('user_nickname', user);
+      .eq('user_nickname', searchedValue);
     
     if (limit) query.limit(limit);
     if (range && range.length === 2) query.range(range[0], range[1]);
@@ -41,7 +38,7 @@ export async function getSearchThreads({
     throw new Error(error.message);
   }
   
-  if (!!user) {
+  if (type === 'title') {
     return data as Array<SearchedThread>;
   }
   

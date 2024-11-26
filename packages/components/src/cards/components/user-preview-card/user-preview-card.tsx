@@ -1,4 +1,5 @@
-import { HoverCardWrapper } from '#wrappers/hover-card-wrapper.tsx';
+'use client';
+
 import Link from 'next/link';
 import { UserEntity } from '@repo/types/entities/entities-type.ts';
 import { Avatar } from '#user/components/avatar/components/avatar.tsx';
@@ -6,11 +7,12 @@ import { UserNickname } from '#user/components/name/components/nickname.tsx';
 import { UserDonate } from '#user/components/donate/components/donate.tsx';
 import { Separator } from '@repo/ui/src/components/separator.tsx';
 import dynamic from 'next/dynamic';
+import { USER_URL } from '@repo/shared/constants/routes.ts';
+import { DropdownWrapper } from '#wrappers/dropdown-wrapper.tsx';
+import Spyglass from '@repo/assets/images/minecraft/spyglass.webp';
 
-export type UserCardProps = Pick<UserEntity, 'nickname'
-  | 'description'
-  | 'created_at'
-  | 'name_color'
+export type UserCardProps = Pick<UserEntity,
+  | 'nickname' | 'description' | 'created_at' | 'name_color'
 >;
 
 const UserPreviewCardProperties = dynamic(() =>
@@ -19,18 +21,21 @@ const UserPreviewCardProperties = dynamic(() =>
 );
 
 export const UserPreviewCard = ({
-  nickname, name_color, created_at, description
+  nickname, name_color, created_at, description,
 }: UserCardProps) => {
-  
-  if (!nickname) return;
-  
   return (
-    <HoverCardWrapper
-      properties={{ sideAlign: 'left', contentAlign: 'start', contentClassname: 'min-w-[300px]' }}
+    <DropdownWrapper
+      properties={{
+        sideAlign: 'left',
+        contentAlign: 'start',
+        contentClassname: "w-[320px]",
+      }}
       trigger={
-        <div className="flex gap-2 items-center px-2 py-1 cursor-pointer">
-          <Avatar propHeight={18} propWidth={18} nickname={nickname} />
-          <UserNickname nickname={nickname} nicknameColor={name_color} className="text-sm font-normal" />
+        <div className="flex cursor-pointer rounded-sm h-[50px] relative group w-[50px] hover:bg-shark-900 overflow-hidden">
+          <div className="group-hover:flex z-[2] hidden items-center justify-center absolute h-full w-full bg-black/60">
+            <img src={Spyglass.src} width={26} height={26} alt="" />
+          </div>
+          <Avatar nickname={nickname} propHeight={50} propWidth={50} />
         </div>
       }
       content={
@@ -42,7 +47,7 @@ export const UserPreviewCard = ({
                   <Avatar propHeight={48} propWidth={48} nickname={nickname} />
                 </div>
                 <div className="flex flex-col w-full justify-between h-[48px]">
-                  <Link href={`/user/${nickname}`} className="max-w-[140px]">
+                  <Link href={USER_URL + nickname} className="max-w-[140px]">
                     <UserNickname
                       nickname={nickname}
                       nicknameColor={name_color}

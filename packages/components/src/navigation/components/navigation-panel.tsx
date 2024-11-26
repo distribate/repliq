@@ -11,7 +11,7 @@ export const NavigationPanel = () => {
       className="flex w-full items-center overflow-hidden"
     >
       <div className="flex items-center justify-between max-w-1/3
-        *:flex *:items-center hover:*:bg-white/10 transition-colors duration-200"
+        *:flex *:items-center hover:*:bg-secondary-color transition-colors duration-200"
       >
         {NAVIGATION_LINKS.map((link, i) => (
           <Fragment key={link.href}>

@@ -55,7 +55,7 @@ export const SearchPageResults = ({
   
   if (isLoading) return <SearchPageResultsSkeleton />;
   
-  if (!searchState.queryValue && !searchState.user) return <SearchPageRelated/>
+  if (!searchState.queryValue) return <SearchPageRelated/>
   
   return (
     <>

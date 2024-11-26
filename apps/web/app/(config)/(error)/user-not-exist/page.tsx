@@ -6,6 +6,7 @@ import Compass from "@repo/assets/images/minecraft/compass.webp"
 import Spyglass from "@repo/assets/images/minecraft/spyglass.webp"
 import { UserNotExistCounter } from "@repo/components/src/templates/user-not-exist-counter";
 import { PageConventionProps } from '@repo/types/global';
+import { USER_URL } from '@repo/shared/constants/routes.ts';
 
 export default async function UserNotExistPage({
 	searchParams
@@ -38,7 +39,7 @@ export default async function UserNotExistPage({
 					className="flex py-0.5 rounded-xl items-center gap-1 justify-between bg-white/30 backdrop-blur-md overflow-hidden">
 					<Link href="/">
 						<div
-							className="flex px-3 gap-1 cursor-pointer items-center hover:bg-white/10 transition-all duration-150 ease-in max-h-[42px]">
+							className="flex px-3 gap-1 cursor-pointer items-center hover:bg-secondary-color transition-all duration-150 ease-in max-h-[42px]">
 							<Image
 								src={Compass}
 								width={48}
@@ -53,9 +54,9 @@ export default async function UserNotExistPage({
 						</div>
 					</Link>
 					<span>|</span>
-					<Link href={`/user/${redirectUserNickname}`}>
+					<Link href={USER_URL + redirectUserNickname}>
 						<div
-							className="flex px-3 gap-1 cursor-pointer items-center hover:bg-white/10 transition-all duration-150 ease-in max-h-[42px]">
+							className="flex px-3 gap-1 cursor-pointer items-center hover:bg-secondary-color transition-all duration-150 ease-in max-h-[42px]">
 							<Image
 								src={Spyglass}
 								width={48}

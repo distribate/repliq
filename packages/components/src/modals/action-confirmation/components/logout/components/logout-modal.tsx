@@ -1,4 +1,4 @@
-import { ReactNode } from 'react';
+import { ReactNode, useState } from 'react';
 import { DynamicModal } from '../../../../dynamic-modal.tsx';
 import { ConfirmationActionModalTemplate } from '#templates/confirmation-action-modal-template.tsx';
 import { ConfirmationButton } from '#buttons/confirmation-action-button.tsx';
@@ -11,33 +11,37 @@ type LogoutModal = {
 }
 
 export const LogoutModal = ({
-  trigger
+  trigger,
 }: LogoutModal) => {
+  const [ freeze, setFreeze ] = useState(true);
   const { logoutMutation } = useLogout();
+  
+  const handleClose = () => {
+    setFreeze(false);
+  };
   
   return (
     <DynamicModal
-      freeze
+      freeze={freeze}
       mutationKey={LOGOUT_MUTATION_KEY}
       trigger={trigger}
-      content={
-        logoutMutation.isPending ? <DialogLoader /> : (
-          <ConfirmationActionModalTemplate title="Уверены, что хотите выйти?">
+      content={logoutMutation.isPending ? <DialogLoader /> : (
+        <ConfirmationActionModalTemplate title="Уверены, что хотите выйти?">
+          <ConfirmationButton
+            title="Да, выйти"
+            actionType="continue"
+            onClick={() => logoutMutation.mutate()}
+            disabled={logoutMutation.isPending}
+          />
+          <DialogClose onClick={handleClose}>
             <ConfirmationButton
-              title="Да, выйти"
-              actionType="continue"
-              onClick={() => logoutMutation.mutate()}
+              title="Отмена"
+              actionType="cancel"
               disabled={logoutMutation.isPending}
             />
-            <DialogClose>
-              <ConfirmationButton
-                title="Отмена"
-                actionType="cancel"
-                disabled={logoutMutation.isPending}
-              />
-            </DialogClose>
-          </ConfirmationActionModalTemplate>
-        )
+          </DialogClose>
+        </ConfirmationActionModalTemplate>
+      )
       }
     />
   );

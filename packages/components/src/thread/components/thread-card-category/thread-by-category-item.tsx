@@ -24,7 +24,7 @@ export const ThreadByCategoryItem = ({
 
   return (
     <div
-      className="flex grow group bg-shark-900 rounded-md justify-between transition-all duration-150 p-3 cursor-pointer">
+      className="flex grow group bg-shark-900 hover:bg-shark-700 rounded-md justify-between transition-all duration-150 p-3 cursor-pointer">
       <div className="flex flex-col w-full gap-y-2 justify-between">
         <div className="flex items-center min-w-[260px] gap-x-2">
           <Avatar

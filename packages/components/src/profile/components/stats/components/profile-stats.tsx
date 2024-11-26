@@ -12,7 +12,7 @@ type UserProfileGameStatsProps = UserPageParam & {
 export const UserProfileGameStats = async({
   nickname, uuid, isSectionPrivatedByOwner,
 }: UserProfileGameStatsProps) => {
-  if (!nickname || !uuid) return null;
+  if (!uuid) return null;
   
   return (
     <ProfileSectionLayout

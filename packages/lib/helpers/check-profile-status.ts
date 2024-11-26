@@ -1,13 +1,13 @@
 'use server';
 
 import { getUserInformation } from '../queries/get-user-information.ts';
-import { UserEntity } from '@repo/types/entities/entities-type.ts';
 import { checkProfileIsPrivate } from './check-profile-is-private.ts';
 import { CheckProfileIsBlocked, checkProfileIsBlocked } from './check-profile-is-blocked.ts';
 import { checkProfileIsBanned } from './check-profile-is-banned.ts';
+import { RequestedUser } from '#queries/get-requested-user.ts';
 
 export type CheckProfileStatus = {
-  requestedUser: UserEntity,
+  requestedUserNickname: string,
   currentUserNickname?: string
 }
 
@@ -36,32 +36,30 @@ export async function getBlockType({
 }
 
 export async function checkProfileStatus(
-  requestedUser: Pick<CheckProfileStatus, 'requestedUser'>["requestedUser"]
+  requestedUser: RequestedUser
 ): Promise<ProfileStatusType> {
+  const currentUser = await getUserInformation();
+  if (!currentUser) return null;
+  
+  const currentUserNickname = currentUser.nickname;
+  
+  if (!currentUserNickname || !requestedUser.nickname) return null
+  if (currentUserNickname === requestedUser.nickname) return null
+  
   try {
-    
-    const currentUser = await getUserInformation();
-    if (!currentUser) return null;
-    
-    const currentUserNickname = currentUser.nickname;
-    const requestedUserNickname = requestedUser.nickname;
-    
-    if (!currentUserNickname || !requestedUserNickname) return null
-    if (currentUserNickname === requestedUserNickname) return null
-    
     const banStatus = await checkProfileIsBanned(requestedUser.nickname);
     
-    if (banStatus && banStatus.nickname === requestedUserNickname) {
+    if (banStatus && banStatus.nickname === requestedUser.nickname) {
       return 'banned'
     }
     
-    const blockStatus = await checkProfileIsBlocked(requestedUserNickname);
+    const blockStatus = await checkProfileIsBlocked(requestedUser.nickname);
     
     if (blockStatus) {
       return getBlockType({
         initiator: blockStatus.initiator,
         recipient: blockStatus.recipient,
-        requestedUserNickname
+        requestedUserNickname: requestedUser.nickname
       })
     }
     

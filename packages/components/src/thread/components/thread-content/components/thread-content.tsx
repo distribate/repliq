@@ -80,40 +80,56 @@ export const ThreadContent = ({
   
   return (
     <div className={`${isReadOnly ? '' : '!bg-shark-800'} px-4 w-full h-full flex !rounded-none`}>
-      <ContextMenu>
-        <ContextMenuTrigger className="w-full">
-          <Slate
-            editor={editor}
-            initialValue={content || initialValue}
-            onValueChange={value => onChange(serializeNodes(value))}
-            onChange={handleOnChange}
-          >
-            <Editable
-              renderLeaf={props => <RenderLeaf {...props} children={props.children} />}
-              renderElement={props => <RenderElement {...props} children={props.children} />}
-              readOnly={isReadOnly}
-              className="!outline-none"
-              placeholder=" "
-            />
-          </Slate>
-          {isTriggered && (
-            <div className="flex my-4 items-center gap-2 w-full justify-end">
-              <ThreadControlSave threadId={threadId} />
-              <Button variant="negative" onClick={handleCancelEdit}>
-                <Typography>Отменить</Typography>
-              </Button>
-            </div>
-          )}
-        </ContextMenuTrigger>
-        <ContextMenuContent>
-          <ContextMenuItem onClick={handleContentEdit}>
-            <div className="flex items-center gap-2">
-              <PencilLine size={20} />
-              <Typography>Редактировать</Typography>
-            </div>
-          </ContextMenuItem>
-        </ContextMenuContent>
-      </ContextMenu>
+      {isOwner && (
+        <ContextMenu>
+          <ContextMenuTrigger className="w-full">
+            <Slate
+              editor={editor}
+              initialValue={content || initialValue}
+              onValueChange={value => onChange(serializeNodes(value))}
+              onChange={handleOnChange}
+            >
+              <Editable
+                renderLeaf={props => <RenderLeaf {...props} children={props.children} />}
+                renderElement={props => <RenderElement {...props} children={props.children} />}
+                readOnly={isReadOnly}
+                className="!outline-none"
+                placeholder=" "
+              />
+            </Slate>
+            {isTriggered && (
+              <div className="flex my-4 items-center gap-2 w-full justify-end">
+                <ThreadControlSave threadId={threadId} />
+                <Button variant="negative" onClick={handleCancelEdit}>
+                  <Typography>Отменить</Typography>
+                </Button>
+              </div>
+            )}
+          </ContextMenuTrigger>
+          <ContextMenuContent>
+            <ContextMenuItem onClick={handleContentEdit}>
+              <div className="flex items-center gap-2">
+                <PencilLine size={20} />
+                <Typography>Редактировать</Typography>
+              </div>
+            </ContextMenuItem>
+          </ContextMenuContent>
+        </ContextMenu>
+      )}
+      {!isOwner && (
+        <Slate
+          editor={editor}
+          initialValue={content || initialValue}
+        >
+          <Editable
+            renderLeaf={props => <RenderLeaf {...props} children={props.children} />}
+            renderElement={props => <RenderElement {...props} children={props.children} />}
+            className="!outline-none"
+            placeholder=" "
+            readOnly={true}
+          />
+        </Slate>
+      )}
     </div>
   );
 };

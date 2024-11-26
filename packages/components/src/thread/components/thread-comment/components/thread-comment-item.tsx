@@ -4,7 +4,6 @@ import { UserNickname } from '#user/components/name/components/nickname.tsx';
 import { Typography } from '@repo/ui/src/components/typography.tsx';
 import { ThreadCommentActions } from './thread-comment-actions.tsx';
 import { ThreadCommentProps } from '../types/thread-comment-types.ts';
-import { ThreadRepliedCommentItem } from './thread-comment-replied-item.tsx';
 import { useMutationState } from '@tanstack/react-query';
 import { USER_URL } from '@repo/shared/constants/routes.ts';
 import { Badge } from '@repo/ui/src/components/badge.tsx';
@@ -21,7 +20,8 @@ const ThreadCommentMoreActions = dynamic(() =>
 );
 
 export const ThreadCommentItem = ({
-  nickname: threadCommentNickname, isAuthor, created_at, content, id, replied, thread_id, edited,
+  nickname: threadCommentNickname, isAuthor, created_at,
+  content, id, replied, thread_id, edited,
 }: ThreadCommentProps) => {
   const currentUser = getUser();
   if (!currentUser) return null;

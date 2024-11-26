@@ -36,7 +36,7 @@ export const DropdownWrapper = ({
 		<DropdownMenu modal={properties?.isModal}>
 			<DropdownMenuTrigger
 				asChild={properties?.triggerAsChild}
-				className="w-full"
+				className="w-full focus-visible:outline-none"
 				onClick={properties?.onClick}
 			>
 				{trigger}

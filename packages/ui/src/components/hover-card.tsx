@@ -19,7 +19,8 @@ const HoverCardItem = forwardRef<
       ref={ref}
       className={cn(
         `${isActive && 'text-caribbean-green-500'}
-			flex hover:bg-white/10 border border-none cursor-default select-none items-center rounded-md px-2 py-1.5 text-sm relative`,
+			    flex hover:bg-shark-600 focus:bg-shark-600 border data-[disabled]:opacity-50
+			     border-none cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm relative`,
         className,
       )}
       {...props}
@@ -35,7 +36,7 @@ const HoverCardContent = forwardRef<
     align={align}
     sideOffset={sideOffset}
     className={cn(
-      'z-50 w-64 rounded-lg' +
+      'z-50 w-64 rounded-md' +
       ' border-[1px] border-white/10 dark:bg-shark-900 bg-shark-900 p-1 shadow-md outline-none' +
       ' data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0' +
       ' data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95' +
