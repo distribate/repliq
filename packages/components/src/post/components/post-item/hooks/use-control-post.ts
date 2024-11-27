@@ -1,18 +1,25 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { removePost } from '../queries/remove-post.ts';
-import { POSTS_QUERY_KEY } from '#profile/components/posts/components/posts/queries/posts-query.ts';
+import {
+  POSTS_QUERY_KEY,
+  PostsQueryPromise,
+} from '#profile/components/posts/components/posts/queries/posts-query.ts';
 import { getUser } from '@repo/lib/helpers/get-user.ts';
 import { PostEntity } from '@repo/types/entities/entities-type.ts';
 import { toast } from 'sonner';
 import { editPost } from '#post/components/post-item/queries/edit-post.ts';
 import { disablePostComments } from '#post/components/post-item/queries/disable-post-comments.ts';
 import { pinPost } from '#post/components/post-item/queries/pin-post.ts';
+import { getUpdatedPost } from '#post/components/post-item/queries/get-updated-post.ts';
+import { POST_CONTROL_QUERY_KEY, PostControlQuery } from '#post/components/post-item/queries/post-control-query.ts';
 
-type ControlPost =
-  | { type: 'remove'; id: PostEntity['id'] }
-  | { type: 'edit'; id: PostEntity['id']; content: string }
-  | { type: 'pin'; id: PostEntity['id']; isPinned: boolean }
-  | { type: 'comments'; id: PostEntity['id']; isComments: boolean };
+type ControlPostActionType = 'remove' | 'edit' | 'pin' | 'comments'
+
+type ControlPost = {
+  nickname: string
+  id: PostEntity['id']
+  type: ControlPostActionType
+}
 
 export const useControlPost = () => {
   const qc = useQueryClient();
@@ -20,27 +27,69 @@ export const useControlPost = () => {
   
   const controlPostMutation = useMutation({
     mutationFn: async(values: ControlPost) => {
-      const { id, type } = values;
+      const { id, type, nickname } = values;
       
-      if (type === 'remove') {
-        return removePost({ id });
-      } else if (type === 'edit') {
-        const { content } = values;
-        return editPost({ id, content });
-      } else if (type === 'comments') {
-        const { isComments } = values;
-        return disablePostComments({ id, isComments });
-      } else if (type === 'pin') {
-        const { isPinned } = values;
-        return pinPost({ id, isPinned });
+      const posts = qc.getQueryData<PostsQueryPromise>(POSTS_QUERY_KEY(nickname))?.data;
+      if (!posts) return;
+      
+      let post = posts.find(post => post.id === id);
+      if (!post) return;
+      
+      const { isPinned, isComments, content: prevContent } = post;
+      const content = qc.getQueryData<PostControlQuery>(POST_CONTROL_QUERY_KEY(id))?.values?.content;
+      
+      switch(type) {
+        case 'pin':
+          return pinPost({ id, isPinned });
+        case 'comments':
+          return disablePostComments({ id, isComments });
+        case 'remove':
+          return removePost({ id });
+        case 'edit':
+          return editPost({ id, content: content ?? prevContent });
+        default:
+          break;
       }
     },
-    onSuccess: async(data) => {
-      console.log(data)
+    onSuccess: async(data, variables) => {
       if (!data || !currentUser) return toast.error('Произошла ошибка');
       
-      return qc.invalidateQueries({
+      if (variables.type === 'remove') {
+        return qc.setQueryData(
+          POSTS_QUERY_KEY(currentUser.nickname),
+          (prev: PostsQueryPromise) => {
+            if (!prev.data) return null;
+            
+            const newData = prev.data.filter(post => post.id !== variables.id)
+            
+            return {
+              data: newData,
+              meta: {
+                count: newData.length ?? 0
+              }
+            }
+          },
+        );
+      }
+      
+      const updatedPost = await getUpdatedPost({
+        nickname: variables.nickname,
+        id: variables.id,
+      });
+      
+      if (!updatedPost) return qc.invalidateQueries({
         queryKey: POSTS_QUERY_KEY(currentUser.nickname),
+      });
+      
+      qc.setQueryData(POSTS_QUERY_KEY(currentUser.nickname), (prev: PostsQueryPromise) => {
+        if (!prev.data) return prev;
+        
+        return {
+          ...prev,
+          data: prev.data.map(post =>
+            post.id === updatedPost.id ? updatedPost : post,
+          ),
+        };
       });
     },
     onError: e => { throw new Error(e.message); },

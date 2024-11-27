@@ -1,10 +1,10 @@
 "use server"
 
 import { validatePostOwner } from '#post/components/post-item/queries/validate-owner-post.ts';
-import { ControlPost } from '#post/components/post-item/types/control-post-types.ts';
 import { createClient } from '@repo/lib/utils/api/server.ts';
+import { PostEntity } from '@repo/types/entities/entities-type.ts';
 
-type PinPost = ControlPost & {
+type PinPost = Pick<PostEntity, 'id'> & {
   isPinned: boolean
 }
 

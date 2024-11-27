@@ -1,42 +1,24 @@
-import figlet from "figlet";
-import { db } from '#db/db.ts';
-import type { LuckpermsPlayers } from '#types/db/database-types.ts';
-import { sleep, serve } from "bun";
+import { Hono } from 'hono';
+import { prettyJSON } from "hono/pretty-json"
+import luckperms from './lib/routes/get-luckperms-player.ts'
+import getAuthUser from "./lib/routes/get-auth-player.ts"
+import createUser from "./lib/routes/create-user.ts"
+import { authorizeToken } from '#utils/authorize-token.ts';
 
-export async function findPlayerByUUID(uuid: string) {
-  return await db.selectFrom('luckperms_players')
-  .where('uuid', '=', uuid)
-  .selectAll()
-  .executeTakeFirst()
-}
+const app = new Hono()
 
-export async function findPlayer(criteria: Partial<LuckpermsPlayers>) {
-  let query = db.selectFrom('luckperms_players')
-  
-  if (criteria.username) {
-    query = query.where('username', '=', criteria.username) // Kysely is immutable, you must re-assign!
-  }
-  
-  if (criteria.uuid) {
-    query = query.where('uuid', '=', criteria.uuid)
-  }
-  
-  return await query.selectAll().execute()
-}
-
-export async function deletePlayer(uuid: string) {
-  return await db.deleteFrom('luckperms_players').where('uuid', '=', uuid)
-  .returningAll()
-  .executeTakeFirst()
-}
-
-const server = serve({
-  port: process.env.SERVICE_PORT,
-  fetch(req, server) {
-    const ip = server.requestIP(req);
-    console.log(server)
-    return new Response(`Your IP is ${ip}`);
-  },
+app.use("*", prettyJSON())
+app.use('*', (c, next) => {
+  const authHeader = c.req.header("Authorization");
+  authorizeToken(authHeader)
+  return next();
 });
 
-console.log(`Listening on http://localhost:${server.port} ...`);
+app.route('/lp', luckperms)
+app.route('/auth/get', getAuthUser)
+app.route('/auth', createUser)
+
+export default {
+  port: process.env.SERVICE_PORT,
+  fetch: app.fetch,
+}

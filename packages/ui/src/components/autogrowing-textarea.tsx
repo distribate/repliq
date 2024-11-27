@@ -31,15 +31,12 @@ export default function AutogrowingTextarea({
     
     textarea.style.height = `${newHeight}px`;
     
-    if (onChange) {
-      onChange(e);
-    }
+    if (onChange) onChange(e)
   };
   
   return (
     <div className="space-y-2">
       <Textarea
-        id="textarea-19"
         ref={textareaRef}
         onChange={handleInput}
         rows={defaultRows}

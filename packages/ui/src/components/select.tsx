@@ -119,7 +119,7 @@ const SelectItem = forwardRef<
 		ref={ref}
 		className={cn(
 			"relative flex w-full cursor-default select-none " +
-			"items-center rounded-sm py-1.5 pl-8 pr-2 text-sm outline-none hover:bg-secondary-color data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
+			"items-center rounded-sm py-1.5 pl-8 pr-2 text-sm outline-none hover:bg-shark-600 data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
 			className
 		)}
 		{...props}

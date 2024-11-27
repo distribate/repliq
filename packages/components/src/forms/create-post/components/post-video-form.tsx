@@ -5,7 +5,7 @@ import { TooltipWrapper } from '#wrappers/tooltip-wrapper.tsx';
 export const PostVideoForm = () => {
 	return (
 		<TooltipWrapper
-			trigger={<Video size={24} className="text-shark-300"/>}
+			trigger={<Video size={18} className="text-shark-300"/>}
 			content={<Typography>Видео</Typography>}
 			properties={{ sideAlign: "top" }}
 		/>

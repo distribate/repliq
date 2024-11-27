@@ -1,5 +1,5 @@
 import { Typography } from '@repo/ui/src/components/typography.tsx';
-import { PostEntity } from '@repo/types/entities/entities-type.ts';
+import { PostEntity, UserEntity } from '@repo/types/entities/entities-type.ts';
 import {
   POST_CONTROL_QUERY_KEY,
   PostControlQuery,
@@ -8,39 +8,51 @@ import {
 import { Input } from '@repo/ui/src/components/input.tsx';
 import { useQueryClient } from '@tanstack/react-query';
 import { Button } from '@repo/ui/src/components/button.tsx';
-import React, { useState } from 'react';
+import { useState, ChangeEvent } from 'react';
 import { useControlPost } from '#post/components/post-item/hooks/use-control-post.ts';
 
 type PostItemBodyProps = Pick<PostEntity, 'content' | 'id'>
+  & Pick<UserEntity, 'nickname'>
 
 export const PostItemBody = ({
-  content, id: postId,
+  content, id, nickname,
 }: PostItemBodyProps) => {
-  const { data: postControlState } = postControlQuery(postId);
-  const [value, setValue] = useState<string>(content);
   const qc = useQueryClient();
+  const [ value, setValue ] = useState<string>(content);
+  const { data: postControlState } = postControlQuery(id);
   const { controlPostMutation } = useControlPost();
+  
   const isEdit = postControlState.isEdit;
+  
+  const onChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const { value } = e.target;
+    
+    setValue(value);
+    qc.setQueryData(POST_CONTROL_QUERY_KEY(id), (prev: PostControlQuery) => ({
+      ...prev,
+      values: { content: value.length >= 1 ? value : null },
+    }));
+  };
   
   const handleUpdateContent = () => {
     if (!isValid) return;
     
-    qc.setQueryData(POST_CONTROL_QUERY_KEY(postId), (prev: PostControlQuery) => ({
-      ...prev, isEdit: false
-    }))
+    qc.setQueryData(
+      POST_CONTROL_QUERY_KEY(id),
+      (prev: PostControlQuery) =>
+        ({ ...prev, isEdit: false }),
+    );
     
-    return controlPostMutation.mutate({ type: "edit", content: value, id: postId })
-  }
+    return controlPostMutation.mutate({ type: 'edit', id, nickname });
+  };
   
   const handleCancelEdit = () => {
-    return qc.setQueryData(POST_CONTROL_QUERY_KEY(postId), (prev: PostControlQuery) => ({
-      ...prev, isEdit: false
-    }))
-  }
-  
-  const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setValue(e.target.value)
-  }
+    qc.setQueryData(
+      POST_CONTROL_QUERY_KEY(id),
+      (prev: PostControlQuery) =>
+        ({ ...prev, isEdit: false }),
+    );
+  };
   
   const isValid = value !== content && !controlPostMutation.isPending;
   
@@ -74,9 +86,7 @@ export const PostItemBody = ({
           </div>
         </div>
       )}
-      {!isEdit && (
-        <Typography>{content}</Typography>
-      )}
+      {!isEdit && <Typography>{content}</Typography>}
     </div>
   );
 };

@@ -16,9 +16,10 @@ export const authorizationSchema = z
 
 export const registrationSchema = authorizationSchema.and(z
 	.object({
-		email: z.string().email({
-			message:  "Почта обязательна!"
-		}),
+		// email: z.string().email({
+		// 	message:  "Почта обязательна!"
+		// }),
+		realName: z.string().optional(),
 		acceptRules: z.literal<boolean>(true, {
 			errorMap: () => ({
 				message: "Вы должны согласиться с правилами, прежде чем авторизовываться"
@@ -26,6 +27,6 @@ export const registrationSchema = authorizationSchema.and(z
 		}),
 		findout: z.string().min(6, {
 			message: "Опишите причину подробнее, пожалуйста"
-		}).optional().or(z.literal('')),
+		}).max(128)
 	})
 )

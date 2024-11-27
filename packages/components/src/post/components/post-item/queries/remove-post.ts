@@ -3,13 +3,11 @@
 import 'server-only';
 import { createClient } from '@repo/lib/utils/api/server.ts';
 import { validatePostOwner } from '#post/components/post-item/queries/validate-owner-post.ts';
-import { ControlPost } from '#post/components/post-item/types/control-post-types.ts';
-
-type RemovePost = ControlPost
+import { PostEntity } from '@repo/types/entities/entities-type.ts';
 
 export async function removePost({
   id: postId
-}: RemovePost) {
+}: Pick<PostEntity, 'id'>) {
   const isValid = await validatePostOwner({ postId })
   if (!isValid) return
   

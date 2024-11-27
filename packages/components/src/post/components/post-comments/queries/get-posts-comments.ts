@@ -20,9 +20,7 @@ export async function getPostsComments ({
     .select()
     .eq("post_id", id)
   
-  if (range) {
-    query = query.range(range[0], range[1])
-  }
+  if (range) query = query.range(range[0], range[1])
   
   if (ascending && order) {
     if (order === 'created_at') {

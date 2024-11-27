@@ -2,12 +2,12 @@
 
 import "server-only"
 import { cookies } from "next/headers"
-import { permanentRedirect } from "next/navigation"
+import { redirect } from 'next/navigation';
 import { lucia } from "@repo/lib/utils/auth/lucia-instance.ts";
 import bcrypt from "bcryptjs";
 import { setSessionDeviceInfo } from "./set-session-device-info.ts";
-import { createClient } from "@repo/lib/utils/api/server.ts";
 import { USER_URL } from '@repo/shared/constants/routes.ts';
+import { getUserFromAuthData } from '#queries/get-user-from-auth-data.ts';
 
 export interface ActionResult {
 	error: string | null;
@@ -20,8 +20,15 @@ type SessionAction = {
 }
 
 export async function getAuthCredentials(nickname: string) {
-	const api = createClient();
-	return api.from("AUTH").select("HASH,NICKNAME").eq("NICKNAME", nickname).single();
+	const res = await getUserFromAuthData(nickname)
+	
+	if (!res.ok) {
+		throw new Error(res.statusText)
+	}
+	
+	const user = await res.json()
+	
+	return user.data
 }
 
 export async function createSessionAction({
@@ -29,12 +36,12 @@ export async function createSessionAction({
 }: SessionAction): Promise<ActionResult | null> {
 	const existingUser = await getAuthCredentials(nickname);
 	
-	if (!existingUser.data) return {
+	if (!existingUser) return {
 		error: "Incorrect password or nickname"
 	}
 	
 	const validPassword = bcrypt.compareSync(
-		password, existingUser.data.HASH
+		password, existingUser.HASH
 	);
 	
 	if (!validPassword) {
@@ -50,5 +57,5 @@ export async function createSessionAction({
 		sessionCookie.name, sessionCookie.value, sessionCookie.attributes
 	);
 	
-	permanentRedirect(USER_URL + existingUser.data.NICKNAME);
+	redirect(USER_URL + existingUser.NICKNAME);
 }

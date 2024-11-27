@@ -1,12 +1,19 @@
 {
   "name": "authorization",
-  "module": "index.ts",
-  "type": "module",
   "scripts": {
-    "start": "bun run --hot index.ts",
-    "gen-types": "kysely-codegen --out-file ./types/db/database-types.ts"
+    "dev": "bun run --hot index.ts",
+    "lp-gen-types": "kysely-codegen --dialect postgres --url=env\\(LP_DATABASE_URL\\) --out-file=types/db/luckperms-database-types.ts",
+    "auth-gen-types": "kysely-codegen --dialect postgres --url=env\\(AUTH_DATABASE_URL\\) --out-file types/db/auth-database-types.ts"
+  },
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "figlet": "^1.8.0",
+    "hono": "^4.6.12",
+    "kysely": "^0.27.4",
+    "pg": "^8.13.1"
   },
   "devDependencies": {
+    "@types/bcryptjs": "^2.4.6",
     "@types/bun": "latest",
     "@types/figlet": "^1",
     "@types/pg": "^8",
@@ -14,10 +21,5 @@
   },
   "peerDependencies": {
     "typescript": "^5.0.0"
-  },
-  "dependencies": {
-    "figlet": "^1.8.0",
-    "kysely": "^0.27.4",
-    "pg": "^8.13.1"
   }
 }

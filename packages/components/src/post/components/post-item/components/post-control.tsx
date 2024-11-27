@@ -1,59 +1,50 @@
-import { Ellipsis } from 'lucide-react';
+import { Ellipsis, Pen, Pin, Trash } from 'lucide-react';
 import { HoverCardItem } from '@repo/ui/src/components/hover-card.tsx';
 import { Separator } from '@repo/ui/src/components/separator.tsx';
 import { useQueryClient } from '@tanstack/react-query';
 import { POSTS_QUERY_KEY, PostsQueryPromise } from '#profile/components/posts/components/posts/queries/posts-query.ts';
 import { DropdownWrapper } from '#wrappers/dropdown-wrapper.tsx';
 import { PostAdditionalModal } from '#modals/custom/post-additional-modal.tsx';
-import { UserEntity } from '@repo/types/entities/entities-type.ts';
+import { PostEntity, UserEntity } from '@repo/types/entities/entities-type.ts';
 import { useControlPost } from '#post/components/post-item/hooks/use-control-post.ts';
 import { getUser } from '@repo/lib/helpers/get-user.ts';
 import { ReportCreateModal } from '#modals/action-confirmation/components/report/components/report-create-modal.tsx';
-import { ControlPost } from '#post/components/post-item/types/control-post-types.ts';
 import { POST_CONTROL_QUERY_KEY, PostControlQuery } from '#post/components/post-item/queries/post-control-query.ts';
 import { Typography } from '@repo/ui/src/components/typography.tsx';
 
-export type PostControlProps = ControlPost & Pick<UserEntity, 'nickname'>
+export type PostControlProps = Pick<PostEntity, 'id'> & Pick<UserEntity, 'nickname'>
+
+// const handleComments = () => controlPostMutation.mutate({ type: 'comments', isComments, id: postId });
 
 export const PostControl = ({
-  id: postId, nickname,
+  id, nickname
 }: PostControlProps) => {
   const qc = useQueryClient();
   const currentUser = getUser();
+  if (!currentUser) return null;
+  
   const { controlPostMutation } = useControlPost();
   
-  const posts = qc.getQueryData<PostsQueryPromise>(POSTS_QUERY_KEY(nickname));
+  const posts = qc.getQueryData<PostsQueryPromise>(POSTS_QUERY_KEY(nickname))?.data;
+  if (!posts) return null;
   
-  let post = posts
-    ? posts?.data?.find(item => item.id === postId)
-    : null;
+  let post = posts.find(post => post.id === id);
+  if (!post) return null;
   
-  const handleRemovePost = () => {
-    if (!post) return;
-    return controlPostMutation.mutate({ type: 'remove', id: postId });
-  };
+  const { isPinned } = post;
   
-  // const handleComments = () => {
-  //   if (!post) return;
-  //   return controlPostMutation.mutate({ type: 'comments', isComments: post.isComments, id: postId });
-  // };
+  const handleRemovePost = () => controlPostMutation.mutate({ type: 'remove', id, nickname });
+  const handlePin = () => controlPostMutation.mutate({ type: 'pin', id, nickname });
   
   const handleEditContent = () => {
-    if (!post) return;
-    return qc.setQueryData(POST_CONTROL_QUERY_KEY(postId), (prev: PostControlQuery) => ({
-      ...prev, isEdit: true,
-    }));
+    return qc.setQueryData(
+      POST_CONTROL_QUERY_KEY(id),
+      (prev: PostControlQuery) =>
+        ({ ...prev, isEdit: true }),
+    );
   };
-  
-  const handlePin = () => {
-    if (!post) return;
-    return controlPostMutation.mutate({ type: 'pin', isPinned: post.isPinned, id: postId });
-  };
-  
-  if (!post || !currentUser) return;
   
   const isOwner = currentUser.nickname === nickname;
-  const { isPinned, isComments } = post;
   
   return (
     <div className="w-fit">
@@ -62,41 +53,39 @@ export const PostControl = ({
         trigger={<Ellipsis size={22} className="text-shark-200 cursor-pointer" />}
         content={
           <div className="flex flex-col gap-y-2">
+            <PostAdditionalModal post={post} nickname={nickname} />
+            <Separator/>
             {isOwner && (
               <>
-                <HoverCardItem onClick={handleEditContent}>
-                  <Typography>
-                    Редактировать пост
-                  </Typography>
+                <HoverCardItem className="gap-2 items-center" onClick={handleEditContent}>
+                  <Pen size={16} className="text-shark-300"/>
+                  <Typography>Редактировать пост</Typography>
                 </HoverCardItem>
-                <HoverCardItem onClick={handlePin}>
-                  <Typography className={`${isPinned && 'text-caribbean-green-500'}`}>
+                <HoverCardItem className="gap-2 items-center" onClick={handlePin}>
+                  <Pin size={16} className='text-shark-300'/>
+                  <Typography state={isPinned ? 'active' : 'default'}>
                     {isPinned ? `Открепить пост` : `Закрепить пост`}
                   </Typography>
                 </HoverCardItem>
                 {/*<HoverCardItem onClick={handleComments}>*/}
-                {/*  <Typography className={`${isComments && 'text-caribbean-green-500'}`}>*/}
+                {/*  <Typography state={isComments ? 'active' : 'default'}>*/}
                 {/*    {isComments ? `Выключить комментарии` : `Включить комментарии`}*/}
                 {/*  </Typography>*/}
                 {/*</HoverCardItem>*/}
-                <HoverCardItem onClick={handleRemovePost}>
-                  <Typography>
-                    Удалить пост
-                  </Typography>
+                <HoverCardItem className="gap-2 items-center" onClick={handleRemovePost}>
+                  <Trash size={16} className="text-shark-300"/>
+                  <Typography>Удалить пост</Typography>
                 </HoverCardItem>
                 <Separator />
               </>
             )}
-            {post && (
-              <PostAdditionalModal post={post} nickname={nickname} />
-            )}
-            {!isOwner && (
+            {!isOwner &&
               <ReportCreateModal
-                targetId={postId}
+                targetId={id}
                 reportType="post"
                 targetNickname={nickname}
               />
-            )}
+            }
           </div>
         }
       />

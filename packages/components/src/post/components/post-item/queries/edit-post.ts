@@ -2,9 +2,9 @@
 
 import { createClient } from '@repo/lib/utils/api/server.ts';
 import { validatePostOwner } from '#post/components/post-item/queries/validate-owner-post.ts';
-import { ControlPost } from '#post/components/post-item/types/control-post-types.ts';
+import { PostEntity } from '@repo/types/entities/entities-type.ts';
 
-type EditPost = ControlPost & {
+type EditPost = Pick<PostEntity, 'id'> & {
   content: string
 }
 
@@ -18,9 +18,7 @@ export async function editPost({
   
   const { error } = await api
     .from("posts")
-    .update({
-      content, isUpdated: true
-    })
+    .update({ content, isUpdated: true })
     .eq("id", postId)
   
   return !error;

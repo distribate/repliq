@@ -13,9 +13,10 @@ export type AuthQuery = {
   values: {
     nickname: string,
     password: string,
-    email?: string,
-    findout?: string,
-    acceptRules?: boolean
+    // email: string,
+    findout: string,
+    acceptRules: boolean,
+    realName: string
   } | null
 }
 
@@ -32,5 +33,6 @@ export const authQuery = () => useQuery<AuthQuery, Error>({
   gcTime: Infinity,
   staleTime: Infinity,
   initialData: initial,
-  refetchOnWindowFocus: false
+  refetchOnWindowFocus: false,
+  refetchOnMount: false
 });

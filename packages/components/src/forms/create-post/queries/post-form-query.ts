@@ -4,15 +4,13 @@ import { createQueryKey } from '@repo/lib/helpers/query-key-builder.ts';
 export type VisibilityPost = 'only' | 'all' | 'friends'
 
 export type CreatePostFieldType = {
-  active: boolean,
-  length: number,
+  isActive: boolean,
   visibility: VisibilityPost,
   content: string | null,
 }
 
 const initial: CreatePostFieldType = {
-  active: false,
-  length: 0,
+  isActive: false,
   content: null,
   visibility: 'all',
 };
@@ -24,5 +22,6 @@ export const postFormQuery = () => useQuery<CreatePostFieldType, Error>({
   staleTime: Infinity,
   initialData: initial,
   gcTime: Infinity,
-  refetchOnWindowFocus: false
+  refetchOnWindowFocus: false,
+  refetchOnMount: false
 });

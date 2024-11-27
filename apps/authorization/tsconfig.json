@@ -1,31 +1,33 @@
 {
-	"compilerOptions": {
-		"lib": ["ESNext"],
-		"target": "ESNext",
-		"module": "ESNext",
-		"moduleDetection": "force",
-		"moduleResolution": "bundler",
-		"outDir": "./dist",
-		"allowImportingTsExtensions": true,
-		"verbatimModuleSyntax": true,
-		"rootDir": "./",
-		"esModuleInterop": true,
-		"forceConsistentCasingInFileNames": true,
-		"strict": true,
-		"noEmit": true,
-		"skipLibCheck": true,
-		"noUnusedLocals": false,
-		"noUnusedParameters": false,
-		"noPropertyAccessFromIndexSignature": true,
-		"baseUrl": ".",
-		"paths": {
-			"#*": ["./*"]
-		}
-	},
-	"include": [
-		"**/*.ts", "*.ts"
-	],
-	"exclude": [
-		"node_modules", "dist",
-	]
+  "compilerOptions": {
+    "lib": ["ESNext"],
+    "target": "ESNext",
+    "module": "ESNext",
+    "moduleDetection": "force",
+    "moduleResolution": "bundler",
+    "outDir": "./dist",
+    "allowImportingTsExtensions": true,
+    "verbatimModuleSyntax": true,
+    "rootDir": "./",
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "noEmit": true,
+    "skipLibCheck": true,
+    "noUnusedLocals": false,
+    "noUnusedParameters": false,
+    "noPropertyAccessFromIndexSignature": true,
+    "strict": true,
+    "jsx": "react-jsx",
+    "jsxImportSource": "hono/jsx",
+    "baseUrl": ".",
+    "paths": {
+      "#*": ["./*"]
+    }
+  },
+  "include": [
+    "**/*.ts", "*.ts"
+  ],
+  "exclude": [
+    "node_modules", "dist",
+  ]
 }

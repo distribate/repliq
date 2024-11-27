@@ -6261,7 +6261,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/pg@npm:8.11.6, @types/pg@npm:^8":
+"@types/pg@npm:8.11.6":
   version: 8.11.6
   resolution: "@types/pg@npm:8.11.6"
   dependencies:
@@ -6269,6 +6269,17 @@ __metadata:
     pg-protocol: "npm:*"
     pg-types: "npm:^4.0.1"
   checksum: 10c0/e68e057d9500b25cd776f4fcc547b4880c4f3b0c7b6e03c8a0e5e262b6189dd7a00f4edc8937ffc55a9f6a136a78d7e4a9b6bbe6a46122a95c134f7be66f6842
+  languageName: node
+  linkType: hard
+
+"@types/pg@npm:^8":
+  version: 8.11.10
+  resolution: "@types/pg@npm:8.11.10"
+  dependencies:
+    "@types/node": "npm:*"
+    pg-protocol: "npm:*"
+    pg-types: "npm:^4.0.1"
+  checksum: 10c0/c8800d0ab2c6424308e6c6b40c73f19583ee1aed758462bd07694844b0a551b5841442205a4ee05207b80109ba502f33f20241b1bd9b4902e713611fb9e08f6c
   languageName: node
   linkType: hard
 
@@ -7223,10 +7234,13 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "authorization@workspace:apps/authorization"
   dependencies:
+    "@types/bcryptjs": "npm:^2.4.6"
     "@types/bun": "npm:latest"
     "@types/figlet": "npm:^1"
     "@types/pg": "npm:^8"
+    bcryptjs: "npm:^2.4.3"
     figlet: "npm:^1.8.0"
+    hono: "npm:^4.6.12"
     kysely: "npm:^0.27.4"
     kysely-codegen: "npm:^0.17.0"
     pg: "npm:^8.13.1"
@@ -10691,6 +10705,13 @@ __metadata:
   dependencies:
     hermes-estree: "npm:0.25.1"
   checksum: 10c0/3abaa4c6f1bcc25273f267297a89a4904963ea29af19b8e4f6eabe04f1c2c7e9abd7bfc4730ddb1d58f2ea04b6fee74053d8bddb5656ec6ebf6c79cc8d14202c
+  languageName: node
+  linkType: hard
+
+"hono@npm:^4.6.12":
+  version: 4.6.12
+  resolution: "hono@npm:4.6.12"
+  checksum: 10c0/34dbaf9ac7ed45c1f1ab8c13535077eed70621b3bb5a07d8ee1a13d7a5f362a748b5f119399292f5496d2db1e19be46c0e49683fd21224c0a57aec897edc42fe
   languageName: node
   linkType: hard
 

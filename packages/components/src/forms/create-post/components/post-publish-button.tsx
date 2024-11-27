@@ -4,28 +4,22 @@ import { postFormQuery } from "../queries/post-form-query.ts";
 import { POST_CONTENT_LIMIT } from '@repo/shared/constants/limits.ts';
 
 export const PostPublishButton = () => {
-	const { data: fieldQuery } = postFormQuery()
+	const { data: createPostFormState } = postFormQuery()
 	const { createPostMutation } = useCreatePost()
-
+	
+	const { content, visibility } = createPostFormState
+	
 	const handlePublishPost = () => {
-		if (!fieldQuery.content || !fieldQuery.visibility) {
-			return;
-		}
+		if (!content || !visibility) return;
 		
-		return createPostMutation.mutate({
-			content: fieldQuery.content,
-			visibility: fieldQuery.visibility || "all"
-		})
+		return createPostMutation.mutate({ content, visibility })
 	}
 	
-	const formFieldLength = fieldQuery?.content?.length || 0;
+	const formFieldLength = content?.length ?? 0;
+	const isDisabled = formFieldLength <= POST_CONTENT_LIMIT[0] || createPostMutation.isPending
 	
 	return (
-		<Button
-			onClick={handlePublishPost}
-			variant="action"
-			disabled={formFieldLength <= POST_CONTENT_LIMIT[0] || createPostMutation.isPending}
-		>
+		<Button onClick={handlePublishPost} variant="action" disabled={isDisabled}>
 			Опубликовать
 		</Button>
 	)

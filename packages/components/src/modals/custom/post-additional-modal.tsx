@@ -1,15 +1,12 @@
 import { HoverCardItem } from '@repo/ui/src/components/hover-card.tsx';
-import Link from 'next/link';
 import { Typography } from '@repo/ui/src/components/typography.tsx';
-import dayjs from 'dayjs';
 import { BlockWrapper } from '#wrappers/block-wrapper.tsx';
-import { Avatar } from '#user/components/avatar/components/avatar.tsx';
-import { UserNickname } from '#user/components/name/components/nickname.tsx';
 import { Dialog, DialogContent, DialogTrigger } from '@repo/ui/src/components/dialog.tsx';
-import { USER_URL } from '@repo/shared/constants/routes.ts';
 import { UserEntity } from '@repo/types/entities/entities-type.ts';
 import { PostItemBody } from '#post/components/post-item/components/post-body.tsx';
 import { OverridedPosts } from '#profile/components/posts/components/posts/queries/get-posts.ts';
+import { Square } from 'lucide-react';
+import { PostItemHeader } from '#post/components/post-item/components/post-header.tsx';
 
 type PostAdditionalModal = Pick<UserEntity, 'nickname'> & {
   post: OverridedPosts
@@ -18,29 +15,27 @@ type PostAdditionalModal = Pick<UserEntity, 'nickname'> & {
 export const PostAdditionalModal = ({
   post, nickname
 }: PostAdditionalModal) => {
+  const { created_at, isPinned, visibility } = post;
+  
   return (
     <Dialog>
       <DialogTrigger>
-        <HoverCardItem>Открыть в окне</HoverCardItem>
+        <HoverCardItem className="gap-2 items-center">
+          <Square size={16} className="text-shark-300"/>
+          <Typography>Открыть в окне</Typography>
+        </HoverCardItem>
       </DialogTrigger>
       <DialogContent id={post.id} className="max-w-4xl !p-0">
         <BlockWrapper className="flex flex-col gap-y-4">
           <div className="flex justify-between w-full items-center">
-            <div className="flex gap-4 items-center">
-              <Link href={USER_URL + nickname}>
-                <Avatar variant="page" propHeight={48} propWidth={48} nickname={nickname} />
-              </Link>
-              <div className="flex flex-col gap-y-1">
-                <Link href={USER_URL + nickname}>
-                  <UserNickname nickname={nickname} className="text-base font-medium" />
-                </Link>
-                <Typography className="text-shark-200 text-sm">
-                  {dayjs(post.created_at).format('DD.MM.YYYY HH:mm')}
-                </Typography>
-              </div>
-            </div>
+            <PostItemHeader
+              nickname={nickname}
+              created_at={created_at}
+              visibility={visibility}
+              isPinned={isPinned}
+            />
           </div>
-          <PostItemBody content={post.content} id={post.id} />
+          <PostItemBody id={post.id} content={post.content} nickname={nickname} />
         </BlockWrapper>
       </DialogContent>
     </Dialog>

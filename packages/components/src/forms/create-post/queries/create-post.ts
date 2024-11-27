@@ -10,19 +10,19 @@ type CreatePost = Pick<PostEntity, 'id'> & {
 }
 
 async function createPostUsers({
-  id: post_id, user_nickname
+  id: post_id, user_nickname,
 }: CreatePost) {
   const api = createClient();
   
   const { error } = await api
   .from('posts_users')
-  .insert({ post_id, user_nickname })
+  .insert({ post_id, user_nickname });
   
   return !error;
 }
 
 export async function createPost({
-  visibility, content
+  visibility, content,
 }: Pick<PostEntity, 'content' | 'visibility'>) {
   const currentUser = await getCurrentUser();
   if (!currentUser) return;
@@ -31,7 +31,7 @@ export async function createPost({
   
   const { data, error } = await api
   .from('posts')
-  .insert({ content, visibility, })
+  .insert({ content, visibility })
   .select('id')
   .single();
   
@@ -40,8 +40,8 @@ export async function createPost({
   }
   
   const userPost = await createPostUsers({
-    id: data.id, user_nickname: currentUser.nickname
-  })
+    id: data.id, user_nickname: currentUser.nickname,
+  });
   
   if (!userPost) return;
   

@@ -2,15 +2,30 @@
 
 import "server-only"
 import { createClient } from '@repo/lib/utils/api/server.ts';
+import { getUserFromAuthData } from '@repo/lib/queries/get-user-from-auth-data.ts';
 
-export const getUserFromOriginalAuthDetails = async(nickname: string) => {
-	const api = createClient();
+export const findPlayerFromServerData = async (nickname: string): Promise<boolean> => {
+	const res = await getUserFromAuthData(nickname)
 	
-	return api.from("AUTH").select("NICKNAME,UUID").eq("NICKNAME", nickname).single();
+	if (!res.ok) {
+		throw new Error(res.statusText)
+	}
+	
+	const user = await res.json()
+	
+	return user.data !== null;
 }
 
 export const getUserFromForumAuthDetails = async(nickname: string) => {
 	const api = createClient();
 	
-	return api.from("users").select("nickname,id").eq("nickname", nickname).single();
+	const { data, error } = await api
+	.from("users")
+	.select("nickname,id")
+	.eq("nickname", nickname)
+	.single();
+	
+	if (error) return null;
+	
+	return data;
 }

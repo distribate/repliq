@@ -5,7 +5,6 @@ import { PostTextForm } from '#forms/create-post/components/post-text-form.tsx';
 import { usePostFormControl } from '#forms/create-post/hooks/use-post-form-control.ts';
 import { Avatar } from '#user/components/avatar/components/avatar.tsx';
 import { BlockWrapper } from '#wrappers/block-wrapper.tsx';
-import { postFormQuery } from '#forms/create-post/queries/post-form-query.ts';
 import dynamic from 'next/dynamic';
 import { getUser } from '@repo/lib/helpers/get-user.ts';
 
@@ -16,10 +15,11 @@ const CreatePostActiveSection = dynamic(() =>
 
 export const CreatePostSection = () => {
   const currentUser = getUser();
+  if (!currentUser) return null;
+  
   const postFieldRef = useRef<HTMLDivElement | null>(null);
   const { postFormFieldsMutation } = usePostFormControl();
-  const { data: postFieldStatus } = postFormQuery();
-  
+
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (postFieldRef.current) {
@@ -27,7 +27,7 @@ export const CreatePostSection = () => {
         
         if (postFieldRef.current.contains(target)) return;
         
-        postFormFieldsMutation.mutate({ active: false });
+        postFormFieldsMutation.mutate({ isActive: false });
       }
     };
     
@@ -38,32 +38,26 @@ export const CreatePostSection = () => {
     };
   }, [ postFieldRef ]);
   
-  const postFieldLength = postFieldStatus.length
-    ? postFieldStatus.length
-    : 0;
-  
-  const isActive = postFieldStatus.active || postFieldLength >= 1;
-  
-  if (!currentUser) return;
-  
   return (
     <BlockWrapper
       ref={postFieldRef}
-      backgroundColor="shark_white"
+      backgroundColor="shark_black"
       className="flex-col overflow-hidden h-full"
     >
       <div className="flex items-start h-full w-full gap-2 justify-between">
-        <div className="flex gap-2 items-center w-full h-full">
+        <div className="flex gap-2 items-start w-full h-full">
           <Avatar
             variant="page"
             propWidth={48}
             propHeight={48}
             nickname={currentUser.nickname}
           />
-          <PostTextForm />
+          <div className="flex w-full overflow-hidden *:w-full relative h-full">
+            <PostTextForm />
+          </div>
         </div>
       </div>
-      {isActive && <CreatePostActiveSection />}
+      <CreatePostActiveSection />
     </BlockWrapper>
   );
 };

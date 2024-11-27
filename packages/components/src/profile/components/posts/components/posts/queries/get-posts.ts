@@ -88,13 +88,8 @@ export async function getPosts({
     );
   }
   
-  if (range) {
-    query = query.range(range[0], range[1]);
-  }
-  
-  if (limit) {
-    query = query.limit(limit);
-  }
+  if (range) query = query.range(range[0], range[1]);
+  if (limit) query = query.limit(limit);
   
   const { data: otherPosts, error, count } = await query.returns<OverridedPosts[]>();
   

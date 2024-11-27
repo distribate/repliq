@@ -36,6 +36,10 @@ const typographyVariants = cva('whitespace-wrap', {
       medium: '[text-shadow:_1px_2px_0_rgb(0_0_0_/_30%)]',
       big: '[text-shadow:_1px_1px_0_rgb(0_0_0_/_50%)]',
     },
+    state: {
+      default: "",
+      active: "text-caribbean-green-500"
+    }
   },
 });
 
@@ -45,13 +49,11 @@ export interface TypographyProps
 }
 
 export const Typography = ({
-  variant, className, font, textSize, textShadow, textColor, ...props
+  variant, className, font, state, textSize, textShadow, textColor, ...props
 }: TypographyProps) => {
   return (
     <p
-      className={typographyVariants(({
-        variant, font, textSize, textShadow, textColor, className
-      }))}
+      className={typographyVariants(({ variant, font, textSize, state, textShadow, textColor, className }))}
       {...props}
     />
   );

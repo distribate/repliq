@@ -14,5 +14,6 @@ export const postCommentsQuery = ({
   queryKey: POST_COMMENTS_QUERY_KEY(id),
   queryFn: () => getPostsComments({ id, limit, order, range, ascending, }),
   refetchOnWindowFocus: false,
+  refetchOnMount: false,
   enabled: comments && !!id,
 });

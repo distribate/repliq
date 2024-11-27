@@ -1,17 +1,17 @@
 "use server"
 
-import { getCurrentUser } from '@repo/lib/actions/get-current-user.ts';
 import { createClient } from '@repo/lib/utils/api/server.ts';
-import { ControlPost } from '#post/components/post-item/types/control-post-types.ts';
+import { validatePostOwner } from '#post/components/post-item/queries/validate-owner-post.ts';
+import { PostEntity } from '@repo/types/entities/entities-type.ts';
 
-type DisablePostComments = ControlPost & {
+type DisablePostComments = Pick<PostEntity, 'id'> & {
   isComments: boolean
 }
 
 export async function disablePostComments({
   id: postId, isComments
 }: DisablePostComments) {
-  const isValid = await getCurrentUser();
+  const isValid = await validatePostOwner({ postId })
   if (!isValid) return;
   
   const api = createClient()

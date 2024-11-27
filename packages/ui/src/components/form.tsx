@@ -14,8 +14,8 @@ const formAuthErrorMessageVariants = cva(
   "text-md font-normal [text-shadow:_1px_1px_0_rgb(0_0_0_/_10%)]", {
   variants: {
     variant: {
-      error: "text-red-600",
-      success: "text-green-600"
+      error: "text-red-700",
+      success: "text-biloba-flower-600"
     }
   },
   defaultVariants: {
