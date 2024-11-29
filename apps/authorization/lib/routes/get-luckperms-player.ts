@@ -4,8 +4,7 @@ import { determinePlayerDetailType } from '#utils/determine-player-detail-type.t
 import { HTTPException } from 'hono/http-exception';
 
 const app = new Hono()
-
-app.get(":detail", async (c) => {
+.get(":detail", async (c) => {
   const { detail } = c.req.param();
   
   const detailType = determinePlayerDetailType(detail);
@@ -13,7 +12,7 @@ app.get(":detail", async (c) => {
   if (detailType === 'unknown') {
     throw new HTTPException(400, { message: "Player details must be uuid or nickname" });
   }
-  
+
   switch(detailType) {
     case 'nickname':
       const playerByNickname = await findPlayer({ username: detail })
@@ -26,4 +25,4 @@ app.get(":detail", async (c) => {
   }
 })
 
-export default app;
+export { app };

@@ -8,6 +8,7 @@
     "outDir": "./dist",
     "allowImportingTsExtensions": true,
     "verbatimModuleSyntax": true,
+    "strictNullChecks": true,
     "rootDir": "./",
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,

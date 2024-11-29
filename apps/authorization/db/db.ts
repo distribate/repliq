@@ -14,7 +14,7 @@ const forumDialect = new PostgresDialect({
     database: FORUM_DB_NAME,
     host: '127.0.0.1',
     user: FORUM_DB_USER,
-    port: FORUM_DB_PORT,
+    port: Number(FORUM_DB_PORT),
     max: 10,
     password: FORUM_DB_PASS,
   }),
@@ -25,7 +25,7 @@ const lpDialect = new PostgresDialect({
     database: LP_DB_NAME,
     host: '127.0.0.1',
     user: LP_DB_USER,
-    port: LP_DB_PORT,
+    port: Number(LP_DB_PORT),
     max: 10,
     password: LP_DB_PASS,
   }),
@@ -36,12 +36,24 @@ const authDialect = new PostgresDialect({
     database: AUTH_DB_NAME,
     host: '127.0.0.1',
     user: AUTH_DB_USER,
-    port: AUTH_DB_PORT,
+    port: Number(AUTH_DB_PORT),
     max: 10,
     password: AUTH_DB_PASS,
   }),
 });
 
 export const lpDB = new Kysely<lpDBType>({ dialect: lpDialect });
-export const authDB = new Kysely<authDBType>({ dialect: authDialect });
-export const forumDB = new Kysely<forumDBType>({ dialect: forumDialect });
+
+export const authDB = new Kysely<authDBType>({
+  dialect: authDialect,
+  log: (log) => {
+    console.log(log.query.sql);
+  },
+});
+
+export const forumDB = new Kysely<forumDBType>({
+  dialect: forumDialect,
+  log: (log) => {
+    console.log(log.query.sql);
+  },
+});

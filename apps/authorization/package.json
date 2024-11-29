@@ -2,10 +2,17 @@
   "name": "authorization",
   "scripts": {
     "dev": "bun run --hot index.ts",
+    "build": "bun tsc",
     "lp-gen-types": "kysely-codegen --dialect postgres --url=env\\(LP_DATABASE_URL\\) --out-file=types/db/luckperms-database-types.ts",
-    "auth-gen-types": "kysely-codegen --dialect postgres --url=env\\(AUTH_DATABASE_URL\\) --out-file types/db/auth-database-types.ts"
+    "auth-gen-types": "kysely-codegen --dialect postgres --url=env\\(AUTH_DATABASE_URL\\) --out-file types/db/auth-database-types.ts",
+    "forum-gen-types": "kysely-codegen --dialect postgres --url=env\\(FORUM_DATABASE_URL\\) --out-file types/db/forum-database-types.ts"
+  },
+  "imports": {
+    "#*": "./*"
   },
   "dependencies": {
+    "@oslojs/crypto": "^1.0.1",
+    "@oslojs/encoding": "^1.1.0",
     "bcryptjs": "^2.4.3",
     "figlet": "^1.8.0",
     "hono": "^4.6.12",
@@ -13,11 +20,13 @@
     "pg": "^8.13.1"
   },
   "devDependencies": {
+    "@hono/zod-validator": "^0.4.1",
     "@types/bcryptjs": "^2.4.6",
     "@types/bun": "latest",
     "@types/figlet": "^1",
     "@types/pg": "^8",
-    "kysely-codegen": "^0.17.0"
+    "kysely-codegen": "^0.17.0",
+    "zod": "^3.23.8"
   },
   "peerDependencies": {
     "typescript": "^5.0.0"
