@@ -2,7 +2,7 @@
 
 import "server-only"
 import { getCurrentUser } from '@repo/lib/actions/get-current-user.ts';
-import { createClient } from '@repo/lib/utils/api/server.ts';
+import { createClient } from '../../../../lib/utils/api/supabase-client.ts';
 import { FriendNotesEntity } from '@repo/types/entities/entities-type.ts';
 
 export type SetNote = Pick<FriendNotesEntity, "friend_id" | "note" | "recipient">

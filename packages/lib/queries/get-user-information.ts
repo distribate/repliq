@@ -5,7 +5,7 @@ import { DonateType, getUserDonate } from '@repo/components/src/user/components/
 import { convertUserPreferencesToObject, UserPreferences } from '../helpers/convert-user-preferences-to-map.ts';
 import { getUserBanned } from './get-user-banned.ts';
 import { CurrentUser } from './current-user-query.ts';
-import { createClient } from '@repo/lib/utils/api/server.ts';
+import { createClient } from '#utils/api/supabase-client.ts';
 import { permanentRedirect } from 'next/navigation';
 import { BANNED_REDIRECT } from '@repo/shared/constants/routes.ts';
 

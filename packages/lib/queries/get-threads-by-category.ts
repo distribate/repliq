@@ -1,4 +1,4 @@
-import { createClient } from "@repo/lib/utils/api/server.ts";
+import { createClient } from "#utils/api/supabase-client.ts";
 import { RequestDetails, ThreadEntity } from '@repo/types/entities/entities-type.ts';
 
 type ThreadsFromCategories = {

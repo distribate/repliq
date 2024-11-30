@@ -1,4 +1,4 @@
-import { createClient } from '@repo/lib/utils/api/server.ts';
+import { createClient } from '../../../../../lib/utils/api/supabase-client.ts';
 
 function getRandomArbitrary(min: number, max: number) {
 	return Math.random() * (max - min) + min;

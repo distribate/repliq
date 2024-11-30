@@ -8,7 +8,7 @@ import {
   getPreferenceValue,
   UserPreferences,
 } from '../helpers/convert-user-preferences-to-map.ts';
-import { createClient } from '@repo/lib/utils/api/server.ts';
+import { createClient } from '#utils/api/supabase-client.ts';
 import { redirect } from 'next/navigation';
 import { getDonateData } from '#queries/get-donate-data.ts';
 import { DonateType } from '@repo/components/src/user/components/donate/queries/get-user-donate.ts';

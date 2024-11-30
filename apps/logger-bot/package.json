@@ -1,0 +1,19 @@
+{
+  "name": "logger-bot",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "bun --watch src/index.ts",
+    "lint": "bun x eslint \"src/**/*.ts\"",
+    "lint:fix": "bun eslint \"src/**/*.ts\" --fix"
+  },
+  "dependencies": {
+    "gramio": "^0.1.2"
+  },
+  "devDependencies": {
+    "@antfu/eslint-config": "^3.8.0",
+    "@types/bun": "^1.1.13",
+    "eslint": "^9.14.0",
+    "typescript": "^5.6.3"
+  }
+}

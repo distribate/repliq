@@ -1,5 +1,5 @@
 import { RequestDetails, UserEntity } from '@repo/types/entities/entities-type.ts';
-import { createClient } from '@repo/lib/utils/api/server.ts';
+import { createClient } from '../../../../../lib/utils/api/supabase-client.ts';
 import { getUserBanned } from '@repo/lib/queries/get-user-banned.ts';
 
 type GetLastUsers = Pick<UserEntity,

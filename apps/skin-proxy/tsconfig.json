@@ -10,7 +10,10 @@
     "strict": true,
     "noEmit": false,
     "skipLibCheck": true,
-    "baseUrl": "."
+    "baseUrl": ".",
+    "paths": {
+      "#*": ["./src/*"]
+    }
   },
   "include": [
     "**/*.ts", "*.ts"

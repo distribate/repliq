@@ -1,14 +1,14 @@
 {
   "name": "authorization",
   "scripts": {
-    "dev": "bun run --hot index.ts",
+    "dev": "bun run --hot src/index.ts",
     "build": "bun tsc",
     "lp-gen-types": "kysely-codegen --dialect postgres --url=env\\(LP_DATABASE_URL\\) --out-file=types/db/luckperms-database-types.ts",
     "auth-gen-types": "kysely-codegen --dialect postgres --url=env\\(AUTH_DATABASE_URL\\) --out-file types/db/auth-database-types.ts",
     "forum-gen-types": "kysely-codegen --dialect postgres --url=env\\(FORUM_DATABASE_URL\\) --out-file types/db/forum-database-types.ts"
   },
   "imports": {
-    "#*": "./*"
+    "#*": "./src/*"
   },
   "dependencies": {
     "@oslojs/crypto": "^1.0.1",

@@ -1,9 +1,9 @@
 import { ReactNode } from 'react';
-import { validateRequest } from '@repo/lib/utils/auth/validate-requests.ts';
 import { permanentRedirect } from 'next/navigation';
 import { checkAdminPermission } from '@repo/lib/actions/check-admin-permission.ts';
 import { AdminNavigation } from '@repo/components/src/admin/components/navigation/admin-navigation.tsx';
 import { Metadata } from 'next';
+import { getCurrentSession } from '@repo/lib/actions/get-current-session.ts';
 
 type AdminLayoutProps = {
   tickets: ReactNode,
@@ -20,7 +20,7 @@ export const metadata: Metadata = {
 export default async function AdminLayout({
   tickets, children, reports, configs, stats,
 }: AdminLayoutProps) {
-  const { user, session } = await validateRequest();
+  const { user, session } = await getCurrentSession();
   
   if (!user || !session) {
     return permanentRedirect('/');

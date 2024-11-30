@@ -1,8 +1,8 @@
 'use server';
 
 import { ReportEntity } from '@repo/types/entities/entities-type';
-import { validateRequest } from '@repo/lib/utils/auth/validate-requests.ts';
-import { createClient } from '@repo/lib/utils/api/server.ts';
+import { createClient } from '@repo/lib/utils/api/supabase-client.ts';
+import { getCurrentSession } from '@repo/lib/actions/get-current-session.ts';
 
 type PostReportType = Omit<ReportEntity, 'id'
   | 'created_at'
@@ -20,14 +20,14 @@ export type PostReportItem = {
 export async function postReport({
   report_type, reason, targetContent, targetNickname, targetId,
 }: PostReportType) {
-  const { user } = await validateRequest();
+  const { user } = await getCurrentSession();
   if (!user) return;
   
   let reported_item: PostReportItem | null = null;
   
   if (!targetNickname || !targetId) return;
   if (user.nickname === targetNickname) return;
-	
+  
   reported_item = {
     targetId, targetContent, targetNickname,
   };

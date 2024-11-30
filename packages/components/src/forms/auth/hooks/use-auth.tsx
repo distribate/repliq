@@ -1,7 +1,6 @@
 import { findPlayerFromServerData, getUserFromForumAuthDetails } from '../queries/get-user-by-nickname.ts';
 import { createSessionAction } from '@repo/lib/actions/create-session.ts';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { mutationOptions } from '@repo/shared/options/mutation-options.ts';
 import { AUTH_QUERY_KEY, AuthQuery } from '../queries/auth-query.ts';
 import { AUTH_REDIRECT } from '@repo/shared/constants/routes.ts';
 import { useRouter } from 'next/navigation';
@@ -14,7 +13,6 @@ export const useAuth = () => {
   const { replace } = useRouter();
   
   const setAuthValuesMutation = useMutation({
-    ...mutationOptions,
     mutationKey: AUTH_MUTATION_KEY,
     mutationFn: async() => {
       const authValues = qc.getQueryData<AuthQuery>(AUTH_QUERY_KEY);
@@ -50,10 +48,10 @@ export const useAuth = () => {
           if (forumAuthDetails) {
             const { nickname, id } = forumAuthDetails;
             
-            const error = await createSessionAction({ nickname: nickname, id, password });
+            const error = await createSessionAction({
+              details: { nickname, userId: id, password }
+            });
             
-            // Если произошла ошибка при создании сессии, что значит, что введенный пароль юзера
-            // неправильный - выводим ошибку о невалидном пароле
             if (error) {
               return qc.setQueryData(
                 AUTH_QUERY_KEY,
@@ -69,25 +67,24 @@ export const useAuth = () => {
       
       if (type === 'sign-up') {
         const forumAuthDetails = await getUserFromForumAuthDetails(nickname);
-        
+    
         if (!forumAuthDetails) {
-          const { status, error } = await createForumUser({ nickname, password, realName, findout });
+          const res = await createForumUser({ nickname, password, realName, findout });
           
-          if (status === 201 && !error) {
+          if ("success" in res) {
             qc.setQueryData(
               AUTH_QUERY_KEY,
               (prev: AuthQuery) =>
-                ({ ...prev, formState: { error: 'created', status } }),
+                ({ ...prev, formState: { error: 'created', status: 200 } }),
             );
             
-            replace(AUTH_REDIRECT);
+            return replace(AUTH_REDIRECT);
           }
           
-          if (error) {
+          if ("error" in res) {
             return qc.setQueryData(
-              AUTH_QUERY_KEY,
-              (prev: AuthQuery) =>
-                ({ ...prev, formState: { error: 'incorrectPassword', status: 400 } }),
+              AUTH_QUERY_KEY, (prev: AuthQuery) =>
+                ({ ...prev, formState: { error: "incorrectPassword", status: 400 } }),
             );
           }
         }

@@ -1,6 +1,6 @@
 'use server';
 
-import { createClient } from "@repo/lib/utils/api/server.ts";
+import { createClient } from "#utils/api/supabase-client.ts";
 import { getCurrentUser } from '#actions/get-current-user.ts';
 
 async function getUserBlockStatus(requestedUserNickname: string) {

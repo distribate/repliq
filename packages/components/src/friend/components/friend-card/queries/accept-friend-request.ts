@@ -2,7 +2,7 @@
 
 import { deleteFriendRequest } from './delete-friend-request.ts';
 import { getCurrentUser } from '@repo/lib/actions/get-current-user.ts';
-import { createClient } from '@repo/lib/utils/api/server.ts';
+import { createClient } from '../../../../../../lib/utils/api/supabase-client.ts';
 import { FriendRequestProperties } from '#friend/components/friend-card/types/friend-request-types.ts';
 
 type AcceptFriendRequestType = Pick<FriendRequestProperties, 'initiator'> & {

@@ -1,7 +1,7 @@
 "use server"
 
 import { PostCommentEntity, PostEntity } from '@repo/types/entities/entities-type.ts';
-import { createClient } from '@repo/lib/utils/api/server.ts';
+import { createClient } from '../../../../../../lib/utils/api/supabase-client.ts';
 
 export type GetPostsComments = Pick<PostEntity, "id"> & Partial<{
   order: "created_at" | "rating",

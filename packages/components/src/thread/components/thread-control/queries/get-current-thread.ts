@@ -2,7 +2,7 @@
 
 import { ThreadModel } from '../../../queries/get-thread-model.ts';
 import { ThreadEntity } from '@repo/types/entities/entities-type.ts';
-import { createClient } from '@repo/lib/utils/api/server.ts';
+import { createClient } from '../../../../../../lib/utils/api/supabase-client.ts';
 
 export async function getCurrentThread(id: Pick<ThreadModel, 'id'>["id"]): Promise<
   Pick<ThreadEntity, "id" | "title" | "description" | "isComments" | "permission" | "content">

@@ -1,7 +1,7 @@
 "use server"
 
 import { getCurrentUser } from '#actions/get-current-user.ts';
-import { createClient } from '#utils/api/server.ts';
+import { createClient } from '#utils/api/supabase-client.ts';
 
 export type ValidateOwner = {
   type: "posts_comments" | "threads_comments",

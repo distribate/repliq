@@ -6,7 +6,9 @@
   "compilerOptions": {
     "jsx": "preserve",
     "module": "ESNext",
-    "moduleResolution": "Bundler",
+    "moduleResolution": "bundler",
+    "skipLibCheck": true,
+    "strict": true,
     "paths": {
       "#*": ["./*"]
     }

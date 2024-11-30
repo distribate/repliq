@@ -2,7 +2,7 @@
 
 import "server-only"
 import type { FriendsSort } from '#profile/components/friends/hooks/use-friends-sort.tsx';
-import { createClient } from "@repo/lib/utils/api/server.ts";
+import { createClient } from "../../../../lib/utils/api/supabase-client.ts";
 import { FriendEntity, UserEntity } from '@repo/types/entities/entities-type.ts';
 import { getNotedFriends } from '#friends/queries/get-noted-friends.ts';
 import { getPinnedFriends } from '#friends/queries/get-pinned-friends.ts';

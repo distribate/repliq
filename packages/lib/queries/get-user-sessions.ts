@@ -1,20 +1,16 @@
 'use server';
 
-import { createClient } from '@repo/lib/utils/api/server.ts';
-import { getCurrentUser } from '../actions/get-current-user.ts';
-import { validateRequest } from '../utils/auth/validate-requests.ts';
+import { createClient } from '#utils/api/supabase-client.ts';
 import { UsersSessionEntity } from '@repo/types/entities/entities-type.ts';
+import { getCurrentSession } from '#actions/get-current-session.ts';
 
 export type UserSessions = Omit<UsersSessionEntity, 'id' | 'isBot' | 'expires_at'> & {
   current: boolean
 }
 
 export const getUserActiveSessions = async(): Promise<UserSessions[] | null> => {
-  const currentUser = await getCurrentUser();
-  if (!currentUser) return null;
-  
-  const { session: currentSession } = await validateRequest();
-  if (!currentSession) return null;
+  const current = await getCurrentSession();
+  if (!current) return null;
   
   const api = createClient();
   
@@ -23,7 +19,7 @@ export const getUserActiveSessions = async(): Promise<UserSessions[] | null> => 
   .select('user_id, browser, os, ua, cpu, ip, uuid');
   
   const { data, error } = await query
-  .eq('user_id', currentUser.id);
+  .eq('user_id', current.user?.id);
   
   if (error) {
     throw new Error(error.message);
@@ -32,7 +28,7 @@ export const getUserActiveSessions = async(): Promise<UserSessions[] | null> => 
   return data.map(session => {
     return {
       ...session,
-      current: currentSession.uuid === session.uuid,
+      current: current.user?.id === session.user_id,
     };
   });
 };

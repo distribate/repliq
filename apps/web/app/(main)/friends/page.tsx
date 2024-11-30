@@ -20,7 +20,7 @@ import {
 import { Metadata } from 'next';
 import { FilteringSearchWrapper } from '@repo/components/src/wrappers/filtering-search-wrapper.tsx';
 import dynamic from 'next/dynamic';
-import { validateRequest } from '@repo/lib/utils/auth/validate-requests.ts';
+import { getCurrentSession } from '@repo/lib/actions/get-current-session.ts';
 
 export const metadata: Metadata = {
   title: 'Друзья',
@@ -32,7 +32,7 @@ const ProfileFriendsFilteringSearch = dynamic(() =>
 );
 
 export default async function FriendsPage() {
-  const { user, session } = await validateRequest();
+  const { user, session } = await getCurrentSession();
   if (!user || !session) return null;
   
   const nickname = user.nickname;

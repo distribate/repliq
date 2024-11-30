@@ -3,7 +3,7 @@
 import "server-only"
 import { ThreadCommentEntity, ThreadCommentRepliedEntity } from '@repo/types/entities/entities-type.ts';
 import { CreateThreadCommentType } from './create-thread-comment-query.ts';
-import { createClient } from '@repo/lib/utils/api/server.ts';
+import { createClient } from '../../../../../lib/utils/api/supabase-client.ts';
 import { getCurrentUser } from '@repo/lib/actions/get-current-user.ts';
 
 type PostThreadComment = Pick<ThreadCommentEntity,

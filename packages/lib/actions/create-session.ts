@@ -1,61 +1,52 @@
-"use server"
+'use server';
 
-import "server-only"
-import { cookies } from "next/headers"
+import 'server-only';
 import { redirect } from 'next/navigation';
-import { lucia } from "@repo/lib/utils/auth/lucia-instance.ts";
-import bcrypt from "bcryptjs";
-import { setSessionDeviceInfo } from "./set-session-device-info.ts";
 import { USER_URL } from '@repo/shared/constants/routes.ts';
-import { getUserFromAuthData } from '#queries/get-user-from-auth-data.ts';
+import { setSessionTokenCookie } from '#actions/session-control.ts';
+import { authClient } from 'authorization/src';
+import { createSessionBodySchema } from 'authorization/src/lib/routes/create-session.ts';
+import { z } from 'zod';
+import { userAgent } from 'next/server';
+import { headers } from 'next/headers';
 
-export interface ActionResult {
-	error: string | null;
-}
+type CreateSession = z.infer<typeof createSessionBodySchema>
 
-type SessionAction = {
-	nickname: string,
-	id: string,
-	password: string,
-}
-
-export async function getAuthCredentials(nickname: string) {
-	const res = await getUserFromAuthData(nickname)
-	
-	if (!res.ok) {
-		throw new Error(res.statusText)
-	}
-	
-	const user = await res.json()
-	
-	return user.data
+async function createSession({
+  details, info,
+}: CreateSession) {
+  const res = await authClient.auth['create-session'].$post({
+    json: { details, info },
+  });
+  
+  return await res.json();
 }
 
 export async function createSessionAction({
-	nickname, id, password
-}: SessionAction): Promise<ActionResult | null> {
-	const existingUser = await getAuthCredentials(nickname);
-	
-	if (!existingUser) return {
-		error: "Incorrect password or nickname"
-	}
-	
-	const validPassword = bcrypt.compareSync(
-		password, existingUser.HASH
-	);
-	
-	if (!validPassword) {
-		return { error: "Incorrect username or password" }
-	}
-	
-	const session = await lucia.createSession(id, {});
-	const sessionCookie = lucia.createSessionCookie(session.id);
-	
-	await setSessionDeviceInfo(id, session.id)
-	
-	cookies().set(
-		sessionCookie.name, sessionCookie.value, sessionCookie.attributes
-	);
-	
-	redirect(USER_URL + existingUser.NICKNAME);
+  details
+}: Pick<CreateSession, "details">) {
+  const ua = headers().get("Sec-CH-UA")
+  const headersObject: Record<string, string> = {};
+  const allHeaders = headers();
+
+  for (const [key, value] of allHeaders) {
+    headersObject[key] = value;
+  }
+
+  console.log(ua, headersObject);
+  
+  // const createdSession = await createSession({
+  //   details,
+  //   info: { browser: null, ua: null, ip: null, cpu: null, os: null, isBot: false },
+  // });
+  //
+  // if ("error" in createdSession) {
+  //   return { error: createdSession.error };
+  // }
+  //
+  // const expiresAt = new Date(createdSession.expiresAt);
+  //
+  // await setSessionTokenCookie(createdSession.token, expiresAt);
+  //
+  // return redirect(USER_URL + details.nickname);
 }

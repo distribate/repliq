@@ -2,7 +2,7 @@
 
 import { getCurrentUser } from '@repo/lib/actions/get-current-user.ts';
 import { checkIsFriend } from '@repo/lib/helpers/check-is-friend.ts';
-import { createClient } from '@repo/lib/utils/api/server.ts';
+import { createClient } from '../../../../../../../../lib/utils/api/supabase-client.ts';
 import { PostEntity, RequestDetails } from '@repo/types/entities/entities-type.ts';
 import { PostsFilteringQuery } from '#profile/components/posts/components/posts/queries/posts-filtering-query.ts';
 

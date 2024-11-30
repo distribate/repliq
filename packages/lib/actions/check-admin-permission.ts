@@ -1,11 +1,11 @@
 "use server"
 
 import "server-only"
-import { createClient } from "@repo/lib/utils/api/server.ts";
-import { validateRequest } from "../utils/auth/validate-requests.ts";
+import { createClient } from "#utils/api/supabase-client.ts";
+import { getCurrentSession } from '#actions/get-current-session.ts';
 
 export async function checkAdminPermission(): Promise<boolean> {
-	const { user } = await validateRequest()
+	const { user } = await getCurrentSession()
 	if (!user) return false;
 	
 	const api = createClient();
@@ -18,5 +18,5 @@ export async function checkAdminPermission(): Promise<boolean> {
 	
 	if (error) return false;
 	
-	return !!data;
+	return !!data.id;
 }

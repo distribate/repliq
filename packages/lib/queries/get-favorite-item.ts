@@ -1,6 +1,6 @@
 'use server';
 
-import { createClient } from "@repo/lib/utils/api/server.ts";
+import { createClient } from "#utils/api/supabase-client.ts";
 import { UserEntity } from '@repo/types/entities/entities-type.ts';
 import { getPublicUrlFromStorage } from '../utils/storage/get-public-url-from-storage.ts';
 

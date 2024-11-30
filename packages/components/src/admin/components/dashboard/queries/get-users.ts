@@ -1,7 +1,7 @@
 'use server';
 
 import 'server-only';
-import { createClient } from '@repo/lib/utils/api/server.ts';
+import { createClient } from '../../../../../../lib/utils/api/supabase-client.ts';
 import { ExtendedUserEntity, UserEntity } from '@repo/types/entities/entities-type.ts';
 import { getUserDonate } from '#user/components/donate/queries/get-user-donate.ts';
 

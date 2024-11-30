@@ -1,7 +1,7 @@
 "use server"
 
 import "server-only"
-import { createClient } from "@repo/lib/utils/api/server.ts";
+import { createClient } from "#utils/api/supabase-client.ts";
 
 type GetStaticSignedImages = {
   fileName: string

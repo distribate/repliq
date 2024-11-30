@@ -6,6 +6,7 @@
 	"exclude": ["node_modules"],
 	"compilerOptions": {
 		"module": "ESNext",
-		"moduleResolution": "Bundler"
+		"moduleResolution": "Bundler",
+		"strict": true
 	}
 }

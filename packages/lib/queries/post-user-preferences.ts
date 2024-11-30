@@ -1,6 +1,6 @@
 "use server"
 
-import { createClient } from '../utils/api/server.ts';
+import { createClient } from '../utils/api/supabase-client.ts';
 import { UserPreferences } from '../helpers/convert-user-preferences-to-map.ts';
 import { UpdateUserFields } from './update-user-fields.ts';
 

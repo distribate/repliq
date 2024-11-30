@@ -11,7 +11,6 @@
     "jsx": "preserve",
     "lib": ["dom", "dom.iterable", "esnext"],
     "module": "ESNext",
-    "moduleResolution": "Bundler",
     "resolveJsonModule": true,
     "strict": true,
     "target": "es5"

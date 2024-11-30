@@ -1,26 +1,18 @@
 "use server"
 
-import { ActionResult } from "./create-session.ts";
-import { validateRequest } from "../utils/auth/validate-requests.ts";
-import { lucia } from "../utils/auth/lucia-instance.ts";
-import { cookies } from "next/headers";
 import { permanentRedirect } from "next/navigation";
 import { AUTH_REDIRECT } from '@repo/shared/constants/routes.ts';
+import { getCurrentSession } from '#actions/get-current-session.ts';
+import { deleteSessionTokenCookie } from '#actions/session-control.ts';
 
-export async function deleteSession(): Promise<ActionResult> {
-	const { session } = await validateRequest();
+export async function deleteSession(): Promise<{ error: string | null }> {
+	const { session } = await getCurrentSession();
 
 	if (!session) {
 		return { error: "Unauthorized..." };
 	}
 
-	await lucia.invalidateSession(session.id);
-
-	const sessionCookie = lucia.createBlankSessionCookie();
+	await deleteSessionTokenCookie()
 	
-	cookies().set(
-		sessionCookie.name, sessionCookie.value, sessionCookie.attributes
-	);
-
 	permanentRedirect(AUTH_REDIRECT);
 }

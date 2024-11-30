@@ -4,7 +4,7 @@ import { Avatar } from '#user/components/avatar/components/avatar.tsx';
 import { UserNickname } from '#user/components/name/components/nickname.tsx';
 import { Typography } from '@repo/ui/src/components/typography.tsx';
 import { ThreadModel } from '#thread/queries/get-thread-model.ts';
-import { createClient } from '@repo/lib/utils/api/server.ts';
+import { createClient } from '../../../../../../lib/utils/api/supabase-client.ts';
 
 type ThreadCreatorProps = Pick<ThreadModel, "owner">
 

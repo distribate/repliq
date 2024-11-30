@@ -1,4 +1,4 @@
-import { createClient } from "@repo/lib/utils/api/server.ts";
+import { createClient } from "#utils/api/supabase-client.ts";
 
 export async function getCategory(category_id: string) {
   const api = createClient();

@@ -10,19 +10,13 @@ import {
   REQUESTED_USER_QUERY_KEY
 } from '@repo/components/src/profile/components/cover/queries/requested-user-query.ts';
 
-export type AvailableFields = Pick<UserEntity,
-  | 'description'
-  | 'visibility'
-  | 'birthday'
-  | 'name_color'
-  | 'favorite_item'
-  | 'real_name'
-  | 'preferences'
+export type UpdateAvailableFields = Pick<UserEntity,
+  | 'description' | 'visibility' | 'birthday' | 'name_color' | 'favorite_item' | 'real_name' | 'preferences'
 >
 
 export type UpdateCurrentUser = {
-  field: keyof AvailableFields,
-  value: string | null,
+  field: keyof UpdateAvailableFields,
+  value: string,
   preferences?: Omit<Extract<UpdateUserFields['preferences'], object>, 'oldPreferences'>
 }
 
@@ -35,7 +29,7 @@ export const useUpdateCurrentUser = () => {
   const updateFieldMutation = useMutation({
     mutationKey: UPDATE_FIELD_MUTATION_KEY,
     mutationFn: async(values: UpdateCurrentUser) => {
-      if (!currentUser || values.value === null) return;
+      if (!currentUser) return;
       
       const { field, value, preferences } = values;
       
@@ -80,14 +74,8 @@ export const useUpdateCurrentUser = () => {
         
         return data;
       }
-      
-      if (data.status === 400 && data.data === 'Timeout') {
-        toast.error("Слишком частое изменение поля");
-        
-        return data;
-      }
     },
-    onError: (e) => { throw new Error(e.message); },
+    onError: e => { throw new Error(e.message); },
   });
   
   return { updateFieldMutation };

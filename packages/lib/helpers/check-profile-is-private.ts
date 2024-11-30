@@ -1,7 +1,6 @@
 'use server';
 
 import { checkIsFriend } from './check-is-friend.ts';
-import { CheckProfileStatus } from './check-profile-status.ts';
 import { RequestedUser } from '#queries/get-requested-user.ts';
 
 type CheckProfileIsPrivate = {

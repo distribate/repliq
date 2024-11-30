@@ -1,5 +1,3 @@
-import { validateRequest } from '@repo/lib/utils/auth/validate-requests.ts';
-import { redirect } from 'next/navigation';
 import { MainCategoriesList } from '@repo/components/src/categories/components/main-categories-list.tsx';
 import { hasAlertsShow } from '@repo/lib/actions/has-alerts.ts';
 import { Suspense } from 'react';
@@ -7,10 +5,10 @@ import { ForumStats } from '@repo/components/src/widgets/forum-stats/components/
 import {
   LastRegisteredUsers,
 } from '@repo/components/src/widgets/last-registered-users/components/last-registered-users.tsx';
-import { AUTH_REDIRECT } from '@repo/shared/constants/routes.ts';
 import { AlertCard } from '@repo/components/src/alert/components/alert-card.tsx';
 import { getAlerts } from '@repo/lib/queries/get-alerts.ts';
 import { Skeleton } from '@repo/ui/src/components/skeleton.tsx';
+import { validateSession } from '@repo/lib/actions/validate-requests.ts';
 
 const StatisticsSkeleton = () => {
   return (
@@ -44,8 +42,7 @@ const Alerts = async() => {
 };
 
 export default async function MainPage() {
-  const { user, session } = await validateRequest();
-  if (!user || !session) return redirect(AUTH_REDIRECT);
+  await validateSession();
   
   const hasAlertsShowing = await hasAlertsShow();
   

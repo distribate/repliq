@@ -1,7 +1,7 @@
 "use server"
 
 import { UserDonate } from "../types/user-donate-types.ts";;
-import { createClient } from "@repo/lib/utils/api/server.ts";
+import { createClient } from "../../../../../../lib/utils/api/supabase-client.ts";
 import { DonateVariantsEnum } from '@repo/types/entities/entities-type.ts';
 
 export type DonateType = {

@@ -1,7 +1,7 @@
 import { Typography } from '@repo/ui/src/components/typography.tsx';
 import { EditorPanel } from '#editor/components/editor-panel.tsx';
 import { Editable, RenderPlaceholderProps, Slate, withReact } from 'slate-react';
-import { serializeNodes } from '@repo/lib/helpers/serialize-nodes.ts';
+import { serializeNodes } from '@repo/lib/helpers/nodes-serializer.ts';
 import { Controller, useController } from 'react-hook-form';
 import { useState, ChangeEvent } from 'react';
 import { createEditor, Descendant } from 'slate';

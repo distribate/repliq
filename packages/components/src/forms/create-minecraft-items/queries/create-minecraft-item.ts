@@ -1,6 +1,6 @@
 "use server"
 
-import { createClient } from "@repo/lib/utils/api/server.ts";
+import { createClient } from "../../../../../lib/utils/api/supabase-client.ts";
 import { decode } from 'base64-arraybuffer';
 import { nanoid } from 'nanoid';
 import { MinecraftItemEntity } from '@repo/types/entities/entities-type.ts';

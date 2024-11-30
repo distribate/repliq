@@ -1,7 +1,7 @@
 "use server"
 
 import { validatePostOwner } from '#post/components/post-item/queries/validate-owner-post.ts';
-import { createClient } from '@repo/lib/utils/api/server.ts';
+import { createClient } from '../../../../../../lib/utils/api/supabase-client.ts';
 import { PostEntity } from '@repo/types/entities/entities-type.ts';
 
 type PinPost = Pick<PostEntity, 'id'> & {

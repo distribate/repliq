@@ -2,7 +2,7 @@
 
 import 'server-only';
 import { ThreadEntity } from '@repo/types/entities/entities-type';
-import { createClient } from '@repo/lib/utils/api/server.ts';
+import { createClient } from '../../../../../lib/utils/api/supabase-client.ts';
 import { PostThreadImages, postThreadImages } from './post-thread-images.ts';
 import { getCurrentUser } from '@repo/lib/actions/get-current-user.ts';
 import { ThreadModel } from '#thread/queries/get-thread-model.ts';

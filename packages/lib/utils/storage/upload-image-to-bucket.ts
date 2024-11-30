@@ -1,6 +1,6 @@
 'use server';
 
-import { createClient } from '@repo/lib/utils/api/server.ts';
+import { createClient } from '#utils/api/supabase-client.ts';
 import { decode } from 'base64-arraybuffer';
 import { USER_IMAGES_BUCKET } from '@repo/shared/constants/buckets.ts';
 import { getCurrentUser } from '#actions/get-current-user.ts';

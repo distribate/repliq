@@ -18,7 +18,7 @@ import {
   threadControlQuery,
 } from '#thread/components/thread-control/queries/thread-control-query.ts';
 import { useThreadControl } from '#thread/components/thread-control/hooks/use-thread-control.ts';
-import { serializeNodes } from '@repo/lib/helpers/serialize-nodes.ts';
+import { serializeNodes } from '../../../../../../lib/helpers/nodes-serializer.ts';
 import { useController, useForm } from 'react-hook-form';
 import { Button } from '@repo/ui/src/components/button.tsx';
 import { handleOnChangeEditor } from '#editor/helpers/handle-on-change.ts';

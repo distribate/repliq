@@ -1,4 +1,4 @@
-import { serve } from 'https://deno.land/std@0.170.0/http/server.ts'
+import { serve } from 'https://deno.land/std@0.170.0/http/supabase-client.ts'
 import 'https://deno.land/x/xhr@0.2.1/mod.ts'
 import { createClient } from 'jsr:@__supabase/__supabase-js@2'
 import { codeBlock, oneLine } from 'https://esm.sh/common-tags@1.8.2'

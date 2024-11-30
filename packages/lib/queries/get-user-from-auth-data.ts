@@ -1,12 +1,19 @@
-"use server"
+'use server';
 
-import "server-only"
-import ky from 'ky';
-import type { AUTH } from 'authorization/types/db/auth-database-types.ts';
-import { authorized } from '#helpers/authorize-req.ts';
+import 'server-only';
+import { authClient } from 'authorization';
 
 export async function getUserFromAuthData(nickname: string) {
-  return ky.get<{ data: AUTH | null }>(`http://localhost:3400/auth/get/${nickname}`, {
-    ...authorized
+  const res = await authClient.auth.get[':detail'].$post({
+    param: { detail: nickname },
+    json: { fields: ['HASH'] }
   });
+  
+  if (!res.ok) {
+    throw new Error('er')
+  }
+  
+  const data = await res.json()
+  
+  return data.data;
 }

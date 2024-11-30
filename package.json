@@ -3,6 +3,7 @@
   "scripts": {
     "build": "turbo build",
     "frontend": "turbo dev --filter=skin-proxy --filter=web",
+    "auth": "yarn workspace authorization dev",
     "dev": "concurrently -n \"DOCKER,DEV\" -c \"blue,green\" \"docker-compose up -d\" \"yarn frontend\"",
     "start": "yarn workspace web run start",
     "db-dump-schema": "yarn workspace database run dump-schema",

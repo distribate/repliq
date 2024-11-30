@@ -1,7 +1,7 @@
 'use server';
 
 import { getCurrentUser } from '@repo/lib/actions/get-current-user.ts';
-import { createClient } from '@repo/lib/utils/api/server.ts';
+import { createClient } from '../../../../../../lib/utils/api/supabase-client.ts';
 import { checkProfileIsBlocked } from '@repo/lib/helpers/check-profile-is-blocked.ts';
 import { getBlockType, ProfileStatusBlockedType } from '@repo/lib/helpers/check-profile-status.ts';
 import { parseStringToBoolean } from '@repo/lib/helpers/parse-string-to-boolean.ts';

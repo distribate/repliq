@@ -1,6 +1,6 @@
 'use server';
 
-import { createClient } from '@repo/lib/utils/api/server.ts';
+import { createClient } from '../../../../../../lib/utils/api/supabase-client.ts';
 import { PostEntity, UserEntity } from '@repo/types/entities/entities-type.ts';
 import { OverridedPosts } from '#profile/components/posts/components/posts/queries/get-posts.ts';
 import { getCurrentUser } from '@repo/lib/actions/get-current-user.ts';

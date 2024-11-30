@@ -1,6 +1,6 @@
 "use server"
 
-import { createClient } from '#utils/api/server.ts';
+import { createClient } from '#utils/api/supabase-client.ts';
 
 export async function getDonateData(nickname: string) {
   const api = createClient();

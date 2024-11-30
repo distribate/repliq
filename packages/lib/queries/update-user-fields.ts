@@ -1,10 +1,9 @@
 'use server';
 
-import { createClient } from '@repo/lib/utils/api/server.ts';
+import { createClient } from '#utils/api/supabase-client.ts';
 import { getCurrentUser } from '../actions/get-current-user.ts';
-import { AvailableFields } from '../hooks/use-update-current-user.ts';
+import { UpdateAvailableFields } from '../hooks/use-update-current-user.ts';
 import { getUserDonate } from '@repo/components/src/user/components/donate/queries/get-user-donate.ts';
-import { keysForCheckDonate } from '@repo/shared/constants/user-fields-donated.ts';
 import { UserPreferences } from '../helpers/convert-user-preferences-to-map.ts';
 import { postUserPreferences } from './post-user-preferences.ts';
 
@@ -12,7 +11,7 @@ export type UpdateUserFields = {
   nickname: string,
   id: string,
   field: {
-    [key in keyof AvailableFields]?: string | null;
+    [key in keyof UpdateAvailableFields]?: string | null;
   };
   preferences?: {
     key: keyof UserPreferences;
@@ -20,6 +19,10 @@ export type UpdateUserFields = {
     oldPreferences: UserPreferences
   }
 }
+
+export const keysForCheckDonate: (
+  keyof UpdateAvailableFields
+  )[] = ["name_color", "favorite_item"];
 
 export async function updateUserFields({
   field, nickname, id, preferences,

@@ -1,4 +1,4 @@
-import { createClient } from '@repo/lib/utils/api/server.ts';
+import { createClient } from '../../../../../lib/utils/api/supabase-client.ts';
 
 export async function getForumStats() {
   let usersRegisteredForum: number;

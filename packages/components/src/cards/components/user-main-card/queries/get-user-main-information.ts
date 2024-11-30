@@ -6,7 +6,7 @@ import { getFavoriteItem } from '@repo/lib/queries/get-favorite-item.ts';
 import { UserMainCard } from '../types/user-main-card-types.ts';
 import { UserCardQuery } from './user-main-card-query.ts';
 import { getUserTimeFromServer } from '@repo/lib/queries/get-user-time-from-server.ts';
-import { createClient } from '@repo/lib/utils/api/server.ts';
+import { createClient } from '../../../../../../lib/utils/api/supabase-client.ts';
 
 async function getFriendsCount({
   nickname

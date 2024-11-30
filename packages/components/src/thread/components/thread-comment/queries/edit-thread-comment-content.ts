@@ -1,6 +1,6 @@
 'use server';
 
-import { createClient } from '@repo/lib/utils/api/server.ts';
+import { createClient } from '../../../../../../lib/utils/api/supabase-client.ts';
 import { validateOwner } from '@repo/lib/helpers/validate-owner.ts';
 import { ThreadCommentEntity } from '@repo/types/entities/entities-type.ts';
 

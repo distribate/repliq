@@ -3,7 +3,7 @@
 import 'server-only';
 import { getCurrentUser } from '@repo/lib/actions/get-current-user.ts';
 import { PostCommentEntity } from '@repo/types/entities/entities-type.ts';
-import { createClient } from "@repo/lib/utils/api/server.ts";
+import { createClient } from "../../../../../lib/utils/api/supabase-client.ts";
 
 type PostComment = Pick<PostCommentEntity, "content"> & {
   post_id: string

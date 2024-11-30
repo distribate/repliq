@@ -6,8 +6,6 @@ import { Suspense } from 'react';
 import { checkProfileStatus, ProfileStatusBlockedType } from '@repo/lib/helpers/check-profile-status.ts';
 import { getBanDetails } from '@repo/lib/helpers/get-ban-details.ts';
 import { Separator } from '@repo/ui/src/components/separator.tsx';
-import { validateRequest } from '@repo/lib/utils/auth/validate-requests.ts';
-import { checkUserGameStatsVisibility } from '@repo/lib/helpers/check-user-game-stats-visibility.ts';
 import { protectPrivateArea } from '@repo/lib/helpers/protect-private-area.ts';
 import { MetadataType, PageConventionProps } from '@repo/types/global';
 import { UserPostsSkeleton } from '@repo/components/src/skeletons/user-posts-skeleton.tsx';
@@ -21,7 +19,9 @@ import { getFriends } from '@repo/components/src/friends/queries/get-friends.ts'
 import { REQUESTED_USER_QUERY_KEY } from '@repo/components/src/profile/components/cover/queries/requested-user-query.ts';
 import { UserCoverLayout } from '@repo/components/src/profile/components/cover/components/cover-layout.tsx';
 import dynamic from 'next/dynamic';
-import type { User } from 'lucia';
+import { getPreferenceValue, UserPreferences } from '@repo/lib/helpers/convert-user-preferences-to-map.ts';
+import { getCurrentSession } from '@repo/lib/actions/get-current-session.ts';
+import { User } from 'authorization/lib/routes/create-session.ts';
 
 const UserProfilePosts = dynamic(() =>
   import('@repo/components/src/profile/components/posts/components/posts/components/profile-posts.tsx')
@@ -94,6 +94,22 @@ export async function generateMetadata({
       nickname ? nickname : 'player', 'profile', `profile of ${nickname}`, `fasberry profile player`, `${nickname} profile`,
     ],
   };
+}
+
+type CheckUserGameStatsVisibility = {
+  preferences: UserPreferences,
+  currentUserNickname: string,
+  requestedUserNickname: string
+}
+
+function checkUserGameStatsVisibility({
+  preferences, currentUserNickname, requestedUserNickname
+}: CheckUserGameStatsVisibility): boolean {
+  const gameStatsShow = getPreferenceValue(preferences, "gameStatsVisibility")
+  
+  if (currentUserNickname === requestedUserNickname) return true;
+  
+  return gameStatsShow;
 }
 
 const ProfileContentPage = async({
@@ -186,7 +202,7 @@ export default async function ProfilePage({
   const { nickname: requestedUserNickname } = params;
   if (!requestedUserNickname) return;
   
-  const { user, session } = await validateRequest();
+  const { user, session } = await getCurrentSession();
   if (!user || !session) return;
   
   const requestedUser = await getRequestedUser(requestedUserNickname)
