@@ -1,14 +1,14 @@
 'use server';
 
 import 'server-only';
-import { getCurrentUser } from '@repo/lib/actions/get-current-user.ts';
 import { ExtendedUsers, getUsers } from '#admin/components/dashboard/queries/get-users.ts';
 import { getFriends } from './get-friends.ts';
+import { getCurrentSession } from '@repo/lib/actions/get-current-session.ts';
 
 export type SearchingFriend = Omit<ExtendedUsers, "uuid">
 
 export async function getSearchingFriends(): Promise<SearchingFriend[] | null> {
-  const currentUser = await getCurrentUser();
+  const { user: currentUser } = await getCurrentSession();
   if (!currentUser) return null;
   
   const [ users, friends ] = await Promise.all([

@@ -25,7 +25,7 @@ export const registrationSchema = authorizationSchema.and(z
 				message: "Вы должны согласиться с правилами, прежде чем авторизовываться"
 			})
 		}),
-		findout: z.string().min(6, {
+		findout: z.string().min(4, {
 			message: "Опишите причину подробнее, пожалуйста"
 		}).max(128)
 	})

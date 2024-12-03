@@ -1,13 +1,13 @@
 import { getUserBanned } from '@repo/lib/queries/get-user-banned.ts';
-import { getCurrentUser } from '@repo/lib/actions/get-current-user.ts';
 import { redirect } from 'next/navigation';
 import Dirt from "@repo/assets/images/minecraft/dirt.webp"
 import { Typography } from '@repo/ui/src/components/typography.tsx';
 import { BannedActionButton } from '@repo/components/src/buttons/banned-action-button.tsx';
 import dayjs from "dayjs"
+import { getCurrentSession } from '@repo/lib/actions/get-current-session.ts';
 
 export default async function BannedPage() {
-  const currentUser = await getCurrentUser()
+  const { user: currentUser } = await getCurrentSession()
   if (!currentUser) return null;
   
   const isBanned = await getUserBanned(currentUser.nickname)

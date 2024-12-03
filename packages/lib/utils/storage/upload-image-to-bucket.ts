@@ -3,7 +3,7 @@
 import { createClient } from '#utils/api/supabase-client.ts';
 import { decode } from 'base64-arraybuffer';
 import { USER_IMAGES_BUCKET } from '@repo/shared/constants/buckets.ts';
-import { getCurrentUser } from '#actions/get-current-user.ts';
+import { getCurrentSession } from '#actions/get-current-session.ts';
 
 type UploadProperties = {
   bucket: string,
@@ -33,7 +33,7 @@ function parseString(input: string): {
 }
 
 export async function deleteCoverImageFromBucket(): Promise<boolean> {
-  const currentUser = await getCurrentUser()
+  const { user: currentUser } = await getCurrentSession()
   if (!currentUser) return false;
   
   const api = createClient();

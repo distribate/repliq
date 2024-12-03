@@ -1,11 +1,11 @@
 "use server"
 
-import { getCurrentUser } from '@repo/lib/actions/get-current-user.ts';
-import { createClient } from '../../../../lib/utils/api/supabase-client.ts';
+import { createClient } from '@repo/lib/utils/api/supabase-client.ts';
 import { FriendNotesEntity } from '@repo/types/entities/entities-type.ts';
+import { getCurrentSession } from '@repo/lib/actions/get-current-session.ts';
 
 export async function getNotedFriends() {
-  const currentUser = await getCurrentUser();
+  const { user: currentUser } = await getCurrentSession();
   if (!currentUser) return;
   
   const api = createClient();

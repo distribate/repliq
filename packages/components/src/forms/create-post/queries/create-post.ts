@@ -1,9 +1,9 @@
 'use server';
 
 import 'server-only';
-import { createClient } from '../../../../../lib/utils/api/supabase-client.ts';
+import { createClient } from '@repo/lib/utils/api/supabase-client.ts';
 import { PostEntity } from '@repo/types/entities/entities-type.ts';
-import { getCurrentUser } from '@repo/lib/actions/get-current-user.ts';
+import { getCurrentSession } from '@repo/lib/actions/get-current-session.ts';
 
 type CreatePost = Pick<PostEntity, 'id'> & {
   user_nickname: string
@@ -24,7 +24,7 @@ async function createPostUsers({
 export async function createPost({
   visibility, content,
 }: Pick<PostEntity, 'content' | 'visibility'>) {
-  const currentUser = await getCurrentUser();
+  const { user: currentUser } = await getCurrentSession();
   if (!currentUser) return;
   
   const api = createClient();

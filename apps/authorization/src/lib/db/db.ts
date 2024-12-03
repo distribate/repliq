@@ -1,8 +1,8 @@
 import { Pool } from 'pg';
 import { Kysely, PostgresDialect } from 'kysely';
-import type { DB as lpDBType } from '#/types/db/luckperms-database-types.ts';
-import type { DB as authDBType } from '#/types/db/auth-database-types.ts';
-import type { DB as forumDBType } from '#/types/db/forum-database-types.ts';
+import type { DB as lpDBType } from '#types/db/luckperms-database-types.ts';
+import type { DB as authDBType } from '#types/db/auth-database-types.ts';
+import type { DB as forumDBType } from '#types/db/forum-database-types.ts';
 import {
   LP_DB_PORT, LP_DB_NAME, LP_DB_USER, LP_DB_PASS,
   AUTH_DB_PASS, AUTH_DB_PORT, AUTH_DB_USER, AUTH_DB_NAME,
@@ -42,7 +42,9 @@ const authDialect = new PostgresDialect({
   }),
 });
 
-export const lpDB = new Kysely<lpDBType>({ dialect: lpDialect });
+export const lpDB = new Kysely<lpDBType>({
+  dialect: lpDialect
+});
 
 export const authDB = new Kysely<authDBType>({
   dialect: authDialect,

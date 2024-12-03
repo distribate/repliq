@@ -1,7 +1,7 @@
 "use server"
 
-import { getCurrentUser } from '#actions/get-current-user.ts';
 import { createClient } from '#utils/api/supabase-client.ts';
+import { getCurrentSession } from '#actions/get-current-session.ts';
 
 export type ValidateOwner = {
   type: "posts_comments" | "threads_comments",
@@ -11,7 +11,7 @@ export type ValidateOwner = {
 export async function validateOwner({
   id, type
 }: ValidateOwner) {
-  const currentUser = await getCurrentUser();
+  const { user: currentUser } = await getCurrentSession();
   if (!currentUser) return;
   
   const api = createClient();

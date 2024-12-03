@@ -3,8 +3,8 @@
 import "server-only"
 import { ThreadCommentEntity, ThreadCommentRepliedEntity } from '@repo/types/entities/entities-type.ts';
 import { CreateThreadCommentType } from './create-thread-comment-query.ts';
-import { createClient } from '../../../../../lib/utils/api/supabase-client.ts';
-import { getCurrentUser } from '@repo/lib/actions/get-current-user.ts';
+import { createClient } from '@repo/lib/utils/api/supabase-client.ts';
+import { getCurrentSession } from '@repo/lib/actions/get-current-session.ts';
 
 type PostThreadComment = Pick<ThreadCommentEntity,
   'thread_id' | "content"
@@ -37,7 +37,7 @@ export async function postThreadReplied({
 export async function postThreadCommentItem({
   content, thread_id
 }: PostThreadCommentItem) {
-  const currentUser = await getCurrentUser();
+  const { user: currentUser } = await getCurrentSession();
   if (!currentUser) return;
   
   const api = createClient();

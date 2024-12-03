@@ -11,7 +11,6 @@ import { useEffect, useState } from 'react';
 import { FormAuthErrorMessage } from '@repo/ui/src/components/form.tsx';
 import { Typography } from '@repo/ui/src/components/typography.tsx';
 import { useMutationState, useQueryClient } from '@tanstack/react-query';
-import { zodSignUpForm } from '../types/error-message-type.ts';
 import { errorMessages } from '../constants/error-messages.ts';
 import { AUTH_MUTATION_KEY, useAuth } from '../hooks/use-auth.tsx';
 import { AUTH_QUERY_KEY, AuthQuery, authQuery } from '../queries/auth-query.ts';
@@ -19,20 +18,26 @@ import Link from 'next/link';
 import { GearLoader } from '@repo/ui/src/components/gear-loader.tsx';
 import EnderPearl from '@repo/assets/images/minecraft/ender_pearl.webp';
 import EyeOfEnder from '@repo/assets/images/minecraft/eye_of_ender.webp';
+import type { PasswordVisibilityType } from '#forms/auth/types/form-types.ts';
+import { z } from 'zod';
+
+type zodSignUpForm = z.infer<typeof registrationSchema>
 
 export const SignUpForm = () => {
   const qc = useQueryClient();
   const { data: authState } = authQuery();
-  const [ passwordType, setPasswordType ] = useState<'text' | 'password'>('password');
+  const [ passwordType, setPasswordType ] = useState<PasswordVisibilityType>('password');
   const { setAuthValuesMutation } = useAuth();
-  const { replace } = useRouter()
+  const { replace } = useRouter();
   
   const mutData = useMutationState({
     filters: { mutationKey: AUTH_MUTATION_KEY },
-    select: mutation => mutation.state.status,
+    select: m => m.state.status,
   });
   
   const isLoading = mutData[mutData.length - 1] === 'pending';
+  const status = authState.status;
+  const isError = status !== 'created';
   
   const {
     register,
@@ -50,17 +55,13 @@ export const SignUpForm = () => {
   });
   
   useEffect(() => {
-    if (status === 201 || error === 'notFound') {
-      return reset();
+    switch(status) {
+      case 'notFound':
+        return reset();
+      case 'incorrectPassword':
+        return resetField('password');
     }
-    
-    if (error === 'incorrectPassword' && status === 400) {
-      return resetField('password');
-    }
-  }, [ authState?.formState ]);
-  
-  const error = authState?.formState?.error;
-  const status = authState.formState?.status;
+  }, [ status ]);
   
   const onSubmit = () => {
     const values = getValues();
@@ -80,6 +81,14 @@ export const SignUpForm = () => {
   const handleRedirect = () => {
     replace('/auth?type=login');
     return qc.resetQueries({ queryKey: AUTH_QUERY_KEY });
+  };
+  
+  const handlePasswordVisibility = () => {
+    if (passwordType === 'password') {
+      setPasswordType('text');
+    } else {
+      setPasswordType('password');
+    }
   };
   
   return (
@@ -121,11 +130,7 @@ export const SignUpForm = () => {
             width={36}
             height={36}
             loading="lazy"
-            onClick={() => {
-              if (passwordType === 'password') {
-                setPasswordType('text');
-              } else setPasswordType('password');
-            }}
+            onClick={handlePasswordVisibility}
           />
         </div>
       </FormField>
@@ -160,19 +165,55 @@ export const SignUpForm = () => {
         />
       </FormField>
       <FormField errorMessage={errors?.acceptRules?.message}>
-        <div className="flex items-center gap-1">
-          <input type="checkbox" id="rules" {...register('acceptRules')} />
-          <Typography textSize="medium" textColor="shark_black">
-            Согласен с&nbsp;
-            <Link
-              href="/misc/rules"
-              target="_blank"
-              className="underline underline-offset-4"
+        <div className="inline-flex gap-2 items-center">
+          <label
+            htmlFor="rules"
+            className="flex items-center cursor-pointer relative"
+          >
+            <input
+              id="rules"
+              type="checkbox"
+              className="peer h-6 w-6 cursor-pointer transition-all appearance-none
+                  rounded shadow hover:shadow-md border-[2px] border-shark-600 bg-shark-700 checked:bg-shark-900 checked:border-black"
+              {...register('acceptRules')}
+            />
+            <span
+              className="absolute text-white opacity-0 peer-checked:opacity-100
+               top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 pointer-events-none"
             >
-              правилами
-            </Link>
-            &nbsp;пользования
-          </Typography>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-3.5 w-3.5"
+                viewBox="0 0 20 20"
+                fill="currentColor"
+                stroke="currentColor"
+                stroke-width="1"
+              >
+                <path
+                  fill-rule="evenodd"
+                  d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                  clip-rule="evenodd"
+                >
+                </path>
+              </svg>
+            </span>
+          </label>
+          <label className="select-none cursor-pointer" htmlFor="rules">
+            <Typography
+              textSize="large"
+              textColor="shark_black"
+            >
+              Согласен с&nbsp;
+              <Link
+                href="/misc/rules"
+                target="_blank"
+                className="underline underline-offset-4"
+              >
+                правилами
+              </Link>
+              &nbsp;проекта
+            </Typography>
+          </label>
         </div>
       </FormField>
       <div className="flex items-center gap-x-2">
@@ -182,14 +223,19 @@ export const SignUpForm = () => {
           className="hover:bg-pink-900 bg-pink-800"
           disabled={!isValid || isLoading}
         >
-							<span className="text-shark-50 text-md uppercase font-semibold">
-                Зарегистрироваться
-              </span>
+          <Typography
+            textSize="medium"
+            font="minecraft"
+            textColor="shark_white"
+            className="uppercase font-semibold"
+          >
+            Зарегистрироваться
+          </Typography>
         </Button>
         {isLoading && <GearLoader />}
       </div>
-      {error && <FormAuthErrorMessage type={error} messages={errorMessages} />}
-      {error === 'created' && (
+      {isError && <FormAuthErrorMessage type={status} messages={errorMessages} />}
+      {status === 'created' && (
         <div className="px-2">
           <Typography
             onClick={handleRedirect}

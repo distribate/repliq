@@ -1,11 +1,11 @@
 'use server';
 
 import { createClient } from '#utils/api/supabase-client.ts';
-import { getCurrentUser } from '../actions/get-current-user.ts';
 import { UpdateAvailableFields } from '../hooks/use-update-current-user.ts';
 import { getUserDonate } from '@repo/components/src/user/components/donate/queries/get-user-donate.ts';
 import { UserPreferences } from '../helpers/convert-user-preferences-to-map.ts';
 import { postUserPreferences } from './post-user-preferences.ts';
+import { getCurrentSession } from '#actions/get-current-session.ts';
 
 export type UpdateUserFields = {
   nickname: string,
@@ -28,7 +28,7 @@ export async function updateUserFields({
   field, nickname, id, preferences,
 }: UpdateUserFields) {
   const api = createClient();
-  const currentUser = await getCurrentUser();
+  const { user: currentUser } = await getCurrentSession();
   
   if (!currentUser) return;
   

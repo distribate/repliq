@@ -1,10 +1,10 @@
 'use server';
 
-import { getCurrentUser } from '@repo/lib/actions/get-current-user.ts';
-import { createClient } from '../../../../../../lib/utils/api/supabase-client.ts';
+import { createClient } from '@repo/lib/utils/api/supabase-client.ts';
 import { checkProfileIsBlocked } from '@repo/lib/helpers/check-profile-is-blocked.ts';
 import { getBlockType, ProfileStatusBlockedType } from '@repo/lib/helpers/check-profile-status.ts';
 import { parseStringToBoolean } from '@repo/lib/helpers/parse-string-to-boolean.ts';
+import { getCurrentSession } from '@repo/lib/actions/get-current-session.ts';
 
 type CreateFriendRequest = {
   status: number,
@@ -32,7 +32,7 @@ async function validateUserFriendRequest(nickname: string) {
 }
 
 export async function createFriendRequest(requestedUserNickname: string): Promise<CreateFriendRequest> {
-  const currentUser = await getCurrentUser();
+  const { user: currentUser } = await getCurrentSession();
   
   if (!currentUser) return {
     status: 400, error: 'not-authorized',

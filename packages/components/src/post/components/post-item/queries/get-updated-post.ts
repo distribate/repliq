@@ -1,9 +1,9 @@
 'use server';
 
-import { createClient } from '../../../../../../lib/utils/api/supabase-client.ts';
+import { createClient } from '@repo/lib/utils/api/supabase-client.ts';
 import { PostEntity, UserEntity } from '@repo/types/entities/entities-type.ts';
 import { OverridedPosts } from '#profile/components/posts/components/posts/queries/get-posts.ts';
-import { getCurrentUser } from '@repo/lib/actions/get-current-user.ts';
+import { getCurrentSession } from '@repo/lib/actions/get-current-session.ts';
 
 type GetUpdatedPost = Pick<PostEntity, 'id'>
   & Pick<UserEntity, 'nickname'>
@@ -21,7 +21,7 @@ type PostViews = {
 export async function getUpdatedPost({
   nickname, id,
 }: GetUpdatedPost): Promise<UpdatedPost | null> {
-  const currentUser = await getCurrentUser();
+  const { user: currentUser } = await getCurrentSession();
   if (!currentUser) return null;
   
   const api = createClient();

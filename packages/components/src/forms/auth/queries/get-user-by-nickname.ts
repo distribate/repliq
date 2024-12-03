@@ -2,21 +2,17 @@
 
 import "server-only"
 import { createClient } from '@repo/lib/utils/api/supabase-client.ts';
-import { authClient } from 'authorization';
+import { authClient } from '@repo/lib/utils/api/auth-client.ts';
 
 export const findPlayerFromServerData = async (nickname: string): Promise<boolean> => {
-	const res = await authClient.auth.get[":detail"].$post({
+	const res = await authClient.get[":detail"].$post({
 		param: { detail: nickname },
 		json: { fields: ['NICKNAME'] }
 	});
 	
-	if (!res.ok) {
-		throw new Error('er')
-	}
-	
 	const data = await res.json()
 	
-	return !!data.data;
+	return !!data;
 }
 
 export const getUserFromForumAuthDetails = async(nickname: string) => {

@@ -2,11 +2,11 @@
 
 import 'server-only';
 import { ThreadEntity } from '@repo/types/entities/entities-type';
-import { createClient } from '../../../../../lib/utils/api/supabase-client.ts';
+import { createClient } from '@repo/lib/utils/api/supabase-client.ts';
 import { PostThreadImages, postThreadImages } from './post-thread-images.ts';
-import { getCurrentUser } from '@repo/lib/actions/get-current-user.ts';
 import { ThreadModel } from '#thread/queries/get-thread-model.ts';
 import { postThreadTags } from '#forms/create-thread/queries/post-thread-tags.ts';
+import { getCurrentSession } from '@repo/lib/actions/get-current-session.ts';
 
 type Nullable<T> = {
   [P in keyof T]: T[P] | null;
@@ -46,7 +46,7 @@ export async function postThreadCategory({
 export async function postThreadNickname(
   thread_id: Pick<PostThreadProperties, 'id'>["id"]
 ) {
-  const currentUser = await getCurrentUser();
+  const { user: currentUser } = await getCurrentSession();
   if (!currentUser) return;
   
   const api = createClient();
@@ -90,7 +90,7 @@ export async function postThreadItem({
 export async function postThread({
   ...values
 }: PostThreadType) {
-  const currentUser = await getCurrentUser();
+  const { user: currentUser } = await getCurrentSession();
   if (!currentUser) return;
   
   const {

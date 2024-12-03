@@ -1,3 +1,1 @@
-export type SignTipProps = {
-  handleRedirect: () => void
-}
+export type PasswordVisibilityType = "text" | "password"

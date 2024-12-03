@@ -15,19 +15,9 @@ export async function getAlerts(filter?: GetAlerts) {
   .select()
   .returns<AlertEntity[]>()
   
-  if (filter?.sort) {
-    query.order(filter.sort, {
-      ascending: false
-    })
-  }
-  
-  if (filter?.limit) {
-    query.limit(filter.limit)
-  }
-  
-  if (filter?.range) {
-    query.range(filter.range[0], filter.range[1])
-  }
+  if (filter?.sort) query.order(filter.sort, { ascending: false })
+  if (filter?.limit) query.limit(filter.limit)
+  if (filter?.range) query.range(filter.range[0], filter.range[1])
   
   const { data, error } = await query;
   

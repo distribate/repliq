@@ -1,14 +1,14 @@
 'use server';
 
 import "server-only"
-import { getCurrentUser } from '@repo/lib/actions/get-current-user.ts';
 import { SetNote } from './set-note-friend.ts';
-import { createClient } from '../../../../lib/utils/api/supabase-client.ts';
+import { createClient } from '@repo/lib/utils/api/supabase-client.ts';
+import { getCurrentSession } from '@repo/lib/actions/get-current-session.ts';
 
 export async function setUnNoteFriend({
   recipient, friend_id
 }: Omit<SetNote, "note">) {
-  const currentUser = await getCurrentUser();
+  const { user: currentUser } = await getCurrentSession();
   if (!currentUser) return;
   
   const api = createClient();

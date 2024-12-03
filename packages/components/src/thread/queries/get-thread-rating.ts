@@ -1,9 +1,9 @@
 'use server';
 
 import { UpdateThreadRatingType } from './post-thread-rating.ts';
-import { getCurrentUser } from '@repo/lib/actions/get-current-user.ts';
-import { createClient } from '../../../../lib/utils/api/supabase-client.ts';
+import { createClient } from '@repo/lib/utils/api/supabase-client.ts';
 import { ThreadEntity, ThreadRatingEntity } from '@repo/types/entities/entities-type.ts';
+import { getCurrentSession } from '@repo/lib/actions/get-current-session.ts';
 
 export type ThreadRatingResponse = {
   increment: number,
@@ -12,7 +12,7 @@ export type ThreadRatingResponse = {
 }
 
 export async function getThreadRating(threadId?: Pick<ThreadEntity, 'id'>["id"]): Promise<ThreadRatingResponse | null> {
-  const currentUser = await getCurrentUser();
+  const { user: currentUser } = await getCurrentSession();
   if (!currentUser || !threadId) return null;
 
   const api = createClient();

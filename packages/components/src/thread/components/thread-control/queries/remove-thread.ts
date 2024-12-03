@@ -1,10 +1,10 @@
 "use server"
 
 import "server-only"
-import { createClient } from '../../../../../../lib/utils/api/supabase-client.ts';
+import { createClient } from '@repo/lib/utils/api/supabase-client.ts';
 import { ThreadEntity } from '@repo/types/entities/entities-type.ts';
-import { getCurrentUser } from '@repo/lib/actions/get-current-user.ts';
 import { validateThreadOwner } from '#thread/components/thread-control/queries/validate-thread-owner.ts';
+import { getCurrentSession } from '@repo/lib/actions/get-current-session.ts';
 
 async function threadImagesRemove(thread_id: Pick<ThreadEntity, 'id'>["id"]) {
   const api = createClient();
@@ -39,7 +39,7 @@ async function threadImagesRemove(thread_id: Pick<ThreadEntity, 'id'>["id"]) {
 export async function removeThread({
   id
 }: Pick<ThreadEntity, 'id'>) {
-  const currentUser = await getCurrentUser();
+  const { user: currentUser } = await getCurrentSession();
   if (!currentUser) return;
   
   const isValid = await validateThreadOwner({

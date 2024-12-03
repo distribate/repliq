@@ -1,9 +1,9 @@
 'use server';
 
 import 'server-only';
-import { getCurrentUser } from '@repo/lib/actions/get-current-user.ts';
 import { PostCommentEntity } from '@repo/types/entities/entities-type.ts';
-import { createClient } from "../../../../../lib/utils/api/supabase-client.ts";
+import { createClient } from '@repo/lib/utils/api/supabase-client.ts';
+import { getCurrentSession } from '@repo/lib/actions/get-current-session.ts';
 
 type PostComment = Pick<PostCommentEntity, "content"> & {
   post_id: string
@@ -28,7 +28,7 @@ async function validatePostComments(postId: string): Promise<boolean> {
 export async function postComment({
   content, post_id
 }: PostComment) {
-  const currentUser = await getCurrentUser();
+  const { user: currentUser } = await getCurrentSession();
   if (!currentUser) return;
   
   const isValid = await validatePostComments(post_id)

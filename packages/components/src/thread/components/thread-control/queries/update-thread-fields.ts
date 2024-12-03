@@ -1,12 +1,12 @@
 'use server';
 
 import 'server-only';
-import { getCurrentUser } from '@repo/lib/actions/get-current-user.ts';
-import { createClient } from '../../../../../../lib/utils/api/supabase-client.ts';
+import { createClient } from '@repo/lib/utils/api/supabase-client.ts';
 import { validateThreadOwner } from '#thread/components/thread-control/queries/validate-thread-owner.ts';
 import {
   ThreadControlQueryValues,
 } from '#thread/components/thread-control/queries/thread-control-query.ts';
+import { getCurrentSession } from '@repo/lib/actions/get-current-session.ts';
 
 type UpdateThread = {
   threadId: string,
@@ -16,7 +16,7 @@ type UpdateThread = {
 export async function updateThread({
   threadId, values
 }: UpdateThread) {
-  const currentUser = await getCurrentUser();
+  const { user: currentUser } = await getCurrentSession();
   if (!currentUser) return;
   
   const isValid = await validateThreadOwner({

@@ -1,9 +1,9 @@
 'use server';
 
 import { deleteFriendRequest } from './delete-friend-request.ts';
-import { getCurrentUser } from '@repo/lib/actions/get-current-user.ts';
-import { createClient } from '../../../../../../lib/utils/api/supabase-client.ts';
+import { createClient } from '@repo/lib/utils/api/supabase-client.ts';
 import { FriendRequestProperties } from '#friend/components/friend-card/types/friend-request-types.ts';
+import { getCurrentSession } from '@repo/lib/actions/get-current-session.ts';
 
 type AcceptFriendRequestType = Pick<FriendRequestProperties, 'initiator'> & {
   friend_id: string
@@ -17,7 +17,7 @@ type AcceptFriendRequest = {
 export async function acceptFriendRequest({
   initiator, friend_id,
 }: AcceptFriendRequestType): Promise<AcceptFriendRequest> {
-  const currentUser = await getCurrentUser();
+  const { user: currentUser } = await getCurrentSession();
   if (!currentUser) return {
     error: 'not-authorized', status: 400,
   };

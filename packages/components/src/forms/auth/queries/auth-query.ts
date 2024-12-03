@@ -6,10 +6,7 @@ type AuthType = 'sign-in' | 'sign-up';
 
 export type AuthQuery = {
   type: AuthType,
-  formState: {
-    error: AuthMessages | null,
-    status: number | null
-  },
+  status: AuthMessages | null,
   values: {
     nickname: string,
     password: string,
@@ -21,7 +18,7 @@ export type AuthQuery = {
 }
 
 const initial: AuthQuery = {
-  formState: { error: null, status: null, },
+  status: null,
   values: null,
   type: "sign-up"
 };

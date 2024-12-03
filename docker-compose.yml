@@ -31,7 +31,7 @@ services:
     ports:
       - ${AUTHORIZATION_POSTGRES_PORT}:5432/tcp
     volumes:
-      - ./apps/authorization/docker/volumes/authorization-db/data:/var/lib/postgresql/data
+      - ./data/authorization-db/data:/var/lib/postgresql/data
 
   studio:
     container_name: supabase-studio
@@ -99,7 +99,7 @@ services:
       DASHBOARD_PASSWORD: ${DASHBOARD_PASSWORD}
     volumes:
       # https://github.com/supabase/supabase/issues/12661
-      - ./apps/database/docker/volumes/api/kong.yml:/home/kong/temp.yml:ro
+      - ./data/supabase/volumes/api/kong.yml:/home/kong/temp.yml:ro
 
   auth:
     container_name: supabase-auth
@@ -290,7 +290,7 @@ services:
       ENABLE_IMAGE_TRANSFORMATION: "true"
       IMGPROXY_URL: http://imgproxy:5001
     volumes:
-      - ./apps/database/docker/volumes/storage:/var/lib/storage:z
+      - ./data/supabase/volumes/storage:/var/lib/storage:z
 
   imgproxy:
     container_name: supabase-imgproxy
@@ -306,7 +306,7 @@ services:
       IMGPROXY_USE_ETAG: "true"
       IMGPROXY_ENABLE_WEBP_DETECTION: ${IMGPROXY_ENABLE_WEBP_DETECTION}
     volumes:
-      - ./apps/database/docker/volumes/storage:/var/lib/storage:z
+      - ./data/supabase/volumes/storage:/var/lib/storage:z
 
   meta:
     container_name: supabase-meta
@@ -342,7 +342,7 @@ services:
       # TODO: Allow configuring VERIFY_JWT per function. This PR might help: https://github.com/supabase/cli/pull/786
       VERIFY_JWT: "${FUNCTIONS_VERIFY_JWT}"
     volumes:
-      - ./apps/database/docker/volumes/functions:/home/deno/functions:Z
+      - ./data/supabase/volumes/functions:/home/deno/functions:Z
     command:
       - start
       - --main-service
@@ -420,21 +420,21 @@ services:
       JWT_SECRET: ${JWT_SECRET}
       JWT_EXP: ${JWT_EXPIRY}
     volumes:
-      - ./apps/database/docker/volumes/db/realtime.sql:/docker-entrypoint-initdb.d/migrations/99-realtime.sql:Z
+      - ./data/supabase/volumes/db/realtime.sql:/docker-entrypoint-initdb.d/migrations/99-realtime.sql:Z
       # Must be superuser to create event trigger
-      - ./apps/database/docker/volumes/db/webhooks.sql:/docker-entrypoint-initdb.d/init-scripts/98-webhooks.sql:Z
+      - ./data/supabase/volumes/db/webhooks.sql:/docker-entrypoint-initdb.d/init-scripts/98-webhooks.sql:Z
       # Must be superuser to alter reserved role
-      - ./apps/database/docker/volumes/db/roles.sql:/docker-entrypoint-initdb.d/init-scripts/99-roles.sql:Z
+      - ./data/supabase/volumes/db/roles.sql:/docker-entrypoint-initdb.d/init-scripts/99-roles.sql:Z
       # Initialize the database settings with JWT_SECRET and JWT_EXP
-      - /apps/database/docker/volumes/db/jwt.sql:/docker-entrypoint-initdb.d/init-scripts/99-jwt.sql:Z
+      - ./data/supabase/volumes/db/jwt.sql:/docker-entrypoint-initdb.d/init-scripts/99-jwt.sql:Z
       # PGDATA directory is persisted between restarts
-      - ./apps/database/docker/volumes/db/data:/var/lib/postgresql/data:Z
+      - ./data/supabase/volumes/db/data:/var/lib/postgresql/data:Z
       # Changes required for internal __supabase data such as _analytics
-      - ./apps/database/docker/volumes/db/_supabase.sql:/docker-entrypoint-initdb.d/migrations/97-_supabase.sql:Z
+      - ./data/supabase/volumes/db/_supabase.sql:/docker-entrypoint-initdb.d/migrations/97-_supabase.sql:Z
       # Changes required for Analytics support
-      - ./apps/database/docker/volumes/db/logs.sql:/docker-entrypoint-initdb.d/migrations/99-logs.sql:Z
+      - ./data/supabase/volumes/db/logs.sql:/docker-entrypoint-initdb.d/migrations/99-logs.sql:Z
       # Changes required for Pooler support
-      - ./apps/database/docker/volumes/db/pooler.sql:/docker-entrypoint-initdb.d/migrations/99-pooler.sql:Z
+      - ./data/supabase/volumes/db/pooler.sql:/docker-entrypoint-initdb.d/migrations/99-pooler.sql:Z
       # Use named volume to persist pgsodium decryption key between restarts
       - db-config:/etc/postgresql-custom
 
@@ -456,7 +456,7 @@ services:
       interval: 5s
       retries: 3
     volumes:
-      - ./apps/database/docker/volumes/logs/vector.yml:/etc/vector/vector.yml:ro
+      - ./data/supabase/volumes/logs/vector.yml:/etc/vector/vector.yml:ro
       - ${DOCKER_SOCKET_LOCATION}:/var/run/docker.sock:ro
     environment:
       LOGFLARE_API_KEY: ${LOGFLARE_API_KEY}
@@ -502,7 +502,7 @@ services:
       - POOLER_MAX_CLIENT_CONN=${POOLER_MAX_CLIENT_CONN}
       - POOLER_POOL_MODE=transaction
     volumes:
-      - ./apps/database/docker/volumes/pooler/pooler.exs:/etc/pooler/pooler.exs:ro
+      - ./data/supabase/volumes/pooler/pooler.exs:/etc/pooler/pooler.exs:ro
 
 volumes:
   db-config:

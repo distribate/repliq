@@ -5,9 +5,11 @@ import Image from "next/image";
 import AdventureInBlossom from "@repo/assets/images/adventure-in-blossom.jpg"
 import Compass from "@repo/assets/images/minecraft/compass.webp"
 import { HistoryBackButton } from "@repo/components/src/templates/history-back-button.tsx";
+import { Typography } from '@repo/ui/src/components/typography.tsx';
 
 export const metadata: Metadata = {
-	title: "Не найдено"
+	title: "Не найдено",
+	description: "Контент не найден"
 }
 
 export default function NotFound() {
@@ -15,9 +17,9 @@ export default function NotFound() {
 		<PageWrapper className="flex flex-col gap-y-6">
 			<div
 				className="flex overflow-hidden rounded-md w-fit max-w-[890px] h-fit max-h-[450px] border-[1px] border-white/50">
-				<Image
-					src={AdventureInBlossom}
-					alt="Content not found."
+				<img
+					src={AdventureInBlossom.src}
+					alt=""
 					width={1200}
 					height={1240}
 					loading="lazy"
@@ -25,9 +27,9 @@ export default function NotFound() {
 				/>
 			</div>
 			<div className="flex flex-col items-center justify-center gap-y-4">
-				<p className="text-5xl font-[Pixy] text-white">
+				<Typography font="minecraft" textColor="shark_white" className="text-5xl">
 					Ничего не найдено ;(
-				</p>
+				</Typography>
 				<div
 					className="flex py-0.5 rounded-xl items-center gap-1 justify-between bg-white/30 backdrop-blur-md overflow-hidden"
 				>

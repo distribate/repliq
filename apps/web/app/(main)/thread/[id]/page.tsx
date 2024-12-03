@@ -2,7 +2,6 @@ import { Metadata } from 'next';
 import { getTopicName } from '@repo/lib/queries/get-thread-name.ts';
 import { BlockWrapper } from '@repo/components/src/wrappers/block-wrapper.tsx';
 import { ThreadControl } from '@repo/components/src/thread/components/thread-control/components/thread-control.tsx';
-import { getCurrentUser } from '@repo/lib/actions/get-current-user.ts';
 import { ThreadContent } from '@repo/components/src/thread/components/thread-content/components/thread-content.tsx';
 import { ThreadImages } from '@repo/components/src/thread/components/thread-images/thread-images.tsx';
 import { Typography } from '@repo/ui/src/components/typography.tsx';
@@ -25,7 +24,7 @@ import dynamic from 'next/dynamic';
 import {
   ThreadCommentsSkeleton,
 } from '@repo/components/src/thread/components/thread-comments/components/thread-comments.tsx';
-import { validateRequest } from '@repo/lib/utils/auth/validate-requests.ts';
+import { getCurrentSession } from '@repo/lib/actions/get-current-session.ts';
 
 export async function generateMetadata({
   params,
@@ -63,7 +62,7 @@ export default async function TopicsTopicPage({
   params,
 }: PageConventionProps) {
   const { id: threadId } = params;
-  const { user, session } = await validateRequest();
+  const { user, session } = await getCurrentSession();
   if (!user || !session || !threadId) return redirect('/');
   
   const thread = await getThreadModel({ id: threadId, postViews: true });

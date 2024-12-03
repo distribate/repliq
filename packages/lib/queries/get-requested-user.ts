@@ -1,7 +1,6 @@
 'use server';
 
 import { UserEntity } from '@repo/types/entities/entities-type.ts';
-import { getCurrentUser } from '../actions/get-current-user.ts';
 import { REDIRECT_USER_NOT_EXIST } from '@repo/shared/constants/routes.ts';
 import {
   convertUserPreferencesToObject,
@@ -12,6 +11,7 @@ import { createClient } from '#utils/api/supabase-client.ts';
 import { redirect } from 'next/navigation';
 import { getDonateData } from '#queries/get-donate-data.ts';
 import { DonateType } from '@repo/components/src/user/components/donate/queries/get-user-donate.ts';
+import { getCurrentSession } from '#actions/get-current-session.ts';
 
 type RequestedUserProps = {
   nickname: string,
@@ -19,7 +19,7 @@ type RequestedUserProps = {
 }
 
 export type RequestedUser = Omit<UserEntity, 'preferences'> & {
-  donate: DonateType["primary_group"],
+  donate: DonateType['primary_group'],
   preferences: UserPreferences
 }
 
@@ -33,7 +33,7 @@ async function validateUserDetailsVisibility(
   nickname: string,
   preferences: UserPreferences,
 ): Promise<{ real_name: boolean } | null> {
-  const currentUser = await getCurrentUser();
+  const { user: currentUser } = await getCurrentSession();
   if (!currentUser) return null;
   
   const isOwnProfile = currentUser.nickname === nickname;
@@ -44,13 +44,13 @@ async function validateUserDetailsVisibility(
   
   const result = getPreferenceValue(preferences, 'realNameVisibility');
   
-  return { real_name: result, };
+  return { real_name: result };
 }
 
 export async function getRequestedUser(
   nickname: RequestedUserProps['nickname'],
 ): Promise<RequestedUser | null> {
-  const currentUser = await getCurrentUser();
+  const { user: currentUser } = await getCurrentSession();
   if (!currentUser) return null;
   
   const [ donate, main ] = await Promise.all([
@@ -67,7 +67,7 @@ export async function getRequestedUser(
   const preferences = convertUserPreferencesToObject(userData.preferences as Record<string, string>) as UserPreferences;
   
   const detailsVisibility = await validateUserDetailsVisibility(
-    nickname, preferences
+    nickname, preferences,
   );
   
   if (!detailsVisibility) return null;

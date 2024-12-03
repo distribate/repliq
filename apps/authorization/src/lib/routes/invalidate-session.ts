@@ -7,14 +7,16 @@ export const invalidateSessionBodySchema = z.object({
   sessionId: z.string().min(6)
 })
 
-export const app = new Hono()
-.post("/invalidate-session", zValidator("json", invalidateSessionBodySchema, async (result, c) => {
+export const invalidateSessionRoute = new Hono()
+.post('/invalidate-session', zValidator('json', invalidateSessionBodySchema), async(c) => {
+  const result = invalidateSessionBodySchema.safeParse(await c.req.json());
+  
   if (!result.success) {
-    return c.text('Invalid body', 400)
+    return c.json({ error: 'Invalid body' }, 400);
   }
   
   const body = await c.req.json<z.infer<typeof invalidateSessionBodySchema>>();
-  const res = await invalidateSession(body.sessionId)
+  const res = await invalidateSession(body.sessionId);
   
-  return c.json({ success: !!res }, 200)
-}))
+  return c.json({ success: !!res }, 200);
+})

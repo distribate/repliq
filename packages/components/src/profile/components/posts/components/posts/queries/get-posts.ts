@@ -1,10 +1,10 @@
 'use server';
 
-import { getCurrentUser } from '@repo/lib/actions/get-current-user.ts';
 import { checkIsFriend } from '@repo/lib/helpers/check-is-friend.ts';
-import { createClient } from '../../../../../../../../lib/utils/api/supabase-client.ts';
+import { createClient } from '@repo/lib/utils/api/supabase-client.ts';
 import { PostEntity, RequestDetails } from '@repo/types/entities/entities-type.ts';
 import { PostsFilteringQuery } from '#profile/components/posts/components/posts/queries/posts-filtering-query.ts';
+import { getCurrentSession } from '@repo/lib/actions/get-current-session.ts';
 
 export type GetPosts = {
   nickname: string
@@ -52,7 +52,7 @@ const processPost = (
 export async function getPosts({
   nickname, limit, ascending = false, searchQuery, filteringType, range,
 }: GetPosts): Promise<PostsByUser | null> {
-  const currentUser = await getCurrentUser();
+  const { user: currentUser } = await getCurrentSession();
   if (!currentUser || !nickname) return null;
   
   const api = createClient();

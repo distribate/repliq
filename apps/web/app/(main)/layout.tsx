@@ -1,6 +1,5 @@
 import { ReactNode } from 'react';
 import { ResizableLayout } from '@repo/components/src/layouts/resizable-layout.tsx';
-import { getCurrentUser } from '@repo/lib/actions/get-current-user.ts';
 import { redirect } from 'next/navigation';
 import { HydrationBoundary, dehydrate, QueryClient } from '@tanstack/react-query';
 import { CURRENT_USER_QUERY_KEY } from '@repo/lib/queries/current-user-query.ts';
@@ -9,6 +8,7 @@ import { AUTH_REDIRECT, BANNED_REDIRECT } from '@repo/shared/constants/routes.ts
 import { getUserBanned } from '@repo/lib/queries/get-user-banned.ts';
 import { cookies } from 'next/headers';
 import { RESIZABLE_LAYOUT_COOKIE_KEY } from '@repo/shared/keys/cookie.ts';
+import { getCurrentSession } from '@repo/lib/actions/get-current-session.ts';
 
 type MainLayoutProps = {
   children: ReactNode
@@ -17,7 +17,7 @@ type MainLayoutProps = {
 export default async function MainLayout({
   children,
 }: MainLayoutProps) {
-  const currentUser = await getCurrentUser();
+  const { user: currentUser } = await getCurrentSession();
   if (!currentUser) return redirect(AUTH_REDIRECT);
   
   const isBanned = await getUserBanned(currentUser.nickname);

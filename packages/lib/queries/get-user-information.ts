@@ -1,6 +1,5 @@
 'use server';
 
-import { getCurrentUser } from '../actions/get-current-user.ts';
 import { DonateType, getUserDonate } from '@repo/components/src/user/components/donate/queries/get-user-donate.ts';
 import { convertUserPreferencesToObject, UserPreferences } from '../helpers/convert-user-preferences-to-map.ts';
 import { getUserBanned } from './get-user-banned.ts';
@@ -8,9 +7,10 @@ import { CurrentUser } from './current-user-query.ts';
 import { createClient } from '#utils/api/supabase-client.ts';
 import { permanentRedirect } from 'next/navigation';
 import { BANNED_REDIRECT } from '@repo/shared/constants/routes.ts';
+import { getCurrentSession } from '#actions/get-current-session.ts';
 
 export async function getUserInformation(): Promise<CurrentUser | null> {
-  const currentUser = await getCurrentUser();
+  const { user: currentUser } = await getCurrentSession();
   if (!currentUser) return null;
   
   const api = createClient();

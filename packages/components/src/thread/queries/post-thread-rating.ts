@@ -1,8 +1,8 @@
 'use server';
 
-import { getCurrentUser } from '@repo/lib/actions/get-current-user.ts';
-import { createClient } from '../../../../lib/utils/api/supabase-client.ts';
+import { createClient } from '@repo/lib/utils/api/supabase-client.ts';
 import { ThreadEntity } from '@repo/types/entities/entities-type.ts';
+import { getCurrentSession } from '@repo/lib/actions/get-current-session.ts';
 
 export type UpdateThreadRatingType = 'increment' | 'decrement'
 
@@ -88,7 +88,7 @@ async function postRating({
 export async function updateThreadRating({
   type, threadId,
 }: UpdateThreadRating): Promise<boolean | UpdateThreadRatingError> {
-  const currentUser = await getCurrentUser();
+  const { user: currentUser } = await getCurrentSession();
   
   if (!currentUser || !threadId) return 'default';
   

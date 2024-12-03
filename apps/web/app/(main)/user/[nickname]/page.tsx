@@ -21,7 +21,7 @@ import { UserCoverLayout } from '@repo/components/src/profile/components/cover/c
 import dynamic from 'next/dynamic';
 import { getPreferenceValue, UserPreferences } from '@repo/lib/helpers/convert-user-preferences-to-map.ts';
 import { getCurrentSession } from '@repo/lib/actions/get-current-session.ts';
-import { User } from 'authorization/lib/routes/create-session.ts';
+import { User } from 'authorization/src/lib/routes/create-session.ts';
 
 const UserProfilePosts = dynamic(() =>
   import('@repo/components/src/profile/components/posts/components/posts/components/profile-posts.tsx')

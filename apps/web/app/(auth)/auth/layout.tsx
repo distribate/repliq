@@ -2,10 +2,10 @@ import { ReactNode } from 'react';
 import { PageWrapper } from '@repo/components/src/wrappers/page-wrapper.tsx';
 import AuthBackground from '@repo/assets/images/auth_background.webp';
 import { ImageWrapper } from '@repo/components/src/wrappers/image-wrapper.tsx';
-import { getCurrentUser } from '@repo/lib/actions/get-current-user.ts';
 import { permanentRedirect } from 'next/navigation';
 import { AUTH_REDIRECT } from '@repo/shared/constants/routes.ts';
 import { getRandomAuthBackground } from '@repo/components/src/forms/auth/queries/get-random-auth-background.ts';
+import { getCurrentSession } from '@repo/lib/actions/get-current-session.ts';
 
 type AuthLayoutProps = {
   children: ReactNode
@@ -15,7 +15,7 @@ type AuthLayoutProps = {
 export default async function AuthLayout({
   children, section
 }: AuthLayoutProps) {
-  const currentUser = await getCurrentUser();
+  const { user: currentUser } = await getCurrentSession();
   const url = await getRandomAuthBackground();
 	
   if (currentUser) {

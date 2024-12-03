@@ -1,10 +1,10 @@
 'use server';
 
 import { createClient } from "#utils/api/supabase-client.ts";
-import { getCurrentUser } from '#actions/get-current-user.ts';
+import { getCurrentSession } from '#actions/get-current-session.ts';
 
 async function getUserBlockStatus(requestedUserNickname: string) {
-  const currentUser = await getCurrentUser();
+  const { user: currentUser } = await getCurrentSession();
   if (!currentUser) return null;
   
   const api = createClient();

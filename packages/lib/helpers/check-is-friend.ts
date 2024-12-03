@@ -1,10 +1,10 @@
 "use server"
 
-import { getCurrentUser } from "../actions/get-current-user.ts";
 import { createClient } from "#utils/api/supabase-client.ts";
+import { getCurrentSession } from '#actions/get-current-session.ts';
 
 export async function checkIsFriend(requestedUserNickname: string): Promise<boolean> {
-	const currentUser = await getCurrentUser();
+	const { user: currentUser } = await getCurrentSession();
 	if (!currentUser) return false;
 	
 	const api = createClient();

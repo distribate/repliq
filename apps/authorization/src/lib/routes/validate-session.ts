@@ -7,16 +7,18 @@ export const validateSessionBodySchema = z.object({
   token: z.string().min(6)
 })
 
-export const app = new Hono()
-.post("/validate-session", zValidator("json", validateSessionBodySchema, async (result, c) => {
+export const validateSessionRoute = new Hono()
+.post('/validate-session', zValidator('json', validateSessionBodySchema), async(c) => {
+  const result = validateSessionBodySchema.safeParse(await c.req.json());
+  
   if (!result.success) {
-    return c.text('Invalid body', 400)
+    return c.json({ error: 'Invalid body' }, 400);
   }
   
-  const body = await c.req.json<z.infer<typeof validateSessionBodySchema>>()
+  const body = await c.req.json<z.infer<typeof validateSessionBodySchema>>();
   
   const { token } = body;
-  const { session } = await validateSessionToken(token);
+  const { session, user } = await validateSessionToken(token);
   
-  return c.json({ session }, 200)
-}))
+  return c.json({ session, user }, 200);
+});

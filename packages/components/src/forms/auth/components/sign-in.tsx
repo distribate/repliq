@@ -9,7 +9,6 @@ import { FormField } from '@repo/ui/src/components/form-field.tsx';
 import { FormAuthErrorMessage } from '@repo/ui/src/components/form.tsx';
 import { Typography } from '@repo/ui/src/components/typography.tsx';
 import { authorizationSchema } from '../schemas/authorization-schema.ts';
-import { zodSignInForm } from '../types/error-message-type.ts';
 import { useRouter } from 'next/navigation';
 import { errorMessages } from '../constants/error-messages.ts';
 import { useMutationState, useQueryClient } from '@tanstack/react-query';
@@ -18,20 +17,26 @@ import { AUTH_QUERY_KEY, AuthQuery, authQuery } from '../queries/auth-query.ts';
 import { GearLoader } from '@repo/ui/src/components/gear-loader.tsx';
 import EnderPearl from '@repo/assets/images/minecraft/ender_pearl.webp';
 import EyeOfEnder from '@repo/assets/images/minecraft/eye_of_ender.webp';
+import type { PasswordVisibilityType } from '#forms/auth/types/form-types.ts';
+import { z } from 'zod';
+
+type zodSignInForm = z.infer<typeof authorizationSchema>
 
 export const SignInForm = () => {
   const qc = useQueryClient();
   const { data: authState } = authQuery();
   const { replace } = useRouter();
-  const [ passwordType, setPasswordType ] = useState<'text' | 'password'>('password');
+  const [ passwordType, setPasswordType ] = useState<PasswordVisibilityType>('password');
   const { setAuthValuesMutation } = useAuth();
   
   const mutData = useMutationState({
     filters: { mutationKey: AUTH_MUTATION_KEY },
-    select: mutation => mutation.state.status,
+    select: m => m.state.status,
   });
   
   const isLoading = mutData[mutData.length - 1] === 'pending';
+  const status = authState.status;
+  const isError = status !== 'created';
   
   const {
     register,
@@ -46,18 +51,14 @@ export const SignInForm = () => {
     defaultValues: { password: '', nickname: '' },
   });
   
-  const error = authState?.formState?.error;
-  const status = authState.formState?.status;
-  
   useEffect(() => {
-    if (status === 201 || error === 'notFound') {
-      reset();
+    switch(status) {
+      case 'notFound':
+        return reset();
+      case 'incorrectPassword':
+        return resetField('password');
     }
-    
-    if (error === 'incorrectPassword' && status === 400) {
-      resetField('password');
-    }
-  }, [ authState?.formState ]);
+  }, [ status ]);
   
   const onSubmit = () => {
     const values = getValues();
@@ -77,8 +78,17 @@ export const SignInForm = () => {
     return qc.resetQueries({ queryKey: AUTH_QUERY_KEY });
   };
   
+  const handlePasswordVisibility = () => {
+    if (passwordType === 'password') {
+      setPasswordType('text');
+    } else setPasswordType('password');
+  };
+  
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-y-4">
+    <form
+      onSubmit={handleSubmit(onSubmit)}
+      className="flex flex-col gap-y-4"
+    >
       <FormField
         label={{ name: 'Никнейм', for: 'nickname' }}
         errorMessage={errors?.nickname?.message}
@@ -107,9 +117,6 @@ export const SignInForm = () => {
             autoComplete="new-password"
             status={errors.password ? 'error' : 'default'}
             variant="minecraft"
-            onClick={() => {
-              if (error && status === 400) return qc.resetQueries({ queryKey: AUTH_QUERY_KEY });
-            }}
             {...register('password')}
           />
           <img
@@ -119,11 +126,7 @@ export const SignInForm = () => {
             width={36}
             height={36}
             loading="lazy"
-            onClick={() => {
-              if (passwordType === 'password') {
-                setPasswordType('text');
-              } else setPasswordType('password');
-            }}
+            onClick={handlePasswordVisibility}
           />
         </div>
       </FormField>
@@ -134,14 +137,19 @@ export const SignInForm = () => {
           className="hover:bg-pink-900 bg-pink-800"
           disabled={!isValid || isLoading}
         >
-          <Typography textSize="medium" textColor="shark_white" className="uppercase font-semibold">
+          <Typography
+            font="minecraft"
+            textSize="medium"
+            textColor="shark_white"
+            className="uppercase font-semibold"
+          >
             Войти в аккаунт
           </Typography>
         </Button>
         {isLoading && <GearLoader />}
       </div>
-      {error && <FormAuthErrorMessage type={error} messages={errorMessages} />}
-      {error === 'alreadyOriginal' && (
+      {isError && <FormAuthErrorMessage type={status} messages={errorMessages} />}
+      {status === 'alreadyOriginal' && (
         <div className="px-2">
           <Typography
             onClick={handleRedirect}
