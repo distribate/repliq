@@ -1,13 +1,11 @@
-import { CreateThreadForm } from '@repo/components/src/forms/create-thread/components/create-thread-form.tsx';
-import { BlockWrapper } from '@repo/components/src/wrappers/block-wrapper.tsx';
-import { Typography } from '@repo/ui/src/components/typography.tsx';
-import {
-  FormThreadRecommendations,
-} from '@repo/components/src/forms/create-thread/components/form-thread-recommendations.tsx';
-import { Metadata } from 'next';
+import { CreateThreadForm } from "@repo/components/src/forms/create-thread/components/create-thread-form.tsx";
+import { BlockWrapper } from "@repo/components/src/wrappers/block-wrapper.tsx";
+import { Typography } from "@repo/ui/src/components/typography.tsx";
+import { FormThreadRecommendations } from "@repo/components/src/forms/create-thread/components/form-thread-recommendations.tsx";
+import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: 'Создание треда',
+  title: "Создание треда",
 };
 
 export default async function CreateThreadPage() {

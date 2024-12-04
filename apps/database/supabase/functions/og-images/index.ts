@@ -1,6 +1,6 @@
-import { serve } from 'https://deno.land/std@0.170.0/http/supabase-client.ts'
-import { handler } from './handler.tsx'
+import { serve } from "https://deno.land/std@0.170.0/http/supabase-client.ts";
+import { handler } from "./handler.tsx";
 
-serve(handler)
+serve(handler);
 
-console.log('Serving og-images function')
+console.log("Serving og-images function");

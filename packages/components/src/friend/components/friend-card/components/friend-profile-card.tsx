@@ -1,22 +1,19 @@
-import { Typography } from '@repo/ui/src/components/typography.tsx';
-import Link from 'next/link';
-import { Avatar } from '#user/components/avatar/components/avatar.tsx';
-import { UserDonate } from '#user/components/donate/components/donate.tsx';
-import { UserNickname } from '#user/components/name/components/nickname.tsx';
-import { Separator } from '@repo/ui/src/components/separator.tsx';
-import { UserCardModal } from '#modals/custom/user-card-modal.tsx';
-import { UserEntity } from '@repo/types/entities/entities-type.ts';
-import { USER_URL } from '@repo/shared/constants/routes.ts';
-import { getUser } from '@repo/lib/helpers/get-user.ts';
+import { Typography } from "@repo/ui/src/components/typography.tsx";
+import Link from "next/link";
+import { Avatar } from "#user/components/avatar/components/avatar.tsx";
+import { UserDonate } from "#user/components/donate/components/donate.tsx";
+import { UserNickname } from "#user/components/name/components/nickname.tsx";
+import { Separator } from "@repo/ui/src/components/separator.tsx";
+import { UserCardModal } from "#modals/custom/user-card-modal.tsx";
+import { UserEntity } from "@repo/types/entities/entities-type.ts";
+import { USER_URL } from "@repo/shared/constants/routes.ts";
 
-type FriendCardProps = Pick<UserEntity, "nickname" | "name_color">
+type FriendCardProps = Pick<UserEntity, "nickname" | "name_color">;
 
 export const FriendProfileCard = ({
-  nickname, name_color
+  nickname,
+  name_color,
 }: FriendCardProps) => {
-  const currentUser = getUser();
-  if (!currentUser) return null;
-  
   return (
     <div className="flex flex-col gap-y-4 w-full bg-shark-950 *:px-4 py-4 rounded-lg">
       <div className="flex items-start justify-between w-full">
@@ -42,7 +39,7 @@ export const FriendProfileCard = ({
         </Typography>
       </div>
       <Separator />
-     <UserCardModal nickname={nickname}/>
+      <UserCardModal nickname={nickname} />
     </div>
   );
 };

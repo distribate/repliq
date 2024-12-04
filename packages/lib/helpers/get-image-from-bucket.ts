@@ -1,26 +1,26 @@
-"use server"
+"use server";
 
-import "server-only"
+import "server-only";
 import { createClient } from "#utils/api/supabase-client.ts";
 
 type ImageUrlProperties = {
-	bucket: string,
-	fileName: string | null
-}
+  bucket: string;
+  fileName: string | null;
+};
 
 export async function getImageUrl({
-	bucket, fileName
+  bucket,
+  fileName,
 }: ImageUrlProperties): Promise<string | null> {
-	const api = createClient()
-	
-	if (!fileName) return null;
-	
-	const { data: url, error } = await api
-	.storage
-	.from(bucket)
-	.createSignedUrl(fileName, 600)
-	
-	if (error) return null;
-	
-	return url.signedUrl;
+  const api = createClient();
+
+  if (!fileName) return null;
+
+  const { data: url, error } = await api.storage
+    .from(bucket)
+    .createSignedUrl(fileName, 600);
+
+  if (error) return null;
+
+  return url.signedUrl;
 }

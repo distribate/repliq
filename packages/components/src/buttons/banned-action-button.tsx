@@ -1,11 +1,11 @@
-'use client';
+"use client";
 
-import { Button } from '@repo/ui/src/components/button.tsx';
-import { useLogout } from '../modals/action-confirmation/components/logout/hooks/use-logout.ts';
+import { Button } from "@repo/ui/src/components/button.tsx";
+import { useLogout } from "../modals/action-confirmation/components/logout/hooks/use-logout.ts";
 
 export const BannedActionButton = () => {
   const { logoutMutation } = useLogout();
-  
+
   return (
     <Button
       rounded="none"

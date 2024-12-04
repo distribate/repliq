@@ -1,15 +1,19 @@
-import { cn } from '@repo/lib/utils/ui/cn.ts';
-import { HTMLAttributes } from 'react';
+import { cn } from "@repo/lib/utils/ui/cn.ts";
+import { HTMLAttributes } from "react";
 
 export function Skeleton({
-  className, ...props
+  className,
+  ...props
 }: HTMLAttributes<HTMLDivElement>) {
   return (
     <div
-      className={cn(`isolate bg-secondary-color rounded-lg overflow-hidden shadow-xl shadow-black/5 before:border-t
+      className={cn(
+        `isolate bg-secondary-color rounded-lg overflow-hidden shadow-xl shadow-black/5 before:border-t
         before:border-biloba-flower-500 relative
         before:absolute before:inset-0 before:-translate-x-full before:animate-[shimmer_2s_infinite] before:bg-gradient-to-r before:from-transparent
-        before:via-biloba-flower-500/20 before:to-transparent`, className)}
+        before:via-biloba-flower-500/20 before:to-transparent`,
+        className,
+      )}
       {...props}
     >
       <div

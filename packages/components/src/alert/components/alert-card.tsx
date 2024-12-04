@@ -1,12 +1,16 @@
-import { AlertEntity } from '@repo/types/entities/entities-type.ts';
-import { Typography } from '@repo/ui/src/components/typography.tsx';
-import { AlertClose } from './alert-close.tsx';
-import Link from 'next/link';
-import { Separator } from '@repo/ui/src/components/separator.tsx';
-import dayjs from 'dayjs';
+import { AlertEntity } from "@repo/types/entities/entities-type.ts";
+import { Typography } from "@repo/ui/src/components/typography.tsx";
+import { AlertClose } from "./alert-close.tsx";
+import Link from "next/link";
+import { Separator } from "@repo/ui/src/components/separator.tsx";
+import dayjs from "dayjs";
 
 export const AlertCard = async ({
-  title, id, creator, link, created_at,
+  title,
+  id,
+  creator,
+  link,
+  created_at,
 }: AlertEntity) => {
   return (
     <div className="flex group flex-col w-full relative rounded-lg py-2 px-6 bg-shark-950">

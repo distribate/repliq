@@ -1,3 +1,3 @@
 export type UserDonate = {
-	nickname?: string
-}
+  nickname?: string;
+};

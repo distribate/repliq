@@ -13,5 +13,5 @@ export const MainPageLoader = () => {
       speed={200}
       shadow="0 0 10px #00cdb0,0 0 5px #00cdb0"
     />
-  )
-}
+  );
+};

@@ -1,28 +1,30 @@
-'use server';
+"use server";
 
-import 'server-only';
-import { createClient } from '#utils/api/supabase-client.ts';
+import "server-only";
+import { createClient } from "#utils/api/supabase-client.ts";
 
 type UpdateProperties = {
-  table: string,
+  table: string;
   field: {
-    [key: string]: string | null
-  },
+    [key: string]: string | null;
+  };
   equals: {
-    column: string,
-    value: unknown
-  }
-}
+    column: string;
+    value: unknown;
+  };
+};
 
 export async function updateValueOfUploadedImage({
-  table, field, equals,
+  table,
+  field,
+  equals,
 }: UpdateProperties): Promise<boolean> {
   const api = createClient();
-  
+
   const { error, status } = await api
-  .from(table)
-  .update(field)
-  .eq(equals.column, equals.value)
-  
+    .from(table)
+    .update(field)
+    .eq(equals.column, equals.value);
+
   return !(error || status === 404);
 }

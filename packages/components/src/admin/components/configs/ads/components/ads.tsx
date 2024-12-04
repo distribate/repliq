@@ -1,8 +1,3 @@
-
 export const Ads = async () => {
-  return (
-    <div>
-    
-    </div>
-  )
-}
+  return <div></div>;
+};

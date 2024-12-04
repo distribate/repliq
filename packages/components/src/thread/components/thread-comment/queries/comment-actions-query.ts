@@ -1,12 +1,12 @@
-import { useQuery } from '@tanstack/react-query';
-import { createQueryKey } from '@repo/lib/helpers/query-key-builder.ts';
+import { useQuery } from "@tanstack/react-query";
+import { createQueryKey } from "@repo/lib/helpers/query-key-builder.ts";
 
 export const COMMENT_ACTIONS_QUERY_KEY = (commentId: number) =>
-  createQueryKey('ui', [ 'comment-actions' ], commentId);
+  createQueryKey("ui", ["comment-actions"], commentId);
 
 export type CommentActionsQuery = {
-  isEdit: boolean
-}
+  isEdit: boolean;
+};
 
 const initial: CommentActionsQuery = {
   isEdit: false,
@@ -14,7 +14,7 @@ const initial: CommentActionsQuery = {
 
 export const commentActionsQuery = (commentId: number | null) => {
   if (!commentId) return null;
-  
+
   return useQuery<CommentActionsQuery, Error>({
     queryKey: COMMENT_ACTIONS_QUERY_KEY(commentId),
     staleTime: Infinity,

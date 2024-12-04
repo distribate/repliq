@@ -1,60 +1,67 @@
-import dayjs from '@repo/lib/utils/dayjs/dayjs-instance.ts';
-import { Avatar } from '#user/components/avatar/components/avatar.tsx';
-import { UserNickname } from '#user/components/name/components/nickname.tsx';
-import { Typography } from '@repo/ui/src/components/typography.tsx';
-import { ThreadCommentActions } from './thread-comment-actions.tsx';
-import { ThreadCommentProps } from '../types/thread-comment-types.ts';
-import { useMutationState } from '@tanstack/react-query';
-import { USER_URL } from '@repo/shared/constants/routes.ts';
-import { Badge } from '@repo/ui/src/components/badge.tsx';
-import { SELECT_COMMENT_MUTATION_KEY } from '../hooks/use-highlight.ts';
-import { useEffect, useState } from 'react';
-import Link from 'next/link';
-import dynamic from 'next/dynamic';
-import { getUser } from '@repo/lib/helpers/get-user.ts';
-import { ThreadCommentItemContent } from '#thread/components/thread-comment/components/thread-comment-item-content.tsx';
+import dayjs from "@repo/lib/constants/dayjs-instance.ts";
+import { Avatar } from "#user/components/avatar/components/avatar.tsx";
+import { UserNickname } from "#user/components/name/components/nickname.tsx";
+import { Typography } from "@repo/ui/src/components/typography.tsx";
+import { ThreadCommentActions } from "./thread-comment-actions.tsx";
+import { ThreadCommentProps } from "../types/thread-comment-types.ts";
+import { useMutationState } from "@tanstack/react-query";
+import { USER_URL } from "@repo/shared/constants/routes.ts";
+import { Badge } from "@repo/ui/src/components/badge.tsx";
+import { SELECT_COMMENT_MUTATION_KEY } from "../hooks/use-highlight.ts";
+import { useEffect, useState } from "react";
+import Link from "next/link";
+import dynamic from "next/dynamic";
+import { getUser } from "@repo/lib/helpers/get-user.ts";
+import { ThreadCommentItemContent } from "#thread/components/thread-comment/components/thread-comment-item-content.tsx";
 
 const ThreadCommentMoreActions = dynamic(() =>
-  import('./thread-comment-more-actions.tsx')
-  .then(m => m.ThreadCommentMoreActions),
+  import("./thread-comment-more-actions.tsx").then(
+    (m) => m.ThreadCommentMoreActions,
+  ),
 );
 
 export const ThreadCommentItem = ({
-  nickname: threadCommentNickname, isAuthor, created_at,
-  content, id, replied, thread_id, edited,
+  nickname: threadCommentNickname,
+  isAuthor,
+  created_at,
+  content,
+  id,
+  replied,
+  thread_id,
+  edited,
 }: ThreadCommentProps) => {
   const currentUser = getUser();
-  if (!currentUser) return null;
-  
-  const [ active, setActive ] = useState<boolean>(false);
-  
+  const [active, setActive] = useState<boolean>(false);
+
   const data = useMutationState({
     filters: { mutationKey: SELECT_COMMENT_MUTATION_KEY(id) },
-    select: m => m.state.status,
+    select: (m) => m.state.status,
   });
-  
+
   const mutationStatus = data[data.length - 1];
-  
+
   useEffect(() => {
-    if (mutationStatus === 'success') {
+    if (mutationStatus === "success") {
       setActive(true);
-      
+
       const timeoutId = setTimeout(() => setActive(false), 2000);
-      
+
       return () => clearTimeout(timeoutId);
     }
-  }, [ mutationStatus ]);
-  
+  }, [mutationStatus]);
+
   const isCommentOwner = currentUser.nickname === threadCommentNickname;
   const createdAt = dayjs(created_at).fromNow();
-  
+
   return (
     <div
       id={id.toString()}
-      className={`${active && 'animate-flash-fade'}
+      className={`${active && "animate-flash-fade"}
        flex flex-col h-fit gap-y-4 px-4 py-2 rounded-md bg-shark-950 relative min-w-[450px] w-fit max-w-[80%]`}
     >
-      {isCommentOwner && <ThreadCommentMoreActions id={id} thread_id={thread_id} />}
+      {isCommentOwner && (
+        <ThreadCommentMoreActions id={id} thread_id={thread_id} />
+      )}
       <div className="flex items-center gap-2">
         <Link href={USER_URL + threadCommentNickname}>
           <Avatar
@@ -76,7 +83,9 @@ export const ThreadCommentItem = ({
                 </Badge>
               )}
             </div>
-            <Typography className="text-shark-300 text-sm">{createdAt}</Typography>
+            <Typography className="text-shark-300 text-sm">
+              {createdAt}
+            </Typography>
           </div>
         </div>
       </div>
@@ -95,7 +104,11 @@ export const ThreadCommentItem = ({
           commentNickname={threadCommentNickname}
           commentContent={content}
         />
-        {edited && <Typography textColor="gray" textSize="small">[изменено]</Typography>}
+        {edited && (
+          <Typography textColor="gray" textSize="small">
+            [изменено]
+          </Typography>
+        )}
       </div>
     </div>
   );

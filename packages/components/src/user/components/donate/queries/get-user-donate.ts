@@ -1,27 +1,25 @@
-"use server"
+"use server";
 
-import { UserDonate } from "../types/user-donate-types.ts";;
+import { UserDonate } from "../types/user-donate-types.ts";
 import { createClient } from "../../../../../../lib/utils/api/supabase-client.ts";
-import { DonateVariantsEnum } from '@repo/types/entities/entities-type.ts';
+import { DonateVariantsEnum } from "@repo/types/entities/entities-type.ts";
 
 export type DonateType = {
-	primary_group: DonateVariantsEnum
-}
+  primary_group: DonateVariantsEnum;
+};
 
-export async function getUserDonate(
-	nickname: UserDonate["nickname"]
-) {
-	const supabase = createClient();
-	
-	const { data, error } = await supabase
-	.from("luckperms_players")
-	.select("primary_group")
-	.eq("username", nickname)
-	.single()
-	
-	if (error) throw new Error(error.message)
-	
-	const donate: DonateType["primary_group"] = data.primary_group;
-	
-	return donate;
+export async function getUserDonate(nickname: UserDonate["nickname"]) {
+  const supabase = createClient();
+
+  const { data, error } = await supabase
+    .from("luckperms_players")
+    .select("primary_group")
+    .eq("username", nickname)
+    .single();
+
+  if (error) throw new Error(error.message);
+
+  const donate: DonateType["primary_group"] = data.primary_group;
+
+  return donate;
 }

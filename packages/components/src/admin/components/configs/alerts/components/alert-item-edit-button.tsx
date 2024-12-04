@@ -1,32 +1,36 @@
-'use client';
+"use client";
 
-import { AlertEntity } from '@repo/types/entities/entities-type.ts';
-import { PenLine } from 'lucide-react';
-import { Button } from '@repo/ui/src/components/button.tsx';
-import { Dialog, DialogContent, DialogTrigger } from '@repo/ui/src/components/dialog.tsx';
-import { AlertUpdateForm } from '../../../../../forms/create-alert/components/update-alert-form.tsx';
-import { useEffect, useState } from 'react';
-import { useMutationState } from '@tanstack/react-query';
-import { ALERT_UPDATE_MUTATION_KEY } from '../../../../../forms/create-alert/hooks/use-alerts.ts';
-import { DialogLoader } from '../../../../../templates/dialog-loader.tsx';
-import { Typography } from '@repo/ui/src/components/typography.tsx';
+import { AlertEntity } from "@repo/types/entities/entities-type.ts";
+import { PenLine } from "lucide-react";
+import { Button } from "@repo/ui/src/components/button.tsx";
+import {
+  Dialog,
+  DialogContent,
+  DialogTrigger,
+} from "@repo/ui/src/components/dialog.tsx";
+import { AlertUpdateForm } from "../../../../../forms/create-alert/components/update-alert-form.tsx";
+import { useEffect, useState } from "react";
+import { useMutationState } from "@tanstack/react-query";
+import { ALERT_UPDATE_MUTATION_KEY } from "../../../../../forms/create-alert/hooks/use-alerts.ts";
+import { DialogLoader } from "../../../../../templates/dialog-loader.tsx";
+import { Typography } from "@repo/ui/src/components/typography.tsx";
 
 export const AlertItemEditButton = ({
   ...currentAlert
-}: Omit<AlertEntity, 'created_at' | 'creator'>) => {
-  const [ isShow, setIsShow ] = useState<boolean>(false);
-  
+}: Omit<AlertEntity, "created_at" | "creator">) => {
+  const [isShow, setIsShow] = useState<boolean>(false);
+
   const data = useMutationState({
     filters: { mutationKey: ALERT_UPDATE_MUTATION_KEY },
-    select: mutation => mutation.state.status,
+    select: (mutation) => mutation.state.status,
   });
-  
+
   const alertUpdatingMutationStatus = data[data.length - 1];
-  
+
   useEffect(() => {
-    if (alertUpdatingMutationStatus === 'success') setIsShow(false);
-  }, [ alertUpdatingMutationStatus ]);
-  
+    if (alertUpdatingMutationStatus === "success") setIsShow(false);
+  }, [alertUpdatingMutationStatus]);
+
   return (
     <Dialog onOpenChange={setIsShow} open={isShow}>
       <DialogTrigger>
@@ -38,11 +42,11 @@ export const AlertItemEditButton = ({
         </Button>
       </DialogTrigger>
       <DialogContent>
-        {alertUpdatingMutationStatus === 'pending' ? <DialogLoader /> : (
+        {alertUpdatingMutationStatus === "pending" ? (
+          <DialogLoader />
+        ) : (
           <div className="flex flex-col gap-y-6 px-2 items-center w-full">
-            <Typography variant="dialogTitle">
-              Обновление объявления
-            </Typography>
+            <Typography variant="dialogTitle">Обновление объявления</Typography>
             <AlertUpdateForm {...currentAlert} />
           </div>
         )}

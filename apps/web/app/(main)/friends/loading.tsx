@@ -1,8 +1,8 @@
-import { BlockWrapper } from '@repo/components/src/wrappers/block-wrapper.tsx';
-import { Skeleton } from '@repo/ui/src/components/skeleton.tsx';
-import { FriendsAllListSkeleton } from '@repo/components/src/skeletons/friends-all-list-skeleton.tsx';
+import { BlockWrapper } from "@repo/components/src/wrappers/block-wrapper.tsx";
+import { Skeleton } from "@repo/ui/src/components/skeleton.tsx";
+import { FriendsAllListSkeleton } from "@repo/components/src/skeletons/friends-all-list-skeleton.tsx";
 
-const FriendsPageSkeleton = async() => {
+const FriendsPageSkeleton = async () => {
   return (
     <div className="flex flex-col gap-2 items-start lg:flex-row w-full h-full relative">
       <BlockWrapper className="flex w-4/6 *:w-full !p-4 h-full">
@@ -24,7 +24,5 @@ const FriendsPageSkeleton = async() => {
 };
 
 export default function FriendsLoadingPage() {
-  return (
-    <FriendsPageSkeleton />
-  );
+  return <FriendsPageSkeleton />;
 }

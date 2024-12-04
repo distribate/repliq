@@ -5,9 +5,7 @@
   "scripts": {
     "start": "bun run src/index.ts",
     "dev": "bun run --hot src/index.ts",
-    "lp-gen-types": "kysely-codegen --dialect postgres --url=env\\(LP_DATABASE_URL\\) --out-file=types/db/luckperms-database-types.ts",
-    "auth-gen-types": "kysely-codegen --dialect postgres --url=env\\(AUTH_DATABASE_URL\\) --out-file types/db/auth-database-types.ts",
-    "forum-gen-types": "kysely-codegen --dialect postgres --url=env\\(FORUM_DATABASE_URL\\) --out-file types/db/forum-database-types.ts"
+    "type-check": "tsc --noEmit"
   },
   "imports": {
     "#*": "./src/*"
@@ -27,7 +25,6 @@
     "@types/bun": "latest",
     "@types/figlet": "^1",
     "@types/pg": "^8",
-    "kysely-codegen": "^0.17.0",
     "zod": "^3.23.8"
   },
   "peerDependencies": {

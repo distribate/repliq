@@ -1,11 +1,11 @@
-import { FriendsSort as FriendsSortType } from '#profile/components/friends/hooks/use-friends-sort.tsx';
+import { FriendsSortType } from "#profile/components/friends/queries/friends-settings-query.ts";
 
 export type FriendsSort = {
-  title: string,
-  value: FriendsSortType
-}
+  name: string;
+  value: FriendsSortType;
+};
 
 export const FRIENDS_SORT: FriendsSort[] = [
-  { title: "По дате добавления", value: "created_at" },
-  { title: "По привилегии", value: "donate" }
-]
+  { name: "По дате добавления", value: "created_at" },
+  { name: "По привилегии", value: "donate" },
+];

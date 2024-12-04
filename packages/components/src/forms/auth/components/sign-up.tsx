@@ -1,44 +1,45 @@
-'use client';
+"use client";
 
-import { FormField } from '@repo/ui/src/components/form-field.tsx';
-import { Input } from '@repo/ui/src/components/input.tsx';
-import { useForm } from 'react-hook-form';
-import { Button } from '@repo/ui/src/components/button.tsx';
-import { useRouter } from 'next/navigation';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { registrationSchema } from '../schemas/authorization-schema.ts';
-import { useEffect, useState } from 'react';
-import { FormAuthErrorMessage } from '@repo/ui/src/components/form.tsx';
-import { Typography } from '@repo/ui/src/components/typography.tsx';
-import { useMutationState, useQueryClient } from '@tanstack/react-query';
-import { errorMessages } from '../constants/error-messages.ts';
-import { AUTH_MUTATION_KEY, useAuth } from '../hooks/use-auth.tsx';
-import { AUTH_QUERY_KEY, AuthQuery, authQuery } from '../queries/auth-query.ts';
-import Link from 'next/link';
-import { GearLoader } from '@repo/ui/src/components/gear-loader.tsx';
-import EnderPearl from '@repo/assets/images/minecraft/ender_pearl.webp';
-import EyeOfEnder from '@repo/assets/images/minecraft/eye_of_ender.webp';
-import type { PasswordVisibilityType } from '#forms/auth/types/form-types.ts';
-import { z } from 'zod';
+import { FormField } from "@repo/ui/src/components/form-field.tsx";
+import { Input } from "@repo/ui/src/components/input.tsx";
+import { useForm } from "react-hook-form";
+import { Button } from "@repo/ui/src/components/button.tsx";
+import { useRouter } from "next/navigation";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { registrationSchema } from "../schemas/authorization-schema.ts";
+import { useEffect, useState } from "react";
+import { FormAuthErrorMessage } from "@repo/ui/src/components/form.tsx";
+import { Typography } from "@repo/ui/src/components/typography.tsx";
+import { useMutationState, useQueryClient } from "@tanstack/react-query";
+import { errorMessages } from "../constants/error-messages.ts";
+import { AUTH_MUTATION_KEY, useAuth } from "../hooks/use-auth.tsx";
+import { AUTH_QUERY_KEY, AuthQuery, authQuery } from "../queries/auth-query.ts";
+import Link from "next/link";
+import { GearLoader } from "@repo/ui/src/components/gear-loader.tsx";
+import EnderPearl from "@repo/assets/images/minecraft/ender_pearl.webp";
+import EyeOfEnder from "@repo/assets/images/minecraft/eye_of_ender.webp";
+import type { PasswordVisibilityType } from "#forms/auth/types/form-types.ts";
+import { z } from "zod";
 
-type zodSignUpForm = z.infer<typeof registrationSchema>
+type zodSignUpForm = z.infer<typeof registrationSchema>;
 
 export const SignUpForm = () => {
   const qc = useQueryClient();
   const { data: authState } = authQuery();
-  const [ passwordType, setPasswordType ] = useState<PasswordVisibilityType>('password');
+  const [passwordType, setPasswordType] =
+    useState<PasswordVisibilityType>("password");
   const { setAuthValuesMutation } = useAuth();
   const { replace } = useRouter();
-  
+
   const mutData = useMutationState({
     filters: { mutationKey: AUTH_MUTATION_KEY },
-    select: m => m.state.status,
+    select: (m) => m.state.status,
   });
-  
-  const isLoading = mutData[mutData.length - 1] === 'pending';
+
+  const isLoading = mutData[mutData.length - 1] === "pending";
   const status = authState.status;
-  const isError = status !== 'created';
-  
+  const isError = status !== "created";
+
   const {
     register,
     resetField,
@@ -47,54 +48,57 @@ export const SignUpForm = () => {
     reset,
     getValues,
   } = useForm<zodSignUpForm>({
-    mode: 'onSubmit',
+    mode: "onSubmit",
     resolver: zodResolver(registrationSchema),
     defaultValues: {
-      password: '', nickname: '', findout: '', acceptRules: false,
+      password: "",
+      nickname: "",
+      findout: "",
+      acceptRules: false,
     },
   });
-  
+
   useEffect(() => {
-    switch(status) {
-      case 'notFound':
+    switch (status) {
+      case "notFound":
         return reset();
-      case 'incorrectPassword':
-        return resetField('password');
+      case "incorrectPassword":
+        return resetField("password");
     }
-  }, [ status ]);
-  
+  }, [status]);
+
   const onSubmit = () => {
     const values = getValues();
     const { password, acceptRules, findout, nickname, realName } = values;
-    
+
     if (!acceptRules) return;
-    
+
     qc.setQueryData(AUTH_QUERY_KEY, (prev: AuthQuery) => ({
       ...prev,
-      type: 'sign-up',
+      type: "sign-up",
       values: { nickname, password, acceptRules, findout, realName },
     }));
-    
+
     setAuthValuesMutation.mutate();
   };
-  
+
   const handleRedirect = () => {
-    replace('/auth?type=login');
+    replace("/auth?type=login");
     return qc.resetQueries({ queryKey: AUTH_QUERY_KEY });
   };
-  
+
   const handlePasswordVisibility = () => {
-    if (passwordType === 'password') {
-      setPasswordType('text');
+    if (passwordType === "password") {
+      setPasswordType("text");
     } else {
-      setPasswordType('password');
+      setPasswordType("password");
     }
   };
-  
+
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-y-4">
       <FormField
-        label={{ name: 'Никнейм', for: 'nickname' }}
+        label={{ name: "Никнейм", for: "nickname" }}
         errorMessage={errors?.nickname?.message}
       >
         <Input
@@ -103,14 +107,14 @@ export const SignUpForm = () => {
           placeholder="игровой ник"
           autoComplete="new-password"
           className="!bg-shark-900"
-          status={errors.nickname ? 'error' : 'default'}
+          status={errors.nickname ? "error" : "default"}
           variant="minecraft"
-          {...register('nickname')}
+          {...register("nickname")}
         />
       </FormField>
       <FormField
         errorMessage={errors?.password?.message}
-        label={{ name: 'Пароль', for: 'password' }}
+        label={{ name: "Пароль", for: "password" }}
       >
         <div className="flex items-center gap-2 justify-center">
           <Input
@@ -119,13 +123,13 @@ export const SignUpForm = () => {
             className="!bg-shark-900"
             placeholder="игровой пароль"
             autoComplete="new-password"
-            status={errors.password ? 'error' : 'default'}
+            status={errors.password ? "error" : "default"}
             variant="minecraft"
-            {...register('password')}
+            {...register("password")}
           />
           <img
             className="cursor-pointer"
-            src={passwordType === 'password' ? EnderPearl.src : EyeOfEnder.src}
+            src={passwordType === "password" ? EnderPearl.src : EyeOfEnder.src}
             alt=""
             width={36}
             height={36}
@@ -135,7 +139,7 @@ export const SignUpForm = () => {
         </div>
       </FormField>
       <FormField
-        label={{ name: 'Реальное имя', for: 'realName' }}
+        label={{ name: "Реальное имя", for: "realName" }}
         errorMessage={errors?.realName?.message}
       >
         <Input
@@ -144,13 +148,13 @@ export const SignUpForm = () => {
           className="!bg-shark-900"
           placeholder="например: Данил"
           autoComplete="new-password"
-          status={errors.realName ? 'error' : 'default'}
+          status={errors.realName ? "error" : "default"}
           variant="minecraft"
-          {...register('realName')}
+          {...register("realName")}
         />
       </FormField>
       <FormField
-        label={{ name: 'Откуда узнал(-а) о проекте?', for: 'findout' }}
+        label={{ name: "Откуда узнал(-а) о проекте?", for: "findout" }}
         errorMessage={errors?.findout?.message}
       >
         <Input
@@ -159,9 +163,9 @@ export const SignUpForm = () => {
           placeholder="узнал от..."
           autoComplete="new-password"
           className="!bg-shark-900"
-          status={errors.findout ? 'error' : 'default'}
+          status={errors.findout ? "error" : "default"}
           variant="minecraft"
-          {...register('findout')}
+          {...register("findout")}
         />
       </FormField>
       <FormField errorMessage={errors?.acceptRules?.message}>
@@ -175,7 +179,7 @@ export const SignUpForm = () => {
               type="checkbox"
               className="peer h-6 w-6 cursor-pointer transition-all appearance-none
                   rounded shadow hover:shadow-md border-[2px] border-shark-600 bg-shark-700 checked:bg-shark-900 checked:border-black"
-              {...register('acceptRules')}
+              {...register("acceptRules")}
             />
             <span
               className="absolute text-white opacity-0 peer-checked:opacity-100
@@ -193,16 +197,12 @@ export const SignUpForm = () => {
                   fill-rule="evenodd"
                   d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
                   clip-rule="evenodd"
-                >
-                </path>
+                ></path>
               </svg>
             </span>
           </label>
           <label className="select-none cursor-pointer" htmlFor="rules">
-            <Typography
-              textSize="large"
-              textColor="shark_black"
-            >
+            <Typography textSize="large" textColor="shark_black">
               Согласен с&nbsp;
               <Link
                 href="/misc/rules"
@@ -234,8 +234,10 @@ export const SignUpForm = () => {
         </Button>
         {isLoading && <GearLoader />}
       </div>
-      {isError && <FormAuthErrorMessage type={status} messages={errorMessages} />}
-      {status === 'created' && (
+      {isError && (
+        <FormAuthErrorMessage type={status} messages={errorMessages} />
+      )}
+      {status === "created" && (
         <div className="px-2">
           <Typography
             onClick={handleRedirect}

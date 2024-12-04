@@ -1,22 +1,26 @@
-"use server"
+"use server";
 
 import { createClient } from "#utils/api/supabase-client.ts";
-import { getCurrentSession } from '#actions/get-current-session.ts';
+import { getCurrentSession } from "#actions/get-current-session.ts";
 
-export async function checkIsFriend(requestedUserNickname: string): Promise<boolean> {
-	const { user: currentUser } = await getCurrentSession();
-	if (!currentUser) return false;
-	
-	const api = createClient();
-	
-	const { data, error } = await api
-		.from("users_friends")
-		.select("user_1,user_2")
-		.or(`user_1.eq.${requestedUserNickname},user_2.eq.${requestedUserNickname}`);
-	
-	if (error || !data) return true;
-	
-	return data.some((friendship) =>
-		[ friendship.user_1, friendship.user_2 ].includes(currentUser.nickname)
-	);
+export async function checkIsFriend(
+  requestedUserNickname: string,
+): Promise<boolean> {
+  const { user: currentUser } = await getCurrentSession();
+  if (!currentUser) return false;
+
+  const api = createClient();
+
+  const { data, error } = await api
+    .from("users_friends")
+    .select("user_1,user_2")
+    .or(
+      `user_1.eq.${requestedUserNickname},user_2.eq.${requestedUserNickname}`,
+    );
+
+  if (error || !data) return true;
+
+  return data.some((friendship) =>
+    [friendship.user_1, friendship.user_2].includes(currentUser.nickname),
+  );
 }

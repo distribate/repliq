@@ -1,61 +1,63 @@
-import { Typography } from '@repo/ui/src/components/typography.tsx';
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@repo/ui/src/components/accordion.tsx';
-import { useCreateThread } from '../hooks/use-create-thread.tsx';
-import { threadFormQuery } from '../queries/thread-form-query.ts';
-import { Input } from '@repo/ui/src/components/input.tsx';
-import { useState, ChangeEvent } from 'react';
-import { X } from 'lucide-react';
-import { THREAD_TAGS_LIMIT } from '@repo/shared/constants/limits.ts';
+import { Typography } from "@repo/ui/src/components/typography.tsx";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@repo/ui/src/components/accordion.tsx";
+import { useCreateThread } from "../hooks/use-create-thread.tsx";
+import { threadFormQuery } from "../queries/thread-form-query.ts";
+import { Input } from "@repo/ui/src/components/input.tsx";
+import { useState, ChangeEvent } from "react";
+import { X } from "lucide-react";
+import { THREAD_TAGS_LIMIT } from "@repo/shared/constants/limits.ts";
 
 function parseStringToArray(input: string) {
-  const parts = input.split(',');
-  return parts
-  .map((item) => item
-  .trim())
-  .filter((item) => item);
+  const parts = input.split(",");
+  return parts.map((item) => item.trim()).filter((item) => item);
 }
 
 export const AdditionalSections = () => {
   const { updateThreadFormMutation } = useCreateThread();
-  const { data: threadFormState } = threadFormQuery()
-  const [inputValue, setInputValue] = useState<string>('');
-  
+  const { data: threadFormState } = threadFormQuery();
+  const [inputValue, setInputValue] = useState<string>("");
+
   if (!threadFormState) return;
-  
+
   const tags = threadFormState.tags;
-  
+
   const handleDeleteTag = (index: number) => {
     if (!tags) return;
-    
+
     const updatedTags = tags.filter((_, i) => i !== index);
-    
+
     return updateThreadFormMutation.mutate({
-      tags: updatedTags.length >= 1 ? updatedTags : null
+      tags: updatedTags.length >= 1 ? updatedTags : null,
     });
-  }
-  
+  };
+
   const handleAddTags = (e: ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     setInputValue(value);
-    
+
     if (tags && tags.length >= THREAD_TAGS_LIMIT[1]) {
       return;
     }
-    
-    if (value.endsWith(',')) {
+
+    if (value.endsWith(",")) {
       const tags = parseStringToArray(value);
       const lastTag = tags[tags.length - 1];
-      
+
       if (lastTag) {
         updateThreadFormMutation.mutate({
           tags: [...(threadFormState.tags || []), lastTag],
         });
       }
-      
-      setInputValue('');
+
+      setInputValue("");
     }
   };
-  
+
   return (
     <>
       {/*{threadFormState.auto_remove && (*/}
@@ -94,7 +96,10 @@ export const AdditionalSections = () => {
                   {threadFormState.tags && (
                     <div className="flex flex-wrap items-center gap-2">
                       {threadFormState.tags.map((tag, i) => (
-                        <div key={i} className="flex items-center justify-between bg-shark-500 rounded-sm px-2 py-3 h-3 overflow-hidden">
+                        <div
+                          key={i}
+                          className="flex items-center justify-between bg-shark-500 rounded-sm px-2 py-3 h-3 overflow-hidden"
+                        >
                           <Typography className="text-[15px] font-medium">
                             {tag.toString()}
                           </Typography>

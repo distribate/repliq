@@ -1,25 +1,23 @@
-"use server"
+"use server";
 
 import { createClient } from "#utils/api/supabase-client.ts";
 
 type PublicUrlFromStorage = {
-  bucket: string,
-  fileName: string
-}
+  bucket: string;
+  fileName: string;
+};
 
 export async function getPublicUrlFromStorage({
-  bucket, fileName
+  bucket,
+  fileName,
 }: PublicUrlFromStorage): Promise<string> {
-  const supabase = createClient()
-  
+  const supabase = createClient();
+
   let url: string;
-  
-  const { data } = supabase
-  .storage
-  .from(bucket)
-  .getPublicUrl(fileName);
-  
+
+  const { data } = supabase.storage.from(bucket).getPublicUrl(fileName);
+
   url = data.publicUrl;
-  
+
   return url;
 }

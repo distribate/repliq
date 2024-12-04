@@ -1,4 +1,4 @@
-import { Skeleton } from '@repo/ui/src/components/skeleton.tsx';
+import { Skeleton } from "@repo/ui/src/components/skeleton.tsx";
 
 const FriendCardSkeleton = () => {
   return (
@@ -7,22 +7,22 @@ const FriendCardSkeleton = () => {
       <div className="flex flex-col gap-y-1 w-fit">
         <div className="flex items-center gap-1 w-fit">
           <div className="flex items-center gap-1">
-            <Skeleton className="h-6 w-64"/>
-            <Skeleton className="h-6 w-48"/>
+            <Skeleton className="h-6 w-64" />
+            <Skeleton className="h-6 w-48" />
           </div>
-          <Skeleton className="h-6 w-24"/>
+          <Skeleton className="h-6 w-24" />
         </div>
         <div className="flex items-center w-fit">
-          <Skeleton className="h-6 w-48"/>
+          <Skeleton className="h-6 w-48" />
         </div>
         <div className="flex items-center mt-2 gap-1 w-fit">
-          <Skeleton className="h-6 w-48"/>
-          <Skeleton className="h-6 w-48"/>
+          <Skeleton className="h-6 w-48" />
+          <Skeleton className="h-6 w-48" />
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
 export const FriendsAllListSkeleton = () => {
   return (

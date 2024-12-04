@@ -1,47 +1,59 @@
-"use client"
+"use client";
 
-import { usePathname, useRouter, useSearchParams } from 'next/navigation';
-import { NavigationBadge } from '#navigation/components/navigation-badge.tsx';
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { NavigationBadge } from "#navigation/components/navigation-badge.tsx";
 
-export type AdminSections = "reports" | "tickets" | "configs" | "main" | "stats"
+export type AdminSections =
+  | "reports"
+  | "tickets"
+  | "configs"
+  | "main"
+  | "stats";
 
-const SECTION_QUERY_KEY = "section"
+const SECTION_QUERY_KEY = "section";
 
 type AdminNavigationBadgeProps = {
-  title: string,
-  paramValue: AdminSections
-}
+  title: string;
+  paramValue: AdminSections;
+};
 
 export const AdminNavigationBadge = ({
-  title, paramValue
+  title,
+  paramValue,
 }: AdminNavigationBadgeProps) => {
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const { push } = useRouter();
-  
+
   const createQueryString = () => {
     const query = new URLSearchParams(searchParams);
     query.set(SECTION_QUERY_KEY, paramValue);
-    return query.toString()
-  }
-  
+    return query.toString();
+  };
+
   const handleSection = () => {
-    const url = pathname + '?'
-    
-    if (paramValue === 'main') {
-      return push(pathname)
+    const url = pathname + "?";
+
+    if (paramValue === "main") {
+      return push(pathname);
     }
-    
-    push(url + createQueryString())
-  }
-  
+
+    push(url + createQueryString());
+  };
+
   const isActive = (): boolean => {
-    if (paramValue === 'main' && !searchParams.get(SECTION_QUERY_KEY)) {
+    if (paramValue === "main" && !searchParams.get(SECTION_QUERY_KEY)) {
       return true;
     }
-    
-    return paramValue === searchParams.get(SECTION_QUERY_KEY)
-  }
-  
-  return <NavigationBadge onClick={handleSection} isActive={isActive()} title={title}/>
-}
+
+    return paramValue === searchParams.get(SECTION_QUERY_KEY);
+  };
+
+  return (
+    <NavigationBadge
+      onClick={handleSection}
+      isActive={isActive()}
+      title={title}
+    />
+  );
+};

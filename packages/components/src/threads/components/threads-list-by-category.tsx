@@ -1,13 +1,11 @@
-import { ThreadEntity } from "@repo/types/entities/entities-type.ts"
+import { ThreadEntity } from "@repo/types/entities/entities-type.ts";
 
 type ThreadsListByCategoryProps = {
-	threadsList: ThreadEntity[] | null
-}
+  threadsList: ThreadEntity[] | null;
+};
 
 export const ThreadsListByCategory = ({
-	threadsList
+  threadsList,
 }: ThreadsListByCategoryProps) => {
-	
-	if (!threadsList) return null;
-	
-}
+  if (!threadsList) return null;
+};

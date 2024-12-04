@@ -1,13 +1,13 @@
-import { Separator } from '@repo/ui/src/components/separator.tsx';
-import { PostCommentItem } from '#post/components/post-comment/post-comment-item.tsx';
-import { PostEntity } from '@repo/types/entities/entities-type.ts';
-import { Skeleton } from '@repo/ui/src/components/skeleton.tsx';
-import { BlockWrapper } from '#wrappers/block-wrapper.tsx';
-import { postCommentsQuery } from '#post/components/post-comments/queries/post-comments-query.ts';
+import { Separator } from "@repo/ui/src/components/separator.tsx";
+import { PostCommentItem } from "#post/components/post-comment/post-comment-item.tsx";
+import { PostEntity } from "@repo/types/entities/entities-type.ts";
+import { Skeleton } from "@repo/ui/src/components/skeleton.tsx";
+import { BlockWrapper } from "#wrappers/block-wrapper.tsx";
+import { postCommentsQuery } from "#post/components/post-comments/queries/post-comments-query.ts";
 
 type PostCommentsProps = Pick<PostEntity, "id"> & {
-  comments_count: number
-}
+  comments_count: number;
+};
 
 const PostCommentSkeleton = () => {
   return (
@@ -45,23 +45,23 @@ const PostCommentsSkeleton = () => {
 };
 
 export const PostComments = ({
-  id: postId, comments_count
+  id: postId,
+  comments_count,
 }: PostCommentsProps) => {
   const { data: postComments, isLoading } = postCommentsQuery({
-    id: postId, comments: comments_count >= 1
+    id: postId,
+    comments: comments_count >= 1,
   });
-  
+
   if (isLoading) return <PostCommentsSkeleton />;
-  
-  if (!postComments
-    || (postComments && !postComments.length)
-  ) return null;
-  
+
+  if (!postComments || (postComments && !postComments.length)) return null;
+
   return (
     <>
       <Separator />
       <div className="flex flex-col gap-y-2 w-full">
-        {postComments.map(comment => (
+        {postComments.map((comment) => (
           <PostCommentItem
             key={comment.id}
             post_id={comment.post_id}

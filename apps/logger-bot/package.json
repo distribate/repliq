@@ -5,7 +5,8 @@
   "scripts": {
     "dev": "bun --watch src/index.ts",
     "lint": "bun x eslint \"src/**/*.ts\"",
-    "lint:fix": "bun eslint \"src/**/*.ts\" --fix"
+    "lint:fix": "bun eslint \"src/**/*.ts\" --fix",
+    "type-check": "tsc --noEmit"
   },
   "dependencies": {
     "gramio": "^0.1.2"

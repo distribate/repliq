@@ -1,27 +1,32 @@
-'use server';
+"use server";
 
-import { createClient } from "../../../../lib/utils/api/supabase-client.ts";
-import { FriendRequestEntity } from '@repo/types/entities/entities-type.ts';
-import { FriendsRequestsProperties } from '#friends/types/friends-requests-types.ts';
+import { createClient } from "@repo/lib/utils/api/supabase-client.ts";
+import { FriendRequestEntity } from "@repo/types/entities/entities-type.ts";
 
-export type FriendsRequestsType = 'incoming' | 'outgoing';
+export type FriendsRequestsType = "incoming" | "outgoing";
+
+type GetRequestsByType = {
+  type: FriendsRequestsType;
+  nickname: string;
+};
 
 export async function getRequestsByType({
-  type, nickname
-}: FriendsRequestsProperties): Promise<FriendRequestEntity[]> {
-  const requestType = type === 'incoming' ? 'recipient' : 'initiator';
-  
+  type,
+  nickname,
+}: GetRequestsByType): Promise<FriendRequestEntity[]> {
+  const requestType = type === "incoming" ? "recipient" : "initiator";
+
   const api = createClient();
-  
+
   const { data: friendsRequests, error } = await api
-  .from('friends_requests')
-  .select('id, recipient, initiator, created_at')
-  .eq(requestType, nickname)
-  .returns<FriendRequestEntity[]>()
-  
+    .from("friends_requests")
+    .select("id, recipient, initiator, created_at")
+    .eq(requestType, nickname)
+    .returns<FriendRequestEntity[]>();
+
   if (error) {
-    throw new Error(error.message)
+    throw new Error(error.message);
   }
-  
+
   return friendsRequests;
 }

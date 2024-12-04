@@ -1,28 +1,28 @@
-import { HoverCardItem } from '@repo/ui/src/components/hover-card.tsx';
-import { X } from 'lucide-react';
-import { Typography } from '@repo/ui/src/components/typography.tsx';
-import { ConfirmationButton } from '#buttons/confirmation-action-button.tsx';
-import { ConfirmationActionModalTemplate } from '#templates/confirmation-action-modal-template.tsx';
-import { DialogClose } from '@repo/ui/src/components/dialog.tsx';
-import { DynamicModal } from '../../../../dynamic-modal.tsx';
-import { getUser } from '@repo/lib/helpers/get-user.ts';
+import { HoverCardItem } from "@repo/ui/src/components/hover-card.tsx";
+import { X } from "lucide-react";
+import { Typography } from "@repo/ui/src/components/typography.tsx";
+import { ConfirmationButton } from "#buttons/confirmation-action-button.tsx";
+import { ConfirmationActionModalTemplate } from "#templates/confirmation-action-modal-template.tsx";
+import { DialogClose } from "@repo/ui/src/components/dialog.tsx";
+import { DynamicModal } from "../../../../dynamic-modal.tsx";
+import { getUser } from "@repo/lib/helpers/get-user.ts";
 import {
   useControlCoverImage,
   USER_COVER_DELETE_IMAGE_MUTATION_KEY,
-} from '#profile/components/cover/hooks/use-control-cover-image.ts';
+} from "#profile/components/cover/hooks/use-control-cover-image.ts";
 
 export const DeleteCoverModal = () => {
   const currentUser = getUser();
   const { deleteBackgroundImageMutation } = useControlCoverImage();
-  
+
   if (!currentUser) return null;
 
   const handleDeleteCover = () => {
     return deleteBackgroundImageMutation.mutate();
   };
-  
+
   if (!currentUser.cover_image) return null;
-  
+
   return (
     <DynamicModal
       withLoader

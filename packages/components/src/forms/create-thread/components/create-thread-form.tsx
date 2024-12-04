@@ -1,23 +1,28 @@
-'use client';
+"use client";
 
-import { useCreateThread } from '../hooks/use-create-thread.tsx';
-import { Button } from '@repo/ui/src/components/button.tsx';
-import { Separator } from '@repo/ui/src/components/separator.tsx';
-import { BlockWrapper } from '#wrappers/block-wrapper.tsx';
-import { FormThreadContent } from './form-thread-content.tsx';
-import { FormThreadCategories } from './form-thread-categories.tsx';
-import { FormThreadComments } from './form-thread-comments.tsx';
-import { FormThreadDescription } from './form-thread-description.tsx';
-import { FormThreadTitle } from './form-thread-title.tsx';
-import { useForm } from 'react-hook-form';
-import { FormChildsProps, zodCreateThreadForm } from '../types/create-thread-form-types.ts';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { createThreadSchema } from '../schemas/create-thread-schema.ts';
-import { threadFormQuery } from '#forms/create-thread/queries/thread-form-query.ts';
-import dynamic from 'next/dynamic';
+import { useCreateThread } from "../hooks/use-create-thread.tsx";
+import { Button } from "@repo/ui/src/components/button.tsx";
+import { Separator } from "@repo/ui/src/components/separator.tsx";
+import { BlockWrapper } from "#wrappers/block-wrapper.tsx";
+import { FormThreadContent } from "./form-thread-content.tsx";
+import { FormThreadCategories } from "./form-thread-categories.tsx";
+import { FormThreadComments } from "./form-thread-comments.tsx";
+import { FormThreadDescription } from "./form-thread-description.tsx";
+import { FormThreadTitle } from "./form-thread-title.tsx";
+import { useForm } from "react-hook-form";
+import {
+  FormChildsProps,
+  zodCreateThreadForm,
+} from "../types/create-thread-form-types.ts";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { createThreadSchema } from "../schemas/create-thread-schema.ts";
+import { threadFormQuery } from "#forms/create-thread/queries/thread-form-query.ts";
+import dynamic from "next/dynamic";
 
 const FormThreadPreviewImages = dynamic(() =>
-  import('./form-thread-preview-images.tsx').then(m => m.FormThreadPreviewImages),
+  import("./form-thread-preview-images.tsx").then(
+    (m) => m.FormThreadPreviewImages,
+  ),
 );
 
 // const FormThreadAutoRemove = dynamic(() =>
@@ -29,28 +34,33 @@ const FormThreadPreviewImages = dynamic(() =>
 // );
 
 const AdditionalSections = dynamic(() =>
-  import('./additional-sections.tsx').then(m => m.AdditionalSections),
+  import("./additional-sections.tsx").then((m) => m.AdditionalSections),
 );
 
 export const CreateThreadForm = () => {
   const { createPostThreadMutation } = useCreateThread();
   const { data: threadFormState } = threadFormQuery();
-  
+
   const {
-    control, handleSubmit, setValue, resetField, getValues, formState: { errors, isValid },
+    control,
+    handleSubmit,
+    setValue,
+    resetField,
+    getValues,
+    formState: { errors, isValid },
   } = useForm<zodCreateThreadForm>({
-    mode: 'onChange',
+    mode: "onChange",
     resolver: zodResolver(createThreadSchema),
     defaultValues: {
       comments: threadFormState.isComments,
       permission: threadFormState.permission,
       auto_remove: threadFormState.auto_remove,
-      images: null
+      images: null,
     },
   });
-  
+
   const formChildsObj: FormChildsProps = { errors, control };
-  
+
   return (
     <form
       onSubmit={handleSubmit(() => createPostThreadMutation.mutate())}
@@ -63,7 +73,7 @@ export const CreateThreadForm = () => {
           <FormThreadContent {...formChildsObj} />
           <FormThreadPreviewImages
             setValue={setValue}
-            images={getValues('images')}
+            images={getValues("images")}
             resetField={resetField}
             {...formChildsObj}
           />

@@ -1,97 +1,109 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import { Editable, ReactEditor, Slate, withReact } from 'slate-react';
-import { createEditor, Descendant } from 'slate';
-import { RenderElement } from '#editor/components/render-element.tsx';
-import { RenderLeaf } from '#editor/components/render-leaf.tsx';
+import { useState } from "react";
+import { Editable, ReactEditor, Slate, withReact } from "slate-react";
+import { createEditor, Descendant } from "slate";
+import { RenderElement } from "#editor/components/render-element.tsx";
+import { RenderLeaf } from "#editor/components/render-leaf.tsx";
 import {
   ContextMenu,
   ContextMenuContent,
   ContextMenuItem,
   ContextMenuTrigger,
-} from '@repo/ui/src/components/context-menu.tsx';
-import { PencilLine } from 'lucide-react';
-import { Typography } from '@repo/ui/src/components/typography.tsx';
+} from "@repo/ui/src/components/context-menu.tsx";
+import { PencilLine } from "lucide-react";
+import { Typography } from "@repo/ui/src/components/typography.tsx";
 import {
   THREAD_CONTROL_QUERY_KEY,
   threadControlQuery,
-} from '#thread/components/thread-control/queries/thread-control-query.ts';
-import { useThreadControl } from '#thread/components/thread-control/hooks/use-thread-control.ts';
-import { serializeNodes } from '../../../../../../lib/helpers/nodes-serializer.ts';
-import { useController, useForm } from 'react-hook-form';
-import { Button } from '@repo/ui/src/components/button.tsx';
-import { handleOnChangeEditor } from '#editor/helpers/handle-on-change.ts';
-import { ThreadModel } from '#thread/queries/get-thread-model.ts';
-import { ThreadControlSave } from '#thread/components/thread-control/components/thread-control-save.tsx';
-import { useQueryClient } from '@tanstack/react-query';
+} from "#thread/components/thread-control/queries/thread-control-query.ts";
+import { useThreadControl } from "#thread/components/thread-control/hooks/use-thread-control.ts";
+import { serializeNodes } from "../../../../../../lib/helpers/nodes-serializer.ts";
+import { useController, useForm } from "react-hook-form";
+import { Button } from "@repo/ui/src/components/button.tsx";
+import { handleOnChangeEditor } from "#editor/helpers/handle-on-change.ts";
+import { ThreadModel } from "#thread/queries/get-thread-model.ts";
+import { ThreadControlSave } from "#thread/components/thread-control/components/thread-control-save.tsx";
+import { useQueryClient } from "@tanstack/react-query";
 
 type ThreadContentProps = {
-  content: Descendant[],
-  isOwner: boolean
-} & Pick<ThreadModel, 'id'>
+  content: Descendant[];
+  isOwner: boolean;
+} & Pick<ThreadModel, "id">;
 
 const initialValue = [
   {
-    type: 'paragraph',
-    children: [ { text: 'Произошла ошибка при загрузке контента!', } ],
+    type: "paragraph",
+    children: [{ text: "Произошла ошибка при загрузке контента!" }],
   },
 ];
 
 export const ThreadContent = ({
-  content, isOwner, id: threadId,
+  content,
+  isOwner,
+  id: threadId,
 }: ThreadContentProps) => {
   const qc = useQueryClient();
   const { data: controlState } = threadControlQuery();
   const { setThreadNewValuesMutation } = useThreadControl();
-  const [ editor ] = useState<ReactEditor>(() => withReact(createEditor()));
+  const [editor] = useState<ReactEditor>(() => withReact(createEditor()));
   const { control } = useForm();
-  
-  const { field: { onChange } } = useController(
-    { name: 'content', control, rules: { required: true } },
-  );
-  
+
+  const {
+    field: { onChange },
+  } = useController({ name: "content", control, rules: { required: true } });
+
   const handleContentEdit = () => {
     return setThreadNewValuesMutation.mutate({
-      state: { isContenteditable: true }
-    })
+      state: { isContenteditable: true },
+    });
   };
-  
+
   const handleOnChange = (value: Descendant[]) => {
     const isAstChange = handleOnChangeEditor(editor, value);
-    
+
     if (isAstChange) {
       return setThreadNewValuesMutation.mutate({
         state: {
-          isValid: controlState.values ? controlState.values.content !== content : false
+          isValid: controlState.values
+            ? controlState.values.content !== content
+            : false,
         },
-        values: { content: value }
+        values: { content: value },
       });
     }
   };
-  
+
   const handleCancelEdit = () => {
     editor.children = content;
     return qc.resetQueries({ queryKey: THREAD_CONTROL_QUERY_KEY });
   };
-  
+
   const isReadOnly = !controlState?.state?.isContenteditable || !isOwner;
-  const isTriggered: boolean = controlState?.state?.isContenteditable ? controlState.state.isContenteditable : false;
-  
+  const isTriggered: boolean = controlState?.state?.isContenteditable
+    ? controlState.state.isContenteditable
+    : false;
+
   return (
-    <div className={`${isReadOnly ? '' : '!bg-shark-800'} px-4 w-full h-full flex !rounded-none`}>
+    <div
+      className={`${isReadOnly ? "" : "!bg-shark-800"} px-4 w-full h-full flex !rounded-none`}
+    >
       {isOwner && (
         <ContextMenu>
           <ContextMenuTrigger className="w-full">
             <Slate
               editor={editor}
               initialValue={content || initialValue}
-              onValueChange={value => onChange(serializeNodes(value))}
+              onValueChange={(value) => onChange(serializeNodes(value))}
               onChange={handleOnChange}
             >
               <Editable
-                renderLeaf={props => <RenderLeaf {...props} children={props.children} />}
-                renderElement={props => <RenderElement {...props} children={props.children} />}
+                renderLeaf={(props) => (
+                  <RenderLeaf {...props} children={props.children} />
+                )}
+                renderElement={(props) => (
+                  <RenderElement {...props} children={props.children} />
+                )}
                 readOnly={isReadOnly}
                 className="!outline-none"
                 placeholder=" "
@@ -117,13 +129,14 @@ export const ThreadContent = ({
         </ContextMenu>
       )}
       {!isOwner && (
-        <Slate
-          editor={editor}
-          initialValue={content || initialValue}
-        >
+        <Slate editor={editor} initialValue={content || initialValue}>
           <Editable
-            renderLeaf={props => <RenderLeaf {...props} children={props.children} />}
-            renderElement={props => <RenderElement {...props} children={props.children} />}
+            renderLeaf={(props) => (
+              <RenderLeaf {...props} children={props.children} />
+            )}
+            renderElement={(props) => (
+              <RenderElement {...props} children={props.children} />
+            )}
             className="!outline-none"
             placeholder=" "
             readOnly={true}

@@ -1,1 +1,1 @@
-export type PasswordVisibilityType = "text" | "password"
+export type PasswordVisibilityType = "text" | "password";

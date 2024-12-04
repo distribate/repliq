@@ -1,40 +1,44 @@
-import { useState } from 'react';
-import { UserNickname } from '../../../../../../user/components/name/components/nickname.tsx';
+import { useState } from "react";
+import { UserNickname } from "../../../../../../user/components/name/components/nickname.tsx";
 import {
   ColorArea,
   SliderTrack,
   ColorSlider,
   parseColor,
   ColorThumb,
-} from 'react-aria-components';
-import { Typography } from '@repo/ui/src/components/typography.tsx';
-import { Separator } from '@repo/ui/src/components/separator.tsx';
-import { Button } from '@repo/ui/src/components/button.tsx';
-import { useUpdateCurrentUser } from '@repo/lib/hooks/use-update-current-user.ts';
-import { UserEntity } from '@repo/types/entities/entities-type.ts';
-import { parseHexToHSL } from '../../../../../../../../lib/helpers/color-parser.ts';
+} from "react-aria-components";
+import { Typography } from "@repo/ui/src/components/typography.tsx";
+import { Separator } from "@repo/ui/src/components/separator.tsx";
+import { Button } from "@repo/ui/src/components/button.tsx";
+import { useUpdateCurrentUser } from "@repo/lib/hooks/use-update-current-user.ts";
+import { UserEntity } from "@repo/types/entities/entities-type.ts";
+import { parseHexToHSL } from "../../../../../../../../lib/helpers/color-parser.ts";
 
-type NicknameColorPickerProps = Pick<UserEntity, 'nickname' | 'name_color'>
+type NicknameColorPickerProps = Pick<UserEntity, "nickname" | "name_color">;
 
 export const NicknameColorPicker = ({
-  nickname, name_color,
+  nickname,
+  name_color,
 }: NicknameColorPickerProps) => {
-  const [ color, setColor ] = useState(parseColor(`hsl(${parseHexToHSL(name_color)})`));
-  const [ finalColor, setFinalColor ] = useState(color);
+  const [color, setColor] = useState(
+    parseColor(`hsl(${parseHexToHSL(name_color)})`),
+  );
+  const [finalColor, setFinalColor] = useState(color);
   const { updateFieldMutation } = useUpdateCurrentUser();
-  
+
   const currentColor = name_color.toString();
-  const currentSelectedColor = finalColor.toString('hex');
+  const currentSelectedColor = finalColor.toString("hex");
   const isIdentity = currentColor === currentSelectedColor;
-  
+
   const handleUpdateColor = () => {
     if (isIdentity) return;
-    
+
     return updateFieldMutation.mutate({
-      value: finalColor.toString('hex'), field: 'name_color',
+      value: finalColor.toString("hex"),
+      field: "name_color",
     });
-  }
-  
+  };
+
   return (
     <div className="flex flex-col gap-4 items-center w-full">
       <Typography variant="dialogTitle">Изменение цвета никнейма</Typography>
@@ -49,7 +53,7 @@ export const NicknameColorPicker = ({
                 <Typography>Текущий цвет: {currentColor}</Typography>
                 <div
                   className="w-[8px] h-[8px]"
-                  style={{ backgroundColor: currentColor, }}
+                  style={{ backgroundColor: currentColor }}
                 />
               </div>
               <div className="flex items-center gap-1">
@@ -61,7 +65,10 @@ export const NicknameColorPicker = ({
               </div>
               <div className="flex items-center gap-1">
                 <Typography>Ник:</Typography>
-                <UserNickname nickname={nickname} nicknameColor={currentSelectedColor} />
+                <UserNickname
+                  nickname={nickname}
+                  nicknameColor={currentSelectedColor}
+                />
               </div>
             </div>
           </div>

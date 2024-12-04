@@ -1,35 +1,36 @@
-import { useQuery } from '@tanstack/react-query';
-import { AuthMessages } from '../types/error-message-type.ts';
-import { createQueryKey } from '@repo/lib/helpers/query-key-builder.ts';
+import { useQuery } from "@tanstack/react-query";
+import { AuthMessages } from "../types/error-message-type.ts";
+import { createQueryKey } from "@repo/lib/helpers/query-key-builder.ts";
 
-type AuthType = 'sign-in' | 'sign-up';
+type AuthType = "sign-in" | "sign-up";
 
 export type AuthQuery = {
-  type: AuthType,
-  status: AuthMessages | null,
+  type: AuthType;
+  status: AuthMessages | null;
   values: {
-    nickname: string,
-    password: string,
+    nickname: string;
+    password: string;
     // email: string,
-    findout: string,
-    acceptRules: boolean,
-    realName: string
-  } | null
-}
+    findout: string;
+    acceptRules: boolean;
+    realName: string;
+  } | null;
+};
 
 const initial: AuthQuery = {
   status: null,
   values: null,
-  type: "sign-up"
+  type: "sign-up",
 };
 
-export const AUTH_QUERY_KEY = createQueryKey('ui', [ 'auth-state' ]);
+export const AUTH_QUERY_KEY = createQueryKey("ui", ["auth-state"]);
 
-export const authQuery = () => useQuery<AuthQuery, Error>({
-  queryKey: AUTH_QUERY_KEY,
-  gcTime: Infinity,
-  staleTime: Infinity,
-  initialData: initial,
-  refetchOnWindowFocus: false,
-  refetchOnMount: false
-});
+export const authQuery = () =>
+  useQuery<AuthQuery, Error>({
+    queryKey: AUTH_QUERY_KEY,
+    gcTime: Infinity,
+    staleTime: Infinity,
+    initialData: initial,
+    refetchOnWindowFocus: false,
+    refetchOnMount: false,
+  });

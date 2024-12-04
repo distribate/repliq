@@ -1,34 +1,38 @@
-import { Typography } from '@repo/ui/src/components/typography.tsx';
-import { Avatar } from '#user/components/avatar/components/avatar.tsx';
-import { ThreadModel } from '../../queries/get-thread-model.ts';
-import dayjs from '@repo/lib/utils/dayjs/dayjs-instance.ts';
-import { Separator } from '@repo/ui/src/components/separator.tsx';
-import { ArrowDown, ArrowUp, MessageSquare, MessageSquareOff } from 'lucide-react';
+import { Typography } from "@repo/ui/src/components/typography.tsx";
+import { Avatar } from "#user/components/avatar/components/avatar.tsx";
+import { ThreadModel } from "../../queries/get-thread-model.ts";
+import dayjs from "@repo/lib/constants/dayjs-instance.ts";
+import { Separator } from "@repo/ui/src/components/separator.tsx";
+import {
+  ArrowDown,
+  ArrowUp,
+  MessageSquare,
+  MessageSquareOff,
+} from "lucide-react";
 
-type TopicByCategoryItemProps = Pick<ThreadModel, 'title'
-  | 'owner'
-  | 'created_at'
-  | 'commentsCount'
-  | 'rating'
-  | 'isComments'
->
+type TopicByCategoryItemProps = Pick<
+  ThreadModel,
+  "title" | "owner" | "created_at" | "commentsCount" | "rating" | "isComments"
+>;
 
 export const ThreadByCategoryItem = ({
   ...thread
 }: TopicByCategoryItemProps) => {
-  const { owner, created_at, title, rating, commentsCount, isComments } = thread;
-  
+  const { owner, created_at, title, rating, commentsCount, isComments } =
+    thread;
+
   if (!owner || !rating) return null;
-  
+
   const createdAt = dayjs(created_at).from(dayjs());
 
   return (
-    <div
-      className="flex grow group bg-shark-900 hover:bg-shark-700 rounded-md justify-between transition-all duration-150 p-3 cursor-pointer">
+    <div className="flex grow group bg-shark-900 hover:bg-shark-700 rounded-md justify-between transition-all duration-150 p-3 cursor-pointer">
       <div className="flex flex-col w-full gap-y-2 justify-between">
         <div className="flex items-center min-w-[260px] gap-x-2">
           <Avatar
-            nickname={owner.nickname} propWidth={36} propHeight={36}
+            nickname={owner.nickname}
+            propWidth={36}
+            propHeight={36}
             className="min-h-[36px] min-w-[36px]"
           />
           <div className="flex flex-col">
@@ -50,14 +54,17 @@ export const ThreadByCategoryItem = ({
                 {commentsCount}
               </Typography>
             </>
-          ) : <MessageSquareOff className="text-red-500" size={16} />}
+          ) : (
+            <MessageSquareOff className="text-red-500" size={16} />
+          )}
         </div>
         <Separator orientation="vertical" />
         <div className="flex items-center gap-1 w-[26px]">
-          {(rating.increment - rating.decrement) >= 0 ?
-            <ArrowUp className="text-shark-300" size={16} /> :
+          {rating.increment - rating.decrement >= 0 ? (
+            <ArrowUp className="text-shark-300" size={16} />
+          ) : (
             <ArrowDown className="text-shark-300" size={16} />
-          }
+          )}
           <Typography className="text-shark-300 text-sm font-normal">
             {rating.increment - rating.decrement}
           </Typography>

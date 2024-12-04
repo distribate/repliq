@@ -1,14 +1,12 @@
-import { Typography } from '@repo/ui/src/components/typography.tsx';
-import { Input } from '@repo/ui/src/components/input.tsx';
-import { useCreateThread } from '../hooks/use-create-thread.tsx';
-import { Controller } from 'react-hook-form';
-import { FormChildsProps } from '../types/create-thread-form-types.ts';
+import { Typography } from "@repo/ui/src/components/typography.tsx";
+import { Input } from "@repo/ui/src/components/input.tsx";
+import { useCreateThread } from "../hooks/use-create-thread.tsx";
+import { Controller } from "react-hook-form";
+import { FormChildsProps } from "../types/create-thread-form-types.ts";
 
-export const FormThreadTitle = ({
-  control, errors,
-}: FormChildsProps) => {
+export const FormThreadTitle = ({ control, errors }: FormChildsProps) => {
   const { updateThreadFormMutation } = useCreateThread();
-  
+
   return (
     <div className="flex flex-col gap-y-1 w-full">
       <div className="flex flex-col">
@@ -26,10 +24,10 @@ export const FormThreadTitle = ({
             variant="form"
             className="rounded-md"
             placeholder="абоба тайтл..."
-            status={errors ? 'error' : 'default'}
-            onChange={e => {
+            status={errors ? "error" : "default"}
+            onChange={(e) => {
               onChange(e);
-              return updateThreadFormMutation.mutate({ title: e.target.value, });
+              return updateThreadFormMutation.mutate({ title: e.target.value });
             }}
           />
         )}

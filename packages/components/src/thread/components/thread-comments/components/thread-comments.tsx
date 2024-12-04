@@ -1,33 +1,39 @@
-'use client';
+"use client";
 
-import { Typography } from '@repo/ui/src/components/typography.tsx';
-import { ThreadCommentItem } from '../../thread-comment/components/thread-comment-item.tsx';
-import { threadCommentsQuery } from '../queries/thread-comments-query.ts';
-import { ThreadCommentEntity } from '@repo/types/entities/entities-type.ts';
-import { Skeleton } from '@repo/ui/src/components/skeleton.tsx';
-import { useInView } from 'react-intersection-observer';
-import { useEffect } from 'react';
+import { Typography } from "@repo/ui/src/components/typography.tsx";
+import { ThreadCommentItem } from "../../thread-comment/components/thread-comment-item.tsx";
+import { threadCommentsQuery } from "../queries/thread-comments-query.ts";
+import { ThreadCommentEntity } from "@repo/types/entities/entities-type.ts";
+import { Skeleton } from "@repo/ui/src/components/skeleton.tsx";
+import { useInView } from "react-intersection-observer";
+import { useEffect } from "react";
 
-type ThreadCommentsProps = Pick<ThreadCommentEntity, 'thread_id'> & {
-  threadAuthorNickname: string,
-  isComments: boolean
-}
+type ThreadCommentsProps = Pick<ThreadCommentEntity, "thread_id"> & {
+  threadAuthorNickname: string;
+  isComments: boolean;
+};
 
 type ThreadCommentsHeaderProps = {
-  nonComments: boolean
-}
+  nonComments: boolean;
+};
 
-const ThreadCommentsHeader = ({
-  nonComments,
-}: ThreadCommentsHeaderProps) => {
+const ThreadCommentsHeader = ({ nonComments }: ThreadCommentsHeaderProps) => {
   return (
     <div className="flex w-fit bg-shark-800 rounded-md px-2 py-0.5">
       {nonComments ? (
-        <Typography textSize="medium" textColor="shark_white" className="font-semibold">
+        <Typography
+          textSize="medium"
+          textColor="shark_white"
+          className="font-semibold"
+        >
           Комментариев еще нет...
         </Typography>
       ) : (
-        <Typography textSize="medium" textColor="shark_white" className="font-semibold">
+        <Typography
+          textSize="medium"
+          textColor="shark_white"
+          className="font-semibold"
+        >
           Обсуждение началось
         </Typography>
       )}
@@ -38,7 +44,7 @@ const ThreadCommentsHeader = ({
 export const ThreadCommentsSkeleton = () => {
   return (
     <div className="flex flex-col gap-y-2 items-center w-full">
-      <Skeleton className="h-8 w-44"/>
+      <Skeleton className="h-8 w-44" />
       <div className="flex flex-col items-start gap-y-2 w-full">
         <Skeleton className="h-[120px] w-full" />
         <Skeleton className="h-[120px] w-full" />
@@ -49,26 +55,28 @@ export const ThreadCommentsSkeleton = () => {
 };
 
 export const ThreadComments = ({
-  thread_id, threadAuthorNickname, isComments,
+  thread_id,
+  threadAuthorNickname,
+  isComments,
 }: ThreadCommentsProps) => {
   const { inView, ref } = useInView({
-    threshold: 0
-  })
-  
-  const { data: threadComments, isLoading } = threadCommentsQuery({
-    thread_id, isComments
+    threshold: 0,
   });
-  
+
+  const { data: threadComments, isLoading } = threadCommentsQuery({
+    thread_id,
+    isComments,
+  });
+
   useEffect(() => {
     if (inView) {
-    
     }
   }, []);
-  
-  if (isLoading) return <ThreadCommentsSkeleton/>
-  
+
+  if (isLoading) return <ThreadCommentsSkeleton />;
+
   const nonComments = isComments && !threadComments;
-  
+
   return (
     <div className="flex flex-col items-center w-full">
       <ThreadCommentsHeader nonComments={nonComments} />
@@ -87,7 +95,7 @@ export const ThreadComments = ({
               created_at={comment.created_at}
             />
           ))}
-          <div ref={ref} className="h-[1px] w-full border"/>
+          <div ref={ref} className="h-[1px] w-full border" />
         </div>
       )}
     </div>

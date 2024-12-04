@@ -1,25 +1,30 @@
-import { ReactNode } from 'react';
-import { ConfirmationActionModalTemplate } from '#templates/confirmation-action-modal-template.tsx';
-import { ConfirmationButton } from '#buttons/confirmation-action-button.tsx';
-import { DynamicModal } from '../../../../dynamic-modal.tsx';
-import { DialogClose } from '@repo/ui/src/components/dialog.tsx';
-import { useControlFriendRequests } from '#friend/components/friend-card/hooks/use-control-friend-requests.ts';
-import { USER_FRIEND_DELETE_MUTATION_KEY } from '#friend/components/friend-card/hooks/use-control-friend.ts';
-import { UserFriends } from '#friends/queries/get-friends.ts';
+import { ReactNode } from "react";
+import { ConfirmationActionModalTemplate } from "#templates/confirmation-action-modal-template.tsx";
+import { ConfirmationButton } from "#buttons/confirmation-action-button.tsx";
+import { DynamicModal } from "../../../../dynamic-modal.tsx";
+import { DialogClose } from "@repo/ui/src/components/dialog.tsx";
+import { useControlFriendRequests } from "#friend/components/friend-card/hooks/use-control-friend-requests.ts";
+import { USER_FRIEND_DELETE_MUTATION_KEY } from "#friend/components/friend-card/hooks/use-control-friend.ts";
+import { UserFriends } from "#friends/queries/get-friends.ts";
 
 type DeleteFriendModal = {
-  trigger: ReactNode
-} & Pick<UserFriends, 'friend_id' | 'nickname'>
+  trigger: ReactNode;
+} & Pick<UserFriends, "friend_id" | "nickname">;
 
 export const DeleteFriendModal = ({
-  friend_id, trigger, nickname,
+  friend_id,
+  trigger,
+  nickname,
 }: DeleteFriendModal) => {
   const { removeFriendMutation } = useControlFriendRequests();
-  
+
   const handleDeleteFriend = () => {
-    return removeFriendMutation.mutate({ friend_id, reqUserNickname: nickname });
+    return removeFriendMutation.mutate({
+      friend_id,
+      reqUserNickname: nickname,
+    });
   };
-  
+
   return (
     <DynamicModal
       mutationKey={USER_FRIEND_DELETE_MUTATION_KEY}

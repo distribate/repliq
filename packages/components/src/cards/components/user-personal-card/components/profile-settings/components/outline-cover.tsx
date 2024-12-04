@@ -1,39 +1,37 @@
-import { DropdownWrapper } from '#wrappers/dropdown-wrapper.tsx';
-import { Typography } from '@repo/ui/src/components/typography.tsx';
-import { useUpdateCurrentUser } from '@repo/lib/hooks/use-update-current-user.ts';
-import { HoverCardItem } from '@repo/ui/src/components/hover-card.tsx';
-import React from 'react';
-import { HoverCardWrapper } from '#wrappers/hover-card-wrapper.tsx';
-import { getPreferenceValue } from '@repo/lib/helpers/convert-user-preferences-to-map.ts';
-import { getUser } from '@repo/lib/helpers/get-user.ts';
+import { DropdownWrapper } from "#wrappers/dropdown-wrapper.tsx";
+import { Typography } from "@repo/ui/src/components/typography.tsx";
+import { useUpdateCurrentUser } from "@repo/lib/hooks/use-update-current-user.ts";
+import { HoverCardItem } from "@repo/ui/src/components/hover-card.tsx";
+import React from "react";
+import { HoverCardWrapper } from "#wrappers/hover-card-wrapper.tsx";
+import { getPreferenceValue } from "@repo/lib/helpers/convert-user-preferences-to-map.ts";
+import { getUser } from "@repo/lib/helpers/get-user.ts";
 
 export const OutlineCover = () => {
   const currentUser = getUser();
   const { updateFieldMutation } = useUpdateCurrentUser();
-  
-  if (!currentUser) return null;
-  
   const preferences = currentUser.preferences;
-  const preferOutline = getPreferenceValue(preferences, "coverOutline")
-  
-  const handleOutlinePrefer = (e: React.MouseEvent<HTMLDivElement>, value: boolean) => {
+  const preferOutline = getPreferenceValue(preferences, "coverOutline");
+
+  const handleOutlinePrefer = (
+    e: React.MouseEvent<HTMLDivElement>,
+    value: boolean,
+  ) => {
     e.preventDefault();
-    
-    updateFieldMutation.mutate({
+
+    return updateFieldMutation.mutate({
       value: value.toString(),
-      field: 'preferences',
-      preferences: {
-        value: value, key: "coverOutline"
-      },
+      field: "preferences",
+      preferences: { value: value, key: "coverOutline" },
     });
   };
-  
+
   return (
     <DropdownWrapper
-      properties={{ contentAlign: 'end', sideAlign: 'right' }}
+      properties={{ contentAlign: "end", sideAlign: "right" }}
       trigger={
         <Typography className="text-base">
-          {preferOutline ? 'вкл' : 'выкл'}
+          {preferOutline ? "вкл" : "выкл"}
         </Typography>
       }
       content={
@@ -43,7 +41,11 @@ export const OutlineCover = () => {
               Обводка профиля
             </Typography>
             <HoverCardWrapper
-              properties={{ delay: 10, contentAlign: 'center', sideAlign: 'right' }}
+              properties={{
+                delay: 10,
+                contentAlign: "center",
+                sideAlign: "right",
+              }}
               trigger={
                 <Typography className="text-shark-400 text-sm hover:text-pink-500 cursor-pointer">
                   (подробнее)
@@ -52,7 +54,8 @@ export const OutlineCover = () => {
               content={
                 <div className="flex flex-col gap-y-2 w-full p-2">
                   <Typography textSize="small" textColor="shark_white">
-                    Обводка вокруг профиля - уникальная фича, чтобы выделиться среди других игроков.
+                    Обводка вокруг профиля - уникальная фича, чтобы выделиться
+                    среди других игроков.
                   </Typography>
                   <Typography textSize="small" textColor="shark_white">
                     Цвет обводки зависит от типа привилегии.
@@ -63,12 +66,16 @@ export const OutlineCover = () => {
           </div>
           <div className="flex flex-col gap-y-2">
             <HoverCardItem onClick={(e) => handleOutlinePrefer(e, true)}>
-              <Typography className={preferOutline ? 'text-caribbean-green-500' : ''}>
+              <Typography
+                className={preferOutline ? "text-caribbean-green-500" : ""}
+              >
                 включить
               </Typography>
             </HoverCardItem>
             <HoverCardItem onClick={(e) => handleOutlinePrefer(e, false)}>
-              <Typography className={!preferOutline ? 'text-caribbean-green-500' : ''}>
+              <Typography
+                className={!preferOutline ? "text-caribbean-green-500" : ""}
+              >
                 выключить
               </Typography>
             </HoverCardItem>

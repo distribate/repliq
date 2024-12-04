@@ -3,41 +3,42 @@ import { cva, VariantProps } from "class-variance-authority";
 import { StaticImageData } from "next/image";
 
 const pageWrapperVariants = cva("flex overflow-hidden px-4", {
-	variants: {
-		variant: {
-			default: "h-screen w-full items-center justify-center",
-			mini: "",
-		}
-	},
-	defaultVariants: {
-		variant: "default"
-	}
-})
+  variants: {
+    variant: {
+      default: "h-screen w-full items-center justify-center",
+      mini: "",
+    },
+  },
+  defaultVariants: {
+    variant: "default",
+  },
+});
 
-export interface PageWrapperProps extends HTMLAttributes<HTMLDivElement>,
-	VariantProps<typeof pageWrapperVariants> {
-		withBackground?: {
-			src: StaticImageData | string
-		}
+export interface PageWrapperProps
+  extends HTMLAttributes<HTMLDivElement>,
+    VariantProps<typeof pageWrapperVariants> {
+  withBackground?: {
+    src: StaticImageData | string;
+  };
 }
 
 const PageWrapper = ({
-	variant,
-	withBackground,
-	className,
-	...props
+  variant,
+  withBackground,
+  className,
+  ...props
 }: PageWrapperProps) => {
-	const background = withBackground ? withBackground.src : 'none';
+  const background = withBackground ? withBackground.src : "none";
 
-	return (
-		<div
-			className={pageWrapperVariants(({ variant, className }))}
-			style={{
-				backgroundImage: `url('${background}')`,
-			}}
-			{...props}
-		/>
-	)
-}
+  return (
+    <div
+      className={pageWrapperVariants({ variant, className })}
+      style={{
+        backgroundImage: `url('${background}')`,
+      }}
+      {...props}
+    />
+  );
+};
 
-export { PageWrapper }
+export { PageWrapper };

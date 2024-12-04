@@ -5,13 +5,13 @@
 
 import type { ColumnType } from "kysely";
 
-export type ArrayType<T> = ArrayTypeImpl<T> extends (infer U)[]
-  ? U[]
-  : ArrayTypeImpl<T>;
+export type ArrayType<T> =
+  ArrayTypeImpl<T> extends (infer U)[] ? U[] : ArrayTypeImpl<T>;
 
-export type ArrayTypeImpl<T> = T extends ColumnType<infer S, infer I, infer U>
-  ? ColumnType<S[], I[], U[]>
-  : T[];
+export type ArrayTypeImpl<T> =
+  T extends ColumnType<infer S, infer I, infer U>
+    ? ColumnType<S[], I[], U[]>
+    : T[];
 
 export type AuthAalLevel = "aal1" | "aal2" | "aal3";
 
@@ -21,13 +21,24 @@ export type AuthFactorStatus = "unverified" | "verified";
 
 export type AuthFactorType = "phone" | "totp" | "webauthn";
 
-export type AuthOneTimeTokenType = "confirmation_token" | "email_change_token_current" | "email_change_token_new" | "phone_change_token" | "reauthentication_token" | "recovery_token";
+export type AuthOneTimeTokenType =
+  | "confirmation_token"
+  | "email_change_token_current"
+  | "email_change_token_new"
+  | "phone_change_token"
+  | "reauthentication_token"
+  | "recovery_token";
 
-export type Generated<T> = T extends ColumnType<infer S, infer I, infer U>
-  ? ColumnType<S, I | undefined, U>
-  : ColumnType<T, T | undefined, T>;
+export type Generated<T> =
+  T extends ColumnType<infer S, infer I, infer U>
+    ? ColumnType<S, I | undefined, U>
+    : ColumnType<T, T | undefined, T>;
 
-export type Int8 = ColumnType<string, bigint | number | string, bigint | number | string>;
+export type Int8 = ColumnType<
+  string,
+  bigint | number | string,
+  bigint | number | string
+>;
 
 export type Json = JsonValue;
 
@@ -45,7 +56,18 @@ export type Numeric = ColumnType<string, number | string, number | string>;
 
 export type PgsodiumKeyStatus = "default" | "expired" | "invalid" | "valid";
 
-export type PgsodiumKeyType = "aead-det" | "aead-ietf" | "auth" | "generichash" | "hmacsha256" | "hmacsha512" | "kdf" | "secretbox" | "secretstream" | "shorthash" | "stream_xchacha20";
+export type PgsodiumKeyType =
+  | "aead-det"
+  | "aead-ietf"
+  | "auth"
+  | "generichash"
+  | "hmacsha256"
+  | "hmacsha512"
+  | "kdf"
+  | "secretbox"
+  | "secretstream"
+  | "shorthash"
+  | "stream_xchacha20";
 
 export type PostVisibility = "all" | "friends" | "only";
 

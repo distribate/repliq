@@ -1,26 +1,28 @@
-'use server';
+"use server";
 
 import { createClient } from "#utils/api/supabase-client.ts";
-import { convertMsToFormattedTimestamp } from '../helpers/convert-ms-to-timestampz-format.ts';
+import { convertMsToFormattedTimestamp } from "../helpers/convert-ms-to-timestampz-format.ts";
 
 export type UserTimeFromServer = {
-  regDate: string,
-  loginDate: string
-}
+  regDate: string;
+  loginDate: string;
+};
 
-export async function getUserTimeFromServer(nickname: string): Promise<UserTimeFromServer | null> {
+export async function getUserTimeFromServer(
+  nickname: string,
+): Promise<UserTimeFromServer | null> {
   const api = createClient();
-  
+
   const { data, error } = await api
-  .from('AUTH')
-  .select('REGDATE, LOGINDATE')
-  .eq('NICKNAME', nickname)
-  .single();
-  
+    .from("AUTH")
+    .select("REGDATE, LOGINDATE")
+    .eq("NICKNAME", nickname)
+    .single();
+
   if (error) return null;
-  
+
   const regDate = convertMsToFormattedTimestamp(data.REGDATE);
   const loginDate = convertMsToFormattedTimestamp(data.LOGINDATE);
-  
+
   return { regDate, loginDate };
 }

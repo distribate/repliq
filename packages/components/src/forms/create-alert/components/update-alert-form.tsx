@@ -1,37 +1,41 @@
-import { AlertEntity } from '@repo/types/entities/entities-type.ts';
-import { useState } from 'react';
-import { AlertValues } from '../types/alert-values-types.ts';
-import { useAlerts } from '../hooks/use-alerts.ts';
-import { Input } from '@repo/ui/src/components/input.tsx';
-import { Button } from '@repo/ui/src/components/button.tsx';
-import { Typography } from '@repo/ui/src/components/typography.tsx';
-import { DialogClose } from '@repo/ui/src/components/dialog.tsx';
+import { AlertEntity } from "@repo/types/entities/entities-type.ts";
+import { useState } from "react";
+import { AlertValues } from "../types/alert-values-types.ts";
+import { useAlerts } from "../hooks/use-alerts.ts";
+import { Input } from "@repo/ui/src/components/input.tsx";
+import { Button } from "@repo/ui/src/components/button.tsx";
+import { Typography } from "@repo/ui/src/components/typography.tsx";
+import { DialogClose } from "@repo/ui/src/components/dialog.tsx";
 
 export const AlertUpdateForm = ({
-  id, description, link, title
+  id,
+  description,
+  link,
+  title,
 }: Omit<AlertEntity, "created_at" | "creator">) => {
-  const [ alertValues, setAlertValues ] = useState<AlertValues>({
-    title: title, description: description, link: link
+  const [alertValues, setAlertValues] = useState<AlertValues>({
+    title: title,
+    description: description,
+    link: link,
   });
-  
+
   const { updateAlertMutation } = useAlerts();
-  
-  const handleInputChange = (
-    field: keyof typeof alertValues,
-  ) => (
-    e: React.ChangeEvent<HTMLInputElement>,
-  ) => {
-    setAlertValues(prev => ({ ...prev, [field]: e.target.value }));
-  };
-  
+
+  const handleInputChange =
+    (field: keyof typeof alertValues) =>
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      setAlertValues((prev) => ({ ...prev, [field]: e.target.value }));
+    };
+
   const handleUpdateAlert = () => {
     updateAlertMutation.mutate({
-      ...alertValues, id
-    })
-  }
-  
-  const isDisabled = updateAlertMutation.isPending
-  
+      ...alertValues,
+      id,
+    });
+  };
+
+  const isDisabled = updateAlertMutation.isPending;
+
   return (
     <>
       <div className="flex flex-col w-full gap-2">
@@ -46,14 +50,14 @@ export const AlertUpdateForm = ({
           maxLength={256}
           placeholder="Описание"
           roundedType="default"
-          value={alertValues.description || ''}
+          value={alertValues.description || ""}
           onChange={handleInputChange("description")}
         />
         <Input
           maxLength={256}
           placeholder="Ссылка"
           roundedType="default"
-          value={alertValues.link || ''}
+          value={alertValues.link || ""}
           onChange={handleInputChange("link")}
         />
       </div>
@@ -73,5 +77,5 @@ export const AlertUpdateForm = ({
         </DialogClose>
       </div>
     </>
-  )
-}
+  );
+};

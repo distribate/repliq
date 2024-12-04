@@ -1,21 +1,21 @@
-import { SidebarFormat } from '../../sidebar-layout/queries/sidebar-layout-query.ts';
+import { SidebarFormat } from "../../sidebar-layout/queries/sidebar-layout-query.ts";
 
 type SidebarFormats = {
-  title: string,
-  value: SidebarFormat
-}
+  title: string;
+  value: SidebarFormat;
+};
 
 export const SIDEBAR_FORMATS: SidebarFormats[] = [
   {
     title: "Резиновый",
-    value: "dynamic"
+    value: "dynamic",
   },
   {
     title: "Раскрыт",
-    value: "full"
+    value: "full",
   },
   {
     title: "Минимал",
-    value: "compact"
-  }
-]
+    value: "compact",
+  },
+];

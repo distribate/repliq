@@ -1,43 +1,41 @@
-import React from 'react';
-import { CustomEditor } from '../components/editor.tsx';
-import { BaseEditor } from 'slate';
+import React from "react";
+import { CustomEditor } from "../components/editor.tsx";
+import { BaseEditor } from "slate";
 
 type HandleEventKeydown = {
   editor: BaseEditor;
-  event: React.KeyboardEvent<HTMLDivElement>
-}
+  event: React.KeyboardEvent<HTMLDivElement>;
+};
 
-export const handleEventKeyDown = ({
-  event, editor
-}: HandleEventKeydown) => {
+export const handleEventKeyDown = ({ event, editor }: HandleEventKeydown) => {
   if (!event.ctrlKey) return;
-  
-  switch(event.key) {
-    case '`': {
+
+  switch (event.key) {
+    case "`": {
       event.preventDefault();
       CustomEditor.toggleCodeBlock(editor);
       break;
     }
-    
-    case 'i': {
+
+    case "i": {
       event.preventDefault();
       CustomEditor.toggleItalicMark(editor);
       break;
     }
-    
-    case 's': {
+
+    case "s": {
       event.preventDefault();
       CustomEditor.toggleStrikeMark(editor);
       break;
     }
-    
-    case 'u': {
+
+    case "u": {
       event.preventDefault();
       CustomEditor.toggleUnderlineMark(editor);
       break;
     }
-    
-    case 'b': {
+
+    case "b": {
       event.preventDefault();
       CustomEditor.toggleBoldMark(editor);
       break;

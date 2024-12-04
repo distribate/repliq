@@ -1,14 +1,12 @@
-import { MainCategoriesList } from '@repo/components/src/categories/components/main-categories-list.tsx';
-import { hasAlertsShow } from '@repo/lib/actions/has-alerts.ts';
-import { Suspense } from 'react';
-import { ForumStats } from '@repo/components/src/widgets/forum-stats/components/forum-stats.tsx';
-import {
-  LastRegisteredUsers,
-} from '@repo/components/src/widgets/last-registered-users/components/last-registered-users.tsx';
-import { AlertCard } from '@repo/components/src/alert/components/alert-card.tsx';
-import { getAlerts } from '@repo/lib/queries/get-alerts.ts';
-import { Skeleton } from '@repo/ui/src/components/skeleton.tsx';
-import { validateSession } from '@repo/lib/actions/validate-requests.ts';
+import { MainCategoriesList } from "@repo/components/src/categories/components/main-categories-list.tsx";
+import { hasAlertsShow } from "@repo/lib/actions/has-alerts.ts";
+import { Suspense } from "react";
+import { ForumStats } from "@repo/components/src/widgets/forum-stats/components/forum-stats.tsx";
+import { LastRegisteredUsers } from "@repo/components/src/widgets/last-registered-users/components/last-registered-users.tsx";
+import { AlertCard } from "@repo/components/src/alert/components/alert-card.tsx";
+import { getAlerts } from "@repo/lib/queries/get-alerts.ts";
+import { Skeleton } from "@repo/ui/src/components/skeleton.tsx";
+import { validateSession } from "@repo/lib/actions/validate-requests.ts";
 
 const StatisticsSkeleton = () => {
   return (
@@ -31,21 +29,23 @@ const CategoriesSkeleton = () => {
   );
 };
 
-const Alerts = async() => {
-  const alerts = await getAlerts({ sort: 'created_at', limit: 1 });
-  
+const Alerts = async () => {
+  const alerts = await getAlerts({ sort: "created_at", limit: 1 });
+
   return (
     <div className="flex flex-col gap-2 w-full">
-      {alerts.map((item, i) => <AlertCard key={i} {...item} />)}
+      {alerts.map((item, i) => (
+        <AlertCard key={i} {...item} />
+      ))}
     </div>
   );
 };
 
 export default async function MainPage() {
   await validateSession();
-  
+
   const hasAlertsShowing = await hasAlertsShow();
-  
+
   return (
     <main className="flex flex-col w-full gap-2 h-full">
       {hasAlertsShowing && <Alerts />}

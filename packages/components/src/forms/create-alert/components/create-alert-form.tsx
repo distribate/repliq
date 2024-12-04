@@ -1,38 +1,39 @@
-import { useState } from 'react';
-import { Input } from '@repo/ui/src/components/input.tsx';
-import { Button } from '@repo/ui/src/components/button.tsx';
-import { Typography } from '@repo/ui/src/components/typography.tsx';
-import { DialogClose } from '@repo/ui/src/components/dialog.tsx';
-import { useAlerts } from '../hooks/use-alerts.ts';
-import { AlertValues } from '../types/alert-values-types.ts';
+import { useState } from "react";
+import { Input } from "@repo/ui/src/components/input.tsx";
+import { Button } from "@repo/ui/src/components/button.tsx";
+import { Typography } from "@repo/ui/src/components/typography.tsx";
+import { DialogClose } from "@repo/ui/src/components/dialog.tsx";
+import { useAlerts } from "../hooks/use-alerts.ts";
+import { AlertValues } from "../types/alert-values-types.ts";
 
 export const AlertCreateForm = () => {
   const { addAlertMutation } = useAlerts();
-  const [ alertValues, setAlertValues ] = useState<AlertValues>({
-    title: '', description: '', link: null,
+  const [alertValues, setAlertValues] = useState<AlertValues>({
+    title: "",
+    description: "",
+    link: null,
   });
-  
-  const handleInputChange = (
-    field: keyof typeof alertValues,
-  ) => (
-    e: React.ChangeEvent<HTMLInputElement>,
-  ) => {
-    setAlertValues(prev => ({ ...prev, [field]: e.target.value }));
-  };
-  
+
+  const handleInputChange =
+    (field: keyof typeof alertValues) =>
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      setAlertValues((prev) => ({ ...prev, [field]: e.target.value }));
+    };
+
   const handleAddAlert = () => {
     if (!alertValues.title) return;
     addAlertMutation.mutate(alertValues);
   };
-  
+
   const handleClose = () => {
-    setAlertValues({ description: '', link: null, title: '', });
+    setAlertValues({ description: "", link: null, title: "" });
   };
-  
-  const isDisabled = addAlertMutation.isPending
-    || !alertValues.title
-    || alertValues.title.length <= 6
-  
+
+  const isDisabled =
+    addAlertMutation.isPending ||
+    !alertValues.title ||
+    alertValues.title.length <= 6;
+
   return (
     <>
       <div className="flex flex-col w-full gap-2">
@@ -47,14 +48,14 @@ export const AlertCreateForm = () => {
           maxLength={256}
           placeholder="Описание"
           roundedType="default"
-          value={alertValues.description || ''}
+          value={alertValues.description || ""}
           onChange={handleInputChange("description")}
         />
         <Input
           maxLength={256}
           placeholder="Ссылка"
           roundedType="default"
-          value={alertValues.link || ''}
+          value={alertValues.link || ""}
           onChange={handleInputChange("link")}
         />
       </div>

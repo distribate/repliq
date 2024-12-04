@@ -1,13 +1,22 @@
-'use client';
+"use client";
 
-import { threadImagesQuery } from './thread-images-query.ts';
-import { ThreadEntity } from '@repo/types/entities/entities-type.ts';
-import { Skeleton } from '@repo/ui/src/components/skeleton.tsx';
-import { Carousel, CarouselContent, CarouselItem, CarouselApi } from '@repo/ui/src/components/carousel.tsx';
-import { Dialog, DialogContent, DialogTrigger } from '@repo/ui/src/components/dialog.tsx';
-import { useEffect, useState } from 'react';
-import { ArrowLeft, ArrowRight } from 'lucide-react';
-import type { EmblaCarouselType } from 'embla-carousel';
+import { threadImagesQuery } from "./thread-images-query.ts";
+import { ThreadEntity } from "@repo/types/entities/entities-type.ts";
+import { Skeleton } from "@repo/ui/src/components/skeleton.tsx";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselApi,
+} from "@repo/ui/src/components/carousel.tsx";
+import {
+  Dialog,
+  DialogContent,
+  DialogTrigger,
+} from "@repo/ui/src/components/dialog.tsx";
+import { useEffect, useState } from "react";
+import { ArrowLeft, ArrowRight } from "lucide-react";
+import type { EmblaCarouselType } from "embla-carousel";
 
 const ThreadImagesSkeleton = () => {
   return (
@@ -19,12 +28,10 @@ const ThreadImagesSkeleton = () => {
 };
 
 type ThreadImagesNavigationProps = {
-  api: EmblaCarouselType
-}
+  api: EmblaCarouselType;
+};
 
-const ThreadImagesNavigation = ({
-  api
-}: ThreadImagesNavigationProps) => {
+const ThreadImagesNavigation = ({ api }: ThreadImagesNavigationProps) => {
   return (
     <>
       <div
@@ -49,21 +56,21 @@ const ThreadImagesNavigation = ({
   );
 };
 
-export const ThreadImages = ({ id }: Pick<ThreadEntity, 'id'>) => {
+export const ThreadImages = ({ id }: Pick<ThreadEntity, "id">) => {
   const { data: threadImages, isLoading } = threadImagesQuery(id);
-  const [ selectedIndex, setSelectedIndex ] = useState<number>(0);
-  const [ api, setApi ] = useState<CarouselApi>();
-  
+  const [selectedIndex, setSelectedIndex] = useState<number>(0);
+  const [api, setApi] = useState<CarouselApi>();
+
   useEffect(() => {
-    if (api && selectedIndex !== null) api.scrollTo(selectedIndex, true)
-  }, [ api, selectedIndex ]);
-  
+    if (api && selectedIndex !== null) api.scrollTo(selectedIndex, true);
+  }, [api, selectedIndex]);
+
   if (isLoading) return <ThreadImagesSkeleton />;
-  
+
   if (!threadImages) return null;
-  
+
   const carouselIsActive = threadImages.length > 1;
-  
+
   return (
     <Dialog>
       <div className="grid grid-cols-3 grid-rows-1 gap-2 bg-black/20 px-4 py-2 items-start w-full">
@@ -83,9 +90,14 @@ export const ThreadImages = ({ id }: Pick<ThreadEntity, 'id'>) => {
       <DialogContent className="bg-opacity-60 border-none p-0 max-h-[720px] max-w-[1280px]">
         <Carousel
           setApi={setApi}
-          opts={{ align: 'start', dragFree: false, loop: true, active: carouselIsActive }}
+          opts={{
+            align: "start",
+            dragFree: false,
+            loop: true,
+            active: carouselIsActive,
+          }}
         >
-          {(carouselIsActive && api) && <ThreadImagesNavigation api={api}/>}
+          {carouselIsActive && api && <ThreadImagesNavigation api={api} />}
           <CarouselContent className="-mr-4">
             {threadImages.map((image, i) => (
               <CarouselItem key={i} className="max-h-[720px] !p-0 relative">

@@ -1,53 +1,60 @@
-import { Avatar } from '#user/components/avatar/components/avatar.tsx';
-import { Input } from '@repo/ui/src/components/input.tsx';
-import { Button } from '@repo/ui/src/components/button.tsx';
-import { SendHorizontal } from 'lucide-react';
-import { usePostCommentsFormControl } from '../hooks/use-post-comments-form-control.ts';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { postCommentSchema } from '../schemas/post-comment-schema.ts';
-import { FormField } from '@repo/ui/src/components/form-field.tsx';
-import { getUser } from '@repo/lib/helpers/get-user.ts';
-import { PostEntity } from '@repo/types/entities/entities-type.ts';
+import { Avatar } from "#user/components/avatar/components/avatar.tsx";
+import { Input } from "@repo/ui/src/components/input.tsx";
+import { Button } from "@repo/ui/src/components/button.tsx";
+import { SendHorizontal } from "lucide-react";
+import { usePostCommentsFormControl } from "../hooks/use-post-comments-form-control.ts";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { postCommentSchema } from "../schemas/post-comment-schema.ts";
+import { FormField } from "@repo/ui/src/components/form-field.tsx";
+import { getUser } from "@repo/lib/helpers/get-user.ts";
+import { PostEntity } from "@repo/types/entities/entities-type.ts";
 import {
   POST_COMMENT_FIELD_QUERY_KEY,
   PostCommentField,
-} from '#forms/create-post-comment/queries/post-comment-field-query.ts';
-import { useQueryClient } from '@tanstack/react-query';
-import { z } from 'zod';
+} from "#forms/create-post-comment/queries/post-comment-field-query.ts";
+import { useQueryClient } from "@tanstack/react-query";
+import { z } from "zod";
 
-type createPostCommentInferSchema = z.infer<typeof postCommentSchema>
+type createPostCommentInferSchema = z.infer<typeof postCommentSchema>;
 
 export const CreatePostCommentForm = ({
-  id: postId
-}: Pick<PostEntity, 'id'>) => {
+  id: postId,
+}: Pick<PostEntity, "id">) => {
   const currentUser = getUser();
   const qc = useQueryClient();
   const { createPostCommentMutation } = usePostCommentsFormControl();
-  
-  const { register, handleSubmit, getValues, reset, formState: { errors, isValid } } = useForm<createPostCommentInferSchema>({
+
+  const {
+    register,
+    handleSubmit,
+    getValues,
+    reset,
+    formState: { errors, isValid },
+  } = useForm<createPostCommentInferSchema>({
     mode: "onChange",
     resolver: zodResolver(postCommentSchema),
-    defaultValues: { content: '' },
+    defaultValues: { content: "" },
   });
-  
+
   const onSubmit = () => {
     reset();
     createPostCommentMutation.mutate(postId);
   };
-  
+
   const onChange = () => {
     return qc.setQueryData(
       POST_COMMENT_FIELD_QUERY_KEY(postId),
       (prev: PostCommentField) => ({
-        ...prev, post_id: postId,
-        content: getValues('content'),
+        ...prev,
+        post_id: postId,
+        content: getValues("content"),
       }),
     );
   };
-  
+
   if (!currentUser) return null;
-  
+
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
@@ -65,8 +72,9 @@ export const CreatePostCommentForm = ({
             placeholder="Комментировать"
             maxLength={128}
             backgroundType="transparent"
-            {...register('content', {
-              maxLength: 128, onChange: onChange,
+            {...register("content", {
+              maxLength: 128,
+              onChange: onChange,
             })}
           />
         </FormField>

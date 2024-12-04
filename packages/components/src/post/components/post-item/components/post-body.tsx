@@ -1,61 +1,58 @@
-import { Typography } from '@repo/ui/src/components/typography.tsx';
-import { PostEntity, UserEntity } from '@repo/types/entities/entities-type.ts';
+import { Typography } from "@repo/ui/src/components/typography.tsx";
+import { PostEntity, UserEntity } from "@repo/types/entities/entities-type.ts";
 import {
   POST_CONTROL_QUERY_KEY,
   PostControlQuery,
   postControlQuery,
-} from '#post/components/post-item/queries/post-control-query.ts';
-import { Input } from '@repo/ui/src/components/input.tsx';
-import { useQueryClient } from '@tanstack/react-query';
-import { Button } from '@repo/ui/src/components/button.tsx';
-import { useState, ChangeEvent } from 'react';
-import { useControlPost } from '#post/components/post-item/hooks/use-control-post.ts';
+} from "#post/components/post-item/queries/post-control-query.ts";
+import { Input } from "@repo/ui/src/components/input.tsx";
+import { useQueryClient } from "@tanstack/react-query";
+import { Button } from "@repo/ui/src/components/button.tsx";
+import { useState, ChangeEvent } from "react";
+import { useControlPost } from "#post/components/post-item/hooks/use-control-post.ts";
 
-type PostItemBodyProps = Pick<PostEntity, 'content' | 'id'>
-  & Pick<UserEntity, 'nickname'>
+type PostItemBodyProps = Pick<PostEntity, "content" | "id"> &
+  Pick<UserEntity, "nickname">;
 
-export const PostItemBody = ({
-  content, id, nickname,
-}: PostItemBodyProps) => {
+export const PostItemBody = ({ content, id, nickname }: PostItemBodyProps) => {
   const qc = useQueryClient();
-  const [ value, setValue ] = useState<string>(content);
+  const [value, setValue] = useState<string>(content);
   const { data: postControlState } = postControlQuery(id);
   const { controlPostMutation } = useControlPost();
-  
+
   const isEdit = postControlState.isEdit;
-  
+
   const onChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { value } = e.target;
-    
+
     setValue(value);
+
     qc.setQueryData(POST_CONTROL_QUERY_KEY(id), (prev: PostControlQuery) => ({
       ...prev,
       values: { content: value.length >= 1 ? value : null },
     }));
   };
-  
+
   const handleUpdateContent = () => {
     if (!isValid) return;
-    
-    qc.setQueryData(
-      POST_CONTROL_QUERY_KEY(id),
-      (prev: PostControlQuery) =>
-        ({ ...prev, isEdit: false }),
-    );
-    
-    return controlPostMutation.mutate({ type: 'edit', id, nickname });
+
+    qc.setQueryData(POST_CONTROL_QUERY_KEY(id), (prev: PostControlQuery) => ({
+      ...prev,
+      isEdit: false,
+    }));
+
+    return controlPostMutation.mutate({ type: "edit", id, nickname });
   };
-  
+
   const handleCancelEdit = () => {
-    qc.setQueryData(
-      POST_CONTROL_QUERY_KEY(id),
-      (prev: PostControlQuery) =>
-        ({ ...prev, isEdit: false }),
-    );
+    qc.setQueryData(POST_CONTROL_QUERY_KEY(id), (prev: PostControlQuery) => ({
+      ...prev,
+      isEdit: false,
+    }));
   };
-  
+
   const isValid = value !== content && !controlPostMutation.isPending;
-  
+
   return (
     <div className="flex w-full">
       {isEdit && (

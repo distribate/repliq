@@ -1,22 +1,21 @@
-"use client"
+"use client";
 
-import { Avatar } from '#user/components/avatar/components/avatar.tsx';
-import { ImageWrapper } from '#wrappers/image-wrapper.tsx';
-import Logotype from '@repo/assets/images/logotype.png';
-import Inspector from '@repo/assets/images/minecraft/block_inspect.webp';
-import BottleEnchanting from '@repo/assets/images/minecraft/bottle_enchanting.webp';
-import Link from 'next/link';
-import { USER_URL } from '@repo/shared/constants/routes.ts';
-import { currentUserQuery } from '@repo/lib/queries/current-user-query.ts';
+import { Avatar } from "#user/components/avatar/components/avatar.tsx";
+import { ImageWrapper } from "#wrappers/image-wrapper.tsx";
+import Logotype from "@repo/assets/images/logotype.png";
+import Inspector from "@repo/assets/images/minecraft/block_inspect.webp";
+import BottleEnchanting from "@repo/assets/images/minecraft/bottle_enchanting.webp";
+import Link from "next/link";
+import { USER_URL } from "@repo/shared/constants/routes.ts";
+import { currentUserQuery } from "@repo/lib/queries/current-user-query.ts";
 
 export const SidebarMobile = () => {
   const { data: currentUser, isLoading } = currentUserQuery();
-  
+
   if (!currentUser) return;
-  
+
   return (
-    <div
-      className="flex items-center justify-between gap-6 sticky bottom-0 w-full px-6 py-2 bg-shark-950 min-h-[80px] rounded-t-lg">
+    <div className="flex items-center justify-between gap-6 sticky bottom-0 w-full px-6 py-2 bg-shark-950 min-h-[80px] rounded-t-lg">
       <Link href="/">
         <ImageWrapper
           priority={true}

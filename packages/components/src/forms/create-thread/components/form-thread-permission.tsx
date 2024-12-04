@@ -1,21 +1,19 @@
-import { Typography } from '@repo/ui/src/components/typography.tsx';
-import { Controller } from 'react-hook-form';
-import { Toggle } from '@repo/ui/src/components/toggle.tsx';
-import { FormField } from '@repo/ui/src/components/form-field.tsx';
-import { threadFormQuery } from '../queries/thread-form-query.ts';
-import { useCreateThread } from '../hooks/use-create-thread.tsx';
-import { FormChildsProps } from '../types/create-thread-form-types.ts';
+import { Typography } from "@repo/ui/src/components/typography.tsx";
+import { Controller } from "react-hook-form";
+import { Toggle } from "@repo/ui/src/components/toggle.tsx";
+import { FormField } from "@repo/ui/src/components/form-field.tsx";
+import { threadFormQuery } from "../queries/thread-form-query.ts";
+import { useCreateThread } from "../hooks/use-create-thread.tsx";
+import { FormChildsProps } from "../types/create-thread-form-types.ts";
 
-export const FormThreadPermissions = ({
-  errors, control,
-}: FormChildsProps) => {
+export const FormThreadPermissions = ({ errors, control }: FormChildsProps) => {
   const { data: threadFormState } = threadFormQuery();
   const { updateThreadFormMutation } = useCreateThread();
-  
+
   if (!threadFormState) return;
-  
+
   const isActive = threadFormState.permission;
-  
+
   return (
     <FormField errorMessage={errors?.permission?.message}>
       <div className="flex flex-col gap-y-2">
@@ -36,11 +34,16 @@ export const FormThreadPermissions = ({
                 defaultPressed={isActive || false}
                 onPressedChange={(checked: boolean) => {
                   onChange(checked);
-                  return updateThreadFormMutation.mutate({ permission: checked })
+                  return updateThreadFormMutation.mutate({
+                    permission: checked,
+                  });
                 }}
               >
-                <Typography textColor={isActive ? 'shark_black' : 'shark_white'} textSize="medium">
-                  {isActive ? 'включено' : 'выключено'}
+                <Typography
+                  textColor={isActive ? "shark_black" : "shark_white"}
+                  textSize="medium"
+                >
+                  {isActive ? "включено" : "выключено"}
                 </Typography>
               </Toggle>
             );

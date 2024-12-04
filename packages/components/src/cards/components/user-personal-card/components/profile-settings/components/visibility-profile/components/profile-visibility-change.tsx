@@ -1,38 +1,39 @@
-import { Typography } from '@repo/ui/src/components/typography.tsx';
-import React, { useCallback } from 'react';
-import { UPDATE_FIELD_MUTATION_KEY, useUpdateCurrentUser } from '@repo/lib/hooks/use-update-current-user.ts';
-import { VISIBILITY_FORMATS } from '../constants/visibility-formats.ts';
-import { ProfileVisibilityChangeType } from '../types/visibility-types.ts';
-import { getUser } from '@repo/lib/helpers/get-user.ts';
+import { Typography } from "@repo/ui/src/components/typography.tsx";
+import React, { useCallback } from "react";
 import {
-  UserSettingOption,
-} from '#cards/components/user-personal-card/components/profile-settings/user-profile-settings.tsx';
-import Barrier from '@repo/assets/images/minecraft/barrier.webp';
-import { DynamicModal } from '#modals/dynamic-modal.tsx';
-import { HoverCardItem } from '@repo/ui/src/components/hover-card.tsx';
+  UPDATE_FIELD_MUTATION_KEY,
+  useUpdateCurrentUser,
+} from "@repo/lib/hooks/use-update-current-user.ts";
+import { VISIBILITY_FORMATS } from "../constants/visibility-formats.ts";
+import { ProfileVisibilityChangeType } from "../types/visibility-types.ts";
+import { getUser } from "@repo/lib/helpers/get-user.ts";
+import { UserSettingOption } from "#cards/components/user-personal-card/components/profile-settings/user-profile-settings.tsx";
+import Barrier from "@repo/assets/images/minecraft/barrier.webp";
+import { DynamicModal } from "#modals/dynamic-modal.tsx";
+import { HoverCardItem } from "@repo/ui/src/components/hover-card.tsx";
 
 type VisibilityProps = {
-  e: React.MouseEvent<HTMLDivElement, MouseEvent>,
-  type: ProfileVisibilityChangeType['visibility']
-}
+  e: React.MouseEvent<HTMLDivElement, MouseEvent>;
+  type: ProfileVisibilityChangeType["visibility"];
+};
 
 export const ProfileVisibilityChange = () => {
   const currentUser = getUser();
   const { updateFieldMutation } = useUpdateCurrentUser();
   const visibility = currentUser?.visibility;
-  const profileVisibilityType = visibility === 'all'
-    ? 'открытый' : 'закрытый';
-  
-  const handleVisibility = useCallback((values: VisibilityProps) => {
-    const { e, type } = values;
-    
-    e.preventDefault();
-    
-    updateFieldMutation.mutate({
-      field: 'visibility', value: type,
-    });
-  }, [ updateFieldMutation ]);
-  
+  const profileVisibilityType = visibility === "all" ? "открытый" : "закрытый";
+
+  const handleVisibility = useCallback(
+    (values: VisibilityProps) => {
+      const { e, type } = values;
+
+      e.preventDefault();
+
+      return updateFieldMutation.mutate({ field: "visibility", value: type });
+    },
+    [updateFieldMutation],
+  );
+
   return (
     <DynamicModal
       mutationKey={UPDATE_FIELD_MUTATION_KEY}
@@ -52,7 +53,11 @@ export const ProfileVisibilityChange = () => {
                 key={item.value}
                 onClick={(e) => handleVisibility({ e: e, type: item.value })}
               >
-                <Typography className={visibility === item.value ? 'text-caribbean-green-500' : ''}>
+                <Typography
+                  className={
+                    visibility === item.value ? "text-caribbean-green-500" : ""
+                  }
+                >
                   {item.title}
                 </Typography>
               </HoverCardItem>

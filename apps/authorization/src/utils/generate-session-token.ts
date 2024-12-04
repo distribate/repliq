@@ -1,4 +1,4 @@
-import { encodeBase32LowerCaseNoPadding } from '@oslojs/encoding';
+import { encodeBase32LowerCaseNoPadding } from "@oslojs/encoding";
 
 export function generateSessionToken(): string {
   const bytes = new Uint8Array(20);

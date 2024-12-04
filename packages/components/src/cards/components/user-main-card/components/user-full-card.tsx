@@ -1,21 +1,20 @@
-import { TiltCard } from '@repo/ui/src/components/tilt-card.tsx';
-import { Separator } from '@repo/ui/src/components/separator.tsx';
-import { Typography } from '@repo/ui/src/components/typography.tsx';
-import { ImageWrapper } from '#wrappers/image-wrapper.tsx';
-import { Avatar } from '#user/components/avatar/components/avatar.tsx';
-import { UserNickname } from '#user/components/name/components/nickname.tsx';
-import { UserRealName } from '#user/components/real-name/components/real-name.tsx';
-import { UserDonate } from '#user/components/donate/components/donate.tsx';
-import { UserMainCard } from '../types/user-main-card-types.ts';
-import { userCardQuery } from '../queries/user-main-card-query.ts';
-import Glass from '@repo/assets/images/minecraft/glass.webp';
-import dayjs from 'dayjs';
-import { Skeleton } from '@repo/ui/src/components/skeleton.tsx';
+import { TiltCard } from "@repo/ui/src/components/tilt-card.tsx";
+import { Separator } from "@repo/ui/src/components/separator.tsx";
+import { Typography } from "@repo/ui/src/components/typography.tsx";
+import { ImageWrapper } from "#wrappers/image-wrapper.tsx";
+import { Avatar } from "#user/components/avatar/components/avatar.tsx";
+import { UserNickname } from "#user/components/name/components/nickname.tsx";
+import { UserRealName } from "#user/components/real-name/components/real-name.tsx";
+import { UserDonate } from "#user/components/donate/components/donate.tsx";
+import { UserMainCard } from "../types/user-main-card-types.ts";
+import { userCardQuery } from "../queries/user-main-card-query.ts";
+import Glass from "@repo/assets/images/minecraft/glass.webp";
+import dayjs from "dayjs";
+import { Skeleton } from "@repo/ui/src/components/skeleton.tsx";
 
 const UserFullCardSkeleton = () => {
   return (
-    <div
-      className="flex flex-col h-[512px] gap-y-4 relative w-full rounded-lg p-4 bg-shark-950 border-[1px] border-white/10 items-center">
+    <div className="flex flex-col h-[512px] gap-y-4 relative w-full rounded-lg p-4 bg-shark-950 border-[1px] border-white/10 items-center">
       <div className="flex items-center gap-4 w-full">
         <div className="flex relative justify-center p-2 items-center">
           <Skeleton className="w-[104px] h-[104px]" />
@@ -28,7 +27,7 @@ const UserFullCardSkeleton = () => {
           <Skeleton className="h-6 w-24" />
         </div>
       </div>
-      <Separator/>
+      <Separator />
       <div className="flex flex-col gap-y-4 items-center w-full">
         <div className="flex flex-col gap-y-1 w-full">
           <Skeleton className="h-6 w-24" />
@@ -44,23 +43,25 @@ const UserFullCardSkeleton = () => {
   );
 };
 
-export const UserFullCard = ({
-  nickname,
-}: UserMainCard) => {
+export const UserFullCard = ({ nickname }: UserMainCard) => {
   const { data: userCard, isLoading } = userCardQuery(nickname);
-  
+
   if (isLoading) return <UserFullCardSkeleton />;
-  if (typeof userCard === 'string') return;
-  
+  if (typeof userCard === "string") return;
+
   if (!userCard) return null;
-  
+
   const main = userCard.user;
   const favoriteItemImage = userCard.favoriteItem;
   const stats = userCard.stats;
-  
-  const createdInForum = dayjs(main.created_at).format("На форуме с: DD.MM.YYYY");
-  const createdInServer = dayjs(stats.joined?.regDate).format('В игре с: DD.MM.YYYY');
-  
+
+  const createdInForum = dayjs(main.created_at).format(
+    "На форуме с: DD.MM.YYYY",
+  );
+  const createdInServer = dayjs(stats.joined?.regDate).format(
+    "В игре с: DD.MM.YYYY",
+  );
+
   return (
     <TiltCard
       tiltMaxAngleY={10}
@@ -72,7 +73,8 @@ export const UserFullCard = ({
           {favoriteItemImage && (
             <>
               <ImageWrapper
-                className="absolute -top-10 rotate-45 -right-10" propSrc={favoriteItemImage.image}
+                className="absolute -top-10 rotate-45 -right-10"
+                propSrc={favoriteItemImage.image}
                 propAlt={`Favorite Item`}
                 width={64}
                 height={64}
@@ -120,9 +122,7 @@ export const UserFullCard = ({
             <div className="flex flex-col gap-y-2">
               <div className="flex flex-col">
                 <UserNickname nickname={nickname} nicknameColor={`#ffffff`} />
-                {main.real_name && (
-                  <UserRealName real_name={main.real_name} />
-                )}
+                {main.real_name && <UserRealName real_name={main.real_name} />}
               </div>
               <div className="w-fit">
                 <UserDonate nickname={nickname} />
@@ -132,9 +132,7 @@ export const UserFullCard = ({
           <Separator />
           <div className="flex flex-col gap-y-4 items-center w-full">
             <div className="flex flex-col gap-y-1 w-full">
-              <Typography>
-                Описание
-              </Typography>
+              <Typography>Описание</Typography>
               <div className="flex bg-shark-900 rounded-sm overflow-hidden px-2 py-0.5">
                 <Typography className="whitespace-normal" textSize="small">
                   {main.description}
@@ -142,9 +140,7 @@ export const UserFullCard = ({
               </div>
             </div>
             <div className="flex flex-col gap-y-1 w-full">
-              <Typography textSize="small">
-                Участник Fasberry:
-              </Typography>
+              <Typography textSize="small">Участник Fasberry:</Typography>
               <div className="flex items-center gap-2">
                 <Typography className="text-shark-300" textSize="small">
                   {createdInServer}
@@ -158,21 +154,15 @@ export const UserFullCard = ({
           </div>
           <Separator />
           <div className="flex flex-col gap-y-2 w-full">
-            <Typography>
-              Статистика
-            </Typography>
+            <Typography>Статистика</Typography>
             <div className="flex items-center gap-1 w-full">
-              <Typography textSize="small">
-                Друзей:
-              </Typography>
+              <Typography textSize="small">Друзей:</Typography>
               <Typography className="truncate" textSize="small">
                 {stats.friendsCount}
               </Typography>
             </div>
             <div className="flex items-center gap-1 w-full">
-              <Typography textSize="small">
-                Тем:
-              </Typography>
+              <Typography textSize="small">Тем:</Typography>
               <Typography className="truncate" textSize="small">
                 {stats.threadsCount}
               </Typography>

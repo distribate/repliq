@@ -1,4 +1,4 @@
-import { BookMarked } from 'lucide-react';
+import { BookMarked } from "lucide-react";
 
 export const ThreadSave = () => {
   return (

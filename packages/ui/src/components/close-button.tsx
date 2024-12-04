@@ -1,6 +1,6 @@
-import { X } from 'lucide-react';
-import { cva, VariantProps } from 'class-variance-authority';
-import { HTMLAttributes } from 'react';
+import { X } from "lucide-react";
+import { cva, VariantProps } from "class-variance-authority";
+import { HTMLAttributes } from "react";
 
 const closeButtonVariants = cva(
   `absolute hover:bg-red-600 p-2 rounded-lg opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2
@@ -8,25 +8,27 @@ const closeButtonVariants = cva(
   {
     variants: {
       variant: {
-        top: 'right-4 top-4',
-        center: 'right-4 top-50',
+        top: "right-4 top-4",
+        center: "right-4 top-50",
       },
     },
     defaultVariants: {
-      variant: 'top',
+      variant: "top",
     },
   },
 );
 
-interface CloseButtonProps extends HTMLAttributes<HTMLDivElement>,
-  VariantProps<typeof closeButtonVariants> {
-}
+interface CloseButtonProps
+  extends HTMLAttributes<HTMLDivElement>,
+    VariantProps<typeof closeButtonVariants> {}
 
 export const CloseButton = ({
-  className, variant, ...props
+  className,
+  variant,
+  ...props
 }: CloseButtonProps) => {
   return (
-    <div className={closeButtonVariants(({ className, variant }))} {...props}>
+    <div className={closeButtonVariants({ className, variant })} {...props}>
       <X className="h-4 w-4" />
       <span className="sr-only">Close</span>
     </div>

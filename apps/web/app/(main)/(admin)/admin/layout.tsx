@@ -1,37 +1,41 @@
-import { ReactNode } from 'react';
-import { permanentRedirect } from 'next/navigation';
-import { checkAdminPermission } from '@repo/lib/actions/check-admin-permission.ts';
-import { AdminNavigation } from '@repo/components/src/admin/components/navigation/admin-navigation.tsx';
-import { Metadata } from 'next';
-import { getCurrentSession } from '@repo/lib/actions/get-current-session.ts';
+import { ReactNode } from "react";
+import { permanentRedirect } from "next/navigation";
+import { checkAdminPermission } from "@repo/lib/actions/check-admin-permission.ts";
+import { AdminNavigation } from "@repo/components/src/admin/components/navigation/admin-navigation.tsx";
+import { Metadata } from "next";
+import { getCurrentSession } from "@repo/lib/actions/get-current-session.ts";
 
 type AdminLayoutProps = {
-  tickets: ReactNode,
-  children: ReactNode,
-  reports: ReactNode,
-  configs: ReactNode
-  stats: ReactNode
-}
+  tickets: ReactNode;
+  children: ReactNode;
+  reports: ReactNode;
+  configs: ReactNode;
+  stats: ReactNode;
+};
 
 export const metadata: Metadata = {
-  title: 'Админ-панель',
+  title: "Админ-панель",
 };
 
 export default async function AdminLayout({
-  tickets, children, reports, configs, stats,
+  tickets,
+  children,
+  reports,
+  configs,
+  stats,
 }: AdminLayoutProps) {
   const { user, session } = await getCurrentSession();
-  
+
   if (!user || !session) {
-    return permanentRedirect('/');
+    return permanentRedirect("/");
   }
-  
+
   const isAdmin = await checkAdminPermission();
-  
+
   if (!isAdmin) {
-    return permanentRedirect('/');
+    return permanentRedirect("/");
   }
-  
+
   return (
     <div className="flex flex-col bg-shark-950 gap-6 p-2 rounded-[12px] w-full h-full">
       <AdminNavigation />

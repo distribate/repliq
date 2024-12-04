@@ -1,23 +1,15 @@
-import { Typography } from '@repo/ui/src/components/typography.tsx';
-import {
-  NicknameColorPicker,
-} from '#cards/components/user-personal-card/components/profile-settings/components/nickname-color-picker.tsx';
-import { DynamicModal } from '../dynamic-modal.tsx';
-import { UPDATE_FIELD_MUTATION_KEY } from '@repo/lib/hooks/use-update-current-user.ts';
-import { getUser } from '@repo/lib/helpers/get-user.ts';
-import BlueDye from '@repo/assets/images/minecraft/blue_dye.webp';
-import {
-  UserSettingOption
-} from '#cards/components/user-personal-card/components/profile-settings/user-profile-settings.tsx';
+import { Typography } from "@repo/ui/src/components/typography.tsx";
+import { NicknameColorPicker } from "#cards/components/user-personal-card/components/profile-settings/components/nickname-color-picker.tsx";
+import { DynamicModal } from "../dynamic-modal.tsx";
+import { UPDATE_FIELD_MUTATION_KEY } from "@repo/lib/hooks/use-update-current-user.ts";
+import { getUser } from "@repo/lib/helpers/get-user.ts";
+import BlueDye from "@repo/assets/images/minecraft/blue_dye.webp";
+import { UserSettingOption } from "#cards/components/user-personal-card/components/profile-settings/user-profile-settings.tsx";
 
 export const NicknameColorPickerModal = () => {
   const currentUser = getUser();
-  
-  if (!currentUser) return null;
-  
-  const nameColor = currentUser?.name_color;
-  const nickname = currentUser?.nickname;
-  
+  const nameColor = currentUser.name_color;
+
   return (
     <DynamicModal
       mutationKey={UPDATE_FIELD_MUTATION_KEY}
@@ -32,7 +24,12 @@ export const NicknameColorPickerModal = () => {
           </div>
         </UserSettingOption>
       }
-      content={<NicknameColorPicker nickname={nickname} name_color={nameColor} />}
+      content={
+        <NicknameColorPicker
+          nickname={currentUser.nickname}
+          name_color={nameColor}
+        />
+      }
     />
   );
 };

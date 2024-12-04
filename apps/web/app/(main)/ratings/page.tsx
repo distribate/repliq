@@ -1,9 +1,3 @@
 export default async function RatingsPage() {
-  
-  
-  return (
-    <div>
-      Ratngs
-    </div>
-  )
+  return <div>Ratngs</div>;
 }

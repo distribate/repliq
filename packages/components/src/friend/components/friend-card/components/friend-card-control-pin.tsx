@@ -1,24 +1,29 @@
-import { DropdownMenuItem } from '@repo/ui/src/components/dropdown-menu.tsx';
-import { Pin } from 'lucide-react';
-import { Typography } from '@repo/ui/src/components/typography.tsx';
-import { useControlFriend } from '#friend/components/friend-card/hooks/use-control-friend.ts';
-import { FriendCardControlProps } from '#friend/components/friend-card/components/friend-card-control.tsx';
+import { DropdownMenuItem } from "@repo/ui/src/components/dropdown-menu.tsx";
+import { Pin } from "lucide-react";
+import { Typography } from "@repo/ui/src/components/typography.tsx";
+import { useControlFriend } from "#friend/components/friend-card/hooks/use-control-friend.ts";
+import { FriendCardControlProps } from "#friend/components/friend-card/components/friend-card-control.tsx";
 
-type FriendCardControlPinProps = Pick<FriendCardControlProps, "isPinned" | "nickname">
+type FriendCardControlPinProps = Pick<
+  FriendCardControlProps,
+  "isPinned" | "nickname"
+>;
 
 export const FriendCardControlPin = ({
-  isPinned, nickname: reqUserNickname
+  isPinned,
+  nickname: reqUserNickname,
 }: FriendCardControlPinProps) => {
-  const { setFriendPinnedMutation, setFriendUnpinMutation } = useControlFriend();
-  
+  const { setFriendPinnedMutation, setFriendUnpinMutation } =
+    useControlFriend();
+
   const handlePin = () => {
     if (isPinned) {
-      return setFriendUnpinMutation.mutate({ reqUserNickname })
+      return setFriendUnpinMutation.mutate({ reqUserNickname });
     } else {
-      return setFriendPinnedMutation.mutate({ reqUserNickname })
+      return setFriendPinnedMutation.mutate({ reqUserNickname });
     }
-  }
-  
+  };
+
   return (
     <DropdownMenuItem
       onClick={handlePin}
@@ -30,9 +35,7 @@ export const FriendCardControlPin = ({
           Открепить
         </Typography>
       ) : (
-        <Typography textSize="small">
-          Закрепить
-        </Typography>
+        <Typography textSize="small">Закрепить</Typography>
       )}
     </DropdownMenuItem>
   );

@@ -1,32 +1,32 @@
-import { DropdownMenuItem } from '@repo/ui/src/components/dropdown-menu.tsx';
-import { Pen } from 'lucide-react';
-import { Typography } from '@repo/ui/src/components/typography.tsx';
-import { DropdownWrapper } from '#wrappers/dropdown-wrapper.tsx';
-import { Input } from '@repo/ui/src/components/input';
-import { Button } from '@repo/ui/src/components/button.tsx';
-import { useState } from 'react';
-import { FriendCardProps } from '#friend/components/friend-card/components/friend-card.tsx';
-import { useControlFriend } from '#friend/components/friend-card/hooks/use-control-friend.ts';
+import { DropdownMenuItem } from "@repo/ui/src/components/dropdown-menu.tsx";
+import { Pen } from "lucide-react";
+import { Typography } from "@repo/ui/src/components/typography.tsx";
+import { DropdownWrapper } from "#wrappers/dropdown-wrapper.tsx";
+import { Input } from "@repo/ui/src/components/input";
+import { Button } from "@repo/ui/src/components/button.tsx";
+import { useState } from "react";
+import { FriendCardProps } from "#friend/components/friend-card/components/friend-card.tsx";
+import { useControlFriend } from "#friend/components/friend-card/hooks/use-control-friend.ts";
 
-type FriendCardControlNote = Pick<FriendCardProps, "nickname">
+type FriendCardControlNote = Pick<FriendCardProps, "nickname">;
 
 export const FriendCardControlNote = ({
-  nickname: reqUserNickname
+  nickname: reqUserNickname,
 }: FriendCardControlNote) => {
-  const [value, setValue] = useState<string>('')
-  const { setFriendNoteMutation } = useControlFriend()
-  
+  const [value, setValue] = useState<string>("");
+  const { setFriendNoteMutation } = useControlFriend();
+
   const handleAddNote = () => {
     if (value.length <= 1) return;
-    return setFriendNoteMutation.mutate({ reqUserNickname, note: value })
-  }
-  
+    return setFriendNoteMutation.mutate({ reqUserNickname, note: value });
+  };
+
   return (
     <DropdownWrapper
       properties={{
-        sideAlign: 'right',
-        contentAlign: 'start',
-        contentClassname: "w-[228px]"
+        sideAlign: "right",
+        contentAlign: "start",
+        contentClassname: "w-[228px]",
       }}
       trigger={
         <DropdownMenuItem className="flex justify-start items-center gap-2 group">
@@ -49,7 +49,9 @@ export const FriendCardControlNote = ({
               {value.length} / 32
             </Typography>
             <Button
-              disabled={setFriendNoteMutation.isPending || setFriendNoteMutation.isError}
+              disabled={
+                setFriendNoteMutation.isPending || setFriendNoteMutation.isError
+              }
               onClick={handleAddNote}
               className="bg-shark-800 hover:bg-shark-700"
             >

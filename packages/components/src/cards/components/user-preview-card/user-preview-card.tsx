@@ -1,33 +1,38 @@
-'use client';
+"use client";
 
-import Link from 'next/link';
-import { UserEntity } from '@repo/types/entities/entities-type.ts';
-import { Avatar } from '#user/components/avatar/components/avatar.tsx';
-import { UserNickname } from '#user/components/name/components/nickname.tsx';
-import { UserDonate } from '#user/components/donate/components/donate.tsx';
-import { Separator } from '@repo/ui/src/components/separator.tsx';
-import dynamic from 'next/dynamic';
-import { USER_URL } from '@repo/shared/constants/routes.ts';
-import { DropdownWrapper } from '#wrappers/dropdown-wrapper.tsx';
-import Spyglass from '@repo/assets/images/minecraft/spyglass.webp';
+import Link from "next/link";
+import { UserEntity } from "@repo/types/entities/entities-type.ts";
+import { Avatar } from "#user/components/avatar/components/avatar.tsx";
+import { UserNickname } from "#user/components/name/components/nickname.tsx";
+import { UserDonate } from "#user/components/donate/components/donate.tsx";
+import { Separator } from "@repo/ui/src/components/separator.tsx";
+import dynamic from "next/dynamic";
+import { USER_URL } from "@repo/shared/constants/routes.ts";
+import { DropdownWrapper } from "#wrappers/dropdown-wrapper.tsx";
+import Spyglass from "@repo/assets/images/minecraft/spyglass.webp";
 
-export type UserCardProps = Pick<UserEntity,
-  | 'nickname' | 'description' | 'created_at' | 'name_color'
+export type UserCardProps = Pick<
+  UserEntity,
+  "nickname" | "description" | "created_at" | "name_color"
 >;
 
 const UserPreviewCardProperties = dynamic(() =>
-  import('./components/preview-properties.tsx')
-  .then(m => m.UserPreviewCardProperties),
+  import("./components/preview-properties.tsx").then(
+    (m) => m.UserPreviewCardProperties,
+  ),
 );
 
 export const UserPreviewCard = ({
-  nickname, name_color, created_at, description,
+  nickname,
+  name_color,
+  created_at,
+  description,
 }: UserCardProps) => {
   return (
     <DropdownWrapper
       properties={{
-        sideAlign: 'left',
-        contentAlign: 'start',
+        sideAlign: "left",
+        contentAlign: "start",
         contentClassname: "w-[320px]",
       }}
       trigger={
@@ -65,9 +70,7 @@ export const UserPreviewCard = ({
             </div>
           </div>
           <Separator />
-          <div className="flex flex-row bg-shark-900 px-2 py-1">
-            asdasd
-          </div>
+          <div className="flex flex-row bg-shark-900 px-2 py-1">asdasd</div>
         </div>
       }
     />

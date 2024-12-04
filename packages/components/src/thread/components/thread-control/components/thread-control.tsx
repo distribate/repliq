@@ -1,16 +1,14 @@
-'use client';
+"use client";
 
-import { Button } from '@repo/ui/src/components/button.tsx';
-import { ThreadControlMain } from './thread-control-main.tsx';
-import { PencilLine } from 'lucide-react';
-import { Typography } from '@repo/ui/src/components/typography.tsx';
-import { ThreadModel } from '#thread/queries/get-thread-model.ts';
-import { DynamicModal } from '#modals/dynamic-modal.tsx';
-import { THREAD_CONTROL_MUTATION_KEY } from '#thread/components/thread-control/hooks/use-thread-control.ts';
+import { Button } from "@repo/ui/src/components/button.tsx";
+import { ThreadControlMain } from "./thread-control-main.tsx";
+import { PencilLine } from "lucide-react";
+import { Typography } from "@repo/ui/src/components/typography.tsx";
+import { ThreadModel } from "#thread/queries/get-thread-model.ts";
+import { DynamicModal } from "#modals/dynamic-modal.tsx";
+import { THREAD_CONTROL_MUTATION_KEY } from "#thread/components/thread-control/hooks/use-thread-control.ts";
 
-export const ThreadControl = ({
-  id: threadId,
-}: Pick<ThreadModel, 'id'>) => {
+export const ThreadControl = ({ id: threadId }: Pick<ThreadModel, "id">) => {
   return (
     <DynamicModal
       mutationKey={THREAD_CONTROL_MUTATION_KEY}
@@ -19,15 +17,11 @@ export const ThreadControl = ({
         <Button className="w-full" state="default">
           <div className="flex items-center gap-2">
             <PencilLine size={20} />
-            <Typography textSize="medium">
-              Редактировать
-            </Typography>
+            <Typography textSize="medium">Редактировать</Typography>
           </div>
         </Button>
       }
-      content={
-        <ThreadControlMain id={threadId} />
-      }
+      content={<ThreadControlMain id={threadId} />}
     />
   );
 };

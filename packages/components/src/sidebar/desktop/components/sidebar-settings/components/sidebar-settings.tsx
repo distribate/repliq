@@ -1,41 +1,48 @@
-import { GripVertical, LogOut } from 'lucide-react';
-import { Separator } from '@repo/ui/src/components/separator.tsx';
-import { Typography } from '@repo/ui/src/components/typography.tsx';
-import { DropdownMenuItem } from '@repo/ui/src/components/dropdown-menu.tsx';
-import { PanelsTopLeft } from 'lucide-react';
-import { HoverCardItem } from '@repo/ui/src/components/hover-card.tsx';
-import { SIDEBAR_FORMATS } from '../constants/sidebar-formats.ts';
-import { NavigationBar } from '../../sidebar-content/navigation/navigation-bar.tsx';
-import { OpenTicket } from '../../sidebar-content/open-ticket/open-ticket.tsx';
-import { Icon } from '@repo/shared/ui/icon/icon.tsx';
-import Link from 'next/link';
-import { DropdownWrapper } from '#wrappers/dropdown-wrapper.tsx';
-import { SidebarFormat, sidebarLayoutQuery } from '../../sidebar-layout/queries/sidebar-layout-query.ts';
-import { useSidebarControl } from '../../sidebar-layout/hooks/use-sidebar-control.ts';
-import { LogoutModal } from '#modals/action-confirmation/components/logout/components/logout-modal.tsx';
+import { GripVertical, LogOut } from "lucide-react";
+import { Separator } from "@repo/ui/src/components/separator.tsx";
+import { Typography } from "@repo/ui/src/components/typography.tsx";
+import { DropdownMenuItem } from "@repo/ui/src/components/dropdown-menu.tsx";
+import { PanelsTopLeft } from "lucide-react";
+import { HoverCardItem } from "@repo/ui/src/components/hover-card.tsx";
+import { SIDEBAR_FORMATS } from "../constants/sidebar-formats.ts";
+import { NavigationBar } from "../../sidebar-content/navigation/navigation-bar.tsx";
+import { OpenTicket } from "../../sidebar-content/open-ticket/open-ticket.tsx";
+import { Icon } from "@repo/shared/ui/icon/icon.tsx";
+import Link from "next/link";
+import { DropdownWrapper } from "#wrappers/dropdown-wrapper.tsx";
+import {
+  SidebarFormat,
+  sidebarLayoutQuery,
+} from "../../sidebar-layout/queries/sidebar-layout-query.ts";
+import { useSidebarControl } from "../../sidebar-layout/hooks/use-sidebar-control.ts";
+import { LogoutModal } from "#modals/action-confirmation/components/logout/components/logout-modal.tsx";
 
 const isValue = (i: SidebarFormat, o: SidebarFormat) => i === o;
 
 export const SidebarSettings = () => {
   const { data: sidebarState } = sidebarLayoutQuery();
-  const { updateSidebarPropertiesMutation, isCompact, isExpanded } = useSidebarControl();
-  
+  const { updateSidebarPropertiesMutation, isCompact, isExpanded } =
+    useSidebarControl();
+
   return (
     <div className="flex items-center justify-between flex-wrap bg-shark-700 max-h-[48px] self-end rounded-md px-3 py-1 w-full gap-2">
       {isCompact || !isExpanded ? (
         <DropdownWrapper
-          properties={{ sideAlign: 'right', contentAlign: 'end' }}
+          properties={{ sideAlign: "right", contentAlign: "end" }}
           trigger={
             <div className="flex justify-center items-center">
-              <PanelsTopLeft size={18} className="text-shark-300 cursor-pointer" />
+              <PanelsTopLeft
+                size={18}
+                className="text-shark-300 cursor-pointer"
+              />
             </div>
           }
           content={
             <div className="flex flex-col gap-y-2">
               <DropdownWrapper
-                properties={{ sideAlign: 'right', contentAlign: 'end' }}
+                properties={{ sideAlign: "right", contentAlign: "end" }}
                 trigger={
-                  <DropdownMenuItem onClick={e => e.preventDefault()}>
+                  <DropdownMenuItem onClick={(e) => e.preventDefault()}>
                     <Typography>Режим сайдбара</Typography>
                   </DropdownMenuItem>
                 }
@@ -47,12 +54,18 @@ export const SidebarSettings = () => {
                         onClick={(e) => {
                           e.preventDefault();
                           updateSidebarPropertiesMutation.mutate({
-                            type: 'format',
+                            type: "format",
                             values: { format: format.value },
                           });
                         }}
                       >
-                        <Typography className={isValue(sidebarState.format, format.value) ? 'text-caribbean-green-500' : ''}>
+                        <Typography
+                          className={
+                            isValue(sidebarState.format, format.value)
+                              ? "text-caribbean-green-500"
+                              : ""
+                          }
+                        >
                           {format.title}
                         </Typography>
                       </DropdownMenuItem>
@@ -63,7 +76,9 @@ export const SidebarSettings = () => {
               <LogoutModal
                 trigger={
                   <HoverCardItem>
-                    <Typography className="text-red-400 text-sm">Выйти из аккаунта</Typography>
+                    <Typography className="text-red-400 text-sm">
+                      Выйти из аккаунта
+                    </Typography>
                   </HoverCardItem>
                 }
               />
@@ -74,7 +89,10 @@ export const SidebarSettings = () => {
         <>
           <div className="flex items-center gap-2">
             <Link href={`https://discord.gg/X4x6Unj89g`} target="_blank">
-              <Icon name="sprite/discord" className="text-md text-shark-300 hover:text-pink-500" />
+              <Icon
+                name="sprite/discord"
+                className="text-md text-shark-300 hover:text-pink-500"
+              />
             </Link>
             <Separator orientation="vertical" />
           </div>
@@ -83,10 +101,13 @@ export const SidebarSettings = () => {
             <Separator orientation="vertical" />
             <div className="flex items-center justify-center w-fit">
               <DropdownWrapper
-                properties={{ sideAlign: 'top', contentAlign: 'start' }}
+                properties={{ sideAlign: "top", contentAlign: "start" }}
                 trigger={
                   <div className="flex items-center justify-center">
-                    <GripVertical size={18} className="text-shark-300 cursor-pointer" />
+                    <GripVertical
+                      size={18}
+                      className="text-shark-300 cursor-pointer"
+                    />
                   </div>
                 }
                 content={
@@ -101,11 +122,18 @@ export const SidebarSettings = () => {
                           onClick={(e) => {
                             e.preventDefault();
                             updateSidebarPropertiesMutation.mutate({
-                              type: 'format', values: { format: format.value },
+                              type: "format",
+                              values: { format: format.value },
                             });
                           }}
                         >
-                          <Typography className={isValue(sidebarState.format, format.value) ? 'text-caribbean-green-500' : ''}>
+                          <Typography
+                            className={
+                              isValue(sidebarState.format, format.value)
+                                ? "text-caribbean-green-500"
+                                : ""
+                            }
+                          >
                             {format.title}
                           </Typography>
                         </DropdownMenuItem>

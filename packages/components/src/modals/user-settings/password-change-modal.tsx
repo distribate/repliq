@@ -1,8 +1,10 @@
+import { UserSettingOption } from "#cards/components/user-personal-card/components/profile-settings/user-profile-settings.tsx";
+import GoldIngot from "@repo/assets/images/minecraft/gold_ingot.webp";
 import {
-  UserSettingOption
-} from '#cards/components/user-personal-card/components/profile-settings/user-profile-settings.tsx';
-import GoldIngot from "@repo/assets/images/minecraft/gold_ingot.webp"
-import { Dialog, DialogContent, DialogTrigger } from '@repo/ui/src/components/dialog.tsx';
+  Dialog,
+  DialogContent,
+  DialogTrigger,
+} from "@repo/ui/src/components/dialog.tsx";
 
 export const PasswordChangeModal = () => {
   return (
@@ -12,9 +14,7 @@ export const PasswordChangeModal = () => {
           ...
         </UserSettingOption>
       </DialogTrigger>
-      <DialogContent>
-        ...
-      </DialogContent>
+      <DialogContent>...</DialogContent>
     </Dialog>
   );
 };

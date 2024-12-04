@@ -1,25 +1,30 @@
-import { SelectedWrapper } from '#wrappers/selected-wrapper.tsx';
-import { X } from 'lucide-react';
-import { Typography } from '@repo/ui/src/components/typography.tsx';
-import { useControlFriend } from '#friend/components/friend-card/hooks/use-control-friend.ts';
-import { UserFriends } from '#friends/queries/get-friends.ts';
+import { SelectedWrapper } from "#wrappers/selected-wrapper.tsx";
+import { X } from "lucide-react";
+import { Typography } from "@repo/ui/src/components/typography.tsx";
+import { useControlFriend } from "#friend/components/friend-card/hooks/use-control-friend.ts";
+import { UserFriends } from "#friends/queries/get-friends.ts";
 
-type FriendCardNoteProps = Pick<UserFriends, 'friend_id' | 'nickname'> & {
-  note: string | null
-}
+type FriendCardNoteProps = Pick<UserFriends, "friend_id" | "nickname"> & {
+  note: string | null;
+};
 
 export const FriendCardNote = ({
-  note, friend_id, nickname: reqUserNickname,
+  note,
+  friend_id,
+  nickname: reqUserNickname,
 }: FriendCardNoteProps) => {
   const { setFriendUnNoteMutation } = useControlFriend();
-  
+
   return (
     <div className="flex items-end gap-2">
       <SelectedWrapper
         className="relative -bottom-1"
-        onClick={() => setFriendUnNoteMutation.mutate({
-          friend_id, reqUserNickname
-        })}
+        onClick={() =>
+          setFriendUnNoteMutation.mutate({
+            friend_id,
+            reqUserNickname,
+          })
+        }
       >
         <X className="text-red-500" size={16} />
       </SelectedWrapper>

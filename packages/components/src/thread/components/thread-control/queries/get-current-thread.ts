@@ -1,23 +1,28 @@
-'use server';
+"use server";
 
-import { ThreadModel } from '../../../queries/get-thread-model.ts';
-import { ThreadEntity } from '@repo/types/entities/entities-type.ts';
-import { createClient } from '../../../../../../lib/utils/api/supabase-client.ts';
+import { ThreadModel } from "../../../queries/get-thread-model.ts";
+import { ThreadEntity } from "@repo/types/entities/entities-type.ts";
+import { createClient } from "../../../../../../lib/utils/api/supabase-client.ts";
 
-export async function getCurrentThread(id: Pick<ThreadModel, 'id'>["id"]): Promise<
-  Pick<ThreadEntity, "id" | "title" | "description" | "isComments" | "permission" | "content">
+export async function getCurrentThread(
+  id: Pick<ThreadModel, "id">["id"],
+): Promise<
+  Pick<
+    ThreadEntity,
+    "id" | "title" | "description" | "isComments" | "permission" | "content"
+  >
 > {
   const api = createClient();
-  
+
   const { data, error } = await api
-  .from('threads')
-  .select('id, title, description, isComments, permission, content')
-  .eq('id', id)
-  .single()
-  
+    .from("threads")
+    .select("id, title, description, isComments, permission, content")
+    .eq("id", id)
+    .single();
+
   if (error) {
     throw new Error(error.message);
   }
-  
-  return data
+
+  return data;
 }

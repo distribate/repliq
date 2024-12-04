@@ -1,24 +1,28 @@
-import { List } from 'lucide-react';
-import { Typography } from '@repo/ui/src/components/typography.tsx';
-import { useSearchControl } from '../hooks/use-search-control.tsx';
-import { searchQuery } from '../queries/search-query.ts';
-import { DropdownMenuItem } from '@repo/ui/src/components/dropdown-menu.tsx';
-import { Separator } from '@repo/ui/src/components/separator.tsx';
-import { AlignJustify, LayoutGrid } from 'lucide-react';
-import { SORT_TYPES } from '../constants/sort-types.ts';
-import { isValue } from '@repo/lib/helpers/check-is-value.ts';
-import { DropdownWrapper } from '#wrappers/dropdown-wrapper.tsx';
+import { List } from "lucide-react";
+import { Typography } from "@repo/ui/src/components/typography.tsx";
+import { useSearchControl } from "../hooks/use-search-control.tsx";
+import { searchQuery } from "../queries/search-query.ts";
+import { DropdownMenuItem } from "@repo/ui/src/components/dropdown-menu.tsx";
+import { Separator } from "@repo/ui/src/components/separator.tsx";
+import { AlignJustify, LayoutGrid } from "lucide-react";
+import { SORT_TYPES } from "../constants/sort-types.ts";
+import { isValue } from "@repo/lib/helpers/check-is-value.ts";
+import { DropdownWrapper } from "#wrappers/dropdown-wrapper.tsx";
 
 export const SearchSort = () => {
   const { data: searchedState } = searchQuery();
   const { setSearchQueryMutation } = useSearchControl();
-  
+
   const isSearchType = isValue(searchedState.type);
-  
+
   return (
-    <div className="flex">
+    <div className="w-fit">
       <DropdownWrapper
-        properties={{ sideAlign: 'right', contentAlign: 'start', contentClassname: 'min-w-[180px]', }}
+        properties={{
+          sideAlign: "right",
+          contentAlign: "start",
+          contentClassname: "min-w-[180px]",
+        }}
         trigger={<List size={20} className="text-shark-300" />}
         content={
           <div className="flex flex-col gap-y-2 w-full">
@@ -27,7 +31,7 @@ export const SearchSort = () => {
                 Фильтровать по
               </Typography>
               <div className="flex flex-col gap-y-2">
-                {SORT_TYPES.map(sort => (
+                {SORT_TYPES.map((sort) => (
                   <DropdownMenuItem
                     key={sort.value}
                     className="items-center gap-1"
@@ -37,7 +41,13 @@ export const SearchSort = () => {
                     }}
                   >
                     <sort.icon size={16} className="text-shark-300" />
-                    <Typography className={isSearchType(sort.value) ? 'text-caribbean-green-500' : ''}>
+                    <Typography
+                      className={
+                        isSearchType(sort.value)
+                          ? "text-caribbean-green-500"
+                          : ""
+                      }
+                    >
                       {sort.title}
                     </Typography>
                   </DropdownMenuItem>

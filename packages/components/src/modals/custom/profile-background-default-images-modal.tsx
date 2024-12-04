@@ -1,30 +1,31 @@
-import { Image } from 'lucide-react';
-import { Typography } from '@repo/ui/src/components/typography.tsx';
-import { DynamicModal } from '../dynamic-modal.tsx';
-import { ImageWrapper } from '#wrappers/image-wrapper.tsx';
+import { Image } from "lucide-react";
+import { Typography } from "@repo/ui/src/components/typography.tsx";
+import { DynamicModal } from "../dynamic-modal.tsx";
+import { ImageWrapper } from "#wrappers/image-wrapper.tsx";
 import {
   CoverImageInput,
   useControlCoverImage,
   USER_COVER_DELETE_IMAGE_MUTATION_KEY,
-} from '#profile/components/cover/hooks/use-control-cover-image.ts';
-import { defaultImagesQuery } from '#profile/components/cover/queries/default-images-query.ts';
-import { Skeleton } from '@repo/ui/src/components/skeleton.tsx';
-import { HoverCardItem } from '@repo/ui/src/components/hover-card.tsx';
+} from "#profile/components/cover/hooks/use-control-cover-image.ts";
+import { defaultImagesQuery } from "#profile/components/cover/queries/default-images-query.ts";
+import { Skeleton } from "@repo/ui/src/components/skeleton.tsx";
+import { HoverCardItem } from "@repo/ui/src/components/hover-card.tsx";
 
 export const ProfileBackgroundDefaultImagesModal = () => {
   const { uploadBackgroundImageMutation } = useControlCoverImage();
   const { data: defaultImages, isLoading } = defaultImagesQuery();
-  
+
   const handleCoverImageInput = ({
     fileName,
-  }: Pick<CoverImageInput, 'fileName'>) => {
+  }: Pick<CoverImageInput, "fileName">) => {
     if (!fileName) return;
-    
+
     return uploadBackgroundImageMutation.mutate({
-      file: null, customFilename: fileName,
+      file: null,
+      customFilename: fileName,
     });
   };
-  
+
   return (
     <DynamicModal
       contentClassName="max-w-6xl"
@@ -45,23 +46,26 @@ export const ProfileBackgroundDefaultImagesModal = () => {
           <div className="grid grid-cols-3 gap-2 grid-rows-1 w-full">
             {isLoading && (
               <>
-                <Skeleton className="w-full h-full"/>
-                <Skeleton className="w-full h-full"/>
-                <Skeleton className="w-full h-full"/>
-                <Skeleton className="w-full h-full"/>
-                <Skeleton className="w-full h-full"/>
+                <Skeleton className="w-full h-full" />
+                <Skeleton className="w-full h-full" />
+                <Skeleton className="w-full h-full" />
+                <Skeleton className="w-full h-full" />
+                <Skeleton className="w-full h-full" />
               </>
             )}
-            {(!isLoading && defaultImages) && (
+            {!isLoading &&
+              defaultImages &&
               defaultImages.map((image, i) => (
                 <div
                   className="flex flex-col rounded-lg overflow-hidden border border-shark-800 relative
                   hover:bg-secondary-color cursor-pointer group transition-all duration-150 w-full"
                   key={i}
-                  onClick={() => handleCoverImageInput({
-                    // @ts-ignore
-                    fileName: image.path, file: null,
-                  })}
+                  onClick={() =>
+                    handleCoverImageInput({
+                      // @ts-ignore
+                      fileName: image.path, file: null,
+                    })
+                  }
                 >
                   <ImageWrapper
                     // @ts-ignore
@@ -74,11 +78,10 @@ export const ProfileBackgroundDefaultImagesModal = () => {
                     className="min-w-[340px] group-hover:brightness-50 transition-all duration-150"
                   />
                 </div>
-              ))
-            )}
+              ))}
           </div>
         </div>
       }
     />
-  )
-}
+  );
+};

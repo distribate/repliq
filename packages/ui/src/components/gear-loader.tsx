@@ -1,23 +1,21 @@
 // @ts-ignore
-import Gear from "@repo/assets/gifs/minecraft-gear.gif"
+import Gear from "@repo/assets/gifs/minecraft-gear.gif";
 
 type GearLoaderProps = Partial<{
-	height: number,
-	width: number,
-}>
+  height: number;
+  width: number;
+}>;
 
-export const GearLoader = ({
-	height = 36, width = 36
-}: GearLoaderProps) => {
-	return (
-		<div className={`w-[${width}px] h-[${height}px]`}>
-			<img
-				alt=""
-				src={Gear.src}
-				width={width}
-				height={height}
-				loading="eager"
-			/>
-		</div>
-	)
-}
+export const GearLoader = ({ height = 36, width = 36 }: GearLoaderProps) => {
+  return (
+    <div className={`w-[${width}px] h-[${height}px]`}>
+      <img
+        alt=""
+        src={Gear.src}
+        width={width}
+        height={height}
+        loading="eager"
+      />
+    </div>
+  );
+};

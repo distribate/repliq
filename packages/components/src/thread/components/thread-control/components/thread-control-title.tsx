@@ -1,26 +1,26 @@
-import { ChangeEvent, useState } from 'react';
-import { Input } from '@repo/ui/src/components/input.tsx';
-import { ThreadControlFields } from '../types/thread-control-types.ts';
-import { Info } from 'lucide-react';
-import { Typography } from '@repo/ui/src/components/typography.tsx';
-import { useThreadControl } from '#thread/components/thread-control/hooks/use-thread-control.ts';
+import { ChangeEvent, useState } from "react";
+import { Input } from "@repo/ui/src/components/input.tsx";
+import { ThreadControlFields } from "../types/thread-control-types.ts";
+import { Info } from "lucide-react";
+import { Typography } from "@repo/ui/src/components/typography.tsx";
+import { useThreadControl } from "#thread/components/thread-control/hooks/use-thread-control.ts";
 
 export const ThreadControlTitle = ({
   title: currentTitle,
-}: Pick<ThreadControlFields, 'title'>) => {
-  const [ titleValue, setTitleValue ] = useState<string>(currentTitle);
-  const { setThreadNewValuesMutation } = useThreadControl()
-  
+}: Pick<ThreadControlFields, "title">) => {
+  const [titleValue, setTitleValue] = useState<string>(currentTitle);
+  const { setThreadNewValuesMutation } = useThreadControl();
+
   const onChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { value } = e.target;
-    setTitleValue(value)
-    
+    setTitleValue(value);
+
     return setThreadNewValuesMutation.mutate({
       state: { isValid: value.length > 2 },
-      values: { title: value }
-    })
-  }
-  
+      values: { title: value },
+    });
+  };
+
   return (
     <div className="flex items-center gap-2 w-full">
       <div className="flex flex-col w-full pt-2 pb-1 border border-shark-700 rounded-md">

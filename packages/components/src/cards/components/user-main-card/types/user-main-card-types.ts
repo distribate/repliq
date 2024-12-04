@@ -1,3 +1,3 @@
 export type UserMainCard = {
-  nickname: string
-}
+  nickname: string;
+};

@@ -1,31 +1,32 @@
-import "server-only"
+import "server-only";
 
-import { cookies } from "next/headers"
-import { authClient } from '#utils/api/auth-client.ts';
+import { cookies } from "next/headers";
+import { authClient } from "#utils/api/auth-client.ts";
 
 export async function validateSessionToken(token: string) {
   const res = await authClient["validate-session"].$post({
-    json: { token }
-  })
-  
-  const data = await res.json()
-  
+    json: { token },
+  });
+
+  const data = await res.json();
+
   if ("error" in data) {
-    throw new Error(data.error)
+    throw new Error(data.error);
   }
-  
-  return data
+
+  return data;
 }
 
 export async function setSessionTokenCookie(
-  token: string, expiresAt: Date
+  token: string,
+  expiresAt: Date,
 ): Promise<void> {
   cookies().set("session", token, {
     httpOnly: true,
     sameSite: "lax",
     secure: process.env.NODE_ENV === "production",
     expires: expiresAt,
-    path: "/"
+    path: "/",
   });
 }
 
@@ -35,6 +36,6 @@ export async function deleteSessionTokenCookie(): Promise<void> {
     sameSite: "lax",
     secure: process.env.NODE_ENV === "production",
     maxAge: 0,
-    path: "/"
+    path: "/",
   });
 }

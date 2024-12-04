@@ -1,4 +1,4 @@
-import { Skeleton } from '@repo/ui/src/components/skeleton.tsx';
+import { Skeleton } from "@repo/ui/src/components/skeleton.tsx";
 
 export const ThreadRatingSkeleton = () => {
   return (

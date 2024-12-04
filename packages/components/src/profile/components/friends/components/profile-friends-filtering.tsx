@@ -1,48 +1,127 @@
-"use client"
+"use client";
 
 import { Typography } from "@repo/ui/src/components/typography.tsx";
 import { DropdownMenuItem } from "@repo/ui/src/components/dropdown-menu.tsx";
-import { DropdownWrapper } from '#wrappers/dropdown-wrapper.tsx';
-import { FriendsSort as FriendsSortType, useFriendsSort } from "../hooks/use-friends-sort.tsx";
-import React from "react";
-import { FRIENDS_SORT } from '#profile/components/friends/constants/friends-filtering.ts';
+import { DropdownWrapper } from "#wrappers/dropdown-wrapper.tsx";
+import React, { ChangeEvent, forwardRef, useState } from "react";
+import { FRIENDS_SORT } from "#profile/components/friends/constants/friends-filtering.ts";
+import { useQueryClient } from "@tanstack/react-query";
+import {
+  FRIENDS_SORT_QUERY_KEY,
+  FriendsSortQuery,
+  FriendsSortType,
+} from "#profile/components/friends/queries/friends-settings-query.ts";
+import { FilteringSearchWrapper } from "#wrappers/filtering-search-wrapper.tsx";
+import { useDebounce } from "@repo/lib/hooks/use-debounce.ts";
+import { Input } from "@repo/ui/src/components/input.tsx";
+
+const ProfileFriendsFilteringSearch = forwardRef<HTMLInputElement>(
+  (props, ref) => {
+    const qc = useQueryClient();
+    const [value, setValue] = useState<string>("");
+
+    const updateQuery = (value: string) => {
+      return qc.setQueryData(
+        FRIENDS_SORT_QUERY_KEY,
+        (prev: FriendsSortQuery) => ({
+          ...prev,
+          querySearch: value,
+        }),
+      );
+    };
+
+    const debouncedUpdateQuery = useDebounce(updateQuery, 300);
+
+    const handleSearchInput = (e: ChangeEvent<HTMLInputElement>) => {
+      const { value } = e.target;
+      const convertedValue = value.replace(/ {3,}/g, "  ");
+      setValue(convertedValue);
+      debouncedUpdateQuery(convertedValue);
+    };
+
+    return (
+      <Input
+        ref={ref}
+        className="rounded-lg"
+        value={value}
+        maxLength={64}
+        placeholder="Поиск по имени"
+        onChange={handleSearchInput}
+        {...props}
+      />
+    );
+  },
+);
+
+const ProfileFriendsFilteringView = () => {
+  const qc = useQueryClient();
+
+  const handleSort = (
+    e: React.MouseEvent<HTMLDivElement, MouseEvent>,
+    type: FriendsSortType,
+  ) => {
+    e.preventDefault();
+
+    return qc.setQueryData(
+      FRIENDS_SORT_QUERY_KEY,
+      (prev: FriendsSortQuery) => ({ ...prev, type }),
+    );
+  };
+
+  return (
+    <DropdownWrapper
+      properties={{
+        sideAlign: "bottom",
+        contentAlign: "end",
+        contentClassname: "w-[200px]",
+      }}
+      trigger={
+        <div className="flex items-center gap-1">
+          <Typography className="text-shark-300" textSize="medium">
+            По дате добавления
+          </Typography>
+        </div>
+      }
+      content={
+        <div className="flex flex-col gap-y-4">
+          <Typography className="text-shark-300 text-sm px-2 pt-2">
+            Фильтровать по
+          </Typography>
+          <div className="flex flex-col gap-y-2">
+            {FRIENDS_SORT.map((item) => (
+              <DropdownMenuItem
+                key={item.value}
+                onClick={(e) => handleSort(e, item.value)}
+              >
+                <Typography>{item.name}</Typography>
+              </DropdownMenuItem>
+            ))}
+          </div>
+        </div>
+      }
+    />
+  );
+};
 
 export const ProfileFriendsFiltering = () => {
-	const { setFriendsSortMUtation } = useFriendsSort()
-
-	const handleSort = (
-		e: React.MouseEvent<HTMLDivElement, MouseEvent>, type: FriendsSortType
-	) => {
-		e.preventDefault();
-		return setFriendsSortMUtation.mutate({ type })
-	}
-
-	return (
-		<div className="w-fit">
-			<DropdownWrapper
-				properties={{
-					sideAlign: "bottom", contentAlign: "end", contentClassname: "w-[200px]"
-				}}
-				trigger={
-					<div className="flex items-center gap-1">
-						<Typography className="text-shark-300" textSize="medium">По дате добавления</Typography>
-					</div>
-				}
-				content={
-					<div className="flex flex-col gap-y-4">
-						<Typography className="text-shark-300 text-sm px-2 pt-2">
-							Фильтровать по
-						</Typography>
-						<div className="flex flex-col gap-y-2">
-							{FRIENDS_SORT.map(item => (
-								<DropdownMenuItem key={item.value} onClick={e => handleSort(e, item.value)}>
-									<Typography>{item.title}</Typography>
-								</DropdownMenuItem>
-							))}
-						</div>
-					</div>
-				}
-			/>
-		</div>
-	)
-}
+  return (
+    <div className="flex w-full justify-between items-center">
+      <div className="flex items-center gap-1 w-fit">
+        <Typography
+          textColor="shark_white"
+          className="text-[22px] font-semibold"
+        >
+          Друзья
+        </Typography>
+      </div>
+      <div className="flex items-center gap-4 w-fit">
+        <FilteringSearchWrapper>
+          <ProfileFriendsFilteringSearch />
+        </FilteringSearchWrapper>
+        <div className="w-fit">
+          <ProfileFriendsFilteringView />
+        </div>
+      </div>
+    </div>
+  );
+};

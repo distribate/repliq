@@ -1,29 +1,44 @@
-"use client"
+"use client";
 
-import { LayoutGrid } from 'lucide-react';
-import { Typography } from '@repo/ui/src/components/typography.tsx';
-import { DropdownMenuItem } from '@repo/ui/src/components/dropdown-menu.tsx';
-import { DropdownWrapper } from '#wrappers/dropdown-wrapper.tsx';
-import { SelectedWrapper } from '#wrappers/selected-wrapper.tsx';
-import { useFriendSort } from '../hooks/use-friends-sort.ts';
-import { friendsFilteringQuery, FriendsFilteringViewType } from '../queries/friends-filtering-query.ts';
-import { isValue } from '@repo/lib/helpers/check-is-value.ts';
-import { VIEW_COMPONENTS_TYPE } from '#friends/components/filtering/contants/view-components-type.ts';
+import { LayoutGrid } from "lucide-react";
+import { Typography } from "@repo/ui/src/components/typography.tsx";
+import { DropdownMenuItem } from "@repo/ui/src/components/dropdown-menu.tsx";
+import { DropdownWrapper } from "#wrappers/dropdown-wrapper.tsx";
+import { SelectedWrapper } from "#wrappers/selected-wrapper.tsx";
+import {
+  FRIENDS_FILTERING_QUERY_KEY,
+  FriendsFilteringQuery,
+  friendsFilteringQuery,
+  FriendsFilteringViewType,
+} from "../queries/friends-filtering-query.ts";
+import { isValue } from "@repo/lib/helpers/check-is-value.ts";
+import { VIEW_COMPONENTS_TYPE } from "#friends/components/filtering/contants/view-components-type.ts";
+import { useQueryClient } from "@tanstack/react-query";
 
 export const FriendsFilteringView = () => {
-  const { data: friendsFiltering } = friendsFilteringQuery()
-  const { setValueMutation } = useFriendSort();
-  
-  const handleView = (value: FriendsFilteringViewType) => {
-    return setValueMutation.mutate({ value, type: 'view', });
+  const qc = useQueryClient();
+  const { data: friendsFiltering } = friendsFilteringQuery();
+
+  const handleView = (viewType: FriendsFilteringViewType) => {
+    return qc.setQueryData(
+      FRIENDS_FILTERING_QUERY_KEY,
+      (prev: FriendsFilteringQuery) => ({
+        ...prev,
+        viewType,
+      }),
+    );
   };
-  
+
   const isViewType = isValue(friendsFiltering.viewType);
-  
+
   return (
     <div className="w-fit">
       <DropdownWrapper
-        properties={{ sideAlign: 'bottom', contentAlign: 'end', contentClassname: 'w-[200px]', }}
+        properties={{
+          sideAlign: "bottom",
+          contentAlign: "end",
+          contentClassname: "w-[200px]",
+        }}
         trigger={
           <SelectedWrapper>
             <LayoutGrid size={20} className="text-shark-300" />
@@ -35,15 +50,15 @@ export const FriendsFilteringView = () => {
               Вид
             </Typography>
             <div className="flex flex-col gap-y-2">
-              {VIEW_COMPONENTS_TYPE.map(view => (
+              {VIEW_COMPONENTS_TYPE.map(({ title, value, icon: Icon }) => (
                 <DropdownMenuItem
-                  key={view.name}
-                  onClick={() => handleView(view.name)}
+                  key={value}
+                  onClick={() => handleView(value)}
                   className="items-center gap-1"
                 >
-                  <view.icon size={16} className="text-shark-300" />
-                  <Typography className={isViewType(view.name) ? 'text-caribbean-green-500' : ''}>
-                    {view.title}
+                  <Icon size={16} className="text-shark-300" />
+                  <Typography state={isViewType(value) ? "active" : "default"}>
+                    {title}
                   </Typography>
                 </DropdownMenuItem>
               ))}

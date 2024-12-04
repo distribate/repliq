@@ -1,1 +1,1 @@
-export type ControlUserType = "ban" | "unban" | "kill-session"
+export type ControlUserType = "ban" | "unban" | "kill-session";

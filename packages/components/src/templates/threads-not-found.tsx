@@ -1,4 +1,4 @@
-import { Typography } from '@repo/ui/src/components/typography.tsx';
+import { Typography } from "@repo/ui/src/components/typography.tsx";
 
 export const ThreadNotFound = () => {
   return (
@@ -7,5 +7,5 @@ export const ThreadNotFound = () => {
         Тредов в этой категории ещё нет...
       </Typography>
     </div>
-  )
-}
+  );
+};

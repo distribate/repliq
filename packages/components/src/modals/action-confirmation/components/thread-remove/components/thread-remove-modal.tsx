@@ -1,24 +1,22 @@
-import { Button } from '@repo/ui/src/components/button.tsx';
-import { Typography } from '@repo/ui/src/components/typography.tsx';
-import { ThreadModel } from '#thread/queries/get-thread-model.ts';
-import { ConfirmationActionModalTemplate } from '#templates/confirmation-action-modal-template.tsx';
-import { ConfirmationButton } from '#buttons/confirmation-action-button.tsx';
-import { DynamicModal } from '../../../../dynamic-modal.tsx';
+import { Button } from "@repo/ui/src/components/button.tsx";
+import { Typography } from "@repo/ui/src/components/typography.tsx";
+import { ThreadModel } from "#thread/queries/get-thread-model.ts";
+import { ConfirmationActionModalTemplate } from "#templates/confirmation-action-modal-template.tsx";
+import { ConfirmationButton } from "#buttons/confirmation-action-button.tsx";
+import { DynamicModal } from "../../../../dynamic-modal.tsx";
 import {
   THREAD_CONTROL_MUTATION_KEY,
   useThreadControl,
-} from '#thread/components/thread-control/hooks/use-thread-control.ts';
-import { DialogClose } from '@repo/ui/src/components/dialog.tsx';
+} from "#thread/components/thread-control/hooks/use-thread-control.ts";
+import { DialogClose } from "@repo/ui/src/components/dialog.tsx";
 
-export const ThreadRemoveModal = ({
-  id,
-}: Pick<ThreadModel, 'id'>) => {
+export const ThreadRemoveModal = ({ id }: Pick<ThreadModel, "id">) => {
   const { removeThreadMutation } = useThreadControl();
-  
+
   const handleRemoveThread = () => {
     return removeThreadMutation.mutate(id);
-  }
-  
+  };
+
   return (
     <DynamicModal
       mutationKey={THREAD_CONTROL_MUTATION_KEY}

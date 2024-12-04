@@ -1,0 +1,21 @@
+{
+  "name": "forum-backend",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "start": "bun run src/index.ts",
+    "dev": "bun run --hot src/index.ts",
+    "type-check": "tsc --noEmit"
+  },
+  "dependencies": {
+    "hono": "^4.6.12",
+    "kysely": "^0.27.4",
+    "pg": "^8.13.1"
+  },
+  "devDependencies": {
+    "@hono/zod-validator": "^0.4.1",
+    "@types/bun": "latest",
+    "@types/pg": "^8.11.10",
+    "zod": "^3.23.8"
+  }
+}

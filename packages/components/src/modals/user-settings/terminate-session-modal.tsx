@@ -1,15 +1,15 @@
-import { DynamicModal } from '../dynamic-modal.tsx';
-import { ConfirmationActionModalTemplate } from '#templates/confirmation-action-modal-template.tsx';
-import { ConfirmationButton } from '#buttons/confirmation-action-button.tsx';
+import { DynamicModal } from "../dynamic-modal.tsx";
+import { ConfirmationActionModalTemplate } from "#templates/confirmation-action-modal-template.tsx";
+import { ConfirmationButton } from "#buttons/confirmation-action-button.tsx";
 // import {
 //   TERMINATE_SESSIONS_MUTATION_KEY, useTerminateSession,
 // } from '../action-confirmation/components/terminate-session/hooks/use-terminate-session.ts';
-import { DialogClose } from '@repo/ui/src/components/dialog.tsx';
-import { DeleteButton } from '@repo/ui/src/components/detele-button.tsx';
+import { DialogClose } from "@repo/ui/src/components/dialog.tsx";
+import { DeleteButton } from "@repo/ui/src/components/detele-button.tsx";
 
 type TerminateSessionModalProps = {
-  session_uuid: string
-}
+  session_uuid: string;
+};
 
 export const TerminateSessionModal = ({
   session_uuid,
@@ -21,11 +21,9 @@ export const TerminateSessionModal = ({
   // const handleTerminate = () => {
   //   return terminateMutation.mutate({ type: 'single', session_uuid });
   // };
-  
+
   return (
-    <div>
-    
-    </div>
+    <div></div>
     // <DynamicModal
     //   mutationKey={TERMINATE_SESSIONS_MUTATION_KEY}
     //   trigger={

@@ -1,24 +1,26 @@
-import React, { useState } from 'react';
-import { Input } from '@repo/ui/src/components/input.tsx';
-import { ThreadControlFields } from '../types/thread-control-types.ts';
-import { Typography } from '@repo/ui/src/components/typography.tsx';
-import { Info } from 'lucide-react';
-import { useThreadControl } from '#thread/components/thread-control/hooks/use-thread-control.ts';
+import React, { useState } from "react";
+import { Input } from "@repo/ui/src/components/input.tsx";
+import { ThreadControlFields } from "../types/thread-control-types.ts";
+import { Typography } from "@repo/ui/src/components/typography.tsx";
+import { Info } from "lucide-react";
+import { useThreadControl } from "#thread/components/thread-control/hooks/use-thread-control.ts";
 
 export const ThreadControlDescription = ({
   description: currentDescription,
-}: Pick<ThreadControlFields, 'description'>) => {
-  const { setThreadNewValuesMutation } = useThreadControl()
-  const [ descriptionValue, setDescriptionValue ] = useState(currentDescription || "");
-  
+}: Pick<ThreadControlFields, "description">) => {
+  const { setThreadNewValuesMutation } = useThreadControl();
+  const [descriptionValue, setDescriptionValue] = useState(
+    currentDescription || "",
+  );
+
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = e.target;
-    setDescriptionValue(value)
+    setDescriptionValue(value);
     return setThreadNewValuesMutation.mutate({
-      values: { description: value.length < 1 ? null : value }
-    })
-  }
-  
+      values: { description: value.length < 1 ? null : value },
+    });
+  };
+
   return (
     <div className="flex items-center gap-2 w-full">
       <div className="flex flex-col w-full pt-2 pb-1 border border-shark-700 rounded-md">
@@ -27,7 +29,7 @@ export const ThreadControlDescription = ({
           <Info size={14} className="text-shark-300" />
         </div>
         <Input
-          placeholder={currentDescription || 'Введите описание'}
+          placeholder={currentDescription || "Введите описание"}
           roundedType="default"
           value={descriptionValue}
           backgroundType="transparent"

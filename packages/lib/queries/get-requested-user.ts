@@ -1,32 +1,37 @@
-'use server';
+"use server";
 
-import { UserEntity } from '@repo/types/entities/entities-type.ts';
-import { REDIRECT_USER_NOT_EXIST } from '@repo/shared/constants/routes.ts';
+import { UserEntity } from "@repo/types/entities/entities-type.ts";
+import { REDIRECT_USER_NOT_EXIST } from "@repo/shared/constants/routes.ts";
 import {
   convertUserPreferencesToObject,
   getPreferenceValue,
   UserPreferences,
-} from '../helpers/convert-user-preferences-to-map.ts';
-import { createClient } from '#utils/api/supabase-client.ts';
-import { redirect } from 'next/navigation';
-import { getDonateData } from '#queries/get-donate-data.ts';
-import { DonateType } from '@repo/components/src/user/components/donate/queries/get-user-donate.ts';
-import { getCurrentSession } from '#actions/get-current-session.ts';
+} from "../helpers/convert-user-preferences-to-map.ts";
+import { createClient } from "#utils/api/supabase-client.ts";
+import { redirect } from "next/navigation";
+import { getDonateData } from "#queries/get-donate-data.ts";
+import { DonateType } from "@repo/components/src/user/components/donate/queries/get-user-donate.ts";
+import { getCurrentSession } from "#actions/get-current-session.ts";
 
 type RequestedUserProps = {
-  nickname: string,
-  withDonate?: boolean
-}
+  nickname: string;
+  withDonate?: boolean;
+};
 
-export type RequestedUser = Omit<UserEntity, 'preferences'> & {
-  donate: DonateType['primary_group'],
-  preferences: UserPreferences
-}
+export type RequestedUser = Omit<UserEntity, "preferences"> & {
+  donate: DonateType["primary_group"];
+  preferences: UserPreferences;
+};
 
-async function getMainData(nickname: RequestedUserProps['nickname']) {
+async function getMainData(nickname: RequestedUserProps["nickname"]) {
   const api = createClient();
-  
-  return api.from('users').select().eq('nickname', nickname).returns<UserEntity[]>().single();
+
+  return api
+    .from("users")
+    .select()
+    .eq("nickname", nickname)
+    .returns<UserEntity[]>()
+    .single();
 }
 
 async function validateUserDetailsVisibility(
@@ -35,43 +40,50 @@ async function validateUserDetailsVisibility(
 ): Promise<{ real_name: boolean } | null> {
   const { user: currentUser } = await getCurrentSession();
   if (!currentUser) return null;
-  
+
   const isOwnProfile = currentUser.nickname === nickname;
-  
-  if (isOwnProfile) return {
-    real_name: true,
-  };
-  
-  const result = getPreferenceValue(preferences, 'realNameVisibility');
-  
+
+  if (isOwnProfile)
+    return {
+      real_name: true,
+    };
+
+  const result = getPreferenceValue(preferences, "realNameVisibility");
+
   return { real_name: result };
 }
 
 export async function getRequestedUser(
-  nickname: RequestedUserProps['nickname'],
+  nickname: RequestedUserProps["nickname"],
 ): Promise<RequestedUser | null> {
   const { user: currentUser } = await getCurrentSession();
   if (!currentUser) return null;
-  
-  const [ donate, main ] = await Promise.all([
-    getDonateData(nickname), getMainData(nickname),
+
+  const [donate, main] = await Promise.all([
+    getDonateData(nickname),
+    getMainData(nickname),
   ]);
-  
+
   const { data: donateData, error: donateError } = donate;
   const { data: userData, error: userError } = main;
-  
+
   if (!donateData || userError || donateError || !userData) {
-    return redirect(`${REDIRECT_USER_NOT_EXIST}${currentUser.nickname}&timeout=5`);
+    return redirect(
+      `${REDIRECT_USER_NOT_EXIST}${currentUser.nickname}&timeout=5`,
+    );
   }
-  
-  const preferences = convertUserPreferencesToObject(userData.preferences as Record<string, string>) as UserPreferences;
-  
+
+  const preferences = convertUserPreferencesToObject(
+    userData.preferences as Record<string, string>,
+  ) as UserPreferences;
+
   const detailsVisibility = await validateUserDetailsVisibility(
-    nickname, preferences,
+    nickname,
+    preferences,
   );
-  
+
   if (!detailsVisibility) return null;
-  
+
   return {
     ...userData,
     real_name: detailsVisibility.real_name ? userData.real_name : null,

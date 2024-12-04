@@ -7,67 +7,81 @@ import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { FormField } from "@repo/ui/src/components/form-field.tsx";
-import { realNameSchema } from '../schemas/real-name-schema.ts';
-import { getUser } from '@repo/lib/helpers/get-user.ts';
+import { realNameSchema } from "../schemas/real-name-schema.ts";
+import { getUser } from "@repo/lib/helpers/get-user.ts";
 
 export type zodRealNameInfer = z.infer<typeof realNameSchema>;
 
 export const RealNameChange = () => {
-	const currentUser = getUser();
-	const { updateFieldMutation } = useUpdateCurrentUser()
-	
-	const { register, formState: { errors, isValid }, getValues, watch } = useForm<zodRealNameInfer>({
-		resolver: zodResolver(realNameSchema),
-		mode: "onChange",
-		defaultValues: { name: currentUser?.real_name || '' }
-	})
-	
-	const value = watch("name")
-	const isIdentity = value === currentUser?.real_name;
-	
-	const handleRealName = () => {
-		if (!currentUser) return;
-		
-		const value = getValues("name")
-		
-		if (isIdentity) return;
-		
-		return updateFieldMutation.mutate({
-			field: "real_name", value: value
-		})
-	}
-	
-	if (!currentUser) return;
-	
-	return (
-		<div className="flex flex-col items-center gap-y-4 w-full">
-			<Typography variant="dialogTitle">Смена реального имени</Typography>
-			<div className="flex items-center justify-start w-full gap-1 px-4">
-				<Typography>Текущее имя:</Typography>
-				<Typography textShadow="small" textSize="medium" textColor="shark_white">
-					{currentUser.real_name}
-				</Typography>
-			</div>
-			<Separator/>
-			<div className="flex flex-col gap-y-2 w-full">
-				<FormField>
-					<Input
-						placeholder="например: Абоба"
-						className="!text-base"
-						maxLength={25}
-						backgroundType="transparent"
-						{...register("name", { maxLength: 25 })}
-					/>
-					{errors?.name && <span className="text-red-500 text-sm px-4">{errors.name.message}</span>}
-				</FormField>
-				<Button
-					pending={updateFieldMutation.isPending}
-					disabled={updateFieldMutation.isPending || !isValid || isIdentity}
-					onClick={handleRealName}
-				>
-					<Typography textColor="shark_white">Сохранить</Typography>
-				</Button>
-			</div>
-		</div>
-	)
-}
+  const currentUser = getUser();
+  const { updateFieldMutation } = useUpdateCurrentUser();
+
+  const {
+    register,
+    formState: { errors, isValid },
+    getValues,
+    watch,
+  } = useForm<zodRealNameInfer>({
+    resolver: zodResolver(realNameSchema),
+    mode: "onChange",
+    defaultValues: { name: currentUser?.real_name || "" },
+  });
+
+  const value = watch("name");
+  const isIdentity = value === currentUser?.real_name;
+
+  const handleRealName = () => {
+    if (!currentUser) return;
+
+    const value = getValues("name");
+
+    if (isIdentity) return;
+
+    return updateFieldMutation.mutate({
+      field: "real_name",
+      value: value,
+    });
+  };
+
+  if (!currentUser) return;
+
+  return (
+    <div className="flex flex-col items-center gap-y-4 w-full">
+      <Typography variant="dialogTitle">Смена реального имени</Typography>
+      <div className="flex items-center justify-start w-full gap-1 px-4">
+        <Typography>Текущее имя:</Typography>
+        <Typography
+          textShadow="small"
+          textSize="medium"
+          textColor="shark_white"
+        >
+          {currentUser.real_name}
+        </Typography>
+      </div>
+      <Separator />
+      <div className="flex flex-col gap-y-2 w-full">
+        <FormField>
+          <Input
+            placeholder="например: Абоба"
+            className="!text-base"
+            maxLength={25}
+            backgroundType="transparent"
+            {...register("name", { maxLength: 25 })}
+          />
+          {errors?.name && (
+            <span className="text-red-500 text-sm px-4">
+              {errors.name.message}
+            </span>
+          )}
+        </FormField>
+        <Button
+          pending={updateFieldMutation.isPending}
+          disabled={updateFieldMutation.isPending || !isValid || isIdentity}
+          onClick={handleRealName}
+        >
+          <Typography textColor="shark_white">Сохранить</Typography>
+        </Button>
+      </div>
+    </div>
+  );
+};

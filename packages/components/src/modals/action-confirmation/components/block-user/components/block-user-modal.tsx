@@ -1,37 +1,35 @@
-import { DynamicModal } from '#modals/dynamic-modal.tsx';
+import { DynamicModal } from "#modals/dynamic-modal.tsx";
 import {
   BLOCK_USER_MUTATION_KEY,
   UNBLOCK_USER_MUTATION_KEY,
   useBlockUser,
-} from '#modals/action-confirmation/components/block-user/hooks/use-block-user.ts';
-import { HoverCardItem } from '@repo/ui/src/components/hover-card.tsx';
-import { Ban } from 'lucide-react';
-import { Typography } from '@repo/ui/src/components/typography.tsx';
-import { ConfirmationButton } from '#buttons/confirmation-action-button.tsx';
-import { DialogClose } from '@repo/ui/src/components/dialog.tsx';
-import { ConfirmationActionModalTemplate } from '#templates/confirmation-action-modal-template.tsx';
-import { blockedUserQuery } from '@repo/lib/queries/blocked-user-query.ts';
+} from "#modals/action-confirmation/components/block-user/hooks/use-block-user.ts";
+import { HoverCardItem } from "@repo/ui/src/components/hover-card.tsx";
+import { Ban } from "lucide-react";
+import { Typography } from "@repo/ui/src/components/typography.tsx";
+import { ConfirmationButton } from "#buttons/confirmation-action-button.tsx";
+import { DialogClose } from "@repo/ui/src/components/dialog.tsx";
+import { ConfirmationActionModalTemplate } from "#templates/confirmation-action-modal-template.tsx";
+import { blockedUserQuery } from "@repo/lib/queries/blocked-user-query.ts";
 
 type BlockUserModalProps = {
-  requestedNickname: string
-}
+  requestedNickname: string;
+};
 
-export const BlockUserModal = ({
-  requestedNickname
-}: BlockUserModalProps) => {
+export const BlockUserModal = ({ requestedNickname }: BlockUserModalProps) => {
   const { data: blockedState } = blockedUserQuery(requestedNickname);
   const { blockUserMutation, unblockUserMutation } = useBlockUser();
-  
+
   const isBlocked = blockedState?.recipient === requestedNickname || false;
-  
+
   const handleBlockUser = () => {
     if (isBlocked) {
-      return unblockUserMutation.mutate(requestedNickname)
+      return unblockUserMutation.mutate(requestedNickname);
     } else {
-      return blockUserMutation.mutate(requestedNickname)
+      return blockUserMutation.mutate(requestedNickname);
     }
-  }
-  
+  };
+
   return (
     <DynamicModal
       trigger={
@@ -45,21 +43,27 @@ export const BlockUserModal = ({
       content={
         <ConfirmationActionModalTemplate title="Подтверждение действия">
           <ConfirmationButton
-            title={isBlocked ? 'Удалить' : 'Добавить'}
+            title={isBlocked ? "Удалить" : "Добавить"}
             actionType="continue"
             onClick={handleBlockUser}
-            disabled={blockUserMutation.isPending || unblockUserMutation.isPending}
+            disabled={
+              blockUserMutation.isPending || unblockUserMutation.isPending
+            }
           />
           <DialogClose>
             <ConfirmationButton
               title="Отмена"
               actionType="cancel"
-              disabled={blockUserMutation.isPending || unblockUserMutation.isPending}
+              disabled={
+                blockUserMutation.isPending || unblockUserMutation.isPending
+              }
             />
           </DialogClose>
         </ConfirmationActionModalTemplate>
       }
-      mutationKey={isBlocked ? UNBLOCK_USER_MUTATION_KEY : BLOCK_USER_MUTATION_KEY}
+      mutationKey={
+        isBlocked ? UNBLOCK_USER_MUTATION_KEY : BLOCK_USER_MUTATION_KEY
+      }
     />
-  )
-}
+  );
+};

@@ -1,74 +1,75 @@
-import { Hono } from 'hono';
-import { prettyJSON } from 'hono/pretty-json';
-import { authorizeToken } from '#utils/authorize-token.ts';
-import { getAuthUser } from './lib/routes/get-auth-player.ts';
-import { createUserRoute } from './lib/routes/create-user.ts';
-import { createSessionRoute } from './lib/routes/create-session.ts';
-import { invalidateSessionRoute } from './lib/routes/invalidate-session.ts';
-import { validateSessionRoute } from './lib/routes/validate-session.ts';
-import { hc } from 'hono/client';
-import { showRoutes } from 'hono/dev';
-import { PORT as port, SECRET_TOKEN } from '#utils/initialize-env.ts';
-import { getLuckpermsPlayer } from '#lib/routes/get-luckperms-player.ts';
-import { exceptionHandler } from '#helpers/exception-handler.ts';
-import { mergeRoutes, type Module } from '#utils/merge-routes.ts';
+import { Hono } from "hono";
+import { prettyJSON } from "hono/pretty-json";
+import { getAuthUser } from "./lib/routes/get-auth-player.ts";
+import { createUserRoute } from "./lib/routes/create-user.ts";
+import { createSessionRoute } from "./lib/routes/create-session.ts";
+import { invalidateSessionRoute } from "./lib/routes/invalidate-session.ts";
+import { validateSessionRoute } from "./lib/routes/validate-session.ts";
+import { hc } from "hono/client";
+import { showRoutes } from "hono/dev";
+import { PORT as port, SECRET_TOKEN } from "#utils/initialize-env.ts";
+import { getLuckpermsPlayer } from "#lib/routes/get-luckperms-player.ts";
+import { exceptionHandler } from "#helpers/exception-handler.ts";
+import { mergeRoutes, type Module } from "#utils/merge-routes.ts";
+import { authorizeToken } from "#helpers/authorize-token.ts";
 
-const headers = { 'Authorization': `Bearer ${SECRET_TOKEN}` };
+const headers = { Authorization: `Bearer ${SECRET_TOKEN}` };
 
 const base = new Hono();
 
 const installedModules = [
   {
-    path: '/auth',
+    path: "/auth",
     routes: invalidateSessionRoute,
   },
   {
-    path: '/auth',
+    path: "/auth",
     routes: validateSessionRoute,
   },
   {
-    path: '/auth',
+    path: "/auth",
     routes: getAuthUser,
   },
   {
-    path: '/auth',
+    path: "/auth",
     routes: createUserRoute,
   },
   {
-    path: '/auth',
+    path: "/auth",
     routes: createSessionRoute,
   },
   {
-    path: '/lp',
+    path: "/lp",
     routes: getLuckpermsPlayer,
   },
 ] as const satisfies Module[];
 
 const routes = mergeRoutes(
   base
-  .use('*', prettyJSON())
-  .use('*', (c, next) => {
-    const authHeader = c.req.header('Authorization');
-    authorizeToken(authHeader);
-    return next();
-  })
-  .onError(exceptionHandler),
-  ...installedModules
+    .use("*", prettyJSON())
+    .use("*", (c, next) => {
+      const authHeader = c.req.header("Authorization");
+      authorizeToken({ authHeader, apiKey: process.env.SECRET_TOKEN });
+      return next();
+    })
+    .onError(exceptionHandler),
+  ...installedModules,
 );
 
 const auth = new Hono()
-.route('/', invalidateSessionRoute)
-.route('/', validateSessionRoute)
-.route('/', getAuthUser)
-.route('/', createUserRoute)
-.route('/', createSessionRoute);
+  .route("/", invalidateSessionRoute)
+  .route("/", validateSessionRoute)
+  .route("/", getAuthUser)
+  .route("/", createUserRoute)
+  .route("/", createSessionRoute);
 
-const lp = new Hono()
-.route('/', getLuckpermsPlayer);
+const lp = new Hono().route("/", getLuckpermsPlayer);
 
-export const authClient = hc<typeof auth>(`http://localhost:3400/auth`, { headers });
+export const authClient = hc<typeof auth>(`http://localhost:3400/auth`, {
+  headers,
+});
 export const lpClient = hc<typeof lp>(`http://localhost:3400/lp`, { headers });
 
-showRoutes(routes, { verbose: true });
+showRoutes(routes, { verbose: false });
 
 export default { port, fetch: routes.fetch };

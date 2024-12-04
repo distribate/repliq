@@ -1,33 +1,37 @@
-'use client';
+"use client";
 
-import { Typography } from '@repo/ui/src/components/typography.tsx';
-import { ImageWrapper } from '#wrappers/image-wrapper.tsx';
-import CharismWallet from '@repo/assets/images/minecraft/charism_wallet.png';
-import BelkoinWallet from '@repo/assets/images/minecraft/belkoin_wallet.png';
-import dayjs from '@repo/lib/utils/dayjs/dayjs-instance.ts';
-import { generalStatsQuery } from '#profile/components/stats/queries/general-stats-query.ts';
-import { ProfileStatsLayout } from '#profile/components/stats/components/profile-stats-layout.tsx';
-import { StatsRequest } from '#profile/components/stats/types/stats-types.ts';
-import { Skeleton } from '@repo/ui/src/components/skeleton.tsx';
-import { SomethingError } from '#templates/something-error.tsx';
+import { Typography } from "@repo/ui/src/components/typography.tsx";
+import { ImageWrapper } from "#wrappers/image-wrapper.tsx";
+import CharismWallet from "@repo/assets/images/minecraft/charism_wallet.png";
+import BelkoinWallet from "@repo/assets/images/minecraft/belkoin_wallet.png";
+import dayjs from "@repo/lib/constants/dayjs-instance.ts";
+import { generalStatsQuery } from "#profile/components/stats/queries/general-stats-query.ts";
+import { ProfileStatsLayout } from "#profile/components/stats/components/profile-stats-layout.tsx";
+import { StatsRequest } from "#profile/components/stats/types/stats-types.ts";
+import { Skeleton } from "@repo/ui/src/components/skeleton.tsx";
+import { SomethingError } from "#templates/something-error.tsx";
 
-const GeneralStatsSkeleton = () => <Skeleton className="flex flex-col gap-y-2 h-[400px] w-full rounded-md px-4 py-2" />;
+const GeneralStatsSkeleton = () => (
+  <Skeleton className="flex flex-col gap-y-2 h-[400px] w-full rounded-md px-4 py-2" />
+);
 
-export const GeneralStats = ({
-  nickname, uuid
-}: StatsRequest) => {
-  const { data: generalStats, isLoading, isError } = generalStatsQuery({ nickname, uuid })
-  
-  if (isLoading) return <GeneralStatsSkeleton/>
-  if (isError) return <SomethingError />
+export const GeneralStats = ({ nickname, uuid }: StatsRequest) => {
+  const {
+    data: generalStats,
+    isLoading,
+    isError,
+  } = generalStatsQuery({ nickname, uuid });
+
+  if (isLoading) return <GeneralStatsSkeleton />;
+  if (isError) return <SomethingError />;
   if (!generalStats) return;
-  
+
   const cmi = generalStats.cmi;
   const wallet = generalStats.wallet;
   const reputation = generalStats.reputation;
-  
+
   if (!cmi || !reputation || !wallet) return;
-  
+
   return (
     <div className="flex flex-col gap-y-2">
       <div className="grid font-[Minecraft] grid-cols-2 grid-rows-2 gap-2 w-full h-fit">
@@ -36,9 +40,7 @@ export const GeneralStats = ({
             Ник
           </Typography>
           <div className="flex flex-col w-full">
-            <Typography>
-              Реальный ник: {cmi.username}
-            </Typography>
+            <Typography>Реальный ник: {cmi.username}</Typography>
             <Typography>
               Псевдоним: {cmi.displayName ? cmi.displayName : "нет"}
             </Typography>
@@ -50,9 +52,7 @@ export const GeneralStats = ({
           </Typography>
           <div className="flex flex-col w-full">
             <div className="flex items-center gap-1">
-              <Typography>
-                Харизма: {cmi.balance}
-              </Typography>
+              <Typography>Харизма: {cmi.balance}</Typography>
               <ImageWrapper
                 propSrc={CharismWallet.src}
                 propAlt="Харизма"
@@ -61,9 +61,7 @@ export const GeneralStats = ({
               />
             </div>
             <div className="flex items-center gap-1">
-              <Typography>
-                Белкоины: {wallet.points}
-              </Typography>
+              <Typography>Белкоины: {wallet.points}</Typography>
               <ImageWrapper
                 propSrc={BelkoinWallet.src}
                 propAlt="Белкоин"
@@ -78,12 +76,8 @@ export const GeneralStats = ({
             Коллекции
           </Typography>
           <div className="flex flex-col w-full">
-            <Typography>
-              Собрано постеров: 10/14
-            </Typography>
-            <Typography>
-              Собрано жвачек: 0
-            </Typography>
+            <Typography>Собрано постеров: 10/14</Typography>
+            <Typography>Собрано жвачек: 0</Typography>
           </div>
         </ProfileStatsLayout>
         <ProfileStatsLayout>
@@ -92,11 +86,11 @@ export const GeneralStats = ({
           </Typography>
           <div className="flex flex-col w-full">
             <Typography>
-              Наиграно: {dayjs.duration(Number(cmi.totalPlayTime)).asHours().toFixed()} часа(-ов)
+              Наиграно:{" "}
+              {dayjs.duration(Number(cmi.totalPlayTime)).asHours().toFixed()}{" "}
+              часа(-ов)
             </Typography>
-            <Typography>
-              Смертей: 2
-            </Typography>
+            <Typography>Смертей: 2</Typography>
           </div>
         </ProfileStatsLayout>
         <ProfileStatsLayout>

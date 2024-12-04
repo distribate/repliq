@@ -1,4 +1,4 @@
-import { GearLoader } from '@repo/ui/src/components/gear-loader.tsx';
+import { GearLoader } from "@repo/ui/src/components/gear-loader.tsx";
 
 export const DialogLoader = () => {
   return (

@@ -1,14 +1,17 @@
-import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
-import { getThreadComments } from './get-thread-comments.ts';
-import { RequestDetails, ThreadCommentEntity } from '@repo/types/entities/entities-type.ts';
-import { createQueryKey } from '@repo/lib/helpers/query-key-builder.ts';
+import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
+import { getThreadComments } from "./get-thread-comments.ts";
+import {
+  RequestDetails,
+  ThreadCommentEntity,
+} from "@repo/types/entities/entities-type.ts";
+import { createQueryKey } from "@repo/lib/helpers/query-key-builder.ts";
 
 export const THREAD_COMMENTS_QUERY_KEY = (thread_id: string) =>
-  createQueryKey("ui", ["thread-comments"], thread_id)
+  createQueryKey("ui", ["thread-comments"], thread_id);
 
-type ThreadCommentsQuery = Pick<ThreadCommentEntity, 'thread_id'> & {
-  isComments: boolean
-} & RequestDetails
+type ThreadCommentsQuery = Pick<ThreadCommentEntity, "thread_id"> & {
+  isComments: boolean;
+} & RequestDetails;
 
 // export const threadCommentsInfiniteQuery = ({
 //   thread_id, isComments, ...filter
@@ -29,11 +32,14 @@ type ThreadCommentsQuery = Pick<ThreadCommentEntity, 'thread_id'> & {
 // });
 
 export const threadCommentsQuery = ({
-  thread_id, isComments, ...filter
-}: ThreadCommentsQuery) => useQuery({
-  queryKey: THREAD_COMMENTS_QUERY_KEY(thread_id),
-  queryFn: () => getThreadComments({ threadId: thread_id, ...filter }),
-  enabled: isComments && !!thread_id,
-  refetchOnWindowFocus: false,
-  refetchOnMount: false,
-});
+  thread_id,
+  isComments,
+  ...filter
+}: ThreadCommentsQuery) =>
+  useQuery({
+    queryKey: THREAD_COMMENTS_QUERY_KEY(thread_id),
+    queryFn: () => getThreadComments({ threadId: thread_id, ...filter }),
+    enabled: isComments && !!thread_id,
+    refetchOnWindowFocus: false,
+    refetchOnMount: false,
+  });

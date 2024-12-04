@@ -1,17 +1,17 @@
-import { Typography } from '@repo/ui/src/components/typography.tsx';
-import { usePathname } from 'next/navigation';
-import { SIDEBAR_TARGETS } from '../constants/sidebar-targets.ts';
-import { useSidebarControl } from '../../../sidebar-layout/hooks/use-sidebar-control.ts';
-import Link from 'next/link';
+import { Typography } from "@repo/ui/src/components/typography.tsx";
+import { usePathname } from "next/navigation";
+import { SIDEBAR_TARGETS } from "../constants/sidebar-targets.ts";
+import { useSidebarControl } from "../../../sidebar-layout/hooks/use-sidebar-control.ts";
+import Link from "next/link";
 
 export const SidebarTarget = () => {
   const pathname = usePathname();
   const { isCompact, isExpanded } = useSidebarControl();
   const isCollapsed = isCompact || !isExpanded;
-  
+
   return (
     <div className="flex flex-col gap-y-2 w-full">
-      {SIDEBAR_TARGETS.map(target => (
+      {SIDEBAR_TARGETS.map((target) => (
         <div key={target.title} className="w-full">
           {isCollapsed && (
             <div className="flex relative w-[50px] h-[50px]">

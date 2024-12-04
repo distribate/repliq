@@ -1,18 +1,21 @@
-'use server';
+"use server";
 
-import 'server-only';
-import { z } from 'zod';
-import { createUserBodySchema } from 'authorization/src/lib/routes/create-user.ts';
-import { authClient } from '#utils/api/auth-client.ts';
+import "server-only";
+import { z } from "zod";
+import { createUserBodySchema } from "authorization/src/lib/routes/create-user.ts";
+import { authClient } from "#utils/api/auth-client.ts";
 
-type UserDetails = z.infer<typeof createUserBodySchema>
+type UserDetails = z.infer<typeof createUserBodySchema>;
 
 export async function createForumUser({
-  nickname, password, realName, findout
+  nickname,
+  password,
+  realName,
+  findout,
 }: UserDetails) {
   const res = await authClient.register.$post({
-    json: { nickname, password, realName, findout }
-  })
+    json: { nickname, password, realName, findout },
+  });
 
-  return await res.json()
+  return await res.json();
 }

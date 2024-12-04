@@ -5172,7 +5172,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/pg@npm:^8":
+"@types/pg@npm:^8, @types/pg@npm:^8.11.10":
   version: 8.11.10
   resolution: "@types/pg@npm:8.11.10"
   dependencies:
@@ -6127,7 +6127,6 @@ __metadata:
     figlet: "npm:^1.8.0"
     hono: "npm:^4.6.12"
     kysely: "npm:^0.27.4"
-    kysely-codegen: "npm:^0.17.0"
     pg: "npm:^8.13.1"
     zod: "npm:^3.23.8"
   peerDependencies:
@@ -8603,6 +8602,7 @@ __metadata:
     cross-env: "npm:^7.0.3"
     dotenv-cli: "npm:^7.4.2"
     eslint: "npm:^9.5.0"
+    kysely-codegen: "npm:^0.17.0"
     prettier: "npm:^3.2.5"
     prettier-plugin-tailwindcss: "npm:^0.5.11"
     turbo: "npm:^2.2.3"
@@ -8916,6 +8916,20 @@ __metadata:
   checksum: 10c0/5392ec484f9ce0d5e0d52fb5a78e7486637d516179b0eb84d81389d7eccf9ca2f663079da56f761355c0a65792810e3b345dc24db9a8bbbcf24ef3c8c88570c6
   languageName: node
   linkType: hard
+
+"forum-backend@workspace:apps/forum-backend":
+  version: 0.0.0-use.local
+  resolution: "forum-backend@workspace:apps/forum-backend"
+  dependencies:
+    "@hono/zod-validator": "npm:^0.4.1"
+    "@types/bun": "npm:latest"
+    "@types/pg": "npm:^8.11.10"
+    hono: "npm:^4.6.12"
+    kysely: "npm:^0.27.4"
+    pg: "npm:^8.13.1"
+    zod: "npm:^3.23.8"
+  languageName: unknown
+  linkType: soft
 
 "forwarded@npm:0.2.0":
   version: 0.2.0
