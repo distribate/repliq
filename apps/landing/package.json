@@ -1,0 +1,45 @@
+{
+	"name": "landing",
+	"version": "0.0.0",
+	"private": true,
+	"scripts": {
+		"dev": "next dev",
+		"build": "next build",
+		"start": "next start",
+		"lint": "next lint",
+		"type-check": "tsc --noEmit"
+	},
+	"dependencies": {
+		"@repo/assets": "*",
+		"@repo/shared": "*",
+		"caniuse-lite": "^1.0.30001684",
+		"next": "^14.2.7",
+		"react": "^18.3.1",
+		"react-dom": "^18.3.1",
+		"server-only": "^0.0.1"
+	},
+	"devDependencies": {
+		"@neodx/svg": "^0.7.1",
+		"@next/eslint-plugin-next": "^14.1.1",
+		"@repo/components": "*",
+		"@repo/config-eslint": "*",
+		"@repo/config-tailwind": "*",
+		"@repo/config-typescript": "*",
+		"@repo/lib": "*",
+		"@repo/types": "*",
+		"@repo/ui": "*",
+		"@supabase/ssr": "^0.5.1",
+		"@supabase/supabase-js": "^2.45.6",
+		"@types/caniuse-lite": "^1",
+		"@types/node": "^20.11.24",
+		"@types/react": "^18.2.6",
+		"@types/react-dom": "^18.3.0",
+		"autoprefixer": "^10.4.18",
+		"ky": "^1.7.2",
+		"nextjs-toploader": "^1.6.12",
+		"postcss": "^8.4.35",
+		"sharp": "^0.33.4",
+		"tailwindcss": "^3.4.14",
+		"typescript": "^5.4.5"
+	}
+}

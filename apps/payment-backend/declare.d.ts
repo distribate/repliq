@@ -1,0 +1,41 @@
+declare module "bun" {
+  interface Env {
+    PAYMENT_BACKEND_PORT: number,
+    PAYMENTS_POSTGRES_DB_URL: string,
+    PAYMENTS_POSTGRES_DB: string,
+    PAYMENTS_POSTGRES_PASSWORD: string,
+    PAYMENTS_POSTGRES_USER: string,
+    PAYMENTS_POSTGRES_PORT: string;
+    LUCKPERMS_POSTGRES_DB: string;
+    LUCKPERMS_POSTGRES_PASSWORD: string;
+    LUCKPERMS_POSTGRES_USER: string;
+    LUCKPERMS_POSTGRES_PORT: string;
+    AUTHORIZATION_POSTGRES_DB_URL: string
+    
+    AUTHORIZATION_POSTGRES_PASSWORD: string;
+    AUTHORIZATION_POSTGRES_PORT: number;
+    AUTHORIZATION_POSTGRES_DB: string;
+    AUTHORIZATION_POSTGRES_USER: string;
+    POSTGRES_USER: string,
+    POSTGRES_DB: string,
+    POSTGRES_PORT: number,
+    POSTGRES_PASSWORD: string
+    POSTGRES_TENANT_ID: string,
+    
+    MINECRAFT_SERVER_API_USERNAME: string,
+    MINECRAFT_SERVER_API_PASSWORD: string,
+    
+    ARC_PAY_API_URL: string,
+    MINECRAFT_SERVER_API_URL: string,
+    PAYMENT_ARC_PAY_API: string
+    
+    SECRET_TOKEN: string;
+    SERVER_RCON_PASSWORD: string,
+    ARC_PAY_API_KEY: string,
+    ARC_pAY_PRIVATE_KEY: string
+    LOGGER_BOT_TOKEN: string,
+    FASBERRY_BOT_TOKEN: string,
+    
+    ADMIN_TELEGRAM_USER_ID: number
+  }
+}

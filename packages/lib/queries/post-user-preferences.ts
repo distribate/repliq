@@ -11,11 +11,7 @@ type PostUserPreferences = Pick<UpdateUserFields, "nickname" | "id"> & {
 };
 
 export async function postUserPreferences({
-  value,
-  nickname,
-  id,
-  oldPreferences,
-  key,
+  value, nickname, id, oldPreferences, key,
 }: PostUserPreferences) {
   const api = createClient();
 

@@ -7,31 +7,18 @@
 name: fasberry-media
 
 services:
-  luckperms_db:
-    container_name: luckperms_db
+  payments_db:
+    container_name: payments_db
     image: postgres:15.1
     restart: unless-stopped
     environment:
-      POSTGRES_USER: ${LUCKPERMS_POSTGRES_USER}
-      POSTGRES_PASSWORD: ${LUCKPERMS_POSTGRES_PASSWORD}
-      POSTGRES_DB: ${LUCKPERMS_POSTGRES_DB}
+      POSTGRES_USER: ${PAYMENTS_POSTGRES_USER}
+      POSTGRES_PASSWORD: ${PAYMENTS_POSTGRES_PASSWORD}
+      POSTGRES_DB: ${PAYMENTS_POSTGRES_DB}
     ports:
-      - ${LUCKPERMS_POSTGRES_PORT}:5432/tcp
+      - ${PAYMENTS_POSTGRES_PORT}:5432/tcp
     volumes:
-      - ./data/luckperms-db/data:/var/lib/postgresql/data
-
-  authorization-db:
-    container_name: authorization-db
-    image: postgres:15.1
-    restart: unless-stopped
-    environment:
-      POSTGRES_USER: ${AUTHORIZATION_POSTGRES_USER}
-      POSTGRES_PASSWORD: ${AUTHORIZATION_POSTGRES_PASSWORD}
-      POSTGRES_DB: ${AUTHORIZATION_POSTGRES_DB}
-    ports:
-      - ${AUTHORIZATION_POSTGRES_PORT}:5432/tcp
-    volumes:
-      - ./data/authorization-db/data:/var/lib/postgresql/data
+      - ./data/payments-db/data:/var/lib/postgresql/data
 
   studio:
     container_name: supabase-studio
@@ -179,10 +166,6 @@ services:
       # GOTRUE_HOOK_SEND_EMAIL_ENABLED: "false"
       # GOTRUE_HOOK_SEND_EMAIL_URI: "http://host.docker.internal:54321/functions/v1/email_sender"
       # GOTRUE_HOOK_SEND_EMAIL_SECRETS: "v1,whsec_VGhpcyBpcyBhbiBleGFtcGxlIG9mIGEgc2hvcnRlciBCYXNlNjQgc3RyaW5n"
-
-
-
-
 
   rest:
     container_name: supabase-rest
@@ -503,6 +486,10 @@ services:
       - POOLER_POOL_MODE=transaction
     volumes:
       - ./data/supabase/volumes/pooler/pooler.exs:/etc/pooler/pooler.exs:ro
+
+networks:
+  shared-network:
+    external: true
 
 volumes:
   db-config:

@@ -1,0 +1,32 @@
+name: fasberry-server
+
+services:
+  luckperms_db:
+    container_name: luckperms_db
+    image: postgres:15.1
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${LUCKPERMS_POSTGRES_USER}
+      POSTGRES_PASSWORD: ${LUCKPERMS_POSTGRES_PASSWORD}
+      POSTGRES_DB: ${LUCKPERMS_POSTGRES_DB}
+    ports:
+      - ${LUCKPERMS_POSTGRES_PORT}:5432/tcp
+    volumes:
+      - ./data/luckperms-db/data:/var/lib/postgresql/data
+
+  authorization-db:
+    container_name: authorization-db
+    image: postgres:15.1
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${AUTHORIZATION_POSTGRES_USER}
+      POSTGRES_PASSWORD: ${AUTHORIZATION_POSTGRES_PASSWORD}
+      POSTGRES_DB: ${AUTHORIZATION_POSTGRES_DB}
+    ports:
+      - ${AUTHORIZATION_POSTGRES_PORT}:5432/tcp
+    volumes:
+      - ./data/authorization-db/data:/var/lib/postgresql/data
+
+networks:
+  shared-network:
+    external: true

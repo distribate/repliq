@@ -2,8 +2,9 @@
   "private": true,
   "scripts": {
     "build": "turbo build",
-    "frontend": "turbo dev --filter=skin-proxy --filter=web --filter=authorization",
-    "dev": "concurrently -n \"DOCKER,DEV\" -c \"blue,green\" \"docker-compose up -d\" \"yarn frontend\"",
+    "dev": "turbo dev --filter=skin-proxy --filter=web --filter=authorization --filter=forum-backend",
+    "docker-start": "concurrently \"docker compose -f docker-compose.yml up -d\" \"docker compose -f docker-compose-external.yml up -d\"",
+    "docker-down": "concurrently \"docker compose -f docker-compose.yml down\" \"docker compose -f docker-compose-external.yml down\"",
     "start": "turbo start --filter=web --filter=authorization --filter=skin-proxy --filter=web --filter=forum-backend",
     "db-dump-schema": "yarn workspace database run dump-schema",
     "auth": "yarn workspace authorization dev",
@@ -15,7 +16,8 @@
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "lp-gen-types": "kysely-codegen --dialect postgres --url=env\\(LP_DATABASE_URL\\) --out-file=packages/types/db/luckperms-database-types.ts",
     "auth-gen-types": "kysely-codegen --dialect postgres --url=env\\(AUTH_DATABASE_URL\\) --out-file=packages/types/db/auth-database-types.ts",
-    "forum-gen-types": "kysely-codegen --dialect postgres --url=env\\(FORUM_DATABASE_URL\\) --out-file=packages/types/db/forum-database-types.ts"
+    "forum-gen-types": "kysely-codegen --dialect postgres --url=env\\(FORUM_DATABASE_URL\\) --out-file=packages/types/db/forum-database-types.ts",
+    "payments-gen-types": "kysely-codegen --dialect postgres --url=env\\(PAYMENTS_DATABASE_URL\\) --out-file=packages/types/db/payments-database-types.ts"
   },
   "devDependencies": {
     "@repo/config-typescript": "*",

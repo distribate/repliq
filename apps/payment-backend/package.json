@@ -1,0 +1,31 @@
+{
+  "name": "payment-backend",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "start": "bun run src/index.ts",
+    "dev": "bun run --watch src/index.ts",
+    "lint": "bun x eslint \"src/**/*.ts\"",
+    "lint:fix": "bun eslint \"src/**/*.ts\" --fix",
+    "type-check": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@gramio/format": "^0.1.5",
+    "dayjs": "^1.11.13",
+    "gramio": "^0.1.5",
+    "hono": "^4.6.12",
+    "ky": "^1.7.2",
+    "kysely": "^0.27.4",
+    "nanoid": "^5.0.9",
+    "pg": "^8.13.1",
+    "pg-listen": "^1.7.0"
+  },
+  "devDependencies": {
+    "@hono/zod-validator": "^0.4.1",
+    "@types/bun": "latest",
+    "@types/pg": "^8.11.10",
+    "rcon-srcds": "^2.1.0",
+    "smee-client": "^2.0.4",
+    "zod": "^3.23.8"
+  }
+}

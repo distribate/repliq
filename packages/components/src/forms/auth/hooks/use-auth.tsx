@@ -7,7 +7,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { AUTH_QUERY_KEY, AuthQuery } from "../queries/auth-query.ts";
 import { AUTH_REDIRECT } from "@repo/shared/constants/routes.ts";
 import { useRouter } from "next/navigation";
-import { createForumUser } from "@repo/lib/actions/create-forum-user.ts";
+import { createForumUser } from '#forms/auth/queries/create-forum-user.ts';
 
 export const AUTH_MUTATION_KEY = ["auth-mutation"];
 

@@ -5,13 +5,13 @@
 
 import type { ColumnType } from "kysely";
 
-export type ArrayType<T> =
-  ArrayTypeImpl<T> extends (infer U)[] ? U[] : ArrayTypeImpl<T>;
+export type ArrayType<T> = ArrayTypeImpl<T> extends (infer U)[]
+  ? U[]
+  : ArrayTypeImpl<T>;
 
-export type ArrayTypeImpl<T> =
-  T extends ColumnType<infer S, infer I, infer U>
-    ? ColumnType<S[], I[], U[]>
-    : T[];
+export type ArrayTypeImpl<T> = T extends ColumnType<infer S, infer I, infer U>
+  ? ColumnType<S[], I[], U[]>
+  : T[];
 
 export type AuthAalLevel = "aal1" | "aal2" | "aal3";
 
@@ -21,24 +21,13 @@ export type AuthFactorStatus = "unverified" | "verified";
 
 export type AuthFactorType = "phone" | "totp" | "webauthn";
 
-export type AuthOneTimeTokenType =
-  | "confirmation_token"
-  | "email_change_token_current"
-  | "email_change_token_new"
-  | "phone_change_token"
-  | "reauthentication_token"
-  | "recovery_token";
+export type AuthOneTimeTokenType = "confirmation_token" | "email_change_token_current" | "email_change_token_new" | "phone_change_token" | "reauthentication_token" | "recovery_token";
 
-export type Generated<T> =
-  T extends ColumnType<infer S, infer I, infer U>
-    ? ColumnType<S, I | undefined, U>
-    : ColumnType<T, T | undefined, T>;
+export type Generated<T> = T extends ColumnType<infer S, infer I, infer U>
+  ? ColumnType<S, I | undefined, U>
+  : ColumnType<T, T | undefined, T>;
 
-export type Int8 = ColumnType<
-  string,
-  bigint | number | string,
-  bigint | number | string
->;
+export type Int8 = ColumnType<string, bigint | number | string, bigint | number | string>;
 
 export type Json = JsonValue;
 
@@ -56,18 +45,7 @@ export type Numeric = ColumnType<string, number | string, number | string>;
 
 export type PgsodiumKeyStatus = "default" | "expired" | "invalid" | "valid";
 
-export type PgsodiumKeyType =
-  | "aead-det"
-  | "aead-ietf"
-  | "auth"
-  | "generichash"
-  | "hmacsha256"
-  | "hmacsha512"
-  | "kdf"
-  | "secretbox"
-  | "secretstream"
-  | "shorthash"
-  | "stream_xchacha20";
+export type PgsodiumKeyType = "aead-det" | "aead-ietf" | "auth" | "generichash" | "hmacsha256" | "hmacsha512" | "kdf" | "secretbox" | "secretstream" | "shorthash" | "stream_xchacha20";
 
 export type PostVisibility = "all" | "friends" | "only";
 
@@ -466,6 +444,53 @@ export interface InfoFindout {
   findout: string | null;
   id: Generated<Int8>;
   user_nickname: string;
+}
+
+export interface LandingDonate {
+  created_at: Generated<Timestamp>;
+  description: string;
+  id: Generated<Int8>;
+  imageUrl: string;
+  origin: string;
+  price: Int8;
+  title: string;
+}
+
+export interface LandingNews {
+  created_at: Generated<Timestamp>;
+  description: string;
+  id: Generated<string>;
+  images: string[] | null;
+  media_links: Json | null;
+  tags: string[] | null;
+  title: string;
+}
+
+export interface LandingRuleContent {
+  description: string | null;
+  id: Generated<number>;
+  punishment: string | null;
+  rule_list_id: string | null;
+  subtitle: string | null;
+  title: string;
+}
+
+export interface LandingRulesList {
+  id: string;
+  name: string;
+}
+
+export interface LandingTerminContent {
+  article_desc: string;
+  article_title: string;
+  id: Generated<number>;
+  section_id: string | null;
+}
+
+export interface LandingTermins {
+  section_id: string;
+  subtitle: string | null;
+  title: string;
 }
 
 export interface LuckpermsActions {
@@ -997,6 +1022,12 @@ export interface DB {
   friends_pinned: FriendsPinned;
   friends_requests: FriendsRequests;
   info_findout: InfoFindout;
+  landing_donate: LandingDonate;
+  landing_news: LandingNews;
+  landing_rule_content: LandingRuleContent;
+  landing_rules_list: LandingRulesList;
+  landing_termin_content: LandingTerminContent;
+  landing_termins: LandingTermins;
   luckperms_actions: LuckpermsActions;
   luckperms_group_permissions: LuckpermsGroupPermissions;
   luckperms_groups: LuckpermsGroups;
