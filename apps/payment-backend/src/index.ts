@@ -2,15 +2,29 @@ import { Hono } from 'hono';
 import { showRoutes } from 'hono/dev';
 import { createOrderRoute } from '#routes/create-order.ts';
 import { checkOrderRoute } from '#routes/check-order.ts';
-import { loggerBot, fasberryBot } from '#shared/bot.ts';
-import { connect } from '#lib/db/listener.ts';
+import { stopNatsClient } from '#shared/nats-client.ts';
 
-// initializing tg bots
-await fasberryBot.init();
-await loggerBot.init();
+async function startNatsClient() {
+  try {
+    process.on('SIGINT', async () => {
+      console.log("Graceful shutdown initiated...");
+      await stopNatsClient();
+      process.exit(0);
+    });
+    
+    process.on('SIGTERM', async () => {
+      console.log("Graceful shutdown initiated...");
+      await stopNatsClient();
+      process.exit(0);
+    });
+  } catch (e) {
+    console.error(e)
+    await stopNatsClient();
+    process.exit(1)
+  }
+}
 
-// initializing pg listener
-await connect();
+await startNatsClient()
 
 const payments = new Hono()
 .basePath('/payment')

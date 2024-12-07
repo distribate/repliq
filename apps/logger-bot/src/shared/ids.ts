@@ -1,0 +1,1 @@
+export const adminTelegramUserId = process.env.ADMIN_TELEGRAM_USER_ID as string

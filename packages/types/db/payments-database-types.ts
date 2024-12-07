@@ -5,8 +5,6 @@
 
 import type { ColumnType } from "kysely";
 
-export type DonationType = "arkhont" | "authentic" | "loyal";
-
 export type Generated<T> = T extends ColumnType<infer S, infer I, infer U>
   ? ColumnType<S, I | undefined, U>
   : ColumnType<T, T | undefined, T>;
@@ -19,14 +17,15 @@ export type Timestamp = ColumnType<Date, Date | string, Date | string>;
 
 export interface Payments {
   captured: Generated<boolean | null>;
-  createdat: Generated<Timestamp | null>;
+  created_at: Generated<Timestamp | null>;
   currency: string;
-  donate: DonationType;
   hash: string;
   id: Generated<string>;
   lt: Int8;
   nickname: string;
   orderid: string;
+  payment_type: string;
+  payment_value: string;
   price: Int8;
   status: PaymentStatus;
   wallet: string | null;

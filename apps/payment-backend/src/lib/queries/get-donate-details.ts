@@ -1,6 +1,6 @@
-import { type PaymentDonateType } from '#routes/create-order';
-import { forumDB } from '#lib/db/db.ts';
 import type { DB } from '@repo/types/db/forum-database-types.ts';
+import type { PaymentDonateType } from '@repo/types/entities/payment-types.ts';
+import { forumDB } from '@repo/shared/db/forum-db.ts';
 
 type Donate = Pick<DB, 'landing_donate'>
 

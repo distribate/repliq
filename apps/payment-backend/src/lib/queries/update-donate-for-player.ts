@@ -1,10 +1,9 @@
-import { lpDB } from '#lib/db/db.ts';
-import { z } from 'zod';
-import { createOrderBodySchema } from '#routes/create-order.ts';
+import type { PaymentDonateType } from '@repo/types/entities/payment-types.ts';
+import { lpDB } from '@repo/shared/db/luckperms-db.ts';
 
 type UpdateDonateForPlayer = {
   nickname: string,
-  donate: Pick<z.infer<typeof createOrderBodySchema>, 'donate'>['donate']
+  donate: PaymentDonateType
 }
 
 export async function updateDonateForPlayer({

@@ -22,20 +22,12 @@ declare module "bun" {
     POSTGRES_PASSWORD: string
     POSTGRES_TENANT_ID: string,
     
-    MINECRAFT_SERVER_API_USERNAME: string,
-    MINECRAFT_SERVER_API_PASSWORD: string,
-    
     ARC_PAY_API_URL: string,
-    MINECRAFT_SERVER_API_URL: string,
     PAYMENT_ARC_PAY_API: string
     
     SECRET_TOKEN: string;
     SERVER_RCON_PASSWORD: string,
     ARC_PAY_API_KEY: string,
     ARC_pAY_PRIVATE_KEY: string
-    LOGGER_BOT_TOKEN: string,
-    FASBERRY_BOT_TOKEN: string,
-    
-    ADMIN_TELEGRAM_USER_ID: number
   }
 }

@@ -6,6 +6,7 @@
   "exclude": ["node_modules"],
   "compilerOptions": {
     "baseUrl": "./",
+    "allowImportingTsExtensions": true,
     "rootDir": "./",
     "paths": {
       "#*": ["src/*"]

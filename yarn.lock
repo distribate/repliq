@@ -763,13 +763,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@gramio/types@npm:^8.1.0":
-  version: 8.1.0
-  resolution: "@gramio/types@npm:8.1.0"
-  checksum: 10c0/3e5a45cb81b61fff3d1f958522b24cdeeee009a951b54322c83648394aa6015df31fe1d7bbd8f08f30b8183de665b8a3f3b8bdde19710227c65064dff74523da
-  languageName: node
-  linkType: hard
-
 "@hono/zod-validator@npm:^0.4.1":
   version: 0.4.1
   resolution: "@hono/zod-validator@npm:0.4.1"
@@ -1155,6 +1148,43 @@ __metadata:
   version: 0.14.2
   resolution: "@microsoft/tsdoc@npm:0.14.2"
   checksum: 10c0/c018857ad439144559ce34a397a29ace7cf5b24b999b8e3c1b88d878338088b3a453eaac4435beaf2c7eae13c4c0aac81e42f96f0f1d48e8d4eeb438eb3bb82f
+  languageName: node
+  linkType: hard
+
+"@nats-io/nats-core@npm:3.0.0-47":
+  version: 3.0.0-47
+  resolution: "@nats-io/nats-core@npm:3.0.0-47"
+  dependencies:
+    "@nats-io/nkeys": "npm:2.0.0-3"
+    "@nats-io/nuid": "npm:2.0.1-2"
+  checksum: 10c0/a5899f5b08271ba90d26f0748080a24c468f0969030eaa128b7f4dbf97bd15b9294b0d51d2186ac403112e1ce50261c3c3e7480ead0bb3ca988e241e8aa8ccb4
+  languageName: node
+  linkType: hard
+
+"@nats-io/nkeys@npm:2.0.0-3":
+  version: 2.0.0-3
+  resolution: "@nats-io/nkeys@npm:2.0.0-3"
+  dependencies:
+    tweetnacl: "npm:^1.0.3"
+  checksum: 10c0/015f12748892bb63d82a548f4d289f7268b67959c2350d8307a067ed0d8bc3af8c9c048b8d15e1de22c63ec19989aed4e19e4700b121ea2905b811446bb8aa4c
+  languageName: node
+  linkType: hard
+
+"@nats-io/nuid@npm:2.0.1-2":
+  version: 2.0.1-2
+  resolution: "@nats-io/nuid@npm:2.0.1-2"
+  checksum: 10c0/d1e7d6b9fe3559e208210f3f8060b25bf3ad6a0cdc2aa74c8f6ac413fbf3cca7fbd85e2d08d5c7caeb1946fb596dfef398234bea83170a4acb89b02682a74263
+  languageName: node
+  linkType: hard
+
+"@nats-io/transport-node@npm:^3.0.0-32":
+  version: 3.0.0-32
+  resolution: "@nats-io/transport-node@npm:3.0.0-32"
+  dependencies:
+    "@nats-io/nats-core": "npm:3.0.0-47"
+    "@nats-io/nkeys": "npm:2.0.0-3"
+    "@nats-io/nuid": "npm:2.0.1-2"
+  checksum: 10c0/ebd8325071e5418a63db353f4a243d6743ce99a89753a2cefe612824f025658b6b4f042349a83fa355f008dfa9e00f83f53b0136bcbf7fee78ecdd21056220f7
   languageName: node
   linkType: hard
 
@@ -4654,6 +4684,8 @@ __metadata:
 "@repo/types@npm:*, @repo/types@workspace:packages/types":
   version: 0.0.0-use.local
   resolution: "@repo/types@workspace:packages/types"
+  dependencies:
+    zod: "npm:^3.23.8"
   languageName: unknown
   linkType: soft
 
@@ -7045,7 +7077,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"dayjs@npm:^1.11.11, dayjs@npm:^1.11.13":
+"dayjs@npm:^1.11.11":
   version: 1.11.13
   resolution: "dayjs@npm:1.11.13"
   checksum: 10c0/a3caf6ac8363c7dade9d1ee797848ddcf25c1ace68d9fe8678ecf8ba0675825430de5d793672ec87b24a69bf04a1544b176547b2539982275d5542a7955f35b7
@@ -9373,23 +9405,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"gramio@npm:^0.1.5":
-  version: 0.1.5
-  resolution: "gramio@npm:0.1.5"
-  dependencies:
-    "@gramio/callback-data": "npm:^0.0.3"
-    "@gramio/contexts": "npm:^0.0.23"
-    "@gramio/files": "npm:^0.1.0"
-    "@gramio/format": "npm:^0.1.5"
-    "@gramio/keyboards": "npm:^1.0.0"
-    "@gramio/types": "npm:^8.1.0"
-    debug: "npm:^4.3.7"
-    inspectable: "npm:^3.0.2"
-    middleware-io: "npm:^2.8.1"
-  checksum: 10c0/c25fa8616f9665016f5dbf7de10f8b379d65e70cddb19a4f894a0dffeda8d32de26ce7b4ba413672ee21715444fc078bd0d1b262cd8557c014b58b38973bb8ef
-  languageName: node
-  linkType: hard
-
 "grammex@npm:3.1.2":
   version: 3.1.2
   resolution: "grammex@npm:3.1.2"
@@ -10616,9 +10631,13 @@ __metadata:
   resolution: "logger-bot@workspace:apps/logger-bot"
   dependencies:
     "@antfu/eslint-config": "npm:^3.8.0"
+    "@gramio/format": "npm:^0.1.5"
+    "@nats-io/transport-node": "npm:^3.0.0-32"
     "@types/bun": "npm:^1.1.13"
     eslint: "npm:^9.14.0"
     gramio: "npm:^0.1.2"
+    ky: "npm:^1.7.2"
+    pg-listen: "npm:^1.7.0"
     typescript: "npm:^5.6.3"
   languageName: unknown
   linkType: soft
@@ -12247,19 +12266,15 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "payment-backend@workspace:apps/payment-backend"
   dependencies:
-    "@gramio/format": "npm:^0.1.5"
     "@hono/zod-validator": "npm:^0.4.1"
+    "@nats-io/transport-node": "npm:^3.0.0-32"
     "@types/bun": "npm:latest"
     "@types/pg": "npm:^8.11.10"
-    dayjs: "npm:^1.11.13"
-    gramio: "npm:^0.1.5"
     hono: "npm:^4.6.12"
     ky: "npm:^1.7.2"
     kysely: "npm:^0.27.4"
     nanoid: "npm:^5.0.9"
     pg: "npm:^8.13.1"
-    pg-listen: "npm:^1.7.0"
-    rcon-srcds: "npm:^2.1.0"
     smee-client: "npm:^2.0.4"
     zod: "npm:^3.23.8"
   languageName: unknown
@@ -12879,13 +12894,6 @@ __metadata:
   bin:
     rc: ./cli.js
   checksum: 10c0/24a07653150f0d9ac7168e52943cc3cb4b7a22c0e43c7dff3219977c2fdca5a2760a304a029c20811a0e79d351f57d46c9bde216193a0f73978496afc2b85b15
-  languageName: node
-  linkType: hard
-
-"rcon-srcds@npm:^2.1.0":
-  version: 2.1.0
-  resolution: "rcon-srcds@npm:2.1.0"
-  checksum: 10c0/8ed3b8c3b360108ce84f73713f30df21c724214a334b97cfcc5d143e02551cd95a51d514e45734875c0224851b9ae3b0bc261c76f5b8ede10965ff803218b242
   languageName: node
   linkType: hard
 
@@ -15010,6 +15018,13 @@ __metadata:
   bin:
     turbo: bin/turbo
   checksum: 10c0/9aab52fb868a2b6246f41fe2343dec56c70252a9cb7729a3ea183458cfa728c1445d1b98882dd43542f0ffd46524e8ba7776fe0925e31a86904b113222778fa5
+  languageName: node
+  linkType: hard
+
+"tweetnacl@npm:^1.0.3":
+  version: 1.0.3
+  resolution: "tweetnacl@npm:1.0.3"
+  checksum: 10c0/069d9df51e8ad4a89fbe6f9806c68e06c65be3c7d42f0701cc43dba5f0d6064686b238bbff206c5addef8854e3ce00c643bff59432ea2f2c639feab0ee1a93f9
   languageName: node
   linkType: hard
 

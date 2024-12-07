@@ -3,50 +3,31 @@ import { z } from 'zod';
 import { zValidator } from '@hono/zod-validator';
 import { HTTPException } from 'hono/http-exception';
 import { nanoid } from 'nanoid';
-import { getDonateDetails } from '#lib/queries/get-donate-details.ts';
 import { ARC_API } from '#shared/api.ts';
-import { callAlert } from '#utils/rcon-server/call-alert.ts';
-
-export const donateSchema = z.enum([ 'authentic', 'arkhont', 'loyal' ]);
-export const currencySchema = z.enum([ 'TON', 'RUB', 'USDT', 'UAH' ])
-export const statusSchema = z.enum(["created", "received", "captured", "cancelled", "failed"])
+import {
+  currencyCryptoSchema, currencyFiatSchema,
+  currencySchema,
+  paymentTypeSchema,
+  paymentValueSchema,
+} from '@repo/types/schemas/payment/payment-schema.ts';
+import {
+  type Payment,
+  type PaymentDonateType,
+  type PaymentResponseStatus,
+  type PaymentType,
+  type PaymentValueType,
+} from '@repo/types/entities/payment-types.ts';
+import { getDonateDetails } from '#lib/queries/get-donate-details.ts';
 
 export const createOrderBodySchema = z.object({
   nickname: z.string().min(1).max(16),
   email: z.string().email('Введите корректный адрес электронной почты'),
-  phone: z.string().regex(/^\+?[1-9]\d{1,14}$/, 'Введите корректный номер телефона'),
   privacy: z.boolean(),
 }).extend({
   currency: currencySchema,
-  donate: donateSchema,
+  paymentType: paymentTypeSchema,
+  paymentValue: paymentValueSchema,
 });
-
-export type PaymentDonateType = z.infer<typeof donateSchema>
-export type PaymentCurrency = z.infer<typeof currencySchema>
-export type PaymentResponseStatus = z.infer<typeof statusSchema>
-
-export type PaymentDetail = {
-  title: string,
-  description: string,
-  imageUrl: string,
-  price: number,
-  count: number,
-  itemId: string
-}
-
-export type Payment = {
-  title: string,
-  orderId: string,
-  currency: PaymentCurrency,
-  items: Array<PaymentDetail>,
-  captured: boolean,
-  meta: PaymentMeta
-}
-
-export type PaymentMeta = {
-  nickname: string,
-  donate: string
-}
 
 type PaymentResponse = Payment & {
   status: PaymentResponseStatus,
@@ -63,40 +44,87 @@ type PaymentResponse = Payment & {
 type CreateCryptoOrder = {
   nickname: string,
   orderId: string,
-  donate: Pick<z.infer<typeof createOrderBodySchema>, 'donate'>['donate'],
-  currency: 'TON' | 'USDT'
+  paymentType: PaymentType,
+  paymentValue: PaymentValueType
+  currency: z.infer<typeof currencyCryptoSchema>
 }
 
-const cryptoReceived = [ 'TON', 'USDT' ];
-const fiatReceived = [ 'RUB' ];
+type CreateDonateOrder = Omit<CreateCryptoOrder, "paymentType">
 
-async function createCryptoOrder({
-  nickname, donate, orderId, currency,
-}: CreateCryptoOrder) {
-  const donateDetails = await getDonateDetails({ origin: donate });
-  const {
-    title, price, imageUrl, description, id: itemId, origin,
-  } = donateDetails;
+type ArcPaymentCurrency = "TON" | "GRAM" | "LLAMA" | "USDT"
+
+type ArcPayment = Omit<Payment, "currency"> & {
+  currency: ArcPaymentCurrency
+}
+
+async function createDonateOrder({
+  currency, orderId, paymentValue, nickname
+}: CreateDonateOrder) {
+  const donateDetails = await getDonateDetails({
+    origin: paymentValue as PaymentDonateType,
+  });
+  
+  const { title, price, imageUrl, description, id: itemId, origin } = donateDetails;
   
   const paymentTitle = `Покупка привилегии ${title} за ${price} ${currency}`;
   
-  const paymentDetails: Payment = {
+  const paymentItem = {
+    title, imageUrl, description, itemId,
+    count: 1,
+    price: Number(price),
+  }
+  
+  let arcCurrency: ArcPaymentCurrency | null = null;
+  
+  if (currency === 'USDT(TON)' || currency === 'USDT(TRC20)') {
+    arcCurrency = 'USDT';
+  } else {
+    arcCurrency = currency
+  }
+  
+  if (!arcCurrency) {
+    throw new Error("Invalid currency. Available: TON, USDT, GRAM, LLAMA")
+  }
+  
+  const paymentDetails: ArcPayment = {
     title: paymentTitle,
-    orderId, currency,
-    items: [ { title, imageUrl, description, itemId, count: 1, price: 1 } ],
+    orderId,
+    currency: arcCurrency,
+    items: [ paymentItem ],
     captured: false,
-    meta: { nickname, donate: origin },
+    meta: { nickname, paymentType: 'donate', paymentValue: origin },
   };
   
+  return await ARC_API.post('order', { json: paymentDetails }).json<PaymentResponse>();
+}
+
+async function createCryptoOrder({
+  nickname, paymentType, paymentValue, orderId, currency,
+}: CreateCryptoOrder) {
+  const orderValues = { nickname, paymentValue, orderId, currency }
+  
   try {
-    const res = await ARC_API.post('order', { json: paymentDetails });
-    
-    if (!res.ok) {
-      throw new Error('Failed while creating order');
+    switch(paymentType) {
+      case 'donate':
+        // TON network
+        if (currency !== 'USDT(TRC20)') {
+          console.log(orderValues.currency);
+          return await createDonateOrder(orderValues)
+        }
+        
+        // TRON network
+        console.log(orderValues.currency);
+        break;
+      case "belkoin":
+        console.log(orderValues.paymentValue)
+        return;
+      case "charism":
+        console.log(orderValues.paymentValue)
+        return;
+      case "item":
+        console.log(orderValues.paymentValue)
+        return;
     }
-    
-    await callAlert(`Игрок ${nickname} купил привилегию ${title}`);
-    return await res.json<PaymentResponse>();
   } catch (e) {
     throw e;
   }
@@ -110,7 +138,7 @@ export const createOrderRoute = new Hono()
     throw new HTTPException(400, { message: 'Invalid body' });
   }
   
-  const { donate, currency, email, privacy, phone, nickname } = result.data;
+  const { paymentValue, paymentType, currency, privacy, nickname } = result.data;
   
   if (!privacy) {
     return c.json({ error: 'Privacy must required' }, 401);
@@ -118,21 +146,21 @@ export const createOrderRoute = new Hono()
   
   const orderId = nanoid(16);
   
-  if (cryptoReceived.includes(currency)) {
-    try {
+  const isCrypto = currencyCryptoSchema.safeParse(currency);
+  const isFiat = currencyFiatSchema.safeParse(currency);
+  
+  try {
+    if (isCrypto.success) {
       const payment = await createCryptoOrder({
-        nickname, orderId, donate,
-        currency: currency as 'TON' | 'USDT',
+        nickname, orderId, paymentValue, paymentType, currency: isCrypto.data,
       });
       
       return c.json(payment, 200);
-    } catch (e) {
-      const error = e instanceof Error ? e.message : 'Internal Server Error';
-      return c.json({ error }, 400);
+    } else if (isFiat.success) {
+    
     }
-  } else if (fiatReceived.includes(currency)) {
-    //
+  } catch (e) {
+    const error = e instanceof Error ? e.message : 'Internal Server Error';
+    return c.json({ error }, 400);
   }
-  
-  return c.json(200);
 });

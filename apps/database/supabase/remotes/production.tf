@@ -3,7 +3,7 @@ variable "linked_project" {
   type = string
 }
 
-# Configure api settings for the linked project
+# Configure api.ts settings for the linked project
 resource "supabase_settings" "production" {
   project_ref = var.linked_project
 

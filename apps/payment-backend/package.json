@@ -10,21 +10,17 @@
     "type-check": "tsc --noEmit"
   },
   "dependencies": {
-    "@gramio/format": "^0.1.5",
-    "dayjs": "^1.11.13",
-    "gramio": "^0.1.5",
+    "@nats-io/transport-node": "^3.0.0-32",
     "hono": "^4.6.12",
     "ky": "^1.7.2",
     "kysely": "^0.27.4",
     "nanoid": "^5.0.9",
-    "pg": "^8.13.1",
-    "pg-listen": "^1.7.0"
+    "pg": "^8.13.1"
   },
   "devDependencies": {
     "@hono/zod-validator": "^0.4.1",
     "@types/bun": "latest",
     "@types/pg": "^8.11.10",
-    "rcon-srcds": "^2.1.0",
     "smee-client": "^2.0.4",
     "zod": "^3.23.8"
   }

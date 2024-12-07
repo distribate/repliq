@@ -1,7 +1,7 @@
 // "use server"
 //
 // import "server-only"
-// import { createClient } from "#utils/api/supabase-client.ts";
+// import { createClient } from "#utils/api.ts/supabase-client.ts";
 // import { getCurrentUser } from '#actions/get-current-user.ts';
 // import { UsersSessionEntity } from '@repo/types/entities/entities-type.ts';
 // import { validateRequests } from '#actions/validate-requests.ts';
@@ -12,14 +12,14 @@
 // 	const currentUser = await getCurrentUser()
 // 	if (!currentUser) return;
 //
-// 	const api = createClient();
+// 	const api.ts = createClient();
 //
 // 	const { user, session: currentSession } = await validateRequests();
 //
 // 	if (!user || !currentSession) return;
 // 	if (user.id !== currentUser.id) return;
 //
-// 	const { data: allActiveSessions } = await api
+// 	const { data: allActiveSessions } = await api.ts
 // 	.from("users_session")
 // 	.select()
 // 	.neq("id", currentSession.id)
@@ -31,7 +31,7 @@
 // 	let allSuccess = true;
 //
 // 	for (const session of allActiveSessions) {
-// 		const { error } = await api
+// 		const { error } = await api.ts
 // 		.from("users_session")
 // 		.delete()
 // 		.eq("uuid", session.uuid)
@@ -62,9 +62,9 @@
 // 	const currentUser = await getCurrentUser()
 // 	if (!currentUser) return;
 //
-// 	const api = createClient()
+// 	const api.ts = createClient()
 //
-// 	const { error } = await api
+// 	const { error } = await api.ts
 // 	.from("users_session")
 // 	.delete()
 // 	.eq("uuid", uuid)

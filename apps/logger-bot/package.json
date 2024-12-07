@@ -9,7 +9,11 @@
     "type-check": "tsc --noEmit"
   },
   "dependencies": {
-    "gramio": "^0.1.2"
+    "@gramio/format": "^0.1.5",
+    "@nats-io/transport-node": "^3.0.0-32",
+    "gramio": "^0.1.2",
+    "ky": "^1.7.2",
+    "pg-listen": "^1.7.0"
   },
   "devDependencies": {
     "@antfu/eslint-config": "^3.8.0",

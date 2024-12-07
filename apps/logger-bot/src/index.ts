@@ -1,34 +1,13 @@
-import { Bot, CallbackData, InlineKeyboard } from "gramio";
+import { fasberryBot, loggerBot } from '#shared/bot';
+import { startNATS } from '#shared/nats-client';
+import { connect } from '#shared/listener';
 
-const bot = new Bot(process.env.FASBERRY_SOCIAL_TOKEN as string);
+// initializing tg bots
+await fasberryBot.init().then(_ => console.log("Fasberry bot started"))
+await loggerBot.init().then(_ => console.log("Logger bot started"))
 
-bot
-  .hears("aboba", async (c) => {
-    await c.send("сам абоба");
-  })
-  .hears(/привет (.*)/i, async (c) => {
-    if (c.args) {
-      await c.send(`привет ${c.args[1]}`);
-    }
-  });
+// initializing pg listener
+await connect().then(_ => console.log("PG listener started"));
 
-const buttonData = new CallbackData("action").number("action_id");
-
-bot
-  .command("start", (context) =>
-    context.send("Choose an action:", {
-      reply_markup: new InlineKeyboard().text(
-        "Do Action 1",
-        buttonData.pack({ action_id: 1 }),
-      ),
-    }),
-  )
-  .callbackQuery(buttonData, (context) => {
-    context.send(`You selected action with ID: ${context.queryData.action_id}`);
-  });
-
-bot.onStart(({ info }) => {
-  console.log(`✨ Bot ${info.username} was started!`);
-});
-
-bot.start();
+// initializing nats client
+await startNATS().catch((err) => console.error(err))

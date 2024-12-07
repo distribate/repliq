@@ -30,7 +30,7 @@ services:
           "CMD",
           "node",
           "-e",
-          "require('http').get('http://localhost:3000/api/profile', (r) => {if (r.statusCode !== 200) throw new Error(r.statusCode)})"
+          "require('http').get('http://localhost:3000/api.ts/profile', (r) => {if (r.statusCode !== 200) throw new Error(r.statusCode)})"
         ]
       timeout: 5s
       interval: 5s
@@ -86,7 +86,7 @@ services:
       DASHBOARD_PASSWORD: ${DASHBOARD_PASSWORD}
     volumes:
       # https://github.com/supabase/supabase/issues/12661
-      - ./data/supabase/volumes/api/kong.yml:/home/kong/temp.yml:ro
+      - ./data/supabase/volumes/api.ts/kong.yml:/home/kong/temp.yml:ro
 
   auth:
     container_name: supabase-auth
@@ -450,7 +450,7 @@ services:
     container_name: supabase-pooler
     image: supabase/supavisor:1.1.56
     healthcheck:
-      test: curl -sSfL --head -o /dev/null "http://127.0.0.1:4000/api/health"
+      test: curl -sSfL --head -o /dev/null "http://127.0.0.1:4000/api.ts/health"
       interval: 10s
       timeout: 5s
       retries: 5
