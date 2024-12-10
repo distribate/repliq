@@ -14,25 +14,26 @@ export type UserSessions = Omit<
 export const getUserActiveSessions = async (): Promise<
   UserSessions[] | null
 > => {
-  const current = await getCurrentSession();
-  if (!current) return null;
-
-  const api = createClient();
-
-  let query = api
-    .from("users_session")
-    .select("user_id, browser, os, ua, cpu, ip, uuid");
-
-  const { data, error } = await query.eq("user_id", current.user?.id);
-
-  if (error) {
-    throw new Error(error.message);
-  }
-
-  return data.map((session) => {
-    return {
-      ...session,
-      current: current.user?.id === session.user_id,
-    };
-  });
+  return null
+  // const current = await getCurrentSession();
+  // if (!current) return null;
+  //
+  // const api = createClient();
+  //
+  // let query = api
+  //   .from("users_session")
+  //   .select("user_id, browser, os, ua, cpu, ip, uuid")
+  //
+  // const { data, error } = await query.eq("user_id", current.user?.id);
+  //
+  // if (error) {
+  //   throw new Error(error.message);
+  // }
+  //
+  // return data.map((session) => {
+  //   return {
+  //     ...session,
+  //     current: current.user?.id === session.user_id,
+  //   };
+  // });
 };

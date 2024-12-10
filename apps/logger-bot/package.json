@@ -1,6 +1,6 @@
 {
   "name": "logger-bot",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "private": true,
   "scripts": {
     "dev": "bun --watch src/index.ts",
@@ -12,13 +12,13 @@
     "@gramio/format": "^0.1.5",
     "@nats-io/transport-node": "^3.0.0-32",
     "gramio": "^0.1.2",
-    "ky": "^1.7.2",
-    "pg-listen": "^1.7.0"
+    "ky": "1.7.2",
+    "pg-listen": "1.7.0"
   },
   "devDependencies": {
     "@antfu/eslint-config": "^3.8.0",
     "@types/bun": "^1.1.13",
     "eslint": "^9.14.0",
-    "typescript": "^5.6.3"
+    "typescript": "^5.4.5"
   }
 }

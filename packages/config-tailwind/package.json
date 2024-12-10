@@ -1,11 +1,12 @@
 {
   "name": "@repo/config-tailwind",
-  "version": "0.0.0",
+  "version": "0.1.0",
+  "license": "MIT",
   "private": true,
   "exports": {
     "./tailwind.config": "./tailwind.config.ts"
   },
-  "dependencies": {
+  "devDependencies": {
     "@repo/config-typescript": "*",
     "tailwind-merge": "latest",
     "tailwindcss": "3.4.14",

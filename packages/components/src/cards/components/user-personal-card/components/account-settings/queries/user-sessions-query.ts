@@ -1,6 +1,5 @@
 import { QueryKey, useQuery } from "@tanstack/react-query";
 import {
-  getUserActiveSessions,
   UserSessions,
 } from "@repo/lib/queries/get-user-sessions.ts";
 
@@ -36,30 +35,31 @@ export const userActiveSessionsQuery = () =>
   useQuery<UserActiveSessionsQuery[] | null, Error>({
     queryKey: USER_ACTIVE_SESSIONS_QUERY_KEY,
     queryFn: async () => {
-      const sessions = await getUserActiveSessions();
-
-      if (!sessions) return null;
-
-      return await Promise.all(
-        sessions.map(async (session) => {
-          let geo: GeoType | null;
-
-          if (session.ip) {
-            if (RESTRICTED_IP.includes(session.ip)) {
-              geo = null;
-            } else {
-              const geoData = await fetch(
-                `http://ip-api.com/json/${session.ip}`,
-              );
-              geo = await geoData.json();
-            }
-          } else {
-            geo = null;
-          }
-
-          return { geo, ...session };
-        }),
-      );
+      return null;
+      // const sessions = await getUserActiveSessions();
+      //
+      // if (!sessions) return null;
+      //
+      // return await Promise.all(
+      //   sessions.map(async (session) => {
+      //     let geo: GeoType | null;
+      //
+      //     if (session.ip) {
+      //       if (RESTRICTED_IP.includes(session.ip)) {
+      //         geo = null;
+      //       } else {
+      //         const geoData = await fetch(
+      //           `http://ip-api.com/json/${session.ip}`,
+      //         );
+      //         geo = await geoData.json();
+      //       }
+      //     } else {
+      //       geo = null;
+      //     }
+      //
+      //     return { geo, ...session };
+      //   }),
+      // );
     },
     refetchInterval: 10 * 3600,
   });

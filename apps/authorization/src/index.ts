@@ -31,7 +31,7 @@ const routes = mergeRoutes(
   .use('*', prettyJSON())
   .use('*', (c, next) => {
     const authHeader = c.req.header('Authorization');
-    authorizeToken({ authHeader, apiKey: process.env.SECRET_TOKEN });
+    authorizeToken({ authHeader, apiKey: process.env.SECRET_TOKEN! });
     return next();
   })
   .onError(exceptionHandler),

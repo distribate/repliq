@@ -86,7 +86,7 @@ services:
       DASHBOARD_PASSWORD: ${DASHBOARD_PASSWORD}
     volumes:
       # https://github.com/supabase/supabase/issues/12661
-      - ./data/supabase/volumes/api.ts/kong.yml:/home/kong/temp.yml:ro
+      - ./data/supabase/volumes/api/kong.yml:/home/kong/temp.yml:ro
 
   auth:
     container_name: supabase-auth

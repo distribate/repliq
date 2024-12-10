@@ -28,6 +28,6 @@ declare module "bun" {
     SECRET_TOKEN: string;
     SERVER_RCON_PASSWORD: string,
     ARC_PAY_API_KEY: string,
-    ARC_pAY_PRIVATE_KEY: string
+    ARC_PAY_PRIVATE_KEY: string
   }
 }

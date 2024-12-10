@@ -5,6 +5,8 @@ import { Accordion } from "@repo/ui/src/components/accordion.tsx";
 export const MainCategoriesList = async () => {
   const categories = await getCategories();
 
+  if (!categories) return null;
+  
   return (
     <Accordion
       type="multiple"

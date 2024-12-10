@@ -35,6 +35,8 @@ export type ReportEntity = Tables<"reports">;
 export type ReportReasonEnum = Database["public"]["Enums"]["report_reason"];
 export type DonateVariantsEnum = Database["public"]["Enums"]["donate_variants"];
 
+export type DonateEntity = Tables<"landing_donate">
+
 export type RequestDetails = Partial<{
   range: number[];
   limit: number;

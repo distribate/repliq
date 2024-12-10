@@ -1,25 +1,29 @@
 {
   "name": "@repo/lib",
-  "version": "0.0.1",
+  "version": "0.1.0",
+  "private": true,
+  "license": "MIT",
   "imports": {
     "#*": "./*"
   },
-  "devDependencies": {
+  "dependencies": {
     "@repo/assets": "*",
-    "@repo/config-typescript": "*",
     "@repo/shared": "*",
-    "@repo/types": "*",
-    "@tanstack/react-query": "^5.40.0",
-    "@tanstack/react-query-devtools": "^5.40.0",
     "base64-arraybuffer": "^1.0.2",
     "dayjs": "^1.11.11",
-    "ky": "^1.7.2",
+    "ky": "1.7.2",
     "lucia": "^3.2.0",
     "nanoid": "^5.0.7",
-    "unplugin-tailwindcss-mangle": "^2.2.2",
-    "usehooks-ts": "^3.1.0"
+    "usehooks-ts": "3.1.0",
+    "zod": "3.23.8"
   },
-  "dependencies": {
-    "zod": "^3.23.8"
+  "devDependencies": {
+    "@repo/config-typescript": "*",
+    "@repo/types": "*",
+    "@types/react": "18.3.12",
+    "@types/react-dom": "18.3.1",
+    "tailwindcss-react-aria-components": "^1.2.0",
+    "typescript": "^5.4.5",
+    "unplugin-tailwindcss-mangle": "^2.2.2"
   }
 }

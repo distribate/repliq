@@ -446,13 +446,24 @@ export interface InfoFindout {
   user_nickname: string;
 }
 
+export interface LandingCurrencies {
+  created_at: Generated<Timestamp>;
+  id: Generated<Int8>;
+  imageUrl: string;
+  isAvailable: Generated<boolean>;
+  title: string;
+  value: string;
+}
+
 export interface LandingDonate {
+  commands: string[];
   created_at: Generated<Timestamp>;
   description: string;
   id: Generated<Int8>;
   imageUrl: string;
   origin: string;
   price: Int8;
+  rating: Int8;
   title: string;
 }
 
@@ -1022,6 +1033,7 @@ export interface DB {
   friends_pinned: FriendsPinned;
   friends_requests: FriendsRequests;
   info_findout: InfoFindout;
+  landing_currencies: LandingCurrencies;
   landing_donate: LandingDonate;
   landing_news: LandingNews;
   landing_rule_content: LandingRuleContent;

@@ -1,6 +1,6 @@
 {
   "name": "database",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "private": true,
   "scripts": {
     "gen-types": "dotenv -e .env npx supabase gen types --lang typescript --db-url %POSTGRE_URL% > ../../packages/types/entities/gen-supabase.ts",

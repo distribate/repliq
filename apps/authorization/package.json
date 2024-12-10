@@ -1,33 +1,33 @@
 {
   "name": "authorization",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "private": true,
   "scripts": {
     "start": "bun run src/index.ts",
     "dev": "bun run --hot src/index.ts",
+    "lint": "bun x eslint \"src/**/*.ts\"",
+    "lint:fix": "bun eslint \"src/**/*.ts\" --fix",
     "type-check": "tsc --noEmit"
   },
   "imports": {
     "#*": "./src/*"
   },
   "dependencies": {
+    "@hono/zod-validator": "0.4.1",
     "@oslojs/crypto": "^1.0.1",
     "@oslojs/encoding": "^1.1.0",
-    "bcryptjs": "^2.4.3",
-    "figlet": "^1.8.0",
-    "hono": "^4.6.12",
-    "kysely": "^0.27.4",
-    "pg": "^8.13.1"
+    "bcryptjs": "2.4.3",
+    "figlet": "1.8.0",
+    "hono": "4.6.13",
+    "kysely": "0.27.4",
+    "pg": "8.13.1",
+    "zod": "3.23.8"
   },
   "devDependencies": {
-    "@hono/zod-validator": "^0.4.1",
-    "@types/bcryptjs": "^2.4.6",
+    "@types/bcryptjs": "2.4.6",
     "@types/bun": "latest",
-    "@types/figlet": "^1",
-    "@types/pg": "^8",
-    "zod": "^3.23.8"
-  },
-  "peerDependencies": {
-    "typescript": "^5.0.0"
+    "@types/figlet": "1",
+    "@types/pg": "8",
+    "typescript": "^5.4.5"
   }
 }

@@ -10,6 +10,7 @@ import {
 import { getDonateDetails } from '#lib/queries/get-donate-details.ts';
 import { createPaymentPub } from '#lib/publishers/create-payment-pub.ts';
 import type { PaymentDonateType } from '@repo/types/entities/payment-types.ts';
+import * as crypto from 'node:crypto';
 
 type PaymentOrderId = Pick<PaymentCompleted, 'data'>['data']['orderId']
 
@@ -48,6 +49,7 @@ async function createPayment(data: PaymentCompleted['data']) {
     case 'charism':
       break;
     case 'belkoin':
+      
       break;
   }
 }
@@ -71,8 +73,10 @@ async function receivePayment(data: PaymentCompleted['data']) {
       
       return await createPaymentPub(data);
     case "belkoin":
+      
       break;
     case "charism":
+      
       break;
     case "item":
       break;
@@ -81,7 +85,29 @@ async function receivePayment(data: PaymentCompleted['data']) {
 
 export const checkOrderRoute = new Hono()
 .post('/check-order', async(c) => {
-  const body = await c.req.json();
+  const payload = await c.req.text()
+  const privateKey = process.env.ARC_PAY_PRIVATE_KEY
+  const signature = c.req.header("x-signature")
+
+  if (!signature) {
+    throw new HTTPException(401, { message: "Signature required" })
+  }
+  
+  const expectedSignature = new Bun
+  .CryptoHasher('sha256', privateKey)
+  .update(payload)
+  .digest('hex');
+  
+  if (
+    !crypto.timingSafeEqual(
+      Buffer.from(expectedSignature),
+      Buffer.from(signature)
+    )
+  ) {
+    throw new HTTPException(401, { message: 'Invalid signature' });
+  }
+  
+  const body = JSON.parse(await c.req.text())
   
   if (!body) {
     throw new HTTPException(401, { message: 'Body required' });
