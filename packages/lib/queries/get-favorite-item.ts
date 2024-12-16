@@ -20,9 +20,7 @@ export type FavoriteItem = {
 };
 
 export async function getFavoriteItem({
-  favorite_item,
-  type = "itemId",
-  nickname,
+  favorite_item, type = "itemId", nickname,
 }: FavoriteItemType): Promise<FavoriteItem | null> {
   const api = createClient();
 

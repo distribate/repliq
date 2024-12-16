@@ -37,16 +37,12 @@ const MinecraftItem = forwardRef<HTMLDivElement, MinecraftItemProps>(
 );
 
 export const FavoriteItem = ({ id, title, image }: FavoriteItem) => {
-  const currentUser = getUser();
+  const { favorite_item } = getUser();
   const { updateFieldMutation } = useUpdateCurrentUser();
 
-  const handleFavoriteItem = (value: string) => {
-    return updateFieldMutation.mutate({ value, field: "favorite_item" });
-  };
+  const handleFavoriteItem = (value: string) => updateFieldMutation.mutate({ value, criteria: "favorite_item" });
 
-  const currentFavoriteItem = currentUser.favorite_item
-    ? currentUser.favorite_item === id
-    : false;
+  const currentFavoriteItem = favorite_item ? favorite_item === id : false;
 
   return (
     <MinecraftItem variant={currentFavoriteItem ? "selected" : "default"}>

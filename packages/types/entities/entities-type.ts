@@ -1,10 +1,9 @@
-import { Database, Tables } from "./gen-supabase.ts";
-import { DonateType } from "@repo/components/src/user/components/donate/queries/get-user-donate.ts";
+import type { Database, Tables } from "./gen-supabase.ts";
 
 export type UserEntity = Tables<"users">;
 export type UsersSessionEntity = Tables<"users_session">;
 export type ExtendedUserEntity = Tables<"users"> & {
-  donate: DonateType["primary_group"];
+  donate: DonateVariantsEnum
 };
 
 export type FriendEntity = Tables<"users_friends">;
@@ -36,6 +35,8 @@ export type ReportReasonEnum = Database["public"]["Enums"]["report_reason"];
 export type DonateVariantsEnum = Database["public"]["Enums"]["donate_variants"];
 
 export type DonateEntity = Tables<"landing_donate">
+
+export type UserDonateVariant = DonateVariantsEnum
 
 export type RequestDetails = Partial<{
   range: number[];

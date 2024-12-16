@@ -1,5 +1,6 @@
-services:
+# docker-compose config for images
 
+services:
   minio:
     image: minio/minio
     ports:
@@ -15,7 +16,7 @@ services:
       timeout: 10s
       retries: 5
     volumes:
-      - ./data/supabase/volumes/storage:/data:z
+      - ./data/fasberry-supabase/volumes/storage:/data:z
 
   minio-createbucket:
     image: minio/mc
@@ -78,7 +79,7 @@ services:
       ENABLE_IMAGE_TRANSFORMATION: "true"
       IMGPROXY_URL: http://imgproxy:5001
     volumes:
-      - ./data/supabase/volumes/storage:/var/lib/storage:z
+      - ./data/fasberry-supabase/volumes/storage:/var/lib/storage:z
 
   imgproxy:
     container_name: supabase-imgproxy

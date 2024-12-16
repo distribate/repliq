@@ -1,45 +1,19 @@
-import { useQuery } from "@tanstack/react-query";
-import { DonateType, getUserDonate } from "./get-user-donate.ts";
-import {
-  FavoriteItem,
-  getFavoriteItem,
-} from "@repo/lib/queries/get-favorite-item.ts";
-import { UserEntity } from "@repo/types/entities/entities-type.ts";
-import { createQueryKey } from "@repo/lib/helpers/query-key-builder.ts";
+import { useQuery } from '@tanstack/react-query';
+import { FavoriteItem, getFavoriteItem } from '@repo/lib/queries/get-favorite-item.ts';
+import { createQueryKey } from '@repo/lib/helpers/query-key-builder.ts';
+import { CurrentUser } from '@repo/lib/queries/current-user-query.ts';
 
-export const DONATE_QUERY_KEY = (nickname: string) =>
-  createQueryKey("user", ["donate"], nickname);
+export const FAVORITE_ITEM_DONATE_QUERY_KEY = (favoriteItem: number) =>
+  createQueryKey('user', [ 'favorite-item' ], favoriteItem);
 
-export type DonateQueryType = {
-  nickname: Pick<UserEntity, "nickname">["nickname"];
-  existingDonate?: DonateType["primary_group"];
-};
-
-export type DonateQuery = {
-  donate: DonateType["primary_group"];
-  favoriteItemImage: FavoriteItem | null;
-};
-
-async function getDonate({
-  nickname,
-  existingDonate,
-}: DonateQueryType): Promise<DonateQuery> {
-  let donate: DonateType["primary_group"];
-
-  if (!existingDonate) {
-    donate = await getUserDonate(nickname);
-  } else {
-    donate = existingDonate;
-  }
-
-  const image = await getFavoriteItem({ type: "nickname", nickname });
-
-  return { donate, favoriteItemImage: image };
+async function getDonate(favoriteItem: number): Promise<FavoriteItem | null> {
+  return await getFavoriteItem({ type: 'itemId', favorite_item: favoriteItem })
 }
 
-export const donateQuery = ({ nickname, existingDonate }: DonateQueryType) =>
-  useQuery({
-    queryKey: DONATE_QUERY_KEY(nickname),
-    queryFn: () => getDonate({ nickname, existingDonate }),
-    refetchOnWindowFocus: false,
-  });
+export const donateQuery = (favoriteItem: Pick<CurrentUser, "favorite_item">["favorite_item"]) => useQuery({
+  queryKey: FAVORITE_ITEM_DONATE_QUERY_KEY(favoriteItem!),
+  queryFn: () => getDonate(favoriteItem!),
+  refetchOnWindowFocus: false,
+  refetchOnMount: false,
+  enabled: !!favoriteItem
+});

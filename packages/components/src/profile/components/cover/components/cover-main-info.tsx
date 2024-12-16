@@ -1,6 +1,6 @@
-import { UserNickname } from "#user/components/name/components/nickname.tsx";
+import { UserNickname } from "#user/components/name/nickname.tsx";
 import { UserDonate } from "#user/components/donate/components/donate.tsx";
-import { UserRealName } from "#user/components/real-name/components/real-name.tsx";
+import { UserRealName } from "#user/components/real-name/real-name.tsx";
 import { useQueryClient } from "@tanstack/react-query";
 import { Typography } from "@repo/ui/src/components/typography.tsx";
 import { RequestedUser } from "@repo/lib/queries/get-requested-user.ts";
@@ -23,7 +23,7 @@ export const UserCoverMainInfo = ({ nickname }: UserCoverInfoProps) => {
 
   if (!requestedUser || !coverState) return;
 
-  const { description, real_name, name_color } = requestedUser;
+  const { description, real_name, name_color, donate, favorite_item } = requestedUser;
 
   return (
     <div className="flex flex-col self-end justify-between h-1/2 gap-y-1">
@@ -34,7 +34,7 @@ export const UserCoverMainInfo = ({ nickname }: UserCoverInfoProps) => {
             nicknameColor={name_color}
             className={coverState.inView ? "text-3xl" : "text-xl"}
           />
-          <UserDonate nickname={nickname} />
+          <UserDonate donate={donate} favoriteItemId={favorite_item} />
         </div>
         {real_name && <UserRealName real_name={real_name} />}
       </div>

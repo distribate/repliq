@@ -42,7 +42,7 @@ async function createPayment(data: PaymentCompleted['data']) {
       
       return await createPaymentInfo({
         currency, nickname, captured, lt,
-        hash, status, price, orderid, wallet, payment_type: paymentType, payment_value: donate
+        hash, status, price, orderid, wallet, payment_type: paymentType, payment_value: donate,
       });
     case 'item':
       break;
@@ -58,10 +58,10 @@ async function receivePayment(data: PaymentCompleted['data']) {
   const { orderId, meta } = data;
   const { paymentValue, paymentType, nickname } = meta;
   
-  switch (paymentType) {
-    case "donate":
+  switch(paymentType) {
+    case 'donate':
       const donateDetails = await getDonateDetails({
-        origin: paymentValue as PaymentDonateType
+        origin: paymentValue as PaymentDonateType,
       });
       
       const { origin: donateOrigin } = donateDetails;
@@ -72,96 +72,85 @@ async function receivePayment(data: PaymentCompleted['data']) {
       ]);
       
       return await createPaymentPub(data);
-    case "belkoin":
+    case 'belkoin':
       
       break;
-    case "charism":
+    case 'charism':
       
       break;
-    case "item":
+    case 'item':
       break;
   }
 }
 
-export const checkOrderRoute = new Hono()
-.post('/check-order', async(c) => {
-  const payload = await c.req.text()
-  const privateKey = process.env.ARC_PAY_PRIVATE_KEY
-  const signature = c.req.header("x-signature")
-
-  if (!signature) {
-    throw new HTTPException(401, { message: "Signature required" })
-  }
+async function validateSignature(requestedSignature: string, payload: string) {
+  const privateKey = process.env.ARC_PAY_PRIVATE_KEY;
   
   const expectedSignature = new Bun
   .CryptoHasher('sha256', privateKey)
   .update(payload)
   .digest('hex');
   
-  if (
-    !crypto.timingSafeEqual(
-      Buffer.from(expectedSignature),
-      Buffer.from(signature)
-    )
-  ) {
+  if (!crypto.timingSafeEqual(Buffer.from(expectedSignature), Buffer.from(requestedSignature))) {
     throw new HTTPException(401, { message: 'Invalid signature' });
   }
+}
+
+export const checkOrderRoute = new Hono()
+.post('/check-order', async(c) => {
+  const payload = await c.req.text();
   
-  const body = JSON.parse(await c.req.text())
-  
-  if (!body) {
-    throw new HTTPException(401, { message: 'Body required' });
+  if (!payload) {
+    throw new HTTPException(400, { message: 'Body required' });
   }
   
-  const result = checkOrderBodySchema.safeParse(body);
+  const requestedSignature = c.req.header('x-signature');
   
-  if (!result.success) {
-    return c.json({ error: result.error }, 400);
+  if (!requestedSignature) {
+    throw new HTTPException(401, { message: 'Signature required' });
   }
   
-  const { data } = result.data;
+  try {
+    await validateSignature(requestedSignature, payload);
+  } catch (e) {
+    if (e instanceof HTTPException) {
+      return c.json({ error: e.message }, 400);
+    }
+  }
+  
+  const body = JSON.parse(payload);
+  const { success, error, data: bodyData } = checkOrderBodySchema.safeParse(body);
+  
+  if (!success) {
+    return c.json({ error: error }, 400);
+  }
+  
+  const { data } = bodyData;
   const { orderId, status } = data;
   
-  switch(status) {
-    case 'received':
-      try {
+  try {
+    switch(status) {
+      case 'received':
         await receivePayment(data);
         return c.json(200);
-      } catch (e) {
-        const error = e instanceof Error ? e.message : `Error to receive payment`;
-        return c.json({ error }, 400);
-      }
-    case 'created':
-      try {
+      case 'created':
         await createPayment(data);
         return c.json(200);
-      } catch (e) {
-        const error = e instanceof Error ? e.message : `Error to create payment`;
-        return c.json({ error }, 400);
-      }
-    case 'cancelled':
-      try {
+      case 'cancelled':
         await cancelPayment(orderId);
         return c.json(200);
-      } catch (e) {
-        const error = e instanceof Error ? e.message : `Error to cancel payment`;
-        return c.json({ error }, 400);
-      }
-    case 'failed':
-      try {
+      case 'failed':
         await failedPayment(orderId);
         return c.json(200);
-      } catch (e) {
-        const error = e instanceof Error ? e.message : `Error to fail payment`;
-        return c.json({ error }, 400);
-      }
-    case 'captured':
-      try {
+      case 'captured':
         await capturePayment(orderId);
         return c.json(200);
-      } catch (e) {
-        const error = e instanceof Error ? e.message : `Error to capture payment`;
-        return c.json({ error }, 400);
-      }
+    }
+  } catch (e) {
+    const error = e instanceof Error
+      ? e.message
+      : `Error to capture payment`;
+    
+    return c.json({ error }, 400);
   }
 });

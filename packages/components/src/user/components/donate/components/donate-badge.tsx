@@ -12,7 +12,7 @@ const userDonateBadgeVariants = cva(
         helper: "border-helper-border bg-helper-background/80",
         moder: "border-[] bg-[]",
         loyal: "border-loyal-border bg-loyal-background/80",
-        dev: "",
+        dev: "border-none bg-shark-700/80",
       },
       size: {
         small: "px-2 py-[1px]",

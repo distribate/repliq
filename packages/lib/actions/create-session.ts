@@ -1,7 +1,7 @@
 "use server";
 
 import "server-only";
-import { createSessionBodySchema } from "authorization/src/lib/routes/create-session.ts";
+import { createSessionBodySchema } from "auth-backend/src/lib/routes/create-session.ts";
 import { z } from "zod";
 import { headers } from "next/headers";
 import { authClient } from "#utils/api/auth-client.ts";

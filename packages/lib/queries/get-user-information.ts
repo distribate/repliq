@@ -1,37 +1,25 @@
 "use server";
 
-import {
-  DonateType,
-  getUserDonate,
-} from "@repo/components/src/user/components/donate/queries/get-user-donate.ts";
-import {
-  convertUserPreferencesToObject,
-  UserPreferences,
-} from "../helpers/convert-user-preferences-to-map.ts";
-import { getUserBanned } from "./get-user-banned.ts";
-import { CurrentUser } from "./current-user-query.ts";
-import { createClient } from "#utils/api/supabase-client.ts";
-import { permanentRedirect } from "next/navigation";
-import { BANNED_REDIRECT } from "@repo/shared/constants/routes.ts";
-import { getCurrentSession } from "#actions/get-current-session.ts";
+import { getUserBanned } from './get-user-banned.ts';
+import { CurrentUser } from './current-user-query.ts';
+import { permanentRedirect } from 'next/navigation';
+import { AUTH_REDIRECT, BANNED_REDIRECT } from '@repo/shared/constants/routes.ts';
+import { getCurrentSession } from '#actions/get-current-session.ts';
+import { forumUserClient } from '#utils/api/forum-client.ts';
+import { redirect } from "next/navigation"
 
-export async function getUserInformation(): Promise<CurrentUser | null> {
+export async function getUserInformation(): Promise<CurrentUser> {
   const { user: currentUser } = await getCurrentSession();
-  if (!currentUser) return null;
-
-  const api = createClient();
-
-  let query = api
-    .from("users")
-    .select(
-      `
-		id,created_at,uuid,nickname,description,status,birthday,real_name,
-		preferences,cover_image,visibility,name_color,favorite_item
-	`,
-    )
-    .eq("nickname", currentUser.nickname)
-    .eq("id", currentUser.id)
-    .single();
+  
+  if (!currentUser) {
+    return redirect(AUTH_REDIRECT)
+  }
+  
+  const res = await forumUserClient.user["get-user"][":nickname"].$get({
+    param: {
+      nickname: currentUser.nickname
+    }
+  })
 
   const isBanned = await getUserBanned(currentUser.nickname);
 
@@ -39,39 +27,10 @@ export async function getUserInformation(): Promise<CurrentUser | null> {
     return permanentRedirect(BANNED_REDIRECT);
   }
 
-  const [user, donate] = await Promise.all([
-    query,
-    getUserDonate(currentUser.nickname),
-  ]);
-
-  const { data, error } = user;
-
-  let userDonate: DonateType["primary_group"] | null = null;
-
-  if (donate) {
-    userDonate = donate;
-  }
-
-  if (error) {
-    throw new Error(error.message);
-  }
-
+  const { favorite_item, ...rest } = await res.json();
+  
   return {
-    id: data.id,
-    status: data.status,
-    name_color: data.name_color,
-    created_at: data.created_at,
-    nickname: data.nickname,
-    favorite_item: data.favorite_item,
-    uuid: data.uuid,
-    cover_image: data.cover_image,
-    real_name: data.real_name,
-    description: data.description,
-    birthday: data.birthday,
-    donate: userDonate,
-    preferences: convertUserPreferencesToObject(
-      data.preferences,
-    ) as UserPreferences,
-    visibility: data.visibility,
-  };
+    ...rest,
+    favorite_item: Number(favorite_item)
+  }
 }

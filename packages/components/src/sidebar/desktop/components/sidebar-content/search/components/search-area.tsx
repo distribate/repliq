@@ -4,22 +4,20 @@ import {
   SearchUser,
 } from "../queries/search-query.ts";
 import { SearchAreaNotFound } from "#templates/search-area-not-found.tsx";
-import { SearchUserItem } from "#cards/components/search/search-user-card.tsx";
 import { Typography } from "@repo/ui/src/components/typography.tsx";
 import Link from "next/link";
-import { THREAD_URL } from "@repo/shared/constants/routes.ts";
+import { THREAD_URL, USER_URL } from "@repo/shared/constants/routes.ts";
 import { ThreadEntity } from "@repo/types/entities/entities-type.ts";
 import { Skeleton } from "@repo/ui/src/components/skeleton.tsx";
 import { SEARCH_SIDEBAR_LIMIT } from "@repo/shared/constants/limits.ts";
+import { UserNickname } from "#user/components/name/nickname.tsx";
+import { Avatar } from "#user/components/avatar/components/avatar.tsx";
 
 type SearchCardTopicProps = Pick<ThreadEntity, "id" | "title">;
 
 const SearchCardTopic = ({ title, id }: SearchCardTopicProps) => {
   return (
-    <Link
-      href={THREAD_URL + id}
-      className="flex items-center gap-2 p-2 bg-shark-900 rounded-md"
-    >
+    <Link href={THREAD_URL + id} className="flex items-center gap-2 p-2 bg-shark-900 rounded-md">
       {title}
     </Link>
   );
@@ -44,6 +42,24 @@ const SearchAreaSkeleton = () => {
       <SearchItemSkeleton />
       <SearchItemSkeleton />
     </div>
+  );
+};
+
+const SearchUserItem = ({ nickname, nicknameColor }: UserNickname) => {
+  return (
+    <Link
+      href={USER_URL + nickname}
+      className="flex items-center rounded-md p-2 gap-2 bg-shark-900"
+    >
+      <Avatar nickname={nickname} propHeight={16} propWidth={16} />
+      <div className="flex items-center gap-1">
+        <UserNickname
+          className="text-sm"
+          nickname={nickname}
+          nicknameColor={nicknameColor}
+        />
+      </div>
+    </Link>
   );
 };
 
@@ -73,7 +89,8 @@ export const SearchArea = () => {
                   nickname={nickname}
                 />
               ),
-            )}
+            )
+          }
           {typeIsTopics &&
             (results as SearchThread[]).map(({ title, id }) => (
               <SearchCardTopic key={id} id={id} title={title} />

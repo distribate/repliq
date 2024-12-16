@@ -5,46 +5,29 @@ import { Separator } from "@repo/ui/src/components/separator.tsx";
 import { Button } from "@repo/ui/src/components/button.tsx";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
 import { FormField } from "@repo/ui/src/components/form-field.tsx";
-import { realNameSchema } from "../schemas/real-name-schema.ts";
 import { getUser } from "@repo/lib/helpers/get-user.ts";
 
-export type zodRealNameInfer = z.infer<typeof realNameSchema>;
-
 export const RealNameChange = () => {
-  const currentUser = getUser();
+  const { real_name } = getUser();
   const { updateFieldMutation } = useUpdateCurrentUser();
 
-  const {
-    register,
-    formState: { errors, isValid },
-    getValues,
-    watch,
-  } = useForm<zodRealNameInfer>({
-    resolver: zodResolver(realNameSchema),
+  const { register, formState: { errors, isValid }, getValues, watch } = useForm({
     mode: "onChange",
-    defaultValues: { name: currentUser?.real_name || "" },
+    defaultValues: { real_name },
   });
 
-  const value = watch("name");
-  const isIdentity = value === currentUser?.real_name;
+  const value = watch("real_name");
+  const isIdentity = value === real_name;
 
   const handleRealName = () => {
-    if (!currentUser) return;
-
-    const value = getValues("name");
+    const value = getValues("real_name");
 
     if (isIdentity) return;
-
-    return updateFieldMutation.mutate({
-      field: "real_name",
-      value: value,
-    });
+    
+    return updateFieldMutation.mutate({ criteria: "real_name", value, });
   };
-
-  if (!currentUser) return;
-
+  
   return (
     <div className="flex flex-col items-center gap-y-4 w-full">
       <Typography variant="dialogTitle">Смена реального имени</Typography>
@@ -55,7 +38,7 @@ export const RealNameChange = () => {
           textSize="medium"
           textColor="shark_white"
         >
-          {currentUser.real_name}
+          {real_name}
         </Typography>
       </div>
       <Separator />
@@ -66,12 +49,10 @@ export const RealNameChange = () => {
             className="!text-base"
             maxLength={25}
             backgroundType="transparent"
-            {...register("name", { maxLength: 25 })}
+            {...register("real_name", { maxLength: 25 })}
           />
-          {errors?.name && (
-            <span className="text-red-500 text-sm px-4">
-              {errors.name.message}
-            </span>
+          {errors?.real_name && (
+            <span className="text-red-500 text-sm px-4">{errors.real_name.message}</span>
           )}
         </FormField>
         <Button

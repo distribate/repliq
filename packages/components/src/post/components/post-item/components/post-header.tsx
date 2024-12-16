@@ -1,6 +1,6 @@
 import { Typography } from "@repo/ui/src/components/typography.tsx";
 import { Avatar } from "#user/components/avatar/components/avatar.tsx";
-import { UserNickname } from "#user/components/name/components/nickname.tsx";
+import { UserNickname } from "#user/components/name/nickname.tsx";
 import { PostEntity, UserEntity } from "@repo/types/entities/entities-type.ts";
 import Link from "next/link";
 import dayjs from "@repo/lib/constants/dayjs-instance.ts";

@@ -26,42 +26,44 @@ export const Category = async ({
   }
 
   return (
-    <AccordionItem value={title}>
-      <AccordionTrigger>
-        <div className="flex items-center gap-2 px-2">
-          <Typography
-            textSize="very_big"
-            textColor="shark_white"
-            className="font-bold"
-          >
-            {title}
-          </Typography>
-          <Link href={CATEGORY_URL + categoryId}>
-            <ImageWrapper
-              propSrc={Spyglass.src}
-              propAlt={`перейти к категории ${title}`}
-              width={20}
-              height={20}
-            />
-          </Link>
-        </div>
-      </AccordionTrigger>
-      {hasThreads && threads ? (
-        <AccordionContent>
-          <div className="flex flex-col gap-y-2 w-full">
-            <Typography className="text-shark-300 text-base font-normal px-2">
-              Темы
+    <div className="flex gap-y-4 w-full py-4 flex-col rounded-lg px-4 bg-primary-color">
+      <AccordionItem value={title}>
+        <AccordionTrigger>
+          <div className="flex items-center gap-2 px-2">
+            <Typography
+              textSize="very_big"
+              textColor="shark_white"
+              className="font-bold"
+            >
+              {title}
             </Typography>
-            <div className="flex flex-col gap-y-2 w-full h-full">
-              {threads.map((item) => (
-                <ThreadItem key={item.id} id={item.id} />
-              ))}
-            </div>
+            <Link href={CATEGORY_URL + categoryId}>
+              <ImageWrapper
+                propSrc={Spyglass.src}
+                propAlt={`перейти к категории ${title}`}
+                width={20}
+                height={20}
+              />
+            </Link>
           </div>
-        </AccordionContent>
-      ) : (
-        <ThreadNotFound />
-      )}
-    </AccordionItem>
+        </AccordionTrigger>
+        {hasThreads && threads ? (
+          <AccordionContent>
+            <div className="flex flex-col gap-y-2 w-full">
+              <Typography className="text-shark-300 text-base font-normal px-2">
+                Темы
+              </Typography>
+              <div className="flex flex-col gap-y-2 w-full h-full">
+                {threads.map((item) => (
+                  <ThreadItem key={item.id} id={item.id} />
+                ))}
+              </div>
+            </div>
+          </AccordionContent>
+        ) : (
+          <ThreadNotFound />
+        )}
+      </AccordionItem>
+    </div>
   );
 };

@@ -1,93 +1,40 @@
 "use server";
 
-import { UserEntity } from "@repo/types/entities/entities-type.ts";
-import { REDIRECT_USER_NOT_EXIST } from "@repo/shared/constants/routes.ts";
-import {
-  convertUserPreferencesToObject,
-  getPreferenceValue,
-  UserPreferences,
-} from "../helpers/convert-user-preferences-to-map.ts";
-import { createClient } from "#utils/api/supabase-client.ts";
-import { redirect } from "next/navigation";
-import { getDonateData } from "#queries/get-donate-data.ts";
-import { DonateType } from "@repo/components/src/user/components/donate/queries/get-user-donate.ts";
-import { getCurrentSession } from "#actions/get-current-session.ts";
+import { DonateVariantsEnum, UserEntity } from '@repo/types/entities/entities-type.ts';
+import { REDIRECT_USER_NOT_EXIST } from '@repo/shared/constants/routes.ts';
+import { redirect } from 'next/navigation';
+import { getCurrentSession } from '#actions/get-current-session.ts';
+import { forumUserClient } from '#utils/api/forum-client.ts';
+import { CurrentUser } from '#queries/current-user-query.ts';
 
-type RequestedUserProps = {
-  nickname: string;
-  withDonate?: boolean;
-};
+export type RequestedUser = Omit<UserEntity, "acceptrules"> & {
+  donate: DonateVariantsEnum
+} & Pick<CurrentUser, "preferences">
 
-export type RequestedUser = Omit<UserEntity, "preferences"> & {
-  donate: DonateType["primary_group"];
-  preferences: UserPreferences;
-};
-
-async function getMainData(nickname: RequestedUserProps["nickname"]) {
-  const api = createClient();
-
-  return api
-    .from("users")
-    .select()
-    .eq("nickname", nickname)
-    .returns<UserEntity[]>()
-    .single();
-}
-
-async function validateUserDetailsVisibility(
-  nickname: string,
-  preferences: UserPreferences,
-): Promise<{ real_name: boolean } | null> {
-  const { user: currentUser } = await getCurrentSession();
-  if (!currentUser) return null;
-
-  const isOwnProfile = currentUser.nickname === nickname;
-
-  if (isOwnProfile)
-    return {
-      real_name: true,
-    };
-
-  const result = getPreferenceValue(preferences, "realNameVisibility");
-
-  return { real_name: result };
+async function getMainData(nickname: string) {
+  return await forumUserClient.user["get-user"][":nickname"].$get({
+    param: { nickname }
+  })
 }
 
 export async function getRequestedUser(
-  nickname: RequestedUserProps["nickname"],
-): Promise<RequestedUser | null> {
+  nickname: string
+) {
   const { user: currentUser } = await getCurrentSession();
   if (!currentUser) return null;
 
-  const [donate, main] = await Promise.all([
-    getDonateData(nickname),
-    getMainData(nickname),
-  ]);
-
-  const { data: donateData, error: donateError } = donate;
-  const { data: userData, error: userError } = main;
-
-  if (!donateData || userError || donateError || !userData) {
+  const res = await getMainData(nickname)
+ 
+  if (!res) {
     return redirect(
       `${REDIRECT_USER_NOT_EXIST}${currentUser.nickname}&timeout=5`,
     );
   }
 
-  const preferences = convertUserPreferencesToObject(
-    userData.preferences as Record<string, string>,
-  ) as UserPreferences;
-
-  const detailsVisibility = await validateUserDetailsVisibility(
-    nickname,
-    preferences,
-  );
-
-  if (!detailsVisibility) return null;
-
+  const { favorite_item, ...rest } = await res.json()
+  
   return {
-    ...userData,
-    real_name: detailsVisibility.real_name ? userData.real_name : null,
-    preferences,
-    donate: donateData.primary_group,
-  };
+    ...rest,
+    favorite_item: Number(favorite_item)
+  }
 }

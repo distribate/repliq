@@ -3,14 +3,14 @@ import { Avatar } from "#user/components/avatar/components/avatar.tsx";
 import { Typography } from "@repo/ui/src/components/typography.tsx";
 import { UserDonate } from "#user/components/donate/components/donate.tsx";
 import { ExtendedUserEntity } from "@repo/types/entities/entities-type.ts";
-import { UserNickname } from "#user/components/name/components/nickname.tsx";
+import { UserNickname } from "#user/components/name/nickname.tsx";
 import { Button } from "@repo/ui/src/components/button.tsx";
 import { useRouter } from "next/navigation";
 import { FriendButton } from "#buttons/friends/friend-button.tsx";
 
 export type FriendsSearchingCardProps = Pick<
   ExtendedUserEntity,
-  "nickname" | "name_color" | "description" | "donate"
+  "nickname" | "name_color" | "description" | "donate" | "favorite_item"
 >;
 
 export const FriendsSearchingCard = ({
@@ -18,6 +18,7 @@ export const FriendsSearchingCard = ({
   name_color,
   description,
   donate,
+  favorite_item
 }: FriendsSearchingCardProps) => {
   const { push } = useRouter();
 
@@ -27,7 +28,7 @@ export const FriendsSearchingCard = ({
       <div className="flex flex-col items-start gap-1 w-full justify-start">
         <div className="flex items-center gap-2">
           <UserNickname nickname={nickname} nicknameColor={name_color} />
-          <UserDonate nickname={nickname} existingDonate={donate} />
+          <UserDonate donate={donate} favoriteItemId={favorite_item}/>
         </div>
         <div className="flex items-center w-full">
           {description && (

@@ -1,52 +1,32 @@
-import { DropdownWrapper } from "#wrappers/dropdown-wrapper.tsx";
-import { Typography } from "@repo/ui/src/components/typography.tsx";
-import { useUpdateCurrentUser } from "@repo/lib/hooks/use-update-current-user.ts";
-import { getPreferenceValue } from "@repo/lib/helpers/convert-user-preferences-to-map.ts";
-import { HoverCardItem } from "@repo/ui/src/components/hover-card.tsx";
-import { getUser } from "@repo/lib/helpers/get-user.ts";
-
-type RealNamePreferType = {
-  e: React.MouseEvent<HTMLDivElement>;
-  value: boolean;
-};
+import { DropdownWrapper } from '#wrappers/dropdown-wrapper.tsx';
+import { Typography } from '@repo/ui/src/components/typography.tsx';
+import { HoverCardItem } from '@repo/ui/src/components/hover-card.tsx';
+import { useUpdateUserSettings } from '@repo/lib/hooks/use-update-user-settings.ts';
+import { currentUserQuery } from '@repo/lib/queries/current-user-query.ts';
 
 const REAL_NAME_PREFER_OPTIONS = [
-  { name: "включить", value: true },
-  { name: "выключить", value: false },
+  { name: 'включить', value: true },
+  { name: 'выключить', value: false },
 ];
 
-const REAL_NAME_VISIBILITY_NAME = "realNameVisibility";
-
 export const RealNameVisibility = () => {
-  const currentUser = getUser();
-  const { updateFieldMutation } = useUpdateCurrentUser();
-
-  if (!currentUser) return null;
-
-  const preferences = currentUser.preferences;
-  const preferRealName = getPreferenceValue(
-    preferences,
-    REAL_NAME_VISIBILITY_NAME,
-  );
-
-  const handleRealNamePrefer = (values: RealNamePreferType) => {
-    const { e, value } = values;
-
-    e.preventDefault();
-
-    updateFieldMutation.mutate({
-      value: value.toString(),
-      field: "preferences",
-      preferences: { value: value, key: REAL_NAME_VISIBILITY_NAME },
+  const { preferences: { real_name_visible } } = currentUserQuery().data;
+  const { updateUserSettingsMutation } = useUpdateUserSettings();
+  
+  const handleRealNameVisibility = (value: boolean) => {
+    if (value === real_name_visible) return;
+    
+    return updateUserSettingsMutation.mutate({
+      setting: 'real_name_visible', value,
     });
   };
-
+  
   return (
     <DropdownWrapper
-      properties={{ contentAlign: "end", sideAlign: "right" }}
+      properties={{ contentAlign: 'end', sideAlign: 'right' }}
       trigger={
         <Typography className="text-base">
-          {preferRealName ? "видно" : "скрыто"}
+          {real_name_visible ? 'видно' : 'скрыто'}
         </Typography>
       }
       content={
@@ -57,15 +37,13 @@ export const RealNameVisibility = () => {
             </Typography>
           </div>
           <div className="flex flex-col gap-y-2">
-            {REAL_NAME_PREFER_OPTIONS.map((option) => (
+            {REAL_NAME_PREFER_OPTIONS.map(({ name, value }) => (
               <HoverCardItem
-                key={option.value.toString()}
-                isActive={preferRealName === option.value}
-                onClick={(e) =>
-                  handleRealNamePrefer({ e, value: option.value })
-                }
+                key={value.toString()}
+                isActive={real_name_visible === value}
+                onClick={() => handleRealNameVisibility(value)}
               >
-                <Typography>{option.name}</Typography>
+                <Typography>{name}</Typography>
               </HoverCardItem>
             ))}
           </div>

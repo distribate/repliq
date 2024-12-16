@@ -10,6 +10,7 @@ import {
 import { getNotedFriends } from "#friends/queries/get-noted-friends.ts";
 import { getPinnedFriends } from "#friends/queries/get-pinned-friends.ts";
 import { FriendsSortType } from "#profile/components/friends/queries/friends-settings-query.ts";
+import { CurrentUser } from '@repo/lib/queries/current-user-query.ts';
 
 export type RequestFriends = Pick<UserEntity, "nickname"> &
   Partial<{
@@ -25,9 +26,13 @@ type FriendDetails = {
 };
 
 export type UserFriends = FriendDetails &
-  Pick<
-    UserEntity,
-    "nickname" | "status" | "description" | "real_name" | "name_color"
+  Pick<CurrentUser,
+    | "nickname"
+    | "description"
+    | "real_name"
+    | "name_color"
+    | "favorite_item"
+    | "donate"
   >;
 
 export async function getFriends({
@@ -70,9 +75,7 @@ export async function getFriends({
   let usersQuery = api
     .from("users")
     .select(
-      `
-    nickname, description, status, name_color, real_name
-  `,
+      `nickname, description, name_color, real_name, favorite_item, donate`,
     )
     .in("nickname", Array.from(friendNicknames))
     .returns<UserFriends[]>();
@@ -107,7 +110,6 @@ export async function getFriends({
         created_at: friend.created_at,
         nickname: friendDetails.nickname,
         description: friendDetails.description,
-        status: friendDetails.status,
         name_color: friendDetails.name_color,
         isPinned: isPinned,
         note: noted ? noted.note : null,
@@ -116,9 +118,5 @@ export async function getFriends({
     })
     .filter((friend): friend is UserFriends => friend !== null); // Filter out null values
 
-  if (friends.length === 0) {
-    return null;
-  }
-
-  return friends;
+  return friends.length >= 1 ? friends : null;
 }

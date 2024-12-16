@@ -20,9 +20,7 @@ type ProfileSetting = {
 };
 
 export const UserSettingOption = ({
-  title,
-  children,
-  imageSrc,
+  title, children, imageSrc,
 }: ProfileSetting) => {
   return (
     <HoverCardItem className="justify-between w-full">
@@ -44,10 +42,9 @@ export const UserSettingOption = ({
 };
 
 export const UserProfileSettings = () => {
-  const currentUser = getUser();
-  if (!currentUser) return null;
+  const { donate } = getUser();
 
-  const isAccess = currentUser.donate !== "default";
+  const isAccess = donate !== "default";
 
   return (
     <div className="flex flex-col gap-y-4 items-center w-full">

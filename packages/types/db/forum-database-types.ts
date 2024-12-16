@@ -23,6 +23,8 @@ export type AuthFactorType = "phone" | "totp" | "webauthn";
 
 export type AuthOneTimeTokenType = "confirmation_token" | "email_change_token_current" | "email_change_token_new" | "phone_change_token" | "reauthentication_token" | "recovery_token";
 
+export type DonateVariants = "arkhont" | "authentic" | "default" | "dev" | "helper" | "loyal" | "moder";
+
 export type Generated<T> = T extends ColumnType<infer S, infer I, infer U>
   ? ColumnType<S, I | undefined, U>
   : ColumnType<T, T | undefined, T>;
@@ -467,11 +469,23 @@ export interface LandingDonate {
   title: string;
 }
 
+export interface LandingModpack {
+  client: string | null;
+  created_at: Generated<Timestamp>;
+  downloadLink: string | null;
+  id: Generated<Int8>;
+  imageUrl: Generated<string>;
+  mods: string[] | null;
+  name: string | null;
+  shaders: string[] | null;
+  version: string | null;
+}
+
 export interface LandingNews {
   created_at: Generated<Timestamp>;
   description: string;
   id: Generated<string>;
-  images: string[] | null;
+  imageUrl: Generated<string>;
   media_links: Json | null;
   tags: string[] | null;
   title: string;
@@ -911,15 +925,13 @@ export interface Users {
   cover_image: string | null;
   created_at: Generated<Timestamp>;
   description: string | null;
+  donate: Generated<DonateVariants>;
   favorite_item: Int8 | null;
   id: Generated<string>;
   name_color: Generated<string>;
   nickname: string;
-  preferences: Generated<Json | null>;
   real_name: string | null;
-  status: string | null;
   uuid: string;
-  visibility: Generated<ProfileVisibility>;
 }
 
 export interface UsersBanned {
@@ -971,7 +983,12 @@ export interface UsersSession {
 }
 
 export interface UsersSettings {
-  id: Int8;
+  accept_friend_request: Generated<boolean>;
+  cover_outline_visible: Generated<boolean>;
+  game_stats_visible: Generated<boolean>;
+  id: Generated<Int8>;
+  profile_visibility: Generated<ProfileVisibility>;
+  real_name_visible: Generated<boolean>;
   user_id: string;
 }
 
@@ -1035,6 +1052,7 @@ export interface DB {
   info_findout: InfoFindout;
   landing_currencies: LandingCurrencies;
   landing_donate: LandingDonate;
+  landing_modpack: LandingModpack;
   landing_news: LandingNews;
   landing_rule_content: LandingRuleContent;
   landing_rules_list: LandingRulesList;

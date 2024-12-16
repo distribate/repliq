@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { PostCommentItemAdditional } from "./post-comment-additional.tsx";
-import { UserNickname } from "#user/components/name/components/nickname.tsx";
+import { UserNickname } from "#user/components/name/nickname.tsx";
 import { PostCommentEntity } from "@repo/types/entities/entities-type.ts";
 
 type PostCommentItemHeader = Pick<

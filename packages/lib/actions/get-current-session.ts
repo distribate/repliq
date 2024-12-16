@@ -1,6 +1,6 @@
 "use server";
 
-import { SessionValidationResult } from "authorization/src/lib/routes/create-session.ts";
+import { SessionValidationResult } from "auth-backend/src/lib/routes/create-session.ts";
 import { cache } from "react";
 import { cookies } from "next/headers";
 import { validateSessionToken } from "#actions/session-token-control.ts";

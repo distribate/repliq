@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { UserNickname } from "../../../../../../user/components/name/components/nickname.tsx";
+import { UserNickname } from '#user/components/name/nickname.tsx';
 import {
   ColorArea,
   SliderTrack,
@@ -12,17 +12,14 @@ import { Separator } from "@repo/ui/src/components/separator.tsx";
 import { Button } from "@repo/ui/src/components/button.tsx";
 import { useUpdateCurrentUser } from "@repo/lib/hooks/use-update-current-user.ts";
 import { UserEntity } from "@repo/types/entities/entities-type.ts";
-import { parseHexToHSL } from "../../../../../../../../lib/helpers/color-parser.ts";
+import { parseHexToHSL } from '@repo/lib/helpers/color-parser.ts';
 
 type NicknameColorPickerProps = Pick<UserEntity, "nickname" | "name_color">;
 
 export const NicknameColorPicker = ({
-  nickname,
-  name_color,
+  nickname, name_color,
 }: NicknameColorPickerProps) => {
-  const [color, setColor] = useState(
-    parseColor(`hsl(${parseHexToHSL(name_color)})`),
-  );
+  const [color, setColor] = useState(parseColor(`hsl(${parseHexToHSL(name_color)})`));
   const [finalColor, setFinalColor] = useState(color);
   const { updateFieldMutation } = useUpdateCurrentUser();
 
@@ -33,10 +30,7 @@ export const NicknameColorPicker = ({
   const handleUpdateColor = () => {
     if (isIdentity) return;
 
-    return updateFieldMutation.mutate({
-      value: finalColor.toString("hex"),
-      field: "name_color",
-    });
+    return updateFieldMutation.mutate({ value: finalColor.toString("hex"), criteria: "name_color" });
   };
 
   return (

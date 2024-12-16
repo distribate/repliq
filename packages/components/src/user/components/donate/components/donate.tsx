@@ -1,15 +1,14 @@
 "use client";
 
-import { donateQuery, DonateQueryType } from "../queries/donate-query.ts";
+import { donateQuery } from "../queries/donate-query.ts";
 import { Typography } from "@repo/ui/src/components/typography.tsx";
-import { DonateType } from "../queries/get-user-donate.ts";
-import { DONATE_GROUPS } from "../constants/donate-aliases.ts";
 import { ParticleEffect } from "@repo/ui/src/components/particle-effect.tsx";
-import { Skeleton } from "@repo/ui/src/components/skeleton.tsx";
 import { UserDonateBadge } from "./donate-badge.tsx";
+import { DonateVariantsEnum } from '@repo/types/entities/entities-type.ts';
+import { CurrentUser } from '@repo/lib/queries/current-user-query.ts';
+import { DONATE_GROUPS } from '@repo/shared/constants/donate-aliases.ts';
 
-const getDonateTitle = (donate: DonateType["primary_group"]) =>
-  DONATE_GROUPS[donate];
+const getDonateTitle = (donate: DonateVariantsEnum) => DONATE_GROUPS[donate];
 
 // <div className="flex flex-col gap-y-2 w-full p-2">
 //   <Typography textSize="small" textColor="shark_white">
@@ -23,19 +22,21 @@ const getDonateTitle = (donate: DonateType["primary_group"]) =>
 //   </Typography>
 // </div>
 
-export const UserDonate = ({ nickname, existingDonate }: DonateQueryType) => {
-  const { data: donate, isLoading } = donateQuery({ nickname, existingDonate });
+type UserDonateProps = {
+  donate: DonateVariantsEnum,
+  favoriteItemId: Pick<CurrentUser, "favorite_item">["favorite_item"]
+}
 
-  if (isLoading) return <Skeleton className="h-5 rounded-md w-24" />;
-
-  if (!donate) return null;
-
-  const title = getDonateTitle(donate.donate);
-  const favoriteItemImage = donate.favoriteItemImage?.image;
-
+export const UserDonate = ({
+  donate, favoriteItemId
+}: UserDonateProps) => {
+  const { data: favoriteItem } = donateQuery(favoriteItemId)
+  const title = getDonateTitle(donate);
+  const favoriteItemImage = favoriteItem?.image;
+  
   return favoriteItemImage ? (
     <ParticleEffect options={{ particle: favoriteItemImage }}>
-      <UserDonateBadge variant={donate.donate}>
+      <UserDonateBadge variant={donate}>
         <Typography
           textColor="shark_white"
           font="minecraft"
@@ -46,7 +47,7 @@ export const UserDonate = ({ nickname, existingDonate }: DonateQueryType) => {
       </UserDonateBadge>
     </ParticleEffect>
   ) : (
-    <UserDonateBadge variant={donate.donate}>
+    <UserDonateBadge variant={donate}>
       <Typography
         textColor="shark_white"
         font="minecraft"

@@ -29,13 +29,13 @@ const CategoryThreadsSkeleton = () => {
 };
 
 export const CategoryThreads = ({ category_id }: CategoryThreads) => {
-  const { data: categoryThreads, isLoading } = categoryThreadsQuery({
+  const { data: categoryThreads, isLoading, isError } = categoryThreadsQuery({
     category_id,
   });
 
   if (isLoading) return <CategoryThreadsSkeleton />;
 
-  if (!categoryThreads) return <ThreadNotFound />;
+  if (!categoryThreads || isError) return <ThreadNotFound />;
 
   return (
     <div className="flex flex-col gap-y-2 w-full h-full">

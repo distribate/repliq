@@ -1,19 +1,19 @@
 "use client";
 
 import Link from "next/link";
-import { UserEntity } from "@repo/types/entities/entities-type.ts";
 import { Avatar } from "#user/components/avatar/components/avatar.tsx";
-import { UserNickname } from "#user/components/name/components/nickname.tsx";
+import { UserNickname } from "#user/components/name/nickname.tsx";
 import { UserDonate } from "#user/components/donate/components/donate.tsx";
 import { Separator } from "@repo/ui/src/components/separator.tsx";
 import dynamic from "next/dynamic";
 import { USER_URL } from "@repo/shared/constants/routes.ts";
 import { DropdownWrapper } from "#wrappers/dropdown-wrapper.tsx";
 import Spyglass from "@repo/assets/images/minecraft/spyglass.webp";
+import { CurrentUser } from '@repo/lib/queries/current-user-query.ts';
 
 export type UserCardProps = Pick<
-  UserEntity,
-  "nickname" | "description" | "created_at" | "name_color"
+  CurrentUser,
+  "nickname" | "description" | "created_at" | "name_color" | "favorite_item" | "donate"
 >;
 
 const UserPreviewCardProperties = dynamic(() =>
@@ -27,6 +27,7 @@ export const UserPreviewCard = ({
   name_color,
   created_at,
   description,
+  donate, favorite_item
 }: UserCardProps) => {
   return (
     <DropdownWrapper
@@ -60,7 +61,7 @@ export const UserPreviewCard = ({
                     />
                   </Link>
                   <div className="w-fit">
-                    <UserDonate nickname={nickname} />
+                    <UserDonate donate={donate} favoriteItemId={favorite_item} />
                   </div>
                 </div>
               </div>

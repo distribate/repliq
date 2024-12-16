@@ -1,6 +1,6 @@
 "use server";
 
-import { createClient } from "../../../../../../lib/utils/api/supabase-client.ts";
+import { createClient } from '@repo/lib/utils/api/supabase-client.ts';
 import {
   getThreadModel,
   ThreadModel,

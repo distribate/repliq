@@ -3,14 +3,14 @@ import { Separator } from "@repo/ui/src/components/separator.tsx";
 import { Typography } from "@repo/ui/src/components/typography.tsx";
 import { ImageWrapper } from "#wrappers/image-wrapper.tsx";
 import { Avatar } from "#user/components/avatar/components/avatar.tsx";
-import { UserNickname } from "#user/components/name/components/nickname.tsx";
-import { UserRealName } from "#user/components/real-name/components/real-name.tsx";
+import { UserNickname } from "#user/components/name/nickname.tsx";
+import { UserRealName } from "#user/components/real-name/real-name.tsx";
 import { UserDonate } from "#user/components/donate/components/donate.tsx";
-import { UserMainCard } from "../types/user-main-card-types.ts";
 import { userCardQuery } from "../queries/user-main-card-query.ts";
 import Glass from "@repo/assets/images/minecraft/glass.webp";
 import dayjs from "dayjs";
 import { Skeleton } from "@repo/ui/src/components/skeleton.tsx";
+import { UserEntity } from '@repo/types/entities/entities-type.ts';
 
 const UserFullCardSkeleton = () => {
   return (
@@ -43,24 +43,20 @@ const UserFullCardSkeleton = () => {
   );
 };
 
-export const UserFullCard = ({ nickname }: UserMainCard) => {
-  const { data: userCard, isLoading } = userCardQuery(nickname);
+export const UserFullCard = ({ nickname }: Pick<UserEntity, "nickname">) => {
+  const { data: userCard, isLoading, isError } = userCardQuery(nickname);
 
   if (isLoading) return <UserFullCardSkeleton />;
-  if (typeof userCard === "string") return;
-
-  if (!userCard) return null;
+  
+  if (!userCard || isError) return null;
 
   const main = userCard.user;
   const favoriteItemImage = userCard.favoriteItem;
   const stats = userCard.stats;
-
-  const createdInForum = dayjs(main.created_at).format(
-    "На форуме с: DD.MM.YYYY",
-  );
-  const createdInServer = dayjs(stats.joined?.regDate).format(
-    "В игре с: DD.MM.YYYY",
-  );
+  const donate = userCard.user.donate
+  
+  const createdInForum = dayjs(main.created_at).format("На форуме с: DD.MM.YYYY");
+  const createdInServer = dayjs(stats.joined?.regDate).format("В игре с: DD.MM.YYYY");
 
   return (
     <TiltCard
@@ -125,7 +121,7 @@ export const UserFullCard = ({ nickname }: UserMainCard) => {
                 {main.real_name && <UserRealName real_name={main.real_name} />}
               </div>
               <div className="w-fit">
-                <UserDonate nickname={nickname} />
+                <UserDonate donate={donate} favoriteItemId={Number(userCard.favoriteItem?.id)!} />
               </div>
             </div>
           </div>

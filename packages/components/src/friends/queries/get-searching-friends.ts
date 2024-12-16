@@ -15,7 +15,7 @@ export async function getSearchingFriends(): Promise<SearchingFriend[] | null> {
   if (!currentUser) return null;
 
   const [users, friends] = await Promise.all([
-    getUsers({ withDonate: true }),
+    getUsers(),
     getFriends({ nickname: currentUser.nickname }),
   ]);
 

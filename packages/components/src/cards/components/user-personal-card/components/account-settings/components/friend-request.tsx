@@ -1,36 +1,27 @@
-import { useUpdateCurrentUser } from "@repo/lib/hooks/use-update-current-user.ts";
-import { getPreferenceValue } from "@repo/lib/helpers/convert-user-preferences-to-map.ts";
-import React from "react";
 import { DropdownWrapper } from "#wrappers/dropdown-wrapper.tsx";
 import { Typography } from "@repo/ui/src/components/typography.tsx";
-import { HoverCardItem } from "@repo/ui/src/components/hover-card.tsx";
-import { getUser } from "@repo/lib/helpers/get-user.ts";
+import { useUpdateUserSettings } from '@repo/lib/hooks/use-update-user-settings.ts';
+import { currentUserQuery } from '@repo/lib/queries/current-user-query.ts';
+import { DropdownMenuItem } from '@repo/ui/src/components/dropdown-menu.tsx';
 
 export const FriendRequest = () => {
-  const currentUser = getUser();
-  const { updateFieldMutation } = useUpdateCurrentUser();
-  const preferences = currentUser.preferences;
-  const preferFriendRequest = getPreferenceValue(preferences, "friendRequest");
+  const { preferences: { accept_friend_request } } = currentUserQuery().data;
+  const { updateUserSettingsMutation } = useUpdateUserSettings()
 
-  const handleFriendRequestPrefer = (
-    e: React.MouseEvent<HTMLDivElement>,
-    value: boolean,
-  ) => {
-    e.preventDefault();
-
-    return updateFieldMutation.mutate({
-      value: value.toString(),
-      field: "preferences",
-      preferences: { value: value, key: "friendRequest" },
-    });
-  };
-
+  const handleToggleFriendRequest = (value: boolean) => {
+    if (value === accept_friend_request) return;
+    
+    return updateUserSettingsMutation.mutate({
+      setting: "accept_friend_request", value
+    })
+  }
+  
   return (
     <DropdownWrapper
       properties={{ contentAlign: "end", sideAlign: "right" }}
       trigger={
         <Typography className="text-base">
-          {preferFriendRequest ? "вкл" : "выкл"}
+          {accept_friend_request ? "вкл" : "выкл"}
         </Typography>
       }
       content={
@@ -41,24 +32,20 @@ export const FriendRequest = () => {
             </Typography>
           </div>
           <div className="flex flex-col gap-y-2">
-            <HoverCardItem onClick={(e) => handleFriendRequestPrefer(e, true)}>
+            <DropdownMenuItem onClick={() => handleToggleFriendRequest(true)}>
               <Typography
-                className={
-                  preferFriendRequest ? "text-caribbean-green-500" : ""
-                }
+                state={accept_friend_request ? "active" : "default"}
               >
                 включить
               </Typography>
-            </HoverCardItem>
-            <HoverCardItem onClick={(e) => handleFriendRequestPrefer(e, false)}>
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={() => handleToggleFriendRequest(false)}>
               <Typography
-                className={
-                  !preferFriendRequest ? "text-caribbean-green-500" : ""
-                }
+                state={!accept_friend_request ? "active" : "default"}
               >
                 выключить
               </Typography>
-            </HoverCardItem>
+            </DropdownMenuItem>
           </div>
         </div>
       }

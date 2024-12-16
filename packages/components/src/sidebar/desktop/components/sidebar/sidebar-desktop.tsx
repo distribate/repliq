@@ -19,7 +19,7 @@ import dynamic from "next/dynamic";
 import { getUser } from "@repo/lib/helpers/get-user.ts";
 import { DropdownWrapper } from "#wrappers/dropdown-wrapper.tsx";
 import { Avatar } from "#user/components/avatar/components/avatar.tsx";
-import { UserNickname } from "#user/components/name/components/nickname.tsx";
+import { UserNickname } from "#user/components/name/nickname.tsx";
 import { UserDonate } from "#user/components/donate/components/donate.tsx";
 import { UserMenu } from "#sidebar/desktop/components/sidebar-content/user-menu/user-menu.tsx";
 import { useQueryClient } from "@tanstack/react-query";
@@ -37,7 +37,7 @@ const SearchArea = dynamic(() =>
 const UserMenuTrigger = () => {
   const qc = useQueryClient();
   const currentUser = getUser();
-  const { nickname, name_color } = currentUser;
+  const { nickname, name_color, donate, favorite_item } = currentUser;
   const { isExpanded, isCompact } = useSidebarControl();
 
   qc.prefetchQuery({
@@ -67,7 +67,7 @@ const UserMenuTrigger = () => {
                 nicknameColor={name_color}
                 nickname={nickname}
               />
-              <UserDonate nickname={nickname} />
+              <UserDonate donate={donate} favoriteItemId={favorite_item} />
             </div>
           )}
         </div>

@@ -1,0 +1,25 @@
+{
+  "name": "skin-backend",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "license": "MIT",
+  "scripts": {
+    "start": "bun run src/index.ts",
+    "dev": "bun run --hot src/index.ts",
+    "lint": "bun x eslint \"src/**/*.ts\"",
+    "lint:fix": "bun eslint \"src/**/*.ts\" --fix",
+    "type-check": "tsc --noEmit"
+  },
+  "imports": {
+    "#*": "./src/*"
+  },
+  "dependencies": {
+    "hono": "4.6.13",
+    "ky": "1.7.2"
+  },
+  "devDependencies": {
+    "@types/bun": "latest",
+    "typescript": "^5.4.5"
+  }
+}

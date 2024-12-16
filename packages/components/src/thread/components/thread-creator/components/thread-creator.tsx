@@ -1,10 +1,10 @@
 import Link from "next/link";
 import { USER_URL } from "@repo/shared/constants/routes.ts";
 import { Avatar } from "#user/components/avatar/components/avatar.tsx";
-import { UserNickname } from "#user/components/name/components/nickname.tsx";
+import { UserNickname } from "#user/components/name/nickname.tsx";
 import { Typography } from "@repo/ui/src/components/typography.tsx";
 import { ThreadModel } from "#thread/queries/get-thread-model.ts";
-import { createClient } from "../../../../../../lib/utils/api/supabase-client.ts";
+import { createClient } from '@repo/lib/utils/api/supabase-client.ts';
 
 type ThreadCreatorProps = Pick<ThreadModel, "owner">;
 

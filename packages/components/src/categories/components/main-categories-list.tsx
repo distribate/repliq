@@ -1,10 +1,10 @@
-import { Category } from "./category.tsx";
-import { getCategories } from "../queries/get-categories.ts";
-import { Accordion } from "@repo/ui/src/components/accordion.tsx";
+import { Category } from './category.tsx';
+import { getCategories } from '../queries/get-categories.ts';
+import { Accordion } from '@repo/ui/src/components/accordion.tsx';
 
-export const MainCategoriesList = async () => {
+export const MainCategoriesList = async() => {
   const categories = await getCategories();
-
+  
   if (!categories) return null;
   
   return (
@@ -19,14 +19,9 @@ export const MainCategoriesList = async () => {
       ]}
     >
       <div className="flex flex-col gap-y-4 w-full">
-        {categories.map((item) => (
-          <div
-            key={item.id}
-            className="flex gap-y-4 w-full py-4 flex-col rounded-lg px-4 bg-primary-color"
-          >
-            <Category {...item} />
-          </div>
-        ))}
+        {categories.map(({ title, id, hasThreads }) =>
+          <Category key={id} id={id} title={title} hasThreads={hasThreads} />
+        )}
       </div>
     </Accordion>
   );

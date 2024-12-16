@@ -2,7 +2,7 @@
 
 import "server-only";
 import { z } from "zod";
-import { createUserBodySchema } from "authorization/src/lib/routes/create-user.ts";
+import { createUserBodySchema } from "auth-backend/src/lib/routes/create-user.ts";
 import { authClient } from '@repo/lib/utils/api/auth-client.ts';
 
 type UserDetails = z.infer<typeof createUserBodySchema>;

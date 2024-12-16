@@ -36,6 +36,7 @@ export const DateBirthdayPicker = ({ init }: BirthdayPicker) => {
   const [monthYearPicker, setMonthYearPicker] = useState<PickerType | false>(
     false,
   );
+  
   const { updateFieldMutation } = useUpdateCurrentUser();
 
   const handleSaveBirthday = () => {
@@ -45,7 +46,7 @@ export const DateBirthdayPicker = ({ init }: BirthdayPicker) => {
 
     return updateFieldMutation.mutate({
       value: parsedDate as string,
-      field: "birthday",
+      criteria: "birthday",
     });
   };
 

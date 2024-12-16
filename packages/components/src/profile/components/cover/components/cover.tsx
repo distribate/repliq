@@ -2,15 +2,13 @@ import { Avatar } from "#user/components/avatar/components/avatar.tsx";
 import { CoverArea } from "./cover-area.tsx";
 import { UserCoverMainInfo } from "./cover-main-info.tsx";
 import { UserCoverPanel } from "./cover-panel.tsx";
-import { RequestedUser } from "@repo/lib/queries/get-requested-user.ts";
-import { getPreferenceValue } from "@repo/lib/helpers/convert-user-preferences-to-map.ts";
 import { coverQuery } from "#profile/components/cover/queries/cover-query.ts";
 import { imageCoverQuery } from "#profile/components/cover/queries/image-cover-query.ts";
 import { CurrentUser } from "@repo/lib/queries/current-user-query.ts";
 import dynamic from "next/dynamic";
 
 type UserCoverProps = {
-  requestedUser: RequestedUser | CurrentUser;
+  requestedUser: CurrentUser;
 };
 
 const UserCoverWatermark = dynamic(() =>
@@ -19,16 +17,16 @@ const UserCoverWatermark = dynamic(() =>
   ).then((m) => m.UserCoverWatermark),
 );
 
-export const UserCover = ({ requestedUser }: UserCoverProps) => {
+export const UserCover = ({
+  requestedUser
+}: UserCoverProps) => {
+  const { preferences, donate, nickname } = requestedUser
+  
   const { data: coverQueryState } = coverQuery();
-  const { data: url, isLoading } = imageCoverQuery(requestedUser.nickname);
+  const { data: url, isLoading } = imageCoverQuery(nickname);
 
-  const preferOutline = getPreferenceValue(
-    requestedUser.preferences,
-    "coverOutline",
-  );
-  const coverOutline =
-    requestedUser.donate && preferOutline ? requestedUser.donate : "default";
+  const preferOutline = preferences.cover_outline_visible
+  const coverOutline = donate && preferOutline ? donate : "default";
 
   const backgroundImage = url ? `url(${url})` : "";
   const backgroundColor = url ? "transparent" : "gray";

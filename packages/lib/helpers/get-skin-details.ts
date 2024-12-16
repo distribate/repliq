@@ -13,22 +13,24 @@ export async function getSkinDetails({
 }: SkinDetails): Promise<string> {
   if (type === 'skin') {
     try {
-      const rawSkin = await ky(nickname, {
-        prefixUrl: SKIN_GET_SKIN, retry: 1, cache: 'force-cache',
-      });
+      const skinBlob = await ky(nickname, {
+        prefixUrl: SKIN_GET_SKIN,
+        retry: 1,
+        cache: 'force-cache'
+      }).blob()
       
-      const skinBlob = await rawSkin.blob();
       return URL.createObjectURL(skinBlob);
     } catch (e) {
-      return SteveSkin.src as string
+      return SteveSkin.src as string;
     }
   } else {
     try {
-      const rawHead = await ky(nickname.toLowerCase(), {
-        prefixUrl: SKIN_GET_HEAD, retry: 1, cache: 'force-cache',
-      });
+      const headBlob = await ky(nickname.toLowerCase(), {
+        prefixUrl: SKIN_GET_HEAD,
+        retry: 1,
+        cache: 'force-cache'
+      }).blob()
       
-      const headBlob = await rawHead.blob();
       return URL.createObjectURL(headBlob);
     } catch (e) {
       return SteveHead.src as string;

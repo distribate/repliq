@@ -22,7 +22,6 @@ export async function updatePaymentInfo({
   } catch (e) {
     const error = e instanceof Error ? e.message
       : 'An error occurred while updating payment info';
-    console.error(error);
     
     throw new Error(error);
   }

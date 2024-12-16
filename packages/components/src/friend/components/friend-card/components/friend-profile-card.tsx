@@ -1,8 +1,7 @@
 import { Typography } from "@repo/ui/src/components/typography.tsx";
 import Link from "next/link";
 import { Avatar } from "#user/components/avatar/components/avatar.tsx";
-import { UserDonate } from "#user/components/donate/components/donate.tsx";
-import { UserNickname } from "#user/components/name/components/nickname.tsx";
+import { UserNickname } from "#user/components/name/nickname.tsx";
 import { Separator } from "@repo/ui/src/components/separator.tsx";
 import { UserCardModal } from "#modals/custom/user-card-modal.tsx";
 import { UserEntity } from "@repo/types/entities/entities-type.ts";
@@ -11,8 +10,7 @@ import { USER_URL } from "@repo/shared/constants/routes.ts";
 type FriendCardProps = Pick<UserEntity, "nickname" | "name_color">;
 
 export const FriendProfileCard = ({
-  nickname,
-  name_color,
+  nickname, name_color,
 }: FriendCardProps) => {
   return (
     <div className="flex flex-col gap-y-4 w-full bg-shark-950 *:px-4 py-4 rounded-lg">
@@ -27,9 +25,6 @@ export const FriendProfileCard = ({
                 className="text-base font-medium text-shark-50"
               />
             </Link>
-            <div className="w-fit">
-              <UserDonate nickname={nickname} />
-            </div>
           </div>
         </div>
       </div>

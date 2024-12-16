@@ -5,7 +5,7 @@ import { ContentNotFound } from "#templates/content-not-found.tsx";
 import { SearchUser } from "#sidebar/desktop/components/sidebar-content/search/queries/search-query.ts";
 import { Typography } from "@repo/ui/src/components/typography.tsx";
 import { Avatar } from "#user/components/avatar/components/avatar.tsx";
-import { UserNickname } from "#user/components/name/components/nickname.tsx";
+import { UserNickname } from "#user/components/name/nickname.tsx";
 import Link from "next/link";
 import { USER_URL } from "@repo/shared/constants/routes.ts";
 import { filterSearchResults } from "#search/helpers/filter-search-results.ts";

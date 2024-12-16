@@ -1,14 +1,10 @@
 import Image from "next/image";
 import { Typography } from "@repo/ui/src/components/typography.tsx";
 import BlockGold from "@repo/assets/images/minecraft/block_gold.webp";
-import { TerminateSessionModal } from "#modals/user-settings/terminate-session-modal.tsx";
 import { UserActiveSessionsQuery } from "#cards/components/user-personal-card/components/account-settings/queries/user-sessions-query.ts";
 
 export const UserSessionBlock = ({
-  current,
-  browser,
-  uuid,
-  geo,
+  current, browser, geo,
 }: UserActiveSessionsQuery) => {
   const isCurrent = current || false;
 
@@ -28,7 +24,7 @@ export const UserSessionBlock = ({
             {geo?.country || "Unknown"}, {geo?.city || "Unknown"}
           </Typography>
         </div>
-        <TerminateSessionModal session_uuid={uuid} />
+        {/*<TerminateSessionModal session_uuid={uuid} />*/}
       </div>
     </div>
   );

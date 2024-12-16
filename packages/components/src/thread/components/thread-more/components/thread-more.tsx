@@ -13,7 +13,7 @@ import { ThreadModel } from "../../../queries/get-thread-model.ts";
 import Link from "next/link";
 import { USER_URL } from "@repo/shared/constants/routes.ts";
 import { Avatar } from "#user/components/avatar/components/avatar.tsx";
-import { UserNickname } from "#user/components/name/components/nickname.tsx";
+import { UserNickname } from "#user/components/name/nickname.tsx";
 import { Button } from "@repo/ui/src/components/button.tsx";
 
 type ThreadMoreProps = Pick<

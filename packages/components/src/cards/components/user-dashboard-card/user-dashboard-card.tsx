@@ -1,7 +1,7 @@
-import { Avatar } from "../../../user/components/avatar/components/avatar.tsx";
+import { Avatar } from '#user/components/avatar/components/avatar.tsx';
 import { Typography } from "@repo/ui/src/components/typography.tsx";
 import { Grip } from "lucide-react";
-import { DropdownWrapper } from "../../../wrappers/dropdown-wrapper.tsx";
+import { DropdownWrapper } from '#wrappers/dropdown-wrapper.tsx';
 import { HoverCardItem } from "@repo/ui/src/components/hover-card.tsx";
 import { Separator } from "@repo/ui/src/components/separator.tsx";
 import { useRouter } from "next/navigation";
@@ -14,11 +14,7 @@ type UserDashboardCardProps = Pick<
 >;
 
 export const UserDashboardCard = ({
-  nickname,
-  id,
-  uuid,
-  name_color,
-  created_at,
+  nickname
 }: UserDashboardCardProps) => {
   const { push } = useRouter();
 

@@ -1,7 +1,6 @@
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   getRequestedUser,
-  RequestedUser,
 } from "@repo/lib/queries/get-requested-user.ts";
 import { getUser } from "@repo/lib/helpers/get-user.ts";
 import { UserEntity } from "@repo/types/entities/entities-type.ts";
@@ -22,7 +21,7 @@ export const requestedUserQuery = ({
     return { data: currentUser, isLoading: false };
   }
 
-  return useQuery<RequestedUser | null, Error>({
+  return useQuery({
     queryKey: REQUESTED_USER_QUERY_KEY(nickname),
     queryFn: () => getRequestedUser(nickname),
     refetchOnWindowFocus: false,

@@ -1,0 +1,15 @@
+{
+  "extends": "@repo/config-typescript/hono.json",
+  "include": [
+    "**/*.ts", "*.ts"
+  ],
+  "exclude": ["node_modules"],
+  "compilerOptions": {
+    "baseUrl": "./",
+    "allowImportingTsExtensions": true,
+    "rootDir": "./",
+    "paths": {
+      "#*": ["src/*"]
+    }
+  }
+}

@@ -1,33 +1,22 @@
 "use server";
 
-import { createClient } from "../../../../../../../../lib/utils/api/supabase-client.ts";
-import { UserEntity } from "@repo/types/entities/entities-type.ts";
+import { forumUserClient } from '@repo/lib/utils/api/forum-client.ts';
 
-type GetUserBlocked = {
-  nickname: string;
-};
+export async function getUserBlocked(nickname: string) {
+  const res = await forumUserClient.user["get-blocked-users"][":nickname"].$get({
+    param: {
+      nickname
+    },
+    query: {
+      cursor: "1"
+    }
+  })
+  
+  const data = await res.json()
+  
+  if ("error" in data) {
+    return null
+  }
 
-type PromiseBlocked = {
-  added_at: string;
-} & UserEntity;
-
-export async function getUserBlocked(
-  nickname: GetUserBlocked["nickname"],
-): Promise<PromiseBlocked[] | null> {
-  const api = createClient();
-
-  const { data, error } = await api
-    .from("users_blocked")
-    .select("created_at, user_2, users!public_users_blocked_user_2_fkey(*)")
-    .eq("user_1", nickname)
-    .returns<{ created_at: string; user_2: string; users: UserEntity[] }[]>();
-
-  if (error) return null;
-
-  const users = data.flatMap((item) => ({
-    ...item.users,
-    added_at: item.created_at,
-  }));
-
-  return users as PromiseBlocked[];
+  return data
 }

@@ -1,16 +1,6 @@
-name: fasberry-server
+name: fasberry-external
 
 services:
-  nats:
-    container_name: nats
-    image: nats:latest
-    restart: unless-stopped
-    ports:
-      - "4222:4222"
-    command: --T -VV
-    volumes:
-      - ./data/nats/data:/nats
-
   luckperms_db:
     container_name: luckperms_db
     image: postgres:15.1
@@ -22,7 +12,7 @@ services:
     ports:
       - ${LUCKPERMS_POSTGRES_PORT}:5432/tcp
     volumes:
-      - ./data/luckperms-db/data:/var/lib/postgresql/data
+      - ./data/fasberry-external/luckperms-db/data:/var/lib/postgresql/data
 
   authorization-db:
     container_name: authorization-db
@@ -35,7 +25,30 @@ services:
     ports:
       - ${AUTHORIZATION_POSTGRES_PORT}:5432/tcp
     volumes:
-      - ./data/authorization-db/data:/var/lib/postgresql/data
+      - ./data/fasberry-external/authorization-db/data:/var/lib/postgresql/data
+
+  payments_db:
+    container_name: payments_db
+    image: postgres:15.1
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${PAYMENTS_POSTGRES_USER}
+      POSTGRES_PASSWORD: ${PAYMENTS_POSTGRES_PASSWORD}
+      POSTGRES_DB: ${PAYMENTS_POSTGRES_DB}
+    ports:
+      - ${PAYMENTS_POSTGRES_PORT}:5432/tcp
+    volumes:
+      - ./data/fasberry-external/payments-db/data:/var/lib/postgresql/data
+
+  nats:
+    container_name: nats
+    image: nats:latest
+    restart: unless-stopped
+    ports:
+      - "4222:4222"
+    command: --T -VV
+    volumes:
+      - ./data/fasberry-external/nats/data:/nats
 
 networks:
   shared-network:

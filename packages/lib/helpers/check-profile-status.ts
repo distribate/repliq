@@ -1,13 +1,13 @@
-"use server";
+'use server';
 
-import { getUserInformation } from "../queries/get-user-information.ts";
-import { checkProfileIsPrivate } from "./check-profile-is-private.ts";
+import { getUserInformation } from '../queries/get-user-information.ts';
+import { checkProfileIsPrivate } from './check-profile-is-private.ts';
 import {
   CheckProfileIsBlocked,
   checkProfileIsBlocked,
-} from "./check-profile-is-blocked.ts";
-import { checkProfileIsBanned } from "./check-profile-is-banned.ts";
-import { RequestedUser } from "#queries/get-requested-user.ts";
+} from './check-profile-is-blocked.ts';
+import { checkProfileIsBanned } from './check-profile-is-banned.ts';
+import { RequestedUser } from '#queries/get-requested-user.ts';
 
 export type CheckProfileStatus = {
   requestedUserNickname: string;
@@ -15,12 +15,12 @@ export type CheckProfileStatus = {
 };
 
 export type ProfileStatusBlockedType =
-  | "blocked-by-user" // if current user has been banned by requested user
-  | "user-blocked"; // if current user banned requested user
+  | 'blocked-by-user' // if current user has been banned by requested user
+  | 'user-blocked' // if current user banned requested user
 
 export type ProfileStatusType =
-  | "private"
-  | "banned"
+  | 'private'
+  | 'banned'
   | ProfileStatusBlockedType
   | null;
 
@@ -29,19 +29,17 @@ type GetBlockType = {
 } & CheckProfileIsBlocked;
 
 export async function getBlockType({
-  initiator,
-  recipient,
-  requestedUserNickname,
+  initiator, recipient, requestedUserNickname,
 }: GetBlockType): Promise<ProfileStatusBlockedType> {
   if (recipient === requestedUserNickname) {
-    return "user-blocked";
+    return 'user-blocked';
   }
-
+  
   if (initiator === requestedUserNickname) {
-    return "blocked-by-user";
+    return 'blocked-by-user';
   }
-
-  throw new Error("Unhandled case in getBlockedType");
+  
+  throw new Error("Blocked type is not defined")
 }
 
 export async function checkProfileStatus(
@@ -49,38 +47,39 @@ export async function checkProfileStatus(
 ): Promise<ProfileStatusType> {
   const currentUser = await getUserInformation();
   if (!currentUser) return null;
-
-  const currentUserNickname = currentUser.nickname;
-
-  if (!currentUserNickname || !requestedUser.nickname) return null;
-  if (currentUserNickname === requestedUser.nickname) return null;
-
+  
+  const { nickname: currentUserNickname } = currentUser;
+  const { nickname: requestedNickname } = requestedUser;
+  
+  if (!currentUserNickname || !requestedNickname) return null;
+  if (currentUserNickname === requestedNickname) return null;
+  
   try {
-    const banStatus = await checkProfileIsBanned(requestedUser.nickname);
-
-    if (banStatus && banStatus.nickname === requestedUser.nickname) {
-      return "banned";
+    const banStatus = await checkProfileIsBanned(requestedNickname);
+    
+    if (banStatus && banStatus.nickname === requestedNickname) {
+      return 'banned';
     }
-
-    const blockStatus = await checkProfileIsBlocked(requestedUser.nickname);
-
+    
+    const blockStatus = await checkProfileIsBlocked(requestedNickname);
+    
     if (blockStatus) {
+      const { initiator, recipient } = blockStatus;
+      
       return getBlockType({
-        initiator: blockStatus.initiator,
-        recipient: blockStatus.recipient,
+        initiator, recipient,
         requestedUserNickname: requestedUser.nickname,
       });
     }
-
+    
     const isPrivate = await checkProfileIsPrivate({
-      requestedUser,
-      currentUserNickname,
+      requestedUser, currentUserNickname,
     });
-    if (!isPrivate) return "private";
-
+    
+    if (!isPrivate) return 'private';
+    
     return null;
   } catch (e) {
-    console.error("Error checking profile status:", e);
     return null;
   }
 }

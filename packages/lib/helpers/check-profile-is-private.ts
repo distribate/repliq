@@ -17,7 +17,7 @@ export async function checkProfileIsPrivate({
   if (!currentUserNickname || !requestedUserNickname) return true;
   if (currentUserNickname === requestedUserNickname) return true;
 
-  switch (requestedUser.visibility) {
+  switch (requestedUser.preferences.profile_visibility) {
     case "all":
       return true;
     case "friends":

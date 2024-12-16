@@ -5,7 +5,7 @@ import {
 } from "#post/components/post-item/queries/post-views-query.ts";
 import { HoverCardWrapper } from "#wrappers/hover-card-wrapper.tsx";
 import { Skeleton } from "@repo/ui/src/components/skeleton.tsx";
-import { UserNickname } from "#user/components/name/components/nickname.tsx";
+import { UserNickname } from "#user/components/name/nickname.tsx";
 import { Typography } from "@repo/ui/src/components/typography.tsx";
 import dayjs from "@repo/lib/constants/dayjs-instance.ts";
 import { OverridedPosts } from "#profile/components/posts/components/posts/queries/get-posts.ts";

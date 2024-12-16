@@ -1,8 +1,6 @@
-import { ProfileVisibilityChangeType } from "../types/visibility-types.ts";
-
 type VisibilityItems = {
   title: string;
-  value: ProfileVisibilityChangeType["visibility"];
+  value: "all" | "friends"
 };
 
 export const VISIBILITY_FORMATS: VisibilityItems[] = [

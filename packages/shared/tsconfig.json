@@ -1,10 +1,15 @@
 {
 	"extends": "@repo/config-typescript/base.json",
-	"include": ["."],
+	"include": [
+		"**/*.ts", "*.ts"
+	],
 	"compilerOptions": {
 		"jsx": "preserve",
-		"module": "ESNext",
-		"moduleResolution": "Bundler",
+		"esModuleInterop": true,
+		"lib": ["es2020"],
+		"module": "es2022",
+		"preserveConstEnums": true,
+		"moduleResolution": "node",
 		"skipLibCheck": true,
 		"strict": true,
 		"baseUrl": ".",

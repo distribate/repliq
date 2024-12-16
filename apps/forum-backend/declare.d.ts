@@ -7,7 +7,7 @@ declare module "bun" {
     POSTGRES_DB: string;
     POSTGRES_PORT: number;
     POSTGRES_PASSWORD: string;
-    POOLER_TENANT_ID: string;
+    POSTGRES_TENANT_ID: string;
     LUCKPERMS_POSTGRES_DB: string;
     LUCKPERMS_POSTGRES_PASSWORD: string;
     LUCKPERMS_POSTGRES_USER: string;

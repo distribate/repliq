@@ -1,24 +1,27 @@
-import { keepPreviousData, QueryKey, useQuery } from "@tanstack/react-query";
-import { getUserInformation } from "./get-user-information.ts";
-import { UserEntity } from "@repo/types/entities/entities-type.ts";
-import { DonateType } from "@repo/components/src/user/components/donate/queries/get-user-donate.ts";
-import { UserPreferences } from "../helpers/convert-user-preferences-to-map.ts";
+import { useSuspenseQuery } from '@tanstack/react-query';
+import { getUserInformation } from './get-user-information.ts';
+import { DonateVariantsEnum, UserEntity } from '@repo/types/entities/entities-type.ts';
+import { createQueryKey } from '#helpers/query-key-builder.ts';
 
-export const CURRENT_USER_QUERY_KEY: QueryKey = ["user", "current"];
+export const CURRENT_USER_QUERY_KEY = createQueryKey("user", ["current"])
 
 export type CurrentUser = Omit<
   UserEntity,
-  "preferences" | "visibility" | "acceptrules"
+  'acceptrules'
 > & {
-  donate: DonateType["primary_group"] | null;
-  preferences: UserPreferences;
-  visibility: Pick<UserEntity, "visibility">["visibility"];
-  cover_image: Pick<UserEntity, "cover_image">["cover_image"];
+  donate: DonateVariantsEnum;
+  preferences: {
+    cover_outline_visible: boolean,
+    accept_friend_request: boolean,
+    real_name_visible: boolean,
+    game_stats_visible: boolean,
+    profile_visibility: "all" | "friends" | "only"
+  },
+  cover_image: Pick<UserEntity, 'cover_image'>['cover_image'];
 };
 
-export const currentUserQuery = () =>
-  useQuery({
-    queryKey: CURRENT_USER_QUERY_KEY,
-    queryFn: () => getUserInformation(),
-    placeholderData: keepPreviousData,
-  });
+export const currentUserQuery = () => useSuspenseQuery<CurrentUser>({
+  queryKey: CURRENT_USER_QUERY_KEY,
+  queryFn: () => getUserInformation(),
+  refetchOnMount: false
+});

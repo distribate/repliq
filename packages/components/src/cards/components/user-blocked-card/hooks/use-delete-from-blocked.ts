@@ -8,7 +8,7 @@ import { getUser } from "@repo/lib/helpers/get-user.ts";
 
 export const useDeleteFromBlocked = () => {
   const qc = useQueryClient();
-  const currentUser = getUser();
+  const { nickname } = getUser();
 
   const deleteUserFromBlockedMutation = useMutation({
     mutationFn: async (
@@ -18,18 +18,17 @@ export const useDeleteFromBlocked = () => {
 
       return await deleteUserFromBlocked({
         targetUserNickname: values.targetUserNickname,
-        currentUserNickname: currentUser.nickname,
+        currentUserNickname: nickname,
       });
     },
-    onSuccess: async (data, variables, context) => {
+    onSuccess: async (data) => {
       if (!data) return;
+      
       await qc.invalidateQueries({
-        queryKey: USER_BLOCKED_QUERY_KEY(currentUser.nickname),
+        queryKey: USER_BLOCKED_QUERY_KEY(nickname),
       });
     },
-    onError: (e) => {
-      throw new Error(e.message);
-    },
+    onError: e => { throw new Error(e.message) },
   });
 
   return { deleteUserFromBlockedMutation };

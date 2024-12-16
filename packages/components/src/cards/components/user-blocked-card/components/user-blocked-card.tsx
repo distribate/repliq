@@ -1,15 +1,15 @@
 import { UserEntity } from "@repo/types/entities/entities-type.ts";
 import { useRouter } from "next/navigation";
-import { Avatar } from "../../../../user/components/avatar/components/avatar.tsx";
-import { UserNickname } from "../../../../user/components/name/components/nickname.tsx";
+import { Avatar } from '#user/components/avatar/components/avatar.tsx';
+import { UserNickname } from '#user/components/name/nickname.tsx';
 import { Separator } from "@repo/ui/src/components/separator.tsx";
 import { Typography } from "@repo/ui/src/components/typography.tsx";
 import dayjs from "dayjs";
-import { DropdownWrapper } from "../../../../wrappers/dropdown-wrapper.tsx";
+import { DropdownWrapper } from '#wrappers/dropdown-wrapper.tsx';
 import { Ellipsis } from "lucide-react";
 import { HoverCardItem } from "@repo/ui/src/components/hover-card.tsx";
 import { useDeleteFromBlocked } from "../hooks/use-delete-from-blocked.ts";
-import { UserCardModal } from "../../../../modals/custom/user-card-modal.tsx";
+import { UserCardModal } from '#modals/custom/user-card-modal.tsx';
 import { USER_URL } from "@repo/shared/constants/routes.ts";
 
 type UserBlockedCardProps = Pick<UserEntity, "nickname" | "name_color"> & {
@@ -17,20 +17,17 @@ type UserBlockedCardProps = Pick<UserEntity, "nickname" | "name_color"> & {
 };
 
 export const UserBlockedCard = ({
-  name_color,
-  nickname,
-  time,
+  name_color, nickname, time,
 }: UserBlockedCardProps) => {
   const { deleteUserFromBlockedMutation } = useDeleteFromBlocked();
   const { replace } = useRouter();
 
   const handleDeleteFromBlocked = (
-    e: React.MouseEvent<HTMLDivElement>,
-    nickname: string,
+    e: React.MouseEvent<HTMLDivElement>, nickname: string,
   ) => {
     e.preventDefault();
 
-    deleteUserFromBlockedMutation.mutate({
+    return deleteUserFromBlockedMutation.mutate({
       targetUserNickname: nickname,
     });
   };
@@ -55,7 +52,7 @@ export const UserBlockedCard = ({
           content={
             <div className="flex flex-col gap-y-1 w-full *:w-full items-center">
               <HoverCardItem
-                onClick={(e) => handleDeleteFromBlocked(e, nickname)}
+                onClick={e => handleDeleteFromBlocked(e, nickname)}
               >
                 <Typography>Удалить из черного списка</Typography>
               </HoverCardItem>

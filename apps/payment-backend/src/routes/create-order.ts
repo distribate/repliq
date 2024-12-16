@@ -111,24 +111,28 @@ export const createOrderRoute = new Hono()
   const isCrypto = currencyCryptoSchema.safeParse(currency);
   const isFiat = currencyFiatSchema.safeParse(currency);
   
+  let paymentUrl: string | null = null
+  
   try {
     if (isCrypto.success) {
       const payment = await createCryptoOrder({
         nickname, orderId, paymentValue, paymentType, currency: isCrypto.data,
       });
       
-      return c.json(payment, 200);
+      paymentUrl = payment?.paymentUrl ?? null
     }
     
     if (isFiat.success) {
-      const payment = await createFiatOrder({
-        nickname, orderId, paymentValue, paymentType, currency: isFiat.data,
-      });
-      
-      return c.json(payment, 200);
+      return c.json({ error: "Fiat is not allowed" }, 400)
     }
   } catch (e) {
     const error = e instanceof Error ? e.message : 'Internal Server Error';
     return c.json({ error: error }, 400);
   }
+  
+  if (!paymentUrl) {
+    return c.json({ error: "Create payment failed"}, 400)
+  }
+  
+  return c.json({ paymentUrl }, 200);
 });

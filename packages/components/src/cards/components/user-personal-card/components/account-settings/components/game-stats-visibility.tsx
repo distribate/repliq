@@ -1,56 +1,32 @@
-import { useUpdateCurrentUser } from "@repo/lib/hooks/use-update-current-user.ts";
-import { getPreferenceValue } from "@repo/lib/helpers/convert-user-preferences-to-map.ts";
-import React, { useCallback } from "react";
 import { DropdownWrapper } from "#wrappers/dropdown-wrapper.tsx";
 import { Typography } from "@repo/ui/src/components/typography.tsx";
 import { HoverCardItem } from "@repo/ui/src/components/hover-card.tsx";
-import { getUser } from "@repo/lib/helpers/get-user.ts";
-
-type GameStatsVisibilityProps = {
-  e: React.MouseEvent<HTMLDivElement>;
-  value: boolean;
-};
+import { useUpdateUserSettings } from '@repo/lib/hooks/use-update-user-settings.ts';
+import { currentUserQuery } from '@repo/lib/queries/current-user-query.ts';
 
 const GAME_STATS_VISIBLITY_OPTIONS = [
   { name: "включить", value: true },
   { name: "выключить", value: false },
 ];
 
-const GAME_STATS_VISIBLITY_NAME = "gameStatsVisibility";
-
 export const GameStatsVisibility = () => {
-  const currentUser = getUser();
-  const { updateFieldMutation } = useUpdateCurrentUser();
-  const preferences = currentUser.preferences;
-  const preferGameStats = getPreferenceValue(
-    preferences,
-    GAME_STATS_VISIBLITY_NAME,
-  );
-
-  const handleGameStatsPrefer = useCallback(
-    (values: GameStatsVisibilityProps) => {
-      const { e, value } = values;
-
-      e.preventDefault();
-
-      updateFieldMutation.mutate({
-        value: value.toString(),
-        field: "preferences",
-        preferences: {
-          value: value,
-          key: GAME_STATS_VISIBLITY_NAME,
-        },
-      });
-    },
-    [updateFieldMutation],
-  );
-
+  const { preferences: { game_stats_visible } } = currentUserQuery().data;
+  const { updateUserSettingsMutation } = useUpdateUserSettings();
+  
+  const handleGameStatsVisibility = (value: boolean) => {
+    if (value === game_stats_visible) return;
+    
+    return updateUserSettingsMutation.mutate({
+      setting: 'game_stats_visible', value
+    });
+  };
+  
   return (
     <DropdownWrapper
       properties={{ contentAlign: "end", sideAlign: "right" }}
       trigger={
         <Typography className="text-base">
-          {preferGameStats ? "видна" : "скрыта"}
+          {game_stats_visible ? "видна" : "скрыта"}
         </Typography>
       }
       content={
@@ -61,15 +37,13 @@ export const GameStatsVisibility = () => {
             </Typography>
           </div>
           <div className="flex flex-col gap-y-2">
-            {GAME_STATS_VISIBLITY_OPTIONS.map((option) => (
+            {GAME_STATS_VISIBLITY_OPTIONS.map(({ value, name }) => (
               <HoverCardItem
-                key={option.value.toString()}
-                isActive={preferGameStats === option.value}
-                onClick={(e) =>
-                  handleGameStatsPrefer({ e, value: option.value })
-                }
+                key={value.toString()}
+                isActive={game_stats_visible === value}
+                onClick={() => handleGameStatsVisibility(value)}
               >
-                <Typography>{option.name}</Typography>
+                <Typography>{name}</Typography>
               </HoverCardItem>
             ))}
           </div>

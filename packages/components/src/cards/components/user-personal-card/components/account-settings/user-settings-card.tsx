@@ -1,18 +1,49 @@
-import { Typography } from "@repo/ui/src/components/typography.tsx";
-import { HoverCardItem } from "@repo/ui/src/components/hover-card.tsx";
-import IronHelmet from "@repo/assets/images/minecraft/iron_helmet.webp";
-import FancyFeather from "@repo/assets/images/minecraft/fancy_feather.webp";
-import AllaySpawnEgg from "@repo/assets/images/minecraft/allay_spawn_egg.webp";
-import { Separator } from "@repo/ui/src/components/separator.tsx";
-import WildArmorTrim from "@repo/assets/images/minecraft/wild_armor_trim_ыmithing_еemplate.webp";
-import { RealNameVisibility } from "./components/real-name-visibility.tsx";
-import { GameStatsVisibility } from "./components/game-stats-visibility.tsx";
-import { FriendRequest } from "./components/friend-request.tsx";
-// import { ActiveSessionsModal } from '#modals/user-settings/active-sessions-modal.tsx';
-import { BlockedListModal } from "#modals/custom/blocked-list-modal.tsx";
-import { UserSettingOption } from "../profile-settings/user-profile-settings.tsx";
-import { EmailChangeModal } from "#modals/user-settings/email-change-modal.tsx";
-import { PasswordChangeModal } from "#modals/user-settings/password-change-modal.tsx";
+import { Typography } from '@repo/ui/src/components/typography.tsx';
+import { HoverCardItem } from '@repo/ui/src/components/hover-card.tsx';
+import IronHelmet from '@repo/assets/images/minecraft/iron_helmet.webp';
+import FancyFeather from '@repo/assets/images/minecraft/fancy_feather.webp';
+import AllaySpawnEgg from '@repo/assets/images/minecraft/allay_spawn_egg.webp';
+import { Separator } from '@repo/ui/src/components/separator.tsx';
+import WildArmorTrim from '@repo/assets/images/minecraft/wild_armor_trim_ыmithing_еemplate.webp';
+import { RealNameVisibility } from './components/real-name-visibility.tsx';
+import { GameStatsVisibility } from './components/game-stats-visibility.tsx';
+import { FriendRequest } from './components/friend-request.tsx';
+import { UserSettingOption } from '../profile-settings/user-profile-settings.tsx';
+import { Dialog, DialogContent, DialogTrigger } from '@repo/ui/src/components/dialog.tsx';
+import { getUser } from '@repo/lib/helpers/get-user.ts';
+import {
+  userBlockedQuery,
+} from '#cards/components/user-personal-card/components/account-settings/queries/user-blocked-query.ts';
+import { Fragment } from 'react';
+import { UserBlockedCard } from '#cards/components/user-blocked-card/components/user-blocked-card.tsx';
+
+const BlockedList = () => {
+  const currentUser = getUser();
+  const { data: usersBlocked } = userBlockedQuery(currentUser.nickname);
+  
+  if (!usersBlocked) return (
+    <div className="self-start w-full px-2">
+      <Typography className="text-shark-300" textSize="small">
+        список пуст
+      </Typography>
+    </div>
+  );
+  
+  return (
+    usersBlocked && (
+      <div className="flex flex-col gap-y-1 w-full overflow-y-scroll max-h-[600px]">
+        {usersBlocked.map((user) => (
+          <UserBlockedCard
+            key={user.id}
+            name_color={user.name_color!}
+            nickname={user.nickname!}
+            time={user.created_at!}
+          />
+        ))}
+      </div>
+    )
+  );
+};
 
 export const UserSettingsCard = () => {
   return (
@@ -55,9 +86,19 @@ export const UserSettingsCard = () => {
             >
               <FriendRequest />
             </UserSettingOption>
-            <UserSettingOption title="Черный список" imageSrc={IronHelmet.src}>
-              <BlockedListModal />
-            </UserSettingOption>
+            <Dialog>
+              <DialogTrigger>
+                <UserSettingOption title="Черный список" imageSrc={IronHelmet.src} />
+              </DialogTrigger>
+              <DialogContent>
+                <div className="flex flex-col gap-y-4 w-full items-center">
+                  <Typography variant="dialogTitle" className="px-4">
+                    Черный список
+                  </Typography>
+                  <BlockedList />
+                </div>
+              </DialogContent>
+            </Dialog>
             <div className="flex flex-col bg-secondary-color w-full py-2 px-4">
               <Typography className="text-base text-shark-200">
                 Приватность профиля и аккаунта

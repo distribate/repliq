@@ -1,3 +1,4 @@
-import { authClient as authorizationClient } from "authorization/src";
+import { auth, headers } from "auth-backend/src";
+import { hc } from 'hono/client';
 
-export const authClient = authorizationClient;
+export const authClient = hc<typeof auth>(`http://localhost:3400/auth`, { headers });

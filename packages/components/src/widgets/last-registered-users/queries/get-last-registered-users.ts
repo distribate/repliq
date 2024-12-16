@@ -1,28 +1,20 @@
 import {
   RequestDetails,
-  UserEntity,
 } from "@repo/types/entities/entities-type.ts";
-import { createClient } from "../../../../../lib/utils/api/supabase-client.ts";
+import { createClient } from '@repo/lib/utils/api/supabase-client.ts';
 import { getUserBanned } from "@repo/lib/queries/get-user-banned.ts";
-
-type GetLastUsers = Pick<
-  UserEntity,
-  "nickname" | "created_at" | "name_color" | "description"
->;
 
 export async function getLastUsers(
   filter?: RequestDetails,
-): Promise<GetLastUsers[] | null> {
+) {
   const api = createClient();
 
-  let users: GetLastUsers[] | null = null;
+  let users
 
   let query = api
     .from("users")
     .select(
-      `
-    nickname, description, created_at, name_color
-  `,
+      `nickname, description, created_at, name_color, donate, favorite_item`,
     )
     .order("created_at", { ascending: false });
 

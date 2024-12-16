@@ -1,37 +1,28 @@
-import { DropdownWrapper } from "#wrappers/dropdown-wrapper.tsx";
-import { Typography } from "@repo/ui/src/components/typography.tsx";
-import { useUpdateCurrentUser } from "@repo/lib/hooks/use-update-current-user.ts";
-import { HoverCardItem } from "@repo/ui/src/components/hover-card.tsx";
-import React from "react";
-import { HoverCardWrapper } from "#wrappers/hover-card-wrapper.tsx";
-import { getPreferenceValue } from "@repo/lib/helpers/convert-user-preferences-to-map.ts";
-import { getUser } from "@repo/lib/helpers/get-user.ts";
+import { DropdownWrapper } from '#wrappers/dropdown-wrapper.tsx';
+import { Typography } from '@repo/ui/src/components/typography.tsx';
+import { HoverCardWrapper } from '#wrappers/hover-card-wrapper.tsx';
+import { currentUserQuery } from '@repo/lib/queries/current-user-query.ts';
+import { useUpdateUserSettings } from '@repo/lib/hooks/use-update-user-settings.ts';
+import { DropdownMenuItem } from '@repo/ui/src/components/dropdown-menu.tsx';
 
 export const OutlineCover = () => {
-  const currentUser = getUser();
-  const { updateFieldMutation } = useUpdateCurrentUser();
-  const preferences = currentUser.preferences;
-  const preferOutline = getPreferenceValue(preferences, "coverOutline");
-
-  const handleOutlinePrefer = (
-    e: React.MouseEvent<HTMLDivElement>,
-    value: boolean,
-  ) => {
-    e.preventDefault();
-
-    return updateFieldMutation.mutate({
-      value: value.toString(),
-      field: "preferences",
-      preferences: { value: value, key: "coverOutline" },
-    });
-  };
+  const { preferences: { cover_outline_visible } } = currentUserQuery().data;
+  const { updateUserSettingsMutation } = useUpdateUserSettings()
+  
+  const handleCoverOutlineVisibility = (value: boolean) => {
+    if (value === cover_outline_visible) return;
+    
+    return updateUserSettingsMutation.mutate({
+      setting: "cover_outline_visible", value
+    })
+  }
 
   return (
     <DropdownWrapper
-      properties={{ contentAlign: "end", sideAlign: "right" }}
+      properties={{ contentAlign: 'end', sideAlign: 'right' }}
       trigger={
         <Typography className="text-base">
-          {preferOutline ? "вкл" : "выкл"}
+          {cover_outline_visible ? 'вкл' : 'выкл'}
         </Typography>
       }
       content={
@@ -43,8 +34,8 @@ export const OutlineCover = () => {
             <HoverCardWrapper
               properties={{
                 delay: 10,
-                contentAlign: "center",
-                sideAlign: "right",
+                contentAlign: 'center',
+                sideAlign: 'right',
               }}
               trigger={
                 <Typography className="text-shark-400 text-sm hover:text-pink-500 cursor-pointer">
@@ -65,20 +56,16 @@ export const OutlineCover = () => {
             />
           </div>
           <div className="flex flex-col gap-y-2">
-            <HoverCardItem onClick={(e) => handleOutlinePrefer(e, true)}>
-              <Typography
-                className={preferOutline ? "text-caribbean-green-500" : ""}
-              >
+            <DropdownMenuItem onClick={() => handleCoverOutlineVisibility(true)}>
+              <Typography state={cover_outline_visible ? 'active' : 'default'}>
                 включить
               </Typography>
-            </HoverCardItem>
-            <HoverCardItem onClick={(e) => handleOutlinePrefer(e, false)}>
-              <Typography
-                className={!preferOutline ? "text-caribbean-green-500" : ""}
-              >
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={() => handleCoverOutlineVisibility(false)}>
+              <Typography state={!cover_outline_visible ? 'active' : 'default'}>
                 выключить
               </Typography>
-            </HoverCardItem>
+            </DropdownMenuItem>
           </div>
         </div>
       }

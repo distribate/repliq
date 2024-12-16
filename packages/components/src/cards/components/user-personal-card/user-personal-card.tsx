@@ -1,6 +1,6 @@
 import { Typography } from "@repo/ui/src/components/typography.tsx";
 import { Avatar } from "#user/components/avatar/components/avatar.tsx";
-import { UserNickname } from "#user/components/name/components/nickname.tsx";
+import { UserNickname } from "#user/components/name/nickname.tsx";
 import { Separator } from "@repo/ui/src/components/separator.tsx";
 import Portfolio from "@repo/assets/images/minecraft/portfolio.webp";
 import { TicketsModal } from "#modals/custom/tickets-modal.tsx";

@@ -1,12 +1,9 @@
 "use server";
 
 import "server-only";
-import { createClient } from "../../../../../../lib/utils/api/supabase-client.ts";
-import {
-  ExtendedUserEntity,
-  UserEntity,
-} from "@repo/types/entities/entities-type.ts";
-import { getUserDonate } from "#user/components/donate/queries/get-user-donate.ts";
+import { createClient } from '@repo/lib/utils/api/supabase-client.ts';
+import { ExtendedUserEntity } from "@repo/types/entities/entities-type.ts";
+import { CurrentUser } from '@repo/lib/queries/current-user-query.ts';
 
 export type ExtendedUsers = Pick<
   ExtendedUserEntity,
@@ -17,28 +14,25 @@ export type ExtendedUsers = Pick<
   | "name_color"
   | "description"
   | "donate"
+  | "favorite_item"
 >;
 
 type Users = Pick<
-  UserEntity,
-  "id" | "nickname" | "name_color" | "uuid" | "created_at" | "description"
+  CurrentUser,
+  "id" | "nickname" | "name_color" | "uuid" | "created_at" | "description" | "donate" | "favorite_item"
 >;
 
 export type GetUsers = {
   range?: number[];
-  limit?: number;
-  withDonate?: boolean;
+  limit?: number
 };
 
-export async function getUsers(filter?: GetUsers): Promise<{
-  data: ExtendedUsers[] | Users[];
-  count: number;
-} | null> {
+export async function getUsers(filter?: GetUsers): Promise<{ data: ExtendedUsers[] | Users[]; count: number; } | null> {
   const api = createClient();
 
   let query = api
     .from("users")
-    .select("id, nickname, uuid, created_at, name_color, description", {
+    .select("id, nickname, uuid, created_at, name_color, description, favorite_item, donate", {
       count: "exact",
     })
     .returns<Users[]>();
@@ -51,22 +45,6 @@ export async function getUsers(filter?: GetUsers): Promise<{
   if (error) {
     throw new Error(error.message);
   }
-
-  let users: ExtendedUsers[] | Users[];
-
-  if (filter?.withDonate) {
-    users = await Promise.all(
-      data.map(async (user) => {
-        const donate = await getUserDonate(user.nickname);
-        return { ...user, donate };
-      }),
-    );
-  } else {
-    users = data;
-  }
-
-  return {
-    data: users,
-    count: count ? count : 0,
-  };
+  
+  return { data, count: count ? count : 0 };
 }

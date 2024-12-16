@@ -69,8 +69,7 @@ export const UserCoverPanel = ({
   const requestedUser = qc.getQueryData<RequestedUser>(
     REQUESTED_USER_QUERY_KEY(requestedNickname),
   );
-  const userFriendPreference = requestedUser?.preferences
-    .friendRequest as boolean;
+  const userFriendPreference = requestedUser?.preferences.accept_friend_request as boolean;
 
   const isOwner = currentUser.nickname === requestedNickname;
 

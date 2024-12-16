@@ -1,12 +1,8 @@
-import { QueryKey, useQuery } from "@tanstack/react-query";
-import {
-  UserSessions,
-} from "@repo/lib/queries/get-user-sessions.ts";
+import { useQuery } from "@tanstack/react-query";
+import { UserSessions } from "@repo/lib/queries/get-user-sessions.ts";
+import { createQueryKey } from '@repo/lib/helpers/query-key-builder.ts';
 
-export const USER_ACTIVE_SESSIONS_QUERY_KEY: QueryKey = [
-  "user",
-  "active-sessions",
-];
+export const USER_ACTIVE_SESSIONS_QUERY_KEY = createQueryKey("user", ["active-sessions"])
 
 const RESTRICTED_IP = ["127.0.0.1", "localhost", "0.0.0.0"];
 
