@@ -1,12 +1,10 @@
 "use server";
 
 import { validatePostOwner } from "#post/components/post-item/queries/validate-owner-post.ts";
-import { createClient } from "../../../../../../lib/utils/api/supabase-client.ts";
-import { PostEntity } from "@repo/types/entities/entities-type.ts";
+import { createClient } from '@repo/lib/utils/api/supabase-client.ts';
+import { UserPostItem } from '@repo/types/routes-types/get-user-posts-types.ts';
 
-type PinPost = Pick<PostEntity, "id"> & {
-  isPinned: boolean;
-};
+type PinPost = Pick<UserPostItem, "id" | "isPinned">
 
 export async function pinPost({ id: postId, isPinned }: PinPost) {
   const isValid = await validatePostOwner({ postId });

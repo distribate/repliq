@@ -1,27 +1,28 @@
-import { HoverCardItem } from "@repo/ui/src/components/hover-card.tsx";
-import { Typography } from "@repo/ui/src/components/typography.tsx";
-import { BlockWrapper } from "#wrappers/block-wrapper.tsx";
+import { HoverCardItem } from '@repo/ui/src/components/hover-card.tsx';
+import { Typography } from '@repo/ui/src/components/typography.tsx';
+import { BlockWrapper } from '#wrappers/block-wrapper.tsx';
 import {
   Dialog,
   DialogContent,
   DialogTrigger,
-} from "@repo/ui/src/components/dialog.tsx";
-import { UserEntity } from "@repo/types/entities/entities-type.ts";
-import { PostItemBody } from "#post/components/post-item/components/post-body.tsx";
-import { OverridedPosts } from "#profile/components/posts/components/posts/queries/get-posts.ts";
-import { Square } from "lucide-react";
-import { PostItemHeader } from "#post/components/post-item/components/post-header.tsx";
+} from '@repo/ui/src/components/dialog.tsx';
+import { PostItemBody } from '#post/components/post-item/components/post-body.tsx';
+import { Square } from 'lucide-react';
+import { PostItemHeader } from '#post/components/post-item/components/post-header.tsx';
+import type { UserPostItem } from '@repo/types/routes-types/get-user-posts-types.ts';
 
-type PostAdditionalModal = Pick<UserEntity, "nickname"> & {
-  post: OverridedPosts;
-};
+type PostAdditionalModalProps = Pick<UserPostItem,
+  | "id"
+  | "user_nickname"
+  | "created_at"
+  | "visibility"
+  | "isPinned"
+  | "content"
+>
 
 export const PostAdditionalModal = ({
-  post,
-  nickname,
-}: PostAdditionalModal) => {
-  const { created_at, isPinned, visibility } = post;
-
+  isPinned, content, user_nickname, created_at, visibility, id
+}: PostAdditionalModalProps) => {
   return (
     <Dialog>
       <DialogTrigger>
@@ -30,21 +31,17 @@ export const PostAdditionalModal = ({
           <Typography>Открыть в окне</Typography>
         </HoverCardItem>
       </DialogTrigger>
-      <DialogContent id={post.id} className="max-w-4xl !p-0">
+      <DialogContent id={id} className="max-w-4xl !p-0">
         <BlockWrapper className="flex flex-col gap-y-4">
           <div className="flex justify-between w-full items-center">
             <PostItemHeader
-              nickname={nickname}
+              user_nickname={user_nickname}
               created_at={created_at}
               visibility={visibility}
               isPinned={isPinned}
             />
           </div>
-          <PostItemBody
-            id={post.id}
-            content={post.content}
-            nickname={nickname}
-          />
+          <PostItemBody id={id} content={content} user_nickname={user_nickname} />
         </BlockWrapper>
       </DialogContent>
     </Dialog>

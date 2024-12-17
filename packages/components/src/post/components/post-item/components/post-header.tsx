@@ -1,20 +1,16 @@
 import { Typography } from "@repo/ui/src/components/typography.tsx";
 import { Avatar } from "#user/components/avatar/components/avatar.tsx";
 import { UserNickname } from "#user/components/name/nickname.tsx";
-import { PostEntity, UserEntity } from "@repo/types/entities/entities-type.ts";
 import Link from "next/link";
 import dayjs from "@repo/lib/constants/dayjs-instance.ts";
 import { USER_URL } from "@repo/shared/constants/routes.ts";
 import { Pin } from "lucide-react";
+import type { UserPostItem } from '@repo/types/routes-types/get-user-posts-types.ts';
 
-type PostItemHeaderProps = Pick<UserEntity, "nickname" | "created_at"> &
-  Pick<PostEntity, "visibility" | "isPinned">;
+type PostItemHeaderProps = Pick<UserPostItem, "visibility" | "isPinned" | "created_at" | "user_nickname">;
 
 export const PostItemHeader = ({
-  nickname,
-  created_at: postCreatedAt,
-  visibility,
-  isPinned,
+  user_nickname, created_at: postCreatedAt, visibility, isPinned,
 }: PostItemHeaderProps) => {
   const dateCreated = dayjs(postCreatedAt).fromNow();
   const visibilityStatus =
@@ -22,19 +18,19 @@ export const PostItemHeader = ({
 
   return (
     <div className="flex gap-2 items-center">
-      <Link href={USER_URL + nickname}>
+      <Link href={USER_URL + user_nickname}>
         <Avatar
           variant="page"
           propHeight={48}
           propWidth={48}
-          nickname={nickname}
+          nickname={user_nickname}
         />
       </Link>
       <div className="flex flex-col gap-y-1">
         <div className="flex items-center gap-2">
-          <Link href={USER_URL + nickname}>
+          <Link href={USER_URL + user_nickname}>
             <UserNickname
-              nickname={nickname}
+              nickname={user_nickname}
               className="text-base font-medium"
             />
           </Link>

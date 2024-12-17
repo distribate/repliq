@@ -693,7 +693,7 @@ export interface PostsViews {
   created_at: Generated<Timestamp>;
   id: Generated<Int8>;
   post_id: string;
-  user_id: string;
+  user_nickname: string;
 }
 
 export interface PostsWithCommentsAndViewCounts {
@@ -746,8 +746,8 @@ export interface Reports {
   reason: Generated<ReportReason>;
   report_type: ReportType | null;
   reported_item: Json | null;
-  target_user_nickname: string | null;
-  user_nickname: string | null;
+  target_user_nickname: string;
+  user_nickname: string;
 }
 
 export interface Status {

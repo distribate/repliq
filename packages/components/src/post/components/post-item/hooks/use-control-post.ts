@@ -2,7 +2,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { removePost } from "../queries/remove-post.ts";
 import {
   POSTS_QUERY_KEY,
-  PostsQueryPromise,
+  PostsQueryResponse,
 } from "#profile/components/posts/components/posts/queries/posts-query.ts";
 import { getUser } from "@repo/lib/helpers/get-user.ts";
 import { PostEntity } from "@repo/types/entities/entities-type.ts";
@@ -32,7 +32,7 @@ export const useControlPost = () => {
     mutationFn: async (values: ControlPost) => {
       const { id, type, nickname } = values;
 
-      const posts = qc.getQueryData<PostsQueryPromise>(
+      const posts = qc.getQueryData<PostsQueryResponse>(
         POSTS_QUERY_KEY(nickname),
       )?.data;
       if (!posts) return;
@@ -59,12 +59,12 @@ export const useControlPost = () => {
       }
     },
     onSuccess: async (data, variables) => {
-      if (!data || !currentUser) return toast.error("Произошла ошибка");
+      if (!data) return toast.error("Произошла ошибка");
 
       if (variables.type === "remove") {
         return qc.setQueryData(
           POSTS_QUERY_KEY(currentUser.nickname),
-          (prev: PostsQueryPromise) => {
+          (prev: PostsQueryResponse) => {
             if (!prev.data) return null;
 
             const newData = prev.data.filter(
@@ -82,7 +82,7 @@ export const useControlPost = () => {
       }
 
       const updatedPost = await getUpdatedPost({
-        nickname: variables.nickname,
+        user_nickname: variables.nickname,
         id: variables.id,
       });
 
@@ -93,7 +93,7 @@ export const useControlPost = () => {
 
       qc.setQueryData(
         POSTS_QUERY_KEY(currentUser.nickname),
-        (prev: PostsQueryPromise) => {
+        (prev: PostsQueryResponse) => {
           if (!prev.data) return prev;
 
           return {
@@ -111,4 +111,4 @@ export const useControlPost = () => {
   });
 
   return { controlPostMutation };
-};
+}

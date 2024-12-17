@@ -41,7 +41,7 @@ import { CurrentUser } from '@repo/lib/queries/current-user-query.ts';
 const UserProfilePosts = dynamic(() =>
   import(
     "@repo/components/src/profile/components/posts/components/posts/components/profile-posts.tsx"
-  ).then((m) => m.ProfilePosts),
+  ).then((m) => m.UserProfilePosts),
 );
 
 const UserProfileAccountStats = dynamic(() =>

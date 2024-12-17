@@ -5,7 +5,7 @@ import {
   FlyingAnimation,
   SkinViewer,
 } from "skinview3d";
-import { useSkinAnimationQuery } from "../queries/skin-query.ts";
+import { skinAnimationQuery } from "../queries/skin-query.ts";
 
 const animationClasses = {
   idle: IdleAnimation,
@@ -14,7 +14,7 @@ const animationClasses = {
 };
 
 export const useSkinViewer = () => {
-  const { data: skinState } = useSkinAnimationQuery();
+  const { data: skinState } = skinAnimationQuery();
   const viewerRef = useRef<SkinViewer | null>(null);
 
   let animation:

@@ -8,14 +8,14 @@ import { Skeleton } from "@repo/ui/src/components/skeleton.tsx";
 import { UserNickname } from "#user/components/name/nickname.tsx";
 import { Typography } from "@repo/ui/src/components/typography.tsx";
 import dayjs from "@repo/lib/constants/dayjs-instance.ts";
-import { OverridedPosts } from "#profile/components/posts/components/posts/queries/get-posts.ts";
 import { PostFooterViews } from "#post/components/post-item/components/post-footer-views.tsx";
 import Link from "next/link";
 import { USER_URL } from "@repo/shared/constants/routes.ts";
 import { UserEntity } from "@repo/types/entities/entities-type.ts";
+import { UserPostItem } from '@repo/types/routes-types/get-user-posts-types.ts';
 
 type PostFooterWithViewsListProps = Pick<PostViewsQuery, "id"> &
-  Pick<OverridedPosts, "views_count">;
+  Pick<UserPostItem, "views_count">;
 
 const PostFooterViewsListSkeleton = () => {
   return (

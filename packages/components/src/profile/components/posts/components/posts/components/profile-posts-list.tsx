@@ -7,86 +7,64 @@ import { ContentNotFound } from "#templates/content-not-found.tsx";
 import { ProfilePostsFiltering } from "#profile/components/posts/components/posts/components/profile-posts-filtering.tsx";
 import { ProfilePostsListCard } from "#profile/components/posts/components/posts/components/profile-posts-list-card.tsx";
 import { UserEntity } from "@repo/types/entities/entities-type.ts";
-import { postsFilteringQuery } from "#profile/components/posts/components/posts/queries/posts-filtering-query.ts";
-import { useEffect, useState } from "react";
-import { useInView } from "react-intersection-observer";
 import { Separator } from "@repo/ui/src/components/separator.tsx";
 
 const SomethingError = dynamic(() =>
   import("#templates/something-error.tsx").then((m) => m.SomethingError),
 );
 
-export type ProfilePostsListProps = Pick<UserEntity, "nickname">;
-
-const ProfilePostsListSkeleton = () => {
-  return (
-    <>
-      <Skeleton className="h-48 w-full" />
-      <Skeleton className="h-48 w-full" />
-      <Skeleton className="h-48 w-full" />
-    </>
-  );
-};
-
-export const ProfilePostsList = ({ nickname }: ProfilePostsListProps) => {
-  const { data: filteringQuery } = postsFilteringQuery();
-  const [limit, setLimit] = useState(5);
-  const [hasMore, setHasMore] = useState(true);
-  const { ref, inView } = useInView({ threshold: 1 });
-
-  const {
-    data: postsData,
-    isError,
-    isLoading,
-    refetch,
-  } = postsQuery({
-    nickname,
-    range: [0, limit],
-    searchQuery: filteringQuery?.searchQuery,
-    filteringType: filteringQuery?.filteringType,
-  });
-
-  const posts = postsData?.data?.filter((post) => !post.isPinned) || [];
-  const pinnedPost = postsData?.data?.find((post) => post.isPinned);
-  const postsMeta = postsData?.meta;
-
-  useEffect(() => {
-    if (inView && hasMore) {
-      setLimit((prev) => prev + 5);
-    }
-  }, [inView, hasMore]);
-
-  useEffect(() => {
-    setHasMore(postsMeta?.count! >= limit);
-  }, [postsMeta, limit]);
-
-  useEffect(() => {
-    refetch();
-  }, [filteringQuery?.searchQuery, filteringQuery?.filteringType, limit]);
-
-  if (isError) return <SomethingError />;
-
-  const notFound = !postsData?.data || !postsData?.data?.length;
-
+export const ProfilePosts = ({
+  nickname
+}: Pick<UserEntity, "nickname">) => {
   return (
     <div className="flex flex-col gap-4 w-full h-full">
-      {!notFound && !isLoading && <ProfilePostsFiltering nickname={nickname} />}
-      {notFound && !isLoading && <ContentNotFound title="Постов не найдено." />}
-      {isLoading && <ProfilePostsListSkeleton />}
+      <ProfilePostsFiltering nickname={nickname} />
+      <ProfilePostsList nickname={nickname}/>
+    </div>
+  )
+}
+
+export const ProfilePostsList = ({
+  nickname
+}: Pick<UserEntity, "nickname">) => {
+  const { data, isError, isLoading } = postsQuery({
+    requestedUserNickname: nickname
+  });
+  
+  if (!data) return null;
+
+  const postsData = data.data;
+  const posts = postsData?.filter((post) => !post.isPinned) || [];
+  const pinnedPost = postsData?.find((post) => post.isPinned);
+  
+  if (isLoading) return (
+    <div className="flex flex-col gap-4 w-full h-full">
+      <Skeleton className="h-48 w-full" />
+      <Skeleton className="h-48 w-full" />
+      <Skeleton className="h-48 w-full" />
+    </div>
+  )
+  
+  if (isError) return <SomethingError />;
+  
+  if (!postsData) return <ContentNotFound title="Постов не найдено." />
+  
+  return (
+    <div className="flex flex-col gap-4 w-full h-full">
       {!isLoading && postsData && (
         <>
           {pinnedPost && (
             <>
-              <ProfilePostsListCard nickname={nickname} {...pinnedPost} />
+              <ProfilePostsListCard {...pinnedPost} />
               <Separator />
             </>
           )}
           {posts.map((post) => (
-            <ProfilePostsListCard key={post.id} nickname={nickname} {...post} />
+            <ProfilePostsListCard {...post} />
           ))}
-          {hasMore && <div ref={ref} className="h-[1px] w-full relative" />}
+          {/*{hasMore && <div ref={ref} className="h-[1px] w-full relative" />}*/}
         </>
       )}
     </div>
   );
-};
+}

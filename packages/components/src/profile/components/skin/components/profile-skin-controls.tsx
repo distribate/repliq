@@ -2,26 +2,26 @@
 
 import { Button } from "@repo/ui/src/components/button.tsx";
 import { Icon } from "@repo/shared/ui/icon/icon.tsx";
-import { Download, RotateCw } from "lucide-react";
+import { ArrowDownFromLine, RotateCw } from "lucide-react";
 import { Separator } from "@repo/ui/src/components/separator.tsx";
 import { useSkinStateChange } from "../hooks/use-skin-animation.ts";
-import { useSkinAnimationQuery } from "../queries/skin-query.ts";
+import { skinAnimationQuery } from "../queries/skin-query.ts";
 import { useRouter } from "next/navigation";
 import { SKIN_ANIMATIONS } from "../constants/skin-animations.ts";
 import { SKIN_DOWNLOAD_SKIN } from "@repo/shared/constants/routes.ts";
-import { UserSkinProps } from "#profile/components/skin/components/profile-skin.tsx";
+import { UserEntity } from "@repo/types/entities/entities-type.ts";
 
-export const ProfileSkinControls = ({ reqUserNickname }: UserSkinProps) => {
+export const ProfileSkinControls = ({ nickname }: Pick<UserEntity, "nickname">) => {
   const { push } = useRouter();
-  const { data: skinAnimation } = useSkinAnimationQuery();
+  const { data: skinAnimation } = skinAnimationQuery();
   const { updateSkinStateMutation } = useSkinStateChange();
-
+  
   return (
     <div className="flex flex-col gap-y-2">
       {SKIN_ANIMATIONS.map((control, i) => (
         <Button
           key={i}
-          className="min-h-[40px] min-w-[40px]"
+          className="h-[40px] w-[40px]"
           state={
             skinAnimation.animation === control.animation ? "active" : "default"
           }
@@ -33,8 +33,9 @@ export const ProfileSkinControls = ({ reqUserNickname }: UserSkinProps) => {
         </Button>
       ))}
       <Button
-        className="min-h-[40px] min-w-[40px]"
+        className="h-[40px] w-[40px]"
         state={skinAnimation.rotate ? "active" : "default"}
+        title="Переключить вращение"
         onClick={() =>
           updateSkinStateMutation.mutate({ rotate: !skinAnimation.rotate })
         }
@@ -43,10 +44,12 @@ export const ProfileSkinControls = ({ reqUserNickname }: UserSkinProps) => {
       </Button>
       <Separator />
       <Button
-        className="p-2.5"
-        onClick={() => push(SKIN_DOWNLOAD_SKIN + reqUserNickname)}
+        className="h-[40px] w-[40px]"
+        state="default"
+        title="Скачать скин"
+        onClick={() => push(SKIN_DOWNLOAD_SKIN + nickname)}
       >
-        <Download size={20} />
+        <ArrowDownFromLine size={20} />
       </Button>
     </div>
   );

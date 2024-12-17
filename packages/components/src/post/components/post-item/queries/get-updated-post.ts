@@ -1,26 +1,20 @@
 "use server";
 
 import { createClient } from "@repo/lib/utils/api/supabase-client.ts";
-import { PostEntity, UserEntity } from "@repo/types/entities/entities-type.ts";
-import { OverridedPosts } from "#profile/components/posts/components/posts/queries/get-posts.ts";
 import { getCurrentSession } from "@repo/lib/actions/get-current-session.ts";
+import type { UserPostItem } from '@repo/types/routes-types/get-user-posts-types.ts';
 
-type GetUpdatedPost = Pick<PostEntity, "id"> & Pick<UserEntity, "nickname">;
-
-type UpdatedPost = OverridedPosts;
+type GetUpdatedPost = Pick<UserPostItem, "id" | "user_nickname">
 
 type PostViews = {
-  isViewed: Array<{
-    user_id: string;
-  }>;
+  isViewed: Array<{ user_id: string; }>;
   views_count: number;
   comments_count: number;
 };
 
 export async function getUpdatedPost({
-  nickname,
-  id,
-}: GetUpdatedPost): Promise<UpdatedPost | null> {
+  user_nickname, id,
+}: GetUpdatedPost): Promise<UserPostItem | null> {
   const { user: currentUser } = await getCurrentSession();
   if (!currentUser) return null;
 
@@ -35,7 +29,7 @@ export async function getUpdatedPost({
   `,
       { count: "exact" },
     )
-    .eq("user_nickname", nickname)
+    .eq("user_nickname", user_nickname)
     .eq("id", id)
     .single();
 
@@ -59,7 +53,7 @@ export async function getUpdatedPost({
     ...data,
     isViewed,
     views_count: views.views_count,
-    user_nickname: nickname,
+    user_nickname,
     comments_count: views.comments_count,
   };
 }

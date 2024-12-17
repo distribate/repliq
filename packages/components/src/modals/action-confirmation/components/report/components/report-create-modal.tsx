@@ -17,7 +17,7 @@ import {
 import React, { useState } from "react";
 import {
   POSTS_QUERY_KEY,
-  PostsQueryPromise,
+  PostsQueryResponse,
 } from "@repo/components/src/profile/components/posts/components/posts/queries/posts-query.ts";
 import { toast } from "sonner";
 import { THREAD_COMMENTS_QUERY_KEY } from "@repo/components/src/thread/components/thread-comments/queries/thread-comments-query.ts";
@@ -54,7 +54,7 @@ export const ReportCreateModal = ({
     let content: string | null = null;
 
     if (reportType === "post") {
-      const selectedPosts = qc.getQueryData<PostsQueryPromise | null>(
+      const selectedPosts = qc.getQueryData<PostsQueryResponse | null>(
         POSTS_QUERY_KEY(targetNickname),
       );
       const selectedPost = selectedPosts?.data?.find(

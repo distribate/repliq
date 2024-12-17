@@ -10,11 +10,13 @@ import { useQueryClient } from "@tanstack/react-query";
 import { Button } from "@repo/ui/src/components/button.tsx";
 import { useState, ChangeEvent } from "react";
 import { useControlPost } from "#post/components/post-item/hooks/use-control-post.ts";
+import { UserPostItem } from '@repo/types/routes-types/get-user-posts-types.ts';
 
-type PostItemBodyProps = Pick<PostEntity, "content" | "id"> &
-  Pick<UserEntity, "nickname">;
+type PostItemBodyProps = Pick<UserPostItem, "content" | "id" | "user_nickname">
 
-export const PostItemBody = ({ content, id, nickname }: PostItemBodyProps) => {
+export const PostItemBody = ({
+  content, id, user_nickname
+}: PostItemBodyProps) => {
   const qc = useQueryClient();
   const [value, setValue] = useState<string>(content);
   const { data: postControlState } = postControlQuery(id);
@@ -41,7 +43,7 @@ export const PostItemBody = ({ content, id, nickname }: PostItemBodyProps) => {
       isEdit: false,
     }));
 
-    return controlPostMutation.mutate({ type: "edit", id, nickname });
+    return controlPostMutation.mutate({ type: "edit", id, nickname: user_nickname });
   };
 
   const handleCancelEdit = () => {

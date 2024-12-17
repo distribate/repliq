@@ -6,6 +6,8 @@ import { logger } from 'hono/logger';
 import { bearerAuth } from 'hono/bearer-auth';
 import { editUserDetailsRoute } from '#routes/edit-user-detailts.ts';
 import { getBlockedUsersRoute } from '#routes/get-blocked-users.ts';
+import { getUserThreadsRoute } from '#routes/get-user-threads.ts';
+import { getUserPostsRoute } from '#routes/get-user-posts.ts';
 
 const token = process.env.SECRET_TOKEN!;
 
@@ -21,7 +23,9 @@ export const user = new Hono()
 .route('/', editUserSettingsRoute)
 .route('/', editUserDetailsRoute)
 .route('/', getUserSettingsRoute)
-.route('/', getBlockedUsersRoute);
+.route('/', getBlockedUsersRoute)
+.route('/', getUserThreadsRoute)
+.route('/', getUserPostsRoute);
 
 const app = new Hono()
 .use('*', bearerAuth({ token }))
@@ -31,5 +35,5 @@ const app = new Hono()
 
 export default {
   port: process.env.FORUM_BACKEND_PORT,
-  fetch: app.fetch
+  fetch: app.fetch,
 };

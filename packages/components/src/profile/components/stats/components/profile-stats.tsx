@@ -6,21 +6,18 @@ import {
   TabsList,
   TabsTrigger,
 } from "@repo/ui/src/components/tabs.tsx";
-import { UserPageParam } from "@repo/types/global";
 import { GeneralStats } from "#profile/components/stats/components/general-stats.tsx";
 import { LandsStats } from "#profile/components/stats/components/lands-stats.tsx";
 
-type UserProfileGameStatsProps = UserPageParam & {
+type UserProfileGameStatsProps = {
+  nickname: string,
+  uuid: string,
   isSectionPrivatedByOwner: boolean;
 };
 
 export const UserProfileGameStats = async ({
-  nickname,
-  uuid,
-  isSectionPrivatedByOwner,
+  nickname, uuid, isSectionPrivatedByOwner
 }: UserProfileGameStatsProps) => {
-  if (!uuid) return null;
-
   return (
     <ProfileSectionLayout
       header={isSectionPrivatedByOwner && <SectionPrivatedContent />}

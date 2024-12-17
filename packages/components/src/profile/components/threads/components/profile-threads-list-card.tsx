@@ -6,15 +6,20 @@ import { MessageSquare, Text } from "lucide-react";
 import dayjs from "@repo/lib/constants/dayjs-instance.ts";
 import { profileThreadsSettingsQuery } from "#profile/components/threads/queries/profile-threads-settings-query.ts";
 
-export const ProfileThreadsListCard = ({
-  created_at,
-  id,
-  title,
-  commentsCount,
-}: UserThreads) => {
+interface ThreadCardProps {
+  thread: {
+    id: string;
+    title: string;
+    created_at: string;
+    commentsCount: number;
+  }
+}
+
+export const ProfileThreadsListCard = ({ thread }: ThreadCardProps) => {
   const { data: profileThreadsViewState } = profileThreadsSettingsQuery();
   const { viewType } = profileThreadsViewState;
 
+  const { id, title, created_at, commentsCount } = thread;
   const isGrid = viewType === "grid";
 
   return (

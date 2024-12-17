@@ -1,4 +1,3 @@
-import { OverridedPosts } from "#profile/components/posts/components/posts/queries/get-posts.ts";
 import { Typography } from "@repo/ui/src/components/typography.tsx";
 import { getUser } from "@repo/lib/helpers/get-user.ts";
 import { useEffect } from "react";
@@ -6,12 +5,10 @@ import { postPostView } from "#post/components/post-item/queries/post-view.ts";
 import { PostFooterViews } from "#post/components/post-item/components/post-footer-views.tsx";
 import dynamic from "next/dynamic";
 import { UserEntity } from "@repo/types/entities/entities-type.ts";
+import type { UserPostItem } from '@repo/types/routes-types/get-user-posts-types.ts';
 
-type PostFooterProps = Pick<
-  OverridedPosts,
-  "views_count" | "isUpdated" | "id" | "isViewed"
-> &
-  Pick<UserEntity, "nickname">;
+type PostFooterProps = Pick<UserPostItem, "views_count" | "isUpdated" | "id" | "isViewed"> &
+  Pick<UserEntity, "nickname">
 
 const PostFooterWithViewsList = dynamic(() =>
   import(
@@ -20,11 +17,7 @@ const PostFooterWithViewsList = dynamic(() =>
 );
 
 export const PostFooter = ({
-  views_count,
-  isUpdated,
-  nickname,
-  id,
-  isViewed,
+  views_count, isUpdated, nickname, id, isViewed,
 }: PostFooterProps) => {
   const currentUser = getUser();
 

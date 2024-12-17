@@ -16,21 +16,15 @@ const GeneralStatsSkeleton = () => (
 );
 
 export const GeneralStats = ({ nickname, uuid }: StatsRequest) => {
-  const {
-    data: generalStats,
-    isLoading,
-    isError,
-  } = generalStatsQuery({ nickname, uuid });
+  const { data,isLoading, isError } = generalStatsQuery({ nickname, uuid });
 
   if (isLoading) return <GeneralStatsSkeleton />;
   if (isError) return <SomethingError />;
-  if (!generalStats) return;
+  if (!data) return null;
 
-  const cmi = generalStats.cmi;
-  const wallet = generalStats.wallet;
-  const reputation = generalStats.reputation;
+  const { cmi, reputation, wallet } = data
 
-  if (!cmi || !reputation || !wallet) return;
+  if (!cmi || !reputation || !wallet) return null;
 
   return (
     <div className="flex flex-col gap-y-2">

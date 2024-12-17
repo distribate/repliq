@@ -1,4 +1,4 @@
-import { useQuery } from "@tanstack/react-query";
+import { useSuspenseQuery } from "@tanstack/react-query";
 import { getSkinDetails } from "@repo/lib/helpers/get-skin-details.ts";
 import { createQueryKey } from "@repo/lib/helpers/query-key-builder.ts";
 
@@ -24,22 +24,17 @@ const initial: Omit<SkinStateQuery, "skinUrl"> = {
 };
 
 const queryParams = {
-  refetchOnWindowFocus: false,
-  staleTime: Infinity,
-  gcTime: Infinity,
+  refetchOnWindowFocus: false
 };
 
-export const useSkinStateQuery = (nickname: string) =>
-  useQuery({
-    queryKey: SKIN_STATE_QUERY_KEY(nickname),
-    queryFn: () => getSkinDetails({ type: "skin", nickname }),
-    enabled: !!nickname,
-    ...queryParams,
-  });
+export const skinStateQuery = (nickname: string) => useSuspenseQuery({
+  queryKey: SKIN_STATE_QUERY_KEY(nickname),
+  queryFn: () => getSkinDetails({ type: "skin", nickname }),
+  ...queryParams,
+});
 
-export const useSkinAnimationQuery = () =>
-  useQuery<Omit<SkinStateQuery, "skinUrl">, Error>({
-    queryKey: SKIN_ANIMATION_QUERY_KEY,
-    initialData: initial,
-    ...queryParams,
-  });
+export const skinAnimationQuery = () => useSuspenseQuery<Omit<SkinStateQuery, "skinUrl">, Error>({
+  queryKey: SKIN_ANIMATION_QUERY_KEY,
+  initialData: initial,
+  ...queryParams,
+});

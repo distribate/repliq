@@ -1,4 +1,4 @@
-import { subscriber } from '#shared/listener';
+import { authSubscriber } from '#shared/listener';
 import { sendLogs } from '#utils/send-logs';
 
 type LoginDatePayload = {
@@ -7,10 +7,12 @@ type LoginDatePayload = {
   logindate: number
 }
 
-subscriber.notifications.on('logindate_channel', async (payload: LoginDatePayload) => {
-  if (payload) {
-    return await sendLogs({
-      data: payload, messageType: { tag: 'account' }
-    })
-  }
-});
+export async function notifyByAuthLoginDateChannel() {
+  return authSubscriber.notifications.on('auth_logindate_channel', async (payload: LoginDatePayload) => {
+    if (payload) {
+      return await sendLogs({
+        data: payload, messageType: { tag: 'account' }
+      })
+    }
+  });
+}

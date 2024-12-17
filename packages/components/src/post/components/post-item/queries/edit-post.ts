@@ -2,9 +2,9 @@
 
 import { createClient } from "@repo/lib/utils/api/supabase-client.ts";
 import { validatePostOwner } from "#post/components/post-item/queries/validate-owner-post.ts";
-import { PostEntity } from "@repo/types/entities/entities-type.ts";
+import { UserPostItem } from '@repo/types/routes-types/get-user-posts-types.ts';
 
-type EditPost = Pick<PostEntity, "id"> & {
+type EditPost = Pick<UserPostItem, "id"> & {
   content: string;
 };
 
