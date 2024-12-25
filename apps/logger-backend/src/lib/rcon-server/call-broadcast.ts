@@ -1,9 +1,8 @@
 import { getRCONHealthCheck } from '#lib/rcon-server/rcon-server-status';
 import { callServerCommand } from '#lib/rcon-server/call-command';
 
-export async function callAlert(value: string): Promise<void> {
+export async function callBroadcast(value: string): Promise<void> {
   const res = await getRCONHealthCheck();
-  console.log(res)
   
   if (!res.ok) return;
   

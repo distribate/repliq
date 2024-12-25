@@ -1,6 +1,6 @@
 import { HTTPException } from 'hono/http-exception';
 import { Hono } from 'hono';
-import { forumDB } from '#lib/db/db.ts';
+import { forumDB } from '#shared/db.ts';
 import bcrypt from 'bcryptjs';
 import { z } from 'zod';
 import { zValidator } from '@hono/zod-validator';

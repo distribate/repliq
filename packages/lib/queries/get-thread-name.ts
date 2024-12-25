@@ -1,8 +1,7 @@
 import { createClient } from "#utils/api/supabase-client.ts";
 import { ThreadEntity } from "@repo/types/entities/entities-type.ts";
 
-export async function getTopicName(thread_id?: Pick<ThreadEntity, "id">["id"]) {
-  if (!thread_id) return;
+export async function getTopicName(thread_id: Pick<ThreadEntity, "id">["id"]) {
   const api = createClient();
 
   const { data, error } = await api

@@ -7,5 +7,5 @@ export type PostSort = {
 
 export const POSTS_SORT: PostSort[] = [
   { title: "По дате публикации", value: "created_at" },
-  { title: "По кол-ву просмотров", value: "views" },
+  { title: "По кол-ву просмотров", value: "views_count" },
 ];

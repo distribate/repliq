@@ -1,8 +1,7 @@
-import { Kysely, PostgresDialect } from "kysely";
+import { PostgresDialect } from "kysely";
 import { Pool } from "pg";
-import type { DB as authDBType } from "@repo/types/db/auth-database-types.ts"
 
-const authDialect = new PostgresDialect({
+export const authDialect = new PostgresDialect({
   pool: new Pool({
     database: process.env.AUTHORIZATION_POSTGRES_DB,
     host: "127.0.0.1",
@@ -12,5 +11,3 @@ const authDialect = new PostgresDialect({
     password: process.env.AUTHORIZATION_POSTGRES_PASSWORD,
   }),
 })
-
-export const authDB = new Kysely<authDBType>({ dialect: authDialect })

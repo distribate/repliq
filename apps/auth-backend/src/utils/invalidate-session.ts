@@ -1,4 +1,4 @@
-import { forumDB } from "#lib/db/db.ts";
+import { forumDB } from "#shared/db.ts";
 
 export async function invalidateSession(sessionId: string) {
   return await forumDB

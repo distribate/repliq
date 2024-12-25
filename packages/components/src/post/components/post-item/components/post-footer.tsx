@@ -7,8 +7,7 @@ import dynamic from "next/dynamic";
 import { UserEntity } from "@repo/types/entities/entities-type.ts";
 import type { UserPostItem } from '@repo/types/routes-types/get-user-posts-types.ts';
 
-type PostFooterProps = Pick<UserPostItem, "views_count" | "isUpdated" | "id" | "isViewed"> &
-  Pick<UserEntity, "nickname">
+type PostFooterProps = Pick<UserPostItem, "views_count" | "isUpdated" | "id" | "isViewed" | "user_nickname">
 
 const PostFooterWithViewsList = dynamic(() =>
   import(
@@ -17,7 +16,7 @@ const PostFooterWithViewsList = dynamic(() =>
 );
 
 export const PostFooter = ({
-  views_count, isUpdated, nickname, id, isViewed,
+  views_count, isUpdated, id, isViewed, user_nickname,
 }: PostFooterProps) => {
   const currentUser = getUser();
 
@@ -25,7 +24,7 @@ export const PostFooter = ({
     if (!isViewed && currentUser) postPostView(id);
   }, []);
 
-  const isOwner = nickname === currentUser.nickname;
+  const isOwner = user_nickname === currentUser.nickname;
 
   return (
     <div className="flex w-full gap-4 justify-end items-center">

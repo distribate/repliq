@@ -19,19 +19,22 @@ import { UserEntity } from "@repo/types/entities/entities-type.ts";
 
 type ProfilePostsFilteringProps = Pick<UserEntity, "nickname">;
 
-const ProfilePostsFilteringSearch = forwardRef<HTMLInputElement>(
-  (props, ref) => {
+const ProfilePostsFilteringSearch = forwardRef<
+  HTMLInputElement
+>((props, ref) => {
     const qc = useQueryClient();
     const [value, setValue] = useState<string>("");
 
     const updateQuery = (value: string) => {
-      return qc.setQueryData(
+      qc.setQueryData(
         POSTS_FILTERING_QUERY_KEY,
         (prev: PostsFilteringQuery) => ({
           ...prev,
           searchQuery: value,
         }),
       );
+      
+      console.log(qc.getQueryCache())
     };
 
     const debouncedUpdateQuery = useDebounce(updateQuery, 300);

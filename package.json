@@ -13,13 +13,13 @@
     "lp-gen-types": "kysely-codegen --dialect postgres --url=env\\(LP_DATABASE_URL\\) --out-file=packages/types/db/luckperms-database-types.ts",
     "auth-gen-types": "kysely-codegen --dialect postgres --url=env\\(AUTH_DATABASE_URL\\) --out-file=packages/types/db/auth-database-types.ts",
     "forum-gen-types": "kysely-codegen --dialect postgres --url=env\\(FORUM_DATABASE_URL\\) --out-file=packages/types/db/forum-database-types.ts",
-    "payments-gen-types": "kysely-codegen --dialect postgres --url=env\\(PAYMENTS_DATABASE_URL\\) --out-file=packages/types/db/payments-database-types.ts"
+    "payments-gen-types": "kysely-codegen --dialect postgres --url=env\\(PAYMENTS_DATABASE_URL\\) --out-file=packages/types/db/payments-database-types.ts",
+    "skins-gen-types": "kysely-codegen --dialect mysql --url=env\\(SKINS_DATABASE_URL\\) --out-file=packages/types/db/skins-database-types.ts"
   },
   "dependencies": {
-    "@tanstack/react-query": "5.62.3"
+    "@litehex/node-vault": "^1.0.1"
   },
   "devDependencies": {
-    "@tanstack/react-query-devtools": "5.62.3",
     "concurrently": "9.1.0",
     "cross-env": "7.0.3",
     "dotenv-cli": "7.4.4",

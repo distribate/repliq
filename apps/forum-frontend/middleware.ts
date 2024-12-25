@@ -23,11 +23,7 @@ export async function middleware(request: NextRequest) {
 
     return response;
   }
-
-  if (request.method === "GET") {
-    return NextResponse.next();
-  }
-
+  
   const originHeader = request.headers.get("Origin");
   const hostHeader = request.headers.get("X-Forwarded-Host");
 
@@ -46,9 +42,7 @@ export async function middleware(request: NextRequest) {
   if (origin.host !== hostHeader) {
     return new NextResponse(null, { status: 403 });
   }
-
-  if (request.method === "GET") return NextResponse.next();
-
+  
   const hasAlertsShowing = request.cookies.has(ALERTS_COOKIE_KEY);
   const response = NextResponse.next();
 

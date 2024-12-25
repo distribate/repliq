@@ -2,7 +2,7 @@ import { Kysely, PostgresDialect } from "kysely";
 import { Pool } from "pg";
 import type { DB as lpDBType } from "@repo/types/db/luckperms-database-types.ts";
 
-const lpDialect = new PostgresDialect({
+export const lpDialect = new PostgresDialect({
   pool: new Pool({
     database: process.env.LUCKPERMS_POSTGRES_DB,
     host: "127.0.0.1",

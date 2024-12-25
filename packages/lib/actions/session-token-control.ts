@@ -4,17 +4,9 @@ import { cookies } from "next/headers";
 import { authClient } from "#utils/api/auth-client.ts";
 
 export async function validateSessionToken(token: string) {
-  const res = await authClient["validate-session"].$post({
+  return await authClient["validate-session"].$post({
     json: { token },
   });
-
-  const data = await res.json();
-
-  if ("error" in data) {
-    throw new Error(data.error);
-  }
-
-  return data;
 }
 
 export async function setSessionTokenCookie(

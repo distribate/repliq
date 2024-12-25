@@ -44,8 +44,6 @@ async function createPayment(data: PaymentCompleted['data']) {
         currency, nickname, captured, lt,
         hash, status, price, orderid, wallet, payment_type: paymentType, payment_value: donate,
       });
-    case 'item':
-      break;
     case 'charism':
       break;
     case 'belkoin':
@@ -77,9 +75,7 @@ async function receivePayment(data: PaymentCompleted['data']) {
       break;
     case 'charism':
       
-      break;
-    case 'item':
-      break;
+      break
   }
 }
 

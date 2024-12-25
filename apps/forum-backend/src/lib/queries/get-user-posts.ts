@@ -2,21 +2,19 @@ import { z } from 'zod';
 import { forumDB } from '@repo/shared/db/forum-db.ts';
 import type { Expression, SqlBool } from 'kysely';
 import type { getUserPostsSchema } from '@repo/types/schemas/posts/user-posts-schema.ts';
-import type { UserPostItem, GetUserPostsResponse } from '@repo/types/routes-types/get-user-posts-types.ts';
+import type { GetUserPostsResponse } from '@repo/types/routes-types/get-user-posts-types.ts';
 
 type GetPosts = z.infer<typeof getUserPostsSchema> & {
   requestedUserNickname: string
 }
 
-type ValidatePostVisibility = {
-  requestedUserNickname: string,
-  currentUserNickname: string,
-  post: UserPostItem
+type ValidateFriendship = {
+  currentUserNickname: string, requestedUserNickname: string,
 }
 
-async function checkIsFriend(
-  currentUserNickname: string, requestedUserNickname: string,
-): Promise<boolean> {
+async function validateFriendship({
+  requestedUserNickname, currentUserNickname
+}: ValidateFriendship): Promise<boolean> {
   const friendships = await forumDB
   .selectFrom('users_friends')
   .select([ 'user_1', 'user_2' ])
@@ -33,31 +31,12 @@ async function checkIsFriend(
   .includes(currentUserNickname));
 }
 
-const processPost = async({
-  post, currentUserNickname, requestedUserNickname,
-}: ValidatePostVisibility) => {
-  const isFriend = await checkIsFriend(currentUserNickname, requestedUserNickname);
-  const { user_nickname: postCreator, visibility } = post;
-  
-  const canView =
-    (visibility === 'all') ||
-    (visibility === 'friends' && (isFriend || currentUserNickname === postCreator)) ||
-    (visibility === 'only' && currentUserNickname === postCreator);
-  
-  return canView ? post : null;
-};
-
 export async function getUserPosts({
-  limit, ascending = false, searchQuery, filteringType, range, currentUserNickname, requestedUserNickname,
+  ascending, searchQuery, filteringType, range, currentUserNickname, requestedUserNickname
 }: GetPosts): Promise<GetUserPostsResponse | null> {
-  const getPinnedPosts = async() => {
-    return await forumDB
-    .selectFrom('posts_with_comments_and_view_counts')
-    .selectAll()
-    .where('user_nickname', '=', requestedUserNickname)
-    .where('isPinned', '=', true)
-    .execute();
-  };
+  const isFriend = await validateFriendship({
+    requestedUserNickname, currentUserNickname
+  });
   
   const getFilteredPosts = async() => {
     let query = forumDB
@@ -67,13 +46,25 @@ export async function getUserPosts({
       const filters: Expression<SqlBool>[] = [];
       
       filters.push(eb('user_nickname', '=', requestedUserNickname));
-      
-      if (searchQuery) {
+
+      if (searchQuery && searchQuery.trim() !== '') {
         filters.push(eb('content', 'like', `%${searchQuery}%`));
       }
       
       return eb.and(filters);
-    });
+    })
+    .where((eb) => {
+      if (isFriend) {
+        return eb.or([
+          eb('visibility', '=', 'all'),
+          eb('visibility', '=', 'friends'),
+        ]);
+      } else if (requestedUserNickname === currentUserNickname) {
+        return eb('visibility', '=', 'only');
+      } else {
+        return eb("visibility", "=", 'all')
+      }
+    })
     
     if (filteringType) {
       query = query.orderBy(
@@ -83,13 +74,11 @@ export async function getUserPosts({
     }
     
     if (range) {
-      query = query
-      .offset(Number(range[0]))
-      .limit(Number(range[1]) - Number(range[0]) + 1);
-    }
-    
-    if (limit) {
-      query = query.limit(Number(limit));
+      const offset = range[0];
+      const limit = range[1] - range[0];
+      query = query.offset(offset).limit(limit);
+    } else {
+      query = query.limit(8);
     }
     
     return await query.execute()
@@ -99,17 +88,35 @@ export async function getUserPosts({
     return await forumDB
     .selectFrom('posts_with_comments_and_view_counts')
     .select(
-      forumDB.fn.count('id').as('count'),
+      forumDB.fn.count('id').as('count')
     )
     .where('user_nickname', '=', requestedUserNickname)
-    .executeTakeFirst();
+    .where((eb) => {
+      if (isFriend) {
+        return eb.or([
+          eb('visibility', '=', 'all'),
+          eb('visibility', '=', 'friends'),
+        ]);
+      } else if (isFriend && requestedUserNickname === currentUserNickname) {
+        return eb('visibility', '=', 'only');
+      } else {
+        return eb("visibility", "=", 'all')
+      }
+    })
+    .executeTakeFirst()
   };
   
-  const [ pinnedPosts, otherPosts, countResult ] = await Promise.all([
-    getPinnedPosts(), getFilteredPosts(), getPostsCount(),
+  const [ otherPosts, countResult ] = await Promise.all([
+    getFilteredPosts(), getPostsCount()
   ]);
   
-  const allPosts = [...pinnedPosts, ...otherPosts];
+  if (!otherPosts.length) {
+    return {
+      data: [], meta: { count: 0 }
+    }
+  }
+  
+  const allPosts = otherPosts
   const postIds = allPosts.map((post) => post.id);
   
   const postViews = await forumDB
@@ -120,27 +127,21 @@ export async function getUserPosts({
   
   const postsWithViews = allPosts.map((post) => {
     const views = postViews
-    .filter((view) => view.post_id === post.id)
-    .map((view) => view.user_nickname);
+    .filter(view => view.post_id === post.id)
+    .map(view => view.user_nickname);
     
     const isViewed = views.includes(currentUserNickname);
     
-    return { ...post, views, isViewed };
+    return { ...post,
+      isViewed,
+      views_count: Number(post.views_count),
+      comments_count: Number(post.comments_count)
+    };
   });
-  
-  const visiblePosts = await Promise.all(
-    postsWithViews.map((post) =>
-      // @ts-expect-error
-      processPost({ post, currentUserNickname, requestedUserNickname })
-    )
-  );
-  
-  const filteredPosts = visiblePosts.filter(
-    (post): post is UserPostItem => post !== null
-  );
-  
+
   return {
-    data: filteredPosts,
+    // @ts-expect-error
+    data: postsWithViews,
     meta: { count: Number(countResult?.count) ?? 0 },
   };
 }

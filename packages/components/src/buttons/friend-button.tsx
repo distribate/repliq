@@ -15,7 +15,7 @@ import { Typography } from "@repo/ui/src/components/typography.tsx";
 import { Minus, Plus } from "lucide-react";
 
 export type FriendButtonProps = {
-  reqUserNickname: string;
+  requestedUserNickname: string;
 };
 
 const IncomingFriendButton = ({
@@ -68,11 +68,11 @@ const IncomingFriendButton = ({
 };
 
 const DeleteFriendButton = ({
-  recipient: reqUserNickname,
+  recipient
 }: Pick<FriendRequestProperties, "recipient">) => {
   const { removeFriendMutation } = useControlFriendRequests();
 
-  const handleDeleteFriend = () => removeFriendMutation.mutate({ reqUserNickname });
+  const handleDeleteFriend = () => removeFriendMutation.mutate({ reqUserNickname: recipient });
 
   return (
     <Button
@@ -128,13 +128,13 @@ const OutgoingFriendButton = ({
 };
 
 
-export const FriendButton = ({ reqUserNickname }: FriendButtonProps) => {
+export const FriendButton = ({ requestedUserNickname }: FriendButtonProps) => {
   const [currentRequestStatus, setCurrentRequestStatus] =
     useState<RequestStatus | null>(null);
   const currentUser = getUser();
   if (!currentUser) return null;
 
-  const reqStatus = checkFriendRequestStatus(reqUserNickname);
+  const reqStatus = checkFriendRequestStatus(requestedUserNickname);
 
   useEffect(() => {
     setCurrentRequestStatus(reqStatus);
@@ -145,16 +145,16 @@ export const FriendButton = ({ reqUserNickname }: FriendButtonProps) => {
   return (
     <>
       {currentRequestStatus === "friend" && (
-        <DeleteFriendButton recipient={reqUserNickname} />
+        <DeleteFriendButton recipient={requestedUserNickname} />
       )}
       {currentRequestStatus === "default" && (
-        <AddFriendButton recipient={reqUserNickname} />
+        <AddFriendButton recipient={requestedUserNickname} />
       )}
       {currentRequestStatus === "accept" && (
-        <IncomingFriendButton initiator={reqUserNickname} />
+        <IncomingFriendButton initiator={requestedUserNickname} />
       )}
       {currentRequestStatus === "deny" && (
-        <OutgoingFriendButton recipient={reqUserNickname} />
+        <OutgoingFriendButton recipient={requestedUserNickname} />
       )}
     </>
   );

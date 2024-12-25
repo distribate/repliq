@@ -23,10 +23,8 @@ import Campfire from "@repo/assets/images/minecraft/campfire.webp";
 import BookAndQuill from "@repo/assets/images/minecraft/book_quill.webp";
 
 const UserPersonalCardHeader = () => {
-  const currentUser = getUser();
-
-  const { nickname, name_color } = currentUser;
-
+  const { nickname, name_color } = getUser();
+  
   return (
     <>
       <Avatar propHeight={96} propWidth={96} nickname={nickname} />

@@ -17,21 +17,15 @@ export async function getThreadsUser({
   nickname, querySearch,
 }: GetThreadsUser) {
   const res = await forumUserClient.user["get-user-threads"][":nickname"].$get({
-    param: { 
-      nickname
-     },
-    query: { 
-      querySearch
-     }
+    param: { nickname },
+    query: { querySearch }
   })
   
   const data = await res.json()
 
-  if ("error" in data) {
+  if (!data || "error" in data) {
     return null;
   }
-
-  if (data.length ? data : null) return null;
   
-  return data;
+  return data
 }

@@ -1,6 +1,64 @@
 name: fasberry-external
 
 services:
+  consul:
+    image: consul:1.15.4
+    container_name: consul
+    ports:
+      - "8500:8500"  # Web UI
+      - "8600:8600/udp"  # DNS
+    command: "agent -server -client=0.0.0.0 -bootstrap-expect=1 -data-dir=/consul/data"
+    environment:
+      - CONSUL_BIND_INTERFACE=eth0
+    networks:
+      - vault_network
+    restart: always
+    volumes:
+      - ./data/fasberry-external/consul/data:/consul/data
+
+  vault:
+    image: hashicorp/vault:latest
+    container_name: vault
+    ports:
+      - "1488:1488"
+    restart: always
+    depends_on:
+      - consul
+    networks:
+      - vault_network
+    volumes:
+      - ./config/vault.hcl:/vault/config/vault.hcl
+    cap_add:
+      - IPC_LOCK
+    entrypoint: ["vault", "server", "-config=/vault/config/vault.hcl"]
+
+  minio:
+    image: minio/minio:latest
+    container_name: minio
+    ports:
+      - "${MINIO_PORT}:${MINIO_PORT}" 
+      - "${MINIO_CLIENT_PORT}:${MINIO_CLIENT_PORT}" 
+    environment:
+      MINIO_ROOT_USER: ${MINIO_ROOT_USER}
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD}
+    volumes:
+      - ./data/fasberry-external/minio/data:/data
+    command: server /data --console-address ":${MINIO_CLIENT_PORT}"
+
+  # mc:
+  #   image: minio/mc:latest
+  #   container_name: minio-client
+  #   depends_on:
+  #     - minio
+  #   entrypoint: >
+  #     /bin/sh -c "
+  #     until (mc alias set myminio http://minio:${MINIO_PORT} ${MINIO_ROOT_USER} ${MINIO_ROOT_PASSWORD}); do
+  #       echo 'Waiting for MinIO...';
+  #       sleep 2;
+  #     done;
+  #     mc mb myminio/mybucket;
+  #     "
+
   luckperms_db:
     container_name: luckperms_db
     image: postgres:15.1
@@ -53,3 +111,5 @@ services:
 networks:
   shared-network:
     external: true
+  vault_network:
+    driver: bridge

@@ -1,14 +1,19 @@
-"use client";
+'use client';
 
-import { Typography } from "@repo/ui/src/components/typography.tsx";
-import { ThreadCommentItem } from "../../thread-comment/components/thread-comment-item.tsx";
-import { threadCommentsQuery } from "../queries/thread-comments-query.ts";
-import { ThreadCommentEntity } from "@repo/types/entities/entities-type.ts";
-import { Skeleton } from "@repo/ui/src/components/skeleton.tsx";
-import { useInView } from "react-intersection-observer";
-import { useEffect } from "react";
+import { Typography } from '@repo/ui/src/components/typography.tsx';
+import { ThreadCommentItem } from '../../thread-comment/components/thread-comment-item.tsx';
+import {
+  THREAD_COMMENTS_FILTRATION_QUERY_KEY,
+  ThreadCommentsFiltationQuery,
+  threadCommentsQuery,
+} from '../queries/thread-comments-query.ts';
+import { ThreadCommentEntity } from '@repo/types/entities/entities-type.ts';
+import { Skeleton } from '@repo/ui/src/components/skeleton.tsx';
+import { useInView } from 'react-intersection-observer';
+import { useEffect } from 'react';
+import { useQueryClient } from '@tanstack/react-query';
 
-type ThreadCommentsProps = Pick<ThreadCommentEntity, "thread_id"> & {
+type ThreadCommentsProps = Pick<ThreadCommentEntity, 'thread_id'> & {
   threadAuthorNickname: string;
   isComments: boolean;
 };
@@ -55,28 +60,31 @@ export const ThreadCommentsSkeleton = () => {
 };
 
 export const ThreadComments = ({
-  thread_id,
-  threadAuthorNickname,
-  isComments,
+  thread_id, threadAuthorNickname, isComments,
 }: ThreadCommentsProps) => {
-  const { inView, ref } = useInView({
-    threshold: 0,
-  });
-
-  const { data: threadComments, isLoading } = threadCommentsQuery({
-    thread_id,
-    isComments,
-  });
-
-  useEffect(() => {
-    if (inView) {
-    }
-  }, []);
-
-  if (isLoading) return <ThreadCommentsSkeleton />;
-
+  const qc = useQueryClient();
+  const { data: threadComments, isLoading, refetch, isFetching } = threadCommentsQuery({ thread_id, isComments });
+  const { inView, ref } = useInView({ triggerOnce: false, threshold: 1 });
+  
   const nonComments = isComments && !threadComments;
-
+  const hasMore = threadComments && threadComments.length < 30
+  
+  const increaseThreadCommentsRange = () => {
+    return qc.setQueryData(THREAD_COMMENTS_FILTRATION_QUERY_KEY(thread_id), (prev: ThreadCommentsFiltationQuery) => ({
+      ...prev,
+      range: [ prev.range[0], prev.range[1] + 4 ],
+    }));
+  };
+  
+  useEffect(() => {
+    if (inView && hasMore) {
+      increaseThreadCommentsRange();
+      refetch();
+    }
+  }, [ refetch, inView ]);
+  
+  if (isLoading) return <ThreadCommentsSkeleton />;
+  
   return (
     <div className="flex flex-col items-center w-full">
       <ThreadCommentsHeader nonComments={nonComments} />
@@ -86,7 +94,7 @@ export const ThreadComments = ({
             <ThreadCommentItem
               key={i}
               thread_id={thread_id}
-              id={comment.id}
+              id={Number(comment.id)}
               replied={comment.replied}
               edited={comment.edited}
               content={comment.content}
@@ -95,7 +103,14 @@ export const ThreadComments = ({
               created_at={comment.created_at}
             />
           ))}
-          <div ref={ref} className="h-[1px] w-full border" />
+          {(hasMore && isFetching) && (
+            <div className="flex flex-col items-start gap-y-2 w-full">
+              <Skeleton className="h-[120px] w-full" />
+              <Skeleton className="h-[120px] w-full" />
+              <Skeleton className="h-[120px] w-full" />
+            </div>
+          )}
+          {hasMore && <div ref={ref} className="h-[1px] w-full" />}
         </div>
       )}
     </div>

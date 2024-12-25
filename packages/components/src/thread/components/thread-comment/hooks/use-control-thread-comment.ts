@@ -4,9 +4,8 @@ import {
   removeThreadComment,
 } from "../queries/remove-thread-comment.ts";
 import { toast } from "sonner";
-import { THREAD_COMMENTS_QUERY_KEY } from "../../thread-comments/queries/thread-comments-query.ts";
+import { THREAD_COMMENTS_QUERY_KEY, ThreadComment } from '../../thread-comments/queries/thread-comments-query.ts';
 import { editThreadCommentContent } from "../queries/edit-thread-comment-content.ts";
-import { ThreadComment } from "../../thread-comments/queries/get-thread-comments.ts";
 import { ThreadCommentEntity } from "@repo/types/entities/entities-type.ts";
 
 export const useControlThreadComment = () => {

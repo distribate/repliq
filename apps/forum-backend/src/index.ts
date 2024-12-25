@@ -8,16 +8,24 @@ import { editUserDetailsRoute } from '#routes/edit-user-detailts.ts';
 import { getBlockedUsersRoute } from '#routes/get-blocked-users.ts';
 import { getUserThreadsRoute } from '#routes/get-user-threads.ts';
 import { getUserPostsRoute } from '#routes/get-user-posts.ts';
+import { callServerCommandRoute } from '#routes/call-server-command.ts';
+import { showRoutes } from 'hono/dev';
+import { startNATS } from '#shared/nats-client.ts';
+import { getThreadCommentsRoute } from '#routes/get-thread-comments.ts';
 
 const token = process.env.SECRET_TOKEN!;
 
 export const headers = { Authorization: `Bearer ${token}` };
 
-export const forum = new Hono()
-.basePath('/forum');
+export const admin = new Hono()
+.basePath('/admin')
+.route('/', callServerCommandRoute);
+
+export const thread = new Hono()
+.basePath('/thread')
+.route('/', getThreadCommentsRoute);
 
 export const user = new Hono()
-.use('*', logger())
 .basePath('/user')
 .route('/', getUserRoute)
 .route('/', editUserSettingsRoute)
@@ -29,9 +37,15 @@ export const user = new Hono()
 
 const app = new Hono()
 .use('*', bearerAuth({ token }))
+.use('*', logger())
 .basePath('/api')
-.route('/', forum)
-.route('/', user);
+.route('/', admin)
+.route('/', user)
+.route("/", thread)
+
+startNATS();
+
+showRoutes(app, { verbose: false });
 
 export default {
   port: process.env.FORUM_BACKEND_PORT,

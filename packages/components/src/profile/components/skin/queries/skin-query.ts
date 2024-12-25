@@ -15,26 +15,23 @@ export const SKIN_ANIMATION_QUERY_KEY = createQueryKey("ui", [
   "skin-state",
   "animation",
 ]);
-export const SKIN_STATE_QUERY_KEY = (nickname: string) =>
-  createQueryKey("ui", ["skin-state"], nickname);
+
+export const SKIN_STATE_QUERY_KEY = (uuid: string) =>
+  createQueryKey("ui", ["skin-state"], uuid);
 
 const initial: Omit<SkinStateQuery, "skinUrl"> = {
   animation: "idle",
   rotate: false,
 };
 
-const queryParams = {
+export const skinStateQuery = (uuid: string) => useSuspenseQuery({
+  queryKey: SKIN_STATE_QUERY_KEY(uuid),
+  queryFn: () => getSkinDetails(uuid),
   refetchOnWindowFocus: false
-};
-
-export const skinStateQuery = (nickname: string) => useSuspenseQuery({
-  queryKey: SKIN_STATE_QUERY_KEY(nickname),
-  queryFn: () => getSkinDetails({ type: "skin", nickname }),
-  ...queryParams,
 });
 
 export const skinAnimationQuery = () => useSuspenseQuery<Omit<SkinStateQuery, "skinUrl">, Error>({
   queryKey: SKIN_ANIMATION_QUERY_KEY,
   initialData: initial,
-  ...queryParams,
+  refetchOnWindowFocus: false
 });

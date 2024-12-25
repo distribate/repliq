@@ -13,20 +13,20 @@ import { ConfirmationActionModalTemplate } from "#templates/confirmation-action-
 import { blockedUserQuery } from "@repo/lib/queries/blocked-user-query.ts";
 
 type BlockUserModalProps = {
-  requestedNickname: string;
+  requestedUserNickname: string;
 };
 
-export const BlockUserModal = ({ requestedNickname }: BlockUserModalProps) => {
-  const { data: blockedState } = blockedUserQuery(requestedNickname);
+export const BlockUserModal = ({ requestedUserNickname }: BlockUserModalProps) => {
+  const { data: blockedState } = blockedUserQuery(requestedUserNickname);
   const { blockUserMutation, unblockUserMutation } = useBlockUser();
 
-  const isBlocked = blockedState?.recipient === requestedNickname || false;
+  const isBlocked = blockedState?.recipient === requestedUserNickname || false;
 
   const handleBlockUser = () => {
     if (isBlocked) {
-      return unblockUserMutation.mutate(requestedNickname);
+      return unblockUserMutation.mutate(requestedUserNickname);
     } else {
-      return blockUserMutation.mutate(requestedNickname);
+      return blockUserMutation.mutate(requestedUserNickname);
     }
   };
 

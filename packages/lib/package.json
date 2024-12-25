@@ -9,11 +9,12 @@
   "dependencies": {
     "@repo/assets": "*",
     "@repo/shared": "*",
-    "base64-arraybuffer": "^1.0.2",
-    "dayjs": "^1.11.11",
+    "base64-arraybuffer": "1.0.2",
+    "dayjs": "1.11.11",
     "ky": "1.7.2",
-    "lucia": "^3.2.0",
-    "nanoid": "^5.0.7",
+    "lucia": "3.2.0",
+    "mysql2": "3.12.0",
+    "nanoid": "5.0.7",
     "usehooks-ts": "3.1.0",
     "zod": "3.23.8"
   },
@@ -22,8 +23,6 @@
     "@repo/types": "*",
     "@types/react": "18.3.12",
     "@types/react-dom": "18.3.1",
-    "tailwindcss-react-aria-components": "^1.2.0",
-    "typescript": "^5.4.5",
-    "unplugin-tailwindcss-mangle": "^2.2.2"
+    "typescript": "^5.4.5"
   }
 }

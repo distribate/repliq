@@ -20,8 +20,10 @@ import {
   PostsQueryResponse,
 } from "@repo/components/src/profile/components/posts/components/posts/queries/posts-query.ts";
 import { toast } from "sonner";
-import { THREAD_COMMENTS_QUERY_KEY } from "@repo/components/src/thread/components/thread-comments/queries/thread-comments-query.ts";
-import { ThreadComment } from "@repo/components/src/thread/components/thread-comments/queries/get-thread-comments.ts";
+import {
+  THREAD_COMMENTS_QUERY_KEY,
+  ThreadComment,
+} from '@repo/components/src/thread/components/thread-comments/queries/thread-comments-query.ts';
 import { Textarea } from "@repo/ui/src/components/textarea.tsx";
 import {
   ReportEntity,

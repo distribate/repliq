@@ -13,7 +13,7 @@ import { MetadataType, PageConventionProps } from "@repo/types/global";
 import { Button } from "@repo/ui/src/components/button.tsx";
 import { ThreadMore } from "@repo/components/src/thread/components/thread-more/components/thread-more.tsx";
 import { Eye } from "lucide-react";
-import { FriendButton } from "@repo/components/src/buttons/friends/friend-button.tsx";
+import { FriendButton } from "@repo/components/src/buttons/friend-button.tsx";
 import { Descendant } from "slate";
 import { redirect } from "next/navigation";
 import { ThreadCreator } from "@repo/components/src/thread/components/thread-creator/components/thread-creator.tsx";
@@ -30,7 +30,7 @@ export async function generateMetadata({
   const { id: thread_id } = params;
   let title: string = "Не найдено";
   if (!thread_id) title = "";
-  const data = await getTopicName(thread_id);
+  const data = await getTopicName(thread_id!);
   if (data) title = data.title;
   return { title };
 }
@@ -161,7 +161,7 @@ export default async function TopicsTopicPage({ params }: PageConventionProps) {
                 <Typography>Это вы</Typography>
               </Button>
             ) : (
-              <FriendButton reqUserNickname={owner.nickname} />
+              <FriendButton requestedUserNickname={owner.nickname} />
             )}
           </div>
         </BlockWrapper>

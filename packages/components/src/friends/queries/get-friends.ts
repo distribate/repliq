@@ -37,7 +37,7 @@ export type UserFriends = FriendDetails &
 
 export async function getFriends({
   nickname,
-  orderType,
+  orderType = "created_at",
   ascending = false,
 }: RequestFriends): Promise<UserFriends[] | null> {
   const api = createClient();

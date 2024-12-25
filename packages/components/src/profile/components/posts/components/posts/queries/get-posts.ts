@@ -7,12 +7,12 @@ import { redirect } from 'next/navigation';
 import { z } from 'zod';
 import { getUserPostsSchema } from '@repo/types/schemas/posts/user-posts-schema.ts';
 
-export type GetPosts = Omit<z.infer<typeof getUserPostsSchema>, "currentUserNickname"> & {
+export type GetPosts = Omit<z.infer<typeof getUserPostsSchema>, 'currentUserNickname'> & {
   requestedUserNickname: string
 }
 
 export async function getPosts({
-  requestedUserNickname, limit, ascending = false, searchQuery, filteringType, range,
+  requestedUserNickname, ascending = false, searchQuery, filteringType, range
 }: GetPosts) {
   const { user: currentUser } = await getCurrentSession();
   
@@ -20,9 +20,15 @@ export async function getPosts({
     redirect(AUTH_REDIRECT);
   }
   
+  const { nickname: currentUserNickname } = currentUser;
+  
   const res = await forumUserClient.user['get-user-posts'][':nickname'].$get({
     query: {
-      currentUserNickname: currentUser.nickname
+      currentUserNickname,
+      ascending: ascending.toString(),
+      searchQuery,
+      filteringType,
+      range: `${range[0]},${range[1]}`
     },
     param: {
       nickname: requestedUserNickname,
@@ -32,7 +38,8 @@ export async function getPosts({
   const data = await res.json();
   
   if (!data || 'error' in data) {
-    return { data: null, meta: { count: 0 }, };
+    console.log(data?.error)
+    return { data: null, meta: { count: 0 } };
   }
   
   return data;

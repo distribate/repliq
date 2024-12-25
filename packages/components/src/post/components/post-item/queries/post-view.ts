@@ -11,5 +11,7 @@ export async function postPostView(postId: string) {
 
   await api
     .from("posts_views")
-    .insert({ user_id: currentUser.id, post_id: postId });
+    .insert({
+      user_nickname: currentUser.nickname, post_id: postId
+    });
 }

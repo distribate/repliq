@@ -1,10 +1,18 @@
-import { fasberryBot, loggerBot } from '#shared/bot';
-import { startNATS } from '#shared/nats-client';
-import { pgListenConnect } from '#shared/listener';
+import { messageHandler } from '#lib/handlers/message-handler'
+import { fasberryBot, loggerBot } from '#shared/bot'
+import { pgListenConnect } from '#shared/listener'
+import { startNATS } from '#shared/nats-client'
 
-await fasberryBot.init().then(_ => console.log("\x1b[35mFasberry bot started\x1b[0m"))
-await loggerBot.init().then(_ => console.log("\x1b[35mLogger bot started\x1b[0m"))
-
+await fasberryBot.init()
+await loggerBot.start()
 await pgListenConnect()
-
 await startNATS()
+
+async function loadCommands() {
+  await import("#lib/commands/broadcast-command")
+  await import("#lib/commands/weather-command"),
+  await import("#lib/commands/keyboard-command")
+}
+
+loadCommands()
+loggerBot.on("message", messageHandler);

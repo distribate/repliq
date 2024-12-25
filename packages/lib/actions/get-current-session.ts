@@ -4,22 +4,35 @@ import { SessionValidationResult } from "auth-backend/src/lib/routes/create-sess
 import { cache } from "react";
 import { cookies } from "next/headers";
 import { validateSessionToken } from "#actions/session-token-control.ts";
+import { redirect } from "next/navigation";
 
 export const getCurrentSession = cache(
   async (): Promise<SessionValidationResult> => {
-    const cookieStore = cookies();
-    const token = cookieStore.get("session")?.value ?? null;
+    const token = cookies().get("session")?.value ?? null;
 
     if (token === null) {
       return { session: null, user: null };
     }
 
-    const { session, user } = await validateSessionToken(token);
+    try {
+      const res = await validateSessionToken(token);
 
-    if (!session || !user) {
-      return { session: null, user: null };
+      const data = await res.json();
+  
+      if ("error" in data) {
+        console.error(data?.error)
+        throw new Error(data.error);
+      }
+    
+      const { session, user } = data;
+  
+      if (!session || !user) {
+        return { session: null, user: null };
+      }
+  
+      return { session, user };
+    } catch (e) {
+      redirect("/not-online")
     }
-
-    return { session, user };
   },
 );

@@ -1,4 +1,4 @@
-import { authDB } from "#lib/db/db.ts";
+import { authDB } from "#shared/db.ts";
 import type { AUTH } from "@repo/types/db/auth-database-types.ts";
 import type { Selectable } from "kysely";
 

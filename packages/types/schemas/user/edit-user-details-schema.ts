@@ -13,7 +13,7 @@ export const userDetailsSchema = z.object({
       case 'real_name':
       case 'birthday':
       case 'description':
-        return value === null || value.length > 0;
+        return value === null || !value.length || false || value.length > 0;
       case 'name_color':
         return /^#[0-9a-fA-F]{6}$/.test(value || '');
       case 'favorite_item':

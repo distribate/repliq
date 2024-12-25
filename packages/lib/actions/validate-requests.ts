@@ -2,6 +2,7 @@
 
 import { cookies } from "next/headers";
 import { validateSessionToken } from "#actions/session-token-control.ts";
+import { redirect } from "next/navigation";
 
 export async function validateSession() {
   const token = cookies().get("session")?.value ?? null;
@@ -10,9 +11,17 @@ export async function validateSession() {
     return new Response(null, { status: 401 });
   }
 
-  const session = await validateSessionToken(token);
+  try {
+    const res = await validateSessionToken(token);
+    const session = await res.json();
 
-  if (session === null) {
-    return new Response(null, { status: 401 });
+    if ("error" in session) {
+      console.error(session?.error)
+      throw new Error(session.error);
+    }
+  
+    return session;
+  } catch (e) {
+    redirect("/not-online")
   }
 }

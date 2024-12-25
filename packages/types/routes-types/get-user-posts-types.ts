@@ -1,12 +1,12 @@
 import type { Posts } from '../db/forum-database-types.ts';
 import type { Selectable } from 'kysely';
 
-export type UserPostItem = Selectable<Posts> & {
+export type UserPostItem = Omit<Selectable<Posts>, "created_at"> & {
+  created_at: string,
   comments_count: number;
   views_count: number;
   isViewed: boolean;
-  user_nickname: string;
-  views: Array<string>
+  user_nickname: string
 }
 
 export type GetUserPostsResponse = {

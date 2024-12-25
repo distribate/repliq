@@ -27,7 +27,7 @@ const HistoryThreadsList = ({
       )}
       <div className="flex flex-col gap-y-2 w-full">
         {savedThreads.reverse().map((thread, i) => (
-          <ThreadHistory index={i} key={thread.id} type={type} {...thread} />
+          <ThreadHistory index={i} key={i} type={type} {...thread} />
         ))}
       </div>
     </>

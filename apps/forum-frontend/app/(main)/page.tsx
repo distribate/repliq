@@ -1,5 +1,5 @@
+
 import { MainCategoriesList } from "@repo/components/src/categories/components/main-categories-list.tsx";
-import { hasAlertsShow } from "@repo/lib/actions/has-alerts.ts";
 import { Suspense } from "react";
 import { ForumStats } from "@repo/components/src/widgets/forum-stats/components/forum-stats.tsx";
 import { LastRegisteredUsers } from "@repo/components/src/widgets/last-registered-users/components/last-registered-users.tsx";
@@ -7,6 +7,9 @@ import { AlertCard } from "@repo/components/src/alert/components/alert-card.tsx"
 import { getAlerts } from "@repo/lib/queries/get-alerts.ts";
 import { Skeleton } from "@repo/ui/src/components/skeleton.tsx";
 import { validateSession } from "@repo/lib/actions/validate-requests.ts";
+import { cookies } from "next/headers";
+import { ALERTS_COOKIE_KEY } from "@repo/shared/keys/cookie";
+import { hasAlertsShow } from "@repo/lib/actions/has-alerts";
 
 const StatisticsSkeleton = () => {
   return (
@@ -30,6 +33,10 @@ const CategoriesSkeleton = () => {
 };
 
 const Alerts = async () => {
+  const hasAlertsShowing = await hasAlertsShow();
+
+  if (!hasAlertsShowing) return null;
+
   const alerts = await getAlerts({ sort: "created_at", limit: 1 });
 
   return (
@@ -44,11 +51,9 @@ const Alerts = async () => {
 export default async function MainPage() {
   await validateSession();
 
-  const hasAlertsShowing = await hasAlertsShow();
-
   return (
     <main className="flex flex-col w-full gap-2 h-full">
-      {hasAlertsShowing && <Alerts />}
+      <Alerts />
       <div className="flex lg:flex-row gap-2 flex-col w-full h-full">
         <div className="flex flex-col w-full md:w-3/4 gap-y-4 h-full">
           <Suspense fallback={<CategoriesSkeleton />}>

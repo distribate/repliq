@@ -96,6 +96,7 @@ export interface _RealtimeTenants {
 export interface Admins {
   created_at: Generated<Timestamp>;
   id: Generated<Int8>;
+  telegram_id: Int8 | null;
   user_id: string;
 }
 

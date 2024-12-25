@@ -1,3 +1,4 @@
+import { hc } from 'hono/client';
 import { Hono } from 'hono';
 import { cors } from 'hono/cors';
 import * as dotenv from 'dotenv';
@@ -7,6 +8,7 @@ import { getHeadRoute } from '#routes/get-head.ts';
 import { getSkinRoute } from '#routes/get-skins.ts';
 import { downloadSkinRoute } from '#routes/download-skin.ts';
 import { showRoutes } from 'hono/dev';
+import { logger } from 'hono/logger';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -20,16 +22,16 @@ if (!process.env.SKIN_PROXY_PORT) {
 }
 
 const app = new Hono()
-
-app.use("*", cors({
+.use("*", cors({
   origin: "*",
   allowMethods: ['GET']
-}));
-
-app
+}))
+.use("*", logger())
 .route("/", getHeadRoute)
 .route("/", getSkinRoute)
 .route("/", downloadSkinRoute)
+
+export const client = hc<typeof app>("http://localhost:4102/")
 
 showRoutes(app, { verbose: true })
 

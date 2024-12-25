@@ -44,7 +44,7 @@ export const ProfilePostsListCard = ({
         id={id}
         views_count={views_count}
         isUpdated={isUpdated}
-        nickname={user_nickname}
+        user_nickname={user_nickname}
       />
       {/*<PostComments id={id} comments_count={comments_count} />*/}
       {/*{isComments && <CreatePostCommentForm id={id} />}*/}

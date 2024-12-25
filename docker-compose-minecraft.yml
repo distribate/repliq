@@ -155,19 +155,33 @@ services:
     volumes:
       - ./data/fasberry-minecraft/reputation-db/data:/var/lib/mysql
 
-  skins-bisquite-db:
-    container_name: skins_bisquite_db
+  skins-proxy-db:
+    container_name: skins_proxy_db
     image: mariadb:latest
     restart: unless-stopped
     environment:
       MARIADB_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
-      MARIADB_DATABASE: skins_bisquite
+      MARIADB_DATABASE: skins_proxy
       MARIADB_USER: ${MYSQL_USER}
       MARIADB_PASSWORD: ${MYSQL_PASSWORD}
     ports:
-      - ${SKINS_BISQUITE_MYSQL_PORT}:3306/tcp
+      - ${SKINS_PROXY_MYSQL_PORT}:3306/tcp
     volumes:
-      - ./data/fasberry-minecraft/skins_bisquite-db/data:/var/lib/mysql
+      - ./data/fasberry-minecraft/skins_proxy-db/data:/var/lib/mysql
+  
+  # skins-bisquite-db:
+  #   container_name: skins_bisquite_db
+  #   image: mariadb:latest
+  #   restart: unless-stopped
+  #   environment:
+  #     MARIADB_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+  #     MARIADB_DATABASE: skins_bisquite
+  #     MARIADB_USER: ${MYSQL_USER}
+  #     MARIADB_PASSWORD: ${MYSQL_PASSWORD}
+  #   ports:
+  #     - ${SKINS_BISQUITE_MYSQL_PORT}:3306/tcp
+  #   volumes:
+  #     - ./data/fasberry-minecraft/skins_bisquite-db/data:/var/lib/mysql
 
   tab-db:
     container_name: tab_db

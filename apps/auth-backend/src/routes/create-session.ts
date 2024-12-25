@@ -6,7 +6,7 @@ import { findPlayer as findPlayerAuth } from "#lib/queries/find-player-auth.ts";
 import { HTTPException } from "hono/http-exception";
 import bcrypt from "bcryptjs";
 import { generateSessionToken } from "#utils/generate-session-token.ts";
-import { forumDB } from "#lib/db/db.ts";
+import { forumDB } from "#shared/db.ts";
 import { insertSessionInfo } from "#lib/queries/insert-session-info.ts";
 import { createSession } from "#utils/create-session.ts";
 import type { DB, Users } from "@repo/types/db/forum-database-types.ts";

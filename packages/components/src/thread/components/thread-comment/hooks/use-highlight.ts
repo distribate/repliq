@@ -5,14 +5,14 @@ export const SELECT_COMMENT_MUTATION_KEY = (commentId: number) => [
   commentId,
 ];
 
-export const useHighlight = (commentId: number) => {
+export const useHighlight = (commentId: string) => {
   const mutData = useMutationState({
-    filters: { mutationKey: SELECT_COMMENT_MUTATION_KEY(commentId) },
+    filters: { mutationKey: SELECT_COMMENT_MUTATION_KEY(Number(commentId)) },
     select: (m) => m.state.data,
   });
 
   const selectCommentMutation = useMutation({
-    mutationKey: SELECT_COMMENT_MUTATION_KEY(commentId),
+    mutationKey: SELECT_COMMENT_MUTATION_KEY(Number(commentId)),
     mutationFn: async () => commentId,
     gcTime: 2000,
   });

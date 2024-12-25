@@ -7,7 +7,7 @@ export type ThreadCommentProps = {
   content: string;
   edited: boolean;
   replied: {
-    id: number;
+    id: string;
     user_nickname: string;
     content: string;
   } | null;

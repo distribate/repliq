@@ -89,3 +89,6 @@ verify_jwt = false
 
 [analytics]
 enabled = false
+
+[edge_runtime]
+enabled = false

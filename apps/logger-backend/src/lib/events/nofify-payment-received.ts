@@ -2,7 +2,7 @@ import type { PaymentCompleted } from '@repo/types/schemas/payment/payment-schem
 import { getDonateDetails } from '#queries/get-donate-details';
 import { getBuyerTelegramId } from '#queries/get-buyer-telegram-id';
 import { sendLogs } from '#utils/send-logs';
-import { callAlert } from '#lib/rcon-server/call-alert';
+import { callBroadcast } from '#lib/rcon-server/call-broadcast';
 import { sendTelegramMessageToBuyer } from '#utils/send-message-to-buyer';
 import { PaymentDonateType } from '@repo/types/entities/payment-types';
 
@@ -36,12 +36,10 @@ export const nofifyPaymentReceived = async(data: PaymentCompleted['data']) => {
             tag: 'shop',
           },
         }),
-        callAlert(
+        callBroadcast(
           `Игрок ${nickname} купил привилегию ${donateTitle}`,
         ),
       ]);
-    case 'item':
-      break;
     case 'charism':
       break;
     case 'belkoin':

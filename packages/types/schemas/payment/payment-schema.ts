@@ -16,7 +16,7 @@ export const arcCurrencySchema = z.enum([
 ])
 
 export const paymentTypeSchema = z.enum([
-  'donate', 'item', 'belkoin', 'charism'
+  'donate', 'belkoin', 'charism'
 ]);
 
 export const donateSchema = z.enum([

@@ -9,7 +9,7 @@ import { Button } from "@repo/ui/src/components/button.tsx";
 import { getUser } from "@repo/lib/helpers/get-user.ts";
 import { MoreWrapper } from "#wrappers/more-wrapper.tsx";
 import { Separator } from "@repo/ui/src/components/separator.tsx";
-import { FriendButton } from "#buttons/friends/friend-button.tsx";
+import { FriendButton } from "#buttons/friend-button.tsx";
 import { ReportCreateModal } from "#modals/action-confirmation/components/report/components/report-create-modal.tsx";
 import { Skeleton } from "@repo/ui/src/components/skeleton.tsx";
 import { BlockUserModal } from "#modals/action-confirmation/components/block-user/components/block-user-modal.tsx";
@@ -80,7 +80,7 @@ export const UserCoverPanel = ({
           !isLoading &&
           !isOwner &&
           !isBlocked &&
-          !youIsBlocked && <FriendButton reqUserNickname={requestedNickname} />}
+          !youIsBlocked && <FriendButton requestedUserNickname={requestedNickname} />}
         {!isOwner && (
           <MoreWrapper
             variant="medium"
@@ -88,7 +88,7 @@ export const UserCoverPanel = ({
           >
             <div className="flex flex-col gap-y-1 *:w-full w-full items-start">
               {!isLoading && !youIsBlocked && (
-                <BlockUserModal requestedNickname={requestedNickname} />
+                <BlockUserModal requestedUserNickname={requestedNickname} />
               )}
               {!isLoading && !youIsBlocked && (
                 <>

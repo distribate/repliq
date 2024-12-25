@@ -14,7 +14,9 @@ export const useUpdateCurrentUser = () => {
   const updateFieldMutation = useMutation({
     mutationKey: UPDATE_FIELD_MUTATION_KEY,
     mutationFn: async(values: UpdateUserFields) => updateUserFields(values),
-    onSuccess: async(data) => {
+    onSuccess: async(data, variables) => {
+      console.log(data, variables)
+      
       if (!data || 'error' in data) return toast.error('Произошла ошибка при обновлении.', {
         description: 'Повторите попытку позже',
       });

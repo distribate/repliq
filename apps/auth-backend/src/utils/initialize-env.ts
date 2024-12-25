@@ -13,7 +13,7 @@ const FORUM_DB_PORT = env.POSTGRES_PORT;
 const FORUM_DB_PASS = env.POSTGRES_PASSWORD;
 const FORUM_DB_NAME = env.POSTGRES_DB;
 const SECRET_TOKEN = env.SECRET_TOKEN;
-const PORT = env.SERVICE_PORT;
+const PORT = env.AUTH_BACKEND_PORT;
 
 export {
   PORT,

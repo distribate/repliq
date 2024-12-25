@@ -6,7 +6,7 @@ import { ExtendedUserEntity } from "@repo/types/entities/entities-type.ts";
 import { UserNickname } from "#user/components/name/nickname.tsx";
 import { Button } from "@repo/ui/src/components/button.tsx";
 import { useRouter } from "next/navigation";
-import { FriendButton } from "#buttons/friends/friend-button.tsx";
+import { FriendButton } from "#buttons/friend-button.tsx";
 
 export type FriendsSearchingCardProps = Pick<
   ExtendedUserEntity,
@@ -39,7 +39,7 @@ export const FriendsSearchingCard = ({
         </div>
       </div>
       <div className="flex items-center gap-2 *:w-full w-full">
-        <FriendButton reqUserNickname={nickname} />
+        <FriendButton requestedUserNickname={nickname} />
         <Button
           state="default"
           className="!w-2/5"

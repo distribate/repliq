@@ -10,7 +10,7 @@ const MAIN_IP = process.env.MINECRAFT_SERVER_FASBERRY_IP
 
 export const HowToConnectOnServer = () => {
 	const actionCopyboard = async() => {
-		await navigator.clipboard.writeText(MAIN_IP || "play.fasberry.ru");
+		await navigator.clipboard.writeText(MAIN_IP || "play.fasberry.su");
 		
 		toast.success("IP успешно скопирован!", {
 			icon: <Image width={40} height={40} alt="IP copied!" loading="lazy" src="/images/minecraft/icons/book_big.webp"/>
@@ -63,7 +63,7 @@ export const HowToConnectOnServer = () => {
 										onClick={() => actionCopyboard()}
 										className="cursor-pointer bg-black py-2 px-2 border-2 text-white border-neutral-500 w-100 md:w-96"
 									>
-										play.fasberry.ru
+										play.fasberry.su
 									</Typography>
 								}
 								content={

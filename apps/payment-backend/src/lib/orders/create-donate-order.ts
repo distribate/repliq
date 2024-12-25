@@ -1,18 +1,18 @@
+import { createPaymentItem } from '#helpers/create-payment-item.ts';
+import { getCurrencyPriceInRub } from '#lib/queries/get-currency-price-in-rub.ts';
 import { getDonateDetails } from '#lib/queries/get-donate-details.ts';
+import type { CreateCryptoOrder } from '#routes/create-order.ts';
+import { ARC_API } from '#shared/api.ts';
+import { PAYMENT_CURRENCIES_MAPPING } from '#shared/currencies.ts';
 import {
   type Payment,
   type PaymentDonateType,
   type PaymentResponse,
 } from '@repo/types/entities/payment-types.ts';
-import { ARC_API } from '#shared/api.ts';
-import type { CreateCryptoOrder } from '#routes/create-order.ts';
 import {
   arcCurrencySchema,
   otherCurrencySchema,
 } from '@repo/types/schemas/payment/payment-schema.ts';
-import { getCurrencyPriceInRub } from '#lib/queries/get-currency-price-in-rub.ts';
-import { PAYMENT_CURRENCIES_MAPPING } from '#shared/currencies.ts';
-import { createPaymentItem } from '#helpers/create-payment-item.ts';
 
 type CreateDonateOrder = Omit<CreateCryptoOrder, 'paymentType'>
 
@@ -31,7 +31,7 @@ function getPriceByCurrency(priceByCurrency: number, priceByRub: number): number
 
 export async function createDonateOrder({
   currency, orderId, paymentValue, nickname,
-}: CreateDonateOrder) {
+}: CreateDonateOrder & { orderId: string }) {
   const currencyId = PAYMENT_CURRENCIES_MAPPING[currency];
   
   if (!currencyId) {
@@ -49,11 +49,11 @@ export async function createDonateOrder({
     currencyPrice[currencyId].rub, Number(priceInRUB)
   )
   
-  const isArcNetwork = arcCurrencySchema.safeParse(currency)
-  const isOtherNetwork = otherCurrencySchema.safeParse(currency)
+  const { success: isArcNetwork, data: arcCurrency } = arcCurrencySchema.safeParse(currency)
+  const {success: isOtherNetwork, data: otherCurrency} = otherCurrencySchema.safeParse(currency)
 
-  if (isArcNetwork.success) {
-    const paymentTitle = `Покупка привилегии ${title} за ${price} ${currency}`;
+  if (isArcNetwork) {
+    const paymentTitle = `Покупка привилегии ${title} за ${price} ${arcCurrency}`;
     
     const paymentItem = {
       title,
@@ -66,7 +66,7 @@ export async function createDonateOrder({
     
     const paymentDetails = await createPaymentItem<ArcPayment>({
       title: paymentTitle, captured: false, orderId,
-      currency: isArcNetwork.data === 'USDT(TON)' ? "USDT" : isArcNetwork.data,
+      currency: arcCurrency === 'USDT(TON)' ? "USDT" : arcCurrency,
       items: [ paymentItem ],
       meta: { nickname, paymentType: 'donate', paymentValue: donateOrigin },
     })
@@ -74,7 +74,7 @@ export async function createDonateOrder({
     return await ARC_API.post('order', { json: paymentDetails }).json<PaymentResponse>();
   }
   
-  if (isOtherNetwork.success) {
-    console.log(isOtherNetwork.data)
+  if (isOtherNetwork) {
+    console.log(otherCurrency)
   }
 }

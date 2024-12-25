@@ -8,7 +8,7 @@ declare module "bun" {
     AUTHORIZATION_POSTGRES_PORT: number;
     AUTHORIZATION_POSTGRES_DB: string;
     AUTHORIZATION_POSTGRES_USER: string;
-    SERVICE_PORT: number;
+    AUTH_BACKEND_PORT: number;
     SECRET_TOKEN: string;
     POSTGRES_USER: string;
     POSTGRES_PORT: number;
