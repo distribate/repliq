@@ -1,6 +1,6 @@
 "use server";
 
-import { createClient } from "../../../../../lib/utils/api/supabase-client.ts";
+import { createClient } from "@repo/shared/api/supabase-client.ts";
 
 export async function deleteAlert(alertId: number) {
   const api = createClient();

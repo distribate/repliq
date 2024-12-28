@@ -2,9 +2,9 @@ import type {
   Session,
   SessionValidationResult,
   User,
-} from "#routes/create-session.ts";
+} from "../routes/create-session.ts";
 import { encodeHexLowerCase } from "@oslojs/encoding";
-import { forumDB } from "#shared/db.ts";
+import { forumDB } from "../shared/db.ts";
 import { HTTPException } from "hono/http-exception";
 import { sha256 } from "@oslojs/crypto/sha2";
 

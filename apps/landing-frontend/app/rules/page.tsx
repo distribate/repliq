@@ -1,16 +1,16 @@
-import { MainLayoutPage } from '#/components/layout/main-layout';
-import { Overlay } from '#/ui/overlay';
-import { WrapperTitle } from '#/ui/wrapper-title';
-import { Typography } from '#/ui/typography';
-import { Rules as RulesList } from '#/components/rules/rules.tsx';
-import { Button } from '#/ui/button';
+import { MainLayoutPage } from '@repo/landing-components/src/layout/main-layout';
+import { Overlay } from '@repo/landing-ui/src/overlay';
+import { WrapperTitle } from '@repo/landing-ui/src/wrapper-title';
+import { Typography } from '@repo/landing-ui/src/typography';
+import { Rules as RulesList } from '@repo/landing-components/src/rules/rules.tsx';
+import { Button } from '@repo/landing-ui/src/button';
 import Link from 'next/link';
 import { dehydrate, HydrationBoundary, QueryClient } from '@tanstack/react-query';
-import { RULES_QUERY_KEY } from '#/lib/queries/rules-query.ts';
-import { getRules } from '#/lib/queries/get-rules.ts';
+import { RULES_QUERY_KEY } from '@repo/lib/queries/rules-query.ts';
+import { getRules } from '@repo/lib/queries/get-rules.ts';
 import { Suspense } from 'react';
-import { Badge } from '#/ui/Badge.tsx';
-import { RulesListSkeleton } from '#/components/skeletons/rules-list-skeleton.tsx';
+import { Badge } from '@repo/landing-ui/src/Badge.tsx';
+import { RulesListSkeleton } from '@repo/landing-components/src/skeletons/rules-list-skeleton.tsx';
 
 export const metadata = {
   title: 'Правила',

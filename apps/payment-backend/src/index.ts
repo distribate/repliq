@@ -1,12 +1,12 @@
 import { Hono } from 'hono';
 import { showRoutes } from 'hono/dev';
-import { createOrderRoute } from '#routes/create-order.ts';
-import { checkOrderRoute } from '#routes/check-order.ts';
-import { stopNatsClient } from '#shared/nats-client.ts';
-import { hc } from 'hono/client';
 import { logger } from 'hono/logger';
+import { createOrderRoute } from './routes/create-order.ts';
+import { stopNatsClient } from './shared/nats-client.ts';
+import { checkOrderRoute } from './routes/check-order.ts';
+import { bearerAuth } from 'hono/bearer-auth';
 
-const headers = { Authorization: `Bearer ${process.env.SECRET_TOKEN}` };
+const token = process.env.SECRET_TOKEN!
 
 async function startNatsClient() {
   try {
@@ -28,7 +28,7 @@ async function startNatsClient() {
   }
 }
 
-await startNatsClient()
+startNatsClient()
 
 export const payments = new Hono()
 .route('/', createOrderRoute);
@@ -38,12 +38,13 @@ const hooks = new Hono()
 
 const app = new Hono()
 .use('*', logger())
+.use("*", bearerAuth({ token }))
 .basePath('/api')
 .route('/payment', payments)
 .route('/hooks', hooks);
 
 showRoutes(app, { verbose: false });
 
-export const paymentsClient = hc<typeof payments>("http://localhost:4103/api", { headers })
+export type PaymentAppType = typeof app
 
 export default { port: process.env.PAYMENT_BACKEND_PORT, fetch: app.fetch };

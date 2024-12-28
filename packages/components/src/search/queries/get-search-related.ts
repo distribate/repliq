@@ -1,6 +1,6 @@
 "use server";
 
-import { createClient } from "../../../../lib/utils/api/supabase-client.ts";
+import { createClient } from "@repo/shared/api/supabase-client.ts";
 import { getLastUsers } from "#widgets/last-registered-users/queries/get-last-registered-users.ts";
 import { RequestDetails } from "@repo/types/entities/entities-type.ts";
 

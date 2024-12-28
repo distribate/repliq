@@ -1,4 +1,4 @@
-import { getAdmins } from "#queries/get-admins"
+import { getAdmins } from "../../queries/get-admins.ts"
 
 export async function validateRequest(telegramId: number): Promise<boolean> {
   const query = await getAdmins(telegramId)

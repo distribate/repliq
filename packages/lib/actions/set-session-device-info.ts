@@ -1,6 +1,6 @@
 "use server";
 
-import { createClient } from "#utils/api/supabase-client.ts";
+import { createClient } from "@repo/shared/api/supabase-client.ts";
 import { userAgent } from "next/server";
 import { headers } from "next/headers";
 

@@ -8,19 +8,17 @@ import { FriendCardLayout } from "#friend/components/friend-card/components/frie
 import { FriendCardControl } from "#friend/components/friend-card/components/friend-card-control.tsx";
 import { FriendCardNote } from "#friend/components/friend-card/components/friend-card-note.tsx";
 import { Pin } from "lucide-react";
-import { UserFriends } from "#friends/queries/get-friends.ts";
+import { FriendWithDetails } from "@repo/types/schemas/friend/friend-types.ts";
 import { CurrentUser } from '@repo/lib/queries/current-user-query.ts';
 
 export type FriendCardProps = Pick<
-  CurrentUser,
-  "nickname" | "real_name" | "description" | "favorite_item" | "donate"
-> &
-  UserFriends;
+  CurrentUser, "nickname" | "real_name" | "description" | "donate" 
+> & FriendWithDetails
 
 export const FriendCard = ({
   ...friend
 }: FriendCardProps) => {
-  const { real_name, description, donate, favorite_item, nickname, name_color, friend_id, note, isPinned } = friend;
+  const { real_name, description, donate, favorite_item, nickname, name_color, friend_id, note, is_pinned } = friend;
 
   return (
     <FriendCardLayout nickname={nickname}>
@@ -46,9 +44,9 @@ export const FriendCard = ({
         <FriendCardControl
           friend_id={friend_id}
           nickname={nickname}
-          isPinned={isPinned}
+          is_pinned={is_pinned}
         />
-        {(isPinned || !!note) && (
+        {(is_pinned || !!note) && (
           <div className="flex items-end gap-4 absolute right-4 bottom-4">
             {note && (
               <FriendCardNote
@@ -57,7 +55,7 @@ export const FriendCard = ({
                 nickname={nickname}
               />
             )}
-            {isPinned && <Pin size={24} className="text-gold-500" />}
+            {is_pinned && <Pin size={24} className="text-gold-500" />}
           </div>
         )}
       </div>

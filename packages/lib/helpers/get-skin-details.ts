@@ -1,3 +1,4 @@
+import { skinClient } from '@repo/shared/api/skin-client.ts';
 import { SKIN_GET_HEAD } from '@repo/shared/constants/routes.ts';
 import SteveHead from '@repo/assets/images/minecraft/steve_head.jpg';
 import SteveSkin from '@repo/assets/images/default.png';
@@ -19,13 +20,21 @@ export async function getHeadDetails(nickname: string) {
 
 export async function getSkinDetails(uuid: string) {
   try {
-    const res = await ky.get(`http://localhost:9500/get-skin/${uuid}`)
+    const res = await skinClient.api["get-skin"][":uuid"].$get({
+      param: {
+        uuid
+      }
+    })
 
-    if (!res.ok) {
+    if (!res) {
       return SteveSkin.src as string
     }
 
-    const skinUrl = await res.json<{ skin: string }>()
+    const skinUrl = await res.json()
+
+    if (!skinUrl.skin) {
+      return SteveSkin.src as string
+    }
 
     return skinUrl.skin
   } catch (e) {

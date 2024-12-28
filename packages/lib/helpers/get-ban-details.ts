@@ -1,7 +1,7 @@
 "use server";
 
 import "server-only";
-import { createClient } from "#utils/api/supabase-client.ts";
+import { createClient } from "@repo/shared/api/supabase-client.ts";
 import { BanEntity, UserEntity } from "@repo/types/entities/entities-type.ts";
 
 type GetBanDetails = Pick<UserEntity, "nickname">;

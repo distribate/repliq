@@ -1,10 +1,14 @@
 "use server";
 
-import { SessionValidationResult } from "auth-backend/src/lib/routes/create-session.ts";
 import { cache } from "react";
 import { cookies } from "next/headers";
 import { validateSessionToken } from "#actions/session-token-control.ts";
 import { redirect } from "next/navigation";
+import type { Session, User } from 'auth-backend/src/routes/create-session.ts';
+
+type SessionValidationResult =
+  | { session: Session; user: User }
+  | { session: null; user: null };
 
 export const getCurrentSession = cache(
   async (): Promise<SessionValidationResult> => {

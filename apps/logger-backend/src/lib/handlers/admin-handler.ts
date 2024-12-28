@@ -1,6 +1,6 @@
-import { forumDB } from '@repo/shared/db/forum-db';
-import { Context } from './message-handler';
-import { tempAdmins, userStates } from '#shared/maps';
+import { forumDB } from "../../shared/db.ts"
+import type { Context } from "./message-handler.ts"
+import { tempAdmins, userStates } from "../../shared/maps.ts"
 
 export const adminHandler = async (ctx: Context, userId: string) => {
   if (tempAdmins.has(userId) && ctx.text) {

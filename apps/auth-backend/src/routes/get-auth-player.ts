@@ -2,9 +2,9 @@ import { Hono } from "hono";
 import {
   findPlayer as findPlayerAuth,
   type FindPlayerExtractedColumns,
-} from "#lib/queries/find-player-auth.ts";
+} from "../lib/queries/find-player-auth.ts";
 import { HTTPException } from "hono/http-exception";
-import { determinePlayerDetailType } from "#utils/determine-player-detail-type.ts";
+import { determinePlayerDetailType } from "../utils/determine-player-detail-type.ts";
 import { z } from "zod";
 import { zValidator } from "@hono/zod-validator";
 

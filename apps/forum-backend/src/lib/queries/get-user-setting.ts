@@ -1,4 +1,4 @@
-import { forumDB } from '@repo/shared/db/forum-db.ts';
+import { forumDB } from '../../shared/db.ts';
 import { z } from 'zod';
 import { getUserSettingsSchema } from '#routes/get-user-settings.ts';
 import { userSettings } from '#shared/user-settings.ts';

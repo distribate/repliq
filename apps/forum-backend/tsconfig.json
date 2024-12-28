@@ -3,12 +3,12 @@
   "include": [
     "**/*.ts", "*.ts"
   ],
-  "exclude": ["node_modules"],
   "compilerOptions": {
-    "baseUrl": "./",
-    "rootDir": "./",
-    "paths": {
-      "#*": ["src/*"]
-    }
-  }
+    "allowImportingTsExtensions": true,
+    "skipLibCheck": true,
+    "strict": true,
+    "noFallthroughCasesInSwitch": true,
+    "forceConsistentCasingInFileNames": true
+  },
+  "exclude": ["node_modules"],
 }

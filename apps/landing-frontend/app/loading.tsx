@@ -1,5 +1,5 @@
-import { MainLayoutPage } from "#/components/layout/main-layout";
-import { Typography } from "#/ui/typography";
+import { MainLayoutPage } from "@repo/landing-components/src/layout/main-layout";
+import { Typography } from "@repo/landing-ui/src/typography";
 
 export default async function Loading() {
 	return (

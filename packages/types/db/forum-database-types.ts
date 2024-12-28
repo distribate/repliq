@@ -917,7 +917,7 @@ export interface ThreadsViews {
   created_at: Generated<Timestamp>;
   id: Generated<Int8>;
   thread_id: string;
-  user_id: string;
+  user_nickname: string;
 }
 
 export interface Users {

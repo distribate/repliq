@@ -1,20 +1,15 @@
 {
 	"extends": "@repo/config-typescript/base.json",
-	"include": [
-		"**/*.ts", "*.ts"
-	],
+	"include": [".", "../lib/constants/dayjs-instance.ts"],
 	"compilerOptions": {
+		"composite": true,
 		"jsx": "preserve",
-		"esModuleInterop": true,
-		"lib": ["es2020"],
-		"module": "es2022",
-		"preserveConstEnums": true,
-		"moduleResolution": "node",
+		"module": "ESNext",
+		"moduleResolution": "bundler",
 		"skipLibCheck": true,
 		"strict": true,
-		"baseUrl": ".",
 		"paths": {
-			"#*": ["./*"]
+			"#/*": ["./*"]
 		}
 	}
 }

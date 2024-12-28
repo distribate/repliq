@@ -1,6 +1,6 @@
 'use server';
 
-import { forumUserClient } from '#utils/api/forum-client.ts';
+import { forumUserClient } from '@repo/shared/api/forum-client.ts';
 import { getCurrentSession } from '#actions/get-current-session.ts';
 import { z } from 'zod';
 import { editUserSettingsBodySchema } from '@repo/types/schemas/user/edit-user-settings-schema.ts';

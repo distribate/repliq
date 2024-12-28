@@ -1,7 +1,7 @@
 "use server";
 
 import "server-only";
-import { createClient } from "@repo/lib/utils/api/supabase-client.ts";
+import { createClient } from '@repo/shared/api/supabase-client.ts';
 import { validateThreadOwner } from "#thread/components/thread-control/queries/validate-thread-owner.ts";
 import { ThreadControlQueryValues } from "#thread/components/thread-control/queries/thread-control-query.ts";
 import { getCurrentSession } from "@repo/lib/actions/get-current-session.ts";

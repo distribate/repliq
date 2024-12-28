@@ -1,7 +1,7 @@
-import { NatsConnection } from '@nats-io/transport-node';
-import { z } from 'zod';
-import { callServerCommandSchema } from '@repo/types/schemas/server/server-command';
-import { callServerCommand } from '#lib/rcon-server/call-command';
+import type { NatsConnection } from "@nats-io/transport-node"
+import { z } from "zod"
+import { callServerCommandSchema } from "@repo/types/schemas/server/server-command"
+import { callServerCommand } from "../../lib/rcon-server/call-command.ts"
 
 const subj = "call.server.command"
 

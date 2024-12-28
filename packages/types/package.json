@@ -4,10 +4,20 @@
   "version": "0.1.0",
   "private": true,
   "license": "MIT",
-  "publishConfig": {
-    "access": "public"
+  "scripts": {
+    "gen-types": "dotenv -e .env npx supabase gen types --lang typescript --db-url %FORUM_DATABASE_URL% > ./entities/gen-supabase.ts",
+    "lp-gen-types": "kysely-codegen --dialect postgres --url=../../.env\\(LP_DATABASE_URL\\) --out-file=./db/luckperms-database-types.ts",
+    "auth-gen-types": "kysely-codegen --dialect postgres --url=env\\(AUTH_DATABASE_URL\\) --out-file=./db/auth-database-types.ts",
+    "forum-gen-types": "kysely-codegen --dialect postgres --url=env\\(FORUM_DATABASE_URL\\) --out-file=./db/forum-database-types.ts",
+    "payments-gen-types": "kysely-codegen --dialect postgres --url=env\\(PAYMENTS_DATABASE_URL\\) --out-file=./db/payments-database-types.ts",
+    "skins-gen-types": "kysely-codegen --dialect mysql --url=env\\(SKINS_DATABASE_URL\\) --out-file=./db/skins-database-types.ts"
   },
   "dependencies": {
+    "supabase": "1.219.2",
     "zod": "3.23.8"
+  },
+  "devDependencies": {
+    "dotenv-cli": "7.4.4",
+    "kysely-codegen": "0.17.0"
   }
 }

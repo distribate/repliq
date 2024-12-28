@@ -1,36 +1,33 @@
-import { MainLayoutPage } from '#/components/layout/main-layout';
-import { Overlay } from '#/ui/overlay';
-import { Typography } from '#/ui/typography';
-import { Block } from '#/ui/block';
-import { IntroMain } from '#/components/intro/intro-main';
-import { ServerGallery } from '#/components/server-gallery/server-gallery';
-import { commuinityGallery } from '#/shared/data/community/community-list';
-import { CONTACTS_LIST, ContactsListProps } from '#/shared/data/contacts/contacts-list';
-import { GAMEPLAY, GameplayItemType } from '#/shared/data/gameplay/gameplay-list';
+import { MainLayoutPage } from '@repo/landing-components/src/layout/main-layout';
+import { Overlay } from '@repo/landing-ui/src/overlay';
+import { Typography } from '@repo/landing-ui/src/typography';
+import { Block } from '@repo/landing-ui/src/block';
+import { IntroMain } from '@repo/landing-components/src/intro/intro-main';
+import { ServerGallery } from '@repo/landing-components/src/server-gallery/server-gallery';
+import { CONTACTS_LIST, ContactsListProps } from '@repo/shared/wiki/data/contacts/contacts-list';
+import { GAMEPLAY, GameplayItemType } from '@repo/shared/wiki/data/gameplay/gameplay-list';
 import dynamic from 'next/dynamic';
-import { CommunityGalleryItem } from '#/components/community/community-gallery-item';
-import { NewsList } from '#/components/news/news-list';
-import { CommunityStatusItem } from '#/components/community/commuinity-status-item';
+import { CommunityGalleryItem } from '@repo/landing-components/src/community/community-gallery-item';
+import { NewsList } from '@repo/landing-components/src/news/news-list';
+import { CommunityStatusItem } from '@repo/landing-components/src/community/commuinity-status-item';
 import Link from 'next/link';
 import { dehydrate, HydrationBoundary, QueryClient } from '@tanstack/react-query';
-import { NEWS_QUERY_KEY } from '#/lib/queries/news-query.ts';
-import { getNews } from '#/lib/queries/get-news.ts';
+import { NEWS_QUERY_KEY } from '@repo/lib/queries/news-query.ts';
+import { getNews } from '@repo/lib/queries/get-news.ts';
 import { Suspense } from 'react';
-import { Skeleton } from '#/ui/skeleton.tsx';
-
-const ReqProvider = dynamic(() =>
-  import('#/providers/request-provider').then(m => ({ default: m.ReqProvider })),
-);
+import { Skeleton } from '@repo/landing-ui/src/skeleton.tsx';
 
 export const metadata = {
   title: 'Главная | Fasberry',
 };
 
+type GamePlayItemProps = GameplayItemType & {
+  id: number
+}
+
 const GameplayItem = ({
   name, image, description, id,
-}: GameplayItemType & {
-  id: number
-}) => {
+}: GamePlayItemProps) => {
   return (
     <div
       className={`flex flex-col w-full items-center justify-end min-h-screen relative bg-top
@@ -55,36 +52,41 @@ const GameplayItem = ({
 };
 
 const ContactItem = ({
-  content, name, href, icon: Icon,
+  content, name, href
 }: ContactsListProps) => {
   return (
-    <Block key={name} blockItem rounded="big" size="big" type="column">
-      <Typography className="dark:text-neutral-50 text-neutral-800 text-3xl lg:text-4xl xl:text-5xl mb-4">
-        {name}
-      </Typography>
-      <h1 className="text-green text-lg xl:text-3xl">+:</h1>
-      {content.pluses && content.pluses.map((plus, plusIndex) => (
-        <Typography key={plusIndex} size="lg">
-          &gt;&nbsp;{plus}
+    <Block key={name} blockItem rounded="big" size="big" type="column" className="justify-between">
+      <div className="flex flex-col">
+        <Typography className="dark:text-neutral-50 text-neutral-800 text-3xl lg:text-4xl xl:text-5xl mb-4">
+          {name}
         </Typography>
-      ))}
-      <h1 className="mt-2 xl:mt-3 text-rose-500 text-lg xl:text-3xl">-:</h1>
-      {content.minuses && content.minuses.map((minus, minusIndex) => (
-        <Typography key={minusIndex} size="xl">
-          &gt;&nbsp;{minus}
-        </Typography>
-      ))}
+        <h1 className="text-[#5CC85C] text-lg xl:text-3xl">плюсы:</h1>
+        {content.pluses && content.pluses.map((plus, plusIndex) => (
+          <Typography key={plusIndex} size="lg">
+            &gt;&nbsp;{plus}
+          </Typography>
+        ))}
+        <h1 className="mt-2 xl:mt-3 text-rose-500 text-lg xl:text-3xl">минусы:</h1>
+        {content.minuses && content.minuses.map((minus, minusIndex) => (
+          <Typography key={minusIndex} size="xl">
+            &gt;&nbsp;{minus}
+          </Typography>
+        ))}
+      </div>
       <Link
         href={href}
-        className="flex flex-row items-center gap-x-4 group brightness-110 mt-4 py-4 cursor-pointer group"
+        className="flex w-fit bg-neutral-200/60 dark:bg-neutral-600/60 rounded-[6px]
+        px-4 items-center gap-x-4 group brightness-110 mt-4 py-4 cursor-pointer group"
       >
-        <Icon
-          className="fill-white group-hover:fill-[#fabbfb] duration-300 group-hover:duration-300"
-          size={32}
-        />
-        <Typography size="lg">
+        <Typography size="lg" text_color="adaptiveWhiteBlack">
           Перейти в {name}!
         </Typography>
+        <span
+          className="text-[18px] group-hover:translate-x-0
+          -translate-x-2 ease-in-out duration-200 group-hover:duration-200 transition"
+        >
+          {`>`}
+        </span>
       </Link>
     </Block>
   );
@@ -121,7 +123,6 @@ export default async function Main() {
           />
           <Overlay variant="default" />
         </div>
-        <ReqProvider />
         <div className="responsive mx-auto">
           <IntroMain />
         </div>
@@ -168,9 +169,7 @@ export default async function Main() {
                 Скриншоты от игроков
               </Typography>
               <div className="grid grid-cols-2 sm:grid-cols-4 xl:grid-cols-2 2xl:grid-cols-3 auto-rows-auto gap-2">
-                {commuinityGallery.map((image, idx) =>
-                  <CommunityGalleryItem key={idx} image={image} />)
-                }
+                <CommunityGalleryItem />
                 <Link
                   title="Предложить скрин"
                   href="https://forum.fasberry.su/create-art"
@@ -178,7 +177,9 @@ export default async function Main() {
                   className="flex w-full h-full items-center justify-center rounded-[8px] overflow-hidden bg-neutral-800"
                 >
                   <div className="flex items-center min-h-[96px] justify-center sm:h-[96px] md:h-[120px] lg:w-[250px] lg:h-[136px]">
-                    <Typography className="text-3xl font-bold">+</Typography>
+                    <Typography className="text-3xl font-bold">
+                      +
+                    </Typography>
                   </div>
                 </Link>
               </div>

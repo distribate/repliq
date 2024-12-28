@@ -1,4 +1,4 @@
-import { SERVER_API } from '#shared/api';
+import { SERVER_API } from "../../shared/api.ts"
 
 export async function getRCONHealthCheck() {
   try {

@@ -1,22 +1,19 @@
 {
+  "include": [ 
+    "**/*.ts", "*.ts"
+  ],
   "compilerOptions": {
-    "lib": ["ESNext"],
-    "target": "ESNext",
     "module": "ESNext",
-    "moduleDetection": "force",
+    "target": "ESNext", 
     "moduleResolution": "bundler",
+    "allowImportingTsExtensions": true,
     "skipLibCheck": true,
     "strict": true,
+    "composite": true,
+    "noEmit": true,
+    "emitDeclarationOnly": true,
     "noFallthroughCasesInSwitch": true,
-    "forceConsistentCasingInFileNames": true,
-    "baseUrl": "./src",
-    "rootDir": "./src",
-    "outDir": "./dist",
-    "paths": {
-      "#*": ["./*"]
-    }
+    "forceConsistentCasingInFileNames": true
   },
-  "include": [
-    "**/*.ts", "*.ts"
-  ]
+  "exclude": ["node_modules"]
 }

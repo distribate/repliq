@@ -1,6 +1,6 @@
-import { MainLayoutPage } from "#/components/layout/main-layout";
-import { Typography } from "#/ui/typography";
-import { MAIL_FASBERRY_SUPPORT, TELEGRAM_CHANNEL_LINK, VK_GROUP_LINK } from "#/shared/data/configs";
+import { MainLayoutPage } from "@repo/landing-components/src/layout/main-layout";
+import { Typography } from "@repo/landing-ui/src/typography";
+import { MAIL_FASBERRY_SUPPORT, TELEGRAM_CHANNEL_LINK, VK_GROUP_LINK } from "@repo/shared/wiki//data/configs";
 import Link from "next/link";
 
 export default async function InfoContactsPage() {

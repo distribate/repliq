@@ -1,6 +1,6 @@
 import { Hono } from 'hono';
-import { forumDB } from '@repo/shared/db/forum-db.ts';
-import { userSettings } from '#shared/user-settings.ts';
+import { forumDB } from '../shared/db.ts';
+import { userSettings } from '../shared/user-settings.ts';
 import type { UserDonateVariant } from '@repo/types/entities/entities-type.ts';
 
 async function getUserMain(nickname: string) {

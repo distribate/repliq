@@ -1,6 +1,6 @@
-import { callBroadcast } from "#lib/rcon-server/call-broadcast"
-import { callServerCommand } from "#lib/rcon-server/call-command"
-import { loggerBot } from "#shared/bot"
+import { callBroadcast } from "../../lib/rcon-server/call-broadcast.ts"
+import { callServerCommand } from "../../lib/rcon-server/call-command.ts"
+import { loggerBot } from "../../shared/bot.ts"
 
 const weatherTitle: Record<WeatherType, string> = {
   rain: 'дождливая',

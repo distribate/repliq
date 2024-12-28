@@ -1,7 +1,6 @@
-import { forumDB } from '@repo/shared/db/forum-db';
+import { skinsDB, forumDB } from './../shared/db';
 import { decode } from 'base-64';
 import { Hono } from 'hono';
-import { skinsDB } from '@repo/shared/db/skins-db';
 
 type SkinState = { 
   textures: {

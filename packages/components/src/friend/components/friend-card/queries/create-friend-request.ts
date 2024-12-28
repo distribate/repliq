@@ -1,6 +1,6 @@
 "use server";
 
-import { createClient } from "@repo/lib/utils/api/supabase-client.ts";
+import { createClient } from "@repo/shared/api/supabase-client.ts";
 import { checkProfileIsBlocked } from "@repo/lib/helpers/check-profile-is-blocked.ts";
 import {
   getBlockType,

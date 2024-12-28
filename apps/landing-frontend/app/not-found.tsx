@@ -1,5 +1,5 @@
-import { Typography } from "#/ui/typography";
-import { Button } from "#/ui/button";
+import { Typography } from "@repo/landing-ui/src/typography";
+import { Button } from "@repo/landing-ui/src/button";
 import Link from "next/link";
 
 export const metadata = {

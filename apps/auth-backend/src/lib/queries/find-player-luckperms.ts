@@ -1,5 +1,5 @@
 import type { LuckpermsPlayers } from "@repo/types/db/luckperms-database-types.ts";
-import { lpDB } from "#shared/db.ts";
+import { lpDB } from "../../shared/db.ts";
 
 export async function findPlayer(criteria: Partial<LuckpermsPlayers>) {
   let query = lpDB.selectFrom("luckperms_players");

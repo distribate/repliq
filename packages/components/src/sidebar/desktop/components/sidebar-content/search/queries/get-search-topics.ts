@@ -1,6 +1,6 @@
 "use server";
 
-import { createClient } from "../../../../../../../../lib/utils/api/supabase-client.ts";
+import { createClient } from "@repo/shared/api/supabase-client.ts";
 import { SearchTypes } from "../types/search-types.ts";
 import { ThreadEntity } from "@repo/types/entities/entities-type.ts";
 import { SearchPageQuery } from "#search/queries/search-page-query.ts";

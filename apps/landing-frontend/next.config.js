@@ -1,6 +1,10 @@
 /** @type {import('next').NextConfig} */
 module.exports = {
 	reactStrictMode: false,
+	transpilePackages: ['@repo/landing-ui', "@repo/landing-components"],
+  experimental: {
+    optimizePackageImports: ['@repo/landing-ui', "@repo/landing-components"]
+  },
 	images: {
 		remotePatterns: [
 			{

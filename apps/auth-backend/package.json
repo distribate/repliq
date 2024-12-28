@@ -1,6 +1,7 @@
 {
   "name": "auth-backend",
   "version": "0.1.0",
+  "type": "module",
   "private": true,
   "license": "MIT",
   "scripts": {
@@ -10,15 +11,11 @@
     "lint:fix": "bun eslint \"src/**/*.ts\" --fix",
     "type-check": "tsc --noEmit"
   },
-  "imports": {
-    "#*": "./src/*"
-  },
   "dependencies": {
     "@hono/zod-validator": "0.4.1",
     "@oslojs/crypto": "^1.0.1",
     "@oslojs/encoding": "^1.1.0",
     "@repo/shared": "*",
-    "@repo/types": "*",
     "bcryptjs": "2.4.3",
     "figlet": "1.8.0",
     "hono": "4.6.13",
@@ -27,6 +24,9 @@
     "zod": "3.23.8"
   },
   "devDependencies": {
+    "@repo/config-eslint": "*",
+    "@repo/config-tailwind": "*",
+    "@repo/config-typescript": "*",
     "@repo/types": "*",
     "@types/bcryptjs": "2.4.6",
     "@types/bun": "1.1.13",

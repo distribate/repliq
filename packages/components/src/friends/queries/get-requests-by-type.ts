@@ -1,6 +1,6 @@
 "use server";
 
-import { createClient } from "@repo/lib/utils/api/supabase-client.ts";
+import { createClient } from "@repo/shared/api/supabase-client.ts";
 import { FriendRequestEntity } from "@repo/types/entities/entities-type.ts";
 
 export type FriendsRequestsType = "incoming" | "outgoing";

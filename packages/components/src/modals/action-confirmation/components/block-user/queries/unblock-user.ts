@@ -1,6 +1,6 @@
 "use server";
 
-import { createClient } from "@repo/lib/utils/api/supabase-client.ts";
+import { createClient } from "@repo/shared/api/supabase-client.ts";
 import { getCurrentSession } from "@repo/lib/actions/get-current-session.ts";
 
 export async function unblockUser(requestedNickname: string) {

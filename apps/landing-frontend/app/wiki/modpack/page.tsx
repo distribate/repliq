@@ -1,11 +1,11 @@
-import { MainLayoutPage } from '#/components/layout/main-layout';
-import { Typography } from '#/ui/typography';
-import { ModpackList } from '#/components/modpacks/modpack-list.tsx';
+import { MainLayoutPage } from '@repo/landing-components/src/layout/main-layout';
+import { Typography } from '@repo/landing-ui/src/typography';
+import { ModpackList } from '@repo/landing-components/src/modpacks/modpack-list.tsx';
 import { dehydrate, HydrationBoundary, QueryClient } from '@tanstack/react-query';
-import { getModpacks } from '#/lib/queries/get-modpacks.ts';
+import { getModpacks } from '@repo/lib/queries/get-modpacks.ts';
 import { Suspense } from 'react';
-import { ModpackListSkeleton } from '#/components/skeletons/modpack-list-skeleton.tsx';
-import { MODPACKS_QUERY_KEY } from '#/lib/queries/modpacks-query.ts';
+import { ModpackListSkeleton } from '@repo/landing-components/src/skeletons/modpack-list-skeleton.tsx';
+import { MODPACKS_QUERY_KEY } from '@repo/lib/queries/modpacks-query.ts';
 
 export const metadata = {
   title: 'Модпак',

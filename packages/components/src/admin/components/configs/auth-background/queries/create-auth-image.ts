@@ -2,7 +2,7 @@
 
 import { decode } from "base64-arraybuffer";
 import { nanoid } from "nanoid";
-import { createClient } from "@repo/lib/utils/api/supabase-client.ts";
+import { createClient } from "@repo/shared/api/supabase-client.ts";
 
 type CreateAuthImageResult =
   | {

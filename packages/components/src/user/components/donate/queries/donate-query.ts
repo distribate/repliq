@@ -10,10 +10,10 @@ async function getDonate(favoriteItem: number): Promise<FavoriteItem | null> {
   return await getFavoriteItem({ type: 'itemId', favorite_item: favoriteItem })
 }
 
-export const donateQuery = (favoriteItem: Pick<CurrentUser, "favorite_item">["favorite_item"]) => useQuery({
+export const donateQuery = (favoriteItem: Pick<CurrentUser, "favorite_item">["favorite_item"], enabled: boolean) => useQuery({
   queryKey: FAVORITE_ITEM_DONATE_QUERY_KEY(favoriteItem!),
   queryFn: () => getDonate(favoriteItem!),
   refetchOnWindowFocus: false,
   refetchOnMount: false,
-  enabled: !!favoriteItem
+  enabled: !!favoriteItem && enabled
 });

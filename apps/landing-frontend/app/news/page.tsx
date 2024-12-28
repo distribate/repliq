@@ -1,5 +1,5 @@
-import { MainLayoutPage } from "#/components/layout/main-layout";
-import { NewsPageList } from "#/components/news/news-page-list";
+import { MainLayoutPage } from "@repo/landing-components/src/layout/main-layout";
+import { NewsPageList } from "@repo/landing-components/src/news/news-page-list";
 
 export const metadata = {
 	title: "Новости"

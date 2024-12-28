@@ -21,7 +21,7 @@ export const FriendsIncomingRequestsIndicator = () => {
 export const FriendsAllCountIndicator = ({
   nickname,
 }: Pick<UserEntity, "nickname">) => {
-  const { data: friends } = friendsQuery({ nickname });
+  const { data: friends } = friendsQuery({ nickname, with_details: false });
 
   if (!friends) return null;
 

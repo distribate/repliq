@@ -4,7 +4,7 @@
     "**/.env"
   ],
   "envMode": "strict",
-  "ui": "tui",
+  "ui": "stream",
   "tasks": {
     "build": {
       "dependsOn": [

@@ -1,11 +1,7 @@
 {
   "extends": "@repo/config-typescript/nextjs.json",
   "compilerOptions": {
-    "plugins": [
-      {
-        "name": "next"
-      }
-    ]
+    "plugins": [{ "name": "next"}]
   },
   "include": [
     "next-env.d.ts",

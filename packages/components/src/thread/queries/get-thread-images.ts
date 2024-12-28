@@ -1,6 +1,6 @@
 "use server";
 
-import { createClient } from "../../../../lib/utils/api/supabase-client.ts";
+import { createClient } from "@repo/shared/api/supabase-client.ts";
 import { ThreadEntity } from "@repo/types/entities/entities-type.ts";
 import { THREADS_IMAGES_BUCKET } from "@repo/shared/constants/buckets.ts";
 

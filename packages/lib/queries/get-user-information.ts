@@ -5,7 +5,7 @@ import { CurrentUser } from './current-user-query.ts';
 import { permanentRedirect } from 'next/navigation';
 import { AUTH_REDIRECT, BANNED_REDIRECT } from '@repo/shared/constants/routes.ts';
 import { getCurrentSession } from '#actions/get-current-session.ts';
-import { forumUserClient } from '#utils/api/forum-client.ts';
+import { forumUserClient } from '@repo/shared/api/forum-client.ts';
 import { redirect } from "next/navigation"
 
 export async function getUserInformation(): Promise<CurrentUser> {

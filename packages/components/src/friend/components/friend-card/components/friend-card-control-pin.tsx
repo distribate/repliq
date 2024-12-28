@@ -6,18 +6,17 @@ import { FriendCardControlProps } from "#friend/components/friend-card/component
 
 type FriendCardControlPinProps = Pick<
   FriendCardControlProps,
-  "isPinned" | "nickname"
+  "is_pinned" | "nickname"
 >;
 
 export const FriendCardControlPin = ({
-  isPinned,
-  nickname: reqUserNickname,
+  is_pinned, nickname: reqUserNickname,
 }: FriendCardControlPinProps) => {
   const { setFriendPinnedMutation, setFriendUnpinMutation } =
     useControlFriend();
 
   const handlePin = () => {
-    if (isPinned) {
+    if (is_pinned) {
       return setFriendUnpinMutation.mutate({ reqUserNickname });
     } else {
       return setFriendPinnedMutation.mutate({ reqUserNickname });
@@ -30,7 +29,7 @@ export const FriendCardControlPin = ({
       className="flex justify-start items-center gap-2 group"
     >
       <Pin size={16} className="text-shark-300" />
-      {isPinned ? (
+      {is_pinned ? (
         <Typography textSize="small" className="text-caribbean-green-500">
           Открепить
         </Typography>

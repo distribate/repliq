@@ -2,7 +2,7 @@
 
 import "server-only";
 import { getCurrentSession } from "#actions/get-current-session.ts";
-import { forumUserClient } from '#utils/api/forum-client.ts';
+import { forumUserClient } from '@repo/shared/api/forum-client.ts';
 import { userDetailsSchema } from '@repo/types/schemas/user/edit-user-details-schema.ts';
 import { z } from 'zod';
 

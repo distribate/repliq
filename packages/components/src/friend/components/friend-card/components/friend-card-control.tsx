@@ -10,17 +10,17 @@ import { USER_URL } from "@repo/shared/constants/routes.ts";
 import { Separator } from "@repo/ui/src/components/separator.tsx";
 import { FriendCardControlPin } from "#friend/components/friend-card/components/friend-card-control-pin.tsx";
 import { HoverCardItem } from "@repo/ui/src/components/hover-card.tsx";
-import { UserFriends } from "#friends/queries/get-friends.ts";
+import { FriendWithDetails } from "@repo/types/schemas/friend/friend-types.ts";
 
 export type FriendCardControlProps = Pick<
-  UserFriends,
-  "friend_id" | "nickname" | "isPinned"
+  FriendWithDetails,
+  "friend_id" | "nickname" | "is_pinned"
 >;
 
 export const FriendCardControl = ({
   nickname: reqUserNickname,
   friend_id,
-  isPinned,
+  is_pinned,
 }: FriendCardControlProps) => {
   const { push } = useRouter();
 
@@ -53,7 +53,7 @@ export const FriendCardControl = ({
             </HoverCardItem>
           }
         />
-        <FriendCardControlPin nickname={reqUserNickname} isPinned={isPinned} />
+        <FriendCardControlPin nickname={reqUserNickname} is_pinned={is_pinned} />
         <FriendCardControlNote nickname={reqUserNickname} />
         <Separator />
         <DeleteFriendModal

@@ -1,10 +1,10 @@
-import type { PaymentCompleted } from '@repo/types/schemas/payment/payment-schema';
-import { getDonateDetails } from '#queries/get-donate-details';
-import { getBuyerTelegramId } from '#queries/get-buyer-telegram-id';
-import { sendLogs } from '#utils/send-logs';
-import { callBroadcast } from '#lib/rcon-server/call-broadcast';
-import { sendTelegramMessageToBuyer } from '#utils/send-message-to-buyer';
-import { PaymentDonateType } from '@repo/types/entities/payment-types';
+import type { PaymentCompleted } from "@repo/types/schemas/payment/payment-schema"
+import { getDonateDetails } from "../../queries/get-donate-details.ts"
+import { getBuyerTelegramId } from "../../queries/get-buyer-telegram-id.ts"
+import { sendLogs } from "../../utils/send-logs.ts"
+import { callBroadcast } from "../../lib/rcon-server/call-broadcast.ts"
+import { sendTelegramMessageToBuyer } from "../../utils/send-message-to-buyer.ts"
+import type { PaymentDonateType } from "@repo/types/entities/payment-types"
 
 export const nofifyPaymentReceived = async(data: PaymentCompleted['data']) => {
   const { status, customer, orderId, meta, createdAt, currency, txn, captured, uuid, testnet, amount } = data;

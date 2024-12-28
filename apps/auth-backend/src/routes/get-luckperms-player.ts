@@ -1,6 +1,6 @@
 import { Hono } from "hono";
-import { findPlayer as findPlayerLP } from "#lib/queries/find-player-luckperms.ts";
-import { determinePlayerDetailType } from "#utils/determine-player-detail-type.ts";
+import { findPlayer as findPlayerLP } from "../lib/queries/find-player-luckperms.ts";
+import { determinePlayerDetailType } from "../utils/determine-player-detail-type.ts";
 import { HTTPException } from "hono/http-exception";
 
 export const getLuckpermsPlayer = new Hono().get("/:detail", async (c) => {

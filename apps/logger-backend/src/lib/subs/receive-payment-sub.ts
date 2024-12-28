@@ -1,6 +1,6 @@
 import type { PaymentCompleted } from '@repo/types/schemas/payment/payment-schema';
-import { nofifyPaymentReceived } from '#lib/events/nofify-payment-received';
-import { NatsConnection } from '@nats-io/transport-node';
+import { nofifyPaymentReceived } from "../../lib/events/nofify-payment-received.ts"
+import type { NatsConnection } from "@nats-io/transport-node"
 
 const subj = "payment.status.success"
 

@@ -7,6 +7,7 @@ import { UserDonateBadge } from "./donate-badge.tsx";
 import { DonateVariantsEnum } from '@repo/types/entities/entities-type.ts';
 import { CurrentUser } from '@repo/lib/queries/current-user-query.ts';
 import { DONATE_GROUPS } from '@repo/shared/constants/donate-aliases.ts';
+import { useState } from "react";
 
 const getDonateTitle = (donate: DonateVariantsEnum) => DONATE_GROUPS[donate];
 
@@ -30,31 +31,36 @@ type UserDonateProps = {
 export const UserDonate = ({
   donate, favoriteItemId
 }: UserDonateProps) => {
-  const { data: favoriteItem } = donateQuery(favoriteItemId)
+  const [isHovered, setIsHovered] = useState(false);
+  const { data: favoriteItem } = donateQuery(favoriteItemId, isHovered)
   const title = getDonateTitle(donate);
   const favoriteItemImage = favoriteItem?.image;
   
-  return favoriteItemImage ? (
-    <ParticleEffect options={{ particle: favoriteItemImage }}>
-      <UserDonateBadge variant={donate}>
-        <Typography
-          textColor="shark_white"
-          font="minecraft"
-          className="text-[12px]"
-        >
-          {title}
-        </Typography>
-      </UserDonateBadge>
-    </ParticleEffect>
-  ) : (
-    <UserDonateBadge variant={donate}>
-      <Typography
-        textColor="shark_white"
-        font="minecraft"
-        className="text-[12px]"
-      >
-        {title}
-      </Typography>
-    </UserDonateBadge>
-  );
+  return (
+    <div onMouseEnter={() => setIsHovered(true)}>
+      {favoriteItemImage ? (
+        <ParticleEffect options={{ particle: favoriteItemImage }}>
+          <UserDonateBadge variant={donate} className="w-fit">
+            <Typography
+              textColor="shark_white"
+              font="minecraft"
+              className="text-[12px]"
+            > 
+              {title}
+            </Typography>
+          </UserDonateBadge>
+        </ParticleEffect>
+      ) : (
+        <UserDonateBadge variant={donate} className="w-fit">
+          <Typography
+            textColor="shark_white"
+            font="minecraft"
+            className="text-[12px]"
+         >
+            {title}
+          </Typography>
+        </UserDonateBadge>
+      )}
+    </div>
+  )
 };

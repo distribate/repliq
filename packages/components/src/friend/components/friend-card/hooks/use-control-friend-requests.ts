@@ -22,7 +22,7 @@ import { ControlFriendProperties } from "#friend/components/friend-card/types/fr
 import { createFriendRequest } from "#friend/components/friend-card/queries/create-friend-request.ts";
 import { resolveFriendId } from "#friend/components/friend-card/helpers/resolve-friend-id.ts";
 import { deleteFriend } from "#friend/components/friend-card/queries/delete-friend.ts";
-import { UserFriends } from "#friends/queries/get-friends.ts";
+import { FriendWithDetails } from "@repo/types/schemas/friend/friend-types.ts";
 
 export const useControlFriendRequests = () => {
   const qc = useQueryClient();
@@ -209,7 +209,7 @@ export const useControlFriendRequests = () => {
       if (friend_id) {
         friendId = friend_id;
       } else {
-        const friends = qc.getQueryData<UserFriends[]>(
+        const friends = qc.getQueryData<FriendWithDetails[]>(
           FRIENDS_QUERY_KEY(currentUser.nickname),
         );
         if (!friends) return;

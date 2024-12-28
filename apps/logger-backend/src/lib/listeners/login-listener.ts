@@ -1,5 +1,5 @@
-import { authSubscriber } from '#shared/listener';
-import { sendLogs } from '#utils/send-logs';
+import { authSubscriber } from "../../shared/listener.ts"
+import { sendLogs } from "../../utils/send-logs.ts"
 
 type LoginDatePayload = {
   nickname: string,

@@ -1,13 +1,13 @@
 "use server";
 
 import "server-only";
-import { createSessionBodySchema } from "auth-backend/src/lib/routes/create-session.ts";
 import { z } from "zod";
 import { headers } from "next/headers";
-import { authClient } from "#utils/api/auth-client.ts";
+import { authClient } from "@repo/shared/api/auth-client.ts";
 import { setSessionTokenCookie } from "#actions/session-token-control.ts";
 import { redirect } from "next/navigation";
 import { USER_URL } from "@repo/shared/constants/routes.ts";
+import { createSessionBodySchema } from '@repo/types/schemas/auth/create-session-schema.ts';
 
 type CreateSession = z.infer<typeof createSessionBodySchema>;
 

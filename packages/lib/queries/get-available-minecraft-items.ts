@@ -1,6 +1,6 @@
 "use server";
 
-import { createClient } from "#utils/api/supabase-client.ts";
+import { createClient } from "@repo/shared/api/supabase-client.ts";
 import { getPublicUrlFromStorage } from "../utils/storage/get-public-url-from-storage.ts";
 import { MinecraftItemEntity } from "@repo/types/entities/entities-type.ts";
 

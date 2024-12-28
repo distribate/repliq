@@ -5,7 +5,7 @@ import { getRequestedUser } from "@repo/lib/queries/get-requested-user.ts";
 import { getFavoriteItem } from "@repo/lib/queries/get-favorite-item.ts";
 import { UserCardQuery } from "./user-main-card-query.ts";
 import { getUserTimeFromServer } from "@repo/lib/queries/get-user-time-from-server.ts";
-import { createClient } from '@repo/lib/utils/api/supabase-client.ts';
+import { createClient } from "@repo/shared/api/supabase-client.ts";
 import { UserEntity } from '@repo/types/entities/entities-type.ts';
 
 async function getFriendsCount({ nickname }: Pick<UserEntity, "nickname">): Promise<number> {

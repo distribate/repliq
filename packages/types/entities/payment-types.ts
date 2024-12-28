@@ -6,7 +6,7 @@ import {
   paymentTypeSchema,
   paymentValueSchema,
   statusSchema,
-} from '../schemas/payment/payment-schema';
+} from '../schemas/payment/payment-schema.ts';
 
 export type PaymentCryptoCurrency = z.infer<typeof currencyCryptoSchema>
 export type PaymentArcCurrency = z.infer<typeof arcCurrencySchema>

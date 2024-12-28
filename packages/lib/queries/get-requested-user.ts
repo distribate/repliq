@@ -4,7 +4,7 @@ import { DonateVariantsEnum, UserEntity } from '@repo/types/entities/entities-ty
 import { REDIRECT_USER_NOT_EXIST } from '@repo/shared/constants/routes.ts';
 import { redirect } from 'next/navigation';
 import { getCurrentSession } from '#actions/get-current-session.ts';
-import { forumUserClient } from '#utils/api/forum-client.ts';
+import { forumUserClient } from '@repo/shared/api/forum-client.ts';
 import { CurrentUser } from '#queries/current-user-query.ts';
 
 export type RequestedUser = Omit<UserEntity, "acceptrules"> & {

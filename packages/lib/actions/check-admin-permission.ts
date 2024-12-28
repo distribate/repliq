@@ -1,7 +1,7 @@
 "use server";
 
 import "server-only";
-import { createClient } from "#utils/api/supabase-client.ts";
+import { createClient } from "@repo/shared/api/supabase-client.ts";
 import { getCurrentSession } from "#actions/get-current-session.ts";
 
 export async function checkAdminPermission(): Promise<boolean> {

@@ -1,6 +1,6 @@
 import type { Updateable } from 'kysely';
 import type { DB } from '@repo/types/db/payments-database-types.ts';
-import { paymentsDB } from '@repo/shared/db/payments-db.ts';
+import { paymentsDB } from '../../shared/db.ts';
 
 type Payments = Pick<DB, 'payments'>['payments']
 

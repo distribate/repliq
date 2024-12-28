@@ -4,13 +4,13 @@ import { HTTPError } from 'ky';
 import { z, ZodError } from 'zod';
 import { createOrderBodySchema } from '@repo/types/schemas/payment/payment-schema.ts';
 import { parseZodErrorMessages } from '@repo/lib/helpers/parse-zod-errors.ts';
-import { paymentsClient } from '@repo/lib/utils/api/payments-client.ts';
+import { paymentsClient } from '@repo/shared/api/payments-client.ts';
 
 export async function createPaymentClient(
   payment: z.infer<typeof createOrderBodySchema>
 ) {
   try {
-    const res = await paymentsClient["create-order"].$post({
+    const res = await paymentsClient.api.payment["create-order"].$post({
       json: payment
     })
     

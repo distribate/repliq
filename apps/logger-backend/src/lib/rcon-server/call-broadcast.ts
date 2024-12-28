@@ -1,5 +1,5 @@
-import { getRCONHealthCheck } from '#lib/rcon-server/rcon-server-status';
-import { callServerCommand } from '#lib/rcon-server/call-command';
+import { getRCONHealthCheck } from "../../lib/rcon-server/rcon-server-status.ts"
+import { callServerCommand } from "../../lib/rcon-server/call-command.ts"
 
 export async function callBroadcast(value: string): Promise<void> {
   const res = await getRCONHealthCheck();

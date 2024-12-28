@@ -1709,7 +1709,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@litehex/node-vault@npm:^1.0.1":
+"@litehex/node-vault@npm:1.0.1":
   version: 1.0.1
   resolution: "@litehex/node-vault@npm:1.0.1"
   dependencies:
@@ -5811,6 +5811,12 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@repo/config-consul@workspace:packages/config-consul":
+  version: 0.0.0-use.local
+  resolution: "@repo/config-consul@workspace:packages/config-consul"
+  languageName: unknown
+  linkType: soft
+
 "@repo/config-eslint@npm:*, @repo/config-eslint@workspace:packages/config-eslint":
   version: 0.0.0-use.local
   resolution: "@repo/config-eslint@workspace:packages/config-eslint"
@@ -5821,11 +5827,17 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@repo/config-supabase@workspace:packages/config-supabase":
+"@repo/config-migrations@workspace:packages/config-migrations":
   version: 0.0.0-use.local
-  resolution: "@repo/config-supabase@workspace:packages/config-supabase"
+  resolution: "@repo/config-migrations@workspace:packages/config-migrations"
+  languageName: unknown
+  linkType: soft
+
+"@repo/config-nats@npm:*, @repo/config-nats@workspace:packages/config-nats":
+  version: 0.0.0-use.local
+  resolution: "@repo/config-nats@workspace:packages/config-nats"
   dependencies:
-    supabase: "npm:1.219.2"
+    "@nats-io/transport-node": "npm:3.0.0-32"
   languageName: unknown
   linkType: soft
 
@@ -5834,15 +5846,115 @@ __metadata:
   resolution: "@repo/config-tailwind@workspace:packages/config-tailwind"
   dependencies:
     "@repo/config-typescript": "npm:*"
-    tailwind-merge: "npm:latest"
+    tailwind-merge: "npm:2.6.0"
     tailwindcss: "npm:3.4.14"
     tailwindcss-animate: "npm:1.0.7"
+    tailwindcss-react-aria-components: "npm:1.2.0"
   languageName: unknown
   linkType: soft
 
 "@repo/config-typescript@npm:*, @repo/config-typescript@workspace:packages/config-typescript":
   version: 0.0.0-use.local
   resolution: "@repo/config-typescript@workspace:packages/config-typescript"
+  languageName: unknown
+  linkType: soft
+
+"@repo/config-vault@workspace:packages/config-vault":
+  version: 0.0.0-use.local
+  resolution: "@repo/config-vault@workspace:packages/config-vault"
+  dependencies:
+    "@litehex/node-vault": "npm:1.0.1"
+  languageName: unknown
+  linkType: soft
+
+"@repo/landing-components@npm:*, @repo/landing-components@workspace:packages/landing-components":
+  version: 0.0.0-use.local
+  resolution: "@repo/landing-components@workspace:packages/landing-components"
+  dependencies:
+    "@hookform/error-message": "npm:2.0.1"
+    "@hookform/resolvers": "npm:3.6.0"
+    "@radix-ui/react-visually-hidden": "npm:1.1.0"
+    "@repo/assets": "npm:*"
+    "@repo/config-eslint": "npm:*"
+    "@repo/config-tailwind": "npm:*"
+    "@repo/config-typescript": "npm:*"
+    "@repo/landing-ui": "npm:*"
+    "@repo/lib": "npm:*"
+    "@repo/shared": "npm:*"
+    "@repo/types": "npm:*"
+    "@repo/ui": "npm:*"
+    "@types/eslint": "npm:8.56.5"
+    "@types/react": "npm:18.3.12"
+    "@types/react-dom": "npm:18.3.1"
+    "@types/react-window": "npm:1"
+    "@types/react-window-infinite-loader": "npm:1"
+    class-variance-authority: "npm:0.7.0"
+    clsx: "npm:2.1.1"
+    embla-carousel-react: "npm:8.5.1"
+    keen-slider: "npm:6.8.6"
+    ky: "npm:1.7.2"
+    lucide-react: "npm:0.468.0"
+    nanoid: "npm:5.0.7"
+    postcss: "npm:8.4.35"
+    react: "npm:18.3.1"
+    react-dom: "npm:18.3.1"
+    react-hook-form: "npm:7.53.0"
+    react-icons: "npm:5.2.0"
+    slate: "npm:0.103.0"
+    slate-react: "npm:0.107.0"
+    sonner: "npm:1.5.0"
+    tailwindcss: "npm:3.4.14"
+    typescript: "npm:^5.4.5"
+    vaul: "npm:0.8.9"
+    zod: "npm:3.23.8"
+    zod-validation-error: "npm:3.0.0"
+  languageName: unknown
+  linkType: soft
+
+"@repo/landing-ui@npm:*, @repo/landing-ui@workspace:packages/landing-ui":
+  version: 0.0.0-use.local
+  resolution: "@repo/landing-ui@workspace:packages/landing-ui"
+  dependencies:
+    "@eslint/eslintrc": "npm:3.1.0"
+    "@eslint/js": "npm:9.13.0"
+    "@radix-ui/react-accordion": "npm:1.2.0"
+    "@radix-ui/react-checkbox": "npm:1.0.4"
+    "@radix-ui/react-context-menu": "npm:2.2.2"
+    "@radix-ui/react-dialog": "npm:1.0.5"
+    "@radix-ui/react-dropdown-menu": "npm:2.0.6"
+    "@radix-ui/react-hover-card": "npm:latest"
+    "@radix-ui/react-label": "npm:2.0.2"
+    "@radix-ui/react-popover": "npm:1.1.1"
+    "@radix-ui/react-progress": "npm:1.1.0"
+    "@radix-ui/react-scroll-area": "npm:1.2.0"
+    "@radix-ui/react-select": "npm:2.0.0"
+    "@radix-ui/react-separator": "npm:1.0.3"
+    "@radix-ui/react-slot": "npm:1.0.2"
+    "@radix-ui/react-switch": "npm:1.0.3"
+    "@radix-ui/react-tabs": "npm:1.0.4"
+    "@radix-ui/react-toggle": "npm:1.1.0"
+    "@radix-ui/react-tooltip": "npm:1.0.7"
+    "@repo/config-eslint": "npm:*"
+    "@repo/config-tailwind": "npm:*"
+    "@repo/config-typescript": "npm:*"
+    "@repo/lib": "npm:*"
+    "@types/react": "npm:18.3.12"
+    "@types/react-dom": "npm:18.3.1"
+    autoprefixer: "npm:10.4.18"
+    class-variance-authority: "npm:0.7.0"
+    cmdk: "npm:1.0.3"
+    date-fns: "npm:3.6.0"
+    embla-carousel-react: "npm:8.5.1"
+    lucide-react: "npm:0.468.0"
+    postcss: "npm:8.4.35"
+    react: "npm:18.3.1"
+    react-aria-components: "npm:1.4.1"
+    react-day-picker: "npm:9.3.0"
+    react-dom: "npm:18.3.1"
+    react-parallax-tilt: "npm:1.7.232"
+    react-resizable-panels: "npm:2.1.6"
+    tailwindcss: "npm:3.4.14"
+    typescript: "npm:^5.4.5"
   languageName: unknown
   linkType: soft
 
@@ -5872,8 +5984,10 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@repo/shared@workspace:packages/shared"
   dependencies:
+    "@repo/assets": "npm:*"
     "@repo/config-typescript": "npm:*"
     "@repo/types": "npm:*"
+    typescript: "npm:^5.4.5"
   languageName: unknown
   linkType: soft
 
@@ -5881,6 +5995,9 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@repo/types@workspace:packages/types"
   dependencies:
+    dotenv-cli: "npm:7.4.4"
+    kysely-codegen: "npm:0.17.0"
+    supabase: "npm:1.219.2"
     zod: "npm:3.23.8"
   languageName: unknown
   linkType: soft
@@ -7687,6 +7804,9 @@ __metadata:
     "@hono/zod-validator": "npm:0.4.1"
     "@oslojs/crypto": "npm:^1.0.1"
     "@oslojs/encoding": "npm:^1.1.0"
+    "@repo/config-eslint": "npm:*"
+    "@repo/config-tailwind": "npm:*"
+    "@repo/config-typescript": "npm:*"
     "@repo/shared": "npm:*"
     "@repo/types": "npm:*"
     "@types/bcryptjs": "npm:2.4.6"
@@ -8357,19 +8477,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"cross-env@npm:7.0.3":
-  version: 7.0.3
-  resolution: "cross-env@npm:7.0.3"
-  dependencies:
-    cross-spawn: "npm:^7.0.1"
-  bin:
-    cross-env: src/bin/cross-env.js
-    cross-env-shell: src/bin/cross-env-shell.js
-  checksum: 10c0/f3765c25746c69fcca369655c442c6c886e54ccf3ab8c16847d5ad0e91e2f337d36eedc6599c1227904bf2a228d721e690324446876115bc8e7b32a866735ecf
-  languageName: node
-  linkType: hard
-
-"cross-spawn@npm:^7.0.0, cross-spawn@npm:^7.0.1, cross-spawn@npm:^7.0.2, cross-spawn@npm:^7.0.6":
+"cross-spawn@npm:^7.0.0, cross-spawn@npm:^7.0.2, cross-spawn@npm:^7.0.6":
   version: 7.0.6
   resolution: "cross-spawn@npm:7.0.6"
   dependencies:
@@ -9951,12 +10059,8 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "fasberry-forum@workspace:."
   dependencies:
-    "@litehex/node-vault": "npm:^1.0.1"
     concurrently: "npm:9.1.0"
-    cross-env: "npm:7.0.3"
-    dotenv-cli: "npm:7.4.4"
     eslint: "npm:8.57.1"
-    kysely-codegen: "npm:0.17.0"
     prettier: "npm:3.4.2"
     prettier-plugin-tailwindcss: "npm:0.5.14"
     turbo: "npm:2.3.3"
@@ -10151,7 +10255,9 @@ __metadata:
   resolution: "forum-backend@workspace:apps/forum-backend"
   dependencies:
     "@hono/zod-validator": "npm:0.4.1"
-    "@repo/lib": "npm:*"
+    "@repo/config-eslint": "npm:*"
+    "@repo/config-tailwind": "npm:*"
+    "@repo/config-typescript": "npm:*"
     "@repo/shared": "npm:*"
     "@repo/types": "npm:*"
     "@types/bun": "npm:1.1.13"
@@ -10190,6 +10296,7 @@ __metadata:
     "@types/react-dom": "npm:18.3.1"
     autoprefixer: "npm:10.4.18"
     caniuse-lite: "npm:1.0.30001684"
+    eslint: "npm:8.57.1"
     ky: "npm:1.7.2"
     next: "npm:14.2.7"
     nextjs-toploader: "npm:1.6.12"
@@ -10200,6 +10307,7 @@ __metadata:
     sharp: "npm:0.33.4"
     tailwindcss: "npm:3.4.14"
     typescript: "npm:^5.4.5"
+    zod: "npm:3.23.8"
   languageName: unknown
   linkType: soft
 
@@ -11445,18 +11553,18 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "landing-frontend@workspace:apps/landing-frontend"
   dependencies:
-    "@hookform/error-message": "npm:2.0.1"
-    "@hookform/resolvers": "npm:3.6.0"
-    "@radix-ui/react-visually-hidden": "npm:1.1.0"
+    "@next/eslint-plugin-next": "npm:14.1.1"
     "@repo/assets": "npm:*"
-    "@repo/components": "npm:*"
     "@repo/config-eslint": "npm:*"
     "@repo/config-tailwind": "npm:*"
     "@repo/config-typescript": "npm:*"
+    "@repo/landing-components": "npm:*"
+    "@repo/landing-ui": "npm:*"
     "@repo/lib": "npm:*"
     "@repo/shared": "npm:*"
     "@repo/types": "npm:*"
-    "@repo/ui": "npm:*"
+    "@supabase/ssr": "npm:0.5.1"
+    "@supabase/supabase-js": "npm:2.45.6"
     "@tanstack/react-query": "npm:5.62.3"
     "@tanstack/react-query-devtools": "npm:5.62.3"
     "@tanstack/react-table": "npm:8.20.5"
@@ -11468,27 +11576,20 @@ __metadata:
     "@vercel/edge": "npm:1.1.1"
     autoprefixer: "npm:10.4.18"
     caniuse-lite: "npm:1.0.30001684"
-    class-variance-authority: "npm:0.7.0"
-    clsx: "npm:2.1.1"
-    embla-carousel-react: "npm:8.5.1"
-    keen-slider: "npm:6.8.6"
+    eslint: "npm:8.57.1"
     ky: "npm:1.7.2"
-    nanoid: "npm:5.0.7"
     next: "npm:14.2.7"
     next-intl: "npm:3.2.2"
     next-themes: "npm:0.2.1"
     postcss: "npm:8.4.35"
     react: "npm:18.3.1"
     react-dom: "npm:18.3.1"
-    react-hook-form: "npm:7.53.0"
-    react-icons: "npm:5.2.0"
     server-only: "npm:0.0.1"
-    tailwind-merge: "npm:latest"
+    tailwind-merge: "npm:2.6.0"
     tailwindcss: "npm:3.4.14"
     tailwindcss-animate: "npm:1.0.7"
     tailwindcss-textshadow: "npm:2.1.3"
     typescript: "npm:^5.4.5"
-    vaul: "npm:0.8.9"
     zod: "npm:3.23.8"
     zod-validation-error: "npm:3.0.0"
   languageName: unknown
@@ -11597,7 +11698,10 @@ __metadata:
     "@antfu/eslint-config": "npm:3.8.0"
     "@gramio/format": "npm:0.1.5"
     "@gramio/types": "npm:8.1.0"
-    "@nats-io/transport-node": "npm:3.0.0-32"
+    "@repo/config-eslint": "npm:*"
+    "@repo/config-nats": "npm:*"
+    "@repo/config-tailwind": "npm:*"
+    "@repo/config-typescript": "npm:*"
     "@repo/shared": "npm:*"
     "@repo/types": "npm:*"
     "@types/bun": "npm:1.1.13"
@@ -13076,6 +13180,9 @@ __metadata:
   dependencies:
     "@hono/zod-validator": "npm:0.4.1"
     "@nats-io/transport-node": "npm:3.0.0-32"
+    "@repo/config-eslint": "npm:*"
+    "@repo/config-tailwind": "npm:*"
+    "@repo/config-typescript": "npm:*"
     "@repo/shared": "npm:*"
     "@repo/types": "npm:*"
     "@types/bun": "npm:1.1.13"
@@ -14831,7 +14938,9 @@ __metadata:
   resolution: "skin-backend@workspace:apps/skin-backend"
   dependencies:
     "@aws-sdk/client-s3": "npm:3.717.0"
-    "@repo/lib": "npm:*"
+    "@repo/config-eslint": "npm:*"
+    "@repo/config-tailwind": "npm:*"
+    "@repo/config-typescript": "npm:*"
     "@repo/shared": "npm:*"
     "@repo/types": "npm:*"
     "@types/base-64": "npm:1"
@@ -15382,7 +15491,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"tailwind-merge@npm:latest":
+"tailwind-merge@npm:2.6.0":
   version: 2.6.0
   resolution: "tailwind-merge@npm:2.6.0"
   checksum: 10c0/fc8a5535524de9f4dacf1c16ab298581c7bb757d68a95faaf28942b1c555a619bba9d4c6726fe83986e44973b315410c1a5226e5354c30ba82353bd6d2288fa5
@@ -15395,6 +15504,15 @@ __metadata:
   peerDependencies:
     tailwindcss: "*"
   checksum: 10c0/ec7dbd1631076b97d66a1fbaaa06e0725fccfa63119221e8d87a997b02dcede98ad88bb1ef6665b968f5d260fcefb10592e0299ca70208d365b37761edf5e19a
+  languageName: node
+  linkType: hard
+
+"tailwindcss-react-aria-components@npm:1.2.0":
+  version: 1.2.0
+  resolution: "tailwindcss-react-aria-components@npm:1.2.0"
+  peerDependencies:
+    tailwindcss: "*"
+  checksum: 10c0/723b30e035df370e36416c0b1cd931e534d78058648df46010553aac783237f745badd86511469accf8193deef1b098599039cbbcbb1c88d0f29e6eda05d918b
   languageName: node
   linkType: hard
 

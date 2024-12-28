@@ -1,7 +1,7 @@
-import { luckpermsSubscriber } from '#shared/listener';
-import type { LuckpermsPlayers } from '@repo/types/db/luckperms-database-types';
-import { forumDB } from '@repo/shared/db/forum-db';
-import { DonateVariantsEnum } from '@repo/types/entities/entities-type';
+import { luckpermsSubscriber } from "../../shared/listener.ts"
+import type { LuckpermsPlayers } from "@repo/types/db/luckperms-database-types"
+import { forumDB } from "../../shared/db.ts"
+import type { DonateVariantsEnum } from "@repo/types/entities/entities-type"
 
 type LuckpermsPlayersPayload = LuckpermsPlayers
 

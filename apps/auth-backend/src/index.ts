@@ -5,16 +5,15 @@ import { createUserRoute } from './routes/create-user.ts';
 import { createSessionRoute } from './routes/create-session.ts';
 import { invalidateSessionRoute } from './routes/invalidate-session.ts';
 import { validateSessionRoute } from './routes/validate-session.ts';
-import { hc } from 'hono/client';
 import { showRoutes } from 'hono/dev';
-import { PORT as port, SECRET_TOKEN } from '#utils/initialize-env.ts';
-import { getLuckpermsPlayer } from '#routes/get-luckperms-player.ts';
-import { exceptionHandler } from '#helpers/exception-handler.ts';
-import { mergeRoutes, type Module } from '#utils/merge-routes.ts';
-import { authorizeToken } from '#helpers/authorize-token.ts';
+import { getLuckpermsPlayer } from './routes/get-luckperms-player.ts';
+import { exceptionHandler } from './helpers/exception-handler.ts';
+import { mergeRoutes, type Module } from './utils/merge-routes.ts';
 import { logger } from 'hono/logger';
+import { bearerAuth } from 'hono/bearer-auth';
 
-export const headers = { Authorization: `Bearer ${SECRET_TOKEN}` };
+const port = process.env.AUTH_BACKEND_PORT;
+const token = process.env.SECRET_TOKEN!
 
 const base = new Hono();
 
@@ -27,18 +26,18 @@ const installedModules = [
   { path: '/lp', routes: getLuckpermsPlayer },
 ] as const satisfies Module[];
 
-const routes = mergeRoutes(
+const app = mergeRoutes(
   base
+  .basePath('/api')
   .use('*', logger())
   .use('*', prettyJSON())
-  .use('*', (c, next) => {
-    const authHeader = c.req.header('Authorization');
-    authorizeToken({ authHeader, apiKey: process.env.SECRET_TOKEN! });
-    return next();
-  })
+  .use('*', bearerAuth({ token }))
   .onError(exceptionHandler),
   ...installedModules,
 );
+
+export const lp = new Hono()
+.route('/', getLuckpermsPlayer);
 
 export const auth = new Hono()
 .route('/', invalidateSessionRoute)
@@ -47,10 +46,9 @@ export const auth = new Hono()
 .route('/', createUserRoute)
 .route('/', createSessionRoute);
 
-export const lp = new Hono().route('/', getLuckpermsPlayer);
+export type AuthAppType = typeof auth
+export type LpAppType = typeof lp
 
-export const lpClient = hc<typeof lp>(`http://localhost:3400/lp`, { headers });
+showRoutes(app, { verbose: false });
 
-showRoutes(base);
-
-export default { port, fetch: routes.fetch };
+export default { port, fetch: app.fetch };

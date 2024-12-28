@@ -1,4 +1,4 @@
-import { forumDB } from '@repo/shared/db/forum-db.ts';
+import { forumDB } from '../../shared/db.ts';
 import { z } from 'zod';
 import type { getThreadCommentsSchema } from '@repo/types/schemas/thread/get-thread-comments-schema.ts';
 

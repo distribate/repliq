@@ -37,8 +37,11 @@ import {
 import { UserCoverLayout } from '@repo/components/src/profile/components/cover/components/cover-layout.tsx';
 import dynamic from 'next/dynamic';
 import { getCurrentSession } from '@repo/lib/actions/get-current-session.ts';
-import { User } from 'auth-backend/src/lib/routes/create-session.ts';
 import { CurrentUser } from '@repo/lib/queries/current-user-query.ts';
+import { Selectable } from 'kysely';
+import type { Users } from '@repo/types/db/forum-database-types.ts';
+
+export type User = Selectable<Pick<Users, "id" | "nickname" | "uuid">>;
 
 const UserProfilePosts = dynamic(() =>
   import('@repo/components/src/profile/components/posts/components/posts/components/profile-posts.tsx')
@@ -264,11 +267,7 @@ export default async function ProfilePage({ params }: PageConventionProps) {
     qc.prefetchQuery({
       queryKey: REQUESTS_QUERY_KEY(currentUser.nickname),
       queryFn: () => getRequests(currentUser.nickname),
-    }),
-    qc.prefetchQuery({
-      queryKey: FRIENDS_QUERY_KEY(currentUser.nickname),
-      queryFn: () => getFriends({ nickname: currentUser.nickname }),
-    }),
+    })
   ]);
   
   return (

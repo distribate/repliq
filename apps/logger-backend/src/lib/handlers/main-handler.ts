@@ -1,6 +1,6 @@
-import { forumDB } from '@repo/shared/db/forum-db';
-import { adminsListMessage } from '#lib/messages/admins-list';
-import { Context } from './message-handler';
+import { forumDB } from "../../shared/db.ts"
+import { adminsListMessage } from "../../lib/messages/admins-list.ts"
+import type { Context } from "./message-handler.ts"
 
 export const sendAdminsList = async (ctx: Context) => {
   const admins = await forumDB

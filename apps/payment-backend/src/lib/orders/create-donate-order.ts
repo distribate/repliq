@@ -1,9 +1,9 @@
-import { createPaymentItem } from '#helpers/create-payment-item.ts';
-import { getCurrencyPriceInRub } from '#lib/queries/get-currency-price-in-rub.ts';
-import { getDonateDetails } from '#lib/queries/get-donate-details.ts';
-import type { CreateCryptoOrder } from '#routes/create-order.ts';
-import { ARC_API } from '#shared/api.ts';
-import { PAYMENT_CURRENCIES_MAPPING } from '#shared/currencies.ts';
+import { createPaymentItem } from '../../helpers/create-payment-item.ts';
+import { getCurrencyPriceInRub } from '../queries/get-currency-price-in-rub.ts';
+import { getDonateDetails } from '../queries/get-donate-details.ts';
+import type { CreateCryptoOrder } from '../../routes/create-order.ts';
+import { ARC_API } from '../../shared/api.ts';
+import { PAYMENT_CURRENCIES_MAPPING } from '../../shared/currencies.ts';
 import {
   type Payment,
   type PaymentDonateType,

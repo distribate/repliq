@@ -3,9 +3,9 @@ const svg = require('@neodx/svg/webpack');
 
 module.exports = {
   reactStrictMode: false,
-  transpilePackages: ['@repo/ui'],
+  transpilePackages: ['@repo/ui', '@repo/components'],
   experimental: {
-    optimizePackageImports: ['@repo/ui', '@repo/lib'],
+    optimizePackageImports: ['@repo/ui', '@repo/components'],
     serverActions: {
       bodySizeLimit: '15mb',
     },

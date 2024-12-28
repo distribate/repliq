@@ -1,5 +1,5 @@
 import type { PaymentDonateType } from '@repo/types/entities/payment-types.ts';
-import { lpDB } from '@repo/shared/db/luckperms-db.ts';
+import { lpDB } from '../../shared/db.ts';
 
 type UpdateDonateForPlayer = {
   nickname: string,

@@ -4,17 +4,21 @@ import { createPool  } from "mysql2";
 type SkinsDialect = {
   user: string;
   password: string;
-  port: number
+  port: number,
+  database: string,
+  host: string
 }
 
-export const skinsDialect = (dialect: SkinsDialect) => {
+export const skinsDialect = ({
+  user, password, port, database, host
+}: SkinsDialect) => {
   return new MysqlDialect({
     pool: createPool({
-      database: 'skins_proxy',
-      host: '127.0.0.1',
-      user: dialect.user,
-      password: dialect.password,
-      port: dialect.port,
+      database,
+      host,
+      user,
+      password,
+      port,
       connectionLimit: 10,
     }),
   });

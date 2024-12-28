@@ -1,7 +1,7 @@
 "use server";
 
 import "server-only";
-import { createClient } from "../../../../../lib/utils/api/supabase-client.ts";
+import { createClient } from "@repo/shared/api/supabase-client.ts";
 import { decode } from "base64-arraybuffer";
 import { nanoid } from "nanoid";
 import { THREADS_IMAGES_BUCKET } from "@repo/shared/constants/buckets.ts";

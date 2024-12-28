@@ -1,16 +1,16 @@
-import { MainLayoutPage } from "#/components/layout/main-layout";
-import { Overlay } from "#/ui/overlay";
-import { WrapperTitle } from "#/ui/wrapper-title";
-import { Typography } from "#/ui/typography";
-import { Block } from "#/ui/block";
+import { MainLayoutPage } from "@repo/landing-components/src/layout/main-layout";
+import { Overlay } from "@repo/landing-ui/src/overlay";
+import { WrapperTitle } from "@repo/landing-ui/src/wrapper-title";
+import { Typography } from "@repo/landing-ui/src/typography";
+import { Block } from "@repo/landing-ui/src/block";
 import Image from "next/image";
 import Link from "next/link";
-import { Button } from "#/ui/button";
-import { DialogWrapper } from "#/components/wrappers/dialog-wrapper";
-import { DONATIONALERTS_NUMBER, YOOMONEY_NUMBER } from "#/shared/data/support-payment-info";
-import { HOT_MC_VOTE, TELEGRAM_SHARE, VK_SHARE } from "#/shared/data/support-share-info";
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "#/ui/accordion";
-import { CopyCryptoAddress } from "#/components/support/copy-crypto-address";
+import { Button } from "@repo/landing-ui/src/button";
+import { DialogWrapper } from "@repo/landing-components/src/wrappers/dialog-wrapper";
+import { DONATIONALERTS_NUMBER, YOOMONEY_NUMBER } from "@repo/shared/wiki/data/support-payment-info";
+import { HOT_MC_VOTE, TELEGRAM_SHARE, VK_SHARE } from "@repo/shared/wiki/data/support-share-info";
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@repo/landing-ui/src/accordion";
+import { CopyCryptoAddress } from "@repo/landing-components/src/support/copy-crypto-address";
 
 export const metadata = {
 	title: "Поддержка"
@@ -51,7 +51,7 @@ export default async function SupportPage() {
 					</div>
 				</WrapperTitle>
 			</div>
-			<div className="full-screen-section flex flex-col justify-center items-center relative py-24 lg:py-36">
+			<div id="support-list" className="full-screen-section flex flex-col justify-center items-center relative py-24 lg:py-36">
 				<div className="flex flex-col justify-center gap-y-6 w-[85%] mx-auto">
 					<div className="flex flex-col justify-center items-center mb-6">
 						<Typography
@@ -121,7 +121,7 @@ export default async function SupportPage() {
 							</div>
 						</div>
 					</Block>
-					<Block
+					{/* <Block
 						blockItem
 						rounded="big"
 						className="flex flex-col md:flex-row overflow-hidden md:items-center items-start gap-x-6 gap-y-4 w-full"
@@ -219,7 +219,7 @@ export default async function SupportPage() {
 								/>
 							</div>
 						</div>
-					</Block>
+					</Block> */}
 					<Block
 						blockItem
 						rounded="big"

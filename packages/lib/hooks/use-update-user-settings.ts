@@ -1,3 +1,5 @@
+import { REQUESTED_USER_QUERY_KEY } from '@repo/components/src/profile/components/cover/queries/requested-user-query.ts';
+import { usePathname } from 'next/navigation';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { UpdateUserSettings, updateUserSettings } from '#queries/update-user-settings.ts';
 import { toast } from 'sonner';
@@ -5,7 +7,8 @@ import { CURRENT_USER_QUERY_KEY, CurrentUser } from '#queries/current-user-query
 
 export const useUpdateUserSettings = () => {
   const qc = useQueryClient()
-  
+  const pathname = usePathname()
+
   const updateUserSettingsMutation = useMutation({
     mutationFn: async (values: UpdateUserSettings) => updateUserSettings(values),
     onSuccess: async (data) => {
@@ -13,7 +16,16 @@ export const useUpdateUserSettings = () => {
         description: "Повторите попытку позже"
       });
       
-      return qc.setQueryData(CURRENT_USER_QUERY_KEY, (prev: CurrentUser) => ({
+      qc.setQueryData(CURRENT_USER_QUERY_KEY, (prev: CurrentUser) => ({
+        ...prev,
+        preferences: { ...prev.preferences, ...data }
+      }))
+
+      const nickname = pathname.split("/").pop()
+
+      if (!nickname) return
+      
+      qc.setQueryData(REQUESTED_USER_QUERY_KEY(nickname), (prev: CurrentUser) => ({
         ...prev,
         preferences: { ...prev.preferences, ...data }
       }))

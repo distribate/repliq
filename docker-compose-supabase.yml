@@ -7,6 +7,24 @@
 name: fasberry-supabase
 
 services:
+  cloudflared:
+    container_name: cloudflared
+    image: cloudflare/cloudflared:latest
+    restart: unless-stopped
+    command: tunnel run ${CLOUDFLARE_TUNNEL_ID}
+    volumes:
+      - ./packages/config-cloudflare-tunnel/48d1ffb1-780a-40e3-a19b-581a69d88746.json:/etc/cloudflared/48d1ffb1-780a-40e3-a19b-581a69d88746.json
+      - ./packages/config-cloudflare-tunnel/config.yml:/etc/cloudflared/config.yml
+    environment:
+      - DOMAIN_NAME=fasberry.su
+      - NO_AUTOUPDATE=true
+      - TUNNEL_ID=${CLOUDFLARE_TUNNEL_ID} 
+      - TUNNEL_SECRET=${CLOUDFLARE_TUNNEL_SECRET}
+    networks:
+      - cloudflare_network
+    ports:
+      - "5050:5050" 
+
   studio:
     container_name: supabase-studio
     image: supabase/studio:20241014-c083b3b
@@ -46,6 +64,8 @@ services:
       NEXT_ANALYTICS_BACKEND_PROVIDER: postgres
       # Uncomment to use Big Query backend for analytics
       # NEXT_ANALYTICS_BACKEND_PROVIDER: bigquery
+    networks:
+      - cloudflare_network
 
   kong:
     container_name: supabase-kong
@@ -59,6 +79,8 @@ services:
     # depends_on:
     #   analytics:
     #     condition: service_healthy
+    networks:
+      - cloudflare_network
     environment:
       KONG_DATABASE: "off"
       KONG_DECLARATIVE_CONFIG: /home/kong/kong.yml
@@ -153,6 +175,8 @@ services:
       # GOTRUE_HOOK_SEND_EMAIL_ENABLED: "false"
       # GOTRUE_HOOK_SEND_EMAIL_URI: "http://host.docker.internal:54321/functions/v1/email_sender"
       # GOTRUE_HOOK_SEND_EMAIL_SECRETS: "v1,whsec_VGhpcyBpcyBhbiBleGFtcGxlIG9mIGEgc2hvcnRlciBCYXNlNjQgc3RyaW5n"
+    networks:
+      - cloudflare_network
 
   rest:
     container_name: supabase-rest
@@ -173,6 +197,8 @@ services:
       PGRST_APP_SETTINGS_JWT_SECRET: ${JWT_SECRET}
       PGRST_APP_SETTINGS_JWT_EXP: ${JWT_EXPIRY}
     command: "postgrest"
+    networks:
+      - cloudflare_network
 
   realtime:
     # This container name looks inconsistent but is correct because realtime constructs tenant id by parsing the subdomain
@@ -217,6 +243,8 @@ services:
       RLIMIT_NOFILE: "10000"
       APP_NAME: realtime
       SEED_SELF_HOST: true
+    networks:
+      - cloudflare_network
 
   # To use S3 backed storage: docker compose -f docker-compose-supabase.yml -f docker-compose.s3.yml up
   storage:
@@ -261,6 +289,8 @@ services:
       IMGPROXY_URL: http://imgproxy:5001
     volumes:
       - ./data/fasberry-supabase/volumes/storage:/var/lib/storage:z
+    networks:
+      - cloudflare_network
 
   imgproxy:
     container_name: supabase-imgproxy
@@ -277,6 +307,8 @@ services:
       IMGPROXY_ENABLE_WEBP_DETECTION: ${IMGPROXY_ENABLE_WEBP_DETECTION}
     volumes:
       - ./data/fasberry-supabase/volumes/storage:/var/lib/storage:z
+    networks:
+      - cloudflare_network
 
   meta:
     container_name: supabase-meta
@@ -295,6 +327,8 @@ services:
       PG_META_DB_NAME: ${POSTGRES_DB}
       PG_META_DB_USER: supabase_admin
       PG_META_DB_PASSWORD: ${POSTGRES_PASSWORD}
+    networks:
+      - cloudflare_network
 
   # functions:
   #   container_name: supabase-edge-functions
@@ -407,6 +441,8 @@ services:
       - ./data/fasberry-supabase/volumes/db/pooler.sql:/docker-entrypoint-initdb.d/migrations/99-pooler.sql:Z
       # Use named volume to persist pgsodium decryption key between restarts
       - db-config:/etc/postgresql-custom
+    networks:
+      - cloudflare_network
 
   vector:
     container_name: supabase-vector
@@ -431,6 +467,8 @@ services:
     environment:
       LOGFLARE_API_KEY: ${LOGFLARE_API_KEY}
     command: [ "--config", "etc/vector/vector.yml" ]
+    networks:
+      - cloudflare_network
 
   # Update the DATABASE_URL if you are using an external Postgres database
   supavisor:
@@ -473,10 +511,14 @@ services:
       - POOLER_POOL_MODE=transaction
     volumes:
       - ./data/fasberry-supabase/volumes/pooler/pooler.exs:/etc/pooler/pooler.exs:ro
+    networks:
+      - cloudflare_network
 
 networks:
   shared-network:
     external: true
+  cloudflare_network:
+    driver: bridge
 
 volumes:
   db-config:

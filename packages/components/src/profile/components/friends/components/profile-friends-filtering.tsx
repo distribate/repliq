@@ -8,12 +8,15 @@ import { FRIENDS_SORT } from "#profile/components/friends/constants/friends-filt
 import { useQueryClient } from "@tanstack/react-query";
 import {
   FRIENDS_SORT_QUERY_KEY,
+  friendsSortQuery,
   FriendsSortQuery,
   FriendsSortType,
 } from "#profile/components/friends/queries/friends-settings-query.ts";
 import { FilteringSearchWrapper } from "#wrappers/filtering-search-wrapper.tsx";
 import { useDebounce } from "@repo/lib/hooks/use-debounce.ts";
 import { Input } from "@repo/ui/src/components/input.tsx";
+import { FRIENDS_QUERY_KEY } from "#friends/queries/friends-query.ts";
+import { useRouter, usePathname } from "next/navigation";
 
 const ProfileFriendsFilteringSearch = forwardRef<HTMLInputElement>(
   (props, ref) => {
@@ -25,7 +28,7 @@ const ProfileFriendsFilteringSearch = forwardRef<HTMLInputElement>(
         FRIENDS_SORT_QUERY_KEY,
         (prev: FriendsSortQuery) => ({
           ...prev,
-          querySearch: value,
+          searchQuery: value,
         }),
       );
     };
@@ -45,7 +48,7 @@ const ProfileFriendsFilteringSearch = forwardRef<HTMLInputElement>(
         className="rounded-lg"
         value={value}
         maxLength={64}
-        placeholder="Поиск по имени"
+        placeholder="Поиск по никнейму"
         onChange={handleSearchInput}
         {...props}
       />
@@ -55,17 +58,24 @@ const ProfileFriendsFilteringSearch = forwardRef<HTMLInputElement>(
 
 const ProfileFriendsFilteringView = () => {
   const qc = useQueryClient();
+  const pathname = usePathname();
+  const { sort_type: currentSortType } = friendsSortQuery().data;
 
-  const handleSort = (
-    e: React.MouseEvent<HTMLDivElement, MouseEvent>,
-    type: FriendsSortType,
-  ) => {
+  const handleSort = (e: React.MouseEvent<HTMLDivElement, MouseEvent>, sort_type: FriendsSortType) => {
     e.preventDefault();
 
-    return qc.setQueryData(
+    const nickname = pathname.split("/").pop();
+
+    if (!nickname) return;
+
+    qc.setQueryData(
       FRIENDS_SORT_QUERY_KEY,
-      (prev: FriendsSortQuery) => ({ ...prev, type }),
+      (prev: FriendsSortQuery) => ({ ...prev, sort_type }),
     );
+
+    qc.refetchQueries({
+      queryKey: FRIENDS_QUERY_KEY(nickname),
+    });
   };
 
   return (
@@ -77,7 +87,10 @@ const ProfileFriendsFilteringView = () => {
       }}
       trigger={
         <div className="flex items-center gap-1">
-          <Typography className="text-shark-300" textSize="medium">
+          <Typography 
+            className="text-shark-300" 
+            textSize="medium" 
+          >
             По дате добавления
           </Typography>
         </div>
@@ -88,12 +101,16 @@ const ProfileFriendsFilteringView = () => {
             Фильтровать по
           </Typography>
           <div className="flex flex-col gap-y-2">
-            {FRIENDS_SORT.map((item) => (
+            {FRIENDS_SORT.map(({name, value}) => (
               <DropdownMenuItem
-                key={item.value}
-                onClick={(e) => handleSort(e, item.value)}
+                key={value}
+                onClick={(e) => handleSort(e, value)}
               >
-                <Typography>{item.name}</Typography>
+                <Typography
+                  state={value === currentSortType ? "active" : "default"}
+                >
+                  {name}
+                </Typography>
               </DropdownMenuItem>
             ))}
           </div>

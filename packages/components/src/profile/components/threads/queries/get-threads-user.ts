@@ -2,7 +2,7 @@
 
 import "server-only";
 import { ThreadEntity } from "@repo/types/entities/entities-type.ts";
-import { forumUserClient } from '@repo/lib/utils/api/forum-client.ts';
+import { forumUserClient } from '@repo/shared/api/forum-client.ts';
 
 export type UserThreads = Pick<ThreadEntity, "id" | "title" | "created_at"> & {
   commentsCount: number;

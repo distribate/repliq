@@ -1,0 +1,11 @@
+{
+  "name": "@repo/config-migrations",
+  "version": "0.1.0",
+  "type": "module",
+  "license": "MIT",
+  "private": true,
+  "scripts": {
+    "dump-seed": "dotenv -e .env npx supabase db dump --db-url %FORUM_DATABASE_URL% -f supabase/seed.sql --data-only",
+    "dump-schema": "dotenv -e .env npx supabase db dump --db-url %FORUM_DATABASE_URL% -f supabase/schema.sql"
+  }
+}

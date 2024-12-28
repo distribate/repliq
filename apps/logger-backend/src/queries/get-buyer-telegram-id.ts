@@ -1,4 +1,4 @@
-import { authDB } from "#shared/db";
+import { authDB } from "../shared/db.ts";
 
 export async function getBuyerTelegramId(nickname: string) {
   const result = await authDB

@@ -1,6 +1,6 @@
 "use server";
 
-import { createClient } from "#utils/api/supabase-client.ts";
+import { createClient } from "@repo/shared/api/supabase-client.ts";
 import { UsersSessionEntity } from "@repo/types/entities/entities-type.ts";
 import { getCurrentSession } from "#actions/get-current-session.ts";
 

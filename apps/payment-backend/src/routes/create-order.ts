@@ -11,7 +11,6 @@ import {
   type PaymentType,
   type PaymentValueType,
 } from '@repo/types/entities/payment-types.ts';
-import { createDonateOrder } from '#lib/orders/create-donate-order.ts';
 
 export type CreateOrder = {
   nickname: string,

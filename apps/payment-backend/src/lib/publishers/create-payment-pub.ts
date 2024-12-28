@@ -1,5 +1,5 @@
 import type { PaymentCompleted } from '@repo/types/schemas/payment/payment-schema.ts';
-import { nc } from '#shared/nats-client.ts';
+import { nc } from '../../shared/nats-client.ts';
 
 const subj = "payment.status.success"
 

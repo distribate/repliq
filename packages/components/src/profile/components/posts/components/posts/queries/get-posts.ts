@@ -1,7 +1,7 @@
 'use server';
 
 import { getCurrentSession } from '@repo/lib/actions/get-current-session.ts';
-import { forumUserClient } from '@repo/lib/utils/api/forum-client.ts';
+import { forumUserClient } from '@repo/shared/api/forum-client.ts';
 import { AUTH_REDIRECT } from '@repo/shared/constants/routes.ts';
 import { redirect } from 'next/navigation';
 import { z } from 'zod';

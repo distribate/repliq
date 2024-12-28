@@ -2,6 +2,7 @@
   "name": "logger-backend",
   "version": "0.1.0",
   "private": true,
+  "type": "module",
   "scripts": {
     "start": "bun run src/index.ts",
     "dev": "bun --watch src/index.ts",
@@ -11,7 +12,7 @@
   },
   "dependencies": {
     "@gramio/format": "0.1.5",
-    "@nats-io/transport-node": "3.0.0-32",
+    "@repo/config-nats": "*",
     "@repo/shared": "*",
     "gramio": "0.1.2",
     "ky": "1.7.2",
@@ -20,6 +21,9 @@
   "devDependencies": {
     "@antfu/eslint-config": "3.8.0",
     "@gramio/types": "8.1.0",
+    "@repo/config-eslint": "*",
+    "@repo/config-tailwind": "*",
+    "@repo/config-typescript": "*",
     "@repo/types": "*",
     "@types/bun": "1.1.13",
     "typescript": "^5.4.5"

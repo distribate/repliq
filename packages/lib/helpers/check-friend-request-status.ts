@@ -19,7 +19,10 @@ export function checkFriendRequestStatus(
   const currentUserNickname = currentUser.nickname;
 
   const { data: requests } = requestsQuery(currentUserNickname);
-  const { data: friends } = friendsQuery({ nickname: currentUserNickname });
+  const { data: friends } = friendsQuery({ 
+    nickname: currentUserNickname, 
+    with_details: false
+  });
 
   if (!requests) return "default";
 

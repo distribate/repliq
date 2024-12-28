@@ -1,7 +1,7 @@
 'use server';
 
 import { deleteFriendRequest } from './delete-friend-request.ts';
-import { createClient } from '@repo/lib/utils/api/supabase-client.ts';
+import { createClient } from "@repo/shared/api/supabase-client.ts";
 import { FriendRequestProperties } from '#friend/components/friend-card/types/friend-request-types.ts';
 import { getCurrentSession } from '@repo/lib/actions/get-current-session.ts';
 

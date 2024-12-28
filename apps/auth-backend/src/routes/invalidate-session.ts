@@ -1,6 +1,6 @@
 import { Hono } from "hono";
 import { z } from "zod";
-import { invalidateSession } from "#utils/invalidate-session.ts";
+import { invalidateSession } from "../utils/invalidate-session.ts";
 import { zValidator } from "@hono/zod-validator";
 
 export const invalidateSessionBodySchema = z.object({

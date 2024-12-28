@@ -1,56 +1,29 @@
 "use client";
 
 import { FilteredNotFound } from "#templates/filtered-not-found.tsx";
-import { RequestFriends, UserFriends } from "#friends/queries/get-friends.ts";
 import {
-  FRIENDS_QUERY_KEY,
   friendsQuery,
 } from "#friends/queries/friends-query.ts";
 import { ContentNotFound } from "#templates/content-not-found.tsx";
 import { UserEntity } from "@repo/types/entities/entities-type.ts";
 import { FriendProfileCard } from "#friend/components/friend-card/components/friend-profile-card.tsx";
 import { Skeleton } from "@repo/ui/src/components/skeleton.tsx";
-import { useQueryClient } from "@tanstack/react-query";
 import dynamic from "next/dynamic";
 import { friendsSortQuery } from "#profile/components/friends/queries/friends-settings-query.ts";
 import { ProfileFriendsFiltering } from "#profile/components/friends/components/profile-friends-filtering.tsx";
+import { type FriendWithDetails } from '@repo/types/schemas/friend/friend-types';
+import { Suspense } from "react";
 
 const SomethingError = dynamic(() =>
   import("#templates/something-error.tsx").then((m) => m.SomethingError),
 );
 
-type FriendsSearch = Pick<UserEntity, "nickname" | "name_color">;
-
 type FriendsListLayoutProps = {
-  friends: UserFriends[];
+  friends: FriendWithDetails[];
 };
 
-const filterFriendsByNickname = (data: FriendsSearch[], querySearch: string) =>
-  data.filter((item) => item.nickname.startsWith(querySearch));
-
-const ProfileFriendsList = ({ friends }: FriendsListLayoutProps) => {
-  const { data: friendsSortState } = friendsSortQuery();
-
-  const filteredfriends = friendsSortState.querySearch
-    ? filterFriendsByNickname(friends, friendsSortState.querySearch)
-    : friends;
-
-  if (filteredfriends && !filteredfriends.length) {
-    return <FilteredNotFound value={friendsSortState.querySearch || ""} />;
-  }
-
-  return (
-    <div className="grid auto-rows-auto grid-cols-3 gap-2 w-full">
-      {filteredfriends.map((friend, i) => (
-        <FriendProfileCard
-          key={i}
-          nickname={friend.nickname}
-          name_color={friend.name_color}
-        />
-      ))}
-    </div>
-  );
-};
+const filterFriendsByNickname = (data: FriendWithDetails[], querySearch: string) =>
+  data.filter(item => item.nickname.startsWith(querySearch));
 
 const ProfileFriendsSkeleton = () => {
   return (
@@ -63,42 +36,51 @@ const ProfileFriendsSkeleton = () => {
         </div>
       </div>
       <div className="grid auto-rows-auto grid-cols-3 gap-2 w-full">
-        <Skeleton className="w-full h-48" />
-        <Skeleton className="w-full h-48" />
-        <Skeleton className="w-full h-48" />
-        <Skeleton className="w-full h-48" />
-        <Skeleton className="w-full h-48" />
+        <Skeleton className="w-full h-36" />
+        <Skeleton className="w-full h-36" />
+        <Skeleton className="w-full h-36" />
+        <Skeleton className="w-full h-36" />
+        <Skeleton className="w-full h-36" />
       </div>
     </div>
   );
 };
 
-export const ProfileFriends = ({ nickname }: RequestFriends) => {
-  const qc = useQueryClient();
+const ProfileFriendsList = ({ friends }: FriendsListLayoutProps) => {
+  const { searchQuery } = friendsSortQuery().data;
 
-  const currentFriends = qc.getQueryData<UserFriends[]>(
-    FRIENDS_QUERY_KEY(nickname),
+  const filteredfriends = searchQuery && searchQuery.length > 0
+    ? filterFriendsByNickname(friends, searchQuery)
+    : friends;
+
+  if (filteredfriends && !filteredfriends.length) {
+    return <FilteredNotFound value={searchQuery} />;
+  }
+
+  return (
+    <div className="grid auto-rows-auto grid-cols-3 gap-2 w-full">
+      {filteredfriends.map(friend => 
+        <FriendProfileCard key={friend.nickname} {...friend} />
+      )}
+    </div>
   );
+};
 
-  const {
-    data: fetchedFriends,
-    isLoading,
-    isError,
-  } = friendsQuery({
-    nickname,
-    enabled: !currentFriends,
+export const ProfileFriends = ({ nickname }: Pick<UserEntity, "nickname">) => {
+  const { data: friends, isLoading, isError } = friendsQuery({
+    nickname, with_details: true
   });
 
   if (isLoading) return <ProfileFriendsSkeleton />;
   if (isError) return <SomethingError />;
-
-  const friendsData = currentFriends || fetchedFriends;
-
+  if (!friends) return <ContentNotFound title="Друзей нет" />;
+  
   return (
-    <div className="flex flex-col gap-4 w-full h-full">
-      {friendsData && <ProfileFriendsFiltering />}
-      {!friendsData && <ContentNotFound title="Друзей нет" />}
-      {friendsData && <ProfileFriendsList friends={friendsData} />}
-    </div>
+    <Suspense fallback={<ProfileFriendsSkeleton />}>
+      <div className="flex flex-col gap-4 w-full h-full">
+        <ProfileFriendsFiltering />
+        <ProfileFriendsList friends={friends as FriendWithDetails[]} />
+      </div>
+    </Suspense>
   );
 };

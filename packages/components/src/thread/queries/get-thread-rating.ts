@@ -1,7 +1,7 @@
 "use server";
 
 import { UpdateThreadRatingType } from "./post-thread-rating.ts";
-import { createClient } from "@repo/lib/utils/api/supabase-client.ts";
+import { createClient } from '@repo/shared/api/supabase-client.ts';
 import {
   ThreadEntity,
   ThreadRatingEntity,

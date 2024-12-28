@@ -5,11 +5,11 @@ import { DynamicModal } from "../../../../dynamic-modal.tsx";
 import { DialogClose } from "@repo/ui/src/components/dialog.tsx";
 import { useControlFriendRequests } from "#friend/components/friend-card/hooks/use-control-friend-requests.ts";
 import { USER_FRIEND_DELETE_MUTATION_KEY } from "#friend/components/friend-card/hooks/use-control-friend.ts";
-import { UserFriends } from "#friends/queries/get-friends.ts";
+import { FriendWithDetails } from "@repo/types/schemas/friend/friend-types.ts";
 
 type DeleteFriendModal = {
   trigger: ReactNode;
-} & Pick<UserFriends, "friend_id" | "nickname">;
+} & Pick<FriendWithDetails, "friend_id" | "nickname">;
 
 export const DeleteFriendModal = ({
   friend_id,

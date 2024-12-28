@@ -1,6 +1,6 @@
 "use server";
 
-import { createClient } from "@repo/lib/utils/api/supabase-client.ts";
+import { createClient } from "@repo/shared/api/supabase-client.ts";
 import { validatePostOwner } from "#post/components/post-item/queries/validate-owner-post.ts";
 import { UserPostItem } from '@repo/types/routes-types/get-user-posts-types.ts';
 

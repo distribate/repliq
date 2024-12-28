@@ -1,6 +1,6 @@
 "use server";
 
-import { createClient } from "../../../../../lib/utils/api/supabase-client.ts";
+import { createClient } from "@repo/shared/api/supabase-client.ts";
 import { PostThreadProperties } from "#forms/create-thread/queries/post-thread.ts";
 
 export async function postThreadTags({

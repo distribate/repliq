@@ -1,6 +1,6 @@
 'use server';
 
-import { forumThreadClient } from '@repo/lib/utils/api/forum-client.ts';
+import { forumThreadClient } from '@repo/shared/api/forum-client.ts';
 import { z } from 'zod';
 import { getThreadCommentsSchema } from '@repo/types/schemas/thread/get-thread-comments-schema.ts';
 

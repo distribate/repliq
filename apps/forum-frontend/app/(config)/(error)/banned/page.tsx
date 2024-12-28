@@ -43,7 +43,7 @@ export default async function BannedPage() {
               textSize="medium"
               className="brightness-100 font-semibold text-red-500"
             >
-              Причина: <span className="text-shark-50">{isBanned.reason}</span>
+              Причина: <span className="text-shark-50">{isBanned?.reason}</span>
             </Typography>
             <Typography
               textSize="medium"
@@ -51,7 +51,7 @@ export default async function BannedPage() {
             >
               Разбан:{" "}
               <span className="text-shark-50">
-                {dayjs(isBanned.time).format("DD.MM.YYYY HH:mm")}
+                {dayjs(isBanned?.time).format("DD.MM.YYYY HH:mm")}
               </span>
             </Typography>
           </div>

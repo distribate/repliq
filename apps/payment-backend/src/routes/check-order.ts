@@ -1,16 +1,16 @@
 import { Hono } from 'hono';
 import { HTTPException } from 'hono/http-exception';
-import { createPaymentInfo } from '#lib/queries/create-payment-info.ts';
-import { updatePaymentInfo } from '#lib/queries/update-payment-info.ts';
-import { updateDonateForPlayer } from '#lib/queries/update-donate-for-player.ts';
 import {
   checkOrderBodySchema,
   type PaymentCompleted,
 } from '@repo/types/schemas/payment/payment-schema.ts';
-import { getDonateDetails } from '#lib/queries/get-donate-details.ts';
-import { createPaymentPub } from '#lib/publishers/create-payment-pub.ts';
 import type { PaymentDonateType } from '@repo/types/entities/payment-types.ts';
 import * as crypto from 'node:crypto';
+import { updatePaymentInfo } from '../lib/queries/update-payment-info.ts';
+import { createPaymentInfo } from '../lib/queries/create-payment-info.ts';
+import { getDonateDetails } from '../lib/queries/get-donate-details.ts';
+import { updateDonateForPlayer } from '../lib/queries/update-donate-for-player.ts';
+import { createPaymentPub } from '../lib/publishers/create-payment-pub.ts';
 
 type PaymentOrderId = Pick<PaymentCompleted, 'data'>['data']['orderId']
 

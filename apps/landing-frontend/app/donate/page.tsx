@@ -1,15 +1,15 @@
-import { WrapperTitle } from '#/ui/wrapper-title';
-import { Overlay } from '#/ui/overlay';
-import { MainLayoutPage } from '#/components/layout/main-layout';
-import { Typography } from '#/ui/typography';
+import { WrapperTitle } from '@repo/landing-ui/src/wrapper-title.tsx';
+import { Overlay } from '@repo/landing-ui/src/overlay';
+import { MainLayoutPage } from '@repo/landing-components/src/layout/main-layout.tsx';
+import { Typography } from '@repo/landing-ui/src/typography';
 import Link from 'next/link';
-import { Button } from '#/ui/button';
+import { Button } from '@repo/landing-ui/src/button';
 import { dehydrate, HydrationBoundary, QueryClient } from '@tanstack/react-query';
-import { DONATES_QUERY_KEY } from '#/lib/queries/donates-query.ts';
-import { getDonates } from '#/lib/queries/get-donates.ts';
+import { DONATES_QUERY_KEY } from '@repo/lib/queries/donates-query.ts';
+import { getDonates } from '@repo/lib/queries/get-donates.ts';
 import { Suspense } from 'react';
-import { DonateList } from '#/components/subs/donate-list.tsx';
-import { DonateListSkeleton } from '#/components/skeletons/donate-list-skeleton.tsx';
+import { DonateList } from '@repo/landing-components/src/subs/donate-list.tsx';
+import { DonateListSkeleton } from '@repo/landing-components/src/skeletons/donate-list-skeleton.tsx';
 
 export const metadata = {
   title: 'Донат',

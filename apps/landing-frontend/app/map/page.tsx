@@ -1,6 +1,6 @@
-import { MainLayoutPage } from "#/components/layout/main-layout";
-import { MapBlock } from "#/components/map/map-block";
-import { Typography } from "#/ui/typography";
+import { MainLayoutPage } from "@repo/landing-components/src/layout/main-layout";
+import { MapBlock } from "@repo/landing-components/src/map/map-block";
+import { Typography } from "@repo/landing-ui/src/typography";
 
 const serverMap = [
 	// {

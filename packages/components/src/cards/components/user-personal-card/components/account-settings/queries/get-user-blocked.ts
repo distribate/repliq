@@ -1,6 +1,6 @@
 "use server";
 
-import { forumUserClient } from '@repo/lib/utils/api/forum-client.ts';
+import { forumUserClient } from '@repo/shared/api/forum-client.ts';
 
 export async function getUserBlocked(nickname: string) {
   const res = await forumUserClient.user["get-blocked-users"][":nickname"].$get({

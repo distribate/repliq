@@ -7,7 +7,7 @@ import {
 } from "@repo/types/entities/entities-type.ts";
 import { getThreadRating, ThreadRatingResponse } from "./get-thread-rating.ts";
 import { getThreadCreator } from "./get-thread-creator.ts";
-import { createClient } from "@repo/lib/utils/api/supabase-client.ts";
+import { createClient } from '@repo/shared/api/supabase-client.ts';
 import { getCurrentSession } from "@repo/lib/actions/get-current-session.ts";
 
 type ThreadModelDetails = {

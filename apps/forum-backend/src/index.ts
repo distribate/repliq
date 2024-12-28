@@ -12,10 +12,11 @@ import { callServerCommandRoute } from '#routes/call-server-command.ts';
 import { showRoutes } from 'hono/dev';
 import { startNATS } from '#shared/nats-client.ts';
 import { getThreadCommentsRoute } from '#routes/get-thread-comments.ts';
+import { getUserFriendsRoute } from '#routes/get-user-friends.ts';
+
+startNATS()
 
 const token = process.env.SECRET_TOKEN!;
-
-export const headers = { Authorization: `Bearer ${token}` };
 
 export const admin = new Hono()
 .basePath('/admin')
@@ -33,7 +34,8 @@ export const user = new Hono()
 .route('/', getUserSettingsRoute)
 .route('/', getBlockedUsersRoute)
 .route('/', getUserThreadsRoute)
-.route('/', getUserPostsRoute);
+.route('/', getUserPostsRoute)
+.route('/', getUserFriendsRoute)
 
 const app = new Hono()
 .use('*', bearerAuth({ token }))
@@ -43,9 +45,11 @@ const app = new Hono()
 .route('/', user)
 .route("/", thread)
 
-startNATS();
-
 showRoutes(app, { verbose: false });
+
+export type ForumUserAppType = typeof user
+export type ForumThreadAppType = typeof thread
+export type ForumAdminAppType = typeof admin
 
 export default {
   port: process.env.FORUM_BACKEND_PORT,

@@ -1,5 +1,5 @@
 import ky from 'ky';
-import { PAYMENT_CURRENCIES_MAPPING } from '#shared/currencies.ts';
+import type { PAYMENT_CURRENCIES_MAPPING } from '../../shared/currencies.ts';
 
 const coinAPI = ky.extend({
   prefixUrl: "https://api.coingecko.com/api/v3/simple/"

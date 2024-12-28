@@ -1,15 +1,15 @@
-import { z } from "zod";
 import type { Insertable, Selectable } from "kysely";
 import { Hono } from "hono";
 import { zValidator } from "@hono/zod-validator";
-import { findPlayer as findPlayerAuth } from "#lib/queries/find-player-auth.ts";
+import { findPlayer as findPlayerAuth } from "../lib/queries/find-player-auth.ts";
 import { HTTPException } from "hono/http-exception";
 import bcrypt from "bcryptjs";
-import { generateSessionToken } from "#utils/generate-session-token.ts";
-import { forumDB } from "#shared/db.ts";
-import { insertSessionInfo } from "#lib/queries/insert-session-info.ts";
-import { createSession } from "#utils/create-session.ts";
+import { generateSessionToken } from "../utils/generate-session-token.ts";
+import { forumDB } from "../shared/db.ts";
+import { insertSessionInfo } from "../lib/queries/insert-session-info.ts";
+import { createSession } from "../utils/create-session.ts";
 import type { DB, Users } from "@repo/types/db/forum-database-types.ts";
+import { createSessionBodySchema } from '@repo/types/schemas/auth/create-session-schema.ts';
 
 export type Session = Insertable<Pick<DB, "users_session">["users_session"]>;
 export type User = Selectable<Pick<Users, "id" | "nickname" | "uuid">>;
@@ -17,22 +17,6 @@ export type User = Selectable<Pick<Users, "id" | "nickname" | "uuid">>;
 export type SessionValidationResult =
   | { session: Session; user: User }
   | { session: null; user: null };
-
-export const createSessionBodySchema = z.object({
-  details: z.object({
-    nickname: z.string(),
-    userId: z.string().min(10),
-    password: z.string().min(4),
-  }),
-  info: z.object({
-    browser: z.string().nullable(),
-    cpu: z.string().nullable(),
-    ip: z.string().nullable(),
-    isBot: z.boolean().nullable(),
-    os: z.string().nullable(),
-    ua: z.string().nullable(),
-  }),
-});
 
 export const createSessionRoute = new Hono().post(
   "/create-session",

@@ -1,6 +1,7 @@
 "use server";
 
-import { createClient } from "../utils/api/supabase-client.ts";
+import { createClient } from "@repo/shared/api/supabase-client.ts";
+;
 
 export async function postUserPreferences(){
 

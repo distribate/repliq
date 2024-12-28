@@ -16,7 +16,6 @@
   },
   "dependencies": {
     "@aws-sdk/client-s3": "3.717.0",
-    "@repo/lib": "*",
     "@repo/shared": "*",
     "base-64": "1.0.0",
     "canvas": "3.0.0-rc3",
@@ -24,6 +23,9 @@
     "ky": "1.7.2"
   },
   "devDependencies": {
+    "@repo/config-eslint": "*",
+    "@repo/config-tailwind": "*",
+    "@repo/config-typescript": "*",
     "@repo/types": "*",
     "@types/base-64": "1",
     "@types/bun": "1.1.13",

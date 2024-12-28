@@ -15,19 +15,20 @@ services:
     restart: always
     volumes:
       - ./data/fasberry-external/consul/data:/consul/data
+      - ./packages/config-consul/consul.hcl:/consul/config/consul.hcl
 
   vault:
     image: hashicorp/vault:latest
     container_name: vault
     ports:
-      - "1488:1488"
+      - "8200:8200"
     restart: always
     depends_on:
       - consul
     networks:
       - vault_network
     volumes:
-      - ./config/vault.hcl:/vault/config/vault.hcl
+      - ./packages/config-vault/vault.hcl:/vault/config/vault.hcl
     cap_add:
       - IPC_LOCK
     entrypoint: ["vault", "server", "-config=/vault/config/vault.hcl"]
@@ -58,32 +59,6 @@ services:
   #     done;
   #     mc mb myminio/mybucket;
   #     "
-
-  luckperms_db:
-    container_name: luckperms_db
-    image: postgres:15.1
-    restart: unless-stopped
-    environment:
-      POSTGRES_USER: ${LUCKPERMS_POSTGRES_USER}
-      POSTGRES_PASSWORD: ${LUCKPERMS_POSTGRES_PASSWORD}
-      POSTGRES_DB: ${LUCKPERMS_POSTGRES_DB}
-    ports:
-      - ${LUCKPERMS_POSTGRES_PORT}:5432/tcp
-    volumes:
-      - ./data/fasberry-external/luckperms-db/data:/var/lib/postgresql/data
-
-  authorization-db:
-    container_name: authorization-db
-    image: postgres:15.1
-    restart: unless-stopped
-    environment:
-      POSTGRES_USER: ${AUTHORIZATION_POSTGRES_USER}
-      POSTGRES_PASSWORD: ${AUTHORIZATION_POSTGRES_PASSWORD}
-      POSTGRES_DB: ${AUTHORIZATION_POSTGRES_DB}
-    ports:
-      - ${AUTHORIZATION_POSTGRES_PORT}:5432/tcp
-    volumes:
-      - ./data/fasberry-external/authorization-db/data:/var/lib/postgresql/data
 
   payments_db:
     container_name: payments_db

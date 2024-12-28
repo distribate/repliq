@@ -1,14 +1,15 @@
 {
   "extends": "@repo/config-typescript/base.json",
-  "include": ["."],
+  "include": ["**/*.ts", "*.ts", "../shared/constants/dayjs-instance.ts"],
   "files": ["../../packages/types/global.d.ts"],
-  "exclude": ["dist", "build", "node_modules"],
+  "exclude": ["node_modules"],
   "compilerOptions": {
     "jsx": "preserve",
     "module": "ESNext",
     "moduleResolution": "bundler",
     "skipLibCheck": true,
     "strict": true,
+    "baseUrl": ".",
     "paths": {
       "#*": ["./*"]
     }

@@ -1,13 +1,13 @@
 import { HTTPException } from 'hono/http-exception';
 import { Hono } from 'hono';
-import { forumDB } from '#shared/db.ts';
+import { forumDB } from '../shared/db.ts';
 import bcrypt from 'bcryptjs';
 import { z } from 'zod';
 import { zValidator } from '@hono/zod-validator';
 import {
   findPlayer as findPlayerAuth,
   findPlayer,
-} from '#lib/queries/find-player-auth.ts';
+} from '../lib/queries/find-player-auth.ts';
 
 export const createUserBodySchema = z.object({
   nickname: z.string().min(1),

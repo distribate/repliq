@@ -1,4 +1,4 @@
-import { forumDB } from "@repo/shared/db/forum-db"
+import { forumDB } from "../shared/db.ts"
 
 export const getAdmins = async (telegramId: number) => {
   return await forumDB

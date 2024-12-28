@@ -13,7 +13,7 @@ import { setUnNoteFriend } from "#friends/queries/set-unnote-friend.ts";
 import { getUser } from "@repo/lib/helpers/get-user.ts";
 import { ControlFriendProperties } from "#friend/components/friend-card/types/friend-request-types.ts";
 import { resolveFriendId } from "#friend/components/friend-card/helpers/resolve-friend-id.ts";
-import { UserFriends } from "#friends/queries/get-friends.ts";
+import { FriendWithDetails } from "@repo/types/schemas/friend/friend-types.ts";
 
 type SetFriendNote = ControlFriendProperties & {
   note: string;
@@ -71,7 +71,7 @@ export const useControlFriend = () => {
       if (friend_id) {
         friendId = friend_id;
       } else {
-        const friends = qc.getQueryData<UserFriends[]>(
+        const friends = qc.getQueryData<FriendWithDetails[]>(
           FRIENDS_QUERY_KEY(currentUser.nickname),
         );
         if (!friends) return null;
@@ -110,7 +110,7 @@ export const useControlFriend = () => {
       if (friend_id) {
         friendId = friend_id;
       } else {
-        const friends = qc.getQueryData<UserFriends[]>(
+        const friends = qc.getQueryData<FriendWithDetails[]>(
           FRIENDS_QUERY_KEY(currentUser.nickname),
         );
         if (!friends) return null;
@@ -123,7 +123,7 @@ export const useControlFriend = () => {
 
       if (!friendId || !note || !currentUser) return;
 
-      const friends = qc.getQueryData<UserFriends[]>(
+      const friends = qc.getQueryData<FriendWithDetails[]>(
         FRIENDS_QUERY_KEY(currentUser.nickname),
       );
 
@@ -161,7 +161,7 @@ export const useControlFriend = () => {
       if (friend_id) {
         friendId = friend_id;
       } else {
-        const friends = qc.getQueryData<UserFriends[]>(
+        const friends = qc.getQueryData<FriendWithDetails[]>(
           FRIENDS_QUERY_KEY(currentUser.nickname),
         );
         if (!friends) return null;
@@ -203,7 +203,7 @@ export const useControlFriend = () => {
       if (friend_id) {
         friendId = friend_id;
       } else {
-        const friends = qc.getQueryData<UserFriends[]>(
+        const friends = qc.getQueryData<FriendWithDetails[]>(
           FRIENDS_QUERY_KEY(currentUser.nickname),
         );
         if (!friends) return null;

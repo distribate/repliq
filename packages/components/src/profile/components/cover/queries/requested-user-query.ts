@@ -14,7 +14,7 @@ export const requestedUserQuery = ({
 }: Pick<UserEntity, "nickname">) => {
   const qc = useQueryClient();
   const currentUser = getUser();
-  const isOwnProfile = currentUser && currentUser.nickname === nickname;
+  const isOwnProfile = currentUser.nickname === nickname;
 
   if (isOwnProfile) {
     qc.setQueryData(REQUESTED_USER_QUERY_KEY(nickname), currentUser);
@@ -25,7 +25,6 @@ export const requestedUserQuery = ({
     queryKey: REQUESTED_USER_QUERY_KEY(nickname),
     queryFn: () => getRequestedUser(nickname),
     refetchOnWindowFocus: false,
-    refetchOnMount: false,
-    enabled: !isOwnProfile,
+    refetchOnMount: false
   });
 };

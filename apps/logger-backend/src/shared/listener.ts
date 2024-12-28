@@ -1,6 +1,6 @@
 import createSubscriber from "pg-listen"
-import { notifyByLuckpermsPrimaryGroupChannel } from '#lib/listeners/luckperms-primary-group-listener';
-import { notifyByAuthLoginDateChannel } from '#lib/listeners/login-listener';
+import { notifyByLuckpermsPrimaryGroupChannel } from "../lib/listeners/luckperms-primary-group-listener.ts"
+import { notifyByAuthLoginDateChannel } from "../lib/listeners/login-listener.ts"
 
 const luckpermsPostgreConnectionString = process.env.LUCKPERMS_POSTGRES_DB_URL as string;
 const authPostgresConnectionString = process.env.AUTHORIZATION_POSTGRES_DB_URL as string;

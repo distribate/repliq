@@ -1,0 +1,10 @@
+{
+  "name": "@repo/config-vault",
+  "version": "0.1.0",
+  "private": true,
+  "license": "MIT",
+  "type": "module",
+  "dependencies": {
+    "@litehex/node-vault": "1.0.1"
+  }
+}

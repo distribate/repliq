@@ -1,8 +1,8 @@
 import { format, FormattableString, spoiler } from '@gramio/format';
 import type { PaymentCompleted } from '@repo/types/schemas/payment/payment-schema.ts';
-import { convertDate } from '#helpers/convert-date';
-import { loggerBot } from '#shared/bot';
-import { adminTelegramUserId } from '#shared/ids';
+import { convertDate } from '../helpers/convert-date.ts';
+import { loggerBot } from '../shared/bot.ts';
+import { adminTelegramUserId } from '../shared/ids.ts';
 
 type SendLogsPunishData = {
   initiator: string,

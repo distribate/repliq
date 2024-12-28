@@ -1,4 +1,4 @@
-import { forumDB } from '@repo/shared/db/forum-db.ts';
+import { forumDB } from '../../shared/db.ts';
 import type { Expression, SqlBool } from 'kysely';
 import { getUserThreadsSchema } from '#routes/get-user-threads.ts';
 import { z } from 'zod';

@@ -7,5 +7,5 @@ export type FriendsSort = {
 
 export const FRIENDS_SORT: FriendsSort[] = [
   { name: "По дате добавления", value: "created_at" },
-  { name: "По привилегии", value: "donate" },
+  { name: "По привилегии", value: "donate_weight" },
 ];

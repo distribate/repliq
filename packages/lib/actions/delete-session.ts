@@ -4,7 +4,7 @@ import { redirect } from "next/navigation";
 import { AUTH_REDIRECT } from "@repo/shared/constants/routes.ts";
 import { getCurrentSession } from "#actions/get-current-session.ts";
 import { deleteSessionTokenCookie } from "#actions/session-token-control.ts";
-import { authClient } from "#utils/api/auth-client.ts";
+import { authClient } from "@repo/shared/api/auth-client.ts";
 
 export async function deleteSession(): Promise<void> {
   const { session } = await getCurrentSession();

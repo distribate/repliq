@@ -4,7 +4,7 @@ import {
   PostCommentEntity,
   PostEntity,
 } from "@repo/types/entities/entities-type.ts";
-import { createClient } from "../../../../../../lib/utils/api/supabase-client.ts";
+import { createClient } from "@repo/shared/api/supabase-client.ts";
 
 export type GetPostsComments = Pick<PostEntity, "id"> &
   Partial<{

@@ -1,0 +1,10 @@
+{
+  "name": "@repo/config-nats",
+  "version": "0.1.0",
+  "license": "MIT",
+  "type": "module",
+  "private": true,
+  "dependencies": {
+    "@nats-io/transport-node": "3.0.0-32"
+  }
+}

@@ -1,0 +1,20 @@
+import type { DonateVariantsEnum } from "../../entities/entities-type";
+
+export type FriendWithDetails = {
+  friend_id: string;
+  created_at: string;
+  nickname: string;
+  description: string | null;
+  real_name: string | null;
+  name_color: string;
+  favorite_item: number | null;
+  donate: DonateVariantsEnum
+  note: string | null;
+  is_pinned: boolean;
+  donate_weight: number | null;
+};
+
+export type FriendWithoutDetails = {
+  nickname: string;
+  name_color: string;
+};

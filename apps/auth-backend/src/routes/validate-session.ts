@@ -1,6 +1,6 @@
 import { Hono } from "hono";
 import { z } from "zod";
-import { validateSessionToken } from "#utils/validate-session-token.ts";
+import { validateSessionToken } from "../utils/validate-session-token.ts";
 import { zValidator } from "@hono/zod-validator";
 
 export const validateSessionBodySchema = z.object({
