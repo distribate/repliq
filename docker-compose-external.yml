@@ -1,12 +1,33 @@
 name: fasberry-external
 
 services:
+  luckperms-rest-api:
+    image: ghcr.io/luckperms/rest-api
+    environment:
+      LUCKPERMS_STORAGE_METHOD: postgresql
+      LUCKPERMS_DATA_ADDRESS: luckperms_db:5432
+      LUCKPERMS_DATA_DATABASE: ${LUCKPERMS_POSTGRES_DB}
+      LUCKPERMS_DATA_USERNAME: ${LUCKPERMS_POSTGRES_USER}
+      LUCKPERMS_DATA_PASSWORD: ${LUCKPERMS_POSTGRES_PASSWORD}
+      LUCKPERMS_REST_HTTP_PORT: ${LUCKPERMS_BACKEND_PORT}
+      LUCKPERMS_REST_AUTH: true
+      LUCKPERMS_MESSAGING_SERVICE: "NATS"
+      LUCKPERMS_MESSAGING_SERVICE_ENABLE: true
+      LUCKPERMS_MESSAGING_SERVICE_ADDRESS: nats:4222
+      LUCKPERMS_REST_AUTH_KEYS: ${SECRET_TOKEN}
+    ports:
+      - "127.0.0.1:4000:${LUCKPERMS_BACKEND_PORT}"
+    extra_hosts:
+     - "shared-network:host-gateway"
+    networks:
+      - shared-network
+
   consul:
     image: consul:1.15.4
     container_name: consul
     ports:
       - "8500:8500"  # Web UI
-      - "8600:8600/udp"  # DNS
+      - "8600:8600/udp"
     command: "agent -server -client=0.0.0.0 -bootstrap-expect=1 -data-dir=/consul/data"
     environment:
       - CONSUL_BIND_INTERFACE=eth0
@@ -82,6 +103,8 @@ services:
     command: --T -VV
     volumes:
       - ./data/fasberry-external/nats/data:/nats
+    networks:
+      - shared-network
 
 networks:
   shared-network:

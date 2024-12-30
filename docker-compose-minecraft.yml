@@ -13,6 +13,8 @@ services:
       - ${LUCKPERMS_POSTGRES_PORT}:5432/tcp
     volumes:
       - ./data/fasberry-minecraft/luckperms-db/data:/var/lib/postgresql/data
+    networks:
+      - shared-network
 
   authorization-db:
     container_name: authorization-db
@@ -39,7 +41,7 @@ services:
     ports:
       - ${CMI_MYSQL_PORT}:3306/tcp
     volumes:
-      - ./data/fasberry-minecraft/cmi-db/data:/var/lib/mysql
+      - ./data/fasberry-minecraft/cmi-db/data:/var/lib/mysql   
 
   betonquest-db:
     container_name: betonquest_db
@@ -71,17 +73,17 @@ services:
 
   eco-db:
     container_name: eco_db
-    image: mariadb:latest
-    restart: unless-stopped
+    image: mysql:latest
+    restart: always
     environment:
-      MARIADB_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
-      MARIADB_DATABASE: eco
-      MARIADB_USER: ${MYSQL_USER}
-      MARIADB_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: eco
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
     ports:
       - ${ECO_MYSQL_PORT}:3306/tcp
     volumes:
-      - ./data/fasberry-minecraft/eco-db/data:/var/lib/mysql
+      - ./data/fasberry-minecraft/eco-db/data:/var/lib/mysql 
 
   intervis-db:
     container_name: intervis_db

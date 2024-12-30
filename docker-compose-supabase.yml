@@ -13,10 +13,10 @@ services:
     restart: unless-stopped
     command: tunnel run ${CLOUDFLARE_TUNNEL_ID}
     volumes:
-      - ./packages/config-cloudflare-tunnel/48d1ffb1-780a-40e3-a19b-581a69d88746.json:/etc/cloudflared/48d1ffb1-780a-40e3-a19b-581a69d88746.json
+      - ./packages/config-cloudflare-tunnel/${CLOUDFLARE_TUNNEL_ID}.json:/etc/cloudflared/${CLOUDFLARE_TUNNEL_ID}.json
       - ./packages/config-cloudflare-tunnel/config.yml:/etc/cloudflared/config.yml
     environment:
-      - DOMAIN_NAME=fasberry.su
+      - DOMAIN_NAME=${DOMAIN_NAME}
       - NO_AUTOUPDATE=true
       - TUNNEL_ID=${CLOUDFLARE_TUNNEL_ID} 
       - TUNNEL_SECRET=${CLOUDFLARE_TUNNEL_SECRET}
@@ -273,6 +273,7 @@ services:
       retries: 3
     restart: unless-stopped
     environment:
+      REQUEST_ALLOW_X_FORWARDED_PATH: "true"
       ANON_KEY: ${ANON_KEY}
       SERVICE_KEY: ${SERVICE_ROLE_KEY}
       POSTGREST_URL: http://rest:3000

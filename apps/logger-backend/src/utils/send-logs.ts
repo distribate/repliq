@@ -1,23 +1,24 @@
-import { format, FormattableString, spoiler } from '@gramio/format';
+import { format, FormattableString } from '@gramio/format';
 import type { PaymentCompleted } from '@repo/types/schemas/payment/payment-schema.ts';
-import { convertDate } from '../helpers/convert-date.ts';
-import { loggerBot } from '../shared/bot.ts';
-import { adminTelegramUserId } from '../shared/ids.ts';
+import { loggerBot } from '../shared/bot/bot.ts';
+import { getAdmins } from '../queries/get-admins.ts';
+import { paymentLogsMessage } from '../messages/payment-logs.ts';
+import { loginLogsMessage } from '../messages/login-logs.ts';
 
 type SendLogsPunishData = {
   initiator: string,
   recipient: string
 }
 
-type SendLogsAccountData = {
+export type SendLogsAccountData = {
   nickname: string,
   logindate: number,
   uuid: string
 }
 
-type PaymentData = Pick<PaymentCompleted, "data">["data"]
+export type PaymentData = Pick<PaymentCompleted, "data">["data"]
 
-type SendLogsPaymentData = Omit<PaymentData, "meta"> & {
+export type SendLogsPaymentData = Omit<PaymentData, "meta"> & {
   meta: {
     nickname: PaymentData["meta"]["nickname"],
     donate: string
@@ -25,62 +26,47 @@ type SendLogsPaymentData = Omit<PaymentData, "meta"> & {
   telegramId: string | null
 }
 
-type SendLogsFormat = {
-  tag: 'shop' | 'punish' | 'account'
-}
+type MessageType = 'shop' | 'punish' | 'account'
 
-type SendLogs = {
-  data: SendLogsPaymentData
-    | SendLogsPunishData
-    | SendLogsAccountData,
-  messageType: SendLogsFormat
-}
+type SendLogsData<T extends MessageType> =
+  T extends 'shop' ? SendLogsPaymentData :
+  T extends 'punish' ? SendLogsPunishData :
+  T extends 'account' ? SendLogsAccountData :
+never;
 
-function capitalizeFirstLetter(str: string) {
-  if (str.length === 0) return str;
-  return str.charAt(0).toUpperCase() + str.slice(1);
-}
-
-export async function sendLogs({
-  data, messageType,
-}: SendLogs) {
-  const { tag } = messageType;
+export async function sendLogs<T extends MessageType>({
+  data
+}: {
+  data: SendLogsData<T>
+}) {
   let message: FormattableString | null = null;
-  
+  let messageType: MessageType | null = null
+
   if ('orderId' in data) {
-    const { status, customer, amount, currency, orderId, meta, createdAt, telegramId, uuid, testnet, txn, captured } = data;
-    const { donate, nickname } = meta;
-    
-    message = format`Аккаунт ${nickname} приобрел ${donate} за ${amount} ${currency} (${telegramId ?? `undefined`})
-      
-      Order: ${orderId}
-      UUID: ${uuid}
-      TXN.HASH: ${txn.hash}
-      TXN.LT: ${txn.lt}
-      Captured: ${captured}
-      Testnet: ${testnet}
-      Status: ${capitalizeFirstLetter(status)}
-      Адрес кошелька: ${customer.wallet}
-      Создан: ${convertDate(createdAt)}
-    `;
+    messageType = "shop"
+    message = paymentLogsMessage(data);
   }
   
   if ('nickname' in data) {
-    const { nickname, logindate, uuid } = data;
-
-    message = format`[Вход] ${nickname} зашел в игру в ${convertDate(logindate)}
-    
-      ${spoiler(uuid)}
-    `;
+    messageType = "account"
+    message = loginLogsMessage(data);
   }
   
   if ('recipient' in data) {
-  
+     messageType = "punish"
   }
   
   if (!message) return;
   
-  const text = format`#${tag} ${message}`;
+  const text = format`#${messageType ?? ""} ${message}`;
   
-  return await loggerBot.api.sendMessage({ chat_id: adminTelegramUserId, text });
+  const adminsData = await getAdmins()
+
+  const admins = adminsData.filter(
+    (item): item is { telegram_id: string } => item.telegram_id !== null
+  )
+
+  for (const { telegram_id } of admins) {
+    await loggerBot.api.sendMessage({ chat_id: telegram_id, text });
+  }
 }

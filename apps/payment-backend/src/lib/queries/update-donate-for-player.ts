@@ -1,5 +1,5 @@
+import { lpDB } from '#shared/database/lp-db.ts';
 import type { PaymentDonateType } from '@repo/types/entities/payment-types.ts';
-import { lpDB } from '../../shared/db.ts';
 
 type UpdateDonateForPlayer = {
   nickname: string,

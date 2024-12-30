@@ -1,6 +1,6 @@
+import { forumDB } from '#shared/database/forum-db.ts';
 import type { DB } from '@repo/types/db/forum-database-types.ts';
 import type { PaymentDonateType } from '@repo/types/entities/payment-types.ts';
-import { forumDB } from '../../shared/db.ts';
 
 type Donate = Pick<DB, 'landing_donate'>
 

@@ -5,9 +5,13 @@ node_modules
 .pnp
 .pnp.js
 
+
+# IDE configs
 .idea
+.vscode
+
+.yarn
 data
-.migrations
 
 # Local env files
 .env

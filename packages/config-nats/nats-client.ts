@@ -1,8 +1,40 @@
-import { connect } from '@nats-io/transport-node';
+import { connect, type NatsConnection, type ConnectionOptions } from "@nats-io/transport-node";
 
-export async function initializeNatsClient() {
-  const nc = await connect({ servers: 'nats://localhost:4222' });
-  console.log('\x1b[34mNATS started\x1b[0m');
+const NATS_CONFIG: ConnectionOptions = {
+  servers: "nats://localhost:4222",
+  reconnect: true,            // Включить автоматическое переподключение
+  maxReconnectAttempts: -1,   // Неограниченное количество попыток
+  reconnectTimeWait: 2000,    // Задержка между попытками переподключения
+}
 
+let nc: NatsConnection | null = null;
+
+export async function initNats() {
+  try {
+    nc = await connect(NATS_CONFIG);
+    console.log("\x1b[34m[NATS]\x1b[0m Connected to", NATS_CONFIG.servers);
+  } catch (err) {
+    console.error('Failed to connect to NATS:', err);
+    throw new Error('NATS connection failed');
+  }
+}
+
+export function getNatsConnection(): NatsConnection {
+  if (!nc) {
+    throw new Error('NATS client is not initialized');
+  }
+  
   return nc;
+}
+
+export async function closeNatsConnection() {
+  if (nc) {
+    try {
+      console.log('Closing NATS connection...');
+      await nc.drain();
+      console.log('NATS connection closed.');
+    } catch (err) {
+      console.error('Error closing NATS connection:', err);
+    }
+  }
 }

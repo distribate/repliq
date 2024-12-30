@@ -3,13 +3,11 @@ import { Hono } from "hono";
 import { zValidator } from "@hono/zod-validator";
 import { findPlayer as findPlayerAuth } from "../lib/queries/find-player-auth.ts";
 import { HTTPException } from "hono/http-exception";
-import bcrypt from "bcryptjs";
 import { generateSessionToken } from "../utils/generate-session-token.ts";
-import { forumDB } from "../shared/db.ts";
-import { insertSessionInfo } from "../lib/queries/insert-session-info.ts";
-import { createSession } from "../utils/create-session.ts";
 import type { DB, Users } from "@repo/types/db/forum-database-types.ts";
 import { createSessionBodySchema } from '@repo/types/schemas/auth/create-session-schema.ts';
+import { createSessionTransaction } from "../lib/transactions/create-session-transaction.ts";
+import bcrypt from "bcryptjs";
 
 export type Session = Insertable<Pick<DB, "users_session">["users_session"]>;
 export type User = Selectable<Pick<Users, "id" | "nickname" | "uuid">>;
@@ -18,58 +16,41 @@ export type SessionValidationResult =
   | { session: Session; user: User }
   | { session: null; user: null };
 
-export const createSessionRoute = new Hono().post(
-  "/create-session",
-  zValidator("json", createSessionBodySchema),
-  async (c) => {
-    const result = createSessionBodySchema.safeParse(await c.req.json());
+export const createSessionRoute = new Hono()
+.post("/create-session", zValidator("json", createSessionBodySchema), async (ctx) => {
+  const body = await ctx.req.json()
+  const result = createSessionBodySchema.parse(body);
 
-    if (!result.success) {
-      return c.json({ error: "Invalid body" }, 400);
-    }
+  const { details: authDetails, info } = result;
+  const { userId, password, nickname } = authDetails;
 
-    const { details: authDetails, info } = result.data;
-    const { userId, password, nickname } = authDetails;
+  const user = await findPlayerAuth({
+    criteria: {
+      NICKNAME: nickname,
+    },
+    extractedFields: ["HASH"],
+  });
 
-    const user = await findPlayerAuth({
-      criteria: {
-        NICKNAME: nickname,
-      },
-      extractedFields: ["HASH"],
-    });
+  if (!user) {
+    throw new HTTPException(400, { message: "User not found" });
+  }
 
-    if (!user) {
-      throw new HTTPException(400, { message: "User not found" });
-    }
+  const isPasswordValid = bcrypt.compareSync(password, user.HASH);
 
-    const isPasswordValid = bcrypt.compareSync(password, user.HASH);
+  if (!isPasswordValid) {
+    throw new HTTPException(400, { message: "Invalid password" });
+  }
 
-    if (!isPasswordValid) {
-      throw new HTTPException(400, { message: "Invalid password" });
-    }
+  const token = generateSessionToken();
 
-    const token = generateSessionToken();
+  try {
+    const createdSession = await createSessionTransaction({
+      token, userId, info
+    })
 
-    try {
-      const createdSession = await forumDB
-        .transaction()
-        .execute(async (trx) => {
-          const session = await createSession({
-            trx,
-            details: { token, userId },
-          });
-
-          await insertSessionInfo({
-            trx,
-            details: { session_id: session.session_id, ...info },
-          });
-
-          return session;
-        });
-
-      return c.json({ token, expiresAt: createdSession.expires_at }, 200);
-    } catch {
-      throw new HTTPException(500, { message: "Internal Server Error" });
-    }
-  },
+    return ctx.json({ token, expiresAt: createdSession.expires_at }, 200);
+  } catch (e) {
+    console.error(e);
+    throw new HTTPException(500, { message: "Internal Server Error" });
+  }}
 );

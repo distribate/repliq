@@ -2,33 +2,11 @@ import { Hono } from 'hono';
 import { showRoutes } from 'hono/dev';
 import { logger } from 'hono/logger';
 import { createOrderRoute } from './routes/create-order.ts';
-import { stopNatsClient } from './shared/nats-client.ts';
 import { checkOrderRoute } from './routes/check-order.ts';
 import { bearerAuth } from 'hono/bearer-auth';
+import { initNats } from '@repo/config-nats/nats-client.ts';
 
 const token = process.env.SECRET_TOKEN!
-
-async function startNatsClient() {
-  try {
-    process.on('SIGINT', async () => {
-      console.log("Graceful shutdown initiated...");
-      await stopNatsClient();
-      process.exit(0);
-    });
-    
-    process.on('SIGTERM', async () => {
-      console.log("Graceful shutdown initiated...");
-      await stopNatsClient();
-      process.exit(0);
-    });
-  } catch (e) {
-    console.error(e)
-    await stopNatsClient();
-    process.exit(1)
-  }
-}
-
-startNatsClient()
 
 export const payments = new Hono()
 .route('/', createOrderRoute);
@@ -43,6 +21,7 @@ const app = new Hono()
 .route('/payment', payments)
 .route('/hooks', hooks);
 
+initNats()
 showRoutes(app, { verbose: false });
 
 export type PaymentAppType = typeof app

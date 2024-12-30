@@ -7,19 +7,12 @@ export const invalidateSessionBodySchema = z.object({
   sessionId: z.string().min(6),
 });
 
-export const invalidateSessionRoute = new Hono().post(
-  "/invalidate-session",
-  zValidator("json", invalidateSessionBodySchema),
-  async (c) => {
-    const result = invalidateSessionBodySchema.safeParse(await c.req.json());
+export const invalidateSessionRoute = new Hono()
+.post( "/invalidate-session", zValidator("json", invalidateSessionBodySchema), async (ctx) => {
+  const body = await ctx.req.json()
+  const result = invalidateSessionBodySchema.parse(body);
 
-    if (!result.success) {
-      return c.json({ error: "Invalid body" }, 400);
-    }
+  const res = await invalidateSession(result.sessionId);
 
-    const body = result.data;
-    const res = await invalidateSession(body.sessionId);
-
-    return c.json({ success: !!res }, 200);
-  },
-);
+  return ctx.json({ success: !!res }, 200);
+});

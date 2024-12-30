@@ -1,11 +1,12 @@
 import { adminHandler } from "./admin-handler.ts"
-import { validateRequest } from "../../lib/utils/validate-request.ts"
 import { Bot, type DeriveDefinitions, type MessageContext } from "gramio"
 import { controlHandler } from "./control-handler.ts"
 import { sendAdminsList } from "./main-handler.ts"
-import { restrictedCommands } from "../../shared/restricted-commands.ts"
-import { stateToKeyboard } from "../../shared/keyboards.ts"
-import { tempAdmins, userStates } from "../../shared/maps.ts"
+import { stateToKeyboard } from "../../shared/bot/keyboards.ts"
+import { tempAdmins, userStates } from "../../shared/maps/maps.ts"
+import { validateRequest } from "../../utils/validate-request.js"
+
+export const restrictedCommands = ["Управление"]
 
 export type Context = MessageContext<Bot<{}, DeriveDefinitions>>
 

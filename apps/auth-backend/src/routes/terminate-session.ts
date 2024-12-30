@@ -6,16 +6,10 @@ const terminateSessionBodySchema = z.object({
   sessionId: z.string().min(6),
 });
 
-export const terminateSession = new Hono().post(
-  "/terminate-session",
-  zValidator("json", terminateSessionBodySchema),
-  async (c) => {
-    const result = terminateSessionBodySchema.safeParse(await c.req.json());
+export const terminateSession = new Hono()
+.post("/terminate-session",zValidator("json", terminateSessionBodySchema), async (ctx) => {
+  const body = await ctx.req.json()
+  const result = terminateSessionBodySchema.parse(body);
 
-    if (!result.success) {
-      return c.json({ error: "Invalid body" }, 400);
-    }
-
-    const body = result.data;
-  },
-);
+  // implement the terminating session logic
+});

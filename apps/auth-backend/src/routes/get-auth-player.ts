@@ -12,56 +12,49 @@ export const getAuthPlayerBodySchema = z.object({
   fields: z.custom<FindPlayerExtractedColumns>(),
 });
 
-export const getAuthUser = new Hono().post(
-  "/get/:detail",
-  zValidator("json", getAuthPlayerBodySchema),
-  async (c) => {
-    const parsedBody = getAuthPlayerBodySchema.safeParse(await c.req.json());
+export const getAuthUser = new Hono()
+.post("/get/:detail", zValidator("json", getAuthPlayerBodySchema), async (ctx) => {
+  const body = await ctx.req.json()
+  const parsedBody = getAuthPlayerBodySchema.parse(body);
+  const { detail } = ctx.req.param();
+  const { fields: extractedFields } = parsedBody;
 
-    if (!parsedBody.success) {
-      return c.json({ error: "Invalid body" }, 400);
-    }
+  if (!extractedFields || !extractedFields.length) {
+    throw new HTTPException(401, {
+      message: "Extracted fiels must be required",
+    });
+  }
 
-    const { detail } = c.req.param();
-    const body = await c.req.json<z.infer<typeof getAuthPlayerBodySchema>>();
+  const detailType = determinePlayerDetailType(detail);
 
-    const { fields: extractedFields } = body;
+  if (detailType === "unknown") {
+    throw new HTTPException(400, {
+      message: "Player details must be uuid or nickname",
+    });
+  }
 
-    if (!extractedFields || !extractedFields.length) {
-      throw new HTTPException(401, {
-        message: "Extracted fiels must be required",
-      });
-    }
+  let playerData = null;
 
-    const detailType = determinePlayerDetailType(detail);
+  try {
+    switch (detailType) {
+      case "nickname":
+        playerData = await findPlayerAuth({
+          criteria: { NICKNAME: detail },
+          extractedFields,
+        });
+        console.log(playerData);
+        break;
 
-    if (detailType === "unknown") {
-      throw new HTTPException(400, {
-        message: "Player details must be uuid or nickname",
-      });
-    }
-
-    let playerData = null;
-
-    try {
-      switch (detailType) {
-        case "nickname":
-          playerData = await findPlayerAuth({
-            criteria: { NICKNAME: detail },
-            extractedFields,
-          });
-          console.log(playerData);
-          break;
-
-        case "uuid":
-          playerData = await findPlayerAuth({
-            criteria: { UUID: detail },
-            extractedFields,
-          });
-          break;
+      case "uuid":
+        playerData = await findPlayerAuth({
+          criteria: { UUID: detail },
+          extractedFields,
+        });
+        break;
       }
-    } catch (e) {}
+  } catch (e) {
+    console.error(e)
+  }
 
-    return c.json({ playerData }, 200);
-  },
-);
+  return ctx.json({ playerData }, 200);
+});

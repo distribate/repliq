@@ -1,5 +1,5 @@
-import { callBroadcast } from "../../lib/rcon-server/call-broadcast.ts"
-import { loggerBot } from "../../shared/bot.ts"
+import { loggerBot } from "../../shared/bot/bot.ts"
+import { callBroadcast } from "../../utils/call-broadcast.ts"
 
 loggerBot.command('broadcast', async (ctx) => {
   if (!ctx.args) {

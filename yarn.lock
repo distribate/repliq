@@ -5811,6 +5811,12 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@repo/config-cloudflare-tunnel@workspace:packages/config-cloudflare-tunnel":
+  version: 0.0.0-use.local
+  resolution: "@repo/config-cloudflare-tunnel@workspace:packages/config-cloudflare-tunnel"
+  languageName: unknown
+  linkType: soft
+
 "@repo/config-consul@workspace:packages/config-consul":
   version: 0.0.0-use.local
   resolution: "@repo/config-consul@workspace:packages/config-consul"
@@ -6046,6 +6052,18 @@ __metadata:
     react-resizable-panels: "npm:2.1.6"
     tailwindcss: "npm:3.4.14"
     typescript: "npm:^5.4.5"
+  languageName: unknown
+  linkType: soft
+
+"@repo/utils@npm:*, @repo/utils@workspace:packages/utils":
+  version: 0.0.0-use.local
+  resolution: "@repo/utils@workspace:packages/utils"
+  dependencies:
+    "@repo/config-eslint": "npm:*"
+    "@repo/config-typescript": "npm:*"
+    "@repo/shared": "npm:*"
+    "@repo/types": "npm:*"
+    zod: "npm:3.23.8"
   languageName: unknown
   linkType: soft
 
@@ -11704,6 +11722,7 @@ __metadata:
     "@repo/config-typescript": "npm:*"
     "@repo/shared": "npm:*"
     "@repo/types": "npm:*"
+    "@repo/utils": "npm:*"
     "@types/bun": "npm:1.1.13"
     gramio: "npm:0.1.2"
     ky: "npm:1.7.2"

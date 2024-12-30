@@ -1,6 +1,7 @@
-import { forumDB } from "../../shared/db.ts"
 import type { Context } from "./message-handler.ts"
-import { tempAdmins, userStates } from "../../shared/maps.ts"
+import { tempAdmins, userStates } from "../../shared/maps/maps.ts"
+import { getUserId } from "../../queries/get-user-id.ts";
+import { addNewAdmin, deleteAdmin } from "../../queries/update-admins.ts";
 
 export const adminHandler = async (ctx: Context, userId: string) => {
   if (tempAdmins.has(userId) && ctx.text) {
@@ -10,11 +11,7 @@ export const adminHandler = async (ctx: Context, userId: string) => {
       return ctx.reply("Никнейм не может быть пустым, попробуйте снова.");
     }
 
-    const user = await forumDB
-      .selectFrom("users")
-      .select(["id", "nickname"])
-      .where("nickname", "=", nickname)
-      .executeTakeFirst();
+    const user = await getUserId(nickname)
 
     if (!user) {
       return ctx.reply(`Пользователь с никнеймом "${nickname}" не найден.`);
@@ -24,17 +21,11 @@ export const adminHandler = async (ctx: Context, userId: string) => {
 
     switch (action) {
       case "add":
-      await forumDB
-        .insertInto("admins")
-        .values({ user_id: user.id })
-        .execute();
+        await addNewAdmin(user.id)
 
         return ctx.reply(`Пользователь с никнеймом "${nickname}" успешно добавлен в администраторы.`);
       case "remove":
-        await forumDB
-        .deleteFrom("admins")
-        .where("user_id", "=", user.id)
-        .execute();
+        await deleteAdmin(user.id)
 
         return ctx.reply(`Пользователь с никнеймом "${nickname}" был удален из администраторов.`);
     }

@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "start": "bun run src/index.ts",
-    "dev": "bun --watch src/index.ts",
+    "dev": "bun --watch \"src/index.ts\"",
     "lint": "bun x eslint \"src/**/*.ts\"",
     "lint:fix": "bun eslint \"src/**/*.ts\" --fix",
     "type-check": "tsc --noEmit"
@@ -14,6 +14,7 @@
     "@gramio/format": "0.1.5",
     "@repo/config-nats": "*",
     "@repo/shared": "*",
+    "@repo/utils": "*",
     "gramio": "0.1.2",
     "ky": "1.7.2",
     "pg-listen": "1.7.0"

@@ -1,3 +1,4 @@
+import { pubDonatePayload } from '@repo/utils/nats/publishers/pub-donate-payload.ts';
 import { Hono } from 'hono';
 import { HTTPException } from 'hono/http-exception';
 import {
@@ -9,8 +10,7 @@ import * as crypto from 'node:crypto';
 import { updatePaymentInfo } from '../lib/queries/update-payment-info.ts';
 import { createPaymentInfo } from '../lib/queries/create-payment-info.ts';
 import { getDonateDetails } from '../lib/queries/get-donate-details.ts';
-import { updateDonateForPlayer } from '../lib/queries/update-donate-for-player.ts';
-import { createPaymentPub } from '../lib/publishers/create-payment-pub.ts';
+import { pubPaymentPayload } from '#publishers/pub-payment-payload.ts';
 
 type PaymentOrderId = Pick<PaymentCompleted, 'data'>['data']['orderId']
 
@@ -66,10 +66,10 @@ async function receivePayment(data: PaymentCompleted['data']) {
       
       await Promise.all([
         updatePaymentInfo({ orderId, updateable: { status: 'received' } }),
-        updateDonateForPlayer({ donate: donateOrigin, nickname }),
+        pubDonatePayload({ donate: donateOrigin, nickname }),
       ]);
       
-      return await createPaymentPub(data);
+      return await pubPaymentPayload("success", data);
     case 'belkoin':
       
       break;

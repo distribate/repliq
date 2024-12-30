@@ -15,7 +15,7 @@ module.exports = {
       beforeFiles: [
         {
           source: '/misc/:path*',
-          destination: 'http://localhost:4321/misc/:path*',
+          destination: 'http://localhost:3002/misc/:path*',
         },
       ],
     };
@@ -25,13 +25,7 @@ module.exports = {
       {
         protocol: 'http',
         hostname: 'localhost',
-        port: '9500',
-        pathname: '/get-skin/**',
-      },
-      {
-        protocol: 'http',
-        hostname: 'localhost',
-        port: '9500',
+        port: '3002',
         pathname: '/get-head/**',
       },
       {

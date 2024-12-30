@@ -1,5 +1,5 @@
-import { fasberryBot } from "../shared/bot.ts"
-import { paymentReceivedMessage } from "../lib/messages/payment-received.ts"
+import { paymentReceivedMessage } from "../messages/payment-received.ts"
+import { fasberryBot } from "../shared/bot/bot.ts"
 import type { PaymentData } from "@repo/types/schemas/payment/payment-schema.ts"
 
 type SendTelegramMessageToBuyer = Omit<PaymentData, "meta"> & {

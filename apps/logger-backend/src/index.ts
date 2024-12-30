@@ -1,26 +1,33 @@
-import { receiveServerCommandSub } from './lib/subs/receive-server-command-sub.ts';
-import { receivePaymentSub } from './lib/subs/receive-payment-sub.ts';
 import { messageHandler } from './lib/handlers/message-handler.ts'
-import { fasberryBot, loggerBot } from './shared/bot.ts'
-import { pgListenConnect } from './shared/listener.ts'
-import { initializeNatsClient } from '@repo/config-nats/nats-client.ts'
+import { fasberryBot, loggerBot } from './shared/bot/bot.ts'
+import { pgListenConnect } from './shared/events/listener.ts'
+import { initNats } from '@repo/config-nats/nats-client.ts';
+import { subReceivePayment } from './subscribers/sub-receive-payment.ts';
+import { subReceiveServerCommand } from './subscribers/sub-receive-server-command.ts';
+import { subUpdateDonateForPlayer } from './subscribers/sub-update-donate-for-player.ts';
+
+async function startNatsSubscribers() {
+  await subReceivePayment()
+  await subReceiveServerCommand()
+  await subUpdateDonateForPlayer()
+}
+ 
+async function loadCommands() {
+  await import("./lib/commands/broadcast-command.ts")
+  await import("./lib/commands/weather-command.ts")
+  await import("./lib/commands/keyboard-command.ts")
+  await import("./lib/commands/give-item-command.ts")
+}
 
 async function start() {
   await fasberryBot.init()
   await loggerBot.start()
-  await pgListenConnect()
-  const nc = await initializeNatsClient()
-  
-  await receivePaymentSub(nc)
-  await receiveServerCommandSub(nc)
 
-  async function loadCommands() {
-    await import("./lib/commands/broadcast-command.ts")
-    await import("./lib/commands/weather-command.ts")
-    await import("./lib/commands/keyboard-command.ts")
-  }
+  await pgListenConnect()
+  await initNats()
+  await startNatsSubscribers()
   
-  loadCommands()
+  await loadCommands()
   loggerBot.on("message", messageHandler);
 }
 

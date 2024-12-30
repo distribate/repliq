@@ -3,7 +3,8 @@ import { findPlayer as findPlayerLP } from "../lib/queries/find-player-luckperms
 import { determinePlayerDetailType } from "../utils/determine-player-detail-type.ts";
 import { HTTPException } from "hono/http-exception";
 
-export const getLuckpermsPlayer = new Hono().get("/:detail", async (c) => {
+export const getLuckpermsPlayer = new Hono()
+.get("/:detail", async (c) => {
   const { detail } = c.req.param();
 
   const detailType = determinePlayerDetailType(detail);

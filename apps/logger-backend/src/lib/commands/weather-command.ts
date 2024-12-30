@@ -1,6 +1,6 @@
-import { callBroadcast } from "../../lib/rcon-server/call-broadcast.ts"
-import { callServerCommand } from "../../lib/rcon-server/call-command.ts"
-import { loggerBot } from "../../shared/bot.ts"
+import { loggerBot } from "../../shared/bot/bot.ts"
+import { callBroadcast } from "../../utils/call-broadcast.ts"
+import { callServerCommand } from "../../utils/call-command.ts"
 
 const weatherTitle: Record<WeatherType, string> = {
   rain: 'дождливая',
@@ -31,13 +31,13 @@ loggerBot.command('weather', async (ctx) => {
 
   const value = `weather ${arg} BisquiteWorld`
 
+  const broadcastMsg = `Юзер {#FABBFB}${username} {#FFFFFF}(tg) установил погоду ${weatherTitle[arg]}`
+  const serverCommandCallbackMsg = `Установлена погода ${weatherTitle[arg]}! ${weatherEmojis[arg]}`
+
   await Promise.all([
-    callBroadcast(`Юзер {#FABBFB}${username} {#FFFFFF}(tg) установил погоду ${weatherTitle[arg]}`),
-    callServerCommand({
-      parent: 'cmi',
-      value,
-    }).then(() => {
-      ctx.reply(`Установлена погода ${weatherTitle[arg]}! ${weatherEmojis[arg]}`)
+    callBroadcast(broadcastMsg),
+    callServerCommand({ parent: 'cmi', value }).then(() => {
+      ctx.reply(serverCommandCallbackMsg)
     })
   ])
 })
