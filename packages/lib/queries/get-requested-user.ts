@@ -25,13 +25,15 @@ export async function getRequestedUser(
 
   const res = await getMainData(nickname)
  
-  if (!res) {
+  const data = await res.json()
+
+  if (!data || "error" in data) {
     return redirect(
       `${REDIRECT_USER_NOT_EXIST}${currentUser.nickname}&timeout=5`,
     );
   }
 
-  const { favorite_item, ...rest } = await res.json()
+  const { favorite_item, ...rest } = data
   
   return {
     ...rest,

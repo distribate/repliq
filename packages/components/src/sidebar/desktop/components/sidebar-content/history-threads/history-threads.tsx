@@ -37,6 +37,7 @@ const HistoryThreadsList = ({
 export const HistoryThreads = () => {
   const { isCompact, isExpanded } = useSidebarControl();
   const { savedThreads } = useHistoryThreads();
+  
   if (!savedThreads) return null;
 
   const savedThreadsHeight = isCompact || !isExpanded ? 260 : 150;

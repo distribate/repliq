@@ -2,7 +2,7 @@ import { Selectable } from 'kysely';
 import { forumDB } from "../shared/database/forum-db"
 import { Admins } from '@repo/types/db/forum-database-types';
 
-type AdminsWithDetails = Omit<Selectable<Admins>, "created_at" | "id"> & {
+export type AdminsWithDetails = Omit<Selectable<Admins>, "created_at" | "id"> & {
   nickname: string
 }
 

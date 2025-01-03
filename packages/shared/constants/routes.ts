@@ -3,7 +3,7 @@ if (!process.env.NEXT_PUBLIC_SKIN_BACKEND_PORT) {
 }
 
 export const SKIN_GET_SKIN = `http://localhost:${process.env.NEXT_PUBLIC_SKIN_BACKEND_PORT}/get-skin/`;
-export const SKIN_GET_HEAD = `http://localhost:${process.env.NEXT_PUBLIC_SKIN_BACKEND_PORT}/get-head/`;
+export const SKIN_GET_HEAD = `http://localhost:${process.env.NEXT_PUBLIC_SKIN_BACKEND_PORT}/api/get-head/`;
 export const SKIN_DOWNLOAD_SKIN = `http://localhost:${process.env.NEXT_PUBLIC_SKIN_BACKEND_PORT}/download-skin/`;
 export const REDIRECT_USER_NOT_EXIST = "/user-not-exist?redirect_nickname=";
 export const THREAD_URL = "/thread/";

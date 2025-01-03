@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { forumDB } from '../../shared/db.ts';
+import { forumDB } from '#shared/database/forum-db.ts';
 import type { Expression, SqlBool } from 'kysely';
 import type { getUserPostsSchema } from '@repo/types/schemas/posts/user-posts-schema.ts';
 import type { GetUserPostsResponse } from '@repo/types/routes-types/get-user-posts-types.ts';

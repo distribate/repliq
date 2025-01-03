@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { forumDB } from '../../shared/db.ts';
+import { forumDB } from '#shared/database/forum-db.ts';
 import type { editUserSettingsBodySchema } from '@repo/types/schemas/user/edit-user-settings-schema.ts';
 
 export async function updateSetting({

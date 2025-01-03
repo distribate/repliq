@@ -18,7 +18,7 @@ export const SIDEBAR_TARGETS = [
   },
   {
     title: "Справочник",
-    link: "https://fasberry.ru/wiki",
+    link: "https://fasberry.su/wiki",
     icon: NotebookTabs,
   },
 ];

@@ -7,10 +7,7 @@ import { FriendWithDetails } from "@repo/types/schemas/friend/friend-types";
 type FriendsPinnedListProps = Pick<UserEntity, "nickname">;
 
 export const FriendsPinnedList = ({ nickname }: FriendsPinnedListProps) => {
-  const { data, isLoading } = friendsQuery({
-    nickname,
-    with_details: true,
-  });
+  const { data, isLoading } = friendsQuery({ nickname });
 
   const friends = data as FriendWithDetails[];
 

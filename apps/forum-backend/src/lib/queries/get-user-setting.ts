@@ -1,7 +1,7 @@
-import { forumDB } from '../../shared/db.ts';
+import { forumDB } from '#shared/database/forum-db.ts';
 import { z } from 'zod';
 import { getUserSettingsSchema } from '#routes/get-user-settings.ts';
-import { userSettings } from '#shared/user-settings.ts';
+import { userSettings } from '#shared/constants/user-settings.ts';
 
 type GetUserSettings = z.infer<typeof getUserSettingsSchema>
 

@@ -4,6 +4,6 @@ export type FriendRequestProperties = {
 };
 
 export type ControlFriendProperties = {
-  reqUserNickname: string;
+  requestedUserNickname: string;
   friend_id?: string;
 };

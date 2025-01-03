@@ -41,6 +41,7 @@ const DialogContent = forwardRef<
     <DialogOverlay />
     <DialogPrimitive.Content
       ref={ref}
+      onOpenAutoFocus={e => e.preventDefault()}
       className={cn(
         "fixed left-[50%] pt-4 top-[50%] max-h-[calc(100%-200px)] overflow-y-auto z-50 grid w-full rounded-md max-w-lg translate-x-[-50%] translate-y-[-50%]" +
           " gap-4 dark:bg-shark-950 bg-shark-950 px-1 pb-1 shadow-lg duration-200 data-[state=open]:animate-in" +

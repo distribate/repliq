@@ -1,6 +1,6 @@
 import { type FriendWithDetails, type FriendWithoutDetails } from '@repo/types/schemas/friend/friend-types';
 import { getUserFriendsSchema } from '@repo/types/schemas/user/get-user-friends-schema.ts';
-import { forumDB } from "#shared/db.ts"
+import { forumDB } from "#shared/database/forum-db.ts"
 import { sql } from "kysely"
 import type { z } from "zod"
 
@@ -63,8 +63,9 @@ export const getUserFriends = async ({
       "users.favorite_item",
       "users.donate",
       "friends_notes.note",
-      // if the friend is pinned, then the is_pinned will be true
-      sql<{ is_pinned: boolean }>`friends_pinned.id IS NOT NULL AS is_pinned`,
+      // Update is_pinned to be properly cast as boolean
+      sql<boolean>`COALESCE(friends_pinned.id IS NOT NULL, false)`.as("is_pinned"),
+      // Ensure donate_weight is properly selected
       donateWeightCase.as("donate_weight")
     ])
     .orderBy(sortType, sortOrder)
@@ -78,7 +79,7 @@ export const getUserFriends = async ({
         .onRef("users.nickname", "=", sql`COALESCE(users_friends.user_1, users_friends.user_2)`)
         .on("users.nickname", "!=", nickname)
     )
-    .select(["users.nickname", "users.name_color"])
+    .select(["users.nickname", "users.name_color", "users_friends.id as friend_id"])
     .orderBy(sortType, sortOrder)
     .execute();
 

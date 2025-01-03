@@ -1,9 +1,9 @@
 "use server";
 
 import "server-only";
-import { createClient } from "@repo/shared/api/supabase-client.ts";
 import { FriendPinnedEntity } from "@repo/types/entities/entities-type.ts";
 import { getCurrentSession } from "@repo/lib/actions/get-current-session.ts";
+import { forumUserClient } from "@repo/shared/api/forum-client";
 
 export type SetPinFriend = Pick<FriendPinnedEntity, "friend_id" | "recipient">;
 
@@ -11,17 +11,22 @@ export async function setPinFriend({ recipient, friend_id }: SetPinFriend) {
   const { user: currentUser } = await getCurrentSession();
   if (!currentUser) return;
 
-  const api = createClient();
+  const res = await forumUserClient.user["create-friend-pin"].$post({
+    json: {
+      recipient,
+      friend_id,
+      initiator: currentUser.nickname,
+      type: "pin"
+    }
+  })
 
-  const { data, error, status } = await api.from("friends_pinned").insert({
-    friend_id: friend_id,
-    initiator: currentUser?.nickname,
-    recipient: recipient,
-  });
+  const data = await res.json();
 
-  if (error) {
-    throw new Error(error.message);
+  if ("error" in data) {
+    return { error: data.error }
   }
 
-  return { data, status };
+  const { status } = data;
+
+  return { status, friend_id };
 }

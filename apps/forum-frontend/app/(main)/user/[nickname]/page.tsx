@@ -1,10 +1,5 @@
 import { Metadata } from 'next';
 import {
-  dehydrate,
-  HydrationBoundary,
-  QueryClient,
-} from '@tanstack/react-query';
-import {
   Tabs,
   TabsContent,
   TabsList,
@@ -17,88 +12,71 @@ import {
 import { Suspense } from 'react';
 import {
   checkProfileStatus,
-  ProfileStatusBlockedType,
 } from '@repo/lib/helpers/check-profile-status.ts';
 import { getBanDetails } from '@repo/lib/helpers/get-ban-details.ts';
 import { Separator } from '@repo/ui/src/components/separator.tsx';
-import { protectPrivateArea } from '@repo/lib/helpers/protect-private-area.ts';
 import { MetadataType, PageConventionProps } from '@repo/types/global';
 import { UserPostsSkeleton } from '@repo/components/src/skeletons/user-posts-skeleton.tsx';
 import { UserCoverSkeleton } from '@repo/components/src/skeletons/user-cover-skeleton.tsx';
-import { BLOCKED_QUERY_KEY } from '@repo/lib/queries/blocked-user-query.ts';
-import { checkProfileIsBlocked } from '@repo/lib/helpers/check-profile-is-blocked.ts';
-import { getRequests } from '@repo/components/src/friends/queries/get-requests.ts';
-import { REQUESTS_QUERY_KEY } from '@repo/components/src/friends/queries/requests-query.ts';
-import { FRIENDS_QUERY_KEY } from '@repo/components/src/friends/queries/friends-query.ts';
-import { getFriends } from '@repo/components/src/friends/queries/get-friends.ts';
-import {
-  REQUESTED_USER_QUERY_KEY,
-} from '@repo/components/src/profile/components/cover/queries/requested-user-query.ts';
 import { UserCoverLayout } from '@repo/components/src/profile/components/cover/components/cover-layout.tsx';
 import dynamic from 'next/dynamic';
 import { getCurrentSession } from '@repo/lib/actions/get-current-session.ts';
-import { CurrentUser } from '@repo/lib/queries/current-user-query.ts';
 import { Selectable } from 'kysely';
 import type { Users } from '@repo/types/db/forum-database-types.ts';
+import { createProfileView } from "@repo/lib/queries/create-profile-view.ts";
+import { delay } from "@repo/lib/helpers/delay.ts";
+import { UserProfilePosts } from '@repo/components/src/profile/components/posts/components/posts/components/profile-posts.tsx';
 
 export type User = Selectable<Pick<Users, "id" | "nickname" | "uuid">>;
 
-const UserProfilePosts = dynamic(() =>
-  import('@repo/components/src/profile/components/posts/components/posts/components/profile-posts.tsx')
-  .then(m => m.UserProfilePosts),
-  {
-    loading: () => <UserPostsSkeleton />,
-  },
-);
-
 const UserProfileAccountStats = dynamic(() =>
-  import('@repo/components/src/profile/components/account-stats/components/profile-account-stats.tsx')
-  .then(m => m.UserProfileAccountStats),
+  import('@repo/components/src/profile/components/account-stats/components/profile-account.tsx')
+    .then(m => m.UserProfileAccount),
 );
 
 const ProfilePrivated = dynamic(() =>
   import('@repo/components/src/templates/profile-privated.tsx')
-  .then(m => m.ProfilePrivated),
+    .then(m => m.ProfilePrivated),
 );
 
 const UserProfileGameAchievements = dynamic(() =>
   import('@repo/components/src/profile/components/achievements/components/profile-game-ach.tsx')
-  .then(m => m.UserProfileGameAchievements),
+    .then(m => m.UserProfileGameAchievements),
 );
 
 const UserBlocked = dynamic(() =>
   import('@repo/components/src/templates/user-blocked.tsx')
-  .then(m => m.UserBlocked),
+    .then(m => m.UserBlocked),
 );
 
 const UserProfileFriends = dynamic(() =>
   import('@repo/components/src/profile/components/friends/components/profile-friends.tsx')
-  .then(m => m.UserProfileFriends),
+    .then(m => m.UserProfileFriends),
 );
 
 const UserProfileThreads = dynamic(() =>
   import('@repo/components/src/profile/components/threads/components/profile-threads.tsx')
-  .then(m => m.UserProfileThreads),
+    .then(m => m.UserProfileThreads),
 );
 
 const UserProfileGameStats = dynamic(() =>
   import('@repo/components/src/profile/components/stats/components/profile-stats.tsx')
-  .then(m => m.UserProfileGameStats),
+    .then(m => m.UserProfileGameStats),
 );
 
 const UserBanned = dynamic(() =>
   import('@repo/components/src/templates/user-banned.tsx')
-  .then(m => m.UserBanned),
+    .then(m => m.UserBanned),
 );
 
 const UserProfileSkin = dynamic(() =>
   import('@repo/components/src/profile/components/skin/components/profile-skin.tsx')
-  .then(m => m.UserProfileSkin),
+    .then(m => m.UserProfileSkin),
 );
 
 const SectionPrivatedTrigger = dynamic(() =>
   import('@repo/components/src/templates/section-privated-trigger.tsx')
-  .then(m => m.SectionPrivatedTrigger),
+    .then(m => m.SectionPrivatedTrigger),
 );
 
 type ProfileContentPageProps = {
@@ -111,88 +89,69 @@ export async function generateMetadata({
 }: MetadataType): Promise<Metadata> {
   const { nickname } = params;
   return {
-    title: nickname,
+    title: nickname ?? "Загрузка...",
     description: `Профиль игрока ${nickname}`,
-    keywords: [
-      nickname ? nickname : 'player',
-      'profile',
-      `profile of ${nickname}`,
-      `fasberry profile player`,
-      `${nickname} profile`,
-    ],
+    keywords: [nickname ?? "player", `fasberry profile player`, `${nickname} profile`,],
   };
 }
 
-type CheckUserGameStatsVisibility = {
-  game_stats_visible: Pick<CurrentUser, 'preferences'>['preferences']["game_stats_visible"];
-  currentUserNickname: string;
-  requestedUserNickname: string;
-};
-
-function checkUserGameStatsVisibility({
-  game_stats_visible, currentUserNickname, requestedUserNickname,
-}: CheckUserGameStatsVisibility): boolean {
-  if (currentUserNickname === requestedUserNickname) return true;
-  return game_stats_visible;
-}
-
-const ProfileContentPage = async({
+const ProfileContentPage = async ({
   requestedUser, currentUser,
 }: ProfileContentPageProps) => {
   const { nickname: currentUserNickname } = currentUser;
   const { game_stats_visible } = requestedUser.preferences;
   const requestedUserUUID = requestedUser.uuid;
   const requestedUserNickname = requestedUser.nickname;
-  
-  const isOwner = await protectPrivateArea(requestedUserNickname);
-  
-  const isGameStatsShow = checkUserGameStatsVisibility({
-    requestedUserNickname,
-    game_stats_visible,
-    currentUserNickname,
-  });
-  
-  const isSectionPrivatedByOwner =
-    !game_stats_visible &&
-    requestedUserNickname === currentUserNickname;
-  
+
+  const isOwner = currentUserNickname === requestedUserNickname;
+
+  let isGameStatsShow: boolean;
+
+  if (isOwner) {
+    isGameStatsShow = true;
+  } else {
+    isGameStatsShow = game_stats_visible;
+  }
+
+  const isSectionPrivatedByOwner = !game_stats_visible && requestedUserNickname === currentUserNickname;
+
   return (
     <Tabs
       id="main-content"
       defaultValue="posts"
-      className="flex flex-col w-full h-full px-12 gap-y-6 pt-6 min-w-[400px] relative z-[4]"
+      className="flex flex-col w-full h-full lg:px-12 gap-y-6 pt-6 min-w-[380px] relative z-[4]"
     >
-      <TabsList className="flex justify-start gap-2 w-full">
+      <TabsList className="grid grid-cols-2 auto-rows-auto lg:flex lg:justify-start gap-2 w-full">
         <TabsTrigger value="posts">Посты</TabsTrigger>
         <TabsTrigger value="topics">Треды</TabsTrigger>
         <TabsTrigger value="friends">Друзья</TabsTrigger>
-        <Separator orientation="vertical" />
+        <Separator orientation="vertical" className="hidden lg:block" />
         {isGameStatsShow && (
-          <div className="relative">
+          <>
             <TabsTrigger value="game-stats" className="peer">
               Статистика
             </TabsTrigger>
             {isSectionPrivatedByOwner && <SectionPrivatedTrigger />}
-          </div>
+          </>
         )}
         <TabsTrigger value="achievements">Достижения</TabsTrigger>
         {isOwner && (
           <>
-            <Separator orientation="vertical" />
-            <div className="relative">
-              <TabsTrigger value="account-stats" className="peer">
-                Аккаунт
-              </TabsTrigger>
-              <SectionPrivatedTrigger />
-            </div>
+            <Separator orientation="vertical" className="hidden lg:block" />
+            <TabsTrigger value="account-stats" className="peer">
+              Аккаунт
+            </TabsTrigger>
+            <SectionPrivatedTrigger />
           </>
         )}
       </TabsList>
-      <div className="flex items-start gap-12 w-full">
+      <div className="flex flex-col mt-24 lg:mt-0 lg:flex-row items-start gap-12 w-full">
         <div className="flex grow *:w-full w-full">
-          <TabsContent value="posts">
-            <UserProfilePosts nickname={requestedUserNickname} />
-          </TabsContent>
+          <Suspense fallback={<UserPostsSkeleton />}>
+            <TabsContent value="posts">
+              <UserProfilePosts nickname={requestedUserNickname} />
+            </TabsContent>
+          </Suspense>
           <TabsContent value="topics">
             <UserProfileThreads nickname={requestedUserNickname} />
           </TabsContent>
@@ -217,7 +176,7 @@ const ProfileContentPage = async({
             </TabsContent>
           )}
         </div>
-        <div className="flex flex-col w-1/3 h-full">
+        <div className="hidden lg:flex flex-col w-1/3 h-full">
           <UserProfileSkin uuid={requestedUserUUID} />
         </div>
       </div>
@@ -225,64 +184,41 @@ const ProfileContentPage = async({
   );
 };
 
-export default async function ProfilePage({ params }: PageConventionProps) {
+export default async function ProfilePage({
+  params
+}: PageConventionProps) {
   const { nickname: requestedUserNickname } = params;
-  if (!requestedUserNickname || requestedUserNickname === 'none') return;
-  
-  const { user: currentUser } = await getCurrentSession();
-  if (!currentUser) return;
-  
+  if (!requestedUserNickname) return;
+
   const requestedUser = await getRequestedUser(requestedUserNickname);
-  if (!requestedUser) return;
-  
-  const qc = new QueryClient();
-  
-  const [ _, profileStatus ] = await Promise.all([
-    qc.prefetchQuery({
-      queryKey: BLOCKED_QUERY_KEY(requestedUserNickname),
-      queryFn: () => checkProfileIsBlocked(requestedUserNickname),
-    }),
-    checkProfileStatus(requestedUser),
-  ]);
-  
-  if (requestedUserNickname !== currentUser.nickname) {
-    await qc.prefetchQuery({
-      queryKey: REQUESTED_USER_QUERY_KEY(requestedUserNickname),
-      queryFn: () => getRequestedUser(requestedUserNickname),
-    });
-  }
-  
-  if (profileStatus === 'banned') {
-    const banDetails = await getBanDetails({
-      nickname: requestedUserNickname,
-    });
-    
+  const { user: currentUser } = await getCurrentSession();
+  if (!currentUser || !requestedUser) return;
+
+  const profileStatus = await checkProfileStatus(requestedUser);
+
+  if (profileStatus?.is_banned) {
+    const banDetails = await getBanDetails({ nickname: requestedUserNickname });
     return <UserBanned {...banDetails} />;
   }
-  
-  const isBlocked = profileStatus === 'blocked-by-user' || profileStatus === 'user-blocked';
-  const isPrivated = profileStatus === 'private';
-  
-  await Promise.all([
-    qc.prefetchQuery({
-      queryKey: REQUESTS_QUERY_KEY(currentUser.nickname),
-      queryFn: () => getRequests(currentUser.nickname),
-    })
-  ]);
-  
+
+  const isBlocked = profileStatus?.is_blocked ?? "none";
+  const isPrivated = profileStatus?.is_private ?? false
+
+  if (!profileStatus?.is_viewed) {
+    await delay(5000, await createProfileView(requestedUserNickname))
+  }
+
   return (
     <div className="flex flex-col w-full relative">
       <Suspense fallback={<UserCoverSkeleton />}>
-        <HydrationBoundary state={dehydrate(qc)}>
-          <UserCoverLayout requestedUserNickname={requestedUserNickname} />
-        </HydrationBoundary>
+        <UserCoverLayout requestedUserNickname={requestedUserNickname} />
       </Suspense>
-      {isBlocked && (
-        <UserBlocked blockedType={profileStatus as ProfileStatusBlockedType} />
-      )}
-      {isPrivated && <ProfilePrivated />}
-      {!isPrivated && !profileStatus && (
-        <ProfileContentPage requestedUser={requestedUser} currentUser={currentUser} />
+      {(isBlocked !== 'none') ? (
+        <UserBlocked blockedType={isBlocked} />
+      ) : (
+        isPrivated
+          ? <ProfilePrivated />
+          : <ProfileContentPage requestedUser={requestedUser} currentUser={currentUser} />
       )}
     </div>
   );

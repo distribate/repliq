@@ -86,7 +86,7 @@ export const SignInForm = () => {
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-y-4">
+    <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col py-2 lg:px-2 lg:py-4 gap-y-4">
       <FormField
         label={{ name: "Никнейм", for: "nickname" }}
         errorMessage={errors?.nickname?.message}

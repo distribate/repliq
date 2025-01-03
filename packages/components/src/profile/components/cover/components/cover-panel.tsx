@@ -42,7 +42,10 @@ const userCoverPanelVariants = cva(
   "relative z-[3] flex bg-transparent gap-x-4 border-none",
   {
     variants: {
-      variant: { default: "", end: "self-end justify-end" },
+      variant: { 
+        default: "", 
+        end: "lg:self-end self-center justify-center lg:justify-end" 
+      },
     },
   },
 );

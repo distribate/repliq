@@ -11,12 +11,12 @@ services:
       LUCKPERMS_DATA_PASSWORD: ${LUCKPERMS_POSTGRES_PASSWORD}
       LUCKPERMS_REST_HTTP_PORT: ${LUCKPERMS_BACKEND_PORT}
       LUCKPERMS_REST_AUTH: true
-      LUCKPERMS_MESSAGING_SERVICE: "NATS"
-      LUCKPERMS_MESSAGING_SERVICE_ENABLE: true
-      LUCKPERMS_MESSAGING_SERVICE_ADDRESS: nats:4222
+      LUCKPERMS_MESSAGING_SERVICE: nats
+      LUCKPERMS_NATS_ENABLED: "true"
+      LUCKPERMS_NATS_ADDRESS: "nats://${NATS_AUTH_TOKEN}@nats:4222"
       LUCKPERMS_REST_AUTH_KEYS: ${SECRET_TOKEN}
     ports:
-      - "127.0.0.1:4000:${LUCKPERMS_BACKEND_PORT}"
+      - "4000:${LUCKPERMS_BACKEND_PORT}"
     extra_hosts:
      - "shared-network:host-gateway"
     networks:
@@ -100,7 +100,12 @@ services:
     restart: unless-stopped
     ports:
       - "4222:4222"
-    command: --T -VV
+    command: 
+      - "--T"
+      - "-VV"
+      - "--auth=${NATS_AUTH_TOKEN}"
+    environment:
+      - NATS_TOKEN=${NATS_AUTH_TOKEN}
     volumes:
       - ./data/fasberry-external/nats/data:/nats
     networks:

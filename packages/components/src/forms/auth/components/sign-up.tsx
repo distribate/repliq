@@ -96,7 +96,7 @@ export const SignUpForm = () => {
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-y-4">
+    <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col py-2 lg:px-2 lg:py-4 gap-y-4">
       <FormField
         label={{ name: "Никнейм", for: "nickname" }}
         errorMessage={errors?.nickname?.message}
@@ -177,7 +177,7 @@ export const SignUpForm = () => {
             <input
               id="rules"
               type="checkbox"
-              className="peer h-6 w-6 cursor-pointer transition-all appearance-none
+              className="peer h-5 w-5 lg:h-6 lg:w-6 cursor-pointer transition-all appearance-none
                   rounded shadow hover:shadow-md border-[2px] border-shark-600 bg-shark-700 checked:bg-shark-900 checked:border-black"
               {...register("acceptRules")}
             />
@@ -201,8 +201,8 @@ export const SignUpForm = () => {
               </svg>
             </span>
           </label>
-          <label className="select-none cursor-pointer" htmlFor="rules">
-            <Typography textSize="large" textColor="shark_black">
+          <label className="select-none cursor-pointer " htmlFor="rules">
+            <Typography className="text-[15px] break-words lg:text-[18px]" textColor="shark_black">
               Согласен с&nbsp;
               <Link
                 href="/misc/rules"

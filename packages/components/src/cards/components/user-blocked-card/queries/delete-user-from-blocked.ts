@@ -1,30 +1,34 @@
 "use server";
 
 import "server-only";
-import { createClient } from "@repo/shared/api/supabase-client.ts";
+import { forumUserClient } from "@repo/shared/api/forum-client";
+import { getCurrentSession } from "@repo/lib/actions/get-current-session";
 
 export type DeleteUserFromBlocked = {
-  currentUserNickname: string;
-  targetUserNickname: string;
+  recipient: string;
 };
 
 export async function deleteUserFromBlocked({
-  currentUserNickname,
-  targetUserNickname,
+  recipient,
 }: DeleteUserFromBlocked) {
-  const api = createClient();
+  const { user: currentUser } = await getCurrentSession();
+  if (!currentUser) return null;
 
-  const { data, error } = await api
-    .from("users_blocked")
-    .delete()
-    .eq("user_1", currentUserNickname)
-    .eq("user_2", targetUserNickname)
-    .select("user_1")
-    .single();
+  const res = await forumUserClient.user["control-user-blocked"].$post({
+    json: {
+      initiator: currentUser.nickname,
+      recipient,
+      type: "unblock"
+    }
+  })
 
-  if (error) {
-    throw new Error(error.message);
+  const data = await res.json();
+
+  if ("error" in data) {
+    return null
   }
 
-  return data;
+  const { status } = data;
+
+  return { status }
 }

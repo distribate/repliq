@@ -29,9 +29,13 @@ export async function generateMetadata({
 }: MetadataType): Promise<Metadata> {
   const { id: thread_id } = params;
   let title: string = "Не найдено";
-  if (!thread_id) title = "";
+
+  if (!thread_id) title = "Загрузка...";
+  
   const data = await getTopicName(thread_id!);
+
   if (data) title = data.title;
+  
   return { title };
 }
 

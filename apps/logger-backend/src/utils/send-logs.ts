@@ -1,7 +1,7 @@
 import { format, FormattableString } from '@gramio/format';
 import type { PaymentCompleted } from '@repo/types/schemas/payment/payment-schema.ts';
 import { loggerBot } from '../shared/bot/bot.ts';
-import { getAdmins } from '../queries/get-admins.ts';
+import { AdminsWithDetails, getAdmins } from '../queries/get-admins.ts';
 import { paymentLogsMessage } from '../messages/payment-logs.ts';
 import { loginLogsMessage } from '../messages/login-logs.ts';
 
@@ -63,10 +63,11 @@ export async function sendLogs<T extends MessageType>({
   const adminsData = await getAdmins()
 
   const admins = adminsData.filter(
-    (item): item is { telegram_id: string } => item.telegram_id !== null
+    (item): item is AdminsWithDetails => item.telegram_id !== null
   )
 
   for (const { telegram_id } of admins) {
+    if (!telegram_id) continue
     await loggerBot.api.sendMessage({ chat_id: telegram_id, text });
   }
 }

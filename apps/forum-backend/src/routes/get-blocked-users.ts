@@ -13,15 +13,12 @@ export const getBlockedUsersRoute = new Hono()
   const { nickname } = ctx.req.param()
   const { cursor } = getBlockedUsersSchema.parse(ctx.req.query())
   
-  let blockedUsers;
-  
   try {
-    blockedUsers = await getBlockedUsers({
+    const blockedUsers = await getBlockedUsers({
       cursor: Number(cursor) ?? null, nickname
     })
+    return ctx.json(blockedUsers, 200)
   } catch (e) {
     return ctx.json({ error: throwError(e) }, 401)
   }
-  
-  return ctx.json(blockedUsers, 200)
 })

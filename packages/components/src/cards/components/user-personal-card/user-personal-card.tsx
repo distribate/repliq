@@ -14,17 +14,19 @@ import {
   DialogContent,
   DialogTrigger,
 } from "@repo/ui/src/components/dialog.tsx";
-import { HoverCardItem } from "@repo/ui/src/components/hover-card.tsx";
-import { ImageWrapper } from "#wrappers/image-wrapper.tsx";
 import { UserSettingsCard } from "#cards/components/user-personal-card/components/account-settings/user-settings-card.tsx";
 import MinecartWithChest from "@repo/assets/images/minecraft/minecart_chest.webp";
 import { UserAdvancedSettings } from "#cards/components/user-personal-card/components/advanced-settings/user-advanced-settings.tsx";
 import Campfire from "@repo/assets/images/minecraft/campfire.webp";
 import BookAndQuill from "@repo/assets/images/minecraft/book_quill.webp";
+import DragonBreath from "@repo/assets/images/minecraft/dragon_breath.webp";
+import GrassBlock from "@repo/assets/images/minecraft/grass_block.webp";
+import FishingRod from "@repo/assets/images/minecraft/fishing_rod.webp";
+import Link from "next/link";
 
 const UserPersonalCardHeader = () => {
   const { nickname, name_color } = getUser();
-  
+
   return (
     <>
       <Avatar propHeight={96} propWidth={96} nickname={nickname} />
@@ -48,18 +50,7 @@ export const UserPersonalCard = () => {
       <div className="flex flex-col gap-y-2 w-full">
         <Dialog>
           <DialogTrigger>
-            <HoverCardItem className="justify-between w-full">
-              <div className="flex gap-x-2 items-center w-full">
-                <ImageWrapper
-                  propSrc={BookAndQuill?.src}
-                  width={26}
-                  height={26}
-                  loading="eager"
-                  propAlt="Change description"
-                />
-                <Typography className="text-base">Профиль</Typography>
-              </div>
-            </HoverCardItem>
+            <UserSettingOption title="Профиль" imageSrc={BookAndQuill.src} />
           </DialogTrigger>
           <DialogContent>
             <UserProfileSettings />
@@ -67,18 +58,7 @@ export const UserPersonalCard = () => {
         </Dialog>
         <Dialog>
           <DialogTrigger>
-            <HoverCardItem className="justify-between w-full">
-              <div className="flex gap-x-2 items-center w-full">
-                <ImageWrapper
-                  propSrc={MinecartWithChest?.src}
-                  width={26}
-                  height={26}
-                  loading="eager"
-                  propAlt="Change description"
-                />
-                <Typography className="text-base">Аккаунт</Typography>
-              </div>
-            </HoverCardItem>
+            <UserSettingOption title="Аккаунт" imageSrc={MinecartWithChest.src}/>
           </DialogTrigger>
           <DialogContent>
             <UserSettingsCard />
@@ -86,27 +66,36 @@ export const UserPersonalCard = () => {
         </Dialog>
         <Dialog>
           <DialogTrigger>
-            <HoverCardItem className="justify-between w-full">
-              <div className="flex gap-x-2 items-center w-full">
-                <ImageWrapper
-                  propSrc={Campfire?.src}
-                  width={26}
-                  height={26}
-                  loading="eager"
-                  propAlt="Change description"
-                />
-                <Typography className="text-base">Прочее</Typography>
-              </div>
-            </HoverCardItem>
+            <UserSettingOption title="Прочее" imageSrc={Campfire.src} />
           </DialogTrigger>
           <DialogContent>
             <UserAdvancedSettings />
           </DialogContent>
         </Dialog>
         <Separator />
+        <Dialog>
+          <DialogTrigger>
+            <UserSettingOption title="Мои регионы" imageSrc={GrassBlock.src}/>
+          </DialogTrigger>
+          <DialogContent>
+
+          </DialogContent>
+        </Dialog>
+        <Dialog>
+          <DialogTrigger>
+            <UserSettingOption title="Рейтинг" imageSrc={DragonBreath.src} />
+          </DialogTrigger>
+          <DialogContent>
+
+          </DialogContent>
+        </Dialog>
+        <Separator />
+        <Link href="https://fasberry.su/wiki" target="_blank">
+          <UserSettingOption title="Вики" imageSrc={Portfolio.src} />
+        </Link>
         <TicketsModal
           trigger={
-            <UserSettingOption title="Задать вопрос" imageSrc={Portfolio.src} />
+            <UserSettingOption title="Задать вопрос" imageSrc={FishingRod.src} />
           }
         />
       </div>

@@ -2,8 +2,9 @@ import ky from 'ky';
 import { SKIN_HEAD_ELY_URL } from '../shared/urls';
 import { Hono } from 'hono';
 
-export const getHeadRoute = new Hono().get("/get-head/:nickname", async (c) => {
-  const { nickname } = c.req.param()
+export const getHeadRoute = new Hono()
+  .get("/get-head/:nickname", async (ctx) => {
+  const { nickname } = ctx.req.param()
   
   const url = `${SKIN_HEAD_ELY_URL}/${nickname.toLowerCase()}.png&scale=18.9&renderFace=1`;
   
@@ -16,11 +17,11 @@ export const getHeadRoute = new Hono().get("/get-head/:nickname", async (c) => {
     
     const buffer = Buffer.from(await response.arrayBuffer());
     
-    return c.body(buffer as unknown as ReadableStream, 200, {
+    return ctx.body(buffer as unknown as ReadableStream, 200, {
       "Content-Type": "image/png",
     })
   } catch (e) {
     const error = e instanceof Error ? e.message : "Error downloading skin details";
-    return c.json({ error }, 500);
+    return ctx.json({ error }, 500);
   }
 })

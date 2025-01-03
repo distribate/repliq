@@ -24,6 +24,18 @@ import { resolveFriendId } from "#friend/components/friend-card/helpers/resolve-
 import { deleteFriend } from "#friend/components/friend-card/queries/delete-friend.ts";
 import { FriendWithDetails } from "@repo/types/schemas/friend/friend-types.ts";
 
+const friendRequestStatus: Record<string, string> = {
+  "User does not have accept to send friend request": "Пользователь отключил заявки в друзья",
+  "You cannot add yourself": "Вы не можете добавить самого себя в друзья",
+  "You are blocked by user": "Этот пользователь вас заблокировал",
+  "User blocked by you": "Вы заблокировали этого пользователя",
+  "You are already friends": "Вы уже друзья",
+  "Friend request sent": "Запрос отправлен",
+  "Friend request deleted": "Запрос удален",
+  "Friend request accepted": "Запрос принят",
+  "Friend deleted": "Пользователь удален из друзей"
+} as const;
+
 export const useControlFriendRequests = () => {
   const qc = useQueryClient();
   const currentUser = getUser();
@@ -54,28 +66,6 @@ export const useControlFriendRequests = () => {
     ]);
   };
 
-  const handleMutationSuccess = async (
-    data: { status: number } | undefined,
-    successMessage: string,
-    errorMessage: string,
-    refreshNeeded = false,
-  ) => {
-    if (!data) return toast.error("Произошла ошибка. Попробуйте позже");
-
-    if (
-      data &&
-      (data.status === 200 || data.status === 201 || data.status === 204)
-    ) {
-      toast.success(successMessage);
-      if (refreshNeeded) refresh();
-      return invalidateAllFriendsRequests();
-    } else {
-      return toast.error("Произошла ошибка. Попробуйте позже", {
-        description: errorMessage,
-      });
-    }
-  };
-
   const acceptIncomingRequestMutation = useMutation({
     mutationFn: async (initiator: string) => {
       if (!currentUser || !incomingRequests) return;
@@ -90,12 +80,20 @@ export const useControlFriendRequests = () => {
       return acceptFriendRequest({ initiator, friend_id: incomingRequest.id });
     },
     onSuccess: async (data) => {
-      return handleMutationSuccess(
-        data,
-        "Заявка принята.",
-        "Попробуйте попытку позже",
-        true,
-      );
+      if (!data) return;
+
+      const { status: createRequestStatus, error: createRequestError } = data;
+
+      if (!createRequestError && createRequestStatus) {
+        toast.success(friendRequestStatus[createRequestStatus]);
+        return invalidateAllFriendsRequests();
+      }
+
+      if (createRequestError) {
+        return toast.error("Произошла ошибка", {
+          description: friendRequestStatus[createRequestError] ?? createRequestError,
+        });
+      }
     },
     onError: (e) => {
       throw new Error(e.message);
@@ -116,12 +114,20 @@ export const useControlFriendRequests = () => {
       return deleteFriendRequest(incomingRequest.id);
     },
     onSuccess: async (data) => {
-      return handleMutationSuccess(
-        data,
-        "Заявка отклонена.",
-        "Попробуйте попытку позже",
-        false,
-      );
+      if (!data) return
+
+      const { status: createRequestStatus, error: createRequestError } = data;
+
+      if (!createRequestError && createRequestStatus) {
+        toast.success(friendRequestStatus[createRequestStatus]);
+        return invalidateAllFriendsRequests();
+      }
+
+      if (createRequestError) {
+        return toast.error("Произошла ошибка", {
+          description: friendRequestStatus[createRequestError] ?? createRequestError,
+        });
+      }
     },
     onError: (e) => {
       throw new Error(e.message);
@@ -142,12 +148,20 @@ export const useControlFriendRequests = () => {
       return deleteFriendRequest(outgoingRequest.id);
     },
     onSuccess: async (data) => {
-      return handleMutationSuccess(
-        data,
-        "Заявка отозвана.",
-        "Попробуйте попытку позже",
-        false,
-      );
+      if (!data) return
+
+      const { status: createRequestStatus, error: createRequestError } = data;
+
+      if (!createRequestError && createRequestStatus) {
+        toast.success(friendRequestStatus[createRequestStatus]);
+        return invalidateAllFriendsRequests();
+      }
+
+      if (createRequestError) {
+        return toast.error("Произошла ошибка", {
+          description: friendRequestStatus[createRequestError] ?? createRequestError,
+        });
+      }
     },
     onError: (e) => {
       throw new Error(e.message);
@@ -155,39 +169,20 @@ export const useControlFriendRequests = () => {
   });
 
   const createRequestFriendMutation = useMutation({
-    mutationFn: async (
-      reqUserNickname: Pick<
-        ControlFriendProperties,
-        "reqUserNickname"
-      >["reqUserNickname"],
-    ) => createFriendRequest(reqUserNickname),
+    mutationFn: async (requestedUserNickname: string) => createFriendRequest(requestedUserNickname),
     onSuccess: async (data) => {
-      const createRequest = data;
+      if (!data) return;
 
-      if (createRequest && createRequest.status === 201) {
-        toast.success("Заявка отправлена");
+      const { status: createRequestStatus, error: createRequestError } = data;
+
+      if (!createRequestError && createRequestStatus) {
+        toast.success(friendRequestStatus[createRequestStatus]);
         return invalidateAllFriendsRequests();
-      } else if (createRequest && createRequest.error) {
-        if (createRequest.error === "blocked-by-user") {
-          return toast.error("Невозможно добавить этого игрока в друзья", {
-            description: "Этот пользователь вас заблокировал",
-          });
-        }
+      }
 
-        if (createRequest.error === "user-not-accept") {
-          return toast.error("Невозможно добавить этого игрока в друзья", {
-            description: "Этот пользователь не принимает заявки в друзья",
-          });
-        }
-
-        if (createRequest.error === "user-blocked") {
-          return toast.error("Невозможно добавить этого игрока в друзья", {
-            description: "Вы заблокировали данного пользователя",
-          });
-        }
-
-        return toast.error("Произошла ошибка. Повторите попытку", {
-          description: createRequest.error,
+      if (createRequestError) {
+        return toast.error("Невозможно добавить этого игрока в друзья", {
+          description: friendRequestStatus[createRequestError] ?? createRequestError,
         });
       }
     },
@@ -198,23 +193,18 @@ export const useControlFriendRequests = () => {
 
   const removeFriendMutation = useMutation({
     mutationKey: USER_FRIEND_DELETE_MUTATION_KEY,
-    mutationFn: async ({
-      reqUserNickname,
-      friend_id,
-    }: ControlFriendProperties) => {
+    mutationFn: async ({ requestedUserNickname, friend_id }: ControlFriendProperties) => {
       if (!currentUser) return;
 
       let friendId: string | null;
 
-      if (friend_id) {
-        friendId = friend_id;
+      if (friend_id) { 
+        friendId = friend_id
       } else {
-        const friends = qc.getQueryData<FriendWithDetails[]>(
-          FRIENDS_QUERY_KEY(currentUser.nickname),
-        );
+        const friends = qc.getQueryData<FriendWithDetails[]>(FRIENDS_QUERY_KEY(currentUser.nickname));
         if (!friends) return;
 
-        const friend = resolveFriendId(friends, reqUserNickname);
+        const friend = resolveFriendId(friends, requestedUserNickname);
         if (!friend) return;
 
         friendId = friend.friend_id;
@@ -225,12 +215,22 @@ export const useControlFriendRequests = () => {
       return deleteFriend(friendId);
     },
     onSuccess: async (data) => {
-      return handleMutationSuccess(
-        data,
-        "Игрок удален из друзей",
-        data?.error || "Попробуйте попытку позже",
-        true,
-      );
+      if (!data) return;
+
+      const { status: createRequestStatus, error: createRequestError } = data;
+
+      refresh();
+
+      if (!createRequestError && createRequestStatus) {
+        toast.success(friendRequestStatus[createRequestStatus]);
+        return invalidateAllFriendsRequests();
+      }
+
+      if (createRequestError) {
+        return toast.error("Произошла ошибка", {
+          description: friendRequestStatus[createRequestError] ?? createRequestError,
+        });
+      }
     },
     onError: (e) => {
       throw new Error(e.message);

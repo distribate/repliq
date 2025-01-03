@@ -19,7 +19,7 @@
     "@repo/shared": "*",
     "base-64": "1.0.0",
     "canvas": "3.0.0-rc3",
-    "hono": "4.6.13",
+    "hono": "4.6.15",
     "ky": "1.7.2"
   },
   "devDependencies": {

@@ -25,6 +25,14 @@ import { UserMenu } from "#sidebar/desktop/components/sidebar-content/user-menu/
 import { useQueryClient } from "@tanstack/react-query";
 import { checkAdminPermission } from "@repo/lib/actions/check-admin-permission.ts";
 import { ADMIN_QUERY_KEY } from "@repo/lib/queries/admin-query.ts";
+import { HTMLAttributes, useEffect } from "react";
+import { Asterisk, CircleFadingPlus, NotebookPen, Settings } from "lucide-react";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@repo/ui/src/components/dropdown-menu.tsx";
+import { useRouter } from "next/navigation";
+import { Typography } from "@repo/ui/src/components/typography.tsx";
+import { TicketsModal } from "#modals/custom/tickets-modal.tsx";
+import { Dialog, DialogContent, DialogTrigger } from "@repo/ui/src/components/dialog.tsx";
+import { NotificationsList } from "#notifications/components/notifications-list.tsx";
 
 type SidebarLayoutVariant = Exclude<SidebarFormat, "dynamic">;
 
@@ -34,39 +42,71 @@ const SearchArea = dynamic(() =>
   ),
 );
 
+type SidebarFormats = {
+  title: string;
+  value: SidebarFormat;
+};
+
+export const SIDEBAR_FORMATS: SidebarFormats[] = [
+  {
+    title: "Резиновый",
+    value: "dynamic",
+  },
+  {
+    title: "Раскрыт",
+    value: "full",
+  },
+  {
+    title: "Минимал",
+    value: "compact",
+  },
+];
+
+interface OutlineWrapperProps extends HTMLAttributes<HTMLDivElement> { }
+
+const OutlineWrapper = ({ children, className, ...props }: OutlineWrapperProps) => {
+  return (
+    <div
+      className={`flex items-center bg-shark-800 justify-center 
+        hover:bg-shark-700 py-3 px-4 cursor-pointer rounded-md ${className}`}
+      {...props}
+    >
+      {children}
+    </div>
+  )
+}
+
 const UserMenuTrigger = () => {
   const qc = useQueryClient();
   const currentUser = getUser();
   const { nickname, name_color, donate, favorite_item } = currentUser;
   const { isExpanded, isCompact } = useSidebarControl();
 
-  qc.prefetchQuery({
-    queryKey: ADMIN_QUERY_KEY,
-    queryFn: () => checkAdminPermission(),
-  });
+  useEffect(() => {
+    if (isExpanded) {
+      qc.prefetchQuery({
+        queryKey: ADMIN_QUERY_KEY, queryFn: () => checkAdminPermission(),
+      });
+    }
+  }, [isExpanded]);
 
   return (
     <DropdownWrapper
       trigger={
         <div
-          className={`flex gap-x-3 items-center hover:bg-shark-800 rounded-md w-full
+          className={`flex gap-x-3 items-center bg-shark-800 hover:bg-shark-700 rounded-md w-full
 					${!isCompact ? "justify-start" : isExpanded ? "justify-start" : "justify-center"}`}
         >
           <Avatar
             variant="default"
-            border="withBorder"
-            className="overflow-hidden min-w-[48px] min-h-[48px]"
-            propWidth={48}
-            propHeight={48}
+            className="overflow-hidden min-w-[50px] min-h-[50px]"
+            propWidth={50}
+            propHeight={50}
             nickname={nickname}
           />
           {!isCompact && (
-            <div className="flex flex-col items-start max-w-[200px] overflow-hidden">
-              <UserNickname
-                className="text-base truncate"
-                nicknameColor={name_color}
-                nickname={nickname}
-              />
+            <div className="flex gap-1 items-start max-w-[200px] overflow-hidden">
+              <UserNickname className="text-base truncate" nicknameColor={name_color} nickname={nickname} />
               <UserDonate donate={donate} favoriteItemId={favorite_item} />
             </div>
           )}
@@ -79,14 +119,78 @@ const UserMenuTrigger = () => {
 
 const SidebarDesktopContent = () => {
   const { data: searchState } = searchQuery();
+  const { push } = useRouter()
+  const { data: sidebarState } = sidebarLayoutQuery();
+  const { updateSidebarPropertiesMutation } =
+    useSidebarControl();
 
-  return searchState.queryValue ? (
-    <SearchArea />
-  ) : (
-    <>
-      <HistoryThreads />
-      <SidebarTarget />
-    </>
+  if (searchState.queryValue) return <SearchArea />
+
+  return (
+    <div className="flex flex-col h-full justify-between w-full">
+      <div className="flex flex-col gap-y-4 items-center w-full">
+        <div className="flex flex-col gap-y-4 items-center w-full">
+          <HistoryThreads />
+          <SidebarTarget />
+        </div>
+      </div>
+      <div className="flex lg:flex-row flex-col items-center *:w-1/4 gap-2 w-full justify-between">
+        {/* // create issue button */}
+        <OutlineWrapper
+          title="Нашли баг? Откройте заявку!"
+          onClick={() => push("/create-issue")}
+        >
+          <NotebookPen size={20} className="text-shark-300" />
+        </OutlineWrapper>
+        {/* // open ticket button */}
+        <TicketsModal
+          trigger={
+            <OutlineWrapper title="Открыть тикет">
+              <CircleFadingPlus size={20} className="text-shark-300" />
+            </OutlineWrapper>
+          }
+        />
+        {/* //  */}
+        <DropdownMenu>
+          <DropdownMenuTrigger title="Уведомления" className="w-full">
+            <OutlineWrapper className="w-full">
+              <Asterisk size={20} className="text-shark-300" />
+            </OutlineWrapper>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent side="top" className="h-[400px]">
+            <NotificationsList />
+          </DropdownMenuContent>
+        </DropdownMenu>
+        {/* // open sidebar settings */}
+        <DropdownMenu>
+          <DropdownMenuTrigger title="Настройки сайдбара" className="w-full">
+            <OutlineWrapper className="w-full">
+              <Settings size={20} className="text-shark-300" />
+            </OutlineWrapper>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent>
+            <div className="flex flex-col gap-y-2">
+              {SIDEBAR_FORMATS.map(({ title, value }) => (
+                <DropdownMenuItem
+                  key={title}
+                  onClick={e => {
+                    e.preventDefault();
+                    updateSidebarPropertiesMutation.mutate({
+                      type: "format",
+                      values: { format: value },
+                    });
+                  }}
+                >
+                  <Typography state={sidebarState.format === value ? "active" : "default"}>
+                    {title}
+                  </Typography>
+                </DropdownMenuItem>
+              ))}
+            </div>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </div>
+    </div>
   );
 };
 

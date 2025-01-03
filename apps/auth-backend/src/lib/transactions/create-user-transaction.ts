@@ -18,7 +18,7 @@ export const createUserTransaction = async ({
     .executeTakeFirstOrThrow();
     
     await trx.insertInto('users_settings')
-    .values({ user_id: user.id })
+    .values({ user_id: user.id,  nickname: user.nickname })
     .returningAll()
     .executeTakeFirstOrThrow();
     

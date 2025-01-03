@@ -59,7 +59,9 @@ export const SearchInput = () => {
             placeholder="Поиск"
           />
         </div>
-        <SearchSort />
+        <div className="flex w-fit">
+          <SearchSort />
+        </div>
       </div>
     </>
   );

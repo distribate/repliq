@@ -21,13 +21,19 @@ export async function getUserInformation(): Promise<CurrentUser> {
     }
   })
 
+  const data = await res.json()
+
+  if (!data || "error" in data) {
+    return redirect(AUTH_REDIRECT);
+  }
+
   const isBanned = await getUserBanned(currentUser.nickname);
 
   if (isBanned) {
     return permanentRedirect(BANNED_REDIRECT);
   }
 
-  const { favorite_item, ...rest } = await res.json();
+  const { favorite_item, ...rest } = data
   
   return {
     ...rest,

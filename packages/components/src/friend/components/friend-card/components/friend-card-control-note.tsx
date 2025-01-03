@@ -11,14 +11,14 @@ import { useControlFriend } from "#friend/components/friend-card/hooks/use-contr
 type FriendCardControlNote = Pick<FriendCardProps, "nickname">;
 
 export const FriendCardControlNote = ({
-  nickname: reqUserNickname,
+  nickname: requestedUserNickname,
 }: FriendCardControlNote) => {
   const [value, setValue] = useState<string>("");
   const { setFriendNoteMutation } = useControlFriend();
 
   const handleAddNote = () => {
     if (value.length <= 1) return;
-    return setFriendNoteMutation.mutate({ reqUserNickname, note: value });
+    return setFriendNoteMutation.mutate({ requestedUserNickname, note: value });
   };
 
   return (

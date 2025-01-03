@@ -21,7 +21,7 @@ export const DeleteFriendModal = ({
   const handleDeleteFriend = () => {
     return removeFriendMutation.mutate({
       friend_id,
-      reqUserNickname: nickname,
+      requestedUserNickname: nickname,
     });
   };
 

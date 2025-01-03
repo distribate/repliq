@@ -4,7 +4,6 @@ import { throwError } from '#helpers/throw-error.ts';
 import { zValidator } from '@hono/zod-validator';
 import { getThreadCommentsSchema } from '@repo/types/schemas/thread/get-thread-comments-schema.ts';
 
-
 export const getThreadCommentsRoute = new Hono()
 .get("/get-thread-comments/:threadId", zValidator("query", getThreadCommentsSchema), async (ctx) => {
   const { threadId } = ctx.req.param()

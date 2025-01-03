@@ -11,7 +11,7 @@ type FriendCardNoteProps = Pick<FriendWithDetails, "friend_id" | "nickname"> & {
 export const FriendCardNote = ({
   note,
   friend_id,
-  nickname: reqUserNickname,
+  nickname: requestedUserNickname,
 }: FriendCardNoteProps) => {
   const { setFriendUnNoteMutation } = useControlFriend();
 
@@ -22,7 +22,7 @@ export const FriendCardNote = ({
         onClick={() =>
           setFriendUnNoteMutation.mutate({
             friend_id,
-            reqUserNickname,
+            requestedUserNickname,
           })
         }
       >

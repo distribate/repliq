@@ -11,11 +11,18 @@ import { exceptionHandler } from './helpers/exception-handler.ts';
 import { mergeRoutes, type Module } from './utils/merge-routes.ts';
 import { logger } from 'hono/logger';
 import { bearerAuth } from 'hono/bearer-auth';
+import { initNats } from '@repo/config-nats/nats-client.ts';
 
 const port = process.env.AUTH_BACKEND_PORT;
 const token = process.env.SECRET_TOKEN!
 
 const base = new Hono();
+
+async function startNatsSubscribers() {
+  await initNats()
+}
+
+startNatsSubscribers()
 
 const installedModules = [
   { path: '/auth', routes: invalidateSessionRoute },

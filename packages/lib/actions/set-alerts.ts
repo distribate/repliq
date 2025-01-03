@@ -8,5 +8,9 @@ export async function setAlerts() {
 
   if (hasAlertsShowing && hasAlertsShowing.value !== "show") {
     cookies().set(ALERTS_COOKIE_KEY, "show");
+    return "show"
   }
+
+  cookies().set(ALERTS_COOKIE_KEY, "hide");
+  return "hide"
 }

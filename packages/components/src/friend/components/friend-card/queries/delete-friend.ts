@@ -1,35 +1,27 @@
 "use server";
 
 import "server-only";
-import { createClient } from "@repo/shared/api/supabase-client.ts";
 import { getCurrentSession } from "@repo/lib/actions/get-current-session.ts";
+import { forumUserClient } from "@repo/shared/api/forum-client";
 
-type DeleteFriend = {
-  error: "not-authorized" | null;
-  status: number;
-};
-
-export async function deleteFriend(friend_id: string): Promise<DeleteFriend> {
+export async function deleteFriend(friend_id: string) {
   const { user: currentUser } = await getCurrentSession();
+  if (!currentUser) return null;
 
-  if (!currentUser)
-    return {
-      status: 400,
-      error: "not-authorized",
-    };
+  const res = await forumUserClient.user["delete-friend"].$delete({
+    json: {
+      currentUserNickname: currentUser.nickname,
+      friend_id
+    }
+  })
 
-  const api = createClient();
+  const data = await res.json();
 
-  const { error, status } = await api
-    .from("users_friends")
-    .delete()
-    .eq("id", friend_id);
+  if ("error" in data) {
+    return { error: data.error }
+  }  
 
-  if (error) {
-    throw new Error(error.message);
-  }
+  const { status } = data
 
-  console.log(status);
-
-  return { error: null, status };
+  return { status, error: null }
 }

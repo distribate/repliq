@@ -10,16 +10,16 @@ type FriendCardControlPinProps = Pick<
 >;
 
 export const FriendCardControlPin = ({
-  is_pinned, nickname: reqUserNickname,
+  is_pinned, nickname: requestedUserNickname,
 }: FriendCardControlPinProps) => {
   const { setFriendPinnedMutation, setFriendUnpinMutation } =
     useControlFriend();
 
   const handlePin = () => {
     if (is_pinned) {
-      return setFriendUnpinMutation.mutate({ reqUserNickname });
+      return setFriendUnpinMutation.mutate({ requestedUserNickname });
     } else {
-      return setFriendPinnedMutation.mutate({ reqUserNickname });
+      return setFriendPinnedMutation.mutate({ requestedUserNickname });
     }
   };
 

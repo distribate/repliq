@@ -27,5 +27,6 @@ declare module "bun" {
     POSTGRES_PORT: number
     POSTGRES_PASSWORD: string
     POSTGRES_TENANT_ID: string
+    NATS_AUTH_TOKEN:string
   }
 }

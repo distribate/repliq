@@ -449,6 +449,15 @@ export interface InfoFindout {
   user_nickname: string;
 }
 
+export interface Issues {
+  created_at: Generated<Timestamp>;
+  description: string;
+  id: Generated<string>;
+  title: string;
+  type: string;
+  user_nickname: string;
+}
+
 export interface LandingCurrencies {
   created_at: Generated<Timestamp>;
   id: Generated<Int8>;
@@ -519,17 +528,6 @@ export interface LandingTermins {
   title: string;
 }
 
-export interface LuckpermsActions {
-  acted_name: string;
-  acted_uuid: string;
-  action: string;
-  actor_name: string;
-  actor_uuid: string;
-  id: Generated<number>;
-  time: Int8;
-  type: string;
-}
-
 export interface LuckpermsGroupPermissions {
   contexts: string;
   expiry: Int8;
@@ -556,17 +554,6 @@ export interface LuckpermsTracks {
   name: string;
 }
 
-export interface LuckpermsUserPermissions {
-  contexts: string;
-  expiry: Int8;
-  id: Generated<number>;
-  permission: string;
-  server: string;
-  uuid: string;
-  value: boolean;
-  world: string;
-}
-
 export interface Moderators {
   created_at: Generated<Timestamp>;
   id: Generated<Int8>;
@@ -591,6 +578,15 @@ export interface NetHttpResponse {
   id: Int8 | null;
   status_code: number | null;
   timed_out: boolean | null;
+}
+
+export interface Notifications {
+  created_at: Generated<Timestamp>;
+  id: Generated<Int8>;
+  message: string;
+  nickname: string;
+  read: Generated<boolean>;
+  type: string;
 }
 
 export interface PgsodiumDecryptedKey {
@@ -713,8 +709,10 @@ export interface PostsWithCommentsAndViewCounts {
 export interface ProfileViews {
   created_at: Generated<Timestamp>;
   id: Generated<Int8>;
-  target_user_id: string | null;
-  user_id: string | null;
+  initiator: string;
+  recipient: string;
+  resolved: Generated<boolean>;
+  response: Generated<string | null>;
 }
 
 export interface RealtimeMessages {
@@ -947,6 +945,7 @@ export interface UsersBlocked {
   created_at: Generated<Timestamp | null>;
   id: Generated<Int8>;
   initiator: string;
+  message: string | null;
   recipient: string;
 }
 
@@ -955,6 +954,14 @@ export interface UsersFriends {
   id: Generated<string>;
   user_1: string;
   user_2: string;
+}
+
+export interface UsersGameStatus {
+  id: Generated<Int8>;
+  joined: Timestamp | null;
+  nickname: string;
+  quited: Timestamp | null;
+  status: string;
 }
 
 export interface UsersSavedThreads {
@@ -988,6 +995,7 @@ export interface UsersSettings {
   cover_outline_visible: Generated<boolean>;
   game_stats_visible: Generated<boolean>;
   id: Generated<Int8>;
+  nickname: string;
   profile_visibility: Generated<ProfileVisibility>;
   real_name_visible: Generated<boolean>;
   user_id: string;
@@ -1051,6 +1059,7 @@ export interface DB {
   friends_pinned: FriendsPinned;
   friends_requests: FriendsRequests;
   info_findout: InfoFindout;
+  issues: Issues;
   landing_currencies: LandingCurrencies;
   landing_donate: LandingDonate;
   landing_modpack: LandingModpack;
@@ -1059,15 +1068,14 @@ export interface DB {
   landing_rules_list: LandingRulesList;
   landing_termin_content: LandingTerminContent;
   landing_termins: LandingTermins;
-  luckperms_actions: LuckpermsActions;
   luckperms_group_permissions: LuckpermsGroupPermissions;
   luckperms_groups: LuckpermsGroups;
   luckperms_players: LuckpermsPlayers;
   luckperms_tracks: LuckpermsTracks;
-  luckperms_user_permissions: LuckpermsUserPermissions;
   moderators: Moderators;
   "net._http_response": NetHttpResponse;
   "net.http_request_queue": NetHttpRequestQueue;
+  notifications: Notifications;
   "pgsodium.decrypted_key": PgsodiumDecryptedKey;
   "pgsodium.key": PgsodiumKey;
   "pgsodium.mask_columns": PgsodiumMaskColumns;
@@ -1107,6 +1115,7 @@ export interface DB {
   users_banned: UsersBanned;
   users_blocked: UsersBlocked;
   users_friends: UsersFriends;
+  users_game_status: UsersGameStatus;
   users_saved_threads: UsersSavedThreads;
   users_security: UsersSecurity;
   users_session: UsersSession;

@@ -1,4 +1,4 @@
-import { forumDB } from '../../shared/db.ts';
+import { forumDB } from '#shared/database/forum-db.ts'
 import type { Expression, SqlBool } from 'kysely';
 
 type GetBlockedUsers = {

@@ -16,18 +16,12 @@ export default async function AuthPage() {
 
   return (
     fact && (
-      <div className="flex gap-1 relative minecraft-panel w-full items-start py-2 px-10 overflow-x-scroll max-w-[1020px]">
+      <div className="flex gap-1 select-none relative minecraft-panel w-full items-start py-2 px-4 lg:px-10 overflow-x-scroll max-w-[1020px]">
         <Typography
           font="minecraft"
-          className="text-shark-800 text-base font-semibold"
+          className="text-shark-800 text-[14px] lg:text-base font-semibold"
         >
-          Факт:
-        </Typography>
-        <Typography
-          font="minecraft"
-          className="text-shark-800 text-base font-medium whitespace-normal"
-        >
-          {fact.fact.toString()}
+          Факт: <span className="whitespace-normal font-medium">{fact.fact.toString()}</span>
         </Typography>
       </div>
     )

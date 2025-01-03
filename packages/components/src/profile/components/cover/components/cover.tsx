@@ -41,11 +41,12 @@ export const UserCover = ({
     >
       {!url && !isLoading && <UserCoverWatermark />}
       <div className="z-[2] absolute w-full h-full right-0 top-0 bottom-0 left-0 bg-black/40" />
-      <div className="flex gap-x-6 z-[4] relative items-start">
+      <div className="flex flex-col gap-y-2 lg:flex-row gap-x-6 z-[4] relative items-center lg:items-start">
         <Avatar
           variant="page"
           propHeight={imageHeight}
           propWidth={imageHeight}
+          withStatus={true}
           nickname={requestedUser.nickname}
         />
         <UserCoverMainInfo nickname={requestedUser.nickname} />

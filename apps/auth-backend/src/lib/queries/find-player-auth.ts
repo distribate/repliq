@@ -1,6 +1,6 @@
-import { authDB } from "../../shared/db.ts";
 import type { AUTH } from "@repo/types/db/auth-database-types.ts";
 import type { Selectable } from "kysely";
+import { authDB } from "../../shared/database/auth-db";
 
 export type FindPlayerExtractedColumns = Array<keyof Selectable<AUTH>>;
 

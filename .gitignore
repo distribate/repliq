@@ -8,9 +8,11 @@ node_modules
 
 # IDE configs
 .idea
-.vscode
+.vscode/
 
-.yarn
+.yarn/
+
+# Containers data
 data
 
 # Local env files

@@ -72,7 +72,7 @@ const DeleteFriendButton = ({
 }: Pick<FriendRequestProperties, "recipient">) => {
   const { removeFriendMutation } = useControlFriendRequests();
 
-  const handleDeleteFriend = () => removeFriendMutation.mutate({ reqUserNickname: recipient });
+  const handleDeleteFriend = () => removeFriendMutation.mutate({ requestedUserNickname: recipient });
 
   return (
     <Button

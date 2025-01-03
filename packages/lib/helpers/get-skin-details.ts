@@ -6,11 +6,7 @@ import ky from 'ky';
 
 export async function getHeadDetails(nickname: string) {
   try {
-    const headBlob = await ky(nickname.toLowerCase(), {
-      prefixUrl: SKIN_GET_HEAD,
-      retry: 4,
-      cache: 'force-cache'
-    }).blob()
+    const headBlob = await ky(nickname, { prefixUrl: SKIN_GET_HEAD, retry: 1 }).blob()
 
     return URL.createObjectURL(headBlob);
   } catch (e) {

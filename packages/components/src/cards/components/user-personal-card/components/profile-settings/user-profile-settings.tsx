@@ -23,15 +23,15 @@ export const UserSettingOption = ({
   title, children, imageSrc,
 }: ProfileSetting) => {
   return (
-    <HoverCardItem className="justify-between w-full">
+    <HoverCardItem className="py-2 justify-between w-full">
       <div className="flex gap-x-2 items-center w-full">
         {imageSrc && (
           <ImageWrapper
             propSrc={imageSrc}
             propAlt={title}
-            width={32}
-            className="max-w-[40px] max-h-[40px]"
-            height={32}
+            width={26}
+            className="max-w-[26px] max-h-[26px]"
+            height={26}
           />
         )}
         <Typography className="text-base">{title}</Typography>

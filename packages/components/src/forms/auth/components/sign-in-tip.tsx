@@ -15,7 +15,7 @@ export const SignInTip = () => {
   };
 
   return (
-    <div className="flex flex-col mt-6 gap-y-4">
+    <div className="flex flex-col mt-0 lg:mt-6 gap-y-4">
       <div className="flex flex-col gap-y-1">
         <Typography
           textSize="medium"

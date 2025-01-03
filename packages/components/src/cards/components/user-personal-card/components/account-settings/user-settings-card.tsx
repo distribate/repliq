@@ -14,34 +14,38 @@ import { getUser } from '@repo/lib/helpers/get-user.ts';
 import {
   userBlockedQuery,
 } from '#cards/components/user-personal-card/components/account-settings/queries/user-blocked-query.ts';
-import { Fragment } from 'react';
 import { UserBlockedCard } from '#cards/components/user-blocked-card/components/user-blocked-card.tsx';
+import { ContentNotFound } from '#templates/content-not-found.tsx';
+import { Skeleton } from '@repo/ui/src/components/skeleton.tsx';
 
 const BlockedList = () => {
   const currentUser = getUser();
-  const { data: usersBlocked } = userBlockedQuery(currentUser.nickname);
-  
-  if (!usersBlocked) return (
-    <div className="self-start w-full px-2">
-      <Typography className="text-shark-300" textSize="small">
-        список пуст
-      </Typography>
-    </div>
-  );
-  
+  const { data: usersBlocked, isLoading } = userBlockedQuery(currentUser.nickname);
+
   return (
-    usersBlocked && (
+    <>
       <div className="flex flex-col gap-y-1 w-full overflow-y-scroll max-h-[600px]">
-        {usersBlocked.map((user) => (
-          <UserBlockedCard
-            key={user.id}
-            name_color={user.name_color!}
-            nickname={user.nickname!}
-            time={user.created_at!}
-          />
-        ))}
+        {isLoading && (
+          <>
+            <Skeleton className="w-full h-16" />
+            <Skeleton className="w-full h-16" />
+          </>
+        )}
+        {(!isLoading && usersBlocked) && (
+          usersBlocked.map((user) => (
+            <UserBlockedCard
+              key={user.id}
+              name_color={user.name_color!}
+              nickname={user.nickname!}
+              time={user.created_at!}
+            />
+          ))
+        )}
+        {!isLoading && !usersBlocked && (
+          <ContentNotFound title="Никого нет в черном списке" />
+        )}
       </div>
-    )
+    </>
   );
 };
 

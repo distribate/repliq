@@ -16,7 +16,7 @@ export const SignUpTip = () => {
   };
 
   return (
-    <div className="flex flex-col mt-6 gap-y-4">
+    <div className="flex flex-col mt-0 lg:mt-6 gap-y-4">
       <Typography
         textShadow="small"
         textSize="medium"

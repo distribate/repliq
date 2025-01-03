@@ -5,11 +5,15 @@ import { initNats } from '@repo/config-nats/nats-client.ts';
 import { subReceivePayment } from './subscribers/sub-receive-payment.ts';
 import { subReceiveServerCommand } from './subscribers/sub-receive-server-command.ts';
 import { subUpdateDonateForPlayer } from './subscribers/sub-update-donate-for-player.ts';
+import { subReceiveIssue } from './subscribers/sub-receive-issue.ts';
+import { subscribeServerEvents } from './subscribers/sub-server-events.ts';
 
 async function startNatsSubscribers() {
   await subReceivePayment()
   await subReceiveServerCommand()
+  await subReceiveIssue()
   await subUpdateDonateForPlayer()
+  await subscribeServerEvents()
 }
  
 async function loadCommands() {

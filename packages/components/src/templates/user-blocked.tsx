@@ -1,12 +1,16 @@
-import { ProfileStatusBlockedType } from "@repo/lib/helpers/check-profile-status.ts";
 import { Typography } from "@repo/ui/src/components/typography.tsx";
 import { ImageWrapper } from "#wrappers/image-wrapper.tsx";
 // @ts-ignore
 import WardenGif from "@repo/assets/gifs/warden-warden-minecraft.gif";
 
 export type UserBlockedProps = {
-  blockedType: ProfileStatusBlockedType;
+  blockedType: "blocked-by-user" | "blocked-by-you"
 };
+
+const blockedMessages: Record<"blocked-by-user" | "blocked-by-you", string> = {
+  "blocked-by-user": "Этот пользователь вас заблокировал",
+  "blocked-by-you": "Вы заблокировали данного пользователя",
+}
 
 export const UserBlocked = ({ blockedType }: UserBlockedProps) => {
   return (
@@ -19,9 +23,7 @@ export const UserBlocked = ({ blockedType }: UserBlockedProps) => {
           height={144}
         />
         <Typography className="text-xl font-bold text-shark-50">
-          {blockedType === "blocked-by-user"
-            ? `Этот пользователь вас заблокировал`
-            : `Вы заблокировали данного пользователя`}
+          {blockedMessages[blockedType]}
         </Typography>
       </div>
     </div>

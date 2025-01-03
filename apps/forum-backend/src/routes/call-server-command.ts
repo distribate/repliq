@@ -1,8 +1,8 @@
 import { Hono } from 'hono';
 import { zValidator } from '@hono/zod-validator';
 import { throwError } from '#helpers/throw-error.ts';
-import { publishServerCommand } from '#shared/nats-client.ts';
 import { callServerCommandSchema } from '@repo/types/schemas/server/server-command.ts';
+import { publishServerCommand } from '#publishers/pub-server-command.ts';
 
 export const callServerCommandRoute = new Hono()
 .post("/call-server-command", zValidator("json", callServerCommandSchema), async (ctx) => {

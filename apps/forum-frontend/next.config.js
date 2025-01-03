@@ -1,7 +1,11 @@
 /** @type {import('next').NextConfig} */
 const svg = require('@neodx/svg/webpack');
 
-module.exports = {
+const withBundleAnalyzer = require('@next/bundle-analyzer')({
+  enabled: process.env.ANALYZE === 'true',
+})
+
+module.exports = withBundleAnalyzer({
   reactStrictMode: false,
   transpilePackages: ['@repo/ui', '@repo/components'],
   experimental: {
@@ -57,4 +61,4 @@ module.exports = {
     
     return config;
   },
-};
+});

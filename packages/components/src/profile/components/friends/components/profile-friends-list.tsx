@@ -58,7 +58,7 @@ const ProfileFriendsList = ({ friends }: FriendsListLayoutProps) => {
   }
 
   return (
-    <div className="grid auto-rows-auto grid-cols-3 gap-2 w-full">
+    <div className="grid auto-rows-auto grid-cols-1 lg:grid-cols-3 gap-2 w-full">
       {filteredfriends.map(friend => 
         <FriendProfileCard key={friend.nickname} {...friend} />
       )}
@@ -68,7 +68,7 @@ const ProfileFriendsList = ({ friends }: FriendsListLayoutProps) => {
 
 export const ProfileFriends = ({ nickname }: Pick<UserEntity, "nickname">) => {
   const { data: friends, isLoading, isError } = friendsQuery({
-    nickname, with_details: true
+    nickname
   });
 
   if (isLoading) return <ProfileFriendsSkeleton />;

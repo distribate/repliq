@@ -18,5 +18,5 @@ export async function getUserBlocked(nickname: string) {
     return null
   }
 
-  return data
+  return data.length ? data : null
 }

@@ -1,55 +1,37 @@
 "use server";
 
 import "server-only";
-import { createClient } from "@repo/shared/api/supabase-client.ts";
 import { FriendNotesEntity } from "@repo/types/entities/entities-type.ts";
 import { getCurrentSession } from "@repo/lib/actions/get-current-session.ts";
+import { forumUserClient } from "@repo/shared/api/forum-client";
 
 export type SetNote = Pick<
   FriendNotesEntity,
   "friend_id" | "note" | "recipient"
 >;
 
-type SetNoteFriend = SetNote & {
-  isNoted: boolean; // if friend already have a note
-};
-
 export async function setNoteFriend({
-  recipient,
-  friend_id,
-  note,
-  isNoted,
-}: SetNoteFriend) {
+  recipient, friend_id, note,
+}: SetNote) {
   const { user: currentUser } = await getCurrentSession();
   if (!currentUser) return;
 
-  const api = createClient();
-
-  if (!isNoted) {
-    const { data, error, status } = await api.from("friends_notes").insert({
-      friend_id: friend_id,
-      recipient: recipient,
-      initiator: currentUser?.nickname,
-      note: note,
-    });
-
-    if (error) {
-      throw new Error(error.message);
+  const res = await forumUserClient.user["create-friend-note"].$post({
+    json: {
+      recipient,
+      friend_id,
+      initiator: currentUser.nickname,
+      message: note
     }
+  })
 
-    return { data, status };
+  const data = await res.json();
+
+  if ("error" in data) {
+    return { error: data.error }
   }
 
-  const { data, error, status } = await api
-    .from("friends_notes")
-    .update({ note: note })
-    .eq("recipient", recipient)
-    .eq("friend_id", friend_id)
-    .eq("initiator", currentUser?.nickname);
+  const { note: newNote, status } = data;
 
-  if (error) {
-    throw new Error(error.message);
-  }
-
-  return { data, status };
+  return { status, note: newNote, friend_id }
 }

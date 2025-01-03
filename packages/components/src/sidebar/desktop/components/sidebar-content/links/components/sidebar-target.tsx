@@ -4,6 +4,15 @@ import { SIDEBAR_TARGETS } from "../constants/sidebar-targets.ts";
 import { useSidebarControl } from "../../../sidebar-layout/hooks/use-sidebar-control.ts";
 import Link from "next/link";
 
+const SidebarTargetDecoration = () => {
+  return (
+    <div
+      className="absolute -right-1 bg-gradient-to-br
+       from-biloba-flower-300 to-biloba-flower-500 w-[4px] rounded-3xl h-full"
+    />
+  )
+}
+
 export const SidebarTarget = () => {
   const pathname = usePathname();
   const { isCompact, isExpanded } = useSidebarControl();
@@ -11,43 +20,31 @@ export const SidebarTarget = () => {
 
   return (
     <div className="flex flex-col gap-y-2 w-full">
-      {SIDEBAR_TARGETS.map((target) => (
-        <div key={target.title} className="w-full">
+      {SIDEBAR_TARGETS.map(({ link, title, icon: Icon }) => (
+        <div key={title} className="w-full">
           {isCollapsed && (
             <div className="flex relative w-[50px] h-[50px]">
               <Link
-                href={target.link}
-                className="inline-flex items-center px-4 cursor-pointer
-                py-1 rounded-md bg-shark-800 hover:bg-shark-700 group gap-2 w-full justify-start"
+                href={link}
+                className="inline-flex items-center px-4 py-1 rounded-md bg-shark-800 hover:bg-shark-700 w-full justify-start"
               >
-                <target.icon size={20} className="text-shark-300" />
+                <Icon size={20} className="text-shark-300" />
               </Link>
-              {pathname === target.link && (
-                <div
-                  className="absolute -right-1 bg-gradient-to-br
-                   from-biloba-flower-300 to-biloba-flower-500 w-[4px] rounded-3xl h-full"
-                />
-              )}
+              {pathname === link && <SidebarTargetDecoration/>}
             </div>
           )}
           {!isCollapsed && (
             <div className="flex relative w-full h-12">
               <Link
-                href={target.link}
-                className="inline-flex items-center hover:bg-shark-800 px-4 cursor-pointer
-                py-1 rounded-md border border-shark-700 group gap-2 w-full justify-start"
+                href={link}
+                className="inline-flex items-center px-4 py-1 rounded-md bg-shark-800 hover:bg-shark-700 gap-4 w-full justify-start"
               >
-                <target.icon size={20} className="text-shark-300" />
-                <Typography className="text-[14px] font-medium">
-                  {target.title}
+                <Icon size={20} className="text-shark-300" />
+                <Typography className="text-[16px] font-medium">
+                  {title}
                 </Typography>
               </Link>
-              {pathname === target.link && (
-                <div
-                  className="absolute -right-4 bg-gradient-to-br
-                   from-biloba-flower-300 to-biloba-flower-500 w-[4px] rounded-3xl h-full"
-                />
-              )}
+              {pathname === link && <SidebarTargetDecoration/>}
             </div>
           )}
         </div>

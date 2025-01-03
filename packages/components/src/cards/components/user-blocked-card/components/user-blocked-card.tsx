@@ -27,9 +27,7 @@ export const UserBlockedCard = ({
   ) => {
     e.preventDefault();
 
-    return deleteUserFromBlockedMutation.mutate({
-      targetUserNickname: nickname,
-    });
+    return deleteUserFromBlockedMutation.mutate(nickname);
   };
 
   return (
@@ -39,7 +37,7 @@ export const UserBlockedCard = ({
         <UserNickname nickname={nickname} nicknameColor={name_color} />
         <Separator orientation="vertical" />
         <Typography textSize="small" className="text-shark-300">
-          {dayjs(time).format("DD.MM.YYYY HH:mm")}
+          добавлен {dayjs(time).format("DD.MM.YYYY HH:mm")}
         </Typography>
       </div>
       <div className="w-fit">

@@ -1,4 +1,4 @@
-import { forumDB } from '../../shared/db.ts';
+import { forumDB } from '#shared/database/forum-db.ts';
 import type { Updateable } from 'kysely';
 import type { Users } from '@repo/types/db/forum-database-types.ts';
 

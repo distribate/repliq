@@ -15,6 +15,7 @@ export type FriendWithDetails = {
 };
 
 export type FriendWithoutDetails = {
+  friend_id: string
   nickname: string;
   name_color: string;
 };
