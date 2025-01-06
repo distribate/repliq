@@ -1,7 +1,6 @@
 "use client";
 
 import { threadImagesQuery } from "./thread-images-query.ts";
-import { ThreadEntity } from "@repo/types/entities/entities-type.ts";
 import { Skeleton } from "@repo/ui/src/components/skeleton.tsx";
 import {
   Carousel,
@@ -56,8 +55,14 @@ const ThreadImagesNavigation = ({ api }: ThreadImagesNavigationProps) => {
   );
 };
 
-export const ThreadImages = ({ id }: Pick<ThreadEntity, "id">) => {
-  const { data: threadImages, isLoading } = threadImagesQuery(id);
+type ThreadImagesProps = {
+  threadId: string
+}
+
+export const ThreadImages = ({ 
+  threadId 
+}: ThreadImagesProps) => {
+  const { data: threadImages, isLoading } = threadImagesQuery(threadId);
   const [selectedIndex, setSelectedIndex] = useState<number>(0);
   const [api, setApi] = useState<CarouselApi>();
 

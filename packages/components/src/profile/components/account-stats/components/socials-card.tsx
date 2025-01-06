@@ -7,8 +7,6 @@ import { toast } from "sonner";
 import { getUser } from "@repo/lib/helpers/get-user";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@repo/ui/src/components/tooltip";
 import Link from "next/link";
-import { cva, VariantProps } from "class-variance-authority";
-import { HTMLAttributes } from "react";
 
 type SocialsCardProps = {
   title: string,

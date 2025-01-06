@@ -16,7 +16,7 @@ export const FriendsOutgoingList = () => {
   return (
     <FriendsListLayout variant={friendsFiltering.viewType}>
       {outgoingFriends.map((friend) => (
-        <FriendCardOutgoing key={friend.recipient} {...friend} />
+        <FriendCardOutgoing key={friend.recipient} request_id={friend.id} recipient={friend.recipient} />
       ))}
     </FriendsListLayout>
   );

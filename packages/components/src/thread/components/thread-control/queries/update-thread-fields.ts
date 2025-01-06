@@ -1,10 +1,5 @@
-"use server";
-
-import "server-only";
-import { createClient } from '@repo/shared/api/supabase-client.ts';
-import { validateThreadOwner } from "#thread/components/thread-control/queries/validate-thread-owner.ts";
 import { ThreadControlQueryValues } from "#thread/components/thread-control/queries/thread-control-query.ts";
-import { getCurrentSession } from "@repo/lib/actions/get-current-session.ts";
+import { forumThreadClient } from "@repo/shared/api/forum-client";
 
 type UpdateThread = {
   threadId: string;
@@ -12,19 +7,23 @@ type UpdateThread = {
 };
 
 export async function updateThread({ threadId, values }: UpdateThread) {
-  const { user: currentUser } = await getCurrentSession();
-  if (!currentUser) return;
+  const { description, title, auto_remove, content, is_comments } = values;
 
-  const isValid = await validateThreadOwner({
-    threadId,
-    currentUserNickname: currentUser.nickname,
+  const res = await forumThreadClient.thread["update-thread-settings"].$post({
+    json: {
+      threadId,
+      new_description: description,
+      new_title: title,
+      new_tags: undefined,
+      is_comments: is_comments.toString(),
+    },
   });
 
-  if (!isValid) return;
+  const data = await res.json();
 
-  const api = createClient();
+  if (!data || "error" in data) {
+    return null
+  }
 
-  const { error } = await api.from("threads").update(values).eq("id", threadId);
-
-  return !error;
+  return data;
 }

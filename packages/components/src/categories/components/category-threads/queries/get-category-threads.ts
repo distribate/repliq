@@ -3,9 +3,9 @@
 import { createClient } from '@repo/shared/api/supabase-client.ts';
 import {
   getThreadModel,
-  ThreadModel,
 } from "#thread/queries/get-thread-model.ts";
 import { RequestDetails } from "@repo/types/entities/entities-type.ts";
+import { ThreadDetailed } from "@repo/types/entities/thread-type.ts";
 
 export type GetCategoryThreads = {
   category_id: string;
@@ -15,10 +15,10 @@ export async function getCategoryThreads({
   category_id,
   range,
   limit = 12,
-}: GetCategoryThreads): Promise<ThreadModel[] | null> {
+}: GetCategoryThreads): Promise<ThreadDetailed[] | null> {
   const api = createClient();
 
-  let threads: ThreadModel[] | null = null;
+  let threads: ThreadDetailed[] | null = null;
 
   let query = api
     .from("category_threads")
@@ -40,7 +40,7 @@ export async function getCategoryThreads({
 
   for (let i = 0; i < mappedThreads.length; i++) {
     const thread = mappedThreads[i];
-    const threadModel = await getThreadModel({ id: thread.id });
+    const threadModel = await getThreadModel(thread.id);
 
     if (!threadModel) return threads;
 

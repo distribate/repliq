@@ -1,8 +1,106 @@
-import { ForumUserAppType, ForumThreadAppType, ForumAdminAppType } from 'forum-backend/src';
+import { ForumUserAppType, ForumThreadAppType, ForumAdminAppType, ForumCategoriesAppType, ForumCommentAppType } from 'forum-backend/src/types/routes-types.ts';
 import { hc } from 'hono/client';
 
-const headers = { Authorization: `Bearer ${process.env.SECRET_TOKEN}` };
+const baseUrl = `http://localhost:4101/api/`
 
-export const forumUserClient = hc<ForumUserAppType>(`http://localhost:4101/api/`, { headers })
-export const forumThreadClient = hc<ForumThreadAppType>(`http://localhost:4101/api/`, { headers })
-export const forumAdminClient = hc<ForumAdminAppType>(`http://localhost:4101/api/`, { headers })
+export const forumCommentClient = (session?: string) => hc<ForumCommentAppType>(
+  baseUrl,
+  {
+    fetch: (input: RequestInfo | URL, requestInit?: RequestInit) => {
+      return fetch(input, {
+        method: requestInit?.method ?? 'GET',
+        headers: {
+          'content-type': 'application/json',
+          'Cookie': session ? `session=${session}` : ``,
+          ...requestInit?.headers,
+        },
+        body: requestInit?.body ?? null,
+        credentials: "include",
+        ...requestInit,
+      }).then((res) => {
+        return res;
+      });
+    }
+  }
+)
+
+export const forumUserClient = (session?: string) => hc<ForumUserAppType>(
+  baseUrl,
+  {
+    fetch: (input: RequestInfo | URL, requestInit?: RequestInit) => {
+      return fetch(input, {
+        method: requestInit?.method ?? 'GET',
+        headers: {
+          'content-type': 'application/json',
+          'Cookie': session ? `session=${session}` : ``,
+          ...requestInit?.headers,
+        },
+        body: requestInit?.body ?? null,
+        credentials: "include",
+        ...requestInit,
+      }).then((res) => {
+        return res;
+      });
+    }
+  }
+)
+
+export const forumThreadClient = hc<ForumThreadAppType>(
+  baseUrl,
+  {
+    fetch: (input: RequestInfo | URL, requestInit?: RequestInit) => {
+      return fetch(input, {
+        method: requestInit?.method ?? 'GET',
+        headers: {
+          'content-type': 'application/json',
+          ...requestInit?.headers,
+        },
+        body: requestInit?.body ?? null,
+        credentials: "include",
+        ...requestInit,
+      }).then((res) => {
+        return res;
+      });
+    }
+  }
+)
+
+export const forumCategoriesClient = hc<ForumCategoriesAppType>(
+  baseUrl,
+  {
+    fetch: (input: RequestInfo | URL, requestInit?: RequestInit) => {
+      return fetch(input, {
+        method: requestInit?.method ?? 'GET',
+        headers: {
+          'content-type': 'application/json',
+          ...requestInit?.headers,
+        },
+        body: requestInit?.body ?? null,
+        credentials: "include",
+        ...requestInit,
+      }).then((res) => {
+        return res;
+      });
+    }
+  }
+)
+
+export const forumAdminClient = hc<ForumAdminAppType>(
+  baseUrl,
+  {
+    fetch: (input: RequestInfo | URL, requestInit?: RequestInit) => {
+      return fetch(input, {
+        method: requestInit?.method ?? 'GET',
+        headers: {
+          'content-type': 'application/json',
+          ...requestInit?.headers,
+        },
+        body: requestInit?.body ?? null,
+        credentials: "include",
+        ...requestInit,
+      }).then((res) => {
+        return res;
+      });
+    }
+  }
+)

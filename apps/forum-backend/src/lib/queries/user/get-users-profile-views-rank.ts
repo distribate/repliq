@@ -1,0 +1,17 @@
+import { forumDB } from "#shared/database/forum-db.ts";
+import { sql } from "kysely";
+
+const RATING_LIMIT = 200;
+
+export const getUsersProfileViewsRank = async () => {
+  return await forumDB
+  .selectFrom('profile_views')
+  .select([
+    'recipient',
+    sql`COUNT(*)`.as('views_count'),
+  ])
+  .groupBy('recipient')
+  .orderBy(sql`COUNT(*)`, 'desc')
+  .limit(RATING_LIMIT)
+  .execute();
+}

@@ -9,23 +9,20 @@ import {
 import { Typography } from "@repo/ui/src/components/typography.tsx";
 import dayjs from "@repo/lib/constants/dayjs-instance.ts";
 import { useState } from "react";
-import { ThreadModel } from "../../../queries/get-thread-model.ts";
 import Link from "next/link";
 import { USER_URL } from "@repo/shared/constants/routes.ts";
 import { Avatar } from "#user/components/avatar/components/avatar.tsx";
 import { UserNickname } from "#user/components/name/nickname.tsx";
 import { Button } from "@repo/ui/src/components/button.tsx";
+import { ThreadDetailed } from "@repo/types/entities/thread-type";
 
-type ThreadMoreProps = Pick<
-  ThreadModel,
-  "tags" | "description" | "created_at" | "owner"
->;
-
-type ThreadTagProps = {
-  tag: string;
+type ThreadMoreProps = Pick<ThreadDetailed, "description"> & {
+  threadTags: string[];
+  owner: ThreadDetailed["owner"];
+  createdAt: string
 };
 
-const ThreadTag = ({ tag }: ThreadTagProps) => {
+const ThreadTag = ({ tag }: { tag: string; }) => {
   return (
     <div className="flex px-2 py-0.5 bg-secondary-color rounded-sm items-center justify-center">
       <Typography className="leading-5" textColor="gray">
@@ -36,10 +33,7 @@ const ThreadTag = ({ tag }: ThreadTagProps) => {
 };
 
 export const ThreadMore = ({
-  tags,
-  description,
-  created_at,
-  owner,
+  threadTags, description, createdAt, owner,
 }: ThreadMoreProps) => {
   const [expand, setExpand] = useState<boolean>(false);
 
@@ -57,10 +51,10 @@ export const ThreadMore = ({
           onClick={() => setExpand((prev) => !prev)}
         >
           <div className="flex items-center gap-4 justify-start">
-            <Typography>{dayjs(created_at).fromNow()}</Typography>
-            {tags && (
+            <Typography>{dayjs(createdAt).fromNow()}</Typography>
+            {threadTags && (
               <div className="flex items-center gap-1">
-                {tags.map((tag, idx) => (
+                {threadTags.map((tag, idx) => (
                   <ThreadTag key={idx} tag={tag} />
                 ))}
               </div>

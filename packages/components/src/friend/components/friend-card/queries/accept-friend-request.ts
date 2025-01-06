@@ -1,24 +1,9 @@
-'use server';
-
-import { FriendRequestProperties } from '#friend/components/friend-card/types/friend-request-types.ts';
-import { getCurrentSession } from '@repo/lib/actions/get-current-session.ts';
 import { forumUserClient } from '@repo/shared/api/forum-client.ts';
 
-type AcceptFriendRequestType = Pick<FriendRequestProperties, 'initiator'> & {
-  friend_id: string;
-};
-
-export async function acceptFriendRequest({
-  initiator,
-  friend_id,
-}: AcceptFriendRequestType) {
-  const { user: currentUser } = await getCurrentSession();
-  if (!currentUser) return null;
-
-  const res = await forumUserClient.user["accept-friend-request"].$post({
+export async function acceptFriendRequest(request_id: string) {
+  const res = await forumUserClient().user["accept-friend-request"].$post({
     json: {
-      currentUserNickname: initiator,
-      friend_id
+      request_id
     }
   })
 

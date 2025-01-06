@@ -1,53 +1,61 @@
-import { keepPreviousData, useQuery } from '@tanstack/react-query';
+import { keepPreviousData, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { getThreadComments } from './get-thread-comments.ts';
 import {
   ThreadCommentEntity,
 } from '@repo/types/entities/entities-type.ts';
 import { createQueryKey } from '@repo/lib/helpers/query-key-builder.ts';
-import { z } from 'zod';
-import { getThreadCommentsSchema } from '@repo/types/schemas/thread/get-thread-comments-schema.ts';
+import { GetThreadCommentsResponse } from '@repo/types/entities/thread-comments-types.ts';
 
 export const THREAD_COMMENTS_QUERY_KEY = (thread_id: string) =>
-  createQueryKey('ui', [ 'thread-comments' ], thread_id);
+  createQueryKey('ui', ['thread-comments'], thread_id);
 
-type ThreadCommentsQuery = Pick<ThreadCommentEntity, 'thread_id'>
-  & { isComments: boolean; }
+type ThreadCommentsQuery = Pick<ThreadCommentEntity, 'thread_id'> & { isComments: boolean }
 
-type RepliedDetails = {
-  replied: Pick<ThreadCommentEntity, 'id' | 'content' | 'user_nickname'> | null;
-};
+export type ThreadComment = Pick<GetThreadCommentsResponse, "data">["data"][0]
 
-export type ThreadComment = RepliedDetails & ThreadCommentEntity;
+type UpdateComments = {
+  cursor: string | null;
+  limit: number | null;
+  thread_id: string;
+}
 
-export type ThreadCommentsFiltationQuery = z.infer<typeof getThreadCommentsSchema>
+export const useUpdateComments = () => {
+  const qc = useQueryClient();
 
-export const THREAD_COMMENTS_FILTRATION_QUERY_KEY = (thread_id: string) =>
-  createQueryKey("ui", ["thread-comments", "filtration"], thread_id)
+  const updateCommentsMutation = useMutation({
+    mutationFn: async (values: UpdateComments) => getThreadComments(values),
+    onSuccess: async (data, variables) => {
+      if (data) {
+        qc.setQueryData(THREAD_COMMENTS_QUERY_KEY(variables.thread_id), (oldData: GetThreadCommentsResponse) => {
+          if (!oldData) return { data: data, meta: data.meta };
 
-const threadCommentsFiltrationQuery = (thread_id: string) => useQuery<
-  ThreadCommentsFiltationQuery, Error
->({
-  queryKey: THREAD_COMMENTS_FILTRATION_QUERY_KEY(thread_id),
-  initialData: {
-    range: [0, 4],
-    ascending: false,
-    limit: 4
-  },
-  refetchOnWindowFocus: false,
-  refetchOnMount: false
-})
+          const newComments = data.data.filter(comment => !oldData.data.some(existing => existing.id === comment.id));
+
+          return {
+            data: [...oldData.data, ...newComments],
+            meta: data.meta,
+          };
+        });
+      } else {
+        const currentComments = qc.getQueryData<GetThreadCommentsResponse>(
+          THREAD_COMMENTS_QUERY_KEY(variables.thread_id)
+        );
+
+        return { data: currentComments?.data, meta: currentComments?.meta };
+      }
+    }
+  })
+
+  return { updateCommentsMutation }
+}
 
 export const threadCommentsQuery = ({
   thread_id, isComments
-}: ThreadCommentsQuery) => {
-  const { data: { range, limit, ascending } } = threadCommentsFiltrationQuery(thread_id)
-  
-  return useQuery({
-    queryKey: THREAD_COMMENTS_QUERY_KEY(thread_id),
-    queryFn: () => getThreadComments({ thread_id, range, limit, ascending }),
-    enabled: isComments,
-    refetchOnWindowFocus: false,
-    refetchOnMount: false,
-    placeholderData: keepPreviousData
-  });
-};
+}: ThreadCommentsQuery) => useQuery({
+  queryKey: THREAD_COMMENTS_QUERY_KEY(thread_id),
+  queryFn: async () => getThreadComments({ thread_id, limit: null, cursor: null }),
+  enabled: isComments,
+  placeholderData: keepPreviousData,
+  refetchOnWindowFocus: false,
+  refetchOnMount: false,
+});

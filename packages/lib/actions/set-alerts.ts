@@ -12,5 +12,6 @@ export async function setAlerts() {
   }
 
   cookies().set(ALERTS_COOKIE_KEY, "hide");
+  
   return "hide"
 }

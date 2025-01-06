@@ -7,19 +7,21 @@ import { FriendCardControlProps } from "#friend/components/friend-card/component
 type FriendCardControlPinProps = Pick<
   FriendCardControlProps,
   "is_pinned" | "nickname"
->;
+> & {
+  friend_id: string;
+};
 
 export const FriendCardControlPin = ({
-  is_pinned, nickname: requestedUserNickname,
-}: FriendCardControlPinProps) => {
+  is_pinned, nickname: recipient, friend_id
+}: FriendCardControlPinProps) => { 
   const { setFriendPinnedMutation, setFriendUnpinMutation } =
     useControlFriend();
 
   const handlePin = () => {
     if (is_pinned) {
-      return setFriendUnpinMutation.mutate({ requestedUserNickname });
+      return setFriendUnpinMutation.mutate({ recipient, friend_id });
     } else {
-      return setFriendPinnedMutation.mutate({ requestedUserNickname });
+      return setFriendPinnedMutation.mutate({ recipient, friend_id });
     }
   };
 

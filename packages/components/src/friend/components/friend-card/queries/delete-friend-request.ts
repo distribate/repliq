@@ -1,19 +1,9 @@
-"use server";
-
-import "server-only";
-import { getCurrentSession } from "@repo/lib/actions/get-current-session.ts";
 import { forumUserClient } from "@repo/shared/api/forum-client";
 
-export async function deleteFriendRequest(
-  friend_id: string,
-) {
-  const { user: currentUser } = await getCurrentSession();
-  if (!currentUser) return null;
-
-  const res = await forumUserClient.user["delete-friend-request"].$post({
+export async function deleteFriendRequest(request_id: string) {
+  const res = await forumUserClient().user["delete-friend-request"].$post({
     json: {
-      friend_id,
-      currentUserNickname: currentUser.nickname
+      request_id
     }
   })
 

@@ -1,7 +1,6 @@
 import { setAlerts } from "#actions/set-alerts.ts";
 import { GLOBAL_PREFERENCES_QUERY_KEY, globalPreferencesQuery, GlobalPreferencesQuery, PREFERENCES_LS_KEY } from "#queries/global-preferences-query.ts";
 import { useQueryClient, useMutation } from "@tanstack/react-query";
-import { disableAlerts } from "../actions/disable-alerts.ts";
 import { useLocalStorage } from "./use-local-storage";
 
 export const useUpdateGlobalPreferences = () => {

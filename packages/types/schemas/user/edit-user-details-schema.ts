@@ -1,7 +1,6 @@
 import { z } from 'zod';
 
 export const userDetailsSchema = z.object({
-  userId: z.string(),
   value: z.union([
     z.string().nullable(),
     z.string().default('#FFFFFF'),

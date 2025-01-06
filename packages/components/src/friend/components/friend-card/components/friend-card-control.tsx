@@ -53,8 +53,8 @@ export const FriendCardControl = ({
             </HoverCardItem>
           }
         />
-        <FriendCardControlPin nickname={reqUserNickname} is_pinned={is_pinned} />
-        <FriendCardControlNote nickname={reqUserNickname} />
+        <FriendCardControlPin nickname={reqUserNickname} friend_id={friend_id} is_pinned={is_pinned} />
+        <FriendCardControlNote nickname={reqUserNickname} friend_id={friend_id} />
         <Separator />
         <DeleteFriendModal
           friend_id={friend_id}

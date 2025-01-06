@@ -3,28 +3,25 @@
 import { useQueryClient } from "@tanstack/react-query";
 import {
   CURRENT_USER_QUERY_KEY,
-  CurrentUser,
 } from "#queries/current-user-query.ts";
-import { deleteSession } from "#actions/delete-session.ts";
 import { getUserInformation } from "#queries/get-user-information.ts";
-import { toast } from "sonner";
+import { useRouter } from "next/navigation";
+import { BANNED_REDIRECT } from "@repo/shared/constants/routes";
+import { UserDetailed } from "@repo/types/entities/user-type";
 
 export function getUser() {
   const qc = useQueryClient();
-  const cacheUser = qc.getQueryData<CurrentUser>(CURRENT_USER_QUERY_KEY);
-
+  const cacheUser = qc.getQueryData<UserDetailed>(CURRENT_USER_QUERY_KEY);
+  const { push } = useRouter();
+  
   if (!cacheUser) {
-    toast.error("Произошла ошибка при обновлении информации", {
-      description: "Повторите попытку",
-    });
-
-    qc.fetchQuery<CurrentUser | null>({
+    qc.fetchQuery<UserDetailed | { error: string }>({
       queryKey: CURRENT_USER_QUERY_KEY,
       queryFn: () => getUserInformation(),
-      retry: 3,
+      retry: 2,
     }).then((res) => {
-      if (!res) {
-        deleteSession();
+      if ("error" in res) {
+        return push(BANNED_REDIRECT)
       }
     });
   }

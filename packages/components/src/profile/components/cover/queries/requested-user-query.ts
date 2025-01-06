@@ -23,7 +23,7 @@ export const requestedUserQuery = ({
 
   return useQuery({
     queryKey: REQUESTED_USER_QUERY_KEY(nickname),
-    queryFn: () => getRequestedUser(nickname),
+    queryFn: () => getRequestedUser(currentUser.nickname, nickname),
     refetchOnWindowFocus: false,
     refetchOnMount: false
   });

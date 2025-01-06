@@ -1,3 +1,5 @@
+"use client"
+
 import { ProfileSectionLayout } from '#layouts/profile-section-layout.tsx';
 import { UserPageParam } from '@repo/types/global';
 import { ProfileThreads } from '#profile/components/threads/components/profile-threads-list.tsx';
@@ -11,10 +13,10 @@ import {
 import { ProfileThreadsSkeleton } from '#profile/components/threads/components/profile-threads-skeleton.tsx';
 import { Suspense } from 'react';
 
-export const UserProfileThreads = async({ nickname }: UserPageParam) => {
+export const UserProfileThreads = ({ nickname }: UserPageParam) => {
   const qc = new QueryClient();
   
-  await qc.prefetchQuery({
+  qc.prefetchQuery({
     queryKey: THREADS_QUERY_KEY(nickname),
     queryFn: () => getThreadsUser({ nickname }),
   });

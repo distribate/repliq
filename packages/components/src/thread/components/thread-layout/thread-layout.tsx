@@ -4,17 +4,14 @@ import Link from "next/link";
 import { useHistoryThreads } from "../saved-thread/hooks/use-history-threads.tsx";
 import { THREAD_URL } from "@repo/shared/constants/routes.ts";
 import { ReactNode } from "react";
-import { ThreadModel } from "../../queries/get-thread-model.ts";
+import { ThreadDetailed } from "@repo/types/entities/thread-type.ts";
 
 type ThreadLayout = {
   children: ReactNode;
-} & Pick<ThreadModel, "id" | "owner" | "title">;
+} & Pick<ThreadDetailed, "id" | "owner" | "title">;
 
 export const ThreadLayout = ({
-  children,
-  title,
-  owner,
-  id: threadId,
+  children, title, owner, id: threadId,
 }: ThreadLayout) => {
   const { saveThread } = useHistoryThreads();
 

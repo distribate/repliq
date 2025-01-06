@@ -10,8 +10,13 @@ const badgeVariants = cva(
         small: "px-[4px] py-0",
         medium: "px-4 py-1",
       },
+      state: {
+        default: "",
+        active: "bg-green-600",
+      }
     },
     defaultVariants: {
+      state: "default",
       size: "small",
     },
   },
@@ -22,11 +27,11 @@ interface BadgeProps
     VariantProps<typeof badgeVariants> {}
 
 export const Badge = forwardRef<HTMLDivElement, BadgeProps>(
-  ({ className, size, ...props }, ref) => {
+  ({ className, size, state, ...props }, ref) => {
     return (
       <div
         ref={ref}
-        className={badgeVariants({ size, className })}
+        className={badgeVariants({ size, state, className })}
         {...props}
       />
     );

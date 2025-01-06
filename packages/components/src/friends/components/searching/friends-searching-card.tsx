@@ -39,7 +39,7 @@ export const FriendsSearchingCard = ({
         </div>
       </div>
       <div className="flex items-center gap-2 *:w-full w-full">
-        <FriendButton requestedUserNickname={nickname} />
+        <FriendButton recipient={nickname} />
         <Button
           state="default"
           className="!w-2/5"

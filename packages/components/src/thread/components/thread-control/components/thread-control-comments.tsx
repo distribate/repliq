@@ -6,22 +6,20 @@ import { Toggle } from "@repo/ui/src/components/toggle.tsx";
 import { useState } from "react";
 
 export const ThreadControlComments = ({
-  isComments: currentIsComments,
-}: Pick<ThreadControlFields, "isComments">) => {
-  const [commentsValue, setCommentsValue] =
-    useState<boolean>(currentIsComments);
+  is_comments: currentIsComments,
+}: Pick<ThreadControlFields, "is_comments">) => {
+  const [commentsValue, setCommentsValue] = useState<boolean>(currentIsComments);
   const { setThreadNewValuesMutation } = useThreadControl();
 
   const handleToggleThreadComments = () => {
     setCommentsValue((prev) => !prev);
 
     return setThreadNewValuesMutation.mutate({
-      values: { isComments: !commentsValue },
+      values: { is_comments: !commentsValue },
     });
   };
 
-  const disabled =
-    setThreadNewValuesMutation.isPending || setThreadNewValuesMutation.isError;
+  const disabled = setThreadNewValuesMutation.isPending || setThreadNewValuesMutation.isError;
 
   return (
     <div className="flex flex-col items-start gap-2 w-full">

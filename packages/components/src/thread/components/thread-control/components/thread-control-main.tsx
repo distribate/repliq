@@ -1,18 +1,25 @@
 "use client";
 
 import { Typography } from "@repo/ui/src/components/typography.tsx";
-import { currentThreadQuery } from "../queries/current-thread-query.ts";
 import { ThreadRemoveModal } from "#modals/action-confirmation/components/thread-remove/components/thread-remove-modal.tsx";
-import { ThreadControlFields } from "../types/thread-control-types.ts";
 import { ThreadControlTitle } from "./thread-control-title.tsx";
 import { ThreadControlDescription } from "./thread-control-description.tsx";
 import { ThreadControlComments } from "./thread-control-comments.tsx";
 import { ThreadControlSave } from "#thread/components/thread-control/components/thread-control-save.tsx";
+import { THREAD_QUERY_KEY } from "#thread/components/thread-main/queries/thread-query.ts";
+import { useQueryClient } from "@tanstack/react-query";
+import { ThreadDetailed } from "@repo/types/entities/thread-type.ts";
+
+type ThreadControlMainProps = {
+  threadId: string;
+};
 
 export const ThreadControlMain = ({
-  id: threadId,
-}: Pick<ThreadControlFields, "id">) => {
-  const { data: currentThread } = currentThreadQuery(threadId);
+  threadId
+}: ThreadControlMainProps) => {
+  const qc = useQueryClient()
+  const currentThread = qc.getQueryData<ThreadDetailed>(THREAD_QUERY_KEY(threadId));
+
   if (!currentThread) return null;
 
   return (
@@ -24,7 +31,7 @@ export const ThreadControlMain = ({
       <div className="flex flex-col gap-y-4 justify-between">
         <ThreadControlTitle title={currentThread.title} />
         <ThreadControlDescription description={currentThread.description} />
-        <ThreadControlComments isComments={currentThread.isComments} />
+        <ThreadControlComments is_comments={currentThread.is_comments} />
         <div className="flex items-center gap-2 justify-end w-full">
           <ThreadControlSave threadId={threadId} />
           <ThreadRemoveModal id={currentThread.id} />

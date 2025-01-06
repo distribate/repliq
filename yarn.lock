@@ -1746,6 +1746,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@nats-io/jetstream@npm:3.0.0-35":
+  version: 3.0.0-35
+  resolution: "@nats-io/jetstream@npm:3.0.0-35"
+  dependencies:
+    "@nats-io/nats-core": "npm:3.0.0-48"
+  checksum: 10c0/8d9c91fc7d212d50b0bff92147c45585b2c03f8b59a6e3b65ed4dcfc18db31e5b66ed4f28e63709428909749f797dc539c0b1707d3e6ad4979cd89becda15dd7
+  languageName: node
+  linkType: hard
+
 "@nats-io/nats-core@npm:3.0.0-47":
   version: 3.0.0-47
   resolution: "@nats-io/nats-core@npm:3.0.0-47"
@@ -1753,6 +1762,16 @@ __metadata:
     "@nats-io/nkeys": "npm:2.0.0-3"
     "@nats-io/nuid": "npm:2.0.1-2"
   checksum: 10c0/a5899f5b08271ba90d26f0748080a24c468f0969030eaa128b7f4dbf97bd15b9294b0d51d2186ac403112e1ce50261c3c3e7480ead0bb3ca988e241e8aa8ccb4
+  languageName: node
+  linkType: hard
+
+"@nats-io/nats-core@npm:3.0.0-48":
+  version: 3.0.0-48
+  resolution: "@nats-io/nats-core@npm:3.0.0-48"
+  dependencies:
+    "@nats-io/nkeys": "npm:2.0.0-3"
+    "@nats-io/nuid": "npm:2.0.1-2"
+  checksum: 10c0/57680bde9a3130ab8df1acb312d8d4baff4661aeb3709a7545fe4bcdba3a5d76d7e353216e419bfe45d87e8d615c0d19c8d9edd18eb80103e6ad2a8ab0d082c5
   languageName: node
   linkType: hard
 
@@ -5865,6 +5884,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@repo/config-nats@workspace:packages/config-nats"
   dependencies:
+    "@nats-io/jetstream": "npm:3.0.0-35"
     "@nats-io/transport-node": "npm:3.0.0-32"
   languageName: unknown
   linkType: soft
@@ -5875,6 +5895,7 @@ __metadata:
   dependencies:
     "@repo/config-typescript": "npm:*"
     tailwind-merge: "npm:2.6.0"
+    tailwind-scrollbar: "npm:^4.0.0-beta.0"
     tailwindcss: "npm:3.4.14"
     tailwindcss-animate: "npm:1.0.7"
     tailwindcss-react-aria-components: "npm:1.2.0"
@@ -7924,6 +7945,7 @@ __metadata:
     "@oslojs/crypto": "npm:^1.0.1"
     "@oslojs/encoding": "npm:^1.1.0"
     "@repo/config-eslint": "npm:*"
+    "@repo/config-nats": "npm:*"
     "@repo/config-tailwind": "npm:*"
     "@repo/config-typescript": "npm:*"
     "@repo/shared": "npm:*"
@@ -10517,11 +10539,13 @@ __metadata:
     "@repo/config-typescript": "npm:*"
     "@repo/shared": "npm:*"
     "@repo/types": "npm:*"
+    "@supabase/supabase-js": "npm:2.45.6"
     "@types/bun": "npm:1.1.13"
     "@types/pg": "npm:8.11.10"
     hono: "npm:4.6.15"
     ky: "npm:1.7.2"
     kysely: "npm:0.27.4"
+    kysely-paginate: "npm:^0.3.1"
     pg: "npm:8.13.1"
     typescript: "npm:^5.4.5"
     zod: "npm:3.23.8"
@@ -11820,6 +11844,15 @@ __metadata:
   bin:
     kysely-codegen: dist/cli/bin.js
   checksum: 10c0/9e780972aa5301f9df43e1e9018ef5aa5a26e6eed14af28fa1a5cdde5e8d0a2c7a6a46633eaa5dabfad4cda68d53b9612626692b4e45997ae33af288f87c6944
+  languageName: node
+  linkType: hard
+
+"kysely-paginate@npm:^0.3.1":
+  version: 0.3.1
+  resolution: "kysely-paginate@npm:0.3.1"
+  peerDependencies:
+    kysely: "*"
+  checksum: 10c0/4d65780ba6a68463d370d37c25aa6e36660631e7622074cc8f79ad9ac27c09f20b511ecbce535fa499a473c99f172dd42265f155aa40992a234b81e5a0a01de1
   languageName: node
   linkType: hard
 
@@ -15858,6 +15891,15 @@ __metadata:
   version: 2.6.0
   resolution: "tailwind-merge@npm:2.6.0"
   checksum: 10c0/fc8a5535524de9f4dacf1c16ab298581c7bb757d68a95faaf28942b1c555a619bba9d4c6726fe83986e44973b315410c1a5226e5354c30ba82353bd6d2288fa5
+  languageName: node
+  linkType: hard
+
+"tailwind-scrollbar@npm:^4.0.0-beta.0":
+  version: 4.0.0-beta.0
+  resolution: "tailwind-scrollbar@npm:4.0.0-beta.0"
+  peerDependencies:
+    tailwindcss: ^4.0.0-beta.8
+  checksum: 10c0/548baac644faed044c7f7291d504d034652881b67355492615ce86aebf4bb762c42f565b789846778641540a0febc9d12d881e13d41c424e222a77901aefdf3f
   languageName: node
   linkType: hard
 

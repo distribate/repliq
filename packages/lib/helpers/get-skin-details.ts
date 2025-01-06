@@ -17,9 +17,7 @@ export async function getHeadDetails(nickname: string) {
 export async function getSkinDetails(uuid: string) {
   try {
     const res = await skinClient.api["get-skin"][":uuid"].$get({
-      param: {
-        uuid
-      }
+      param: { uuid }
     })
 
     if (!res) {

@@ -2,6 +2,7 @@ import type { Config } from "tailwindcss";
 import colors from "tailwindcss/colors";
 import tailwindAnimate from "tailwindcss-animate";
 import tailwindAria from "tailwindcss-react-aria-components";
+import tailwindScrollbar from "tailwind-scrollbar";
 
 module.exports = {
   content: {
@@ -266,5 +267,5 @@ module.exports = {
       },
     },
   },
-  plugins: [tailwindAnimate, tailwindAria],
+  plugins: [tailwindAnimate, tailwindAria, tailwindScrollbar],
 } satisfies Config;

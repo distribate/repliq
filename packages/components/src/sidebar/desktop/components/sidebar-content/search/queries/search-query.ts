@@ -26,11 +26,10 @@ const initial: SearchQuery = {
   results: null,
 };
 
-export const searchQuery = () =>
-  useQuery<SearchQuery, Error>({
-    queryKey: SEARCH_QUERY_KEY,
-    initialData: initial,
-    refetchOnWindowFocus: false,
-    staleTime: 1000,
-    placeholderData: keepPreviousData,
-  });
+export const searchQuery = () => useQuery<SearchQuery, Error>({
+  queryKey: SEARCH_QUERY_KEY,
+  initialData: initial,
+  refetchOnWindowFocus: false,
+  staleTime: 1000,
+  placeholderData: keepPreviousData,
+});

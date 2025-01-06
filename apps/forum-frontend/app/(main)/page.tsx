@@ -1,4 +1,3 @@
-
 import { MainCategoriesList } from "@repo/components/src/categories/components/main-categories-list.tsx";
 import { Suspense } from "react";
 import { ForumStats } from "@repo/components/src/widgets/forum-stats/components/forum-stats.tsx";
@@ -6,9 +5,6 @@ import { LastRegisteredUsers } from "@repo/components/src/widgets/last-registere
 import { AlertCard } from "@repo/components/src/alert/components/alert-card.tsx";
 import { getAlerts } from "@repo/lib/queries/get-alerts.ts";
 import { Skeleton } from "@repo/ui/src/components/skeleton.tsx";
-import { validateSession } from "@repo/lib/actions/validate-requests.ts";
-import { cookies } from "next/headers";
-import { ALERTS_COOKIE_KEY } from "@repo/shared/keys/cookie";
 import { hasAlertsShow } from "@repo/lib/actions/has-alerts";
 
 const StatisticsSkeleton = () => {
@@ -49,8 +45,6 @@ const Alerts = async () => {
 };
 
 export default async function MainPage() {
-  await validateSession();
-
   return (
     <main className="flex flex-col w-full gap-2 h-full">
       <Alerts />

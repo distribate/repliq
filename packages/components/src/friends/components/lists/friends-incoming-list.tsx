@@ -10,13 +10,12 @@ export const FriendsIncomingList = () => {
   const { data: friendsFiltering } = friendsFilteringQuery();
   const { data: incomingFriends } = requestsIncomingQuery();
 
-  if (!incomingFriends || (incomingFriends && !incomingFriends.length))
-    return <ContentNotFound title="Входящих заявок в друзья нет" />;
+  if (!incomingFriends) return <ContentNotFound title="Входящих заявок в друзья нет" />;
 
   return (
     <FriendsListLayout variant={friendsFiltering.viewType}>
-      {incomingFriends.map((friend) => (
-        <FriendCardIncoming key={friend.initiator} {...friend} />
+      {incomingFriends.map(friend => (
+        <FriendCardIncoming key={friend.initiator} request_id={friend.id} {...friend} />
       ))}
     </FriendsListLayout>
   );

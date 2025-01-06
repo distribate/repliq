@@ -18,6 +18,6 @@ const app = new Hono()
 
 export type SkinAppType = typeof app
 
-showRoutes(app, { verbose: false })
+// showRoutes(app, { verbose: false })
 
 export default { port, fetch: app.fetch }

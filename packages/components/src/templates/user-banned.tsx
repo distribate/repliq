@@ -1,13 +1,29 @@
 "use client";
 
-import { BanDetails } from "@repo/lib/helpers/get-ban-details.ts";
+import { getBanDetails } from "@repo/lib/helpers/get-ban-details.ts";
 import Image from "next/image";
 import MissingTexture from "@repo/assets/images/minecraft/missing_texture.webp";
 import { Typography } from "@repo/ui/src/components/typography.tsx";
 import dayjs from "@repo/lib/constants/dayjs-instance.ts";
 import { CoverArea } from "#profile/components/cover/components/cover-area.tsx";
+import { useQuery } from "@tanstack/react-query";
 
-export const UserBanned = ({ nickname, time }: BanDetails) => {
+export const UserBanned = ({
+  requestedUserNickname
+}: {
+  requestedUserNickname: string
+}) => {
+  const { data: banDetails } = useQuery({
+    queryKey: ['ban-details'],
+    queryFn: () => getBanDetails({
+      nickname: requestedUserNickname
+    })
+  })
+
+  if (!banDetails) return;
+
+  const { nickname, time  } = banDetails
+
   return (
     <div className="flex flex-col w-full h-full">
       <CoverArea variant="full" backgroundColor="gray" outline="default">

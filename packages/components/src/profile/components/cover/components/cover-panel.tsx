@@ -13,10 +13,6 @@ import { FriendButton } from "#buttons/friend-button.tsx";
 import { ReportCreateModal } from "#modals/action-confirmation/components/report/components/report-create-modal.tsx";
 import { Skeleton } from "@repo/ui/src/components/skeleton.tsx";
 import { BlockUserModal } from "#modals/action-confirmation/components/block-user/components/block-user-modal.tsx";
-import { blockedUserQuery } from "@repo/lib/queries/blocked-user-query.ts";
-import { useQueryClient } from "@tanstack/react-query";
-import { REQUESTED_USER_QUERY_KEY } from "#profile/components/cover/queries/requested-user-query.ts";
-import { RequestedUser } from "@repo/lib/queries/get-requested-user.ts";
 
 const ProfileBackgroundUpdateModal = dynamic(
   () =>
@@ -42,9 +38,9 @@ const userCoverPanelVariants = cva(
   "relative z-[3] flex bg-transparent gap-x-4 border-none",
   {
     variants: {
-      variant: { 
-        default: "", 
-        end: "lg:self-end self-center justify-center lg:justify-end" 
+      variant: {
+        default: "",
+        end: "lg:self-end self-center justify-center lg:justify-end"
       },
     },
   },
@@ -52,7 +48,7 @@ const userCoverPanelVariants = cva(
 
 interface UserCoverPanelProps
   extends HTMLAttributes<HTMLDivElement>,
-    VariantProps<typeof userCoverPanelVariants> {
+  VariantProps<typeof userCoverPanelVariants> {
   requestedNickname: string;
 }
 
@@ -62,46 +58,25 @@ export const UserCoverPanel = ({
   requestedNickname,
   ...props
 }: UserCoverPanelProps) => {
-  const qc = useQueryClient();
-  const currentUser = getUser();
+  const { nickname: currentUserNickname } = getUser();
 
-  const { data: blockedState, isLoading } = blockedUserQuery(requestedNickname);
-
-  const isBlocked = blockedState?.recipient === requestedNickname || false;
-  const youIsBlocked = blockedState?.initiator === requestedNickname || false;
-  const requestedUser = qc.getQueryData<RequestedUser>(
-    REQUESTED_USER_QUERY_KEY(requestedNickname),
-  );
-  const userFriendPreference = requestedUser?.preferences.accept_friend_request as boolean;
-
-  const isOwner = currentUser.nickname === requestedNickname;
+  const isOwner = currentUserNickname === requestedNickname;
 
   return (
     <div className={userCoverPanelVariants({ variant, className })} {...props}>
       <div className="flex items-center gap-2">
-        {userFriendPreference &&
-          !isLoading &&
-          !isOwner &&
-          !isBlocked &&
-          !youIsBlocked && <FriendButton requestedUserNickname={requestedNickname} />}
+        <FriendButton recipient={requestedNickname} />
         {!isOwner && (
           <MoreWrapper
             variant="medium"
             properties={{ sideAlign: "bottom", contentAlign: "end" }}
           >
             <div className="flex flex-col gap-y-1 *:w-full w-full items-start">
-              {!isLoading && !youIsBlocked && (
-                <BlockUserModal requestedUserNickname={requestedNickname} />
-              )}
-              {!isLoading && !youIsBlocked && (
-                <>
-                  <Separator />
-                  <ReportCreateModal
-                    reportType="account"
-                    targetNickname={requestedNickname}
-                  />
-                </>
-              )}
+              <BlockUserModal requestedUserNickname={requestedNickname} />
+              <>
+                <Separator />
+                <ReportCreateModal reportType="account" targetNickname={requestedNickname} />
+              </>
             </div>
           </MoreWrapper>
         )}

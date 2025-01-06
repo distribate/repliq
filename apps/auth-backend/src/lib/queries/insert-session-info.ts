@@ -4,7 +4,7 @@ import type { DB } from "@repo/types/db/forum-database-types.ts";
 
 export type SessionInfo = Pick<
   Session,
-  "browser" | "cpu" | "ip" | "isBot" | "os" | "ua" | "session_id"
+  "browser" | "cpu" | "ip" | "isBot" | "os" | "ua" | "session_id" | "nickname"
 >;
 
 type InsertSessionInfo = {

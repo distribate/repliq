@@ -18,10 +18,7 @@ type SidebarMutation = {
 export const useSidebarControl = () => {
   const qc = useQueryClient();
   const { data: sidebarState } = sidebarLayoutQuery();
-  const [value, setValue] = useLocalStorage<{ format: SidebarFormat }>(
-    SIDEBAR_FORMAT_KEY,
-    { format: "dynamic" },
-  );
+  const [value, setValue] = useLocalStorage<{ format: SidebarFormat }>(SIDEBAR_FORMAT_KEY, { format: "dynamic" });
 
   const isExpanded = sidebarState.width ? sidebarState.width > 11 : false;
   const isDynamic = value.format === "dynamic";
@@ -45,25 +42,15 @@ export const useSidebarControl = () => {
       if (type === "width") {
         return qc.setQueryData(
           SIDEBAR_LAYOUT_QUERY_KEY,
-          (prev: SidebarQuery) => ({
-            ...prev,
-            ...values,
-          }),
+          (prev: SidebarQuery) => ({ ...prev,  ...values, }),
         );
       }
     },
-    onSuccess: () =>
-      qc.invalidateQueries({ queryKey: SIDEBAR_LAYOUT_QUERY_KEY }),
-    onError: (e) => {
-      throw new Error(e.message);
-    },
+    onSuccess: () => qc.invalidateQueries({ queryKey: SIDEBAR_LAYOUT_QUERY_KEY }),
+    onError: e => { throw new Error(e.message) },
   });
 
   return {
-    updateSidebarPropertiesMutation,
-    isExpanded,
-    isDynamic,
-    isFull,
-    isCompact,
+    updateSidebarPropertiesMutation, isExpanded, isDynamic, isFull, isCompact,
   };
 };

@@ -1,33 +1,24 @@
 "use client";
 
-import {
-  checkFriendRequestStatus,
-  RequestStatus,
-} from "@repo/lib/helpers/check-friend-request-status.ts";
 import { Skeleton } from "@repo/ui/src/components/skeleton.tsx";
 import { getUser } from "@repo/lib/helpers/get-user.ts";
-import { useEffect, useState } from "react";
 import { useControlFriendRequests } from "#friend/components/friend-card/hooks/use-control-friend-requests.ts";
 import { Button } from "@repo/ui/src/components/button.tsx";
-import { FriendRequestProperties } from "#friend/components/friend-card/types/friend-request-types.ts";
 import { DropdownWrapper } from "#wrappers/dropdown-wrapper.tsx";
 import { Typography } from "@repo/ui/src/components/typography.tsx";
 import { Minus, Plus } from "lucide-react";
+import { friendStatusQuery } from "./friend-status-query";
 
 export type FriendButtonProps = {
-  requestedUserNickname: string;
+  recipient: string;
 };
 
 const IncomingFriendButton = ({
-  initiator,
-}: Pick<FriendRequestProperties, "initiator">) => {
+  recipient, request_id,
+}: RejectAcceptRequestButton) => {
   const {
-     rejectIncomingRequestMutation, acceptIncomingRequestMutation
+    rejectIncomingRequestMutation, acceptIncomingRequestMutation
   } = useControlFriendRequests();
-
-  const handleAcceptRequest = () => acceptIncomingRequestMutation.mutate(initiator);
-
-  const handleRejectRequest = () => rejectIncomingRequestMutation.mutate(initiator);
 
   return (
     <DropdownWrapper
@@ -40,7 +31,10 @@ const IncomingFriendButton = ({
       content={
         <div className="flex flex-col gap-y-1 *:w-full w-full">
           <Button
-            onClick={handleAcceptRequest}
+            onClick={() => acceptIncomingRequestMutation.mutate({
+              request_id,
+              recipient
+            })}
             className="flex justify-start items-center bg-shark-800 gap-2 group"
             disabled={
               acceptIncomingRequestMutation.isPending ||
@@ -51,7 +45,10 @@ const IncomingFriendButton = ({
             <Typography>Принять заявку</Typography>
           </Button>
           <Button
-            onClick={handleRejectRequest}
+            onClick={() => rejectIncomingRequestMutation.mutate({
+              request_id,
+              recipient
+            })}
             className="flex justify-start items-center bg-shark-800 gap-2 group"
             disabled={
               rejectIncomingRequestMutation.isPending ||
@@ -67,17 +64,28 @@ const IncomingFriendButton = ({
   );
 };
 
-const DeleteFriendButton = ({
-  recipient
-}: Pick<FriendRequestProperties, "recipient">) => {
-  const { removeFriendMutation } = useControlFriendRequests();
+type AddDeleteFriendButton = {
+  friend_id: string
+  recipient: string
+}
 
-  const handleDeleteFriend = () => removeFriendMutation.mutate({ requestedUserNickname: recipient });
+type RejectAcceptRequestButton = {
+  request_id: string
+  recipient: string
+}
+
+const DeleteFriendButton = ({
+  friend_id, recipient
+}: AddDeleteFriendButton) => {
+  const { removeFriendMutation } = useControlFriendRequests();
 
   return (
     <Button
-      onClick={handleDeleteFriend}
-      disabled={removeFriendMutation.isPending || removeFriendMutation.isError}
+      onClick={() => removeFriendMutation.mutate({ recipient, friend_id })}
+      disabled={
+        removeFriendMutation.isPending ||
+        removeFriendMutation.isError
+      }
       variant="negative"
     >
       Удалить из друзей
@@ -87,14 +95,12 @@ const DeleteFriendButton = ({
 
 const AddFriendButton = ({
   recipient,
-}: Pick<FriendRequestProperties, "recipient">) => {
+}: Pick<AddDeleteFriendButton, "recipient">) => {
   const { createRequestFriendMutation } = useControlFriendRequests();
-
-  const handleAddFriend = () => createRequestFriendMutation.mutate(recipient);
 
   return (
     <Button
-      onClick={handleAddFriend}
+      onClick={() => createRequestFriendMutation.mutate(recipient)}
       variant="positive"
       disabled={
         createRequestFriendMutation.isPending ||
@@ -106,16 +112,24 @@ const AddFriendButton = ({
   );
 };
 
-const OutgoingFriendButton = ({
-  recipient,
-}: Pick<FriendRequestProperties, "recipient">) => {
-  const { rejectOutgoingRequestMutation } = useControlFriendRequests();
+const FriendNotAcceptedButton = () => {
+  return (
+    <Button state="default" className="flex items-center gap-2">
+      <Typography>Не принимает заявки в друзья</Typography>
+    </Button>
+  )
+}
 
-  const handleDeniedFriendReq = () => rejectOutgoingRequestMutation.mutate(recipient);
+const OutgoingFriendButton = ({
+  recipient, request_id
+}: RejectAcceptRequestButton) => {
+  const { rejectOutgoingRequestMutation } = useControlFriendRequests();
 
   return (
     <Button
-      onClick={handleDeniedFriendReq}
+      onClick={() => rejectOutgoingRequestMutation.mutate({
+        recipient, request_id
+      })}
       variant="pending"
       disabled={
         rejectOutgoingRequestMutation.isPending ||
@@ -127,34 +141,38 @@ const OutgoingFriendButton = ({
   );
 };
 
+export const FriendButton = ({
+  recipient
+}: FriendButtonProps) => {
+  const { nickname: initiator } = getUser();
+  const { data: friendStatus, isLoading } = friendStatusQuery(initiator, recipient)
 
-export const FriendButton = ({ requestedUserNickname }: FriendButtonProps) => {
-  const [currentRequestStatus, setCurrentRequestStatus] =
-    useState<RequestStatus | null>(null);
-  const currentUser = getUser();
-  if (!currentUser) return null;
+  if (isLoading) {
+    return <Skeleton className="h-10 border border-white/10 rounded-md w-56" />
+  }
 
-  const reqStatus = checkFriendRequestStatus(requestedUserNickname);
+  if (!friendStatus) return null;
 
-  useEffect(() => {
-    setCurrentRequestStatus(reqStatus);
-  }, [reqStatus]);
-
-  if (!currentRequestStatus) return <Skeleton className="h-10 border border-white/10 rounded-md w-56" />;
+  const currentFriendStatus = friendStatus.status
+  const currentFriendId = friendStatus.friend_id
+  const currentRequest_id = friendStatus.request_id
 
   return (
     <>
-      {currentRequestStatus === "friend" && (
-        <DeleteFriendButton recipient={requestedUserNickname} />
+      {currentFriendStatus === "not-accepted-friend" && (
+        <FriendNotAcceptedButton />
       )}
-      {currentRequestStatus === "default" && (
-        <AddFriendButton recipient={requestedUserNickname} />
+      {(currentFriendStatus === "friend" && currentFriendId) && (
+        <DeleteFriendButton friend_id={currentFriendId} recipient={recipient} />
       )}
-      {currentRequestStatus === "accept" && (
-        <IncomingFriendButton initiator={requestedUserNickname} />
+      {currentFriendStatus === "not-friend" && (
+        <AddFriendButton recipient={recipient} />
       )}
-      {currentRequestStatus === "deny" && (
-        <OutgoingFriendButton recipient={requestedUserNickname} />
+      {(currentFriendStatus === "accept-request" && currentRequest_id) && (
+        <IncomingFriendButton request_id={currentRequest_id} recipient={recipient} />
+      )}
+      {(currentFriendStatus === "reject-request" && currentRequest_id) && (
+        <OutgoingFriendButton request_id={currentRequest_id} recipient={recipient} />
       )}
     </>
   );

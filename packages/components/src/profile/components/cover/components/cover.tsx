@@ -4,11 +4,11 @@ import { UserCoverMainInfo } from "./cover-main-info.tsx";
 import { UserCoverPanel } from "./cover-panel.tsx";
 import { coverQuery } from "#profile/components/cover/queries/cover-query.ts";
 import { imageCoverQuery } from "#profile/components/cover/queries/image-cover-query.ts";
-import { CurrentUser } from "@repo/lib/queries/current-user-query.ts";
+import type { UserDetailed, UserShorted } from "@repo/types/entities/user-type.ts";
 import dynamic from "next/dynamic";
 
 type UserCoverProps = {
-  requestedUser: CurrentUser;
+  requestedUser: UserDetailed | UserShorted;
 };
 
 const UserCoverWatermark = dynamic(() =>
@@ -20,12 +20,12 @@ const UserCoverWatermark = dynamic(() =>
 export const UserCover = ({
   requestedUser
 }: UserCoverProps) => {
-  const { preferences, donate, nickname } = requestedUser
-  
+  const { donate, nickname, preferences } = requestedUser;
+
   const { data: coverQueryState } = coverQuery();
   const { data: url, isLoading } = imageCoverQuery(nickname);
 
-  const preferOutline = preferences.cover_outline_visible
+  const preferOutline = preferences?.cover_outline_visible ?? false;
   const coverOutline = donate && preferOutline ? donate : "default";
 
   const backgroundImage = url ? `url(${url})` : "";

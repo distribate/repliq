@@ -1,32 +1,18 @@
-"use server";
-
-import { createClient } from "@repo/shared/api/supabase-client.ts";
+import { forumUserClient } from "@repo/shared/api/forum-client";
 import { FriendRequestEntity } from "@repo/types/entities/entities-type.ts";
 
 export type FriendsRequestsType = "incoming" | "outgoing";
 
-type GetRequestsByType = {
-  type: FriendsRequestsType;
-  nickname: string;
-};
+export async function getRequestsByType(type: FriendsRequestsType): Promise<FriendRequestEntity[] | null> {
+  const res = await forumUserClient().user["get-friend-requests"].$get({
+    query: { type },
+  });
 
-export async function getRequestsByType({
-  type,
-  nickname,
-}: GetRequestsByType): Promise<FriendRequestEntity[]> {
-  const requestType = type === "incoming" ? "recipient" : "initiator";
+  const data = await res.json();
 
-  const api = createClient();
-
-  const { data: friendsRequests, error } = await api
-    .from("friends_requests")
-    .select("id, recipient, initiator, created_at")
-    .eq(requestType, nickname)
-    .returns<FriendRequestEntity[]>();
-
-  if (error) {
-    throw new Error(error.message);
+  if (!data || "error" in data) {
+    return null;
   }
 
-  return friendsRequests;
+  return data.length ? data : null;
 }

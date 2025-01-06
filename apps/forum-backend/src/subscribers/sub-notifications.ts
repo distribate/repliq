@@ -12,7 +12,6 @@ export const subNotifications = async () => {
         return;
       }
 
-      console.log(msg.json())
     }
   })
 }

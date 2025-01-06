@@ -3,29 +3,28 @@
 import { Typography } from '@repo/ui/src/components/typography.tsx';
 import { ThreadCommentItem } from '../../thread-comment/components/thread-comment-item.tsx';
 import {
-  THREAD_COMMENTS_FILTRATION_QUERY_KEY,
-  ThreadCommentsFiltationQuery,
   threadCommentsQuery,
+  useUpdateComments,
 } from '../queries/thread-comments-query.ts';
-import { ThreadCommentEntity } from '@repo/types/entities/entities-type.ts';
 import { Skeleton } from '@repo/ui/src/components/skeleton.tsx';
 import { useInView } from 'react-intersection-observer';
 import { useEffect } from 'react';
-import { useQueryClient } from '@tanstack/react-query';
+import { ThreadOwner } from '@repo/types/entities/thread-type.ts';
 
-type ThreadCommentsProps = Pick<ThreadCommentEntity, 'thread_id'> & {
-  threadAuthorNickname: string;
+type ThreadCommentsProps = {
+  thread_id: string,
+  owner: ThreadOwner;
   isComments: boolean;
 };
 
 type ThreadCommentsHeaderProps = {
-  nonComments: boolean;
+  non_comments: boolean;
 };
 
-const ThreadCommentsHeader = ({ nonComments }: ThreadCommentsHeaderProps) => {
+const ThreadCommentsHeader = ({ non_comments }: ThreadCommentsHeaderProps) => {
   return (
     <div className="flex w-fit bg-shark-800 rounded-md px-2 py-0.5">
-      {nonComments ? (
+      {non_comments ? (
         <Typography
           textSize="medium"
           textColor="shark_white"
@@ -60,46 +59,41 @@ export const ThreadCommentsSkeleton = () => {
 };
 
 export const ThreadComments = ({
-  thread_id, threadAuthorNickname, isComments,
+  thread_id, owner, isComments,
 }: ThreadCommentsProps) => {
-  const qc = useQueryClient();
-  const { data: threadComments, isLoading, refetch, isFetching } = threadCommentsQuery({ thread_id, isComments });
+  const { updateCommentsMutation } = useUpdateComments()
+  const { data, isLoading, isFetching } = threadCommentsQuery({ thread_id, isComments });
   const { inView, ref } = useInView({ triggerOnce: false, threshold: 1 });
-  
+
+  const threadComments = data?.data;
+  const threadMeta = data?.meta;
   const nonComments = isComments && !threadComments;
-  const hasMore = threadComments && threadComments.length < 30
-  
-  const increaseThreadCommentsRange = () => {
-    return qc.setQueryData(THREAD_COMMENTS_FILTRATION_QUERY_KEY(thread_id), (prev: ThreadCommentsFiltationQuery) => ({
-      ...prev,
-      range: [ prev.range[0], prev.range[1] + 4 ],
-    }));
-  };
-  
+  const hasMore = threadMeta?.hasNextPage;
+  const cursor = threadMeta?.endCursor ?? null;
+
   useEffect(() => {
-    if (inView && hasMore) {
-      increaseThreadCommentsRange();
-      refetch();
+    if (inView && hasMore && !isFetching) {
+      updateCommentsMutation.mutate({ cursor, limit: null, thread_id })
     }
-  }, [ refetch, inView ]);
-  
+  }, [inView, hasMore]);
+
   if (isLoading) return <ThreadCommentsSkeleton />;
-  
+
   return (
     <div className="flex flex-col items-center w-full">
-      <ThreadCommentsHeader nonComments={nonComments} />
+      <ThreadCommentsHeader non_comments={nonComments} />
       {threadComments && (
         <div className="flex flex-col items-start gap-y-2 w-full">
           {threadComments.map((comment, i) => (
             <ThreadCommentItem
               key={i}
               thread_id={thread_id}
-              id={Number(comment.id)}
+              id={comment.id}
               replied={comment.replied}
-              edited={comment.edited}
+              edited={comment.is_updated}
               content={comment.content}
               nickname={comment.user_nickname}
-              isAuthor={comment.user_nickname === threadAuthorNickname}
+              isAuthor={comment.user_nickname === owner.nickname}
               created_at={comment.created_at}
             />
           ))}

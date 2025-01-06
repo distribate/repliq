@@ -93,7 +93,7 @@ export const useCreateThread = () => {
         visibility,
         base64Files,
         isImages: !!base64Files,
-        tags: tags ?? null,
+        tags: tags ?? undefined,
         content: JSON.stringify(content),
         description: description ?? null,
         isComments: isComments ?? true,

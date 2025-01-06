@@ -1,13 +1,6 @@
 import "server-only";
 
 import { cookies } from "next/headers";
-import { authClient } from "@repo/shared/api/auth-client.ts";
-
-export async function validateSessionToken(token: string) {
-  return await authClient["validate-session"].$post({
-    json: { token },
-  });
-}
 
 export async function setSessionTokenCookie(
   token: string,

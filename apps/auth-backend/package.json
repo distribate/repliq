@@ -25,10 +25,10 @@
   },
   "devDependencies": {
     "@repo/config-eslint": "*",
+    "@repo/config-nats": "*",
     "@repo/config-tailwind": "*",
     "@repo/config-typescript": "*",
     "@repo/types": "*",
-    "@repo/config-nats": "*",
     "@types/bcryptjs": "2.4.6",
     "@types/bun": "1.1.13",
     "@types/figlet": "1",

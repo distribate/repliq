@@ -7,10 +7,10 @@ import { setUnpinFriend } from "#friends/queries/set-unpin-friend.ts";
 import { setNoteFriend } from "#friends/queries/set-note-friend.ts";
 import { setUnNoteFriend } from "#friends/queries/set-unnote-friend.ts";
 import { getUser } from "@repo/lib/helpers/get-user.ts";
-import { ControlFriendProperties } from "#friend/components/friend-card/types/friend-request-types.ts";
 import { resolveFriendId } from "#friend/components/friend-card/helpers/resolve-friend-id.ts";
 import { FriendWithDetails } from "@repo/types/schemas/friend/friend-types.ts";
 import { toast } from "sonner";
+import { ControlFriendProperties } from "../types/friend-request-types";
 
 type SetFriendNote = ControlFriendProperties & {
   note: string;
@@ -20,15 +20,15 @@ export const USER_FRIEND_DELETE_MUTATION_KEY = ["user-friend-delete-list"];
 
 type GetFriendId = {
   friend_id: string | null,
-  requestedUserNickname: string,
+  recipient: string,
   friends: FriendWithDetails[],
 }
 
 const getFriendId = ({
-  friend_id, friends, requestedUserNickname
+  friend_id, friends, recipient
 }: GetFriendId) => {
   if (friend_id) return friend_id;
-  const friend = resolveFriendId(friends, requestedUserNickname);
+  const friend = resolveFriendId(friends, recipient);
   return friend ? friend.friend_id : null;
 };
 
@@ -37,19 +37,18 @@ export const useControlFriend = () => {
   const currentUser = getUser();
 
   const setFriendUnNoteMutation = useMutation({
-    mutationFn: async ({ requestedUserNickname, friend_id }: ControlFriendProperties) => {
+    mutationFn: async ({ recipient, friend_id }: ControlFriendProperties) => {
       const friends = qc.getQueryData<FriendWithDetails[]>(FRIENDS_QUERY_KEY(currentUser.nickname));
       if (!friends) return;
 
       const friendId = getFriendId({
-        friend_id: friend_id ?? null, requestedUserNickname, friends
+        friend_id: friend_id ?? null, recipient, friends
       });
 
       if (!friendId) return;
 
       return setUnNoteFriend({
-        friend_id: friendId,
-        recipient: requestedUserNickname,
+        friend_id: friendId,  recipient,
       });
     },
     onSuccess: (data) => {
@@ -74,20 +73,19 @@ export const useControlFriend = () => {
   });
 
   const setFriendNoteMutation = useMutation({
-    mutationFn: async ({ requestedUserNickname, friend_id, note }: SetFriendNote) => {
+    mutationFn: async ({ recipient, friend_id, note }: SetFriendNote) => {
       const friends = qc.getQueryData<FriendWithDetails[]>(FRIENDS_QUERY_KEY(currentUser.nickname));
       if (!friends) return;
 
       const friendId = getFriendId({
-        friend_id: friend_id ?? null, requestedUserNickname, friends
+        friend_id: friend_id ?? null, recipient, friends
       });
 
       if (!friendId || !note) return;
 
       return setNoteFriend({
         friend_id: friendId,
-        note,
-        recipient: requestedUserNickname,
+        note, recipient,
       });
     },
     onSuccess: (data) => {
@@ -112,19 +110,18 @@ export const useControlFriend = () => {
   });
 
   const setFriendUnpinMutation = useMutation({
-    mutationFn: async ({ requestedUserNickname, friend_id }: ControlFriendProperties) => {
+    mutationFn: async ({ recipient, friend_id }: ControlFriendProperties) => {
       const friends = qc.getQueryData<FriendWithDetails[]>(FRIENDS_QUERY_KEY(currentUser.nickname));
       if (!friends) return;
 
       const friendId = getFriendId({
-        friend_id: friend_id ?? null, requestedUserNickname, friends
+        friend_id: friend_id ?? null, recipient, friends
       });
 
       if (!friendId) return;
 
       return setUnpinFriend({
-        friend_id: friendId,
-        recipient: requestedUserNickname,
+        friend_id: friendId,recipient,
       });
     },
     onSuccess: async (data) => {
@@ -149,19 +146,18 @@ export const useControlFriend = () => {
   });
 
   const setFriendPinnedMutation = useMutation({
-    mutationFn: async ({ requestedUserNickname, friend_id }: ControlFriendProperties) => {
+    mutationFn: async ({ recipient, friend_id }: ControlFriendProperties) => {
       const friends = qc.getQueryData<FriendWithDetails[]>(FRIENDS_QUERY_KEY(currentUser.nickname));
       if (!friends) return;
 
       const friendId = getFriendId({
-        friend_id: friend_id ?? null, requestedUserNickname, friends
+        friend_id: friend_id ?? null, recipient, friends
       });
 
       if (!friendId) return;
 
       return setPinFriend({
-        friend_id: friendId,
-        recipient: requestedUserNickname,
+        friend_id: friendId, recipient,
       })
     },
     onSuccess: async (data) => {

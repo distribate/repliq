@@ -2,14 +2,13 @@ import { X } from "lucide-react";
 import { Avatar } from "#user/components/avatar/components/avatar.tsx";
 import Link from "next/link";
 import { Typography } from "@repo/ui/src/components/typography.tsx";
-import React from "react";
 import { useHistoryThreads } from "../hooks/use-history-threads.tsx";
 import { ThreadHistoryType } from "../types/thread-history-types.ts";
 import { HoverCardWrapper } from "#wrappers/hover-card-wrapper.tsx";
 import { THREAD_URL } from "@repo/shared/constants/routes.ts";
+import { useSidebarControl } from "#sidebar/desktop/components/sidebar-layout/hooks/use-sidebar-control.ts";
 
 export type ThreadHistoryProps = {
-  type: "compact" | "full";
   index?: number;
 } & ThreadHistoryType;
 
@@ -18,13 +17,13 @@ const ThreadHistoryCompact = ({
   id,
   title,
   nickname,
-}: Omit<ThreadHistoryProps, "index" | "type">) => {
+}: Omit<ThreadHistoryProps, "index">) => {
   const { deleteThread } = useHistoryThreads();
 
   return (
     <div className="flex flex-col gap-y-1 relative">
       <div
-        onClick={() => deleteThread({ threadId })}
+        onClick={() => deleteThread(threadId)}
         className="absolute top-1 right-1 cursor-pointer hover:opacity-50"
       >
         <X className="w-3 h-3 hover:text-red-500" />
@@ -42,17 +41,14 @@ const ThreadHistoryCompact = ({
 };
 
 const ThreadHistoryFull = ({
-  threadId,
-  nickname,
-  id,
-  title,
-}: Omit<ThreadHistoryProps, "index" | "type">) => {
+  threadId, nickname, id, title,
+}: Omit<ThreadHistoryProps, "index">) => {
   const { deleteThread } = useHistoryThreads();
 
   return (
     <div className="flex gap-1 relative items-center bg-shark-800 rounded-md p-2 w-full">
       <div
-        onClick={() => deleteThread({ threadId })}
+       onClick={() => deleteThread(threadId)}
         className="absolute top-2 right-2 cursor-pointer hover:opacity-50"
       >
         <X className="w-3 h-3 hover:text-red-500" />
@@ -81,23 +77,25 @@ const ThreadHistoryFull = ({
   );
 };
 
-export const ThreadHistory = (values: ThreadHistoryProps) => {
-  return values.type === "compact" ? (
+export const ThreadHistory = ({
+  id, nickname, title, index, threadId
+}: ThreadHistoryProps) => {
+  const { isCompact, isExpanded } = useSidebarControl();
+
+  return (isCompact || !isExpanded) ? (
     <HoverCardWrapper
       properties={{ sideAlign: "right", contentAlign: "start" }}
       trigger={
         <div className="flex relative bg-shark-800 h-[50px] w-[50px] rounded-md p-1">
-          <Avatar nickname={values.nickname} propHeight={32} propWidth={32} />
+          <Avatar nickname={nickname} propHeight={32} propWidth={32} />
           <div className="absolute bottom-0 -right-2 rounded-md h-[20px] w-[20px]">
             <Typography className="text-sm text-shark-300 font-[Minecraft]">
-              {values.index}
+              {index}
             </Typography>
           </div>
         </div>
       }
-      content={<ThreadHistoryCompact {...values} />}
+      content={<ThreadHistoryCompact id={id} threadId={threadId} title={title} nickname={nickname} />}
     />
-  ) : (
-    <ThreadHistoryFull {...values} />
-  );
+  ) : <ThreadHistoryFull id={id} threadId={threadId} title={title} nickname={nickname} />
 };

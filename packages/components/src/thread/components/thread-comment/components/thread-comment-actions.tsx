@@ -1,11 +1,11 @@
 import { Typography } from "@repo/ui/src/components/typography.tsx";
 import { useCreateThreadComment } from "@repo/components/src/forms/create-thread-comment/hooks/use-create-thread-comment.tsx";
 import { RepliedValuesType } from "@repo/components/src/forms/create-thread-comment/queries/create-thread-comment-query.ts";
-import { ThreadModel } from "../../../queries/get-thread-model.ts";
+import { ThreadDetailed } from "@repo/types/entities/thread-type.ts";
 import dynamic from "next/dynamic";
 
 type ThreadCommentActionsProps = RepliedValuesType &
-  Pick<ThreadModel, "id"> & {
+  Pick<ThreadDetailed, "id"> & {
     isCommentOwner: boolean;
   };
 

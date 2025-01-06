@@ -23,6 +23,8 @@ export type AuthFactorType = "phone" | "totp" | "webauthn";
 
 export type AuthOneTimeTokenType = "confirmation_token" | "email_change_token_current" | "email_change_token_new" | "phone_change_token" | "reauthentication_token" | "recovery_token";
 
+export type CommentsParentType = "post" | "thread";
+
 export type DonateVariants = "arkhont" | "authentic" | "default" | "dev" | "helper" | "loyal" | "moder";
 
 export type Generated<T> = T extends ColumnType<infer S, infer I, infer U>
@@ -30,6 +32,8 @@ export type Generated<T> = T extends ColumnType<infer S, infer I, infer U>
   : ColumnType<T, T | undefined, T>;
 
 export type Int8 = ColumnType<string, bigint | number | string, bigint | number | string>;
+
+export type IssueType = "bug" | "game" | "suggestion";
 
 export type Json = JsonValue;
 
@@ -56,8 +60,6 @@ export type ProfileVisibility = "all" | "friends";
 export type ReportReason = "dont-like" | "offensive" | "spam";
 
 export type ReportType = "account" | "comment" | "post" | "thread";
-
-export type ThreadRatingType = "decrement" | "increment";
 
 export type Timestamp = ColumnType<Date, Date | string, Date | string>;
 
@@ -308,9 +310,21 @@ export interface Category {
   title: string;
 }
 
-export interface CategoryThreads {
-  category_id: Int8;
-  thread_id: string;
+export interface Comments {
+  content: string;
+  created_at: Generated<Timestamp>;
+  id: Generated<Int8>;
+  is_updated: Generated<boolean>;
+  parent_id: string;
+  parent_type: CommentsParentType;
+  updated_at: Timestamp | null;
+  user_nickname: string;
+}
+
+export interface CommentsReplies {
+  id: Generated<Int8>;
+  initiator_comment_id: Int8;
+  recipient_comment_id: Int8;
 }
 
 export interface ConfigAdvertisement {
@@ -454,7 +468,7 @@ export interface Issues {
   description: string;
   id: Generated<string>;
   title: string;
-  type: string;
+  type: IssueType;
   user_nickname: string;
 }
 
@@ -477,6 +491,12 @@ export interface LandingDonate {
   price: Int8;
   rating: Int8;
   title: string;
+}
+
+export interface LandingEconomy {
+  id: Generated<Int8>;
+  type: string;
+  value: Int8;
 }
 
 export interface LandingModpack {
@@ -526,17 +546,6 @@ export interface LandingTermins {
   section_id: string;
   subtitle: string | null;
   title: string;
-}
-
-export interface LuckpermsGroupPermissions {
-  contexts: string;
-  expiry: Int8;
-  id: Generated<number>;
-  name: string;
-  permission: string;
-  server: string;
-  value: boolean;
-  world: string;
 }
 
 export interface LuckpermsGroups {
@@ -846,13 +855,13 @@ export interface SupabaseMigrationsSeedFiles {
 
 export interface Threads {
   auto_remove: Generated<boolean>;
+  category_id: Int8 | null;
   content: Json;
   created_at: Generated<Timestamp>;
   description: string | null;
   id: Generated<string>;
-  isComments: Generated<boolean>;
-  isImages: Generated<boolean>;
-  isUpdated: Generated<boolean>;
+  is_comments: Generated<boolean>;
+  is_updated: Generated<boolean>;
   permission: Generated<boolean>;
   title: string;
   updated_at: Timestamp | null;
@@ -886,11 +895,11 @@ export interface ThreadsPinned {
   thread_id: string;
 }
 
-export interface ThreadsRating {
-  id: Generated<Int8>;
+export interface ThreadsReactions {
+  emoji: string;
+  id: Int8;
   thread_id: string;
-  type: ThreadRatingType;
-  user_id: string;
+  user_nickname: string;
 }
 
 export interface ThreadsStars {
@@ -919,7 +928,6 @@ export interface ThreadsViews {
 }
 
 export interface Users {
-  acceptrules: Generated<boolean | null>;
   birthday: Timestamp | null;
   cover_image: string | null;
   created_at: Generated<Timestamp>;
@@ -981,13 +989,12 @@ export interface UsersSession {
   browser: string | null;
   cpu: string | null;
   expires_at: Timestamp;
-  id: Generated<Int8>;
   ip: string | null;
   isBot: boolean | null;
+  nickname: string;
   os: string | null;
   session_id: string;
   ua: string | null;
-  user_id: string;
 }
 
 export interface UsersSettings {
@@ -1046,7 +1053,8 @@ export interface DB {
   "auth.sso_providers": AuthSsoProviders;
   "auth.users": AuthUsers;
   category: Category;
-  category_threads: CategoryThreads;
+  comments: Comments;
+  comments_replies: CommentsReplies;
   config_advertisement: ConfigAdvertisement;
   config_alerts: ConfigAlerts;
   config_minecraft_facts: ConfigMinecraftFacts;
@@ -1062,13 +1070,13 @@ export interface DB {
   issues: Issues;
   landing_currencies: LandingCurrencies;
   landing_donate: LandingDonate;
+  landing_economy: LandingEconomy;
   landing_modpack: LandingModpack;
   landing_news: LandingNews;
   landing_rule_content: LandingRuleContent;
   landing_rules_list: LandingRulesList;
   landing_termin_content: LandingTerminContent;
   landing_termins: LandingTermins;
-  luckperms_group_permissions: LuckpermsGroupPermissions;
   luckperms_groups: LuckpermsGroups;
   luckperms_players: LuckpermsPlayers;
   luckperms_tracks: LuckpermsTracks;
@@ -1106,7 +1114,7 @@ export interface DB {
   threads_comments_replies: ThreadsCommentsReplies;
   threads_images: ThreadsImages;
   threads_pinned: ThreadsPinned;
-  threads_rating: ThreadsRating;
+  threads_reactions: ThreadsReactions;
   threads_stars: ThreadsStars;
   threads_tags: ThreadsTags;
   threads_users: ThreadsUsers;

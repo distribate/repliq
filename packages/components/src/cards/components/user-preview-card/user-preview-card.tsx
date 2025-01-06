@@ -9,25 +9,20 @@ import dynamic from "next/dynamic";
 import { USER_URL } from "@repo/shared/constants/routes.ts";
 import { DropdownWrapper } from "#wrappers/dropdown-wrapper.tsx";
 import Spyglass from "@repo/assets/images/minecraft/spyglass.webp";
-import { CurrentUser } from '@repo/lib/queries/current-user-query.ts';
+import type { UserDetailed } from "@repo/types/entities/user-type.ts";
 
 export type UserCardProps = Pick<
-  CurrentUser,
+  UserDetailed,
   "nickname" | "description" | "created_at" | "name_color" | "favorite_item" | "donate"
 >;
 
 const UserPreviewCardProperties = dynamic(() =>
-  import("./components/preview-properties.tsx").then(
-    (m) => m.UserPreviewCardProperties,
-  ),
+  import("./components/preview-properties.tsx")
+    .then(m => m.UserPreviewCardProperties),
 );
 
 export const UserPreviewCard = ({
-  nickname,
-  name_color,
-  created_at,
-  description,
-  donate, favorite_item
+  nickname, name_color, donate, favorite_item
 }: UserCardProps) => {
   return (
     <DropdownWrapper

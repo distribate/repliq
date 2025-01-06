@@ -100,7 +100,11 @@ services:
     restart: unless-stopped
     ports:
       - "4222:4222"
+      - "8222:8222"
     command: 
+      - "-js"
+      - "-sd=2G"
+      - "-m=8222"
       - "--T"
       - "-VV"
       - "--auth=${NATS_AUTH_TOKEN}"

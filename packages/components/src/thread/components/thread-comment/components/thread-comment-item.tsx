@@ -21,14 +21,7 @@ const ThreadCommentMoreActions = dynamic(() =>
 );
 
 export const ThreadCommentItem = ({
-  nickname: threadCommentNickname,
-  isAuthor,
-  created_at,
-  content,
-  id,
-  replied,
-  thread_id,
-  edited,
+  nickname, isAuthor, created_at, content, id, replied, thread_id, edited,
 }: ThreadCommentProps) => {
   const currentUser = getUser();
   const [active, setActive] = useState<boolean>(false);
@@ -50,7 +43,7 @@ export const ThreadCommentItem = ({
     }
   }, [mutationStatus]);
 
-  const isCommentOwner = currentUser.nickname === threadCommentNickname;
+  const isCommentOwner = currentUser.nickname === nickname;
   const createdAt = dayjs(created_at).fromNow();
 
   return (
@@ -63,9 +56,9 @@ export const ThreadCommentItem = ({
         <ThreadCommentMoreActions id={id} thread_id={thread_id} />
       )}
       <div className="flex items-center gap-2">
-        <Link href={USER_URL + threadCommentNickname}>
+        <Link href={USER_URL + nickname}>
           <Avatar
-            nickname={threadCommentNickname}
+            nickname={nickname}
             propWidth={42}
             propHeight={42}
             className="min-h-[42px] min-w-[42px]"
@@ -74,7 +67,7 @@ export const ThreadCommentItem = ({
         <div className="flex justify-between w-full">
           <div className="flex flex-col">
             <div className="flex items-center gap-1">
-              <UserNickname nickname={threadCommentNickname} />
+              <UserNickname nickname={nickname} />
               {isAuthor && (
                 <Badge size="small">
                   <Typography className="font-[Minecraft] leading-4">
@@ -101,7 +94,7 @@ export const ThreadCommentItem = ({
           id={thread_id}
           isCommentOwner={isCommentOwner}
           commentId={id}
-          commentNickname={threadCommentNickname}
+          commentNickname={nickname}
           commentContent={content}
         />
         {edited && (

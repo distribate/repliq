@@ -4,9 +4,11 @@ import { Skeleton } from "@repo/ui/src/components/skeleton"
 import { userSocialsQuery } from "../queries/user-socials-query"
 import { Typography } from "@repo/ui/src/components/typography"
 import { SocialsCard } from "./socials-card"
+import { getUser } from "@repo/lib/helpers/get-user"
 
 export const ProfileAccountSocials = () => {
-  const { data: userSocials, isLoading } = userSocialsQuery()
+  const currentUser = getUser()
+  const { data: userSocials, isLoading } = userSocialsQuery(currentUser.nickname)
 
   return (
     <div className="flex flex-col gap-4 w-full h-full">

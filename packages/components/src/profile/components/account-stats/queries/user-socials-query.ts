@@ -9,8 +9,8 @@ type UserSocials = {
   DISCORD_ID: string | null
 } | null
 
-export const userSocialsQuery = () => useQuery<UserSocials, Error>({
+export const userSocialsQuery = (nickname: string) => useQuery<UserSocials, Error>({
   queryKey: USER_SOCIALS_QUERY_KEY,
-  queryFn: () => getUserSocials(),
+  queryFn: () => getUserSocials(nickname),
   refetchOnWindowFocus: false
 })

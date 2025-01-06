@@ -1,4 +1,4 @@
-import { useQuery } from "@tanstack/react-query";
+import { useSuspenseQuery } from "@tanstack/react-query";
 import {
   SIDEBAR_DEFAULT_SIZE,
   SIDEBAR_FORMAT_KEY,
@@ -25,7 +25,7 @@ export const sidebarLayoutQuery = () => {
 
   const format = value.format;
 
-  return useQuery<SidebarQuery, Error>({
+  return useSuspenseQuery<SidebarQuery, Error>({
     queryKey: SIDEBAR_LAYOUT_QUERY_KEY,
     refetchOnWindowFocus: false,
     initialData: { width: SIDEBAR_DEFAULT_SIZE, format: format },

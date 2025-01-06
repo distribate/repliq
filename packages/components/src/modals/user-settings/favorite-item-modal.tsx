@@ -11,9 +11,7 @@ import DiamondPickaxe from "@repo/assets/images/minecraft/diamond_pickaxe.webp";
 import { UserSettingOption } from "#cards/components/user-personal-card/components/profile-settings/user-profile-settings.tsx";
 
 export const FavoriteItemModal = () => {
-  const currentUser = getUser();
-  const favorite_item = currentUser.favorite_item;
-
+  const { favorite_item } = getUser();
   const { data: favoriteItem } = favoriteItemQuery({ favorite_item });
 
   return (

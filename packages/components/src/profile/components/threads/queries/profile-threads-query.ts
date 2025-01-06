@@ -7,10 +7,7 @@ export const THREADS_QUERY_KEY = (nickname: string) =>
 
 export const profileThreadsQuery = (nickname: string) => useQuery<UserThreads[] | null>({
   queryKey: THREADS_QUERY_KEY(nickname),
-  queryFn: async () => {
-    const result = await getThreadsUser({ nickname });
-    return result ?? null;
-  },
+  queryFn: async () => getThreadsUser({ nickname }),
   refetchOnMount: false,
   refetchOnWindowFocus: false,
 });

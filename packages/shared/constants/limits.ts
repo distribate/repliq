@@ -12,3 +12,5 @@ export const POST_CONTENT_LIMIT = [2, 1024];
 
 export const SEARCH_SIDEBAR_LIMIT = 5;
 export const SEARCH_PAGE_LIMIT = 16;
+
+export const ISSUE_MAX_DESCRIPTION_LIMIT = 2048;

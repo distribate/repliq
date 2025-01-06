@@ -5,9 +5,6 @@ import { Separator } from "@repo/ui/src/components/separator.tsx";
 import { getCategory } from "@repo/lib/queries/get-category.ts";
 import { BlockWrapper } from "@repo/components/src/wrappers/block-wrapper.tsx";
 import { CategoryThreads } from "@repo/components/src/categories/components/category-threads/components/category-threads.tsx";
-import { QueryClient } from "@tanstack/react-query";
-import { CATEGORY_THREADS_QUERY_KEY } from "@repo/components/src/categories/components/category-threads/queries/category-threads-query.ts";
-import { getThreadsCategories } from "@repo/lib/queries/get-threads-by-category.ts";
 import { MetadataType, PageConventionProps } from "@repo/types/global";
 
 export async function generateMetadata({
@@ -37,13 +34,6 @@ export default async function CategoryByIdPage({
 
   const category = await getCategory(id);
   if (!category) return notFound();
-
-  const qc = new QueryClient();
-
-  await qc.prefetchQuery({
-    queryKey: CATEGORY_THREADS_QUERY_KEY(category.id),
-    queryFn: () => getThreadsCategories({ categoryId: category.id }),
-  });
 
   return (
     <div className="flex flex-col lg:flex-row items-start gap-4 w-full overflow-hidden">

@@ -21,3 +21,9 @@ export type ProfileStatsCharts = {
     count: number 
   }>;
 }
+
+export type ProfileStatsDetailed = {
+  details: ProfileViewsDetails[],
+  meta: ProfileStatsMeta,
+  charts: ProfileStatsCharts
+}

@@ -4,7 +4,7 @@ import { CreateIssueForm } from "@repo/components/src/forms/create-issue/compone
 import { BlockWrapper } from "@repo/components/src/wrappers/block-wrapper";
 
 export const metadata: Metadata = {
-  title: "Создание заявки",
+  title: "Сообщить о проблеме или идее",
 };
 
 export default async function CreateIssuePage() {
@@ -12,10 +12,10 @@ export default async function CreateIssuePage() {
     <div className="flex flex-col w-full h-full gap-4">
       <BlockWrapper className="flex flex-col gap-y-4 w-full !p-4">
         <Typography textSize="big" textColor="shark_white">
-          Создание треда
+          Сообщить о проблеме или идее
         </Typography>
-        <CreateIssueForm />
       </BlockWrapper>
+      <CreateIssueForm />
     </div>
   )
 }

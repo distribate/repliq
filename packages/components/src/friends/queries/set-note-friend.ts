@@ -1,8 +1,4 @@
-"use server";
-
-import "server-only";
 import { FriendNotesEntity } from "@repo/types/entities/entities-type.ts";
-import { getCurrentSession } from "@repo/lib/actions/get-current-session.ts";
 import { forumUserClient } from "@repo/shared/api/forum-client";
 
 export type SetNote = Pick<
@@ -13,14 +9,10 @@ export type SetNote = Pick<
 export async function setNoteFriend({
   recipient, friend_id, note,
 }: SetNote) {
-  const { user: currentUser } = await getCurrentSession();
-  if (!currentUser) return;
-
-  const res = await forumUserClient.user["create-friend-note"].$post({
+  const res = await forumUserClient().user["create-friend-note"].$post({
     json: {
       recipient,
       friend_id,
-      initiator: currentUser.nickname,
       message: note
     }
   })

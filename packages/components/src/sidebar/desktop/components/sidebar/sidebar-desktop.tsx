@@ -31,7 +31,6 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import { useRouter } from "next/navigation";
 import { Typography } from "@repo/ui/src/components/typography.tsx";
 import { TicketsModal } from "#modals/custom/tickets-modal.tsx";
-import { Dialog, DialogContent, DialogTrigger } from "@repo/ui/src/components/dialog.tsx";
 import { NotificationsList } from "#notifications/components/notifications-list.tsx";
 
 type SidebarLayoutVariant = Exclude<SidebarFormat, "dynamic">;
@@ -119,10 +118,9 @@ const UserMenuTrigger = () => {
 
 const SidebarDesktopContent = () => {
   const { data: searchState } = searchQuery();
-  const { push } = useRouter()
   const { data: sidebarState } = sidebarLayoutQuery();
-  const { updateSidebarPropertiesMutation } =
-    useSidebarControl();
+  const { updateSidebarPropertiesMutation } = useSidebarControl();
+  const { push } = useRouter()
 
   if (searchState.queryValue) return <SearchArea />
 

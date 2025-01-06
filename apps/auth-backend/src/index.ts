@@ -35,23 +35,23 @@ const installedModules = [
 
 const app = mergeRoutes(
   base
-  .basePath('/api')
-  .use('*', logger())
-  .use('*', prettyJSON())
-  .use('*', bearerAuth({ token }))
-  .onError(exceptionHandler),
+    .basePath('/api')
+    .use('*', logger())
+    .use('*', prettyJSON())
+    .use('*', bearerAuth({ token }))
+    .onError(exceptionHandler),
   ...installedModules,
 );
 
 export const lp = new Hono()
-.route('/', getLuckpermsPlayer);
+  .route('/', getLuckpermsPlayer);
 
 export const auth = new Hono()
-.route('/', invalidateSessionRoute)
-.route('/', validateSessionRoute)
-.route('/', getAuthUser)
-.route('/', createUserRoute)
-.route('/', createSessionRoute);
+  .route('/', invalidateSessionRoute)
+  .route('/', validateSessionRoute)
+  .route('/', getAuthUser)
+  .route('/', createUserRoute)
+  .route('/', createSessionRoute);
 
 export type AuthAppType = typeof auth
 export type LpAppType = typeof lp

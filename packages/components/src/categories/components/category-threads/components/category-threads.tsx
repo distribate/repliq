@@ -41,6 +41,7 @@ export const CategoryThreads = ({ category_id }: CategoryThreads) => {
     <div className="flex flex-col gap-y-2 w-full h-full">
       {categoryThreads.map((thread) => (
         <ThreadLayout id={thread.id} title={thread.title} owner={thread.owner}>
+          {/* @ts-ignore */}
           <ThreadByCategoryItem {...thread} />
         </ThreadLayout>
       ))}

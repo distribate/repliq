@@ -20,9 +20,9 @@ export async function validateSessionToken(
     return { session: null, user: null };
   }
 
-  const { session_id, user_id, expires_at, nickname, uuid, userId } = row;
+  const { session_id, expires_at, nickname, uuid, userId } = row;
 
-  const session: Session = { session_id, user_id, expires_at };
+  const session: Session = { session_id, nickname, expires_at };
   const user: User = { nickname, uuid, id: userId };
   const expiresAt = new Date(session.expires_at);
 

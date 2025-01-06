@@ -10,7 +10,7 @@ export async function deleteSession(): Promise<void> {
   const { session } = await getCurrentSession();
 
   if (!session) {
-    throw new Error("Session not defined");
+    redirect(AUTH_REDIRECT);
   }
 
   const res = await authClient["invalidate-session"].$post({

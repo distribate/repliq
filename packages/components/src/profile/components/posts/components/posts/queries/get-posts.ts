@@ -1,9 +1,4 @@
-'use server';
-
-import { getCurrentSession } from '@repo/lib/actions/get-current-session.ts';
 import { forumUserClient } from '@repo/shared/api/forum-client.ts';
-import { AUTH_REDIRECT } from '@repo/shared/constants/routes.ts';
-import { redirect } from 'next/navigation';
 import { z } from 'zod';
 import { getUserPostsSchema } from '@repo/types/schemas/posts/user-posts-schema.ts';
 
@@ -14,17 +9,8 @@ export type GetPosts = Omit<z.infer<typeof getUserPostsSchema>, 'currentUserNick
 export async function getPosts({
   requestedUserNickname, ascending = false, searchQuery, filteringType, range
 }: GetPosts) {
-  const { user: currentUser } = await getCurrentSession();
-  
-  if (!currentUser) {
-    redirect(AUTH_REDIRECT);
-  }
-  
-  const { nickname: currentUserNickname } = currentUser;
-  
-  const res = await forumUserClient.user['get-user-posts'][':nickname'].$get({
+  const res = await forumUserClient().user['get-user-posts'][':nickname'].$get({
     query: {
-      currentUserNickname,
       ascending: ascending.toString(),
       searchQuery,
       filteringType,

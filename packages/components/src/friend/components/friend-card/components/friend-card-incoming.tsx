@@ -4,19 +4,29 @@ import { Button } from "@repo/ui/src/components/button.tsx";
 import { USER_URL } from "@repo/shared/constants/routes.ts";
 import { UserNickname } from "#user/components/name/nickname.tsx";
 import { FriendCardLayout } from "#friend/components/friend-card/components/friend-card-layout.tsx";
-import { FriendRequestProperties } from "#friend/components/friend-card/types/friend-request-types.ts";
 import { useControlFriendRequests } from "#friend/components/friend-card/hooks/use-control-friend-requests.ts";
 
 export const FriendCardIncoming = ({
   initiator,
-}: Pick<FriendRequestProperties, "initiator">) => {
+  request_id,
+}: {
+  request_id: string;
+  initiator: string;
+}) => {
   const {
     rejectIncomingRequestMutation,
     acceptIncomingRequestMutation
   } = useControlFriendRequests();
 
-  const handleAcceptRequest = () => acceptIncomingRequestMutation.mutate(initiator);
-  const handleRejectRequest = () => rejectIncomingRequestMutation.mutate(initiator);
+  const handleAcceptRequest = () => acceptIncomingRequestMutation.mutate({
+    recipient: initiator,
+    request_id
+  });
+  
+  const handleRejectRequest = () => rejectIncomingRequestMutation.mutate({
+    recipient: initiator,
+    request_id
+  });
 
   return (
     <FriendCardLayout nickname={initiator}>

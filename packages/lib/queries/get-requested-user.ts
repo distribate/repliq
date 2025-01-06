@@ -1,42 +1,23 @@
-"use server";
-
-import { DonateVariantsEnum, UserEntity } from '@repo/types/entities/entities-type.ts';
+import { DonateVariantsEnum } from '@repo/types/entities/entities-type.ts';
 import { REDIRECT_USER_NOT_EXIST } from '@repo/shared/constants/routes.ts';
 import { redirect } from 'next/navigation';
-import { getCurrentSession } from '#actions/get-current-session.ts';
 import { forumUserClient } from '@repo/shared/api/forum-client.ts';
-import { CurrentUser } from '#queries/current-user-query.ts';
+import type { UserDetailed } from '@repo/types/entities/user-type';
 
-export type RequestedUser = Omit<UserEntity, "acceptrules"> & {
-  donate: DonateVariantsEnum
-} & Pick<CurrentUser, "preferences">
+export type RequestedUser = UserDetailed
 
-async function getMainData(nickname: string) {
-  return await forumUserClient.user["get-user"][":nickname"].$get({
-    param: { nickname }
+export async function getRequestedUser(currentUserNickname: string, requestedUserNickname: string) {
+  const res = await forumUserClient().user["get-user"][":nickname"].$get({
+    param: { nickname: requestedUserNickname }
   })
-}
 
-export async function getRequestedUser(
-  nickname: string
-) {
-  const { user: currentUser } = await getCurrentSession();
-  if (!currentUser) return null;
-
-  const res = await getMainData(nickname)
- 
   const data = await res.json()
 
   if (!data || "error" in data) {
     return redirect(
-      `${REDIRECT_USER_NOT_EXIST}${currentUser.nickname}&timeout=5`,
+      `${REDIRECT_USER_NOT_EXIST}${currentUserNickname}&timeout=5`,
     );
   }
 
-  const { favorite_item, ...rest } = data
-  
-  return {
-    ...rest,
-    favorite_item: Number(favorite_item)
-  }
+  return data
 }

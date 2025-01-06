@@ -4,11 +4,14 @@ import { Button } from "@repo/ui/src/components/button.tsx";
 import { ThreadControlMain } from "./thread-control-main.tsx";
 import { PencilLine } from "lucide-react";
 import { Typography } from "@repo/ui/src/components/typography.tsx";
-import { ThreadModel } from "#thread/queries/get-thread-model.ts";
 import { DynamicModal } from "#modals/dynamic-modal.tsx";
 import { THREAD_CONTROL_MUTATION_KEY } from "#thread/components/thread-control/hooks/use-thread-control.ts";
 
-export const ThreadControl = ({ id: threadId }: Pick<ThreadModel, "id">) => {
+type ThreadControlProps = {
+  threadId: string;
+}
+
+export const ThreadControl = ({ threadId }: ThreadControlProps) => {
   return (
     <DynamicModal
       mutationKey={THREAD_CONTROL_MUTATION_KEY}
@@ -21,7 +24,7 @@ export const ThreadControl = ({ id: threadId }: Pick<ThreadModel, "id">) => {
           </div>
         </Button>
       }
-      content={<ThreadControlMain id={threadId} />}
+      content={<ThreadControlMain threadId={threadId} />}
     />
   );
 };

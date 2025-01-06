@@ -1,0 +1,43 @@
+import { useThreadReaction } from "#thread/components/thread-reactions/hooks/use-thread-reaction.ts";
+import { THREAD_REACTIONS } from "@repo/shared/constants/emojis";
+import React, { useRef } from "react";
+
+type AvailableReactionsProps = {
+  threadId: string
+}
+
+export const AvailableThreadReactions = ({
+  threadId
+}: AvailableReactionsProps) => {
+  const { updateThreadRatingMutation } = useThreadReaction();
+  const scrollRef = useRef<HTMLDivElement | null>(null);
+
+  const handleThreadBump = (emoji: string) => {
+    if (!threadId) return;
+    return updateThreadRatingMutation.mutate({ emoji, threadId });
+  };
+
+  const handleWheel = (e: React.WheelEvent) => {
+    if (scrollRef.current) {
+      scrollRef.current.scrollLeft += e.deltaY;
+    }
+  };
+
+  return (
+    <div
+      className="flex items-center gap-2 cursor-default pb-2 scrollbar-thin scrollbar-shark-700 scrollbar-track-transparent overflow-x-auto max-w-[200px]"
+      onWheel={handleWheel}
+      ref={scrollRef}
+    >
+      {Object.entries(THREAD_REACTIONS).map(([key, value]) => (
+        <div
+          key={key}
+          onClick={() => handleThreadBump(key)}
+          className="flex bg-shark-600/70 rounded-md p-1 items-center justify-center"
+        >
+          <div>{value}</div>
+        </div>
+      ))}
+    </div>
+  )
+}

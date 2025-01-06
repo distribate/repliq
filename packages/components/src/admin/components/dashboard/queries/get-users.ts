@@ -3,7 +3,7 @@
 import "server-only";
 import { createClient } from "@repo/shared/api/supabase-client.ts";
 import { ExtendedUserEntity } from "@repo/types/entities/entities-type.ts";
-import { CurrentUser } from '@repo/lib/queries/current-user-query.ts';
+import type { UserDetailed } from "@repo/types/entities/user-type";
 
 export type ExtendedUsers = Pick<
   ExtendedUserEntity,
@@ -18,7 +18,7 @@ export type ExtendedUsers = Pick<
 >;
 
 type Users = Pick<
-  CurrentUser,
+  UserDetailed,
   "id" | "nickname" | "name_color" | "uuid" | "created_at" | "description" | "donate" | "favorite_item"
 >;
 

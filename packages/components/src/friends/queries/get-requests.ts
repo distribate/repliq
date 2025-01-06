@@ -1,18 +1,16 @@
-"use server";
-
-import "server-only";
-import { createClient } from "@repo/shared/api/supabase-client.ts";
+import { forumUserClient } from "@repo/shared/api/forum-client";
 
 export async function getRequests(nickname: string) {
-  const api = createClient();
+  const res = await forumUserClient().user["get-friend-requests"].$get({
+    query: {
+      type: "outgoing"
+    }
+  })
 
-  const { data, error } = await api
-    .from("friends_requests")
-    .select("recipient, initiator, created_at")
-    .or(`initiator.eq.${nickname},recipient.eq.${nickname}`);
+  const data = await res.json()
 
-  if (error) {
-    throw new Error(error.message);
+  if (!data || "error" in data) {
+    return null;
   }
 
   return data;

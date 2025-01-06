@@ -3,7 +3,6 @@ import { z } from 'zod';
 export const createSessionBodySchema = z.object({
   details: z.object({
     nickname: z.string(),
-    userId: z.string().min(10),
     password: z.string().min(4),
   }),
   info: z.object({

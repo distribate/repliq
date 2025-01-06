@@ -4,7 +4,7 @@ import { insertSessionInfo } from "../queries/insert-session-info";
 
 type CreateSessionTransaction = {
   token: string,
-  userId: string
+  nickname: string
 } & {
   info: {
     browser: string | null;
@@ -17,19 +17,19 @@ type CreateSessionTransaction = {
 }
 
 export const createSessionTransaction = async ({
-  token, userId, info
+  token, nickname, info
 }: CreateSessionTransaction) => {
   return await forumDB
   .transaction()
   .execute(async (trx) => {
     const session = await createSession({
       trx,
-      details: { token, userId },
+      details: { token, nickname },
     });
 
     await insertSessionInfo({
       trx,
-      details: { session_id: session.session_id, ...info },
+      details: { session_id: session.session_id, ...info,nickname },
     });
 
     return session;

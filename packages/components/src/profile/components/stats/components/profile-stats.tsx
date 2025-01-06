@@ -1,3 +1,5 @@
+"use client"
+
 import { SectionPrivatedContent } from "#templates/section-privated-content.tsx";
 import { ProfileSectionLayout } from "#layouts/profile-section-layout.tsx";
 import {
@@ -15,7 +17,7 @@ type UserProfileGameStatsProps = {
   isSectionPrivatedByOwner: boolean;
 };
 
-export const UserProfileGameStats = async ({
+export const UserProfileGameStats = ({
   nickname, uuid, isSectionPrivatedByOwner
 }: UserProfileGameStatsProps) => {
   return (

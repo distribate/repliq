@@ -1,35 +1,31 @@
-import { createClient } from "@repo/shared/api/supabase-client.ts";
-import {
-  RequestDetails,
-  ThreadEntity,
-} from "@repo/types/entities/entities-type.ts";
+import { forumCategoriesClient } from "@repo/shared/api/forum-client";
 
 type ThreadsFromCategories = {
-  categoryId: number;
-} & RequestDetails;
+  categoryId: string;
+} & {
+  range: number[]
+  limit?: number;
+};
 
 export async function getThreadsCategories({
   categoryId,
   range,
   limit = 3,
-}: ThreadsFromCategories): Promise<ThreadEntity[] | null> {
-  const api = createClient();
+}: ThreadsFromCategories) {
+  const res = await forumCategoriesClient.categories["get-category-threads"][":category_id"].$get({
+    query: { 
+      range: `${range[0]},${range[1]}`, 
+      limit: limit.toString(),
+      ascending: "false"
+    },
+    param: { category_id: categoryId },
+  });
 
-  let query = api
-    .from("category_threads")
-    .select("*, threads(*)")
-    .eq("category_id", categoryId);
+  const data = await res.json();
 
-  if (limit) query.limit(limit);
-  if (range) query.range(range[0], range[1]);
-
-  const { data, error } = await query;
-
-  if (error) {
-    throw new Error(error.message);
+  if (!data || "error" in data) {
+    return null;
   }
 
-  if (!data.length) return null;
-
-  return data.map((item) => item.threads);
+  return data
 }

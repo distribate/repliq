@@ -22,7 +22,7 @@ const minecraftItemVariants = cva(
 
 interface MinecraftItemProps
   extends HTMLAttributes<HTMLDivElement>,
-    VariantProps<typeof minecraftItemVariants> {}
+  VariantProps<typeof minecraftItemVariants> { }
 
 const MinecraftItem = forwardRef<HTMLDivElement, MinecraftItemProps>(
   ({ className, variant, ...props }, ref) => {
@@ -36,13 +36,13 @@ const MinecraftItem = forwardRef<HTMLDivElement, MinecraftItemProps>(
   },
 );
 
-export const FavoriteItem = ({ id, title, image }: FavoriteItem) => {
+export const FavoriteItem = ({
+  id, title, image
+}: FavoriteItem) => {
   const { favorite_item } = getUser();
   const { updateFieldMutation } = useUpdateCurrentUser();
 
-  const handleFavoriteItem = (value: string) => updateFieldMutation.mutate({ value, criteria: "favorite_item" });
-
-  const currentFavoriteItem = favorite_item ? favorite_item === id : false;
+  const currentFavoriteItem = favorite_item ? favorite_item === Number(id) : false;
 
   return (
     <MinecraftItem variant={currentFavoriteItem ? "selected" : "default"}>
@@ -53,7 +53,10 @@ export const FavoriteItem = ({ id, title, image }: FavoriteItem) => {
         width={112}
         height={112}
       />
-      <div className="flex flex-col items-end p-2 absolute transition-all ease-in w-full h-full bg-black/50 group-hover:opacity-100 opacity-0 bottom-0 left-0">
+      <div
+        className="flex flex-col items-end p-2 absolute 
+          transition-all ease-in w-full h-full bg-black/50 group-hover:opacity-100 opacity-0 bottom-0 left-0"
+      >
         <Typography
           className="font-[Minecraft]"
           textColor="shark_white"
@@ -62,15 +65,12 @@ export const FavoriteItem = ({ id, title, image }: FavoriteItem) => {
           {title}
         </Typography>
         {currentFavoriteItem ? (
-          <Typography
-            className="text-gold-500 font-[Minecraft]"
-            textSize="small"
-          >
+          <Typography className="text-gold-500 font-[Minecraft]" textSize="small">
             выбрано
           </Typography>
         ) : (
           <Typography
-            onClick={() => handleFavoriteItem(id.toString())}
+            onClick={() => updateFieldMutation.mutate({ value: id, criteria: "favorite_item" })}
             className="text-shark-300 hover:text-shark-50 cursor-pointer font-[Minecraft]"
             textSize="small"
           >

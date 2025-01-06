@@ -1,0 +1,185 @@
+"use client"
+
+import { ThreadComments } from "@repo/components/src/thread/components/thread-comments/components/thread-comments.tsx"
+import { Typography } from "@repo/ui/src/components/typography"
+import dynamic from "next/dynamic"
+import { Descendant } from "slate"
+import { ThreadImages } from "../../thread-images/thread-images"
+import { Eye, PencilLine } from "lucide-react"
+import { BlockWrapper } from "#wrappers/block-wrapper.tsx"
+import { ThreadMore } from "../../thread-more/components/thread-more"
+import { Suspense } from "react"
+import { ThreadCreator } from "../../thread-creator/components/thread-creator"
+import { Skeleton } from "@repo/ui/src/components/skeleton"
+import { Button } from "@repo/ui/src/components/button"
+import { FriendButton } from "#buttons/friend-button.tsx"
+import { ThreadShare } from "../../thread-share/thread-share"
+import { ThreadSave } from "../../thread-save/thread-save"
+import { getUser } from "@repo/lib/helpers/get-user"
+import { ThreadControl } from "../../thread-control/components/thread-control"
+import { ThreadContent } from "../../thread-content/components/thread-content"
+import { threadQuery } from "../queries/thread-query"
+import dayjsInstance from "@repo/lib/constants/dayjs-instance.ts"
+import { ContextMenu, ContextMenuContent, ContextMenuTrigger } from "@repo/ui/src/components/context-menu"
+import { AvailableThreadReactions } from "#reactions/components/available-reactions.tsx"
+import { ThreadReactions } from "#thread/components/thread-reactions/components/thread-reactions.tsx"
+import { ThreadMainSkeleton } from "./thread-main-skeleton"
+import { useQueryClient } from "@tanstack/react-query"
+import { THREAD_CONTROL_QUERY_KEY, ThreadControlQuery } from "#thread/components/thread-control/queries/thread-control-query.ts"
+
+type ThreadContentProps = {
+  threadId: string
+}
+
+const ContentNotFound = dynamic(() =>
+  import("@repo/components/src/templates/content-not-found.tsx").then(
+    (m) => m.ContentNotFound,
+  ),
+);
+
+const CommentsDisabled = dynamic(() =>
+  import("@repo/components/src/templates/comments-disabled.tsx").then(
+    (m) => m.CommentsDisabled,
+  ),
+);
+
+const CreateThreadComment = dynamic(() =>
+  import(
+    "@repo/components/src/thread/components/create-thread-comment/components/create-thread-comment.tsx"
+  ).then((m) => m.CreateThreadComment),
+);
+
+export const ThreadContentEdit = () => {
+  const qc = useQueryClient();
+
+  const handleContentEdit = () => {
+    return qc.setQueryData(
+      THREAD_CONTROL_QUERY_KEY,
+      (prev: ThreadControlQuery) => ({
+        state: {
+          ...prev.state,
+          isContenteditable: true
+        },
+        values: { ...prev.values },
+      }),
+    )
+  };
+
+  return (
+    <div
+      className="flex items-center rounded-md hover:bg-shark-800 cursor-pointer gap-2"
+      onClick={handleContentEdit}
+    >
+      <PencilLine size={20} />
+      <Typography>Редактировать</Typography>
+    </div>
+  )
+}
+
+export const Thread = ({
+  threadId
+}: ThreadContentProps) => {
+  const currentUser = getUser()
+  const { data: thread, isLoading } = threadQuery(threadId)
+
+  if (isLoading) return <ThreadMainSkeleton />
+
+  if (!thread) return <ContentNotFound title="Тема не найдена" />
+
+  const {
+    content, created_at, title, description, id, updated_at, owner, threads_tags,
+    is_comments, is_images, is_updated, threads_views_count
+  } = thread
+
+  const dateCreated = dayjsInstance(created_at).format("DD.MM.YYYY")
+  const isThreadOwner = thread.owner.nickname === currentUser.nickname
+
+  return (
+    <>
+      <div className="flex flex-col min-w-3/4 w-3/4 max-w-3/4 items-start h-full justify-start">
+        <ContextMenu>
+          <ContextMenuTrigger className="w-full">
+            <div className="flex flex-col gap-6 rounded-lg w-full py-6 bg-primary-color">
+              <div className="flex flex-col w-fit px-4">
+                <Typography textSize="very_big" className="font-semibold" textColor="shark_white">
+                  {title}
+                </Typography>
+                <Typography textColor="gray">
+                  тема создана{" "}
+                  <span className="text-caribbean-green-400">{dateCreated}</span> в категории ...
+                </Typography>
+              </div>
+              <ThreadContent threadId={id} content={content as Descendant[]} isThreadOwner={isThreadOwner} />
+              {is_images && <ThreadImages threadId={id} />}
+              <div className="flex items-center px-4 w-full justify-start gap-1">
+                <ThreadReactions threadId={id} />
+                <div className="flex flex-col w-full gap-2">
+                  <div className="flex w-full gap-1 justify-end">
+                    <div className="flex items-center w-fit gap-1">
+                      <Eye size={18} className="text-shark-300" />
+                      <Typography textSize="small" textColor="gray">
+                        {threads_views_count}
+                      </Typography>
+                    </div>
+                    {(is_updated && updated_at) && (
+                      <div className="flex items-center w-fit gap-1">
+                        <Typography textSize="small" textColor="gray">
+                          изменено в {updated_at}
+                        </Typography>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </ContextMenuTrigger>
+          <ContextMenuContent className="flex flex-col gap-y-2">
+            <AvailableThreadReactions threadId={id} />
+            {isThreadOwner && (
+              <div className="flex flex-col bg-shark-800 p-2 rounded-md gap-1">
+                <ThreadContentEdit />
+              </div>
+            )}
+          </ContextMenuContent>
+        </ContextMenu>
+        <BlockWrapper padding="without" className="mt-4">
+          <ThreadMore
+            description={description}
+            threadTags={threads_tags}
+            createdAt={created_at}
+            owner={owner}
+          />
+        </BlockWrapper>
+        <div className="flex flex-col w-full h-full mt-2 gap-y-4">
+          <ThreadComments
+            owner={owner}
+            thread_id={id}
+            isComments={is_comments}
+          />
+          {is_comments ? <CreateThreadComment /> : <CommentsDisabled />}
+        </div>
+      </div>
+      <div className="flex flex-col gap-y-4 min-w-1/4 w-1/4 max-w-1/4 h-fit sticky top-0 overflow-hidden">
+        <BlockWrapper>
+          <div className="flex items-center justify-between w-full">
+            <ThreadCreator name_color={owner.name_color} nickname={owner.nickname} />
+            {isThreadOwner ? (
+              <Button state="default" className="px-6">
+                <Typography>Это вы</Typography>
+              </Button>
+            ) : <FriendButton recipient={owner.nickname} />}
+          </div>
+        </BlockWrapper>
+        <BlockWrapper>
+          <div className="flex justify-between items-center w-full">
+            <div className="flex gap-2 items-center h-full">
+              <ThreadShare />
+              <ThreadSave />
+            </div>
+          </div>
+        </BlockWrapper>
+        {isThreadOwner && <ThreadControl threadId={id} />}
+      </div>
+    </>
+  )
+}

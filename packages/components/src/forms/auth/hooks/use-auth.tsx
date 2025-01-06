@@ -49,9 +49,7 @@ export const useAuth = () => {
             const { nickname, id } = forumAuthDetails;
 
             const createSessionError = await createSessionAction({
-              nickname,
-              userId: id,
-              password,
+              nickname,  password,
             });
 
             if (createSessionError.error) {

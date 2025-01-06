@@ -4,7 +4,6 @@ import "server-only";
 import { ThreadEntity } from "@repo/types/entities/entities-type";
 import { createClient } from "@repo/shared/api/supabase-client.ts";
 import { PostThreadImages, postThreadImages } from "./post-thread-images.ts";
-import { ThreadModel } from "#thread/queries/get-thread-model.ts";
 import { postThreadTags } from "#forms/create-thread/queries/post-thread-tags.ts";
 import { getCurrentSession } from "@repo/lib/actions/get-current-session.ts";
 
@@ -17,7 +16,9 @@ export type PostThreadProperties = Omit<ThreadEntity, "content"> &
     {
       category_id: number;
       content: string;
-    } & Pick<ThreadModel, "tags" | "id">
+      tags: string[]
+      id: string;
+    } 
   >;
 
 export type PostThreadType = Nullable<Pick<PostThreadImages, "base64Files">> &
@@ -88,10 +89,9 @@ export async function postThreadItem({
       title,
       description,
       content,
-      isComments,
+      is_comments: isComments,
       permission,
       auto_remove,
-      isImages,
       visibility,
     })
     .select("id")

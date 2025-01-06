@@ -1,6 +1,6 @@
-import { ThreadModel } from "../../../queries/get-thread-model.ts";
+import { ThreadDetailed } from "@repo/types/entities/thread-type.ts";
 
 export type ThreadControlFields = Pick<
-  ThreadModel,
-  "title" | "id" | "description" | "isComments" | "content"
+  ThreadDetailed,
+  "title" | "id" | "description" | "is_comments" | "content"
 >;

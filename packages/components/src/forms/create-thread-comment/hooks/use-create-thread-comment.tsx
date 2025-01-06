@@ -4,7 +4,7 @@ import {
   CreateThreadCommentQuery,
   initialThreadCommentData,
 } from "../queries/create-thread-comment-query.ts";
-import { postThreadComment } from "../queries/post-thread-comment.ts";
+import { createThreadComment, replyThreadComment } from "../queries/post-thread-comment.ts";
 import { toast } from "sonner";
 import { THREAD_COMMENTS_QUERY_KEY } from "#thread/components/thread-comments/queries/thread-comments-query.ts";
 
@@ -36,26 +36,35 @@ export const useCreateThreadComment = () => {
 
   const createThreadCommentMutation = useMutation({
     mutationFn: async () => {
-      const threadComment = qc.getQueryData<CreateThreadCommentQuery>(
-        CREATE_THREAD_COMMENT_QUERY_KEY,
-      );
+      const threadComment = qc.getQueryData<CreateThreadCommentQuery>(CREATE_THREAD_COMMENT_QUERY_KEY);
       if (!threadComment) return;
 
       const thread_id = threadComment.threadId;
       const content = threadComment.content;
       const type = threadComment.type || "single";
-      const recipient_comment_id = threadComment?.repliedValues?.commentId;
 
       if (!thread_id || !content) return;
 
-      const threadCommentId = await postThreadComment({
-        thread_id,
-        content,
-        recipient_comment_id,
-        type,
-      });
+      switch (type) {
+        case "reply":
+          if (!threadComment.repliedValues?.commentId) return;
 
-      return { threadCommentId, thread_id };
+          const repliedThreadComment = await replyThreadComment({
+            content,
+            thread_id,
+            recipient_comment_id: threadComment.repliedValues?.commentId.toString(),
+          });
+
+          return { repliedThreadComment, thread_id };
+        case "single":
+          const threadCommentId = await createThreadComment({
+            thread_id, content
+          });
+
+          return { threadCommentId, thread_id };
+        default:
+          break;
+      }
     },
     onSuccess: async (data) => {
       if (!data) return toast.error("Что-то пошло не так!");

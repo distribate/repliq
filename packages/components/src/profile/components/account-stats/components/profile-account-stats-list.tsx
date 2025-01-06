@@ -1,14 +1,15 @@
 "use client"
 
 import { Typography } from "@repo/ui/src/components/typography.tsx";
-import { userProfileStatsQuery } from "../queries/user-profile-stats-query";
+import { USER_PROFILE_STATS_QUERY_KEY, userProfileStatsQuery } from "../queries/user-profile-stats-query";
 import { getUser } from "@repo/lib/helpers/get-user";
 import { Dialog, DialogContent, DialogTrigger } from "@repo/ui/src/components/dialog";
 import { Button } from "@repo/ui/src/components/button";
 import { Avatar } from "#user/components/avatar/components/avatar.tsx";
 import { BuyDonateModal } from "#modals/custom/buy-donate-modal.tsx";
 import { ProfileAccountStatsCharts } from "./stats/profile-account-stats-charts";
-import { ProfileStatsMeta, ProfileViewsDetails } from "@repo/types/routes-types/get-user-profile-stats-types";
+import { ProfileStatsDetailed, ProfileStatsMeta, ProfileViewsDetails } from "@repo/types/routes-types/get-user-profile-stats-types";
+import { useQueryClient } from "@tanstack/react-query";
 
 type AccountStatSectionProps = {
   title: string,
@@ -86,7 +87,8 @@ const ProfileAccountStatsPlayers = ({
 }
 
 const ProfileAccountStatsDetails = () => {
-  const { data: profileStats } = userProfileStatsQuery()
+  const qc = useQueryClient()
+  const profileStats = qc.getQueryData<ProfileStatsDetailed>(USER_PROFILE_STATS_QUERY_KEY)
 
   const details = profileStats?.details
   const meta = profileStats?.meta
@@ -136,7 +138,7 @@ const ProfileAccountStatsDetails = () => {
 }
 
 export const ProfileAccountStats = () => {
-  const { data: profileStats } = userProfileStatsQuery()
+  const { data: profileStats, isError, failureReason } = userProfileStatsQuery()
   const { donate } = getUser()
 
   return (

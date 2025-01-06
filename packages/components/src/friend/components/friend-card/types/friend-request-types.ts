@@ -1,9 +1,11 @@
-export type FriendRequestProperties = {
+export type ControlFriendRequests = {
   recipient: string;
-  initiator: string;
-};
+  request_id: string
+}
 
-export type ControlFriendProperties = {
-  requestedUserNickname: string;
-  friend_id?: string;
-};
+export type ControFriendShip = {
+  recipient: string;
+  friend_id: string
+}
+
+export type ControlFriendProperties = ControFriendShip

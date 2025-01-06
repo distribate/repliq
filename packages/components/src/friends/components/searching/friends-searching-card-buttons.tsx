@@ -1,15 +1,21 @@
 import { Button } from "@repo/ui/src/components/button.tsx";
 import { Plus, RotateCcw } from "lucide-react";
-import { FriendRequestProperties } from "#friend/components/friend-card/types/friend-request-types.ts";
 import { useControlFriendRequests } from "#friend/components/friend-card/hooks/use-control-friend-requests.ts";
 
+type t = {
+  recipient: string;
+  request_id: string
+}
+
 export const FriendsSearchingCardActionDeny = ({
-  recipient,
-}: Pick<FriendRequestProperties, "recipient">) => {
+  recipient, request_id
+}: t) => {
   const { rejectOutgoingRequestMutation } = useControlFriendRequests();
 
   const handleDeniedFriendReq = () => {
-    return rejectOutgoingRequestMutation.mutate(recipient);
+    return rejectOutgoingRequestMutation.mutate({
+      recipient, request_id
+    });
   };
 
   return (
@@ -28,12 +34,13 @@ export const FriendsSearchingCardActionDeny = ({
 };
 
 export const FriendsSearchingCardActionAdd = ({
-  recipient,
-}: Pick<FriendRequestProperties, "recipient">) => {
+  recipient, request_id
+}: t) => {
   const { createRequestFriendMutation } = useControlFriendRequests();
 
   const handleAddFriend = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
+
     return createRequestFriendMutation.mutate(recipient);
   };
 

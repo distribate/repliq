@@ -22,12 +22,11 @@ async function createSession({ details, info }: CreateSession) {
 export async function createSessionAction({
   nickname,
   password,
-  userId,
 }: Pick<CreateSession, "details">["details"]) {
   const ua = headers().get("Sec-CH-UA");
 
   const createdSession = await createSession({
-    details: { nickname, password, userId },
+    details: { nickname, password },
     info: {
       browser: null,
       ua: null,

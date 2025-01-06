@@ -3,7 +3,8 @@ import { usePathname } from 'next/navigation';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { UpdateUserSettings, updateUserSettings } from '#queries/update-user-settings.ts';
 import { toast } from 'sonner';
-import { CURRENT_USER_QUERY_KEY, CurrentUser } from '#queries/current-user-query.ts';
+import { CURRENT_USER_QUERY_KEY } from '#queries/current-user-query.ts';
+import type { UserDetailed } from '@repo/types/entities/user-type';
 
 export const useUpdateUserSettings = () => {
   const qc = useQueryClient()
@@ -16,7 +17,7 @@ export const useUpdateUserSettings = () => {
         description: "Повторите попытку позже"
       });
       
-      qc.setQueryData(CURRENT_USER_QUERY_KEY, (prev: CurrentUser) => ({
+      qc.setQueryData(CURRENT_USER_QUERY_KEY, (prev: UserDetailed) => ({
         ...prev,
         preferences: { ...prev.preferences, ...data }
       }))
@@ -25,7 +26,7 @@ export const useUpdateUserSettings = () => {
 
       if (!nickname) return
       
-      qc.setQueryData(REQUESTED_USER_QUERY_KEY(nickname), (prev: CurrentUser) => ({
+      qc.setQueryData(REQUESTED_USER_QUERY_KEY(nickname), (prev: UserDetailed) => ({
         ...prev,
         preferences: { ...prev.preferences, ...data }
       }))

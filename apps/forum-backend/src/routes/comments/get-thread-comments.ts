@@ -1,0 +1,136 @@
+import { throwError } from "#helpers/throw-error.ts";
+import { forumDB } from "#shared/database/forum-db.ts";
+import { zValidator } from "@hono/zod-validator";
+import { Hono } from "hono";
+import { executeWithCursorPagination } from "kysely-paginate";
+import { z } from "zod";
+import type { CommentWithReplies, GetThreadCommentsResponse } from "@repo/types/entities/thread-comments-types.ts";
+
+type GetThreadComments = {
+  limit: number | null;
+  cursor?: string;
+  threadId: string;
+}
+
+export const THREAD_COMMENTS_LIMIT = 6;
+
+async function getThreadComments({
+  limit: rawLimit, cursor, threadId
+}: GetThreadComments): Promise<GetThreadCommentsResponse> {
+  const limit = rawLimit ? rawLimit + 1 : THREAD_COMMENTS_LIMIT + 1
+
+  const query = forumDB
+    .selectFrom('comments')
+    .leftJoin('comments_replies', 'comments.id', 'comments_replies.initiator_comment_id')
+    .leftJoin('comments as replied_comment', 'comments_replies.recipient_comment_id', 'replied_comment.id')
+    .select([
+      'comments.id as comment_id',
+      'comments.created_at as comment_created_at',
+      'comments.user_nickname as comment_user_nickname',
+      'comments.content as comment_content',
+      'comments.updated_at as comment_updated_at',
+      'comments.is_updated as comment_is_updated',
+      'comments_replies.initiator_comment_id as reply_initiator_comment_id',
+      'comments_replies.recipient_comment_id as reply_recipient_comment_id',
+      'replied_comment.id as replied_comment_id',
+      'replied_comment.created_at as replied_comment_created_at',
+      'replied_comment.user_nickname as replied_comment_user_nickname',
+      'replied_comment.content as replied_comment_content',
+      'replied_comment.updated_at as replied_comment_updated_at',
+      'replied_comment.is_updated as replied_comment_is_updated',
+    ])
+    .where('comments.parent_id', '=', threadId)
+    .orderBy('comments.created_at', 'asc')
+    .limit(limit)
+
+  const result = await executeWithCursorPagination(query, {
+    perPage: 6,
+    after: cursor,
+    fields: [
+      {
+        key: "comment_created_at",
+        expression: "comments.created_at",
+        direction: "asc"
+      },
+    ],
+    parseCursor: (cursor) => {
+      const parsed = {
+        comment_created_at: new Date(cursor.comment_created_at),
+      }
+
+      return parsed
+    },
+  });
+
+  const commentsMap = new Map<number, CommentWithReplies>();
+
+  result.rows.forEach(row => {
+    const commentId = Number(row.comment_id);
+    const createdAt = row.comment_created_at.toString();
+    const initialCommentUpdatedAt = row.comment_updated_at ? row.comment_updated_at.toString() : null;
+
+    if (!commentsMap.has(commentId)) {
+      commentsMap.set(commentId, {
+        id: commentId,
+        created_at: createdAt,
+        user_nickname: row.comment_user_nickname,
+        content: row.comment_content,
+        updated_at: initialCommentUpdatedAt,
+        is_updated: row.comment_is_updated,
+        replied: null,
+      });
+    }
+
+    if (row.replied_comment_id) {
+      const repliedComment = {
+        id: Number(row.replied_comment_id),
+        created_at: row.replied_comment_created_at!.toString(),
+        user_nickname: row.replied_comment_user_nickname!,
+        content: row.replied_comment_content!,
+        updated_at: row.replied_comment_updated_at ? row.replied_comment_updated_at.toString() : null,
+        is_updated: row.replied_comment_is_updated ?? false,
+      };
+
+      const comment = commentsMap.get(commentId);
+
+      if (comment) {
+        comment.replied = repliedComment;
+      }
+    }
+  });
+
+  return {
+    data: Array.from(commentsMap.values()),
+    meta: {
+      hasNextPage: result.hasNextPage ?? false,
+      hasNextPrev: result.hasPrevPage ?? false,
+      startCursor: result.startCursor,
+      endCursor: result.endCursor
+    }
+  }
+}
+
+const getThreadCommentsSchema = z.object({
+  limit: z.string().transform(Number).optional(),
+  cursor: z.string().optional(),
+})
+
+export const getThreadCommentsRoute = new Hono()
+  .get("/get-thread-comments/:threadId", zValidator("query", getThreadCommentsSchema), async (ctx) => {
+    const { threadId } = ctx.req.param();
+    const query = ctx.req.query();
+    const { limit, cursor } = getThreadCommentsSchema.parse(query);
+
+    console.log(limit, cursor)
+
+    try {
+      const threadComments = await getThreadComments({
+        limit: limit ?? null, cursor: cursor ?? undefined, threadId
+      });
+
+      return ctx.json(threadComments, 200);
+    } catch (e) {
+      return ctx.json({ error: throwError(e) }, 500);
+    }
+  }
+  )

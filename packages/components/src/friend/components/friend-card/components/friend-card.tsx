@@ -9,16 +9,19 @@ import { FriendCardControl } from "#friend/components/friend-card/components/fri
 import { FriendCardNote } from "#friend/components/friend-card/components/friend-card-note.tsx";
 import { Pin } from "lucide-react";
 import { FriendWithDetails } from "@repo/types/schemas/friend/friend-types.ts";
-import { CurrentUser } from '@repo/lib/queries/current-user-query.ts';
+import type { UserDetailed } from "@repo/types/entities/user-type";
 
 export type FriendCardProps = Pick<
-  CurrentUser, "nickname" | "real_name" | "description" | "donate" 
+  UserDetailed, "nickname" | "real_name" | "description" | "donate" 
 > & FriendWithDetails
 
 export const FriendCard = ({
   ...friend
 }: FriendCardProps) => {
-  const { real_name, description, donate, favorite_item, nickname, name_color, friend_id, note, is_pinned } = friend;
+  const { 
+    real_name, description, donate, 
+    favorite_item, nickname, name_color, friend_id, note, is_pinned
+  } = friend;
 
   return (
     <FriendCardLayout nickname={nickname}>
@@ -30,9 +33,7 @@ export const FriendCard = ({
               className="text-lg"
               nicknameColor={name_color}
             />
-            {real_name && (
-              <UserRealName real_name={real_name} with_annotation={false} />
-            )}
+            {real_name && <UserRealName real_name={real_name} with_annotation={false} />}
           </Link>
           <UserDonate donate={donate} favoriteItemId={favorite_item} />
         </div>

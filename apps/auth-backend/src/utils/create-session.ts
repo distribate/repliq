@@ -7,28 +7,25 @@ import type { DB } from "@repo/types/db/forum-database-types.ts";
 type CreateSession = {
   details: {
     token: string;
-    userId: string;
+    nickname: string;
   };
   trx: Transaction<DB>;
 };
 
 export async function createSession({
-  details,
-  trx,
+  details, trx,
 }: CreateSession): Promise<Session> {
-  const { token, userId } = details;
+  const { token, nickname } = details;
 
-  const sessionId = encodeHexLowerCase(sha256(new TextEncoder().encode(token)));
+  const session_id = encodeHexLowerCase(sha256(new TextEncoder().encode(token)));
 
   const session: Session = {
-    session_id: sessionId,
-    user_id: userId,
-    expires_at: new Date(Date.now() + 1000 * 60 * 60 * 24 * 30),
+    session_id, nickname, expires_at: new Date(Date.now() + 1000 * 60 * 60 * 24 * 15),
   };
 
   return await trx
     .insertInto("users_session")
     .values(session)
-    .returning(["user_id", "session_id", "expires_at"])
+    .returning(["nickname", "session_id", "expires_at"])
     .executeTakeFirstOrThrow();
 }

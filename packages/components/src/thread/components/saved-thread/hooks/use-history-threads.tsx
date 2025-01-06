@@ -1,34 +1,33 @@
 "use client";
 
 import { useLocalStorage } from "@repo/lib/hooks/use-local-storage.ts";
-import { useCallback, useMemo } from "react";
+import { useCallback } from "react";
 import { ThreadHistoryType } from "../types/thread-history-types.ts";
 import { getUser } from "@repo/lib/helpers/get-user.ts";
 import { globalPreferencesQuery } from "@repo/lib/queries/global-preferences-query.ts";
 
-export const SAVED_LAST_THREADS_KEY = "history-threads";
+export const HISTORY_THREADS_KEY = "history-threads";
 
 export const useHistoryThreads = () => {
-  const [value, setValue, removeValue] = useLocalStorage<ThreadHistoryType[] | null>(SAVED_LAST_THREADS_KEY, null);
-
-  const threads = value ?? null;
-
-  const currentUser = useMemo(() => getUser(), []);
   const { data: globalPreferences } = globalPreferencesQuery();
 
+  const [_, setValue, __] = useLocalStorage<ThreadHistoryType[] | null>(HISTORY_THREADS_KEY, null, { 
+    initializeWithValue : false 
+  });
+  
   const { autoSaveThreads } = globalPreferences
-
+  const currentUser = getUser()
+  
   const saveThread = useCallback(({
     nickname, title, threadId
   }: Omit<ThreadHistoryType, "id">) => {
-    if (!autoSaveThreads) return;
+    if (!currentUser || typeof autoSaveThreads === "undefined") return;
 
     setValue((prev) => {
       let threadObjects: ThreadHistoryType[] = prev ?? [];
 
       const exists = threadObjects.some(
-        (item) =>
-          item.threadId === threadId && item.id === currentUser.nickname,
+        item => item.threadId === threadId && item.id === currentUser.nickname,
       );
 
       if (exists) return threadObjects;
@@ -45,29 +44,19 @@ export const useHistoryThreads = () => {
         ];
       }
     });
-  }, [setValue, threads, autoSaveThreads, currentUser]);
+  }, [setValue, autoSaveThreads, currentUser]);
 
-  const deleteThread = useCallback(({
-    threadId
-  }: Pick<ThreadHistoryType, "threadId">) => {
-    if (!currentUser?.nickname) return;
-
+  const deleteThread = useCallback((threadId: string) => {
     setValue((prev) => {
       if (!prev) return null;
 
       const threadObjects = prev.filter(
-        (item) =>
-          item.threadId !== threadId && item.id === currentUser.nickname,
+        item => item.threadId !== threadId && item.id === currentUser.nickname,
       );
 
       return threadObjects.length === 0 ? null : threadObjects;
     });
   }, [setValue, currentUser]);
 
-  const savedThreads = useMemo(() =>
-    value?.filter((i) => i.id === currentUser?.nickname) ?? null,
-    [value, currentUser]
-  );
-
-  return { saveThread, deleteThread, savedThreads };
+  return { saveThread, deleteThread };
 };

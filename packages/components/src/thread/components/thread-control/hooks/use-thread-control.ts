@@ -1,16 +1,15 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { THREAD_RATING_QUERY_KEY } from "../../thread-bump/queries/thread-rating-query.ts";
+import { THREAD_REACTIONS_QUERY_KEY } from "../../thread-reactions/queries/thread-reactions-query.ts";
 import { updateThread } from "../queries/update-thread-fields.ts";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
-import { CURRENT_THREAD_QUERY_KEY } from "../queries/current-thread-query.ts";
-import { revalidatePath } from "next/cache";
 import {
   THREAD_CONTROL_QUERY_KEY,
   ThreadControlQuery,
   ThreadControlQueryValues,
 } from "#thread/components/thread-control/queries/thread-control-query.ts";
 import { removeThread } from "#thread/components/thread-control/queries/remove-thread.ts";
+import { THREAD_QUERY_KEY } from "#thread/components/thread-main/queries/thread-query.ts";
 
 export const THREAD_CONTROL_MUTATION_KEY = ["thread-control-update"];
 
@@ -19,7 +18,7 @@ export const useThreadControl = () => {
   const { replace, refresh } = useRouter();
 
   const setThreadNewValuesMutation = useMutation({
-    mutationFn: async (values: ThreadControlQuery) => {
+    mutationFn: async (values: Partial<ThreadControlQuery>) => {
       return qc.setQueryData(
         THREAD_CONTROL_QUERY_KEY,
         (prev: ThreadControlQuery) => ({
@@ -55,8 +54,8 @@ export const useThreadControl = () => {
       if (data === "no-update-fields")
         return toast.info("Ничего не было обновлено");
 
-      qc.invalidateQueries({ queryKey: CURRENT_THREAD_QUERY_KEY(variables) });
-      qc.invalidateQueries({ queryKey: THREAD_RATING_QUERY_KEY(variables) });
+      qc.invalidateQueries({ queryKey: THREAD_QUERY_KEY(variables) });
+      qc.invalidateQueries({ queryKey: THREAD_REACTIONS_QUERY_KEY(variables) });
       qc.resetQueries({ queryKey: THREAD_CONTROL_QUERY_KEY });
     },
     onError: (e) => {
@@ -66,17 +65,16 @@ export const useThreadControl = () => {
 
   const removeThreadMutation = useMutation({
     mutationKey: THREAD_CONTROL_MUTATION_KEY,
-    mutationFn: async (threadId: string) => removeThread({ id: threadId }),
+    mutationFn: async (threadId: string) => removeThread(threadId),
     onSuccess: async (data, variables) => {
       if (!data) return toast.error("Произошла ошибка при удалении треда");
 
       await Promise.all([
-        qc.resetQueries({ queryKey: CURRENT_THREAD_QUERY_KEY(variables) }),
-        qc.resetQueries({ queryKey: THREAD_RATING_QUERY_KEY(variables) }),
+        qc.resetQueries({ queryKey: THREAD_QUERY_KEY(variables) }),
+        qc.resetQueries({ queryKey: THREAD_REACTIONS_QUERY_KEY(variables) }),
       ]);
 
       replace("/");
-      return revalidatePath("/");
     },
   });
 

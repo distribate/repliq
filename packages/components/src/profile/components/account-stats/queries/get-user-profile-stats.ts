@@ -1,19 +1,8 @@
-"use server"
-
-import { getCurrentSession } from "@repo/lib/actions/get-current-session";
 import { forumUserClient } from "@repo/shared/api/forum-client"
-import { ProfileStatsCharts, ProfileStatsMeta, ProfileViewsDetails } from "@repo/types/routes-types/get-user-profile-stats-types";
+import { ProfileStatsDetailed } from "@repo/types/routes-types/get-user-profile-stats-types";
 
 export const getUserProfileStats = async () => {
-  const { user: currentUser } = await getCurrentSession();
-  if (!currentUser) return null;
-
-  const res = await forumUserClient.user["get-user-profile-stats"].$post({
-    json: {
-      initiator: currentUser.nickname,
-      recipient: currentUser.nickname
-    },
-  });
+  const res = await forumUserClient().user["get-user-profile-stats"].$get();
 
   const data = await res.json();
 
@@ -21,9 +10,5 @@ export const getUserProfileStats = async () => {
     return null;
   }
 
-  return data as {
-    details: ProfileViewsDetails[],
-    meta: ProfileStatsMeta,
-    charts: ProfileStatsCharts
-  }
+  return data as ProfileStatsDetailed
 }

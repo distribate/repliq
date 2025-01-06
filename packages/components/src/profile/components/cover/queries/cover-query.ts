@@ -12,11 +12,10 @@ export const initial: CoverQuery = {
   inView: true,
 };
 
-export const coverQuery = () =>
-  useQuery({
-    queryKey: COVER_QUERY_KEY,
-    initialData: initial,
-    staleTime: Infinity,
-    gcTime: Infinity,
-    refetchOnWindowFocus: false,
-  });
+export const coverQuery = () => useQuery({
+  queryKey: COVER_QUERY_KEY,
+  initialData: initial,
+  staleTime: Infinity,
+  gcTime: Infinity,
+  refetchOnWindowFocus: false,
+});

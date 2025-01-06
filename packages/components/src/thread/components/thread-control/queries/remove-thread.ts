@@ -1,65 +1,15 @@
-"use server";
+import { forumThreadClient } from "@repo/shared/api/forum-client";
 
-import "server-only";
-import { createClient } from '@repo/shared/api/supabase-client.ts';
-import { ThreadEntity } from "@repo/types/entities/entities-type.ts";
-import { validateThreadOwner } from "#thread/components/thread-control/queries/validate-thread-owner.ts";
-import { getCurrentSession } from "@repo/lib/actions/get-current-session.ts";
-
-async function threadImagesRemove(thread_id: Pick<ThreadEntity, "id">["id"]) {
-  const api = createClient();
-
-  const {
-    data: existingThreadImages,
-    status,
-    error: existingThreadImagesErr,
-  } = await api
-    .from("threads_images")
-    .select("images")
-    .eq("thread_id", thread_id)
-    .single();
-
-  if (existingThreadImagesErr && status !== 406) {
-    throw new Error(existingThreadImagesErr.message);
-  }
-
-  if (
-    !existingThreadImages ||
-    !existingThreadImages.images ||
-    existingThreadImages.images.length === 0
-  ) {
-    return;
-  }
-
-  const { error: removeImagesFromStorage } = await api.storage
-    .from("threads")
-    .remove(existingThreadImages.images);
-
-  if (removeImagesFromStorage) {
-    throw new Error(removeImagesFromStorage.message);
-  }
-}
-
-export async function removeThread({ id }: Pick<ThreadEntity, "id">) {
-  const { user: currentUser } = await getCurrentSession();
-  if (!currentUser) return;
-
-  const isValid = await validateThreadOwner({
-    threadId: id,
-    currentUserNickname: currentUser.nickname,
+export async function removeThread(threadId: string) {
+  const res = await forumThreadClient.thread["remove-thread"][":threadId"].$delete({
+    param: { threadId },
   });
 
-  if (!isValid) return;
+  const data = await res.json();
 
-  const api = createClient();
-
-  await threadImagesRemove(id);
-
-  const { error } = await api.from("threads").delete().eq("id", id);
-
-  if (error) {
-    throw new Error(error.message);
+  if (!data || "error" in data) {
+    return null;
   }
 
-  return !error;
+  return data;
 }

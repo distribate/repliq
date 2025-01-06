@@ -5,7 +5,7 @@ import { Typography } from "@repo/ui/src/components/typography.tsx";
 import { ParticleEffect } from "@repo/ui/src/components/particle-effect.tsx";
 import { UserDonateBadge } from "./donate-badge.tsx";
 import { DonateVariantsEnum } from '@repo/types/entities/entities-type.ts';
-import { CurrentUser } from '@repo/lib/queries/current-user-query.ts';
+import type { UserDetailed } from '@repo/types/entities/user-type.ts';
 import { DONATE_GROUPS } from '@repo/shared/constants/donate-aliases.ts';
 import { useState } from "react";
 
@@ -25,7 +25,7 @@ const getDonateTitle = (donate: DonateVariantsEnum) => DONATE_GROUPS[donate];
 
 type UserDonateProps = {
   donate: DonateVariantsEnum,
-  favoriteItemId: Pick<CurrentUser, "favorite_item">["favorite_item"]
+  favoriteItemId: number | null
 }
 
 export const UserDonate = ({

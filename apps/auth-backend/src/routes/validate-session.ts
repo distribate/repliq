@@ -14,16 +14,12 @@ export const validateSessionRoute = new Hono()
     const result = validateSessionBodySchema.parse(body)
 
     const { token } = result;
-
-    let validated = null;
-
     try {
       const { session, user } = await validateSessionToken(token);
 
-      validated = { session, user }
+      return ctx.json({ session, user }, 200)
     } catch (e) {
       return ctx.json({ error: throwError(e) }, 500)
     }
-
-    return ctx.json(validated, 200)
-  });
+  }
+);

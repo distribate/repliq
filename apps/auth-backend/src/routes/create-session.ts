@@ -9,6 +9,7 @@ import { createSessionBodySchema } from '@repo/types/schemas/auth/create-session
 import { createSessionTransaction } from "../lib/transactions/create-session-transaction.ts";
 import bcrypt from "bcryptjs";
 import { publishAuthNotify } from "../puslishers/pub-auth-notify.ts";
+import { throwError } from "../helpers/throw-error.ts";
 
 export type Session = Insertable<Pick<DB, "users_session">["users_session"]>;
 export type User = Selectable<Pick<Users, "id" | "nickname" | "uuid">>;
@@ -23,7 +24,7 @@ export const createSessionRoute = new Hono()
   const result = createSessionBodySchema.parse(body);
 
   const { details: authDetails, info } = result;
-  const { userId, password, nickname } = authDetails;
+  const { password, nickname } = authDetails;
 
   const user = await findPlayerAuth({
     criteria: {
@@ -46,17 +47,15 @@ export const createSessionRoute = new Hono()
 
   try {
     const createdSession = await createSessionTransaction({
-      token, userId, info
+      token, nickname, info
     })
 
-    await publishAuthNotify({
-      session_id: createdSession.session_id.toString(),
-      nickname
-    })
+    const { session_id, expires_at } = createdSession
 
-    return ctx.json({ token, expiresAt: createdSession.expires_at }, 200);
+    await publishAuthNotify({ session_id, nickname })
+
+    return ctx.json({ token, expiresAt: expires_at }, 200);
   } catch (e) {
-    console.error(e);
-    throw new HTTPException(500, { message: "Internal Server Error" });
+    return ctx.json({ error: throwError(e) }, 500)
   }}
 );

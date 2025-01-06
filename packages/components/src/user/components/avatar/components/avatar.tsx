@@ -8,7 +8,6 @@ import { TooltipWrapper } from '#wrappers/tooltip-wrapper.tsx';
 import ExpActive from '@repo/assets/images/minecraft/exp-active.webp';
 import ExpNoActive from '@repo/assets/images/minecraft/exp-noactive.webp';
 import { userStatusQuery } from '../queries/user-status-query.ts';
-import dayjs from '@repo/lib/constants/dayjs-instance.ts';
 
 const avatarVariants = cva('relative rounded-sm', {
   variants: {
@@ -46,8 +45,6 @@ export const Avatar = forwardRef<HTMLDivElement, AvatarProps>(({
 
   const isOnline = userStatus?.type === 'online';
   const issuedTime = userStatus?.issued_date
-    ? `Оффлайн. Был в ${dayjs(userStatus?.issued_date).format("HH:mm")}`
-    : `Никогда не заходил`
 
   return (
     <div className={avatarVariants({ variant, shadow, border, className })} ref={ref}{...props}>

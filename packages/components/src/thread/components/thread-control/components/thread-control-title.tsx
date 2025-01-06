@@ -1,24 +1,33 @@
 import { ChangeEvent, useState } from "react";
 import { Input } from "@repo/ui/src/components/input.tsx";
-import { ThreadControlFields } from "../types/thread-control-types.ts";
 import { Info } from "lucide-react";
 import { Typography } from "@repo/ui/src/components/typography.tsx";
-import { useThreadControl } from "#thread/components/thread-control/hooks/use-thread-control.ts";
+import { ThreadDetailed } from "@repo/types/entities/thread-type.ts";
+import { useQueryClient } from "@tanstack/react-query";
+import { THREAD_CONTROL_QUERY_KEY, ThreadControlQuery } from "../queries/thread-control-query";
+
+type ThreadControlTitleProps = Pick<ThreadDetailed, "title">;
 
 export const ThreadControlTitle = ({
   title: currentTitle,
-}: Pick<ThreadControlFields, "title">) => {
+}: ThreadControlTitleProps) => {
+  const qc = useQueryClient();
   const [titleValue, setTitleValue] = useState<string>(currentTitle);
-  const { setThreadNewValuesMutation } = useThreadControl();
 
   const onChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { value } = e.target;
     setTitleValue(value);
 
-    return setThreadNewValuesMutation.mutate({
-      state: { isValid: value.length > 2 },
-      values: { title: value },
-    });
+    return qc.setQueryData(
+      THREAD_CONTROL_QUERY_KEY,
+      (prev: ThreadControlQuery) => ({
+        state: {
+          ...prev.state,
+          isValid: value.length > 2,
+        },
+        values: { ...prev.values },
+      }),
+    )
   };
 
   return (

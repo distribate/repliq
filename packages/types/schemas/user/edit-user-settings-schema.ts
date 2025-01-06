@@ -12,7 +12,6 @@ export const userSettings = [
 ] satisfies readonly [ UserSettingsKeys, ...UserSettingsKeys[] ];
 
 export const editUserSettingsBodySchema = z.object({
-  userId: z.string(),
   setting: z.enum(userSettings),
   value: z.union([
     z.boolean(),

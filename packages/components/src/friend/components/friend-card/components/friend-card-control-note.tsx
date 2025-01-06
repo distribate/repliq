@@ -8,17 +8,19 @@ import { useState } from "react";
 import { FriendCardProps } from "#friend/components/friend-card/components/friend-card.tsx";
 import { useControlFriend } from "#friend/components/friend-card/hooks/use-control-friend.ts";
 
-type FriendCardControlNote = Pick<FriendCardProps, "nickname">;
+type FriendCardControlNote = Pick<FriendCardProps, "nickname"> & {
+  friend_id: string;
+};
 
 export const FriendCardControlNote = ({
-  nickname: requestedUserNickname,
+  nickname: recipient, friend_id
 }: FriendCardControlNote) => {
   const [value, setValue] = useState<string>("");
   const { setFriendNoteMutation } = useControlFriend();
 
   const handleAddNote = () => {
     if (value.length <= 1) return;
-    return setFriendNoteMutation.mutate({ requestedUserNickname, note: value });
+    return setFriendNoteMutation.mutate({ recipient, friend_id, note: value });
   };
 
   return (

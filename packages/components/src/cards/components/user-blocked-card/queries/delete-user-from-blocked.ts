@@ -1,8 +1,4 @@
-"use server";
-
-import "server-only";
 import { forumUserClient } from "@repo/shared/api/forum-client";
-import { getCurrentSession } from "@repo/lib/actions/get-current-session";
 
 export type DeleteUserFromBlocked = {
   recipient: string;
@@ -11,12 +7,8 @@ export type DeleteUserFromBlocked = {
 export async function deleteUserFromBlocked({
   recipient,
 }: DeleteUserFromBlocked) {
-  const { user: currentUser } = await getCurrentSession();
-  if (!currentUser) return null;
-
-  const res = await forumUserClient.user["control-user-blocked"].$post({
+  const res = await forumUserClient().user["control-user-blocked"].$post({
     json: {
-      initiator: currentUser.nickname,
       recipient,
       type: "unblock"
     }

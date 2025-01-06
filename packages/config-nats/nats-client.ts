@@ -2,10 +2,11 @@ import { connect, type NatsConnection, type ConnectionOptions } from "@nats-io/t
 
 const NATS_CONFIG: ConnectionOptions = {
   servers: "nats://localhost:4222",
+  // @ts-ignore
   token: process.env.NATS_AUTH_TOKEN!,
-  reconnect: true,            // Включить автоматическое переподключение
-  maxReconnectAttempts: -1,   // Неограниченное количество попыток
-  reconnectTimeWait: 2000,    // Задержка между попытками переподключения
+  reconnect: true,           
+  maxReconnectAttempts: -1,  
+  reconnectTimeWait: 2000, 
 }
 
 let nc: NatsConnection | null = null;

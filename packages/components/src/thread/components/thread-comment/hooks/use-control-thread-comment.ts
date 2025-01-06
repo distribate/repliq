@@ -6,58 +6,57 @@ import {
 import { toast } from "sonner";
 import { THREAD_COMMENTS_QUERY_KEY, ThreadComment } from '../../thread-comments/queries/thread-comments-query.ts';
 import { editThreadCommentContent } from "../queries/edit-thread-comment-content.ts";
-import { ThreadCommentEntity } from "@repo/types/entities/entities-type.ts";
 
 export const useControlThreadComment = () => {
   const qc = useQueryClient();
 
   const editCommentContentMutation = useMutation({
-    mutationFn: async (
-      values: Pick<ThreadCommentEntity, "id" | "thread_id" | "content">,
-    ) => editThreadCommentContent(values),
+    mutationFn: async (values: { id: number; content: string; thread_id: string }) => {
+      return
+    },
     onSuccess: async (data, variables) => {
-      if (!data) return toast.error("Не удалось обновить комментарий");
+      // if (!data) return toast.error("Не удалось обновить комментарий");
 
-      const prevComments = qc.getQueryData<ThreadComment[]>(
-        THREAD_COMMENTS_QUERY_KEY(variables.thread_id),
-      );
+      // const prevComments = qc.getQueryData<ThreadComment[]>(
+      //   THREAD_COMMENTS_QUERY_KEY(variables.thread_id),
+      // );
 
-      if (!prevComments) {
-        return qc.invalidateQueries({
-          queryKey: THREAD_COMMENTS_QUERY_KEY(variables.thread_id),
-        });
-      }
+      // if (!prevComments) {
+      //   return qc.invalidateQueries({
+      //     queryKey: THREAD_COMMENTS_QUERY_KEY(variables.thread_id),
+      //   });
+      // }
 
-      const prevCommentIndex = prevComments.findIndex(
-        (item) => item.id === Number(variables.id),
-      );
+      // const prevCommentIndex = prevComments.findIndex(
+      //   (item) => item.id === Number(variables.id),
+      // );
 
-      if (prevCommentIndex === -1) {
-        return qc.invalidateQueries({
-          queryKey: THREAD_COMMENTS_QUERY_KEY(variables.thread_id),
-        });
-      }
+      // if (prevCommentIndex === -1) {
+      //   return qc.invalidateQueries({
+      //     queryKey: THREAD_COMMENTS_QUERY_KEY(variables.thread_id),
+      //   });
+      // }
 
-      const prevComment = prevComments[prevCommentIndex];
+      // const prevComment = prevComments[prevCommentIndex];
 
-      if (!prevComment) {
-        return qc.invalidateQueries({
-          queryKey: THREAD_COMMENTS_QUERY_KEY(variables.thread_id),
-        });
-      }
+      // if (!prevComment) {
+      //   return qc.invalidateQueries({
+      //     queryKey: THREAD_COMMENTS_QUERY_KEY(variables.thread_id),
+      //   });
+      // }
 
-      const updatedComments = [...prevComments];
+      // const updatedComments = [...prevComments];
 
-      updatedComments[prevCommentIndex] = {
-        ...updatedComments[prevCommentIndex],
-        content: data.content,
-        edited: data.edited,
-      };
+      // updatedComments[prevCommentIndex] = {
+      //   ...updatedComments[prevCommentIndex],
+      //   content: data.content,
+      //   is_updated: data.is_updated,
+      // };
 
-      return qc.setQueryData(
-        THREAD_COMMENTS_QUERY_KEY(variables.thread_id),
-        updatedComments,
-      );
+      // return qc.setQueryData(
+      //   THREAD_COMMENTS_QUERY_KEY(variables.thread_id),
+      //   updatedComments,
+      // );
     },
     onError: (e) => {
       throw new Error(e.message);
