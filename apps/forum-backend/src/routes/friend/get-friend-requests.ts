@@ -3,14 +3,10 @@ import { getFriendRequests } from "#lib/queries/friend/get-friend-requests.ts";
 import { getNickname } from "#utils/get-nickname-from-storage.ts";
 import { zValidator } from "@hono/zod-validator";
 import { Hono } from "hono";
-import { z } from "zod";
-
-const getFriendsRequestSchema = z.object({
-  type: z.enum(["incoming", "outgoing"])
-});
+import { getFriendsRequestSchema } from "@repo/types/schemas/friend/get-friends-requests-schema.ts";
 
 export const getFriendRequestsRoute = new Hono()
-  .get("/get-friend-requests", zValidator("query", getFriendsRequestSchema), async (ctx) => {
+  .get("/get-friends-requests", zValidator("query", getFriendsRequestSchema), async (ctx) => {
     const query = await ctx.req.query();
     const { type } = getFriendsRequestSchema.parse(query);
     const nickname = getNickname();

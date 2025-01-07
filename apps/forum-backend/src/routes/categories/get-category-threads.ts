@@ -1,30 +1,12 @@
-import { forumDB } from "#shared/database/forum-db.ts";
+import { getThreadsCategories } from "#lib/queries/categories/get-category-threads.ts";
 import { zValidator } from "@hono/zod-validator";
 import { queryRouteSchema } from "@repo/types/schemas/global/query-route-schema";
 import { Hono } from "hono";
 import { z } from "zod";
 
-const getCategoryThreadsSchema = z.object({
+export const getCategoryThreadsSchema = z.object({
   limit: z.string().transform(Number).optional()
 }).merge(queryRouteSchema);
-
-type ThreadsFromCategories = z.infer<typeof getCategoryThreadsSchema> & {
-  category_id: string
-}
-
-async function getThreadsCategories({
-  category_id, ascending, limit, range
-}: ThreadsFromCategories) {
-  let query = forumDB
-    .selectFrom("threads")
-    .select(["threads.id", "threads.title", "threads.created_at", "threads.updated_at", "threads.visibility"])  
-    .where("threads.category_id", "=", category_id);
-
-  if (limit) query = query.limit(limit);
-  if (range) query.offset(range[0]).limit(range[1] - range[0] + 1);
-
-  return await query.execute();
-}
 
 export const getCategoryThreadsRoute = new Hono()
   .get("/get-category-threads/:category_id", zValidator("query", getCategoryThreadsSchema), async (ctx) => {

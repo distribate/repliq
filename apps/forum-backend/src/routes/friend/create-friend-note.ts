@@ -1,16 +1,9 @@
 import { throwError } from "#helpers/throw-error.ts";
 import { createFriendNote } from "#lib/queries/friend/create-friend-note.ts";
-import { forumDB } from "#shared/database/forum-db.ts"
 import { getNickname } from "#utils/get-nickname-from-storage.ts";
 import { zValidator } from "@hono/zod-validator";
 import { Hono } from "hono";
-import { z } from "zod";
-
-export const addFriendNoteSchema = z.object({
-  friend_id: z.string(),
-  recipient: z.string(),
-  message: z.string(),
-})
+import { addFriendNoteSchema } from "@repo/types/schemas/friend/create-friend-note-schema.ts";
 
 export const createFriendNoteRoute = new Hono()
   .post("/create-friend-note", zValidator("json", addFriendNoteSchema), async (ctx) => {

@@ -1,11 +1,4 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import {
-  RemoveThreadComment,
-  removeThreadComment,
-} from "../queries/remove-thread-comment.ts";
-import { toast } from "sonner";
-import { THREAD_COMMENTS_QUERY_KEY, ThreadComment } from '../../thread-comments/queries/thread-comments-query.ts';
-import { editThreadCommentContent } from "../queries/edit-thread-comment-content.ts";
 
 export const useControlThreadComment = () => {
   const qc = useQueryClient();
@@ -64,15 +57,16 @@ export const useControlThreadComment = () => {
   });
 
   const deleteCommentItemMutation = useMutation({
-    mutationFn: async (values: RemoveThreadComment) =>
-      removeThreadComment(values),
+    mutationFn: async () => {
+      return;
+    },
     onSuccess: async (data, variables) => {
-      if (!data)
-        return toast.error("Произошла ошибка при удалении комментария");
+      // if (!data)
+      //   return toast.error("Произошла ошибка при удалении комментария");
 
-      return qc.invalidateQueries({
-        queryKey: THREAD_COMMENTS_QUERY_KEY(variables.thread_id),
-      });
+      // return qc.invalidateQueries({
+      //   queryKey: THREAD_COMMENTS_QUERY_KEY(variables.thread_id),
+      // });
     },
     onError: (e) => {
       throw new Error(e.message);

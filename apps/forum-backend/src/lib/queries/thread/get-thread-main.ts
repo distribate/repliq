@@ -8,7 +8,6 @@ export async function getThreadMain(threadId: string) {
     .leftJoin('threads_views', 'threads.id', 'threads_views.thread_id')
     .select([
       'threads.id',
-      'threads.auto_remove',
       'threads.description',
       "threads.title",
       "threads.content",

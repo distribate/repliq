@@ -1,5 +1,6 @@
 import { forumDB } from "#shared/database/forum-db.ts";
 
+// todo
 async function removeThreadImages(threadId: string) {
   
 }

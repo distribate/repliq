@@ -23,14 +23,14 @@ export const ThreadCommentItemContent = ({
 }: ThreadCommentItemContentProps) => {
   const qc = useQueryClient();
   const data = commentActionsQuery(isOwner ? id : null);
-  const { editCommentContentMutation } = useControlThreadComment();
+  // const { editCommentContentMutation } = useControlThreadComment();
   const [content, setContent] = useState<string>(currentContent || "");
 
   const commentState = data?.data;
 
   const handleSave = () => {
     if (content === currentContent) return;
-    return editCommentContentMutation.mutate({ thread_id, id, content });
+    // return editCommentContentMutation.mutate({ thread_id, id, content });
   };
 
   return (

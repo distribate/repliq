@@ -14,7 +14,7 @@ import { ThreadOwner } from '@repo/types/entities/thread-type.ts';
 type ThreadCommentsProps = {
   thread_id: string,
   owner: ThreadOwner;
-  isComments: boolean;
+  is_comments: boolean;
 };
 
 type ThreadCommentsHeaderProps = {
@@ -59,21 +59,21 @@ export const ThreadCommentsSkeleton = () => {
 };
 
 export const ThreadComments = ({
-  thread_id, owner, isComments,
+  thread_id, owner, is_comments,
 }: ThreadCommentsProps) => {
   const { updateCommentsMutation } = useUpdateComments()
-  const { data, isLoading, isFetching } = threadCommentsQuery({ thread_id, isComments });
+  const { data, isLoading, isFetching } = threadCommentsQuery({ id: thread_id, is_comments });
   const { inView, ref } = useInView({ triggerOnce: false, threshold: 1 });
 
   const threadComments = data?.data;
   const threadMeta = data?.meta;
-  const nonComments = isComments && !threadComments;
+  const nonComments = is_comments && !threadComments;
   const hasMore = threadMeta?.hasNextPage;
-  const cursor = threadMeta?.endCursor ?? null;
+  const cursor = threadMeta?.endCursor ?? undefined;
 
   useEffect(() => {
     if (inView && hasMore && !isFetching) {
-      updateCommentsMutation.mutate({ cursor, limit: null, thread_id })
+      updateCommentsMutation.mutate({ cursor, threadId: thread_id });
     }
   }, [inView, hasMore]);
 
@@ -90,11 +90,12 @@ export const ThreadComments = ({
               thread_id={thread_id}
               id={comment.id}
               replied={comment.replied}
-              edited={comment.is_updated}
+              is_updated={comment.is_updated}
               content={comment.content}
-              nickname={comment.user_nickname}
-              isAuthor={comment.user_nickname === owner.nickname}
+              user_nickname={comment.user_nickname}
+              is_owner={comment.user_nickname === owner.nickname}
               created_at={comment.created_at}
+              updated_at={comment.updated_at}
             />
           ))}
           {(hasMore && isFetching) && (

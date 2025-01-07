@@ -84,7 +84,6 @@ export const getUserFriends = async ({
     .orderBy(sortType, sortOrder)
     .execute();
 
-    console.log(friendsData)
     return friendsData
   }
 }

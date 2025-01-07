@@ -10,6 +10,7 @@ export const getUsersProfileViewsRank = async () => {
     'recipient',
     sql`COUNT(*)`.as('views_count'),
   ])
+  .$narrowType<{ recipient: string; views_count: number }>()
   .groupBy('recipient')
   .orderBy(sql`COUNT(*)`, 'desc')
   .limit(RATING_LIMIT)

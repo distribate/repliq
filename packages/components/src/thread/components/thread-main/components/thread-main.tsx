@@ -8,9 +8,7 @@ import { ThreadImages } from "../../thread-images/thread-images"
 import { Eye, PencilLine } from "lucide-react"
 import { BlockWrapper } from "#wrappers/block-wrapper.tsx"
 import { ThreadMore } from "../../thread-more/components/thread-more"
-import { Suspense } from "react"
 import { ThreadCreator } from "../../thread-creator/components/thread-creator"
-import { Skeleton } from "@repo/ui/src/components/skeleton"
 import { Button } from "@repo/ui/src/components/button"
 import { FriendButton } from "#buttons/friend-button.tsx"
 import { ThreadShare } from "../../thread-share/thread-share"
@@ -109,7 +107,11 @@ export const Thread = ({
                   <span className="text-caribbean-green-400">{dateCreated}</span> в категории ...
                 </Typography>
               </div>
-              <ThreadContent threadId={id} content={content as Descendant[]} isThreadOwner={isThreadOwner} />
+              <ThreadContent
+                threadId={id}
+                content={content as Descendant[]}
+                isThreadOwner={isThreadOwner}
+              />
               {is_images && <ThreadImages threadId={id} />}
               <div className="flex items-center px-4 w-full justify-start gap-1">
                 <ThreadReactions threadId={id} />
@@ -154,7 +156,7 @@ export const Thread = ({
           <ThreadComments
             owner={owner}
             thread_id={id}
-            isComments={is_comments}
+            is_comments={is_comments}
           />
           {is_comments ? <CreateThreadComment /> : <CommentsDisabled />}
         </div>

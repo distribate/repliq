@@ -1,17 +1,8 @@
 import { throwError } from "#helpers/throw-error.ts";
 import { removeThread } from "#lib/queries/thread/remove-thread.ts";
-import { forumDB } from "#shared/database/forum-db.ts";
 import { getNickname } from "#utils/get-nickname-from-storage.ts";
 import { Hono } from "hono";
-
-async function getThreadOwner(nickname: string, threadId: string) {
-  return await forumDB
-    .selectFrom("threads_users")
-    .select(["user_nickname"])
-    .where("thread_id", "=", threadId)
-    .where("user_nickname", "=", nickname)
-    .executeTakeFirst()
-}
+import { validateThreadOwner } from "./validate-thread-owner";
 
 export const removeThreadRoute = new Hono()
   .delete("/remove-thread/:threadId", async (ctx) => {
@@ -19,9 +10,9 @@ export const removeThreadRoute = new Hono()
 
     const nickname = getNickname()
 
-    const threadOwner = await getThreadOwner(nickname, threadId)
+    const isValidOwner = await validateThreadOwner(nickname, threadId)
 
-    if (!threadOwner || (threadOwner && threadOwner.user_nickname !== nickname)) {
+    if (!isValidOwner) {
       return ctx.json({ error: "You are not the owner of this thread" }, 400)
     }
 

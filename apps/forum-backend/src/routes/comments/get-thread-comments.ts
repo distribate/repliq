@@ -3,8 +3,8 @@ import { forumDB } from "#shared/database/forum-db.ts";
 import { zValidator } from "@hono/zod-validator";
 import { Hono } from "hono";
 import { executeWithCursorPagination } from "kysely-paginate";
-import { z } from "zod";
 import type { CommentWithReplies, GetThreadCommentsResponse } from "@repo/types/entities/thread-comments-types.ts";
+import { getCommentsSchema } from "@repo/types/schemas/comment/get-comments-schema.ts";
 
 type GetThreadComments = {
   limit: number | null;
@@ -110,16 +110,11 @@ async function getThreadComments({
   }
 }
 
-const getThreadCommentsSchema = z.object({
-  limit: z.string().transform(Number).optional(),
-  cursor: z.string().optional(),
-})
-
 export const getThreadCommentsRoute = new Hono()
-  .get("/get-thread-comments/:threadId", zValidator("query", getThreadCommentsSchema), async (ctx) => {
+  .get("/get-thread-comments/:threadId", zValidator("query", getCommentsSchema), async (ctx) => {
     const { threadId } = ctx.req.param();
     const query = ctx.req.query();
-    const { limit, cursor } = getThreadCommentsSchema.parse(query);
+    const { limit, cursor } = getCommentsSchema.parse(query);
 
     console.log(limit, cursor)
 

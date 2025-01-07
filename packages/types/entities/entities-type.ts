@@ -19,7 +19,6 @@ export type CategoryEntity = Tables<"category">;
 
 export type ThreadCommentEntity = Tables<"threads_comments">;
 export type ThreadCommentRepliedEntity = Tables<"threads_comments_replies">;
-export type ThreadRatingEntity = Tables<"threads_rating">;
 export type ThreadEntity = Tables<"threads">;
 export type ThreadRatingEnum =
   Database["public"]["Enums"]["thread_rating_type"];

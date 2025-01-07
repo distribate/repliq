@@ -44,7 +44,6 @@ import { getThreadPreviewRoute } from '#routes/thread/get-thread-preview.ts';
 import { getLatestCategoryThreadsRoute } from '#routes/categories/get-latest-category-threads.ts';
 import { removeThreadRoute } from '#routes/thread/remove-thread.ts';
 import { updateThreadSettingsRoute } from '#routes/thread/update-thread-settings.ts';
-import { createThreadReactionRoute } from '#routes/thread/create-thread-reaction.ts';
 import { getThreadUserReactionsRoute } from '#routes/thread/get-thread-user-rating.ts';
 import { timeout } from 'hono/timeout'
 import { natsSubscribe } from '#utils/nats-subscribers.ts';
@@ -54,6 +53,7 @@ import type { Env } from '#types/env-type.ts';
 import { createCommentRoute } from '#routes/comments/create-comment.ts';
 import { replyCommentRoute } from '#routes/comments/reply-comment.ts';
 import { getThreadCommentsRoute } from '#routes/comments/get-thread-comments.ts';
+import { createReactionRoute } from '#routes/reaction/create-reaction.ts';
 
 await initNats()
 await natsSubscribe()
@@ -79,9 +79,12 @@ export const thread = new Hono()
   .route("/", getThreadPreviewRoute)
   .route("/", removeThreadRoute)
   .route("/", updateThreadSettingsRoute)
-  .route("/", createThreadReactionRoute)
   .route("/", getThreadCommentsRoute)
   .route("/", getThreadUserReactionsRoute)
+
+export const reaction = new Hono()
+  .basePath('/reaction')
+  .route("/", createReactionRoute)
 
 export const user = new Hono()
   .basePath('/user')
@@ -121,9 +124,11 @@ const app = new Hono<Env>()
   .use("/api/thread/*", cors(corsOptions))
   .use("/api/categories/*", cors(corsOptions))
   .use("/api/comment/*", cors(corsOptions))
+  .use("/api/reaction/*", cors(corsOptions))
   .use("/api/*", csrf(csrfOptions))
   .use("/api/*", timeout(5000))
   .use('/api/user/*', validateRequest)
+  .use('/api/reaction/*', validateRequest)
   .use('/api/thread/*', validateRequest)
   .use('/api/comment/*', validateRequest)
   .use('/api/categories/*', validateRequest)

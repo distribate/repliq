@@ -1,10 +1,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import {
-  UpdateThreadRating,
-  updateThreadRating,
-} from "../../../queries/post-thread-rating.ts";
 import { toast } from "sonner";
 import { THREAD_REACTIONS_QUERY_KEY } from "../queries/thread-reactions-query.ts";
+import { addReactionToThread, UpdateThreadRating } from "#thread/queries/add-reaction-to-thread.ts";
 
 const THREAD_RATING_MESSAGES: Record<string, string> = {
   "Reacted": "Вы уже оценивали тред",
@@ -16,8 +13,8 @@ const THREAD_RATING_MESSAGES: Record<string, string> = {
 export const useThreadReaction = () => {
   const qc = useQueryClient();
 
-  const updateThreadRatingMutation = useMutation({
-    mutationFn: async (values: UpdateThreadRating) => updateThreadRating(values),
+  const addReactionToThreadMutation = useMutation({
+    mutationFn: async (values: UpdateThreadRating) => addReactionToThread(values),
     onSuccess: async (data, variables) => {
       if (!data) return null;
 
@@ -36,7 +33,7 @@ export const useThreadReaction = () => {
       }
 
       return qc.invalidateQueries({
-        queryKey: THREAD_REACTIONS_QUERY_KEY(variables.threadId),
+        queryKey: THREAD_REACTIONS_QUERY_KEY(variables.id),
       });
     },
     onError: (e) => {
@@ -44,5 +41,5 @@ export const useThreadReaction = () => {
     },
   });
 
-  return { updateThreadRatingMutation };
+  return { addReactionToThreadMutation };
 };

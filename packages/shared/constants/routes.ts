@@ -1,7 +1,3 @@
-if (!process.env.NEXT_PUBLIC_SKIN_BACKEND_PORT) {
-  throw new Error("NEXT_PUBLIC_SKIN_PROXY_PORT is not defined in .env");
-}
-
 export const SKIN_GET_SKIN = `http://localhost:${process.env.NEXT_PUBLIC_SKIN_BACKEND_PORT}/get-skin/`;
 export const SKIN_GET_HEAD = `http://localhost:${process.env.NEXT_PUBLIC_SKIN_BACKEND_PORT}/api/get-head/`;
 export const SKIN_DOWNLOAD_SKIN = `http://localhost:${process.env.NEXT_PUBLIC_SKIN_BACKEND_PORT}/download-skin/`;
@@ -12,3 +8,6 @@ export const CATEGORY_URL = "/category/";
 export const AUTH_REDIRECT = "/auth?type=login";
 export const BANNED_REDIRECT = "/banned";
 export const CREATE_THREAD_URL = "/create-thread";
+
+export const REACTIONS_LIMIT_DEFAULT = 1;
+export const REACTIONS_LIMIT_PREMIUM = 3;

@@ -3,11 +3,7 @@ import { zValidator } from "@hono/zod-validator";
 import { Hono } from "hono";
 import { deleteFriendRequest } from "#lib/queries/friend/delete-friend-request.ts";
 import { getNickname } from "#utils/get-nickname-from-storage.ts";
-import { z } from "zod";
-
-const deleteFriendRequestSchema = z.object({
-  request_id: z.string()
-})
+import { deleteFriendRequestSchema } from "@repo/types/schemas/friend/delete-friend-request-schema.ts";
 
 export const deleteFriendRequestRoute = new Hono()
   .post("/delete-friend-request", zValidator("json", deleteFriendRequestSchema), async (ctx) => {

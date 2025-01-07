@@ -12,7 +12,7 @@ export const FormThreadComments = ({ errors, control }: FormChildsProps) => {
 
   if (!threadFormState) return null;
 
-  const isActive = threadFormState.isComments;
+  const isActive = threadFormState.is_comments;
 
   return (
     <FormField errorMessage={errors?.comments?.message}>
@@ -36,7 +36,7 @@ export const FormThreadComments = ({ errors, control }: FormChildsProps) => {
                 onPressedChange={(checked) => {
                   onChange(checked);
                   return updateThreadFormMutation.mutate({
-                    isComments: checked,
+                    is_comments: checked,
                   });
                 }}
               >

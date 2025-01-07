@@ -3,17 +3,13 @@ import { updateNotification } from "#lib/queries/notifications/update-notificati
 import { getNickname } from "#utils/get-nickname-from-storage.ts";
 import { zValidator } from "@hono/zod-validator";
 import { Hono } from "hono";
-import { z } from "zod";
-
-const notificationIdSchema = z.object({
-  notification_id: z.string(),
-});
+import { checkNotificationSchema } from "@repo/types/schemas/notification/check-notification-schema";
 
 export const checkNotificationRoute = new Hono()
-  .post("/check-notification", zValidator("json", notificationIdSchema), async (ctx) => {
+  .post("/check-notification", zValidator("json", checkNotificationSchema), async (ctx) => {
     const nickname = getNickname()
     const body = await ctx.req.json();
-    const result = notificationIdSchema.parse(body);
+    const result = checkNotificationSchema.parse(body);
 
     try {
       await updateNotification({

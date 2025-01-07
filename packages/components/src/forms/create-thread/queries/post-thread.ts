@@ -24,7 +24,7 @@ export type PostThreadProperties = Omit<ThreadEntity, "content"> &
 export type PostThreadType = Nullable<Pick<PostThreadImages, "base64Files">> &
   Omit<
     PostThreadProperties,
-    "thread_id" | "created_at" | "id" | "updated_at" | "isUpdated"
+    "thread_id" | "created_at" | "id" | "updated_at" | "is_updated"
   >;
 
 export async function postThreadCategory({
@@ -73,13 +73,11 @@ export async function postThreadItem({
   const api = createClient();
 
   const {
-    isComments,
-    auto_remove,
+    is_comments,
     content,
     permission,
     description,
     title,
-    isImages,
     visibility,
   } = values;
 
@@ -89,9 +87,8 @@ export async function postThreadItem({
       title,
       description,
       content,
-      is_comments: isComments,
+      is_comments,
       permission,
-      auto_remove,
       visibility,
     })
     .select("id")
@@ -111,14 +108,12 @@ export async function postThread({ ...values }: PostThreadType) {
   const {
     category_id,
     content: rawContent,
-    isComments,
+    is_comments,
     title,
     tags,
     visibility,
-    isImages,
     permission,
     description,
-    auto_remove,
     base64Files,
   } = values;
 
@@ -128,12 +123,10 @@ export async function postThread({ ...values }: PostThreadType) {
 
   const { id: thread_id } = await postThreadItem({
     content,
-    isComments,
-    auto_remove,
+    is_comments,
     title,
     description,
     permission,
-    isImages,
     visibility,
   });
 

@@ -14,7 +14,6 @@ export type ThreadDetailed = {
   title: string;
   created_at: string;
   content: any;
-  auto_remove: boolean;
   description: string | null;
   updated_at: string | null;
   is_comments: boolean;

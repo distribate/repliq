@@ -1,16 +1,8 @@
-export type ThreadCommentProps = {
-  nickname: string;
-  isAuthor: boolean;
-  id: number;
-  created_at: string;
+import { Comment } from "@repo/types/entities/thread-comments-types";
+
+export type ThreadCommentProps = Comment & {
+  is_owner: boolean;
   thread_id: string;
   content: string;
-  edited: boolean;
-  replied: {
-    id: number;
-    user_nickname: string;
-    content: string;
-    is_updated: boolean;
-    updated_at: string | null;
-  } | null;
+  replied: Comment | null;
 };

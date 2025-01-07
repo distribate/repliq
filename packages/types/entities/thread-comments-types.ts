@@ -1,4 +1,4 @@
-interface Comment {
+export type Comment = {
   id: number;
   created_at: string;
   user_nickname: string;

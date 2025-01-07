@@ -23,8 +23,7 @@ export type ThreadFormQuery = Partial<
 
 const initial: ThreadFormQuery = {
   permission: false,
-  auto_remove: false,
-  isComments: true,
+  is_comments: true,
   visibility: "all",
 };
 

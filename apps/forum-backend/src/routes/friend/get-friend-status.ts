@@ -1,87 +1,15 @@
 import { throwError } from "#helpers/throw-error.ts";
+import { getFriendObject, getUserFriendRequest } from "#lib/queries/friend/get-friend-status.ts";
 import { getUserFriendPreference } from "#lib/queries/user/get-user-friend-preference.ts";
-import { forumDB } from "#shared/database/forum-db.ts";
-import type { InitiatorRecipientType } from "#types/initiator-recipient-type.ts";
 import { getNickname } from "#utils/get-nickname-from-storage.ts";
 import { Hono } from "hono";
 
-type GetUserFriendRequest = InitiatorRecipientType
-
-async function getUserFriendRequest({
-  initiator, recipient
-}: GetUserFriendRequest) {
-  const friendRequestQuery = await forumDB
-    .selectFrom("friends_requests")
-    .select(["initiator", "recipient", "id"])
-    .where((eb) =>
-      eb.or([
-        eb("initiator", "=", initiator),
-        eb("recipient", "=", initiator),
-      ])
-    )
-    .where((eb) =>
-      eb.or([
-        eb("initiator", "=", recipient),
-        eb("recipient", "=", recipient),
-      ])
-    )
-    .executeTakeFirst();
-
-  if (!friendRequestQuery) return null;
-
-  let requestObject: {
-    status: "reject-request" | "accept-request",
-    request_id: string
-  }
-
-  if (friendRequestQuery.initiator === initiator) {
-    requestObject = {
-      status: "reject-request",
-      request_id: friendRequestQuery.id
-    }
-
-    return requestObject
-  }
-
-  if (friendRequestQuery.recipient === initiator) {
-    requestObject = {
-      status: "accept-request",
-      request_id: friendRequestQuery.id
-    }
-
-    return requestObject
-  }
-
-  return null;
-}
-
-async function getFriendObject({
-  initiator,
-  recipient
-}: {
-  initiator: string;
-  recipient: string;
-}) {
-  return await forumDB
-    .selectFrom("users_friends")
-    .select("id")
-    .select(["user_1", "user_2", "id"])
-    .where((eb) =>
-      eb.or([
-        eb('user_1', '=', initiator),
-        eb('user_2', '=', initiator),
-      ]),
-    )
-    .where((eb) =>
-      eb.or([
-        eb('user_1', '=', recipient),
-        eb('user_2', '=', recipient),
-      ]),
-    )
-    .executeTakeFirst();
-}
-
-type FriendStatus = "reject-request" | "friend" | "accept-request" | "not-accepted-friend" | "not-friend"
+type FriendStatus =
+  | "reject-request"
+  | "friend"
+  | "accept-request"
+  | "not-accepted-friend"
+  | "not-friend"
 
 export const getFriendStatusRoute = new Hono()
   .get("/get-friend-status/:nickname", async (ctx) => {

@@ -6,21 +6,16 @@ import { getUserFriendPreference } from "#lib/queries/user/get-user-friend-prefe
 import { getNickname } from "#utils/get-nickname-from-storage.ts";
 import { zValidator } from "@hono/zod-validator";
 import { Hono } from "hono";
-import { z } from "zod";
-
-export const friendRequestSchema = z.object({
-  recipient: z.string(),
-  friend_id: z.string().optional(),
-});
+import { createFriendRequestSchema } from "@repo/types/schemas/friend/create-friend-request-schema.ts";
 
 async function validateUserFriendPreference(nickname: string): Promise<boolean> {
   return await getUserFriendPreference(nickname)
 }
 
 export const createFriendRequestRoute = new Hono()
-  .post("/create-friend-request", zValidator("json", friendRequestSchema), async (ctx) => {
+  .post("/create-friend-request", zValidator("json", createFriendRequestSchema), async (ctx) => {
     const body = await ctx.req.json();
-    const result = friendRequestSchema.parse(body);
+    const result = createFriendRequestSchema.parse(body);
     const { recipient } = result
 
     const initiator = getNickname()

@@ -4,6 +4,7 @@ export const getUserIsBanned = async (nickname: string) => {
   const query = await forumDB
     .selectFrom('users_banned')
     .select(forumDB.fn.countAll().as('count'))
+    .$narrowType<{ count: number }>()
     .where('nickname', '=', nickname)
     .executeTakeFirst();
 
@@ -11,5 +12,5 @@ export const getUserIsBanned = async (nickname: string) => {
     return false;
   }
 
-  return Number(query.count) > 0 ? true : false
+  return query.count > 0 ? true : false
 }

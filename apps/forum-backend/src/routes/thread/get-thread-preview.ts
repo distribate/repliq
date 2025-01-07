@@ -7,7 +7,7 @@ import { getThreadShorted } from "#lib/queries/thread/get-thread-shorted.ts";
 async function getThreadPreview(threadId: string): Promise<ThreadPreview | null> {
   const [main, owner] = await Promise.all([
     getThreadShorted(threadId),
-    getThreadOwner(threadId)
+    getThreadOwner({ threadId })
   ]);
 
   if (!main || !owner) return null;

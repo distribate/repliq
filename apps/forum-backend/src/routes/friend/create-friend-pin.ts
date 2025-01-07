@@ -4,18 +4,12 @@ import { deleteFriendPin } from "#lib/queries/friend/delete-friend-pin.ts";
 import { getNickname } from "#utils/get-nickname-from-storage.ts";
 import { zValidator } from "@hono/zod-validator";
 import { Hono } from "hono";
-import { z } from "zod";
-
-export const createFriendPinSchema = z.object({
-  friend_id: z.string(),
-  recipient: z.string(),
-  type: z.enum(["pin", "unpin"])
-})
+import { friendPinSchema } from "@repo/types/schemas/friend/friend-pin-schema.ts";
 
 export const createFriendPinRoute = new Hono()
-  .post("/create-friend-pin", zValidator("json", createFriendPinSchema), async (ctx) => {
+  .post("/create-friend-pin", zValidator("json", friendPinSchema), async (ctx) => {
     const body = await ctx.req.json();
-    const result = createFriendPinSchema.parse(body);
+    const result = friendPinSchema.parse(body);
 
     const initiator = getNickname()
 

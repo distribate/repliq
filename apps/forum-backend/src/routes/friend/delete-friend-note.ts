@@ -4,12 +4,7 @@ import { getFriendId } from "#lib/queries/friend/get-friend-id.ts";
 import { getNickname } from "#utils/get-nickname-from-storage.ts";
 import { zValidator } from "@hono/zod-validator";
 import { Hono } from "hono";
-import { z } from "zod";
-
-const deleteFriendNoteSchema = z.object({
-  recipient: z.string(),
-  friend_id: z.string(),
-})
+import { deleteFriendNoteSchema } from "@repo/types/schemas/friend/delete-friend-note-schema.ts";
 
 export const deleteFriendNoteRoute = new Hono()
   .delete("/delete-friend-note", zValidator("json", deleteFriendNoteSchema), async (ctx) => {

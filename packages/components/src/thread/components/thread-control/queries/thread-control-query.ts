@@ -12,7 +12,6 @@ export type ThreadControlQueryValues = Pick<
   | "title"
   | "description"
   | "is_comments"
-  | "auto_remove"
 > & {
   content: Descendant[];
 };

@@ -7,7 +7,7 @@ type UpdateThread = {
 };
 
 export async function updateThread({ threadId, values }: UpdateThread) {
-  const { description, title, auto_remove, content, is_comments } = values;
+  const { description, title, content, is_comments } = values;
 
   const res = await forumThreadClient.thread["update-thread-settings"].$post({
     json: {

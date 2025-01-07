@@ -52,8 +52,7 @@ export const useCreateThread = () => {
         description,
         visibility,
         permission,
-        auto_remove,
-        isComments,
+        is_comments,
         tags,
         category_id,
         content,
@@ -92,13 +91,11 @@ export const useCreateThread = () => {
         title,
         visibility,
         base64Files,
-        isImages: !!base64Files,
         tags: tags ?? undefined,
         content: JSON.stringify(content),
         description: description ?? null,
-        isComments: isComments ?? true,
+        is_comments: is_comments ?? true,
         permission: false, // todo: add thread permission
-        auto_remove: false, // todo: add auto_remove
       });
     },
     onSuccess: async (data) => {

@@ -1,7 +1,26 @@
-import { ForumUserAppType, ForumThreadAppType, ForumAdminAppType, ForumCategoriesAppType, ForumCommentAppType } from 'forum-backend/src/types/routes-types.ts';
+import { ForumUserAppType, ForumThreadAppType, ForumAdminAppType, ForumCategoriesAppType, ForumCommentAppType, ForumReactionAppType } from 'forum-backend/src/types/routes-types.ts';
 import { hc } from 'hono/client';
 
 const baseUrl = `http://localhost:4101/api/`
+
+export const forumReactionClient = hc<ForumReactionAppType>(
+  baseUrl,
+  {
+    fetch: (input: RequestInfo | URL, requestInit?: RequestInit) => {
+      return fetch(input, {
+        method: requestInit?.method ?? 'GET',
+        headers: {
+          ...requestInit?.headers,
+        },
+        body: requestInit?.body ?? null,
+        credentials: "include",
+        ...requestInit,
+      }).then((res) => {
+        return res;
+      });
+    }
+  }
+)
 
 export const forumCommentClient = (session?: string) => hc<ForumCommentAppType>(
   baseUrl,

@@ -11,16 +11,16 @@ type ThreadLayout = {
 } & Pick<ThreadDetailed, "id" | "owner" | "title">;
 
 export const ThreadLayout = ({
-  children, title, owner, id: threadId,
+  children, title, owner, id: threadId
 }: ThreadLayout) => {
   const { saveThread } = useHistoryThreads();
-
-  const handleSaveThread = () => {
-    return saveThread({ title, nickname: owner.nickname, threadId });
-  };
+  const { nickname } = owner;
 
   return (
-    <Link href={THREAD_URL + threadId} onClick={handleSaveThread}>
+    <Link
+      href={THREAD_URL + threadId}
+      onClick={() => saveThread({ title, nickname, threadId })}
+    >
       {children}
     </Link>
   );

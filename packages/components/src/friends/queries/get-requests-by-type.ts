@@ -4,7 +4,7 @@ import { FriendRequestEntity } from "@repo/types/entities/entities-type.ts";
 export type FriendsRequestsType = "incoming" | "outgoing";
 
 export async function getRequestsByType(type: FriendsRequestsType): Promise<FriendRequestEntity[] | null> {
-  const res = await forumUserClient().user["get-friend-requests"].$get({
+  const res = await forumUserClient().user["get-friends-requests"].$get({
     query: { type },
   });
 

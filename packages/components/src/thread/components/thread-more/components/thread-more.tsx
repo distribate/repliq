@@ -1,5 +1,3 @@
-"use client";
-
 import {
   Accordion,
   AccordionContent,
@@ -35,7 +33,7 @@ const ThreadTag = ({ tag }: { tag: string; }) => {
 export const ThreadMore = ({
   threadTags, description, createdAt, owner,
 }: ThreadMoreProps) => {
-  const [expand, setExpand] = useState<boolean>(false);
+  const [expand, setExpand] = useState<boolean>(true);
 
   return (
     <Accordion
@@ -53,10 +51,8 @@ export const ThreadMore = ({
           <div className="flex items-center gap-4 justify-start">
             <Typography>{dayjs(createdAt).fromNow()}</Typography>
             {threadTags && (
-              <div className="flex items-center gap-1">
-                {threadTags.map((tag, idx) => (
-                  <ThreadTag key={idx} tag={tag} />
-                ))}
+              <div className="flex items-center gap-2">
+                {threadTags.map((tag, idx) => <ThreadTag key={idx} tag={tag} />)}
               </div>
             )}
           </div>

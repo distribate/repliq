@@ -12,15 +12,11 @@ type RatingActionItemProps = {
 export const ThreadReactionItem = ({
   emoji, reactionCount, threadId, isLiked, Icon
 }: RatingActionItemProps) => {
-  const { updateThreadRatingMutation } = useThreadReaction();
-
-  const handleThreadBump = () => {
-    return updateThreadRatingMutation.mutate({ emoji, threadId });
-  };
+  const { addReactionToThreadMutation } = useThreadReaction();
 
   return (
     <div
-      onClick={handleThreadBump}
+      onClick={() => addReactionToThreadMutation.mutate({ emoji, id: threadId })}
       className={`flex bg-shark-700/50 rounded-md py-1 items-center gap-1 px-2 group *:transition-all *:duration-150 group cursor-pointer`}
     >
       {typeof Icon === "string" ? (

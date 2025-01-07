@@ -52,10 +52,9 @@ export const CreateThreadForm = () => {
     mode: "onChange",
     resolver: zodResolver(createThreadSchema),
     defaultValues: {
-      comments: threadFormState.isComments,
+      comments: threadFormState.is_comments,
       permission: threadFormState.permission,
-      auto_remove: threadFormState.auto_remove,
-      images: null,
+      images: null
     },
   });
 

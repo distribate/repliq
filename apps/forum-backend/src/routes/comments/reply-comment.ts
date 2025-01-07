@@ -2,7 +2,7 @@ import { throwError } from "#helpers/throw-error.ts";
 import { getNickname } from "#utils/get-nickname-from-storage.ts";
 import { Hono } from "hono";
 import { replyCommentBodySchema } from "@repo/types/routes-types/reply-comment.ts"
-import { createReply } from "#lib/queries/comments/create-comment.ts";
+import { createReplyTransaction } from "#lib/transactions/comment/create-reply-transaction.ts";
 
 export const replyCommentRoute = new Hono()
   .post("/reply-comment", async (ctx) => {
@@ -11,7 +11,7 @@ export const replyCommentRoute = new Hono()
     const nickname = getNickname()
 
     try {
-      const createdReply = await createReply({
+      const createdReply = await createReplyTransaction({
         ...result, nickname
       })
 

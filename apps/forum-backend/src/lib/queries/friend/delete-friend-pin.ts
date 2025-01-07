@@ -1,9 +1,9 @@
-import type { createFriendPinSchema } from "#routes/friend/create-friend-pin.ts";
 import { forumDB } from "#shared/database/forum-db.ts";
 import type { z } from "zod";
 import type { InitiatorRecipientType } from "#types/initiator-recipient-type.ts";
+import type { friendPinSchema } from "@repo/types/schemas/friend/friend-pin-schema";
 
-type DeleteFriendPin = z.infer<typeof createFriendPinSchema> 
+type DeleteFriendPin = z.infer<typeof friendPinSchema> 
   & Pick<InitiatorRecipientType, "initiator">
 
 export async function deleteFriendPin({

@@ -552,12 +552,6 @@ export interface LuckpermsGroups {
   name: string;
 }
 
-export interface LuckpermsPlayers {
-  primary_group: string;
-  username: string;
-  uuid: string;
-}
-
 export interface LuckpermsTracks {
   groups: string;
   name: string;
@@ -854,7 +848,6 @@ export interface SupabaseMigrationsSeedFiles {
 }
 
 export interface Threads {
-  auto_remove: Generated<boolean>;
   category_id: Int8 | null;
   content: Json;
   created_at: Generated<Timestamp>;
@@ -1078,7 +1071,6 @@ export interface DB {
   landing_termin_content: LandingTerminContent;
   landing_termins: LandingTermins;
   luckperms_groups: LuckpermsGroups;
-  luckperms_players: LuckpermsPlayers;
   luckperms_tracks: LuckpermsTracks;
   moderators: Moderators;
   "net._http_response": NetHttpResponse;

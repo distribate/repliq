@@ -21,7 +21,7 @@ const ThreadCommentMoreActions = dynamic(() =>
 );
 
 export const ThreadCommentItem = ({
-  nickname, isAuthor, created_at, content, id, replied, thread_id, edited,
+  user_nickname, is_owner, created_at, content, id, replied, thread_id, is_updated,
 }: ThreadCommentProps) => {
   const currentUser = getUser();
   const [active, setActive] = useState<boolean>(false);
@@ -43,7 +43,7 @@ export const ThreadCommentItem = ({
     }
   }, [mutationStatus]);
 
-  const isCommentOwner = currentUser.nickname === nickname;
+  const isCommentOwner = currentUser.nickname === user_nickname;
   const createdAt = dayjs(created_at).fromNow();
 
   return (
@@ -56,9 +56,9 @@ export const ThreadCommentItem = ({
         <ThreadCommentMoreActions id={id} thread_id={thread_id} />
       )}
       <div className="flex items-center gap-2">
-        <Link href={USER_URL + nickname}>
+        <Link href={USER_URL + user_nickname}>
           <Avatar
-            nickname={nickname}
+            nickname={user_nickname}
             propWidth={42}
             propHeight={42}
             className="min-h-[42px] min-w-[42px]"
@@ -67,8 +67,8 @@ export const ThreadCommentItem = ({
         <div className="flex justify-between w-full">
           <div className="flex flex-col">
             <div className="flex items-center gap-1">
-              <UserNickname nickname={nickname} />
-              {isAuthor && (
+              <UserNickname nickname={user_nickname} />
+              {is_owner && (
                 <Badge size="small">
                   <Typography className="font-[Minecraft] leading-4">
                     автор
@@ -94,10 +94,10 @@ export const ThreadCommentItem = ({
           id={thread_id}
           isCommentOwner={isCommentOwner}
           commentId={id}
-          commentNickname={nickname}
+          commentNickname={user_nickname}
           commentContent={content}
         />
-        {edited && (
+        {is_updated && (
           <Typography textColor="gray" textSize="small">
             [изменено]
           </Typography>

@@ -9,13 +9,10 @@ type AvailableReactionsProps = {
 export const AvailableThreadReactions = ({
   threadId
 }: AvailableReactionsProps) => {
-  const { updateThreadRatingMutation } = useThreadReaction();
+  const { addReactionToThreadMutation } = useThreadReaction();
   const scrollRef = useRef<HTMLDivElement | null>(null);
 
-  const handleThreadBump = (emoji: string) => {
-    if (!threadId) return;
-    return updateThreadRatingMutation.mutate({ emoji, threadId });
-  };
+  const handleAddReaction = (emoji: string) => addReactionToThreadMutation.mutate({ emoji, id: threadId });
 
   const handleWheel = (e: React.WheelEvent) => {
     if (scrollRef.current) {
@@ -32,7 +29,7 @@ export const AvailableThreadReactions = ({
       {Object.entries(THREAD_REACTIONS).map(([key, value]) => (
         <div
           key={key}
-          onClick={() => handleThreadBump(key)}
+          onClick={() => handleAddReaction(key)}
           className="flex bg-shark-600/70 rounded-md p-1 items-center justify-center"
         >
           <div>{value}</div>

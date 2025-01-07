@@ -12,10 +12,12 @@ type GetThread = {
 
 async function getThread({
   threadId
-}: Omit<GetThread, "nickname">) {
+}: Omit<GetThread, "nickname">): Promise<ThreadDetailed | null> {
   const [thread, threadCreator] = await Promise.all([
     getThreadMain(threadId),
-    getThreadOwner(threadId),
+    getThreadOwner({
+      threadId
+    }),
   ]);
 
   if (!thread || !threadCreator) return null;
@@ -39,4 +41,4 @@ export const getThreadRoute = new Hono()
       return ctx.json({ error: throwError(e) }, 500);
     }
   }
-)
+  )

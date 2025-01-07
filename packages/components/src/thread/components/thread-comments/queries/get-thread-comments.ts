@@ -1,16 +1,14 @@
 import { forumThreadClient } from '@repo/shared/api/forum-client.ts';
+import { getCommentsSchema } from "@repo/types/schemas/comment/get-comments-schema.ts";
+import { z } from 'zod';
 
-type GetThreadComments = {
-  thread_id: string;
-  cursor: string | null;
-  limit: number | null
+export type GetThreadComments = z.infer<typeof getCommentsSchema> & {
+  threadId: string
 }
 
 export async function getThreadComments({
-  thread_id, ...filter
+  threadId, cursor, limit
 }: GetThreadComments) {
-  const { limit, cursor } = filter;
-
   const query: Record<string, string | undefined> = {
     limit: limit?.toString(),
     cursor: cursor ?? undefined,
@@ -18,9 +16,7 @@ export async function getThreadComments({
 
   const res = await forumThreadClient.thread['get-thread-comments'][':threadId'].$get({
     query,
-    param: {
-      threadId: thread_id,
-    },
+    param: { threadId },
   });
 
   const data = await res.json();

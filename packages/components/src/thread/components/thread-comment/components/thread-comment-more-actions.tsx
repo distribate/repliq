@@ -15,7 +15,7 @@ export const ThreadCommentMoreActions = ({
   thread_id,
 }: Pick<ThreadCommentEntity, "id" | "thread_id">) => {
   const qc = useQueryClient();
-  const { deleteCommentItemMutation } = useControlThreadComment();
+  // const { deleteCommentItemMutation } = useControlThreadComment();
 
   const handleEditContent = () => {
     return qc.setQueryData(
@@ -26,7 +26,7 @@ export const ThreadCommentMoreActions = ({
 
   const handleDeleteContent = async () => {
     await qc.resetQueries({ queryKey: COMMENT_ACTIONS_QUERY_KEY(commentId) });
-    return deleteCommentItemMutation.mutate({ thread_id, id: commentId });
+    // return deleteCommentItemMutation.mutate({ thread_id, id: commentId });
   };
 
   return (

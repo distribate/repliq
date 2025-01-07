@@ -6,18 +6,14 @@ import { createClient } from "@repo/shared/api/supabase-client";
 async function getThreadTitle(threadId: string) {
   const api = createClient()
 
-  const { data, error } = await api
+  const { data } = await api
     .from("threads")
     .select("title, description")
     .eq("id", threadId)
     .single()
 
-  if (error) {
-    return null;
-  }
-
   return {
-    title: data.title,
+    title: data?.title,
     description: data?.description ?? null
   }
 }

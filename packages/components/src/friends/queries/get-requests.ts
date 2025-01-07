@@ -1,7 +1,7 @@
 import { forumUserClient } from "@repo/shared/api/forum-client";
 
-export async function getRequests(nickname: string) {
-  const res = await forumUserClient().user["get-friend-requests"].$get({
+export async function getRequests() {
+  const res = await forumUserClient().user["get-friends-requests"].$get({
     query: {
       type: "outgoing"
     }
