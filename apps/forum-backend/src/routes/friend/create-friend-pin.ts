@@ -1,4 +1,4 @@
-import { throwError } from "#helpers/throw-error.ts";
+import { throwError } from '@repo/lib/helpers/throw-error.ts';
 import { createFriendPin } from "#lib/queries/friend/create-friend-pin.ts";
 import { deleteFriendPin } from "#lib/queries/friend/delete-friend-pin.ts";
 import { getNickname } from "#utils/get-nickname-from-storage.ts";

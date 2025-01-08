@@ -1,6 +1,6 @@
 import { Hono, type Env } from 'hono';
 import { zValidator } from '@hono/zod-validator';
-import { throwError } from '#helpers/throw-error.ts';
+import { throwError } from '@repo/lib/helpers/throw-error.ts';
 import { getUserPosts } from '#lib/queries/user/get-user-posts.ts';
 import { getUserPostsSchema } from '@repo/types/schemas/posts/user-posts-schema.ts';
 import { getNickname } from '#utils/get-nickname-from-storage.ts';

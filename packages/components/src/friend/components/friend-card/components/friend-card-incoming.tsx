@@ -18,16 +18,6 @@ export const FriendCardIncoming = ({
     acceptIncomingRequestMutation
   } = useControlFriendRequests();
 
-  const handleAcceptRequest = () => acceptIncomingRequestMutation.mutate({
-    recipient: initiator,
-    request_id
-  });
-  
-  const handleRejectRequest = () => rejectIncomingRequestMutation.mutate({
-    recipient: initiator,
-    request_id
-  });
-
   return (
     <FriendCardLayout nickname={initiator}>
       <div className="flex flex-col gap-y-1 w-fit">
@@ -37,10 +27,10 @@ export const FriendCardIncoming = ({
           </Link>
         </div>
         <div className="flex items-center mt-2 gap-1 w-fit">
-          <Button onClick={handleAcceptRequest} variant="positive">
+          <Button onClick={() => acceptIncomingRequestMutation.mutate({ request_id, recipient: initiator })} variant="positive">
             <Typography textSize="small">Принять заявку</Typography>
           </Button>
-          <Button onClick={handleRejectRequest} variant="negative">
+          <Button onClick={() => rejectIncomingRequestMutation.mutate({ request_id, recipient: initiator })} variant="negative">
             <Typography textSize="small">Отклонить заявку</Typography>
           </Button>
         </div>

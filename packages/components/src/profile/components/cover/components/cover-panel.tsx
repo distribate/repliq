@@ -72,7 +72,7 @@ export const UserCoverPanel = ({
             properties={{ sideAlign: "bottom", contentAlign: "end" }}
           >
             <div className="flex flex-col gap-y-1 *:w-full w-full items-start">
-              <BlockUserModal requestedUserNickname={requestedNickname} />
+              <BlockUserModal recipient={requestedNickname} />
               <>
                 <Separator />
                 <ReportCreateModal reportType="account" targetNickname={requestedNickname} />

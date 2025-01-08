@@ -12,16 +12,10 @@ import {
 } from "#profile/components/cover/hooks/use-control-cover-image.ts";
 
 export const DeleteCoverModal = () => {
-  const currentUser = getUser();
+  const { cover_image } = getUser();
   const { deleteBackgroundImageMutation } = useControlCoverImage();
 
-  if (!currentUser) return null;
-
-  const handleDeleteCover = () => {
-    return deleteBackgroundImageMutation.mutate();
-  };
-
-  if (!currentUser.cover_image) return null;
+  if (!cover_image) return null;
 
   return (
     <DynamicModal
@@ -38,7 +32,7 @@ export const DeleteCoverModal = () => {
           <ConfirmationButton
             title="Удалить"
             actionType="continue"
-            onClick={handleDeleteCover}
+            onClick={() => deleteBackgroundImageMutation.mutate()}
             disabled={deleteBackgroundImageMutation.isPending}
             pending={deleteBackgroundImageMutation.isPending}
           />

@@ -1,4 +1,4 @@
-import { throwError } from "#helpers/throw-error.ts";
+import { throwError } from '@repo/lib/helpers/throw-error.ts';
 import { Hono } from "hono";
 import type { ProfileStatsCharts, ProfileStatsDetailed, ProfileStatsMeta } from "@repo/types/routes-types/get-user-profile-stats-types.ts";
 import { prepareHourlyChartData, prepareMonthlyChartData } from "#utils/prepare-charts-data.ts";

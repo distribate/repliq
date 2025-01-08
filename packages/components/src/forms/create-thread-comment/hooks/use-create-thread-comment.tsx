@@ -3,11 +3,12 @@ import {
   CREATE_THREAD_COMMENT_QUERY_KEY,
   CreateThreadCommentQuery,
 } from "../queries/create-thread-comment-query.ts";
-import { createThreadComment, replyThreadComment } from "../queries/post-thread-comment.ts";
 import { toast } from "sonner";
 import { THREAD_COMMENTS_QUERY_KEY } from "#thread/components/thread-comments/queries/thread-comments-query.ts";
 import { GetThreadCommentsResponse } from "@repo/types/entities/thread-comments-types.ts";
 import { useUpdateComments } from "#thread/components/thread-comments/hooks/use-update-comments.ts";
+import { replyThreadComment } from "../queries/reply-thread-comment.ts";
+import { createThreadComment } from "../queries/create-thread-comment.ts";
 
 export const useCreateThreadComment = () => {
   const qc = useQueryClient();
@@ -54,13 +55,13 @@ export const useCreateThreadComment = () => {
           const recipient_comment_id = threadComment.replied.commentId
 
           const repliedThreadComment = await replyThreadComment({
-            content, thread_id, recipient_comment_id
+            content, threadId: thread_id, recipient_comment_id: recipient_comment_id.toString()
           });
 
           return { repliedThreadComment, thread_id };
         case "single":
           const threadCommentId = await createThreadComment({
-            thread_id, content
+            threadId: thread_id, content
           });
 
           return { threadCommentId, thread_id };

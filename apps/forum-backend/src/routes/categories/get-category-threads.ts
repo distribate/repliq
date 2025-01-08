@@ -3,6 +3,7 @@ import { zValidator } from "@hono/zod-validator";
 import { queryRouteSchema } from "@repo/types/schemas/global/query-route-schema";
 import { Hono } from "hono";
 import { z } from "zod";
+import { throwError } from '@repo/lib/helpers/throw-error.ts';
 
 export const getCategoryThreadsSchema = z.object({
   limit: z.string().transform(Number).optional()
@@ -18,7 +19,7 @@ export const getCategoryThreadsRoute = new Hono()
       const threads = await getThreadsCategories({ category_id, limit, range, ascending });
       return ctx.json(threads, 200);
     } catch (e) {
-      return ctx.json({ error: e }, 500);
+      return ctx.json({ error: throwError(e) }, 500);
     }
   }
   )

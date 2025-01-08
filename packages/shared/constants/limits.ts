@@ -6,7 +6,7 @@ export const THREAD_IMAGES_LIMIT_DONATE = [0, 4];
 export const THREAD_IMAGES_LIMIT_DEFAULT = [0, 2];
 export const THREAD_TAGS_LIMIT = [0, 16];
 
-export const COMMENT_LIMIT = [1, 512];
+export const COMMENT_LIMIT = [2, 1024];
 
 export const POST_CONTENT_LIMIT = [2, 1024];
 

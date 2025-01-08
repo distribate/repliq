@@ -14,7 +14,7 @@ import { getUserSettingsRoute } from '#routes/user/get-user-settings.ts';
 import { getBlockedUsersRoute } from '#routes/user/get-blocked-users.ts';
 import { getUserThreadsRoute } from '#routes/user/get-user-threads.ts';
 import { getUserPostsRoute } from '#routes/user/get-user-posts.ts';
-import { getUserFriendsRoute } from '#routes/friend/get-user-friends.ts';
+import { getUserFriendsRoute } from '#routes/user/get-user-friends.ts';
 import { createFriendRequestRoute } from '#routes/friend/create-friend-request.ts';
 import { deleteFriendRequestRoute } from '#routes/friend/delete-friend-request.ts';
 import { acceptFriendRequestRoute } from '#routes/friend/accept-friend-request.ts';
@@ -58,6 +58,7 @@ import { getUserBanDetailsRoute } from '#routes/user/get-user-ban-details.ts';
 import { createThreadRoute } from '#routes/thread/create-thread.ts';
 import { encodeCborXRoute } from '#routes/test/encode-cbor-x.ts';
 import { decodeCborXRoute } from '#routes/test/decode-cbor-x.ts';
+import { getUserFriendsCountRoute } from '#routes/user/get-user-friends-count.ts';
 
 declare module 'hono' {
   interface ContextRenderer {
@@ -135,6 +136,7 @@ export const user = new Hono()
   .route("/", getFriendRequestsRoute)
   .route("/", getUserSummaryRoute)
   .route("/", getUserBanDetailsRoute)
+  .route("/", getUserFriendsCountRoute)
 
 const app = new Hono<Env>()
   .use("/api/user/*", cors(corsOptions))

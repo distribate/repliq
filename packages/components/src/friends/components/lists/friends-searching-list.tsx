@@ -10,8 +10,9 @@ export const FriendsSearchingList = () => {
 
   if (isLoading) return <FriendsAllListSkeleton />;
 
-  if (!searchingUsers || (searchingUsers && searchingUsers.length === 0))
+  if (!searchingUsers || (searchingUsers && searchingUsers.length === 0)) {
     return <ContentNotFound title="Пока никого не можем вам предложить ;(" />;
+  }
 
   return (
     <div className="grid grid-cols-3 auto-rows-auto gap-2 h-fit">

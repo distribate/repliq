@@ -1,4 +1,4 @@
-import { throwError } from "#helpers/throw-error.ts";
+import { throwError } from '@repo/lib/helpers/throw-error.ts';
 import { getUserIsViewed } from "#lib/queries/user/get-user-is-viewed.ts";
 import { getUserRelation } from "#lib/queries/user/get-user-relation.ts";
 import { getNickname } from "#utils/get-nickname-from-storage.ts";
@@ -21,8 +21,6 @@ export const getUserProfileStatusRoute = new Hono()
     try {
       const status = await getUserRelation({ recipient, initiator })
       const is_viewed = await getUserIsViewed({ recipient, initiator })
-
-      console.log(status, is_viewed)
 
       return ctx.json({ status, is_viewed }, 200)
     } catch (e) {

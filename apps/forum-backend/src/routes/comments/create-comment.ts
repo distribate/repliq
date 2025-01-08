@@ -1,4 +1,4 @@
-import { throwError } from "#helpers/throw-error.ts";
+import { throwError } from '@repo/lib/helpers/throw-error.ts';
 import { createComment } from "#lib/queries/comments/create-comment.ts";
 import { getNickname } from "#utils/get-nickname-from-storage.ts";
 import { zValidator } from "@hono/zod-validator";

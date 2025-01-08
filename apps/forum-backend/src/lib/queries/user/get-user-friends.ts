@@ -1,26 +1,55 @@
-import { type FriendWithDetails, type FriendWithoutDetails } from '@repo/types/schemas/friend/friend-types';
+import { type GetFriendsResponse } from '@repo/types/schemas/friend/friend-types';
 import { getUserFriendsSchema } from '@repo/types/schemas/user/get-user-friends-schema.ts';
 import { forumDB } from "#shared/database/forum-db.ts"
 import { sql } from "kysely"
 import type { z } from "zod"
+import { executeWithCursorPagination } from 'kysely-paginate';
+import type { DonateVariants } from '@repo/types/db/forum-database-types';
 
 type GetUserFriends = z.infer<typeof getUserFriendsSchema> & {
   nickname: string
 }
 
-export const getUserFriends = async ({
-  nickname, with_details, ascending, searchQuery, range, sort_type
-}: GetUserFriends): Promise<FriendWithDetails[] | FriendWithoutDetails[]> => {
-  let query = forumDB
+function sortFriendsByDonate<T extends { donate: DonateVariants }>(rows: T[]) {
+  const weights: Record<DonateVariants, number> = {
+    'default': 1,
+    'authentic': 2,
+    'loyal': 3,
+    'arkhont': 4,
+    'dev': 5,
+    'moder': 5,
+    "helper": 5
+  };
 
-  const baseQuery = query
-  .selectFrom("users_friends")
-  .where((qb) => 
-    qb.or([
-      qb("user_1", "=", nickname),
-      qb("user_2", "=", nickname)
-    ])
-  )
+  return rows.sort((a, b) => {
+    return weights[b.donate] - weights[a.donate];
+  });
+}
+
+export const SORT_TYPES: Record<string, "donate" | "created_at"> = {
+  "users.donate": "donate",
+  "users_friends.created_at": "created_at"
+}
+
+export const DEFAULT_LIMIT_PER_PAGE = 2
+
+export const getUserFriends = async ({
+  nickname, with_details, ascending, sort_type, cursor
+}: GetUserFriends): Promise<GetFriendsResponse> => {
+  const baseQuery = forumDB
+    .selectFrom("users_friends")
+    .where((qb) =>
+      qb.or([
+        qb("user_1", "=", nickname),
+        qb("user_2", "=", nickname)
+      ])
+    )
+
+  const orderBy = ascending ? "asc" : "desc";
+
+  const sortType = sort_type === "donate_weight"
+    ? "users.donate"
+    : "users_friends.created_at"
 
   const donateWeightCase = sql`
     CASE
@@ -34,56 +63,81 @@ export const getUserFriends = async ({
     END
   `
 
-  const sortOrder = ascending ? "asc" : "desc";
-  const sortType = sort_type === "donate_weight" ? donateWeightCase : "users_friends.created_at"
-    
+  const sortField = SORT_TYPES[sortType]
+
   if (with_details) {
-    const friendsData = await baseQuery
-    .innerJoin(
-      "users",
-      (join) =>
-        join
-          .onRef(
-            "users.nickname",
-            "=",
-            sql`CASE WHEN users_friends.user_1 = ${nickname} THEN users_friends.user_2 ELSE users_friends.user_1 END`
-          )
-          .on("users.nickname", "!=", nickname)
-    )
-    .leftJoin("friends_pinned", "friends_pinned.recipient", "users.nickname")
-    .leftJoin("friends_notes", "friends_notes.recipient", "users.nickname")
-    // @ts-ignore
-    .select([
-      "users_friends.id as friend_id",
-      "users_friends.created_at",
-      "users.nickname",
-      "users.description",
-      "users.real_name",
-      "users.name_color",
-      "users.favorite_item",
-      "users.donate",
-      "friends_notes.note",
-      // Update is_pinned to be properly cast as boolean
-      sql<boolean>`COALESCE(friends_pinned.id IS NOT NULL, false)`.as("is_pinned"),
-      // Ensure donate_weight is properly selected
-      donateWeightCase.as("donate_weight")
-    ])
-    .orderBy(sortType, sortOrder)
-    .execute();
+    const withDetailsQuery = baseQuery
+      .innerJoin(
+        "users",
+        (join) =>
+          join
+            .onRef(
+              "users.nickname",
+              "=",
+              sql`CASE WHEN users_friends.user_1 = ${nickname} THEN users_friends.user_2 ELSE users_friends.user_1 END`
+            )
+            .on("users.nickname", "!=", nickname)
+      )
+      .leftJoin("friends_pinned", "friends_pinned.recipient", "users.nickname")
+      .leftJoin("friends_notes", "friends_notes.recipient", "users.nickname")
+      .select(({ fn }) => [
+        "users_friends.id as friend_id",
+        "users_friends.created_at",
+        "users.nickname",
+        "users.description",
+        "users.real_name",
+        "users.name_color",
+        "users.favorite_item",
+        "users.donate",
+        "friends_notes.note",
+        sql<boolean>`COALESCE(friends_pinned.id IS NOT NULL, false)`.as("is_pinned"),
+      ])
 
-    console.log(friendsData)
-    return friendsData
+    const result = await executeWithCursorPagination(withDetailsQuery, {
+      perPage: DEFAULT_LIMIT_PER_PAGE,
+      after: cursor,
+      fields: [
+        { key: "created_at", expression: "users_friends.created_at", direction: orderBy }
+      ],
+      parseCursor: (cursor) => ({ created_at: new Date(cursor.created_at) }),
+    });
+
+    const { endCursor, hasNextPage, hasPrevPage, startCursor, rows } = result
+
+    let data;
+
+    if (sort_type === "donate_weight") {
+      data = sortFriendsByDonate(rows)
+    } else {
+      data = rows;
+    }
+    return { data, meta: { hasNextPage: hasNextPage ?? false, hasPrevPage: hasPrevPage ?? false, endCursor, startCursor } }
   } else {
-    const friendsData = await baseQuery
-    .innerJoin("users", (join) =>
-      join
-        .onRef("users.nickname", "=", sql`COALESCE(users_friends.user_1, users_friends.user_2)`)
-        .on("users.nickname", "!=", nickname)
-    )
-    .select(["users.nickname", "users.name_color", "users_friends.id as friend_id"])
-    .orderBy(sortType, sortOrder)
-    .execute();
+    const withoutDetailsQuery = baseQuery
+      .innerJoin("users", (join) =>
+        join
+          .onRef("users.nickname", "=", sql`COALESCE(users_friends.user_1, users_friends.user_2)`)
+          .on("users.nickname", "!=", nickname)
+      )
+      .select([
+        "users_friends.created_at",
+        "users.nickname",
+        "users.name_color",
+        "users_friends.id as friend_id"
+      ])
+      .orderBy(sortType, orderBy)
 
-    return friendsData
+    const result = await executeWithCursorPagination(withoutDetailsQuery, {
+      perPage: DEFAULT_LIMIT_PER_PAGE,
+      after: cursor,
+      fields: [
+        { key: "created_at", expression: "users_friends.created_at", direction: orderBy }
+      ],
+      parseCursor: (cursor) => ({ created_at: new Date(cursor.created_at) })
+    });
+
+    const { endCursor, hasNextPage, hasPrevPage, startCursor, rows: data } = result
+
+    return { data, meta: { hasNextPage: hasNextPage ?? false, hasPrevPage: hasPrevPage ?? false, endCursor, startCursor } }
   }
 }

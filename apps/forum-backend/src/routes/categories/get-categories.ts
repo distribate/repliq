@@ -1,4 +1,4 @@
-import { throwError } from "#helpers/throw-error.ts";
+import { throwError } from '@repo/lib/helpers/throw-error.ts';
 import { forumDB } from "#shared/database/forum-db.ts";
 import { Hono } from "hono";
 

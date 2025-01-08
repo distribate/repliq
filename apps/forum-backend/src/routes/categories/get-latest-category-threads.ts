@@ -1,4 +1,4 @@
-import { throwError } from "#helpers/throw-error.ts";
+import { throwError } from '@repo/lib/helpers/throw-error.ts';
 import { getLatestCategoryThreads } from "#lib/queries/categories/get-latest-category-threads.ts";
 import { Hono } from "hono";
 

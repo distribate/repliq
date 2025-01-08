@@ -1,7 +1,8 @@
 import { z } from "zod";
-import { queryRouteSchema } from "../global/query-route-schema";
 
 export const getUserFriendsSchema = z.object({
-  with_details: z.string().transform((val) => val === "true"),
-  sort_type: z.enum(["donate_weight", "created_at"]).optional()
-}).merge(queryRouteSchema)
+  with_details: z.enum(["true", "false"]).transform((value) => value === "true"),
+  ascending: z.enum(["true", "false"]).transform((value) => value === "true"),
+  cursor: z.string().optional(),
+  sort_type: z.enum(["donate_weight", "created_at"]),
+});

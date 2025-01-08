@@ -12,18 +12,9 @@ type DeleteFriendModal = {
 } & Pick<FriendWithDetails, "friend_id" | "nickname">;
 
 export const DeleteFriendModal = ({
-  friend_id,
-  trigger,
-  nickname,
+  friend_id, trigger, nickname,
 }: DeleteFriendModal) => {
   const { removeFriendMutation } = useControlFriendRequests();
-
-  const handleDeleteFriend = () => {
-    return removeFriendMutation.mutate({
-      friend_id,
-      recipient: nickname
-    });
-  };
 
   return (
     <DynamicModal
@@ -34,7 +25,7 @@ export const DeleteFriendModal = ({
           <ConfirmationButton
             title="Удалить"
             actionType="continue"
-            onClick={handleDeleteFriend}
+            onClick={() => removeFriendMutation.mutate({ friend_id, recipient: nickname })}
             disabled={removeFriendMutation.isPending}
           />
           <DialogClose>

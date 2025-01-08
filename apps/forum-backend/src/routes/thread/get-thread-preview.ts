@@ -1,4 +1,4 @@
-import { throwError } from "#helpers/throw-error.ts";
+import { throwError } from '@repo/lib/helpers/throw-error.ts';
 import { Hono } from "hono";
 import { getThreadOwner } from "#lib/queries/thread/get-thread-owner.ts";
 import type { ThreadPreview } from "@repo/types/entities/thread-type.ts";

@@ -13,10 +13,6 @@ import { ThreadPreview } from "@repo/types/entities/thread-type.ts";
 export const ThreadRemoveModal = ({ id }: Pick<ThreadPreview, "id">) => {
   const { removeThreadMutation } = useThreadControl();
 
-  const handleRemoveThread = () => {
-    return removeThreadMutation.mutate(id);
-  };
-
   return (
     <DynamicModal
       mutationKey={THREAD_CONTROL_MUTATION_KEY}
@@ -31,7 +27,7 @@ export const ThreadRemoveModal = ({ id }: Pick<ThreadPreview, "id">) => {
             actionType="continue"
             title="Да, удалить"
             disabled={removeThreadMutation.isPending}
-            onClick={handleRemoveThread}
+            onClick={() => removeThreadMutation.mutate(id)}
           />
           <DialogClose>
             <ConfirmationButton

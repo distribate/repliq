@@ -1,17 +1,19 @@
 import { forumUserClient } from "@repo/shared/api/forum-client";
 
-export async function createFriendRequest(recipient: string) {
+type CreateFriendRequest = {
+  recipient: string
+}
+
+export async function createFriendRequest({ recipient }: CreateFriendRequest) {
   const res = await forumUserClient().user["create-friend-request"].$post({
-    json: {
-      recipient
-    }
+    json: { recipient }
   })
 
   const data = await res.json();
 
   if ("error" in data) {
     return { error: data.error }
-  }  
+  }
 
   const { status } = data
 

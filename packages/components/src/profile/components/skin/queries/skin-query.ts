@@ -16,17 +16,17 @@ export const SKIN_ANIMATION_QUERY_KEY = createQueryKey("ui", [
   "animation",
 ]);
 
-export const SKIN_STATE_QUERY_KEY = (uuid: string) =>
-  createQueryKey("ui", ["skin-state"], uuid);
+export const SKIN_STATE_QUERY_KEY = (nickname: string) =>
+  createQueryKey("ui", ["skin-state"], nickname);
 
 const initial: Omit<SkinStateQuery, "skinUrl"> = {
   animation: "idle",
   rotate: false,
 };
 
-export const skinStateQuery = (uuid: string) => useSuspenseQuery({
-  queryKey: SKIN_STATE_QUERY_KEY(uuid),
-  queryFn: () => getSkinDetails(uuid),
+export const skinStateQuery = (nickname: string) => useSuspenseQuery({
+  queryKey: SKIN_STATE_QUERY_KEY(nickname),
+  queryFn: () => getSkinDetails(nickname),
   refetchOnWindowFocus: false
 });
 

@@ -1,7 +1,6 @@
-import { forumDB } from "#shared/database/forum-db.ts"
 import { zValidator } from "@hono/zod-validator";
 import { Hono } from "hono";
-import { throwError } from "#helpers/throw-error.ts";
+import { throwError } from '@repo/lib/helpers/throw-error.ts';
 import { getNickname } from "#utils/get-nickname-from-storage.ts";
 import { deleteFriend } from "#lib/queries/friend/delete-friend.ts";
 import { deleteFriendSchema } from "@repo/types/schemas/friend/delete-friend-schema.ts";

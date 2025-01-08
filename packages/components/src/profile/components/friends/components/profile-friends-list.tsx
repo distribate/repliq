@@ -38,7 +38,7 @@ const ProfileFriendsList = ({ friends }: FriendsListLayoutProps) => {
 
   return (
     <div className="grid auto-rows-auto grid-cols-1 lg:grid-cols-3 gap-2 w-full">
-      {filteredfriends.map(friend => 
+      {filteredfriends.map(friend =>
         <FriendProfileCard key={friend.nickname} {...friend} />
       )}
     </div>
@@ -46,19 +46,18 @@ const ProfileFriendsList = ({ friends }: FriendsListLayoutProps) => {
 };
 
 export const ProfileFriends = ({ nickname }: Pick<UserEntity, "nickname">) => {
-  const { data: friends, isLoading, isError } = friendsQuery({
-    nickname
-  });
+  const { sort_type, ascending } = friendsSortQuery().data;
+  const { data: friends, isLoading, isError } = friendsQuery({ nickname, sort_type, ascending });
 
   if (isLoading) return <ProfileFriendsSkeleton />;
   if (isError) return <SomethingError />;
   if (!friends) return <ContentNotFound title="Друзей нет" />;
-  
+
   return (
     <Suspense fallback={<ProfileFriendsSkeleton />}>
       <div className="flex flex-col gap-4 w-full h-full">
         <ProfileFriendsFiltering />
-        <ProfileFriendsList friends={friends as FriendWithDetails[]} />
+        <ProfileFriendsList friends={friends.data as FriendWithDetails[]} />
       </div>
     </Suspense>
   );

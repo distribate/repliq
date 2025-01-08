@@ -55,11 +55,11 @@ export async function generateMetadata({
 export default async function ThreadPage({
   params
 }: PageConventionProps) {
-  const { id: threadId } = params;
+  const { id } = params;
 
   return (
     <div className="flex gap-2 items-start h-full w-full relative">
-      <Thread threadId={threadId} />
+      <Thread threadId={id} />
     </div>
   );
 }

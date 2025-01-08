@@ -1,22 +1,20 @@
-import ky from 'ky';
-import { SKIN_ELY_URL } from '#shared/constants/external-skin-api-urls.ts';
 import { Hono } from 'hono';
+import { getPlayerSkin } from '#lib/queries/get-player-skin.ts';
+import { throwError } from '@repo/lib/helpers/throw-error.ts';
 
-export const downloadSkinRoute = new Hono().get('/download-skin/:nickname', async(c) => {
-  const { nickname } = c.req.param();
-  
-  const url = `${SKIN_ELY_URL}/${nickname}.png`;
-  
-  try {
-    const response = await ky.get(url);
-    const buffer = Buffer.from(await response.arrayBuffer())
+export const downloadSkinRoute = new Hono()
+  .get('/download-skin/:nickname', async (ctx) => {
+    const { nickname } = ctx.req.param();
 
-    return c.body(buffer as unknown as ReadableStream, 200, {
-      "Content-Type": "image/png",
-      'Content-Disposition': `attachment; filename=${nickname}-skin.png`
-    })
-  } catch (e) {
-    const error = e instanceof Error ? e.message : 'Error fetching the skin file';
-    return c.json({ error }, 500);
-  }
-});
+    try {
+      const skin = await getPlayerSkin({ nickname })
+      const buffer = await skin.arrayBuffer();
+
+      ctx.header('Content-Type', 'image/png')
+      ctx.header('Content-Disposition', `attachment; filename=${nickname}-skin.png`)
+
+      return ctx.body(buffer as unknown as ReadableStream, 200)
+    } catch (e) {
+      return ctx.json({ error: throwError(e) }, 500);
+    }
+  });

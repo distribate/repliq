@@ -1,4 +1,4 @@
-import { throwError } from "#helpers/throw-error.ts";
+import { throwError } from '@repo/lib/helpers/throw-error.ts';
 import { createIssue } from "#lib/queries/issue/create-issue.ts";
 import { publishIssuePayload } from "#publishers/pub-issue-payload.ts";
 import { zValidator } from "@hono/zod-validator";

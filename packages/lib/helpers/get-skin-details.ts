@@ -1,12 +1,15 @@
 import { skinClient } from '@repo/shared/api/skin-client.ts';
-import { SKIN_GET_HEAD } from '@repo/shared/constants/routes.ts';
 import SteveHead from '@repo/assets/images/minecraft/steve_head.jpg';
 import SteveSkin from '@repo/assets/images/default.png';
 import ky from 'ky';
 
 export async function getHeadDetails(nickname: string) {
   try {
-    const headBlob = await ky(nickname, { prefixUrl: SKIN_GET_HEAD, retry: 1 }).blob()
+    const url = skinClient.api["get-head"][":nickname"].$url({
+      param: { nickname }
+    })
+
+    const headBlob = await ky.get(url).blob()
 
     return URL.createObjectURL(headBlob);
   } catch (e) {
@@ -14,25 +17,15 @@ export async function getHeadDetails(nickname: string) {
   }
 }
 
-export async function getSkinDetails(uuid: string) {
+export async function getSkinDetails(nickname: string) {
   try {
-    const res = await skinClient.api["get-skin"][":uuid"].$get({
-      param: { uuid }
+    const url = skinClient.api["get-skin"][":nickname"].$url({
+      param: { nickname }
     })
 
-    if (!res) {
-      return SteveSkin.src as string
-    }
+    const skinBlob = await ky.get(url).blob()
 
-    const skinUrl = await res.json()
-
-    if (!skinUrl.skin) {
-      return SteveSkin.src as string
-    }
-
-    console.log(skinUrl)
-    
-    return skinUrl.skin
+    return URL.createObjectURL(skinBlob)
   } catch (e) {
     return SteveSkin.src as string
   }

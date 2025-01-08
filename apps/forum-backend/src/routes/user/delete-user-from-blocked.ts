@@ -1,4 +1,4 @@
-import { throwError } from "#helpers/throw-error.ts";
+import { throwError } from '@repo/lib/helpers/throw-error.ts';
 import { addUserToBlocked } from "#lib/queries/user/add-user-to-blocked.ts";
 import { deleteUserFromBlocked } from "#lib/queries/user/delete-user-from-blocked.ts";
 import { getNickname } from "#utils/get-nickname-from-storage.ts";

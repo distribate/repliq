@@ -13,10 +13,6 @@ export const FriendCardOutgoing = ({
 }: ControlFriendRequests) => {
   const { rejectOutgoingRequestMutation } = useControlFriendRequests();
 
-  const handleRejectReq = () => rejectOutgoingRequestMutation.mutate({
-    recipient, request_id
-  });
-  
   return (
     <FriendCardLayout nickname={recipient}>
       <div className="flex flex-col gap-y-1 w-fit">
@@ -27,7 +23,7 @@ export const FriendCardOutgoing = ({
         </div>
         <div className="flex items-center mt-2 gap-1 w-fit">
           <Button
-            onClick={handleRejectReq}
+            onClick={() => rejectOutgoingRequestMutation.mutate({ request_id, recipient })}
             variant="pending"
             disabled={
               rejectOutgoingRequestMutation.isPending ||

@@ -8,10 +8,7 @@ type CreateProfileView = z.infer<typeof createProfileViewSchema> & Pick<Initiato
 export async function createProfileView({ initiator, recipient }: CreateProfileView) {
   return await forumDB
     .insertInto('profile_views')
-    .values({
-      initiator,
-      recipient
-    })
+    .values({ initiator, recipient })
     .returningAll()
     .executeTakeFirstOrThrow();
 }

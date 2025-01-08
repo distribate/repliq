@@ -1,4 +1,4 @@
-import { throwError } from "#helpers/throw-error.ts";
+import { throwError } from '@repo/lib/helpers/throw-error.ts';
 import { forumDB } from "#shared/database/forum-db.ts";
 import { zValidator } from "@hono/zod-validator";
 import { Hono } from "hono";
@@ -41,8 +41,7 @@ async function getThreadComments({
     ])
     .where('comments.parent_id', '=', threadId)
     .orderBy('comments.created_at', 'asc')
-    .limit(limit)
-
+    
   const result = await executeWithCursorPagination(query, {
     perPage: 16,
     after: cursor,

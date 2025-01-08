@@ -1,4 +1,4 @@
-import { throwError } from "#helpers/throw-error.ts";
+import { throwError } from '@repo/lib/helpers/throw-error.ts';
 import { getUserNotifications } from "#lib/queries/user/get-user-notifications.ts";
 import { Hono } from "hono";
 

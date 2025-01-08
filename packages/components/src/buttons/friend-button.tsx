@@ -31,10 +31,7 @@ const IncomingFriendButton = ({
       content={
         <div className="flex flex-col gap-y-1 *:w-full w-full">
           <Button
-            onClick={() => acceptIncomingRequestMutation.mutate({
-              request_id,
-              recipient
-            })}
+            onClick={() => acceptIncomingRequestMutation.mutate({ request_id, recipient })}
             className="flex justify-start items-center bg-shark-800 gap-2 group"
             disabled={
               acceptIncomingRequestMutation.isPending ||
@@ -45,10 +42,7 @@ const IncomingFriendButton = ({
             <Typography>Принять заявку</Typography>
           </Button>
           <Button
-            onClick={() => rejectIncomingRequestMutation.mutate({
-              request_id,
-              recipient
-            })}
+            onClick={() => rejectIncomingRequestMutation.mutate({ request_id, recipient })}
             className="flex justify-start items-center bg-shark-800 gap-2 group"
             disabled={
               rejectIncomingRequestMutation.isPending ||
@@ -81,7 +75,7 @@ const DeleteFriendButton = ({
 
   return (
     <Button
-      onClick={() => removeFriendMutation.mutate({ recipient, friend_id })}
+      onClick={() => removeFriendMutation.mutate({ friend_id, recipient })}
       disabled={
         removeFriendMutation.isPending ||
         removeFriendMutation.isError
@@ -100,7 +94,7 @@ const AddFriendButton = ({
 
   return (
     <Button
-      onClick={() => createRequestFriendMutation.mutate(recipient)}
+      onClick={() => createRequestFriendMutation.mutate({ recipient })}
       variant="positive"
       disabled={
         createRequestFriendMutation.isPending ||
@@ -127,9 +121,7 @@ const OutgoingFriendButton = ({
 
   return (
     <Button
-      onClick={() => rejectOutgoingRequestMutation.mutate({
-        recipient, request_id
-      })}
+      onClick={() => rejectOutgoingRequestMutation.mutate({ request_id, recipient })}
       variant="pending"
       disabled={
         rejectOutgoingRequestMutation.isPending ||

@@ -1,4 +1,4 @@
-import { throwError } from "#helpers/throw-error.ts";
+import { throwError } from '@repo/lib/helpers/throw-error.ts';
 import { getNickname } from "#utils/get-nickname-from-storage.ts";
 import { Hono } from "hono";
 

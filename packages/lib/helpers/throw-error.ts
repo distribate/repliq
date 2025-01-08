@@ -1,15 +1,15 @@
-import { HTTPException } from 'hono/http-exception';
-import { HTTPError } from 'ky';
+import { HTTPException } from "hono/http-exception";
+import { HTTPError } from "ky";
 
 export function throwError(e: unknown): string {
   let error = 'Internal Server Error';
-  
-  const errorTypes = [ HTTPException, HTTPError ];
-  
+
+  const errorTypes = [HTTPException, HTTPError];
+
   if (errorTypes.some((ErrorType) => e instanceof ErrorType)) {
     return (e as { message: string }).message;
   }
-  
+
   if (
     typeof e === 'object' &&
     e !== null &&
@@ -18,10 +18,10 @@ export function throwError(e: unknown): string {
   ) {
     return (e as { message: string }).message;
   }
-  
+
   if (typeof e === 'string') {
     return e;
   }
-  
+
   return error;
 }

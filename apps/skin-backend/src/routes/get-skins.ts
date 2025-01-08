@@ -1,42 +1,18 @@
-import { getExistsCustomPlayerSkin } from '#lib/queries/get-exists-custom-player-skin.ts';
-import { getExistsPlayerSkin } from '#lib/queries/get-exists-player-skin.ts';
-import { getUserNickname } from '#lib/queries/get-user-nickname.ts';
-import type { Skin } from '#types/skin-type.ts';
-import { decode } from 'base-64';
 import { Hono } from 'hono';
+import { throwError } from '@repo/lib/helpers/throw-error.ts';
+import { getPlayerSkin } from '#lib/queries/get-player-skin.ts';
 
 export const getSkinRoute = new Hono()
-  .get('/get-skin/:uuid', async (ctx) => {
-    const { uuid } = ctx.req.param();
+  .get('/get-skin/:nickname', async (ctx) => {
+    const { nickname } = ctx.req.param();
 
-    let skinUrl: string | null = null;
+    try {
+      const skin = await getPlayerSkin({ nickname })
 
-    const queryPlayersCustomSkins = await getExistsCustomPlayerSkin(uuid)
+      ctx.header('Content-Type', 'image/png')
 
-    if (queryPlayersCustomSkins) {
-      skinUrl = queryPlayersCustomSkins
+      return ctx.body(skin as unknown as ReadableStream, 200)
+    } catch (e) {
+      return ctx.json({ error: throwError(e) }, 500);
     }
-
-    console.log(queryPlayersCustomSkins)
-
-    const queryPlayersSkins = await getExistsPlayerSkin(uuid)
-
-    if (queryPlayersSkins) {
-      const skinState = decode(queryPlayersSkins);
-      const parsedSkinState: Skin = JSON.parse(skinState);
-
-      skinUrl = parsedSkinState.textures.SKIN.url
-    }
-
-    console.log(queryPlayersSkins)
-
-    if (!queryPlayersSkins && !queryPlayersCustomSkins) {
-      const userNickname = await getUserNickname(uuid)
-
-      skinUrl = `https://mineskin.eu/skin/${userNickname?.nickname}`
-    }
-
-    console.log(skinUrl)
-
-    return ctx.json({ skin: skinUrl ?? null }, 200);
   });

@@ -33,7 +33,9 @@ export const FriendCardControlNote = ({
       trigger={
         <DropdownMenuItem className="flex justify-start items-center gap-2 group">
           <Pen size={16} className="text-shark-300" />
-          <Typography textSize="small">Добавить заметку</Typography>
+          <Typography textSize="small">
+            Добавить заметку
+          </Typography>
         </DropdownMenuItem>
       }
       content={

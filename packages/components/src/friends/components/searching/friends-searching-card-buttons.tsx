@@ -41,7 +41,7 @@ export const FriendsSearchingCardActionAdd = ({
   const handleAddFriend = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
 
-    return createRequestFriendMutation.mutate(recipient);
+    return createRequestFriendMutation.mutate({ recipient });
   };
 
   return (

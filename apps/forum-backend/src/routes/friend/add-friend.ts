@@ -1,4 +1,4 @@
-import { throwError } from "#helpers/throw-error.ts";
+import { throwError } from '@repo/lib/helpers/throw-error.ts';
 import { createFriendRequest } from "#lib/queries/friend/create-friend-request.ts";
 import { getUserFriendPreference } from "#lib/queries/user/get-user-friend-preference.ts";
 import { zValidator } from "@hono/zod-validator";

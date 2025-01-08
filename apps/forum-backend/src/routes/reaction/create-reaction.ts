@@ -1,4 +1,4 @@
-import { throwError } from "#helpers/throw-error.ts";
+import { throwError } from '@repo/lib/helpers/throw-error.ts';
 import { getUserDonate } from "#lib/queries/user/get-user-donate.ts";
 import { forumDB } from "#shared/database/forum-db.ts";
 import { getNickname } from "#utils/get-nickname-from-storage.ts";

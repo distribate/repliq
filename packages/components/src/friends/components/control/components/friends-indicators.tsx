@@ -1,9 +1,9 @@
-"use client";
+"use client"
 
+import { friendsCountQuery } from "#friends/queries/friends-count-query.ts";
 import { requestsIncomingQuery } from "../../../queries/requests-incoming-query.ts";
-import { friendsQuery } from "../../../queries/friends-query.ts";
 import { requestsOutgoingQuery } from "../../../queries/requests-outgoing-query.ts";
-import { UserEntity } from "@repo/types/entities/entities-type.ts";
+import { getUser } from "@repo/lib/helpers/get-user.ts";
 
 export const FriendsIncomingRequestsIndicator = () => {
   const { data: incomingRequests } = requestsIncomingQuery();
@@ -18,16 +18,18 @@ export const FriendsIncomingRequestsIndicator = () => {
   );
 };
 
-export const FriendsAllCountIndicator = ({
-  nickname,
-}: Pick<UserEntity, "nickname">) => {
-  const { data: friends } = friendsQuery({ nickname });
+export const FriendsAllCountIndicator = () => {
+  const { nickname } = getUser()
+  const { data: friendsCount } = friendsCountQuery(nickname);
 
-  if (!friends) return null;
+  if (!friendsCount) return null;
 
   return (
-    <span className="inline-flex items-center justify-center max-h-[20px] max-w-[20px] p-2 rounded-sm overflow-hidden bg-emerald-500">
-      {friends.length ? friends.length : 0}
+    <span
+      className="inline-flex items-center justify-center max-h-[20px] 
+        max-w-[20px] p-2 rounded-sm overflow-hidden bg-emerald-500"
+    >
+      {friendsCount}
     </span>
   );
 };

@@ -1,4 +1,4 @@
-import { throwError } from "#helpers/throw-error.ts";
+import { throwError } from '@repo/lib/helpers/throw-error.ts';
 import { getUserInfo } from "#lib/queries/user/get-user-info.ts";
 import { getUserIsBanned } from "#lib/queries/user/get-user-is-banned.ts";
 import { getUserSettings } from "#lib/queries/user/get-user-setting.ts";

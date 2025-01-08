@@ -1,6 +1,6 @@
 import { Hono } from 'hono';
 import { zValidator } from '@hono/zod-validator';
-import { throwError } from '#helpers/throw-error.ts';
+import { throwError } from '@repo/lib/helpers/throw-error.ts';
 import { updateSetting } from '#lib/queries/user/update-user-setting.ts';
 import { editUserSettingsBodySchema } from '@repo/types/schemas/user/edit-user-settings-schema.ts';
 import { getNickname } from '#utils/get-nickname-from-storage.ts';

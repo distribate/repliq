@@ -144,7 +144,7 @@ export const ProfileContentTabs = ({
           )}
         </div>
         <div className="hidden lg:flex flex-col w-1/3 h-full">
-          <UserProfileSkin uuid={requestedUserUUID} />
+          <UserProfileSkin nickname={requestedUserNickname} />
         </div>
       </div>
     </Tabs>

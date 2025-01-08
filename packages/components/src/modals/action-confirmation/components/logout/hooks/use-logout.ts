@@ -15,8 +15,7 @@ export const useLogout = () => {
     mutationKey: LOGOUT_MUTATION_KEY,
     mutationFn: async () => deleteSession(),
     onSuccess: async () => {
-      push(AUTH_REDIRECT)
-      await delay(2000, qc.clear());
+      await delay(1000, qc.clear()).then(() => push(AUTH_REDIRECT));
     },
     onSettled: () => toast.info("Вы вышли из аккаунта"),
     onError: (e) => {

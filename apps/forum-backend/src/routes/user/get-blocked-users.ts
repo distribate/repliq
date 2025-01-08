@@ -1,5 +1,5 @@
 import { Hono } from 'hono';
-import { throwError } from '#helpers/throw-error.ts';
+import { throwError } from '@repo/lib/helpers/throw-error.ts';
 import { getBlockedUsers } from '#lib/queries/user/get-blocked-users.ts';
 import { z } from 'zod';
 import { zValidator } from '@hono/zod-validator';

@@ -5,12 +5,12 @@ import { ProfileSkinRender } from "#profile/components/skin/components/profile-s
 import { UserEntity } from "@repo/types/entities/entities-type";
 
 export const UserProfileSkin = ({ 
-  uuid
- }: Pick<UserEntity, "uuid">) => {
+  nickname
+ }: Pick<UserEntity, "nickname">) => {
   return (
     <div className="flex h-[500px] w-[500px] gap-2">
-      <ProfileSkinControls uuid={uuid} />
-      <ProfileSkinRender uuid={uuid} />
+      <ProfileSkinControls nickname={nickname} />
+      <ProfileSkinRender nickname={nickname} />
     </div>
   );
 };

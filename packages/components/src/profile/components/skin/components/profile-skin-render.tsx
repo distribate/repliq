@@ -23,15 +23,14 @@ function isHardwareAccelerationEnabled(): boolean {
 }
 
 export const ProfileSkinRender = ({
-  uuid
-}: Pick<UserEntity, "uuid">) => {
+  nickname
+}: Pick<UserEntity, "nickname">) => {
   const { setViewerRef } = useSkinViewer();
-  const { data: skinState, isLoading } = skinStateQuery(uuid);
+  const { data: skinState, isLoading } = skinStateQuery(nickname);
 
   if (isLoading) return <Skeleton className="w-full h-[440px]" />;
 
   const isHardwareAccEnabled = isHardwareAccelerationEnabled();
-  console.log(isHardwareAccEnabled, skinState)
 
   return (
     <>

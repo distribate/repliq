@@ -1,4 +1,4 @@
-import { throwError } from "#helpers/throw-error.ts";
+import { throwError } from '@repo/lib/helpers/throw-error.ts';
 import { getUserLastVisitTime } from "#lib/queries/user/get-user-last-visit-time.ts";
 import { getNatsConnection } from "@repo/config-nats/nats-client";
 import { Hono } from "hono";

@@ -11,7 +11,7 @@ import { SKIN_ANIMATIONS } from "../constants/skin-animations.ts";
 import { SKIN_DOWNLOAD_SKIN } from "@repo/shared/constants/routes.ts";
 import { UserEntity } from "@repo/types/entities/entities-type.ts";
 
-export const ProfileSkinControls = ({ uuid }: Pick<UserEntity, "uuid">) => {
+export const ProfileSkinControls = ({ nickname }: Pick<UserEntity, "nickname">) => {
   const { push } = useRouter();
   const { data: skinAnimation } = skinAnimationQuery();
   const { updateSkinStateMutation } = useSkinStateChange();
@@ -47,7 +47,7 @@ export const ProfileSkinControls = ({ uuid }: Pick<UserEntity, "uuid">) => {
         className="h-[40px] w-[40px]"
         state="default"
         title="Скачать скин"
-        onClick={() => push(SKIN_DOWNLOAD_SKIN + uuid)}
+        onClick={() => push(SKIN_DOWNLOAD_SKIN + nickname)}
       >
         <ArrowDownFromLine size={20} />
       </Button>

@@ -5,7 +5,6 @@ import { UserCoverSkeleton } from '@repo/components/src/skeletons/user-cover-ske
 import { UserCoverLayout } from '@repo/components/src/profile/components/cover/components/cover-layout.tsx';
 import { Selectable } from 'kysely';
 import type { Users } from '@repo/types/db/forum-database-types.ts';
-import { Skeleton } from '@repo/ui/src/components/skeleton';
 import { ProfileContent } from "@repo/components/src/profile/components/profile-content/components/profile-content.tsx";
 
 export type User = Selectable<Pick<Users, "id" | "nickname" | "uuid">>;
@@ -24,16 +23,14 @@ export async function generateMetadata({
 export default async function ProfilePage({
   params
 }: PageConventionProps) {
-  const { nickname: requestedUserNickname } = params;
+  const { nickname } = params;
 
   return (
     <div className="flex flex-col gap-6 w-full h-full relative">
       <Suspense fallback={<UserCoverSkeleton />}>
-        <UserCoverLayout requestedUserNickname={requestedUserNickname} />
+        <UserCoverLayout requestedUserNickname={nickname} />
       </Suspense>
-      <Suspense fallback={<Skeleton className="w-full h-full" />}>
-        <ProfileContent requestedUserNickname={requestedUserNickname} />
-      </Suspense>
+      <ProfileContent requestedUserNickname={nickname} />
     </div>
   );
 }

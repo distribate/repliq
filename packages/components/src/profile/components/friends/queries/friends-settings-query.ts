@@ -9,12 +9,15 @@ export const FRIENDS_SORT_QUERY_KEY: QueryKey = createQueryKey("ui", [
 
 export type FriendsSortType = "created_at" | "donate_weight";
 
-export type FriendsSortQuery = Omit<z.infer<typeof getUserFriendsSchema>, "with_details">
+export type FriendsSortQuery = Omit<z.infer<typeof getUserFriendsSchema>, "with_details"> & {
+  searchQuery: string;
+  type: "first" | "other"
+}
 
 const initial: FriendsSortQuery = {
   sort_type: "created_at",
   searchQuery: "",
-  range: [0, 100],
+  type: "first",
   ascending: false
 };
 

@@ -1,6 +1,6 @@
 import { Hono } from 'hono';
 import type { UserDonateVariant } from '@repo/types/entities/entities-type.ts';
-import { throwError } from '#helpers/throw-error.ts';
+import { throwError } from '@repo/lib/helpers/throw-error.ts';
 import type { UserDetailed, UserShorted } from '@repo/types/entities/user-type.ts';
 import { getNickname } from '#utils/get-nickname-from-storage.ts';
 import { getUserRelation } from '#lib/queries/user/get-user-relation.ts';

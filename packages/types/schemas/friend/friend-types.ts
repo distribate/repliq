@@ -1,5 +1,15 @@
 import type { DonateVariantsEnum } from "../../entities/entities-type";
 
+export type GetFriendsResponse = {
+  data: FriendWithDetails[] | FriendWithoutDetails[]
+  meta: Partial<{
+    hasNextPage: boolean
+    hasPrevPage: boolean
+    endCursor: string;
+    startCursor: string;
+  }>
+}
+
 export type FriendWithDetails = {
   friend_id: string;
   created_at: string;

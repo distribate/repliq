@@ -1,4 +1,4 @@
-import { throwError } from "#helpers/throw-error.ts";
+import { throwError } from '@repo/lib/helpers/throw-error.ts';
 import { getThreadReactions } from "#lib/queries/thread/get-thread-reactions.ts";
 import { getThreadUserReactions } from "#lib/queries/thread/get-thread-user-reactions.ts";
 import { getNickname } from "#utils/get-nickname-from-storage.ts";

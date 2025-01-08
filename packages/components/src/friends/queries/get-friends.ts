@@ -4,32 +4,49 @@ import {
 import { forumUserClient } from "@repo/shared/api/forum-client";
 import { z } from "zod";
 import { getUserFriendsSchema } from "@repo/types/schemas/user/get-user-friends-schema";
-import { type FriendWithDetails, type FriendWithoutDetails } from '@repo/types/schemas/friend/friend-types';
+import { GetFriendsResponse } from '@repo/types/schemas/friend/friend-types';
+import { decode } from "cbor-x"
+import ky from "ky";
 
-export type RequestFriends = Pick<UserEntity, "nickname"> & z.infer<typeof getUserFriendsSchema>
+export type GetFriends = Pick<UserEntity, "nickname"> & z.infer<typeof getUserFriendsSchema>
+
+export const parseBooleanToString = (input: boolean): "true" | "false" => {
+  if (input === true) {
+    return "true";
+  } else if (input === false) {
+    return "false";
+  }
+
+  throw new Error(`Invalid string boolean: ${input}`);
+};
 
 export async function getFriends({
-  nickname, range, searchQuery, sort_type, with_details, ascending,
-}: RequestFriends): Promise<FriendWithDetails[] | FriendWithoutDetails[] | null> {
-  const res = await forumUserClient().user["get-user-friends"][":nickname"].$get({
-    query: {
-      with_details: with_details.toString(),
-      sort_type,
-      ascending: ascending.toString(),
-      searchQuery,
-      range: range.join(",")
-    },
-    param: { nickname }
+  nickname, sort_type, with_details: rawWithDetails, ascending: rawAscending, cursor
+}: GetFriends): Promise<GetFriendsResponse | null> {
+  const with_details = parseBooleanToString(rawWithDetails)
+  const ascending = parseBooleanToString(rawAscending)
+
+  const url = forumUserClient().user["get-user-friends"][":nickname"].$url({
+    param: { nickname },
+    query: { sort_type, with_details, ascending, cursor }
   })
 
-  const data = await res.json()
+  const res = await ky.get(url, { 
+    credentials: "include",
+  })
 
-  if (!data || "error" in data) {
+  const encodedData = await res.arrayBuffer()
+
+  if (!encodedData) {
     return null;
   }
 
-  if (!data.length) {
-    return null
+  const uint8Data = new Uint8Array(encodedData);
+
+  const data: GetFriendsResponse | { error: string } = decode(uint8Data);
+
+  if (!data || "error" in data) {
+    return null;
   }
 
   return data

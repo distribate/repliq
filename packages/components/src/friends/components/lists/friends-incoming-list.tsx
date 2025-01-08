@@ -10,7 +10,9 @@ export const FriendsIncomingList = () => {
   const { data: friendsFiltering } = friendsFilteringQuery();
   const { data: incomingFriends } = requestsIncomingQuery();
 
-  if (!incomingFriends) return <ContentNotFound title="Входящих заявок в друзья нет" />;
+  if (!incomingFriends) {
+    return <ContentNotFound title="Входящих заявок в друзья нет" />;
+  }
 
   return (
     <FriendsListLayout variant={friendsFiltering.viewType}>
