@@ -15,7 +15,7 @@ export const FormThreadComments = ({ errors, control }: FormChildsProps) => {
   const isActive = threadFormState.is_comments;
 
   return (
-    <FormField errorMessage={errors?.comments?.message}>
+    <FormField errorMessage={errors?.is_comments?.message}>
       <div className="flex flex-col gap-y-2">
         <div className="flex flex-col">
           <Typography textColor="shark_white" textSize="large">
@@ -27,7 +27,7 @@ export const FormThreadComments = ({ errors, control }: FormChildsProps) => {
         </div>
         <Controller
           control={control}
-          name="comments"
+          name="is_comments"
           render={({ field: { onChange } }) => {
             return (
               <Toggle

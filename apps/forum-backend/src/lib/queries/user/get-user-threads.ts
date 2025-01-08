@@ -1,6 +1,6 @@
 import type { getUserThreadsSchema } from '#routes/user/get-user-threads.ts';
 import { forumDB } from '#shared/database/forum-db.ts';
-import type { Expression, SqlBool } from 'kysely';
+import { sql, type Expression, type SqlBool } from 'kysely';
 import { z } from 'zod';
 
 type GetUserThreads = {
@@ -13,10 +13,9 @@ export const getUserThreads = async ({
   const threadsWithCounts = await forumDB
   .selectFrom("threads_users")
   .innerJoin("threads", "threads.id", "threads_users.thread_id")
-  .leftJoin("threads_comments", "threads.id", "threads_comments.thread_id")
   .selectAll("threads")
   .select([
-    forumDB.fn.count("threads_comments.id").as("commentsCount"),
+    sql<number>`(SELECT COUNT(*) FROM comments WHERE parent_type = 'thread' AND CAST(parent_id AS uuid) = threads.id)`.as('comments_count')
   ])
   .where((eb) => {
     const filters: Expression<SqlBool>[] = [];
@@ -34,6 +33,6 @@ export const getUserThreads = async ({
   
   return threadsWithCounts.map((thread) => ({
     ...thread,
-    commentsCount: Number(thread.commentsCount),
+    comments_count: Number(thread.comments_count),
   }));
 }

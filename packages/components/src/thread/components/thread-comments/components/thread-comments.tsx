@@ -1,69 +1,33 @@
 'use client';
 
-import { Typography } from '@repo/ui/src/components/typography.tsx';
 import { ThreadCommentItem } from '../../thread-comment/components/thread-comment-item.tsx';
 import {
-  threadCommentsQuery,
-  useUpdateComments,
+  threadCommentsQuery
 } from '../queries/thread-comments-query.ts';
 import { Skeleton } from '@repo/ui/src/components/skeleton.tsx';
 import { useInView } from 'react-intersection-observer';
 import { useEffect } from 'react';
-import { ThreadOwner } from '@repo/types/entities/thread-type.ts';
+import { ThreadDetailed } from '@repo/types/entities/thread-type.ts';
+import { UPDATE_COMMENTS_MUTATION_KEY, useUpdateComments } from '../hooks/use-update-comments.ts';
+import { ThreadCommentsSkeleton } from './thread-comments-skeleton.tsx';
+import { ThreadCommentsHeader } from './thread-comments-header.tsx';
+import { useMutationState } from '@tanstack/react-query';
 
-type ThreadCommentsProps = {
-  thread_id: string,
-  owner: ThreadOwner;
-  is_comments: boolean;
-};
-
-type ThreadCommentsHeaderProps = {
-  non_comments: boolean;
-};
-
-const ThreadCommentsHeader = ({ non_comments }: ThreadCommentsHeaderProps) => {
-  return (
-    <div className="flex w-fit bg-shark-800 rounded-md px-2 py-0.5">
-      {non_comments ? (
-        <Typography
-          textSize="medium"
-          textColor="shark_white"
-          className="font-semibold"
-        >
-          Комментариев еще нет...
-        </Typography>
-      ) : (
-        <Typography
-          textSize="medium"
-          textColor="shark_white"
-          className="font-semibold"
-        >
-          Обсуждение началось
-        </Typography>
-      )}
-    </div>
-  );
-};
-
-export const ThreadCommentsSkeleton = () => {
-  return (
-    <div className="flex flex-col gap-y-2 items-center w-full">
-      <Skeleton className="h-8 w-44" />
-      <div className="flex flex-col items-start gap-y-2 w-full">
-        <Skeleton className="h-[120px] w-full" />
-        <Skeleton className="h-[120px] w-full" />
-        <Skeleton className="h-[120px] w-full" />
-      </div>
-    </div>
-  );
-};
+type ThreadCommentsProps = Pick<ThreadDetailed, 'id' | "is_comments" | "owner">
 
 export const ThreadComments = ({
-  thread_id, owner, is_comments,
+  id: thread_id, owner, is_comments,
 }: ThreadCommentsProps) => {
   const { updateCommentsMutation } = useUpdateComments()
-  const { data, isLoading, isFetching } = threadCommentsQuery({ id: thread_id, is_comments });
+  const { data, isLoading } = threadCommentsQuery({ id: thread_id, is_comments });
   const { inView, ref } = useInView({ triggerOnce: false, threshold: 1 });
+  
+  const mutData = useMutationState({
+    filters: { mutationKey: UPDATE_COMMENTS_MUTATION_KEY },
+    select: (m) => m.state.status
+  })
+  
+  const isLoadingUpdated = mutData[mutData.length - 1] === "pending";
 
   const threadComments = data?.data;
   const threadMeta = data?.meta;
@@ -72,7 +36,7 @@ export const ThreadComments = ({
   const cursor = threadMeta?.endCursor ?? undefined;
 
   useEffect(() => {
-    if (inView && hasMore && !isFetching) {
+    if (inView && hasMore) {
       updateCommentsMutation.mutate({ cursor, threadId: thread_id });
     }
   }, [inView, hasMore]);
@@ -98,7 +62,7 @@ export const ThreadComments = ({
               updated_at={comment.updated_at}
             />
           ))}
-          {(hasMore && isFetching) && (
+          {(isLoadingUpdated) && (
             <div className="flex flex-col items-start gap-y-2 w-full">
               <Skeleton className="h-[120px] w-full" />
               <Skeleton className="h-[120px] w-full" />

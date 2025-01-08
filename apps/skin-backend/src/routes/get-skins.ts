@@ -1,67 +1,42 @@
-import { skinsDB, forumDB } from './../shared/db';
+import { getExistsCustomPlayerSkin } from '#lib/queries/get-exists-custom-player-skin.ts';
+import { getExistsPlayerSkin } from '#lib/queries/get-exists-player-skin.ts';
+import { getUserNickname } from '#lib/queries/get-user-nickname.ts';
+import type { Skin } from '#types/skin-type.ts';
 import { decode } from 'base-64';
 import { Hono } from 'hono';
 
-type SkinState = { 
-  textures: {
-    SKIN: {
-      url: string, 
-      metadata: {
-        model: string 
-      } 
-    } 
-  }
-}
+export const getSkinRoute = new Hono()
+  .get('/get-skin/:uuid', async (ctx) => {
+    const { uuid } = ctx.req.param();
 
-async function getExistsCustomPlayerSkin(uuid: string) {
-  const queryPlayersCustomSkins = await skinsDB
-  .selectFrom('sr_players')
-  .select(["skin_identifier", "skin_variant"])
-  .where("uuid", "=", uuid)
-  .executeTakeFirst();
+    let skinUrl: string | null = null;
 
-  return queryPlayersCustomSkins?.skin_identifier
-}
+    const queryPlayersCustomSkins = await getExistsCustomPlayerSkin(uuid)
 
-async function getExistsPlayerSkin(uuid: string) {
-  const queryPlayersSkins = await skinsDB
-    .selectFrom('sr_player_skins')
-    .select("value")
-    .where("uuid", "=", uuid)
-    .executeTakeFirst();
+    if (queryPlayersCustomSkins) {
+      skinUrl = queryPlayersCustomSkins
+    }
 
-  return queryPlayersSkins?.value
-}
+    console.log(queryPlayersCustomSkins)
 
-export const getSkinRoute = new Hono().get('/get-skin/:uuid', async (ctx) => {
-  const { uuid } = ctx.req.param();
-  
-  let skinUrl: string | null = null;
+    const queryPlayersSkins = await getExistsPlayerSkin(uuid)
 
-  const queryPlayersCustomSkins = await getExistsCustomPlayerSkin(uuid)
-    
-  if (queryPlayersCustomSkins) {
-    skinUrl = queryPlayersCustomSkins
-  }
+    if (queryPlayersSkins) {
+      const skinState = decode(queryPlayersSkins);
+      const parsedSkinState: Skin = JSON.parse(skinState);
 
-  const queryPlayersSkins = await getExistsPlayerSkin(uuid)
+      skinUrl = parsedSkinState.textures.SKIN.url
+    }
 
-  if (queryPlayersSkins) {
-    const skinState = decode(queryPlayersSkins);
-    const parsedSkinState: SkinState = JSON.parse(skinState);
+    console.log(queryPlayersSkins)
 
-    skinUrl = parsedSkinState.textures.SKIN.url
-  }
+    if (!queryPlayersSkins && !queryPlayersCustomSkins) {
+      const userNickname = await getUserNickname(uuid)
 
-  if (!queryPlayersSkins && !queryPlayersCustomSkins) {
-    const userNickname = await forumDB
-    .selectFrom("users")
-    .select('nickname')
-    .where('uuid', '=', uuid)
-    .executeTakeFirst()
-  
-    skinUrl = `https://mineskin.eu/skin/${userNickname?.nickname}`
-  }
+      skinUrl = `https://mineskin.eu/skin/${userNickname?.nickname}`
+    }
 
-  return ctx.json({ skin: skinUrl ?? null }, 200);
-});
+    console.log(skinUrl)
+
+    return ctx.json({ skin: skinUrl ?? null }, 200);
+  });

@@ -13,9 +13,7 @@ export const CreateThreadComment = () => {
   const qc = useQueryClient();
   const { data: createThreadCommentState } = createThreadCommentQuery();
 
-  if (!createThreadCommentState) return null;
-
-  const type = createThreadCommentState.type || "single";
+  const type = createThreadCommentState?.type ?? "single";
 
   useEffect(() => {
     qc.resetQueries({ queryKey: CREATE_THREAD_COMMENT_QUERY_KEY }).then();

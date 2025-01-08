@@ -1,7 +1,7 @@
 import { forumCategoriesClient } from "@repo/shared/api/forum-client";
 
 export type CategoryModel = {
-  hasThreads: boolean;
+  has_threads: boolean;
   title: string;
   id: number;
 };

@@ -4,11 +4,12 @@ import { UserCoverMainInfo } from "./cover-main-info.tsx";
 import { UserCoverPanel } from "./cover-panel.tsx";
 import { coverQuery } from "#profile/components/cover/queries/cover-query.ts";
 import { imageCoverQuery } from "#profile/components/cover/queries/image-cover-query.ts";
-import type { UserDetailed, UserShorted } from "@repo/types/entities/user-type.ts";
 import dynamic from "next/dynamic";
+import { requestedUserQuery } from "../queries/requested-user-query.ts";
+import { UserCoverSkeleton } from "#skeletons/user-cover-skeleton.tsx";
 
 type UserCoverProps = {
-  requestedUser: UserDetailed | UserShorted;
+  requestedUserNickname: string
 };
 
 const UserCoverWatermark = dynamic(() =>
@@ -18,12 +19,17 @@ const UserCoverWatermark = dynamic(() =>
 );
 
 export const UserCover = ({
-  requestedUser
+  requestedUserNickname: nickname
 }: UserCoverProps) => {
-  const { donate, nickname, preferences } = requestedUser;
-
+  const { data: requestedUser, isLoading: requestedUserLoading } = requestedUserQuery(nickname);
   const { data: coverQueryState } = coverQuery();
   const { data: url, isLoading } = imageCoverQuery(nickname);
+
+  if (requestedUserLoading) return <UserCoverSkeleton />;
+
+  if (!requestedUser) return null;
+
+  const { donate, preferences } = requestedUser
 
   const preferOutline = preferences?.cover_outline_visible ?? false;
   const coverOutline = donate && preferOutline ? donate : "default";

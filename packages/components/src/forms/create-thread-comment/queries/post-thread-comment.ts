@@ -9,13 +9,13 @@ type ThreadComment = {
 type CreateThreadComment = ThreadComment
 
 type ReplyThreadComment = ThreadComment & {
-  recipient_comment_id: string;
+  recipient_comment_id: number;
 }
 
 export async function replyThreadComment({
   recipient_comment_id, content, thread_id
 }: ReplyThreadComment) {
-  return await reply({ content, threadId: thread_id, recipient_comment_id });
+  return await reply({ content, threadId: thread_id, recipient_comment_id: recipient_comment_id.toString() });
 }
 
 export async function createThreadComment({

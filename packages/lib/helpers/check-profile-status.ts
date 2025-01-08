@@ -1,14 +1,8 @@
 import { forumUserClient } from '@repo/shared/api/forum-client.ts';
 
-export type CheckProfileStatus = {
-  requestedUserNickname: string;
-};
-
-export async function checkProfileStatus(requestedUserNickname: string) {
+export async function checkProfileStatus(recipient: string) {
   const res = await forumUserClient().user["get-user-profile-status"].$get({
-    query: {
-      recipient: requestedUserNickname
-    }
+    query: { recipient }
   })
 
   const data = await res.json();

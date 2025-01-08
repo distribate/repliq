@@ -12,11 +12,12 @@ export const FormThreadAutoRemove = ({ control, errors }: FormChildsProps) => {
 
   if (!threadFormState) return;
 
-  const isActive = threadFormState.auto_remove;
+  const isActive = false
 
   return (
-    <FormField errorMessage={errors?.auto_remove?.message}>
-      <div className="flex flex-col gap-y-2">
+    <FormField>
+      {/*  todo  */}
+      {/* <div className="flex flex-col gap-y-2">
         <div className="flex flex-col">
           <Typography textColor="shark_white" textSize="large">
             Авто-удаление
@@ -50,7 +51,7 @@ export const FormThreadAutoRemove = ({ control, errors }: FormChildsProps) => {
             );
           }}
         />
-      </div>
+      </div> */}
     </FormField>
   );
 };

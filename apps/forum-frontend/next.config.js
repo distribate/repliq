@@ -27,6 +27,11 @@ module.exports = withBundleAnalyzer({
   images: {
     remotePatterns: [
       {
+        protocol: 'https',
+        hostname: '/imgur.com/**',
+        port: '',
+      },
+      {
         protocol: 'http',
         hostname: 'localhost',
         port: '3002',

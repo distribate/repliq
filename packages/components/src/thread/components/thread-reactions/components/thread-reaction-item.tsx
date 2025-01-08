@@ -5,7 +5,7 @@ type RatingActionItemProps = {
   emoji: string;
   reactionCount: number;
   threadId: string;
-  isLiked: string | false;
+  isLiked: boolean
   Icon: JSX.Element | string;
 };
 
@@ -17,14 +17,15 @@ export const ThreadReactionItem = ({
   return (
     <div
       onClick={() => addReactionToThreadMutation.mutate({ emoji, id: threadId })}
-      className={`flex bg-shark-700/50 rounded-md py-1 items-center gap-1 px-2 group *:transition-all *:duration-150 group cursor-pointer`}
+      className={`flex ${isLiked ? "bg-shark-400/50" : "bg-shark-700/50"} 
+        rounded-md py-1 items-center gap-1 px-2 group *:transition-all *:duration-150 group cursor-pointer`}
     >
       {typeof Icon === "string" ? (
         <span className="text-shark-50">
           {Icon}
         </span>
       ) : (
-        <span className={`text-shark-300 ${isLiked === "fill" ? "fill-current text-primary" : ""}`}>
+        <span className="text-shark-300">
           {Icon}
         </span>
       )}

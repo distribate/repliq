@@ -12,7 +12,7 @@ type GetThreadComments = {
   threadId: string;
 }
 
-export const THREAD_COMMENTS_LIMIT = 6;
+export const THREAD_COMMENTS_LIMIT = 16
 
 async function getThreadComments({
   limit: rawLimit, cursor, threadId
@@ -44,7 +44,7 @@ async function getThreadComments({
     .limit(limit)
 
   const result = await executeWithCursorPagination(query, {
-    perPage: 6,
+    perPage: 16,
     after: cursor,
     fields: [
       {
@@ -115,8 +115,6 @@ export const getThreadCommentsRoute = new Hono()
     const { threadId } = ctx.req.param();
     const query = ctx.req.query();
     const { limit, cursor } = getCommentsSchema.parse(query);
-
-    console.log(limit, cursor)
 
     try {
       const threadComments = await getThreadComments({

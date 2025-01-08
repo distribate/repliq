@@ -10,28 +10,16 @@ import { FormThreadComments } from "./form-thread-comments.tsx";
 import { FormThreadDescription } from "./form-thread-description.tsx";
 import { FormThreadTitle } from "./form-thread-title.tsx";
 import { useForm } from "react-hook-form";
-import {
-  FormChildsProps,
-  zodCreateThreadForm,
-} from "../types/create-thread-form-types.ts";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { createThreadSchema } from "../schemas/create-thread-schema.ts";
 import { threadFormQuery } from "#forms/create-thread/queries/thread-form-query.ts";
 import dynamic from "next/dynamic";
+import { createThreadSchema, FormChildsProps, zodCreateThreadForm } from "../types/create-thread-form-types.ts";
 
 const FormThreadPreviewImages = dynamic(() =>
   import("./form-thread-preview-images.tsx").then(
     (m) => m.FormThreadPreviewImages,
   ),
 );
-
-// const FormThreadAutoRemove = dynamic(() =>
-//   import('./form-thread-auto-remove.tsx').then(m => m.FormThreadAutoRemove),
-// );
-
-// const FormThreadPermissions = dynamic(() =>
-//   import('./form-thread-permission.tsx').then(m => m.FormThreadPermissions),
-// );
 
 const AdditionalSections = dynamic(() =>
   import("./additional-sections.tsx").then((m) => m.AdditionalSections),
@@ -40,21 +28,16 @@ const AdditionalSections = dynamic(() =>
 export const CreateThreadForm = () => {
   const { createPostThreadMutation } = useCreateThread();
   const { data: threadFormState } = threadFormQuery();
-
-  const {
-    control,
-    handleSubmit,
-    setValue,
-    resetField,
-    getValues,
-    formState: { errors, isValid },
-  } = useForm<zodCreateThreadForm>({
+  const { control, handleSubmit, setValue, resetField, getValues, formState: { errors, isValid } } = useForm<zodCreateThreadForm>({
     mode: "onChange",
     resolver: zodResolver(createThreadSchema),
     defaultValues: {
-      comments: threadFormState.is_comments,
+      is_comments: threadFormState.is_comments,
       permission: threadFormState.permission,
-      images: null
+      tags: threadFormState.tags,
+      visibility: threadFormState.visibility,
+      description: threadFormState.description,
+      images: null,
     },
   });
 
@@ -85,11 +68,6 @@ export const CreateThreadForm = () => {
           <Separator />
           <div className="flex flex-col gap-4 items-start h-full *:rounded-md *:w-full">
             <FormThreadComments {...formChildsObj} />
-            {/* // todo: */}
-            {/* // trigger.dev */}
-            {/* // permission for thread */}
-            {/*<FormThreadAutoRemove {...formChildsObj} />*/}
-            {/*<FormThreadPermissions {...formChildsObj} />*/}
           </div>
           <Separator />
           <Button

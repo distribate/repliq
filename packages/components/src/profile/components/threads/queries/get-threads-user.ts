@@ -2,7 +2,7 @@ import { ThreadEntity } from "@repo/types/entities/entities-type.ts";
 import { forumUserClient } from '@repo/shared/api/forum-client.ts';
 
 export type UserThreads = Pick<ThreadEntity, "id" | "title" | "created_at"> & {
-  commentsCount: number;
+  comments_count: number;
 };
 
 type GetThreadsUser = {

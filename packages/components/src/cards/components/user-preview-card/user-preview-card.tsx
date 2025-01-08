@@ -1,74 +1,39 @@
 "use client";
 
-import Link from "next/link";
 import { Avatar } from "#user/components/avatar/components/avatar.tsx";
-import { UserNickname } from "#user/components/name/nickname.tsx";
-import { UserDonate } from "#user/components/donate/components/donate.tsx";
-import { Separator } from "@repo/ui/src/components/separator.tsx";
 import dynamic from "next/dynamic";
-import { USER_URL } from "@repo/shared/constants/routes.ts";
-import { DropdownWrapper } from "#wrappers/dropdown-wrapper.tsx";
 import Spyglass from "@repo/assets/images/minecraft/spyglass.webp";
 import type { UserDetailed } from "@repo/types/entities/user-type.ts";
+import { Dialog, DialogContent, DialogTrigger } from "@repo/ui/src/components/dialog.tsx";
 
 export type UserCardProps = Pick<
   UserDetailed,
-  "nickname" | "description" | "created_at" | "name_color" | "favorite_item" | "donate"
+  "nickname"
 >;
 
-const UserPreviewCardProperties = dynamic(() =>
-  import("./components/preview-properties.tsx")
-    .then(m => m.UserPreviewCardProperties),
+const UserSummaryCard = dynamic(
+  () => import("../user-main-card/components/user-summary-card.tsx").then((mod) => mod.UserSummaryCard)
 );
 
 export const UserPreviewCard = ({
-  nickname, name_color, donate, favorite_item
+  nickname
 }: UserCardProps) => {
   return (
-    <DropdownWrapper
-      properties={{
-        sideAlign: "left",
-        contentAlign: "start",
-        contentClassname: "w-[320px]",
-      }}
-      trigger={
+    <Dialog>
+      <DialogTrigger title={nickname}>
         <div className="flex cursor-pointer rounded-sm h-[50px] relative group w-[50px] hover:bg-shark-900 overflow-hidden">
           <div className="group-hover:flex z-[2] hidden items-center justify-center absolute h-full w-full bg-black/60">
             <img src={Spyglass.src} width={26} height={26} alt="" />
           </div>
           <Avatar nickname={nickname} propHeight={50} propWidth={50} />
         </div>
-      }
-      content={
-        <div className="flex flex-col w-full">
-          <div className="flex flex-col p-2 w-full">
-            <div className="flex justify-between w-full">
-              <div className="flex gap-2 items-center">
-                <div className="min-h-[48px] max-w-[48px] max-h-[48px] min-w-[48px]">
-                  <Avatar propHeight={48} propWidth={48} nickname={nickname} />
-                </div>
-                <div className="flex flex-col w-full justify-between h-[48px]">
-                  <Link href={USER_URL + nickname} className="max-w-[140px]">
-                    <UserNickname
-                      nickname={nickname}
-                      nicknameColor={name_color}
-                      className="text-sm font-normal truncate"
-                    />
-                  </Link>
-                  <div className="w-fit">
-                    <UserDonate donate={donate} favoriteItemId={favorite_item} />
-                  </div>
-                </div>
-              </div>
-              <div className="w-fit">
-                <UserPreviewCardProperties nickname={nickname} />
-              </div>
-            </div>
-          </div>
-          <Separator />
-          <div className="flex flex-row bg-shark-900 px-2 py-1">asdasd</div>
-        </div>
-      }
-    />
+      </DialogTrigger>
+      <DialogContent
+        withClose={false}
+        className="!p-0 !w-[424px] !overflow-visible !border-none !bg-transparent"
+      >
+        <UserSummaryCard nickname={nickname} />
+      </DialogContent>
+    </Dialog>
   );
 };

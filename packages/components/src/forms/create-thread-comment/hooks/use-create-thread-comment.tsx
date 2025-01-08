@@ -2,36 +2,38 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import {
   CREATE_THREAD_COMMENT_QUERY_KEY,
   CreateThreadCommentQuery,
-  initialThreadCommentData,
 } from "../queries/create-thread-comment-query.ts";
 import { createThreadComment, replyThreadComment } from "../queries/post-thread-comment.ts";
 import { toast } from "sonner";
 import { THREAD_COMMENTS_QUERY_KEY } from "#thread/components/thread-comments/queries/thread-comments-query.ts";
+import { GetThreadCommentsResponse } from "@repo/types/entities/thread-comments-types.ts";
+import { useUpdateComments } from "#thread/components/thread-comments/hooks/use-update-comments.ts";
 
 export const useCreateThreadComment = () => {
   const qc = useQueryClient();
+  const { updateCommentsMutation } = useUpdateComments()
 
   const updateCreateThreadCommentMutation = useMutation({
-    mutationFn: async (input: CreateThreadCommentQuery) => {
-      const { content, formState, repliedValues, type, threadId } = input;
+    mutationFn: async (values: Partial<CreateThreadCommentQuery>) => {
+      const { content, replied, type, threadId } = values;
+
+      const updatedContent = content
+        ? content.trim().split(/\s+/).length > 0
+          ? content
+          : null
+        : null;
 
       return qc.setQueryData(
         CREATE_THREAD_COMMENT_QUERY_KEY,
         (prev: CreateThreadCommentQuery) => ({
-          ...prev,
           threadId: threadId ?? prev.threadId,
           type: type ?? prev.type,
-          content: content ? (content.length >= 1 ? content : null) : null,
-          formState: { ...prev.formState, ...formState },
-          repliedValues: { ...prev.repliedValues, ...repliedValues },
+          content: updatedContent ?? prev.content,
+          replied: { ...prev.replied, ...replied },
         }),
       );
     },
-    onSuccess: () =>
-      qc.invalidateQueries({ queryKey: CREATE_THREAD_COMMENT_QUERY_KEY }),
-    onError: (e) => {
-      throw new Error(e.message);
-    },
+    onError: e => { throw new Error(e.message) },
   });
 
   const createThreadCommentMutation = useMutation({
@@ -47,12 +49,12 @@ export const useCreateThreadComment = () => {
 
       switch (type) {
         case "reply":
-          if (!threadComment.repliedValues?.commentId) return;
+          if (!threadComment.replied?.commentId) return;
+
+          const recipient_comment_id = threadComment.replied.commentId
 
           const repliedThreadComment = await replyThreadComment({
-            content,
-            thread_id,
-            recipient_comment_id: threadComment.repliedValues?.commentId.toString(),
+            content, thread_id, recipient_comment_id
           });
 
           return { repliedThreadComment, thread_id };
@@ -69,20 +71,27 @@ export const useCreateThreadComment = () => {
     onSuccess: async (data) => {
       if (!data) return toast.error("Что-то пошло не так!");
 
-      await qc.invalidateQueries({
-        queryKey: THREAD_COMMENTS_QUERY_KEY(data.thread_id),
-      });
+      const threadComment = qc.getQueryData<CreateThreadCommentQuery>(CREATE_THREAD_COMMENT_QUERY_KEY);
+      if (!threadComment) return;
 
-      const defaultValues: CreateThreadCommentQuery = {
-        ...initialThreadCommentData,
-        threadId: data.thread_id,
-      };
+      const currentThreadComments = qc.getQueryData<GetThreadCommentsResponse>(
+        THREAD_COMMENTS_QUERY_KEY(data.thread_id)
+      );
 
-      qc.setQueryData(CREATE_THREAD_COMMENT_QUERY_KEY, () => defaultValues);
+      if (!currentThreadComments || (currentThreadComments && currentThreadComments.data.length === 0)) {
+        return qc.invalidateQueries({
+          queryKey: THREAD_COMMENTS_QUERY_KEY(data.thread_id),
+        });
+      }
+
+      updateCommentsMutation.mutate({
+        cursor: currentThreadComments.meta.endCursor,
+        threadId: threadComment.threadId
+      })
+
+      qc.resetQueries({ queryKey: CREATE_THREAD_COMMENT_QUERY_KEY });
     },
-    onError: (e) => {
-      throw new Error(e.message);
-    },
+    onError: e => { throw new Error(e.message) },
   });
 
   return { updateCreateThreadCommentMutation, createThreadCommentMutation };

@@ -10,7 +10,7 @@ import { Typography } from "@repo/ui/src/components/typography.tsx";
 import { ConfirmationButton } from "#buttons/confirmation-action-button.tsx";
 import { DialogClose } from "@repo/ui/src/components/dialog.tsx";
 import { ConfirmationActionModalTemplate } from "#templates/confirmation-action-modal-template.tsx";
-import { blockedUserQuery } from "@repo/lib/queries/blocked-user-query.ts";
+import { blockedUserQuery } from "../queries/blocked-user-query";
 
 type BlockUserModalProps = {
   requestedUserNickname: string;

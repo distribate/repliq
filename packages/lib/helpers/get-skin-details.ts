@@ -30,6 +30,8 @@ export async function getSkinDetails(uuid: string) {
       return SteveSkin.src as string
     }
 
+    console.log(skinUrl)
+    
     return skinUrl.skin
   } catch (e) {
     return SteveSkin.src as string

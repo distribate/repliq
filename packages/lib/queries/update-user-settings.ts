@@ -10,7 +10,11 @@ export async function updateUserSettings(values: UpdateUserSettings) {
     json: values
   });
 
-  const updatedSettings = await res.json();
+  const data = await res.json();
 
-  return updatedSettings
+  if (!data || "error" in data) {
+    return null;
+  }
+
+  return data
 }

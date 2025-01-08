@@ -9,9 +9,7 @@ import { createQueryKey } from "@repo/lib/helpers/query-key-builder.ts";
 export const REQUESTED_USER_QUERY_KEY = (nickname: string) =>
   createQueryKey("user", ["requested", nickname]);
 
-export const requestedUserQuery = ({
-  nickname,
-}: Pick<UserEntity, "nickname">) => {
+export const requestedUserQuery = (nickname: string) => {
   const qc = useQueryClient();
   const currentUser = getUser();
   const isOwnProfile = currentUser.nickname === nickname;

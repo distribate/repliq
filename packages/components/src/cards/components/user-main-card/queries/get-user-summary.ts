@@ -1,9 +1,6 @@
-import { UserEntity } from '@repo/types/entities/entities-type.ts';
 import { forumUserClient } from "@repo/shared/api/forum-client.ts";
 
-export async function getUserMainInformation({ 
-  nickname 
-}: Pick<UserEntity, "nickname">) {
+export async function getUserSummary(nickname: string) {
   const res = await forumUserClient().user["get-user-summary"][":nickname"].$get({
     param: { nickname },
   });

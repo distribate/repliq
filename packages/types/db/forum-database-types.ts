@@ -548,15 +548,6 @@ export interface LandingTermins {
   title: string;
 }
 
-export interface LuckpermsGroups {
-  name: string;
-}
-
-export interface LuckpermsTracks {
-  groups: string;
-  name: string;
-}
-
 export interface Moderators {
   created_at: Generated<Timestamp>;
   id: Generated<Int8>;
@@ -848,7 +839,7 @@ export interface SupabaseMigrationsSeedFiles {
 }
 
 export interface Threads {
-  category_id: Int8 | null;
+  category_id: Int8;
   content: Json;
   created_at: Generated<Timestamp>;
   description: string | null;
@@ -859,22 +850,6 @@ export interface Threads {
   title: string;
   updated_at: Timestamp | null;
   visibility: Generated<PostVisibility | null>;
-}
-
-export interface ThreadsComments {
-  content: string;
-  created_at: Generated<Timestamp>;
-  edited: Generated<boolean>;
-  id: Int8;
-  thread_id: string;
-  user_nickname: string;
-}
-
-export interface ThreadsCommentsReplies {
-  created_at: Generated<Timestamp>;
-  id: Int8;
-  initiator_comment_id: Int8;
-  recipient_comment_id: Int8;
 }
 
 export interface ThreadsImages {
@@ -1070,8 +1045,6 @@ export interface DB {
   landing_rules_list: LandingRulesList;
   landing_termin_content: LandingTerminContent;
   landing_termins: LandingTermins;
-  luckperms_groups: LuckpermsGroups;
-  luckperms_tracks: LuckpermsTracks;
   moderators: Moderators;
   "net._http_response": NetHttpResponse;
   "net.http_request_queue": NetHttpRequestQueue;
@@ -1102,8 +1075,6 @@ export interface DB {
   "supabase_migrations.schema_migrations": SupabaseMigrationsSchemaMigrations;
   "supabase_migrations.seed_files": SupabaseMigrationsSeedFiles;
   threads: Threads;
-  threads_comments: ThreadsComments;
-  threads_comments_replies: ThreadsCommentsReplies;
   threads_images: ThreadsImages;
   threads_pinned: ThreadsPinned;
   threads_reactions: ThreadsReactions;

@@ -38,6 +38,7 @@ export const getUserSummaryRoute = new Hono()
 
       switch (userStatus) {
         case "blocked-by-user":
+          return ctx.json({ status: "blocked", data: null }, 200);
         case "blocked-by-you":
           return ctx.json({ status: "blocked", data: null }, 200);
         case "private":

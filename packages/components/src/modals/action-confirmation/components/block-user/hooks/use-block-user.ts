@@ -3,7 +3,7 @@ import { blockUser } from "#modals/action-confirmation/components/block-user/que
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { unblockUser } from "#modals/action-confirmation/components/block-user/queries/unblock-user.ts";
-import { BLOCKED_QUERY_KEY } from "@repo/lib/queries/blocked-user-query.ts";
+import { BLOCKED_QUERY_KEY } from "../queries/blocked-user-query";
 
 export const UNBLOCK_USER_MUTATION_KEY = ["unblock-user"];
 export const BLOCK_USER_MUTATION_KEY = ["block-user"];

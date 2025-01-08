@@ -153,10 +153,7 @@ export const Thread = ({
           />
         </BlockWrapper>
         <div className="flex flex-col w-full h-full mt-2 gap-y-4">
-          <ThreadComments
-            owner={owner}
-            thread_id={id}
-            is_comments={is_comments}
+          <ThreadComments owner={owner} id={id} is_comments={is_comments}
           />
           {is_comments ? <CreateThreadComment /> : <CommentsDisabled />}
         </div>

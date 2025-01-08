@@ -16,6 +16,7 @@ import { CATEGORY_URL } from '@repo/shared/constants/routes';
 import { ImageWrapper } from '#wrappers/image-wrapper.tsx';
 import Spyglass from "@repo/assets/images/minecraft/spyglass.webp";
 import { ThreadNotFound } from "#templates/threads-not-found.tsx";
+import { MainCategoriesSkeleton } from './main-categories-skeleton';
 
 const categoriesQuery = () => useQuery({
   queryKey: createQueryKey("ui", ["categories"]),
@@ -39,7 +40,9 @@ async function getMainCategoriesWithThreads() {
 }
 
 export const MainCategoriesList = () => {
-  const { data: categories } = categoriesQuery();
+  const { data: categories, isLoading } = categoriesQuery();
+
+  if (isLoading) return <MainCategoriesSkeleton/>
 
   if (!categories) return null;
 
@@ -54,7 +57,7 @@ export const MainCategoriesList = () => {
         categories[4].category_title,
       ]}
     >
-      <div className="flex flex-col gap-y-4 w-full">
+      <div className="flex flex-col gap-2 w-full">
         {categories.map(({ category_id, category_title, threads }) => (
           <div className="flex gap-y-4 w-full py-4 flex-col rounded-lg px-4 bg-primary-color">
             <AccordionItem value={category_title}>

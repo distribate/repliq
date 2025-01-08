@@ -54,7 +54,7 @@ export const ProfileContentTabs = ({
   requestedUserNickname
 }: ProfileContentProps) => {
   const currentUser = getUser()
-  const { data } = requestedUserQuery({ nickname: requestedUserNickname })
+  const { data } = requestedUserQuery(requestedUserNickname)
   const { nickname: currentUserNickname } = currentUser;
 
   if (!data) return;

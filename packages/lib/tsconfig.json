@@ -1,6 +1,6 @@
 {
   "extends": "@repo/config-typescript/base.json",
-  "include": ["**/*.ts", "*.ts"],
+  "include": ["**/*.ts", "*.ts", "../components/src/modals/action-confirmation/components/block-user/queries/check-profile-is-blocked.ts"],
   "files": ["../../packages/types/global.d.ts"],
   "exclude": ["node_modules"],
   "compilerOptions": {

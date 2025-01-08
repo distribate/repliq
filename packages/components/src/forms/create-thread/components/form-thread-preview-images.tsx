@@ -8,7 +8,7 @@ import {
 } from "@repo/ui/src/components/dialog.tsx";
 import { DeleteButton } from "@repo/ui/src/components/detele-button.tsx";
 import { ImageWrapper } from "#wrappers/image-wrapper.tsx";
-import React, { ChangeEvent } from "react";
+import React from "react";
 import { useCreateThread } from "#forms/create-thread/hooks/use-create-thread.tsx";
 
 type FormThreadPreviewImagesProps = FormChildsProps & {
@@ -31,19 +31,10 @@ export const FormThreadPreviewImages = ({
   const previewFormImages = threadFormState.images;
 
   const handleDeleteImage = (
-    e:
-      | React.MouseEvent<HTMLButtonElement, MouseEvent>
-      | ChangeEvent<HTMLInputElement>,
-    index: number,
+    e: | React.MouseEvent<HTMLButtonElement, MouseEvent> | React.ChangeEvent<HTMLInputElement>, idx: number,
   ) => {
     e.preventDefault();
-    return handleControlImage({
-      index,
-      type: "delete",
-      resetField,
-      images,
-      setValue,
-    });
+    return handleControlImage({ index: idx, type: "delete", resetField, images, setValue, });
   };
 
   return (

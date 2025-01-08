@@ -11,7 +11,7 @@ declare module "bun" {
     POSTGRES_PORT: number;
     POSTGRES_PASSWORD: string;
     POSTGRES_TENANT_ID: string;
-    
+
     LUCKPERMS_POSTGRES_DB: string;
     LUCKPERMS_POSTGRES_PASSWORD: string;
     LUCKPERMS_POSTGRES_USER: string;
@@ -21,6 +21,9 @@ declare module "bun" {
     AUTHORIZATION_POSTGRES_PASSWORD: string
     AUTHORIZATION_POSTGRES_USER: string
     AUTHORIZATION_POSTGRES_PORT: string
-    NATS_AUTH_TOKEN:string
+    NATS_AUTH_TOKEN: string
+
+    SUPABASE_SERVICE_ROLE_KEY: string;
+    NEXT_PUBLIC_SUPABASE_URL: string
   }
 }

@@ -1,5 +1,5 @@
 import ky from 'ky';
-import { SKIN_ELY_URL } from '../shared/urls';
+import { SKIN_ELY_URL } from '#shared/constants/external-skin-api-urls.ts';
 import { Hono } from 'hono';
 
 export const downloadSkinRoute = new Hono().get('/download-skin/:nickname', async(c) => {
@@ -9,8 +9,8 @@ export const downloadSkinRoute = new Hono().get('/download-skin/:nickname', asyn
   
   try {
     const response = await ky.get(url);
-    const buffer = Buffer.from(await response.arrayBuffer());
-    
+    const buffer = Buffer.from(await response.arrayBuffer())
+
     return c.body(buffer as unknown as ReadableStream, 200, {
       "Content-Type": "image/png",
       'Content-Disposition': `attachment; filename=${nickname}-skin.png`

@@ -1,7 +1,7 @@
 'use server';
 
+import { getCurrentSession } from "@repo/lib/actions/get-current-session";
 import { createClient } from "@repo/shared/api/supabase-client.ts";
-import { getCurrentSession } from '#actions/get-current-session.ts';
 
 async function getUserBlockStatus(requestedUserNickname: string) {
   const { user: currentUser } = await getCurrentSession();

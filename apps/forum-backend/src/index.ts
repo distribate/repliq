@@ -54,6 +54,16 @@ import { createCommentRoute } from '#routes/comments/create-comment.ts';
 import { replyCommentRoute } from '#routes/comments/reply-comment.ts';
 import { getThreadCommentsRoute } from '#routes/comments/get-thread-comments.ts';
 import { createReactionRoute } from '#routes/reaction/create-reaction.ts';
+import { getUserBanDetailsRoute } from '#routes/user/get-user-ban-details.ts';
+import { createThreadRoute } from '#routes/thread/create-thread.ts';
+import { encodeCborXRoute } from '#routes/test/encode-cbor-x.ts';
+import { decodeCborXRoute } from '#routes/test/decode-cbor-x.ts';
+
+declare module 'hono' {
+  interface ContextRenderer {
+    (content: any): Response | Promise<Response>
+  }
+}
 
 await initNats()
 await natsSubscribe()
@@ -81,6 +91,12 @@ export const thread = new Hono()
   .route("/", updateThreadSettingsRoute)
   .route("/", getThreadCommentsRoute)
   .route("/", getThreadUserReactionsRoute)
+  .route("/", createThreadRoute)
+
+export const test = new Hono()
+  .basePath('/test')
+  .route("/", decodeCborXRoute)
+  .route("/", encodeCborXRoute)
 
 export const reaction = new Hono()
   .basePath('/reaction')
@@ -118,6 +134,7 @@ export const user = new Hono()
   .route("/", getRecommendedFriendsRoute)
   .route("/", getFriendRequestsRoute)
   .route("/", getUserSummaryRoute)
+  .route("/", getUserBanDetailsRoute)
 
 const app = new Hono<Env>()
   .use("/api/user/*", cors(corsOptions))
@@ -125,6 +142,7 @@ const app = new Hono<Env>()
   .use("/api/categories/*", cors(corsOptions))
   .use("/api/comment/*", cors(corsOptions))
   .use("/api/reaction/*", cors(corsOptions))
+  .use("/api/test/*", cors(corsOptions))
   .use("/api/*", csrf(csrfOptions))
   .use("/api/*", timeout(5000))
   .use('/api/user/*', validateRequest)
@@ -141,8 +159,10 @@ const app = new Hono<Env>()
   .route("/", thread)
   .route("/", category)
   .route("/", comment)
+  .route("/", reaction)
+  .route("/", test)
 
-showRoutes(app, { verbose: false });
+// showRoutes(app, { verbose: false });
 
 export default {
   port: process.env.FORUM_BACKEND_PORT,

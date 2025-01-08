@@ -7,12 +7,12 @@ import {
 import { ContentNotFound } from "#templates/content-not-found.tsx";
 import { UserEntity } from "@repo/types/entities/entities-type.ts";
 import { FriendProfileCard } from "#friend/components/friend-card/components/friend-profile-card.tsx";
-import { Skeleton } from "@repo/ui/src/components/skeleton.tsx";
 import dynamic from "next/dynamic";
 import { friendsSortQuery } from "#profile/components/friends/queries/friends-settings-query.ts";
 import { ProfileFriendsFiltering } from "#profile/components/friends/components/profile-friends-filtering.tsx";
 import { type FriendWithDetails } from '@repo/types/schemas/friend/friend-types';
 import { Suspense } from "react";
+import { ProfileFriendsSkeleton } from "./profile-friends-skeleton";
 
 const SomethingError = dynamic(() =>
   import("#templates/something-error.tsx").then((m) => m.SomethingError),
@@ -24,27 +24,6 @@ type FriendsListLayoutProps = {
 
 const filterFriendsByNickname = (data: FriendWithDetails[], querySearch: string) =>
   data.filter(item => item.nickname.startsWith(querySearch));
-
-const ProfileFriendsSkeleton = () => {
-  return (
-    <div className="flex flex-col gap-4 w-full h-full">
-      <div className="flex w-full justify-between items-center">
-        <Skeleton className="h-10 w-36" />
-        <div className="flex items-center gap-4 w-fit">
-          <Skeleton className="h-10 w-10" />
-          <Skeleton className="h-10 w-36" />
-        </div>
-      </div>
-      <div className="grid auto-rows-auto grid-cols-3 gap-2 w-full">
-        <Skeleton className="w-full h-36" />
-        <Skeleton className="w-full h-36" />
-        <Skeleton className="w-full h-36" />
-        <Skeleton className="w-full h-36" />
-        <Skeleton className="w-full h-36" />
-      </div>
-    </div>
-  );
-};
 
 const ProfileFriendsList = ({ friends }: FriendsListLayoutProps) => {
   const { searchQuery } = friendsSortQuery().data;

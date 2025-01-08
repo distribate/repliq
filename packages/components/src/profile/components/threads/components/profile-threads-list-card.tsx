@@ -11,7 +11,7 @@ interface ThreadCardProps {
     id: string;
     title: string;
     created_at: string;
-    commentsCount: number;
+    comments_count: number;
   }
 }
 
@@ -19,7 +19,7 @@ export const ProfileThreadsListCard = ({ thread }: ThreadCardProps) => {
   const { data: profileThreadsViewState } = profileThreadsSettingsQuery();
   const { viewType } = profileThreadsViewState;
 
-  const { id, title, created_at, commentsCount } = thread;
+  const { id, title, created_at, comments_count } = thread;
   const isGrid = viewType === "grid";
 
   return (
@@ -43,7 +43,7 @@ export const ProfileThreadsListCard = ({ thread }: ThreadCardProps) => {
             <div className="flex items-center gap-1">
               <MessageSquare size={16} className="text-shark-300 font-normal" />
               <Typography className="text-[18px]" textColor="shark_white">
-                {commentsCount}
+                {comments_count}
               </Typography>
             </div>
             <Typography

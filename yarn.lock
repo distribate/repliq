@@ -1010,6 +1010,48 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@cbor-extract/cbor-extract-darwin-arm64@npm:2.2.0":
+  version: 2.2.0
+  resolution: "@cbor-extract/cbor-extract-darwin-arm64@npm:2.2.0"
+  conditions: os=darwin & cpu=arm64
+  languageName: node
+  linkType: hard
+
+"@cbor-extract/cbor-extract-darwin-x64@npm:2.2.0":
+  version: 2.2.0
+  resolution: "@cbor-extract/cbor-extract-darwin-x64@npm:2.2.0"
+  conditions: os=darwin & cpu=x64
+  languageName: node
+  linkType: hard
+
+"@cbor-extract/cbor-extract-linux-arm64@npm:2.2.0":
+  version: 2.2.0
+  resolution: "@cbor-extract/cbor-extract-linux-arm64@npm:2.2.0"
+  conditions: os=linux & cpu=arm64
+  languageName: node
+  linkType: hard
+
+"@cbor-extract/cbor-extract-linux-arm@npm:2.2.0":
+  version: 2.2.0
+  resolution: "@cbor-extract/cbor-extract-linux-arm@npm:2.2.0"
+  conditions: os=linux & cpu=arm
+  languageName: node
+  linkType: hard
+
+"@cbor-extract/cbor-extract-linux-x64@npm:2.2.0":
+  version: 2.2.0
+  resolution: "@cbor-extract/cbor-extract-linux-x64@npm:2.2.0"
+  conditions: os=linux & cpu=x64
+  languageName: node
+  linkType: hard
+
+"@cbor-extract/cbor-extract-win32-x64@npm:2.2.0":
+  version: 2.2.0
+  resolution: "@cbor-extract/cbor-extract-win32-x64@npm:2.2.0"
+  conditions: os=win32 & cpu=x64
+  languageName: node
+  linkType: hard
+
 "@clack/core@npm:^0.3.3":
   version: 0.3.5
   resolution: "@clack/core@npm:0.3.5"
@@ -7143,6 +7185,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/pako@npm:^2":
+  version: 2.0.3
+  resolution: "@types/pako@npm:2.0.3"
+  checksum: 10c0/45119ac3c4e8a77317c35493327039b74e333562f06ce038048228918d8ddfaa7958125aab960d1565b3861046022754c414dba1eecb210c44a32c415956bee2
+  languageName: node
+  linkType: hard
+
 "@types/pg@npm:8, @types/pg@npm:8.11.10":
   version: 8.11.10
   resolution: "@types/pg@npm:8.11.10"
@@ -8286,6 +8335,49 @@ __metadata:
   languageName: node
   linkType: hard
 
+"cbor-extract@npm:^2.2.0":
+  version: 2.2.0
+  resolution: "cbor-extract@npm:2.2.0"
+  dependencies:
+    "@cbor-extract/cbor-extract-darwin-arm64": "npm:2.2.0"
+    "@cbor-extract/cbor-extract-darwin-x64": "npm:2.2.0"
+    "@cbor-extract/cbor-extract-linux-arm": "npm:2.2.0"
+    "@cbor-extract/cbor-extract-linux-arm64": "npm:2.2.0"
+    "@cbor-extract/cbor-extract-linux-x64": "npm:2.2.0"
+    "@cbor-extract/cbor-extract-win32-x64": "npm:2.2.0"
+    node-gyp: "npm:latest"
+    node-gyp-build-optional-packages: "npm:5.1.1"
+  dependenciesMeta:
+    "@cbor-extract/cbor-extract-darwin-arm64":
+      optional: true
+    "@cbor-extract/cbor-extract-darwin-x64":
+      optional: true
+    "@cbor-extract/cbor-extract-linux-arm":
+      optional: true
+    "@cbor-extract/cbor-extract-linux-arm64":
+      optional: true
+    "@cbor-extract/cbor-extract-linux-x64":
+      optional: true
+    "@cbor-extract/cbor-extract-win32-x64":
+      optional: true
+  bin:
+    download-cbor-prebuilds: bin/download-prebuilds.js
+  checksum: 10c0/c36dec273f2114fcfe3b544d03d8bfddd2d537d114b9f94ba52a9366a8b852ea9725850e3d29ceda5df6894faeb37026e3bf2cb0d2bb4429f0a699fcfdfa1b8b
+  languageName: node
+  linkType: hard
+
+"cbor-x@npm:^1.6.0":
+  version: 1.6.0
+  resolution: "cbor-x@npm:1.6.0"
+  dependencies:
+    cbor-extract: "npm:^2.2.0"
+  dependenciesMeta:
+    cbor-extract:
+      optional: true
+  checksum: 10c0/c6ab391e935a60c8a768080806f2c9aee01b2b124de68997e3e4cb700753757286860186094a92f510b595d7f8c77b3023d9125a05247afcbfea08cae45a0615
+  languageName: node
+  linkType: hard
+
 "ccount@npm:^2.0.0":
   version: 2.0.1
   resolution: "ccount@npm:2.0.1"
@@ -9005,7 +9097,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"detect-libc@npm:^2.0.0, detect-libc@npm:^2.0.3":
+"detect-libc@npm:^2.0.0, detect-libc@npm:^2.0.1, detect-libc@npm:^2.0.3":
   version: 2.0.3
   resolution: "detect-libc@npm:2.0.3"
   checksum: 10c0/88095bda8f90220c95f162bf92cad70bd0e424913e655c20578600e35b91edc261af27531cf160a331e185c0ced93944bc7e09939143225f56312d7fd800fdb7
@@ -10541,14 +10633,18 @@ __metadata:
     "@repo/types": "npm:*"
     "@supabase/supabase-js": "npm:2.45.6"
     "@types/bun": "npm:1.1.13"
+    "@types/pako": "npm:^2"
     "@types/pg": "npm:8.11.10"
+    cbor-x: "npm:^1.6.0"
     hono: "npm:4.6.15"
     ky: "npm:1.7.2"
     kysely: "npm:0.27.4"
     kysely-paginate: "npm:^0.3.1"
+    pako: "npm:^2.1.0"
     pg: "npm:8.13.1"
     typescript: "npm:^5.4.5"
     zod: "npm:3.23.8"
+    zod-form-data: "npm:^2.0.5"
   languageName: unknown
   linkType: soft
 
@@ -13099,6 +13195,19 @@ __metadata:
   languageName: node
   linkType: hard
 
+"node-gyp-build-optional-packages@npm:5.1.1":
+  version: 5.1.1
+  resolution: "node-gyp-build-optional-packages@npm:5.1.1"
+  dependencies:
+    detect-libc: "npm:^2.0.1"
+  bin:
+    node-gyp-build-optional-packages: bin.js
+    node-gyp-build-optional-packages-optional: optional.js
+    node-gyp-build-optional-packages-test: build-test.js
+  checksum: 10c0/f9fad2061c48fb0fc90831cd11d6a7670d731d22a5b00c7d3441b43b4003543299ff64ff2729afe2cefd7d14928e560d469336e5bb00f613932ec2cd56b3665b
+  languageName: node
+  linkType: hard
+
 "node-gyp@npm:latest":
   version: 11.0.0
   resolution: "node-gyp@npm:11.0.0"
@@ -13412,6 +13521,13 @@ __metadata:
   version: 0.2.8
   resolution: "package-manager-detector@npm:0.2.8"
   checksum: 10c0/2d24dd6e50a196a0b1e3ce7bf6db8aff403bdbe333cf81383bec54fa441dac958ec87a7e6865cf86e614704f349c7effaf8d0c2474a6a50a164e6218689f02db
+  languageName: node
+  linkType: hard
+
+"pako@npm:^2.1.0":
+  version: 2.1.0
+  resolution: "pako@npm:2.1.0"
+  checksum: 10c0/8e8646581410654b50eb22a5dfd71159cae98145bd5086c9a7a816ec0370b5f72b4648d08674624b3870a521e6a3daffd6c2f7bc00fdefc7063c9d8232ff5116
   languageName: node
   linkType: hard
 
@@ -17025,6 +17141,15 @@ __metadata:
   version: 0.1.0
   resolution: "yocto-queue@npm:0.1.0"
   checksum: 10c0/dceb44c28578b31641e13695d200d34ec4ab3966a5729814d5445b194933c096b7ced71494ce53a0e8820685d1d010df8b2422e5bf2cdea7e469d97ffbea306f
+  languageName: node
+  linkType: hard
+
+"zod-form-data@npm:^2.0.5":
+  version: 2.0.5
+  resolution: "zod-form-data@npm:2.0.5"
+  peerDependencies:
+    zod: ">= 3.11.0"
+  checksum: 10c0/94ec6b1e0f8ff03134e2aa1712e86894e35300a32968d42dd41f60302f49f3534308a364722e856b9177e10532a954d2b1a6902e25e17c633eeb4eff496861d7
   languageName: node
   linkType: hard
 

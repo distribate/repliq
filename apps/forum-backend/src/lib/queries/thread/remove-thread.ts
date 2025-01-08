@@ -13,10 +13,6 @@ export const removeThread = async (threadId: string) => {
       .where('thread_id', '=', threadId)
       .execute();
     await db
-      .deleteFrom('threads_comments')
-      .where('thread_id', '=', threadId)
-      .execute();
-    await db
       .deleteFrom('threads_reactions')
       .where('thread_id', '=', threadId)
       .execute();

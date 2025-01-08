@@ -1,4 +1,3 @@
-import { ThreadCommentsSkeleton } from "#thread/components/thread-comments/components/thread-comments.tsx";
 import { ThreadReactionsSkeleton } from "#thread/components/thread-reactions/components/thread-reactions-skeleton.tsx";
 import { BlockWrapper } from "#wrappers/block-wrapper.tsx";
 import { Skeleton } from "@repo/ui/src/components/skeleton";
@@ -29,9 +28,6 @@ export const ThreadMainSkeleton = () => {
         <BlockWrapper padding="without" className="mt-4">
           <Skeleton className="h-44 w-full" />
         </BlockWrapper>
-        <div className="flex flex-col w-full h-full mt-2 gap-y-4">
-          <ThreadCommentsSkeleton />
-        </div>
       </div>
       <div className="flex flex-col gap-y-4 min-w-1/4 w-1/4 max-w-1/4 h-fit sticky top-0 overflow-hidden">
         <BlockWrapper>

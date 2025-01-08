@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
-import { checkProfileIsBlocked } from "#helpers/check-profile-is-blocked.ts";
-import { createQueryKey } from "#helpers/query-key-builder.ts";
+import { checkProfileIsBlocked } from "@repo/components/src/modals/action-confirmation/components/block-user/queries/check-profile-is-blocked";
+import { createQueryKey } from "@repo/lib/helpers/query-key-builder";
 
 export const BLOCKED_QUERY_KEY = (requestedNickname: string) =>
   createQueryKey("ui", ["is-blocked"], requestedNickname);

@@ -7,16 +7,16 @@ import { useCreateThreadComment } from "#forms/create-thread-comment/hooks/use-c
 export const ReplyComment = () => {
   const { data: createThreadCommentState } = createThreadCommentQuery();
   const { updateCreateThreadCommentMutation } = useCreateThreadComment();
-  const values = createThreadCommentState?.repliedValues;
+  const values = createThreadCommentState?.replied;
 
-  if (createThreadCommentState.type === "single" || !values) return null;
+  if (createThreadCommentState?.type === "single" || !values) return null;
 
   const { commentNickname, commentContent } = values;
 
   const handleCommentType = () => {
     return updateCreateThreadCommentMutation.mutate({
       type: "single",
-      repliedValues: null,
+      replied: null,
     });
   };
 

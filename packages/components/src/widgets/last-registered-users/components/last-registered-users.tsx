@@ -15,10 +15,8 @@ export const LastRegisteredUsers = async () => {
       >
         Новые пользователи
       </Typography>
-      <div className="grid grid-cols-7 grid-rows-1 gap-2 justify-between w-full">
-        {users.map((user) => (
-          <UserPreviewCard key={user.nickname} {...user} />
-        ))}
+      <div className="grid grid-cols-4 md:grid-cols-4 lg:grid-cols-7 xl:grid-cols-8 auto-rows-auto 2xl:flex *:w-fit *:2xl:max-w-[44px] 2xl:flex-wrap gap-2 w-full">
+        {users.map(user => <UserPreviewCard key={user.nickname} {...user} />)}
       </div>
     </div>
   );

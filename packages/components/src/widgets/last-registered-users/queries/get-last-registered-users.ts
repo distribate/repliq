@@ -4,18 +4,14 @@ import {
 import { createClient } from '@repo/shared/api/supabase-client.ts';
 import { getUserBanned } from "@repo/lib/queries/get-user-banned.ts";
 
-export async function getLastUsers(
-  filter?: RequestDetails,
-) {
+export async function getLastUsers(filter?: RequestDetails) {
   const api = createClient();
 
   let users
 
   let query = api
     .from("users")
-    .select(
-      `nickname, description, created_at, name_color, donate, favorite_item`,
-    )
+    .select("nickname, description, name_color")
     .order("created_at", { ascending: false });
 
   if (filter?.limit) query.limit(filter.limit);

@@ -26,6 +26,11 @@ export const useUpdateUserSettings = () => {
 
       if (!nickname) return
       
+      qc.setQueryData(CURRENT_USER_QUERY_KEY, (prev: UserDetailed) => ({
+        ...prev,
+        preferences: { ...prev.preferences, ...data }
+      }))
+
       qc.setQueryData(REQUESTED_USER_QUERY_KEY(nickname), (prev: UserDetailed) => ({
         ...prev,
         preferences: { ...prev.preferences, ...data }

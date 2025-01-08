@@ -1,5 +1,5 @@
 import { cva, VariantProps } from "class-variance-authority";
-import { forwardRef, HTMLAttributes } from "react";
+import { HTMLAttributes } from "react";
 
 const createThreadCommentFormVariants = cva(
   "flex flex-col border focus-visible:border-caribbean-green-200/40 bg-shark-950 overflow-hidden w-full h-full",
@@ -21,18 +21,10 @@ const createThreadCommentFormVariants = cva(
 );
 
 interface CreateThreadCommentFormProps
-  extends HTMLAttributes<HTMLFormElement>,
-    VariantProps<typeof createThreadCommentFormVariants> {}
+  extends HTMLAttributes<HTMLDivElement>, VariantProps<typeof createThreadCommentFormVariants> { }
 
-export const CreateThreadCommentFormLayout = forwardRef<
-  HTMLFormElement,
-  CreateThreadCommentFormProps
->(({ className, variant, state, ...props }, ref) => {
-  return (
-    <form
-      ref={ref}
-      className={createThreadCommentFormVariants({ className, state, variant })}
-      {...props}
-    />
-  );
-});
+export const CreateThreadCommentLayout = ({
+  className, variant, state, ...props
+}: CreateThreadCommentFormProps) => {
+  return <div className={createThreadCommentFormVariants({ className, state, variant })}  {...props} />
+}

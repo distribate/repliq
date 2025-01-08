@@ -13,26 +13,22 @@ export type RepliedValuesType = {
   commentContent: string;
 };
 
-export type CreateThreadCommentQuery = Partial<{
+export type CreateThreadCommentQuery = {
   threadId: string;
   type: CreateThreadCommentType;
-  repliedValues: RepliedValuesType | null;
-  content: string | null;
-  formState: { active: boolean };
-}>;
+  replied: RepliedValuesType | null;
+  content: string;
+}
 
-export const initialThreadCommentData: CreateThreadCommentQuery = {
-  type: "single",
-  formState: { active: false },
-  content: null,
-  repliedValues: null,
-};
-
-export const createThreadCommentQuery = () =>
-  useQuery<CreateThreadCommentQuery, Error>({
-    queryKey: CREATE_THREAD_COMMENT_QUERY_KEY,
-    staleTime: Infinity,
-    gcTime: Infinity,
-    initialData: initialThreadCommentData,
-    refetchOnMount: true,
-  });
+export const createThreadCommentQuery = () => useQuery<CreateThreadCommentQuery | null, Error>({
+  queryKey: CREATE_THREAD_COMMENT_QUERY_KEY,
+  staleTime: Infinity,
+  gcTime: Infinity,
+  initialData: {
+    content: "",
+    threadId: "",
+    type: "single",
+    replied: null
+  },
+  refetchOnMount: true,
+});

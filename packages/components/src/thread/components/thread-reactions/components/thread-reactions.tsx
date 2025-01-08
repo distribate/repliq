@@ -24,7 +24,7 @@ export const ThreadReactions = ({ threadId }: ThreadRatingProps) => {
     <div className="flex items-center w-fit gap-2">
       {Object.keys(threadReactions).map((emojiName) => {
         const count = threadReactions[emojiName];
-        const isLiked = userReactions.reactions.includes(emojiName) ? "fill" : false;
+        const isLiked = userReactions.reactions.includes(emojiName) ? true : false;
 
         const Icon = THREAD_REACTIONS[emojiName];
 

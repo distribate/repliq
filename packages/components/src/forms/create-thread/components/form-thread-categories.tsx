@@ -9,7 +9,9 @@ import { useCreateThread } from "../hooks/use-create-thread.tsx";
 import { threadFormQuery } from "../queries/thread-form-query.ts";
 import { FormChildsProps } from "../types/create-thread-form-types.ts";
 
-export const FormThreadCategories = ({ errors, control }: FormChildsProps) => {
+export const FormThreadCategories = ({ 
+  errors, control 
+}: FormChildsProps) => {
   const [enabled, setEnabled] = useState<boolean>(false);
   const { data: availableCategories } = availableCategoriesQuery(enabled);
   const { data: threadFormState } = threadFormQuery();
@@ -17,25 +19,24 @@ export const FormThreadCategories = ({ errors, control }: FormChildsProps) => {
 
   if (!threadFormState) return;
 
-  const handleValueChange = (value: string, onChange: (v: string) => void) => {
-    onChange(value);
+  const handleValueChange = (value: string, onChange: (v: number) => void) => {
+    onChange(Number(value));
+
     return updateThreadFormMutation.mutate({ category_id: Number(value) });
   };
 
   const handleOpen = (o: boolean) => {
-    if (o && !enabled) {
-      setEnabled(true);
-    }
+    if (o && !enabled) setEnabled(true);
   };
 
   const isActive = threadFormState.category_id;
   const selectedCategoryId = threadFormState.category_id;
-  const selectedCategoryTitle =
-    availableCategories?.find((item) => item.id === selectedCategoryId)
-      ?.title || null;
+  const selectedCategoryTitle = availableCategories?.find(
+    item => item.id === selectedCategoryId
+  )?.title || null;
 
   return (
-    <FormField errorMessage={errors?.category?.message}>
+    <FormField errorMessage={errors?.category_id?.message}>
       <div className="flex flex-col">
         <Typography textColor="shark_white" textSize="large">
           Категория
@@ -46,7 +47,7 @@ export const FormThreadCategories = ({ errors, control }: FormChildsProps) => {
       </div>
       <Controller
         control={control}
-        name="category"
+        name="category_id"
         render={({ field: { onChange } }) => {
           return (
             <Select

@@ -1,4 +1,12 @@
-import { ForumUserAppType, ForumThreadAppType, ForumAdminAppType, ForumCategoriesAppType, ForumCommentAppType, ForumReactionAppType } from 'forum-backend/src/types/routes-types.ts';
+import {
+  ForumUserAppType,
+  ForumThreadAppType,
+  ForumAdminAppType,
+  ForumCategoriesAppType,
+  ForumCommentAppType,
+  ForumReactionAppType,
+  ForumTestAppType
+} from 'forum-backend/src/types/routes-types.ts';
 import { hc } from 'hono/client';
 
 const baseUrl = `http://localhost:4101/api/`
@@ -64,6 +72,8 @@ export const forumUserClient = (session?: string) => hc<ForumUserAppType>(
   }
 )
 
+export const forumTestClient = hc<ForumTestAppType>(baseUrl)
+
 export const forumThreadClient = hc<ForumThreadAppType>(
   baseUrl,
   {
@@ -71,7 +81,8 @@ export const forumThreadClient = hc<ForumThreadAppType>(
       return fetch(input, {
         method: requestInit?.method ?? 'GET',
         headers: {
-          'content-type': 'application/json',
+          "content-type": "multipart/form-data",
+          "Content-Type": "multipart/form-data",
           ...requestInit?.headers,
         },
         body: requestInit?.body ?? null,

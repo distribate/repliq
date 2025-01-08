@@ -3,24 +3,22 @@ import {
   THREAD_FORM_QUERY,
   ThreadFormQuery,
 } from "../queries/thread-form-query.ts";
-import { postThread } from "../queries/post-thread.ts";
+import { createThread } from "../queries/create-thread.ts";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { THREAD_URL } from "@repo/shared/constants/routes.ts";
-import { getArrayBuffer } from "@repo/lib/helpers/ger-array-buffer.ts";
-import { encode } from "base64-arraybuffer";
-import { blobUrlToFile } from "@repo/lib/helpers/blobUrlToFile.ts";
 import { THREAD_CONTENT_LIMIT_DEFAULT } from "@repo/shared/constants/limits.ts";
+import { blobUrlToFile } from "@repo/lib/helpers/blobUrlToFile.ts";
 
 type CreateThreadImageControl = {
   type: "add" | "delete";
   index?: number;
   resetField?: Function;
   setValue?: Function;
-  images: File[] | null;
+  images: Array<File> | null;
 };
 
-export function getContentLimit(images: File[] | string[] | null): number {
+export function getContentLimit(images: Array<File> | string[] | null): number {
   return images && images.length > 0
     ? THREAD_CONTENT_LIMIT_DEFAULT[1]
     : THREAD_CONTENT_LIMIT_DEFAULT[2];
@@ -31,11 +29,8 @@ export const useCreateThread = () => {
   const { push } = useRouter();
 
   const updateThreadFormMutation = useMutation({
-    mutationFn: async (values: ThreadFormQuery) => {
-      return qc.setQueryData(THREAD_FORM_QUERY, (prev: ThreadFormQuery) => ({
-        ...prev,
-        ...values,
-      }));
+    mutationFn: async (values: Partial<ThreadFormQuery>) => {
+      return qc.setQueryData(THREAD_FORM_QUERY, (prev: ThreadFormQuery) => ({ ...prev, ...values }));
     },
     onError: (e) => {
       throw new Error(e.message);
@@ -45,77 +40,61 @@ export const useCreateThread = () => {
   const createPostThreadMutation = useMutation({
     mutationFn: async () => {
       const form = qc.getQueryData<ThreadFormQuery>(THREAD_FORM_QUERY);
+
       if (!form) return "form-error";
 
       const {
-        title,
-        description,
-        visibility,
-        permission,
-        is_comments,
-        tags,
-        category_id,
-        content,
-        images,
+        title, description, visibility, permission, is_comments,
+        tags, category_id, content: rawContent, images,
       } = form;
 
-      if (!title || !content || !category_id || !visibility) return;
+      if (!title || !rawContent || !category_id || !visibility) return;
 
-      let base64Files: Array<string> | null = null;
-      let threadRawImages: Array<File> | null = null;
+      let imagesFiles: File[] | null;
 
       if (images) {
-        threadRawImages = [];
+        imagesFiles = [];
 
         for (let i = 0; i < images.length; i++) {
           const rawImageItem = await blobUrlToFile(images[i]);
-          threadRawImages.push(rawImageItem);
+
+          imagesFiles.push(rawImageItem);
         }
-
-        if (threadRawImages) {
-          base64Files = [];
-
-          for (let i = 0; i < threadRawImages.length; i++) {
-            const imageItem = await getArrayBuffer(threadRawImages[i]);
-            const encodedImageItem = encode(imageItem);
-
-            base64Files.push(encodedImageItem);
-          }
-        } else {
-          base64Files = null;
-        }
+      } else {
+        imagesFiles = null
       }
 
-      return postThread({
-        category_id,
-        title,
-        visibility,
-        base64Files,
-        tags: tags ?? undefined,
-        content: JSON.stringify(content),
-        description: description ?? null,
-        is_comments: is_comments ?? true,
-        permission: false, // todo: add thread permission
+      const content = JSON.stringify(rawContent);
+
+      return createThread({
+        category_id, title, visibility, images: imagesFiles, tags,
+        description, is_comments, permission, content,
       });
     },
     onSuccess: async (data) => {
-      if (!data) return toast.error("Произошла ошибка при создании треда");
-      if (data === "form-error")
-        return toast.error("Форма должна быть заполнена");
-
-      toast.success("Тред создан");
-
-      const formValues = qc.getQueryData<ThreadFormQuery>(THREAD_FORM_QUERY);
-
-      if (formValues && formValues && formValues.images) {
-        for (let i = 0; i < formValues.images.length; i++) {
-          URL.revokeObjectURL(formValues.images[i]);
-        }
+      if (!data) {
+        return toast.error("Произошла ошибка при создании треда")
       }
 
-      qc.resetQueries({ queryKey: THREAD_FORM_QUERY });
+      if (data === "form-error") {
+        return toast.error("Форма должна быть заполнена")
+      }
 
-      return push(THREAD_URL + data);
+      if (data.status === 'Created') {
+        toast.success("Тред создан");
+
+        const formValues = qc.getQueryData<ThreadFormQuery>(THREAD_FORM_QUERY);
+
+        if (formValues && formValues.images) {
+          for (let i = 0; i < formValues.images.length; i++) {
+            URL.revokeObjectURL(formValues.images[i]);
+          }
+        }
+
+        qc.resetQueries({ queryKey: THREAD_FORM_QUERY });
+
+        return push(THREAD_URL + data.data.id);
+      }
     },
     onError: (e) => {
       throw new Error(e.message);
@@ -128,20 +107,25 @@ export const useCreateThread = () => {
     if (!images) return;
 
     if (type === "add") {
-      const convertedFileList = images.map((file) => URL.createObjectURL(file));
-      return updateThreadFormMutation.mutate({ images: convertedFileList });
-    } else if (
-      type === "delete" &&
-      index !== undefined &&
-      resetField &&
-      setValue
-    ) {
+      const convertedFileList = images.map(
+        file => URL.createObjectURL(file)
+      );
+
+      return updateThreadFormMutation.mutate({
+        images: convertedFileList
+      });
+    } else if (type === "delete" && index !== undefined && resetField && setValue) {
       if (images.length <= 1) {
         resetField("images");
-        return updateThreadFormMutation.mutate({ images: null });
+
+        return updateThreadFormMutation.mutate({
+          images: null
+        });
       } else {
         const updatedFormImages = images.filter((_, i) => i !== index);
+
         setValue("images", updatedFormImages);
+
         return updateThreadFormMutation.mutate({
           images: updatedFormImages.map((file) => URL.createObjectURL(file)),
         });
@@ -149,9 +133,5 @@ export const useCreateThread = () => {
     }
   };
 
-  return {
-    updateThreadFormMutation,
-    createPostThreadMutation,
-    handleControlImage,
-  };
+  return { updateThreadFormMutation, createPostThreadMutation, handleControlImage };
 };
