@@ -3,10 +3,8 @@ import { Overlay } from '@repo/landing-ui/src/overlay';
 import { Typography } from '@repo/landing-ui/src/typography';
 import { Block } from '@repo/landing-ui/src/block';
 import { IntroMain } from '@repo/landing-components/src/intro/intro-main';
-import { ServerGallery } from '@repo/landing-components/src/server-gallery/server-gallery';
 import { CONTACTS_LIST, ContactsListProps } from '@repo/shared/wiki/data/contacts/contacts-list';
 import { GAMEPLAY, GameplayItemType } from '@repo/shared/wiki/data/gameplay/gameplay-list';
-import dynamic from 'next/dynamic';
 import { CommunityGalleryItem } from '@repo/landing-components/src/community/community-gallery-item';
 import { NewsList } from '@repo/landing-components/src/news/news-list';
 import { CommunityStatusItem } from '@repo/landing-components/src/community/commuinity-status-item';
@@ -16,10 +14,58 @@ import { NEWS_QUERY_KEY } from '@repo/lib/queries/news-query.ts';
 import { getNews } from '@repo/lib/queries/get-news.ts';
 import { Suspense } from 'react';
 import { Skeleton } from '@repo/landing-ui/src/skeleton.tsx';
+import dynamic from 'next/dynamic';
+import { IntroLayout } from "@repo/landing-components/src/layout/intro-layout";
 
 export const metadata = {
   title: 'Главная | Fasberry',
+  description:
+    "Добро пожаловать на Fasberry! Уникальные сервера, захватывающие события и дружелюбное сообщество. Играй с друзьями и создавай свой мир прямо сейчас!",
+  keywords: [
+    "Fasberry сервер",
+    "лучший Minecraft сервер",
+    "играть в Fasberry онлайн",
+    "Minecraft режимы",
+    "Minecraft события",
+    "fasberry",
+    "fasberry minecraft",
+    "minecraft fasberry сервер",
+    "Fasberry server",
+    "Fasberry project",
+    "дружелюбное сообщество Fasberry",
+  ],
+  author: "Fasberry Server Team",
+  robots: "index, follow",
+  canonical: "https://fasberry.su/",
+  openGraph: {
+    title: "Fasberry Сервер | Создай свой уникальный мир",
+    description:
+      "На нашем Fasberry-сервере ты найдешь всё: креативные режимы, мини-игры, уникальные квесты и теплую атмосферу. Присоединяйся прямо сейчас!",
+    url: "https://fasberry.su/",
+    type: "website",
+    images: [
+      {
+        url: "https://fasberry.su/images/backgrounds/donate_background.png",
+        alt: "Fasberry сервер - лучший выбор",
+        width: 1200,
+        height: 630,
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Fasberry Сервер | Присоединяйся к лучшим",
+    description:
+      "Стань частью нашего Minecraft-сервера. Уникальные миры, незабываемые приключения и дружелюбные игроки ждут тебя!",
+    images: ["https://fasberry.su/images/backgrounds/donate_background.png"],
+  },
 };
+
+
+const ServerGallery = dynamic(() =>
+  import('@repo/landing-components/src/server-gallery/server-gallery.tsx')
+    .then(m => m.ServerGallery)
+);
 
 type GamePlayItemProps = GameplayItemType & {
   id: number
@@ -92,16 +138,16 @@ const ContactItem = ({
   );
 };
 
-const News = async() => {
+const News = async () => {
   const qc = new QueryClient();
-  
+
   await qc.prefetchQuery({
     queryKey: NEWS_QUERY_KEY,
     queryFn: () => getNews({ limit: 3 }),
   });
-  
+
   const dehydratedState = dehydrate(qc);
-  
+
   return (
     <HydrationBoundary state={dehydratedState}>
       <NewsList />
@@ -112,10 +158,7 @@ const News = async() => {
 export default async function Main() {
   return (
     <MainLayoutPage variant="with_section">
-      <div
-        id="title"
-        className="full-screen-section flex flex-col items-start justify-center"
-      >
+      <IntroLayout>
         <div className="absolute top-0 right-0 left-0 overflow-hidden h-screen">
           <div
             className="w-full h-full absolute top-0 right-0 left-0 bg-no-repeat bg-center bg-cover"
@@ -126,7 +169,7 @@ export default async function Main() {
         <div className="responsive mx-auto">
           <IntroMain />
         </div>
-      </div>
+      </IntroLayout>
       <div
         id="gameplay-overview"
         className="full-screen-section flex flex-col items-center"
@@ -170,7 +213,7 @@ export default async function Main() {
               </Typography>
               <div className="grid grid-cols-2 sm:grid-cols-4 xl:grid-cols-2 2xl:grid-cols-3 auto-rows-auto gap-2">
                 <CommunityGalleryItem />
-                <Link
+                {/* <Link
                   title="Предложить скрин"
                   href="https://forum.fasberry.su/create-art"
                   target="_blank"
@@ -181,7 +224,7 @@ export default async function Main() {
                       +
                     </Typography>
                   </div>
-                </Link>
+                </Link> */}
               </div>
             </Block>
           </div>

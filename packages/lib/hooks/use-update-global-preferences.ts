@@ -1,4 +1,4 @@
-import { setAlerts } from "#actions/set-alerts.ts";
+import { updateAlertsVisibility } from "#actions/update-alerts-visibility.ts";
 import { GLOBAL_PREFERENCES_QUERY_KEY, globalPreferencesQuery, GlobalPreferencesQuery, PREFERENCES_LS_KEY } from "#queries/global-preferences-query.ts";
 import { useQueryClient, useMutation } from "@tanstack/react-query";
 import { useLocalStorage } from "./use-local-storage";
@@ -12,7 +12,7 @@ export const useUpdateGlobalPreferences = () => {
   });
 
   const updateAlertsShowingMutation = useMutation({
-    mutationFn: async () => setAlerts(),
+    mutationFn: async () => updateAlertsVisibility(),
     onSuccess: async (data) => {
       qc.setQueryData(GLOBAL_PREFERENCES_QUERY_KEY, (prev: GlobalPreferencesQuery) => ({
         ...prev,

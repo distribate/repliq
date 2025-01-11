@@ -1,9 +1,11 @@
 import { connect, type NatsConnection, type ConnectionOptions } from "@nats-io/transport-node";
 
+// @ts-ignore
+const token = process.env.NATS_AUTH_TOKEN!
+
 const NATS_CONFIG: ConnectionOptions = {
   servers: "nats://localhost:4222",
-  // @ts-ignore
-  token: process.env.NATS_AUTH_TOKEN!,
+  token,
   reconnect: true,           
   maxReconnectAttempts: -1,  
   reconnectTimeWait: 2000, 

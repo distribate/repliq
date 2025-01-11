@@ -43,7 +43,12 @@ export const SubscriptionItem = ({
         className="flex flex-col book h-[540px] w-full
          hover:-translate-y-2 transition ease-out duration-500 justify-between"
       >
-        <SubscriptionItemDescription description={description} name={title} commands={commands} rating={rating} />
+        <SubscriptionItemDescription
+          description={description}
+          name={title}
+          commands={commands}
+          rating={rating}
+        />
         <Typography className="text-black cursor-pointer w-max self-end">
           узнать больше
         </Typography>

@@ -24,5 +24,5 @@ export async function getThreadsUser({
     return null;
   }
 
-  return data.length ? data : null
+  return data.length  ? data : null
 }

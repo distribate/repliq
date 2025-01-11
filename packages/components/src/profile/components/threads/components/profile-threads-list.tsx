@@ -16,18 +16,7 @@ const SomethingError = dynamic(() =>
   import('#templates/something-error.tsx').then((m) => m.SomethingError),
 );
 
-export const ProfileThreads = ({
-  nickname,
-}: Pick<UserEntity, 'nickname'>) => {
-  return (
-    <div className="flex flex-col gap-4 w-full h-full">
-      <ProfileThreadsFiltering nickname={nickname} />
-      <ProfileThreadsList nickname={nickname} />
-    </div>
-  );
-};
-
-export const ProfileThreadsList = ({
+const ProfileThreadsList = ({
   nickname,
 }: Pick<UserEntity, 'nickname'>) => {
   const { data: threads, isLoading, isError } = profileThreadsQuery(nickname);
@@ -47,6 +36,17 @@ export const ProfileThreadsList = ({
   return (
     <div className={`${viewType === 'grid' ? 'grid grid-cols-3 auto-rows-auto' : 'flex flex-col'} gap-4 w-full h-full`}>
       {threads.map((thread) => <ProfileThreadsListCard key={thread.id} thread={thread} />)}
+    </div>
+  );
+};
+
+export const ProfileThreads = ({
+  nickname,
+}: Pick<UserEntity, 'nickname'>) => {
+  return (
+    <div className="flex flex-col gap-4 w-full h-full">
+      <ProfileThreadsFiltering nickname={nickname} />
+      <ProfileThreadsList nickname={nickname} />
     </div>
   );
 };

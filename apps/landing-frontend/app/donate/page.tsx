@@ -13,18 +13,53 @@ import { DonateListSkeleton } from '@repo/landing-components/src/skeletons/donat
 
 export const metadata = {
   title: 'Донат',
+  description:
+    "Поддержите наш сервер Fasberry, приобретая привилегии, уникальные товары и игровые монеты. Улучшите свой игровой опыт и помогите развитию проекта!",
+  keywords: [
+    "Fasberry донат",
+    "купить привилегии Fasberry",
+    "игровые товары Fasberry",
+    "монеты Fasberry",
+    "донат магазин Fasberry",
+    "поддержка сервера Fasberry",
+  ],
+  author: "Fasberry Server Team",
+  robots: "index, follow",
+  canonical: "https://fasberry.su/donate",
+  openGraph: {
+    title: "Донат на сервер Fasberry | Уникальные привилегии и товары",
+    description:
+      "Получите доступ к уникальным привилегиям, товарам и монетам на нашем сервере. Ваша поддержка помогает проекту развиваться!",
+    url: "https://fasberry.su/donate",
+    type: "website",
+    images: [
+      {
+        url: "https://fasberry.su/images/community/market-seller.webp",
+        alt: "Донат на сервер Fasberry",
+        width: 1200,
+        height: 630,
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Донат на сервер Fasberry",
+    description:
+      "Поддержите наш сервер Fasberry, приобретая уникальные привилегии и товары. Сделайте свой игровой процесс незабываемым!",
+    images: ["https://fasberry.su/images/community/market-seller.webp"],
+  },
 };
 
-const Donates = async() => {
+const Donates = async () => {
   const qc = new QueryClient();
-  
+
   await qc.prefetchQuery({
     queryKey: DONATES_QUERY_KEY,
     queryFn: () => getDonates(),
   });
-  
+
   const dehydratedState = dehydrate(qc);
-  
+
   return (
     <HydrationBoundary state={dehydratedState}>
       <DonateList />
@@ -57,11 +92,11 @@ export default async function DonatePage() {
                 className="hover:bg-[#731c6c] bg-[#8c1c85]"
               >
                 <Typography text_color="white" className="font-bold text-xl">
-									<span
+                  <span
                     className="inline-block group-hover:rotate-0 rotate-90 duration-150 group-hover:duration-150"
                   >
-										⭐
-									</span>
+                    ⭐
+                  </span>
                   &nbsp;К привилегиям
                 </Typography>
               </Button>

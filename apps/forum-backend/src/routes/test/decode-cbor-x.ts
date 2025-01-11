@@ -1,9 +1,7 @@
 import { Hono } from "hono";
 import { decode, encode } from 'cbor-x';
 import { createMiddleware } from "hono/factory";
-import fs from 'fs/promises';
-import path from 'path';
-import pako from 'pako';
+
 
 const cborRenderer = createMiddleware(async (ctx, next) => {
   ctx.header('Content-Type', 'application/cbor')

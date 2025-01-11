@@ -4,26 +4,29 @@ import { Typography } from "@repo/landing-ui/src/typography";
 import { TooltipWrapper } from "@repo/landing-components/src/wrappers/tooltip-wrapper";
 import { DialogClose } from "@repo/landing-ui/src/dialog";
 import { toast } from "sonner";
-
-const MAIN_IP = process.env.NEXT_PUBLIC_MINECRAFT_SERVER_FASBERRY_IP
+import { serverIpQuery } from "@repo/lib/queries/server-ip-query";
 
 export const HowToConnectOnServer = () => {
-	const actionCopyboard = async() => {
-		await navigator.clipboard.writeText(MAIN_IP!);
-		
+	const { data: ip, isLoading } = serverIpQuery()
+
+	const actionCopyboard = async () => {
+		if (!ip) return;
+
+		await navigator.clipboard.writeText(ip);
+
 		return toast.success("IP успешно скопирован!", {
-			icon:(
-					<img 
-						width={40} 
-						height={40} 
-						alt="IP copied!"
-						loading="lazy" 
-						src="/images/minecraft/icons/book_big.webp"
+			icon: (
+				<img
+					width={40}
+					height={40}
+					alt="IP copied!"
+					loading="lazy"
+					src="/images/minecraft/icons/book_big.webp"
 				/>
 			)
 		})
 	}
-	
+
 	return (
 		<DialogWrapper
 			title="Инструкция как зайти на сервер"
@@ -34,7 +37,7 @@ export const HowToConnectOnServer = () => {
 			}}
 			trigger={
 				<Button
-					className="w-full h-[54px] lg:h-[56px] group hover:bg-[#088d47]/80 hover:duration-300
+					className="w-full h-[54px] group hover:bg-[#088d47]/80 hover:duration-300
 					duration-100 ease-in-out bg-[#05b458]/80 backdrop-filter backdrop-blur-lg"
 				>
 					<Typography className="!text-white text-2xl text-shadow-xl">
@@ -70,7 +73,10 @@ export const HowToConnectOnServer = () => {
 										onClick={() => actionCopyboard()}
 										className="cursor-pointer bg-black py-2 px-2 border-2 text-white border-neutral-500 w-100 md:w-96"
 									>
-										{MAIN_IP!.toString()}
+										{isLoading && "загрузка..."}
+										{!isLoading && (
+											ip ?? "недоступно"
+										)}
 									</Typography>
 								}
 								content={

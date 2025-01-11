@@ -5,9 +5,9 @@ import { decode, encode } from 'cbor-x';
 const cborRenderer = createMiddleware(async (ctx, next) => {
   ctx.header('Content-Type', 'application/cbor')
 
-  ctx.setRenderer((content) => {
-    return ctx.body(decode(content))
-  })
+  // ctx.setRenderer((content) => {
+  //   return ctx.body(decode(content))
+  // })
 
   await next()
 })
@@ -15,6 +15,6 @@ const cborRenderer = createMiddleware(async (ctx, next) => {
 export const encodeCborXRoute = new Hono()
   .use(cborRenderer)
   .post("/encode-cbor-x", async (ctx) => {
-    const responseData = ctx.render({})
+    // const responseData = ctx.render({})
 
   })

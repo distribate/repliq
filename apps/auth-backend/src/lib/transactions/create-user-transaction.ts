@@ -10,25 +10,23 @@ type CreateUserTransaction = InsertableUser & InsertableFindout
 export const createUserTransaction = async ({
   nickname, uuid, real_name, findout
 }: CreateUserTransaction) => {
-  return await forumDB
-    .transaction()
-    .execute(async (trx) => {
-      const user = await trx
-        .insertInto('users')
-        .values({ nickname, uuid, real_name })
-        .returning(['nickname', 'id'])
-        .executeTakeFirstOrThrow();
+  return await forumDB.transaction().execute(async (trx) => {
+    const user = await trx
+      .insertInto('users')
+      .values({ nickname, uuid, real_name })
+      .returning(['nickname', 'id'])
+      .executeTakeFirstOrThrow();
 
-      await trx
-        .insertInto('users_settings')
-        .values({ user_id: user.id, nickname: user.nickname })
-        .returningAll()
-        .executeTakeFirstOrThrow();
+    await trx
+      .insertInto('users_settings')
+      .values({ user_id: user.id, nickname: user.nickname })
+      .returningAll()
+      .executeTakeFirstOrThrow();
 
-      return await trx
-        .insertInto('info_findout')
-        .values({ user_nickname: user.nickname, findout })
-        .returning('user_nickname')
-        .executeTakeFirst();
-    });
+    return await trx
+      .insertInto('info_findout')
+      .values({ user_nickname: user.nickname, findout })
+      .returning('user_nickname')
+      .executeTakeFirst();
+  });
 }

@@ -15,7 +15,6 @@ import { cookies } from "next/headers";
 import { RESIZABLE_LAYOUT_COOKIE_KEY } from "@repo/shared/keys/cookie.ts";
 import { getCurrentSession } from "@repo/lib/actions/get-current-session.ts";
 import { forumUserClient } from "@repo/shared/api/forum-client";
-import { getUserSessionCookie } from "@repo/lib/actions/get-user-session-cookie";
 import { UserDetailed } from "@repo/types/entities/user-type";
 
 type MainLayoutProps = {
@@ -23,7 +22,7 @@ type MainLayoutProps = {
 };
 
 export async function getInitialCurrentUser(): Promise<UserDetailed | null> {
-  const sessionToken = await getUserSessionCookie()
+  const sessionToken = await cookies().get("session")?.value ?? null;
   if (!sessionToken) redirect(AUTH_REDIRECT);
 
   const res = await forumUserClient().user["get-me"].$get({}, {

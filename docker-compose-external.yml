@@ -18,7 +18,7 @@ services:
     ports:
       - "4000:${LUCKPERMS_BACKEND_PORT}"
     extra_hosts:
-     - "shared-network:host-gateway"
+      - "shared-network:host-gateway"
     networks:
       - shared-network
 
@@ -26,7 +26,7 @@ services:
     image: consul:1.15.4
     container_name: consul
     ports:
-      - "8500:8500"  # Web UI
+      - "8500:8500" # Web UI
       - "8600:8600/udp"
     command: "agent -server -client=0.0.0.0 -bootstrap-expect=1 -data-dir=/consul/data"
     environment:
@@ -52,14 +52,14 @@ services:
       - ./packages/config-vault/vault.hcl:/vault/config/vault.hcl
     cap_add:
       - IPC_LOCK
-    entrypoint: ["vault", "server", "-config=/vault/config/vault.hcl"]
+    entrypoint: [ "vault", "server", "-config=/vault/config/vault.hcl" ]
 
   minio:
     image: minio/minio:latest
     container_name: minio
     ports:
-      - "${MINIO_PORT}:${MINIO_PORT}" 
-      - "${MINIO_CLIENT_PORT}:${MINIO_CLIENT_PORT}" 
+      - "${MINIO_PORT}:${MINIO_PORT}"
+      - "${MINIO_CLIENT_PORT}:${MINIO_CLIENT_PORT}"
     environment:
       MINIO_ROOT_USER: ${MINIO_ROOT_USER}
       MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD}
@@ -101,22 +101,25 @@ services:
     ports:
       - "4222:4222"
       - "8222:8222"
-    command: 
+    command:
       - "-js"
       - "-sd=2G"
       - "-m=8222"
       - "--T"
       - "-VV"
       - "--auth=${NATS_AUTH_TOKEN}"
+      - "--addr=0.0.0.0"
     environment:
       - NATS_TOKEN=${NATS_AUTH_TOKEN}
     volumes:
       - ./data/fasberry-external/nats/data:/nats
     networks:
-      - shared-network
+      - cloudflare_network
 
 networks:
   shared-network:
     external: true
   vault_network:
     driver: bridge
+  cloudflare_network:
+    external: true

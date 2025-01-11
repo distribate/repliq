@@ -1,56 +1,109 @@
 "use client";
 
-import { Button } from "@repo/ui/src/components/button.tsx";
 import { Icon } from "@repo/shared/ui/icon/icon.tsx";
 import { ArrowDownFromLine, RotateCw } from "lucide-react";
-import { Separator } from "@repo/ui/src/components/separator.tsx";
 import { useSkinStateChange } from "../hooks/use-skin-animation.ts";
 import { skinAnimationQuery } from "../queries/skin-query.ts";
-import { useRouter } from "next/navigation";
 import { SKIN_ANIMATIONS } from "../constants/skin-animations.ts";
-import { SKIN_DOWNLOAD_SKIN } from "@repo/shared/constants/routes.ts";
 import { UserEntity } from "@repo/types/entities/entities-type.ts";
+import { skinClient } from "@repo/shared/api/skin-client.ts";
+import { Dialog, DialogClose, DialogContent, DialogTrigger } from "@repo/ui/src/components/dialog.tsx";
+import { Typography } from "@repo/ui/src/components/typography.tsx";
+import { useState } from "react";
+import Link from "next/link";
+import { ConfirmationActionModalTemplate } from "#templates/confirmation-action-modal-template.tsx";
+import { ConfirmationButton } from "#buttons/confirmation-action-button.tsx";
+import { cva, VariantProps } from "class-variance-authority";
+
+const profileSkinControlVariants = cva("flex items-center justify-center cursor-pointer border border-shark-800 p-2 rounded-lg h-[50px] w-[50px]", {
+  variants: {
+    variant: {
+      default: "bg-transparent",
+      active: "bg-shark-700/60"
+    }
+  },
+  defaultVariants: {
+    variant: "default"
+  }
+})
+
+type ProfileSkinControlProps = React.HTMLAttributes<HTMLDivElement>
+  & VariantProps<typeof profileSkinControlVariants>
+
+const ProfileSkinControl = ({ variant, className, ...props }: ProfileSkinControlProps) => {
+  return (
+    <div
+      className={profileSkinControlVariants({ variant, className })}
+      {...props}
+    />
+  )
+}
+
+export const ProfileSkinDownloadLink = ({ nickname }: Pick<UserEntity, "nickname">) => {
+  const [dialogOpen, setDialogOpen] = useState<boolean>(false);
+
+  const downloadUrl = skinClient["download-skin"][":nickname"].$url({
+    param: { nickname },
+  });
+
+  return (
+    <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
+      <DialogTrigger>
+        <div
+          className="flex items-center justify-center cursor-pointer border border-shark-800 p-2 rounded-lg h-[50px] min-w-[50px] w-[50px]"
+          title="Скачать скин"
+        >
+          <ArrowDownFromLine size={20} />
+        </div>
+      </DialogTrigger>
+      <DialogContent>
+        <ConfirmationActionModalTemplate title="Скачать скин?">
+          <Link
+            href={downloadUrl.href}
+            onClick={() => setDialogOpen(false)}
+            target="_blank"
+            rel="noopener noreferrer"
+            download
+            className="bg-shark-50 flex items-center px-6 justify-center rounded-md"
+          >
+            <Typography className="text-shark-950 text-base font-medium">
+              Скачать
+            </Typography>
+          </Link>
+          <DialogClose>
+            <ConfirmationButton actionType="cancel" title="Отмена" />
+          </DialogClose>
+        </ConfirmationActionModalTemplate>
+      </DialogContent>
+    </Dialog>
+  )
+}
 
 export const ProfileSkinControls = ({ nickname }: Pick<UserEntity, "nickname">) => {
-  const { push } = useRouter();
   const { data: skinAnimation } = skinAnimationQuery();
   const { updateSkinStateMutation } = useSkinStateChange();
-  
+
   return (
-    <div className="flex flex-col gap-y-2">
-      {SKIN_ANIMATIONS.map((control, i) => (
-        <Button
-          key={i}
-          className="h-[40px] w-[40px]"
-          state={
-            skinAnimation.animation === control.animation ? "active" : "default"
-          }
-          onClick={() =>
-            updateSkinStateMutation.mutate({ animation: control.animation })
-          }
+    <div className="flex items-center w-full justify-between gap-4">
+      <div className="flex items-center justify-start gap-4 w-full">
+        {SKIN_ANIMATIONS.map((control, i) => (
+          <ProfileSkinControl
+            key={i}
+            onClick={() => updateSkinStateMutation.mutate({ animation: control.animation })}
+            variant={skinAnimation.animation === control.animation ? "active" : "default"}
+          >
+            <Icon name={control.icon} className="text-xl" />
+          </ProfileSkinControl>
+        ))}
+        <ProfileSkinControl
+          key="rotate"
+          onClick={() => updateSkinStateMutation.mutate({ rotate: !skinAnimation.rotate })}
+          variant={skinAnimation.rotate ? "active" : "default"}
         >
-          <Icon name={control.icon} className="text-xl" />
-        </Button>
-      ))}
-      <Button
-        className="h-[40px] w-[40px]"
-        state={skinAnimation.rotate ? "active" : "default"}
-        title="Переключить вращение"
-        onClick={() =>
-          updateSkinStateMutation.mutate({ rotate: !skinAnimation.rotate })
-        }
-      >
-        <RotateCw size={20} />
-      </Button>
-      <Separator />
-      <Button
-        className="h-[40px] w-[40px]"
-        state="default"
-        title="Скачать скин"
-        onClick={() => push(SKIN_DOWNLOAD_SKIN + nickname)}
-      >
-        <ArrowDownFromLine size={20} />
-      </Button>
+          <RotateCw size={20} />
+        </ProfileSkinControl>
+      </div>
+      <ProfileSkinDownloadLink nickname={nickname} />
     </div>
   );
 };

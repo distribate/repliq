@@ -1,25 +1,11 @@
+import { DatabaseConnection } from "@repo/types/entities/database-connection-type";
 import { MysqlDialect } from "kysely";
-import { createPool  } from "mysql2";
-
-type SkinsDialect = {
-  user: string;
-  password: string;
-  port: number,
-  database: string,
-  host: string
-}
+import { createPool } from "mysql2";
 
 export const skinsDialect = ({
   user, password, port, database, host
-}: SkinsDialect) => {
+}: DatabaseConnection) => {
   return new MysqlDialect({
-    pool: createPool({
-      database,
-      host,
-      user,
-      password,
-      port,
-      connectionLimit: 10,
-    }),
+    pool: createPool({ database, host, user, password, port, connectionLimit: 10 }),
   });
 };

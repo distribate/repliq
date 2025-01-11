@@ -7,25 +7,31 @@ import { UserCover } from "./cover";
 
 export type UserCoverLayoutProps = {
   requestedUserNickname: string;
+  children?: React.ReactNode;
 };
 
 export const UserCoverLayout = ({
   requestedUserNickname,
+  children,
 }: UserCoverLayoutProps) => {
-  const { data: coverQueryState } = coverQuery();
+  const { data: { inView } } = coverQuery();
   const { setCoverStateMutation } = useCover();
-  const inView = coverQueryState?.inView;
 
   return (
     <>
       <InView
         as="div"
-        className={`${inView ? "h-[612px] absolute left-0 top-0 right-0" : "h-[200px] absolute top-0"}`}
-        onChange={(inView, entry) =>
-          setCoverStateMutation.mutate({ inView, entry })
+        className={inView ? `h-svh absolute left-0 top-0 right-0` : "h-[20px] absolute left-0 top-0 right-0"}
+        onChange={(inView, _) =>
+          setCoverStateMutation.mutate({ inView })
         }
       />
-      <UserCover requestedUserNickname={requestedUserNickname}/>
+      <div className="w-full h-full relative">
+        <UserCover requestedUserNickname={requestedUserNickname} />
+      </div>
+      <div className="w-full h-full relative">
+        {children}
+      </div>
     </>
   );
 };

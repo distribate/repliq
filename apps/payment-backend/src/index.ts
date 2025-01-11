@@ -5,25 +5,44 @@ import { createOrderRoute } from './routes/create-order.ts';
 import { checkOrderRoute } from './routes/check-order.ts';
 import { bearerAuth } from 'hono/bearer-auth';
 import { initNats } from '@repo/config-nats/nats-client.ts';
+import { csrf } from 'hono/csrf';
+import { cors } from 'hono/cors';
+import { originList } from "@repo/shared/constants/origin-list.ts";
+import { timeout } from 'hono/timeout';
+import { checkOrderFiatRoute } from '#routes/check-order-fiat.ts';
 
 const token = process.env.SECRET_TOKEN!
+const port = process.env.PAYMENT_BACKEND_PORT
 
-export const payments = new Hono()
-.route('/', createOrderRoute);
+await initNats()
+
+const payments = new Hono()
+  .route('/', createOrderRoute)
 
 const hooks = new Hono()
-.route('/', checkOrderRoute);
+  .route('/', checkOrderRoute)
+  .route("/", checkOrderFiatRoute)
 
 const app = new Hono()
-.use('*', logger())
-.use("*", bearerAuth({ token }))
-.basePath('/api')
-.route('/payment', payments)
-.route('/hooks', hooks);
+  .use(cors({ origin: originList, credentials: true }))
+  .use(csrf({ origin: originList }))
+  .use(timeout(5000))
+  .use(bearerAuth({ token }))
+  .use(logger())
+  .basePath('/api/payment')
+  .route('/proccessing', payments)
+  .route('/hooks', hooks);
 
-initNats()
-showRoutes(app, { verbose: false });
+export type PaymentAppType = typeof payments
 
-export type PaymentAppType = typeof app
+async function createServer() {
+  showRoutes(app, { verbose: false });
 
-export default { port: process.env.PAYMENT_BACKEND_PORT, fetch: app.fetch };
+  Bun.serve({ port, fetch: app.fetch });
+}
+
+createServer()
+  .then((_) => console.log(`Server started on port ${port}'`))
+  .catch(err => {
+    console.error('Error starting server:', err);
+  });

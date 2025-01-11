@@ -10,35 +10,37 @@ import { getLuckpermsPlayer } from './routes/get-luckperms-player.ts';
 import { exceptionHandler } from './helpers/exception-handler.ts';
 import { mergeRoutes, type Module } from './utils/merge-routes.ts';
 import { logger } from 'hono/logger';
-import { bearerAuth } from 'hono/bearer-auth';
 import { initNats } from '@repo/config-nats/nats-client.ts';
+import { timeout } from 'hono/timeout';
+import { csrf } from 'hono/csrf';
+import { cors } from 'hono/cors';
 
 const port = process.env.AUTH_BACKEND_PORT;
-const token = process.env.SECRET_TOKEN!
-
 const base = new Hono();
 
-async function startNatsSubscribers() {
-  await initNats()
-}
-
-startNatsSubscribers()
+await initNats()
 
 const installedModules = [
-  { path: '/auth', routes: invalidateSessionRoute },
-  { path: '/auth', routes: validateSessionRoute },
-  { path: '/auth', routes: getAuthUser },
-  { path: '/auth', routes: createUserRoute },
-  { path: '/auth', routes: createSessionRoute },
+  { path: '/', routes: invalidateSessionRoute },
+  { path: '/', routes: validateSessionRoute },
+  { path: '/', routes: getAuthUser },
+  { path: '/', routes: createUserRoute },
+  { path: '/', routes: createSessionRoute },
   { path: '/lp', routes: getLuckpermsPlayer },
 ] as const satisfies Module[];
 
 const app = mergeRoutes(
   base
-    .basePath('/api')
-    .use('*', logger())
-    .use('*', prettyJSON())
-    .use('*', bearerAuth({ token }))
+    .use(async (c, next) => {
+      console.log(c.req.path)
+      await next();
+    })
+    .use(cors())
+    .use(csrf())
+    .basePath('/api/auth')
+    .use(timeout(5000))
+    .use(logger())
+    .use(prettyJSON())
     .onError(exceptionHandler),
   ...installedModules,
 );
@@ -58,4 +60,12 @@ export type LpAppType = typeof lp
 
 showRoutes(app, { verbose: false });
 
-export default { port, fetch: app.fetch };
+async function createServer() {
+  showRoutes(app, { verbose: false });
+
+  Bun.serve({ port, fetch: app.fetch });
+}
+
+createServer().then((_) => console.log(`Server started on port ${port}'`)).catch(err => {
+  console.error('Error starting server:', err);
+});

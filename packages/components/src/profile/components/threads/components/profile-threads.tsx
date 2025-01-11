@@ -1,5 +1,3 @@
-"use client"
-
 import { ProfileSectionLayout } from '#layouts/profile-section-layout.tsx';
 import { UserPageParam } from '@repo/types/global';
 import { ProfileThreads } from '#profile/components/threads/components/profile-threads-list.tsx';

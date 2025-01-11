@@ -5,11 +5,8 @@ import { skinStateQuery } from "../queries/skin-query.ts";
 import { Skeleton } from "@repo/ui/src/components/skeleton.tsx";
 import { UserEntity } from "@repo/types/entities/entities-type.ts";
 import { Typography } from "@repo/ui/src/components/typography.tsx";
-import dynamic from "next/dynamic";
-
-const ReactSkinview3d = dynamic(() => import("react-skinview3d"), {
-  loading: () => <Skeleton className="w-full h-[440px]" />,
-})
+import Cape from "@repo/assets/images/minecraft/cape_default.png";
+import ReactSkinview3d from "react-skinview3d";
 
 function isHardwareAccelerationEnabled(): boolean {
   const canvas = document.createElement('canvas');
@@ -26,19 +23,23 @@ export const ProfileSkinRender = ({
   nickname
 }: Pick<UserEntity, "nickname">) => {
   const { setViewerRef } = useSkinViewer();
-  const { data: skinState, isLoading } = skinStateQuery(nickname);
+  const { data: skinUrl, isLoading } = skinStateQuery(nickname);
 
-  if (isLoading) return <Skeleton className="w-full h-[440px]" />;
+  if (isLoading) return <Skeleton className="w-full h-full" />;
 
   const isHardwareAccEnabled = isHardwareAccelerationEnabled();
 
   return (
-    <>
+    <div className="flex items-center justify-center py-2 overflow-hidden border-4 border-shark-800 rounded-lg w-full">
       {isHardwareAccEnabled ? (
         <ReactSkinview3d
-          skinUrl={skinState}
-          height="500"
-          width="500"
+          skinUrl={skinUrl}
+          height="450"
+          width="350"
+          options={{
+            zoom: 0.8
+          }}
+          capeUrl={Cape.src}
           onReady={({ viewer }) => setViewerRef(viewer)}
         />
       ) : (
@@ -48,6 +49,6 @@ export const ProfileSkinRender = ({
           </Typography>
         </div>
       )}
-    </>
+    </div>
   );
 };

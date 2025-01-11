@@ -1,25 +1,11 @@
 import { PostgresDialect } from "kysely";
 import { Pool } from "pg";
+import type { DatabaseConnection } from "@repo/types/entities/database-connection-type.ts";
 
-type AuthDialect = {
-  host: string;
-  database: string;
-  user: string;
-  password: string;
-  port: number;
-};
-    
 export const authDialect = ({
   host, database, user, password, port
-}: AuthDialect) => {
+}: DatabaseConnection) => {
   return new PostgresDialect({
-    pool: new Pool({
-      database,
-      host,
-      user,
-      port,
-      max: 10,
-      password,
-    }),
+    pool: new Pool({ database, host, user, port, max: 10, password }),
   });
 };

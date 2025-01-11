@@ -18,15 +18,22 @@ const SomethingError = dynamic(() =>
   import("#templates/something-error.tsx").then((m) => m.SomethingError),
 );
 
-type FriendsListLayoutProps = {
-  friends: FriendWithDetails[];
-};
-
 const filterFriendsByNickname = (data: FriendWithDetails[], querySearch: string) =>
   data.filter(item => item.nickname.startsWith(querySearch));
 
-const ProfileFriendsList = ({ friends }: FriendsListLayoutProps) => {
+const ProfileFriendsList = ({ nickname }: Pick<UserEntity, "nickname">) => {
+  const { sort_type, ascending } = friendsSortQuery().data;
+  const { data, isLoading, isError } = friendsQuery({ nickname, sort_type, ascending });
   const { searchQuery } = friendsSortQuery().data;
+
+  if (isLoading) return <ProfileFriendsSkeleton />;
+  if (isError) return <SomethingError />;
+
+  if (!data || !data.data || !data.data.length) {
+    return <ContentNotFound title="Друзей нет" />
+  }
+
+  const friends = data.data as FriendWithDetails[]
 
   const filteredfriends = searchQuery && searchQuery.length > 0
     ? filterFriendsByNickname(friends, searchQuery)
@@ -46,18 +53,11 @@ const ProfileFriendsList = ({ friends }: FriendsListLayoutProps) => {
 };
 
 export const ProfileFriends = ({ nickname }: Pick<UserEntity, "nickname">) => {
-  const { sort_type, ascending } = friendsSortQuery().data;
-  const { data: friends, isLoading, isError } = friendsQuery({ nickname, sort_type, ascending });
-
-  if (isLoading) return <ProfileFriendsSkeleton />;
-  if (isError) return <SomethingError />;
-  if (!friends) return <ContentNotFound title="Друзей нет" />;
-
   return (
     <Suspense fallback={<ProfileFriendsSkeleton />}>
       <div className="flex flex-col gap-4 w-full h-full">
         <ProfileFriendsFiltering />
-        <ProfileFriendsList friends={friends.data as FriendWithDetails[]} />
+        <ProfileFriendsList nickname={nickname} />
       </div>
     </Suspense>
   );

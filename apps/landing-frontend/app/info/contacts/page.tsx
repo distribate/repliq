@@ -48,7 +48,7 @@ export default async function InfoContactsPage() {
 									<span
 										className="group-hover:text-project-color-pink duration-300 relative group-hover:duration-300 right-0 group-hover:-right-6"
 									>
-												{TELEGRAM_CHANNEL_LINK}
+										{TELEGRAM_CHANNEL_LINK}
 									</span>
 								</Link>
 							</Typography>

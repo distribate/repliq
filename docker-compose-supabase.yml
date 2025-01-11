@@ -519,7 +519,7 @@ networks:
   shared-network:
     external: true
   cloudflare_network:
-    driver: bridge
+    external: true
 
 volumes:
   db-config:

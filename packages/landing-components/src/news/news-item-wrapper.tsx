@@ -35,7 +35,7 @@ export const NewsItemWrapper = ({
               {title}
             </Typography>
           </div>
-          <div className="w-1/4 flex justify-end">
+          <div className="w-full lg:w-1/4 flex justify-end">
             <Typography color="black" size="lg" text_color="adaptiveGray">
               {formattedTime}
             </Typography>

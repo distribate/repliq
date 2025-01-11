@@ -1,3 +1,4 @@
+import { publishAuthNotify } from "../../puslishers/pub-auth-notify";
 import { forumDB } from "../../shared/database/forum-db";
 import { createSession } from "../../utils/create-session";
 import { insertSessionInfo } from "../queries/insert-session-info";
@@ -31,6 +32,11 @@ export const createSessionTransaction = async ({
       trx,
       details: { session_id: session.session_id, ...info,nickname },
     });
+
+    await publishAuthNotify({
+      session_id: session.session_id,
+      nickname,
+    })
 
     return session;
   });

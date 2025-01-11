@@ -3,12 +3,6 @@ export type ThreadOwner = {
   name_color: string | null;
 }
 
-export type ThreadRating = {
-  increment: number;
-  decrement: number;
-  currentType: "increment" | "decrement" | null;
-};
-
 export type ThreadDetailed = {
   id: string;
   title: string;

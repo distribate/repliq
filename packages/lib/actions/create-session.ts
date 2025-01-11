@@ -2,14 +2,26 @@
 
 import "server-only";
 import { z } from "zod";
-import { headers } from "next/headers";
+import { headers, cookies } from "next/headers";
 import { authClient } from "@repo/shared/api/auth-client.ts";
-import { setSessionTokenCookie } from "#actions/session-token-control.ts";
 import { redirect } from "next/navigation";
 import { USER_URL } from "@repo/shared/constants/routes.ts";
 import { createSessionBodySchema } from '@repo/types/schemas/auth/create-session-schema.ts';
 
 type CreateSession = z.infer<typeof createSessionBodySchema>;
+
+async function setSessionTokenCookie(
+  token: string,
+  expiresAt: Date,
+): Promise<void> {
+  cookies().set("session", token, {
+    httpOnly: true,
+    sameSite: "lax",
+    secure: process.env.NODE_ENV === "production",
+    expires: expiresAt,
+    path: "/",
+  });
+}
 
 async function createSession({ details, info }: CreateSession) {
   const res = await authClient["create-session"].$post({
@@ -41,9 +53,9 @@ export async function createSessionAction({
     return { error: createdSession.error };
   }
 
-  const expiresAt = new Date(createdSession.expiresAt);
+  const expiresAt = new Date(createdSession.data.expiresAt);
 
-  await setSessionTokenCookie(createdSession.token, expiresAt);
+  await setSessionTokenCookie(createdSession.data.token, expiresAt);
 
   return redirect(USER_URL + nickname);
 }

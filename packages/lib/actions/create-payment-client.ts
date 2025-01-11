@@ -1,16 +1,14 @@
-'use server';
-
 import { HTTPError } from 'ky';
 import { z, ZodError } from 'zod';
 import { createOrderBodySchema } from '@repo/types/schemas/payment/payment-schema.ts';
 import { parseZodErrorMessages } from '@repo/lib/helpers/parse-zod-errors.ts';
 import { paymentsClient } from '@repo/shared/api/payments-client.ts';
 
-export async function createPaymentClient(
-  payment: z.infer<typeof createOrderBodySchema>
-) {
+type CreatePayment = z.infer<typeof createOrderBodySchema>
+
+export async function createPayment(payment: CreatePayment) {
   try {
-    const res = await paymentsClient.api.payment["create-order"].$post({
+    const res = await paymentsClient["create-order"].$post({
       json: payment
     })
     

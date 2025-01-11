@@ -22,7 +22,7 @@ export const UserCover = ({
   requestedUserNickname: nickname
 }: UserCoverProps) => {
   const { data: requestedUser, isLoading: requestedUserLoading } = requestedUserQuery(nickname);
-  const { data: coverQueryState } = coverQuery();
+  const { data: { inView } } = coverQuery();
   const { data: url, isLoading } = imageCoverQuery(nickname);
 
   if (requestedUserLoading) return <UserCoverSkeleton />;
@@ -36,11 +36,11 @@ export const UserCover = ({
 
   const backgroundImage = url ? `url(${url})` : "";
   const backgroundColor = url ? "transparent" : "gray";
-  const imageHeight = coverQueryState.inView ? 168 : 76;
+  const imageHeight = inView ? 168 : 76;
 
   return (
     <CoverArea
-      variant={coverQueryState.inView ? "full" : "compact"}
+      variant={inView ? "full" : "compact"}
       backgroundColor={backgroundColor}
       outline={coverOutline}
       style={{ backgroundImage }}
@@ -59,7 +59,7 @@ export const UserCover = ({
       </div>
       <UserCoverPanel
         requestedNickname={requestedUser.nickname}
-        variant={coverQueryState.inView ? "end" : "default"}
+        variant={inView ? "end" : "default"}
       />
     </CoverArea>
   );

@@ -5,7 +5,6 @@ export const COVER_QUERY_KEY = createQueryKey("ui", ["cover-state"]);
 
 export type CoverQuery = {
   inView: boolean;
-  entry?: IntersectionObserverEntry;
 };
 
 export const initial: CoverQuery = {

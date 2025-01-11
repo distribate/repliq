@@ -1,9 +1,9 @@
 "use client"
 
-import {Dialog, DialogContent, DialogTrigger} from "@repo/landing-ui/src/dialog";
-import {Carousel, CarouselContent, CarouselItem, CarouselApi, CarouselNext, CarouselPrevious} from "@repo/landing-ui/src/carousel";
-import {commuinityGallery} from "@repo/shared/wiki/data/community/community-list.ts";
-import {useEffect, useState} from "react";
+import { Dialog, DialogContent, DialogTrigger } from "@repo/landing-ui/src/dialog";
+import { Carousel, CarouselContent, CarouselItem, CarouselApi, CarouselNext, CarouselPrevious } from "@repo/landing-ui/src/carousel";
+import { commuinityGallery } from "@repo/shared/wiki/data/community/community-list.ts";
+import { useEffect, useState } from "react";
 
 export const CommunityGalleryItem = () => {
   const [selectedIndex, setSelectedIndex] = useState<number>(0);
@@ -54,8 +54,8 @@ export const CommunityGalleryItem = () => {
                   </CarouselItem>
                 ))}
               </CarouselContent>
-              <CarouselPrevious/>
-              <CarouselNext/>
+              <CarouselPrevious />
+              <CarouselNext />
             </Carousel>
           </DialogContent>
         </Dialog>

@@ -3,4 +3,6 @@ import { hc } from "hono/client";
 
 const headers = { Authorization: `Bearer ${process.env.SECRET_TOKEN}` };
 
-export const paymentsClient = hc<PaymentAppType>(`http://localhost:4103/api`, { headers })
+const origin = `https://api.fasberry.su/api/payment`;
+
+export const paymentsClient = hc<PaymentAppType>(`${origin}/proccessing`, { headers })

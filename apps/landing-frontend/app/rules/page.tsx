@@ -14,18 +14,52 @@ import { RulesListSkeleton } from '@repo/landing-components/src/skeletons/rules-
 
 export const metadata = {
   title: 'Правила',
+  description:
+    "Ознакомьтесь с правилами нашего Fasberry-сервера, чтобы обеспечить честную и дружелюбную игру для всех участников. Уважайте других игроков и следуйте установленным нормам поведения.",
+  keywords: [
+    "правила Fasberry",
+    "правила игрового сервера",
+    "Fasberry сервер правила",
+    "как играть на Fasberry сервере",
+    "нормы поведения Fasberry",
+  ],
+  author: "Fasberry Server Team",
+  robots: "index, follow",
+  canonical: "https://fasberry.su/rules",
+  openGraph: {
+    title: "Правила сервера Fasberry | Уважение и честная игра",
+    description:
+      "Правила нашего Fasberry-сервера для комфортной игры. Соблюдайте установленные нормы и поддерживайте дружелюбную атмосферу!",
+    url: "https://fasberry.su/rules",
+    type: "website",
+    images: [
+      {
+        url: "https://fasberry.su/images/backgrounds/main_background.png",
+        alt: "Правила сервера Fasberry",
+        width: 1200,
+        height: 630,
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Правила сервера Fasberry | Соблюдайте порядок",
+    description:
+      "Изучите правила нашего сервера Fasberry, чтобы играть комфортно и честно. Уважение к игрокам — наш приоритет.",
+    images: ["https://fasberry.su/images/backgrounds/main_background.png"],
+  },
 };
 
-const Rules = async() => {
+const Rules = async () => {
   const qc = new QueryClient();
-  
+
   await qc.prefetchQuery({
     queryKey: RULES_QUERY_KEY,
     queryFn: () => getRules(),
   });
-  
+
   const dehydratedState = dehydrate(qc);
-  
+
   return (
     <HydrationBoundary state={dehydratedState}>
       <RulesList />
@@ -58,11 +92,11 @@ export default async function RulesPage() {
                 className="hover:bg-[#8a113c] bg-[#a20f40]"
               >
                 <Typography text_color="white" className="font-bold text-xl">
-									<span
+                  <span
                     className="inline-block group-hover:rotate-0 rotate-90 duration-150 group-hover:duration-150"
                   >
-										✎
-									</span>
+                    ✎
+                  </span>
                   &nbsp;К правилам
                 </Typography>
               </Button>

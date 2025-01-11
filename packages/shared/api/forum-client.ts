@@ -9,7 +9,7 @@ import {
 } from 'forum-backend/src/types/routes-types.ts';
 import { hc } from 'hono/client';
 
-const baseUrl = `http://localhost:4101/api/`
+const baseUrl = `https://cc.fasberry.su/api/forum`
 
 export const forumReactionClient = hc<ForumReactionAppType>(
   baseUrl,

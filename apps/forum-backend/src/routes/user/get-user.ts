@@ -6,6 +6,8 @@ import { getNickname } from '#utils/get-nickname-from-storage.ts';
 import { getUserRelation } from '#lib/queries/user/get-user-relation.ts';
 import type { InitiatorRecipientType } from '#types/initiator-recipient-type.ts';
 import { forumDB } from '#shared/database/forum-db.ts';
+import { describeRoute } from 'hono-openapi';
+import { resolver } from 'hono-openapi/zod';
 
 type GetUserType = "shorted" | "detailed"
 
@@ -42,7 +44,7 @@ export async function getUser<T extends GetUserType>({
 
   const {
     accept_friend_request, cover_outline_visible, game_stats_visible, profile_visibility, real_name_visible,
-    real_name, created_at,birthday, favorite_item, donate, ...userWithoutSensitiveInfo
+    real_name, created_at, birthday, favorite_item, donate, ...userWithoutSensitiveInfo
   } = query;
 
   if (type === "shorted" && !isIdentity) {
@@ -79,30 +81,30 @@ export async function getUser<T extends GetUserType>({
 
 export const getUserRoute = new Hono()
   .get('/get-user/:nickname', async (ctx) => {
-    const { nickname: recipient } = ctx.req.param();
+  const { nickname: recipient } = ctx.req.param();
 
-    const initiator = getNickname()
+  const initiator = getNickname()
 
-    const userRelation = await getUserRelation({
-      initiator, recipient
-    })
+  const userRelation = await getUserRelation({
+    initiator, recipient
+  })
 
-    let getUserType: GetUserType = "shorted"
+  let getUserType: GetUserType = "shorted"
 
-    if (userRelation === "private" || userRelation === "blocked-by-you" || userRelation === "blocked-by-user") {
-      getUserType = "shorted"
-    } else {
-      getUserType = "detailed"
-    }
-
-    try {
-      const user = await getUser({
-        initiator, recipient, type: getUserType
-      });
-
-      return ctx.json(user, 200);
-    } catch (e) {
-      return ctx.json({ error: throwError(e) }, 400);
-    }
+  if (userRelation === "private" || userRelation === "blocked-by-you" || userRelation === "blocked-by-user") {
+    getUserType = "shorted"
+  } else {
+    getUserType = "detailed"
   }
-  );
+
+  try {
+    const user = await getUser({
+      initiator, recipient, type: getUserType
+    });
+
+    return ctx.json(user, 200);
+  } catch (e) {
+    return ctx.json({ error: throwError(e) }, 400);
+  }
+}
+);

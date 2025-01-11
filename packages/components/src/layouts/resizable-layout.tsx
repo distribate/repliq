@@ -12,7 +12,6 @@ import dynamic from "next/dynamic";
 import { SidebarDesktopSkeleton } from "../sidebar/desktop/components/sidebar/sidebar-desktop-skeleton.tsx";
 import { SidebarDesktop } from "../sidebar/desktop/components/sidebar/sidebar-desktop.tsx";
 import { useSidebarControl } from "../sidebar/desktop/components/sidebar-layout/hooks/use-sidebar-control.ts";
-import { RESIZABLE_LAYOUT_COOKIE_KEY } from "@repo/shared/keys/cookie.ts";
 
 interface ResizableLayout {
   defaultLayout: number[];
@@ -98,6 +97,7 @@ export const AreaMain = ({
 };
 
 export const DEFAULT_LAYOUT_SIZES = [16, 84];
+const RESIZABLE_LAYOUT_COOKIE_KEY = `react-resizable-panels:layout`;
 
 export const ResizableLayout = ({
   defaultLayout = DEFAULT_LAYOUT_SIZES,
@@ -127,7 +127,7 @@ export const ResizableLayout = ({
           autoSaveId="conditional"
           suppressHydrationWarning
           style={{ overflow: "clip" }}
-          className={`flex w-full min-h-screen h-screen max-h-screen p-2
+          className={`flex w-full relative min-h-screen h-screen max-h-screen p-2
             gap-${layoutGroupGap} overflow-hidden`}
         >
           <SidebarMain defaultSize={defaultLayout[0]} />

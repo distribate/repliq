@@ -39,7 +39,7 @@ export const createOrderBodySchema = z.object({
   }).max(16, {
     message: "Превышена максимальная длина никнейма"
   }),
-  email: z.string().email('Введите корректный адрес электронной почты'),
+  // email: z.string().email('Введите корректный адрес электронной почты'),
   privacy: z
   .boolean()
   .refine((value) => value === true, {

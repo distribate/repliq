@@ -1,13 +1,16 @@
 import { hc } from 'hono/client';
 import { SkinAppType } from 'skin-backend/src';
 
-export const skinClient = hc<SkinAppType>(`http://localhost:4102/`,
+const origin = `https://api.fasberry.su/api/skin`;
+
+export const skinClient = hc<SkinAppType>(
+  origin,
   {
     fetch: (input: RequestInfo | URL, requestInit?: RequestInit) => {
-      const retries = 1; 
+      const retries = 1;
       const retryDelay = 1000;
 
-      const attemptFetch = (attempt: number): Promise<Response> => {
+      const attemptFetch = async (attempt: number): Promise<Response> => {
         return fetch(input, {
           method: requestInit?.method ?? 'GET',
           headers: {
@@ -23,8 +26,8 @@ export const skinClient = hc<SkinAppType>(`http://localhost:4102/`,
               setTimeout(() => resolve(attemptFetch(attempt + 1)), retryDelay);
             });
           }
-          
-          return res;  
+
+          return res;
         });
       };
 

@@ -49,5 +49,5 @@ export async function getFriends({
     return null;
   }
 
-  return data
+  return data;
 }

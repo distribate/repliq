@@ -5,7 +5,7 @@ import ky from 'ky';
 
 export async function getHeadDetails(nickname: string) {
   try {
-    const url = skinClient.api["get-head"][":nickname"].$url({
+    const url = skinClient["get-head"][":nickname"].$url({
       param: { nickname }
     })
 
@@ -19,7 +19,7 @@ export async function getHeadDetails(nickname: string) {
 
 export async function getSkinDetails(nickname: string) {
   try {
-    const url = skinClient.api["get-skin"][":nickname"].$url({
+    const url = skinClient["get-skin"][":nickname"].$url({
       param: { nickname }
     })
 

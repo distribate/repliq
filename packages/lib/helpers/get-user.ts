@@ -6,7 +6,7 @@ import {
 } from "#queries/current-user-query.ts";
 import { getUserInformation } from "#queries/get-user-information.ts";
 import { useRouter } from "next/navigation";
-import { BANNED_REDIRECT } from "@repo/shared/constants/routes";
+import { AUTH_REDIRECT } from "@repo/shared/constants/routes";
 import { UserDetailed } from "@repo/types/entities/user-type";
 
 export function getUser() {
@@ -21,7 +21,7 @@ export function getUser() {
       retry: 2,
     }).then((res) => {
       if ("error" in res) {
-        return push(BANNED_REDIRECT)
+        return push(AUTH_REDIRECT)
       }
     });
   }

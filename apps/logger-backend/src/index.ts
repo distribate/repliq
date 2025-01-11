@@ -15,24 +15,28 @@ async function startNatsSubscribers() {
   await subUpdateDonateForPlayer()
   await subscribeServerEvents()
 }
- 
-async function loadCommands() {
+
+async function loadBotsCommands() {
   await import("./lib/commands/broadcast-command.ts")
   await import("./lib/commands/weather-command.ts")
   await import("./lib/commands/keyboard-command.ts")
   await import("./lib/commands/give-item-command.ts")
 }
 
-async function start() {
+async function createServer() {
   await fasberryBot.init()
   await loggerBot.start()
 
   await pgListenConnect()
   await initNats()
   await startNatsSubscribers()
-  
-  await loadCommands()
+
+  await loadBotsCommands()
   loggerBot.on("message", messageHandler);
 }
 
-start()
+createServer()
+  .then(() => console.log(`Server started on port ${process.env.LOGGER_BACKEND_PORT}'`))
+  .catch(err => {
+    console.error('Error starting server:', err);
+  });

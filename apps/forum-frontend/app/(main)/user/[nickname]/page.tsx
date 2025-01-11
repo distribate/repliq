@@ -28,9 +28,10 @@ export default async function ProfilePage({
   return (
     <div className="flex flex-col gap-6 w-full h-full relative">
       <Suspense fallback={<UserCoverSkeleton />}>
-        <UserCoverLayout requestedUserNickname={nickname} />
+        <UserCoverLayout requestedUserNickname={nickname}>
+        <ProfileContent requestedUserNickname={nickname} />
+        </UserCoverLayout>
       </Suspense>
-      <ProfileContent requestedUserNickname={nickname} />
     </div>
   );
 }

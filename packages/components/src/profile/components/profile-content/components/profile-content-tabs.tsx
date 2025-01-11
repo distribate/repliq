@@ -11,6 +11,8 @@ import { Selectable } from 'kysely';
 import { Users } from "@repo/types/db/forum-database-types";
 import { ProfileContentProps } from "./profile-content";
 import { UserDetailed } from "@repo/types/entities/user-type";
+import { ProfileSkinControls } from "#profile/components/skin/components/profile-skin-controls.tsx";
+import { Skeleton } from "@repo/ui/src/components/skeleton";
 
 export type User = Selectable<Pick<Users, "id" | "nickname" | "uuid">>;
 
@@ -39,10 +41,11 @@ const UserProfileGameStats = dynamic(() =>
     .then(m => m.UserProfileGameStats),
 );
 
-const UserProfileSkin = dynamic(() =>
-  import('@repo/components/src/profile/components/skin/components/profile-skin.tsx')
-    .then(m => m.UserProfileSkin), {
-  ssr: false
+const ProfileSkinRender = dynamic(() =>
+  import('@repo/components/src/profile/components/skin/components/profile-skin-render.tsx')
+    .then(m => m.ProfileSkinRender), {
+  ssr: false,
+  loading: () => <Skeleton className="w-full h-full" />
 });
 
 const SectionPrivatedTrigger = dynamic(() =>
@@ -143,8 +146,11 @@ export const ProfileContentTabs = ({
             </TabsContent>
           )}
         </div>
-        <div className="hidden lg:flex flex-col w-1/3 h-full">
-          <UserProfileSkin nickname={requestedUserNickname} />
+        <div className="hidden 2xl:flex h-[500px] flex-col w-1/3">
+          <div className="flex flex-col h-full w-full gap-4">
+            <ProfileSkinControls nickname={requestedUserNickname} />
+            <ProfileSkinRender nickname={requestedUserNickname} />
+          </div>
         </div>
       </div>
     </Tabs>

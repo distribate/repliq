@@ -47,7 +47,6 @@ import { updateThreadSettingsRoute } from '#routes/thread/update-thread-settings
 import { getThreadUserReactionsRoute } from '#routes/thread/get-thread-user-rating.ts';
 import { timeout } from 'hono/timeout'
 import { natsSubscribe } from '#utils/nats-subscribers.ts';
-import { corsOptions } from '#shared/options/cors-options.ts';
 import { csrfOptions } from '#shared/options/csrf-options.ts';
 import type { Env } from '#types/env-type.ts';
 import { createCommentRoute } from '#routes/comments/create-comment.ts';
@@ -59,12 +58,12 @@ import { createThreadRoute } from '#routes/thread/create-thread.ts';
 import { encodeCborXRoute } from '#routes/test/encode-cbor-x.ts';
 import { decodeCborXRoute } from '#routes/test/decode-cbor-x.ts';
 import { getUserFriendsCountRoute } from '#routes/user/get-user-friends-count.ts';
+import { originList } from '@repo/shared/constants/origin-list';
+import { swaggerUI } from '@hono/swagger-ui'
+import { openAPISpecs } from 'hono-openapi';
 
-declare module 'hono' {
-  interface ContextRenderer {
-    (content: any): Response | Promise<Response>
-  }
-}
+const port = process.env.FORUM_BACKEND_PORT
+const token = process.env.SECRET_TOKEN!
 
 await initNats()
 await natsSubscribe()
@@ -93,6 +92,9 @@ export const thread = new Hono()
   .route("/", getThreadCommentsRoute)
   .route("/", getThreadUserReactionsRoute)
   .route("/", createThreadRoute)
+
+export const server = new Hono()
+  .basePath('/server')
 
 export const test = new Hono()
   .basePath('/test')
@@ -139,34 +141,60 @@ export const user = new Hono()
   .route("/", getUserFriendsCountRoute)
 
 const app = new Hono<Env>()
-  .use("/api/user/*", cors(corsOptions))
-  .use("/api/thread/*", cors(corsOptions))
-  .use("/api/categories/*", cors(corsOptions))
-  .use("/api/comment/*", cors(corsOptions))
-  .use("/api/reaction/*", cors(corsOptions))
-  .use("/api/test/*", cors(corsOptions))
-  .use("/api/*", csrf(csrfOptions))
-  .use("/api/*", timeout(5000))
-  .use('/api/user/*', validateRequest)
-  .use('/api/reaction/*', validateRequest)
-  .use('/api/thread/*', validateRequest)
-  .use('/api/comment/*', validateRequest)
-  .use('/api/categories/*', validateRequest)
-  .use("/api/admin/*", bearerAuth({ token: process.env.SECRET_TOKEN! }))
+  .use(cors({
+    origin: originList,
+    credentials: true,
+    maxAge: 86400,
+    allowHeaders: ["Cookie", "cookie", "x-csrf-token", "X-CSRF-Token", "content-type", "Content-Type"]
+  }))
+  .use(csrf(csrfOptions))
+  .use(timeout(5000))
+  .use('/api/forum/user/*', validateRequest)
+  .use('/api/forum/reaction/*', validateRequest)
+  .use('/api/forum/thread/*', validateRequest)
+  .use('/api/forum/comment/*', validateRequest)
+  .use('/api/forum/categories/*', validateRequest)
+  .use("/api/forum/admin/*", bearerAuth({ token }))
+  .basePath('/api/forum')
   .use(logger())
   .use(contextStorage())
-  .basePath('/api')
   .route('/', admin)
   .route('/', user)
   .route("/", thread)
+  .route("/", server)
   .route("/", category)
   .route("/", comment)
   .route("/", reaction)
-  .route("/", test)
+  // .route("/", test)
+  .get('/ui', swaggerUI({ url: '/openapi' }))
 
-// showRoutes(app, { verbose: false });
+app.get('/openapi',
+  // @ts-ignore
+  openAPISpecs(app, {
+    documentation: {
+      info: {
+        title: 'Fasberry Forum API',
+        version: '1.0.0',
+        description: 'Greeting API'
+      },
+      servers: [
+        {
+          url: 'http://localhost:4101', description: 'Local Server'
+        }
+      ],
+      security: [{ bearerAuth: [token] }],
+    },
+  })
+)
 
-export default {
-  port: process.env.FORUM_BACKEND_PORT,
-  fetch: app.fetch,
+async function createServer() {
+  showRoutes(app, { verbose: false });
+
+  Bun.serve({ port, fetch: app.fetch });
 }
+
+createServer()
+  .then((_) => console.log(`Server started on port ${port}'`))
+  .catch(err => {
+    console.error('Error starting server:', err);
+  });

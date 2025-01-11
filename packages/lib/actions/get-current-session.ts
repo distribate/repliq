@@ -11,11 +11,20 @@ type SessionValidationResult =
   | { session: null; user: null };
 
 export async function validateSessionToken(token: string) {
-  const res = await authClient["validate-session"].$post({
-    json: { token },
-  });
+  if (!token) {
+    throw new Error("No token provided");
+  }
 
-  return await res.json()
+  try {
+    const res = await authClient["validate-session"].$post({
+      json: { token },
+    });
+
+    return await res.json()
+  } catch (e) {
+    console.error(e)
+    throw new Error("Failed to validate session token");
+  }
 }
 
 export const getCurrentSession = cache(async (): Promise<SessionValidationResult> => {
@@ -28,7 +37,7 @@ export const getCurrentSession = cache(async (): Promise<SessionValidationResult
   try {
     const data = await validateSessionToken(token);
 
-    if ("error" in data) {
+    if (!data || "error" in data) {
       redirect("/not-online")
     }
 

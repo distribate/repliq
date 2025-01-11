@@ -33,12 +33,12 @@ export const metadata: Metadata = {
 			'max-snippet': -1,
 		},
 	},
-	creator: "distribate",
-	keywords: [ "fasberry", "фесберри", "фесберри проект", "фасберри", "fasberryproject", "minecraft",
+	creator: "Fasberry Project Team",
+	keywords: ["fasberry", "фесберри", "фесберри проект", "фасберри", "fasberryproject", "minecraft",
 		"майнкрафт", "майнкрафт играть", "minecraft play", "сервера майнкрафт бесплатно", "список серверов майнкрафта",
 		"полу-ванильные сервера майнкрафта", "полуванила майнкрафт", "rp сервер майнкрафт", "rpg сервер майнкрафт",
 		"rp rpg сервер майнкрафт", "город в майнкрафте сервер", "minecraft server", "выживание", "survival minecraft",
-		"survival", "smp", "fasberry project", "minecraft fasberry", "minecraft server play", "майнкрафт сервер" ],
+		"survival", "smp", "fasberry project", "minecraft fasberry", "minecraft server play", "майнкрафт сервер"],
 	formatDetection: {
 		email: true,
 		address: true,
@@ -67,20 +67,20 @@ export default function RootLayout({
 }: Readonly<{ children: ReactNode }>) {
 	return (
 		<html lang="ru" suppressHydrationWarning>
-		<body>
-		<QueryProvider>
-			<ReactQueryDevtools />
-			<NextThemeProvider>
-				<Toaster position="top-left" richColors />
-				<TooltipProvider>
-					<Header/>
-					{children}
-					<Footer/>
-				</TooltipProvider>
-			</NextThemeProvider>
-		</QueryProvider>
-		<Analytics/>
-		</body>
+			<body>
+				<QueryProvider>
+					<ReactQueryDevtools />
+					<NextThemeProvider>
+						<Toaster position="top-left" richColors />
+						<TooltipProvider>
+							<Header />
+							{children}
+							<Footer />
+						</TooltipProvider>
+					</NextThemeProvider>
+				</QueryProvider>
+				<Analytics />
+			</body>
 		</html>
 	);
 }

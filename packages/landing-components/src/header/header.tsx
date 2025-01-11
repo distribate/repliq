@@ -9,6 +9,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from "@repo/la
 import { HeaderSheet } from "../header/header-sheet";
 import { Skeleton } from "@repo/landing-ui/src/skeleton";
 import dynamic from "next/dynamic";
+import { ComponentPropsWithRef } from 'react';
 
 const ThemeToggle = dynamic(
 	() =>
@@ -17,26 +18,42 @@ const ThemeToggle = dynamic(
 		})),
 	{
 		ssr: false,
-		loading: () => <Skeleton className="w-[36px] h-[36px]"/>,
+		loading: () => <Skeleton className="w-[36px] h-[36px]" />,
 	}
 )
 
+export const SuperLink = (props: ComponentPropsWithRef<typeof Link>) => {
+	const router = useRouter();
+	const strHref = typeof props.href === "string" ? props.href : props.href.href;
+
+	return (
+		<Link
+			{...props}
+			prefetch={false}
+			onMouseEnter={(e) => {
+				if (strHref) {
+					void router.prefetch(strHref);
+				}
+
+				return props.onMouseEnter?.(e);
+			}}
+		/>
+	);
+};
+
 export const Header = () => {
 	const pathname = usePathname();
-	const { push } = useRouter()
-	
+
 	const pathDetect = (href: string) => {
 		if (href) {
 			if (pathname === href) {
 				return toast.info("Вы уже на этой странице!", {
-					icon: <img alt="" loading="lazy" width={32} height={32} src="/images/minecraft/icons/bell.webp"/>
+					icon: <img alt="" loading="lazy" width={32} height={32} src="/images/minecraft/icons/bell.webp" />
 				})
 			}
-			
-			push(href)
 		}
 	}
-	
+
 	return (
 		<div
 			className="header flex items-center justify-between sticky lg:absolute top-0 transition w-full bg-repeat-x z-50
@@ -53,17 +70,23 @@ export const Header = () => {
 				/>
 			</Link>
 			<div className="hidden xl:flex gap-x-4 items-center justify-start pr-[132px]">
-				{MAIN_HEADER.map(item => {
-					const isActive = pathname === item.href;
-					
+				{MAIN_HEADER.map(({ href, name, childs }) => {
+					const isActive = pathname === href;
+
 					const activePathName = MAIN_HEADER.find(
-						i => i.href === pathname
+						i => href === pathname
 					)?.name || "activePathName";
-					
+
 					return (
-						<DropdownMenu key={item.name}>
-							<DropdownMenuTrigger onClick={() => pathDetect(item.href!)} className="group">
-								<div
+						<DropdownMenu key={name}>
+							<DropdownMenuTrigger className="group">
+								<SuperLink
+									onClick={() => {
+										if (href) {
+											pathDetect(href)
+										}
+									}}
+									href={href || "/"}
 									className="flex items-center gap-1 cursor-pointer"
 								>
 									{isActive && (
@@ -78,25 +101,25 @@ export const Header = () => {
 									)}
 									<Typography
 										className={`hover:brightness-150 text-project-color text-lg
-          			      ${isActive && 'brightness-[1.8]'} ${item.name == "Привилегии" && 'text-gold'}`
+          			      ${isActive && 'brightness-[1.8]'} ${name == "Привилегии" && 'text-gold'}`
 										}
 									>
-										{item.name}
+										{name}
 									</Typography>
-									{item.childs && (
+									{childs && (
 										<>
 											<span className="text-white group-data-[state=open]:inline hidden">⏶</span>
 											<span className="text-white group-data-[state=closed]:inline hidden">⏷</span>
 										</>
 									)}
-								</div>
+								</SuperLink>
 							</DropdownMenuTrigger>
-							{item.childs && (
+							{childs && (
 								<DropdownMenuContent className="border" side="bottom" align="end">
 									<div className="flex flex-col py-2 px-4 gap-2 w-full">
-										{item.childs.map(item => {
+										{childs.map(item => {
 											const isActive = item.href === pathname;
-											
+
 											return (
 												<div key={item.name} className="flex items-center gap-1 cursor-pointer">
 													{isActive && (
@@ -109,11 +132,11 @@ export const Header = () => {
 															height={16}
 														/>
 													)}
-													<Link href={item.href || "/"}>
+													<SuperLink href={item.href || "/"}>
 														<Typography className="hover:brightness-150 text-lg text-project-color">
 															{item.name}
 														</Typography>
-													</Link>
+													</SuperLink>
 												</div>
 											)
 										})}
@@ -124,10 +147,10 @@ export const Header = () => {
 					)
 				})}
 				<div className="w-[36px] h-[36px] overflow-hidden">
-					<ThemeToggle/>
+					<ThemeToggle />
 				</div>
 			</div>
-			<HeaderSheet/>
+			<HeaderSheet />
 		</div>
 	);
 };
