@@ -1,47 +1,46 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
-import { ALERTS_COOKIE_KEY } from "@repo/shared/keys/cookie.ts";
 
-function isValidOrigin(originHeader: string, hostHeader: string): boolean {
+function isValidOrigin(oh: string, hh: string): boolean {
   try {
-    const origin = new URL(originHeader);
-    return origin.host === hostHeader;
+    const origin = new URL(oh);
+    return origin.host === hh;
   } catch {
     return false;
   }
 }
 
-export async function middleware(request: NextRequest) {
-  const response = NextResponse.next();
+export async function middleware(req: NextRequest) {
+  const res = NextResponse.next();
 
-  if (request.method === "GET") {
-    const token = request.cookies.get("session")?.value ?? null;
+  if (req.method === "GET") {
+    const token = req.cookies.get("session")?.value ?? null;
 
     if (token !== null) {
-      response.cookies.set("session", token, {
+      res.cookies.set("session", token, {
         path: "/",
         maxAge: 60 * 60 * 24 * 30,
-        sameSite: "lax",
+        sameSite: "lax", 
         httpOnly: true,
         secure: process.env.NODE_ENV === "production",
       });
     }
 
-    return response;
+    return res;
   }
   
-  const originHeader = request.headers.get("Origin");
-  const hostHeader = request.headers.get("X-Forwarded-Host");
+  const oh = req.headers.get("Origin");
+  const hh = req.headers.get("X-Forwarded-Host");
 
-  if (!originHeader || !hostHeader || !isValidOrigin(originHeader, hostHeader)) {
+  if (!oh || !hh || !isValidOrigin(oh, hh)) {
     return new NextResponse(null, { status: 403 });
   }
 
-  if (!request.cookies.has(ALERTS_COOKIE_KEY)) {
-    response.cookies.set(ALERTS_COOKIE_KEY, "show");
+  if (!req.cookies.has("alerts-status")) {
+    res.cookies.set("alerts-status", "show");
   }
 
-  return response;
+  return res;
 }
 
 export const config = {

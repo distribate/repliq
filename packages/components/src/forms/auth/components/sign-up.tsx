@@ -8,10 +8,9 @@ import { useRouter } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { registrationSchema } from "../schemas/authorization-schema.ts";
 import { useEffect, useState } from "react";
-import { FormAuthErrorMessage } from "@repo/ui/src/components/form.tsx";
+import { ErrorField } from "@repo/ui/src/components/form.tsx";
 import { Typography } from "@repo/ui/src/components/typography.tsx";
 import { useMutationState, useQueryClient } from "@tanstack/react-query";
-import { errorMessages } from "../constants/error-messages.ts";
 import { AUTH_MUTATION_KEY, useAuth } from "../hooks/use-auth.tsx";
 import { AUTH_QUERY_KEY, AuthQuery, authQuery } from "../queries/auth-query.ts";
 import Link from "next/link";
@@ -38,7 +37,6 @@ export const SignUpForm = () => {
 
   const isLoading = mutData[mutData.length - 1] === "pending";
   const status = authState.status;
-  const isError = status !== "created";
 
   const {
     register,
@@ -191,7 +189,7 @@ export const SignUpForm = () => {
                 viewBox="0 0 20 20"
                 fill="currentColor"
                 stroke="currentColor"
-                stroke-width="1"
+                strokeWidth="1"
               >
                 <path
                   fill-rule="evenodd"
@@ -234,8 +232,8 @@ export const SignUpForm = () => {
         </Button>
         {isLoading && <GearLoader />}
       </div>
-      {isError && (
-        <FormAuthErrorMessage type={status} messages={errorMessages} />
+      {authState.status && (
+        <ErrorField message={authState.status} />
       )}
       {status === "created" && (
         <div className="px-2">

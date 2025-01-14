@@ -5,16 +5,14 @@ import { callServerCommandSchema } from '@repo/types/schemas/server/server-comma
 import { publishServerCommand } from '#publishers/pub-server-command.ts';
 
 export const callServerCommandRoute = new Hono()
-.post("/call-server-command", zValidator("json", callServerCommandSchema), async (ctx) => {
-  const body = await ctx.req.json()
-  
-  const result = callServerCommandSchema.parse(body)
-  
-  try {
-    await publishServerCommand(result);
-  } catch (e) {
-    return ctx.json({ error: throwError(e) }, 400)
-  }
-  
-  return ctx.json(200)
-})
+  .post("/call-server-command", zValidator("json", callServerCommandSchema), async (ctx) => {
+    const body = await ctx.req.json()
+    const result = callServerCommandSchema.parse(body)
+
+    try {
+      await publishServerCommand(result);
+      return ctx.json(200)
+    } catch (e) {
+      return ctx.json({ error: throwError(e) }, 400)
+    }
+  })

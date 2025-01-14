@@ -21,8 +21,8 @@ const ThreadCommentMoreActions = dynamic(() =>
 );
 
 export const ThreadCommentItem = ({
-  user_nickname, is_owner, created_at, content, id, replied, thread_id, is_updated,
-}: ThreadCommentProps) => {
+  user_nickname, is_owner, created_at, content, id, replied, thread_id, is_updated, idx
+}: ThreadCommentProps & { idx: number }) => {
   const currentUser = getUser();
   const [active, setActive] = useState<boolean>(false);
 
@@ -48,7 +48,7 @@ export const ThreadCommentItem = ({
 
   return (
     <div
-      id={id.toString()}
+      id={idx.toString()}
       className={`${active && "animate-flash-fade"}
        flex flex-col h-fit gap-y-4 px-4 py-2 rounded-md bg-shark-950 relative min-w-[450px] w-fit max-w-[80%]`}
     >

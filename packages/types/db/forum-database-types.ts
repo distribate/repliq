@@ -5,14 +5,6 @@
 
 import type { ColumnType } from "kysely";
 
-export type ArrayType<T> = ArrayTypeImpl<T> extends (infer U)[]
-  ? U[]
-  : ArrayTypeImpl<T>;
-
-export type ArrayTypeImpl<T> = T extends ColumnType<infer S, infer I, infer U>
-  ? ColumnType<S[], I[], U[]>
-  : T[];
-
 export type AuthAalLevel = "aal1" | "aal2" | "aal3";
 
 export type AuthCodeChallengeMethod = "plain" | "s256";
@@ -463,6 +455,12 @@ export interface InfoFindout {
   user_nickname: string;
 }
 
+export interface IpList {
+  id: Generated<Int8>;
+  ip: string;
+  name: string;
+}
+
 export interface Issues {
   created_at: Generated<Timestamp>;
   description: string;
@@ -581,6 +579,12 @@ export interface Notifications {
   nickname: string;
   read: Generated<boolean>;
   type: string;
+}
+
+export interface Permissions {
+  donate: DonateVariants;
+  id: Generated<Int8>;
+  permission: string;
 }
 
 export interface PgsodiumDecryptedKey {
@@ -864,21 +868,16 @@ export interface ThreadsPinned {
 }
 
 export interface ThreadsReactions {
+  created_at: Generated<Timestamp>;
   emoji: string;
   id: Int8;
   thread_id: string;
   user_nickname: string;
 }
 
-export interface ThreadsStars {
-  id: Generated<Int8>;
-  thread_id: string;
-  user_id: string;
-}
-
 export interface ThreadsTags {
   id: Generated<Int8>;
-  tags: ArrayType<Json>;
+  tags: string[];
   thread_id: string;
 }
 
@@ -956,6 +955,8 @@ export interface UsersSecurity {
 export interface UsersSession {
   browser: string | null;
   cpu: string | null;
+  created_at: Generated<Timestamp>;
+  device: string | null;
   expires_at: Timestamp;
   ip: string | null;
   isBot: boolean | null;
@@ -974,6 +975,13 @@ export interface UsersSettings {
   profile_visibility: Generated<ProfileVisibility>;
   real_name_visible: Generated<boolean>;
   user_id: string;
+}
+
+export interface UsersStatus {
+  created_at: Generated<Timestamp>;
+  id: Generated<Int8>;
+  nickname: string;
+  status: Generated<boolean>;
 }
 
 export interface VaultDecryptedSecrets {
@@ -997,6 +1005,13 @@ export interface VaultSecrets {
   nonce: Generated<Buffer | null>;
   secret: string;
   updated_at: Generated<Timestamp>;
+}
+
+export interface WebsocketTokens {
+  created_at: Generated<Timestamp>;
+  id: Generated<Int8>;
+  nickname: string;
+  token: string;
 }
 
 export interface DB {
@@ -1035,6 +1050,7 @@ export interface DB {
   friends_pinned: FriendsPinned;
   friends_requests: FriendsRequests;
   info_findout: InfoFindout;
+  ip_list: IpList;
   issues: Issues;
   landing_currencies: LandingCurrencies;
   landing_donate: LandingDonate;
@@ -1049,6 +1065,7 @@ export interface DB {
   "net._http_response": NetHttpResponse;
   "net.http_request_queue": NetHttpRequestQueue;
   notifications: Notifications;
+  permissions: Permissions;
   "pgsodium.decrypted_key": PgsodiumDecryptedKey;
   "pgsodium.key": PgsodiumKey;
   "pgsodium.mask_columns": PgsodiumMaskColumns;
@@ -1078,7 +1095,6 @@ export interface DB {
   threads_images: ThreadsImages;
   threads_pinned: ThreadsPinned;
   threads_reactions: ThreadsReactions;
-  threads_stars: ThreadsStars;
   threads_tags: ThreadsTags;
   threads_users: ThreadsUsers;
   threads_views: ThreadsViews;
@@ -1091,6 +1107,8 @@ export interface DB {
   users_security: UsersSecurity;
   users_session: UsersSession;
   users_settings: UsersSettings;
+  users_status: UsersStatus;
   "vault.decrypted_secrets": VaultDecryptedSecrets;
   "vault.secrets": VaultSecrets;
+  websocket_tokens: WebsocketTokens;
 }

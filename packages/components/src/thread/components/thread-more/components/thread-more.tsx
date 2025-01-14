@@ -13,11 +13,11 @@ import { Avatar } from "#user/components/avatar/components/avatar.tsx";
 import { UserNickname } from "#user/components/name/nickname.tsx";
 import { Button } from "@repo/ui/src/components/button.tsx";
 import { ThreadDetailed } from "@repo/types/entities/thread-type";
+import { useQueryClient } from "@tanstack/react-query";
+import { THREAD_QUERY_KEY } from "#thread/components/thread-main/queries/thread-query.ts";
 
-type ThreadMoreProps = Pick<ThreadDetailed, "description"> & {
-  threadTags: string[];
-  owner: ThreadDetailed["owner"];
-  createdAt: string
+type ThreadMoreProps = {
+  threadId: string
 };
 
 const ThreadTag = ({ tag }: { tag: string; }) => {
@@ -31,9 +31,15 @@ const ThreadTag = ({ tag }: { tag: string; }) => {
 };
 
 export const ThreadMore = ({
-  threadTags, description, createdAt, owner,
+  threadId
 }: ThreadMoreProps) => {
+  const qc = useQueryClient();
   const [expand, setExpand] = useState<boolean>(true);
+  const thread = qc.getQueryData<ThreadDetailed>(THREAD_QUERY_KEY(threadId));
+
+  if (!thread) return null;
+
+  const { threads_tags, created_at, description, owner } = thread;
 
   return (
     <Accordion
@@ -49,10 +55,10 @@ export const ThreadMore = ({
           onClick={() => setExpand((prev) => !prev)}
         >
           <div className="flex items-center gap-4 justify-start">
-            <Typography>{dayjs(createdAt).fromNow()}</Typography>
-            {threadTags && (
+            <Typography>{dayjs(created_at).fromNow()}</Typography>
+            {threads_tags && (
               <div className="flex items-center gap-2">
-                {threadTags.map((tag, idx) => <ThreadTag key={idx} tag={tag} />)}
+                {threads_tags.map((tag, idx) => <ThreadTag key={idx} tag={tag} />)}
               </div>
             )}
           </div>

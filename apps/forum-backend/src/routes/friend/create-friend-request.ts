@@ -7,6 +7,8 @@ import { getNickname } from "#utils/get-nickname-from-storage.ts";
 import { zValidator } from "@hono/zod-validator";
 import { Hono } from "hono";
 import { createFriendRequestSchema } from "@repo/types/schemas/friend/create-friend-request-schema.ts";
+import { getNatsConnection } from '@repo/config-nats/nats-client';
+import { USER_NOTIFICATIONS_SUBJECT } from '@repo/shared/constants/nats-subjects';
 
 async function validateUserFriendPreference(nickname: string): Promise<boolean> {
   return await getUserFriendPreference(nickname)
@@ -17,6 +19,7 @@ export const createFriendRequestRoute = new Hono()
     const body = await ctx.req.json();
     const result = createFriendRequestSchema.parse(body);
     const { recipient } = result
+    const nc = getNatsConnection()
 
     const initiator = getNickname()
 
@@ -54,6 +57,15 @@ export const createFriendRequestRoute = new Hono()
       await createFriendRequest({
         initiator, recipient
       });
+
+      nc.publish(USER_NOTIFICATIONS_SUBJECT, JSON.stringify({
+        type: "create-friend-request",
+        payload: {
+          recipient,
+          initiator,
+        }
+      }))
+
       return ctx.json({ status: "Friend request sent" }, 200);
     } catch (e) {
       return ctx.json({ error: throwError(e) }, 400);

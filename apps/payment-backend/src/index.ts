@@ -24,7 +24,7 @@ const hooks = new Hono()
   .route("/", checkOrderFiatRoute)
 
 const app = new Hono()
-  .use(cors({ origin: originList, credentials: true }))
+  .use(cors({ origin: originList }))
   .use(csrf({ origin: originList }))
   .use(timeout(5000))
   .use(bearerAuth({ token }))
@@ -41,8 +41,4 @@ async function createServer() {
   Bun.serve({ port, fetch: app.fetch });
 }
 
-createServer()
-  .then((_) => console.log(`Server started on port ${port}'`))
-  .catch(err => {
-    console.error('Error starting server:', err);
-  });
+createServer().then((_) => console.log(port))

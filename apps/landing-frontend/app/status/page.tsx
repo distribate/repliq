@@ -52,7 +52,7 @@ type ServerStatusType = {
   } | null
 }
 
-const url = `https://api.mcstatus.io/v2/status/java/play.fasberry.su`
+const url = `https://api.mcstatus.io/v2/status/java/mc.fasberry.su`
 
 export const revalidate = 60
 

@@ -21,12 +21,12 @@ export const ThreadComments = ({
   const { updateCommentsMutation } = useUpdateComments()
   const { data, isLoading } = threadCommentsQuery({ id: thread_id, is_comments });
   const { inView, ref } = useInView({ triggerOnce: false, threshold: 1 });
-  
+
   const mutData = useMutationState({
     filters: { mutationKey: UPDATE_COMMENTS_MUTATION_KEY },
     select: (m) => m.state.status
   })
-  
+
   const isLoadingUpdated = mutData[mutData.length - 1] === "pending";
 
   const threadComments = data?.data;
@@ -44,13 +44,13 @@ export const ThreadComments = ({
   if (isLoading) return <ThreadCommentsSkeleton />;
 
   return (
-    <div className="flex flex-col items-center w-full">
-      <ThreadCommentsHeader non_comments={nonComments} />
+    <div className="flex flex-col items-center relative w-full">
       {threadComments && (
         <div className="flex flex-col items-start gap-y-2 w-full">
           {threadComments.map((comment, i) => (
             <ThreadCommentItem
               key={i}
+              idx={i + 1} // index for comment's id
               thread_id={thread_id}
               id={comment.id}
               replied={comment.replied}

@@ -12,6 +12,7 @@ import dynamic from "next/dynamic";
 import { SidebarDesktopSkeleton } from "../sidebar/desktop/components/sidebar/sidebar-desktop-skeleton.tsx";
 import { SidebarDesktop } from "../sidebar/desktop/components/sidebar/sidebar-desktop.tsx";
 import { useSidebarControl } from "../sidebar/desktop/components/sidebar-layout/hooks/use-sidebar-control.ts";
+import { UserStatusLayout } from "./user-status-layout.tsx";
 
 interface ResizableLayout {
   defaultLayout: number[];
@@ -119,7 +120,7 @@ export const ResizableLayout = ({
   };
 
   return (
-    <>
+    <UserStatusLayout>
       {matches ? (
         <ResizablePanelGroup
           onLayout={onLayout}
@@ -141,6 +142,6 @@ export const ResizableLayout = ({
           <SidebarMobile />
         </div>
       )}
-    </>
+    </UserStatusLayout>
   );
 };

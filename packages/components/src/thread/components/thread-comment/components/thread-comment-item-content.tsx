@@ -35,7 +35,7 @@ export const ThreadCommentItemContent = ({
 
   return (
     <div className="flex flex-col gap-y-2 h-fit w-full">
-      {replied && <ThreadRepliedCommentItem replied={replied} />}
+      {replied && <ThreadRepliedCommentItem replied={replied} threadId={thread_id} />}
       {commentState?.isEdit ? (
         <AutogrowingTextarea
           className="p-0 text-[16px] bg-none max-h-[600px]"

@@ -6,6 +6,13 @@ import BlueDye from "@repo/assets/images/minecraft/blue_dye.webp";
 import { UserSettingOption } from "#cards/components/user-personal-card/components/profile-settings/user-profile-settings.tsx";
 import { currentUserQuery } from '@repo/lib/queries/current-user-query.ts';
 
+const hexToRgba = (hex: string, alpha: number) => {
+  const match = hex.match(/\w\w/g)!;
+  const [r, g, b] = match.map((x) => parseInt(x, 16));
+  
+  return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+};
+
 export const NicknameColorPickerModal = () => {
   const { data: { nickname, name_color } } = currentUserQuery();
 
@@ -15,9 +22,13 @@ export const NicknameColorPickerModal = () => {
       contentClassName="min-w-[650px]"
       trigger={
         <UserSettingOption title="Цвет никнейма" imageSrc={BlueDye.src}>
-          <div className="flex items-center gap-1">
-            <div className="w-4 h-4" style={{ backgroundColor: name_color }} />
-            <Typography className="text-base">
+          <div
+            className={`flex items-center px-4 py-1 backdrop-blur-md rounded-md`}
+            style={{
+              backgroundColor: hexToRgba(name_color, 0.3),
+            }}
+          >
+            <Typography className="text-base font-semibold" style={{ color: name_color }}>
               {name_color.toString()}
             </Typography>
           </div>

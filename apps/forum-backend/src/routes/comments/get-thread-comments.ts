@@ -40,7 +40,7 @@ async function getThreadComments({
       'replied_comment.is_updated as replied_comment_is_updated',
     ])
     .where('comments.parent_id', '=', threadId)
-    .orderBy('comments.created_at', 'asc')
+    .orderBy('comments.created_at', 'desc')
     
   const result = await executeWithCursorPagination(query, {
     perPage: 16,
@@ -49,7 +49,7 @@ async function getThreadComments({
       {
         key: "comment_created_at",
         expression: "comments.created_at",
-        direction: "asc"
+        direction: "desc"
       },
     ],
     parseCursor: (cursor) => {

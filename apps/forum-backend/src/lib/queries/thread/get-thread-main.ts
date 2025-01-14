@@ -13,6 +13,7 @@ export async function getThreadMain(threadId: string) {
       "threads.content",
       'threads.is_comments',
       'threads.is_updated',
+      "threads.category_id",
       sql<string>`threads.updated_at::text`.as('updated_at'),
       sql<string>`threads.created_at::text`.as('created_at'),
       sql<string[]>`ARRAY(SELECT tags FROM threads_tags WHERE thread_id = threads.id)`.as('threads_tags'),

@@ -5,16 +5,40 @@ import {
   ForumCategoriesAppType,
   ForumCommentAppType,
   ForumReactionAppType,
-  ForumTestAppType
+  ForumSharedAppType,
+  ForumWebSocketAppType
 } from 'forum-backend/src/types/routes-types.ts';
 import { hc } from 'hono/client';
 
-const baseUrl = `https://cc.fasberry.su/api/forum`
+const isProduction = process.env.NODE_ENV === "production";
 
-export const forumReactionClient = hc<ForumReactionAppType>(
+const production = `https://cc.fasberry.su/api/forum`
+const development = `http://localhost:4101/api/forum`
+
+const baseUrl = isProduction ? production : development
+
+export const forumSharedClient = hc<ForumSharedAppType>(
   baseUrl,
   {
-    fetch: (input: RequestInfo | URL, requestInit?: RequestInit) => {
+    fetch: async (input: RequestInfo | URL, requestInit?: RequestInit) => {
+      return fetch(input, {
+        method: requestInit?.method ?? 'GET',
+        headers: {
+          'content-type': 'application/json',
+          ...requestInit?.headers,
+        },
+        body: requestInit?.body ?? null,
+        credentials: "include",
+        ...requestInit,
+      })
+    }
+  }
+)
+
+export const forumWsClient = hc<ForumWebSocketAppType>(
+  baseUrl,
+  {
+    fetch: async (input: RequestInfo | URL, requestInit?: RequestInit) => {
       return fetch(input, {
         method: requestInit?.method ?? 'GET',
         headers: {
@@ -23,9 +47,24 @@ export const forumReactionClient = hc<ForumReactionAppType>(
         body: requestInit?.body ?? null,
         credentials: "include",
         ...requestInit,
-      }).then((res) => {
-        return res;
-      });
+      })
+    }
+  }
+)
+
+export const forumReactionClient = hc<ForumReactionAppType>(
+  baseUrl,
+  {
+    fetch: async (input: RequestInfo | URL, requestInit?: RequestInit) => {
+      return fetch(input, {
+        method: requestInit?.method ?? 'GET',
+        headers: {
+          ...requestInit?.headers,
+        },
+        body: requestInit?.body ?? null,
+        credentials: "include",
+        ...requestInit,
+      })
     }
   }
 )
@@ -33,7 +72,7 @@ export const forumReactionClient = hc<ForumReactionAppType>(
 export const forumCommentClient = (session?: string) => hc<ForumCommentAppType>(
   baseUrl,
   {
-    fetch: (input: RequestInfo | URL, requestInit?: RequestInit) => {
+    fetch: async (input: RequestInfo | URL, requestInit?: RequestInit) => {
       return fetch(input, {
         method: requestInit?.method ?? 'GET',
         headers: {
@@ -44,9 +83,7 @@ export const forumCommentClient = (session?: string) => hc<ForumCommentAppType>(
         body: requestInit?.body ?? null,
         credentials: "include",
         ...requestInit,
-      }).then((res) => {
-        return res;
-      });
+      })
     }
   }
 )
@@ -54,7 +91,7 @@ export const forumCommentClient = (session?: string) => hc<ForumCommentAppType>(
 export const forumUserClient = (session?: string) => hc<ForumUserAppType>(
   baseUrl,
   {
-    fetch: (input: RequestInfo | URL, requestInit?: RequestInit) => {
+    fetch: async (input: RequestInfo | URL, requestInit?: RequestInit) => {
       return fetch(input, {
         method: requestInit?.method ?? 'GET',
         headers: {
@@ -65,19 +102,15 @@ export const forumUserClient = (session?: string) => hc<ForumUserAppType>(
         body: requestInit?.body ?? null,
         credentials: "include",
         ...requestInit,
-      }).then((res) => {
-        return res;
-      });
+      })
     }
   }
 )
 
-export const forumTestClient = hc<ForumTestAppType>(baseUrl)
-
 export const forumThreadClient = hc<ForumThreadAppType>(
   baseUrl,
   {
-    fetch: (input: RequestInfo | URL, requestInit?: RequestInit) => {
+    fetch: async (input: RequestInfo | URL, requestInit?: RequestInit) => {
       return fetch(input, {
         method: requestInit?.method ?? 'GET',
         headers: {
@@ -88,9 +121,7 @@ export const forumThreadClient = hc<ForumThreadAppType>(
         body: requestInit?.body ?? null,
         credentials: "include",
         ...requestInit,
-      }).then((res) => {
-        return res;
-      });
+      })
     }
   }
 )
@@ -98,7 +129,7 @@ export const forumThreadClient = hc<ForumThreadAppType>(
 export const forumCategoriesClient = hc<ForumCategoriesAppType>(
   baseUrl,
   {
-    fetch: (input: RequestInfo | URL, requestInit?: RequestInit) => {
+    fetch: async (input: RequestInfo | URL, requestInit?: RequestInit) => {
       return fetch(input, {
         method: requestInit?.method ?? 'GET',
         headers: {
@@ -108,9 +139,7 @@ export const forumCategoriesClient = hc<ForumCategoriesAppType>(
         body: requestInit?.body ?? null,
         credentials: "include",
         ...requestInit,
-      }).then((res) => {
-        return res;
-      });
+      })
     }
   }
 )
@@ -118,7 +147,7 @@ export const forumCategoriesClient = hc<ForumCategoriesAppType>(
 export const forumAdminClient = hc<ForumAdminAppType>(
   baseUrl,
   {
-    fetch: (input: RequestInfo | URL, requestInit?: RequestInit) => {
+    fetch: async (input: RequestInfo | URL, requestInit?: RequestInit) => {
       return fetch(input, {
         method: requestInit?.method ?? 'GET',
         headers: {
@@ -128,9 +157,7 @@ export const forumAdminClient = hc<ForumAdminAppType>(
         body: requestInit?.body ?? null,
         credentials: "include",
         ...requestInit,
-      }).then((res) => {
-        return res;
-      });
+      })
     }
   }
 )

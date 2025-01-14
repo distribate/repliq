@@ -12,5 +12,6 @@ export async function getUserNotifications(nickname: string) {
       eb.cast<string>('created_at', 'text').as('created_at')
     ])
     .where("nickname", "=", nickname)
+    .orderBy("created_at", "desc")
     .execute();
 }

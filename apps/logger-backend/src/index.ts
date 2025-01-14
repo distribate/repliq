@@ -2,17 +2,17 @@ import { messageHandler } from './lib/handlers/message-handler.ts'
 import { fasberryBot, loggerBot } from './shared/bot/bot.ts'
 import { pgListenConnect } from './shared/events/listener.ts'
 import { initNats } from '@repo/config-nats/nats-client.ts';
-import { subReceivePayment } from './subscribers/sub-receive-payment.ts';
-import { subReceiveServerCommand } from './subscribers/sub-receive-server-command.ts';
-import { subUpdateDonateForPlayer } from './subscribers/sub-update-donate-for-player.ts';
-import { subReceiveIssue } from './subscribers/sub-receive-issue.ts';
+import { subscribeReceivePayment } from './subscribers/sub-receive-payment.ts';
+import { subscribeReceiveServerCommand } from './subscribers/sub-receive-server-command.ts';
+import { subscribeUpdateDonateForPlayer } from './subscribers/sub-update-donate-for-player.ts';
 import { subscribeServerEvents } from './subscribers/sub-server-events.ts';
+import { subscribeReceiveNotify } from './subscribers/sub-receive-notify.ts';
 
 async function startNatsSubscribers() {
-  await subReceivePayment()
-  await subReceiveServerCommand()
-  await subReceiveIssue()
-  await subUpdateDonateForPlayer()
+  await subscribeReceivePayment()
+  await subscribeReceiveServerCommand()
+  await subscribeUpdateDonateForPlayer()
+  await subscribeReceiveNotify()
   await subscribeServerEvents()
 }
 
@@ -27,16 +27,12 @@ async function createServer() {
   await fasberryBot.init()
   await loggerBot.start()
 
+  await loadBotsCommands()
+  loggerBot.on("message", messageHandler);
+
   await pgListenConnect()
   await initNats()
   await startNatsSubscribers()
-
-  await loadBotsCommands()
-  loggerBot.on("message", messageHandler);
 }
 
 createServer()
-  .then(() => console.log(`Server started on port ${process.env.LOGGER_BACKEND_PORT}'`))
-  .catch(err => {
-    console.error('Error starting server:', err);
-  });

@@ -25,11 +25,13 @@ export default async function ProfilePage({
 }: PageConventionProps) {
   const { nickname } = params;
 
+  if (!nickname) return null;
+
   return (
     <div className="flex flex-col gap-6 w-full h-full relative">
       <Suspense fallback={<UserCoverSkeleton />}>
         <UserCoverLayout requestedUserNickname={nickname}>
-        <ProfileContent requestedUserNickname={nickname} />
+          <ProfileContent requestedUserNickname={nickname} />
         </UserCoverLayout>
       </Suspense>
     </div>

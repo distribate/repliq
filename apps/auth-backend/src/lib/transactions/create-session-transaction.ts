@@ -1,4 +1,4 @@
-import { publishAuthNotify } from "../../puslishers/pub-auth-notify";
+import { publishLoginNotify } from "../../puslishers/pub-login-notify";
 import { forumDB } from "../../shared/database/forum-db";
 import { createSession } from "../../utils/create-session";
 import { insertSessionInfo } from "../queries/insert-session-info";
@@ -14,6 +14,7 @@ type CreateSessionTransaction = {
     isBot: boolean | null;
     os: string | null;
     ua: string | null;
+    device: string | null;
   }
 }
 
@@ -21,23 +22,19 @@ export const createSessionTransaction = async ({
   token, nickname, info
 }: CreateSessionTransaction) => {
   return await forumDB
-  .transaction()
-  .execute(async (trx) => {
-    const session = await createSession({
-      trx,
-      details: { token, nickname },
+    .transaction()
+    .execute(async (trx) => {
+      const session = await createSession({
+        trx, details: { token, nickname },
+      });
+
+      await insertSessionInfo({
+        trx,
+        details: { session_id: session.session_id, ...info, nickname },
+      });
+
+      await publishLoginNotify({ session_id: session.session_id, nickname })
+
+      return session;
     });
-
-    await insertSessionInfo({
-      trx,
-      details: { session_id: session.session_id, ...info,nickname },
-    });
-
-    await publishAuthNotify({
-      session_id: session.session_id,
-      nickname,
-    })
-
-    return session;
-  });
 }

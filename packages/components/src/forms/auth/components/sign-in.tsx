@@ -6,11 +6,10 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect, useState } from "react";
 import { FormField } from "@repo/ui/src/components/form-field.tsx";
-import { FormAuthErrorMessage } from "@repo/ui/src/components/form.tsx";
+import { ErrorField } from "@repo/ui/src/components/form.tsx";
 import { Typography } from "@repo/ui/src/components/typography.tsx";
 import { authorizationSchema } from "../schemas/authorization-schema.ts";
 import { useRouter } from "next/navigation";
-import { errorMessages } from "../constants/error-messages.ts";
 import { useMutationState, useQueryClient } from "@tanstack/react-query";
 import { AUTH_MUTATION_KEY, useAuth } from "../hooks/use-auth.tsx";
 import { AUTH_QUERY_KEY, AuthQuery, authQuery } from "../queries/auth-query.ts";
@@ -26,8 +25,7 @@ export const SignInForm = () => {
   const qc = useQueryClient();
   const { data: authState } = authQuery();
   const { replace } = useRouter();
-  const [passwordType, setPasswordType] =
-    useState<PasswordVisibilityType>("password");
+  const [passwordType, setPasswordType] = useState<PasswordVisibilityType>("password");
   const { setAuthValuesMutation } = useAuth();
 
   const mutData = useMutationState({
@@ -37,7 +35,6 @@ export const SignInForm = () => {
 
   const isLoading = mutData[mutData.length - 1] === "pending";
   const status = authState.status;
-  const isError = status !== "created";
 
   const {
     register,
@@ -146,8 +143,8 @@ export const SignInForm = () => {
         </Button>
         {isLoading && <GearLoader />}
       </div>
-      {isError && (
-        <FormAuthErrorMessage type={status} messages={errorMessages} />
+      {authState.status && (
+        <ErrorField message={authState.status} />
       )}
       {status === "alreadyOriginal" && (
         <div className="px-2">

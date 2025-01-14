@@ -1,6 +1,5 @@
 import { MoreWrapper } from "#wrappers/more-wrapper.tsx";
 import { useControlThreadComment } from "../hooks/use-control-thread-comment.ts";
-import { ThreadCommentEntity } from "@repo/types/entities/entities-type.ts";
 import { useQueryClient } from "@tanstack/react-query";
 import {
   COMMENT_ACTIONS_QUERY_KEY,
@@ -10,10 +9,7 @@ import { Typography } from "@repo/ui/src/components/typography.tsx";
 import { Pen, Trash } from "lucide-react";
 import { DropdownMenuItem } from "@repo/ui/src/components/dropdown-menu.tsx";
 
-export const ThreadCommentMoreActions = ({
-  id: commentId,
-  thread_id,
-}: Pick<ThreadCommentEntity, "id" | "thread_id">) => {
+export const ThreadCommentMoreActions = ({ id: commentId, thread_id }: { id: number, thread_id: string }) => {
   const qc = useQueryClient();
   // const { deleteCommentItemMutation } = useControlThreadComment();
 

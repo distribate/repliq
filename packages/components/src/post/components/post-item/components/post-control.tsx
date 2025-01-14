@@ -33,7 +33,7 @@ export const PostControl = ({ id, nickname }: PostControlProps) => {
 
   let post = posts.find((post) => post.id === id);
   if (!post) return null;
-  
+
   const { isPinned } = post;
 
   const handleRemovePost = () => controlPostMutation.mutate({ type: "remove", id, nickname });
@@ -64,10 +64,10 @@ export const PostControl = ({ id, nickname }: PostControlProps) => {
               isPinned={post.isPinned}
               user_nickname={post.user_nickname}
             />
-            <Separator />
             {isOwner && (
               <>
-                <HoverCardItem
+                <Separator />
+                {/* <HoverCardItem
                   className="gap-2 items-center"
                   onClick={handleEditContent}
                 >
@@ -82,7 +82,7 @@ export const PostControl = ({ id, nickname }: PostControlProps) => {
                   <Typography state={isPinned ? "active" : "default"}>
                     {isPinned ? `Открепить пост` : `Закрепить пост`}
                   </Typography>
-                </HoverCardItem>
+                </HoverCardItem> */}
                 {/*<HoverCardItem onClick={handleComments}>*/}
                 {/*  <Typography state={isComments ? 'active' : 'default'}>*/}
                 {/*    {isComments ? `Выключить комментарии` : `Включить комментарии`}*/}
@@ -95,15 +95,17 @@ export const PostControl = ({ id, nickname }: PostControlProps) => {
                   <Trash size={16} className="text-shark-300" />
                   <Typography>Удалить пост</Typography>
                 </HoverCardItem>
-                <Separator />
               </>
             )}
             {!isOwner && (
-              <ReportCreateModal
-                targetId={id}
-                reportType="post"
-                targetNickname={nickname}
-              />
+              <>
+                <Separator />
+                <ReportCreateModal
+                  targetId={id}
+                  reportType="post"
+                  targetNickname={nickname}
+                />
+              </>
             )}
           </div>
         }

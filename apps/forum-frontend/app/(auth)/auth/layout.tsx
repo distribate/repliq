@@ -3,7 +3,6 @@ import { PageWrapper } from "@repo/components/src/wrappers/page-wrapper.tsx";
 import AuthBackground from "@repo/assets/images/auth_background.webp";
 import { ImageWrapper } from "@repo/components/src/wrappers/image-wrapper.tsx";
 import { permanentRedirect } from "next/navigation";
-import { AUTH_REDIRECT } from "@repo/shared/constants/routes.ts";
 import { getRandomAuthBackground } from "@repo/components/src/forms/auth/queries/get-random-auth-background.ts";
 import { getCurrentSession } from "@repo/lib/actions/get-current-session.ts";
 
@@ -20,7 +19,7 @@ export default async function AuthLayout({
   const url = await getRandomAuthBackground();
 
   if (currentUser) {
-    return permanentRedirect(AUTH_REDIRECT);
+    return permanentRedirect("/");
   }
 
   const authImage = url ? url : AuthBackground.src;

@@ -2,13 +2,12 @@ import { z } from "zod"
 import { callServerCommandSchema } from "@repo/types/schemas/server/server-command"
 import { getNatsConnection } from "@repo/config-nats/nats-client.ts"
 import { callServerCommand } from "../utils/call-command"
+import { CALL_SERVER_COMMAND_SUBJECT } from "@repo/shared/constants/nats-subjects";
 
-const subj = "call.server.command"
-
-export async function subReceiveServerCommand() {
+export async function subscribeReceiveServerCommand() {
   const nc = getNatsConnection()
 
-  return nc.subscribe(subj, {
+  return nc.subscribe(CALL_SERVER_COMMAND_SUBJECT, {
     callback: async (err, msg) => {
       if (err) {
         console.error(err);

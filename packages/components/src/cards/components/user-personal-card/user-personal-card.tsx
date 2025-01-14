@@ -23,9 +23,13 @@ import DragonBreath from "@repo/assets/images/minecraft/dragon_breath.webp";
 import GrassBlock from "@repo/assets/images/minecraft/grass_block.webp";
 import FishingRod from "@repo/assets/images/minecraft/fishing_rod.webp";
 import Link from "next/link";
+import { userStatusQuery } from "@repo/lib/queries/user-status-query.ts";
 
 const UserPersonalCardHeader = () => {
   const { nickname, name_color } = getUser();
+  const { data: userStatus } = userStatusQuery(nickname);
+
+  const isOnline = userStatus?.status;
 
   return (
     <>
@@ -36,7 +40,9 @@ const UserPersonalCardHeader = () => {
           nicknameColor={name_color}
           className="text-base font-bold"
         />
-        <Typography>онлайн</Typography>
+        <Typography>
+          {isOnline ? "в сети" : "не в сети"}
+        </Typography>
       </div>
     </>
   );
@@ -58,7 +64,7 @@ export const UserPersonalCard = () => {
         </Dialog>
         <Dialog>
           <DialogTrigger>
-            <UserSettingOption title="Аккаунт" imageSrc={MinecartWithChest.src}/>
+            <UserSettingOption title="Аккаунт" imageSrc={MinecartWithChest.src} />
           </DialogTrigger>
           <DialogContent>
             <UserSettingsCard />
@@ -75,7 +81,7 @@ export const UserPersonalCard = () => {
         <Separator />
         <Dialog>
           <DialogTrigger>
-            <UserSettingOption title="Мои регионы" imageSrc={GrassBlock.src}/>
+            <UserSettingOption title="Мои регионы" imageSrc={GrassBlock.src} />
           </DialogTrigger>
           <DialogContent>
 

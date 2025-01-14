@@ -17,7 +17,7 @@ type Status = {
 
 async function getServerStatus(port: number) {
     try {
-        return await ky(`https://api.mcstatus.io/v2/status/java/play.fasberry.su:${port}`).json<Status>()
+        return await ky(`https://api.mcstatus.io/v2/status/java/mc.fasberry.su:${port}`).json<Status>()
     } catch (e) {
         throw e
     }

@@ -51,7 +51,7 @@ interface ErrorFieldProps
   message: string;
 }
 
-const ErrorField = ({
+export const ErrorField = ({
   variant,
   className,
   message,

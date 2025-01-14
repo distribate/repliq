@@ -17,6 +17,9 @@ import { Button } from "@repo/ui/src/components/button.tsx";
 import { handleOnChangeEditor } from "#editor/helpers/handle-on-change.ts";
 import { ThreadControlSave } from "#thread/components/thread-control/components/thread-control-save.tsx";
 import { useQueryClient } from "@tanstack/react-query";
+import { THREAD_QUERY_KEY } from "#thread/components/thread-main/queries/thread-query.ts";
+import { ThreadDetailed } from "@repo/types/entities/thread-type.ts";
+import { getUser } from "@repo/lib/helpers/get-user.ts";
 
 const initialValue = [
   {
@@ -26,20 +29,25 @@ const initialValue = [
 ];
 
 type ThreadContentProps = {
-  content: Descendant[];
-  isThreadOwner: boolean;
   threadId: string;
 }
 
 export const ThreadContent = ({
-  content, isThreadOwner, threadId,
+  threadId,
 }: ThreadContentProps) => {
   const qc = useQueryClient();
   const { data: controlState } = threadControlQuery();
+  const thread = qc.getQueryData<ThreadDetailed>(THREAD_QUERY_KEY(threadId));
   const [editor] = useState<ReactEditor>(() => withReact(createEditor()));
   const { control } = useForm();
+  const currentUser = getUser();
 
   const { field: { onChange } } = useController({ name: "content", control, rules: { required: true } });
+
+  if (!thread) return null;
+
+  const content = thread.content as Descendant[];
+  const isThreadOwner = thread.owner.nickname === currentUser.nickname;
 
   const handleOnChange = (value: Descendant[]) => {
     const isAstChange = handleOnChangeEditor(editor, value);

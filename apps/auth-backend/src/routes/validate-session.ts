@@ -17,8 +17,6 @@ export const validateSessionRoute = new Hono()
     try {
       const { session, user } = await validateSessionToken(token);
 
-      console.log(session, user)
-
       return ctx.json({ session, user }, 200)
     } catch (e) {
       return ctx.json({ error: throwError(e) }, 500)

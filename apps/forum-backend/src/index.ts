@@ -46,7 +46,6 @@ import { removeThreadRoute } from '#routes/thread/remove-thread.ts';
 import { updateThreadSettingsRoute } from '#routes/thread/update-thread-settings.ts';
 import { getThreadUserReactionsRoute } from '#routes/thread/get-thread-user-rating.ts';
 import { timeout } from 'hono/timeout'
-import { natsSubscribe } from '#utils/nats-subscribers.ts';
 import { csrfOptions } from '#shared/options/csrf-options.ts';
 import type { Env } from '#types/env-type.ts';
 import { createCommentRoute } from '#routes/comments/create-comment.ts';
@@ -55,18 +54,33 @@ import { getThreadCommentsRoute } from '#routes/comments/get-thread-comments.ts'
 import { createReactionRoute } from '#routes/reaction/create-reaction.ts';
 import { getUserBanDetailsRoute } from '#routes/user/get-user-ban-details.ts';
 import { createThreadRoute } from '#routes/thread/create-thread.ts';
-import { encodeCborXRoute } from '#routes/test/encode-cbor-x.ts';
-import { decodeCborXRoute } from '#routes/test/decode-cbor-x.ts';
 import { getUserFriendsCountRoute } from '#routes/user/get-user-friends-count.ts';
 import { originList } from '@repo/shared/constants/origin-list';
-import { swaggerUI } from '@hono/swagger-ui'
-import { openAPISpecs } from 'hono-openapi';
+import { getFactRoute } from '#routes/shared/get-fact-route.ts';
+import { createBunWebSocket } from 'hono/bun'
+import type { ServerWebSocket } from 'bun'
+import { confirmWebsocketConnRoute } from '#routes/ws/confirm-websocket-conn.ts';
+import { userStatusRoute } from '#routes/ws/user-status.ts';
+import { getUserStatusRoute } from '#routes/user/get-user-status.ts';
+import { getUserCoverImageRoute } from '#routes/user/get-user-cover-image.ts';
+
+const { websocket } = createBunWebSocket<ServerWebSocket>()
+
+const corsOptions = {
+  origin: originList,
+  credentials: true,
+  maxAge: 86400,
+  allowHeaders: ["Cookie", "cookie", "x-csrf-token", "X-CSRF-Token", "content-type", "Content-Type"]
+}
 
 const port = process.env.FORUM_BACKEND_PORT
 const token = process.env.SECRET_TOKEN!
 
 await initNats()
-await natsSubscribe()
+
+export const shared = new Hono()
+  .basePath("/shared")
+  .route('/', getFactRoute)
 
 export const admin = new Hono()
   .basePath('/admin')
@@ -95,11 +109,6 @@ export const thread = new Hono()
 
 export const server = new Hono()
   .basePath('/server')
-
-export const test = new Hono()
-  .basePath('/test')
-  .route("/", decodeCborXRoute)
-  .route("/", encodeCborXRoute)
 
 export const reaction = new Hono()
   .basePath('/reaction')
@@ -139,14 +148,16 @@ export const user = new Hono()
   .route("/", getUserSummaryRoute)
   .route("/", getUserBanDetailsRoute)
   .route("/", getUserFriendsCountRoute)
+  .route("/", getUserStatusRoute)
+  .route("/", getUserCoverImageRoute)
+
+export const ws = new Hono()
+  .basePath('/ws')
+  .route("/", userStatusRoute)
+  .route("/", confirmWebsocketConnRoute)
 
 const app = new Hono<Env>()
-  .use(cors({
-    origin: originList,
-    credentials: true,
-    maxAge: 86400,
-    allowHeaders: ["Cookie", "cookie", "x-csrf-token", "X-CSRF-Token", "content-type", "Content-Type"]
-  }))
+  .use(cors(corsOptions))
   .use(csrf(csrfOptions))
   .use(timeout(5000))
   .use('/api/forum/user/*', validateRequest)
@@ -154,6 +165,7 @@ const app = new Hono<Env>()
   .use('/api/forum/thread/*', validateRequest)
   .use('/api/forum/comment/*', validateRequest)
   .use('/api/forum/categories/*', validateRequest)
+  .use('/api/forum/ws/*', validateRequest)
   .use("/api/forum/admin/*", bearerAuth({ token }))
   .basePath('/api/forum')
   .use(logger())
@@ -165,36 +177,13 @@ const app = new Hono<Env>()
   .route("/", category)
   .route("/", comment)
   .route("/", reaction)
-  // .route("/", test)
-  .get('/ui', swaggerUI({ url: '/openapi' }))
-
-app.get('/openapi',
-  // @ts-ignore
-  openAPISpecs(app, {
-    documentation: {
-      info: {
-        title: 'Fasberry Forum API',
-        version: '1.0.0',
-        description: 'Greeting API'
-      },
-      servers: [
-        {
-          url: 'http://localhost:4101', description: 'Local Server'
-        }
-      ],
-      security: [{ bearerAuth: [token] }],
-    },
-  })
-)
+  .route("/", shared)
+  .route("/", ws)
 
 async function createServer() {
   showRoutes(app, { verbose: false });
 
-  Bun.serve({ port, fetch: app.fetch });
+  Bun.serve({ port, fetch: app.fetch, websocket });
 }
 
-createServer()
-  .then((_) => console.log(`Server started on port ${port}'`))
-  .catch(err => {
-    console.error('Error starting server:', err);
-  });
+createServer().then((_) => console.log(port))

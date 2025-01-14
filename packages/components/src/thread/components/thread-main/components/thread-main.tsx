@@ -3,9 +3,8 @@
 import { ThreadComments } from "@repo/components/src/thread/components/thread-comments/components/thread-comments.tsx"
 import { Typography } from "@repo/ui/src/components/typography"
 import dynamic from "next/dynamic"
-import { Descendant } from "slate"
 import { ThreadImages } from "../../thread-images/thread-images"
-import { Eye, PencilLine } from "lucide-react"
+import { Eye } from "lucide-react"
 import { BlockWrapper } from "#wrappers/block-wrapper.tsx"
 import { ThreadMore } from "../../thread-more/components/thread-more"
 import { ThreadCreator } from "../../thread-creator/components/thread-creator"
@@ -16,18 +15,16 @@ import { ThreadSave } from "../../thread-save/thread-save"
 import { getUser } from "@repo/lib/helpers/get-user"
 import { ThreadControl } from "../../thread-control/components/thread-control"
 import { ThreadContent } from "../../thread-content/components/thread-content"
-import { threadQuery } from "../queries/thread-query"
+import { THREAD_QUERY_KEY, threadQuery } from "../queries/thread-query"
 import dayjsInstance from "@repo/lib/constants/dayjs-instance.ts"
 import { ContextMenu, ContextMenuContent, ContextMenuTrigger } from "@repo/ui/src/components/context-menu"
-import { AvailableThreadReactions } from "#reactions/components/available-reactions.tsx"
 import { ThreadReactions } from "#thread/components/thread-reactions/components/thread-reactions.tsx"
 import { ThreadMainSkeleton } from "./thread-main-skeleton"
+import { ThreadCommentsHeader } from "#thread/components/thread-comments/components/thread-comments-header.tsx"
+import { ThreadCommentsAnchor } from "#thread/components/thread-comments/components/thread-comments-anchor.tsx"
+import { ThreadContextMenu } from "#thread/components/thread-context-menu/thread-context-menu.tsx"
 import { useQueryClient } from "@tanstack/react-query"
-import { THREAD_CONTROL_QUERY_KEY, ThreadControlQuery } from "#thread/components/thread-control/queries/thread-control-query.ts"
-
-type ThreadContentProps = {
-  threadId: string
-}
+import { ThreadDetailed } from "@repo/types/entities/thread-type"
 
 const ContentNotFound = dynamic(() =>
   import("@repo/components/src/templates/content-not-found.tsx").then(
@@ -47,29 +44,50 @@ const CreateThreadComment = dynamic(() =>
   ).then((m) => m.CreateThreadComment),
 );
 
-export const ThreadContentEdit = () => {
-  const qc = useQueryClient();
+type ThreadContentProps = {
+  threadId: string
+}
 
-  const handleContentEdit = () => {
-    return qc.setQueryData(
-      THREAD_CONTROL_QUERY_KEY,
-      (prev: ThreadControlQuery) => ({
-        state: {
-          ...prev.state,
-          isContenteditable: true
-        },
-        values: { ...prev.values },
-      }),
-    )
-  };
+const ThreadCommentsSection = ({
+  threadId
+}: ThreadContentProps) => {
+  const qc = useQueryClient()
+  const thread = qc.getQueryData<ThreadDetailed>(THREAD_QUERY_KEY(threadId))
+
+  if (!thread) return null
+
+  const is_comments = thread.is_comments
+  const owner = thread.owner
 
   return (
-    <div
-      className="flex items-center rounded-md hover:bg-shark-800 cursor-pointer gap-2"
-      onClick={handleContentEdit}
-    >
-      <PencilLine size={20} />
-      <Typography>Редактировать</Typography>
+    <div className="flex flex-col w-full h-full mt-2 gap-y-4">
+      <ThreadCommentsHeader non_comments={!is_comments} />
+      {is_comments ? <CreateThreadComment /> : <CommentsDisabled />}
+      <ThreadComments owner={owner} id={threadId} is_comments={is_comments} />
+      <ThreadCommentsAnchor threadId={threadId} />
+    </div>
+  )
+}
+
+const ThreadOwnerSection = ({
+  threadId
+}: ThreadContentProps) => {
+  const currentUser = getUser()
+  const qc = useQueryClient()
+  const thread = qc.getQueryData<ThreadDetailed>(THREAD_QUERY_KEY(threadId))
+  if (!thread) return null;
+
+  const isThreadOwner = thread.owner.nickname === currentUser.nickname
+  const owner = thread.owner
+
+  return (
+    <div className="flex items-center justify-between w-full">
+      <ThreadCreator name_color={owner.name_color} nickname={owner.nickname} />
+      {isThreadOwner ? (
+        <Button state="default" className="px-6">
+          <Typography>Это вы</Typography>
+        </Button>
+      ) : <FriendButton recipient={owner.nickname} />}
     </div>
   )
 }
@@ -77,24 +95,19 @@ export const ThreadContentEdit = () => {
 export const Thread = ({
   threadId
 }: ThreadContentProps) => {
-  const currentUser = getUser()
   const { data: thread, isLoading } = threadQuery(threadId)
 
   if (isLoading) return <ThreadMainSkeleton />
 
   if (!thread) return <ContentNotFound title="Тема не найдена" />
 
-  const {
-    content, created_at, title, description, id, updated_at, owner, threads_tags,
-    is_comments, is_images, is_updated, threads_views_count
-  } = thread
+  const { created_at, title, id, updated_at, is_images, is_updated, threads_views_count } = thread
 
   const dateCreated = dayjsInstance(created_at).format("DD.MM.YYYY")
-  const isThreadOwner = thread.owner.nickname === currentUser.nickname
 
   return (
     <>
-      <div className="flex flex-col min-w-3/4 w-3/4 max-w-3/4 items-start h-full justify-start">
+      <div className="flex flex-col min-w-3/4 w-3/4 relative max-w-3/4 items-start h-full justify-start">
         <ContextMenu>
           <ContextMenuTrigger className="w-full">
             <div className="flex flex-col gap-6 rounded-lg w-full py-6 bg-primary-color">
@@ -107,11 +120,7 @@ export const Thread = ({
                   <span className="text-caribbean-green-400">{dateCreated}</span> в категории ...
                 </Typography>
               </div>
-              <ThreadContent
-                threadId={id}
-                content={content as Descendant[]}
-                isThreadOwner={isThreadOwner}
-              />
+              <ThreadContent threadId={id} />
               {is_images && <ThreadImages threadId={id} />}
               <div className="flex items-center px-4 w-full justify-start gap-1">
                 <ThreadReactions threadId={id} />
@@ -136,38 +145,17 @@ export const Thread = ({
             </div>
           </ContextMenuTrigger>
           <ContextMenuContent className="flex flex-col gap-y-2">
-            <AvailableThreadReactions threadId={id} />
-            {isThreadOwner && (
-              <div className="flex flex-col bg-shark-800 p-2 rounded-md gap-1">
-                <ThreadContentEdit />
-              </div>
-            )}
+            <ThreadContextMenu threadId={id} />
           </ContextMenuContent>
         </ContextMenu>
         <BlockWrapper padding="without" className="mt-4">
-          <ThreadMore
-            description={description}
-            threadTags={threads_tags}
-            createdAt={created_at}
-            owner={owner}
-          />
+          <ThreadMore threadId={id} />
         </BlockWrapper>
-        <div className="flex flex-col w-full h-full mt-2 gap-y-4">
-          <ThreadComments owner={owner} id={id} is_comments={is_comments}
-          />
-          {is_comments ? <CreateThreadComment /> : <CommentsDisabled />}
-        </div>
+        <ThreadCommentsSection threadId={id} />
       </div>
       <div className="flex flex-col gap-y-4 min-w-1/4 w-1/4 max-w-1/4 h-fit sticky top-0 overflow-hidden">
         <BlockWrapper>
-          <div className="flex items-center justify-between w-full">
-            <ThreadCreator name_color={owner.name_color} nickname={owner.nickname} />
-            {isThreadOwner ? (
-              <Button state="default" className="px-6">
-                <Typography>Это вы</Typography>
-              </Button>
-            ) : <FriendButton recipient={owner.nickname} />}
-          </div>
+          <ThreadOwnerSection threadId={id}/>
         </BlockWrapper>
         <BlockWrapper>
           <div className="flex justify-between items-center w-full">
@@ -177,7 +165,7 @@ export const Thread = ({
             </div>
           </div>
         </BlockWrapper>
-        {isThreadOwner && <ThreadControl threadId={id} />}
+        <ThreadControl threadId={id} />
       </div>
     </>
   )

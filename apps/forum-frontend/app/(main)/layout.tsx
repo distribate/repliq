@@ -12,7 +12,6 @@ import {
   BANNED_REDIRECT,
 } from "@repo/shared/constants/routes.ts";
 import { cookies } from "next/headers";
-import { RESIZABLE_LAYOUT_COOKIE_KEY } from "@repo/shared/keys/cookie.ts";
 import { getCurrentSession } from "@repo/lib/actions/get-current-session.ts";
 import { forumUserClient } from "@repo/shared/api/forum-client";
 import { UserDetailed } from "@repo/types/entities/user-type";
@@ -43,7 +42,7 @@ export async function getInitialCurrentUser(): Promise<UserDetailed | null> {
     if (error === "You are banned") {
       redirect(BANNED_REDIRECT)
     }
-    
+
     if (error === 'no result') {
       redirect("/not-online")
     }
@@ -62,7 +61,7 @@ export default async function MainLayout({ children }: MainLayoutProps) {
 
   await qc.prefetchQuery({ queryKey: CURRENT_USER_QUERY_KEY, queryFn: () => getInitialCurrentUser(), });
 
-  const layout = cookies().get(RESIZABLE_LAYOUT_COOKIE_KEY);
+  const layout = cookies().get("react-resizable-panels:layout");
 
   let defaultLayout;
   if (layout) defaultLayout = JSON.parse(layout.value);

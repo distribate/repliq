@@ -36,12 +36,12 @@ export default async function MainPage() {
     <main className="flex flex-col w-full gap-2 h-full">
       <Alerts />
       <div className="flex 2xl:flex-row gap-2 flex-col w-full h-full">
-        <div className="flex flex-col w-full 2xl:w-3/4 gap-2 h-full">
+        <div className="flex flex-col w-full 2xl:w-2/3 gap-2 h-full">
           <Suspense fallback={<MainCategoriesSkeleton />}>
             <MainCategoriesList />
           </Suspense>
         </div>
-        <div className="flex flex-row 2xl:flex-col order-first 2xl:order-last gap-2 w-full 2xl:w-1/4 h-full">
+        <div className="flex flex-row 2xl:flex-col order-first 2xl:order-last gap-2 w-full 2xl:w-1/3 h-full">
           <Suspense fallback={<StatisticsSkeleton />}>
             <LastRegisteredUsers />
             <ForumStats />

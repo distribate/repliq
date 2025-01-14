@@ -9,17 +9,14 @@ export const getUserThreadsSchema = z.object({
 })
 
 export const getUserThreadsRoute = new Hono()
-.get("/get-user-threads/:nickname", zValidator("query", getUserThreadsSchema), async (ctx) => {
-  const { nickname } = ctx.req.param();
-  const { querySearch } = getUserThreadsSchema.parse(ctx.req.query())
-  
-  let threads;
-  
-  try {
-    threads = await getUserThreads({ nickname, querySearch });
-  } catch (e) {
-    return ctx.json({ error: throwError(e) }, 500);
-  }
-  
-  return ctx.json(threads, 200);
-});
+  .get("/get-user-threads/:nickname", zValidator("query", getUserThreadsSchema), async (ctx) => {
+    const { nickname } = ctx.req.param();
+    const { querySearch } = getUserThreadsSchema.parse(ctx.req.query())
+
+    try {
+      const threads = await getUserThreads({ nickname, querySearch });
+      return ctx.json(threads, 200);
+    } catch (e) {
+      return ctx.json({ error: throwError(e) }, 500);
+    }
+  });

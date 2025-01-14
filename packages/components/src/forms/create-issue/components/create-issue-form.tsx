@@ -70,10 +70,10 @@ export const CreateIssueForm = () => {
 
   return (
     <div className="flex flex-col gap-y-6 w-full">
-      <BlockWrapper className="flex lg:flex-row lg:justify-between flex-col gap-6 items-start !p-0 w-full">
+      <BlockWrapper className="flex xl:flex-row xl:justify-between flex-col gap-6 items-start !p-0 w-full">
         <form
           onSubmit={handleSubmit(onSubmit)}
-          className="flex flex-col items-start gap-4 p-4 min-w-2/3 w-full"
+          className="flex flex-col items-start gap-4 p-4 w-full xl:w-fit grow"
         >
           <div className="flex flex-col gap-y-2 w-full">
             <Typography className="text-[18px] font-medium">
@@ -103,7 +103,8 @@ export const CreateIssueForm = () => {
               name="description"
               render={({ field }) => (
                 <AutogrowingTextarea
-                  className="border resize-none min-h-36 max-h-[1250px] border-transparent focus-visible:border-caribbean-green-200/40 bg-shark-900 rounded-md !p-4 text-[18px]"
+                  className="border resize-none min-h-36 max-h-[1250px] border-transparent 
+                  focus-visible:border-caribbean-green-200/40 bg-shark-900 rounded-md !p-4 text-[18px]"
                   placeholder="Расскажите подробнее о вашей проблеме или предложении"
                   autoComplete="off"
                   maxLength={ISSUE_MAX_DESCRIPTION_LIMIT}
@@ -141,7 +142,7 @@ export const CreateIssueForm = () => {
             </Typography>
           </Button>
         </form>
-        <div className="flex items-center max-w-[500px] h-full rounded-lg overflow-hidden">
+        <div className="hidden xl:flex items-center w-[500px] h-full rounded-lg overflow-hidden">
           <img src={Mealing.src} alt="" width={500} height={500} draggable={false} className="w-full h-full" />
         </div>
       </BlockWrapper>

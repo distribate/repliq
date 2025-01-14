@@ -12,11 +12,11 @@ export async function getStaticImages({
 }: GetStaticSignedImages): Promise<string | null> {
   const api = createClient();
 
-  const { data } = await api.storage
+  const { data } = api.storage
     .from("static")
-    .createSignedUrl(fileName, 10);
+    .getPublicUrl(fileName);
 
-  if (!data || !data.signedUrl) return null;
+  if (!data || !data.publicUrl) return null;
 
-  return data.signedUrl;
+  return data.publicUrl;
 }

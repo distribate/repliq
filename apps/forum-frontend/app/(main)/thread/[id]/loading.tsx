@@ -1,9 +1,9 @@
-import { Skeleton } from "@repo/ui/src/components/skeleton.tsx";
+import { ThreadMainSkeleton } from "@repo/components/src/thread/components/thread-main/components/thread-main-skeleton";
 
 export default function ThreadLoadingPage() {
   return (
-    <>
-      <Skeleton className="w-full h-full" />
-    </>
-  );
+    <div className="flex gap-2 items-start h-full w-full relative">
+      <ThreadMainSkeleton />
+    </div>
+  )
 }

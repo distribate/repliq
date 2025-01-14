@@ -2,11 +2,12 @@ import Image from "next/image";
 import { Typography } from "@repo/ui/src/components/typography.tsx";
 import BlockGold from "@repo/assets/images/minecraft/block_gold.webp";
 import { UserActiveSessionsQuery } from "#cards/components/user-personal-card/components/account-settings/queries/user-sessions-query.ts";
+import { TerminateSessionModal } from "#modals/user-settings/terminate-session-modal.tsx";
 
 export const UserSessionBlock = ({
-  current, browser, geo,
+  is_current, browser, geo, session_id
 }: UserActiveSessionsQuery) => {
-  const isCurrent = current || false;
+  const isCurrent = is_current || false;
 
   return (
     <div className="flex w-full gap-2 group relative py-2 rounded-md hover:bg-shark-700/20 px-4">
@@ -24,7 +25,7 @@ export const UserSessionBlock = ({
             {geo?.country || "Unknown"}, {geo?.city || "Unknown"}
           </Typography>
         </div>
-        {/*<TerminateSessionModal session_uuid={uuid} />*/}
+        <TerminateSessionModal session_id={session_id} />
       </div>
     </div>
   );

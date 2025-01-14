@@ -1,28 +1,21 @@
-import { forumDB } from "#shared/database/forum-db.ts";
 import { getNatsConnection } from "@repo/config-nats/nats-client";
-import type { Issues } from "@repo/types/db/forum-database-types";
-import type { Selectable } from "kysely";
+import { USER_NOTIFICATIONS_SUBJECT } from "@repo/shared/constants/nats-subjects";
 
-async function notifyIssueReceived(nickname: string, issueTitle: string) {
-  const nc = getNatsConnection()
-
-  const notification = await forumDB
-    .insertInto("notifications")
-    .values({
-      nickname,
-      message: `Ваша заявка ${issueTitle.slice(0, 16)} была создана`,
-      type: "issue"
-    })
-    .returningAll()
-    .executeTakeFirstOrThrow();
-
-  return nc.publish(`forum.user.${nickname}.notifications`, JSON.stringify(notification))
+type PublishIssuePayload = {
+  title: string;
+  user_nickname: string;
 }
 
-export const publishIssuePayload = async (payload: Selectable<Issues>) => {
+export async function publishIssuePayload({ user_nickname, title }: PublishIssuePayload) {
   const nc = getNatsConnection()
-  
-  await notifyIssueReceived(payload.user_nickname, payload.title)
-  
-  return nc.publish("forum.issue.created", JSON.stringify(payload))
+
+  const payload = JSON.stringify({
+    payload: {
+      title,
+      user_nickname,
+    },
+    type: "issue"
+  })
+
+  return nc.publish(USER_NOTIFICATIONS_SUBJECT, payload)
 }

@@ -4,6 +4,10 @@ export async function getRCONHealthCheck() {
   try {
     return await SERVER_API('healthcheck');
   } catch (e) {
-    throw e;
+    if (e instanceof Error) {
+      throw new Error(`[RCON]: ${e.message}`);
+    }
+
+    throw new Error(`[RCON]: Unknown error`);
   }
 }

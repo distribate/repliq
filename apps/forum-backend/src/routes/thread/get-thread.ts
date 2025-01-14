@@ -22,7 +22,7 @@ async function getThread({
 
   if (!thread || !threadCreator) return null;
 
-  return { ...thread, owner: threadCreator };
+  return { ...thread, category_id: Number(thread.category_id), threads_comments_count: Number(thread.threads_comments_count), owner: threadCreator };
 }
 
 export const getThreadRoute = new Hono()

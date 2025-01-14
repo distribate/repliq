@@ -17,7 +17,7 @@ export const PostItemHeader = ({
     visibility === "only" ? "видно только вам" : "видно только друзьям";
 
   return (
-    <div className="flex gap-2 items-center">
+    <div className="flex gap-3 items-center">
       <Link href={USER_URL + user_nickname}>
         <Avatar
           variant="page"
@@ -26,7 +26,7 @@ export const PostItemHeader = ({
           nickname={user_nickname}
         />
       </Link>
-      <div className="flex flex-col gap-y-1">
+      <div className="flex flex-col">
         <div className="flex items-center gap-2">
           <Link href={USER_URL + user_nickname}>
             <UserNickname

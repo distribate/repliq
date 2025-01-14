@@ -7,52 +7,102 @@ import { Hono } from "hono";
 import { createReactionSchema } from "@repo/types/schemas/reaction/create-reaction.ts";
 import { REACTIONS_LIMIT_DEFAULT, REACTIONS_LIMIT_PREMIUM } from "@repo/shared/constants/routes";
 
+async function validateReactionLimit(nickname: string) {
+  const userDonate = await getUserDonate(nickname)
+  const hasAccess = userDonate.donate !== 'default'
+  const limit = hasAccess ? REACTIONS_LIMIT_PREMIUM : REACTIONS_LIMIT_DEFAULT
+
+  return limit
+}
+
+type GetReactionCount = {
+  threadId: string
+  nickname: string
+}
+
+async function getThreadReactionCount({ nickname, threadId }: GetReactionCount) {
+  const query = await forumDB
+    .selectFrom("threads_reactions")
+    .select(forumDB.fn.countAll().as('count'))
+    .where("thread_id", "=", threadId)
+    .where("user_nickname", "=", nickname)
+    .$castTo<{ count: number }>()
+    .executeTakeFirstOrThrow()
+
+  return query.count
+}
+
 export const createReactionRoute = new Hono()
   .post("/create-reaction", zValidator("json", createReactionSchema), async (ctx) => {
     const body = await ctx.req.json()
     const result = createReactionSchema.parse(body)
+    const { emoji, type, id } = result;
 
-    const { emoji, type, id } = result
     const nickname = getNickname()
-    const userDonate = await getUserDonate(nickname)
-
-    const hasAccess = userDonate.donate !== 'default'
-    const limit = hasAccess ? REACTIONS_LIMIT_PREMIUM : REACTIONS_LIMIT_DEFAULT
+    const limit = await validateReactionLimit(nickname)
 
     try {
       switch (type) {
         case "thread":
-          const threadId = id
-
-          const reactionCount = await forumDB
-            .selectFrom("threads_reactions")
-            .select(forumDB.fn.countAll().as('count'))
-            .where("thread_id", "=", threadId)
-            .where("user_nickname", "=", nickname)
-            .executeTakeFirstOrThrow()
-
-          const count = Number(reactionCount.count);
+          const threadId = id;
+          const reactionCount = await getThreadReactionCount({ nickname, threadId })
 
           const reaction = await forumDB.transaction().execute(async (trx) => {
             const existingReaction = await trx
               .selectFrom("threads_reactions")
-              .where("emoji", "=", emoji)
+              .select("emoji")
               .where("thread_id", "=", threadId)
               .where("user_nickname", "=", nickname)
-              .executeTakeFirst()
+              .orderBy("created_at", "desc")
+              .execute();
 
-            if (existingReaction) {
+            if (existingReaction && existingReaction.some(item => item.emoji === emoji)) {
               await trx
                 .deleteFrom("threads_reactions")
-                .where("emoji", "=", emoji)
+                .where("emoji", "=", existingReaction[0].emoji)
                 .where("thread_id", "=", threadId)
                 .where("user_nickname", "=", nickname)
                 .execute()
+
               return "Deleted";
             }
 
-            if (count >= limit) {
-              return "Limit exceeded"
+            console.log(limit)
+
+            if (limit === 1) {
+              const oldestReaction = await trx
+                .selectFrom("threads_reactions")
+                .select("id")
+                .where("thread_id", "=", threadId)
+                .where("user_nickname", "=", nickname)
+                .orderBy("created_at", "asc")
+                .limit(1)
+                .executeTakeFirst();
+
+              if (oldestReaction) {
+                await trx
+                  .deleteFrom("threads_reactions")
+                  .where("id", "=", oldestReaction.id)
+                  .execute();
+              }
+            } else {
+              if (reactionCount >= limit) {
+                const oldestReaction = await trx
+                  .selectFrom("threads_reactions")
+                  .select("id")
+                  .where("thread_id", "=", threadId)
+                  .where("user_nickname", "=", nickname)
+                  .orderBy("created_at", "asc")
+                  .limit(1)
+                  .executeTakeFirst();
+
+                if (oldestReaction) {
+                  await trx
+                    .deleteFrom("threads_reactions")
+                    .where("id", "=", oldestReaction.id)
+                    .execute();
+                }
+              }
             }
 
             await trx
@@ -61,17 +111,16 @@ export const createReactionRoute = new Hono()
               .values({
                 thread_id: threadId,
                 user_nickname: nickname,
-                emoji,
+                emoji
               })
               .returning("id")
               .executeTakeFirst()
 
             return "Created";
           })
-
           return ctx.json({ status: reaction }, 200)
         case "post":
-          // todo
+
           return ctx.json({ error: "Not implemented" }, 400)
       }
     } catch (e) {

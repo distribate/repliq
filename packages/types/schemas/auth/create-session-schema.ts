@@ -12,5 +12,6 @@ export const createSessionBodySchema = z.object({
     isBot: z.boolean().nullable(),
     os: z.string().nullable(),
     ua: z.string().nullable(),
+    device: z.string().nullable(),
   }),
 });

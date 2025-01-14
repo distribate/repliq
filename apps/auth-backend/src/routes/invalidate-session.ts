@@ -1,22 +1,38 @@
 import { Hono } from "hono";
-import { z } from "zod";
 import { invalidateSession } from "../utils/invalidate-session.ts";
-import { zValidator } from "@hono/zod-validator";
 import { throwError } from '@repo/lib/helpers/throw-error.ts';
-
-export const invalidateSessionBodySchema = z.object({
-  sessionId: z.string().min(6),
-});
+import { getCookie, setCookie } from "hono/cookie";
+import { encodeHexLowerCase } from "@oslojs/encoding";
+import { sha256 } from "@oslojs/crypto/sha2";
 
 export const invalidateSessionRoute = new Hono()
-  .post("/invalidate-session", zValidator("json", invalidateSessionBodySchema), async (ctx) => {
-    const body = await ctx.req.json()
-    const result = invalidateSessionBodySchema.parse(body);
+  .post("/invalidate-session", async (ctx) => {
+    const sessionToken = getCookie(ctx, "session")
+    
+    if (!sessionToken) {
+      return ctx.json({ error: "Session token not found" }, 401)
+    }
 
     try {
-      const res = await invalidateSession(result.sessionId);
+      const sessionId = encodeHexLowerCase(
+        sha256(new TextEncoder().encode(sessionToken))
+      );
+      
+      const res = await invalidateSession(sessionId);
 
-      return ctx.json({ success: !!res }, 200)
+      if (!res) {
+        return ctx.json({ error: "Internal Server Error" }, 500)
+      }
+
+      setCookie(ctx, `session`, "", {
+        httpOnly: true,
+        sameSite: "lax",
+        secure: process.env.NODE_ENV === "production",
+        maxAge: 0,
+        path: "/",
+      })
+
+      return ctx.json({ success: "Success" }, 200)
     } catch (e) {
       return ctx.json({ error: throwError(e) }, 500)
     }

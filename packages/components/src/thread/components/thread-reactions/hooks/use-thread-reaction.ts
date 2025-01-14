@@ -22,14 +22,6 @@ export const useThreadReaction = () => {
         const { error } = data;
 
         return toast.error(THREAD_RATING_MESSAGES[error] ?? "Что-то пошло не так")
-      } else {
-        const { status } = data;
-
-        if (status === "Limit exceeded") {
-
-        } else {
-          // toast.success(THREAD_RATING_MESSAGES[status]);
-        }
       }
 
       return qc.invalidateQueries({

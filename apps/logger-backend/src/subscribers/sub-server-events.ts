@@ -3,6 +3,7 @@ import { forumDB } from "../shared/database/forum-db";
 import { UsersGameStatus } from "@repo/types/db/forum-database-types";
 import { Selectable } from "kysely";
 import { z } from "zod"
+import { SERVER_USER_EVENT_SUBJECT } from "@repo/shared/constants/nats-subjects";
 
 type UpdateUserStatus = Omit<Selectable<UsersGameStatus>, "id" | "joined" | "quited"> & {
   joined?: string | null;
@@ -36,10 +37,10 @@ const userLoginEventSchema = z.object({
   date: z.string(),
 });
 
-export const subscribeServerEvents = () => {
+export const subscribeServerEvents = async () => {
   const nc = getNatsConnection()
 
-  return nc.subscribe("server.user.event", {
+  return nc.subscribe(SERVER_USER_EVENT_SUBJECT, {
     callback: async (err, msg) => {
       if (err) {
         console.error(err);

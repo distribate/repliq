@@ -7,7 +7,7 @@ export const UserActiveSessions = () => {
   const { data: activeSessions, isError } = userActiveSessionsQuery();
 
   const currentSession = activeSessions
-    ? activeSessions.find((item) => (item ? item.current : null))
+    ? activeSessions.find((item) => (item ? item.is_current : null))
     : null;
 
   if (isError || !currentSession || !activeSessions) return;

@@ -17,10 +17,14 @@ export async function createSession({
 }: CreateSession): Promise<Session> {
   const { token, nickname } = details;
 
-  const session_id = encodeHexLowerCase(sha256(new TextEncoder().encode(token)));
+  const session_id = encodeHexLowerCase(
+    sha256(new TextEncoder().encode(token))
+  );
 
   const session: Session = {
-    session_id, nickname, expires_at: new Date(Date.now() + 1000 * 60 * 60 * 24 * 15),
+    session_id,
+    nickname,
+    expires_at: new Date(Date.now() + 1000 * 60 * 60 * 24 * 15),
   };
 
   return await trx

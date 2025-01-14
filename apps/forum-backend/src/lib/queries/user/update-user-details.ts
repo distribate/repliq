@@ -12,7 +12,7 @@ export type UserDetails = Pick<Updateable<Users>,
 
 type UpdateUserDetails = {
   criteria: keyof Partial<UserDetails>,
-  value: string | null
+  value: string | null | number,
   nickname: string
 }
 

@@ -19,7 +19,6 @@ export async function acceptFriendRequestTransaction({
       .returning(["recipient", "initiator"])
       .executeTakeFirstOrThrow();
 
-    console.log(deleteRequest)
     const { recipient, initiator: requestInitiator } = deleteRequest
 
     return await trx
@@ -28,6 +27,7 @@ export async function acceptFriendRequestTransaction({
         user_1: requestInitiator,
         user_2: recipient
       })
+      .returning(["user_2", "user_1"])
       .executeTakeFirstOrThrow();
   });
 }

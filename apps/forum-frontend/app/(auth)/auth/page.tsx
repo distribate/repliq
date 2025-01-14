@@ -1,7 +1,6 @@
 import { Metadata } from "next";
-import { Typography } from "@repo/ui/src/components/typography.tsx";
-import { getRandomMinecraftFact } from "@repo/components/src/forms/auth/queries/get-random-minecraft-fact.ts";
 import { MetadataType } from "@repo/types/global";
+import { FactSection } from "@repo/components/src/forms/auth/components/fact-section.tsx";
 
 export const generateMetadata = ({ searchParams }: MetadataType): Metadata => {
   const { type } = searchParams;
@@ -12,18 +11,5 @@ export const generateMetadata = ({ searchParams }: MetadataType): Metadata => {
 };
 
 export default async function AuthPage() {
-  const fact = await getRandomMinecraftFact();
-
-  return (
-    fact && (
-      <div className="flex gap-1 select-none relative minecraft-panel w-full items-start py-2 px-4 lg:px-10 overflow-x-scroll max-w-[1020px]">
-        <Typography
-          font="minecraft"
-          className="text-shark-800 text-[14px] lg:text-base font-semibold"
-        >
-          Факт: <span className="whitespace-normal font-medium">{fact.fact.toString()}</span>
-        </Typography>
-      </div>
-    )
-  );
+  return <FactSection />;
 }

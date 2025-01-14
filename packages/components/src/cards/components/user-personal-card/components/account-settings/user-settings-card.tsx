@@ -17,6 +17,9 @@ import {
 import { UserBlockedCard } from '#cards/components/user-blocked-card/components/user-blocked-card.tsx';
 import { ContentNotFound } from '#templates/content-not-found.tsx';
 import { Skeleton } from '@repo/ui/src/components/skeleton.tsx';
+// import { EmailChangeModal } from '#modals/user-settings/email-change-modal.tsx';
+import { PasswordChangeModal } from '#modals/user-settings/password-change-modal.tsx';
+import { ActiveSessionsModal } from '#modals/user-settings/active-sessions-modal.tsx';
 
 const BlockedList = () => {
   const currentUser = getUser();
@@ -54,22 +57,22 @@ export const UserSettingsCard = () => {
     <div className="flex flex-col gap-y-4 items-center w-full">
       <Typography variant="dialogTitle">Аккаунт</Typography>
       <div className="flex flex-col gap-y-6 w-full">
-        {/*<div className="flex flex-col gap-y-4 w-full">*/}
-        {/*  <Typography variant="dialogSubtitle" className="px-2">*/}
-        {/*    Защита*/}
-        {/*  </Typography>*/}
-        {/*  <div className="flex flex-col gap-y-2 w-full">*/}
-        {/*    <EmailChangeModal />*/}
-        {/*    <PasswordChangeModal/>*/}
-        {/*    <ActiveSessionsModal />*/}
-        {/*    <div className="flex flex-col bg-secondary-color w-full py-2 px-4">*/}
-        {/*      <Typography className="text-base text-shark-200">*/}
-        {/*        Управление текущими сессиями*/}
-        {/*      </Typography>*/}
-        {/*    </div>*/}
-        {/*  </div>*/}
-        {/*  <Separator />*/}
-        {/*</div>*/}
+        <div className="flex flex-col gap-y-4 w-full">
+          <Typography variant="dialogSubtitle" className="px-2">
+            Защита
+          </Typography>
+          <div className="flex flex-col gap-y-2 w-full">
+            {/* <EmailChangeModal /> */}
+            <PasswordChangeModal />
+            <ActiveSessionsModal />
+            <div className="flex flex-col bg-secondary-color w-full py-2 px-4">
+              <Typography className="text-base text-shark-200">
+                Управление текущими сессиями
+              </Typography>
+            </div>
+          </div>
+          <Separator />
+        </div>
         <div className="flex flex-col gap-y-4 w-full">
           <Typography variant="dialogSubtitle" className="px-2">
             Приватность

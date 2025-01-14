@@ -6,7 +6,6 @@ import { coverQuery } from "#profile/components/cover/queries/cover-query.ts";
 import { imageCoverQuery } from "#profile/components/cover/queries/image-cover-query.ts";
 import dynamic from "next/dynamic";
 import { requestedUserQuery } from "../queries/requested-user-query.ts";
-import { UserCoverSkeleton } from "#skeletons/user-cover-skeleton.tsx";
 
 type UserCoverProps = {
   requestedUserNickname: string
@@ -21,11 +20,9 @@ const UserCoverWatermark = dynamic(() =>
 export const UserCover = ({
   requestedUserNickname: nickname
 }: UserCoverProps) => {
-  const { data: requestedUser, isLoading: requestedUserLoading } = requestedUserQuery(nickname);
+  const { data: requestedUser } = requestedUserQuery(nickname);
   const { data: { inView } } = coverQuery();
   const { data: url, isLoading } = imageCoverQuery(nickname);
-
-  if (requestedUserLoading) return <UserCoverSkeleton />;
 
   if (!requestedUser) return null;
 

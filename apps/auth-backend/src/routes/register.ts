@@ -5,6 +5,7 @@ import { zValidator } from '@hono/zod-validator';
 import { findPlayer } from '../lib/queries/find-player-auth.ts';
 import { createUserTransaction } from '../lib/transactions/create-user-transaction.ts';
 import { throwError } from '@repo/lib/helpers/throw-error.ts';
+import { checkUserExists } from './login.ts';
 
 export const createUserBodySchema = z.object({
   nickname: z.string().min(1),
@@ -13,11 +14,17 @@ export const createUserBodySchema = z.object({
   findout: z.string().or(z.null()),
 });
 
-export const createUserRoute = new Hono()
+export const registerRoute = new Hono()
   .post('/register', zValidator('json', createUserBodySchema), async (ctx) => {
     const body = await ctx.req.json()
     const details = createUserBodySchema.parse(body);
     const { password, realName, findout, nickname } = details;
+
+    const isExistsOnForum = await checkUserExists(nickname)
+
+    if (isExistsOnForum) {
+      return ctx.json({ error: "User already exists on the forum" }, 400)
+    }
 
     const findedUser = await findPlayer({
       criteria: {
@@ -27,13 +34,10 @@ export const createUserRoute = new Hono()
     });
 
     if (!findedUser || !findedUser.UUID) {
-      return ctx.json({ error: 'User not found' }, 404);
+      return ctx.json({ error: 'User not found on the server' }, 404);
     }
 
-    const { HASH, UUID } = findedUser
-
-    const storedPassword = HASH;
-    const uuid = UUID;
+    const { HASH: storedPassword, UUID: uuid } = findedUser
 
     const isPasswordValid = await bcrypt.compare(password, storedPassword);
 
@@ -47,10 +51,10 @@ export const createUserRoute = new Hono()
       })
 
       if (!user || !user.user_nickname) {
-        return ctx.json({ error: 'Error in user create action' }, 400);
+        return ctx.json({ error: 'Error in creating user' }, 400);
       }
 
-      return ctx.json({ success: !!user }, 201);
+      return ctx.json({ status: "Success" }, 201);
     } catch (e) {
       return ctx.json({ error: throwError(e) }, 500);
     }

@@ -1,5 +1,4 @@
 import { Typography } from "@repo/ui/src/components/typography.tsx";
-import { PostEntity, UserEntity } from "@repo/types/entities/entities-type.ts";
 import {
   POST_CONTROL_QUERY_KEY,
   PostControlQuery,
