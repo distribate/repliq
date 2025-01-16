@@ -1,24 +1,24 @@
-import { useEffect, useState } from "react";
-import Image from "next/image";
 import { PlayerStatusProps } from "../status/player-status";
+import { useQuery } from "@tanstack/react-query";
+import { getSkinDetails } from "@repo/lib/helpers/get-skin-details";
 
 type PlayerStatusImageProps = {
 	type?: "small" | "full"
 } & PlayerStatusProps
 
-const ELY_BY_HEAD_URL = "https://ely.by/services/skins-renderer?url=http://skinsystem.ely.by/skins"
+const playerAvatarQuery = (nickname: string) => useQuery({
+	queryKey: ['player-avatar', nickname],
+	queryFn: () => getSkinDetails(nickname),
+	refetchOnWindowFocus: false
+})
 
 export const PlayerStatusImage = ({
 	nickname, type = "small"
 }: PlayerStatusImageProps) => {
-	const [error, setError] = useState(null)
-	
-	useEffect(() => {
-		setError(null)
-	}, [nickname])
+	const { data: avatarUrl } = playerAvatarQuery(nickname)
 	
 	return (
-		<Image
+		<img
 			height={800}
 			width={800}
 			className={`${type === 'small'
@@ -26,12 +26,7 @@ export const PlayerStatusImage = ({
 				: 'max-w-[164px] max-h-[164px]'}`
 			}
 			alt={nickname}
-			// @ts-ignore
-			onError={setError}
-			src={error
-				? '/images/steve.png'
-				: `${ELY_BY_HEAD_URL}/${nickname}.png&scale=18.9&renderFace=1`
-			}
+			src={avatarUrl}
 		/>
 	)
 }

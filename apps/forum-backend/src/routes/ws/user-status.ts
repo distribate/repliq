@@ -7,6 +7,7 @@ import { getNickname } from "#utils/get-nickname-from-storage.ts";
 import type { Subscription } from "@nats-io/transport-node";
 import { getNatsConnection } from "@repo/config-nats/nats-client";
 import { USER_NOTIFICATIONS_SUBJECT } from "@repo/shared/constants/nats-subjects";
+import { forumDB } from "#shared/database/forum-db.ts";
 
 const { upgradeWebSocket } = createBunWebSocket<ServerWebSocket>()
 
@@ -14,13 +15,25 @@ type NotificationObject =
   | { type: "create-friend-request", payload: { recipient: string, initiator: string } }
   | { type: "accept-friend-request", payload: { recipient: string, initiator: string } }
 
+async function getUserNotificationsPreference(nickname: string) {
+  const query = await forumDB
+  .selectFrom("users_settings")
+  .select("send_notifications")
+  .where("nickname", "=", nickname)
+  .executeTakeFirstOrThrow()
+
+  return query.send_notifications
+}
+
 export const userStatusRoute = new Hono()
   .get("/user-status", upgradeWebSocket(async (ctx) => {
     const nickname = getNickname()
     const nc = getNatsConnection()
 
     let pingInterval: Timer;
-    let subscription: Subscription;
+    let subscription: Subscription | null = null;
+
+    const notificationsPreference = await getUserNotificationsPreference(nickname)
 
     return {
       onOpen: async (event, ws) => {
@@ -33,6 +46,11 @@ export const userStatusRoute = new Hono()
         }, WEBSOCKET_PING_INTERVAL);
 
         try {
+          if (!notificationsPreference) {
+            console.log("[Notifications]: Connection canceled. User has disabled notifications.");
+            return;
+          }
+
           subscription = nc.subscribe(USER_NOTIFICATIONS_SUBJECT, {
             callback: async (error, msg) => {
               if (error) {

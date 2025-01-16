@@ -6,7 +6,8 @@ import {
   ForumCommentAppType,
   ForumReactionAppType,
   ForumSharedAppType,
-  ForumWebSocketAppType
+  ForumWebSocketAppType,
+  ForumLandingAppType
 } from 'forum-backend/src/types/routes-types.ts';
 import { hc } from 'hono/client';
 
@@ -16,6 +17,24 @@ const production = `https://cc.fasberry.su/api/forum`
 const development = `http://localhost:4101/api/forum`
 
 const baseUrl = isProduction ? production : development
+
+export const forumLandingClient = hc<ForumLandingAppType>(
+  baseUrl,
+  {
+    fetch: async (input: RequestInfo | URL, requestInit?: RequestInit) => {
+      return fetch(input, {
+        method: requestInit?.method ?? 'GET',
+        headers: {
+          'content-type': 'application/json',
+          ...requestInit?.headers,
+        },
+        body: requestInit?.body ?? null,
+        credentials: "include",
+        ...requestInit,
+      })
+    }
+  }
+)
 
 export const forumSharedClient = hc<ForumSharedAppType>(
   baseUrl,

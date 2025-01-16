@@ -17,6 +17,11 @@ declare module "bun" {
     LUCKPERMS_POSTGRES_USER: string;
     LUCKPERMS_POSTGRES_PORT: string;
 
+    LANDS_MYSQL_DB: string
+    LANDS_MYSQL_PORT: number
+    MYSQL_ROOT_PASSWORD: string,
+    MYSQL_USER: string,
+
     AUTHORIZATION_POSTGRES_DB: string
     AUTHORIZATION_POSTGRES_PASSWORD: string
     AUTHORIZATION_POSTGRES_USER: string

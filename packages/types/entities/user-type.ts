@@ -16,7 +16,8 @@ export type UserDetailed = Omit<Selectable<Users>,
       accept_friend_request: boolean,
       real_name_visible: boolean,
       game_stats_visible: boolean,
-      profile_visibility: "all" | "friends"
+      profile_visibility: "all" | "friends",
+      send_notifications: boolean
     },
   }
 

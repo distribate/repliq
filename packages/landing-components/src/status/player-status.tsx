@@ -30,7 +30,7 @@ export const PlayerStatus = ({
 					<PlayerStatusImage type="full" nickname={nickname}/>
 					<div className="flex flex-col gap-4 w-full">
 						<Link
-							href={`https://forum.fasberry.su/user/${nickname}`}
+							href={`https://cc.fasberry.su/user/${nickname}`}
 							target="_blank"
 							className="inline-flex items-center justify-center whitespace-nowrap
 							px-4 py-2 hover:bg-[#77DD77] bg-[#5CC85C] rounded-[6px] w-full"

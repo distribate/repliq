@@ -974,6 +974,7 @@ export interface UsersSettings {
   nickname: string;
   profile_visibility: Generated<ProfileVisibility>;
   real_name_visible: Generated<boolean>;
+  send_notifications: Generated<boolean>;
   user_id: string;
 }
 

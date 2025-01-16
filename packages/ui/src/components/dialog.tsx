@@ -43,7 +43,7 @@ const DialogContent = forwardRef<
       ref={ref}
       onOpenAutoFocus={e => e.preventDefault()}
       className={cn(
-        "fixed left-[50%] pt-4 top-[50%] max-h-[calc(100%-200px)] overflow-y-auto z-50 grid w-full rounded-md max-w-lg translate-x-[-50%] translate-y-[-50%]" +
+        "fixed left-[50%] pt-4 top-[50%] max-w-[calc(100%-16px)] w-full lg:min-w-[512px] lg:w-fit max-h-[calc(100%-200px)] overflow-y-auto z-50 grid rounded-md translate-x-[-50%] translate-y-[-50%]" +
           " gap-4 dark:bg-shark-950 bg-shark-950 px-1 pb-1 shadow-lg duration-200 data-[state=open]:animate-in" +
           " data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0" +
           " data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[state=closed]:slide-out-to-left-1/2" +

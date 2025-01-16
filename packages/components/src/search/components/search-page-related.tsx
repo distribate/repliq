@@ -11,7 +11,7 @@ const SearchPageRelatedSkeleton = () => {
     <div className="flex flex-col gap-y-8 w-full h-full">
       <div className="flex flex-col gap-y-4 w-full h-full">
         <Skeleton className="w-64 h-8" />
-        <div className="grid grid-cols-5 grid-rows-1 gap-4 w-full h-fit">
+        <div className="grid grid-cols-2 xl:grid-cols-5 grid-rows-1 gap-4 w-full h-fit">
           <Skeleton className="w-full h-[280px]" />
           <Skeleton className="w-full h-[280px]" />
           <Skeleton className="w-full h-[280px]" />
@@ -21,7 +21,7 @@ const SearchPageRelatedSkeleton = () => {
       </div>
       <div className="flex flex-col gap-y-4 w-full h-full">
         <Skeleton className="w-64 h-8" />
-        <div className="grid grid-cols-5 grid-rows-1 gap-4 w-full h-fit">
+        <div className="grid grid-cols-2 xl:grid-cols-5 grid-rows-1 gap-4 w-full h-fit">
           <Skeleton className="w-full h-[280px]" />
           <Skeleton className="w-full h-[280px]" />
           <Skeleton className="w-full h-[280px]" />
@@ -47,7 +47,7 @@ export const SearchPageRelated = () => {
           <Typography className="text-[24px]">
             Последние зарегистрированные игроки
           </Typography>
-          <div className="grid grid-cols-5 grid-rows-1 gap-4 w-full h-fit">
+          <div className="grid grid-cols-2 xl:grid-cols-5 grid-rows-1 gap-4 w-full h-fit">
             {relatedState.lastUsers.map((user) => (
               <FriendsSearchingCard key={user.nickname} description={user.description} name_color={user.name_color} nickname={user.nickname} />
             ))}
@@ -57,7 +57,7 @@ export const SearchPageRelated = () => {
       {relatedState.lastThreads && (
         <div className="flex flex-col gap-y-4 w-full h-full">
           <Typography className="text-[24px]">Последние треды</Typography>
-          <div className="grid grid-cols-5 grid-rows-1 gap-4 w-full h-fit">
+          <div className="grid grid-cols-2 xl:grid-cols-5 grid-rows-1 gap-4 w-full h-fit">
             {relatedState.lastThreads.map((thread) => (
               <div className="flex flex-col group gap-2 justify-between overflow-hidden items-start h-[200px] friend-card">
                 <Typography className="text-[18px]">{thread.title}</Typography>

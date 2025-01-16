@@ -1,17 +1,21 @@
 import { Typography } from '@repo/landing-ui/src/typography';
-import { News } from '@repo/lib/queries/get-news';
 import dayjs from 'dayjs';
 import { Dialog, DialogContent, DialogTrigger } from '@repo/landing-ui/src/dialog.tsx';
+import type { InferResponseType } from 'hono/client'
+import { forumLandingClient } from '@repo/shared/api/forum-client';
+
+const $get = forumLandingClient["get-news"].$get
+
+export type NewsType = InferResponseType<typeof $get, 200>
 
 export const NewsItemWrapper = ({
-  imageUrl, created_at, description, title, media_links,
-}: Omit<News, 'id'>) => {
-  
+  imageUrl, created_at, description, title
+}: NewsType["data"][0]) => {
   const formattedTime = dayjs(created_at).format('DD.MM.YYYY HH:mm');
   
   return (
     <Dialog>
-      <DialogTrigger className="rounded-[8px] overflow-hidden border-[#3d3d3d]/50 border-2">
+      <DialogTrigger className="rounded-[8px] overflow-hidden border-2 border-white/60">
         <div className="h-[200px] lg:h-[444px] w-full overflow-hidden">
           <img
             loading="lazy"

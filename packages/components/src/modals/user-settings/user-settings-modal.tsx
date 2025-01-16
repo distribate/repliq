@@ -5,13 +5,18 @@ import {
   DialogContent,
   DialogTrigger,
 } from "@repo/ui/src/components/dialog.tsx";
+import { ReactNode } from "react";
 
-export const UserSettingsModal = () => {
+type UserSettingsModalProps =
+  | { trigger: ReactNode }
+  | { trigger?: never };
+
+export const UserSettingsModal = ({
+  trigger,
+}: UserSettingsModalProps) => {
   return (
     <Dialog>
-      <DialogTrigger>
-        <HoverCardItem>Настройки</HoverCardItem>
-      </DialogTrigger>
+      <DialogTrigger>{trigger ? trigger : <HoverCardItem>Настройки</HoverCardItem>}</DialogTrigger>
       <DialogContent>
         <UserPersonalCard />
       </DialogContent>

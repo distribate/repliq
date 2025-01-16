@@ -19,12 +19,11 @@ export const POST_FORM_FIELD_QUERY_KEY = createQueryKey("ui", [
   "create-post-field",
 ]);
 
-export const postFormQuery = () =>
-  useQuery<CreatePostFieldType, Error>({
-    queryKey: POST_FORM_FIELD_QUERY_KEY,
-    staleTime: Infinity,
-    initialData: initial,
-    gcTime: Infinity,
-    refetchOnWindowFocus: false,
-    refetchOnMount: false,
-  });
+export const postFormQuery = () => useQuery<CreatePostFieldType, Error>({
+  queryKey: POST_FORM_FIELD_QUERY_KEY,
+  staleTime: Infinity,
+  initialData: initial,
+  gcTime: Infinity,
+  refetchOnWindowFocus: false,
+  refetchOnMount: false,
+});

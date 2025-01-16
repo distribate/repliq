@@ -9,7 +9,7 @@ export const AlertCard = async ({
   title, id, creator, link, created_at,
 }: AlertEntity) => {
   return (
-    <div className="flex group flex-col w-full relative rounded-lg py-2 px-4 bg-primary-color">
+    <div className="flex group border border-shark-800 flex-col w-full relative rounded-lg py-2 px-4 bg-primary-color">
       <Typography textColor="shark_white" textSize="medium">
         {title}
       </Typography>

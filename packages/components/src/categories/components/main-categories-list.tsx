@@ -57,9 +57,9 @@ export const MainCategoriesList = () => {
         categories[4].category_title,
       ]}
     >
-      <div className="flex flex-col gap-2 w-full">
+      <div className="flex flex-col rounded-lg gap-2 w-full">
         {categories.map(({ category_id, category_title, threads }) => (
-          <div className="flex gap-y-4 w-full py-4 flex-col rounded-lg px-4 bg-primary-color">
+          <div className="flex gap-y-4 w-full py-4 border border-shark-800 flex-col rounded-lg px-4 bg-primary-color">
             <AccordionItem value={category_title}>
               <AccordionTrigger>
                 <div className="flex items-center gap-2 px-2">

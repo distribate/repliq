@@ -16,10 +16,10 @@ export const metadata: Metadata = {
 export default async function FriendsPage() {
   return (
     <div className="flex flex-col gap-2 items-start lg:flex-row w-full h-full relative">
-      <BlockWrapper className="flex w-4/6 *:w-full !p-4 h-full">
+      <BlockWrapper className="lg:order-first order-last flex w-full lg:w-4/6 *:w-full !p-4 h-full">
         <FriendsList />
       </BlockWrapper>
-      <div className="flex flex-col gap-4 w-2/6 sticky top-0 h-fit">
+      <div className="flex lg:order-last order-first flex-col gap-4 w-full lg:w-2/6 sticky top-0 h-fit">
         <BlockWrapper className="flex flex-col gap-y-2 w-full !p-4">
           <FriendsTab type="all" title="Мои друзья">
             <FriendsAllCountIndicator />

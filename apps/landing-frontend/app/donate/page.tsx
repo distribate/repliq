@@ -89,7 +89,7 @@ export default async function DonatePage() {
               <Button
                 size="default"
                 variant="pageLink"
-                className="hover:bg-[#731c6c] bg-[#8c1c85]"
+                className="hover:bg-[#8c1c85] rounded-xl border border-[#8c1c85] bg-[#731c6c]"
               >
                 <Typography text_color="white" className="font-bold text-xl">
                   <span

@@ -13,6 +13,7 @@ const buttonVariants = cva(
       variant: {
         default: " ",
         blurred: "bg-black/10 z-20 backdrop-filter backdrop-blur-md",
+        positive: "bg-[#14a551] hover:bg-[#1bd96a] border border-[#1bd96a]",
         pageLink: "w-full !px-14 group hover:duration-300 duration-100"
       },
       size: {
@@ -26,18 +27,11 @@ const buttonVariants = cva(
           "hover:bg-[radial-gradient(ellipse_at_bottom_right,_var(--tw-gradient-stops))] " +
           "hover:duration-700 hover:transition transition " +
           "hover:ease-out duration-500"
-      },
-      rounded: {
-        sm: "rounded-[4px]",
-        md: "rounded-[8px]",
-        xl: "rounded-[14px]",
-        full: "rounded-full"
       }
     },
     defaultVariants: {
       variant: "default",
-      size: "default",
-      rounded: "md"
+      size: "default"
     },
   }
 )
@@ -50,11 +44,11 @@ export interface ButtonProps
 
 const Button = forwardRef<
   HTMLButtonElement, ButtonProps
->(({ className, variant, shadow, rounded, size, asChild = false, ...props }, ref) => {
+>(({ className, variant, shadow, size, asChild = false, ...props }, ref) => {
     const Comp = asChild ? Slot : "button"
     return (
       <Comp
-        className={cn(buttonVariants({ variant, size, rounded, shadow, className }))}
+        className={cn(buttonVariants({ variant, size, shadow, className }))}
         ref={ref}
         {...props}
       />

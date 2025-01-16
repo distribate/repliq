@@ -1,4 +1,4 @@
-import { Hono } from 'hono';
+import { Hono, type Context, type MiddlewareHandler } from 'hono';
 import { logger } from 'hono/logger';
 import { bearerAuth } from 'hono/bearer-auth';
 import { showRoutes } from 'hono/dev';
@@ -46,7 +46,6 @@ import { removeThreadRoute } from '#routes/thread/remove-thread.ts';
 import { updateThreadSettingsRoute } from '#routes/thread/update-thread-settings.ts';
 import { getThreadUserReactionsRoute } from '#routes/thread/get-thread-user-rating.ts';
 import { timeout } from 'hono/timeout'
-import { csrfOptions } from '#shared/options/csrf-options.ts';
 import type { Env } from '#types/env-type.ts';
 import { createCommentRoute } from '#routes/comments/create-comment.ts';
 import { replyCommentRoute } from '#routes/comments/reply-comment.ts';
@@ -63,6 +62,15 @@ import { confirmWebsocketConnRoute } from '#routes/ws/confirm-websocket-conn.ts'
 import { userStatusRoute } from '#routes/ws/user-status.ts';
 import { getUserStatusRoute } from '#routes/user/get-user-status.ts';
 import { getUserCoverImageRoute } from '#routes/user/get-user-cover-image.ts';
+import { getNewsRoute } from '#routes/public/get-news.ts';
+import { getOnlineUsersRoute } from '#routes/public/get-online-users.ts';
+import { getLatestRegUsersRoute } from '#routes/public/get-latest-reg-users.ts';
+import { getLastCommentsRoute } from '#routes/comments/get-last-comments.ts';
+import { HTTPException } from 'hono/http-exception';
+import {
+  rateLimiter as limiter
+} from "hono-rate-limiter";
+import { getUserLandsRoute } from '#routes/user/get-user-lands.ts';
 
 const { websocket } = createBunWebSocket<ServerWebSocket>()
 
@@ -78,27 +86,37 @@ const token = process.env.SECRET_TOKEN!
 
 await initNats()
 
+export const landing = new Hono()
+  .route("/", getNewsRoute)
+  .route("/", getOnlineUsersRoute)
+  .route("/", getLatestRegUsersRoute)
+
 export const shared = new Hono()
   .basePath("/shared")
   .route('/', getFactRoute)
 
 export const admin = new Hono()
   .basePath('/admin')
+  .use(bearerAuth({ token }))
   .route('/', callServerCommandRoute);
 
 export const comment = new Hono()
   .basePath('/comment')
+  .use(validateRequest)
   .route("/", createCommentRoute)
   .route("/", replyCommentRoute)
+  .route("/", getLastCommentsRoute)
 
 export const category = new Hono()
   .basePath('/categories')
+  .use(validateRequest)
   .route("/", getCategoriesRoute)
   .route("/", getCategoryThreadsRoute)
   .route("/", getLatestCategoryThreadsRoute)
 
 export const thread = new Hono()
   .basePath('/thread')
+  .use(validateRequest)
   .route("/", getThreadRoute)
   .route("/", getThreadPreviewRoute)
   .route("/", removeThreadRoute)
@@ -112,10 +130,12 @@ export const server = new Hono()
 
 export const reaction = new Hono()
   .basePath('/reaction')
+  .use(validateRequest)
   .route("/", createReactionRoute)
 
 export const user = new Hono()
   .basePath('/user')
+  .use(validateRequest)
   .route('/', getUserRoute)
   .route('/', editUserSettingsRoute)
   .route('/', editUserDetailsRoute)
@@ -149,25 +169,41 @@ export const user = new Hono()
   .route("/", getUserBanDetailsRoute)
   .route("/", getUserFriendsCountRoute)
   .route("/", getUserStatusRoute)
+  .route("/", getUserLandsRoute)
   .route("/", getUserCoverImageRoute)
 
 export const ws = new Hono()
   .basePath('/ws')
+  .use(validateRequest)
   .route("/", userStatusRoute)
   .route("/", confirmWebsocketConnRoute)
 
+const customTimeoutException = (ctx: Context) =>
+  new HTTPException(408, {
+    message: `Request timeout after waiting ${ctx.req.header(
+      'Duration'
+    )} seconds. Please try again later.`,
+  })
+
 const app = new Hono<Env>()
-  .use(cors(corsOptions))
-  .use(csrf(csrfOptions))
-  .use(timeout(5000))
-  .use('/api/forum/user/*', validateRequest)
-  .use('/api/forum/reaction/*', validateRequest)
-  .use('/api/forum/thread/*', validateRequest)
-  .use('/api/forum/comment/*', validateRequest)
-  .use('/api/forum/categories/*', validateRequest)
-  .use('/api/forum/ws/*', validateRequest)
-  .use("/api/forum/admin/*", bearerAuth({ token }))
+  .use(
+    cors(corsOptions)
+  )
+  .use(
+    csrf({
+      origin: (origin) => /^(https:\/\/(\w+\.)?fasberry\.su|http:\/\/localhost:3000|http:\/\/localhost:3009)$/.test(origin),
+    })
+  )
   .basePath('/api/forum')
+  .use(timeout(5000, customTimeoutException))
+  .use(
+    limiter({
+      windowMs: 60000,
+      limit: 300,
+      standardHeaders: "draft-6",
+      keyGenerator: (ctx) => ctx.req.header("x-forwarded-for") ?? "",
+    })
+  )
   .use(logger())
   .use(contextStorage())
   .route('/', admin)
@@ -179,6 +215,7 @@ const app = new Hono<Env>()
   .route("/", reaction)
   .route("/", shared)
   .route("/", ws)
+  .route("/", landing)
 
 async function createServer() {
   showRoutes(app, { verbose: false });

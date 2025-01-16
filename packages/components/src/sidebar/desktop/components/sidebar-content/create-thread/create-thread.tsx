@@ -2,16 +2,19 @@ import { Pencil } from "lucide-react";
 import { Typography } from "@repo/ui/src/components/typography.tsx";
 import { useSidebarControl } from "../../sidebar-layout/hooks/use-sidebar-control.ts";
 import { CREATE_THREAD_URL } from "@repo/shared/constants/routes.ts";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
+import { SidebarButton } from "../links/components/sidebar-target.tsx";
 
 const CreateThreadButton = ({ type }: { type: "compact" | "full" }) => {
   const { push } = useRouter();
+  const pathname = usePathname();
 
   return (
-    <div
+    <SidebarButton
       id="create-thread"
       onClick={() => push(CREATE_THREAD_URL)}
-      className="inline-flex items-center px-4 cursor-pointer py-3 rounded-md bg-shark-800 hover:bg-shark-700 group gap-4 w-full justify-start"
+      variant={pathname === CREATE_THREAD_URL ? "active" : "default"}
+      className="h-12"
     >
       <Pencil size={20} className="text-shark-300" />
       {type === "full" && (
@@ -19,7 +22,7 @@ const CreateThreadButton = ({ type }: { type: "compact" | "full" }) => {
           Создать тред
         </Typography>
       )}
-    </div>
+    </SidebarButton>
   );
 };
 

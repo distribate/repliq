@@ -5,45 +5,38 @@ import { TooltipWrapper } from "@repo/landing-components/src/wrappers/tooltip-wr
 import { DialogClose } from "@repo/landing-ui/src/dialog";
 import { toast } from "sonner";
 import { serverIpQuery } from "@repo/lib/queries/server-ip-query";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@repo/landing-ui/src/tooltip";
+
+export const actionCopyboard = async (ip: string) => {
+	await navigator.clipboard.writeText(ip);
+
+	return toast.success("IP успешно скопирован!")
+}
 
 export const HowToConnectOnServer = () => {
 	const { data: ip, isLoading } = serverIpQuery()
-
-	const actionCopyboard = async () => {
-		if (!ip) return;
-
-		await navigator.clipboard.writeText(ip);
-
-		return toast.success("IP успешно скопирован!", {
-			icon: (
-				<img
-					width={40}
-					height={40}
-					alt="IP copied!"
-					loading="lazy"
-					src="/images/minecraft/icons/book_big.webp"
-				/>
-			)
-		})
-	}
 
 	return (
 		<DialogWrapper
 			title="Инструкция как зайти на сервер"
 			triggerAsChild
 			classNames={{
-				trigger: "min-w-[360px] w-full",
+				trigger: "min-w-[360px] h-[54px] w-full",
 				content: "max-w-6xl h-3/4 bg-transparent border-none p-0"
 			}}
 			trigger={
 				<Button
-					className="w-full h-[54px] group hover:bg-[#088d47]/80 hover:duration-300
-					duration-100 ease-in-out bg-[#05b458]/80 backdrop-filter backdrop-blur-lg"
+					variant="positive"
+					className="w-full rounded-xl group hover:duration-300 duration-100 ease-in-out backdrop-blur-lg"
 				>
-					<Typography className="!text-white text-2xl text-shadow-xl">
-						<span className="inline-block duration-150 group-hover:duration-300 group-hover:translate-x-2">⏵</span>
+					<Typography className="text-white text-2xl text-shadow-xl">
+						<span className="inline-block duration-150 group-hover:duration-300 group-hover:translate-x-2">
+							⏵
+						</span>
 						&nbsp;Начать играть&nbsp;
-						<span className="inline-block duration-150 group-hover:duration-300 group-hover:-translate-x-2">⏴</span>
+						<span className="inline-block duration-150 group-hover:duration-300 group-hover:-translate-x-2">
+							⏴
+						</span>
 					</Typography>
 				</Button>
 			}
@@ -70,7 +63,7 @@ export const HowToConnectOnServer = () => {
 									<Typography
 										size="base"
 										position="left"
-										onClick={() => actionCopyboard()}
+										onClick={() => actionCopyboard(ip ?? "")}
 										className="cursor-pointer bg-black py-2 px-2 border-2 text-white border-neutral-500 w-100 md:w-96"
 									>
 										{isLoading && "загрузка..."}
@@ -87,28 +80,32 @@ export const HowToConnectOnServer = () => {
 							/>
 						</div>
 						<div className="flex flex-col gap-y-2">
-							<TooltipWrapper
-								classNames={{ content: "w-fit max-w-[460px]" }}
-								trigger={
-									<div className="button w-full md:w-96 px-2 py-1">
-										<Typography
-											shadow="xl"
-											className="text-shadow-xl text-[0.8rem] lg:text-base text-white"
-											position="center"
-										>
-											Наборы ресурсов: Включены
+							<TooltipProvider>
+								<Tooltip delayDuration={2}>
+									<TooltipTrigger>
+										<div className="button w-full md:w-96 px-2 py-1">
+											<Typography
+												shadow="xl"
+												className="text-shadow-xl text-[0.8rem] lg:text-base text-white"
+												position="center"
+											>
+												Наборы ресурсов: Включены
+											</Typography>
+										</div>
+									</TooltipTrigger>
+									<TooltipContent className="w-fit max-w-[460px]" side="left">
+										<Typography size="lg" className="text-neutral-400">
+											На сервере используется ресурспак. Эту нужно оставить включенным!
 										</Typography>
-									</div>
-								}
-								content={
-									<Typography size="lg" className="text-neutral-400">
-										На сервере используется свой ресурспак. Эту опцию рекомендуется оставить включенной!
-									</Typography>
-								}
-							/>
+									</TooltipContent>
+								</Tooltip>
+							</TooltipProvider>
 							<DialogClose>
 								<div className="button w-full md:w-96 px-2 py-1">
-									<Typography className="text-shadow-xl text-[0.8rem] text-white lg:text-base" position="center">
+									<Typography
+										className="text-shadow-xl text-[0.8rem] text-white lg:text-base"
+										position="center"
+									>
 										Готово
 									</Typography>
 								</div>

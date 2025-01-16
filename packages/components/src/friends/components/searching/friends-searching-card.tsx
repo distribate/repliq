@@ -6,6 +6,7 @@ import { Button } from "@repo/ui/src/components/button.tsx";
 import { useRouter } from "next/navigation";
 import { FriendButton } from "#buttons/friend-button.tsx";
 import { UserEntity } from "@repo/types/entities/entities-type";
+import { getUser } from "@repo/lib/helpers/get-user";
 
 export type FriendsSearchingCardProps = Pick<
   UserEntity,
@@ -18,9 +19,10 @@ export const FriendsSearchingCard = ({
   description,
 }: FriendsSearchingCardProps) => {
   const { push } = useRouter();
+  const currentUser = getUser();
 
   return (
-    <div className="flex flex-col group gap-4 justify-between items-center h-[280px] friend-card">
+    <div className="flex flex-col group gap-4 justify-between items-center lg:h-[280px] friend-card">
       <Avatar nickname={nickname} propWidth={128} propHeight={128} />
       <div className="flex flex-col items-start gap-1 w-full justify-start">
         <div className="flex items-center gap-2">
@@ -34,11 +36,19 @@ export const FriendsSearchingCard = ({
           )}
         </div>
       </div>
-      <div className="flex items-center gap-2 *:w-full w-full">
-        <FriendButton recipient={nickname} />
+      <div className="flex lg:flex-row flex-col items-center gap-2 *:w-full w-full">
+        {nickname !== currentUser.nickname ? (
+          <FriendButton recipient={nickname} />
+        ) : (
+          <Button
+            state="default"
+          >
+            Это вы
+          </Button>
+        )}
         <Button
           state="default"
-          className="!w-2/5"
+          className="lg:!w-2/5"
           onClick={() => push(USER_URL + nickname)}
         >
           К профилю

@@ -7,18 +7,14 @@ import { CONTACTS_LIST, ContactsListProps } from '@repo/shared/wiki/data/contact
 import { GAMEPLAY, GameplayItemType } from '@repo/shared/wiki/data/gameplay/gameplay-list';
 import { CommunityGalleryItem } from '@repo/landing-components/src/community/community-gallery-item';
 import { NewsList } from '@repo/landing-components/src/news/news-list';
-import { CommunityStatusItem } from '@repo/landing-components/src/community/commuinity-status-item';
 import Link from 'next/link';
-import { dehydrate, HydrationBoundary, QueryClient } from '@tanstack/react-query';
-import { NEWS_QUERY_KEY } from '@repo/lib/queries/news-query.ts';
-import { getNews } from '@repo/lib/queries/get-news.ts';
 import { Suspense } from 'react';
 import { Skeleton } from '@repo/landing-ui/src/skeleton.tsx';
 import dynamic from 'next/dynamic';
 import { IntroLayout } from "@repo/landing-components/src/layout/intro-layout";
 
 export const metadata = {
-  title: 'Главная | Fasberry',
+  title: 'Главная - Fasberry',
   description:
     "Добро пожаловать на Fasberry! Уникальные сервера, захватывающие события и дружелюбное сообщество. Играй с друзьями и создавай свой мир прямо сейчас!",
   keywords: [
@@ -67,6 +63,11 @@ const ServerGallery = dynamic(() =>
     .then(m => m.ServerGallery)
 );
 
+const StatusItem = dynamic(() =>
+  import('@repo/landing-components/src/intro/status-item').then(m => m.StatusItem), {
+  ssr: false,
+});
+
 type GamePlayItemProps = GameplayItemType & {
   id: number
 }
@@ -102,7 +103,7 @@ const ContactItem = ({
 }: ContactsListProps) => {
   return (
     <Block key={name} blockItem rounded="big" size="big" type="column" className="justify-between">
-      <div className="flex flex-col">
+      <div className="flex flex-col mb-4">
         <Typography className="dark:text-neutral-50 text-neutral-800 text-3xl lg:text-4xl xl:text-5xl mb-4">
           {name}
         </Typography>
@@ -121,15 +122,15 @@ const ContactItem = ({
       </div>
       <Link
         href={href}
-        className="flex w-fit bg-neutral-200/60 dark:bg-neutral-600/60 rounded-[6px]
-        px-4 items-center gap-x-4 group brightness-110 mt-4 py-4 cursor-pointer group"
+        target="_blank"
+        className="flex w-fit gap-4 *:ease-in-out *:duration-300 *:group-hover:duration-300 *:transition-all rounded-xl px-8 items-center gap-x-4 group
+          border-2 hover:border-white/80 border-white/60 py-4"
       >
-        <Typography size="lg" text_color="adaptiveWhiteBlack">
-          Перейти в {name}!
+        <Typography size="lg" className="text-black/60 group-hover:text-black/80 dark:text-white/60 dark:group-hover:text-white/80">
+          Перейти в {name}
         </Typography>
         <span
-          className="text-[18px] group-hover:translate-x-0
-          -translate-x-2 ease-in-out duration-200 group-hover:duration-200 transition"
+          className="text-[18px] text-black/60 group-hover:text-black/80 dark:text-white/60 dark:group-hover:text-white/80"
         >
           {`>`}
         </span>
@@ -138,38 +139,23 @@ const ContactItem = ({
   );
 };
 
-const News = async () => {
-  const qc = new QueryClient();
-
-  await qc.prefetchQuery({
-    queryKey: NEWS_QUERY_KEY,
-    queryFn: () => getNews({ limit: 3 }),
-  });
-
-  const dehydratedState = dehydrate(qc);
-
-  return (
-    <HydrationBoundary state={dehydratedState}>
-      <NewsList />
-    </HydrationBoundary>
-  );
-};
-
 export default async function Main() {
   return (
     <MainLayoutPage variant="with_section">
-      <IntroLayout>
-        <div className="absolute top-0 right-0 left-0 overflow-hidden h-screen">
-          <div
-            className="w-full h-full absolute top-0 right-0 left-0 bg-no-repeat bg-center bg-cover"
-            style={{ backgroundImage: `url("/images/backgrounds/main_background.png")` }}
-          />
-          <Overlay variant="default" />
-        </div>
-        <div className="responsive mx-auto">
-          <IntroMain />
-        </div>
-      </IntroLayout>
+      <div id="title" className="full-screen-section">
+        <IntroLayout>
+          <div className="absolute top-0 right-0 left-0 overflow-hidden h-screen">
+            <div
+              className="w-full h-full absolute top-0 right-0 left-0 bg-no-repeat bg-center bg-cover"
+              style={{ backgroundImage: `url("/images/backgrounds/main_background.png")` }}
+            />
+            <Overlay variant="default" />
+          </div>
+          <div className="responsive z-1 mx-auto">
+            <IntroMain />
+          </div>
+        </IntroLayout>
+      </div>
       <div
         id="gameplay-overview"
         className="full-screen-section flex flex-col items-center"
@@ -189,14 +175,16 @@ export default async function Main() {
             <Typography text_color="black" className="text-3xl lg:text-4xl">
               Новости
             </Typography>
-            <Suspense fallback={
-              <>
-                <Skeleton className="h-64 w-full" />
-                <Skeleton className="h-64 w-full" />
-                <Skeleton className="h-64 w-full" />
-              </>
-            }>
-              <News />
+            <Suspense
+              fallback={
+                <>
+                  <Skeleton className="h-64 w-full" />
+                  <Skeleton className="h-64 w-full" />
+                  <Skeleton className="h-64 w-full" />
+                </>
+              }
+            >
+              <NewsList />
             </Suspense>
           </div>
           <div
@@ -206,25 +194,15 @@ export default async function Main() {
             <Typography text_color="black" className="text-3xl lg:text-4xl">
               Cообщество
             </Typography>
-            <CommunityStatusItem />
+            <Suspense>
+              <StatusItem />
+            </Suspense>
             <Block blockItem type="column" size="normal" rounded="big" className="h-max gap-y-8">
               <Typography className="text-xl lg:text-2xl">
                 Скриншоты от игроков
               </Typography>
               <div className="grid grid-cols-2 sm:grid-cols-4 xl:grid-cols-2 2xl:grid-cols-3 auto-rows-auto gap-2">
                 <CommunityGalleryItem />
-                {/* <Link
-                  title="Предложить скрин"
-                  href="https://forum.fasberry.su/create-art"
-                  target="_blank"
-                  className="flex w-full h-full items-center justify-center rounded-[8px] overflow-hidden bg-neutral-800"
-                >
-                  <div className="flex items-center min-h-[96px] justify-center sm:h-[96px] md:h-[120px] lg:w-[250px] lg:h-[136px]">
-                    <Typography className="text-3xl font-bold">
-                      +
-                    </Typography>
-                  </div>
-                </Link> */}
               </div>
             </Block>
           </div>
@@ -245,7 +223,7 @@ export default async function Main() {
           </div>
         </div>
       </div>
-      <ServerGallery />
+      {/* <ServerGallery /> */}
     </MainLayoutPage>
   );
 }

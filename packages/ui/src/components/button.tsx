@@ -14,10 +14,10 @@ const buttonVariants = cva(
       variant: {
         default: "",
         link: "underline-offset-4 hover:underline",
-        action: "hover:bg-pink-800 bg-pink-700",
-        positive: "hover:bg-green-800 bg-green-700",
-        negative: "hover:bg-red-800 bg-red-700",
-        pending: "hover:bg-contessa-800 bg-contessa-700",
+        action: "hover:bg-pink-700 bg-pink-800 border border-pink-700",
+        positive: "hover:bg-green-700 bg-green-800 border border-green-700",
+        negative: "hover:bg-red-700 bg-red-800 border border-red-700",
+        pending: "hover:bg-contessa-700 bg-contessa-800 border border-contessa-700",
         minecraft:
           "border-[2px] text-shark-50 border-black/80 rounded-none shadow-[inset_0px_-2px_1px_rgba(0,0,0,0.4),inset_-0px_2px_1px_rgba(255,255,255,0.4)]",
       },

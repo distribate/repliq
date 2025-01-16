@@ -24,6 +24,67 @@ import GrassBlock from "@repo/assets/images/minecraft/grass_block.webp";
 import FishingRod from "@repo/assets/images/minecraft/fishing_rod.webp";
 import Link from "next/link";
 import { userStatusQuery } from "@repo/lib/queries/user-status-query.ts";
+import { useQuery } from "@tanstack/react-query";
+import { createQueryKey } from "@repo/lib/helpers/query-key-builder.ts";
+import { forumUserClient } from "@repo/shared/api/forum-client.ts";
+import { ContentNotFound } from "#templates/content-not-found.tsx";
+import { Skeleton } from "@repo/ui/src/components/skeleton.tsx";
+
+const getUserLands = async (nickname: string) => {
+  const res = await forumUserClient().user["get-user-lands"][":nickname"].$get({
+    param: {
+      nickname
+    }
+  })
+
+  const data = await res.json()
+
+  if ("error" in data) {
+    return null
+  }
+
+  return data.data.length > 0 ? data.data : null
+}
+
+const userLandsQuery = (nickname: string) => useQuery({
+  queryKey: createQueryKey('user', ['lands', nickname]),
+  queryFn: () => getUserLands(nickname),
+  refetchOnWindowFocus: false,
+  refetchOnReconnect: false,
+  refetchOnMount: false
+})
+
+const UserLands = () => {
+  const currentUser = getUser();
+  const { data: userLands, isLoading } = userLandsQuery(currentUser.nickname);
+
+  return (
+    <div className="flex flex-col gap-y-4 items-center w-full">
+      <Typography variant="dialogTitle">Ваши регионы</Typography>
+      <div className="flex flex-col w-full gap-y-4">
+        {isLoading && (
+          <>
+            <Skeleton className="w-full h-16" />
+            <Skeleton className="w-full h-16" />
+          </>
+        )}
+        {(!userLands && !isLoading) && (
+          <ContentNotFound title="Регионов пока нет :/" />
+        )}
+        {userLands && userLands?.map((land) => (
+          <div className="flex flex-col bg-secondary-color w-full py-2 px-4">
+            <Typography className="text-base text-shark-200">
+              {land.name}
+            </Typography>
+            <Typography className="text-base text-shark-200">
+              {land.title}
+            </Typography>
+          </div>
+        ))}
+      </div>
+    </div>
+  )
+}
 
 const UserPersonalCardHeader = () => {
   const { nickname, name_color } = getUser();
@@ -84,7 +145,7 @@ export const UserPersonalCard = () => {
             <UserSettingOption title="Мои регионы" imageSrc={GrassBlock.src} />
           </DialogTrigger>
           <DialogContent>
-
+            <UserLands />
           </DialogContent>
         </Dialog>
         <Dialog>

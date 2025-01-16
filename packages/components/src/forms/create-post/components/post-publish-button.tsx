@@ -20,7 +20,7 @@ export const PostPublishButton = () => {
     formFieldLength <= POST_CONTENT_LIMIT[0] || createPostMutation.isPending;
 
   return (
-    <Button onClick={handlePublishPost} variant="action" disabled={isDisabled}>
+    <Button onClick={handlePublishPost} variant="positive" disabled={isDisabled}>
       Опубликовать
     </Button>
   );

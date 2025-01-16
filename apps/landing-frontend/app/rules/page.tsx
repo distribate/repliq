@@ -89,7 +89,7 @@ export default async function RulesPage() {
               <Button
                 size="default"
                 variant="pageLink"
-                className="hover:bg-[#8a113c] bg-[#a20f40]"
+                className="hover:bg-[#a20f40] rounded-xl border border-[#8a113c] bg-[#8a113c]"
               >
                 <Typography text_color="white" className="font-bold text-xl">
                   <span

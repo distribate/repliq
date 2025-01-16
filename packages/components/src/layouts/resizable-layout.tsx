@@ -88,7 +88,7 @@ export const AreaMain = ({
       order={2}
       minSize={84}
       maxSize={96}
-      className="flex flex-col gap-y-2 !pb-4 !overflow-visible !min-h-screen !max-h-screen"
+      className="flex flex-col gap-y-2 !pb-4 !overflow-visible !min-h-screen h-full !max-h-screen"
     >
       <div className="flex flex-col gap-y-4 h-full w-full main-section overflow-x-hidden overflow-y-scroll">
         {children}
@@ -135,11 +135,11 @@ export const ResizableLayout = ({
           <AreaMain defaultSize={defaultLayout[1]}>{children}</AreaMain>
         </ResizablePanelGroup>
       ) : (
-        <div className="flex flex-col gap-2 h-screen relative overflow-hidden w-full">
+        <div className="flex flex-col gap-2 min-h-screen h-full relative w-full">
+          <SidebarMobile />
           <div className="flex overflow-y-auto h-full w-full p-2">
             {children}
           </div>
-          <SidebarMobile />
         </div>
       )}
     </UserStatusLayout>

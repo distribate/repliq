@@ -12,7 +12,7 @@ export const RulesTerminItemContent = ({
     <div className="flex flex-col mb-6 lg:mb-4">
       <div className="flex-col flex gap-1">
         <Typography className="text-project-color text-md md:text-lg">
-          {id})&nbsp;
+          {id}{`)`}&nbsp;
           <span className="text-black dark:text-white font-semibold">{article_title}</span>
           {article_desc && (
             <span className="inline text-black dark:text-neutral-400">

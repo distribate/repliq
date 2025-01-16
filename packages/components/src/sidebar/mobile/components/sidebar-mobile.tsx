@@ -1,61 +1,108 @@
 "use client";
 
 import { Avatar } from "#user/components/avatar/components/avatar.tsx";
-import { ImageWrapper } from "#wrappers/image-wrapper.tsx";
-import Logotype from "@repo/assets/images/logotype.png";
-import Inspector from "@repo/assets/images/minecraft/block_inspect.webp";
-import BottleEnchanting from "@repo/assets/images/minecraft/bottle_enchanting.webp";
-import Link from "next/link";
 import { USER_URL } from "@repo/shared/constants/routes.ts";
-import { currentUserQuery } from "@repo/lib/queries/current-user-query.ts";
+import { Sheet, SheetContent, SheetTrigger } from "@repo/ui/src/components/sheet.tsx";
+import { Menu, Search } from "lucide-react";
+import { getUser } from "@repo/lib/helpers/get-user";
+import { Typography } from "@repo/ui/src/components/typography";
+import { UserNickname } from "#user/components/name/nickname.tsx";
+import { UserDonate } from "#user/components/donate/components/donate.tsx";
+import { forwardRef, HTMLAttributes, useState } from "react";
+import { SidebarButton } from "#sidebar/desktop/components/sidebar-content/links/components/sidebar-target.tsx";
+import { useRouter } from "next/navigation";
+import { Separator } from "@repo/ui/src/components/separator";
+import { UserSettingsModal } from "#modals/user-settings/user-settings-modal.tsx";
+import { useInView } from "react-intersection-observer";
+import { cva, VariantProps } from "class-variance-authority";
+
+const sidebarMobileVariants = cva(
+  `flex items-center justify-between rounded-b-lg gap-6 z-[10] sticky top-0 w-full px-4 bg-shark-950 h-[60px]`,
+  {
+    variants: {
+      variant: {
+        blurred: "bg-opacity-60 backdrop-blur-md",
+        default: "",
+      },
+    },
+    defaultVariants: {
+      variant: "default",
+    },
+  }
+);
+
+type SidebarMobileProps = HTMLAttributes<HTMLDivElement>
+  & VariantProps<typeof sidebarMobileVariants>
+
+export const SidebarMobileWrapper = forwardRef<HTMLDivElement, SidebarMobileProps>(({
+  className, variant, ...props
+}, ref) => {
+  return <div className={sidebarMobileVariants({ variant, className })} {...props} ref={ref} />
+});
+
+type SidebarMobileButtonProps = {
+  func?: () => void
+  title: string
+}
+
+const SidebarMobileButton = ({ func, title }: SidebarMobileButtonProps) => {
+  return (
+    <SidebarButton className="h-10" onClick={func}>
+      <Typography>
+        {title}
+      </Typography>
+    </SidebarButton>
+  )
+}
 
 export const SidebarMobile = () => {
-  const { data: currentUser, isLoading } = currentUserQuery();
+  const [open, setOpen] = useState(false);
+  const { nickname, donate, favorite_item } = getUser();
+  const { push } = useRouter()
+  const { inView, ref } = useInView({
+    threshold: 1
+  })
 
-  if (!currentUser) return;
+  const handle = (func?: () => void) => {
+    setOpen(false)
+    func && func()
+  }
 
   return (
-    <div className="flex items-center justify-between gap-6 sticky bottom-0 w-full px-6 py-2 bg-shark-950 min-h-[80px] rounded-t-lg">
-      <Link href="/">
-        <ImageWrapper
-          priority={true}
-          propSrc={Logotype.src}
-          width={40}
-          className="relative top-1"
-          height={40}
-          propAlt="Go to Forum"
-        />
-      </Link>
-      <Link href="/search?type=users">
-        <ImageWrapper
-          propSrc={Inspector.src}
-          propAlt="Search peoples"
-          className="w-[42px] h-[42px] relative top-1"
-          width={42}
-          height={42}
-          loading="lazy"
-        />
-      </Link>
-      <Link href="/search?type=threads">
-        <ImageWrapper
-          propSrc={BottleEnchanting.src}
-          propAlt="Search threads"
-          className="w-[38px] h-[38px]"
-          width={38}
-          height={38}
-          loading="lazy"
-        />
-      </Link>
-      <Link href={USER_URL + currentUser.nickname}>
-        <Avatar
-          variant="default"
-          border="withBorder"
-          className="overflow-hidden min-w-[38px] min-h-[38px]"
-          propWidth={38}
-          propHeight={38}
-          nickname={currentUser.nickname}
-        />
-      </Link>
-    </div>
+    <SidebarMobileWrapper ref={ref} variant={inView ? "blurred" : "default"} >
+      <Sheet open={open} onOpenChange={setOpen}>
+        <SheetTrigger>
+          <Menu size={32} className="text-shark-300" />
+        </SheetTrigger>
+        <SheetContent side="left" className="overflow-y-auto h-full">
+          <div className="flex bg-shark-950 gap-4 p-4 flex-col">
+            <Avatar nickname={nickname} propHeight={64} propWidth={64} />
+            <div className="flex flex-col gap-1">
+              <UserNickname nickname={nickname} className="text-[18px] font-medium text-shark-50" />
+              <UserDonate donate={donate} favoriteItemId={favorite_item} />
+            </div>
+          </div>
+          <div className="flex flex-col p-4 gap-y-4">
+            <SidebarMobileButton title="Мой профиль" func={() => handle(() => push(USER_URL + nickname))} />
+            <SidebarMobileButton title="Друзья" func={() => handle(() => push("/friends"))} />
+            <SidebarMobileButton title="Треды" func={() => handle(() => push("/"))} />
+            <Separator />
+            <SidebarMobileButton title="Создать тред" func={() => handle(() => push("/create-thread"))} />
+            <Separator />
+            <SidebarMobileButton title="Ивенты" func={() => handle(() => push("/events"))} />
+            <SidebarMobileButton title="Справочник" func={() => handle(() => push("https://fasberry.su/wiki"))} />
+            <SidebarMobileButton title="Территории" func={() => handle(() => push("/lands"))} />
+            <Separator />
+            <SidebarMobileButton title="Коллекции" func={() => handle(() => push("/collections"))} />
+            <UserSettingsModal trigger={<SidebarMobileButton title="Настройки" />} />
+          </div>
+        </SheetContent>
+      </Sheet>
+      <Search
+        onClick={() => handle(() => push("/search"))}
+        size={26}
+        className="text-shark-300 cursor-pointer"
+      />
+    </SidebarMobileWrapper>
   );
 };

@@ -6,7 +6,9 @@ import { Typography } from '@repo/landing-ui/src/typography';
 import { newsQuery } from '@repo/lib/queries/news-query.ts';
 
 export const NewsList = () => {
-  const { data: news } = newsQuery({ limit: 3 });
+  const { data } = newsQuery({ limit: 3, ascending: true });
+
+  const news = data?.data
 
   return (
     <div className="flex flex-col gap-6">

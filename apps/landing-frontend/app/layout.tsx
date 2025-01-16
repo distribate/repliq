@@ -71,7 +71,16 @@ export default function RootLayout({
 				<QueryProvider>
 					<ReactQueryDevtools />
 					<NextThemeProvider>
-						<Toaster position="top-left" richColors />
+						<Toaster
+							position="top-left"
+							richColors
+							icons={{
+								info: <img width={32} height={32} alt="" loading="lazy" draggable={false} src="/images/minecraft/icons/book_big.webp" />,
+								error: <img width={32} height={32} alt="" loading="lazy" draggable={false} src="/images/minecraft/icons/book_big.webp" />,
+								success: <img width={32} height={32} alt="" loading="lazy" draggable={false} src="/images/minecraft/icons/book_big.webp" />,
+								warning: <img width={32} height={32} alt="" loading="lazy" draggable={false} src="/images/minecraft/icons/book_big.webp" />
+							}}
+						/>
 						<TooltipProvider>
 							<Header />
 							{children}

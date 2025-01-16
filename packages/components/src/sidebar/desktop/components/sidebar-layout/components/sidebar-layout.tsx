@@ -2,7 +2,7 @@ import { cva, type VariantProps } from "class-variance-authority";
 import { forwardRef, HTMLAttributes } from "react";
 
 export const sidebarLayoutVariants = cva(
-  `flex flex-col justify-between h-full transition-all duration-100
+  `flex flex-col justify-between border border-shark-800 h-full transition-all duration-100
 	 rounded-lg ease-in-out overflow-hidden
 	 pt-6 pb-2 bg-primary-color outline-none relative`,
   {

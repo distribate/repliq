@@ -69,7 +69,7 @@ export default async function SupportPage() {
 							<Button
 								size="default"
 								variant="pageLink"
-								className="hover:bg-[#724e11] bg-[#86600d]"
+								className="hover:bg-[#86600d] rounded-xl border border-[#86600d] bg-[#724e11]"
 							>
 								<Typography text_color="white" className="font-bold text-xl">
 									<span className="inline-block duration-150 group-hover:duration-150">
