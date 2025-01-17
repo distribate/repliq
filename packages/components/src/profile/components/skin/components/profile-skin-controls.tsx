@@ -10,7 +10,6 @@ import { skinClient } from "@repo/shared/api/skin-client.ts";
 import { Dialog, DialogClose, DialogContent, DialogTrigger } from "@repo/ui/src/components/dialog.tsx";
 import { Typography } from "@repo/ui/src/components/typography.tsx";
 import { useState } from "react";
-import Link from "next/link";
 import { ConfirmationActionModalTemplate } from "#templates/confirmation-action-modal-template.tsx";
 import { ConfirmationButton } from "#buttons/confirmation-action-button.tsx";
 import { cva, VariantProps } from "class-variance-authority";
@@ -58,7 +57,7 @@ export const ProfileSkinDownloadLink = ({ nickname }: Pick<UserEntity, "nickname
       </DialogTrigger>
       <DialogContent>
         <ConfirmationActionModalTemplate title="Скачать скин?">
-          <Link
+          <a
             href={downloadUrl.href}
             onClick={() => setDialogOpen(false)}
             target="_blank"
@@ -69,7 +68,7 @@ export const ProfileSkinDownloadLink = ({ nickname }: Pick<UserEntity, "nickname
             <Typography className="text-shark-950 text-base font-medium">
               Скачать
             </Typography>
-          </Link>
+          </a>
           <DialogClose>
             <ConfirmationButton actionType="cancel" title="Отмена" />
           </DialogClose>

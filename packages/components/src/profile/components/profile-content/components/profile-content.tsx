@@ -4,22 +4,9 @@ import { useUserProfile } from "../hooks/use-user-profile"
 import { profileStatusQuery } from "../queries/profile-status-query"
 import { useEffect } from "react"
 import { ProfileContentTabs } from "./profile-content-tabs"
-import dynamic from 'next/dynamic';
-
-const UserBanned = dynamic(() =>
-  import('@repo/components/src/templates/user-banned.tsx')
-    .then(m => m.UserBanned),
-);
-
-const UserBlocked = dynamic(() =>
-  import('@repo/components/src/templates/user-blocked.tsx')
-    .then(m => m.UserBlocked),
-);
-
-const ProfilePrivated = dynamic(() =>
-  import('@repo/components/src/templates/profile-privated.tsx')
-    .then(m => m.ProfilePrivated),
-);
+import { ProfilePrivated } from "#templates/profile-privated.tsx"
+import { UserBlocked } from "#templates/user-blocked.tsx"
+import { UserBanned } from "#templates/user-banned.tsx"
 
 export type ProfileContentProps = {
   requestedUserNickname: string

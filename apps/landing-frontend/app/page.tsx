@@ -12,6 +12,7 @@ import { Suspense } from 'react';
 import { Skeleton } from '@repo/landing-ui/src/skeleton.tsx';
 import dynamic from 'next/dynamic';
 import { IntroLayout } from "@repo/landing-components/src/layout/intro-layout";
+import { IntroBackgroundImage} from "@repo/landing-components/src/intro/background-image";
 
 export const metadata = {
   title: 'Главная - Fasberry',
@@ -145,10 +146,7 @@ export default async function Main() {
       <div id="title" className="full-screen-section">
         <IntroLayout>
           <div className="absolute top-0 right-0 left-0 overflow-hidden h-screen">
-            <div
-              className="w-full h-full absolute top-0 right-0 left-0 bg-no-repeat bg-center bg-cover"
-              style={{ backgroundImage: `url("/images/backgrounds/main_background.png")` }}
-            />
+            <IntroBackgroundImage/>
             <Overlay variant="default" />
           </div>
           <div className="responsive z-1 mx-auto">

@@ -7,8 +7,8 @@ import tailwindScrollbar from "tailwind-scrollbar";
 module.exports = {
   content: {
     files: [
-      "./app/**/*.{ts,tsx}",
-      "./src/**/*.{ts,tsx}",
+      "./app/**/*.{js,ts,tsx}",
+      "./src/**/*.{js,ts,tsx}",
       "../../packages/ui/src/**/*.{ts,tsx}",
       "../../packages/components/src/**/*.{ts,tsx}",
     ],

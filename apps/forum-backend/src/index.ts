@@ -1,11 +1,9 @@
-import { Hono, type Context, type MiddlewareHandler } from 'hono';
+import { Hono } from 'hono';
 import { logger } from 'hono/logger';
 import { bearerAuth } from 'hono/bearer-auth';
 import { showRoutes } from 'hono/dev';
 import { initNats } from '@repo/config-nats/nats-client';
-import { cors } from 'hono/cors';
-import { csrf } from "hono/csrf";
-import { validateRequest } from '#utils/validate-request.ts';
+import { validateRequest } from '#middlewares/validate-request.ts';
 import { contextStorage } from 'hono/context-storage'
 import { getUserRoute } from '#routes/user/get-user.ts';
 import { editUserSettingsRoute } from '#routes/user/edit-user-settings.ts';
@@ -45,7 +43,6 @@ import { getLatestCategoryThreadsRoute } from '#routes/categories/get-latest-cat
 import { removeThreadRoute } from '#routes/thread/remove-thread.ts';
 import { updateThreadSettingsRoute } from '#routes/thread/update-thread-settings.ts';
 import { getThreadUserReactionsRoute } from '#routes/thread/get-thread-user-rating.ts';
-import { timeout } from 'hono/timeout'
 import type { Env } from '#types/env-type.ts';
 import { createCommentRoute } from '#routes/comments/create-comment.ts';
 import { replyCommentRoute } from '#routes/comments/reply-comment.ts';
@@ -54,7 +51,6 @@ import { createReactionRoute } from '#routes/reaction/create-reaction.ts';
 import { getUserBanDetailsRoute } from '#routes/user/get-user-ban-details.ts';
 import { createThreadRoute } from '#routes/thread/create-thread.ts';
 import { getUserFriendsCountRoute } from '#routes/user/get-user-friends-count.ts';
-import { originList } from '@repo/shared/constants/origin-list';
 import { getFactRoute } from '#routes/shared/get-fact-route.ts';
 import { createBunWebSocket } from 'hono/bun'
 import type { ServerWebSocket } from 'bun'
@@ -66,34 +62,32 @@ import { getNewsRoute } from '#routes/public/get-news.ts';
 import { getOnlineUsersRoute } from '#routes/public/get-online-users.ts';
 import { getLatestRegUsersRoute } from '#routes/public/get-latest-reg-users.ts';
 import { getLastCommentsRoute } from '#routes/comments/get-last-comments.ts';
-import { HTTPException } from 'hono/http-exception';
-import {
-  rateLimiter as limiter
-} from "hono-rate-limiter";
 import { getUserLandsRoute } from '#routes/user/get-user-lands.ts';
+import { getAuthImageRoute } from '#routes/public/get-auth-image.ts';
+import { getDonatesRoute } from '#routes/public/get-donates.ts';
+import { getThreadImagesRoute } from './routes/thread/get-thread-images';
+import { getStaticImageRoute } from '#routes/shared/get-static-image.ts';
+import { port, token } from "./utils/init-env.ts"
+import { timeoutMiddleware } from '#middlewares/timeout.ts';
+import { rateLimiterMiddleware } from '#middlewares/rate-limiter.ts';
+import { csrfProtectionMiddleware } from '#middlewares/csrf-protection.ts';
+import { corsProtectionMiddleware } from '#middlewares/cors-protection.ts';
 
 const { websocket } = createBunWebSocket<ServerWebSocket>()
 
-const corsOptions = {
-  origin: originList,
-  credentials: true,
-  maxAge: 86400,
-  allowHeaders: ["Cookie", "cookie", "x-csrf-token", "X-CSRF-Token", "content-type", "Content-Type"]
-}
-
-const port = process.env.FORUM_BACKEND_PORT
-const token = process.env.SECRET_TOKEN!
-
-await initNats()
+initNats()
 
 export const landing = new Hono()
   .route("/", getNewsRoute)
   .route("/", getOnlineUsersRoute)
   .route("/", getLatestRegUsersRoute)
+  .route("/", getDonatesRoute)
 
 export const shared = new Hono()
   .basePath("/shared")
   .route('/', getFactRoute)
+  .route("/", getAuthImageRoute)
+  .route("/", getStaticImageRoute)
 
 export const admin = new Hono()
   .basePath('/admin')
@@ -124,6 +118,7 @@ export const thread = new Hono()
   .route("/", getThreadCommentsRoute)
   .route("/", getThreadUserReactionsRoute)
   .route("/", createThreadRoute)
+  .route("/", getThreadImagesRoute)
 
 export const server = new Hono()
   .basePath('/server')
@@ -178,32 +173,12 @@ export const ws = new Hono()
   .route("/", userStatusRoute)
   .route("/", confirmWebsocketConnRoute)
 
-const customTimeoutException = (ctx: Context) =>
-  new HTTPException(408, {
-    message: `Request timeout after waiting ${ctx.req.header(
-      'Duration'
-    )} seconds. Please try again later.`,
-  })
-
 const app = new Hono<Env>()
-  .use(
-    cors(corsOptions)
-  )
-  .use(
-    csrf({
-      origin: (origin) => /^(https:\/\/(\w+\.)?fasberry\.su|http:\/\/localhost:3000|http:\/\/localhost:3009)$/.test(origin),
-    })
-  )
+  .use(corsProtectionMiddleware)
+  .use(csrfProtectionMiddleware)
   .basePath('/api/forum')
-  .use(timeout(5000, customTimeoutException))
-  .use(
-    limiter({
-      windowMs: 60000,
-      limit: 300,
-      standardHeaders: "draft-6",
-      keyGenerator: (ctx) => ctx.req.header("x-forwarded-for") ?? "",
-    })
-  )
+  .use(timeoutMiddleware)
+  .use(rateLimiterMiddleware)
   .use(logger())
   .use(contextStorage())
   .route('/', admin)
@@ -217,10 +192,10 @@ const app = new Hono<Env>()
   .route("/", ws)
   .route("/", landing)
 
-async function createServer() {
-  showRoutes(app, { verbose: false });
+showRoutes(app, { verbose: false });
 
-  Bun.serve({ port, fetch: app.fetch, websocket });
-}
+Bun.serve({
+  port, fetch: app.fetch, websocket
+})
 
-createServer().then((_) => console.log(port))
+console.log(port)

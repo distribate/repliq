@@ -2,18 +2,12 @@
 
 import { PostTextForm } from "#forms/create-post/components/post-text-form.tsx";
 import { Avatar } from "#user/components/avatar/components/avatar.tsx";
-import dynamic from "next/dynamic";
 import { getUser } from "@repo/lib/helpers/get-user.ts";
 import { Button } from "@repo/ui/src/components/button.tsx";
 import { Typography } from "@repo/ui/src/components/typography.tsx";
 import { CreatePostFieldType, POST_FORM_FIELD_QUERY_KEY, postFormQuery } from "#forms/create-post/queries/post-form-query.ts";
 import { useQueryClient } from "@tanstack/react-query";
-
-const CreatePostActiveSection = dynamic(() =>
-  import("./create-post-active-section.tsx").then(
-    (m) => m.CreatePostActiveSection,
-  ),
-);
+import { CreatePostActiveSection } from "./create-post-active-section";
 
 export const CreatePostSection = () => {
   const currentUser = getUser();

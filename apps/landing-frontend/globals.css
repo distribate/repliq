@@ -2,13 +2,13 @@
 @tailwind components;
 @tailwind utilities;
 
-@font-face {
-	font-family: Monocraft;
-	src: url("./public/fonts/Monocraft.otf") format("opentype");
-	font-display: swap;
-}
-
 @layer base {
+	@font-face {
+		font-family: Monocraft;
+		src: url("./public/fonts/Monocraft.otf") format("opentype");
+		font-display: swap;
+	}
+	
 	* {font-family: Monocraft, serif;}
 	::-webkit-progress-bar,
 	::-moz-progress-bar,

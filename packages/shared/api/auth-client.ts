@@ -1,9 +1,6 @@
 import { AuthAppType } from "auth-backend/src";
 import { hc } from "hono/client";
-
-const headers = { Authorization: `Bearer ${process.env.SECRET_TOKEN}` };
-
-const isProduction = process.env.NODE_ENV === "production";
+import { isProduction } from "@repo/lib/helpers/is-production";
 
 const production = `https://cc.fasberry.su/api/auth`;
 const development = `http://localhost:4100/api/auth`;

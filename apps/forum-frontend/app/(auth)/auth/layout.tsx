@@ -1,10 +1,9 @@
 import { ReactNode } from "react";
 import { PageWrapper } from "@repo/components/src/wrappers/page-wrapper.tsx";
-import AuthBackground from "@repo/assets/images/auth_background.webp";
-import { ImageWrapper } from "@repo/components/src/wrappers/image-wrapper.tsx";
 import { permanentRedirect } from "next/navigation";
-import { getRandomAuthBackground } from "@repo/components/src/forms/auth/queries/get-random-auth-background.ts";
 import { getCurrentSession } from "@repo/lib/actions/get-current-session.ts";
+import Image from "next/image";
+import { AuthImage } from "@repo/components/src/forms/auth/components/auth-image.tsx";
 
 type AuthLayoutProps = {
   children: ReactNode;
@@ -16,27 +15,22 @@ export default async function AuthLayout({
   section,
 }: AuthLayoutProps) {
   const { user: currentUser } = await getCurrentSession();
-  const url = await getRandomAuthBackground();
 
   if (currentUser) {
     return permanentRedirect("/");
   }
 
-  const authImage = url ? url : AuthBackground.src;
-
   return (
-    <PageWrapper
-      withBackground={{ src: authImage }}
-      className="flex flex-col bg-cover py-6 relative"
-    >
+    <PageWrapper className="flex flex-col bg-cover py-6 relative">
+      <AuthImage/>
       <div className="absolute inset-0 bg-black/40" />
       <div className="flex relative max-w-[1024px] max-h-[256px] overflow-hidden">
-        <ImageWrapper
-          propSrc="/images/fasberry_logo.png"
-          propAlt="Fasberry"
+        <Image
+          src="/images/fasberry_logo.png"
+          alt="Fasberry"
           width={956}
           height={216}
-          loading="eager"
+          loading="lazy"
           className="w-full h-full"
         />
       </div>

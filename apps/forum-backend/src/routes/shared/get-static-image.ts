@@ -1,0 +1,24 @@
+import { getPublicUrl } from "#routes/public/get-news.ts";
+import { zValidator } from "@hono/zod-validator";
+import { throwError } from "@repo/lib/helpers/throw-error";
+import { Hono } from "hono";
+import { z } from "zod";
+
+const getStaticImageSchema = z.object({
+  bucket: z.string(),
+  fileName: z.string(),
+})
+
+export const getStaticImageRoute = new Hono()
+.get("/get-static-image", zValidator("query", getStaticImageSchema), async (ctx) => {
+  const query = ctx.req.query();
+  const { bucket, fileName } = getStaticImageSchema.parse(query);
+
+  try {
+    const imageUrl = await getPublicUrl(bucket, fileName)
+
+    return ctx.json({ data: imageUrl.data.publicUrl }, 200)
+  } catch (e) {
+    return ctx.json({ error: throwError(e) }, 500)
+  }
+})

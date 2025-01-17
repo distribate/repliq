@@ -11,7 +11,6 @@ import {
 } from '#profile/components/posts/components/posts/components/profile-posts-list-card.tsx';
 import { UserEntity } from '@repo/types/entities/entities-type.ts';
 import { Separator } from '@repo/ui/src/components/separator.tsx';
-import dynamic from 'next/dynamic';
 import { useInView } from 'react-intersection-observer';
 import { useEffect } from 'react';
 import {
@@ -19,10 +18,7 @@ import {
   POSTS_FILTERING_QUERY_KEY, PostsFilteringQuery,
 } from '#profile/components/posts/components/posts/queries/posts-filtering-query.ts';
 import { useQueryClient } from '@tanstack/react-query';
-
-const SomethingError = dynamic(() =>
-  import('#templates/something-error.tsx').then((m) => m.SomethingError),
-);
+import { SomethingError } from '#templates/something-error.tsx';
 
 const PostsSkeleton = () => {
   return (

@@ -3,36 +3,15 @@ import { HTMLAttributes } from "react";
 import { DropdownWrapper } from "#wrappers/dropdown-wrapper.tsx";
 import Photo from "@repo/assets/images/minecraft/photo.webp";
 import { ProfileDescriptionChangeModal } from "#modals/user-settings/profile-description-change-modal.tsx";
-import dynamic from "next/dynamic";
-import Image from "next/image";
 import { Button } from "@repo/ui/src/components/button.tsx";
 import { getUser } from "@repo/lib/helpers/get-user.ts";
 import { MoreWrapper } from "#wrappers/more-wrapper.tsx";
 import { Separator } from "@repo/ui/src/components/separator.tsx";
 import { FriendButton } from "#buttons/friend-button.tsx";
 import { ReportCreateModal } from "#modals/action-confirmation/components/report/components/report-create-modal.tsx";
-import { Skeleton } from "@repo/ui/src/components/skeleton.tsx";
 import { BlockUserModal } from "#modals/action-confirmation/components/block-user/components/block-user-modal.tsx";
-
-const ProfileBackgroundUpdateModal = dynamic(
-  () =>
-    import(
-      "@repo/components/src/modals/custom/profile-background-update-modal.tsx"
-    ).then((m) => m.ProfileBackgroundUpdateModal),
-  {
-    loading: () => <Skeleton className="h-8" />,
-  },
-);
-
-const DeleteCoverModal = dynamic(
-  () =>
-    import(
-      "@repo/components/src/modals/action-confirmation/components/delete-cover/components/delete-cover-modal.tsx"
-    ).then((m) => m.DeleteCoverModal),
-  {
-    loading: () => <Skeleton className="h-8" />,
-  },
-);
+import { ProfileBackgroundUpdateModal } from "#modals/custom/profile-background-update-modal.tsx";
+import { DeleteCoverModal } from "#modals/action-confirmation/components/delete-cover/components/delete-cover-modal.tsx";
 
 const userCoverPanelVariants = cva(
   "relative z-[3] flex bg-transparent gap-x-4 border-none",
@@ -95,7 +74,7 @@ export const UserCoverPanel = ({
                 type="button"
                 className="rounded-r-none px-6 hover:bg-shark-800"
               >
-                <Image
+                <img
                   src={Photo?.src}
                   width={48}
                   className="w-[24px] h-[24px]"

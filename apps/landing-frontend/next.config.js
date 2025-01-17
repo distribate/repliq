@@ -2,17 +2,11 @@
 module.exports = {
 	reactStrictMode: false,
 	transpilePackages: ['@repo/landing-ui', "@repo/landing-components"],
-  experimental: {
-    optimizePackageImports: ['@repo/landing-ui', "@repo/landing-components"]
-  },
+	experimental: {
+		optimizePackageImports: ['@repo/landing-ui', "@repo/landing-components"]
+	},
 	images: {
 		remotePatterns: [
-			{
-				protocol: "https",
-				hostname: "ely.by",
-				port: "",
-				pathname: "/**"
-			},
 			{
 				protocol: "https",
 				hostname: "mc-heads.net",
@@ -38,28 +32,10 @@ module.exports = {
 				pathname: "/**"
 			},
 			{
-				protocol: "https",
-				hostname: "docs.google.com",
-				port: "",
-				pathname: "/**"
-			},
-			{
-				protocol: "https",
-				hostname: "mc.yandex.ru",
-				port: "",
-				pathname: "/**"
-			},
-			{
-				protocol: "https",
-				hostname: "lh3.googleusercontent.com",
-				port: "",
-				pathname: "/**"
-			},
-			{
-				protocol: "https",
-				hostname: "storage.easyx.ru",
-				port: "",
-				pathname: "/**"
+				protocol: 'https',
+				hostname: 'kong.fasberry.su/**',
+				port: '',
+				pathname: '/storage/**',
 			}
 		]
 	},

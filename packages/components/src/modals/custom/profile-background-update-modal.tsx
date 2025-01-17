@@ -7,18 +7,7 @@ import {
   USER_COVER_UPDATE_IMAGE_MUTATION_KEY,
 } from "#profile/components/cover/hooks/use-control-cover-image.ts";
 import { ChangeEvent } from "react";
-import dynamic from "next/dynamic";
-import { Skeleton } from "@repo/ui/src/components/skeleton.tsx";
-
-const ProfileBackgroundDefaultImagesModal = dynamic(
-  () =>
-    import("./profile-background-default-images-modal.tsx").then(
-      (m) => m.ProfileBackgroundDefaultImagesModal,
-    ),
-  {
-    loading: () => <Skeleton className="p-6 w-full h-20" />,
-  },
-);
+import { ProfileBackgroundDefaultImagesModal } from "./profile-background-default-images-modal.tsx";
 
 const ProfileBackgroundUploadCustom = () => {
   const { uploadBackgroundImageMutation } = useControlCoverImage();

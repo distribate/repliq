@@ -4,18 +4,12 @@ import { UserCoverMainInfo } from "./cover-main-info.tsx";
 import { UserCoverPanel } from "./cover-panel.tsx";
 import { coverQuery } from "#profile/components/cover/queries/cover-query.ts";
 import { imageCoverQuery } from "#profile/components/cover/queries/image-cover-query.ts";
-import dynamic from "next/dynamic";
 import { requestedUserQuery } from "../queries/requested-user-query.ts";
+import { UserCoverWatermark } from "./cover-watermark.tsx";
 
 type UserCoverProps = {
   requestedUserNickname: string
 };
-
-const UserCoverWatermark = dynamic(() =>
-  import(
-    "@repo/components/src/profile/components/cover/components/cover-watermark.tsx"
-  ).then((m) => m.UserCoverWatermark),
-);
 
 export const UserCover = ({
   requestedUserNickname: nickname

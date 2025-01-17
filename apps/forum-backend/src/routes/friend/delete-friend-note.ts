@@ -19,8 +19,6 @@ export const deleteFriendNoteRoute = new Hono()
         friend_id, initiator, recipient
       })
 
-      console.log(friend_id, id)
-
       await deleteFriendNote(id)
       return ctx.json({ status: "Friend note deleted" }, 200);
     } catch (e) {

@@ -15,6 +15,7 @@
     "@repo/config-nats": "*",
     "@repo/shared": "*",
     "@repo/utils": "*",
+    "dayjs": "1.11.11",
     "gramio": "0.1.2",
     "ky": "1.7.2",
     "pg-listen": "1.7.0"

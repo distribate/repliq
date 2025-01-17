@@ -1,5 +1,5 @@
 import { useSuspenseQuery } from "@tanstack/react-query";
-import { getSkinDetails } from "@repo/lib/helpers/get-skin-details.ts";
+import { getSkinDetails } from "@repo/lib/queries/get-skin-details.ts";
 import { createQueryKey } from "@repo/lib/helpers/query-key-builder.ts";
 
 export type SkinAnimation = "idle" | "run" | "flying";
@@ -26,7 +26,7 @@ const initial: Omit<SkinStateQuery, "skinUrl"> = {
 
 export const skinStateQuery = (nickname: string) => useSuspenseQuery({
   queryKey: SKIN_STATE_QUERY_KEY(nickname),
-  queryFn: () => getSkinDetails(nickname),
+  queryFn: () => getSkinDetails({ type: "skin", nickname }),
   refetchOnWindowFocus: false
 });
 

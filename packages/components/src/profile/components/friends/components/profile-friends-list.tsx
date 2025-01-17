@@ -7,16 +7,12 @@ import {
 import { ContentNotFound } from "#templates/content-not-found.tsx";
 import { UserEntity } from "@repo/types/entities/entities-type.ts";
 import { FriendProfileCard } from "#friend/components/friend-card/components/friend-profile-card.tsx";
-import dynamic from "next/dynamic";
 import { friendsSortQuery } from "#profile/components/friends/queries/friends-settings-query.ts";
 import { ProfileFriendsFiltering } from "#profile/components/friends/components/profile-friends-filtering.tsx";
 import { type FriendWithDetails } from '@repo/types/schemas/friend/friend-types';
 import { Suspense } from "react";
 import { ProfileFriendsSkeleton } from "./profile-friends-skeleton";
-
-const SomethingError = dynamic(() =>
-  import("#templates/something-error.tsx").then((m) => m.SomethingError),
-);
+import { SomethingError } from "#templates/something-error.tsx";
 
 const filterFriendsByNickname = (data: FriendWithDetails[], querySearch: string) =>
   data.filter(item => item.nickname.startsWith(querySearch));

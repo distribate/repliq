@@ -1,6 +1,5 @@
 import { HTMLAttributes } from "react";
 import { cva, VariantProps } from "class-variance-authority";
-import { StaticImageData } from "next/image";
 
 const pageWrapperVariants = cva("flex overflow-hidden px-4", {
   variants: {
@@ -14,31 +13,12 @@ const pageWrapperVariants = cva("flex overflow-hidden px-4", {
   },
 });
 
-export interface PageWrapperProps
-  extends HTMLAttributes<HTMLDivElement>,
-    VariantProps<typeof pageWrapperVariants> {
-  withBackground?: {
-    src: StaticImageData | string;
-  };
-}
+interface PageWrapperProps extends 
+  HTMLAttributes<HTMLDivElement>, 
+    VariantProps<typeof pageWrapperVariants> { }
 
-const PageWrapper = ({
-  variant,
-  withBackground,
-  className,
-  ...props
+export const PageWrapper = ({
+  variant, className, ...props
 }: PageWrapperProps) => {
-  const background = withBackground ? withBackground.src : "none";
-
-  return (
-    <div
-      className={pageWrapperVariants({ variant, className })}
-      style={{
-        backgroundImage: `url('${background}')`,
-      }}
-      {...props}
-    />
-  );
+  return <div className={pageWrapperVariants({ variant, className })} {...props} />;
 };
-
-export { PageWrapper };

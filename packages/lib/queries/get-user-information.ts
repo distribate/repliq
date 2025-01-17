@@ -7,8 +7,7 @@ export async function getUserInformation(): Promise<UserDetailed> {
   const data = await res.json()
 
   if ("error" in data) {
-    const { error } = data;
-    throw new Error(error)
+    throw new Error(data.error)
   }
 
   return data as UserDetailed

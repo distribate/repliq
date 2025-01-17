@@ -6,7 +6,6 @@ import { Dialog, DialogContent, DialogTrigger } from "@repo/ui/src/components/di
 import { toast } from "sonner";
 import { getUser } from "@repo/lib/helpers/get-user";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@repo/ui/src/components/tooltip";
-import Link from "next/link";
 
 type SocialsCardProps = {
   title: string,
@@ -51,7 +50,7 @@ const SocialsSupport = ({
                     1. Написать сообщение ниже следующим ботам:
                   </Typography>
                   <Typography textColor="shark_white">
-                    Telegram: <Link href="https://t.me/fasberry_bot" className="text-shark-300" target="_blank">@fasberry_bot</Link>
+                    Telegram: <a href="https://t.me/fasberry_bot" className="text-shark-300" target="_blank">@fasberry_bot</a>
                   </Typography>
                   <Typography textColor="shark_white">
                     Discord: <span className="text-shark-300">FasberryBot#7635</span>

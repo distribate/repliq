@@ -1,18 +1,20 @@
 import { throwError } from '@repo/lib/helpers/throw-error.ts';
 import { Hono } from "hono";
-import { getThreadOwner } from "#lib/queries/thread/get-thread-owner.ts";
 import type { ThreadPreview } from "@repo/types/entities/thread-type.ts";
 import { getThreadShorted } from "#lib/queries/thread/get-thread-shorted.ts";
 
 async function getThreadPreview(threadId: string): Promise<ThreadPreview | null> {
-  const [main, owner] = await Promise.all([
-    getThreadShorted(threadId),
-    getThreadOwner({ threadId })
-  ]);
+  const thread = await getThreadShorted(threadId)
 
-  if (!main || !owner) return null;
+  if (!thread) return null;
 
-  return { ...main, owner }
+  return {
+    ...thread,
+    owner: {
+      nickname: thread.user_nickname,
+      name_color: thread.name_color
+    }
+  }
 }
 
 export const getThreadPreviewRoute = new Hono()

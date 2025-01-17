@@ -1,14 +1,13 @@
 import { Typography } from "@repo/ui/src/components/typography.tsx";
 import MissingTexture from "@repo/assets/images/minecraft/missing_texture.webp";
-import { ImageWrapper } from "../wrappers/image-wrapper.tsx";
 
 export const ProfilePrivated = () => {
   return (
     <div className="flex w-full items-center justify-center h-full gap-12 px-12 py-6 relative z-[4]">
       <div className="flex flex-col items-center gap-y-2 p-6">
-        <ImageWrapper
-          propSrc={MissingTexture.src}
-          propAlt="Страница скрыта"
+        <img
+          src={MissingTexture.src}
+          alt="Страница скрыта"
           width={64}
           height={64}
         />

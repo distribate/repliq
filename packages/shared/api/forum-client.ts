@@ -10,8 +10,7 @@ import {
   ForumLandingAppType
 } from 'forum-backend/src/types/routes-types.ts';
 import { hc } from 'hono/client';
-
-const isProduction = process.env.NODE_ENV === "production";
+import { isProduction } from "@repo/lib/helpers/is-production";
 
 const production = `https://cc.fasberry.su/api/forum`
 const development = `http://localhost:4101/api/forum`

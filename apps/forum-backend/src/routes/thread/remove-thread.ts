@@ -19,7 +19,11 @@ export const removeThreadRoute = new Hono()
     try {
       const deletedThread = await removeThread(threadId)
 
-      return ctx.json(deletedThread, 200)
+      if (!deletedThread) {
+        return ctx.json({ error: "Thread not found" }, 404)
+      }
+
+      return ctx.json({ status: "Success" }, 200)
     } catch (error) {
       return ctx.json({ error: throwError(error) }, 500);
     }

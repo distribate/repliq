@@ -1,19 +1,18 @@
-"use server"
+import { forumLandingClient } from '@repo/shared/api/forum-client';
+import { InferResponseType } from 'hono/client';
 
-import { createClient } from '@repo/shared/api/supabase-client';
-import { DonateEntity } from '@repo/types/entities/entities-type.ts';
+const client = forumLandingClient["get-donates"].$get
+
+export type DonateType = InferResponseType<typeof client, 200>
 
 export async function getDonates() {
-  const api = createClient()
-  
-  const { data, error } = await api
-    .from("landing_donate")
-    .select()
-    .returns<DonateEntity[] | null>()
-  
-  if (error) {
-    throw new Error(error.message)
+  const res = await forumLandingClient["get-donates"].$get();
+
+  const data = await res.json();
+
+  if ("error" in data) {
+    return null;
   }
-  
-  return data && data.length ? data : null;
+
+  return data.data.length > 0 ? data.data : null
 }

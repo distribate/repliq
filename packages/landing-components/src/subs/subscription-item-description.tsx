@@ -2,7 +2,7 @@ import { Typography } from "@repo/landing-ui/src/typography.tsx";
 
 type SubscriptionFormDescriptionProps = {
 	name: string,
-	rating: number,
+	rating: string,
 	commands: string[],
 	description: string
 }

@@ -5,16 +5,9 @@ import { UserEntity } from '@repo/types/entities/entities-type.ts';
 import { Skeleton } from '@repo/ui/src/components/skeleton.tsx';
 import { ProfileThreadsFiltering } from '#profile/components/threads/components/profile-threads-filtering.tsx';
 import { ProfileThreadsListCard } from '#profile/components/threads/components/profile-threads-list-card.tsx';
-import dynamic from 'next/dynamic';
 import { profileThreadsSettingsQuery } from '#profile/components/threads/queries/profile-threads-settings-query.ts';
-
-const ContentNotFound = dynamic(() =>
-  import('#templates/content-not-found.tsx').then((m) => m.ContentNotFound),
-);
-
-const SomethingError = dynamic(() =>
-  import('#templates/something-error.tsx').then((m) => m.SomethingError),
-);
+import { SomethingError } from '#templates/something-error.tsx';
+import { ContentNotFound } from '#templates/content-not-found.tsx';
 
 const ProfileThreadsList = ({
   nickname,

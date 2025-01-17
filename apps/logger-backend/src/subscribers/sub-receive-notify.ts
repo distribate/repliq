@@ -3,6 +3,7 @@ import { Issues } from "@repo/types/db/forum-database-types";
 import { forumDB } from "../shared/database/forum-db";
 import { notifyIssueReceived } from "../utils/notify-issue-received";
 import { USER_NOTIFICATIONS_SUBJECT } from "@repo/shared/constants/nats-subjects";
+import dayjs from "@repo/lib/constants/dayjs-instance";
 
 type NotifyLoginReceived = {
   session_id: string
@@ -38,14 +39,14 @@ export const subscribeReceiveNotify = async () => {
 
       switch (message.type) {
         case "login":
-          const { nickname, session_id } = message.payload;
+          const { nickname } = message.payload;
 
           try {
             await forumDB
               .insertInto("notifications")
               .values({
                 nickname,
-                message: `Кто-то вошел в ваш аккаунт. ${session_id}`,
+                message: `Кто-то вошел в ваш аккаунт. ${dayjs(new Date().toLocaleString()).format("HH:mm:ss")}`,
                 type: "auth"
               })
               .returningAll()

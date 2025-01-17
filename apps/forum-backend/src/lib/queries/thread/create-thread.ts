@@ -1,7 +1,7 @@
 import { JsonValue } from "#helpers/json-value.ts"
 import { supabase } from "#shared/supabase/supabase-client.ts"
 import type { Transaction } from "kysely"
-import type { DB  } from "@repo/types/db/forum-database-types";
+import type { DB } from "@repo/types/db/forum-database-types";
 import type { z } from "zod";
 import type { createThreadSchema } from "@repo/types/schemas/thread/create-thread-schema";
 import { forumDB } from "#shared/database/forum-db.ts";
@@ -42,10 +42,12 @@ type AddThreadsImages = CreateThreadTransaction & Pick<UploadThreadImages, "thre
 async function addThreadsImages({
   images, thread_id, trx
 }: AddThreadsImages) {
-  return await trx
+  if (images.length === 0) return;
+
+  await trx
     .insertInto("threads_images")
-    .values({ thread_id, images })
-    .execute()
+    .values(images.map(image => ({ thread_id, image_url: image })))
+    .execute();
 }
 
 async function uploadThreadImages({

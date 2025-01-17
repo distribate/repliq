@@ -1,4 +1,3 @@
-import Image from "next/image";
 import { forwardRef, Suspense } from "react";
 import { cn } from "@repo/lib/utils/ui/cn.ts";
 import { Skeleton } from "@repo/ui/src/components/skeleton.tsx";
@@ -36,11 +35,9 @@ const ImageWrapper = forwardRef<HTMLDivElement, ImageWrapperProps>(
         {...rest}
       >
         <Suspense fallback={<Skeleton className={`w-fit h-fit rounded-md`} />}>
-          <Image
+          <img
             src={propSrc}
-            priority={priority}
             width={width}
-            placeholder="empty"
             height={height}
             alt={propAlt}
             loading={loading}

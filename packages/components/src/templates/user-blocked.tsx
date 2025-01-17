@@ -1,5 +1,4 @@
 import { Typography } from "@repo/ui/src/components/typography.tsx";
-import { ImageWrapper } from "#wrappers/image-wrapper.tsx";
 // @ts-ignore
 import WardenGif from "@repo/assets/gifs/warden-warden-minecraft.gif";
 
@@ -16,9 +15,9 @@ export const UserBlocked = ({ blockedType }: UserBlockedProps) => {
   return (
     <div className="flex w-full items-center justify-center h-full gap-12 px-12 py-6 relative z-[4]">
       <div className="flex flex-col items-center gap-y-2 p-6">
-        <ImageWrapper
-          propSrc={WardenGif.src}
-          propAlt=""
+        <img
+          src={WardenGif.src}
+          alt=""
           width={144}
           height={144}
         />

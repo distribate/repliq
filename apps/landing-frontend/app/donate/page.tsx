@@ -50,23 +50,6 @@ export const metadata = {
   },
 };
 
-const Donates = async () => {
-  const qc = new QueryClient();
-
-  await qc.prefetchQuery({
-    queryKey: DONATES_QUERY_KEY,
-    queryFn: () => getDonates(),
-  });
-
-  const dehydratedState = dehydrate(qc);
-
-  return (
-    <HydrationBoundary state={dehydratedState}>
-      <DonateList />
-    </HydrationBoundary>
-  );
-};
-
 export default async function DonatePage() {
   return (
     <MainLayoutPage variant="with_section">
@@ -118,7 +101,7 @@ export default async function DonatePage() {
             </Typography>
           </div>
           <Suspense fallback={<DonateListSkeleton />}>
-            <Donates />
+            <DonateList />
           </Suspense>
         </div>
       </div>

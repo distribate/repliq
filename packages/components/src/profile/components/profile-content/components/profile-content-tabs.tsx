@@ -6,52 +6,20 @@ import { isUserDetailed } from "@repo/lib/helpers/is-user-detailed";
 import { Separator } from "@repo/ui/src/components/separator";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@repo/ui/src/components/tabs";
 import { Suspense } from "react";
-import dynamic from 'next/dynamic';
 import { Selectable } from 'kysely';
 import { Users } from "@repo/types/db/forum-database-types";
 import { ProfileContentProps } from "./profile-content";
 import { UserDetailed } from "@repo/types/entities/user-type";
 import { ProfileSkinControls } from "#profile/components/skin/components/profile-skin-controls.tsx";
-import { Skeleton } from "@repo/ui/src/components/skeleton";
+import { UserProfileThreads } from "#profile/components/threads/components/profile-threads.tsx";
+import { UserProfileFriends } from "#profile/components/friends/components/profile-friends.tsx";
+import { UserProfileGameStats } from "#profile/components/stats/components/profile-stats.tsx";
+import { UserProfileGameAchievements } from "#profile/components/achievements/components/profile-game-ach.tsx";
+import { ProfileSkinRender } from "#profile/components/skin/components/profile-skin-render.tsx";
+import { UserProfileAccount } from "#profile/components/account-stats/components/profile-account.tsx";
+import { SectionPrivatedTrigger } from "#templates/section-privated-trigger.tsx";
 
 export type User = Selectable<Pick<Users, "id" | "nickname" | "uuid">>;
-
-const UserProfileAccountStats = dynamic(() =>
-  import('@repo/components/src/profile/components/account-stats/components/profile-account.tsx')
-    .then(m => m.UserProfileAccount),
-);
-
-const UserProfileGameAchievements = dynamic(() =>
-  import('@repo/components/src/profile/components/achievements/components/profile-game-ach.tsx')
-    .then(m => m.UserProfileGameAchievements),
-);
-
-const UserProfileFriends = dynamic(() =>
-  import('@repo/components/src/profile/components/friends/components/profile-friends.tsx')
-    .then(m => m.UserProfileFriends),
-);
-
-const UserProfileThreads = dynamic(() =>
-  import('@repo/components/src/profile/components/threads/components/profile-threads.tsx')
-    .then(m => m.UserProfileThreads),
-);
-
-const UserProfileGameStats = dynamic(() =>
-  import('@repo/components/src/profile/components/stats/components/profile-stats.tsx')
-    .then(m => m.UserProfileGameStats),
-);
-
-const ProfileSkinRender = dynamic(() =>
-  import('@repo/components/src/profile/components/skin/components/profile-skin-render.tsx')
-    .then(m => m.ProfileSkinRender), {
-  ssr: false,
-  loading: () => <Skeleton className="w-full h-full" />
-});
-
-const SectionPrivatedTrigger = dynamic(() =>
-  import('@repo/components/src/templates/section-privated-trigger.tsx')
-    .then(m => m.SectionPrivatedTrigger),
-);
 
 export const ProfileContentTabs = ({
   requestedUserNickname
@@ -142,7 +110,7 @@ export const ProfileContentTabs = ({
           </TabsContent>
           {isOwner && (
             <TabsContent value="account-stats">
-              <UserProfileAccountStats />
+              <UserProfileAccount />
             </TabsContent>
           )}
         </div>

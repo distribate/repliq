@@ -7,7 +7,7 @@ import { executeWithCursorPagination } from "kysely-paginate";
 import { z } from "zod";
 import { getNewsSchema } from "@repo/types/schemas/news/get-news-schema.ts";
 
-async function getPublicUrl(bucket: string, url: string) {
+export async function getPublicUrl(bucket: string, url: string) {
   return supabase.storage.from(bucket).getPublicUrl(url);
 }
 

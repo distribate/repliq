@@ -1,9 +1,8 @@
 import type { PaymentAppType } from "payment-backend/src";
 import { hc } from "hono/client";
+import { isProduction } from "@repo/lib/helpers/is-production";
 
 const headers = { Authorization: `Bearer ${process.env.SECRET_TOKEN}` };
-
-const isProduction = process.env.NODE_ENV === "production";
 
 const production = `https://api.fasberry.su/api/payment`;
 

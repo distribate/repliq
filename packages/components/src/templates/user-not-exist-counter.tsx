@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { Typography } from "@repo/ui/src/components/typography";
-import { useRouter } from "next/navigation";
+import { useRouter } from "next/navigation"
 
 type UserNotExistCounterProps = {
   redirectTimeout: string;
@@ -14,7 +14,6 @@ export const UserNotExistCounter = ({
   redirectUser,
 }: UserNotExistCounterProps) => {
   const [seconds, setSeconds] = useState<number>(parseInt(redirectTimeout));
-
   const { push } = useRouter();
   const timerIdRef = useRef<NodeJS.Timeout | null>(null);
 
@@ -42,7 +41,7 @@ export const UserNotExistCounter = ({
         clearInterval(timerIdRef.current);
       }
     };
-  }, [seconds, push, redirectUser]);
+  }, [seconds, redirectUser]);
 
   if (!redirectUser || !redirectTimeout) return;
 

@@ -858,7 +858,7 @@ export interface Threads {
 
 export interface ThreadsImages {
   id: Generated<Int8>;
-  images: string[];
+  image_url: string;
   thread_id: string;
 }
 

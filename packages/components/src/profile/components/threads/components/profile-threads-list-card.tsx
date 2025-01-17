@@ -1,6 +1,5 @@
 import { UserThreads } from "#profile/components/threads/queries/get-threads-user.ts";
 import { Typography } from "@repo/ui/src/components/typography.tsx";
-import Link from "next/link";
 import { THREAD_URL } from "@repo/shared/constants/routes.ts";
 import { MessageSquare, Text } from "lucide-react";
 import dayjs from "@repo/lib/constants/dayjs-instance.ts";
@@ -57,13 +56,13 @@ export const ProfileThreadsListCard = ({ thread }: ThreadCardProps) => {
           </div>
         </div>
       </div>
-      <Link
+      <a
         href={THREAD_URL + id}
         className={`${isGrid ? "w-full" : "w-fit"}
          transition-all ease-in duration-150 hover:bg-shark-800 px-6 py-4 h-full rounded-md bg-shark-900`}
       >
         <Typography className="text-[18px]">Перейти к треду</Typography>
-      </Link>
+      </a>
     </div>
   );
 };

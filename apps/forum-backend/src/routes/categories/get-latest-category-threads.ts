@@ -13,7 +13,6 @@ export const getLatestCategoryThreadsRoute = new Hono()
 
       return ctx.json(rankedThreads, 200);
     } catch (e) {
-      console.error(e)
       return ctx.json({ error: throwError(e) }, 500);
     }
   }

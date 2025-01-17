@@ -14,16 +14,16 @@ module.exports = withBundleAnalyzer({
       bodySizeLimit: '15mb',
     },
   },
-  async rewrites() {
-    return {
-      beforeFiles: [
-        {
-          source: '/misc/:path*',
-          destination: 'http://localhost:3002/misc/:path*',
-        },
-      ],
-    };
-  },
+  // async rewrites() {
+  //   return {
+  //     beforeFiles: [
+  //       {
+  //         source: '/misc/:path*',
+  //         destination: 'http://localhost:3002/misc/:path*',
+  //       },
+  //     ],
+  //   };
+  // },
   images: {
     remotePatterns: [
       {
@@ -41,6 +41,12 @@ module.exports = withBundleAnalyzer({
         protocol: 'http',
         hostname: '127.0.0.1',
         port: '8000',
+        pathname: '/storage/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'kong.fasberry.su/**',
+        port: '',
         pathname: '/storage/**',
       },
     ],

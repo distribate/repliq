@@ -1,7 +1,6 @@
 import { Image } from 'lucide-react';
 import { Typography } from '@repo/ui/src/components/typography.tsx';
 import { DynamicModal } from '../dynamic-modal.tsx';
-import { ImageWrapper } from '#wrappers/image-wrapper.tsx';
 import {
   CoverImageInput,
   useControlCoverImage,
@@ -45,9 +44,9 @@ const BackgroundImagesList = () => {
       key={i}
       onClick={() => handleCoverImageInput({ fileName: path })}
     >
-      <ImageWrapper
-        propSrc={signedUrl}
-        propAlt={path}
+      <img
+        src={signedUrl}
+        alt={path}
         height={900}
         width={1200}
         loading="lazy"

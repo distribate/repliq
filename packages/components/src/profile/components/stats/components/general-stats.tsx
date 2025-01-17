@@ -1,7 +1,6 @@
 "use client";
 
 import { Typography } from "@repo/ui/src/components/typography.tsx";
-import { ImageWrapper } from "#wrappers/image-wrapper.tsx";
 import CharismWallet from "@repo/assets/images/minecraft/charism_wallet.png";
 import BelkoinWallet from "@repo/assets/images/minecraft/belkoin_wallet.png";
 import dayjs from "@repo/lib/constants/dayjs-instance.ts";
@@ -47,18 +46,18 @@ export const GeneralStats = ({ nickname, uuid }: StatsRequest) => {
           <div className="flex flex-col w-full">
             <div className="flex items-center gap-1">
               <Typography>Харизма: {cmi.balance}</Typography>
-              <ImageWrapper
-                propSrc={CharismWallet.src}
-                propAlt="Харизма"
+              <img
+                src={CharismWallet.src}
+                alt="Харизма"
                 width={18}
                 height={18}
               />
             </div>
             <div className="flex items-center gap-1">
               <Typography>Белкоины: {wallet.points}</Typography>
-              <ImageWrapper
-                propSrc={BelkoinWallet.src}
-                propAlt="Белкоин"
+              <img
+                src={BelkoinWallet.src}
+                alt="Белкоин"
                 width={18}
                 height={18}
               />

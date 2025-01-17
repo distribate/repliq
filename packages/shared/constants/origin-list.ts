@@ -1,6 +1,9 @@
 export const originList = [
-  "http://localhost:3000",
+  // production
+  "https://fasberry.su",
   "https://cc.fasberry.su",
+  // development
   "http://localhost:3009",
-  "https://fasberry.su"
+  "http://localhost:3001",
+  "http://localhost:3000",
 ]

@@ -1,12 +1,6 @@
 import { forumDB } from "#shared/database/forum-db.ts";
 
-type GetThreadOwner = {
-  threadId: string
-}
-
-export async function getThreadOwner({
-  threadId
-}: GetThreadOwner) {
+export async function getThreadOwner(threadId: string) {
   const result = await forumDB
     .selectFrom('threads_users')
     .innerJoin(

@@ -2,7 +2,6 @@
 
 import "server-only";
 import { createClient } from "@repo/shared/api/supabase-client.ts";
-import { CategoryEntity } from "@repo/types/entities/entities-type.ts";
 
 export async function getAvailableCategories() {
   const api = createClient();
@@ -11,7 +10,7 @@ export async function getAvailableCategories() {
     .from("category")
     .select("id, title, description")
     .eq("available", true)
-    .returns<Pick<CategoryEntity, "id" | "title" | "description">[]>();
+    .returns<{ id: number, title: string, description: string}[]>();
 
   if (error) {
     throw new Error(error.message);
