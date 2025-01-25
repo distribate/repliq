@@ -17,28 +17,26 @@ async function validateUserFriendPreference(nickname: string): Promise<boolean> 
 export const addFriendRoute = new Hono()
   .post("/add-friend", zValidator("json", addFriendSchema), async (ctx) => {
     const body = await ctx.req.json()
-
-    const result = addFriendSchema.parse(body)
-    const { recipient, initiator } = result;
+    const { initiator, recipient } = addFriendSchema.parse(body)
 
     if (!validateUserFriendPreference(recipient)) {
-      return ctx.json({
-        error: "User does not have accept to send friend request"
-      }, 200)
+      return ctx.json({ error: "User does not have accept to send friend request" }, 200)
     }
 
     if (initiator === recipient) {
-      return ctx.json({
-        error: "You cannot add yourself"
-      }, 400)
+      return ctx.json({ error: "You cannot add yourself" }, 400)
     }
 
     try {
-      const a = await createFriendRequest({
+      const createRequest = await createFriendRequest({
         initiator, recipient
       })
 
-      return ctx.json(200)
+      if (!createRequest.id) {
+        return ctx.json({ error: "Error sending friend request" }, 404)
+      }
+
+      return ctx.json({ data: createRequest.id }, 200)
     } catch (e) {
       return ctx.json({ error: throwError(e) }, 400)
     }

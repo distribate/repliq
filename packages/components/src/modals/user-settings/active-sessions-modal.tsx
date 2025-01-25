@@ -16,7 +16,7 @@ export const ActiveSessionsModal = () => {
   return (
     <Dialog>
       <DialogTrigger>
-        <UserSettingOption title="Активные сессии" imageSrc={YellowCandle.src}>
+        <UserSettingOption title="Активные сессии" imageSrc={YellowCandle}>
           {isLoading ? (
             <Skeleton className="rounded-md h-4 w-4" />
           ) : (

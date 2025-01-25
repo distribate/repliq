@@ -12,10 +12,14 @@ export const checkNotificationRoute = new Hono()
     const result = checkNotificationSchema.parse(body);
 
     try {
-      await updateNotification({
+      const res = await updateNotification({
         nickname, notificationId: result.notification_id
       });
       
+      if (!res.numUpdatedRows) {
+        return ctx.json({ error: "Error checking notification" }, 404);
+      }
+
       return ctx.json({ status: "Notification checked" }, 200);
     } catch (e) {
       return ctx.json({ error: throwError(e) }, 500);

@@ -11,7 +11,7 @@ export const PasswordChangeModal = () => {
   return (
     <Dialog>
       <DialogTrigger>
-        <UserSettingOption title="Пароль" imageSrc={GoldIngot.src} />
+        <UserSettingOption title="Пароль" imageSrc={GoldIngot} />
       </DialogTrigger>
       <DialogContent>
         <div className="flex flex-col gap-y-4 w-full">

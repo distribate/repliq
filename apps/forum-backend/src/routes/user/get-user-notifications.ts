@@ -9,10 +9,10 @@ export const getUserNotificationsRoute = new Hono()
 
     try {
       const notifications = await getUserNotifications(nickname);
-      
-      return ctx.json(notifications, 200);
+
+      return ctx.json({ data: notifications }, 200);
     } catch (e) {
       return ctx.json({ error: throwError(e) }, 500);
     }
   }
-);
+  );

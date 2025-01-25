@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { Typography } from "@repo/ui/src/components/typography";
-import { useRouter } from "next/navigation"
+import { useNavigate } from "@tanstack/react-router"
 
 type UserNotExistCounterProps = {
   redirectTimeout: string;
@@ -14,12 +14,12 @@ export const UserNotExistCounter = ({
   redirectUser,
 }: UserNotExistCounterProps) => {
   const [seconds, setSeconds] = useState<number>(parseInt(redirectTimeout));
-  const { push } = useRouter();
+  const navigate = useNavigate();
   const timerIdRef = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
     if (!seconds) {
-      push(`/user/${redirectUser}`);
+      navigate({ to: `/user/${redirectUser}` });
       return;
     }
 
@@ -29,7 +29,7 @@ export const UserNotExistCounter = ({
         if (prevSeconds <= 1) {
           clearInterval(timerIdRef.current!);
 
-          push(`/user/${redirectUser}`);
+          navigate({ to: `/user/${redirectUser}` });
           return 0;
         }
         return prevSeconds - 1;

@@ -3,7 +3,7 @@ import { logger } from 'hono/logger';
 import { bearerAuth } from 'hono/bearer-auth';
 import { showRoutes } from 'hono/dev';
 import { initNats } from '@repo/config-nats/nats-client';
-import { validateRequest } from '#middlewares/validate-request.ts';
+import { validateRequest, watcher } from '#middlewares/validate-request.ts';
 import { contextStorage } from 'hono/context-storage'
 import { getUserRoute } from '#routes/user/get-user.ts';
 import { editUserSettingsRoute } from '#routes/user/edit-user-settings.ts';
@@ -62,7 +62,6 @@ import { getNewsRoute } from '#routes/public/get-news.ts';
 import { getOnlineUsersRoute } from '#routes/public/get-online-users.ts';
 import { getLatestRegUsersRoute } from '#routes/public/get-latest-reg-users.ts';
 import { getLastCommentsRoute } from '#routes/comments/get-last-comments.ts';
-import { getUserLandsRoute } from '#routes/user/get-user-lands.ts';
 import { getAuthImageRoute } from '#routes/public/get-auth-image.ts';
 import { getDonatesRoute } from '#routes/public/get-donates.ts';
 import { getThreadImagesRoute } from './routes/thread/get-thread-images';
@@ -72,16 +71,27 @@ import { timeoutMiddleware } from '#middlewares/timeout.ts';
 import { rateLimiterMiddleware } from '#middlewares/rate-limiter.ts';
 import { csrfProtectionMiddleware } from '#middlewares/csrf-protection.ts';
 import { corsProtectionMiddleware } from '#middlewares/cors-protection.ts';
+import { getSearchRoute } from '#routes/search/get-search.ts';
+import { getUserGlobalOptionsRoute } from '#routes/user/get-user-global-options.ts';
+import { getAlertsRoute } from '#routes/public/get-alerts.ts';
+import { createAuthImageRoute } from '#routes/admin/create-auth-image.ts';
+import { getAuthImagesRoute } from '#routes/admin/get-auth-images.ts';
+import { getMinecraftItemsRoute } from '#routes/public/get-minecraft-items.ts';
+import { createMinecraftItemRoute } from '#routes/admin/create-minecraft-item.ts';
+import { createCoverImageRoute } from '#routes/user/create-cover-image.ts';
+
+await initNats()
+await watcher()
 
 const { websocket } = createBunWebSocket<ServerWebSocket>()
-
-initNats()
 
 export const landing = new Hono()
   .route("/", getNewsRoute)
   .route("/", getOnlineUsersRoute)
   .route("/", getLatestRegUsersRoute)
   .route("/", getDonatesRoute)
+  .route("/", getAlertsRoute)
+  .route("/", getMinecraftItemsRoute)
 
 export const shared = new Hono()
   .basePath("/shared")
@@ -92,7 +102,10 @@ export const shared = new Hono()
 export const admin = new Hono()
   .basePath('/admin')
   .use(bearerAuth({ token }))
-  .route('/', callServerCommandRoute);
+  .route('/', callServerCommandRoute)
+  .route("/", createAuthImageRoute)
+  .route("/", getAuthImagesRoute)
+  .route("/", createMinecraftItemRoute)
 
 export const comment = new Hono()
   .basePath('/comment')
@@ -122,6 +135,7 @@ export const thread = new Hono()
 
 export const server = new Hono()
   .basePath('/server')
+  .use(bearerAuth({ token }))
 
 export const reaction = new Hono()
   .basePath('/reaction')
@@ -164,8 +178,15 @@ export const user = new Hono()
   .route("/", getUserBanDetailsRoute)
   .route("/", getUserFriendsCountRoute)
   .route("/", getUserStatusRoute)
-  .route("/", getUserLandsRoute)
   .route("/", getUserCoverImageRoute)
+  .route("/", getUserGlobalOptionsRoute)
+  .route("/", getUserBanDetailsRoute)
+  .route("/", createCoverImageRoute)
+
+export const search = new Hono()
+  .basePath('/search')
+  .use(validateRequest)
+  .route("/", getSearchRoute)
 
 export const ws = new Hono()
   .basePath('/ws')
@@ -190,6 +211,7 @@ const app = new Hono<Env>()
   .route("/", reaction)
   .route("/", shared)
   .route("/", ws)
+  .route("/", search)
   .route("/", landing)
 
 showRoutes(app, { verbose: false });

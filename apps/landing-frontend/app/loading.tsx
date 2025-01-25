@@ -6,7 +6,7 @@ export default async function Loading() {
 		<MainLayoutPage variant="with_section">
 			<div
 				className="bg-right lg:bg-center"
-				style={{ backgroundImage: `url("/images/static/dirt.png")` }}
+				style={{ backgroundImage: `url("/images/static/dirt.webp")` }}
 			>
 				<div className="flex flex-col gap-x-12 gap-y-4 items-center justify-center w-full min-h-screen">
 					<Typography className="text-white">

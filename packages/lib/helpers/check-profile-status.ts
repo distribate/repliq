@@ -1,7 +1,7 @@
 import { forumUserClient } from '@repo/shared/api/forum-client.ts';
 
 export async function checkProfileStatus(recipient: string) {
-  const res = await forumUserClient().user["get-user-profile-status"].$get({
+  const res = await forumUserClient.user["get-user-profile-status"].$get({
     query: { recipient }
   })
 
@@ -11,5 +11,5 @@ export async function checkProfileStatus(recipient: string) {
     return null;
   }
 
-  return data;
+  return data.data;
 }

@@ -1,62 +1,71 @@
 "use client";
 
 import { useLocalStorage } from "@repo/lib/hooks/use-local-storage.ts";
-import { useCallback } from "react";
 import { ThreadHistoryType } from "../types/thread-history-types.ts";
 import { getUser } from "@repo/lib/helpers/get-user.ts";
 import { globalPreferencesQuery } from "@repo/lib/queries/global-preferences-query.ts";
+import { useQueryClient } from "@tanstack/react-query";
+import { HISTORY_THREADS_QUERY_KEY } from "../queries/history-threads-query.ts";
 
 export const HISTORY_THREADS_KEY = "history-threads";
 
 export const useHistoryThreads = () => {
-  const { data: globalPreferences } = globalPreferencesQuery();
+  const qc = useQueryClient()
+  const { data: { autoSaveThreads: preference } } = globalPreferencesQuery();
 
-  const [_, setValue, __] = useLocalStorage<ThreadHistoryType[] | null>(HISTORY_THREADS_KEY, null, { 
-    initializeWithValue : false 
-  });
-  
-  const { autoSaveThreads } = globalPreferences
-  const currentUser = getUser()
-  
-  const saveThread = useCallback(({
-    nickname, title, threadId
-  }: Omit<ThreadHistoryType, "id">) => {
-    if (!currentUser || typeof autoSaveThreads === "undefined") return;
+  const [_, setValue, __] = useLocalStorage<ThreadHistoryType[] | null>(
+    HISTORY_THREADS_KEY,
+    [],
+    {
+      initializeWithValue: false
+    }
+  );
+
+  const { nickname: account } = getUser()
+
+  const saveThread = ({ thread }: Omit<ThreadHistoryType, "account">) => {
+    if (!preference) return;
 
     setValue((prev) => {
       let threadObjects: ThreadHistoryType[] = prev ?? [];
 
       const exists = threadObjects.some(
-        item => item.threadId === threadId && item.id === currentUser.nickname,
+        i => i.thread.id === thread.id && i.account === account,
       );
 
       if (exists) return threadObjects;
 
       if (threadObjects.length < 3) {
-        return [
-          ...threadObjects,
-          { id: currentUser.nickname, threadId, nickname, title },
-        ];
+        const threads = [...threadObjects, { account, thread }]
+
+        qc.setQueryData(HISTORY_THREADS_QUERY_KEY, threads)
+
+        return threads;
       } else {
-        return [
-          ...threadObjects.slice(1),
-          { id: currentUser.nickname, threadId, nickname, title },
-        ];
+        const sliced = [...threadObjects.slice(1), { account, thread }]
+
+        qc.setQueryData(HISTORY_THREADS_QUERY_KEY, sliced)
+
+        return sliced;
       }
     });
-  }, [setValue, autoSaveThreads, currentUser]);
+  }
 
-  const deleteThread = useCallback((threadId: string) => {
+  const deleteThread = (threadId: string) => {
     setValue((prev) => {
       if (!prev) return null;
 
       const threadObjects = prev.filter(
-        item => item.threadId !== threadId && item.id === currentUser.nickname,
+        i => !(i.thread.id === threadId && i.account === account)
       );
 
-      return threadObjects.length === 0 ? null : threadObjects;
+      const threads = threadObjects.length === 0 ? [] : threadObjects
+
+      qc.setQueryData(HISTORY_THREADS_QUERY_KEY, threads)
+
+      return threads;
     });
-  }, [setValue, currentUser]);
+  }
 
   return { saveThread, deleteThread };
 };

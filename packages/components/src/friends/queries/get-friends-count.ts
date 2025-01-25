@@ -1,7 +1,7 @@
 import { forumUserClient } from "@repo/shared/api/forum-client";
 
 export async function getFriendsCount(nickname: string) {
-  const res = await forumUserClient().user["get-user-friends-count"][":nickname"].$get({
+  const res = await forumUserClient.user["get-user-friends-count"][":nickname"].$get({
     param: {
       nickname
     }
@@ -13,5 +13,5 @@ export async function getFriendsCount(nickname: string) {
     return null;
   }
 
-  return data.count
+  return data.data
 }

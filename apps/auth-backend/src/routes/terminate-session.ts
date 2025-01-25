@@ -6,6 +6,7 @@ import { encodeHexLowerCase } from "@oslojs/encoding";
 import { sha256 } from "@oslojs/crypto/sha2";
 import { forumDB } from "../shared/database/forum-db";
 import { createMiddleware } from "hono/factory";
+import { deleteSessionToken } from "../utils/delete-session-token";
 
 const terminateSessionBodySchema = z.object({
   selectedSessionId: z.string().min(6).optional(),
@@ -30,7 +31,7 @@ async function terminateSession(sessionId: string) {
   return await forumDB
     .deleteFrom("users_session")
     .where("session_id", "=", sessionId)
-    .execute();
+    .executeTakeFirstOrThrow();
 }
 
 async function terminateAllSessions(nickname: string, currentSessionId: string) {
@@ -38,6 +39,7 @@ async function terminateAllSessions(nickname: string, currentSessionId: string) 
     .deleteFrom("users_session")
     .where("nickname", "=", nickname)
     .where("session_id", "!=", currentSessionId)
+    .returning("token")
     .execute();
 }
 
@@ -52,6 +54,7 @@ export const validateUserRequest = createMiddleware(async (ctx, next) => {
 
   const { nickname } = session
 
+  ctx.set('sessionToken', sessionToken)
   ctx.set('currentSessionId', sessionId)
   ctx.set('nickname', nickname)
 
@@ -76,8 +79,10 @@ export const terminateSessionRoute = new Hono()
 
     // @ts-ignore
     const nickname = ctx.get("nickname")
-     // @ts-ignore
+    // @ts-ignore
     const currentSessionId = ctx.get("currentSessionId")
+    // @ts-ignore
+    const sessionToken = ctx.get("sessionToken")
 
     if (!nickname || !currentSessionId) {
       return ctx.json({ error: "Unauthorized" }, 401)
@@ -100,7 +105,10 @@ export const terminateSessionRoute = new Hono()
             return ctx.json({ error: "selectedSessionId must be provided" }, 400)
           }
 
-          const terminatedSession = await terminateSession(selectedSessionId);
+          const [terminatedSession, _] = await Promise.all([
+            terminateSession(selectedSessionId),
+            deleteSessionToken(sessionToken as string)
+          ])
 
           if (!terminatedSession) {
             return ctx.json({ error: "Session not terminated" }, 500)
@@ -108,8 +116,10 @@ export const terminateSessionRoute = new Hono()
 
           return ctx.json({ status: "Success", meta: { is_current: selectedSessionId === currentSessionId } }, 200)
         case "all":
-           // @ts-ignore
-          const terminatedAllSessions = await terminateAllSessions(nickname, currentSessionId);
+          // @ts-ignore
+          const terminatedAllSessions = await terminateAllSessions(nickname as string, currentSessionId as string)
+
+          await deleteSessionToken(terminatedAllSessions.map(session => session.token))
 
           if (!terminatedAllSessions) {
             return ctx.json({ error: "Sessions not terminated" }, 500)

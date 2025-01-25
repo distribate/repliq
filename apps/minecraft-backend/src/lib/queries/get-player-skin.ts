@@ -3,6 +3,7 @@ import { getExistsPlayerSkin } from "./get-exists-player-skin";
 import type { Skin } from "#types/skin-type.ts";
 import ky from "ky";
 import fs from "fs/promises";
+// @ts-ignore
 import SteveSkin from "@repo/assets/images/minecraft/steve_skin.png";
 import { Blob } from "buffer";
 import path from "path";

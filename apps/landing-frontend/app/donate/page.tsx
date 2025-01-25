@@ -4,12 +4,7 @@ import { MainLayoutPage } from '@repo/landing-components/src/layout/main-layout.
 import { Typography } from '@repo/landing-ui/src/typography';
 import Link from 'next/link';
 import { Button } from '@repo/landing-ui/src/button';
-import { dehydrate, HydrationBoundary, QueryClient } from '@tanstack/react-query';
-import { DONATES_QUERY_KEY } from '@repo/lib/queries/donates-query.ts';
-import { getDonates } from '@repo/lib/queries/get-donates.ts';
-import { Suspense } from 'react';
 import { DonateList } from '@repo/landing-components/src/subs/donate-list.tsx';
-import { DonateListSkeleton } from '@repo/landing-components/src/skeletons/donate-list-skeleton.tsx';
 
 export const metadata = {
   title: 'Донат',
@@ -100,9 +95,7 @@ export default async function DonatePage() {
               привилегии и всё, что с ними связано
             </Typography>
           </div>
-          <Suspense fallback={<DonateListSkeleton />}>
-            <DonateList />
-          </Suspense>
+          <DonateList />
         </div>
       </div>
     </MainLayoutPage>

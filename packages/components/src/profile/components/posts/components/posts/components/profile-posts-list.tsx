@@ -1,5 +1,3 @@
-'use client';
-
 import { postsQuery } from '../queries/posts-query.ts';
 import { Skeleton } from '@repo/ui/src/components/skeleton.tsx';
 import { ContentNotFound } from '#templates/content-not-found.tsx';

@@ -1,7 +1,7 @@
 import { Typography } from "@repo/ui/src/components/typography.tsx";
 import { Avatar } from "#user/components/avatar/components/avatar.tsx";
 import { UserNickname } from "#user/components/name/nickname.tsx";
-import Link from "next/link";
+import { Link } from "@tanstack/react-router";
 import dayjs from "@repo/lib/constants/dayjs-instance.ts";
 import { USER_URL } from "@repo/shared/constants/routes.ts";
 import { Pin } from "lucide-react";
@@ -18,7 +18,7 @@ export const PostItemHeader = ({
 
   return (
     <div className="flex gap-3 items-center">
-      <Link href={USER_URL + user_nickname}>
+      <Link to={USER_URL + user_nickname}>
         <Avatar
           variant="page"
           propHeight={48}
@@ -28,7 +28,7 @@ export const PostItemHeader = ({
       </Link>
       <div className="flex flex-col">
         <div className="flex items-center gap-2">
-          <Link href={USER_URL + user_nickname}>
+          <Link to={USER_URL + user_nickname}>
             <UserNickname
               nickname={user_nickname}
               className="text-base font-medium"

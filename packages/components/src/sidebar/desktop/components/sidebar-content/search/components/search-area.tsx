@@ -5,7 +5,7 @@ import {
 } from "../queries/search-query.ts";
 import { SearchAreaNotFound } from "#templates/search-area-not-found.tsx";
 import { Typography } from "@repo/ui/src/components/typography.tsx";
-import Link from "next/link";
+import { Link } from "@tanstack/react-router";
 import { THREAD_URL, USER_URL } from "@repo/shared/constants/routes.ts";
 import { ThreadEntity } from "@repo/types/entities/entities-type.ts";
 import { Skeleton } from "@repo/ui/src/components/skeleton.tsx";
@@ -17,7 +17,7 @@ type SearchCardTopicProps = Pick<ThreadEntity, "id" | "title">;
 
 const SearchCardTopic = ({ title, id }: SearchCardTopicProps) => {
   return (
-    <Link href={THREAD_URL + id} className="flex items-center gap-2 p-2 bg-shark-900 rounded-md">
+    <Link to={THREAD_URL + id} className="flex items-center gap-2 p-2 bg-shark-900 rounded-md">
       {title}
     </Link>
   );
@@ -48,7 +48,7 @@ const SearchAreaSkeleton = () => {
 const SearchUserItem = ({ nickname, nicknameColor }: UserNickname) => {
   return (
     <Link
-      href={USER_URL + nickname}
+      to={USER_URL + nickname}
       className="flex items-center rounded-md p-2 gap-2 bg-shark-900"
     >
       <Avatar nickname={nickname} propHeight={16} propWidth={16} />
@@ -97,9 +97,9 @@ export const SearchArea = () => {
             ))}
           {results.length >= SEARCH_SIDEBAR_LIMIT && (
             <Link
-              href={{
-                pathname: "/search",
-                query: { type, queryValue },
+              to="/search"
+              search={{
+                type, queryValue
               }}
             >
               <Typography textColor="gray" textSize="small">

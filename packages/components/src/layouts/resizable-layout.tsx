@@ -1,38 +1,34 @@
-"use client";
-
 import {
   ResizableHandle,
   ResizablePanel,
   ResizablePanelGroup,
 } from "@repo/ui/src/components/resizable.tsx";
-import { ReactNode, useEffect, useRef, useState } from "react";
+import { lazy, ReactNode, useRef } from "react";
 import { ImperativePanelHandle } from "react-resizable-panels";
 import { useMediaQuery } from "@repo/lib/hooks/use-media-query.ts";
-import dynamic from "next/dynamic";
-import { SidebarDesktopSkeleton } from "../sidebar/desktop/components/sidebar/sidebar-desktop-skeleton.tsx";
 import { SidebarDesktop } from "../sidebar/desktop/components/sidebar/sidebar-desktop.tsx";
 import { useSidebarControl } from "../sidebar/desktop/components/sidebar-layout/hooks/use-sidebar-control.ts";
-import { UserStatusLayout } from "./user-status-layout.tsx";
+
+const SidebarMobile = lazy(() => import("#sidebar/mobile/components/sidebar-mobile.tsx")
+  .then(m => ({ default: m.SidebarMobile }))
+);
 
 interface ResizableLayout {
   defaultLayout: number[];
   children: ReactNode;
 }
 
-const SidebarMobile = dynamic(() =>
-  import("../sidebar/mobile/components/sidebar-mobile.tsx").then(
-    (m) => m.SidebarMobile,
-  ),
-);
-
 type PanelsProps = {
   defaultSize: number;
 };
 
+export const DEFAULT_LAYOUT_SIZES = [16, 84];
+
+const RESIZABLE_LAYOUT_COOKIE_KEY = `react-resizable-panels:layout`;
+
 export const SidebarMain = ({ defaultSize }: PanelsProps) => {
   const { isDynamic, updateSidebarPropertiesMutation } = useSidebarControl();
   const sidebarRef = useRef<ImperativePanelHandle>(null);
-  const [isClient, setIsClient] = useState(false);
 
   const handleSizePanel = (size: number) => {
     const sidebarPanel = sidebarRef.current;
@@ -46,12 +42,6 @@ export const SidebarMain = ({ defaultSize }: PanelsProps) => {
       values: { width: size },
     });
   };
-
-  useEffect(() => {
-    setIsClient(true);
-  }, []);
-
-  if (!isClient) return <SidebarDesktopSkeleton />;
 
   return isDynamic ? (
     <>
@@ -97,51 +87,41 @@ export const AreaMain = ({
   );
 };
 
-export const DEFAULT_LAYOUT_SIZES = [16, 84];
-const RESIZABLE_LAYOUT_COOKIE_KEY = `react-resizable-panels:layout`;
-
 export const ResizableLayout = ({
   defaultLayout = DEFAULT_LAYOUT_SIZES,
   children,
 }: ResizableLayout) => {
   const matches = useMediaQuery("(min-width: 768px)");
   const { isDynamic } = useSidebarControl();
-  const [isClient, setIsClient] = useState(false);
   const layoutGroupGap = isDynamic ? 1 : 2;
-
-  useEffect(() => {
-    setIsClient(true);
-  }, []);
-
-  if (!isClient) return null;
 
   const onLayout = (sizes: number[]) => {
     document.cookie = `${RESIZABLE_LAYOUT_COOKIE_KEY}=${JSON.stringify(sizes)}`;
   };
 
   return (
-    <UserStatusLayout>
-      {matches ? (
-        <ResizablePanelGroup
-          onLayout={onLayout}
-          direction="horizontal"
-          autoSaveId="conditional"
-          suppressHydrationWarning
-          style={{ overflow: "clip" }}
-          className={`flex w-full relative min-h-screen h-screen max-h-screen p-2
+    matches ? (
+      <ResizablePanelGroup
+        onLayout={onLayout}
+        direction="horizontal"
+        autoSaveId="conditional"
+        suppressHydrationWarning
+        style={{ overflow: "clip" }}
+        className={`flex w-full relative min-h-screen h-screen max-h-screen p-2
             gap-${layoutGroupGap} overflow-hidden`}
-        >
-          <SidebarMain defaultSize={defaultLayout[0]} />
-          <AreaMain defaultSize={defaultLayout[1]}>{children}</AreaMain>
-        </ResizablePanelGroup>
-      ) : (
-        <div className="flex flex-col gap-2 min-h-screen h-full relative w-full">
-          <SidebarMobile />
-          <div className="flex overflow-y-auto h-full w-full p-2">
-            {children}
-          </div>
+      >
+        <SidebarMain defaultSize={defaultLayout[0]} />
+        <AreaMain defaultSize={defaultLayout[1]}>
+          {children}
+        </AreaMain>
+      </ResizablePanelGroup>
+    ) : (
+      <div className="flex flex-col gap-2 min-h-screen h-full relative w-full">
+        <SidebarMobile />
+        <div className="flex overflow-y-auto h-full w-full p-2">
+          {children}
         </div>
-      )}
-    </UserStatusLayout>
+      </div>
+    )
   );
 };

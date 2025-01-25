@@ -6,6 +6,7 @@ import { USER_URL } from "@repo/shared/constants/routes.ts";
 import { UserDonate } from "#user/components/donate/components/donate.tsx";
 import { type FriendWithDetails } from "@repo/types/schemas/friend/friend-types";
 import { Button } from "@repo/ui/src/components/button";
+import { Link } from "@tanstack/react-router";
 
 export const FriendProfileCard = ({
   nickname, name_color, donate, favorite_item
@@ -16,13 +17,13 @@ export const FriendProfileCard = ({
         <div className="flex gap-2 w-full items-center">
           <Avatar propHeight={56} propWidth={56} nickname={nickname} />
           <div className="flex flex-col gap-1">
-            <a href={USER_URL + nickname}>
+            <Link to={USER_URL + nickname}>
               <UserNickname 
                 nickname={nickname}
                 nicknameColor={name_color}
                 className="text-[18px] font-medium text-shark-50"
               />
-            </a>
+            </Link>
             <UserDonate donate={donate} favoriteItemId={Number(favorite_item)} />
           </div>
         </div>

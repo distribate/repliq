@@ -143,7 +143,7 @@ export const CreateIssueForm = () => {
           </Button>
         </form>
         <div className="hidden xl:flex items-center w-[500px] h-full rounded-lg overflow-hidden">
-          <img src={Mealing.src} alt="" width={500} height={500} draggable={false} className="w-full h-full" />
+          <img src={Mealing} alt="" width={500} height={500} draggable={false} className="w-full h-full" />
         </div>
       </BlockWrapper>
       <BlockWrapper className="flex flex-col gap-2 !p-4 w-full">

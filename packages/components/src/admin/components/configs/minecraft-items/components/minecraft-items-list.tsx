@@ -1,11 +1,30 @@
-import { getAvailableMinecraftItems } from "@repo/lib/queries/get-available-minecraft-items.ts";
-import Image from "next/image";
 import { Typography } from "@repo/ui/src/components/typography.tsx";
 import { MinecraftItemsAddButton } from "./minecraft-items-add-button.tsx";
 import { MinecraftItemsDeleteButton } from "./minecraft-items-delete-button.tsx";
+import { forumLandingClient } from "@repo/shared/api/forum-client.ts";
+import { useQuery } from "@tanstack/react-query";
+import { createQueryKey } from "@repo/lib/helpers/query-key-builder.ts";
 
-export const MinecraftItemsList = async () => {
-  const availableMinecraftItems = await getAvailableMinecraftItems();
+async function getAvailableMinecraftItems() {
+  const res = await forumLandingClient["get-minecraft-items"].$get();
+
+  const data = await res.json();
+
+  if ("error" in data) {
+    return null;
+  }
+
+  return data.data;
+}
+
+const availableMinecraftItemsQuery = () => useQuery({
+  queryKey: createQueryKey("ui", ["available-minecraft-items"]),
+  queryFn: () => getAvailableMinecraftItems(),
+  refetchOnWindowFocus: false
+})
+
+export const MinecraftItemsList = () => {
+  const { data: availableMinecraftItems } = availableMinecraftItemsQuery();
 
   return (
     <div
@@ -18,7 +37,7 @@ export const MinecraftItemsList = async () => {
           title={item.description || ""}
           className="relative group w-full max-h-[96px] rounded-md overflow-hidden"
         >
-          <Image
+          <img
             key={item.id}
             src={item.image}
             alt={item.title}
@@ -36,7 +55,7 @@ export const MinecraftItemsList = async () => {
               {item.title}
             </Typography>
           </div>
-          <MinecraftItemsDeleteButton image={item.image} id={item.id} />
+          <MinecraftItemsDeleteButton image={item.image} id={Number(item.id)} />
         </div>
       ))}
       <MinecraftItemsAddButton />

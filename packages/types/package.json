@@ -11,7 +11,8 @@
     "payments-gen-types": "kysely-codegen --dialect postgres --url=env\\(PAYMENTS_DATABASE_URL\\) --out-file=./db/payments-database-types.ts",
     "skins-gen-types": "kysely-codegen --dialect mysql --url=env\\(SKINS_DATABASE_URL\\) --out-file=./db/skins-database-types.ts",
     "lands-gen-types": "kysely-codegen --dialect mysql --url=env\\(LANDS_DATABASE_URL\\) --out-file=./db/lands-database-types.ts",
-    "cmi-gen-types": "kysely-codegen --dialect mysql --url=env\\(CMI_DATABASE_URL\\) --out-file=./db/cmi-database-types.ts"
+    "cmi-gen-types": "kysely-codegen --dialect mysql --url=env\\(CMI_DATABASE_URL\\) --out-file=./db/cmi-database-types.ts",
+    "playerpoints-gen-types": "kysely-codegen --dialect mysql --url=env\\(PLAYER_POINTS_DATABASE_URL\\) --out-file=./db/player-points-database-types.ts"
   },
   "dependencies": {
     "supabase": "1.219.2",

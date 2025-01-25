@@ -7,7 +7,7 @@ import { Button } from "@repo/ui/src/components/button.tsx";
 import { SendHorizontal } from "lucide-react";
 import { createThreadCommentQuery } from "../queries/create-thread-comment-query.ts";
 import { CreateThreadCommentLayout } from "./create-thread-comment-layout.tsx";
-import { useParams } from "next/navigation";
+import { useParams } from "@tanstack/react-router";
 import { getUser } from "@repo/lib/helpers/get-user.ts";
 import { COMMENT_LIMIT } from "@repo/shared/constants/limits.ts";
 import { z } from "zod";
@@ -19,7 +19,8 @@ import { createThreadCommentSchema } from "../schemas/create-thread-comment-sche
 type createThreadForm = z.infer<typeof createThreadCommentSchema>
 
 export const CreateThreadCommentForm = () => {
-  const params = useParams<{ id: string }>();
+  const { id: paramId } = useParams({ from: "/_protected/thread/$id" });
+
   const { nickname } = getUser();
   const { data: createThreadCommentState } = createThreadCommentQuery();
   const { updateCreateThreadCommentMutation, createThreadCommentMutation } = useCreateThreadComment();
@@ -33,7 +34,7 @@ export const CreateThreadCommentForm = () => {
     },
   })
 
-  if (!params.id) return null;
+  if (!paramId) return null;
 
   const onSubmit = async () => {
     if (!createThreadCommentState) return;
@@ -51,10 +52,10 @@ export const CreateThreadCommentForm = () => {
   };
 
   useEffect(() => {
-    if (params.id) {
-      updateCreateThreadCommentMutation.mutate({ threadId: params.id });
+    if (paramId) {
+      updateCreateThreadCommentMutation.mutate({ threadId: paramId });
     }
-  }, [params]);
+  }, [paramId]);
 
   const type = createThreadCommentState?.type || "single";
 

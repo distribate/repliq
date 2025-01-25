@@ -17,7 +17,7 @@ const FOOTER_LINKS: FooterLink[] = [
 export const Footer = async() => {
   return (
     <footer
-      className="sticky flex-col flex justify-center items-center gap-6 pt-10 pb-6 bg-[url('/images/static/bedrock.png')]"
+      className="sticky flex-col flex justify-center items-center gap-6 pt-10 pb-6 bg-[url('/images/static/bedrock.webp')]"
       style={{ backgroundSize: '160px' }}
     >
       <div className="flex flex-col lg:flex-row justify-center items-center responsive mx-auto">
@@ -26,7 +26,7 @@ export const Footer = async() => {
             width={316}
             height={128}
             alt="Fasberry Project Logo"
-            src="/images/fasberry_logo.png"
+            src="/images/fasberry_logo.webp"
             className="relative top-4 cursor-pointer"
             loading="lazy"
           />

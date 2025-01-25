@@ -1,4 +1,3 @@
-import Link from "next/link";
 import { USER_URL } from "@repo/shared/constants/routes.ts";
 import { UserNickname } from "#user/components/name/nickname.tsx";
 import { UserRealName } from "#user/components/real-name/real-name.tsx";
@@ -10,6 +9,7 @@ import { FriendCardNote } from "#friend/components/friend-card/components/friend
 import { Pin } from "lucide-react";
 import { FriendWithDetails } from "@repo/types/schemas/friend/friend-types.ts";
 import type { UserDetailed } from "@repo/types/entities/user-type";
+import { Link } from "@tanstack/react-router"
 
 export type FriendCardProps = Pick<
   UserDetailed, "nickname" | "real_name" | "description" | "donate" 
@@ -27,7 +27,7 @@ export const FriendCard = ({
     <FriendCardLayout nickname={nickname}>
       <div className="flex flex-col gap-y-1 w-fit">
         <div className="flex items-center gap-1 w-fit">
-          <Link href={USER_URL + nickname} className="flex items-center gap-1">
+          <Link to={USER_URL + nickname} className="flex items-center gap-1">
             <UserNickname
               nickname={nickname}
               className="text-lg"

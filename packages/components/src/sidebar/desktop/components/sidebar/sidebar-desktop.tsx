@@ -15,29 +15,34 @@ import {
   sidebarLayoutQuery,
 } from "../sidebar-layout/queries/sidebar-layout-query.ts";
 import { SidebarLayout } from "../sidebar-layout/components/sidebar-layout.tsx";
-import dynamic from "next/dynamic";
 import { getUser } from "@repo/lib/helpers/get-user.ts";
 import { DropdownWrapper } from "#wrappers/dropdown-wrapper.tsx";
 import { Avatar } from "#user/components/avatar/components/avatar.tsx";
 import { UserNickname } from "#user/components/name/nickname.tsx";
-import { UserMenu } from "#sidebar/desktop/components/sidebar-content/user-menu/user-menu.tsx";
-import { HTMLAttributes } from "react";
+import { HTMLAttributes, lazy } from "react";
 import { CircleFadingPlus, NotebookPen, Settings } from "lucide-react";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@repo/ui/src/components/dropdown-menu.tsx";
-import { useRouter } from "next/navigation";
+import { useNavigate } from "@tanstack/react-router";
 import { Typography } from "@repo/ui/src/components/typography.tsx";
-import { TicketsModal } from "#modals/custom/tickets-modal.tsx";
 import { Icon } from "@repo/shared/ui/icon/icon.tsx";
 import Charism from "@repo/assets/images/minecraft/charism_wallet.png"
 import Belkoin from "@repo/assets/images/minecraft/belkoin_wallet.png"
+import { Suspense } from 'react'
+import { userGlobalOptionsQuery } from "@repo/lib/queries/user-global-options-query.ts";
+
+const SearchArea = lazy(() => import("../sidebar-content/search/components/search-area.tsx")
+  .then(m => ({ default: m.SearchArea }))
+)
+
+const TicketsModal = lazy(() => import("#modals/custom/tickets-modal.tsx")
+  .then(m => ({ default: m.TicketsModal }))
+)
+
+const UserMenu = lazy(() => import("#sidebar/desktop/components/sidebar-content/user-menu/user-menu.tsx")
+  .then(m => ({ default: m.UserMenu }))
+)
 
 type SidebarLayoutVariant = Exclude<SidebarFormat, "dynamic">;
-
-const SearchArea = dynamic(() =>
-  import("../sidebar-content/search/components/search-area.tsx").then(
-    (m) => m.SearchArea,
-  ),
-);
 
 type SidebarFormats = {
   title: string;
@@ -74,8 +79,7 @@ const OutlineWrapper = ({ children, className, ...props }: OutlineWrapperProps) 
 }
 
 const UserMenuTrigger = () => {
-  const currentUser = getUser();
-  const { nickname, name_color } = currentUser;
+  const { nickname, name_color } = getUser();
   const { isExpanded, isCompact } = useSidebarControl();
 
   return (
@@ -102,50 +106,63 @@ const UserMenuTrigger = () => {
                   <Typography className="text-[15px]">
                     1
                   </Typography>
-                  <img src={Charism.src} width={16} height={16} alt="" />
+                  <img src={Charism} width={16} height={16} alt="" />
                 </div>
                 <div className="flex gap-1 items-center">
                   <Typography className="text-[15px]">
                     1
                   </Typography>
-                  <img src={Belkoin.src} width={15} height={15} alt="" />
+                  <img src={Belkoin} width={15} height={15} alt="" />
                 </div>
               </div>
             </div>
           )}
         </div>
       }
-      content={<UserMenu />}
+      content={
+        <Suspense>
+          <UserMenu />
+        </Suspense>
+      }
     />
   );
 };
 
+const SidebarBarNotifications = () => {
+  const { data } = userGlobalOptionsQuery();
+  const navigate = useNavigate()
+
+  return (
+    <OutlineWrapper onClick={() => navigate({ to: "/notifications" })} title="Уведомления" className="w-full relative">
+      {data?.has_new_notifications && <div className="bg-red-500 w-[16px] h-[16px] rounded-[999px] absolute top-4 right-4" />}
+      <Icon name="sprite/bell" className="text-xl text-shark-300" />
+    </OutlineWrapper>
+  )
+}
+
 const SidebarBar = () => {
-  const { data: searchState } = searchQuery();
   const { data: sidebarState } = sidebarLayoutQuery();
   const { updateSidebarPropertiesMutation } = useSidebarControl();
-  const { replace } = useRouter()
-
-  if (searchState.queryValue) return <SearchArea />
+  const navigate = useNavigate()
 
   return (
     <>
       <OutlineWrapper
         title="Нашли баг? Откройте заявку!"
-        onClick={() => replace("/create-issue")}
+        onClick={() => navigate({ to: "/create-issue" })}
       >
         <NotebookPen size={20} className="text-shark-300" />
       </OutlineWrapper>
-      <TicketsModal
-        trigger={
-          <OutlineWrapper title="Открыть тикет">
-            <CircleFadingPlus size={20} className="text-shark-300" />
-          </OutlineWrapper>
-        }
-      />
-      <OutlineWrapper onClick={() => replace("/notifications")} title="Уведомления" className="w-full">
-        <Icon name="sprite/bell" className="text-xl text-shark-300" />
-      </OutlineWrapper>
+      <Suspense>
+        <TicketsModal
+          trigger={
+            <OutlineWrapper title="Открыть тикет">
+              <CircleFadingPlus size={20} className="text-shark-300" />
+            </OutlineWrapper>
+          }
+        />
+      </Suspense>
+      <SidebarBarNotifications />
       <DropdownMenu>
         <DropdownMenuTrigger title="Настройки сайдбара" className="w-full">
           <OutlineWrapper className="w-full">
@@ -177,9 +194,15 @@ const SidebarBar = () => {
   )
 }
 
-
 const SidebarDesktopContent = () => {
   const { isCompact, isExpanded } = useSidebarControl();
+  const { data: searchState } = searchQuery();
+
+  if (searchState.queryValue) return (
+    <Suspense>
+      <SearchArea />
+    </Suspense>
+  )
 
   return (
     <div className="flex flex-col h-full justify-between w-full">

@@ -1,5 +1,3 @@
-"use client"
-
 import { Avatar } from "#user/components/avatar/components/avatar.tsx"
 import { UserNickname } from "#user/components/name/nickname.tsx"
 import { createQueryKey } from "@repo/lib/helpers/query-key-builder"
@@ -7,10 +5,10 @@ import { forumCommentClient } from "@repo/shared/api/forum-client"
 import { USER_URL } from "@repo/shared/constants/routes"
 import { Typography } from "@repo/ui/src/components/typography"
 import { useQuery } from "@tanstack/react-query"
-import Link from "next/link"
+import { Link } from "@tanstack/react-router"
 
 const getLatestComments = async () => {
-  const res = await forumCommentClient().comment["get-last-comments"].$get()
+  const res = await forumCommentClient.comment["get-last-comments"].$get()
 
   const data = await res.json()
 
@@ -46,10 +44,10 @@ export const LatestComments = () => {
         {comments && comments.map(({ created_at, content, parent_id, parent_type, title, user_nickname }, idx) => (
           <div key={idx} className="flex flex-col bg-shark-700/60 rounded-md p-2 gap-1">
             <div className="flex items-center gap-2">
-              <Link href={USER_URL + user_nickname}>
+              <Link to={USER_URL + user_nickname}>
                 <Avatar nickname={user_nickname} propWidth={24} propHeight={24} />
               </Link>
-              <Link href={USER_URL + user_nickname}>
+              <Link to={USER_URL + user_nickname}>
                 <UserNickname nickname={user_nickname} />
               </Link>
             </div>
@@ -58,7 +56,7 @@ export const LatestComments = () => {
             </Typography>
             <div className="flex w-full">
               <Typography textColor="gray" className="text-[14px]">
-                к треду <Link href={`/${parent_type}/${parent_id}`} className="text-shark-50">{title}</Link>
+                к треду <Link to={`/${parent_type}/${parent_id}`} className="text-shark-50">{title}</Link>
               </Typography>
             </div>
           </div>

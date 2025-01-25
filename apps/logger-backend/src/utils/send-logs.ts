@@ -1,7 +1,7 @@
 import { format, FormattableString } from '@gramio/format';
 import type { PaymentCompleted } from '@repo/types/schemas/payment/payment-schema.ts';
 import { loggerBot } from '../shared/bot/bot.ts';
-import { AdminsWithDetails, getAdmins } from '../queries/get-admins.ts';
+import { AdminsWithDetails, getAdmins } from '../lib/queries/get-admins.ts';
 import { paymentLogsMessage } from '../messages/payment-logs.ts';
 import { loginLogsMessage } from '../messages/login-logs.ts';
 

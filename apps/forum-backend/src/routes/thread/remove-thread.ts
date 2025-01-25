@@ -7,7 +7,6 @@ import { validateThreadOwner } from "./validate-thread-owner";
 export const removeThreadRoute = new Hono()
   .delete("/remove-thread/:threadId", async (ctx) => {
     const { threadId } = ctx.req.param()
-
     const nickname = getNickname()
 
     const isValidOwner = await validateThreadOwner(nickname, threadId)
@@ -19,7 +18,7 @@ export const removeThreadRoute = new Hono()
     try {
       const deletedThread = await removeThread(threadId)
 
-      if (!deletedThread) {
+      if (!deletedThread[0].numDeletedRows) {
         return ctx.json({ error: "Thread not found" }, 404)
       }
 

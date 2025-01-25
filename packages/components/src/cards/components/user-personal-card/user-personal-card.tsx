@@ -22,16 +22,16 @@ import BookAndQuill from "@repo/assets/images/minecraft/book_quill.webp";
 import DragonBreath from "@repo/assets/images/minecraft/dragon_breath.webp";
 import GrassBlock from "@repo/assets/images/minecraft/grass_block.webp";
 import FishingRod from "@repo/assets/images/minecraft/fishing_rod.webp";
-import Link from "next/link";
+import { Link } from "@tanstack/react-router";
 import { userStatusQuery } from "@repo/lib/queries/user-status-query.ts";
 import { useQuery } from "@tanstack/react-query";
 import { createQueryKey } from "@repo/lib/helpers/query-key-builder.ts";
-import { forumUserClient } from "@repo/shared/api/forum-client.ts";
+import { landsClient } from "@repo/shared/api/minecraft-client.ts";
 import { ContentNotFound } from "#templates/content-not-found.tsx";
 import { Skeleton } from "@repo/ui/src/components/skeleton.tsx";
 
 const getUserLands = async (nickname: string) => {
-  const res = await forumUserClient().user["get-user-lands"][":nickname"].$get({
+  const res = await landsClient.lands["get-user-lands"][":nickname"].$get({
     param: {
       nickname
     }
@@ -117,7 +117,7 @@ export const UserPersonalCard = () => {
       <div className="flex flex-col gap-y-2 w-full">
         <Dialog>
           <DialogTrigger>
-            <UserSettingOption title="Профиль" imageSrc={BookAndQuill.src} />
+            <UserSettingOption title="Профиль" imageSrc={BookAndQuill} />
           </DialogTrigger>
           <DialogContent>
             <UserProfileSettings />
@@ -125,7 +125,7 @@ export const UserPersonalCard = () => {
         </Dialog>
         <Dialog>
           <DialogTrigger>
-            <UserSettingOption title="Аккаунт" imageSrc={MinecartWithChest.src} />
+            <UserSettingOption title="Аккаунт" imageSrc={MinecartWithChest} />
           </DialogTrigger>
           <DialogContent>
             <UserSettingsCard />
@@ -133,7 +133,7 @@ export const UserPersonalCard = () => {
         </Dialog>
         <Dialog>
           <DialogTrigger>
-            <UserSettingOption title="Прочее" imageSrc={Campfire.src} />
+            <UserSettingOption title="Прочее" imageSrc={Campfire} />
           </DialogTrigger>
           <DialogContent>
             <UserAdvancedSettings />
@@ -142,7 +142,7 @@ export const UserPersonalCard = () => {
         <Separator />
         <Dialog>
           <DialogTrigger>
-            <UserSettingOption title="Мои регионы" imageSrc={GrassBlock.src} />
+            <UserSettingOption title="Мои регионы" imageSrc={GrassBlock} />
           </DialogTrigger>
           <DialogContent>
             <UserLands />
@@ -150,19 +150,19 @@ export const UserPersonalCard = () => {
         </Dialog>
         <Dialog>
           <DialogTrigger>
-            <UserSettingOption title="Рейтинг" imageSrc={DragonBreath.src} />
+            <UserSettingOption title="Рейтинг" imageSrc={DragonBreath} />
           </DialogTrigger>
           <DialogContent>
 
           </DialogContent>
         </Dialog>
         <Separator />
-        <Link href="https://fasberry.su/wiki" target="_blank">
-          <UserSettingOption title="Вики" imageSrc={Portfolio.src} />
+        <Link to="https://fasberry.su/wiki" target="_blank">
+          <UserSettingOption title="Вики" imageSrc={Portfolio} />
         </Link>
         <TicketsModal
           trigger={
-            <UserSettingOption title="Задать вопрос" imageSrc={FishingRod.src} />
+            <UserSettingOption title="Задать вопрос" imageSrc={FishingRod} />
           }
         />
       </div>

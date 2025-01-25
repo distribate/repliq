@@ -1,11 +1,8 @@
-import type { PaymentAppType } from "payment-backend/src";
+import type { PaymentAppType, OrderAppType } from "payment-backend/src";
 import { hc } from "hono/client";
 import { isProduction } from "@repo/lib/helpers/is-production";
 
-const headers = { Authorization: `Bearer ${process.env.SECRET_TOKEN}` };
+const baseUrl = isProduction ? `https://api.fasberry.su/api/payment` : `http://localhost:4103/api/payment`;
 
-const production = `https://api.fasberry.su/api/payment`;
-
-const origin = isProduction ? production : production;
-
-export const paymentsClient = hc<PaymentAppType>(`${origin}/proccessing`, { headers })
+export const ordersClient = hc<OrderAppType>(baseUrl)
+export const paymentsClient = hc<PaymentAppType>(`${baseUrl}/proccessing`)

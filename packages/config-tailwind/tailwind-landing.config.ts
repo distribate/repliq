@@ -1,6 +1,8 @@
 import type { Config } from 'tailwindcss'
-
-const defaultTheme = require("tailwindcss/defaultTheme");
+import tailwindCSSAnimate from "tailwindcss-animate";
+// @ts-ignore
+import tailwindCSSTextShadow from "tailwindcss-textshadow";
+import defaultTheme from "tailwindcss/defaultTheme"
 
 module.exports = {
   darkMode: "class",
@@ -10,25 +12,23 @@ module.exports = {
     "../../packages/landing-components/src/**/*.{ts,tsx}",
     "../../packages/landing-ui/src/**/*.{ts,tsx}",
   ],
-  plugins: [
-    require("tailwindcss-animate"),
-    require("tailwindcss-textshadow"),
-  ],
-  safelist: [{
+  plugins: [tailwindCSSAnimate, tailwindCSSTextShadow],
+  safelist: [
+    {
       pattern: /(mt|mb|mr|ml|my|mx|px|py|pt|pb|pl|pr)-[0-9]+/,
-    }, {
+    },
+    {
       pattern: /flex-.*/,
-    }, {
+    },
+    {
       pattern: /(bottom|right|top|left)-[0-9]+/,
-    }, {
+    },
+    {
       pattern: /(w|h)-[0-9]+/,
     },
   ],
   theme: {
-    screens: {
-      xs: "480px",
-      ...defaultTheme.screens,
-    },
+    screens: { xs: "480px", ...defaultTheme.screens },
     extend: {
       textShadow: {
         'default': '1.5px 1.5px #000',

@@ -1,5 +1,4 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { createPost } from "../queries/create-post.ts";
 import { toast } from "sonner";
 import { POSTS_QUERY_KEY } from "#profile/components/posts/components/posts/queries/posts-query.ts";
 import { POST_FORM_FIELD_QUERY_KEY } from "../queries/post-form-query.ts";
@@ -33,25 +32,25 @@ export const useCreatePost = () => {
     }: Pick<PostEntity, "content" | "visibility">) => {
       const fixedContent = outputValidator(content, bannedWords);
 
-      return createPost({ content: fixedContent, visibility });
+      // return createPost({ content: fixedContent, visibility });
     },
     onSuccess: async (data) => {
-      if (!data)
-        toast.error(
-          "Произошла ошибка при публикации поста. Попробуйте позже!",
-          {
-            description: "Попробуйте попытку позже",
-          },
-        );
+      // if (!data)
+      //   toast.error(
+      //     "Произошла ошибка при публикации поста. Попробуйте позже!",
+      //     {
+      //       description: "Попробуйте попытку позже",
+      //     },
+      //   );
 
-      toast.success("Опубликовано");
+      // toast.success("Опубликовано");
 
-      await Promise.all([
-        qc.invalidateQueries({
-          queryKey: POSTS_QUERY_KEY(currentUser.nickname),
-        }),
-        qc.resetQueries({ queryKey: POST_FORM_FIELD_QUERY_KEY }),
-      ]);
+      // await Promise.all([
+      //   qc.invalidateQueries({
+      //     queryKey: POSTS_QUERY_KEY(currentUser.nickname),
+      //   }),
+      //   qc.resetQueries({ queryKey: POST_FORM_FIELD_QUERY_KEY }),
+      // ]);
     },
     onError: (e) => {
       throw new Error(e.message);

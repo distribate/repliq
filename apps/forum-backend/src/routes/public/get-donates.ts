@@ -1,7 +1,7 @@
 import { forumDB } from "#shared/database/forum-db.ts";
+import { getPublicUrl } from "#utils/get-public-url.ts";
 import { throwError } from "@repo/lib/helpers/throw-error";
 import { Hono } from "hono";
-import { getPublicUrl } from "./get-news";
 
 async function getDonatesList() {
   const query = await forumDB

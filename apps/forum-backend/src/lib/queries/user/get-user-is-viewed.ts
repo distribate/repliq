@@ -12,12 +12,12 @@ export async function getUserIsViewed({
     .where("initiator", "=", initiator)
     .where("recipient", "=", recipient)
     .where("created_at", '>=', new Date(new Date().setDate(new Date().getDate() - 1)))
-    .$narrowType<{ count: number }>()
+    .$castTo<{ count: number }>()
     .executeTakeFirst();
 
   if (!query) {
     return false
   }
 
-  return query.count === 0 ? false : true
+  return query.count > 0 ? true : false
 }

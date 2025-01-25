@@ -1,5 +1,5 @@
 import { UserEntity } from "@repo/types/entities/entities-type.ts";
-import { useRouter } from "next/navigation";
+import { useNavigate } from "@tanstack/react-router";
 import { Avatar } from '#user/components/avatar/components/avatar.tsx';
 import { UserNickname } from '#user/components/name/nickname.tsx';
 import { Separator } from "@repo/ui/src/components/separator.tsx";
@@ -20,7 +20,7 @@ export const UserBlockedCard = ({
   name_color, nickname, time,
 }: UserBlockedCardProps) => {
   const { deleteUserFromBlockedMutation } = useDeleteFromBlocked();
-  const { replace } = useRouter();
+  const navigate = useNavigate();
 
   const handleDeleteFromBlocked = (
     e: React.MouseEvent<HTMLDivElement>, nickname: string,
@@ -55,7 +55,7 @@ export const UserBlockedCard = ({
                 <Typography>Удалить из черного списка</Typography>
               </HoverCardItem>
               <Separator />
-              <HoverCardItem onClick={() => replace(USER_URL + nickname)}>
+              <HoverCardItem onClick={() => navigate({ to: USER_URL + nickname })}>
                 <Typography>Перейти к профилю</Typography>
               </HoverCardItem>
               <UserCardModal nickname={nickname} />

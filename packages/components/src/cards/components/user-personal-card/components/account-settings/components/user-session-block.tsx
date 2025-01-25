@@ -1,4 +1,3 @@
-import Image from "next/image";
 import { Typography } from "@repo/ui/src/components/typography.tsx";
 import BlockGold from "@repo/assets/images/minecraft/block_gold.webp";
 import { UserActiveSessionsQuery } from "#cards/components/user-personal-card/components/account-settings/queries/user-sessions-query.ts";
@@ -11,8 +10,8 @@ export const UserSessionBlock = ({
 
   return (
     <div className="flex w-full gap-2 group relative py-2 rounded-md hover:bg-shark-700/20 px-4">
-      <Image
-        src={BlockGold.src}
+      <img
+        src={BlockGold}
         alt="Page private"
         width={64}
         className={`w-[64px] h-[64px] ${!isCurrent ? "grayscale" : "grayscale-0"}`}

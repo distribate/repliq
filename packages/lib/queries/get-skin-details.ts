@@ -7,7 +7,7 @@ type GetSkinDetails = {
 }
 
 export async function getSkinDetails({ type, nickname }: GetSkinDetails) {
-  const url = skinClient[`get-${type}`][":nickname"].$url({
+  const url = skinClient.skin[`get-${type}`][":nickname"].$url({
     param: { nickname }
   })
 

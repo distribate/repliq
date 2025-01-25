@@ -1,7 +1,7 @@
 import { forumUserClient } from "@repo/shared/api/forum-client";
 
 export const getNotifications = async () => {
-  const res = await forumUserClient().user["get-user-notifications"].$get()
+  const res = await forumUserClient.user["get-user-notifications"].$get()
 
   const data = await res.json()
 
@@ -9,5 +9,5 @@ export const getNotifications = async () => {
     return null
   }
 
-  return data
+  return data.data
 }

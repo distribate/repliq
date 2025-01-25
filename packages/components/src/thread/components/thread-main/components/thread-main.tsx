@@ -2,7 +2,6 @@
 
 import { ThreadComments } from "@repo/components/src/thread/components/thread-comments/components/thread-comments.tsx"
 import { Typography } from "@repo/ui/src/components/typography"
-import dynamic from "next/dynamic"
 import { ThreadImages } from "../../thread-images/thread-images"
 import { Eye } from "lucide-react"
 import { BlockWrapper } from "#wrappers/block-wrapper.tsx"
@@ -25,24 +24,9 @@ import { ThreadCommentsAnchor } from "#thread/components/thread-comments/compone
 import { ThreadContextMenu } from "#thread/components/thread-context-menu/thread-context-menu.tsx"
 import { useQueryClient } from "@tanstack/react-query"
 import { ThreadDetailed } from "@repo/types/entities/thread-type"
-
-const ContentNotFound = dynamic(() =>
-  import("@repo/components/src/templates/content-not-found.tsx").then(
-    (m) => m.ContentNotFound,
-  ),
-);
-
-const CommentsDisabled = dynamic(() =>
-  import("@repo/components/src/templates/comments-disabled.tsx").then(
-    (m) => m.CommentsDisabled,
-  ),
-);
-
-const CreateThreadComment = dynamic(() =>
-  import(
-    "@repo/components/src/thread/components/create-thread-comment/components/create-thread-comment.tsx"
-  ).then((m) => m.CreateThreadComment),
-);
+import { ContentNotFound } from "#templates/content-not-found.tsx"
+import { CommentsDisabled } from "#templates/comments-disabled.tsx"
+import { CreateThreadComment } from "#thread/components/create-thread-comment/components/create-thread-comment.tsx"
 
 type ThreadContentProps = {
   threadId: string

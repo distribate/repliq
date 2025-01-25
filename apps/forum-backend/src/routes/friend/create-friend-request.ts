@@ -7,8 +7,7 @@ import { getNickname } from "#utils/get-nickname-from-storage.ts";
 import { zValidator } from "@hono/zod-validator";
 import { Hono } from "hono";
 import { createFriendRequestSchema } from "@repo/types/schemas/friend/create-friend-request-schema.ts";
-import { getNatsConnection } from '@repo/config-nats/nats-client';
-import { USER_NOTIFICATIONS_SUBJECT } from '@repo/shared/constants/nats-subjects';
+import { publishCreateFriendRequest } from '#publishers/pub-create-friend-request.ts';
 
 async function validateUserFriendPreference(nickname: string): Promise<boolean> {
   return await getUserFriendPreference(nickname)
@@ -19,24 +18,19 @@ export const createFriendRequestRoute = new Hono()
     const body = await ctx.req.json();
     const result = createFriendRequestSchema.parse(body);
     const { recipient } = result
-    const nc = getNatsConnection()
-
     const initiator = getNickname()
 
-    if (!(await validateUserFriendPreference(recipient))) {
-      return ctx.json(
-        { error: "User does not have accept to send friend request" },
-        400
-      );
+    const isValidFriendPreference = await validateUserFriendPreference(recipient);
+
+    if (!isValidFriendPreference) {
+      return ctx.json({ error: "User does not have accept to send friend request" }, 400);
     }
 
     if (initiator === recipient) {
       return ctx.json({ error: "You cannot add yourself" }, 400);
     }
 
-    const blockStatus = await getUserBlockStatus({
-      initiator, recipient
-    });
+    const blockStatus = await getUserBlockStatus({ initiator, recipient });
 
     switch (blockStatus) {
       case "blocked-by-user":
@@ -45,26 +39,20 @@ export const createFriendRequestRoute = new Hono()
         return ctx.json({ error: "User blocked you" }, 400);
     }
 
-    const existingFriendShip = await getFriendship({
-      initiator, recipient
-    });
+    const existingFriendShip = await getFriendship({ initiator, recipient });
 
     if (existingFriendShip) {
       return ctx.json({ error: "You are already friends" }, 400);
     }
 
     try {
-      await createFriendRequest({
-        initiator, recipient
-      });
+      const res = await createFriendRequest({ initiator, recipient });
 
-      nc.publish(USER_NOTIFICATIONS_SUBJECT, JSON.stringify({
-        type: "create-friend-request",
-        payload: {
-          recipient,
-          initiator,
-        }
-      }))
+      if (!res.id) {
+        return ctx.json({ error: "Error creating friend request" }, 404);
+      }
+
+      publishCreateFriendRequest({ initiator, recipient })
 
       return ctx.json({ status: "Friend request sent" }, 200);
     } catch (e) {

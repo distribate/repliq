@@ -6,10 +6,19 @@ import { downloadSkinRoute } from '#routes/download-skin.ts';
 import { showRoutes } from 'hono/dev';
 import { logger } from 'hono/logger';
 import { timeout } from 'hono/timeout';
-import { csrf } from 'hono/csrf';
-import { rateLimiter as limiter } from "hono-rate-limiter";
+import { processPlayerVoteRoute } from '#routes/hooks/process-player-vote.ts';
+import { initNats } from '@repo/config-nats/nats-client';
+import { rateLimiterMiddleware } from '#middlewars/rate-limiter.ts';
+import { port } from "./utils/init-env.ts"
+import { getLandsRoute } from '#routes/lands/get-lands.ts';
+import { getLandsByNicknameRoute } from '#routes/lands/get-lands-by-nickname.ts';
+import { getLandRoute } from '#routes/lands/get-land.ts';
 
-const port = process.env.SKIN_BACKEND_PORT!
+initNats()
+
+export const hooks = new Hono()
+  .basePath('/hooks')
+  .route("/", processPlayerVoteRoute)
 
 export const skin = new Hono()
   .basePath("/skin")
@@ -21,27 +30,37 @@ export const achievements = new Hono()
   .basePath("/achievements")
 // .route("/", getAchievementsRoute)
 
-const app = new Hono()
-  .use(cors({ origin: '*', allowMethods: ['GET'] }))
-  .use(csrf())
-  .use(timeout(2000))
-  .use(
-    limiter({
-      windowMs: 60000,
-      limit: 300,
-      standardHeaders: "draft-6",
-      keyGenerator: (ctx) => ctx.req.header("x-forwarded-for") ?? "",
-    })
-  )
-  .use(logger())
-  .basePath('/api/minecraft')
+export const lands = new Hono()
+  .basePath("/lands")
+  .route("/", getLandsRoute)
+  .route("/", getLandsByNicknameRoute)
+  .route("/", getLandRoute)
+
+export const minecraft = new Hono()
+  .basePath('/minecraft')
   .route("/", skin)
   .route("/", achievements)
+  .route("/", lands)
 
-async function createServer() {
-  showRoutes(app, { verbose: false });
+const app = new Hono()
+  .use(cors({
+    origin: ["http://localhost:3000", "https://cc.fasberry.su", "https://fasberry.su", "http://localhost:3001"],
+    allowMethods: ['GET', "POST", "OPTIONS"],
+    allowHeaders: ["Cookie", "cookie", "x-csrf-token", "X-CSRF-Token", "content-type", "Content-Type"],
+    credentials: true
+  }))
+  .use(timeout(2000))
+  .use(rateLimiterMiddleware)
+  .use(logger())
+  .basePath('/api')
+  .route("/", minecraft)
+  .route("/", hooks)
 
-  Bun.serve({ port, fetch: app.fetch });
-}
+showRoutes(app, { verbose: false });
 
-createServer().then((_) => console.log(port))
+Bun.serve({
+  port,
+  fetch: app.fetch
+});
+
+console.log(port)

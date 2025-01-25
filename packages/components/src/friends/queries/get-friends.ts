@@ -26,7 +26,7 @@ export async function getFriends({
   const with_details = parseBooleanToString(rawWithDetails)
   const ascending = parseBooleanToString(rawAscending)
 
-  const url = forumUserClient().user["get-user-friends"][":nickname"].$url({
+  const url = forumUserClient.user["get-user-friends"][":nickname"].$url({
     param: { nickname },
     query: { sort_type, with_details, ascending, cursor }
   })

@@ -4,8 +4,7 @@ import { Hono } from "hono";
 import { getNickname } from "#utils/get-nickname-from-storage.ts";
 import { z } from "zod";
 import { acceptFriendRequestTransaction } from "#lib/transactions/friend/accept-friend-request-transaction.ts";
-import { getNatsConnection } from '@repo/config-nats/nats-client';
-import { USER_NOTIFICATIONS_SUBJECT } from '@repo/shared/constants/nats-subjects';
+import { publishAcceptFriendRequest } from '#publishers/pub-accept-friend-request.ts';
 
 const acceptFriendRequestSchema = z.object({
   request_id: z.string()
@@ -14,22 +13,14 @@ const acceptFriendRequestSchema = z.object({
 export const acceptFriendRequestRoute = new Hono()
   .post("/accept-friend-request", zValidator("json", acceptFriendRequestSchema), async (ctx) => {
     const body = await ctx.req.json();
-    const result = acceptFriendRequestSchema.parse(body);
-    const { request_id } = result;
-    const nc = getNatsConnection()
+    const { request_id } = acceptFriendRequestSchema.parse(body);
 
     const initiator = getNickname()
 
     try {
-      const acceptedFriendRequest = await acceptFriendRequestTransaction({ initiator, request_id })
+      const { user_1, user_2 } = await acceptFriendRequestTransaction({ initiator, request_id })
 
-      nc.publish(USER_NOTIFICATIONS_SUBJECT, JSON.stringify({
-        type: "accept-friend-request",
-        payload: {
-          recipient: acceptedFriendRequest.user_2,
-          initiator: acceptedFriendRequest.user_1,
-        }
-      }))
+      publishAcceptFriendRequest({ user_1: user_1, user_2: user_2 })
 
       return ctx.json({ status: "Friend request accepted" }, 200);
     } catch (e) {

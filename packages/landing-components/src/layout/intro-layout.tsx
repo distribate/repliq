@@ -49,7 +49,8 @@ export const IntroLayout = ({ children }: { children: React.ReactNode }) => {
 
   return (
     <div
-      className={`flex flex-col items-start h-screen justify-center weather ${weather}`}
+      id="title"
+      className={`flex flex-col relative items-start h-dvh justify-center weather ${weather}`}
     >
       {children}
     </div>

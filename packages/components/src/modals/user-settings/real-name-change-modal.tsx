@@ -18,7 +18,7 @@ export const RealNameChangeModal = () => {
     <DynamicModal
       mutationKey={UPDATE_FIELD_MUTATION_KEY}
       trigger={
-        <UserSettingOption title="Реальное имя" imageSrc={Nametag.src}>
+        <UserSettingOption title="Реальное имя" imageSrc={Nametag}>
           <div className="flex items-center gap-1">
             <Typography className="text-base">
               {real_name ?? 'не указано'}

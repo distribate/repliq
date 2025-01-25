@@ -1,5 +1,6 @@
-import { getUser } from "@repo/lib/helpers/get-user"
+import { currentUserQuery } from "@repo/lib/queries/current-user-query"
 import { forumWsClient } from "@repo/shared/api/forum-client"
+import { useNavigate } from "@tanstack/react-router"
 import { useEffect } from "react"
 import { toast } from "sonner"
 
@@ -19,6 +20,7 @@ async function pushNotifications({
   payload, type
 }: PushNotifications) {
   const { initiator, recipient } = payload;
+  const navigate = useNavigate()
 
   switch (type) {
     case "create-friend-request":
@@ -27,7 +29,7 @@ async function pushNotifications({
         action: {
           label: "Перейти",
           onClick: () => {
-            window.location.href = `/friends`
+            navigate({ to: `/friends` })
           }
         }
       });
@@ -43,7 +45,9 @@ async function pushNotifications({
 export const UserStatusLayout = ({
   children
 }: UserStatusLayoutProps) => {
-  const { nickname } = getUser()
+  const { nickname } = currentUserQuery().data
+
+  console.log(nickname)
 
   useEffect(() => {
     const ws = forumWsClient.ws["user-status"].$ws();
@@ -94,9 +98,5 @@ export const UserStatusLayout = ({
     }
   }, []);
 
-  return (
-    <>
-      {children}
-    </>
-  )
+  return children
 }

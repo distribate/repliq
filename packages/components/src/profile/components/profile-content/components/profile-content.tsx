@@ -1,12 +1,19 @@
-"use client"
-
 import { useUserProfile } from "../hooks/use-user-profile"
 import { profileStatusQuery } from "../queries/profile-status-query"
-import { useEffect } from "react"
+import { lazy, Suspense, useEffect } from "react"
 import { ProfileContentTabs } from "./profile-content-tabs"
-import { ProfilePrivated } from "#templates/profile-privated.tsx"
-import { UserBlocked } from "#templates/user-blocked.tsx"
-import { UserBanned } from "#templates/user-banned.tsx"
+
+const UserBlocked = lazy(() => import("#templates/user-blocked.tsx")
+  .then(m => ({ default: m.UserBlocked }))
+);
+
+const UserBanned = lazy(() => import("#templates/user-banned.tsx")
+  .then(m => ({ default: m.UserBanned }))
+);
+
+const ProfilePrivated = lazy(() => import("#templates/profile-privated.tsx")
+  .then(m => ({ default: m.ProfilePrivated }))
+);
 
 export type ProfileContentProps = {
   requestedUserNickname: string
@@ -36,5 +43,13 @@ export const ProfileContent = ({
     return <UserBlocked blockedType={blockedType} />
   }
 
-  return isPrivate ? <ProfilePrivated /> : <ProfileContentTabs requestedUserNickname={requestedUserNickname} />
+  return isPrivate ? (
+    <Suspense fallback={null}>
+      <ProfilePrivated />
+    </Suspense>
+  ) : (
+    <Suspense fallback={null}>
+      <ProfileContentTabs requestedUserNickname={requestedUserNickname} />
+    </Suspense>
+  )
 }

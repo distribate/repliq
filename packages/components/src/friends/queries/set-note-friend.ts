@@ -9,7 +9,7 @@ export type SetNote = Pick<
 export async function setNoteFriend({
   recipient, friend_id, note,
 }: SetNote) {
-  const res = await forumUserClient().user["create-friend-note"].$post({
+  const res = await forumUserClient.user["create-friend-note"].$post({
     json: {
       recipient,
       friend_id,
@@ -23,7 +23,7 @@ export async function setNoteFriend({
     return { error: data.error }
   }
 
-  const { note: newNote, status } = data;
+  const { data: newNote, status } = data;
 
   return { status, note: newNote, friend_id }
 }

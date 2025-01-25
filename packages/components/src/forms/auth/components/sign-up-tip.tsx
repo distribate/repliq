@@ -4,14 +4,14 @@ import { Typography } from "@repo/ui/src/components/typography.tsx";
 import { AUTH_REDIRECT } from "@repo/shared/constants/routes.ts";
 import { AUTH_QUERY_KEY } from "#forms/auth/queries/auth-query.ts";
 import { useQueryClient } from "@tanstack/react-query";
-import { useRouter } from "next/navigation";
+import { useNavigate } from "@tanstack/react-router";
 
 export const SignUpTip = () => {
   const qc = useQueryClient();
-  const { replace } = useRouter();
+  const navigate = useNavigate();
 
   const handleRedirect = () => {
-    replace(AUTH_REDIRECT);
+    navigate({ to: AUTH_REDIRECT });
     return qc.resetQueries({ queryKey: AUTH_QUERY_KEY });
   };
 
@@ -23,8 +23,8 @@ export const SignUpTip = () => {
         textColor="shark_black"
         className="font-normal"
       >
-        Зарегистрируйся на форуме, чтобы создавать свой контент и с общаться с
-        игроками в одной сети!
+        Зарегистрируйся на проекте, чтобы создавать свой контент, общаться с
+        игроками и строить свою игру!
       </Typography>
       <div className="flex flex-col gap-y-1">
         <Typography
@@ -32,7 +32,7 @@ export const SignUpTip = () => {
           textSize="medium"
           className="font-semibold text-red-800"
         >
-          Внимание!
+          Обрати внимание
         </Typography>
         <Typography
           textShadow="small"
@@ -40,8 +40,8 @@ export const SignUpTip = () => {
           textColor="shark_black"
           className="font-normal"
         >
-          Никнейм чувствителен к регистру, иначе ты должен вводить игровой ник
-          точь-в-точь с заглавными буквами (если они есть).
+          Никнейм чувствителен к регистру, то есть ты должен ввести игровой ник
+          учитывая заглавные буквы (если они есть).
         </Typography>
       </div>
       <div className="w-full overflow-hidden">

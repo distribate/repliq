@@ -1,5 +1,3 @@
-"use client";
-
 import { DeleteButton } from "@repo/ui/src/components/detele-button.tsx";
 import { useMinecraftItems } from "../../../../../forms/create-minecraft-items/hooks/use-minecraft-items.tsx";
 import { DeleteMinecraftItem } from "../../../../../forms/create-minecraft-items/queries/delete-minecraft-item.ts";

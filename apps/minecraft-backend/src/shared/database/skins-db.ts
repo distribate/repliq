@@ -4,9 +4,9 @@ import { Kysely } from "kysely";
 
 export const skinsDB = new Kysely<skinsDBType>({
   dialect: skinsDialect({
-    user: process.env.SKINS_PROXY_MYSQL_USER!,
-    password: process.env.SKINS_PROXY_MYSQL_PASSWORD!,
-    port: Number(process.env.SKINS_PROXY_MYSQL_PORT!),
+    user: Bun.env.MYSQL_USER!,
+    password: Bun.env.MYSQL_ROOT_PASSWORD!,
+    port: Number(Bun.env.SKINS_PROXY_MYSQL_PORT!),
     database: "skins_proxy",
     host: "127.0.0.1"
   })

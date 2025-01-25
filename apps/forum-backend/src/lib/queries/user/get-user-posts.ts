@@ -54,6 +54,7 @@ export async function getUserPosts({
     if (range) {
       const offset = range[0];
       const limit = range[1] - range[0];
+      
       query = query.offset(offset).limit(limit);
     } else {
       query = query.limit(8);

@@ -26,7 +26,7 @@ const NotificationCard = ({
       onMouseEnter={() => checkNotificationMutation.mutate(id)}
     >
       <div className="w-[64px]">
-        <img src={Bell.src} alt="" width={64} height={64} />
+        <img src={Bell} alt="" width={64} height={64} />
       </div>
       <div className="flex flex-col justify-start w-full">
         <Typography className="truncate text-[18px]">

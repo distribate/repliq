@@ -1,10 +1,8 @@
-"use client"
-
 import { createQueryKey } from "@repo/lib/helpers/query-key-builder"
 import { forumLandingClient } from "@repo/shared/api/forum-client"
 import { Typography } from "@repo/ui/src/components/typography"
 import { useQuery } from "@tanstack/react-query"
-import Link from "next/link"
+import { Link } from "@tanstack/react-router"
 
 const getLatestNews = async () => {
   const res = await forumLandingClient["get-news"].$get({
@@ -45,7 +43,7 @@ export const LatestNews = () => {
         Последние новости
       </Typography>
       <div className="flex flex-col gap-y-4 w-full h-full">
-        {newsList.map((newsItem)=> (
+        {newsList.map((newsItem) => (
           <div key={newsItem.id} className="flex group flex-col rounded-lg h-[200px] relative overflow-hidden">
             <img
               src={newsItem.imageUrl}
@@ -65,7 +63,7 @@ export const LatestNews = () => {
           </div>
         ))}
       </div>
-      <Link href="https://fasberry.su/news">
+      <Link to="https://fasberry.su/news">
         <Typography textColor="gray" className="text-[16px]">
           показать больше
         </Typography>

@@ -47,7 +47,7 @@ export const GeneralStats = ({ nickname, uuid }: StatsRequest) => {
             <div className="flex items-center gap-1">
               <Typography>Харизма: {cmi.balance}</Typography>
               <img
-                src={CharismWallet.src}
+                src={CharismWallet}
                 alt="Харизма"
                 width={18}
                 height={18}
@@ -56,7 +56,7 @@ export const GeneralStats = ({ nickname, uuid }: StatsRequest) => {
             <div className="flex items-center gap-1">
               <Typography>Белкоины: {wallet.points}</Typography>
               <img
-                src={BelkoinWallet.src}
+                src={BelkoinWallet}
                 alt="Белкоин"
                 width={18}
                 height={18}

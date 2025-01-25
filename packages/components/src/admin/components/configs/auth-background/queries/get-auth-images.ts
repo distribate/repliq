@@ -1,32 +1,39 @@
-import { getAuthBackgroundImages } from "@repo/lib/queries/get-auth-background-images.ts";
 import { getPublicUrlFromStorage } from "@repo/lib/utils/storage/get-public-url-from-storage.ts";
+import { forumAdminClient } from "@repo/shared/api/forum-client";
 
 type AuthImages = {
   name: string;
   url: string;
 };
 
+async function getAuthBackgroundImages() {
+  const res = await forumAdminClient.admin["get-auth-images"].$get();
+
+  const data = await res.json();
+
+  if ("error" in data) {
+    return null;
+  }
+
+  return data.data;
+}
+
 export async function getAuthImages() {
   const authBackgroundImages = await getAuthBackgroundImages();
 
-  if (!authBackgroundImages) {
-    return null;
-  }
+  if (!authBackgroundImages) return null
 
   let images: Array<AuthImages> = [];
 
   for (let i = 0; i < authBackgroundImages.length; i++) {
-    const imageName = authBackgroundImages[i]?.name;
+    const name = authBackgroundImages[i]?.name;
 
     const image = await getPublicUrlFromStorage({
       bucket: "static",
-      fileName: `auth_background/${imageName}`,
+      fileName: `auth_background/${name}`,
     });
 
-    images.push({
-      name: imageName,
-      url: image,
-    });
+    images.push({ name, url: image });
   }
 
   if (images.length === 0) return null;

@@ -2,7 +2,6 @@
 
 import { ReportEntity } from "@repo/types/entities/entities-type";
 import { createClient } from '@repo/shared/api/supabase-client.ts';
-import { getCurrentSession } from "@repo/lib/actions/get-current-session.ts";
 
 type PostReportType = Omit<
   ReportEntity,
@@ -27,13 +26,10 @@ export async function postReport({
   targetNickname,
   targetId,
 }: PostReportType) {
-  const { user } = await getCurrentSession();
-  if (!user) return;
-
   let reported_item: PostReportItem | null = null;
 
   if (!targetNickname || !targetId) return;
-  if (user.nickname === targetNickname) return;
+  if ("12" === targetNickname) return;
 
   reported_item = {
     targetId,
@@ -50,7 +46,7 @@ export async function postReport({
       reported_item,
       target_user_nickname: targetNickname,
       report_type,
-      user_nickname: user.nickname,
+      user_nickname: "12",
     })
     .select()
     .returns<ReportEntity>();

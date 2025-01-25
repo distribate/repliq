@@ -5,10 +5,10 @@ import { createUserBodySchema } from "auth-backend/src/routes/register";
 type UserDetails = z.infer<typeof createUserBodySchema>;
 
 export async function registerForum({
-  nickname, password, realName, findout,
+  nickname, password, details
 }: UserDetails) {
   const res = await authClient.register.$post({
-    json: { nickname, password, realName, findout },
+    json: { nickname, password, details },
   });
 
   const data = await res.json();

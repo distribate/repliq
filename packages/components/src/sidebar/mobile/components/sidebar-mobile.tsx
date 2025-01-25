@@ -10,7 +10,7 @@ import { UserNickname } from "#user/components/name/nickname.tsx";
 import { UserDonate } from "#user/components/donate/components/donate.tsx";
 import { forwardRef, HTMLAttributes, useState } from "react";
 import { SidebarButton } from "#sidebar/desktop/components/sidebar-content/links/components/sidebar-target.tsx";
-import { useRouter } from "next/navigation";
+import { useNavigate } from "@tanstack/react-router";
 import { Separator } from "@repo/ui/src/components/separator";
 import { UserSettingsModal } from "#modals/user-settings/user-settings-modal.tsx";
 import { useInView } from "react-intersection-observer";
@@ -58,7 +58,7 @@ const SidebarMobileButton = ({ func, title }: SidebarMobileButtonProps) => {
 export const SidebarMobile = () => {
   const [open, setOpen] = useState(false);
   const { nickname, donate, favorite_item } = getUser();
-  const { push } = useRouter()
+  const navigate = useNavigate()
   const { inView, ref } = useInView({
     threshold: 1
   })
@@ -83,23 +83,23 @@ export const SidebarMobile = () => {
             </div>
           </div>
           <div className="flex flex-col p-4 gap-y-4">
-            <SidebarMobileButton title="Мой профиль" func={() => handle(() => push(USER_URL + nickname))} />
-            <SidebarMobileButton title="Друзья" func={() => handle(() => push("/friends"))} />
-            <SidebarMobileButton title="Треды" func={() => handle(() => push("/"))} />
+            <SidebarMobileButton title="Мой профиль" func={() => handle(() => navigate({ to: USER_URL + nickname }))} />
+            <SidebarMobileButton title="Друзья" func={() => handle(() => navigate({ to: "/friends" }))} />
+            <SidebarMobileButton title="Треды" func={() => handle(() => navigate({ to: "/" }))} />
             <Separator />
-            <SidebarMobileButton title="Создать тред" func={() => handle(() => push("/create-thread"))} />
+            <SidebarMobileButton title="Создать тред" func={() => handle(() => navigate({ to: "/create-thread" }))} />
             <Separator />
-            <SidebarMobileButton title="Ивенты" func={() => handle(() => push("/events"))} />
-            <SidebarMobileButton title="Справочник" func={() => handle(() => push("https://fasberry.su/wiki"))} />
-            <SidebarMobileButton title="Территории" func={() => handle(() => push("/lands"))} />
+            <SidebarMobileButton title="Ивенты" func={() => handle(() => navigate({ to: "/events" }))} />
+            <SidebarMobileButton title="Справочник" func={() => handle(() => navigate({ to: "https://fasberry.su/wiki" }))} />
+            <SidebarMobileButton title="Территории" func={() => handle(() => navigate({ to: "/lands" }))} />
             <Separator />
-            <SidebarMobileButton title="Коллекции" func={() => handle(() => push("/collections"))} />
+            <SidebarMobileButton title="Коллекции" func={() => handle(() => navigate({ to: "/collections" }))} />
             <UserSettingsModal trigger={<SidebarMobileButton title="Настройки" />} />
           </div>
         </SheetContent>
       </Sheet>
       <Search
-        onClick={() => handle(() => push("/search"))}
+        onClick={() => handle(() => navigate({ to: "/search" }))}
         size={26}
         className="text-shark-300 cursor-pointer"
       />

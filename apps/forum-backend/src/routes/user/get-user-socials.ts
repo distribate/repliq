@@ -15,7 +15,12 @@ export const getUserSocialsRoute = new Hono()
 
     try {
       const socials = await getUserSocials(nickname);
-      return ctx.json(socials ?? null, 200);
+
+      if (!socials) {
+        return ctx.json({ data: null }, 200);
+      }
+
+      return ctx.json({ data: socials }, 200);
     } catch (e) {
       return ctx.json({ error: throwError(e) }, 500);
     }

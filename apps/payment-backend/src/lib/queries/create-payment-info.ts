@@ -6,13 +6,8 @@ type Payments = Pick<DB, "payments">["payments"]
 type CreatePaymentInfo = Insertable<Payments>
 
 export async function createPaymentInfo(values: CreatePaymentInfo) {
-  try {
-    return await paymentsDB
+  return await paymentsDB
     .insertInto('payments')
     .values(values)
     .executeTakeFirstOrThrow()
-  } catch (e) {
-    console.error(e)
-    throw new Error("Failed to create payment");
-  }
 }

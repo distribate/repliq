@@ -11,5 +11,5 @@ export async function getThreadReactions(threadId: string) {
     return null;
   }
 
-  return data;
+  return data.data;
 }

@@ -3,7 +3,7 @@ import { Avatar } from "#user/components/avatar/components/avatar.tsx";
 import { Typography } from "@repo/ui/src/components/typography.tsx";
 import { UserNickname } from "#user/components/name/nickname.tsx";
 import { Button } from "@repo/ui/src/components/button.tsx";
-import { useRouter } from "next/navigation";
+import { useNavigate } from "@tanstack/react-router";
 import { FriendButton } from "#buttons/friend-button.tsx";
 import { UserEntity } from "@repo/types/entities/entities-type";
 import { getUser } from "@repo/lib/helpers/get-user";
@@ -18,7 +18,7 @@ export const FriendsSearchingCard = ({
   name_color,
   description,
 }: FriendsSearchingCardProps) => {
-  const { push } = useRouter();
+  const navigate = useNavigate();
   const currentUser = getUser();
 
   return (
@@ -49,7 +49,7 @@ export const FriendsSearchingCard = ({
         <Button
           state="default"
           className="lg:!w-2/5"
-          onClick={() => push(USER_URL + nickname)}
+          onClick={() => navigate({ to: USER_URL + nickname })}
         >
           К профилю
         </Button>

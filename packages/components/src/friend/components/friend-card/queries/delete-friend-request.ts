@@ -5,7 +5,7 @@ type DeleteFriendRequest = {
 }
 
 export async function deleteFriendRequest({ request_id }: DeleteFriendRequest) {
-  const res = await forumUserClient().user["delete-friend-request"].$post({
+  const res = await forumUserClient.user["delete-friend-request"].$post({
     json: { request_id }
   })
 

@@ -1,7 +1,7 @@
 import type { PaymentCompleted } from "@repo/types/schemas/payment/payment-schema"
 import type { PaymentDonateType } from "@repo/types/entities/payment-types"
-import { getBuyerTelegramId } from "../queries/get-buyer-telegram-id";
-import { getDonateDetails } from "../queries/get-donate-details";
+import { getBuyerTelegramId } from "../lib/queries/get-buyer-telegram-id";
+import { getDonateDetails } from "../lib/queries/get-donate-details";
 import { sendTelegramMessageToBuyer } from "./send-message-to-buyer";
 import { sendLogs } from "./send-logs";
 import { callBroadcast } from "./call-broadcast";

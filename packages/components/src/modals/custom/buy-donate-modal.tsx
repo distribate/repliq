@@ -3,7 +3,7 @@ import { Dialog, DialogContent, DialogTrigger } from "@repo/ui/src/components/di
 import { Typography } from "@repo/ui/src/components/typography"
 import { HTMLAttributes, ReactNode, RefAttributes } from "react"
 import { useInView } from "react-intersection-observer"
-import { useRouter } from "next/navigation"
+import { useNavigate } from "@tanstack/react-router"
 // @ts-ignore
 import Chestplate from "@repo/assets/gifs/chestplate.gif"
 import WildArmor from "@repo/assets/images/minecraft/wild_armor_trim_ыmithing_еemplate.webp"
@@ -41,10 +41,10 @@ const DonateDialogFeatureItem = ({
 }
 
 const PushButton = () => {
-  const { push } = useRouter()
+  const navigate = useNavigate()
 
   return (
-    <Button onClick={() => push("https://fasberry.su/donate")} state="default" className="w-full py-3">
+    <Button onClick={() => navigate({ to: "https://fasberry.su/donate" })} state="default" className="w-full py-3">
       <Typography className="text-[18px] font-semibold">
         Купить
       </Typography>
@@ -59,7 +59,7 @@ const DonateDialog = () => {
     <div className="flex flex-col items-center relative gap-y-6 w-full h-full">
       <div className="flex flex-col relative px-4 pt-4 pb-2 items-center gap-y-4 w-full">
         <div className="biloba-gradient opacity-30 w-full h-[160px] z-[1] absolute left-0 right-0 top-0" />
-        <img src={Chestplate.src} alt="" width={112} height={112} />
+        <img src={Chestplate} alt="" width={112} height={112} />
         <div className="flex flex-col">
           <Typography className="text-[20px] font-semibold text-center break-words">
             Получите больше возможностей.
@@ -73,33 +73,33 @@ const DonateDialog = () => {
         <DonateDialogFeatureItem
           title="Test title"
           description="description"
-          imageSrc={WildArmor.src}
+          imageSrc={WildArmor}
         />
         <DonateDialogFeatureItem
           title="Test title"
           description="description"
-          imageSrc={DragonBreath.src}
+          imageSrc={DragonBreath}
         />
         <DonateDialogFeatureItem
           title="Test title"
           description="description"
-          imageSrc={BustPainting.src}
+          imageSrc={BustPainting}
         />
         <DonateDialogFeatureItem
           title="Test title"
           description="description"
-          imageSrc={BustPainting.src}
+          imageSrc={BustPainting}
         />
         <DonateDialogFeatureItem
           title="Test title"
           description="description"
-          imageSrc={BustPainting.src}
+          imageSrc={BustPainting}
         />
         <div ref={ref}>
           <DonateDialogFeatureItem
             title="Test title"
             description="description"
-            imageSrc={BustPainting.src}
+            imageSrc={BustPainting}
           />
         </div>
         {inView && (

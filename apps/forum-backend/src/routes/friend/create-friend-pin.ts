@@ -16,10 +16,20 @@ export const createFriendPinRoute = new Hono()
     try {
       switch (result.type) {
         case "pin":
-          await createFriendPin({ ...result, initiator })
+          const createPin = await createFriendPin({ ...result, initiator })
+
+          if (!createPin.id) {
+            return ctx.json({ error: "Error creating friend pin" }, 404)
+          }
+
           return ctx.json({ status: "Friend pinned" }, 200)
         case "unpin":
-          await deleteFriendPin({ ...result, initiator })
+          const deletePin = await deleteFriendPin({ ...result, initiator })
+
+          if (!deletePin[0].numDeletedRows) {
+            return ctx.json({ error: "Error deleting friend pin" }, 404)
+          }
+
           return ctx.json({ status: "Friend unpinned" }, 200)
       }
     } catch (e) {

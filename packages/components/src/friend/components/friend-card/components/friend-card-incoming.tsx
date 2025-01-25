@@ -1,4 +1,4 @@
-import Link from "next/link";
+import { Link } from "@tanstack/react-router";
 import { Typography } from "@repo/ui/src/components/typography.tsx";
 import { Button } from "@repo/ui/src/components/button.tsx";
 import { USER_URL } from "@repo/shared/constants/routes.ts";
@@ -22,7 +22,7 @@ export const FriendCardIncoming = ({
     <FriendCardLayout nickname={initiator}>
       <div className="flex flex-col gap-y-1 w-fit">
         <div className="flex items-center gap-1 w-fit">
-          <Link href={USER_URL + initiator}>
+          <Link to={USER_URL + initiator}>
             <UserNickname nickname={initiator} className="text-lg" />
           </Link>
         </div>

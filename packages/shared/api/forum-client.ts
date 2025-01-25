@@ -7,175 +7,22 @@ import {
   ForumReactionAppType,
   ForumSharedAppType,
   ForumWebSocketAppType,
-  ForumLandingAppType
+  ForumLandingAppType,
+  ForumSearchAppType
 } from 'forum-backend/src/types/routes-types.ts';
 import { hc } from 'hono/client';
 import { isProduction } from "@repo/lib/helpers/is-production";
+import { fetchOptions } from '../constants/fetch-options.ts';
 
-const production = `https://cc.fasberry.su/api/forum`
-const development = `http://localhost:4101/api/forum`
+const baseUrl = isProduction ? `https://cc.fasberry.su/api/forum` : `http://localhost:4101/api/forum`
 
-const baseUrl = isProduction ? production : development
-
-export const forumLandingClient = hc<ForumLandingAppType>(
-  baseUrl,
-  {
-    fetch: async (input: RequestInfo | URL, requestInit?: RequestInit) => {
-      return fetch(input, {
-        method: requestInit?.method ?? 'GET',
-        headers: {
-          'content-type': 'application/json',
-          ...requestInit?.headers,
-        },
-        body: requestInit?.body ?? null,
-        credentials: "include",
-        ...requestInit,
-      })
-    }
-  }
-)
-
-export const forumSharedClient = hc<ForumSharedAppType>(
-  baseUrl,
-  {
-    fetch: async (input: RequestInfo | URL, requestInit?: RequestInit) => {
-      return fetch(input, {
-        method: requestInit?.method ?? 'GET',
-        headers: {
-          'content-type': 'application/json',
-          ...requestInit?.headers,
-        },
-        body: requestInit?.body ?? null,
-        credentials: "include",
-        ...requestInit,
-      })
-    }
-  }
-)
-
-export const forumWsClient = hc<ForumWebSocketAppType>(
-  baseUrl,
-  {
-    fetch: async (input: RequestInfo | URL, requestInit?: RequestInit) => {
-      return fetch(input, {
-        method: requestInit?.method ?? 'GET',
-        headers: {
-          ...requestInit?.headers,
-        },
-        body: requestInit?.body ?? null,
-        credentials: "include",
-        ...requestInit,
-      })
-    }
-  }
-)
-
-export const forumReactionClient = hc<ForumReactionAppType>(
-  baseUrl,
-  {
-    fetch: async (input: RequestInfo | URL, requestInit?: RequestInit) => {
-      return fetch(input, {
-        method: requestInit?.method ?? 'GET',
-        headers: {
-          ...requestInit?.headers,
-        },
-        body: requestInit?.body ?? null,
-        credentials: "include",
-        ...requestInit,
-      })
-    }
-  }
-)
-
-export const forumCommentClient = (session?: string) => hc<ForumCommentAppType>(
-  baseUrl,
-  {
-    fetch: async (input: RequestInfo | URL, requestInit?: RequestInit) => {
-      return fetch(input, {
-        method: requestInit?.method ?? 'GET',
-        headers: {
-          'content-type': 'application/json',
-          'Cookie': session ? `session=${session}` : ``,
-          ...requestInit?.headers,
-        },
-        body: requestInit?.body ?? null,
-        credentials: "include",
-        ...requestInit,
-      })
-    }
-  }
-)
-
-export const forumUserClient = (session?: string) => hc<ForumUserAppType>(
-  baseUrl,
-  {
-    fetch: async (input: RequestInfo | URL, requestInit?: RequestInit) => {
-      return fetch(input, {
-        method: requestInit?.method ?? 'GET',
-        headers: {
-          'content-type': 'application/json',
-          'Cookie': session ? `session=${session}` : ``,
-          ...requestInit?.headers,
-        },
-        body: requestInit?.body ?? null,
-        credentials: "include",
-        ...requestInit,
-      })
-    }
-  }
-)
-
-export const forumThreadClient = hc<ForumThreadAppType>(
-  baseUrl,
-  {
-    fetch: async (input: RequestInfo | URL, requestInit?: RequestInit) => {
-      return fetch(input, {
-        method: requestInit?.method ?? 'GET',
-        headers: {
-          "content-type": "multipart/form-data",
-          "Content-Type": "multipart/form-data",
-          ...requestInit?.headers,
-        },
-        body: requestInit?.body ?? null,
-        credentials: "include",
-        ...requestInit,
-      })
-    }
-  }
-)
-
-export const forumCategoriesClient = hc<ForumCategoriesAppType>(
-  baseUrl,
-  {
-    fetch: async (input: RequestInfo | URL, requestInit?: RequestInit) => {
-      return fetch(input, {
-        method: requestInit?.method ?? 'GET',
-        headers: {
-          'content-type': 'application/json',
-          ...requestInit?.headers,
-        },
-        body: requestInit?.body ?? null,
-        credentials: "include",
-        ...requestInit,
-      })
-    }
-  }
-)
-
-export const forumAdminClient = hc<ForumAdminAppType>(
-  baseUrl,
-  {
-    fetch: async (input: RequestInfo | URL, requestInit?: RequestInit) => {
-      return fetch(input, {
-        method: requestInit?.method ?? 'GET',
-        headers: {
-          'content-type': 'application/json',
-          ...requestInit?.headers,
-        },
-        body: requestInit?.body ?? null,
-        credentials: "include",
-        ...requestInit,
-      })
-    }
-  }
-)
+export const forumLandingClient = hc<ForumLandingAppType>(baseUrl, fetchOptions)
+export const forumSearchClient = hc<ForumSearchAppType>(baseUrl, fetchOptions)
+export const forumSharedClient = hc<ForumSharedAppType>(baseUrl, fetchOptions)
+export const forumWsClient = hc<ForumWebSocketAppType>(baseUrl, fetchOptions)
+export const forumReactionClient = hc<ForumReactionAppType>(baseUrl, fetchOptions)
+export const forumCommentClient = hc<ForumCommentAppType>(baseUrl, fetchOptions)
+export const forumUserClient = hc<ForumUserAppType>(baseUrl, fetchOptions)
+export const forumThreadClient = hc<ForumThreadAppType>(baseUrl, fetchOptions)
+export const forumCategoriesClient = hc<ForumCategoriesAppType>(baseUrl, fetchOptions)
+export const forumAdminClient = hc<ForumAdminAppType>(baseUrl, fetchOptions)

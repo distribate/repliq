@@ -47,7 +47,7 @@ export const getUserGameStatusRoute = new Hono()
     try {
       const payload = await getPlayerStatus(nickname);
 
-      return ctx.json(payload, 200);
+      return ctx.json({ data: payload }, 200);
     } catch (e) {
       return ctx.json({ error: throwError(e) }, 500);
     }

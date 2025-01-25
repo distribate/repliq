@@ -8,13 +8,10 @@ export const LANDS_STATS_QUERY_KEY = (uuid?: string) => [
   uuid,
 ];
 
-export const landsStatsQuery = (uuid: Pick<StatsRequest, "uuid">["uuid"]) => {
-  return useQuery({
-    queryKey: LANDS_STATS_QUERY_KEY(uuid),
-    queryFn: () => getUserLands(uuid),
-    retry: 1,
-    enabled: !!uuid,
-    refetchOnMount: false,
-    refetchOnWindowFocus: false,
-  });
-};
+export const landsStatsQuery = (uuid: Pick<StatsRequest, "uuid">["uuid"]) => useQuery({
+  queryKey: LANDS_STATS_QUERY_KEY(uuid),
+  queryFn: () => getUserLands(uuid),
+  enabled: !!uuid,
+  refetchOnMount: false,
+  refetchOnWindowFocus: false,
+});

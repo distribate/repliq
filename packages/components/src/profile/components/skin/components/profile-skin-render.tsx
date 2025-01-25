@@ -39,7 +39,7 @@ export const ProfileSkinRender = ({
           options={{
             zoom: 0.8
           }}
-          capeUrl={Cape.src}
+          capeUrl={Cape}
           onReady={({ viewer }) => setViewerRef(viewer)}
         />
       ) : (

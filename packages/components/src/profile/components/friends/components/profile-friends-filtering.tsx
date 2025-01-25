@@ -16,7 +16,7 @@ import { FilteringSearchWrapper } from "#wrappers/filtering-search-wrapper.tsx";
 import { useDebounce } from "@repo/lib/hooks/use-debounce.ts";
 import { Input } from "@repo/ui/src/components/input.tsx";
 import { FRIENDS_QUERY_KEY } from "#friends/queries/friends-query.ts";
-import { useRouter, usePathname } from "next/navigation";
+import { useLocation } from "@tanstack/react-router";
 
 const ProfileFriendsFilteringSearch = forwardRef<HTMLInputElement>(
   (props, ref) => {
@@ -58,13 +58,13 @@ const ProfileFriendsFilteringSearch = forwardRef<HTMLInputElement>(
 
 const ProfileFriendsFilteringView = () => {
   const qc = useQueryClient();
-  const pathname = usePathname();
+  const location = useLocation();
   const { sort_type: currentSortType } = friendsSortQuery().data;
 
   const handleSort = (e: React.MouseEvent<HTMLDivElement, MouseEvent>, sort_type: FriendsSortType) => {
     e.preventDefault();
 
-    const nickname = pathname.split("/").pop();
+    const nickname = location.pathname.split("/")[2];
 
     if (!nickname) return;
 

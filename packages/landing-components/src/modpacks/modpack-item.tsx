@@ -27,7 +27,7 @@ export const ModpackItem = ({
         </div>
         <div className="flex items-center justify-center w-full gap-2">
           <Button
-            className="w-full group hover:bg-[#05b458]/80 hover:duration-300
+            className="w-full rounded-lg group hover:bg-[#05b458]/80 hover:duration-300
 					    duration-100 ease-in-out bg-[#088d47]/80 backdrop-filter backdrop-blur-lg"
           >
             <Link href={downloadLink || ''} target="_blank">
@@ -39,7 +39,7 @@ export const ModpackItem = ({
           <Dialog>
             <DialogTrigger asChild>
               <Button
-                className="w-full group hover:bg-neutral-700/80 hover:duration-300
+                className="w-full rounded-lg group hover:bg-neutral-700/80 hover:duration-300
 					    duration-100 ease-in-out bg-neutral-800/80 backdrop-filter backdrop-blur-lg"
               >
                 <Typography size="xl" className="text-white">

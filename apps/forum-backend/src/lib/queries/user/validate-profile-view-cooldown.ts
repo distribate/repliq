@@ -4,7 +4,7 @@ import dayjs from "dayjs";
 
 export async function validateProfileViewCoolDown({
   initiator, recipient
-}: InitiatorRecipientType) {
+}: InitiatorRecipientType): Promise<boolean> {
   const query = await forumDB
     .selectFrom('profile_views')
     .select(forumDB.fn.countAll().as('count'))

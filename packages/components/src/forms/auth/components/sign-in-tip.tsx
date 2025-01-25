@@ -3,14 +3,14 @@
 import { Typography } from "@repo/ui/src/components/typography.tsx";
 import { AUTH_QUERY_KEY } from "#forms/auth/queries/auth-query.ts";
 import { useQueryClient } from "@tanstack/react-query";
-import { useRouter } from "next/navigation";
+import { useNavigate } from "@tanstack/react-router";
 
 export const SignInTip = () => {
   const qc = useQueryClient();
-  const { replace } = useRouter();
+  const navigate = useNavigate();
 
   const handleRedirect = () => {
-    replace("/auth?type=register");
+    navigate({ to: "/auth/", search: { type: "register" } });
     return qc.resetQueries({ queryKey: AUTH_QUERY_KEY });
   };
 

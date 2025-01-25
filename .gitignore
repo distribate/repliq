@@ -17,9 +17,6 @@ data
 # map data
 apps/map-frontend/tiles
 
-# beta
-apps/forum-frontend-router
-
 # Local env files
 .env
 .env.local

@@ -43,7 +43,7 @@ export const HowToConnectOnServer = () => {
 			content={
 				<div
 					className="flex justify-center items-center bg-repeat border-4 border-black h-full w-full"
-					style={{ backgroundImage: `url("images/static/dirt.png")` }}
+					style={{ backgroundImage: `url("images/static/dirt.webp")` }}
 				>
 					<div className="flex flex-col gap-y-6 justify-between">
 						<div className="flex flex-col gap-y-2">

@@ -6,12 +6,10 @@ import { createQueryKey } from "@repo/lib/helpers/query-key-builder.ts";
 export const GENERAL_STATS_QUERY_KEY = (nickname: string) =>
   createQueryKey("user", ["general-stats"], nickname);
 
-export const generalStatsQuery = ({ nickname, uuid }: StatsRequest) =>
-  useQuery({
-    queryKey: GENERAL_STATS_QUERY_KEY(nickname),
-    queryFn: () => getMainUserState({ nickname, uuid }),
-    refetchOnMount: false,
-    refetchOnWindowFocus: false,
-    placeholderData: keepPreviousData,
-    retry: 1,
-  });
+export const generalStatsQuery = ({ nickname, uuid }: StatsRequest) => useQuery({
+  queryKey: GENERAL_STATS_QUERY_KEY(nickname),
+  queryFn: () => getMainUserState({ nickname, uuid }),
+  refetchOnMount: false,
+  refetchOnWindowFocus: false,
+  placeholderData: keepPreviousData,
+});

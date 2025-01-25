@@ -1,8 +1,7 @@
 import Logotype from "@repo/assets/images/logotype.png";
-import Link from "next/link";
+import { Link } from "@tanstack/react-router";
 import { Typography } from "@repo/ui/src/components/typography.tsx";
 import { useSidebarControl } from "../../sidebar-layout/hooks/use-sidebar-control.ts";
-import Image from "next/image";
 
 export const SidebarLogotype = () => {
   const { isCompact, isExpanded } = useSidebarControl();
@@ -10,12 +9,12 @@ export const SidebarLogotype = () => {
   return (
     <Link
       title="Главная"
-      href="/"
+      to="."
       className="flex items-center justify-center w-full select-none"
     >
       {isCompact || !isExpanded ? (
-        <Image
-          src={Logotype.src}
+        <img
+          src={Logotype}
           width={42}
           height={42}
           alt=""
@@ -24,8 +23,8 @@ export const SidebarLogotype = () => {
         />
       ) : (
         <>
-          <Image
-            src={Logotype.src}
+          <img
+            src={Logotype}
             width={42}
             className="h-[42px] w-[42px]"
             height={42}

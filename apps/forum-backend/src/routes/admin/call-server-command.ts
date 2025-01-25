@@ -10,8 +10,9 @@ export const callServerCommandRoute = new Hono()
     const result = callServerCommandSchema.parse(body)
 
     try {
-      await publishServerCommand(result);
-      return ctx.json(200)
+      publishServerCommand(result);
+
+      return ctx.json({ status: "Published" }, 200)
     } catch (e) {
       return ctx.json({ error: throwError(e) }, 400)
     }

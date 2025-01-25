@@ -1,21 +1,51 @@
-import { encodeHexLowerCase } from "@oslojs/encoding";
-import { sha256 } from "@oslojs/crypto/sha2";
 import { getCookie } from "hono/cookie";
-import { getUserSession } from "#lib/queries/user/get-user-session.ts";
 import { createMiddleware } from "hono/factory";
+import { getNatsConnection } from "@repo/config-nats/nats-client";
+import { Kvm } from "@nats-io/kv";
+
+export async function getUserNicknameByToken(token: string) {
+  const nc = getNatsConnection();
+  const kvm = new Kvm(nc);
+  const kv = await kvm.open("users");
+
+  const entry = await kv.get(token);
+
+  if (!entry) return false;
+
+  return { nickname: entry.string() };
+}
+
+export async function watcher() {
+  const nc = getNatsConnection();
+  const kvm = new Kvm(nc);
+  // const kv = await kvm.create("users", { ttl: 30 * 24 * 60 * 60 * 1000 });
+  const kv = await kvm.open("users");
+
+  const watch = await kv.watch();
+
+  (async () => {
+    for await (const e of watch) {
+      console.log(
+        `watch: ${e.key}: ${e.operation} ${e.value ? e.string() : ""}`,
+      );
+    }
+  })().then();
+}
 
 export const validateRequest = createMiddleware(async (ctx, next) => {
   const sessionToken = getCookie(ctx, "session")
-  const sessionId = encodeHexLowerCase(sha256(new TextEncoder().encode(sessionToken)));
-  const session = await getUserSession(sessionId)
 
-  if (!session) {
+  if (!sessionToken) {
     return ctx.json({ error: "Unauthorized" }, 401)
   }
 
-  const { nickname } = session
+  const nickname = await getUserNicknameByToken(sessionToken)
 
-  ctx.set('nickname', nickname);
-  
+  if (!nickname) {
+    return ctx.json({ error: "Unauthrozied" }, 401)
+  }
+
+  ctx.set('nickname', nickname.nickname);
+
   await next()
 })

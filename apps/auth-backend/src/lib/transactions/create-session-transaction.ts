@@ -1,6 +1,6 @@
-import { publishLoginNotify } from "../../puslishers/pub-login-notify";
+import { publishLoginNotify } from "../../publishers/pub-login-notify";
 import { forumDB } from "../../shared/database/forum-db";
-import { createSession } from "../../utils/create-session";
+import { createSession } from "../queries/create-session";
 import { insertSessionInfo } from "../queries/insert-session-info";
 
 type CreateSessionTransaction = {
@@ -33,7 +33,11 @@ export const createSessionTransaction = async ({
         details: { session_id: session.session_id, ...info, nickname },
       });
 
-      await publishLoginNotify({ session_id: session.session_id, nickname })
+      publishLoginNotify({
+        browser: session.browser ?? "Unknown",
+        ip: session.ip ?? "Unknown",
+        nickname
+      })
 
       return session;
     });

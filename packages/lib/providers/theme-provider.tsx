@@ -2,6 +2,7 @@
 
 import { ReactNode } from "react";
 import { ThemeProvider } from "next-themes";
+import React from "react"
 
 export const NextThemeProvider = ({
 	children

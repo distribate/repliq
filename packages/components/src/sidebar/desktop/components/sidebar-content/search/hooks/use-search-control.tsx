@@ -41,6 +41,7 @@ export const useSearchControl = () => {
   const handleSearchMutation = useMutation({
     mutationFn: async (queryValue: string) => {
       if (!searchState.type) return;
+      
       return getSearchResults({
         value: queryValue,
         type: searchState.type,

@@ -10,6 +10,26 @@ type GetUserFriends = z.infer<typeof getUserFriendsSchema> & {
   nickname: string
 }
 
+export async function getUserFriendsCount(nickname: string) {
+  const query = await forumDB
+    .selectFrom("users_friends")
+    .select(forumDB.fn.countAll().as('count'))
+    .where((eb) =>
+      eb.or([
+        eb('user_1', '=', nickname),
+        eb('user_2', '=', nickname),
+      ]),
+    )
+    .$narrowType<{ count: number }>()
+    .executeTakeFirst();
+
+  if (!query) {
+    return 0
+  }
+  
+  return query.count
+}
+
 function sortFriendsByDonate<T extends { donate: DonateVariants }>(rows: T[]) {
   const weights: Record<DonateVariants, number> = {
     'default': 1,
@@ -31,7 +51,7 @@ export const SORT_TYPES: Record<string, "donate" | "created_at"> = {
   "users_friends.created_at": "created_at"
 }
 
-export const DEFAULT_LIMIT_PER_PAGE = 2
+export const DEFAULT_LIMIT_PER_PAGE = 6
 
 export const getUserFriends = async ({
   nickname, with_details, ascending, sort_type, cursor
@@ -138,6 +158,9 @@ export const getUserFriends = async ({
 
     const { endCursor, hasNextPage, hasPrevPage, startCursor, rows: data } = result
 
-    return { data, meta: { hasNextPage: hasNextPage ?? false, hasPrevPage: hasPrevPage ?? false, endCursor, startCursor } }
+    return {
+      data,
+      meta: { hasNextPage: hasNextPage ?? false, hasPrevPage: hasPrevPage ?? false, endCursor, startCursor }
+    }
   }
 }

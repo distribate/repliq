@@ -3,6 +3,7 @@ import { z } from "zod";
 import { validateSessionToken } from "../utils/validate-session-token.ts";
 import { zValidator } from "@hono/zod-validator";
 import { throwError } from '@repo/lib/helpers/throw-error.ts';
+import { putSessionToken } from "../utils/put-session-token.ts";
 
 export const validateSessionBodySchema = z.object({
   token: z.string().min(6),
@@ -11,11 +12,16 @@ export const validateSessionBodySchema = z.object({
 export const validateSessionRoute = new Hono()
   .post("/validate-session", zValidator("json", validateSessionBodySchema), async (ctx) => {
     const body = await ctx.req.json()
-    const result = validateSessionBodySchema.parse(body)
+    const { token } = validateSessionBodySchema.parse(body)
 
-    const { token } = result;
     try {
       const { session, user } = await validateSessionToken(token);
+
+      if (!user || !session) {
+        return ctx.json({ error: "Invalid session token" }, 401)
+      }
+
+      await putSessionToken(user.nickname, token)
 
       return ctx.json({ session, user }, 200)
     } catch (e) {

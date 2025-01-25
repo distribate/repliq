@@ -1,7 +1,7 @@
 import { forumUserClient } from "@repo/shared/api/forum-client.ts";
 
 export async function getUserSummary(nickname: string) {
-  const res = await forumUserClient().user["get-user-summary"][":nickname"].$get({
+  const res = await forumUserClient.user["get-user-summary"][":nickname"].$get({
     param: { nickname },
   });
 

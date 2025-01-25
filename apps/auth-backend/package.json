@@ -13,8 +13,12 @@
   },
   "dependencies": {
     "@hono/zod-validator": "0.4.1",
+    "@nats-io/jetstream": "3.0.0-36",
+    "@nats-io/kv": "3.0.0-30",
+    "@nats-io/transport-node": "3.0.0-32",
     "@oslojs/crypto": "^1.0.1",
     "@oslojs/encoding": "^1.1.0",
+    "@repo/assets": "*",
     "@repo/shared": "*",
     "bcryptjs": "2.4.3",
     "figlet": "1.8.0",

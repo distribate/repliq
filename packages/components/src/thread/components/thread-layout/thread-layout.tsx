@@ -1,6 +1,6 @@
 "use client";
 
-import Link from "next/link";
+import { Link } from "@tanstack/react-router";
 import { useHistoryThreads } from "../saved-thread/hooks/use-history-threads.tsx";
 import { THREAD_URL } from "@repo/shared/constants/routes.ts";
 import { ReactNode } from "react";
@@ -11,15 +11,15 @@ type ThreadLayout = {
 } & Pick<ThreadDetailed, "id" | "owner" | "title">;
 
 export const ThreadLayout = ({
-  children, title, owner, id: threadId
+  children, title, owner, id
 }: ThreadLayout) => {
   const { saveThread } = useHistoryThreads();
   const { nickname } = owner;
 
   return (
     <Link
-      href={THREAD_URL + threadId}
-      onClick={() => saveThread({ title, nickname, threadId })}
+      to={THREAD_URL + id}
+      onClick={() => saveThread({ thread: { title, owner: nickname, id } })}
     >
       {children}
     </Link>

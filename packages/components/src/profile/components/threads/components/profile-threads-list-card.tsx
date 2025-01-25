@@ -4,6 +4,7 @@ import { THREAD_URL } from "@repo/shared/constants/routes.ts";
 import { MessageSquare, Text } from "lucide-react";
 import dayjs from "@repo/lib/constants/dayjs-instance.ts";
 import { profileThreadsSettingsQuery } from "#profile/components/threads/queries/profile-threads-settings-query.ts";
+import { Link } from "@tanstack/react-router";
 
 interface ThreadCardProps {
   thread: {
@@ -56,13 +57,13 @@ export const ProfileThreadsListCard = ({ thread }: ThreadCardProps) => {
           </div>
         </div>
       </div>
-      <a
-        href={THREAD_URL + id}
+      <Link
+        to={THREAD_URL + id}
         className={`${isGrid ? "w-full" : "w-fit"}
          transition-all ease-in duration-150 hover:bg-shark-800 px-6 py-4 h-full rounded-md bg-shark-900`}
       >
         <Typography className="text-[18px]">Перейти к треду</Typography>
-      </a>
+      </Link>
     </div>
   );
 };

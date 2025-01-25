@@ -450,7 +450,7 @@ export interface FriendsRequests {
 }
 
 export interface InfoFindout {
-  findout: string | null;
+  findout: string;
   id: Generated<Int8>;
   user_nickname: string;
 }
@@ -908,6 +908,16 @@ export interface Users {
   uuid: string;
 }
 
+export interface UsersActions {
+  created_at: Generated<Timestamp>;
+  description: string;
+  id: Generated<Int8>;
+  source_nickname: string;
+  target_nickname: string;
+  type: string;
+  uuid: string;
+}
+
 export interface UsersBanned {
   created_at: Generated<Timestamp | null>;
   id: Generated<Int8>;
@@ -963,6 +973,7 @@ export interface UsersSession {
   nickname: string;
   os: string | null;
   session_id: string;
+  token: string;
   ua: string | null;
 }
 
@@ -1006,6 +1017,12 @@ export interface VaultSecrets {
   nonce: Generated<Buffer | null>;
   secret: string;
   updated_at: Generated<Timestamp>;
+}
+
+export interface VotedUsers {
+  created_at: Generated<Timestamp>;
+  id: Generated<Int8>;
+  nickname: string;
 }
 
 export interface WebsocketTokens {
@@ -1100,6 +1117,7 @@ export interface DB {
   threads_users: ThreadsUsers;
   threads_views: ThreadsViews;
   users: Users;
+  users_actions: UsersActions;
   users_banned: UsersBanned;
   users_blocked: UsersBlocked;
   users_friends: UsersFriends;
@@ -1111,5 +1129,6 @@ export interface DB {
   users_status: UsersStatus;
   "vault.decrypted_secrets": VaultDecryptedSecrets;
   "vault.secrets": VaultSecrets;
+  voted_users: VotedUsers;
   websocket_tokens: WebsocketTokens;
 }

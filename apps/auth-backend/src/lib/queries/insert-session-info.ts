@@ -1,6 +1,6 @@
-import type { Session } from "../../routes/create-session.ts";
 import type { Transaction } from "kysely";
 import type { DB } from "@repo/types/db/forum-database-types.ts";
+import type { Session } from "../../routes/login";
 
 export type SessionInfo = Pick<
   Session,

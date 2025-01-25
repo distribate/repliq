@@ -1,14 +1,11 @@
-'use client';
-
 import { cva, VariantProps } from 'class-variance-authority';
 import { forwardRef, HTMLAttributes } from 'react';
 import { Typography } from '@repo/ui/src/components/typography.tsx';
 import { userAvatarQuery } from '../queries/avatar-query.ts';
-import { TooltipWrapper } from '#wrappers/tooltip-wrapper.tsx';
 import ExpActive from '@repo/assets/images/minecraft/exp-active.webp';
 import ExpNoActive from '@repo/assets/images/minecraft/exp-noactive.webp';
-// import { userGameStatusQuery } from '../queries/user-game-status-query.ts';
 import { userStatusQuery } from '@repo/lib/queries/user-status-query.ts';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@repo/ui/src/components/tooltip.tsx';
 
 const avatarVariants = cva('relative rounded-sm', {
   variants: {
@@ -45,33 +42,31 @@ const AvatarUserStatus = ({ nickname }: { nickname: string }) => {
   const issuedTime = userStatus?.created_at
 
   return (
-    <TooltipWrapper
-      properties={{
-        triggerClassname:
-          'rounded-full min-w-[18px] min-h-[18px] absolute -bottom-2 -right-2 max-h-[32px] max-w-[32px]',
-        sideAlign: 'bottom',
-      }}
-      trigger={
-        <img
-          src={isOnline ? ExpActive.src : ExpNoActive.src}
-          alt=""
-          loading="lazy"
-          width={32}
-          height={32}
-        />
-      }
-      content={
-        userStatus ? (
-          <Typography>
-            {isOnline ? `В сети` : issuedTime}
-          </Typography>
-        ) : (
-          <Typography>
-            Был давно
-          </Typography>
-        )
-      }
-    />
+    <TooltipProvider>
+      <Tooltip>
+        <TooltipTrigger className="rounded-full min-w-[18px] min-h-[18px] absolute -bottom-2 -right-2 max-h-[32px] max-w-[32px]">
+          <img
+            // @ts-ignore
+            src={isOnline ? ExpActive : ExpNoActive}
+            alt=""
+            loading="lazy"
+            width={32}
+            height={32}
+          />
+        </TooltipTrigger>
+        <TooltipContent>
+          {userStatus ? (
+            <Typography>
+              {isOnline ? `В сети` : issuedTime}
+            </Typography>
+          ) : (
+            <Typography>
+              Был давно
+            </Typography>
+          )}
+        </TooltipContent>
+      </Tooltip>
+    </TooltipProvider>
   )
 }
 

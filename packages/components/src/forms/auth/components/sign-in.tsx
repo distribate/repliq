@@ -9,7 +9,7 @@ import { FormField } from "@repo/ui/src/components/form-field.tsx";
 import { ErrorField } from "@repo/ui/src/components/form.tsx";
 import { Typography } from "@repo/ui/src/components/typography.tsx";
 import { authorizationSchema } from "../schemas/authorization-schema.ts";
-import { useRouter } from "next/navigation";
+import { useNavigate } from "@tanstack/react-router";
 import { useMutationState, useQueryClient } from "@tanstack/react-query";
 import { AUTH_MUTATION_KEY, useAuth } from "../hooks/use-auth.tsx";
 import { AUTH_QUERY_KEY, AuthQuery, authQuery } from "../queries/auth-query.ts";
@@ -23,37 +23,29 @@ type zodSignInForm = z.infer<typeof authorizationSchema>;
 
 export const SignInForm = () => {
   const qc = useQueryClient();
-  const { data: authState } = authQuery();
-  const { replace } = useRouter();
-  const [passwordType, setPasswordType] = useState<PasswordVisibilityType>("password");
+  const { data: { status } } = authQuery();
+  const navigate = useNavigate();
+  const [pt, setPt] = useState<PasswordVisibilityType>("password");
   const { setAuthValuesMutation } = useAuth();
 
   const mutData = useMutationState({
     filters: { mutationKey: AUTH_MUTATION_KEY },
-    select: (m) => m.state.status,
+    select: m => m.state.status,
   });
 
   const isLoading = mutData[mutData.length - 1] === "pending";
-  const status = authState.status;
 
-  const {
-    register,
-    handleSubmit,
-    reset,
-    resetField,
-    formState: { errors, isValid },
-    getValues,
-  } = useForm<zodSignInForm>({
-    mode: "onSubmit",
+  const { register, handleSubmit, resetField, formState: { errors, isValid }, getValues } = useForm<zodSignInForm>({
+    mode: "onChange",
     resolver: zodResolver(authorizationSchema),
     defaultValues: { password: "", nickname: "" },
   });
 
   useEffect(() => {
     switch (status) {
-      case "notFound":
-        return reset();
-      case "incorrectPassword":
+      case "Nickname invalid":
+        return resetField("nickname");
+      case "Unsafe password":
         return resetField("password");
     }
   }, [status]);
@@ -71,15 +63,12 @@ export const SignInForm = () => {
     setAuthValuesMutation.mutate();
   };
 
-  const handleRedirect = () => {
-    replace("/auth?type=register");
-    return qc.resetQueries({ queryKey: AUTH_QUERY_KEY });
-  };
-
   const handlePasswordVisibility = () => {
-    if (passwordType === "password") {
-      setPasswordType("text");
-    } else setPasswordType("password");
+    if (pt === "password") {
+      setPt("text");
+    } else {
+      setPt("password");
+    }
   };
 
   return (
@@ -106,7 +95,7 @@ export const SignInForm = () => {
         <div className="flex items-center gap-2 justify-center">
           <Input
             id="password"
-            type={passwordType}
+            type={pt}
             className="!bg-shark-900"
             placeholder="игровой пароль"
             autoComplete="new-password"
@@ -116,7 +105,7 @@ export const SignInForm = () => {
           />
           <img
             className="cursor-pointer"
-            src={passwordType === "password" ? EnderPearl.src : EyeOfEnder.src}
+            src={pt === "password" ? EnderPearl : EyeOfEnder}
             alt=""
             width={36}
             height={36}
@@ -143,20 +132,19 @@ export const SignInForm = () => {
         </Button>
         {isLoading && <GearLoader />}
       </div>
-      {authState.status && (
-        <ErrorField message={authState.status} />
-      )}
-      {status === "alreadyOriginal" && (
-        <div className="px-2">
-          <Typography
-            onClick={handleRedirect}
-            textColor="shark_black"
-            textSize="medium"
-            variant="link"
-          >
-            Перейти к регистрации
-          </Typography>
-        </div>
+      {status && (
+        status !== "Success" ? <ErrorField message={status} />
+          : (
+            <div className="px-2">
+              <Typography
+                textColor="shark_black"
+                textSize="medium"
+                variant="link"
+              >
+                Входим в аккаунт...
+              </Typography>
+            </div>
+          )
       )}
     </form>
   );

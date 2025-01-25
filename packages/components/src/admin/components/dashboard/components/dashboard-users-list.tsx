@@ -1,10 +1,8 @@
-"use client";
-
 import { usersQuery } from "../queries/users-query.ts";
 import { Skeleton } from "@repo/ui/src/components/skeleton.tsx";
 import { UserDashboardCard } from "../../../../cards/components/user-dashboard-card/user-dashboard-card.tsx";
-import { useSearchParams } from "next/navigation";
 import { useEffect } from "react";
+import { useSearch } from "@tanstack/react-router";
 import { Separator } from "@repo/ui/src/components/separator.tsx";
 import { DashboardUsersListPagination } from "./dashboard-users-list-pagination.tsx";
 
@@ -30,10 +28,12 @@ export const DashboardUsersListSkeleton = () => {
 };
 
 export const DashboardUsersList = () => {
-  const searchParams = useSearchParams();
-  const pageParam = searchParams.get(USERS_QUERY_KEY) || "0";
+  const searchParams = useSearch({
+    from: "/admin/dashboard",
+    select: (params) => params[USERS_QUERY_KEY] || "0",
+  });
 
-  const start = Number(pageParam) * 6;
+  const start = Number(searchParams) * 6;
   const end = start + 6;
 
   const {
@@ -47,7 +47,7 @@ export const DashboardUsersList = () => {
 
   useEffect(() => {
     refetch();
-  }, [pageParam]);
+  }, [searchParams]);
 
   if (isLoading) return <DashboardUsersListSkeleton />;
 

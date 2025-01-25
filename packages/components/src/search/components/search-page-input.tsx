@@ -1,16 +1,17 @@
 "use client";
 
 import { Input } from "@repo/ui/src/components/input.tsx";
-import { useSearchParams } from "next/navigation";
+import { useSearch, useRouterState, useLocation } from "@tanstack/react-router";
 import { ChangeEvent, useEffect, useState } from "react";
 import { useSearchPage } from "#search/hooks/use-search-page.ts";
 import { useDebounce } from "@repo/lib/hooks/use-debounce.ts";
 import { SearchType } from "#sidebar/desktop/components/sidebar-content/search/queries/search-query.ts";
 
 export const SearchPageInput = () => {
-  const searchParams = useSearchParams();
-  const paramQueryValue = searchParams.get("queryValue");
-  const searchType = (searchParams.get("type") as SearchType) ?? "all";
+  const { search: searchParams } = useLocation()
+
+  const paramQueryValue = searchParams.queryValue
+  const searchType = searchParams.type as SearchType ?? "all";
   const [value, setValue] = useState<string>(paramQueryValue || "");
   const { setValueMutation } = useSearchPage();
 
@@ -18,8 +19,7 @@ export const SearchPageInput = () => {
     setValueMutation.mutate({ queryValue: value });
   }, [searchType]);
 
-  const updateQuery = (queryValue: string) =>
-    setValueMutation.mutate({ queryValue });
+  const updateQuery = (queryValue: string) => setValueMutation.mutate({ queryValue });
   const debounceUpdateQuery = useDebounce(updateQuery, 300);
 
   const handleSearch = (e: ChangeEvent<HTMLInputElement>) => {

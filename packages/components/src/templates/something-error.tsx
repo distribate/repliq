@@ -7,7 +7,7 @@ export const SomethingError = () => {
     <div className="flex w-full items-center justify-center h-full gap-12 px-12 py-6 relative">
       <div className="flex flex-col items-center">
         <img
-          src={Heart.src}
+          src={Heart}
           alt="Content not found."
           width={96}
           height={96}

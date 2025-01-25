@@ -20,7 +20,7 @@ export const globalPreferencesQuery = () => {
   return useSuspenseQuery<GlobalPreferencesQuery>({
     queryKey: GLOBAL_PREFERENCES_QUERY_KEY,
     queryFn: async () => {
-      const hasAlertsShowing = await hasAlertsShow()
+      const hasAlertsShowing = hasAlertsShow()
 
       return {
         alerts: hasAlertsShowing ? "show" : "hide",

@@ -16,14 +16,14 @@ export const SubscriptionItem = ({
   rating, description, commands, id, price, title, origin, imageUrl,
 }: DonateType["data"][0]) => {
   const qc = useQueryClient();
-  const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [o, setO] = useState<boolean>(false);
 
   const handleDialogControl = (open: boolean) => {
     if (!open) {
       qc.resetQueries({ queryKey: SHOP_ITEM_QUERY_KEY });
     }
 
-    setIsOpen(open);
+    setO(open);
   };
 
   const selectDonateItem = () => {
@@ -35,7 +35,7 @@ export const SubscriptionItem = ({
   return (
     <Dialog
       key={id}
-      open={isOpen}
+      open={o}
       onOpenChange={handleDialogControl}
     >
       <DialogTrigger
@@ -53,7 +53,7 @@ export const SubscriptionItem = ({
           узнать больше
         </Typography>
       </DialogTrigger>
-      <DialogContent className="max-w-[540px] max-h-[86%] p-0 overflow-y-auto !bg-transparent border-none gap-y-2 m-0">
+      <DialogContent className="!w-[540px] max-h-[86%] p-0 overflow-y-auto !bg-transparent border-none gap-y-2 m-0">
         <Block
           type="column"
           className="gap-x-2 gap-y-2"
@@ -100,7 +100,7 @@ export const SubscriptionItem = ({
                 className="w-full"
               >
                 <Button
-                  className="py-2 w-full group hover:bg-[#05b458] bg-[#088d47] hover:duration-300
+                  className="py-2 rounded-lg w-full group hover:bg-[#05b458] bg-[#088d47] hover:duration-300
 					        duration-100 ease-in-out  backdrop-filter backdrop-blur-lg"
                 >
                   <Typography className="text-lg text-white">
@@ -108,7 +108,7 @@ export const SubscriptionItem = ({
                   </Typography>
                 </Button>
               </DialogTrigger>
-              <DialogContent className="max-w-[600px] h-auto !bg-transparent p-0 overflow-y-auto border-none gap-0">
+              <DialogContent className="!w-[640px] h-auto !bg-transparent p-0 overflow-y-auto border-none gap-0">
                 <Block blockItem type="column" rounded="big" className="h-full w-full">
                   <Typography size="xl" position="center" className="w-[90%] self-center tracking-tight mb-4 lg:mb-8">
                     Покупка привилегии ({title})
@@ -122,7 +122,7 @@ export const SubscriptionItem = ({
               className="lg:w-1/3 w-full"
             >
               <Button
-                className="w-full py-2 group hover:bg-red/80 hover:duration-300
+                className="w-full py-2 rounded-lg group hover:bg-red/80 hover:duration-300
 					        duration-100 ease-in-out bg-red-server-color/80 backdrop-filter backdrop-blur-lg"
               >
                 <Typography className="text-lg text-white">

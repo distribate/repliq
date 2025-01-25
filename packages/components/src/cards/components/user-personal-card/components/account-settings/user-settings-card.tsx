@@ -80,22 +80,22 @@ export const UserSettingsCard = () => {
           <div className="flex flex-col gap-y-2 w-full">
             <UserSettingOption
               title="Игровая статистика"
-              imageSrc={WildArmorTrim.src}
+              imageSrc={WildArmorTrim}
             >
               <GameStatsVisibility />
             </UserSettingOption>
-            <UserSettingOption title="Реальное имя" imageSrc={FancyFeather.src}>
+            <UserSettingOption title="Реальное имя" imageSrc={FancyFeather}>
               <RealNameVisibility />
             </UserSettingOption>
             <UserSettingOption
               title="Заявки в друзья"
-              imageSrc={AllaySpawnEgg.src}
+              imageSrc={AllaySpawnEgg}
             >
               <FriendRequest />
             </UserSettingOption>
             <Dialog>
               <DialogTrigger>
-                <UserSettingOption title="Черный список" imageSrc={IronHelmet.src} />
+                <UserSettingOption title="Черный список" imageSrc={IronHelmet} />
               </DialogTrigger>
               <DialogContent>
                 <div className="flex flex-col gap-y-4 w-full items-center">

@@ -11,7 +11,7 @@ export const ContentNotFound = ({ title }: ContentNotFoundProps) => {
     <div className="flex w-full items-center justify-center h-full gap-12 px-12 py-6 relative">
       <div className="flex flex-col items-center gap-y-4">
         <img
-          src={Elci.src}
+          src={Elci}
           alt="Content not found."
           className="-ml-7"
           width={156}

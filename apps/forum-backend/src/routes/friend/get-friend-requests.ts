@@ -16,7 +16,7 @@ export const getFriendRequestsRoute = new Hono()
         nickname, type
       });
 
-      return ctx.json(outgoingFriendRequests, 200);
+      return ctx.json({ data: outgoingFriendRequests }, 200);
     } catch (e) {
       return ctx.json({ error: throwError(e) }, 400);
     }

@@ -28,7 +28,7 @@ export const UserBanned = ({
         <div className="z-[2] absolute w-full h-full right-0 top-0 bottom-0 left-0 bg-black/40" />
         <div className="flex gap-x-6 z-[3] relative items-start">
           <img
-            src={MissingTexture.src}
+            src={MissingTexture}
             alt=""
             height={168}
             width={168}

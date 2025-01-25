@@ -12,7 +12,7 @@ import { toast } from "sonner";
 import { USER_ACTIVE_SESSIONS_QUERY_KEY } from "#cards/components/user-personal-card/components/account-settings/queries/user-sessions-query.ts";
 import { CURRENT_USER_QUERY_KEY } from "@repo/lib/queries/current-user-query.ts";
 import { AUTH_REDIRECT } from "@repo/shared/constants/routes.ts";
-import { useRouter } from "next/navigation";
+import { useNavigate } from "@tanstack/react-router"
 
 type TerminateSession =
   | { type: "single", selectedSessionId: string }
@@ -41,12 +41,12 @@ export const TERMINATE_SESSIONS_MUTATION_KEY = ["terminate-sessions"];
 
 export const useTerminateSession = () => {
   const qc = useQueryClient()
-  const { push } = useRouter()
+  const navigate = useNavigate()
 
   const terminateMutation = useMutation({
     mutationKey: TERMINATE_SESSIONS_MUTATION_KEY,
     mutationFn: async (values: TerminateSession) => terminateSession(values),
-    onSuccess: async (data, variables) => {
+    onSuccess: async (data) => {
       if (!data) return;
 
       if ("error" in data) {
@@ -59,7 +59,7 @@ export const useTerminateSession = () => {
 
       if (data.status) {
         if (data.meta.is_current) {
-          push(AUTH_REDIRECT)
+          navigate({ to: AUTH_REDIRECT })
 
           return setTimeout(() => {
             qc.clear()
@@ -86,7 +86,7 @@ export const TerminateAllSessionsModal = () => {
       trigger={
         <HoverCardItem className="gap-2 px-2">
           <ImageWrapper
-            propSrc={Barrier.src}
+            propSrc={Barrier}
             propAlt="Page private"
             width={32}
             className="max-w-[40px] max-h-[40px]"

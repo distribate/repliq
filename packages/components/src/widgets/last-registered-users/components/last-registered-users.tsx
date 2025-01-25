@@ -5,6 +5,7 @@ import { UserPreviewCard } from "#cards/components/user-preview-card/user-previe
 import { forumLandingClient } from "@repo/shared/api/forum-client.ts";
 import { createQueryKey } from "@repo/lib/helpers/query-key-builder";
 import { useQuery } from "@tanstack/react-query";
+import { getUser } from "@repo/lib/helpers/get-user";
 
 const getLastUsers = async () => {
   const res = await forumLandingClient["get-latest-reg-users"].$get()
@@ -20,7 +21,7 @@ const getLastUsers = async () => {
 
 const lastUsersQuery = () => useQuery({
   queryKey: createQueryKey("ui", ["last-users"]),
-  queryFn: () => getLastUsers(),
+  queryFn: getLastUsers,
   refetchOnMount: false,
   refetchOnWindowFocus: false,
   refetchInterval: 1000 * 60 * 5

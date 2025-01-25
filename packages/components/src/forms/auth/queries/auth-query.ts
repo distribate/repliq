@@ -25,12 +25,11 @@ const initial: AuthQuery = {
 
 export const AUTH_QUERY_KEY = createQueryKey("ui", ["auth-state"]);
 
-export const authQuery = () =>
-  useQuery<AuthQuery, Error>({
-    queryKey: AUTH_QUERY_KEY,
-    gcTime: Infinity,
-    staleTime: Infinity,
-    initialData: initial,
-    refetchOnWindowFocus: false,
-    refetchOnMount: false,
-  });
+export const authQuery = () => useQuery<AuthQuery, Error>({
+  queryKey: AUTH_QUERY_KEY,
+  gcTime: Infinity,
+  staleTime: Infinity,
+  initialData: initial,
+  refetchOnWindowFocus: false,
+  refetchOnMount: false,
+});

@@ -12,7 +12,8 @@ export function createClient() {
   const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY!
 
   return createServerClient(
-    supabaseUrl, supabaseKey,
+    supabaseUrl,
+    supabaseKey,
     {
       cookies: {
         getAll() {

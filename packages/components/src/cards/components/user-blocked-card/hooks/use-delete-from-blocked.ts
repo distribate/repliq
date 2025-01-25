@@ -4,12 +4,12 @@ import {
   deleteUserFromBlocked,
 } from "../queries/delete-user-from-blocked.ts";
 import { getUser } from "@repo/lib/helpers/get-user.ts";
-import { useRouter } from "next/navigation"
+import { useRouter } from "@tanstack/react-router";
 
 export const useDeleteFromBlocked = () => {
   const qc = useQueryClient();
   const { nickname } = getUser();
-  const { refresh } = useRouter()
+  const { invalidate } = useRouter()
 
   const deleteUserFromBlockedMutation = useMutation({
     mutationFn: async (recipient: string) => deleteUserFromBlocked({ recipient }),
@@ -26,7 +26,7 @@ export const useDeleteFromBlocked = () => {
         return qc.setQueryData(USER_BLOCKED_QUERY_KEY(nickname), null);
       }
 
-      refresh()
+      invalidate()
 
       return qc.setQueryData(USER_BLOCKED_QUERY_KEY(nickname), updatedBlockedUsers);
     },

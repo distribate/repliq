@@ -26,13 +26,8 @@ export const getMeRoute = new Hono()
         getUserSettings(nickname)
       ]);
 
-      return ctx.json({
-        ...user,
-        donate: user.donate satisfies UserDonateVariant,
-        preferences
-      }, 200)
+      return ctx.json({ data: { ...user, donate: user.donate satisfies UserDonateVariant, preferences } }, 200)
     } catch (e) {
       return ctx.json({ error: throwError(e) }, 500);
     }
-  }
-)
+  })

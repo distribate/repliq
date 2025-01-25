@@ -32,9 +32,10 @@ const DialogContent = forwardRef<
     <DialogOverlay />
     <DialogPrimitive.Content
       ref={ref}
+      onOpenAutoFocus={(e) => e.preventDefault()}
       className={cn(
-        "fixed left-[50%] top-[50%] z-50 grid rounded-[8px] w-[90%] mx-auto" +
-        " max-w-6xl translate-x-[-50%] translate-y-[-50%] gap-4 bg-neutral-300" +
+        "fixed left-[50%] top-[50%] max-w-[calc(100%-16px)] sm:max-w-[calc(100%-32px)] lg:max-w-6xl z-50 grid rounded-[8px] w-[90%] mx-auto" +
+        " translate-x-[-50%] translate-y-[-50%] gap-4 bg-neutral-300" +
         " dark:bg-background-dark p-6 shadow-lg duration-200" +
         " data-[state=open]:animate-in data-[state=closed]:animate-out" +
         " data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0" +
@@ -47,7 +48,7 @@ const DialogContent = forwardRef<
     >
       {children}
       <DialogPrimitive.Close
-        className="absolute text-xl text-white right-4 top-4 ring-offset-background transition-opacity
+        className="absolute text-xl z-[10] text-white right-4 top-4 ring-offset-background transition-opacity
         hover:opacity-100 disabled:pointer-events-none data-[state=open]:text-muted-foreground"
       >
         &times;

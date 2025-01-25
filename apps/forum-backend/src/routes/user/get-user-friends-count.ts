@@ -23,7 +23,11 @@ export const getUserFriendsCountRoute = new Hono()
     try {
       const friendsCount = await getUserFriendsCount(nickname)
 
-      return ctx.json({ count: friendsCount?.count ?? 0 }, 200)
+      if (!friendsCount) {
+        return ctx.json({ data: 0 }, 200)
+      }
+
+      return ctx.json({ data: friendsCount.count }, 200)
     } catch (e) {
       return ctx.json({ error: throwError(e) }, 500);
     }

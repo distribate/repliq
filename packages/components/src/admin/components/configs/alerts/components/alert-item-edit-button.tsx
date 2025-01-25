@@ -1,5 +1,3 @@
-"use client";
-
 import { AlertEntity } from "@repo/types/entities/entities-type.ts";
 import { PenLine } from "lucide-react";
 import { Button } from "@repo/ui/src/components/button.tsx";

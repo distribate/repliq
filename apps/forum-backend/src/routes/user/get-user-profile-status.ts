@@ -13,16 +13,17 @@ const getUserProfileStatusSchema = z.object({
 export const getUserProfileStatusRoute = new Hono()
   .get("/get-user-profile-status", zValidator("query", getUserProfileStatusSchema), async (ctx) => {
     const query = ctx.req.query()
-    const result = getUserProfileStatusSchema.parse(query)
+    const { recipient } = getUserProfileStatusSchema.parse(query)
 
-    const { recipient } = result;
     const initiator = getNickname()
 
     try {
-      const status = await getUserRelation({ recipient, initiator })
-      const is_viewed = await getUserIsViewed({ recipient, initiator })
+      const [status, is_viewed] = await Promise.all([
+        getUserRelation({ recipient, initiator }),
+        getUserIsViewed({ recipient, initiator })
+      ])
 
-      return ctx.json({ status, is_viewed }, 200)
+      return ctx.json({ data: { status, is_viewed } }, 200)
     } catch (e) {
       return ctx.json({ error: throwError(e) }, 500)
     }

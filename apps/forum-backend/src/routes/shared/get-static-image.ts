@@ -1,4 +1,4 @@
-import { getPublicUrl } from "#routes/public/get-news.ts";
+import { getPublicUrl } from "#utils/get-public-url.ts";
 import { zValidator } from "@hono/zod-validator";
 import { throwError } from "@repo/lib/helpers/throw-error";
 import { Hono } from "hono";

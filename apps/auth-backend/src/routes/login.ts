@@ -11,6 +11,7 @@ import bcrypt from "bcryptjs";
 import { generateSessionToken } from "../utils/generate-session-token.ts";
 import { createSessionTransaction } from "../lib/transactions/create-session-transaction.ts";
 import { setCookie } from "hono/cookie";
+import { putSessionToken } from "../utils/put-session-token.ts";
 
 export type Session = Insertable<Pick<DB, "users_session">["users_session"]>;
 export type User = Selectable<Pick<Users, "id" | "nickname" | "uuid">>;
@@ -39,9 +40,9 @@ export const loginRoute = new Hono()
     const body = await ctx.req.json()
     const { info, details: { nickname, password } } = createSessionBodySchema.parse(body)
 
-    const isExistsoOnForum = await checkUserExists(nickname)
+    const isExistsOnForum = await checkUserExists(nickname)
 
-    if (!isExistsoOnForum) {
+    if (!isExistsOnForum) {
       return ctx.json({ error: "User not found on the forum" }, 404)
     }
 
@@ -66,6 +67,8 @@ export const loginRoute = new Hono()
 
     try {
       const createdSession = await createSessionTransaction({ token, nickname, info })
+
+      await putSessionToken(nickname, token)
 
       setCookie(ctx, `session`, token, {
         httpOnly: true,

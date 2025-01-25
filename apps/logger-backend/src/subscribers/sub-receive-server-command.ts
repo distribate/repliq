@@ -4,7 +4,7 @@ import { getNatsConnection } from "@repo/config-nats/nats-client.ts"
 import { callServerCommand } from "../utils/call-command"
 import { CALL_SERVER_COMMAND_SUBJECT } from "@repo/shared/constants/nats-subjects";
 
-export async function subscribeReceiveServerCommand() {
+export function subscribeReceiveServerCommand() {
   const nc = getNatsConnection()
 
   return nc.subscribe(CALL_SERVER_COMMAND_SUBJECT, {

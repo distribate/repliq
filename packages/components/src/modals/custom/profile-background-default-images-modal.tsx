@@ -37,7 +37,7 @@ const BackgroundImagesList = () => {
   
   if (!defaultImages) return null;
   
-  return defaultImages.map(({ path, signedUrl, error }, i) => (
+  return defaultImages.map(({ path, signedUrl }, i) => (
     <div
       className="flex flex-col rounded-lg overflow-hidden border border-shark-800 relative
       hover:bg-secondary-color cursor-pointer group transition-all duration-150 w-full"

@@ -6,7 +6,7 @@ export const IMAGE_COVER_QUERY_KEY = (nickname: string) =>
   createQueryKey("user", ["cover"], nickname);
 
 const getUserCoverImage = async (nickname: string) => {
-  const res = await forumUserClient().user["get-user-cover-image"][":nickname"].$get({
+  const res = await forumUserClient.user["get-user-cover-image"][":nickname"].$get({
     param: {
       nickname,
     }
@@ -18,7 +18,7 @@ const getUserCoverImage = async (nickname: string) => {
     return null
   }
 
-  return data.image_url;
+  return data.data;
 }
 
 export const imageCoverQuery = (nickname: string) => useQuery({

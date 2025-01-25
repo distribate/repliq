@@ -1,6 +1,5 @@
-"use client"
-
 import { UserPreviewCard } from "#cards/components/user-preview-card/user-preview-card.tsx"
+import { getUser } from "@repo/lib/helpers/get-user"
 import { createQueryKey } from "@repo/lib/helpers/query-key-builder"
 import { forumLandingClient } from "@repo/shared/api/forum-client"
 import { Typography } from "@repo/ui/src/components/typography"
@@ -18,15 +17,40 @@ const getOnlineUsers = async () => {
   return data.data.length > 0 ? data.data : null;
 }
 
-const onlineUsersQuery = () => useQuery({
+const onlineUsersQuery = (currentUserNickname: string) => useQuery({
   queryKey: createQueryKey("ui", ["online-users"]),
-  queryFn: getOnlineUsers,
+  queryFn: async () => {
+    const res = await getOnlineUsers()
+
+    if (!res) {
+      return [{ nickname: currentUserNickname }]
+    }
+
+    if ("error" in res) {
+      return null
+    }
+
+    return res
+      .reduce<{ nickname: string }[]>((uniqueUsers, user) => {
+        if (!uniqueUsers.some(existingUser => existingUser.nickname === user.nickname)) {
+          uniqueUsers.push(user);
+        }
+        
+        return uniqueUsers;
+      }, [])
+      .concat(
+        res.some(user => user.nickname === currentUserNickname)
+          ? []
+          : [{ nickname: currentUserNickname }]
+      );
+  },
   refetchInterval: 1000 * 60 * 5,
   refetchOnMount: false
 })
 
 export const OnlineUsers = () => {
-  const { data: onlineUsers } = onlineUsersQuery();
+  const user = getUser()
+  const { data: onlineUsers } = onlineUsersQuery(user.nickname);
 
   return (
     <div className="flex flex-col border border-shark-800 gap-y-2 w-full py-6 px-4 rounded-lg overflow-hidden bg-primary-color">

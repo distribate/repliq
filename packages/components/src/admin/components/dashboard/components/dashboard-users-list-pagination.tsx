@@ -1,6 +1,6 @@
 "use client";
 
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { useSearch, useNavigate, useLocation } from "@tanstack/react-router";
 import { useCallback } from "react";
 import { Button } from "@repo/ui/src/components/button.tsx";
 import { USERS_QUERY_KEY } from "./dashboard-users-list.tsx";
@@ -12,9 +12,12 @@ type DashboardUsersListPaginationProps = {
 export const DashboardUsersListPagination = ({
   length,
 }: DashboardUsersListPaginationProps) => {
-  const searchParams = useSearchParams();
-  const pathname = usePathname();
-  const { push } = useRouter();
+  const searchParams = useSearch({
+    from: "/admin/dashboard/users",
+  });
+
+  const { pathname } = useLocation();
+  const navigate = useNavigate();
 
   if (!length) return;
 
@@ -36,9 +39,10 @@ export const DashboardUsersListPagination = ({
         <Button
           key={i}
           onClick={() =>
-            push(
-              pathname + "?" + createQueryString(USERS_QUERY_KEY, i.toString()),
-            )
+            navigate({
+              to:
+                pathname + "?" + createQueryString(USERS_QUERY_KEY, i.toString()),
+            })
           }
           state="default"
           className="flex items-center justify-center p-1 hover:brightness-75 w-8 h-8"

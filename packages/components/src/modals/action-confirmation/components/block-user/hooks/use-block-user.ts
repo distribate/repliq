@@ -1,8 +1,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { blockUser } from "#modals/action-confirmation/components/block-user/queries/block-user.ts";
 import { toast } from "sonner";
-import { useRouter } from "next/navigation";
-import { unblockUser } from "#modals/action-confirmation/components/block-user/queries/unblock-user.ts";
+import { useRouter } from "@tanstack/react-router"
 import { BLOCKED_QUERY_KEY } from "../queries/blocked-user-query";
 
 export const UNBLOCK_USER_MUTATION_KEY = ["unblock-user"];
@@ -10,24 +8,23 @@ export const BLOCK_USER_MUTATION_KEY = ["block-user"];
 
 export const useBlockUser = () => {
   const qc = useQueryClient();
-  const { refresh } = useRouter();
+  const { invalidate } = useRouter();
 
   const blockUserMutation = useMutation({
     mutationKey: BLOCK_USER_MUTATION_KEY,
-    mutationFn: async (requestedNickname: string) =>
-      blockUser(requestedNickname),
+    mutationFn: async (requestedNickname: string) => null,
     onSuccess: async (data, variables) => {
-      if (!data)
-        return toast.error("Произошла ошибка", {
-          description: "Попробуйте попытку позже!",
-        });
+      // if (!data)
+      //   return toast.error("Произошла ошибка", {
+      //     description: "Попробуйте попытку позже!",
+      //   });
 
-      toast.success("Пользователь заблокирован");
-      refresh();
+      // toast.success("Пользователь заблокирован");
+      // invalidate();
 
-      return qc.invalidateQueries({
-        queryKey: BLOCKED_QUERY_KEY(variables),
-      });
+      // return qc.invalidateQueries({
+      //   queryKey: BLOCKED_QUERY_KEY(variables),
+      // });
     },
     onError: (e) => {
       throw new Error(e.message);
@@ -36,20 +33,19 @@ export const useBlockUser = () => {
 
   const unblockUserMutation = useMutation({
     mutationKey: UNBLOCK_USER_MUTATION_KEY,
-    mutationFn: async (requestedNickname: string) =>
-      unblockUser(requestedNickname),
+    mutationFn: async (requestedNickname: string) => null,
     onSuccess: async (data, variables) => {
-      if (!data)
-        return toast.error("Произошла ошибка", {
-          description: "Попробуйте попытку позже!",
-        });
+      // if (!data)
+      //   return toast.error("Произошла ошибка", {
+      //     description: "Попробуйте попытку позже!",
+      //   });
 
-      toast.success("Пользователь разблокирован");
-      refresh();
+      // toast.success("Пользователь разблокирован");
+      // invalidate();
 
-      return qc.invalidateQueries({
-        queryKey: BLOCKED_QUERY_KEY(variables),
-      });
+      // return qc.invalidateQueries({
+      //   queryKey: BLOCKED_QUERY_KEY(variables),
+      // });
     },
     onError: (e) => {
       throw new Error(e.message);

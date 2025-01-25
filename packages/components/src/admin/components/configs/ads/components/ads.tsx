@@ -1,3 +1,3 @@
-export const Ads = async () => {
+export const Ads = () => {
   return <div></div>;
 };

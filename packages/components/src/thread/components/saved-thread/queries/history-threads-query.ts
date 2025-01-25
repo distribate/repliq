@@ -5,12 +5,14 @@ import { HISTORY_THREADS_KEY } from "../hooks/use-history-threads";
 import { useReadLocalStorage } from "@repo/lib/hooks/use-read-local-storage";
 import { createQueryKey } from "@repo/lib/helpers/query-key-builder";
 
+export const HISTORY_THREADS_QUERY_KEY = createQueryKey("ui", ["history-threads"])
+
 export const historyThreadsQuery = () => {
   const threads = useReadLocalStorage<ThreadHistoryType[] | null>(HISTORY_THREADS_KEY);
-  const currentUser = getUser()
+  const { nickname: account } = getUser()
 
   return useSuspenseQuery({
-    queryKey: createQueryKey("ui", ["history-threads"]),
-    initialData: threads?.filter(i => i.id === currentUser.nickname) ?? null,
+    queryKey: HISTORY_THREADS_QUERY_KEY,
+    initialData: threads?.filter(i => i.account === account) ?? [],
   })
 }

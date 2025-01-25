@@ -3,7 +3,6 @@ import {
   POST_COMMENT_FIELD_QUERY_KEY,
   PostCommentField,
 } from "../queries/post-comment-field-query.ts";
-import { postComment } from "../queries/create-comment.ts";
 import { toast } from "sonner";
 import { POST_COMMENTS_QUERY_KEY } from "#post/components/post-comments/queries/post-comments-query.ts";
 

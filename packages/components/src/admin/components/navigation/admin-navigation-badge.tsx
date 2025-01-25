@@ -1,6 +1,4 @@
-"use client";
-
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { useLocation, useNavigate, useSearch } from "@tanstack/react-router";
 import { NavigationBadge } from "#navigation/components/navigation-badge.tsx";
 
 export type AdminSections =
@@ -21,9 +19,12 @@ export const AdminNavigationBadge = ({
   title,
   paramValue,
 }: AdminNavigationBadgeProps) => {
-  const pathname = usePathname();
-  const searchParams = useSearchParams();
-  const { push } = useRouter();
+  const { pathname } = useLocation();
+  const searchParams = useSearch({
+    from: "/_protected/admin/",
+  });
+
+  const navigate = useNavigate();
 
   const createQueryString = () => {
     const query = new URLSearchParams(searchParams);
@@ -35,18 +36,18 @@ export const AdminNavigationBadge = ({
     const url = pathname + "?";
 
     if (paramValue === "main") {
-      return push(pathname);
+      return navigate({ to: pathname });
     }
 
-    push(url + createQueryString());
+    navigate({ to: url + createQueryString() });
   };
 
   const isActive = (): boolean => {
-    if (paramValue === "main" && !searchParams.get(SECTION_QUERY_KEY)) {
+    if (paramValue === "main" && !searchParams[SECTION_QUERY_KEY]) {
       return true;
     }
 
-    return paramValue === searchParams.get(SECTION_QUERY_KEY);
+    return paramValue === searchParams[SECTION_QUERY_KEY]
   };
 
   return (

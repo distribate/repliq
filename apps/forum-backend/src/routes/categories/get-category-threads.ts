@@ -17,7 +17,8 @@ export const getCategoryThreadsRoute = new Hono()
 
     try {
       const threads = await getThreadsCategories({ category_id, limit, range, ascending });
-      return ctx.json(threads, 200);
+
+      return ctx.json({ data: threads }, 200);
     } catch (e) {
       return ctx.json({ error: throwError(e) }, 500);
     }

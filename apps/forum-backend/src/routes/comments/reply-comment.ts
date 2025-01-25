@@ -11,9 +11,7 @@ export const replyCommentRoute = new Hono()
     const nickname = getNickname()
 
     try {
-      const createdReply = await createReplyTransaction({
-        ...result, nickname
-      })
+      const createdReply = await createReplyTransaction({ ...result, nickname })
 
       if (!createdReply) {
         return ctx.json({ error: "Error creating reply" }, 400);

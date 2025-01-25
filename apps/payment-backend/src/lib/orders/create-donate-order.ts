@@ -9,10 +9,7 @@ import {
   type PaymentDonateType,
   type PaymentResponse,
 } from '@repo/types/entities/payment-types.ts';
-import {
-  arcCurrencySchema,
-  otherCurrencySchema,
-} from '@repo/types/schemas/payment/payment-schema.ts';
+import { arcCurrencySchema, otherCurrencySchema } from '@repo/types/schemas/entities/currencies-schema.ts';
 
 type CreateDonateOrder = Omit<CreateCryptoOrder, 'paymentType'>
 

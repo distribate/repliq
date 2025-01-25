@@ -1,6 +1,6 @@
-import { donateSchema } from '@repo/types/schemas/payment/payment-schema';
 import { getNatsConnection } from "@repo/config-nats/nats-client"
 import { z } from "zod"
+import { donateSchema } from '@repo/types/schemas/entities/donate-schema';
 
 export type DonatePayload = {
   nickname: string,

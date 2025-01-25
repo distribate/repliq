@@ -5,7 +5,7 @@ type AcceptFriendRequest = {
 }
 
 export async function acceptFriendRequest({ request_id }: AcceptFriendRequest) {
-  const res = await forumUserClient().user["accept-friend-request"].$post({
+  const res = await forumUserClient.user["accept-friend-request"].$post({
     json: { request_id }
   })
 

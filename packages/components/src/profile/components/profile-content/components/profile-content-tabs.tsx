@@ -11,13 +11,32 @@ import { Users } from "@repo/types/db/forum-database-types";
 import { ProfileContentProps } from "./profile-content";
 import { UserDetailed } from "@repo/types/entities/user-type";
 import { ProfileSkinControls } from "#profile/components/skin/components/profile-skin-controls.tsx";
-import { UserProfileThreads } from "#profile/components/threads/components/profile-threads.tsx";
-import { UserProfileFriends } from "#profile/components/friends/components/profile-friends.tsx";
-import { UserProfileGameStats } from "#profile/components/stats/components/profile-stats.tsx";
-import { UserProfileGameAchievements } from "#profile/components/achievements/components/profile-game-ach.tsx";
 import { ProfileSkinRender } from "#profile/components/skin/components/profile-skin-render.tsx";
-import { UserProfileAccount } from "#profile/components/account-stats/components/profile-account.tsx";
-import { SectionPrivatedTrigger } from "#templates/section-privated-trigger.tsx";
+import { lazy } from "react";
+
+const UserProfileAccount = lazy(() => import("#profile/components/account-stats/components/profile-account.tsx")
+  .then(m => ({ default: m.UserProfileAccount }))
+)
+
+const UserProfileGameStats = lazy(() => import("#profile/components/stats/components/profile-stats.tsx")
+  .then(m => ({ default: m.UserProfileGameStats }))
+)
+
+const UserProfileFriends = lazy(() => import("#profile/components/friends/components/profile-friends.tsx")
+  .then(m => ({ default: m.UserProfileFriends }))
+)
+
+const UserProfileThreads = lazy(() => import("#profile/components/threads/components/profile-threads.tsx")
+  .then(m => ({ default: m.UserProfileThreads }))
+)
+
+const UserProfileGameAchievements = lazy(() => import("#profile/components/achievements/components/profile-game-ach.tsx")
+  .then(m => ({ default: m.UserProfileGameAchievements }))
+)
+
+const SectionPrivatedTrigger = lazy(() => import("#templates/section-privated-trigger.tsx")
+  .then(m => ({ default: m.SectionPrivatedTrigger }))
+);
 
 export type User = Selectable<Pick<Users, "id" | "nickname" | "uuid">>;
 
@@ -91,26 +110,36 @@ export const ProfileContentTabs = ({
             </TabsContent>
           </Suspense>
           <TabsContent value="topics">
-            <UserProfileThreads nickname={requestedUserNickname} />
+            <Suspense>
+              <UserProfileThreads nickname={requestedUserNickname} />
+            </Suspense>
           </TabsContent>
           <TabsContent value="friends">
-            <UserProfileFriends nickname={requestedUserNickname} />
+            <Suspense>
+              <UserProfileFriends nickname={requestedUserNickname} />
+            </Suspense>
           </TabsContent>
           {isGameStatsShow && (
             <TabsContent value="game-stats">
-              <UserProfileGameStats
-                nickname={requestedUserNickname}
-                uuid={requestedUserUUID}
-                isSectionPrivatedByOwner={isSectionPrivatedByOwner}
-              />
+              <Suspense>
+                <UserProfileGameStats
+                  nickname={requestedUserNickname}
+                  uuid={requestedUserUUID}
+                  isSectionPrivatedByOwner={isSectionPrivatedByOwner}
+                />
+              </Suspense>
             </TabsContent>
           )}
           <TabsContent value="achievements">
-            <UserProfileGameAchievements nickname={requestedUserNickname} />
+            <Suspense>
+              <UserProfileGameAchievements nickname={requestedUserNickname} />
+            </Suspense>
           </TabsContent>
           {isOwner && (
             <TabsContent value="account-stats">
-              <UserProfileAccount />
+              <Suspense>
+                <UserProfileAccount />
+              </Suspense>
             </TabsContent>
           )}
         </div>

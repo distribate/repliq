@@ -19,8 +19,8 @@ export const HeaderSheet = () => {
   const pathname = usePathname();
   
   const chestStatusImage = open
-    ? '/images/minecraft/icons/chest_opened.png'
-    : '/images/minecraft/icons/chest_closed.png';
+    ? '/images/minecraft/icons/chest_opened.webp'
+    : '/images/minecraft/icons/chest_closed.webp';
   
   const handleToPage = (href: string | null) => {
     if (href) {
@@ -31,7 +31,7 @@ export const HeaderSheet = () => {
   
   return (
     <Sheet modal open={open} onOpenChange={setOpen}>
-      <SheetTrigger className="xl:hidden absolute top-[10px] right-[8px] z-[3000]">
+      <SheetTrigger name="trigger" id="trigger" className="xl:hidden absolute top-[10px] right-[8px] z-[3000]">
         <img
           src={chestStatusImage}
           alt=""
@@ -47,7 +47,7 @@ export const HeaderSheet = () => {
       >
         <div className="flex justify-between px-2 items-center w-full">
           <Link href="/" className="bg-transparent cursor-pointer right-6 relative top-2">
-            <img src="/images/fasberry_logo.png" alt="" width={224} height={64} loading="lazy" />
+            <img src="/images/fasberry_logo.webp" alt="Fasberry" width={224} height={64} loading="lazy" />
           </Link>
           <div className="w-[36px] h-[36px] relative">
             <ThemeToggle />

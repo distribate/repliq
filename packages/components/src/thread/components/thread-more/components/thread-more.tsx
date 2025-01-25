@@ -7,7 +7,7 @@ import {
 import { Typography } from "@repo/ui/src/components/typography.tsx";
 import dayjs from "@repo/lib/constants/dayjs-instance.ts";
 import { useState } from "react";
-import Link from "next/link";
+import {Link} from "@tanstack/react-router";
 import { USER_URL } from "@repo/shared/constants/routes.ts";
 import { Avatar } from "#user/components/avatar/components/avatar.tsx";
 import { UserNickname } from "#user/components/name/nickname.tsx";
@@ -77,30 +77,28 @@ export const ThreadMore = ({
           </div>
           <div className="flex flex-col mt-2 mb-6 gap-y-4 w-full">
             <div className="flex items-end gap-2 w-fit">
-              <Link href={USER_URL + owner.nickname}>
+              <Link to={USER_URL + owner.nickname}>
                 <Avatar
                   nickname={owner.nickname}
                   propWidth={36}
                   propHeight={36}
                 />
               </Link>
-              <Link href={USER_URL + owner.nickname}>
+              <Link to={USER_URL + owner.nickname}>
                 <UserNickname nickname={owner.nickname} />
               </Link>
             </div>
             <div className="flex items-center gap-2 w-full">
-              <Link href={USER_URL + owner.nickname}>
+              <Link to={USER_URL + owner.nickname}>
                 <Button className="px-6" state="default">
                   <Typography className="text-[16px]">Профиль</Typography>
                 </Button>
               </Link>
               <Link
-                href={{
-                  pathname: "/search",
-                  query: {
-                    type: "threads",
-                    user: owner.nickname,
-                  },
+                to="/search"
+                search={{
+                  type: "threads",
+                  user: owner.nickname,
                 }}
               >
                 <Button state="default" className="px-6">

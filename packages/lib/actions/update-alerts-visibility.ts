@@ -1,17 +1,15 @@
-"use server";
-
-import { cookies } from "next/headers";
+import { getCookieByKey } from "#helpers/get-cookie-by-key.ts";
 import { ALERTS_COOKIE_KEY } from "@repo/shared/keys/cookie.ts";
 
 export async function updateAlertsVisibility() {
-  const hasAlertsShowing = cookies().get(ALERTS_COOKIE_KEY);
+  const hasAlertsShowing = getCookieByKey(ALERTS_COOKIE_KEY);
 
-  if (hasAlertsShowing && hasAlertsShowing.value !== "show") {
-    cookies().set(ALERTS_COOKIE_KEY, "show");
+  if (hasAlertsShowing && hasAlertsShowing !== "show") {
+    document.cookie = `${ALERTS_COOKIE_KEY}=show`;
     return "show"
   }
 
-  cookies().set(ALERTS_COOKIE_KEY, "hide");
+  document.cookie = `${ALERTS_COOKIE_KEY}=hide`;
   
   return "hide"
 }

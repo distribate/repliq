@@ -5,10 +5,10 @@ import {
 } from "../queries/thread-form-query.ts";
 import { createThread } from "../queries/create-thread.ts";
 import { toast } from "sonner";
-import { useRouter } from "next/navigation";
 import { THREAD_URL } from "@repo/shared/constants/routes.ts";
 import { THREAD_CONTENT_LIMIT_DEFAULT } from "@repo/shared/constants/limits.ts";
 import { blobUrlToFile } from "@repo/lib/helpers/blobUrlToFile.ts";
+import { useNavigate } from "@tanstack/react-router";
 
 type CreateThreadImageControl = {
   type: "add" | "delete";
@@ -26,7 +26,7 @@ export function getContentLimit(images: Array<File> | string[] | null): number {
 
 export const useCreateThread = () => {
   const qc = useQueryClient();
-  const { push } = useRouter();
+  const navigate = useNavigate();
 
   const updateThreadFormMutation = useMutation({
     mutationFn: async (values: Partial<ThreadFormQuery>) => {
@@ -93,7 +93,7 @@ export const useCreateThread = () => {
 
         qc.resetQueries({ queryKey: THREAD_FORM_QUERY });
 
-        return push(THREAD_URL + data.data.id);
+        return navigate({ to: THREAD_URL + data.data.id });
       }
     },
     onError: (e) => {

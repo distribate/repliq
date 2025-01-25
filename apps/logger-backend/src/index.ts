@@ -4,35 +4,42 @@ import { pgListenConnect } from './shared/events/listener.ts'
 import { initNats } from '@repo/config-nats/nats-client.ts';
 import { subscribeReceivePayment } from './subscribers/sub-receive-payment.ts';
 import { subscribeReceiveServerCommand } from './subscribers/sub-receive-server-command.ts';
-import { subscribeUpdateDonateForPlayer } from './subscribers/sub-update-donate-for-player.ts';
+import { subscribePlayerGroup } from './subscribers/sub-player-group.ts';
 import { subscribeServerEvents } from './subscribers/sub-server-events.ts';
 import { subscribeReceiveNotify } from './subscribers/sub-receive-notify.ts';
+import { subscribeReceiveFiatPayment } from './subscribers/sub-receive-fiat-payment.ts';
+import "./lib/commands/broadcast-command.ts"
+import "./lib/commands/weather-command.ts"
+import "./lib/commands/keyboard-command.ts"
+import "./lib/commands/give-item-command.ts"
 
-async function startNatsSubscribers() {
-  await subscribeReceivePayment()
-  await subscribeReceiveServerCommand()
-  await subscribeUpdateDonateForPlayer()
-  await subscribeReceiveNotify()
-  await subscribeServerEvents()
+await initNats()
+
+function startNatsSubscribers() {
+  subscribeReceivePayment()
+  console.log("Subscribed to payment status")
+  
+  subscribeReceiveServerCommand()
+  console.log("Subscribed to server command")
+
+  subscribeReceiveFiatPayment()
+  console.log("Subscribed to fiat payment")
+
+  subscribePlayerGroup()
+  console.log("Subscribed to player group")
+
+  subscribeReceiveNotify()
+  console.log("Subscribed to receive notify")
+
+  subscribeServerEvents()
+  console.log("Subscribed to server events")
 }
 
-async function loadBotsCommands() {
-  await import("./lib/commands/broadcast-command.ts")
-  await import("./lib/commands/weather-command.ts")
-  await import("./lib/commands/keyboard-command.ts")
-  await import("./lib/commands/give-item-command.ts")
-}
+await fasberryBot.init()
+await loggerBot.start()
 
-async function createServer() {
-  await fasberryBot.init()
-  await loggerBot.start()
+loggerBot.on("message", messageHandler);
 
-  await loadBotsCommands()
-  loggerBot.on("message", messageHandler);
+pgListenConnect()
 
-  await pgListenConnect()
-  await initNats()
-  await startNatsSubscribers()
-}
-
-createServer()
+startNatsSubscribers()

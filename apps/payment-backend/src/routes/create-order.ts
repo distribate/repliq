@@ -4,13 +4,15 @@ import { zValidator } from '@hono/zod-validator';
 import { nanoid } from 'nanoid';
 import {
   createOrderBodySchema,
-  currencyCryptoSchema, currencyFiatSchema,
 } from '@repo/types/schemas/payment/payment-schema.ts';
 import {
   type PaymentResponse,
   type PaymentType,
   type PaymentValueType,
 } from '@repo/types/entities/payment-types.ts';
+import { getNatsConnection } from '@repo/config-nats/nats-client';
+import { throwError } from '@repo/lib/helpers/throw-error';
+import { currencyCryptoSchema, currencyFiatSchema } from '@repo/types/schemas/entities/currencies-schema';
 
 export type CreateOrder = {
   nickname: string,
@@ -43,16 +45,21 @@ function isOtherCurrency(currency: string): currency is typeof otherCurrenies[nu
 }
 
 async function createFiatOrder({
-  currency, paymentValue, paymentType, nickname,
-}: CreateFiatOrder) {
+  paymentValue, paymentType, nickname,
+}: Omit<CreateFiatOrder, "currency">) {
+  const nc = getNatsConnection()
 
-  try {
-    return {
-      ads: 'asd',
-    };
-  } catch (e) {
-    throw e;
-  }
+  const payload = JSON.stringify({
+    metadata: { nickname, paymentType, paymentValue },
+  })
+
+  let res = await nc.request("payment.start.fiat", payload)
+
+  return res.json<{
+    errorcode: number | null,
+    errormessage: string | null,
+    data: string | null
+  }>()
 }
 
 async function createCryptoOrder({
@@ -92,17 +99,13 @@ async function createCryptoOrder({
 }
 
 export const createOrderRoute = new Hono()
-  .post('/create-order', zValidator('json', createOrderBodySchema), async (c) => {
-    const body = await c.req.json()
+  .post('/create-order', zValidator('json', createOrderBodySchema), async (ctx) => {
+    const body = await ctx.req.json()
     const result = createOrderBodySchema.parse(body);
 
     const { paymentValue, paymentType, currency, nickname } = result;
     const { success: isCrypto, data: cryptoCurrency } = currencyCryptoSchema.safeParse(currency);
     const { success: isFiat, data: fiatCurrency } = currencyFiatSchema.safeParse(currency);
-
-    let paymentUrl;
-
-    console.log(cryptoCurrency, fiatCurrency)
 
     try {
       if (isCrypto) {
@@ -110,20 +113,27 @@ export const createOrderRoute = new Hono()
           nickname, paymentValue, paymentType, currency: cryptoCurrency,
         });
 
-        paymentUrl = payment?.paymentUrl
+        if (!payment || !payment.paymentUrl) {
+          return ctx.json({ error: "Error creating payment" }, 400)
+        }
+
+        return ctx.json({ data: payment.paymentUrl }, 200)
       }
 
       if (isFiat) {
-        return c.json({ error: "Fiat is not allowed" }, 400)
-      }
-    } catch (e) {
-      const error = e instanceof Error ? e.message : 'Internal Server Error';
-      return c.json({ error: error }, 400);
-    }
+        const { data, errorcode, errormessage } = await createFiatOrder({
+          nickname, paymentValue, paymentType,
+        })
 
-    if (!paymentUrl) {
-      return c.json({ error: "Payment is failed" }, 500)
+        if (errorcode || errormessage) {
+          return ctx.json({ error: errormessage }, 400);
+        }
+
+        return ctx.json({ data }, 400)
+      }
+
+      return ctx.json({ error: "Error creating payment" }, 400)
+    } catch (e) {
+      return ctx.json({ error: throwError(e) }, 500)
     }
-    
-    return c.json({ paymentUrl }, 200);
   });

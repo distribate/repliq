@@ -52,12 +52,7 @@ export const createThreadRoute = new Hono()
         return ctx.json<CreateThreadResponse>({ error: "Error" }, 400);
       }
 
-      return ctx.json<CreateThreadResponse>({
-        status: "Created",
-        data: {
-          id: createdThread.thread_id
-        }
-      }, 200);
+      return ctx.json<CreateThreadResponse>({ status: "Created", data: { id: createdThread.thread_id } }, 200);
     } catch (e) {
       return ctx.json({ error: throwError(e) }, 500);
     }

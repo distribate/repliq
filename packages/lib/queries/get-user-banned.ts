@@ -1,6 +1,4 @@
-"use server";
-
-import { createClient } from "@repo/shared/api/supabase-client.ts";
+import { forumUserClient } from "@repo/shared/api/forum-client";
 import { BanEntity } from "@repo/types/entities/entities-type.ts";
 
 export type UserBanDetails = Omit<BanEntity, "id" | "created_at">;
@@ -8,18 +6,17 @@ export type UserBanDetails = Omit<BanEntity, "id" | "created_at">;
 export async function getUserBanned(
   nickname: string,
 ): Promise<UserBanDetails | null> {
-  const api = createClient();
+  const res = await forumUserClient.user["get-user-ban-details"][":nickname"].$get({
+    param: {
+      nickname
+    }
+  })
 
-  const { data, error } = await api
-    .from("users_banned")
-    .select()
-    .eq("nickname", nickname)
-    .returns<UserBanDetails>()
-    .single();
+  const data = await res.json()
 
-  if (error) {
+  if (!data || "error" in data) {
     return null;
   }
 
-  return data;
+  return data.data;
 }

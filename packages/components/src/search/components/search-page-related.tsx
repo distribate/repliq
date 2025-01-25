@@ -3,7 +3,7 @@ import { FriendsSearchingCard } from "#friends/components/searching/friends-sear
 import { relatedQuery } from "#search/queries/related-query.ts";
 import { Skeleton } from "@repo/ui/src/components/skeleton.tsx";
 import { Button } from "@repo/ui/src/components/button.tsx";
-import Link from "next/link";
+import { Link } from "@tanstack/react-router";
 import { THREAD_URL } from "@repo/shared/constants/routes.ts";
 
 const SearchPageRelatedSkeleton = () => {
@@ -72,7 +72,7 @@ export const SearchPageRelated = () => {
                   </div>
                 )}
                 <Link
-                  href={THREAD_URL + thread.id}
+                  to={THREAD_URL + thread.id}
                   className="flex items-center w-full"
                 >
                   <Button state="default" className="px-6 w-full">

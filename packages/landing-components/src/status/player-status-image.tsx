@@ -1,6 +1,6 @@
 import { PlayerStatusProps } from "../status/player-status";
 import { useQuery } from "@tanstack/react-query";
-import { getSkinDetails } from "@repo/lib/helpers/get-skin-details";
+import { getSkinDetails } from "@repo/lib/queries/get-skin-details";
 
 type PlayerStatusImageProps = {
 	type?: "small" | "full"
@@ -8,7 +8,7 @@ type PlayerStatusImageProps = {
 
 const playerAvatarQuery = (nickname: string) => useQuery({
 	queryKey: ['player-avatar', nickname],
-	queryFn: () => getSkinDetails(nickname),
+	queryFn: () => getSkinDetails({ type: "head", nickname }),
 	refetchOnWindowFocus: false
 })
 
@@ -16,7 +16,7 @@ export const PlayerStatusImage = ({
 	nickname, type = "small"
 }: PlayerStatusImageProps) => {
 	const { data: avatarUrl } = playerAvatarQuery(nickname)
-	
+
 	return (
 		<img
 			height={800}

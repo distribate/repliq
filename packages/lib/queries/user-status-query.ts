@@ -4,7 +4,7 @@ import { forumUserClient } from "@repo/shared/api/forum-client";
 import { useQuery } from "@tanstack/react-query";
 
 async function getUserStatus(nickname: string) {
-  const res = await forumUserClient().user["get-user-status"][":nickname"].$get({
+  const res = await forumUserClient.user["get-user-status"][":nickname"].$get({
     param: {
       nickname,
     }

@@ -7,7 +7,7 @@ import Inspector from "@repo/assets/images/minecraft/block_inspect.webp";
 import { SearchSort } from "./search-sort.tsx";
 import { Separator } from "@repo/ui/src/components/separator.tsx";
 import { ImageWrapper } from "#wrappers/image-wrapper.tsx";
-import Link from "next/link";
+import { Link } from "@tanstack/react-router";
 
 export const SearchInput = () => {
   const { setSearchQueryMutation } = useSearchControl();
@@ -36,11 +36,11 @@ export const SearchInput = () => {
       <div className="flex bg-shark-700/80 items-center px-2 w-full justify-between rounded-md">
         <div className="flex items-center">
           <Link
-            href="/search"
+            to="/search"
             className="flex items-center rounded-md w-[44px]"
           >
             <ImageWrapper
-              propSrc={Inspector.src}
+              propSrc={Inspector}
               propAlt="Search spyglass"
               className="w-[24px] h-[24px]"
               width={24}

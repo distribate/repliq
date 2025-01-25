@@ -6,14 +6,14 @@ import { SearchUser } from "#sidebar/desktop/components/sidebar-content/search/q
 import { Typography } from "@repo/ui/src/components/typography.tsx";
 import { Avatar } from "#user/components/avatar/components/avatar.tsx";
 import { UserNickname } from "#user/components/name/nickname.tsx";
-import Link from "next/link";
+import { Link } from "@tanstack/react-router";
 import { USER_URL } from "@repo/shared/constants/routes.ts";
 import { filterSearchResults } from "#search/helpers/filter-search-results.ts";
 
 export const SearchPageUser = ({ nickname, name_color }: SearchUser) => {
   return (
     <Link
-      href={USER_URL + nickname}
+      to={USER_URL + nickname}
       className="flex p-4 items-center gap-3 hover:bg-shark-700 w-full rounded-md"
     >
       <Avatar nickname={nickname} propWidth={40} propHeight={40} />

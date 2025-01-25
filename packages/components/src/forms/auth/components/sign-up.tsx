@@ -4,7 +4,7 @@ import { FormField } from "@repo/ui/src/components/form-field.tsx";
 import { Input } from "@repo/ui/src/components/input.tsx";
 import { useForm } from "react-hook-form";
 import { Button } from "@repo/ui/src/components/button.tsx";
-import { useRouter } from "next/navigation";
+import { useNavigate } from "@tanstack/react-router";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { registrationSchema } from "../schemas/authorization-schema.ts";
 import { useEffect, useState } from "react";
@@ -13,54 +13,42 @@ import { Typography } from "@repo/ui/src/components/typography.tsx";
 import { useMutationState, useQueryClient } from "@tanstack/react-query";
 import { AUTH_MUTATION_KEY, useAuth } from "../hooks/use-auth.tsx";
 import { AUTH_QUERY_KEY, AuthQuery, authQuery } from "../queries/auth-query.ts";
-import Link from "next/link";
 import { GearLoader } from "@repo/ui/src/components/gear-loader.tsx";
 import EnderPearl from "@repo/assets/images/minecraft/ender_pearl.webp";
 import EyeOfEnder from "@repo/assets/images/minecraft/eye_of_ender.webp";
 import type { PasswordVisibilityType } from "#forms/auth/types/form-types.ts";
 import { z } from "zod";
+import { Link } from "@tanstack/react-router";
 
 type zodSignUpForm = z.infer<typeof registrationSchema>;
 
 export const SignUpForm = () => {
   const qc = useQueryClient();
-  const { data: authState } = authQuery();
-  const [passwordType, setPasswordType] =
-    useState<PasswordVisibilityType>("password");
+  const { data: { status } } = authQuery();
+  const [pt, setPt] = useState<PasswordVisibilityType>("password");
   const { setAuthValuesMutation } = useAuth();
-  const { replace } = useRouter();
+  const navigate = useNavigate();
 
   const mutData = useMutationState({
     filters: { mutationKey: AUTH_MUTATION_KEY },
-    select: (m) => m.state.status,
+    select: m => m.state.status,
   });
 
   const isLoading = mutData[mutData.length - 1] === "pending";
-  const status = authState.status;
 
-  const {
-    register,
-    resetField,
-    formState: { errors, isValid },
-    handleSubmit,
-    reset,
-    getValues,
-  } = useForm<zodSignUpForm>({
-    mode: "onSubmit",
+  const { register, resetField, formState: { errors, isValid }, handleSubmit, getValues } = useForm<zodSignUpForm>({
+    mode: "onChange",
     resolver: zodResolver(registrationSchema),
     defaultValues: {
-      password: "",
-      nickname: "",
-      findout: "",
-      acceptRules: false,
+      password: "", nickname: "", findout: "", acceptRules: false,
     },
   });
 
   useEffect(() => {
     switch (status) {
-      case "notFound":
-        return reset();
-      case "incorrectPassword":
+      case "Nickname invalid":
+        return resetField("nickname");
+      case "Unsafe password":
         return resetField("password");
     }
   }, [status]);
@@ -81,15 +69,15 @@ export const SignUpForm = () => {
   };
 
   const handleRedirect = () => {
-    replace("/auth?type=login");
+    navigate({ to: "/auth", search: { type: "login" } });
     return qc.resetQueries({ queryKey: AUTH_QUERY_KEY });
   };
 
   const handlePasswordVisibility = () => {
-    if (passwordType === "password") {
-      setPasswordType("text");
+    if (pt === "password") {
+      setPt("text");
     } else {
-      setPasswordType("password");
+      setPt("password");
     }
   };
 
@@ -101,9 +89,10 @@ export const SignUpForm = () => {
       >
         <Input
           id="nickname"
-          type="text"
-          placeholder="игровой ник"
           autoComplete="new-password"
+          autoCorrect="off"
+          type="text"
+          placeholder="игровой никнейм"
           className="!bg-shark-900"
           status={errors.nickname ? "error" : "default"}
           variant="minecraft"
@@ -117,17 +106,18 @@ export const SignUpForm = () => {
         <div className="flex items-center gap-2 justify-center">
           <Input
             id="password"
-            type={passwordType}
-            className="!bg-shark-900"
-            placeholder="игровой пароль"
+            type={pt}
             autoComplete="new-password"
+            autoCorrect="off"
+            className="!bg-shark-900"
+            placeholder="пароль"
             status={errors.password ? "error" : "default"}
             variant="minecraft"
             {...register("password")}
           />
           <img
             className="cursor-pointer"
-            src={passwordType === "password" ? EnderPearl.src : EyeOfEnder.src}
+            src={pt === "password" ? EnderPearl : EyeOfEnder}
             alt=""
             width={36}
             height={36}
@@ -144,7 +134,7 @@ export const SignUpForm = () => {
           id="realName"
           type="text"
           className="!bg-shark-900"
-          placeholder="например: Данил"
+          placeholder="например: Александр"
           autoComplete="new-password"
           status={errors.realName ? "error" : "default"}
           variant="minecraft"
@@ -203,7 +193,7 @@ export const SignUpForm = () => {
             <Typography className="text-[15px] break-words lg:text-[18px]" textColor="shark_black">
               Согласен с&nbsp;
               <Link
-                href="/misc/rules"
+                to="https://fasberry.su/rules"
                 target="_blank"
                 className="underline underline-offset-4"
               >
@@ -232,20 +222,20 @@ export const SignUpForm = () => {
         </Button>
         {isLoading && <GearLoader />}
       </div>
-      {authState.status && (
-        <ErrorField message={authState.status} />
-      )}
-      {status === "created" && (
-        <div className="px-2">
-          <Typography
-            onClick={handleRedirect}
-            textColor="shark_black"
-            textSize="medium"
-            variant="link"
-          >
-            Перейти к авторизации
-          </Typography>
-        </div>
+      {status && (
+        status !== 'Success' ? <ErrorField message={status} />
+          : (
+            <div className="px-2">
+              <Typography
+                onClick={handleRedirect}
+                textColor="shark_black"
+                textSize="medium"
+                variant="link"
+              >
+                Перейти к авторизации
+              </Typography>
+            </div>
+          )
       )}
     </form>
   );

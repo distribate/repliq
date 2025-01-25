@@ -5,7 +5,7 @@ type CreateFriendRequest = {
 }
 
 export async function createFriendRequest({ recipient }: CreateFriendRequest) {
-  const res = await forumUserClient().user["create-friend-request"].$post({
+  const res = await forumUserClient.user["create-friend-request"].$post({
     json: { recipient }
   })
 

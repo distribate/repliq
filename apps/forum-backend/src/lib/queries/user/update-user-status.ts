@@ -7,6 +7,8 @@ export async function updateUserStatus(nickname: string, status: boolean) {
   return await forumDB
     .insertInto("users_status")
     .values({ nickname, created_at, status })
-    .onConflict((oc) => oc.column("nickname").doUpdateSet({ status, created_at }))
+    .onConflict((oc) =>
+      oc.column("nickname").doUpdateSet({ status, created_at })
+    )
     .execute()
 }

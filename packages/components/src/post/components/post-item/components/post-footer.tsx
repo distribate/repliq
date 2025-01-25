@@ -1,18 +1,16 @@
 import { Typography } from "@repo/ui/src/components/typography.tsx";
 import { getUser } from "@repo/lib/helpers/get-user.ts";
-import { useEffect } from "react";
-import { postPostView } from "#post/components/post-item/queries/post-view.ts";
+import { lazy } from "react";
 import { PostFooterViews } from "#post/components/post-item/components/post-footer-views.tsx";
-import dynamic from "next/dynamic";
 import type { UserPostItem } from '@repo/types/routes-types/get-user-posts-types.ts';
 import dayjs from "@repo/lib/constants/dayjs-instance";
 
 type PostFooterProps = Pick<UserPostItem, "views_count" | "isUpdated" | "id" | "isViewed" | "user_nickname" | "created_at">
 
-const PostFooterWithViewsList = dynamic(() =>
-  import(
-    "#post/components/post-item/components/post-footer-views-list.tsx"
-  ).then((m) => m.PostFooterWithViewsList),
+const PostFooterWithViewsList = lazy(() =>
+  import("#post/components/post-item/components/post-footer-views-list.tsx").then((m) => ({
+    default: m.PostFooterWithViewsList,
+  })),
 );
 
 export const PostFooter = ({
@@ -20,9 +18,9 @@ export const PostFooter = ({
 }: PostFooterProps) => {
   const currentUser = getUser();
 
-  useEffect(() => {
-    if (!isViewed && currentUser) postPostView(id);
-  }, []);
+  // useEffect(() => {
+  //   if (!isViewed && currentUser) postPostView(id);
+  // }, []);
 
   const isOwner = user_nickname === currentUser.nickname;
 

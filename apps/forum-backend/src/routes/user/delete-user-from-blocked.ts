@@ -25,10 +25,20 @@ export const controlUserBlockedRoute = new Hono()
     try {
       switch (result.type) {
         case "block":
-          await addUserToBlocked({ ...result, initiator })
+          const added = await addUserToBlocked({ ...result, initiator })
+
+          if (!added.id) {
+            return ctx.json({ error: "Error adding user to blocked" }, 404);
+          }
+
           return ctx.json({ status: "User added to blocked" }, 200);
         case "unblock":
-          await deleteUserFromBlocked({ ...result, initiator })
+          const deleted = await deleteUserFromBlocked({ ...result, initiator })
+
+          if (!deleted[0].numDeletedRows) {
+            return ctx.json({ error: "Error deleting user from blocked" }, 404);
+          }
+
           return ctx.json({ status: "User deleted from blocked" }, 200);
       }
     } catch (e) {

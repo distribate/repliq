@@ -1,11 +1,10 @@
 import { FriendPinnedEntity } from "@repo/types/entities/entities-type.ts";
-import { getCurrentSession } from "@repo/lib/actions/get-current-session.ts";
 import { forumUserClient } from "@repo/shared/api/forum-client";
 
 export type SetPinFriend = Pick<FriendPinnedEntity, "friend_id" | "recipient">;
 
 export async function setPinFriend({ recipient, friend_id }: SetPinFriend) {
-  const res = await forumUserClient().user["create-friend-pin"].$post({
+  const res = await forumUserClient.user["create-friend-pin"].$post({
     json: {
       recipient,
       friend_id,

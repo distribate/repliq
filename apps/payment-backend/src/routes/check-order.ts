@@ -11,6 +11,7 @@ import { updatePaymentInfo } from '../lib/queries/update-payment-info.ts';
 import { createPaymentInfo } from '../lib/queries/create-payment-info.ts';
 import { getDonateDetails } from '../lib/queries/get-donate-details.ts';
 import { pubPaymentPayload } from '#publishers/pub-payment-payload.ts';
+import type { DonateVariants } from '@repo/types/db/forum-database-types.ts';
 
 type PaymentOrderId = Pick<PaymentCompleted, 'data'>['data']['orderId']
 
@@ -66,7 +67,7 @@ async function receivePayment(data: PaymentCompleted['data']) {
 
       await Promise.all([
         updatePaymentInfo({ orderId, updateable: { status: 'received' } }),
-        pubDonatePayload({ donate: donateOrigin, nickname }),
+        pubDonatePayload({ donate: donateOrigin as "arkhont" | "authentic" | "loyal", nickname }),
       ]);
 
       return await pubPaymentPayload("success", data);

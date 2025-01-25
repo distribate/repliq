@@ -6,13 +6,13 @@ type PublishIssuePayload = {
   user_nickname: string;
 }
 
-export async function publishIssuePayload({ user_nickname, title }: PublishIssuePayload) {
+export function publishIssuePayload({ user_nickname, title }: PublishIssuePayload) {
   const nc = getNatsConnection()
 
   const payload = JSON.stringify({
     payload: {
       title,
-      user_nickname,
+      nickname: user_nickname,
     },
     type: "issue"
   })

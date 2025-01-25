@@ -1,6 +1,6 @@
 import { lpDialect } from '@repo/shared/db/luckperms-db.ts';
 import { Kysely } from 'kysely';
-import type { DB as lpDBType } from "@repo/types/db/luckperms-database-types"
+import type { DB as lpDBType } from "@repo/types/db/luckperms-database-types.ts"
 
 export const lpDB = new Kysely<lpDBType>({ dialect: lpDialect({
     host: "127.0.0.1",

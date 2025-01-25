@@ -9,7 +9,7 @@ import { UserNickname } from "#user/components/name/nickname.tsx";
 import { Typography } from "@repo/ui/src/components/typography.tsx";
 import dayjs from "@repo/lib/constants/dayjs-instance.ts";
 import { PostFooterViews } from "#post/components/post-item/components/post-footer-views.tsx";
-import Link from "next/link";
+import { Link } from "@tanstack/react-router";
 import { USER_URL } from "@repo/shared/constants/routes.ts";
 import { UserEntity } from "@repo/types/entities/entities-type.ts";
 import { UserPostItem } from '@repo/types/routes-types/get-user-posts-types.ts';
@@ -36,7 +36,7 @@ const PostViewCard = ({
       className="flex justify-between h-6 items-center gap-2 w-full"
     >
       <div className="flex items-center gap-2 w-1/2 justify-between">
-        <Link href={USER_URL + nickname}>
+        <Link to={USER_URL + nickname}>
           <UserNickname nickname={nickname} className="truncate text-[14px]" />
         </Link>
       </div>

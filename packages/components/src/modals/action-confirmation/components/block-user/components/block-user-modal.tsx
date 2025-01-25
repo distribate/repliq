@@ -17,10 +17,12 @@ type BlockUserModalProps = {
 };
 
 export const BlockUserModal = ({ recipient }: BlockUserModalProps) => {
-  const { data: blockedState } = blockedUserQuery(recipient);
+  const { data: blocked } = blockedUserQuery(recipient);
   const { blockUserMutation, unblockUserMutation } = useBlockUser();
 
-  const isBlocked = blockedState?.recipient === recipient || false;
+  if (!blocked) return null;
+
+  const isBlocked = blocked.recipient === recipient || false;
 
   const handleBlockUser = () => {
     if (isBlocked) {

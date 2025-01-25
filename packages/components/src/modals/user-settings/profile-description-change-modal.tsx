@@ -18,7 +18,7 @@ export const ProfileDescriptionChangeModal = () => {
           className="rounded-l-none px-6 hover:bg-shark-800"
         >
           <ImageWrapper
-            propSrc={BookAndQuill?.src}
+            propSrc={BookAndQuill}
             width={24}
             className="w-[24px] h-[24px]"
             height={24}

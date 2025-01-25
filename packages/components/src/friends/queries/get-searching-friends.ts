@@ -6,7 +6,7 @@ import { forumUserClient } from "@repo/shared/api/forum-client.ts";
 export type SearchingFriend = Omit<ExtendedUsers, "uuid">;
 
 export async function getSearchingFriends(): Promise<SearchingFriend[] | null> {
-  const res = await forumUserClient().user["get-recommended-friends"].$get({
+  const res = await forumUserClient.user["get-recommended-friends"].$get({
     query: { type: "searching" },
   });
 
@@ -16,5 +16,5 @@ export async function getSearchingFriends(): Promise<SearchingFriend[] | null> {
     return null;
   }
 
-  return data
+  return data.data
 }

@@ -21,3 +21,5 @@ declare module "bun" {
     POSTGRES_TENANT_ID: string;
   }
 }
+
+declare module "*.txt"

@@ -1,20 +1,5 @@
 import { FieldPath, FieldValues, useFormContext } from "react-hook-form";
 import { createContext, useContext } from "react";
-import {
-  AuthMessages,
-  ErrorMessageMap,
-} from "@repo/components/src/forms/auth/types/error-message-type.ts";
-
-export function getFormErrorMessage(
-  type: AuthMessages,
-  errorMessages: ErrorMessageMap,
-): string {
-  if (type === null) {
-    return "";
-  } else {
-    return errorMessages[type];
-  }
-}
 
 type FormFieldContextValue<
   TFieldValues extends FieldValues = FieldValues,

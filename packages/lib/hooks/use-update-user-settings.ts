@@ -1,5 +1,5 @@
 import { REQUESTED_USER_QUERY_KEY } from '@repo/components/src/profile/components/cover/queries/requested-user-query.ts';
-import { usePathname } from 'next/navigation';
+import { useLocation } from "@tanstack/react-router"
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { UpdateUserSettings, updateUserSettings } from '#queries/update-user-settings.ts';
 import { toast } from 'sonner';
@@ -8,7 +8,7 @@ import type { UserDetailed } from '@repo/types/entities/user-type';
 
 export const useUpdateUserSettings = () => {
   const qc = useQueryClient()
-  const pathname = usePathname()
+  const { pathname } = useLocation()
 
   const updateUserSettingsMutation = useMutation({
     mutationFn: async (values: UpdateUserSettings) => updateUserSettings(values),

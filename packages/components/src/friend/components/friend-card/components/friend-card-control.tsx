@@ -5,7 +5,7 @@ import { Tag, Trash } from "lucide-react";
 import { DeleteFriendModal } from "#modals/action-confirmation/components/delete-friend/components/delete-friend-modal.tsx";
 import { UserCardModal } from "#modals/custom/user-card-modal.tsx";
 import { FriendCardControlNote } from "./friend-card-control-note.tsx";
-import { useRouter } from "next/navigation";
+import { useNavigate } from "@tanstack/react-router";
 import { USER_URL } from "@repo/shared/constants/routes.ts";
 import { Separator } from "@repo/ui/src/components/separator.tsx";
 import { FriendCardControlPin } from "#friend/components/friend-card/components/friend-card-control-pin.tsx";
@@ -22,14 +22,14 @@ export const FriendCardControl = ({
   friend_id,
   is_pinned,
 }: FriendCardControlProps) => {
-  const { push } = useRouter();
+  const navigate = useNavigate();
 
   return (
     <div className="flex items-center mt-2 gap-1 w-fit">
       <Button
         className="h-8 px-4"
         variant="positive"
-        onClick={() => push(USER_URL + reqUserNickname)}
+        onClick={() => navigate({ to: USER_URL + reqUserNickname })}
       >
         <Typography textSize="small">К профилю</Typography>
       </Button>

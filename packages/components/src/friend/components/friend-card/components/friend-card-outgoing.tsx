@@ -1,5 +1,5 @@
 import { Typography } from "@repo/ui/src/components/typography.tsx";
-import Link from "next/link";
+import { Link } from "@tanstack/react-router";
 import { Button } from "@repo/ui/src/components/button.tsx";
 import { USER_URL } from "@repo/shared/constants/routes.ts";
 import { UserNickname } from "#user/components/name/nickname.tsx";
@@ -17,7 +17,7 @@ export const FriendCardOutgoing = ({
     <FriendCardLayout nickname={recipient}>
       <div className="flex flex-col gap-y-1 w-fit">
         <div className="flex items-center gap-1 w-fit">
-          <Link href={USER_URL + recipient} className="flex items-center gap-1">
+          <Link to={USER_URL + recipient} className="flex items-center gap-1">
             <UserNickname nickname={recipient} className="text-lg" />
           </Link>
         </div>

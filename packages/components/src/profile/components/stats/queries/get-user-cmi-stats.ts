@@ -45,6 +45,7 @@ async function getUserReputation(uuid: string) {
       Authorization: `Bearer ${process.env.ASP_NET_API_SECRET}`,
       "Content-Type": "application/json",
     },
+    retry: 1
   });
 
   if (!res.ok) {
@@ -66,6 +67,7 @@ async function getUserBelkoinWallet(uuid: string) {
         Authorization: `Bearer ${process.env.ASP_NET_API_SECRET}`,
         "Content-Type": "application/json",
       },
+      retry: 1
     },
   );
 
@@ -86,6 +88,7 @@ async function getUserCMIStats(nickname: string) {
       Authorization: `Bearer ${process.env.ASP_NET_API_SECRET}`,
       "Content-Type": "application/json",
     },
+    retry: 1
   });
 
   if (!res.ok) {

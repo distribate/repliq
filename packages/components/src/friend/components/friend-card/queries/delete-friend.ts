@@ -5,7 +5,7 @@ type DeleteFriend = {
 }
 
 export async function deleteFriend({ friend_id }: DeleteFriend) {
-  const res = await forumUserClient().user["delete-friend"].$delete({
+  const res = await forumUserClient.user["delete-friend"].$delete({
     json: { friend_id }
   })
 

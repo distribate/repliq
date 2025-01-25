@@ -1,5 +1,3 @@
-"use client";
-
 import { Skeleton } from "@repo/ui/src/components/skeleton.tsx";
 import { getUser } from "@repo/lib/helpers/get-user.ts";
 import { useControlFriendRequests } from "#friend/components/friend-card/hooks/use-control-friend-requests.ts";

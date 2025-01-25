@@ -1,5 +1,5 @@
 import { Avatar } from "#user/components/avatar/components/avatar.tsx";
-import Link from "next/link";
+import { Link } from "@tanstack/react-router";
 import { USER_URL } from "@repo/shared/constants/routes.ts";
 import { PostCommentItemHeader } from "#post/components/post-comment/components/post-comment-header.tsx";
 import { PostCommentItemFooter } from "#post/components/post-comment/components/post-comment-footer.tsx";
@@ -15,7 +15,7 @@ export const PostCommentItem = ({
 }: PostCommentEntity) => {
   return (
     <div className="flex flex-row gap-2 group items-end justify-between w-full">
-      <Link href={USER_URL + user_nickname}>
+      <Link to={USER_URL + user_nickname}>
         <Avatar
           variant="page"
           propWidth={36}

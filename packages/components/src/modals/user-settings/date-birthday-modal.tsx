@@ -16,7 +16,7 @@ export const DateBirthdayModal = () => {
     <DynamicModal
       mutationKey={UPDATE_FIELD_MUTATION_KEY}
       trigger={
-        <UserSettingOption title="День рождения" imageSrc={Firework.src}>
+        <UserSettingOption title="День рождения" imageSrc={Firework}>
           <div className="flex items-center gap-1">
             <Typography className="text-base">
               {birthday ? birthday.toString() : `не указано`}

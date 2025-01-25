@@ -13,7 +13,12 @@ export const deleteFriendRoute = new Hono()
     const nickname = getNickname()
 
     try {
-      await deleteFriend({ ...result, nickname });
+      const res = await deleteFriend({ ...result, nickname });
+      
+      if (!res[0].numDeletedRows) {
+        return ctx.json({ error: "Error deleting friend" }, 404);
+      }
+
       return ctx.json({ status: "Friend deleted" }, 200);
     } catch (e) {
       return ctx.json({ error: throwError(e), }, 400);

@@ -1,24 +1,26 @@
-"use client"
-
 import { createQueryKey } from "@repo/lib/helpers/query-key-builder";
 import { forumSharedClient } from "@repo/shared/api/forum-client";
 import { Skeleton } from "@repo/ui/src/components/skeleton";
 import { Typography } from "@repo/ui/src/components/typography";
 import { useQuery } from "@tanstack/react-query";
 
+async function getFact() {
+  const res = await forumSharedClient.shared["get-fact"].$get()
+
+  const data = await res.json();
+
+  if (!data || "error" in data) {
+    return null;
+  }
+
+  return data.data
+}
+
 const factQuery = () => useQuery({
   queryKey: createQueryKey("ui", ["random-fact"]),
-  queryFn: async () => {
-    const res = await forumSharedClient.shared["get-fact"].$get()
-
-    const data = await res.json();
-
-    if (!data || "error" in data) {
-      return null;
-    }
-
-    return data.fact
-  }
+  queryFn: getFact,
+  refetchOnWindowFocus: false,
+  refetchOnMount: false
 })
 
 export const FactSection = () => {

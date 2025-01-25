@@ -1,18 +1,17 @@
 "use client";
 
-import Image from "next/image";
-import { useRouter } from "next/navigation";
+import { useNavigate } from "@tanstack/react-router";
 import Spyglass from "@repo/assets/images/minecraft/spyglass.webp";
 
 export const HistoryBackButton = () => {
-  const { back } = useRouter();
+  const navigate = useNavigate();
 
   return (
     <div
-      onClick={back}
+      onClick={() => navigate({ to: "." })}
       className="flex px-3 gap-1 cursor-pointer items-center hover:bg-secondary-color transition-all duration-150 ease-in max-h-[42px]"
     >
-      <Image
+      <img
         src={Spyglass}
         width={48}
         height={48}

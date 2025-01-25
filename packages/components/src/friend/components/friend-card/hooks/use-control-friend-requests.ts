@@ -4,7 +4,6 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { deleteFriendRequest } from "../queries/delete-friend-request.ts";
 import { toast } from "sonner";
 import { acceptFriendRequest } from "../queries/accept-friend-request.ts";
-import { useRouter } from "next/navigation";
 import { USER_FRIEND_DELETE_MUTATION_KEY } from "#friend/components/friend-card/hooks/use-control-friend.ts";
 import { createFriendRequest } from "#friend/components/friend-card/queries/create-friend-request.ts";
 import { deleteFriend } from "#friend/components/friend-card/queries/delete-friend.ts";
@@ -31,7 +30,6 @@ const friendRequestStatus: Record<string, string> = {
 
 export const useControlFriendRequests = () => {
   const qc = useQueryClient();
-  const { refresh } = useRouter();
   const { nickname: currentUserNickname } = getUser();
 
   const acceptIncomingRequestMutation = useMutation({
@@ -169,7 +167,6 @@ export const useControlFriendRequests = () => {
 
       if (!createRequestError) {
         toast.success(friendRequestStatus[createRequestStatus]);
-        refresh();
 
         qc.invalidateQueries({
           queryKey: FRIENDS_COUNT_QUERY_KEY(currentUserNickname)

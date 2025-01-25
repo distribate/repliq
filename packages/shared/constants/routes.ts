@@ -6,6 +6,7 @@ export const AUTH_REDIRECT = "/auth?type=login";
 export const BANNED_REDIRECT = "/banned";
 export const CREATE_THREAD_URL = "/create-thread";
 export const CREATE_ISSUE_URL = "/create-issue";
+export const LAND_URL = "/land/";
 
 export const REACTIONS_LIMIT_DEFAULT = 1;
 export const REACTIONS_LIMIT_PREMIUM = 3;

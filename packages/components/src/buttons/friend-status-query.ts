@@ -5,7 +5,7 @@ import { useSuspenseQuery } from "@tanstack/react-query";
 export const FRIEND_STATUS_QUERY_KEY = (recipient: string) => createQueryKey("user", ["friend-status", recipient])
 
 const getUserFriendStatus = async (recipient: string) => {
-  const res = await forumUserClient().user["get-friend-status"][":nickname"].$get({
+  const res = await forumUserClient.user["get-friend-status"][":nickname"].$get({
     param: {
       nickname: recipient
     }
@@ -17,7 +17,7 @@ const getUserFriendStatus = async (recipient: string) => {
     return null;
   }
 
-  return data
+  return data.data
 }
 
 export const friendStatusQuery = (initiator: string, recipient: string) => useSuspenseQuery({

@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { SHOP_ITEM_QUERY_KEY } from '@repo/lib/queries/shop-item-query.ts';
-import { createPayment } from '@repo/lib/actions/create-payment-client.ts';
+import { createPayment } from '@repo/lib/actions/create-payment.ts';
 import { PaymentFields } from '@repo/landing-components/src/subs/subscription-item-form.tsx';
 
 export const CREATE_PAYMENT_MUTATION_KEY = ["shop", 'create-payment-mutation'];

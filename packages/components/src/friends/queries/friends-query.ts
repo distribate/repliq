@@ -1,4 +1,4 @@
-import { keepPreviousData, useQuery } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import { getFriends } from "./get-friends.ts";
 import { createQueryKey } from "@repo/lib/helpers/query-key-builder.ts";
 
@@ -18,6 +18,5 @@ export const friendsQuery = ({
   queryKey: FRIENDS_QUERY_KEY(nickname),
   queryFn: () => getFriends({ nickname, with_details, sort_type, ascending }),
   refetchOnWindowFocus: false,
-  refetchOnMount: false,
-  placeholderData: keepPreviousData
+  refetchOnMount: false
 })

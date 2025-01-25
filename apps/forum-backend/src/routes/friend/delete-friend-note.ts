@@ -19,7 +19,12 @@ export const deleteFriendNoteRoute = new Hono()
         friend_id, initiator, recipient
       })
 
-      await deleteFriendNote(id)
+      const res = await deleteFriendNote(id)
+
+      if (!res[0].numDeletedRows) {
+        return ctx.json({ error: "Error deleting friend note" }, 404)
+      }
+
       return ctx.json({ status: "Friend note deleted" }, 200);
     } catch (e) {
       return ctx.json({ error: throwError(e) }, 400)

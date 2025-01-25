@@ -53,8 +53,6 @@ export const CreatePostCommentForm = ({
     );
   };
 
-  if (!currentUser) return null;
-
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}

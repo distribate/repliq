@@ -34,7 +34,7 @@ export const getFriendStatusRoute = new Hono()
           request_id: null
         }
 
-        return ctx.json(friendData, 200)
+        return ctx.json({ data: friendData }, 200)
       }
 
       if (friendObject) {
@@ -63,7 +63,7 @@ export const getFriendStatusRoute = new Hono()
         }
       }
 
-      return ctx.json(friendData, 200);
+      return ctx.json({ data: friendData }, 200);
     } catch (e) {
       return ctx.json({ error: throwError(e) }, 500);
     }

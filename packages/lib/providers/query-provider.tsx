@@ -2,6 +2,7 @@
 
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactNode } from "react";
+import React from "react"
 
 function makeQueryClient() {
   return new QueryClient({

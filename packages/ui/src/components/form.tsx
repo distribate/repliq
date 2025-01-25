@@ -12,7 +12,6 @@ import { Label } from "./label.tsx";
 import {
   FormFieldContext,
   FormItemContext,
-  getFormErrorMessage,
   useFormField,
 } from "../hooks/use-form-field";
 import {
@@ -23,10 +22,6 @@ import {
   useId,
 } from "react";
 import { cva, VariantProps } from "class-variance-authority";
-import {
-  AuthMessages,
-  ErrorMessageMap,
-} from "@repo/components/src/forms/auth/types/error-message-type.ts";
 
 const Form = FormProvider;
 
@@ -64,30 +59,6 @@ export const ErrorField = ({
     >
       {message}
     </span>
-  );
-};
-
-const FormAuthErrorMessage = ({
-  type,
-  messages,
-}: {
-  type: AuthMessages;
-  messages: ErrorMessageMap;
-}) => {
-  const errorMessage = getFormErrorMessage(type, messages);
-  return (
-    <div className="py-0.5 px-2">
-      <ErrorField
-        message={errorMessage}
-        variant={
-          type === "created"
-            ? "success"
-            : type === "alreadyOriginal"
-              ? "success"
-              : "error"
-        }
-      />
-    </div>
   );
 };
 
@@ -193,7 +164,6 @@ const FormMessage = forwardRef<
 FormMessage.displayName = "FormMessage";
 
 export {
-  FormAuthErrorMessage,
   useFormField,
   Form,
   FormItem,

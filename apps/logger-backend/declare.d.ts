@@ -28,5 +28,10 @@ declare module "bun" {
     POSTGRES_PASSWORD: string
     POSTGRES_TENANT_ID: string
     NATS_AUTH_TOKEN:string
+
+    MYSQL_USER: string,
+    MYSQL_PASSWORD: string,
+    CMI_MYSQL_PORT: number
+    PLAYERPOINTS_MYSQL_PORT: number
   }
 }

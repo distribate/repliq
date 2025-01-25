@@ -48,7 +48,7 @@
     "class-variance-authority": "0.7.0",
     "cmdk": "1.0.3",
     "postcss": "8.4.35",
-    "tailwindcss": "3.4.14",
+    "tailwindcss": "3.4.17",
     "typescript": "^5.4.5"
   }
 }

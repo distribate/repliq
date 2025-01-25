@@ -4,7 +4,6 @@ import { Button } from "@repo/ui/src/components/button.tsx";
 import { Typography } from "@repo/ui/src/components/typography.tsx";
 import { DialogClose } from "@repo/ui/src/components/dialog.tsx";
 import { useEffect, ChangeEvent, useState } from "react";
-import Image from "next/image";
 import { Image as ImageIcon } from "lucide-react";
 
 type MinecraftItemValues = {
@@ -85,7 +84,7 @@ export const MinecraftItemCreateForm = () => {
           )}
         </div>
         {previewImage ? (
-          <Image
+          <img
             src={previewImage}
             alt={itemValues.title}
             width={128}

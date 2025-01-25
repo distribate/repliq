@@ -1,6 +1,8 @@
 export type ThreadHistoryType = {
-  id: string;
-  threadId: string;
-  title: string;
-  nickname: string;
+  thread: {
+    id: string;
+    owner: string;
+    title: string;
+  },
+  account: string;
 };

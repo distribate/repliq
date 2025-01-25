@@ -7,7 +7,7 @@ import {
 import { SearchType } from "#sidebar/desktop/components/sidebar-content/search/queries/search-query.ts";
 import { getSearchResults } from "#search/queries/get-search-results.ts";
 import { SEARCH_PAGE_LIMIT } from "@repo/shared/constants/limits.ts";
-import { useSearchParams } from "next/navigation";
+import { useSearch } from "@tanstack/react-router"
 import { useEffect } from "react";
 
 export const SEARCH_PAGE_RESULTS_MUTATION_KEY = ["search-page-results"];
@@ -20,9 +20,18 @@ type HandleSearchMutation = {
 
 export const useSearchPage = () => {
   const qc = useQueryClient();
-  const params = useSearchParams();
-  const searchType = (params.get("type") as SearchType) ?? "all";
-  const threadsSearchType = params.get("user") ?? null;
+  const params = useSearch({
+    from: "/_protected/search",
+    select: (params) => {
+      return {
+        type: params.type as SearchType,
+        user: params.user as string
+      }
+    }
+  });
+
+  const searchType = params.type ?? "all";
+  const threadsSearchType = params.user ?? null;
   const { data: searchState } = searchPageQuery();
 
   useEffect(() => {

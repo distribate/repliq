@@ -14,9 +14,10 @@ export const getUserPostsRoute = new Hono()
 
     try {
       const posts = await getUserPosts({ ...query, currentUserNickname: nickname, requestedUserNickname });
+      
       return ctx.json(posts, 200);
     } catch (e) {
       return ctx.json({ error: throwError(e) }, 500);
     }
   }
-);
+  );

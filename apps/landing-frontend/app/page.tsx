@@ -11,8 +11,12 @@ import Link from 'next/link';
 import { Suspense } from 'react';
 import { Skeleton } from '@repo/landing-ui/src/skeleton.tsx';
 import dynamic from 'next/dynamic';
-import { IntroLayout } from "@repo/landing-components/src/layout/intro-layout";
-import { IntroBackgroundImage} from "@repo/landing-components/src/intro/background-image";
+import { IntroBackgroundImage } from "@repo/landing-components/src/intro/background-image";
+
+const ParamProvider = dynamic(() => import("@repo/landing-components/src/layout/param-provider")
+  .then(m => m.ParamProvider), {
+  ssr: false
+})
 
 export const metadata = {
   title: 'Главная - Fasberry',
@@ -58,12 +62,6 @@ export const metadata = {
   },
 };
 
-
-const ServerGallery = dynamic(() =>
-  import('@repo/landing-components/src/server-gallery/server-gallery.tsx')
-    .then(m => m.ServerGallery)
-);
-
 const StatusItem = dynamic(() =>
   import('@repo/landing-components/src/intro/status-item').then(m => m.StatusItem), {
   ssr: false,
@@ -78,7 +76,7 @@ const GameplayItem = ({
 }: GamePlayItemProps) => {
   return (
     <div
-      className={`flex flex-col w-full items-center justify-end min-h-screen relative bg-top
+      className={`flex flex-col w-full items-center justify-end h-[80dvh] sm:h-screen relative bg-top
 			 lg:bg-center border-0 border-discord-server-color ${GAMEPLAY.length - 2 === id && 'lg:border-l-2 lg:border-r-2'}`}
       style={{ backgroundImage: `url(${image})` }}
     >
@@ -143,16 +141,18 @@ const ContactItem = ({
 export default async function Main() {
   return (
     <MainLayoutPage variant="with_section">
-      <div id="title" className="full-screen-section">
-        <IntroLayout>
-          <div className="absolute top-0 right-0 left-0 overflow-hidden h-screen">
-            <IntroBackgroundImage/>
-            <Overlay variant="default" />
-          </div>
-          <div className="responsive z-1 mx-auto">
-            <IntroMain />
-          </div>
-        </IntroLayout>
+      <ParamProvider />
+      <div
+        id="title"
+        className={`flex flex-col relative items-start full-screen-section justify-center`}
+      >
+        <div className="absolute top-0 right-0 left-0 overflow-hidden h-full">
+          <IntroBackgroundImage />
+          <Overlay variant="default" />
+        </div>
+        <div className="responsive z-1 mx-auto">
+          <IntroMain />
+        </div>
       </div>
       <div
         id="gameplay-overview"

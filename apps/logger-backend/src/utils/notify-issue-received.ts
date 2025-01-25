@@ -1,7 +1,7 @@
 import { Issues } from "@repo/types/db/forum-database-types"
 import { loggerBot } from "../shared/bot/bot"
 import { Selectable } from "kysely"
-import { getAdmins } from "../queries/get-admins"
+import { getAdmins } from "../lib/queries/get-admins"
 import { format } from "gramio"
 
 export const notifyIssueReceived = async (issue: Selectable<Issues>) => {

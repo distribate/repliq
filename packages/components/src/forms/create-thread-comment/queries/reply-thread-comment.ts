@@ -9,7 +9,7 @@ type ReplyThreadComment = Omit<z.infer<typeof replyCommentBodySchema>, "parent_t
 export const replyThreadComment = async ({
   content, threadId, recipient_comment_id
 }: ReplyThreadComment) => {
-  const res = await forumCommentClient().comment["reply-comment"].$post({
+  const res = await forumCommentClient.comment["reply-comment"].$post({
     json: {
       content, parent_id: threadId, parent_type: "thread", recipient_comment_id
     },

@@ -15,7 +15,8 @@ export const getUserThreadsRoute = new Hono()
 
     try {
       const threads = await getUserThreads({ nickname, querySearch });
-      return ctx.json(threads, 200);
+      
+      return ctx.json({ data: threads }, 200);
     } catch (e) {
       return ctx.json({ error: throwError(e) }, 500);
     }

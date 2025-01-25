@@ -5,7 +5,5 @@ import type { DatabaseConnection } from "@repo/types/entities/database-connectio
 export const authDialect = ({
   host, database, user, password, port
 }: DatabaseConnection) => {
-  return new PostgresDialect({
-    pool: new Pool({ database, host, user, port, max: 10, password }),
-  });
+  return new PostgresDialect({ pool: new Pool({ database, host, user, port, max: 10, password }) });
 };

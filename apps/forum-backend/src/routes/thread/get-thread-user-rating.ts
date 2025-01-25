@@ -15,9 +15,9 @@ export const getThreadUserReactionsRoute = new Hono()
         getThreadReactions(threadId)
       ]);
 
-      return ctx.json({ userReactions, threadReactions }, 200)
+      return ctx.json({ data: { userReactions, threadReactions } }, 200)
     } catch (e) {
       return ctx.json({ error: throwError(e) }, 500);
     }
   }
-)
+  )

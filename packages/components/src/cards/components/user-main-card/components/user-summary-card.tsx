@@ -12,6 +12,8 @@ import { UserEntity } from '@repo/types/entities/entities-type.ts';
 import { UserSummaryCardPrivated } from "./user-summary-card-privated.tsx";
 import { UserSummaryCardLimited } from "./user-summary-card-limited.tsx";
 import { UserSummaryCardSkeleton } from "./user-summary-card-skeleton.tsx";
+import { Link } from "@tanstack/react-router";
+import { USER_URL } from "@repo/shared/constants/routes.ts";
 
 export const UserSummaryCard = ({ nickname }: Pick<UserEntity, "nickname">) => {
   const { data: userCard, isLoading, isError } = userCardQuery(nickname);
@@ -52,18 +54,20 @@ export const UserSummaryCard = ({ nickname }: Pick<UserEntity, "nickname">) => {
                 <div className="flex relative justify-center p-2 items-center">
                   <div className="z-1 absolute w-full h-full right-0 left-0 bottom-0 top-0">
                     <ImageWrapper
-                      propSrc={Glass.src}
+                      propSrc={Glass}
                       propAlt={`nickname`}
                       width={104}
                       height={104}
                     />
                   </div>
-                  <Avatar
-                    nickname={nickname}
-                    propWidth={88}
-                    propHeight={88}
-                    className="z-2 relative !rounded-none"
-                  />
+                  <Link to={USER_URL + nickname}>
+                    <Avatar
+                      nickname={nickname}
+                      propWidth={88}
+                      propHeight={88}
+                      className="z-2 relative !rounded-none"
+                    />
+                  </Link>
                 </div>
                 <div className="flex flex-col gap-y-2">
                   <div className="flex flex-col">

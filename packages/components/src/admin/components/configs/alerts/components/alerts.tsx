@@ -1,23 +1,21 @@
-import { getAlerts } from "@repo/lib/queries/get-alerts.ts";
 import { Avatar } from "../../../../../user/components/avatar/components/avatar.tsx";
 import { Typography } from "@repo/ui/src/components/typography.tsx";
 import dayjs from "dayjs";
 import { AlertItemEditButton } from "./alert-item-edit-button.tsx";
 import { AlertItemDeleteButton } from "./alert-item-delete-button.tsx";
 import { AlertsAddButton } from "./alerts-add-button.tsx";
+import { alertsQuery } from "@repo/lib/queries/alerts-query.ts";
 
-export const Alerts = async () => {
-  const alertsList = await getAlerts({
-    range: [0, 6],
-    sort: "created_at",
-    limit: 6,
-  });
+export const Alerts = () => {
+  const { data } = alertsQuery({ limit: 1 });
+
+  const alerts = data?.data;
 
   return (
-    alertsList && (
+    alerts && (
       <>
         <div className="flex flex-col gap-2">
-          {alertsList.map((alert) => (
+          {alerts.map((alert) => (
             <div
               key={alert.id}
               className="flex h-14 bg-shark-900 rounded-md p-2 justify-between items-center"

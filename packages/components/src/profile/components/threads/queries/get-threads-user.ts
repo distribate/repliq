@@ -13,7 +13,7 @@ type GetThreadsUser = {
 export async function getThreadsUser({
   nickname, querySearch,
 }: GetThreadsUser) {
-  const res = await forumUserClient().user["get-user-threads"][":nickname"].$get({
+  const res = await forumUserClient.user["get-user-threads"][":nickname"].$get({
     param: { nickname },
     query: { querySearch }
   })
@@ -24,5 +24,5 @@ export async function getThreadsUser({
     return null;
   }
 
-  return data.length  ? data : null
+  return data.data.length ? data.data : null
 }

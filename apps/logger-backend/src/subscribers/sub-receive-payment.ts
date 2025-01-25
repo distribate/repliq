@@ -8,7 +8,7 @@ type PaymentReceived = {
   payload: PaymentCompleted['data']
 }
 
-export async function subscribeReceivePayment() {
+export function subscribeReceivePayment() {
   const nc = getNatsConnection()
 
   return nc.subscribe(PAYMENT_STATUS_SUBJECT, {

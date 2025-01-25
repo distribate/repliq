@@ -8,7 +8,7 @@ type CreateThreadComment = {
 export async function createThreadComment({
   content, threadId
 }: CreateThreadComment) {
-  const res = await forumCommentClient().comment["create-comment"].$post({
+  const res = await forumCommentClient.comment["create-comment"].$post({
     json: {
       content,
       parent_type: "thread",

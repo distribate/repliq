@@ -13,8 +13,8 @@ type SocialsCardProps = {
 }
 
 const socialsImages: Record<string, string> = {
-  "Telegram": TelegramLogo.src,
-  "Discord": DiscordLogo.src,
+  "Telegram": TelegramLogo,
+  "Discord": DiscordLogo,
 }
 
 const SocialsSupport = ({

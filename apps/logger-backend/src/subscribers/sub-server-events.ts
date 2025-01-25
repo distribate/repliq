@@ -37,7 +37,7 @@ const userLoginEventSchema = z.object({
   date: z.string(),
 });
 
-export const subscribeServerEvents = async () => {
+export const subscribeServerEvents = () => {
   const nc = getNatsConnection()
 
   return nc.subscribe(SERVER_USER_EVENT_SUBJECT, {

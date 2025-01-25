@@ -7,7 +7,7 @@ type UpdateUserFields = z.infer<typeof userDetailsSchema>
 export async function updateUserFields({
   criteria, value
 }: UpdateUserFields) {
-  const res = await forumUserClient().user["edit-user-details"].$post({
+  const res = await forumUserClient.user["edit-user-details"].$post({
     json: { criteria, value }
   })
 
@@ -17,5 +17,5 @@ export async function updateUserFields({
     return null;
   }
 
-  return data;
+  return data.data;
 }

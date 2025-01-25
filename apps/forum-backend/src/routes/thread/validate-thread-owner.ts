@@ -1,16 +1,16 @@
 import { forumDB } from "#shared/database/forum-db.ts"
 
 export async function validateThreadOwner(nickname: string, threadId: string) {
-  const threadOwner = await forumDB
+  const query = await forumDB
     .selectFrom("threads_users")
     .select(["user_nickname"])
     .where("thread_id", "=", threadId)
     .where("user_nickname", "=", nickname)
     .executeTakeFirst()
 
-  if (!threadOwner || !threadOwner.user_nickname) {
+  if (!query || !query.user_nickname) {
     return false
   }
 
-  return threadOwner.user_nickname === nickname
+  return query.user_nickname === nickname
 }

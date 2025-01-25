@@ -1,6 +1,5 @@
 "use server";
 
-import "server-only";
 import { createClient } from "@repo/shared/api/supabase-client.ts";
 
 type UpdateProperties = {

@@ -1,4 +1,4 @@
-import Link from "next/link";
+import { Link } from "@tanstack/react-router";
 import { Separator } from "@repo/ui/src/components/separator.tsx";
 import { DropdownMenuItem } from "@repo/ui/src/components/dropdown-menu.tsx";
 import { HoverCardItem } from "@repo/ui/src/components/hover-card.tsx";
@@ -7,7 +7,7 @@ import { LogoutModal } from "#modals/action-confirmation/components/logout/compo
 import { UserSettingsModal } from "#modals/user-settings/user-settings-modal.tsx";
 import { USER_URL } from "@repo/shared/constants/routes.ts";
 import { getUser } from "@repo/lib/helpers/get-user.ts";
-import { adminQuery } from "@repo/lib/queries/admin-query.ts";
+import { userGlobalOptionsQuery } from "@repo/lib/queries/user-global-options-query.ts";
 
 const COLLECTION_LINKS = [
   { name: "Мои темы", query: "threads" },
@@ -15,12 +15,13 @@ const COLLECTION_LINKS = [
 ];
 
 const AdminButton = () => {
-  const { data: isAdmin } = adminQuery();
-  if (!isAdmin) return null;
+  const { data } = userGlobalOptionsQuery();
+
+  if (!data?.is_admin) return null;
 
   return (
     <>
-      <Link href={{ pathname: "/admin" }}>
+      <Link to="/admin">
         <DropdownMenuItem>К панели админа</DropdownMenuItem>
       </Link>
       <Separator />
@@ -32,7 +33,7 @@ const ProfileLink = () => {
   const currentUser = getUser();
 
   return (
-    <Link href={USER_URL + currentUser.nickname}>
+    <Link to={USER_URL + currentUser.nickname}>
       <DropdownMenuItem>
         <Typography>Перейти к профилю</Typography>
       </DropdownMenuItem>
@@ -48,10 +49,8 @@ export const UserMenu = () => {
       {COLLECTION_LINKS.map((collection) => (
         <Link
           key={collection.name}
-          href={{
-            pathname: "/collection",
-            query: { type: collection.query },
-          }}
+          to="/collection"
+          search={{ type: collection.query }}
         >
           <DropdownMenuItem>
             <Typography>{collection.name}</Typography>

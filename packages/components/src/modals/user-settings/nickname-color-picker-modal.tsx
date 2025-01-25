@@ -21,7 +21,7 @@ export const NicknameColorPickerModal = () => {
       mutationKey={UPDATE_FIELD_MUTATION_KEY}
       contentClassName="min-w-[650px]"
       trigger={
-        <UserSettingOption title="Цвет никнейма" imageSrc={BlueDye.src}>
+        <UserSettingOption title="Цвет никнейма" imageSrc={BlueDye}>
           <div
             className={`flex items-center px-4 py-1 backdrop-blur-md rounded-md`}
             style={{

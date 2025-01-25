@@ -9,5 +9,5 @@ export const profileThreadsQuery = (nickname: string) => useQuery<UserThreads[] 
   queryKey: THREADS_QUERY_KEY(nickname),
   queryFn: () => getThreadsUser({ nickname }),
   refetchOnMount: false,
-  refetchOnWindowFocus: false,
+  refetchOnWindowFocus: false
 });

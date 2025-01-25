@@ -16,12 +16,11 @@ export const createIssueRoute = new Hono()
     try {
       const createdIssue = await createIssue({ ...result, nickname })
 
-      if (createdIssue) {
-        await publishIssuePayload({
-          title: createdIssue.title,
-          user_nickname: nickname
-        })
+      if (!createdIssue) {
+        return ctx.json({ error: "Error creating issue" }, 400);
       }
+
+      publishIssuePayload({ title: createdIssue.title, user_nickname: nickname })
 
       return ctx.json({ status: "Issue created" }, 200)
     } catch (e) {

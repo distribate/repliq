@@ -19,7 +19,7 @@ export const FavoriteItemModal = () => {
       <DialogTrigger>
         <UserSettingOption
           title="Любимый предмет"
-          imageSrc={DiamondPickaxe.src}
+          imageSrc={DiamondPickaxe}
         >
           <div className="flex items-center gap-1">
             <Typography className="text-base">

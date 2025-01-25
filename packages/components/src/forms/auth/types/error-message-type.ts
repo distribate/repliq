@@ -1,10 +1,7 @@
 export type AuthMessages =
-  | "notFound"
-  | "incorrectPassword"
-  | "something"
-  | "created"
-  | "alreadyOriginal"
-  | "alreadyForum"
+  | "Unsafe password"
+  | "Nickname invalid"
+  | "Success"
   | null;
 
 export interface ErrorMessageMap {

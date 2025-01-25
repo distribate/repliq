@@ -1,5 +1,3 @@
-"use client";
-
 import { useAuthBackgroundImage } from "../hooks/use-auth-bg-images.ts";
 import { DeleteButton } from "@repo/ui/src/components/detele-button.tsx";
 

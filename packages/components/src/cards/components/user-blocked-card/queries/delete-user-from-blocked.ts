@@ -7,7 +7,7 @@ export type DeleteUserFromBlocked = {
 export async function deleteUserFromBlocked({
   recipient,
 }: DeleteUserFromBlocked) {
-  const res = await forumUserClient().user["control-user-blocked"].$post({
+  const res = await forumUserClient.user["control-user-blocked"].$post({
     json: {
       recipient,
       type: "unblock"

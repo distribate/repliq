@@ -6,7 +6,7 @@ import { editUserSettingsBodySchema } from '@repo/types/schemas/user/edit-user-s
 export type UpdateUserSettings = Omit<z.infer<typeof editUserSettingsBodySchema>, "userId">
 
 export async function updateUserSettings(values: UpdateUserSettings) {
-  const res = await forumUserClient().user['edit-user-settings'].$post({
+  const res = await forumUserClient.user['edit-user-settings'].$post({
     json: values
   });
 
@@ -16,5 +16,5 @@ export async function updateUserSettings(values: UpdateUserSettings) {
     return null;
   }
 
-  return data
+  return data.data
 }

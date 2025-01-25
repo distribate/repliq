@@ -75,7 +75,7 @@ export const UserCoverPanel = ({
                 className="rounded-r-none px-6 hover:bg-shark-800"
               >
                 <img
-                  src={Photo?.src}
+                  src={Photo}
                   width={48}
                   className="w-[24px] h-[24px]"
                   height={48}

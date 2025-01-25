@@ -1,7 +1,7 @@
 import { forumUserClient } from "@repo/shared/api/forum-client";
 
 export async function getUserBanDetails(nickname: string) {
-  const res = await forumUserClient().user["get-user-ban-details"][":nickname"].$get({
+  const res = await forumUserClient.user["get-user-ban-details"][":nickname"].$get({
     param: {
       nickname,
     },

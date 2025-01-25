@@ -117,9 +117,9 @@ export const getUserProfileStatsRoute = new Hono()
         nickname, with_details
       });
 
-      return ctx.json(userProfileStats, 200);
+      return ctx.json({ data: userProfileStats }, 200);
     } catch (e) {
       return ctx.json({ error: throwError(e) }, 500);
     }
   }
-)
+  )

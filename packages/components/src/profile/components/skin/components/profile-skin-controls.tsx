@@ -6,13 +6,14 @@ import { useSkinStateChange } from "../hooks/use-skin-animation.ts";
 import { skinAnimationQuery } from "../queries/skin-query.ts";
 import { SKIN_ANIMATIONS } from "../constants/skin-animations.ts";
 import { UserEntity } from "@repo/types/entities/entities-type.ts";
-import { skinClient } from "@repo/shared/api/skin-client.ts";
+import { skinClient } from "@repo/shared/api/minecraft-client.ts";
 import { Dialog, DialogClose, DialogContent, DialogTrigger } from "@repo/ui/src/components/dialog.tsx";
 import { Typography } from "@repo/ui/src/components/typography.tsx";
 import { useState } from "react";
 import { ConfirmationActionModalTemplate } from "#templates/confirmation-action-modal-template.tsx";
 import { ConfirmationButton } from "#buttons/confirmation-action-button.tsx";
 import { cva, VariantProps } from "class-variance-authority";
+import { Link } from "@tanstack/react-router";
 
 const profileSkinControlVariants = cva("flex items-center justify-center cursor-pointer border border-shark-800 p-2 rounded-lg h-[50px] w-[50px]", {
   variants: {
@@ -41,7 +42,7 @@ const ProfileSkinControl = ({ variant, className, ...props }: ProfileSkinControl
 export const ProfileSkinDownloadLink = ({ nickname }: Pick<UserEntity, "nickname">) => {
   const [dialogOpen, setDialogOpen] = useState<boolean>(false);
 
-  const downloadUrl = skinClient["download-skin"][":nickname"].$url({
+  const downloadUrl = skinClient.skin["download-skin"][":nickname"].$url({
     param: { nickname },
   });
 
@@ -57,8 +58,8 @@ export const ProfileSkinDownloadLink = ({ nickname }: Pick<UserEntity, "nickname
       </DialogTrigger>
       <DialogContent>
         <ConfirmationActionModalTemplate title="Скачать скин?">
-          <a
-            href={downloadUrl.href}
+          <Link
+            to={downloadUrl.href}
             onClick={() => setDialogOpen(false)}
             target="_blank"
             rel="noopener noreferrer"
@@ -68,7 +69,7 @@ export const ProfileSkinDownloadLink = ({ nickname }: Pick<UserEntity, "nickname
             <Typography className="text-shark-950 text-base font-medium">
               Скачать
             </Typography>
-          </a>
+          </Link>
           <DialogClose>
             <ConfirmationButton actionType="cancel" title="Отмена" />
           </DialogClose>

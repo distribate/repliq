@@ -1,0 +1,63 @@
+import { Hono } from "hono";
+import { forumDB } from "#shared/database/forum-db.ts";
+import { cmiDB } from "#shared/database/cmi-db.ts";
+import { sql } from "kysely";
+import { VOTIFIER_REWARD } from "@repo/shared/constants/rewards";
+import { publishVoteNotify } from "#publishers/pub-vote-notify.ts";
+
+async function postVoted(nickname: string) {
+  const result = await forumDB
+    .insertInto("voted_users")
+    .values({ nickname })
+    .onConflict((ob) => ob.column("nickname").doNothing())
+    .execute();
+
+  if (Number(result[0].numInsertedOrUpdatedRows) === 0) {
+    return
+  }
+
+  const addCharism = await cmiDB
+    .updateTable("cmi_users")
+    .set({
+      Balance: sql`Balance + ${VOTIFIER_REWARD}`
+    })
+    .where("username", "=", nickname)
+    .executeTakeFirstOrThrow()
+
+  if (Number(addCharism.numUpdatedRows) === 0) {
+    return
+  }
+
+  publishVoteNotify(nickname)
+
+  return
+}
+
+export const processPlayerVoteRoute = new Hono()
+  .post("/process-player-vote", async (ctx) => {
+    const parsedBody = await ctx.req.parseBody()
+
+    const nick = parsedBody["nick"] as string;
+    const time = parsedBody["time"] as string;
+    const sign = parsedBody["sign"] as string;
+
+    if (!nick || !time || !sign) {
+      return ctx.text('error', 400);
+    }
+
+    if (nick.length > 16) {
+      return ctx.text('nickname limit', 400);
+    }
+
+    const expSign = new Bun.CryptoHasher("sha1")
+      .update(nick + time + Bun.env.VOTIFIEF_SECRET_KEY)
+      .digest('hex');
+
+    if (sign !== expSign) {
+      return ctx.text('error', 400);
+    }
+
+    await postVoted(nick);
+
+    return ctx.text('ok', 200);
+  })

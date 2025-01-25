@@ -1,5 +1,3 @@
-"use client";
-
 import { Plus } from "lucide-react";
 import { useAuthBackgroundImage } from "../hooks/use-auth-bg-images.ts";
 import { ChangeEvent } from "react";

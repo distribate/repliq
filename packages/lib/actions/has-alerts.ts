@@ -1,12 +1,10 @@
-"use server";
-
-import { cookies } from "next/headers";
 import { ALERTS_COOKIE_KEY } from "@repo/shared/keys/cookie.ts";
+import { getCookieByKey } from "../helpers/get-cookie-by-key";
 
-export async function hasAlertsShow(): Promise<boolean> {
-  const hasAlertsShowing = cookies().get(ALERTS_COOKIE_KEY);
+export function hasAlertsShow(): boolean {
+  const hasAlertsShowing = getCookieByKey(ALERTS_COOKIE_KEY);
 
-  if (hasAlertsShowing?.value === "show") return true;
+  if (hasAlertsShowing === "show") return true;
 
-  return hasAlertsShowing?.value !== "hide";
+  return hasAlertsShowing !== "hide";
 }

@@ -22,13 +22,6 @@ module.exports = {
       current: "currentColor",
       inherit: colors.inherit,
     },
-    borderRadius: {
-      none: "0",
-      sm: "16px",
-      md: "24px",
-      lg: "28px",
-      xl: "32px",
-    },
     extend: {
       backgroundImage: {
         "gradient-radial": "radial-gradient(var(--gradient-color-stops))",
@@ -264,6 +257,9 @@ module.exports = {
         "fade-in-right": "fade-in-right 1s ease-in-out 0.25s 1",
         "fade-in-up": "fade-in-up 1s ease-in-out 0.25s 1",
         "flash-fade": "flash-fade 3s ease-out 1",
+      },
+      boxShadow: {
+        'minecraft-panel': 'inset 4px -4px 1px rgba(0, 0, 0, 0.6), inset -4px 4px 1px rgba(255, 255, 255, 0.4)',
       },
     },
   },

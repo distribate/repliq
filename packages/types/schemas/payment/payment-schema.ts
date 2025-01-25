@@ -1,55 +1,41 @@
 import { z } from 'zod';
+import { donateSchema } from '../entities/donate-schema';
+import { currencyCryptoSchema, currencyFiatSchema } from '../entities/currencies-schema';
 
-export const currencyCryptoSchema = z.enum([
-  "BTC", "ETH", 'TON', 'USDT(TON)', 'USDT(TRC20)', 'LLAMA', 'GRAM'
-]);
-
-export const currencyFiatSchema = z.enum([ 'RUB' ]);
-
-export const otherCurrencySchema = z.enum([
-  "BTC", "ETH", "USDT(TRC20)"
-])
-
-export const arcCurrencySchema = z.enum([
-  "TON", "USDT(TON)",
-  // "LLAMA", "GRAM"
-])
-
-export const paymentTypeSchema = z.enum([
-  'donate', 'belkoin', 'charism'
-]);
-
-export const donateSchema = z.enum([
-  'authentic', 'arkhont', 'loyal'
-]);
-
-export const currencySchema = z.union([ currencyFiatSchema, currencyCryptoSchema ]);
-
-export const statusSchema = z.enum([
-  'created', 'received', 'captured', 'cancelled', 'failed'
-]);
-
-export const paymentValueSchema = z.union([
-  donateSchema, z.number(), z.string()
-]);
-
-export const createOrderBodySchema = z.object({
-  nickname: z.string().min(1, {
-    message: "Никнейм должен содержать хотя бы 1 символ"
-  }).max(16, {
-    message: "Превышена максимальная длина никнейма"
-  }),
-  // email: z.string().email('Введите корректный адрес электронной почты'),
-  privacy: z
-  .boolean()
-  .refine((value) => value === true, {
-    message: 'Вы должны ознакомиться с правилами!',
-  }),
-}).extend({
-  currency: currencySchema,
+export const paymentTypeSchema = z.enum(['donate', 'belkoin', 'charism', 'item', 'event']);
+export const paymentCurrencySchema = z.union([currencyFiatSchema, currencyCryptoSchema]);
+export const paymentStatusSchema = z.enum(['created', 'received', 'captured', 'cancelled', 'failed']);
+export const paymentValueSchema = z.union([donateSchema, z.number(), z.string()]);
+export const paymentMetaSchema = z.object({
+  nickname: z.string().min(1, { message: "Никнейм должен содержать хотя бы 1 символ" }).max(32, { message: "Превышена максимальная длина никнейма" }),
   paymentType: paymentTypeSchema,
   paymentValue: paymentValueSchema,
-});
+})
+
+export function paymentTypeValidator({ data, ctx }: { data: any, ctx: z.RefinementCtx }) {
+  if (data.paymentType === 'donate' && !donateSchema.safeParse(data.paymentValue, ctx).success) {
+    ctx.addIssue({
+      code: "custom",
+      message: `Invalid donate value. Needed: ${donateSchema.options.join(", ")}`
+    })
+  }
+
+  if ([paymentTypeSchema.options].includes(data.paymentType) && typeof data.paymentValue !== "number") {
+    ctx.addIssue({
+      code: "custom",
+      message: "Invalid payment value. Needed a number"
+    })
+  }
+}
+
+export const createOrderBodySchema = z.object({
+  // email: z.string().email('Введите корректный адрес электронной почты'),
+  privacy: z.boolean()
+    .refine((value) => value === true, {
+      message: 'Вы должны ознакомиться с правилами!',
+    }),
+  currency: paymentCurrencySchema,
+}).merge(paymentMetaSchema).superRefine((data, ctx) => paymentTypeValidator({ data, ctx }))
 
 export const responsePaymentSchema = z.object({
   event: z.string(),
@@ -71,8 +57,8 @@ export const responsePaymentSchema = z.object({
       wallet: z.string(),
     }),
   }).extend({
-    status: statusSchema,
-    currency: currencySchema,
+    status: paymentStatusSchema,
+    currency: paymentCurrencySchema,
   }),
 });
 

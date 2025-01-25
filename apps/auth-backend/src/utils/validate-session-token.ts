@@ -1,19 +1,26 @@
-import type {
-  Session,
-  SessionValidationResult,
-  User,
-} from "../routes/create-session.ts";
 import { encodeHexLowerCase } from "@oslojs/encoding";
 import { HTTPException } from "hono/http-exception";
 import { sha256 } from "@oslojs/crypto/sha2";
 import { updateSessionExpires } from "../lib/queries/update-session.ts";
 import { deleteSession } from "../lib/queries/delete-session.ts";
 import { getSession } from "../lib/queries/get-session.ts";
+import type { Insertable, Selectable } from "kysely";
+import type { DB, Users } from "@repo/types/db/forum-database-types.ts";
+
+export type Session = Insertable<Pick<DB, "users_session">["users_session"]>;
+export type User = Selectable<Pick<Users, "id" | "nickname" | "uuid">>;
+
+export type SessionValidationResult =
+  | { session: Omit<Session, "token">; user: User }
+  | { session: null; user: null };
 
 export async function validateSessionToken(
   token: string,
 ): Promise<SessionValidationResult> {
-  const sessionId = encodeHexLowerCase(sha256(new TextEncoder().encode(token)));
+  const sessionId = encodeHexLowerCase(
+    sha256(new TextEncoder().encode(token))
+  );
+  
   const row = await getSession(sessionId)
 
   if (!row) {
@@ -22,7 +29,7 @@ export async function validateSessionToken(
 
   const { session_id, expires_at, nickname, uuid, userId } = row;
 
-  const session: Session = { session_id, nickname, expires_at };
+  const session: Omit<Session, "token"> = { session_id, nickname, expires_at };
   const user: User = { nickname, uuid, id: userId };
   const expiresAt = new Date(session.expires_at);
 
@@ -39,7 +46,7 @@ export async function validateSessionToken(
   if (Date.now() >= expiresAt.getTime() - 1000 * 60 * 60 * 24 * 15) {
     session.expires_at = new Date(Date.now() + 1000 * 60 * 60 * 24 * 30);
 
-    await updateSessionExpires({ expires_at, session_id })
+    await updateSessionExpires({ expires_at: session.expires_at, session_id })
   }
 
   return { session, user };

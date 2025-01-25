@@ -9,7 +9,9 @@ export const getRecommendedFriendsRoute = new Hono()
 
 
     try {
-      return ctx.json([], 200)
+      // TODO: implement get recommended friends
+
+      return ctx.json({ data: [] }, 200)
     } catch (e) {
       return ctx.json({ error: throwError(e) }, 500);
     }

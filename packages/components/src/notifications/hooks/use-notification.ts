@@ -1,5 +1,6 @@
 import { checkNotification } from "#notifications/queries/check-notification.ts";
 import { NOTIFICATIONS_QUERY_KEY } from "#notifications/queries/notifications-query.ts";
+import { USER_GLOBAL_OPTIONS_QUERY_KEY } from "@repo/lib/queries/user-global-options-query";
 import { Notifications } from "@repo/types/db/forum-database-types";
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { Selectable } from "kysely"
@@ -34,6 +35,14 @@ export const useNotification = () => {
           ...updatedNotifications[indexToUpdate], 
           read: true,
         };
+      }
+      
+      const checkedNotifications = currentNotifications.filter(notification => notification.read === false)
+
+      console.log(checkedNotifications)
+
+      if (!checkedNotifications || checkedNotifications?.length <= 1) {
+        qc.invalidateQueries({ queryKey: USER_GLOBAL_OPTIONS_QUERY_KEY })
       }
 
       return qc.setQueryData(NOTIFICATIONS_QUERY_KEY, updatedNotifications)

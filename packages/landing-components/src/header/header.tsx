@@ -62,11 +62,11 @@ export const Header = () => {
 		>
 			<Link href="/" className="bg-transparent cursor-pointer relative md:-right-[40px] top-3 xl:-right-[60px]">
 				<img
-					src="/images/fasberry_logo.png"
+					src="/images/fasberry_logo.webp"
 					width={224}
 					height={64}
 					title="Fasberry"
-					alt=""
+					alt="Fasberry"
 				/>
 			</Link>
 			<div className="hidden xl:flex gap-x-4 items-center justify-start pr-[132px]">

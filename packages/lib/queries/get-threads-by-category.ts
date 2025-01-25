@@ -27,5 +27,5 @@ export async function getThreadsCategories({
     return null;
   }
 
-  return data
+  return data.data
 }

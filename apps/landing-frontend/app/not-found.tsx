@@ -12,7 +12,7 @@ export default async function NotFoundPage() {
 			id="not-found"
 			className="flex min-h-screen justify-center items-center px-8"
 			style={{
-				backgroundImage: 'url("/images/static/dirt.png")'
+				backgroundImage: 'url("/images/static/dirt.webp")'
 			}}
 		>
 			<div className="flex flex-col items-center gap-y-2">

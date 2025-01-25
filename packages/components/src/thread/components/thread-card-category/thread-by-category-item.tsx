@@ -8,7 +8,7 @@ import {
 import type { ThreadPreview } from "@repo/types/entities/thread-type.ts"
 
 export const ThreadByCategoryItem = ({
-  created_at, description, id, is_comments, title, thread_comments_count, thread_views_count, owner,
+  created_at, is_comments, title, thread_comments_count, owner,
 }: ThreadPreview) => {
   const createdAt = dayjs(created_at).from(dayjs());
 

@@ -1,7 +1,7 @@
 import type { Context } from "./message-handler.ts"
 import { tempAdmins, userStates } from "../../shared/maps/maps.ts"
-import { getUserId } from "../../queries/get-user-id.ts";
-import { addNewAdmin, deleteAdmin } from "../../queries/update-admins.ts";
+import { getUserId } from "../queries/get-user-id.ts";
+import { addNewAdmin, deleteAdmin } from "../queries/update-admins.ts";
 
 export const adminHandler = async (ctx: Context, userId: string) => {
   if (tempAdmins.has(userId) && ctx.text) {

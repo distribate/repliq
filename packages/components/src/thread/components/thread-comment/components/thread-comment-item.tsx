@@ -9,7 +9,7 @@ import { USER_URL } from "@repo/shared/constants/routes.ts";
 import { Badge } from "@repo/ui/src/components/badge.tsx";
 import { SELECT_COMMENT_MUTATION_KEY } from "../hooks/use-highlight.ts";
 import { useEffect, useState } from "react";
-import Link from "next/link";
+import { Link } from "@tanstack/react-router";
 import dynamic from "next/dynamic";
 import { getUser } from "@repo/lib/helpers/get-user.ts";
 import { ThreadCommentItemContent } from "#thread/components/thread-comment/components/thread-comment-item-content.tsx";
@@ -56,7 +56,7 @@ export const ThreadCommentItem = ({
         <ThreadCommentMoreActions id={id} thread_id={thread_id} />
       )}
       <div className="flex items-center gap-2">
-        <Link href={USER_URL + user_nickname}>
+        <Link to={USER_URL + user_nickname}>
           <Avatar
             nickname={user_nickname}
             propWidth={42}

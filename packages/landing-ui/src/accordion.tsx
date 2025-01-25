@@ -1,7 +1,6 @@
 "use client"
 
 import * as AccordionPrimitive from "@radix-ui/react-accordion"
-import Image from "next/image"
 import { cn } from "@repo/lib/utils/ui/cn"
 import { ComponentPropsWithoutRef, ElementRef, forwardRef } from 'react';
 
@@ -34,7 +33,7 @@ const AccordionTrigger = forwardRef<
     >
       {children}
       {withBook && (
-        <Image
+        <img
           src="/images/minecraft/icons/knowledge_book.webp"
           className="w-[16px] h-[20px]"
           width={26}

@@ -1,29 +1,29 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { AUTH_QUERY_KEY, AuthQuery } from "../queries/auth-query.ts";
 import { AUTH_REDIRECT, USER_URL } from "@repo/shared/constants/routes.ts";
-import { useRouter } from "next/navigation";
+import { useNavigate } from "@tanstack/react-router";
 import { registerForum } from '#forms/auth/queries/register-forum.ts';
 import { loginForum } from "../queries/login-forum.ts";
+import { CURRENT_USER_QUERY_KEY } from "@repo/lib/queries/current-user-query.ts";
 
 export const AUTH_MUTATION_KEY = ["auth-mutation"];
 
 const LOGIN_MESSAGES: Record<string, string> = {
   "Invalid password": "Неверный пароль",
   "User not found": "Пользователь не найден",
-  "User not found on the forum": "Пользователь не зарегистрирован на форуме",
-  "User not found on the server": "Пользователь не зарегистрирован на сервере",
+  "Success": "Входим в аккаунт..."
 }
 
 const REGISTER_MESSAGES: Record<string, string> = {
-  "Invalid password": "Неверный пароль",
-  "User already exists on the forum": "Пользователь уже зарегистрирован на форуме",
-  "User not found on the server": "Пользователь не зарегистрирован на сервере",
+  "Nickname invalid": "Неверное имя пользователя.",
+  "Unsafe password": "Ненадежный пароль",
+  "User already exists": "Такой пользователь уже зарегистрирован",
   "Success": "Пользователь зарегистрирован"
 }
 
 export const useAuth = () => {
   const qc = useQueryClient();
-  const { push } = useRouter();
+  const navigate = useNavigate();
 
   const setAuthValuesMutation = useMutation({
     mutationKey: AUTH_MUTATION_KEY,
@@ -46,13 +46,23 @@ export const useAuth = () => {
           }))
         }
 
-        push(USER_URL + nickname);
+        qc.setQueryData(AUTH_QUERY_KEY, (prev: AuthQuery) => ({
+          ...prev,
+          status: LOGIN_MESSAGES[login.status] ?? "Что-то пошло не так",
+        }))
+
+        await qc.prefetchQuery({
+          queryKey: CURRENT_USER_QUERY_KEY,
+        })
+
+        navigate({ to: USER_URL + nickname });
+
         return qc.resetQueries({ queryKey: AUTH_QUERY_KEY });
       }
 
       if (type === "sign-up") {
         const register = await registerForum({
-          nickname, password, realName, findout,
+          nickname, password, details: { findout, realName },
         });
 
         if (!register) return;
@@ -69,7 +79,8 @@ export const useAuth = () => {
           status: REGISTER_MESSAGES[register.status],
         }));
 
-        push(AUTH_REDIRECT)
+        navigate({ to: AUTH_REDIRECT });
+
         return qc.resetQueries({ queryKey: AUTH_QUERY_KEY });
       }
     },

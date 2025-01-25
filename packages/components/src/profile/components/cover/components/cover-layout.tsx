@@ -1,5 +1,3 @@
-"use client";
-
 import { InView } from "react-intersection-observer";
 import { useCover } from "#profile/components/cover/hooks/use-cover.ts";
 import { coverQuery } from "#profile/components/cover/queries/cover-query.ts";

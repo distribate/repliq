@@ -7,7 +7,8 @@ import { ThreadHistory } from "#thread/components/saved-thread/components/thread
 export const HistoryThreads = () => {
   const { isCompact, isExpanded } = useSidebarControl();
   const { data: savedThreads } = historyThreadsQuery();
-  if (!savedThreads) return null;
+
+  if (!savedThreads || !savedThreads.length) return null;
 
   const savedThreadsHeight = isCompact || !isExpanded ? 260 : 150;
 

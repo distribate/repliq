@@ -1,7 +1,7 @@
 import { forumUserClient } from "@repo/shared/api/forum-client"
 
 export async function getUserStatus(nickname: string) {
-  const res = await forumUserClient().user["get-user-game-status"][":nickname"].$get({
+  const res = await forumUserClient.user["get-user-game-status"][":nickname"].$get({
     param: {
       nickname
     }
@@ -13,5 +13,5 @@ export async function getUserStatus(nickname: string) {
     return null
   }
 
-  return data
+  return data.data
 }

@@ -21,7 +21,7 @@ export async function getUserIsFriend({
       eb('user_2', '=', recipient),
     ]),
   )
-  .$narrowType<{ count: number }>()
+  .$castTo<{ count: number }>()
   .executeTakeFirst();
   
   if (!friendships) return false;

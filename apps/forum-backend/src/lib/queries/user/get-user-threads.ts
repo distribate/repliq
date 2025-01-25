@@ -7,6 +7,21 @@ type GetUserThreads = {
   nickname: string
 } & Pick<z.infer<typeof getUserThreadsSchema>, "querySearch">
 
+export async function getUserThreadsCount(nickname: string) {
+  const query = await forumDB
+    .selectFrom("threads_users")
+    .select(forumDB.fn.countAll().as('count'))
+    .$castTo<{ count: number }>()
+    .where("user_nickname", "=", nickname)
+    .executeTakeFirst()
+
+  if (!query) {
+    return 0
+  }
+
+  return query.count
+}
+
 export const getUserThreads = async ({
   nickname, querySearch
 }: GetUserThreads) => {

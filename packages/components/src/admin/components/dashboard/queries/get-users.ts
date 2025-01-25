@@ -1,6 +1,5 @@
 "use server";
 
-import "server-only";
 import { createClient } from "@repo/shared/api/supabase-client.ts";
 import { ExtendedUserEntity } from "@repo/types/entities/entities-type.ts";
 import type { UserDetailed } from "@repo/types/entities/user-type";

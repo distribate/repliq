@@ -28,14 +28,14 @@ export const getUserCoverImageRoute = new Hono()
       const userCoverImage = await getUserCoverImage(nickname);
 
       if (!userCoverImage || !userCoverImage?.cover_image) {
-        return ctx.json({ image_url: null }, 200);
+        return ctx.json({ data: null }, 200);
       }
 
       const { cover_image } = userCoverImage;
 
       const imageUrl = await getCoverImageUrl(cover_image);
 
-      return ctx.json({ image_url: imageUrl }, 200);
+      return ctx.json({ data: imageUrl }, 200);
     } catch (e) {
       return ctx.json({ error: throwError(e) }, 500);
     }

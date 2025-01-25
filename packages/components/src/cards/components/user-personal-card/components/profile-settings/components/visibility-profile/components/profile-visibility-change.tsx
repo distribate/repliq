@@ -1,5 +1,4 @@
 import { Typography } from "@repo/ui/src/components/typography.tsx";
-import React from "react";
 import {
   UPDATE_FIELD_MUTATION_KEY,
 } from "@repo/lib/hooks/use-update-current-user.ts";
@@ -26,7 +25,7 @@ export const ProfileVisibilityChange = () => {
     <DynamicModal
       mutationKey={UPDATE_FIELD_MUTATION_KEY}
       trigger={
-        <UserSettingOption title="Тип аккаунта:" imageSrc={Barrier.src}>
+        <UserSettingOption title="Тип аккаунта:" imageSrc={Barrier}>
           <Typography className="text-base">
             {profile_visibility === "all" ? "открытый" : "закрытый"}
           </Typography>

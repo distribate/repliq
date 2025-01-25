@@ -5,7 +5,7 @@ import { z } from "zod"
 export type CreateIssue = z.infer<typeof createIssueSchema>
 
 export async function createIssue(values: CreateIssue) {
-  const res = await forumUserClient().user["create-issue"].$post({
+  const res = await forumUserClient.user["create-issue"].$post({
     json: values
   })
 

@@ -1,14 +1,14 @@
 import { throwError } from '@repo/lib/helpers/throw-error.ts';
 import { getNickname } from "#utils/get-nickname-from-storage.ts";
 import { Hono } from "hono";
-import { getUser } from "./get-user";
 import { getUserRelation } from "#lib/queries/user/get-user-relation.ts";
-import { getUserFriendsCount } from "#lib/queries/user/get-user-friends-count.ts";
+import { getUserFriendsCount } from "#lib/queries/user/get-user-friends.ts";
 import { getFavoriteItem } from "#lib/queries/user/get-user-favorite-item.ts";
 import { getUserRegistrationDateOnServer } from "#lib/queries/user/get-user-registration-date-on-server.ts";
-import { getUserThreadsCount } from "#lib/queries/user/get-user-threads-count.ts";
+import { getUserThreadsCount } from "#lib/queries/user/get-user-threads.ts";
 import { isUserDetailed } from "@repo/lib/helpers/is-user-detailed.ts";
 import type { UserDetailed } from "@repo/types/entities/user-type";
+import { getUser } from '#lib/queries/user/get-user.ts';
 
 type UserSummaryStatus = "blocked" | "private" | "default" | "banned"
 
@@ -81,9 +81,7 @@ export const getUserSummaryRoute = new Hono()
         }
       }
 
-      return ctx.json<{
-        status: UserSummaryStatus; data: UserSummary
-      }>({ status: "default", data: user }, 200)
+      return ctx.json<{ data: UserSummary, status: UserSummaryStatus }>({ status: "default", data: user }, 200)
     } catch (e) {
       return ctx.json({ error: throwError(e) }, 500);
     }

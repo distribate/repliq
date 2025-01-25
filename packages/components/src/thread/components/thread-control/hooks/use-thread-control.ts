@@ -2,7 +2,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { THREAD_REACTIONS_QUERY_KEY } from "../../thread-reactions/queries/thread-reactions-query.ts";
 import { updateThread } from "../queries/update-thread-fields.ts";
 import { toast } from "sonner";
-import { useRouter } from "next/navigation";
+import { useRouter, useNavigate } from "@tanstack/react-router";
 import {
   THREAD_CONTROL_QUERY_KEY,
   ThreadControlQuery,
@@ -15,7 +15,8 @@ export const THREAD_CONTROL_MUTATION_KEY = ["thread-control-update"];
 
 export const useThreadControl = () => {
   const qc = useQueryClient();
-  const { replace, refresh } = useRouter();
+  const { invalidate } = useRouter();
+  const navigate = useNavigate()
 
   const setThreadNewValuesMutation = useMutation({
     mutationFn: async (values: Partial<ThreadControlQuery>) => {
@@ -48,7 +49,7 @@ export const useThreadControl = () => {
 
       return updateThread({ threadId, values });
     },
-    onSettled: refresh,
+    onSettled: () => invalidate(),
     onSuccess: async (data, variables) => {
       if (!data) return toast.error("Произошла ошибка при обновлении");
       if (data === "no-update-fields")
@@ -74,7 +75,7 @@ export const useThreadControl = () => {
         qc.resetQueries({ queryKey: THREAD_REACTIONS_QUERY_KEY(variables) }),
       ]);
 
-      replace("/");
+      navigate({ to: "/" });
     },
   });
 

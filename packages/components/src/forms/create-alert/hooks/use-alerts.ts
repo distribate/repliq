@@ -1,25 +1,27 @@
 import { useMutation } from "@tanstack/react-query";
-import { createAlert, CreateAlert } from "../queries/create-alert.ts";
 import { toast } from "sonner";
-import { useRouter } from "next/navigation";
+import { useRouter } from "@tanstack/react-router";
 import { deleteAlert } from "../queries/delete-alert.ts";
 import { UpdateAlert, updateAlert } from "../queries/update-alert.ts";
+import { AlertEntity } from "@repo/types/entities/entities-type.ts";
+
+export type CreateAlert = Omit<AlertEntity, "id" | "created_at" | "creator">;
 
 export const ALERT_UPDATE_MUTATION_KEY = ["alert-update"];
 export const ALERT_CREATE_MUTATION_KEY = ["alert-create"];
 
 export const useAlerts = () => {
-  const { refresh } = useRouter();
+  const { invalidate } = useRouter();
 
   const addAlertMutation = useMutation({
     mutationKey: ALERT_CREATE_MUTATION_KEY,
-    mutationFn: async (values: CreateAlert) => createAlert(values),
+    mutationFn: async (values: CreateAlert) => null,
     onSuccess: async (data) => {
-      if (!data) return toast.error("Произошла ошибка при создании объявления");
+      // if (!data) return toast.error("Произошла ошибка при создании объявления");
 
-      toast.success("Объявление создано");
+      // toast.success("Объявление создано");
 
-      return refresh();
+      // return invalidate();
     },
     onError: (e) => {
       throw new Error(e.message);
@@ -31,7 +33,7 @@ export const useAlerts = () => {
     onSuccess: async (data) => {
       if (!data) return toast.error("Произошла ошибка при удалении объявления");
 
-      return refresh();
+      return invalidate();
     },
     onError: (e) => {
       throw new Error(e.message);
@@ -46,7 +48,7 @@ export const useAlerts = () => {
 
       toast.success("Объявление обновлено");
 
-      return refresh();
+      return invalidate();
     },
     onError: (e) => {
       throw new Error(e.message);

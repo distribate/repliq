@@ -9,7 +9,7 @@ export type GetPosts = Omit<z.infer<typeof getUserPostsSchema>, 'currentUserNick
 export async function getPosts({
   requestedUserNickname, ascending = false, searchQuery, filteringType, range
 }: GetPosts) {
-  const res = await forumUserClient().user['get-user-posts'][':nickname'].$get({
+  const res = await forumUserClient.user['get-user-posts'][':nickname'].$get({
     query: {
       ascending: ascending.toString(),
       searchQuery,

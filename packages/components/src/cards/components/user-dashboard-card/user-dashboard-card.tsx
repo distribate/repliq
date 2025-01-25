@@ -4,7 +4,7 @@ import { Grip } from "lucide-react";
 import { DropdownWrapper } from '#wrappers/dropdown-wrapper.tsx';
 import { HoverCardItem } from "@repo/ui/src/components/hover-card.tsx";
 import { Separator } from "@repo/ui/src/components/separator.tsx";
-import { useRouter } from "next/navigation";
+import { useNavigate } from "@tanstack/react-router";
 import { USER_URL } from "@repo/shared/constants/routes.ts";
 import { UserEntity } from "@repo/types/entities/entities-type.ts";
 
@@ -16,7 +16,7 @@ type UserDashboardCardProps = Pick<
 export const UserDashboardCard = ({
   nickname
 }: UserDashboardCardProps) => {
-  const { push } = useRouter();
+  const navigate = useNavigate();
 
   return (
     <div className="flex items-center justify-between w-full p-2 cursor-pointer bg-player-background/20 rounded-[8px]">
@@ -30,7 +30,7 @@ export const UserDashboardCard = ({
           trigger={<Grip size={20} className="cursor-pointer text-shark-400" />}
           content={
             <div className="flex flex-col gap-2 w-full h-full">
-              <HoverCardItem onClick={() => push(USER_URL + nickname)}>
+              <HoverCardItem onClick={() => navigate({ to: USER_URL + nickname })}>
                 <Typography>К профилю</Typography>
               </HoverCardItem>
               <Separator />

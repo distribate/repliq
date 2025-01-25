@@ -6,7 +6,7 @@ export const ProfilePrivated = () => {
     <div className="flex w-full items-center justify-center h-full gap-12 px-12 py-6 relative z-[4]">
       <div className="flex flex-col items-center gap-y-2 p-6">
         <img
-          src={MissingTexture.src}
+          src={MissingTexture}
           alt="Страница скрыта"
           width={64}
           height={64}

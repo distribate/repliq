@@ -1,5 +1,4 @@
 import { Typography } from "@repo/ui/src/components/typography.tsx";
-import Image from "next/image";
 import {
   Dialog,
   DialogContent,
@@ -11,9 +10,18 @@ import { AuthBackgroundImagesDeleteButton } from "./auth-bg-images-delete-button
 import { HoverCardWrapper } from "../../../../../wrappers/hover-card-wrapper.tsx";
 import { Separator } from "@repo/ui/src/components/separator.tsx";
 import { getAuthImages } from "../queries/get-auth-images.ts";
+import { useQuery } from "@tanstack/react-query";
+import { createQueryKey } from "@repo/lib/helpers/query-key-builder.ts";
 
-export const AuthBackgroundImages = async () => {
-  const authImages = await getAuthImages();
+const authImagesQuery = () => useQuery({
+  queryKey: createQueryKey("ui", ["auth-background-images"]),
+  queryFn: getAuthImages,
+  refetchOnWindowFocus: false,
+  refetchOnMount: false
+})
+
+export const AuthBackgroundImages = () => {
+  const { data: authImages } = authImagesQuery()
 
   return (
     authImages && (
@@ -37,7 +45,7 @@ export const AuthBackgroundImages = async () => {
           {authImages.slice(0, 50).map((image, i) => (
             <Dialog key={i}>
               <DialogTrigger className="group hover:brightness-75 duration-300 relative">
-                <Image
+                <img
                   src={image.url}
                   alt=""
                   height={500}
@@ -47,13 +55,12 @@ export const AuthBackgroundImages = async () => {
                 <AuthBackgroundImagesDeleteButton imageName={image.name} />
               </DialogTrigger>
               <DialogContent className="max-w-6xl p-0">
-                <Image
+                <img
                   key={i}
                   src={image.url}
                   alt=""
                   height={1920}
                   width={1080}
-                  quality={100}
                   className="w-full h-full rounded-md"
                 />
               </DialogContent>

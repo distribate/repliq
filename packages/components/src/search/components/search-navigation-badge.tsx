@@ -1,7 +1,7 @@
 "use client";
 
 import { NavigationBadge } from "#navigation/components/navigation-badge.tsx";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { useSearch, useNavigate, useLocation } from "@tanstack/react-router";
 import { SearchType } from "#sidebar/desktop/components/sidebar-content/search/queries/search-query.ts";
 
 const SEARCH_TYPE_QUERY_KEY = "type";
@@ -15,9 +15,12 @@ export const SearchNavigationBadge = ({
   title,
   paramValue,
 }: SearchNavigationBadgeProps) => {
-  const pathname = usePathname();
-  const searchParams = useSearchParams();
-  const { push } = useRouter();
+  const {pathname} = useLocation();
+  const searchParams = useSearch({
+    from: "/_protected/search",
+  });
+  
+  const navigate = useNavigate();
 
   const createQueryString = () => {
     const query = new URLSearchParams(searchParams);
@@ -29,18 +32,18 @@ export const SearchNavigationBadge = ({
     const url = pathname + "?";
 
     if (paramValue === "all") {
-      return push(pathname);
+      return navigate({ to: pathname });
     }
 
-    push(url + createQueryString());
+    navigate({ to: url + createQueryString() });
   };
 
   const isActive = (): boolean => {
-    if (paramValue === "all" && !searchParams.get(SEARCH_TYPE_QUERY_KEY)) {
+    if (paramValue === "all" && !searchParams[SEARCH_TYPE_QUERY_KEY]) {
       return true;
     }
 
-    return paramValue === searchParams.get(SEARCH_TYPE_QUERY_KEY);
+    return paramValue === searchParams[SEARCH_TYPE_QUERY_KEY]
   };
 
   return (

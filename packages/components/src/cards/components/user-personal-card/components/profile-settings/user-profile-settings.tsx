@@ -78,7 +78,7 @@ export const UserProfileSettings = () => {
             <NicknameColorPickerModal />
             <UserSettingOption
               title="Обводка вокруг шапки профиля"
-              imageSrc={Lead.src}
+              imageSrc={Lead}
             >
               <OutlineCover />
             </UserSettingOption>
