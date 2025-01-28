@@ -1,5 +1,3 @@
-"use client";
-
 import { Avatar } from "#user/components/avatar/components/avatar.tsx";
 import { USER_URL } from "@repo/shared/constants/routes.ts";
 import { Sheet, SheetContent, SheetTrigger } from "@repo/ui/src/components/sheet.tsx";
@@ -9,12 +7,12 @@ import { Typography } from "@repo/ui/src/components/typography";
 import { UserNickname } from "#user/components/name/nickname.tsx";
 import { UserDonate } from "#user/components/donate/components/donate.tsx";
 import { forwardRef, HTMLAttributes, useState } from "react";
-import { SidebarButton } from "#sidebar/desktop/components/sidebar-content/links/components/sidebar-target.tsx";
 import { useNavigate } from "@tanstack/react-router";
 import { Separator } from "@repo/ui/src/components/separator";
 import { UserSettingsModal } from "#modals/user-settings/user-settings-modal.tsx";
 import { useInView } from "react-intersection-observer";
 import { cva, VariantProps } from "class-variance-authority";
+import { SidebarButton } from "#sidebar/desktop/components/sidebar/sidebar-button.tsx";
 
 const sidebarMobileVariants = cva(
   `flex items-center justify-between rounded-b-lg gap-6 z-[10] sticky top-0 w-full px-4 bg-shark-950 h-[60px]`,
@@ -59,9 +57,7 @@ export const SidebarMobile = () => {
   const [open, setOpen] = useState(false);
   const { nickname, donate, favorite_item } = getUser();
   const navigate = useNavigate()
-  const { inView, ref } = useInView({
-    threshold: 1
-  })
+  const { inView, ref } = useInView({ threshold: 1})
 
   const handle = (func?: () => void) => {
     setOpen(false)

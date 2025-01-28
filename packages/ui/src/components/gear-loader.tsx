@@ -11,7 +11,7 @@ export const GearLoader = ({ height = 36, width = 36 }: GearLoaderProps) => {
     <div className={`w-[${width}px] h-[${height}px]`}>
       <img
         alt=""
-        src={Gear.src}
+        src={Gear}
         width={width}
         height={height}
         loading="eager"

@@ -16,18 +16,15 @@ export const useSearchControl = () => {
       return qc.setQueryData(SEARCH_QUERY_KEY, (prev: SearchQuery) => ({
         ...prev,
         ...values,
-        queryValue: values.queryValue
-          ? values.queryValue.length >= 1
-            ? values.queryValue
-            : null
+        queryValue: values.queryValue ? values.queryValue.length >= 1 
+          ? values.queryValue : null 
           : null,
       }));
     },
     onSuccess: async (_, variables) => {
       if (!variables.queryValue) {
         return qc.setQueryData(SEARCH_QUERY_KEY, (prev: SearchQuery) => ({
-          ...prev,
-          results: null,
+          ...prev, results: null
         }));
       }
 
@@ -41,12 +38,24 @@ export const useSearchControl = () => {
   const handleSearchMutation = useMutation({
     mutationFn: async (queryValue: string) => {
       if (!searchState.type) return;
-      
-      return getSearchResults({
-        value: queryValue,
-        type: searchState.type,
-        limit: SEARCH_SIDEBAR_LIMIT,
-      });
+
+      switch (searchState.type) {
+        case "threads":
+          return getSearchResults({
+            queryValue,
+            type: searchState.type,
+            limit: SEARCH_SIDEBAR_LIMIT,
+            threadsType: "title"
+          });
+        case "users":
+          return getSearchResults({
+            queryValue,
+            type: searchState.type,
+            limit: SEARCH_SIDEBAR_LIMIT
+          });
+        default:
+          break;
+      }
     },
     onSuccess: async (data) => {
       return qc.setQueryData(SEARCH_QUERY_KEY, (prev: SearchQuery) => ({

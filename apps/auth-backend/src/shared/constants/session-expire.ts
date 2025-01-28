@@ -1,0 +1,1 @@
+export const DEFAULT_SESSION_EXPIRE = 3 * 24 * 60 * 60 * 1000; // 30 days

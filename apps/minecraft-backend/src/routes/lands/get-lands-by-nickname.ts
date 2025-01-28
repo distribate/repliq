@@ -2,6 +2,8 @@ import { forumDB } from "#shared/database/forum-db.ts";
 import { landsDB } from "#shared/database/lands-db.ts";
 import { throwError } from "@repo/lib/helpers/throw-error";
 import { Hono } from "hono";
+import { z } from "zod";
+import { zValidator } from "@hono/zod-validator";
 
 async function getLandsByNickname(nickname: string) {
   const query = await landsDB
@@ -13,7 +15,8 @@ async function getLandsByNickname(nickname: string) {
       "lands_lands.members",
       "lands_lands.type",
       "lands_lands.created_at",
-      "lands_lands.title"
+      "lands_lands.title",
+      "lands_lands.ulid"
     ])
     .where("lands_players.name", "=", nickname)
     .execute();
@@ -44,9 +47,14 @@ async function getLandsByNickname(nickname: string) {
   return lands;
 }
 
+const getLandsByNicknameSchema = z.object({
+  exclude: z.string().optional()
+})
+
 export const getLandsByNicknameRoute = new Hono()
-  .get("/get-user-lands/:nickname", async (ctx) => {
+  .get("/get-user-lands/:nickname", zValidator("query", getLandsByNicknameSchema), async (ctx) => {
     const { nickname } = ctx.req.param()
+    const { exclude } = getLandsByNicknameSchema.parse(ctx.req.query())
 
     const userPreference = await forumDB
       .selectFrom("users_settings")
@@ -61,7 +69,11 @@ export const getLandsByNicknameRoute = new Hono()
     // if !user in forum then show own lands
 
     try {
-      const lands = await getLandsByNickname(nickname)
+      let lands = await getLandsByNickname(nickname)
+
+      if (exclude) {
+        lands = lands.filter((land) => land.ulid !== exclude)
+      }
 
       return ctx.json({ data: lands }, 200)
     } catch (e) {

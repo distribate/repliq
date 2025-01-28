@@ -22,11 +22,10 @@ const initial: ReportQuery = {
   reportedItem: null,
 };
 
-export const reportQuery = () =>
-  useQuery<ReportQuery, Error>({
-    queryKey: REPORT_QUERY_KEY,
-    gcTime: Infinity,
-    staleTime: Infinity,
-    initialData: initial,
-    refetchOnWindowFocus: false,
-  });
+export const reportQuery = () => useQuery<ReportQuery, Error>({
+  queryKey: REPORT_QUERY_KEY,
+  gcTime: Infinity,
+  staleTime: Infinity,
+  initialData: initial,
+  refetchOnWindowFocus: false,
+});

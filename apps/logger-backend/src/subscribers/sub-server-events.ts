@@ -20,12 +20,7 @@ async function updateUserStatus({
 
   return await forumDB
     .insertInto("users_game_status")
-    .values({
-      nickname,
-      status,
-      joined,
-      quited
-    })
+    .values({ nickname, status, joined, quited })
     .onConflict((oc) => oc.column("nickname").doUpdateSet(updateValues))
     .returningAll()
     .executeTakeFirstOrThrow();

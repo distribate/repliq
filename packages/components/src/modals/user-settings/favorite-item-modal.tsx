@@ -23,14 +23,12 @@ export const FavoriteItemModal = () => {
         >
           <div className="flex items-center gap-1">
             <Typography className="text-base">
-              {favoriteItem && favorite_item
-                ? favoriteItem.title
-                : "не выбрано"}
+              {favoriteItem && favorite_item ? favoriteItem.title : "не выбрано"}
             </Typography>
           </div>
         </UserSettingOption>
       </DialogTrigger>
-      <DialogContent className="max-w-2xl">
+      <DialogContent className="!lg:w-[600px]">
         <FavoriteItems />
       </DialogContent>
     </Dialog>

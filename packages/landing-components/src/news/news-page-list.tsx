@@ -15,7 +15,10 @@ const NewsPageItem = ({
 }: NewsType["data"][0]) => {
   return (
     <Dialog>
-      <DialogTrigger className="flex flex-col group overflow-hidden h-[320px] relative border-2 border-neutral-600 rounded-xl">
+      <DialogTrigger 
+        className="flex flex-col group overflow-hidden h-[320px] 
+          relative border-2 border-neutral-600 rounded-xl"
+      >
         <img
           src={imageUrl}
           alt=""
@@ -26,8 +29,9 @@ const NewsPageItem = ({
           loading="lazy"
         />
         <div
-          className="flex transition-all rounded-t-xl ease-out group-hover:duration-300 duration-300 flex-col absolute 
-          bg-gradient-to-t from-black via-black/80 to-transparent bottom-0 overflow-hidden p-3 w-full"
+          className="flex transition-all rounded-t-xl ease-out group-hover:duration-300 duration-300 
+            flex-col absolute bg-gradient-to-t from-black via-black/80 to-transparent
+            bottom-0 overflow-hidden p-3 w-full"
         >
           <div
             className="flex flex-col items-start group-hover:-translate-y-0 translate-y-14 transition-all 
@@ -39,8 +43,8 @@ const NewsPageItem = ({
             <Typography
               text_color="gray"
               position="left"
-              className="transition-all group-hover:opacity-0 
-                group-hover:overflow-hidden group-hover:absolute group-hover:duration-300 duration-300 opacity-100 ease-in text-lg"
+              className="transition-all group-hover:opacity-0 group-hover:overflow-hidden group-hover:absolute 
+                group-hover:duration-300 duration-300 opacity-100 ease-in text-lg"
             >
               {dayjs(created_at).format('D MMM YYYY')}
             </Typography>
@@ -48,7 +52,8 @@ const NewsPageItem = ({
           <Typography
             text_color="gray"
             position="left"
-            className="group-hover:-translate-y-0 translate-y-24 transition-all group-hover:duration-300 duration-300 ease-out text-lg"
+            className="group-hover:-translate-y-0 translate-y-24 transition-all 
+              group-hover:duration-300 duration-300 ease-out text-lg"
           >
             {description.length > 38 ? description.slice(0, 36) + "..." : description}
           </Typography>

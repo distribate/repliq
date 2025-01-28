@@ -5,6 +5,7 @@ import { getUserSettings } from "#lib/queries/user/get-user-setting.ts";
 import { getNickname } from "#utils/get-nickname-from-storage.ts";
 import type { UserDonateVariant } from "@repo/types/entities/entities-type";
 import { Hono } from "hono";
+import { supabase } from '#shared/supabase/supabase-client.ts';
 
 export const getMeRoute = new Hono()
   .use(async (ctx, next) => {
@@ -26,7 +27,20 @@ export const getMeRoute = new Hono()
         getUserSettings(nickname)
       ]);
 
-      return ctx.json({ data: { ...user, donate: user.donate satisfies UserDonateVariant, preferences } }, 200)
+      let cover_image: string | null = null
+
+      if (user.cover_image) {
+        cover_image = supabase.storage.from("user_images").getPublicUrl(user.cover_image).data.publicUrl
+      }
+
+      return ctx.json({
+        data: {
+          ...user,
+          cover_image,
+          donate: user.donate satisfies UserDonateVariant,
+          preferences
+        }
+      }, 200)
     } catch (e) {
       return ctx.json({ error: throwError(e) }, 500);
     }

@@ -28,5 +28,7 @@ export const friendStatusQuery = (initiator: string, recipient: string) => useSu
     }
 
     return await getUserFriendStatus(recipient)
-  }
+  },
+  refetchOnMount: false,
+  refetchOnWindowFocus: false
 })

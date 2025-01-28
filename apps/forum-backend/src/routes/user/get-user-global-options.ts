@@ -4,38 +4,35 @@ import { throwError } from "@repo/lib/helpers/throw-error";
 import { Hono } from "hono";
 
 async function isAdmin(nickname: string): Promise<boolean> {
-  const query = await forumDB
+  const exists = await forumDB
     .selectFrom("users")
     .innerJoin("admins", "admins.user_id", "users.id")
-    .select(forumDB.fn.count("admins.user_id").as("count"))
-    .$castTo<{ count: number }>()
+    .select("users.nickname")
     .where("users.nickname", "=", nickname)
     .executeTakeFirst();
 
-  return query ? query.count > 0 : false;
+  return !!exists;
 }
 
 async function hasNewNotifications(nickname: string) {
-  const query = await forumDB
+  const exists = await forumDB
     .selectFrom("notifications")
-    .select(forumDB.fn.countAll().as("count"))
+    .select("nickname")
     .where("nickname", "=", nickname)
     .where("read", "=", false)
-    .$castTo<{ count: number }>()
     .executeTakeFirst();
 
-  return query ? query.count > 0 : false
+  return !!exists;
 }
 
 async function hasNewFriends(nickname: string) {
-  const query = await forumDB
+  const exists = await forumDB
     .selectFrom("friends_requests")
-    .select(forumDB.fn.countAll().as("count"))
+    .select("id")
     .where("recipient", "=", nickname)
-    .$castTo<{ count: number }>()
     .executeTakeFirst();
 
-  return query ? query.count > 0 : false
+  return !!exists
 }
 
 export const getUserGlobalOptionsRoute = new Hono()
@@ -61,6 +58,7 @@ export const getUserGlobalOptionsRoute = new Hono()
         }
       }, 200)
     } catch (e) {
+      console.log(e)
       return ctx.json({ error: throwError(e) }, 500);
     }
   })

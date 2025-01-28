@@ -7,31 +7,22 @@ import { getUserFriendsSchema } from "@repo/types/schemas/user/get-user-friends-
 import { GetFriendsResponse } from '@repo/types/schemas/friend/friend-types';
 import { decode } from "cbor-x"
 import ky from "ky";
+import { parseBooleanToString } from "@repo/lib/helpers/parse-boolean-to-string.ts"
 
 export type GetFriends = Pick<UserEntity, "nickname"> & z.infer<typeof getUserFriendsSchema>
 
-export const parseBooleanToString = (input: boolean): "true" | "false" => {
-  if (input === true) {
-    return "true";
-  } else if (input === false) {
-    return "false";
-  }
-
-  throw new Error(`Invalid string boolean: ${input}`);
-};
-
 export async function getFriends({
-  nickname, sort_type, with_details: rawWithDetails, ascending: rawAscending, cursor
+  nickname, sort_type, with_details: rawWithDetails, ascending: rawAscending, cursor, limit
 }: GetFriends): Promise<GetFriendsResponse | null> {
   const with_details = parseBooleanToString(rawWithDetails)
   const ascending = parseBooleanToString(rawAscending)
 
   const url = forumUserClient.user["get-user-friends"][":nickname"].$url({
     param: { nickname },
-    query: { sort_type, with_details, ascending, cursor }
+    query: { sort_type, with_details, ascending, cursor, limit: limit ? `${limit}` : undefined },
   })
 
-  const res = await ky.get(url, { 
+  const res = await ky.get(url, {
     credentials: "include",
   })
 

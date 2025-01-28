@@ -1,7 +1,5 @@
-"use client"
-
 import { useCallback, useEffect, useState } from 'react'
-import { useEventListener } from 'usehooks-ts'
+import { useEventListener } from './use-event-listener'
 
 const IS_SERVER = typeof window === 'undefined'
 

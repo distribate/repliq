@@ -17,13 +17,11 @@ import {
   PostControlQuery,
 } from "#post/components/post-item/queries/post-control-query.ts";
 import { Typography } from "@repo/ui/src/components/typography.tsx";
+import { Cloud } from "lucide-react";
 
-export type PostControlProps = Pick<PostEntity, "id"> &
-  Pick<UserEntity, "nickname">;
+export type PostControlProps = Pick<PostEntity, "id" | "isComments"> & Pick<UserEntity, "nickname">;
 
-// const handleComments = () => controlPostMutation.mutate({ type: 'comments', isComments, id: postId });
-
-export const PostControl = ({ id, nickname }: PostControlProps) => {
+export const PostControl = ({ id, nickname, isComments }: PostControlProps) => {
   const qc = useQueryClient();
   const { nickname: currentUserNickname } = getUser();
   const { controlPostMutation } = useControlPost();
@@ -31,13 +29,14 @@ export const PostControl = ({ id, nickname }: PostControlProps) => {
   const posts = qc.getQueryData<PostsQueryResponse>(POSTS_QUERY_KEY(nickname))?.data;
   if (!posts) return null;
 
-  let post = posts.find((post) => post.id === id);
+  let post = posts.find(p => p.id === id);
   if (!post) return null;
 
   const { isPinned } = post;
 
-  const handleRemovePost = () => controlPostMutation.mutate({ type: "remove", id, nickname });
+  const handleRemovePost = () => controlPostMutation.mutate({ type: "delete", id, nickname });
   const handlePin = () => controlPostMutation.mutate({ type: "pin", id, nickname });
+  const handleComments = () => controlPostMutation.mutate({ type: "comments", id, nickname });
 
   const handleEditContent = () => {
     return qc.setQueryData(POST_CONTROL_QUERY_KEY(id),
@@ -46,6 +45,8 @@ export const PostControl = ({ id, nickname }: PostControlProps) => {
   };
 
   const isOwner = currentUserNickname === nickname;
+
+  const pinnedPost = posts.find(p => p.isPinned) && !isPinned || false;
 
   return (
     <div className="w-fit">
@@ -62,36 +63,31 @@ export const PostControl = ({ id, nickname }: PostControlProps) => {
               created_at={post.created_at}
               visibility={post.visibility}
               isPinned={post.isPinned}
-              user_nickname={post.user_nickname}
+              nickname={post.nickname}
             />
             {isOwner && (
               <>
                 <Separator />
-                {/* <HoverCardItem
-                  className="gap-2 items-center"
-                  onClick={handleEditContent}
-                >
+                <HoverCardItem className="gap-2 items-center" onClick={handleEditContent} >
                   <Pen size={16} className="text-shark-300" />
                   <Typography>Редактировать пост</Typography>
                 </HoverCardItem>
                 <HoverCardItem
-                  className="gap-2 items-center"
+                  className={`gap-2 items-center ${pinnedPost ? "select-none opacity-50 cursor-not-allowed pointer-events-none" : ""}`}
                   onClick={handlePin}
                 >
                   <Pin size={16} className="text-shark-300" />
                   <Typography state={isPinned ? "active" : "default"}>
                     {isPinned ? `Открепить пост` : `Закрепить пост`}
                   </Typography>
-                </HoverCardItem> */}
-                {/*<HoverCardItem onClick={handleComments}>*/}
-                {/*  <Typography state={isComments ? 'active' : 'default'}>*/}
-                {/*    {isComments ? `Выключить комментарии` : `Включить комментарии`}*/}
-                {/*  </Typography>*/}
-                {/*</HoverCardItem>*/}
-                <HoverCardItem
-                  className="gap-2 items-center"
-                  onClick={handleRemovePost}
-                >
+                </HoverCardItem>
+                <HoverCardItem className="gap-2 items-center" onClick={handleComments}>
+                  <Cloud size={16} className="text-shark-300" />
+                  <Typography state={isComments ? 'active' : 'default'}>
+                    {isComments ? `Выключить комментарии` : `Включить комментарии`}
+                  </Typography>
+                </HoverCardItem>
+                <HoverCardItem className="gap-2 items-center" onClick={handleRemovePost} >
                   <Trash size={16} className="text-shark-300" />
                   <Typography>Удалить пост</Typography>
                 </HoverCardItem>

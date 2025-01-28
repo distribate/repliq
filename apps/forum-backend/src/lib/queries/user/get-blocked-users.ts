@@ -1,9 +1,9 @@
 import { forumDB } from '#shared/database/forum-db.ts'
-import type { Expression, SqlBool } from 'kysely';
+import { executeWithCursorPagination } from 'kysely-paginate';
 
 type GetBlockedUsers = {
   nickname: string,
-  cursor: number | null
+  cursor?: string
 }
 
 export const getBlockedUsers = async ({
@@ -16,24 +16,37 @@ export const getBlockedUsers = async ({
     "users.id",
     "users.nickname",
     "users.name_color",
-    "users.real_name",
     "users.donate",
     "users_blocked.created_at"
   ])
-  .where((eb) => {
-    const filters: Expression<SqlBool>[] = []
-    
-    if (cursor !== null) {
-      // @ts-expect-error
-      filters.push(eb("users_blocked.id", ">", cursor))
-    }
-    
-    filters.push(eb("users_blocked.initiator", "=", nickname))
-    
-    return eb.and(filters)
-  })
+  .where("users_blocked.initiator", "=", nickname)
   .orderBy("users_blocked.created_at", "desc")
   .limit(16)
   
-  return await query.execute()
+  const res = await executeWithCursorPagination(query, {
+    perPage: 16,
+    after: cursor,
+    fields: [
+      {
+        key: "created_at",
+        direction: "desc",
+        expression: "users_blocked.created_at",
+      }
+    ],
+    parseCursor: (cursor) => {
+      return {
+        created_at: new Date(cursor.created_at),
+      }
+    },
+  })
+
+  return {
+    data: res.rows,
+    meta: {
+      hasNextPage: res.hasNextPage ?? false,
+      hasPrevPage: res.hasPrevPage ?? false,
+      endCursor: res.endCursor,
+      startCursor: res.startCursor
+    }
+  }
 }

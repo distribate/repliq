@@ -11,8 +11,8 @@ import { getUser } from "@repo/lib/helpers/get-user.ts";
 
 export const UserAdvancedSettings = () => {
   const { data: globalPreferencesState } = globalPreferencesQuery()
-  const { updateAlertsShowingMutation, updateThreadsSavingMutation } = useUpdateGlobalPreferences()
-  const { alerts, autoSaveThreads } = globalPreferencesState
+  const { updateAlertsShowingMutation, updateThreadsSavingMutation, updateIntroVisibilityMutation } = useUpdateGlobalPreferences()
+  const { alerts, autoSaveThreads, intro } = globalPreferencesState
   const { updateUserSettingsMutation } = useUpdateUserSettings()
   const { preferences: { send_notifications }} = getUser()
 
@@ -20,21 +20,28 @@ export const UserAdvancedSettings = () => {
     <div className="flex flex-col gap-y-4 items-center w-full">
       <Typography variant="dialogTitle">Дополнительные настройки</Typography>
       <div className="flex flex-col gap-y-2 w-full">
-        <UserSettingOption title="Объявления" imageSrc={CopperHorn.src}>
+        <UserSettingOption title="Объявления" imageSrc={CopperHorn}>
           <Switch
             checked={alerts === "show"}
             defaultChecked={alerts === "show"}
             onCheckedChange={_ => updateAlertsShowingMutation.mutate()}
           />
         </UserSettingOption>
-        <UserSettingOption title="История тредов" imageSrc={Paper.src}>
+        <UserSettingOption title="Интро" imageSrc={CopperHorn}>
+          <Switch
+            checked={intro === "show"}
+            defaultChecked={intro === "show"}
+            onCheckedChange={_ => updateIntroVisibilityMutation.mutate()}
+          />
+        </UserSettingOption>
+        <UserSettingOption title="История тредов" imageSrc={Paper}>
           <Switch
             checked={autoSaveThreads}
             defaultChecked={autoSaveThreads}
             onCheckedChange={_ => updateThreadsSavingMutation.mutate()}
           />
         </UserSettingOption>
-        <UserSettingOption title="Уведомления" imageSrc={Bell.src}>
+        <UserSettingOption title="Уведомления" imageSrc={Bell}>
           <Switch
             checked={send_notifications}
             defaultChecked={send_notifications}

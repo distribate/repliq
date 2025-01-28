@@ -1,11 +1,25 @@
 import { useQuery } from "@tanstack/react-query";
 import { MinecraftItemEntity } from "@repo/types/entities/entities-type.ts";
+import { forumLandingClient } from "@repo/shared/api/forum-client";
+import { createQueryKey } from "@repo/lib/helpers/query-key-builder";
 
-export const favoriteItemsQuery = () => {
-  return useQuery<MinecraftItemEntity[] | null, Error>({
-    queryKey: ["ui", "minecraft-items"],
-    queryFn: () => null,
-    retry: 1,
-    refetchOnWindowFocus: false,
-  });
-};
+async function getFavoriteItems() {
+  const res = await forumLandingClient["get-minecraft-items"].$get()
+
+  const data = await res.json()
+
+  if ("error" in data) {
+    return null
+  }
+
+  return data.data
+}
+
+export const FAVORITE_ITEMS_QUERY_KEY = createQueryKey("ui", ["minecraft-items"])
+
+export const favoriteItemsQuery = () => useQuery<MinecraftItemEntity[] | null, Error>({
+  queryKey: FAVORITE_ITEMS_QUERY_KEY,
+  queryFn: () => getFavoriteItems(),
+  refetchOnWindowFocus: false,
+  refetchOnMount: false,
+});

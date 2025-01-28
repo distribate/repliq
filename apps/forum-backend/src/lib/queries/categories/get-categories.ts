@@ -10,9 +10,10 @@ export type CategoryModel = {
 export async function getCategories(): Promise<CategoryModel[]> {
   const categories = await forumDB
     .selectFrom("category")
+    .innerJoin("threads", "category.id", "threads.category_id")
     .select([
-      "id",
-      "title",
+      "category.id",
+      "category.title",
       forumDB.fn.count("threads.id").as("threads_count")
     ])
     .groupBy("category.id")
@@ -21,7 +22,7 @@ export async function getCategories(): Promise<CategoryModel[]> {
   return categories.map((category) => ({
     id: Number(category.id),
     title: category.title,
-    has_threads: Number(category.threads_count) > 0,
-    threads_count: Number(category.threads_count),
+    has_threads: Number(category.threads_count) > 0, 
+    threads_count: Number(category.threads_count), 
   }));
 }

@@ -1,15 +1,10 @@
-"use client";
-
 import {
   categoryThreadsQuery,
-  CategoryThreadsQuery,
 } from "../queries/category-threads-query.ts";
 import { Skeleton } from "@repo/ui/src/components/skeleton.tsx";
 import { ThreadLayout } from "#thread/components/thread-layout/thread-layout.tsx";
 import { ThreadByCategoryItem } from "#thread/components/thread-card-category/thread-by-category-item.tsx";
 import { ThreadNotFound } from "#templates/threads-not-found.tsx";
-
-type CategoryThreads = Pick<CategoryThreadsQuery, "category_id">;
 
 const CategoryThreadsSkeleton = () => {
   return (
@@ -28,21 +23,36 @@ const CategoryThreadsSkeleton = () => {
   );
 };
 
-export const CategoryThreads = ({ category_id }: CategoryThreads) => {
-  const { data: categoryThreads, isLoading, isError } = categoryThreadsQuery({
-    category_id,
+export const CategoryThreads = ({ category_id }: { category_id: string }) => {
+  const { data, isLoading, isError } = categoryThreadsQuery({
+    id: category_id
   });
 
   if (isLoading) return <CategoryThreadsSkeleton />;
 
-  if (!categoryThreads || isError) return <ThreadNotFound />;
+  if (!data || isError) return <ThreadNotFound />;
+
+  const threads = data?.data
+  const meta = data?.meta
+
+  const hasMore = meta.hasNextPage
+
+  if (!threads) return null;
 
   return (
     <div className="flex flex-col gap-y-2 w-full h-full">
-      {categoryThreads.map((thread) => (
-        <ThreadLayout id={thread.id} title={thread.title} owner={thread.owner}>
-          {/* @ts-ignore */}
-          <ThreadByCategoryItem {...thread} />
+      {threads.map((thread) => (
+        <ThreadLayout key={thread.id} id={thread.id} title={thread.title} owner={{ nickname: thread.nickname, name_color: thread.name_color }}>
+          <ThreadByCategoryItem
+            title={thread.title}
+            id={thread.id}
+            owner={{ nickname: thread.nickname, name_color: thread.name_color }}
+            created_at={thread.created_at}
+            thread_comments_count={0}
+            thread_views_count={0}
+            is_comments={false}
+            description={""}
+          />
         </ThreadLayout>
       ))}
     </div>

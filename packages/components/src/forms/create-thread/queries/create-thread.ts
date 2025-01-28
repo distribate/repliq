@@ -17,7 +17,7 @@ const createThreadSchema = createThreadSchemaRequest.extend({
 
 type CreateThread = z.infer<typeof createThreadSchema>;
 
-const fileArrayToUint8Array = async (files: File[] | null) => {
+export const fileArrayToUint8Array = async (files: File[] | null) => {
   if (!files) return null;
 
   const uint8ArrayFiles = await Promise.all(

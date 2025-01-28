@@ -1,5 +1,3 @@
-"use client";
-
 import { Typography } from "@repo/ui/src/components/typography.tsx";
 import { DropdownMenuItem } from "@repo/ui/src/components/dropdown-menu.tsx";
 import { DropdownWrapper } from "#wrappers/dropdown-wrapper.tsx";
@@ -87,9 +85,9 @@ const ProfileFriendsFilteringView = () => {
       }}
       trigger={
         <div className="flex items-center gap-1">
-          <Typography 
-            className="text-shark-300" 
-            textSize="medium" 
+          <Typography
+            className="text-shark-300"
+            textSize="medium"
           >
             По дате добавления
           </Typography>
@@ -101,7 +99,7 @@ const ProfileFriendsFilteringView = () => {
             Фильтровать по
           </Typography>
           <div className="flex flex-col gap-y-2">
-            {FRIENDS_SORT.map(({name, value}) => (
+            {FRIENDS_SORT.map(({ name, value }) => (
               <DropdownMenuItem
                 key={value}
                 onClick={(e) => handleSort(e, value)}
@@ -126,7 +124,8 @@ export const ProfileFriendsFiltering = () => {
       <div className="flex items-center gap-1 w-fit">
         <Typography
           textColor="shark_white"
-          className="text-[22px] font-semibold"
+          textSize="big"
+          className="font-semibold"
         >
           Друзья
         </Typography>

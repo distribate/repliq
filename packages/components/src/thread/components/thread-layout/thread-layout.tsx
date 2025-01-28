@@ -1,5 +1,3 @@
-"use client";
-
 import { Link } from "@tanstack/react-router";
 import { useHistoryThreads } from "../saved-thread/hooks/use-history-threads.tsx";
 import { THREAD_URL } from "@repo/shared/constants/routes.ts";

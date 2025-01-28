@@ -1,5 +1,3 @@
-"use client";
-
 import { Skeleton } from "@repo/ui/src/components/skeleton.tsx";
 import {
   SEARCH_PAGE_QUERY_KEY,
@@ -14,7 +12,7 @@ import { SearchPageAll } from "#search/components/search-page-all.tsx";
 import { useMutationState, useQueryClient } from "@tanstack/react-query";
 import { SEARCH_PAGE_RESULTS_MUTATION_KEY } from "#search/hooks/use-search-page.ts";
 import { useInView } from "react-intersection-observer";
-import { useEffect } from "react";
+import { Suspense, useEffect } from "react";
 import { SEARCH_PAGE_LIMIT } from "@repo/shared/constants/limits.ts";
 
 type SearchPageResultsProps = {
@@ -60,11 +58,11 @@ export const SearchPageResults = ({ type }: SearchPageResultsProps) => {
   if (!searchState.queryValue) return <SearchPageRelated />;
 
   return (
-    <>
+    <Suspense fallback={<SearchPageResultsSkeleton />}>
       {type === "threads" && <SearchPageThreads />}
       {type === "users" && <SearchPageUsers />}
       {type === "all" && <SearchPageAll />}
       <div ref={ref} className="h-[1px] w-full" />
-    </>
+    </Suspense>
   );
 };

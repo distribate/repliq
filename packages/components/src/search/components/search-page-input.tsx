@@ -1,5 +1,3 @@
-"use client";
-
 import { Input } from "@repo/ui/src/components/input.tsx";
 import { useSearch, useRouterState, useLocation } from "@tanstack/react-router";
 import { ChangeEvent, useEffect, useState } from "react";

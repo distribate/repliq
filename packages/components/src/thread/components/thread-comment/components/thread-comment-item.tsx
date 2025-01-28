@@ -10,13 +10,13 @@ import { Badge } from "@repo/ui/src/components/badge.tsx";
 import { SELECT_COMMENT_MUTATION_KEY } from "../hooks/use-highlight.ts";
 import { useEffect, useState } from "react";
 import { Link } from "@tanstack/react-router";
-import dynamic from "next/dynamic";
 import { getUser } from "@repo/lib/helpers/get-user.ts";
 import { ThreadCommentItemContent } from "#thread/components/thread-comment/components/thread-comment-item-content.tsx";
+import { lazy, Suspense } from "react";
 
-const ThreadCommentMoreActions = dynamic(() =>
+const ThreadCommentMoreActions = lazy(() =>
   import("./thread-comment-more-actions.tsx").then(
-    (m) => m.ThreadCommentMoreActions,
+    (m) => ({ default: m.ThreadCommentMoreActions }),
   ),
 );
 
@@ -53,7 +53,9 @@ export const ThreadCommentItem = ({
        flex flex-col h-fit gap-y-4 px-4 py-2 rounded-md bg-shark-950 relative min-w-[450px] w-fit max-w-[80%]`}
     >
       {isCommentOwner && (
-        <ThreadCommentMoreActions id={id} thread_id={thread_id} />
+        <Suspense>
+          <ThreadCommentMoreActions id={id} thread_id={thread_id} />
+        </Suspense>
       )}
       <div className="flex items-center gap-2">
         <Link to={USER_URL + user_nickname}>

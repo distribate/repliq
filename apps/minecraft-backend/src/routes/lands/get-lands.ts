@@ -33,8 +33,16 @@ async function getLands({
       }
     },
   })
-
-  return { data: result.rows, ...result }
+ 
+  const lands = result.rows.map(land => {
+    return {
+      ...land,
+      members: JSON.parse(land.members),
+      area: JSON.parse(land.area),
+    }
+  })
+  
+  return { data: lands, ...result }
 }
 
 const getLandsSchema = z.object({

@@ -10,7 +10,9 @@ export const CommunityGalleryItem = () => {
   const [api, setApi] = useState<CarouselApi>();
 
   useEffect(() => {
-    if (api && selectedIndex !== null) api.scrollTo(selectedIndex, true);
+    if (api && selectedIndex !== null) {
+      api.scrollTo(selectedIndex, true)
+    };
   }, [api, selectedIndex]);
 
   return (

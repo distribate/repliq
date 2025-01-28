@@ -1,5 +1,3 @@
-"use client";
-
 import { ChevronDown } from "lucide-react";
 import { SearchType } from "#sidebar/desktop/components/sidebar-content/search/queries/search-query.ts";
 import { Button } from "@repo/ui/src/components/button.tsx";
@@ -7,10 +5,7 @@ import { DropdownWrapper } from "#wrappers/dropdown-wrapper.tsx";
 import { Typography } from "@repo/ui/src/components/typography.tsx";
 import { DropdownMenuItem } from "@repo/ui/src/components/dropdown-menu.tsx";
 import { useSearchPage } from "#search/hooks/use-search-page.ts";
-import {
-  searchPageQuery,
-  SearchPageQuery,
-} from "#search/queries/search-page-query.ts";
+import { searchPageQuery, SearchPageQuery } from "#search/queries/search-page-query.ts";
 import { isValue } from "@repo/lib/helpers/check-is-value.ts";
 
 type SearchPageFilterProps = {
@@ -31,11 +26,7 @@ export const SearchPageFilter = ({ type }: SearchPageFilterProps) => {
   const { setValueMutation } = useSearchPage();
   const { data: searchState } = searchPageQuery();
 
-  const handleSearchFilter = (
-    type: Pick<SearchPageFilter, "value">["value"],
-  ) => {
-    return setValueMutation.mutate({ type });
-  };
+  const handleSearchFilter = (t: Pick<SearchPageFilter, "value">["value"]) => setValueMutation.mutate({ type: t });
 
   const isSearchType = isValue(searchState.type);
 
@@ -52,10 +43,7 @@ export const SearchPageFilter = ({ type }: SearchPageFilterProps) => {
           className="flex cursor-pointer
             disabled:pointer-events-none items-center justify-center disabled:cursor-not-allowed rounded-md w-[40px] h-[80px]"
         >
-          <ChevronDown
-            size={32}
-            className="text-shark-300 disabled:opacity-60"
-          />
+          <ChevronDown size={32} className="icon-color disabled:opacity-60"/>
         </Button>
       }
       content={
@@ -73,11 +61,7 @@ export const SearchPageFilter = ({ type }: SearchPageFilterProps) => {
                   handleSearchFilter(option.value);
                 }}
               >
-                <Typography
-                  className={
-                    isSearchType(option.value) ? "text-caribbean-green-500" : ""
-                  }
-                >
+                <Typography state={isSearchType(option.value) ? "active" : "default"}>
                   {option.title}
                 </Typography>
               </DropdownMenuItem>

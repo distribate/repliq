@@ -14,12 +14,16 @@ export const useLogout = () => {
     mutationKey: LOGOUT_MUTATION_KEY,
     mutationFn: () => deleteSession(),
     onSuccess: async (data) => {
-      if (data.success) {
-        navigate({ to: AUTH_REDIRECT });
-        qc.clear();
+      if (!data.status) {
+        return toast.error("Произошла ошибка");
       }
+
+      toast.info("Вы вышли из аккаунта")
+
+      await navigate({ to: AUTH_REDIRECT });
+
+      qc.clear();
     },
-    onSettled: () => toast.info("Вы вышли из аккаунта"),
     onError: (e) => {
       throw new Error(e.message);
     },

@@ -5,6 +5,7 @@ import { useNavigate } from "@tanstack/react-router";
 import { registerForum } from '#forms/auth/queries/register-forum.ts';
 import { loginForum } from "../queries/login-forum.ts";
 import { CURRENT_USER_QUERY_KEY } from "@repo/lib/queries/current-user-query.ts";
+import { toast } from "sonner";
 
 export const AUTH_MUTATION_KEY = ["auth-mutation"];
 
@@ -15,10 +16,13 @@ const LOGIN_MESSAGES: Record<string, string> = {
 }
 
 const REGISTER_MESSAGES: Record<string, string> = {
+  "IP already exists": "Превышен лимит регистраций",
   "Nickname invalid": "Неверное имя пользователя.",
   "Unsafe password": "Ненадежный пароль",
   "User already exists": "Такой пользователь уже зарегистрирован",
-  "Success": "Пользователь зарегистрирован"
+  "Success": "Пользователь зарегистрирован",
+  "User not found": "Пользователь не найден",
+  "Error in creating user": "Ошибка при регистрации"
 }
 
 export const useAuth = () => {
@@ -32,7 +36,7 @@ export const useAuth = () => {
       if (!authValues || !authValues.values) return;
 
       const { values, type } = authValues;
-      const { findout, password, nickname, realName } = values;
+      const { findout, password, nickname, realName, referrer } = values;
 
       if (type === "sign-in") {
         const login = await loginForum({ nickname, password });
@@ -60,9 +64,11 @@ export const useAuth = () => {
         return qc.resetQueries({ queryKey: AUTH_QUERY_KEY });
       }
 
+      console.log(referrer)
+
       if (type === "sign-up") {
         const register = await registerForum({
-          nickname, password, details: { findout, realName },
+          nickname, password, details: { findout, realName, referrer },
         });
 
         if (!register) return;
@@ -78,6 +84,10 @@ export const useAuth = () => {
           ...prev,
           status: REGISTER_MESSAGES[register.status],
         }));
+
+        toast.success("Спасибо за регистрацию!", {
+          description: "Теперь вы можете войти в аккаунт.",
+        });
 
         navigate({ to: AUTH_REDIRECT });
 

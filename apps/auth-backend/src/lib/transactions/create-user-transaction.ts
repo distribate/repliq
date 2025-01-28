@@ -4,6 +4,7 @@ import { forumDB } from "../../shared/database/forum-db";
 import { authDB } from '../../shared/database/auth-db';
 import type { AUTH } from '@repo/types/db/auth-database-types';
 import { publishRegisterNotify } from '../../publishers/pub-register-notify';
+import { publishReferalReward } from '../../publishers/pub-referal-reward';
 
 type InsertableUser = Pick<Insertable<Users>, "nickname" | "real_name">
 type InsertableFindout = Pick<Insertable<InfoFindout>, "findout">
@@ -23,7 +24,9 @@ type CreateUserTransaction = InsertableUser & InsertableFindout & Omit<Insertabl
   | "LOGINDATE"
   | "ISSUEDTIME"
   | "PREMIUMUUID"
->
+> & {
+  referrer?: string
+}
 
 async function createUserSettings(user_id: string, nickname: string, trx: Transaction<DB>) {
   return await trx
@@ -50,7 +53,7 @@ async function createUserServer(values: CreateUserServer) {
 }
 
 export const createUserTransaction = async ({
-  nickname, real_name, findout, HASH, LOWERCASENICKNAME, NICKNAME, IP, REGDATE, UUID
+  nickname, real_name, findout, HASH, LOWERCASENICKNAME, NICKNAME, IP, REGDATE, UUID, referrer
 }: CreateUserTransaction) => {
   return await forumDB.transaction().execute(async (trx) => {
     const userByServer = await createUserServer({
@@ -79,9 +82,16 @@ export const createUserTransaction = async ({
       return;
     }
 
-    publishRegisterNotify(nickname).catch((err) =>
-      console.error('Notification error:', err)
-    );
+    if (referrer) {
+      await trx
+        .insertInto("refferals")
+        .values({ initiator: referrer, recipient: nickname })
+        .execute()
+
+      publishReferalReward({ referrer, referral: nickname })
+    }
+
+    publishRegisterNotify(nickname)
 
     return infoFindout;
   });

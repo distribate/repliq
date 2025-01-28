@@ -1,13 +1,24 @@
 import { hasAlertsShow } from "#actions/has-alerts.ts";
+import { getCookieByKey } from "#helpers/get-cookie-by-key.ts";
 import { createQueryKey } from "#helpers/query-key-builder.ts";
 import { useReadLocalStorage } from "#hooks/use-read-local-storage.ts";
+import { INTRO_COOKIE_KEY } from "@repo/shared/keys/cookie";
 import { useSuspenseQuery } from "@tanstack/react-query";
 
 export const GLOBAL_PREFERENCES_QUERY_KEY = createQueryKey("ui", ["global-preferences"])
 
 export type GlobalPreferencesQuery = {
   alerts: "show" | "hide",
-  autoSaveThreads: boolean
+  autoSaveThreads: boolean,
+  intro: "show" | "hide"
+}
+
+function hasIntroShow(): boolean {
+  const hasIntroShowing = getCookieByKey(INTRO_COOKIE_KEY);
+
+  if (hasIntroShowing === "show") return true;
+
+  return hasIntroShowing !== "hide";
 }
 
 export const PREFERENCES_LS_KEY = "preferences";
@@ -21,9 +32,11 @@ export const globalPreferencesQuery = () => {
     queryKey: GLOBAL_PREFERENCES_QUERY_KEY,
     queryFn: async () => {
       const hasAlertsShowing = hasAlertsShow()
+      const hasIntroShowing = hasIntroShow()
 
       return {
         alerts: hasAlertsShowing ? "show" : "hide",
+        intro: hasIntroShowing ? "show" : "hide",
         autoSaveThreads: value ? value.autoSaveThreads : false
       }
     },

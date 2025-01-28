@@ -13,7 +13,7 @@ import type { UserPostItem } from '@repo/types/routes-types/get-user-posts-types
 
 type PostAdditionalModalProps = Pick<UserPostItem,
   | "id"
-  | "user_nickname"
+  | "nickname"
   | "created_at"
   | "visibility"
   | "isPinned"
@@ -21,7 +21,7 @@ type PostAdditionalModalProps = Pick<UserPostItem,
 >
 
 export const PostAdditionalModal = ({
-  isPinned, content, user_nickname, created_at, visibility, id
+  isPinned, content, nickname, created_at, visibility, id
 }: PostAdditionalModalProps) => {
   return (
     <Dialog>
@@ -35,13 +35,13 @@ export const PostAdditionalModal = ({
         <BlockWrapper className="flex flex-col gap-y-4">
           <div className="flex justify-between w-full items-center">
             <PostItemHeader
-              user_nickname={user_nickname}
+              nickname={nickname}
               created_at={created_at}
               visibility={visibility}
               isPinned={isPinned}
             />
           </div>
-          <PostItemBody id={id} content={content} user_nickname={user_nickname} />
+          <PostItemBody id={id} content={content} nickname={nickname} />
         </BlockWrapper>
       </DialogContent>
     </Dialog>

@@ -5,9 +5,7 @@ import { useQuery } from "@tanstack/react-query";
 
 async function getUserStatus(nickname: string) {
   const res = await forumUserClient.user["get-user-status"][":nickname"].$get({
-    param: {
-      nickname,
-    }
+    param: { nickname }
   })
 
   const data = await res.json()
@@ -30,6 +28,7 @@ export const userStatusQuery = (nickname: string) => useQuery({
 
     return { ...res, created_at: issuedTime }
   },
-  refetchOnWindowFocus: true,
-  refetchInterval: 50000,
+  refetchOnWindowFocus: false,
+  refetchOnMount: false,
+  refetchInterval: 60000,
 });

@@ -34,6 +34,9 @@ const getUserLands = async (nickname: string) => {
   const res = await landsClient.lands["get-user-lands"][":nickname"].$get({
     param: {
       nickname
+    },
+    query: {
+      exclude: undefined
     }
   })
 
@@ -153,18 +156,28 @@ export const UserPersonalCard = () => {
             <UserSettingOption title="Рейтинг" imageSrc={DragonBreath} />
           </DialogTrigger>
           <DialogContent>
-
+            <div className="flex flex-col gap-y-4 items-center w-full">
+              <Typography variant="dialogTitle">
+                Рейтинг
+              </Typography>
+              <div className="flex flex-col w-full gap-y-4">
+                <ContentNotFound title="Вас пока нет ни в каком рейтинге :/" />
+              </div>
+            </div>
           </DialogContent>
         </Dialog>
         <Separator />
         <Link to="https://fasberry.su/wiki" target="_blank">
           <UserSettingOption title="Вики" imageSrc={Portfolio} />
         </Link>
-        <TicketsModal
+        {/* <Link to="/create-issue">
+          <UserSettingOption title="Задать вопрос" imageSrc={FishingRod} />
+        </Link> */}
+        {/* <TicketsModal
           trigger={
             <UserSettingOption title="Задать вопрос" imageSrc={FishingRod} />
           }
-        />
+        /> */}
       </div>
     </div>
   );

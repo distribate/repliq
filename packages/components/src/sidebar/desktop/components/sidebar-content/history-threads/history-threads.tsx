@@ -10,18 +10,18 @@ export const HistoryThreads = () => {
 
   if (!savedThreads || !savedThreads.length) return null;
 
-  const savedThreadsHeight = isCompact || !isExpanded ? 260 : 150;
+  const historyThreadsHeight = isCompact || !isExpanded ? 260 : 150;
 
   return (
     <>
-      <div className={`flex flex-col gap-y-2 overflow-y-auto overflow-x-hidden max-h-[${savedThreadsHeight}px] w-full`}>
+      <div className={`flex flex-col gap-y-2 overflow-y-auto overflow-x-hidden max-h-[${historyThreadsHeight}px] w-full`}>
         {(!isCompact && isExpanded) && (
           <Typography textSize="medium" textColor="shark_white">
             Последнее просмотренное
           </Typography>
         )}
         <div className="flex flex-col gap-y-2 w-full">
-          {savedThreads.reverse().map((thread, i) => (
+          {savedThreads.map((thread, i) => (
             <ThreadHistory index={i} key={i} {...thread} />
           ))}
         </div>

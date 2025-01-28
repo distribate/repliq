@@ -10,13 +10,13 @@ export const SidebarLogotype = () => {
     <Link
       title="Главная"
       to="."
-      className="flex items-center justify-center w-full select-none"
+      className="flex bg-shark-50/10 backdrop-blur-md py-4 rounded-md items-center justify-center w-full select-none"
     >
       {isCompact || !isExpanded ? (
         <img
           src={Logotype}
-          width={42}
-          height={42}
+          width={36}
+          height={36}
           alt=""
           draggable={false}
           loading="lazy"
@@ -25,9 +25,8 @@ export const SidebarLogotype = () => {
         <>
           <img
             src={Logotype}
-            width={42}
-            className="h-[42px] w-[42px]"
-            height={42}
+            width={32}
+            height={32}
             alt=""
             draggable={false}
             loading="lazy"

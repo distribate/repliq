@@ -1,13 +1,20 @@
-import { Kysely } from 'kysely';
-import { authDialect } from "@repo/shared/db/auth-db";
+import { Kysely, PostgresDialect } from 'kysely';
 import type { DB as AuthDB } from "@repo/types/db/auth-database-types";
+import type { DatabaseConnection } from '@repo/types/entities/database-connection-type';
+import { Pool } from 'pg';
+
+const authDialect = ({
+  host, database, user, password, port
+}: DatabaseConnection) => {
+  return new PostgresDialect({ pool: new Pool({ database, host, user, port, max: 10, password }) });
+};
 
 export const authDB = new Kysely<AuthDB>({
   dialect: authDialect({
     host: "127.0.0.1",
-    database: process.env.POSTGRES_DB!,
-    user: process.env.POSTGRES_USER!,
-    password: process.env.POSTGRES_PASSWORD!,
-    port: Number(process.env.POSTGRES_PORT!),
+    database: Bun.env.POSTGRES_DB!,
+    user: Bun.env.POSTGRES_USER!,
+    password: Bun.env.POSTGRES_PASSWORD!,
+    port: Number(Bun.env.POSTGRES_PORT!),
   })
 });

@@ -49,7 +49,12 @@ export const SearchPageRelated = () => {
           </Typography>
           <div className="grid grid-cols-2 xl:grid-cols-5 grid-rows-1 gap-4 w-full h-fit">
             {relatedState.lastUsers.map((user) => (
-              <FriendsSearchingCard key={user.nickname} description={user.description} name_color={user.name_color} nickname={user.nickname} />
+              <FriendsSearchingCard
+                key={user.nickname}
+                description={user.description}
+                name_color={user.name_color}
+                nickname={user.nickname}
+              />
             ))}
           </div>
         </div>

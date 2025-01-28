@@ -5,7 +5,7 @@ import { PostFooterViews } from "#post/components/post-item/components/post-foot
 import type { UserPostItem } from '@repo/types/routes-types/get-user-posts-types.ts';
 import dayjs from "@repo/lib/constants/dayjs-instance";
 
-type PostFooterProps = Pick<UserPostItem, "views_count" | "isUpdated" | "id" | "isViewed" | "user_nickname" | "created_at">
+type PostFooterProps = Pick<UserPostItem, "views_count" | "isUpdated" | "id" | "isViewed" | "nickname" | "created_at">
 
 const PostFooterWithViewsList = lazy(() =>
   import("#post/components/post-item/components/post-footer-views-list.tsx").then((m) => ({
@@ -14,7 +14,7 @@ const PostFooterWithViewsList = lazy(() =>
 );
 
 export const PostFooter = ({
-  views_count, isUpdated, id, isViewed, user_nickname, created_at
+  views_count, isUpdated, id, isViewed, nickname, created_at
 }: PostFooterProps) => {
   const currentUser = getUser();
 
@@ -22,7 +22,7 @@ export const PostFooter = ({
   //   if (!isViewed && currentUser) postPostView(id);
   // }, []);
 
-  const isOwner = user_nickname === currentUser.nickname;
+  const isOwner = nickname === currentUser.nickname;
 
   return (
     <div className="flex w-full select-none gap-4 group-hover:opacity-100 opacity-0 justify-end items-center">

@@ -9,6 +9,7 @@ import { UserNotExistCounter } from '@repo/components/src/templates/user-not-exi
 
 export const Route = createLazyFileRoute('/_public/not-exist')({
   component: RouteComponent,
+    // @ts-ignore
   validateSearch: (search) => {
     return {
       redirect_nickname: search.redirect_nickname as string,
@@ -40,7 +41,7 @@ function RouteComponent() {
         />
       </div>
       <div className="flex flex-col items-center justify-center gap-y-4">
-        <p className="text-5xl font-[Pixy] text-white">Юзер не найден {`;(`}</p>
+        <p className="text-5xl font-[Minecraft] text-white">Юзер не найден {`;(`}</p>
         <div className="flex py-0.5 rounded-xl items-center gap-1 justify-between bg-white/30 backdrop-blur-md overflow-hidden">
           <Link to="/">
             <div className="flex px-3 gap-1 cursor-pointer items-center hover:bg-secondary-color transition-all duration-150 ease-in max-h-[42px]">
@@ -52,7 +53,7 @@ function RouteComponent() {
                 loading="lazy"
                 className="max-w-[32px] max-h-[32px]"
               />
-              <p className="text-md font-semibold text-shark-200">главная</p>
+              <p className="text-md font-semibold font-[Minecraft] text-shark-200">главная</p>
             </div>
           </Link>
           <span>|</span>
@@ -66,7 +67,7 @@ function RouteComponent() {
                 loading="lazy"
                 className="max-w-[26px] max-h-[26px]"
               />
-              <p className="text-md font-semibold text-shark-200">к профилю</p>
+              <p className="text-md font-semibold font-[Minecraft] text-shark-200">к профилю</p>
             </div>
           </Link>
         </div>

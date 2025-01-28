@@ -1,14 +1,14 @@
 import { Hono } from 'hono';
-import bcrypt from 'bcryptjs';
 import { z } from 'zod';
 import { zValidator } from '@hono/zod-validator';
 import { createUserTransaction } from '../lib/transactions/create-user-transaction.ts';
 import { throwError } from '@repo/lib/helpers/throw-error.ts';
 import { checkUserExists } from './login.ts';
 import ky, { HTTPError } from 'ky';
-import { getConnInfo } from "hono/bun"
 import { validatePasswordSafe } from '../utils/validate-password-safe.ts';
-import { convertIPv6ToIPv4 } from '../helpers/ipv6-to-ipv4.ts';
+import { generateOfflineUUID } from '../utils/generate-offline-uuid.ts';
+import { validateIpRestricts } from '../utils/validate-ip-restricts.ts';
+import { getClientIp } from '../utils/gen-client-ip.ts';
 
 type PremiumUser = {
   uuid: string,
@@ -27,6 +27,7 @@ export const createUserBodySchema = z.object({
   details: z.object({
     realName: z.string().or(z.null()),
     findout: z.string(),
+    referrer: z.string().optional()
   })
 });
 
@@ -34,12 +35,14 @@ export const registerRoute = new Hono()
   .post('/register', zValidator('json', createUserBodySchema), async (ctx) => {
     const body = await ctx.req.json()
     const details = createUserBodySchema.parse(body);
-    const { password, details: { findout, realName }, nickname } = details;
+    const { password, details: { findout, realName: real_name, referrer }, nickname } = details;
 
-    let available = false;
+    const IP = getClientIp(ctx) ?? "1.1.1.1"
 
-    if (!available) {
-      return ctx.json({ status: "Not available" }, 201);
+    const isValid = await validateIpRestricts(IP)
+
+    if (isValid) {
+      return ctx.json({ error: "IP already exists" }, 400)
     }
 
     const isExistsOnForum = await checkUserExists(nickname)
@@ -48,28 +51,23 @@ export const registerRoute = new Hono()
       return ctx.json({ error: "User already exists" }, 400)
     }
 
-    console.log(getConnInfo(ctx))
-    console.log(ctx.req.header("x-forwarded-for"))
-
     const isPasswordSafe = validatePasswordSafe(password)
 
     if (!isPasswordSafe) {
       return ctx.json({ error: 'Unsafe password' }, 401);
     }
 
-    const passwordHash = bcrypt.hashSync(password, 10)
-
-    const xForwardedFor = ctx.req.header("x-forwarded-for") ?? getConnInfo(ctx).remote.address;
-    const clientIp = xForwardedFor?.split(",")[0]
-
-    if (!clientIp) {
-      return ctx.json({ error: "Unknown client IP" }, 400);
-    }
+    const HASH = Bun.password.hashSync(password, {
+      algorithm: "bcrypt",
+      cost: 10
+    })
 
     let user: PremiumUser | null;
 
     try {
-      user = await ky.get(`https://api.ashcon.app/mojang/v2/user/${nickname}`).json<PremiumUser>();
+      user = await ky
+        .get(`https://api.ashcon.app/mojang/v2/user/${nickname}`)
+        .json<PremiumUser>();
     } catch (e) {
       if (e instanceof HTTPError) {
         const error = await e.response.json<MojangError>();
@@ -78,21 +76,27 @@ export const registerRoute = new Hono()
           return ctx.json({ error: "Nickname invalid" }, 400);
         }
 
-        return ctx.json({ error: error.reason }, 400);
+        user = null
       }
-
-      return ctx.json({ error: 'Unknown error' }, 400);
+      user = null
     }
+
+    const offlineUUID = generateOfflineUUID(nickname);
+
+    user = {
+      uuid: offlineUUID,
+      username: nickname
+    }
+
+    console.log(details)
 
     try {
       const registered = await createUserTransaction({
-        nickname, findout, real_name: realName ?? null,
+        nickname, findout, real_name, HASH, IP, referrer,
         UUID: user.uuid,
-        HASH: passwordHash,
         LOWERCASENICKNAME: nickname.toLowerCase(),
         NICKNAME: nickname,
-        IP: convertIPv6ToIPv4(clientIp),
-        REGDATE: new Date().getTime(),
+        REGDATE: new Date().getTime()
       })
 
       if (!registered || !registered.user_nickname) {
@@ -101,6 +105,7 @@ export const registerRoute = new Hono()
 
       return ctx.json({ status: "Success" }, 201);
     } catch (e) {
+      console.log(e)
       return ctx.json({ error: throwError(e) }, 500);
     }
   });

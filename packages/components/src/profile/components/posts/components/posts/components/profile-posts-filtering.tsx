@@ -16,6 +16,7 @@ import {
   PostSort,
 } from "#profile/components/posts/components/posts/constants/posts-filtering.ts";
 import { UserEntity } from "@repo/types/entities/entities-type.ts";
+import { POSTS_QUERY_KEY } from "../queries/posts-query";
 
 type ProfilePostsFilteringProps = Pick<UserEntity, "nickname">;
 
@@ -60,18 +61,24 @@ const ProfilePostsFilteringSearch = forwardRef<
   },
 );
 
-const ProfilePostsFilteringView = () => {
+const ProfilePostsFilteringView = ({
+  nickname
+}: {
+  nickname: string
+}) => {
   const { data: filteringState } = postsFilteringQuery();
   const qc = useQueryClient();
 
   const handleSortType = (type: Pick<PostSort, "value">["value"]) => {
-    return qc.setQueryData(
+    qc.setQueryData(
       POSTS_FILTERING_QUERY_KEY,
       (prev: PostsFilteringQuery) => ({
         ...prev,
         filteringType: type,
       }),
     );
+
+    qc.invalidateQueries({ queryKey: POSTS_QUERY_KEY(nickname) });
   };
 
   const currentFilteringType = filteringState.filteringType;
@@ -125,17 +132,18 @@ export const ProfilePostsFiltering = ({
       <div className="flex items-center gap-1 w-fit">
         <Typography
           textColor="shark_white"
-          className="text-[22px] font-semibold"
+          textSize="big"
+          className="font-semibold"
         >
           Посты {nickname}
         </Typography>
       </div>
       <div className="flex items-center gap-4 w-fit">
-        <FilteringSearchWrapper>
+        {/* <FilteringSearchWrapper>
           <ProfilePostsFilteringSearch />
-        </FilteringSearchWrapper>
+        </FilteringSearchWrapper> */}
         <div className="w-fit">
-          <ProfilePostsFilteringView />
+          <ProfilePostsFilteringView nickname={nickname} />
         </div>
       </div>
     </div>

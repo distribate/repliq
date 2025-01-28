@@ -27,7 +27,8 @@ export const NewsItemWrapper = ({
           />
         </div>
         <div
-          className="flex lg:flex-row flex-col justify-between items-start lg:items-center overflow-hidden p-4 lg:p-6 w-full gap-y-4"
+          className="flex lg:flex-row flex-col justify-between items-start 
+            lg:items-center overflow-hidden p-4 lg:p-6 w-full gap-y-4"
         >
           <div className="block whitespace-normal w-3/4 overflow-hidden truncate">
             <Typography

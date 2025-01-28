@@ -10,6 +10,9 @@ import { HeaderSheet } from "../header/header-sheet";
 import { Skeleton } from "@repo/landing-ui/src/skeleton";
 import dynamic from "next/dynamic";
 import { ComponentPropsWithRef } from 'react';
+import { Avatar } from '@repo/components/src/user/components/avatar/components/avatar';
+import { getUserFromCookie } from './get-user-from-cookie';
+import { useQuery } from '@tanstack/react-query';
 
 const ThemeToggle = dynamic(
 	() =>
@@ -40,6 +43,26 @@ export const SuperLink = (props: ComponentPropsWithRef<typeof Link>) => {
 		/>
 	);
 };
+
+const headerUserQuery = () => useQuery({
+	queryKey: ["header-user"],
+	queryFn: () => getUserFromCookie(),
+	refetchOnWindowFocus: false,
+	refetchOnMount: false,
+	refetchOnReconnect: false
+})
+
+const HeaderUser = () => {
+	const { data: nickname } = headerUserQuery()
+
+	if (!nickname) return null
+
+	return (
+		<Link href={`https://cc.fasberry.su/user/${nickname}`} className="w-[38px] h-[38px] overflow-hidden rounded-md border border-neutral-400">
+			<Avatar nickname={nickname} propHeight={38} propWidth={38} />
+		</Link>
+	)
+}
 
 export const Header = () => {
 	const pathname = usePathname();
@@ -146,6 +169,7 @@ export const Header = () => {
 						</DropdownMenu>
 					)
 				})}
+				<HeaderUser />
 				<div className="w-[36px] h-[36px] overflow-hidden">
 					<ThemeToggle />
 				</div>

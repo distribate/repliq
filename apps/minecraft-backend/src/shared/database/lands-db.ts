@@ -1,6 +1,14 @@
 import { Kysely } from "kysely";
-import { landsDialect } from "@repo/shared/db/lands-db.ts";
 import type { DB as landsDBType } from "@repo/types/db/lands-database-types.ts";
+import { MysqlDialect } from "kysely";
+import { createPool } from "mysql2";
+import type { DatabaseConnection } from "@repo/types/entities/database-connection-type";
+
+const landsDialect = ({
+  user, password, port, database, host
+}: DatabaseConnection) => {
+  return new MysqlDialect({ pool: createPool({ database, host, user, password, port, connectionLimit: 10 }) });
+};
 
 export const landsDB = new Kysely<landsDBType>({
   dialect: landsDialect({

@@ -1,9 +1,5 @@
-"use client";
-
 import { FilteredNotFound } from "#templates/filtered-not-found.tsx";
-import {
-  friendsQuery,
-} from "#friends/queries/friends-query.ts";
+import { friendsQuery } from "#friends/queries/friends-query.ts";
 import { ContentNotFound } from "#templates/content-not-found.tsx";
 import { UserEntity } from "@repo/types/entities/entities-type.ts";
 import { FriendProfileCard } from "#friend/components/friend-card/components/friend-profile-card.tsx";
@@ -19,7 +15,7 @@ const filterFriendsByNickname = (data: FriendWithDetails[], querySearch: string)
 
 const ProfileFriendsList = ({ nickname }: Pick<UserEntity, "nickname">) => {
   const { sort_type, ascending } = friendsSortQuery().data;
-  const { data, isLoading, isError } = friendsQuery({ nickname, sort_type, ascending });
+  const { data, isLoading, isError } = friendsQuery({ nickname, sort_type, ascending, limit: 32 });
   const { searchQuery } = friendsSortQuery().data;
 
   if (isLoading) return <ProfileFriendsSkeleton />;

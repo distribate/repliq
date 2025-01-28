@@ -4,11 +4,13 @@ import { useQuery } from "@tanstack/react-query"
 import { getAlertsSchema } from "@repo/types/schemas/alerts/get-alerts-schema.ts";
 import { z } from "zod";
 
-type GetAlerts = z.infer<typeof getAlertsSchema>
+type GetAlerts = z.infer<typeof getAlertsSchema> & {
+  enabled?: boolean
+}
 
 async function getAlerts({
   cursor, limit
-}: GetAlerts) {
+}: Omit<GetAlerts, "enabled">) {
   const res = await forumLandingClient["get-alerts"].$get({
     query: {
       cursor: cursor,
@@ -28,7 +30,7 @@ async function getAlerts({
 export const ALERTS_QUERY_KEY = createQueryKey("ui", ["alerts"])
 
 export const alertsQuery = ({
-  cursor, limit
+  cursor, limit, enabled = true
 }: GetAlerts) => useQuery({
   queryKey: ALERTS_QUERY_KEY,
   queryFn: () => getAlerts({
@@ -36,5 +38,6 @@ export const alertsQuery = ({
     limit
   }),
   refetchOnWindowFocus: false,
-  refetchOnMount: false
+  refetchOnMount: false,
+  enabled
 })

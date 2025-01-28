@@ -16,14 +16,14 @@ export const SubscriptionItem = ({
   rating, description, commands, id, price, title, origin, imageUrl,
 }: DonateType["data"][0]) => {
   const qc = useQueryClient();
-  const [o, setO] = useState<boolean>(false);
+  const [open, setOpen] = useState<boolean>(false);
 
   const handleDialogControl = (open: boolean) => {
     if (!open) {
       qc.resetQueries({ queryKey: SHOP_ITEM_QUERY_KEY });
     }
 
-    setO(open);
+    setOpen(open);
   };
 
   const selectDonateItem = () => {
@@ -35,7 +35,7 @@ export const SubscriptionItem = ({
   return (
     <Dialog
       key={id}
-      open={o}
+      open={open}
       onOpenChange={handleDialogControl}
     >
       <DialogTrigger

@@ -31,9 +31,7 @@ export const SubscriptionItemForm = () => {
   const methods = useForm<PaymentFields>({
     mode: 'onChange',
     resolver: zodResolver(createOrderBodySchema),
-    defaultValues: {
-      privacy: false, paymentValue, paymentType
-    },
+    defaultValues: { privacy: false, paymentValue, paymentType }
   });
 
   const { formState: { errors, isValid }, register } = methods
@@ -113,12 +111,12 @@ export const SubscriptionItemForm = () => {
                   viewBox="0 0 20 20"
                   fill="currentColor"
                   stroke="currentColor"
-                  stroke-width="1"
+                  strokeWidth="1"
                 >
                   <path
-                    fill-rule="evenodd"
+                    fillRule="evenodd"
                     d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                    clip-rule="evenodd"
+                    clipRule="evenodd"
                   ></path>
                 </svg>
               </span>
@@ -139,7 +137,7 @@ export const SubscriptionItemForm = () => {
         <Button
           type="submit"
           disabled={!isValid}
-          className="py-2 w-full group hover:bg-[#05b458] bg-[#088d47] hover:duration-300
+          className="py-2 w-full rounded-lg group hover:bg-[#05b458] bg-[#088d47] hover:duration-300
 					 duration-100 ease-in-out backdrop-filter backdrop-blur-lg"
         >
           <Typography className="text-lg text-white">

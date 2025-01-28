@@ -1,9 +1,7 @@
 import { useMutationState, useQueryClient } from '@tanstack/react-query';
 import { Typography } from '@repo/landing-ui/src/typography';
 import Link from 'next/link';
-import {
-  SubscriptionItemForm,
-} from '@repo/landing-components/src/subs/subscription-item-form';
+import { SubscriptionItemForm } from '@repo/landing-components/src/subs/subscription-item-form';
 import Totem from '@repo/assets/gifs/totem-of-undying-faked-death.gif';
 import Heart from '@repo/assets/gifs/hardcore-heart-minecraft.gif';
 import Duo from '@repo/assets/gifs/duo.gif';
@@ -30,17 +28,17 @@ export const ShopAreaItem = ({
 
 export const ShopArea = () => {
   const qc = useQueryClient();
-  const paymentData = qc.getQueryData<{ paymentUrl: string } | string[]>(CREATE_PAYMENT_DATA_QUERY_KEY);
-  
+  const paymentData = qc.getQueryData<{ data: string }>(CREATE_PAYMENT_DATA_QUERY_KEY);
+
   const mutData = useMutationState({
     filters: ({ mutationKey: CREATE_PAYMENT_MUTATION_KEY }),
     select: m => m.state.status,
   });
-  
+
   const isPaymentError = Array.isArray(paymentData);
   const isPaymentSuccess = mutData[mutData.length - 1] === 'success' && !isPaymentError;
   const isPaymentProccessing = mutData[mutData.length - 1] === 'pending';
-  
+
   return (
     <>
       {isPaymentError && (
@@ -59,7 +57,7 @@ export const ShopArea = () => {
             Перейдите по ссылке ниже, чтобы оплатить заказ
           </Typography>
           <Link
-            href={paymentData?.paymentUrl || ''}
+            href={paymentData?.data || ''}
             target="_blank"
             rel="noopener noreferrer"
           >

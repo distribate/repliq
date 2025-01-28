@@ -1,16 +1,10 @@
-"use client";
-
 import { useState } from "react";
 import { Editable, ReactEditor, Slate, withReact } from "slate-react";
 import { createEditor, Descendant } from "slate";
 import { RenderElement } from "#editor/components/render-element.tsx";
 import { RenderLeaf } from "#editor/components/render-leaf.tsx";
 import { Typography } from "@repo/ui/src/components/typography.tsx";
-import {
-  THREAD_CONTROL_QUERY_KEY,
-  ThreadControlQuery,
-  threadControlQuery,
-} from "#thread/components/thread-control/queries/thread-control-query.ts";
+import { THREAD_CONTROL_QUERY_KEY, ThreadControlQuery, threadControlQuery } from "#thread/components/thread-control/queries/thread-control-query.ts";
 import { serializeNodes } from "../../../../../../lib/helpers/nodes-serializer.ts";
 import { useController, useForm } from "react-hook-form";
 import { Button } from "@repo/ui/src/components/button.tsx";
@@ -20,6 +14,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { THREAD_QUERY_KEY } from "#thread/components/thread-main/queries/thread-query.ts";
 import { ThreadDetailed } from "@repo/types/entities/thread-type.ts";
 import { getUser } from "@repo/lib/helpers/get-user.ts";
+import { ThreadContentWrapper } from "./thread-content-wrapper.tsx";
 
 const initialValue = [
   {
@@ -36,18 +31,19 @@ export const ThreadContent = ({
   threadId,
 }: ThreadContentProps) => {
   const qc = useQueryClient();
-  const { data: controlState } = threadControlQuery();
-  const thread = qc.getQueryData<ThreadDetailed>(THREAD_QUERY_KEY(threadId));
   const [editor] = useState<ReactEditor>(() => withReact(createEditor()));
+  const { data: controlState } = threadControlQuery();
   const { control } = useForm();
-  const currentUser = getUser();
-
-  const { field: { onChange } } = useController({ name: "content", control, rules: { required: true } });
+  const { nickname } = getUser();
+  const thread = qc.getQueryData<ThreadDetailed>(THREAD_QUERY_KEY(threadId));
+  
+  const { field: { onChange } } = useController({
+    name: "content", control, rules: { required: true }
+  });
 
   if (!thread) return null;
 
   const content = thread.content as Descendant[];
-  const isThreadOwner = thread.owner.nickname === currentUser.nickname;
 
   const handleOnChange = (value: Descendant[]) => {
     const isAstChange = handleOnChangeEditor(editor, value);
@@ -74,20 +70,15 @@ export const ThreadContent = ({
     });
   };
 
+  const isOwner = thread.owner.nickname === nickname;
   const isContenteditable = controlState?.state?.isContenteditable;
-  const isReadOnly = !isContenteditable || !isThreadOwner;
+  const isReadonly = !isContenteditable || !isOwner;
   const isTriggered = isContenteditable ?? false;
 
-  console.log("isThreadOwner", isThreadOwner)
-  console.log("isReadOnly", isReadOnly)
-  console.log("isContenteditable", isContenteditable)
-
   return (
-    <div
-      className={`${isReadOnly ? "" : "!bg-shark-800"} px-4 w-full h-full flex !rounded-none`}
-    >
-      {isThreadOwner && (
-        <div className="w-full">
+    <ThreadContentWrapper variant={isReadonly ? "readonly" : "default"}>
+      {isOwner && (
+        <div className="w-full overflow-hidden text-wrap">
           <Slate
             editor={editor}
             initialValue={content || initialValue}
@@ -101,7 +92,7 @@ export const ThreadContent = ({
               renderElement={(props) => (
                 <RenderElement {...props} children={props.children} />
               )}
-              readOnly={isReadOnly}
+              readOnly={isReadonly}
               className="!outline-none"
               placeholder=" "
             />
@@ -116,21 +107,17 @@ export const ThreadContent = ({
           )}
         </div>
       )}
-      {!isThreadOwner && (
+      {!isOwner && (
         <Slate editor={editor} initialValue={content || initialValue}>
           <Editable
-            renderLeaf={(props) => (
-              <RenderLeaf {...props} children={props.children} />
-            )}
-            renderElement={(props) => (
-              <RenderElement {...props} children={props.children} />
-            )}
+            renderLeaf={props => <RenderLeaf {...props} children={props.children} />}
+            renderElement={props => <RenderElement {...props} children={props.children} />}
             className="!outline-none"
             placeholder=" "
             readOnly={true}
           />
         </Slate>
       )}
-    </div>
+    </ThreadContentWrapper>
   );
 };

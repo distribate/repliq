@@ -1,5 +1,3 @@
-'use client';
-
 import { ThreadCommentItem } from '../../thread-comment/components/thread-comment-item.tsx';
 import {
   threadCommentsQuery
@@ -10,7 +8,6 @@ import { useEffect } from 'react';
 import { ThreadDetailed } from '@repo/types/entities/thread-type.ts';
 import { UPDATE_COMMENTS_MUTATION_KEY, useUpdateComments } from '../hooks/use-update-comments.ts';
 import { ThreadCommentsSkeleton } from './thread-comments-skeleton.tsx';
-import { ThreadCommentsHeader } from './thread-comments-header.tsx';
 import { useMutationState } from '@tanstack/react-query';
 
 type ThreadCommentsProps = Pick<ThreadDetailed, 'id' | "is_comments" | "owner">

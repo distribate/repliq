@@ -2,17 +2,17 @@ import { Typography } from "@repo/ui/src/components/typography.tsx";
 import { useCreateThreadComment } from "@repo/components/src/forms/create-thread-comment/hooks/use-create-thread-comment.tsx";
 import { RepliedValuesType } from "@repo/components/src/forms/create-thread-comment/queries/create-thread-comment-query.ts";
 import { ThreadDetailed } from "@repo/types/entities/thread-type.ts";
-import dynamic from "next/dynamic";
+import { lazy, Suspense } from "react";
 
 type ThreadCommentActionsProps = RepliedValuesType &
   Pick<ThreadDetailed, "id"> & {
     isCommentOwner: boolean;
   };
 
-const ReportCreateModal = dynamic(() =>
+const ReportCreateModal = lazy(() =>
   import(
     "@repo/components/src/modals/action-confirmation/components/report/components/report-create-modal.tsx"
-  ).then((m) => m.ReportCreateModal),
+  ).then((m) => ({ default: m.ReportCreateModal })),
 );
 
 export const ThreadCommentActions = ({
@@ -40,12 +40,14 @@ export const ThreadCommentActions = ({
         Ответить
       </Typography>
       {!isCommentOwner && (
-        <ReportCreateModal
-          reportType="comment"
-          threadId={threadId}
-          targetNickname={commentNickname}
-          targetId={commentId}
-        />
+        <Suspense>
+          <ReportCreateModal
+            reportType="comment"
+            threadId={threadId}
+            targetNickname={commentNickname}
+            targetId={commentId}
+          />
+        </Suspense>
       )}
     </div>
   );

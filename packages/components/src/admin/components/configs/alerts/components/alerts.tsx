@@ -7,7 +7,7 @@ import { AlertsAddButton } from "./alerts-add-button.tsx";
 import { alertsQuery } from "@repo/lib/queries/alerts-query.ts";
 
 export const Alerts = () => {
-  const { data } = alertsQuery({ limit: 1 });
+  const { data } = alertsQuery({ limit: 1});
 
   const alerts = data?.data;
 

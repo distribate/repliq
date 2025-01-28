@@ -39,7 +39,9 @@ export const WikiContent = () => {
 	useEffect(() => {
 		const search = searchParams.get("tab");
 
-		if (search !== null) setValueTab(`${search}`);
+		if (search !== null) { 
+			setValueTab(`${search}`)
+		};
 	}, [searchParams])
 
 	const handleTabChange = useCallback((valueTab: string) => {
@@ -47,10 +49,6 @@ export const WikiContent = () => {
 
 		push(`/wiki?tab=${valueTab}`)
 	}, [push])
-
-	const redirectToTab = (href: string) => {
-		setValueTab(href);
-	}
 
 	return (
 		<Tabs
@@ -148,7 +146,7 @@ export const WikiContent = () => {
 						На сервере две валюты: харизма и белкоин. Но основной является - харизма.
 						Добыть её можно многими способами: зарабатывая на&nbsp;
 						<span
-							onClick={() => redirectToTab("jobs")}
+							onClick={() => setValueTab("jobs")}
 							className="text-[#00cdb0] cursor-pointer text-shadow-xl">работах
                 </span>,
 						находя уникальные предметы, участвуя в заданиях местных
@@ -261,7 +259,7 @@ export const WikiContent = () => {
 					<Typography size="xl" className="mb-6">
 						Можно узнать, введя команду <CommandLine>/rep me</CommandLine>, а также в&nbsp;
 						<span
-							onClick={() => redirectToTab("profile")}
+							onClick={() => setValueTab("profile")}
 							className="text-[#00cdb0] cursor-pointer">профиле</span> или скорборде.
 					</Typography>
 					<Tooltip delayDuration={1}>

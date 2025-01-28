@@ -1,26 +1,22 @@
-"use server";
-
-import { createClient } from "@repo/shared/api/supabase-client.ts";
-import { validatePostOwner } from "#post/components/post-item/queries/validate-owner-post.ts";
-import { PostEntity } from "@repo/types/entities/entities-type.ts";
-
-type DisablePostComments = Pick<PostEntity, "id"> & {
-  isComments: boolean;
-};
+import { forumCommentClient } from "@repo/shared/api/forum-client";
 
 export async function disablePostComments({
-  id: postId,
-  isComments,
-}: DisablePostComments) {
-  const isValid = await validatePostOwner({ postId });
-  if (!isValid) return;
+  id
+}: {
+  id: string
+}) {
+  const res = await forumCommentClient.comment["disable-comments"].$post({
+    json: {
+      id,
+      type: "post"
+    }
+  })
 
-  const api = createClient();
+  const data = await res.json();
 
-  const { error } = await api
-    .from("posts")
-    .update({ isComments: !isComments })
-    .eq("id", postId);
+  if ("error" in data) {
+    return null
+  }
 
-  return !error;
+  return data;
 }

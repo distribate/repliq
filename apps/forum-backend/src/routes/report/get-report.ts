@@ -1,0 +1,28 @@
+import { forumDB } from "#shared/database/forum-db.ts";
+import { throwError } from "@repo/lib/helpers/throw-error";
+import { Hono } from "hono";
+
+async function getReport(id: string) {
+  return await forumDB
+    .selectFrom("reports")
+    .selectAll()
+    .where("id", "=", id)
+    .executeTakeFirst()
+}
+
+export const getReportRoute = new Hono()
+  .get("/get-report/:id", async (ctx) => {
+    const { id } = ctx.req.param();
+
+    try {
+      const report = await getReport(id)
+
+      if (!report) {
+        return ctx.json({ error: "Report not found" }, 404)
+      }
+
+      return ctx.json({ data: report }, 200)
+    } catch (e) {
+      return ctx.json({ error: throwError(e) }, 500)
+    }
+  })

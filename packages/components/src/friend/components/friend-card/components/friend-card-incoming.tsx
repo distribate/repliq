@@ -27,11 +27,22 @@ export const FriendCardIncoming = ({
           </Link>
         </div>
         <div className="flex items-center mt-2 gap-1 w-fit">
-          <Button onClick={() => acceptIncomingRequestMutation.mutate({ request_id, recipient: initiator })} variant="positive">
-            <Typography textSize="small">Принять заявку</Typography>
+          <Button
+            onClick={() => acceptIncomingRequestMutation.mutate({ request_id, recipient: initiator })}
+            variant="positive"
+          >
+            <Typography textSize="small">
+              Принять заявку
+            </Typography>
           </Button>
-          <Button onClick={() => rejectIncomingRequestMutation.mutate({ request_id, recipient: initiator })} variant="negative">
-            <Typography textSize="small">Отклонить заявку</Typography>
+          <Button
+            onClick={() => rejectIncomingRequestMutation.mutate({ request_id, recipient: initiator })}
+            variant="negative"
+          >
+            <Typography textSize="small"
+            >
+              Отклонить заявку
+            </Typography>
           </Button>
         </div>
       </div>

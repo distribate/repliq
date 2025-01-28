@@ -7,6 +7,8 @@ import { UserDonate } from "#user/components/donate/components/donate.tsx";
 import { type FriendWithDetails } from "@repo/types/schemas/friend/friend-types";
 import { Button } from "@repo/ui/src/components/button";
 import { Link } from "@tanstack/react-router";
+import { Suspense } from "react";
+import { Skeleton } from "@repo/ui/src/components/skeleton";
 
 export const FriendProfileCard = ({
   nickname, name_color, donate, favorite_item
@@ -15,10 +17,12 @@ export const FriendProfileCard = ({
     <div className="flex flex-col gap-y-4 w-full bg-shark-950 *:px-4 py-4 rounded-lg">
       <div className="flex items-start justify-between w-full">
         <div className="flex gap-2 w-full items-center">
-          <Avatar propHeight={56} propWidth={56} nickname={nickname} />
+          <Suspense fallback={<Skeleton className="w-[56px] h-[56px]" />}>
+            <Avatar propHeight={56} propWidth={56} nickname={nickname} />
+          </Suspense>
           <div className="flex flex-col gap-1">
             <Link to={USER_URL + nickname}>
-              <UserNickname 
+              <UserNickname
                 nickname={nickname}
                 nicknameColor={name_color}
                 className="text-[18px] font-medium text-shark-50"
@@ -29,7 +33,7 @@ export const FriendProfileCard = ({
         </div>
       </div>
       <UserCardModal
-        nickname={nickname} 
+        nickname={nickname}
         withCustomTrigger={true}
         trigger={
           <Button variant="positive" className="hover:bg-[#05b458] bg-[#088d47] w-full">
@@ -37,7 +41,7 @@ export const FriendProfileCard = ({
               Показать карточку профиля
             </Typography>
           </Button>
-        } 
+        }
       />
     </div>
   );

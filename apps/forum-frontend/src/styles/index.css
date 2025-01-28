@@ -72,6 +72,10 @@
   .bg-secondary-color {
     @apply bg-shark-700/60;
   }
+
+  .icon-color {
+    @apply text-shark-300;
+  }
 }
 
 @layer components {

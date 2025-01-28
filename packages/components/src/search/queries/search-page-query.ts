@@ -29,10 +29,10 @@ const initial: SearchPageQuery = {
   type: "title",
 };
 
-export const searchPageQuery = () =>
-  useQuery<SearchPageQuery>({
-    queryKey: SEARCH_PAGE_QUERY_KEY,
-    initialData: initial,
-    refetchOnWindowFocus: false,
-    placeholderData: keepPreviousData,
-  });
+export const searchPageQuery = () => useQuery<SearchPageQuery>({
+  queryKey: SEARCH_PAGE_QUERY_KEY,
+  initialData: initial,
+  refetchOnMount: false,
+  refetchOnWindowFocus: false,
+  placeholderData: keepPreviousData,
+});

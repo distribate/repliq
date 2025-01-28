@@ -14,35 +14,34 @@ export const useUpdateFriends = () => {
 
   const updateFriendsMutation = useMutation({
     mutationKey: UPDATE_FRIENDS_MUTATION_KEY,
-    mutationFn: async ({ with_details, cursor }: Pick<GetFriends, "cursor" | "with_details">) => getFriends({
-      cursor, with_details, ascending, sort_type, nickname
-    }),
-    onSuccess: async (data, variables) => {
-      if (data) {
-        qc.setQueryData(FRIENDS_QUERY_KEY(nickname), (oldData: GetFriendsResponse) => {
-          if (!oldData) return { data: data, meta: data.meta };
-
-          qc.setQueryData(FRIENDS_SORT_QUERY_KEY, (prev: FriendsSortQuery) => ({
-            ...prev,
-            type: "other"
-          }))
-
-          const newFriends = data.data.filter(
-            friend => !oldData.data.some(existing => existing.friend_id === friend.friend_id)
-          );
-
-          return {
-            data: [...oldData.data, ...newFriends],
-            meta: data.meta,
-          };
-        });
-      } else {
+    mutationFn: async ({ with_details, cursor }: Pick<GetFriends, "cursor" | "with_details">) => {
+      return getFriends({ cursor, with_details, ascending, sort_type, nickname })
+    },
+    onSuccess: async (data) => {
+      if (!data) {
         const currentFriends = qc.getQueryData<GetFriendsResponse>(
           FRIENDS_QUERY_KEY(nickname)
         );
 
         return { data: currentFriends?.data, meta: currentFriends?.meta };
       }
+
+      qc.setQueryData(FRIENDS_QUERY_KEY(nickname), (prev: GetFriendsResponse) => {
+        if (!prev) {
+          return { data: data.data, meta: data.meta };
+        }
+
+        const newFriends = data.data.filter(
+          friend => !prev.data.some(exist => exist.friend_id === friend.friend_id)
+        );
+
+        return { data: [...prev.data, ...newFriends], meta: data.meta };
+      });
+
+      qc.setQueryData(FRIENDS_SORT_QUERY_KEY, (prev: FriendsSortQuery) => ({
+        ...prev,
+        type: "other"
+      }))
     }
   })
 

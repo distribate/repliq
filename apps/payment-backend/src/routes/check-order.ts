@@ -70,7 +70,7 @@ async function receivePayment(data: PaymentCompleted['data']) {
         pubDonatePayload({ donate: donateOrigin as "arkhont" | "authentic" | "loyal", nickname }),
       ]);
 
-      return await pubPaymentPayload("success", data);
+      return pubPaymentPayload("success", data)
     case 'belkoin':
 
       break;

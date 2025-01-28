@@ -7,23 +7,22 @@ import { useNavigate } from "@tanstack/react-router";
 import { FriendButton } from "#buttons/friend-button.tsx";
 import { UserEntity } from "@repo/types/entities/entities-type";
 import { getUser } from "@repo/lib/helpers/get-user";
+import { Suspense } from "react";
+import { Skeleton } from "@repo/ui/src/components/skeleton";
 
-export type FriendsSearchingCardProps = Pick<
-  UserEntity,
-  "nickname" | "name_color" | "description"
->;
+export type FriendsSearchingCardProps = Pick<UserEntity, "nickname" | "name_color" | "description">;
 
 export const FriendsSearchingCard = ({
-  nickname,
-  name_color,
-  description,
+  nickname, name_color, description,
 }: FriendsSearchingCardProps) => {
   const navigate = useNavigate();
   const currentUser = getUser();
 
   return (
     <div className="flex flex-col group gap-4 justify-between items-center lg:h-[280px] friend-card">
-      <Avatar nickname={nickname} propWidth={128} propHeight={128} />
+      <Suspense fallback={<Skeleton className="w-[128px] h-[128px]" />}>
+        <Avatar nickname={nickname} propWidth={128} propHeight={128} />
+      </Suspense>
       <div className="flex flex-col items-start gap-1 w-full justify-start">
         <div className="flex items-center gap-2">
           <UserNickname nickname={nickname} nicknameColor={name_color} />
@@ -38,12 +37,14 @@ export const FriendsSearchingCard = ({
       </div>
       <div className="flex lg:flex-row flex-col items-center gap-2 *:w-full w-full">
         {nickname !== currentUser.nickname ? (
-          <FriendButton recipient={nickname} />
+          <Suspense fallback={<Skeleton className="w-full h-8" />}>
+            <FriendButton recipient={nickname} />
+          </Suspense>
         ) : (
-          <Button
-            state="default"
-          >
-            Это вы
+          <Button state="default">
+            <Typography>
+              Это вы
+            </Typography>
           </Button>
         )}
         <Button
@@ -51,7 +52,9 @@ export const FriendsSearchingCard = ({
           className="lg:!w-2/5"
           onClick={() => navigate({ to: USER_URL + nickname })}
         >
-          К профилю
+          <Typography>
+            К профилю
+          </Typography>
         </Button>
       </div>
     </div>

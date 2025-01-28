@@ -29,7 +29,7 @@ const initial: SearchQuery = {
 export const searchQuery = () => useQuery<SearchQuery, Error>({
   queryKey: SEARCH_QUERY_KEY,
   initialData: initial,
+  refetchOnMount: false,
   refetchOnWindowFocus: false,
-  staleTime: 1000,
-  placeholderData: keepPreviousData,
+  placeholderData: keepPreviousData
 });

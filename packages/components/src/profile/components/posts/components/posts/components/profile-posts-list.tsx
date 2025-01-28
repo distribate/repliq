@@ -11,18 +11,14 @@ import { UserEntity } from '@repo/types/entities/entities-type.ts';
 import { Separator } from '@repo/ui/src/components/separator.tsx';
 import { useInView } from 'react-intersection-observer';
 import { useEffect } from 'react';
-import {
-  POSTS_DEFAULT_MAX_RANGE,
-  POSTS_FILTERING_QUERY_KEY, PostsFilteringQuery,
-} from '#profile/components/posts/components/posts/queries/posts-filtering-query.ts';
-import { useQueryClient } from '@tanstack/react-query';
 import { SomethingError } from '#templates/something-error.tsx';
+import { postsFilteringQuery } from '../queries/posts-filtering-query.ts';
 
 const PostsSkeleton = () => {
   return (
     <div className="flex flex-col gap-4 w-full h-full">
-      <Skeleton className="h-36 w-full" />
-      <Skeleton className="h-36 w-full" />
+      <Skeleton className="h-64 w-full" />
+      <Skeleton className="h-64 w-full" />
     </div>
   );
 };
@@ -30,40 +26,30 @@ const PostsSkeleton = () => {
 const ProfilePostsList = ({
   nickname,
 }: Pick<UserEntity, 'nickname'>) => {
-  const qc = useQueryClient();
-  const { data, isError, isLoading, refetch, isFetching } = postsQuery(nickname);
+  const { data: { filteringType, ascending } } = postsFilteringQuery();
+  const { data, isError, isLoading, refetch, isFetching } = postsQuery(nickname, filteringType, ascending);
   const { ref, inView } = useInView({ triggerOnce: false, threshold: 1 });
-  
+
   const postsData = data?.data;
-  const postsMeta = data?.meta!;
-  const hasMore = postsData && postsData.length < postsMeta.count;
-  
-  const increasePostRange = () => {
-    return qc.setQueryData(POSTS_FILTERING_QUERY_KEY, (prev: PostsFilteringQuery) => ({
-      ...prev,
-      range: [ prev.range[0], prev.range[1] + POSTS_DEFAULT_MAX_RANGE ],
-    }));
-  };
-  
+  const postsMeta = data?.meta;
+  const hasMore = postsMeta?.hasNextPage;
+
   useEffect(() => {
     if (inView && hasMore) {
-      increasePostRange();
       refetch();
     }
-  }, [ inView, refetch ]);
-  
+  }, [inView, refetch]);
+
   if (isLoading) return <PostsSkeleton />;
   if (isError) return <SomethingError />;
-  if (!postsData || !postsData.length) return <ContentNotFound title="Постов не найдено." />;
-  
-  const posts = postsData.filter(
-    post => !post.isPinned,
-  );
-  
-  const pinnedPost = postsData.find(
-    post => post.isPinned,
-  );
-  
+
+  if (!postsData || !postsData.length) {
+    return <ContentNotFound title="Постов не найдено." />;
+  }
+
+  const posts = postsData.filter(p => !p.isPinned);
+  const pinnedPost = postsData.find(p => p.isPinned);
+
   return (
     <div className="flex flex-col gap-4 w-full h-full">
       {pinnedPost && (

@@ -15,17 +15,15 @@ const DonateListNull = () => {
 
 export const DonateList = () => {
   const { data: donates, isLoading, isError } = donatesQuery()
-  
-  if (isLoading) return <DonateListSkeleton/>
-  if (isError) return <DonateListNull/>
-  
-  if (!donates) return <DonateListNull/>
-  
+
+  if (isLoading) return <DonateListSkeleton />
+  if (isError) return <DonateListNull />
+
+  if (!donates) return <DonateListNull />
+
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 2xl:grid-cols-4 gap-4">
-      {donates.map(donate => (
-        <SubscriptionItem key={donate.origin} {...donate} />
-      ))}
+      {donates.map(d => <SubscriptionItem key={d.origin} {...d} />)}
     </div>
   )
 }

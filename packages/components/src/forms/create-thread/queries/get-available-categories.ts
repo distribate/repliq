@@ -1,19 +1,13 @@
-"use server";
-
-import { createClient } from "@repo/shared/api/supabase-client.ts";
+import { forumCategoriesClient } from "@repo/shared/api/forum-client"
 
 export async function getAvailableCategories() {
-  const api = createClient();
+  const res = await forumCategoriesClient.categories["get-available-categories"].$get()
 
-  const { data, error } = await api
-    .from("category")
-    .select("id, title, description")
-    .eq("available", true)
-    .returns<{ id: number, title: string, description: string}[]>();
+  const data = await res.json()
 
-  if (error) {
-    throw new Error(error.message);
+  if (!data || 'error' in data) {
+    return null
   }
 
-  return data;
+  return data.data
 }

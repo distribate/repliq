@@ -5,7 +5,6 @@ import { showRoutes } from 'hono/dev';
 import { initNats } from '@repo/config-nats/nats-client';
 import { validateRequest, watcher } from '#middlewares/validate-request.ts';
 import { contextStorage } from 'hono/context-storage'
-import { getUserRoute } from '#routes/user/get-user.ts';
 import { editUserSettingsRoute } from '#routes/user/edit-user-settings.ts';
 import { editUserDetailsRoute } from '#routes/user/edit-user-details.ts';
 import { getUserSettingsRoute } from '#routes/user/get-user-settings.ts';
@@ -25,7 +24,6 @@ import { getUserSocialsRoute } from '#routes/user/get-user-socials.ts';
 import { getUserProfileStatsRoute } from '#routes/user/get-user-profile-stats.ts';
 import { createProfileViewRoute } from '#routes/user/create-profile-view.ts';
 import { createIssueRoute } from '#routes/issue/create-issue.ts';
-import { getUserProfileStatusRoute } from '#routes/user/get-user-profile-status.ts';
 import { getUserNotificationsRoute } from '#routes/user/get-user-notifications.ts';
 import { checkNotificationRoute } from '#routes/notification/check-notification.ts';
 import { getUserGameStatusRoute } from '#routes/user/get-user-game-status.ts';
@@ -57,7 +55,6 @@ import type { ServerWebSocket } from 'bun'
 import { confirmWebsocketConnRoute } from '#routes/ws/confirm-websocket-conn.ts';
 import { userStatusRoute } from '#routes/ws/user-status.ts';
 import { getUserStatusRoute } from '#routes/user/get-user-status.ts';
-import { getUserCoverImageRoute } from '#routes/user/get-user-cover-image.ts';
 import { getNewsRoute } from '#routes/public/get-news.ts';
 import { getOnlineUsersRoute } from '#routes/public/get-online-users.ts';
 import { getLatestRegUsersRoute } from '#routes/public/get-latest-reg-users.ts';
@@ -79,11 +76,35 @@ import { getAuthImagesRoute } from '#routes/admin/get-auth-images.ts';
 import { getMinecraftItemsRoute } from '#routes/public/get-minecraft-items.ts';
 import { createMinecraftItemRoute } from '#routes/admin/create-minecraft-item.ts';
 import { createCoverImageRoute } from '#routes/user/create-cover-image.ts';
+import { createPostRoute } from '#routes/post/create-post.ts';
+import { deletePostRoute } from '#routes/post/delete-post.ts';
+import { editPostRoute } from '#routes/post/edit-post.ts';
+import { pinPostRoute } from '#routes/post/pin-post.ts';
+import { disableCommentsRoute } from '#routes/comments/disable-comments.ts';
+import { getAvailableCategoriesRoute } from '#routes/categories/get-available-categories.ts';
+import { getLatestThreadsRoute } from '#routes/thread/get-latest-threads.ts';
+import { getUserReferalsRoute } from '#routes/user/get-user-referals.ts';
+import { deleteCoverImageRoute } from '#routes/user/delete-cover-image.ts';
+import { getImagesLibraryRoute } from '#routes/public/get-images-library.ts';
+import { createReportRoute } from '#routes/report/create-report.ts';
+import { getReportRoute } from '#routes/report/get-report.ts';
+import { approveReportRoute } from '#routes/report/approve-report.ts';
+import { getCategoryRoute } from '#routes/categories/get-category.ts';
+import { getIsAdminRoute } from '#routes/admin/get-is-admin.ts';
+import { getUserProfileRoute } from "#routes/user/get-user-profile.ts"
+import { getPostViewersRoute } from '#routes/post/get-post-viewers.ts';
 
 await initNats()
 await watcher()
 
 const { websocket } = createBunWebSocket<ServerWebSocket>()
+
+export const report = new Hono()
+  .basePath('/report')
+  .use(validateRequest)
+  .route("/", getReportRoute)
+  .route("/", createReportRoute)
+  .route("/", approveReportRoute)
 
 export const landing = new Hono()
   .route("/", getNewsRoute)
@@ -92,6 +113,7 @@ export const landing = new Hono()
   .route("/", getDonatesRoute)
   .route("/", getAlertsRoute)
   .route("/", getMinecraftItemsRoute)
+  .route("/", getImagesLibraryRoute)
 
 export const shared = new Hono()
   .basePath("/shared")
@@ -112,6 +134,7 @@ export const comment = new Hono()
   .use(validateRequest)
   .route("/", createCommentRoute)
   .route("/", replyCommentRoute)
+  .route("/", disableCommentsRoute)
   .route("/", getLastCommentsRoute)
 
 export const category = new Hono()
@@ -120,6 +143,8 @@ export const category = new Hono()
   .route("/", getCategoriesRoute)
   .route("/", getCategoryThreadsRoute)
   .route("/", getLatestCategoryThreadsRoute)
+  .route("/", getAvailableCategoriesRoute)
+  .route("/", getCategoryRoute)
 
 export const thread = new Hono()
   .basePath('/thread')
@@ -131,7 +156,17 @@ export const thread = new Hono()
   .route("/", getThreadCommentsRoute)
   .route("/", getThreadUserReactionsRoute)
   .route("/", createThreadRoute)
+  .route("/", getLatestThreadsRoute)
   .route("/", getThreadImagesRoute)
+
+export const post = new Hono()
+  .basePath('/post')
+  .use(validateRequest)
+  .route("/", createPostRoute)
+  .route("/", deletePostRoute)
+  .route("/", editPostRoute)
+  .route('/', pinPostRoute)
+  .route("/", getPostViewersRoute)
 
 export const server = new Hono()
   .basePath('/server')
@@ -145,7 +180,6 @@ export const reaction = new Hono()
 export const user = new Hono()
   .basePath('/user')
   .use(validateRequest)
-  .route('/', getUserRoute)
   .route('/', editUserSettingsRoute)
   .route('/', editUserDetailsRoute)
   .route('/', getUserSettingsRoute)
@@ -165,7 +199,6 @@ export const user = new Hono()
   .route("/", getUserProfileStatsRoute)
   .route("/", createProfileViewRoute)
   .route("/", createIssueRoute)
-  .route("/", getUserProfileStatusRoute)
   .route("/", getUserNotificationsRoute)
   .route("/", checkNotificationRoute)
   .route("/", getUserGameStatusRoute)
@@ -178,10 +211,13 @@ export const user = new Hono()
   .route("/", getUserBanDetailsRoute)
   .route("/", getUserFriendsCountRoute)
   .route("/", getUserStatusRoute)
-  .route("/", getUserCoverImageRoute)
   .route("/", getUserGlobalOptionsRoute)
   .route("/", getUserBanDetailsRoute)
   .route("/", createCoverImageRoute)
+  .route("/", getUserReferalsRoute)
+  .route("/", deleteCoverImageRoute)
+  .route("/", getIsAdminRoute)
+  .route("/", getUserProfileRoute)
 
 export const search = new Hono()
   .basePath('/search')
@@ -212,7 +248,9 @@ const app = new Hono<Env>()
   .route("/", shared)
   .route("/", ws)
   .route("/", search)
+  .route("/", post)
   .route("/", landing)
+  .route("/", report)
 
 showRoutes(app, { verbose: false });
 

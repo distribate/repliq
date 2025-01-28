@@ -1,9 +1,10 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
-import { POSTS_QUERY_KEY } from "#profile/components/posts/components/posts/queries/posts-query.ts";
+import { POSTS_QUERY_KEY, PostsQueryResponse } from "#profile/components/posts/components/posts/queries/posts-query.ts";
 import { POST_FORM_FIELD_QUERY_KEY } from "../queries/post-form-query.ts";
 import { getUser } from "@repo/lib/helpers/get-user.ts";
 import { PostEntity } from "@repo/types/entities/entities-type.ts";
+import { createPost } from "../queries/create-post.ts";
 
 export const outputValidator = (
   output: string,
@@ -23,7 +24,7 @@ export const bannedWords = ["FUCK", "fuck", "сука", "бля"];
 
 export const useCreatePost = () => {
   const qc = useQueryClient();
-  const currentUser = getUser();
+  const { nickname } = getUser();
 
   const createPostMutation = useMutation({
     mutationFn: async ({
@@ -32,25 +33,29 @@ export const useCreatePost = () => {
     }: Pick<PostEntity, "content" | "visibility">) => {
       const fixedContent = outputValidator(content, bannedWords);
 
-      // return createPost({ content: fixedContent, visibility });
+      return createPost({ isComments: false, isPinned: false, content: fixedContent, visibility });
     },
     onSuccess: async (data) => {
-      // if (!data)
-      //   toast.error(
-      //     "Произошла ошибка при публикации поста. Попробуйте позже!",
-      //     {
-      //       description: "Попробуйте попытку позже",
-      //     },
-      //   );
+      if (!data) return toast.error("Произошла ошибка при публикации поста. Попробуйте позже!", {
+        description: "Попробуйте попытку позже",
+      });
 
-      // toast.success("Опубликовано");
+      toast.success("Опубликовано");
 
-      // await Promise.all([
-      //   qc.invalidateQueries({
-      //     queryKey: POSTS_QUERY_KEY(currentUser.nickname),
-      //   }),
-      //   qc.resetQueries({ queryKey: POST_FORM_FIELD_QUERY_KEY }),
-      // ]);
+      const newPost: Pick<PostsQueryResponse, "data">["data"][0] = {
+        ...data.data,
+        nickname,
+        views_count: 0,
+        isViewed: true,
+        comments_count: 0,
+      };
+
+      qc.setQueryData(POSTS_QUERY_KEY(nickname), (prev: PostsQueryResponse) => ({
+        ...prev,
+        data: [newPost, ...prev.data]
+      }))
+      
+      return qc.resetQueries({ queryKey: POST_FORM_FIELD_QUERY_KEY })
     },
     onError: (e) => {
       throw new Error(e.message);

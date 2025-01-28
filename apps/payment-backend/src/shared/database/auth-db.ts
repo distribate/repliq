@@ -1,6 +1,14 @@
-import { paymentsDialect } from "@repo/shared/db/payments-db.ts";
 import { Kysely } from "kysely";
 import type { DB as paymentsDBType } from "@repo/types/db/payments-database-types.ts";
+import type { DatabaseConnection } from "@repo/types/entities/database-connection-type";
+import { PostgresDialect } from "kysely";
+import { Pool } from "pg";
+
+const paymentsDialect = ({
+  host, database, user, password, port
+}: DatabaseConnection) => {
+  return new PostgresDialect({ pool: new Pool({ database, host, port, password, user, max: 10, }) });
+};
 
 export const paymentsDB = new Kysely<paymentsDBType>({ dialect: paymentsDialect({
     host: "127.0.0.1",

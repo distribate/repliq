@@ -1,10 +1,7 @@
 import { FriendNotesEntity } from "@repo/types/entities/entities-type.ts";
 import { forumUserClient } from "@repo/shared/api/forum-client";
 
-export type SetNote = Pick<
-  FriendNotesEntity,
-  "friend_id" | "note" | "recipient"
->;
+export type SetNote = Pick<FriendNotesEntity, "friend_id" | "note" | "recipient">;
 
 export async function setNoteFriend({
   recipient, friend_id, note,

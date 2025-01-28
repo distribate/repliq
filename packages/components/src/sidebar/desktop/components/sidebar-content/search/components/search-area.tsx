@@ -17,7 +17,10 @@ type SearchCardTopicProps = Pick<ThreadEntity, "id" | "title">;
 
 const SearchCardTopic = ({ title, id }: SearchCardTopicProps) => {
   return (
-    <Link to={THREAD_URL + id} className="flex items-center gap-2 p-2 bg-shark-900 rounded-md">
+    <Link
+      to={THREAD_URL + id}
+      className="flex items-center gap-2 p-2 bg-shark-900 rounded-md"
+    >
       {title}
     </Link>
   );
@@ -69,9 +72,6 @@ export const SearchArea = () => {
 
   if (isLoading) return <SearchAreaSkeleton />;
 
-  const typeIsUsers = type === "users";
-  const typeIsTopics = type === "threads";
-
   if (!queryValue) return null;
 
   return (
@@ -80,7 +80,7 @@ export const SearchArea = () => {
         <SearchAreaNotFound searchValue={queryValue || null} />
       ) : (
         <>
-          {typeIsUsers &&
+          {type === "users" &&
             (searchState.results as SearchUser[]).map(
               ({ nickname, name_color }) => (
                 <SearchUserItem
@@ -91,16 +91,15 @@ export const SearchArea = () => {
               ),
             )
           }
-          {typeIsTopics &&
-            (results as SearchThread[]).map(({ title, id }) => (
-              <SearchCardTopic key={id} id={id} title={title} />
-            ))}
+          {type === "threads" &&
+            (results as SearchThread[]).map(i => (
+              <SearchCardTopic key={i.id} id={i.id} title={i.title} />
+            ))
+          }
           {results.length >= SEARCH_SIDEBAR_LIMIT && (
             <Link
               to="/search"
-              search={{
-                type, queryValue
-              }}
+              search={{ type, queryValue }}
             >
               <Typography textColor="gray" textSize="small">
                 показать больше

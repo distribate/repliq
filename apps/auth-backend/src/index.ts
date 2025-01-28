@@ -21,7 +21,6 @@ await initNats()
 
 export const auth = new Hono()
   .route('/', invalidateSessionRoute)
-  // .route('/', validateSessionRoute)
   .route('/', getAuthUser)
   .route('/', registerRoute)
   .route("/", loginRoute)

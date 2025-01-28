@@ -1,13 +1,13 @@
 import { PostItemHeader } from "#post/components/post-item/components/post-header.tsx";
 import { PostItemBody } from "#post/components/post-item/components/post-body.tsx";
 import { PostFooter } from "#post/components/post-item/components/post-footer.tsx";
-import dynamic from "next/dynamic";
 import type { UserPostItem } from '@repo/types/routes-types/get-user-posts-types.ts';
+import { lazy, Suspense } from "react";
 
-const PostControl = dynamic(() =>
+const PostControl = lazy(() =>
   import(
     "@repo/components/src/post/components/post-item/components/post-control.tsx"
-  ).then((m) => m.PostControl),
+  ).then((m) => ({ default: m.PostControl })),
 );
 
 type ProfilePostsListCardProps = Pick<UserPostItem,
@@ -15,36 +15,39 @@ type ProfilePostsListCardProps = Pick<UserPostItem,
   | "content"
   | "isPinned"
   | "created_at"
-  | "user_nickname"
+  | "nickname"
   | "isUpdated"
   | "views_count"
   | "visibility"
   | "isViewed"
+  | "isComments"
 >
 
 export const ProfilePostsListCard = ({
-  user_nickname, created_at, isPinned, id, content, visibility, views_count, isUpdated, isViewed
+  nickname, created_at, isPinned, id, content, visibility, views_count, isUpdated, isViewed, isComments
 }: ProfilePostsListCardProps) => {
   return (
     <div className="flex bg-shark-950 group rounded-lg w-full p-4 flex-col gap-y-2">
       <div className="flex flex-col gap-y-4">
         <div className="flex justify-between w-full items-center">
           <PostItemHeader
-            user_nickname={user_nickname}
+            nickname={nickname}
             isPinned={isPinned}
             visibility={visibility}
             created_at={created_at}
           />
-          <PostControl id={id} nickname={user_nickname} />
+          <Suspense>
+            <PostControl id={id} nickname={nickname} isComments={isComments} />
+          </Suspense>
         </div>
-        <PostItemBody id={id} content={content} user_nickname={user_nickname} />
+        <PostItemBody id={id} content={content} nickname={nickname} />
       </div>
       <PostFooter
         isViewed={isViewed}
         id={id}
         views_count={views_count}
         isUpdated={isUpdated}
-        user_nickname={user_nickname}
+        nickname={nickname}
         created_at={created_at}
       />
       {/*<PostComments id={id} comments_count={comments_count} />*/}

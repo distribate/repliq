@@ -6,8 +6,13 @@ import {
   useControlCoverImage,
   USER_COVER_UPDATE_IMAGE_MUTATION_KEY,
 } from "#profile/components/cover/hooks/use-control-cover-image.ts";
-import { ChangeEvent } from "react";
-import { ProfileBackgroundDefaultImagesModal } from "./profile-background-default-images-modal.tsx";
+import { ChangeEvent, Suspense, lazy } from "react";
+import { Skeleton } from "@repo/ui/src/components/skeleton.tsx";
+
+const ProfileBackgroundDefaultImagesModal = lazy(() =>
+  import("./profile-background-default-images-modal.tsx")
+    .then(m => ({ default: m.ProfileBackgroundDefaultImagesModal }))
+);
 
 const ProfileBackgroundUploadCustom = () => {
   const { uploadBackgroundImageMutation } = useControlCoverImage();
@@ -17,13 +22,13 @@ const ProfileBackgroundUploadCustom = () => {
 
     if (!file) return;
 
-    uploadBackgroundImageMutation.mutate({ file, customFilename: null });
+    uploadBackgroundImageMutation.mutate({ file, type: "custom" });
   };
 
   return (
     <HoverCardItem className="relative gap-2 p-6 items-center group">
-      <CloudUpload size={24} className="text-shark-300" />
-      <Typography textSize="medium" textColor="shark_white">
+      <CloudUpload size={24} className="icon-color" />
+      <Typography textSize="large" textColor="shark_white">
         Загрузить своё
       </Typography>
       <input
@@ -46,7 +51,7 @@ export const ProfileBackgroundUpdateModal = () => {
         <HoverCardItem className="gap-2 items-center group">
           <ImageUp
             size={16}
-            className="text-shark-300 group-hover:text-pink-500"
+            className="icon-color group-hover:text-pink-500"
           />
           <Typography>Обновить фон</Typography>
         </HoverCardItem>
@@ -55,7 +60,9 @@ export const ProfileBackgroundUpdateModal = () => {
         <div className="flex flex-col items-center gap-y-4 w-full">
           <Typography variant="dialogTitle">Обновление фона</Typography>
           <div className="flex flex-col items-center justify-center *:w-full w-full">
-            <ProfileBackgroundDefaultImagesModal />
+            <Suspense fallback={<Skeleton className="h-10 w-full" />}>
+              <ProfileBackgroundDefaultImagesModal />
+            </Suspense>
             <ProfileBackgroundUploadCustom />
           </div>
         </div>

@@ -1,5 +1,3 @@
-"use client";
-
 import { ThreadEntity } from "@repo/types/entities/entities-type.ts";
 import { THREAD_REACTIONS } from "@repo/shared/constants/emojis.tsx";
 import { threadReactionsQuery } from "../queries/thread-reactions-query";

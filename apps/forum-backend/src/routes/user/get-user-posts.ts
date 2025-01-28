@@ -8,16 +8,17 @@ import { getNickname } from '#utils/get-nickname-from-storage.ts';
 export const getUserPostsRoute = new Hono()
   .get('/get-user-posts/:nickname', zValidator('query', getUserPostsSchema), async (ctx) => {
     const { nickname: requestedUserNickname } = ctx.req.param();
-    const query = getUserPostsSchema.parse(ctx.req.query());
+    const { filteringType, ascending } = getUserPostsSchema.parse(ctx.req.query());
 
     const nickname = getNickname()
 
     try {
-      const posts = await getUserPosts({ ...query, currentUserNickname: nickname, requestedUserNickname });
-      
+      const posts = await getUserPosts({
+        filteringType, ascending, currentUserNickname: nickname, requestedUserNickname
+      });
+
       return ctx.json(posts, 200);
     } catch (e) {
       return ctx.json({ error: throwError(e) }, 500);
     }
-  }
-  );
+  });

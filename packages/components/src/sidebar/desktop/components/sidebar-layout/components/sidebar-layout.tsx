@@ -21,18 +21,11 @@ export const sidebarLayoutVariants = cva(
   },
 );
 
-interface SidebarLayoutProps
-  extends HTMLAttributes<HTMLDivElement>,
-    VariantProps<typeof sidebarLayoutVariants> {}
+type SidebarLayoutProps = HTMLAttributes<HTMLDivElement>
+  & VariantProps<typeof sidebarLayoutVariants>
 
-export const SidebarLayout = forwardRef<HTMLDivElement, SidebarLayoutProps>(
-  ({ variant, className, padding, ...props }, ref) => {
-    return (
-      <div
-        ref={ref}
-        className={sidebarLayoutVariants({ variant, padding, className })}
-        {...props}
-      />
-    );
-  },
-);
+export const SidebarLayout = forwardRef<HTMLDivElement, SidebarLayoutProps>(({
+  variant, className, padding, ...props
+}, ref) => {
+  return <div ref={ref} className={sidebarLayoutVariants({ variant, padding, className })} {...props} />
+});

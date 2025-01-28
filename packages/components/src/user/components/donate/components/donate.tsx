@@ -1,5 +1,3 @@
-"use client";
-
 import { donateQuery } from "../queries/donate-query.ts";
 import { Typography } from "@repo/ui/src/components/typography.tsx";
 import { ParticleEffect } from "@repo/ui/src/components/particle-effect.tsx";

@@ -147,7 +147,8 @@ export const ProfileAccountStats = () => {
         <div className="flex items-center gap-1 w-fit">
           <Typography
             textColor="shark_white"
-            className="text-[22px] font-semibold"
+            textSize="big"
+            className="font-semibold"
           >
             Статистика аккаунта
           </Typography>

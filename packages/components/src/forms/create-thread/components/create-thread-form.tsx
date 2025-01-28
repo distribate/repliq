@@ -1,11 +1,9 @@
-"use client";
-
 import { useCreateThread } from "../hooks/use-create-thread.tsx";
 import { Button } from "@repo/ui/src/components/button.tsx";
 import { Separator } from "@repo/ui/src/components/separator.tsx";
 import { BlockWrapper } from "#wrappers/block-wrapper.tsx";
 import { FormThreadContent } from "./form-thread-content.tsx";
-// import { FormThreadCategories } from "./form-thread-categories.tsx";
+import { FormThreadCategories } from "./form-thread-categories.tsx";
 import { FormThreadComments } from "./form-thread-comments.tsx";
 import { FormThreadDescription } from "./form-thread-description.tsx";
 import { FormThreadTitle } from "./form-thread-title.tsx";
@@ -55,7 +53,7 @@ export const CreateThreadForm = () => {
       </div>
       <div className="flex flex-grow-0 sticky w-1/4 max-w-1/4 top-0 h-fit">
         <BlockWrapper className="flex flex-col gap-y-4 w-full !p-4">
-          {/* <FormThreadCategories {...formChildsObj} /> */}
+          <FormThreadCategories {...formChildsObj} />
           <Separator />
           <div className="flex flex-col gap-4 items-start h-full *:rounded-md *:w-full">
             <FormThreadComments {...formChildsObj} />

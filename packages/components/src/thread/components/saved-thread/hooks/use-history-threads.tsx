@@ -1,5 +1,3 @@
-"use client";
-
 import { useLocalStorage } from "@repo/lib/hooks/use-local-storage.ts";
 import { ThreadHistoryType } from "../types/thread-history-types.ts";
 import { getUser } from "@repo/lib/helpers/get-user.ts";
@@ -8,6 +6,8 @@ import { useQueryClient } from "@tanstack/react-query";
 import { HISTORY_THREADS_QUERY_KEY } from "../queries/history-threads-query.ts";
 
 export const HISTORY_THREADS_KEY = "history-threads";
+
+const MAX_HISTORY = 2;
 
 export const useHistoryThreads = () => {
   const qc = useQueryClient()
@@ -35,7 +35,7 @@ export const useHistoryThreads = () => {
 
       if (exists) return threadObjects;
 
-      if (threadObjects.length < 3) {
+      if (threadObjects.length < MAX_HISTORY) {
         const threads = [...threadObjects, { account, thread }]
 
         qc.setQueryData(HISTORY_THREADS_QUERY_KEY, threads)

@@ -47,5 +47,9 @@ export const validateRequest = createMiddleware(async (ctx, next) => {
 
   ctx.set('nickname', nickname.nickname);
 
+  if (!ctx.get("nickname")) {
+    return ctx.json({ error: "Failed to validate request" }, 401)
+  }
+
   await next()
 })

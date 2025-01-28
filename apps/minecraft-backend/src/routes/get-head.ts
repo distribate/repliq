@@ -13,6 +13,7 @@ export const getHeadRoute = new Hono()
       const head = await extractHeadFromSkin(buffer)
 
       ctx.header('Content-Type', 'image/png')
+      ctx.header('Cache-Control', 'public, max-age=120')
 
       return ctx.body(head as unknown as ReadableStream, 200)
     } catch (e) {

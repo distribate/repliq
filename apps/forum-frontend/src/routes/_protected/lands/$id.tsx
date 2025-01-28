@@ -14,12 +14,13 @@ import { createFileRoute, Link } from '@tanstack/react-router'
 import Looking from '@repo/assets/images/looking.jpg'
 import { UserNickname } from '@repo/components/src/user/components/name/nickname'
 import { USER_URL } from '@repo/shared/constants/routes'
+import { createQueryKey } from '@repo/lib/helpers/query-key-builder'
 
 export const Route = createFileRoute('/_protected/lands/$id')({
   component: RouteComponent,
   loader: async ({ params, context }) => {
     const data = await context.queryClient.ensureQueryData({
-      queryKey: ['lands', params.id],
+      queryKey: LAND_QUERY_KEY(params.id),
       queryFn: () => getLandById(params.id),
     })
 
@@ -48,13 +49,14 @@ async function getLandById(id: string) {
   return data
 }
 
-const landsQuery = (id: string) =>
-  useQuery({
-    queryKey: ['lands', id],
-    queryFn: () => getLandById(id),
-    refetchOnWindowFocus: false,
-    refetchOnMount: false,
-  })
+const LAND_QUERY_KEY = (id: string) => createQueryKey('ui', ["land", id])
+
+const landsQuery = (id: string) => useQuery({
+  queryKey: LAND_QUERY_KEY(id),
+  queryFn: () => getLandById(id),
+  refetchOnWindowFocus: false,
+  refetchOnMount: false,
+})
 
 function RouteComponent() {
   const { id } = Route.useParams()
@@ -203,13 +205,65 @@ function RouteComponent() {
             </Typography>
           </div>
         </BlockWrapper>
-        <BlockWrapper className="flex flex-col items-center overflow-hidden justify-end !p-4 gap-4 w-full">
-          <Typography className="text-[20px] font-semibold">
-            Территории владельца этой территории:
-          </Typography>
-          <Typography>пусто.</Typography>
-        </BlockWrapper>
+        <AnotherLandsByOwner exclude={id} nickname={land.members[0].nickname} />
       </div>
     </div>
+  )
+}
+
+async function getAnotherLandsByOwner(nickname: string, exclude: string) {
+  const res = await landsClient.lands['get-user-lands'][':nickname'].$get({
+    param: {
+      nickname,
+    },
+    query: {
+      exclude,
+    },
+  })
+
+  const data = await res.json()
+
+  if (!data || 'error' in data) return null
+
+  return data.data.length > 0 ? data.data : null
+}
+
+type AnotherLandsByOwner = {
+  nickname: string
+  exclude: string
+}
+
+const ANOTHER_LANDS_BY_OWNER_QUERY_KEY = (nickname: string, exclude: string) => createQueryKey('ui', ['lands', nickname, exclude])
+
+const anotherLandsByOwnerQuery = ({
+  exclude, nickname
+}: AnotherLandsByOwner) => useQuery({
+  queryKey: ANOTHER_LANDS_BY_OWNER_QUERY_KEY(nickname, exclude),
+  queryFn: () => getAnotherLandsByOwner(nickname, exclude),
+  refetchOnWindowFocus: false,
+  refetchOnMount: false,
+})
+
+const AnotherLandsByOwner = ({
+  nickname, exclude,
+}: AnotherLandsByOwner) => {
+  const { data } = anotherLandsByOwnerQuery({ exclude, nickname })
+
+  return (
+    <BlockWrapper className="flex flex-col items-center overflow-hidden justify-end !p-4 gap-4 w-full">
+      <Typography className="text-[20px] font-semibold">
+        Территории владельца этой территории:
+      </Typography>
+      {data && (
+        data.map((land) => (
+          <div>
+            {land.name}
+          </div>
+        ))
+      )}
+      {!data && (
+        <Typography>Пусто.</Typography>
+      )}
+    </BlockWrapper>
   )
 }

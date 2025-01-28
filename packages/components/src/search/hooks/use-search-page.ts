@@ -35,11 +35,12 @@ export const useSearchPage = () => {
   const { data: searchState } = searchPageQuery();
 
   useEffect(() => {
-    if (threadsSearchType)
+    if (threadsSearchType) {
       setValueMutation.mutate({
         type: threadsSearchType ? "user" : "title",
         queryValue: threadsSearchType,
-      });
+      })
+    }
   }, [threadsSearchType]);
 
   const setValueMutation = useMutation({
@@ -62,8 +63,7 @@ export const useSearchPage = () => {
         return qc.setQueryData(
           SEARCH_PAGE_QUERY_KEY,
           (prev: SearchPageQuery) => ({
-            ...prev,
-            results: null,
+            ...prev, results: null
           }),
         );
       }
@@ -83,17 +83,7 @@ export const useSearchPage = () => {
 
   const handleSearchMutation = useMutation({
     mutationKey: SEARCH_PAGE_RESULTS_MUTATION_KEY,
-    mutationFn: async ({
-      queryValue,
-      limit,
-      threadsType,
-    }: HandleSearchMutation) =>
-      getSearchResults({
-        type: searchType,
-        value: queryValue,
-        limit,
-        threadsType,
-      }),
+    mutationFn: async ({ queryValue, limit, threadsType }: HandleSearchMutation) => getSearchResults({ type: searchType, queryValue, limit, threadsType }),
     onSuccess: async (data) => {
       if (!data) return;
 

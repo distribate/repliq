@@ -17,16 +17,14 @@ import { Route as PublicImport } from './routes/_public'
 import { Route as ProtectedImport } from './routes/_protected'
 import { Route as AuthIndexImport } from './routes/auth/index'
 import { Route as ProtectedIndexImport } from './routes/_protected/index'
-import { Route as ProtectedAdminIndexImport } from './routes/_protected/admin/index'
+import { Route as ProtectedCollectionImport } from './routes/_protected/collection'
+import { Route as ProtectedAdminImport } from './routes/_protected/_admin'
+import { Route as ProtectedLandsIndexImport } from './routes/_protected/lands/index'
 import { Route as ProtectedUserNicknameImport } from './routes/_protected/user/$nickname'
 import { Route as ProtectedThreadIdImport } from './routes/_protected/thread/$id'
 import { Route as ProtectedLandsIdImport } from './routes/_protected/lands/$id'
 import { Route as ProtectedCategoryIdImport } from './routes/_protected/category/$id'
-import { Route as ProtectedAdminSupportImport } from './routes/_protected/admin/support'
-import { Route as ProtectedAdminStatsImport } from './routes/_protected/admin/stats'
-import { Route as ProtectedAdminDashboardImport } from './routes/_protected/admin/dashboard'
-import { Route as ProtectedAdminConfigsImport } from './routes/_protected/admin/configs'
-import { Route as ProtectedactionsCreateIssueImport } from './routes/_protected/(actions)/create-issue'
+import { Route as ProtectedactionsCreateTicketImport } from './routes/_protected/(actions)/create-ticket'
 
 // Create Virtual Routes
 
@@ -39,15 +37,26 @@ const ProtectedNotificationsLazyImport = createFileRoute(
 )()
 const ProtectedFriendsLazyImport = createFileRoute('/_protected/friends')()
 const ProtectedEventsLazyImport = createFileRoute('/_protected/events')()
-const ProtectedCollectionLazyImport = createFileRoute(
-  '/_protected/collection',
-)()
 const ProtectedRatingsIndexLazyImport = createFileRoute(
   '/_protected/ratings/',
 )()
-const ProtectedLandsIndexLazyImport = createFileRoute('/_protected/lands/')()
 const ProtectedactionsCreateThreadLazyImport = createFileRoute(
   '/_protected/(actions)/create-thread',
+)()
+const ProtectedAdminAdminIndexLazyImport = createFileRoute(
+  '/_protected/_admin/admin/',
+)()
+const ProtectedAdminAdminSupportLazyImport = createFileRoute(
+  '/_protected/_admin/admin/support',
+)()
+const ProtectedAdminAdminStatsLazyImport = createFileRoute(
+  '/_protected/_admin/admin/stats',
+)()
+const ProtectedAdminAdminDashboardLazyImport = createFileRoute(
+  '/_protected/_admin/admin/dashboard',
+)()
+const ProtectedAdminAdminConfigsLazyImport = createFileRoute(
+  '/_protected/_admin/admin/configs',
 )()
 
 // Create/Update Routes
@@ -132,13 +141,16 @@ const ProtectedEventsLazyRoute = ProtectedEventsLazyImport.update({
   import('./routes/_protected/events.lazy').then((d) => d.Route),
 )
 
-const ProtectedCollectionLazyRoute = ProtectedCollectionLazyImport.update({
+const ProtectedCollectionRoute = ProtectedCollectionImport.update({
   id: '/collection',
   path: '/collection',
   getParentRoute: () => ProtectedRoute,
-} as any).lazy(() =>
-  import('./routes/_protected/collection.lazy').then((d) => d.Route),
-)
+} as any)
+
+const ProtectedAdminRoute = ProtectedAdminImport.update({
+  id: '/_admin',
+  getParentRoute: () => ProtectedRoute,
+} as any)
 
 const ProtectedRatingsIndexLazyRoute = ProtectedRatingsIndexLazyImport.update({
   id: '/ratings/',
@@ -148,17 +160,9 @@ const ProtectedRatingsIndexLazyRoute = ProtectedRatingsIndexLazyImport.update({
   import('./routes/_protected/ratings/index.lazy').then((d) => d.Route),
 )
 
-const ProtectedLandsIndexLazyRoute = ProtectedLandsIndexLazyImport.update({
+const ProtectedLandsIndexRoute = ProtectedLandsIndexImport.update({
   id: '/lands/',
   path: '/lands/',
-  getParentRoute: () => ProtectedRoute,
-} as any).lazy(() =>
-  import('./routes/_protected/lands/index.lazy').then((d) => d.Route),
-)
-
-const ProtectedAdminIndexRoute = ProtectedAdminIndexImport.update({
-  id: '/admin/',
-  path: '/admin/',
   getParentRoute: () => ProtectedRoute,
 } as any)
 
@@ -197,36 +201,63 @@ const ProtectedCategoryIdRoute = ProtectedCategoryIdImport.update({
   getParentRoute: () => ProtectedRoute,
 } as any)
 
-const ProtectedAdminSupportRoute = ProtectedAdminSupportImport.update({
-  id: '/admin/support',
-  path: '/admin/support',
-  getParentRoute: () => ProtectedRoute,
-} as any)
-
-const ProtectedAdminStatsRoute = ProtectedAdminStatsImport.update({
-  id: '/admin/stats',
-  path: '/admin/stats',
-  getParentRoute: () => ProtectedRoute,
-} as any)
-
-const ProtectedAdminDashboardRoute = ProtectedAdminDashboardImport.update({
-  id: '/admin/dashboard',
-  path: '/admin/dashboard',
-  getParentRoute: () => ProtectedRoute,
-} as any)
-
-const ProtectedAdminConfigsRoute = ProtectedAdminConfigsImport.update({
-  id: '/admin/configs',
-  path: '/admin/configs',
-  getParentRoute: () => ProtectedRoute,
-} as any)
-
-const ProtectedactionsCreateIssueRoute =
-  ProtectedactionsCreateIssueImport.update({
-    id: '/(actions)/create-issue',
-    path: '/create-issue',
+const ProtectedactionsCreateTicketRoute =
+  ProtectedactionsCreateTicketImport.update({
+    id: '/(actions)/create-ticket',
+    path: '/create-ticket',
     getParentRoute: () => ProtectedRoute,
   } as any)
+
+const ProtectedAdminAdminIndexLazyRoute =
+  ProtectedAdminAdminIndexLazyImport.update({
+    id: '/admin/',
+    path: '/admin/',
+    getParentRoute: () => ProtectedAdminRoute,
+  } as any).lazy(() =>
+    import('./routes/_protected/_admin/admin/index.lazy').then((d) => d.Route),
+  )
+
+const ProtectedAdminAdminSupportLazyRoute =
+  ProtectedAdminAdminSupportLazyImport.update({
+    id: '/admin/support',
+    path: '/admin/support',
+    getParentRoute: () => ProtectedAdminRoute,
+  } as any).lazy(() =>
+    import('./routes/_protected/_admin/admin/support.lazy').then(
+      (d) => d.Route,
+    ),
+  )
+
+const ProtectedAdminAdminStatsLazyRoute =
+  ProtectedAdminAdminStatsLazyImport.update({
+    id: '/admin/stats',
+    path: '/admin/stats',
+    getParentRoute: () => ProtectedAdminRoute,
+  } as any).lazy(() =>
+    import('./routes/_protected/_admin/admin/stats.lazy').then((d) => d.Route),
+  )
+
+const ProtectedAdminAdminDashboardLazyRoute =
+  ProtectedAdminAdminDashboardLazyImport.update({
+    id: '/admin/dashboard',
+    path: '/admin/dashboard',
+    getParentRoute: () => ProtectedAdminRoute,
+  } as any).lazy(() =>
+    import('./routes/_protected/_admin/admin/dashboard.lazy').then(
+      (d) => d.Route,
+    ),
+  )
+
+const ProtectedAdminAdminConfigsLazyRoute =
+  ProtectedAdminAdminConfigsLazyImport.update({
+    id: '/admin/configs',
+    path: '/admin/configs',
+    getParentRoute: () => ProtectedAdminRoute,
+  } as any).lazy(() =>
+    import('./routes/_protected/_admin/admin/configs.lazy').then(
+      (d) => d.Route,
+    ),
+  )
 
 // Populate the FileRoutesByPath interface
 
@@ -246,11 +277,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PublicImport
       parentRoute: typeof rootRoute
     }
+    '/_protected/_admin': {
+      id: '/_protected/_admin'
+      path: ''
+      fullPath: ''
+      preLoaderRoute: typeof ProtectedAdminImport
+      parentRoute: typeof ProtectedImport
+    }
     '/_protected/collection': {
       id: '/_protected/collection'
       path: '/collection'
       fullPath: '/collection'
-      preLoaderRoute: typeof ProtectedCollectionLazyImport
+      preLoaderRoute: typeof ProtectedCollectionImport
       parentRoute: typeof ProtectedImport
     }
     '/_protected/events': {
@@ -316,39 +354,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthIndexImport
       parentRoute: typeof rootRoute
     }
-    '/_protected/(actions)/create-issue': {
-      id: '/_protected/(actions)/create-issue'
-      path: '/create-issue'
-      fullPath: '/create-issue'
-      preLoaderRoute: typeof ProtectedactionsCreateIssueImport
-      parentRoute: typeof ProtectedImport
-    }
-    '/_protected/admin/configs': {
-      id: '/_protected/admin/configs'
-      path: '/admin/configs'
-      fullPath: '/admin/configs'
-      preLoaderRoute: typeof ProtectedAdminConfigsImport
-      parentRoute: typeof ProtectedImport
-    }
-    '/_protected/admin/dashboard': {
-      id: '/_protected/admin/dashboard'
-      path: '/admin/dashboard'
-      fullPath: '/admin/dashboard'
-      preLoaderRoute: typeof ProtectedAdminDashboardImport
-      parentRoute: typeof ProtectedImport
-    }
-    '/_protected/admin/stats': {
-      id: '/_protected/admin/stats'
-      path: '/admin/stats'
-      fullPath: '/admin/stats'
-      preLoaderRoute: typeof ProtectedAdminStatsImport
-      parentRoute: typeof ProtectedImport
-    }
-    '/_protected/admin/support': {
-      id: '/_protected/admin/support'
-      path: '/admin/support'
-      fullPath: '/admin/support'
-      preLoaderRoute: typeof ProtectedAdminSupportImport
+    '/_protected/(actions)/create-ticket': {
+      id: '/_protected/(actions)/create-ticket'
+      path: '/create-ticket'
+      fullPath: '/create-ticket'
+      preLoaderRoute: typeof ProtectedactionsCreateTicketImport
       parentRoute: typeof ProtectedImport
     }
     '/_protected/category/$id': {
@@ -386,18 +396,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProtectedactionsCreateThreadLazyImport
       parentRoute: typeof ProtectedImport
     }
-    '/_protected/admin/': {
-      id: '/_protected/admin/'
-      path: '/admin'
-      fullPath: '/admin'
-      preLoaderRoute: typeof ProtectedAdminIndexImport
-      parentRoute: typeof ProtectedImport
-    }
     '/_protected/lands/': {
       id: '/_protected/lands/'
       path: '/lands'
       fullPath: '/lands'
-      preLoaderRoute: typeof ProtectedLandsIndexLazyImport
+      preLoaderRoute: typeof ProtectedLandsIndexImport
       parentRoute: typeof ProtectedImport
     }
     '/_protected/ratings/': {
@@ -407,52 +410,99 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProtectedRatingsIndexLazyImport
       parentRoute: typeof ProtectedImport
     }
+    '/_protected/_admin/admin/configs': {
+      id: '/_protected/_admin/admin/configs'
+      path: '/admin/configs'
+      fullPath: '/admin/configs'
+      preLoaderRoute: typeof ProtectedAdminAdminConfigsLazyImport
+      parentRoute: typeof ProtectedAdminImport
+    }
+    '/_protected/_admin/admin/dashboard': {
+      id: '/_protected/_admin/admin/dashboard'
+      path: '/admin/dashboard'
+      fullPath: '/admin/dashboard'
+      preLoaderRoute: typeof ProtectedAdminAdminDashboardLazyImport
+      parentRoute: typeof ProtectedAdminImport
+    }
+    '/_protected/_admin/admin/stats': {
+      id: '/_protected/_admin/admin/stats'
+      path: '/admin/stats'
+      fullPath: '/admin/stats'
+      preLoaderRoute: typeof ProtectedAdminAdminStatsLazyImport
+      parentRoute: typeof ProtectedAdminImport
+    }
+    '/_protected/_admin/admin/support': {
+      id: '/_protected/_admin/admin/support'
+      path: '/admin/support'
+      fullPath: '/admin/support'
+      preLoaderRoute: typeof ProtectedAdminAdminSupportLazyImport
+      parentRoute: typeof ProtectedAdminImport
+    }
+    '/_protected/_admin/admin/': {
+      id: '/_protected/_admin/admin/'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof ProtectedAdminAdminIndexLazyImport
+      parentRoute: typeof ProtectedAdminImport
+    }
   }
 }
 
 // Create and export the route tree
 
+interface ProtectedAdminRouteChildren {
+  ProtectedAdminAdminConfigsLazyRoute: typeof ProtectedAdminAdminConfigsLazyRoute
+  ProtectedAdminAdminDashboardLazyRoute: typeof ProtectedAdminAdminDashboardLazyRoute
+  ProtectedAdminAdminStatsLazyRoute: typeof ProtectedAdminAdminStatsLazyRoute
+  ProtectedAdminAdminSupportLazyRoute: typeof ProtectedAdminAdminSupportLazyRoute
+  ProtectedAdminAdminIndexLazyRoute: typeof ProtectedAdminAdminIndexLazyRoute
+}
+
+const ProtectedAdminRouteChildren: ProtectedAdminRouteChildren = {
+  ProtectedAdminAdminConfigsLazyRoute: ProtectedAdminAdminConfigsLazyRoute,
+  ProtectedAdminAdminDashboardLazyRoute: ProtectedAdminAdminDashboardLazyRoute,
+  ProtectedAdminAdminStatsLazyRoute: ProtectedAdminAdminStatsLazyRoute,
+  ProtectedAdminAdminSupportLazyRoute: ProtectedAdminAdminSupportLazyRoute,
+  ProtectedAdminAdminIndexLazyRoute: ProtectedAdminAdminIndexLazyRoute,
+}
+
+const ProtectedAdminRouteWithChildren = ProtectedAdminRoute._addFileChildren(
+  ProtectedAdminRouteChildren,
+)
+
 interface ProtectedRouteChildren {
-  ProtectedCollectionLazyRoute: typeof ProtectedCollectionLazyRoute
+  ProtectedAdminRoute: typeof ProtectedAdminRouteWithChildren
+  ProtectedCollectionRoute: typeof ProtectedCollectionRoute
   ProtectedEventsLazyRoute: typeof ProtectedEventsLazyRoute
   ProtectedFriendsLazyRoute: typeof ProtectedFriendsLazyRoute
   ProtectedNotificationsLazyRoute: typeof ProtectedNotificationsLazyRoute
   ProtectedSearchLazyRoute: typeof ProtectedSearchLazyRoute
   ProtectedIndexRoute: typeof ProtectedIndexRoute
-  ProtectedactionsCreateIssueRoute: typeof ProtectedactionsCreateIssueRoute
-  ProtectedAdminConfigsRoute: typeof ProtectedAdminConfigsRoute
-  ProtectedAdminDashboardRoute: typeof ProtectedAdminDashboardRoute
-  ProtectedAdminStatsRoute: typeof ProtectedAdminStatsRoute
-  ProtectedAdminSupportRoute: typeof ProtectedAdminSupportRoute
+  ProtectedactionsCreateTicketRoute: typeof ProtectedactionsCreateTicketRoute
   ProtectedCategoryIdRoute: typeof ProtectedCategoryIdRoute
   ProtectedLandsIdRoute: typeof ProtectedLandsIdRoute
   ProtectedThreadIdRoute: typeof ProtectedThreadIdRoute
   ProtectedUserNicknameRoute: typeof ProtectedUserNicknameRoute
   ProtectedactionsCreateThreadLazyRoute: typeof ProtectedactionsCreateThreadLazyRoute
-  ProtectedAdminIndexRoute: typeof ProtectedAdminIndexRoute
-  ProtectedLandsIndexLazyRoute: typeof ProtectedLandsIndexLazyRoute
+  ProtectedLandsIndexRoute: typeof ProtectedLandsIndexRoute
   ProtectedRatingsIndexLazyRoute: typeof ProtectedRatingsIndexLazyRoute
 }
 
 const ProtectedRouteChildren: ProtectedRouteChildren = {
-  ProtectedCollectionLazyRoute: ProtectedCollectionLazyRoute,
+  ProtectedAdminRoute: ProtectedAdminRouteWithChildren,
+  ProtectedCollectionRoute: ProtectedCollectionRoute,
   ProtectedEventsLazyRoute: ProtectedEventsLazyRoute,
   ProtectedFriendsLazyRoute: ProtectedFriendsLazyRoute,
   ProtectedNotificationsLazyRoute: ProtectedNotificationsLazyRoute,
   ProtectedSearchLazyRoute: ProtectedSearchLazyRoute,
   ProtectedIndexRoute: ProtectedIndexRoute,
-  ProtectedactionsCreateIssueRoute: ProtectedactionsCreateIssueRoute,
-  ProtectedAdminConfigsRoute: ProtectedAdminConfigsRoute,
-  ProtectedAdminDashboardRoute: ProtectedAdminDashboardRoute,
-  ProtectedAdminStatsRoute: ProtectedAdminStatsRoute,
-  ProtectedAdminSupportRoute: ProtectedAdminSupportRoute,
+  ProtectedactionsCreateTicketRoute: ProtectedactionsCreateTicketRoute,
   ProtectedCategoryIdRoute: ProtectedCategoryIdRoute,
   ProtectedLandsIdRoute: ProtectedLandsIdRoute,
   ProtectedThreadIdRoute: ProtectedThreadIdRoute,
   ProtectedUserNicknameRoute: ProtectedUserNicknameRoute,
   ProtectedactionsCreateThreadLazyRoute: ProtectedactionsCreateThreadLazyRoute,
-  ProtectedAdminIndexRoute: ProtectedAdminIndexRoute,
-  ProtectedLandsIndexLazyRoute: ProtectedLandsIndexLazyRoute,
+  ProtectedLandsIndexRoute: ProtectedLandsIndexRoute,
   ProtectedRatingsIndexLazyRoute: ProtectedRatingsIndexLazyRoute,
 }
 
@@ -476,8 +526,8 @@ const PublicRouteWithChildren =
   PublicRoute._addFileChildren(PublicRouteChildren)
 
 export interface FileRoutesByFullPath {
-  '': typeof PublicRouteWithChildren
-  '/collection': typeof ProtectedCollectionLazyRoute
+  '': typeof ProtectedAdminRouteWithChildren
+  '/collection': typeof ProtectedCollectionRoute
   '/events': typeof ProtectedEventsLazyRoute
   '/friends': typeof ProtectedFriendsLazyRoute
   '/notifications': typeof ProtectedNotificationsLazyRoute
@@ -487,24 +537,24 @@ export interface FileRoutesByFullPath {
   '/not-online': typeof PublicNotOnlineLazyRoute
   '/': typeof ProtectedIndexRoute
   '/auth': typeof AuthIndexRoute
-  '/create-issue': typeof ProtectedactionsCreateIssueRoute
-  '/admin/configs': typeof ProtectedAdminConfigsRoute
-  '/admin/dashboard': typeof ProtectedAdminDashboardRoute
-  '/admin/stats': typeof ProtectedAdminStatsRoute
-  '/admin/support': typeof ProtectedAdminSupportRoute
+  '/create-ticket': typeof ProtectedactionsCreateTicketRoute
   '/category/$id': typeof ProtectedCategoryIdRoute
   '/lands/$id': typeof ProtectedLandsIdRoute
   '/thread/$id': typeof ProtectedThreadIdRoute
   '/user/$nickname': typeof ProtectedUserNicknameRoute
   '/create-thread': typeof ProtectedactionsCreateThreadLazyRoute
-  '/admin': typeof ProtectedAdminIndexRoute
-  '/lands': typeof ProtectedLandsIndexLazyRoute
+  '/lands': typeof ProtectedLandsIndexRoute
   '/ratings': typeof ProtectedRatingsIndexLazyRoute
+  '/admin/configs': typeof ProtectedAdminAdminConfigsLazyRoute
+  '/admin/dashboard': typeof ProtectedAdminAdminDashboardLazyRoute
+  '/admin/stats': typeof ProtectedAdminAdminStatsLazyRoute
+  '/admin/support': typeof ProtectedAdminAdminSupportLazyRoute
+  '/admin': typeof ProtectedAdminAdminIndexLazyRoute
 }
 
 export interface FileRoutesByTo {
-  '': typeof PublicRouteWithChildren
-  '/collection': typeof ProtectedCollectionLazyRoute
+  '': typeof ProtectedAdminRouteWithChildren
+  '/collection': typeof ProtectedCollectionRoute
   '/events': typeof ProtectedEventsLazyRoute
   '/friends': typeof ProtectedFriendsLazyRoute
   '/notifications': typeof ProtectedNotificationsLazyRoute
@@ -514,26 +564,27 @@ export interface FileRoutesByTo {
   '/not-online': typeof PublicNotOnlineLazyRoute
   '/': typeof ProtectedIndexRoute
   '/auth': typeof AuthIndexRoute
-  '/create-issue': typeof ProtectedactionsCreateIssueRoute
-  '/admin/configs': typeof ProtectedAdminConfigsRoute
-  '/admin/dashboard': typeof ProtectedAdminDashboardRoute
-  '/admin/stats': typeof ProtectedAdminStatsRoute
-  '/admin/support': typeof ProtectedAdminSupportRoute
+  '/create-ticket': typeof ProtectedactionsCreateTicketRoute
   '/category/$id': typeof ProtectedCategoryIdRoute
   '/lands/$id': typeof ProtectedLandsIdRoute
   '/thread/$id': typeof ProtectedThreadIdRoute
   '/user/$nickname': typeof ProtectedUserNicknameRoute
   '/create-thread': typeof ProtectedactionsCreateThreadLazyRoute
-  '/admin': typeof ProtectedAdminIndexRoute
-  '/lands': typeof ProtectedLandsIndexLazyRoute
+  '/lands': typeof ProtectedLandsIndexRoute
   '/ratings': typeof ProtectedRatingsIndexLazyRoute
+  '/admin/configs': typeof ProtectedAdminAdminConfigsLazyRoute
+  '/admin/dashboard': typeof ProtectedAdminAdminDashboardLazyRoute
+  '/admin/stats': typeof ProtectedAdminAdminStatsLazyRoute
+  '/admin/support': typeof ProtectedAdminAdminSupportLazyRoute
+  '/admin': typeof ProtectedAdminAdminIndexLazyRoute
 }
 
 export interface FileRoutesById {
   __root__: typeof rootRoute
   '/_protected': typeof ProtectedRouteWithChildren
   '/_public': typeof PublicRouteWithChildren
-  '/_protected/collection': typeof ProtectedCollectionLazyRoute
+  '/_protected/_admin': typeof ProtectedAdminRouteWithChildren
+  '/_protected/collection': typeof ProtectedCollectionRoute
   '/_protected/events': typeof ProtectedEventsLazyRoute
   '/_protected/friends': typeof ProtectedFriendsLazyRoute
   '/_protected/notifications': typeof ProtectedNotificationsLazyRoute
@@ -543,19 +594,19 @@ export interface FileRoutesById {
   '/_public/not-online': typeof PublicNotOnlineLazyRoute
   '/_protected/': typeof ProtectedIndexRoute
   '/auth/': typeof AuthIndexRoute
-  '/_protected/(actions)/create-issue': typeof ProtectedactionsCreateIssueRoute
-  '/_protected/admin/configs': typeof ProtectedAdminConfigsRoute
-  '/_protected/admin/dashboard': typeof ProtectedAdminDashboardRoute
-  '/_protected/admin/stats': typeof ProtectedAdminStatsRoute
-  '/_protected/admin/support': typeof ProtectedAdminSupportRoute
+  '/_protected/(actions)/create-ticket': typeof ProtectedactionsCreateTicketRoute
   '/_protected/category/$id': typeof ProtectedCategoryIdRoute
   '/_protected/lands/$id': typeof ProtectedLandsIdRoute
   '/_protected/thread/$id': typeof ProtectedThreadIdRoute
   '/_protected/user/$nickname': typeof ProtectedUserNicknameRoute
   '/_protected/(actions)/create-thread': typeof ProtectedactionsCreateThreadLazyRoute
-  '/_protected/admin/': typeof ProtectedAdminIndexRoute
-  '/_protected/lands/': typeof ProtectedLandsIndexLazyRoute
+  '/_protected/lands/': typeof ProtectedLandsIndexRoute
   '/_protected/ratings/': typeof ProtectedRatingsIndexLazyRoute
+  '/_protected/_admin/admin/configs': typeof ProtectedAdminAdminConfigsLazyRoute
+  '/_protected/_admin/admin/dashboard': typeof ProtectedAdminAdminDashboardLazyRoute
+  '/_protected/_admin/admin/stats': typeof ProtectedAdminAdminStatsLazyRoute
+  '/_protected/_admin/admin/support': typeof ProtectedAdminAdminSupportLazyRoute
+  '/_protected/_admin/admin/': typeof ProtectedAdminAdminIndexLazyRoute
 }
 
 export interface FileRouteTypes {
@@ -572,19 +623,19 @@ export interface FileRouteTypes {
     | '/not-online'
     | '/'
     | '/auth'
-    | '/create-issue'
-    | '/admin/configs'
-    | '/admin/dashboard'
-    | '/admin/stats'
-    | '/admin/support'
+    | '/create-ticket'
     | '/category/$id'
     | '/lands/$id'
     | '/thread/$id'
     | '/user/$nickname'
     | '/create-thread'
-    | '/admin'
     | '/lands'
     | '/ratings'
+    | '/admin/configs'
+    | '/admin/dashboard'
+    | '/admin/stats'
+    | '/admin/support'
+    | '/admin'
   fileRoutesByTo: FileRoutesByTo
   to:
     | ''
@@ -598,23 +649,24 @@ export interface FileRouteTypes {
     | '/not-online'
     | '/'
     | '/auth'
-    | '/create-issue'
-    | '/admin/configs'
-    | '/admin/dashboard'
-    | '/admin/stats'
-    | '/admin/support'
+    | '/create-ticket'
     | '/category/$id'
     | '/lands/$id'
     | '/thread/$id'
     | '/user/$nickname'
     | '/create-thread'
-    | '/admin'
     | '/lands'
     | '/ratings'
+    | '/admin/configs'
+    | '/admin/dashboard'
+    | '/admin/stats'
+    | '/admin/support'
+    | '/admin'
   id:
     | '__root__'
     | '/_protected'
     | '/_public'
+    | '/_protected/_admin'
     | '/_protected/collection'
     | '/_protected/events'
     | '/_protected/friends'
@@ -625,19 +677,19 @@ export interface FileRouteTypes {
     | '/_public/not-online'
     | '/_protected/'
     | '/auth/'
-    | '/_protected/(actions)/create-issue'
-    | '/_protected/admin/configs'
-    | '/_protected/admin/dashboard'
-    | '/_protected/admin/stats'
-    | '/_protected/admin/support'
+    | '/_protected/(actions)/create-ticket'
     | '/_protected/category/$id'
     | '/_protected/lands/$id'
     | '/_protected/thread/$id'
     | '/_protected/user/$nickname'
     | '/_protected/(actions)/create-thread'
-    | '/_protected/admin/'
     | '/_protected/lands/'
     | '/_protected/ratings/'
+    | '/_protected/_admin/admin/configs'
+    | '/_protected/_admin/admin/dashboard'
+    | '/_protected/_admin/admin/stats'
+    | '/_protected/_admin/admin/support'
+    | '/_protected/_admin/admin/'
   fileRoutesById: FileRoutesById
 }
 
@@ -671,23 +723,19 @@ export const routeTree = rootRoute
     "/_protected": {
       "filePath": "_protected.tsx",
       "children": [
+        "/_protected/_admin",
         "/_protected/collection",
         "/_protected/events",
         "/_protected/friends",
         "/_protected/notifications",
         "/_protected/search",
         "/_protected/",
-        "/_protected/(actions)/create-issue",
-        "/_protected/admin/configs",
-        "/_protected/admin/dashboard",
-        "/_protected/admin/stats",
-        "/_protected/admin/support",
+        "/_protected/(actions)/create-ticket",
         "/_protected/category/$id",
         "/_protected/lands/$id",
         "/_protected/thread/$id",
         "/_protected/user/$nickname",
         "/_protected/(actions)/create-thread",
-        "/_protected/admin/",
         "/_protected/lands/",
         "/_protected/ratings/"
       ]
@@ -700,8 +748,19 @@ export const routeTree = rootRoute
         "/_public/not-online"
       ]
     },
+    "/_protected/_admin": {
+      "filePath": "_protected/_admin.tsx",
+      "parent": "/_protected",
+      "children": [
+        "/_protected/_admin/admin/configs",
+        "/_protected/_admin/admin/dashboard",
+        "/_protected/_admin/admin/stats",
+        "/_protected/_admin/admin/support",
+        "/_protected/_admin/admin/"
+      ]
+    },
     "/_protected/collection": {
-      "filePath": "_protected/collection.lazy.tsx",
+      "filePath": "_protected/collection.tsx",
       "parent": "/_protected"
     },
     "/_protected/events": {
@@ -739,24 +798,8 @@ export const routeTree = rootRoute
     "/auth/": {
       "filePath": "auth/index.tsx"
     },
-    "/_protected/(actions)/create-issue": {
-      "filePath": "_protected/(actions)/create-issue.tsx",
-      "parent": "/_protected"
-    },
-    "/_protected/admin/configs": {
-      "filePath": "_protected/admin/configs.tsx",
-      "parent": "/_protected"
-    },
-    "/_protected/admin/dashboard": {
-      "filePath": "_protected/admin/dashboard.tsx",
-      "parent": "/_protected"
-    },
-    "/_protected/admin/stats": {
-      "filePath": "_protected/admin/stats.tsx",
-      "parent": "/_protected"
-    },
-    "/_protected/admin/support": {
-      "filePath": "_protected/admin/support.tsx",
+    "/_protected/(actions)/create-ticket": {
+      "filePath": "_protected/(actions)/create-ticket.tsx",
       "parent": "/_protected"
     },
     "/_protected/category/$id": {
@@ -779,17 +822,33 @@ export const routeTree = rootRoute
       "filePath": "_protected/(actions)/create-thread.lazy.tsx",
       "parent": "/_protected"
     },
-    "/_protected/admin/": {
-      "filePath": "_protected/admin/index.tsx",
-      "parent": "/_protected"
-    },
     "/_protected/lands/": {
-      "filePath": "_protected/lands/index.lazy.tsx",
+      "filePath": "_protected/lands/index.tsx",
       "parent": "/_protected"
     },
     "/_protected/ratings/": {
       "filePath": "_protected/ratings/index.lazy.tsx",
       "parent": "/_protected"
+    },
+    "/_protected/_admin/admin/configs": {
+      "filePath": "_protected/_admin/admin/configs.lazy.tsx",
+      "parent": "/_protected/_admin"
+    },
+    "/_protected/_admin/admin/dashboard": {
+      "filePath": "_protected/_admin/admin/dashboard.lazy.tsx",
+      "parent": "/_protected/_admin"
+    },
+    "/_protected/_admin/admin/stats": {
+      "filePath": "_protected/_admin/admin/stats.lazy.tsx",
+      "parent": "/_protected/_admin"
+    },
+    "/_protected/_admin/admin/support": {
+      "filePath": "_protected/_admin/admin/support.lazy.tsx",
+      "parent": "/_protected/_admin"
+    },
+    "/_protected/_admin/admin/": {
+      "filePath": "_protected/_admin/admin/index.lazy.tsx",
+      "parent": "/_protected/_admin"
     }
   }
 }

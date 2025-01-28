@@ -1,14 +1,15 @@
-"use client"
-
 import { Typography } from "@repo/ui/src/components/typography.tsx";
 import { UserPreviewCard } from "#cards/components/user-preview-card/user-preview-card.tsx";
 import { forumLandingClient } from "@repo/shared/api/forum-client.ts";
 import { createQueryKey } from "@repo/lib/helpers/query-key-builder";
 import { useQuery } from "@tanstack/react-query";
-import { getUser } from "@repo/lib/helpers/get-user";
 
-const getLastUsers = async () => {
-  const res = await forumLandingClient["get-latest-reg-users"].$get()
+export const getLastUsers = async (limit?: number) => {
+  const res = await forumLandingClient["get-latest-reg-users"].$get({
+    query: {
+      limit: limit ? `${limit}` : undefined
+    }
+  })
 
   const data = await res.json()
 
@@ -21,7 +22,7 @@ const getLastUsers = async () => {
 
 const lastUsersQuery = () => useQuery({
   queryKey: createQueryKey("ui", ["last-users"]),
-  queryFn: getLastUsers,
+  queryFn: () => getLastUsers(),
   refetchOnMount: false,
   refetchOnWindowFocus: false,
   refetchInterval: 1000 * 60 * 5

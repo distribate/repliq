@@ -7,32 +7,28 @@ import { USER_URL } from "@repo/shared/constants/routes.ts";
 import { Pin } from "lucide-react";
 import type { UserPostItem } from '@repo/types/routes-types/get-user-posts-types.ts';
 
-type PostItemHeaderProps = Pick<UserPostItem, "visibility" | "isPinned" | "created_at" | "user_nickname">;
+type PostItemHeaderProps = Pick<UserPostItem, "visibility" | "isPinned" | "created_at" | "nickname">;
 
 export const PostItemHeader = ({
-  user_nickname, created_at: postCreatedAt, visibility, isPinned,
+  nickname, created_at: postCreatedAt, visibility, isPinned,
 }: PostItemHeaderProps) => {
   const dateCreated = dayjs(postCreatedAt).fromNow();
-  const visibilityStatus =
-    visibility === "only" ? "видно только вам" : "видно только друзьям";
+  const visibilityStatus = visibility === "only" ? "видно только вам" : "видно только друзьям";
 
   return (
     <div className="flex gap-3 items-center">
-      <Link to={USER_URL + user_nickname}>
+      <Link to={USER_URL + nickname}>
         <Avatar
           variant="page"
           propHeight={48}
           propWidth={48}
-          nickname={user_nickname}
+          nickname={nickname}
         />
       </Link>
       <div className="flex flex-col">
         <div className="flex items-center gap-2">
-          <Link to={USER_URL + user_nickname}>
-            <UserNickname
-              nickname={user_nickname}
-              className="text-base font-medium"
-            />
+          <Link to={USER_URL + nickname}>
+            <UserNickname nickname={nickname} className="text-base font-medium" />
           </Link>
           {visibility !== "all" && (
             <Typography textSize="small" textColor="gray" className="self-end">

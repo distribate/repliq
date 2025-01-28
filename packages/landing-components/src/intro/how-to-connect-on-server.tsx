@@ -5,7 +5,7 @@ import { TooltipWrapper } from "@repo/landing-components/src/wrappers/tooltip-wr
 import { DialogClose } from "@repo/landing-ui/src/dialog";
 import { toast } from "sonner";
 import { serverIpQuery } from "@repo/lib/queries/server-ip-query";
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@repo/landing-ui/src/tooltip";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@repo/landing-ui/src/tooltip";
 
 export const actionCopyboard = async (ip: string) => {
 	await navigator.clipboard.writeText(ip);
@@ -80,26 +80,24 @@ export const HowToConnectOnServer = () => {
 							/>
 						</div>
 						<div className="flex flex-col gap-y-2">
-							<TooltipProvider>
-								<Tooltip delayDuration={2}>
-									<TooltipTrigger>
-										<div className="button w-full md:w-96 px-2 py-1">
-											<Typography
-												shadow="xl"
-												className="text-shadow-xl text-[0.8rem] lg:text-base text-white"
-												position="center"
-											>
-												Наборы ресурсов: Включены
-											</Typography>
-										</div>
-									</TooltipTrigger>
-									<TooltipContent className="w-fit max-w-[460px]" side="left">
-										<Typography size="lg" className="text-neutral-400">
-											На сервере используется ресурспак. Эту нужно оставить включенным!
+							<Tooltip delayDuration={2}>
+								<TooltipTrigger>
+									<div className="button w-full md:w-96 px-2 py-1">
+										<Typography
+											shadow="xl"
+											className="text-shadow-xl text-[0.8rem] lg:text-base text-white"
+											position="center"
+										>
+											Наборы ресурсов: Включены
 										</Typography>
-									</TooltipContent>
-								</Tooltip>
-							</TooltipProvider>
+									</div>
+								</TooltipTrigger>
+								<TooltipContent className="w-fit max-w-[460px]" side="left">
+									<Typography size="lg" className="text-neutral-400">
+										На сервере используется ресурспак. Эту нужно оставить включенным!
+									</Typography>
+								</TooltipContent>
+							</Tooltip>
 							<DialogClose>
 								<div className="button w-full md:w-96 px-2 py-1">
 									<Typography

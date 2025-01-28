@@ -12,15 +12,10 @@ import { FriendCardControlPin } from "#friend/components/friend-card/components/
 import { HoverCardItem } from "@repo/ui/src/components/hover-card.tsx";
 import { FriendWithDetails } from "@repo/types/schemas/friend/friend-types.ts";
 
-export type FriendCardControlProps = Pick<
-  FriendWithDetails,
-  "friend_id" | "nickname" | "is_pinned"
->;
+export type FriendCardControlProps = Pick<FriendWithDetails, "friend_id" | "nickname" | "is_pinned">;
 
 export const FriendCardControl = ({
-  nickname: reqUserNickname,
-  friend_id,
-  is_pinned,
+  nickname, friend_id, is_pinned,
 }: FriendCardControlProps) => {
   const navigate = useNavigate();
 
@@ -29,9 +24,11 @@ export const FriendCardControl = ({
       <Button
         className="h-8 px-4"
         variant="positive"
-        onClick={() => navigate({ to: USER_URL + reqUserNickname })}
+        onClick={() => navigate({ to: USER_URL + nickname })}
       >
-        <Typography textSize="small">К профилю</Typography>
+        <Typography textSize="small">
+          К профилю
+        </Typography>
       </Button>
       <MoreWrapper
         properties={{
@@ -42,7 +39,7 @@ export const FriendCardControl = ({
         }}
       >
         <UserCardModal
-          nickname={reqUserNickname}
+          nickname={nickname}
           withCustomTrigger={true}
           trigger={
             <HoverCardItem className="flex justify-start items-center gap-2 group">
@@ -53,12 +50,12 @@ export const FriendCardControl = ({
             </HoverCardItem>
           }
         />
-        <FriendCardControlPin nickname={reqUserNickname} friend_id={friend_id} is_pinned={is_pinned} />
-        <FriendCardControlNote nickname={reqUserNickname} friend_id={friend_id} />
+        <FriendCardControlPin nickname={nickname} friend_id={friend_id} is_pinned={is_pinned} />
+        <FriendCardControlNote nickname={nickname} friend_id={friend_id} />
         <Separator />
         <DeleteFriendModal
           friend_id={friend_id}
-          nickname={reqUserNickname}
+          nickname={nickname}
           trigger={
             <HoverCardItem className="flex justify-start items-center gap-2 group">
               <Trash size={16} className="text-red-500" />

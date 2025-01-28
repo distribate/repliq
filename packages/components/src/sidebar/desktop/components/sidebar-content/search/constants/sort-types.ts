@@ -1,5 +1,5 @@
 import { Folder, UsersRound } from "lucide-react";
-import { SearchQuery, SearchType } from "../queries/search-query.ts";
+import { SearchQuery } from "../queries/search-query.ts";
 
 type SortType = {
   title: string;
@@ -8,14 +8,6 @@ type SortType = {
 };
 
 export const SORT_TYPES: SortType[] = [
-  {
-    title: "Игрокам",
-    value: "users",
-    icon: UsersRound,
-  },
-  {
-    title: "Топикам",
-    value: "threads",
-    icon: Folder,
-  },
+  { title: "Игрокам", value: "users", icon: UsersRound },
+  { title: "Топикам", value: "threads", icon: Folder },
 ];

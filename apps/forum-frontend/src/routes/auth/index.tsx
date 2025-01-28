@@ -8,6 +8,7 @@ import { SignInTip } from '@repo/components/src/forms/auth/components/sign-in-ti
 import { validateSession } from '@repo/lib/actions/validate-session'
 import { lazy, Suspense } from 'react'
 import { createFileRoute } from '@tanstack/react-router'
+import { Skeleton } from '@repo/ui/src/components/skeleton'
 
 const SignUpForm = lazy(() =>
   import('@repo/components/src/forms/auth/components/sign-up.tsx').then(
@@ -80,7 +81,7 @@ function RouteComponent() {
           <>
             <SignUpFormTitle />
             <div className="flex flex-col lg:flex-row w-full gap-4 *:w-full">
-              <Suspense>
+              <Suspense fallback={<Skeleton className="w-full h-96" />}>
                 <SignUpForm />
               </Suspense>
               <Suspense>

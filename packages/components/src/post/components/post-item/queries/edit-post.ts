@@ -1,23 +1,20 @@
-"use server";
+import { forumPostClient } from "@repo/shared/api/forum-client";
 
-import { createClient } from "@repo/shared/api/supabase-client.ts";
-import { validatePostOwner } from "#post/components/post-item/queries/validate-owner-post.ts";
-import { UserPostItem } from '@repo/types/routes-types/get-user-posts-types.ts';
+export async function editPost({
+  content, id
+}: {
+  id: string,
+  content: string
+}) {
+  const res = await forumPostClient.post["edit-post"].$post({
+    json: {  id, content }
+  })
 
-type EditPost = Pick<UserPostItem, "id"> & {
-  content: string;
-};
+  const data = await res.json();
 
-export async function editPost({ content, id: postId }: EditPost) {
-  const isValid = validatePostOwner({ postId });
-  if (!isValid) return;
+  if ("error" in data) {
+    return null
+  }
 
-  const api = createClient();
-
-  const { error } = await api
-    .from("posts")
-    .update({ content, isUpdated: true })
-    .eq("id", postId);
-
-  return !error;
+  return data;
 }

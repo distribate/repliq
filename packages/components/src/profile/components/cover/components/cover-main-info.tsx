@@ -3,12 +3,12 @@ import { UserDonate } from "#user/components/donate/components/donate.tsx";
 import { UserRealName } from "#user/components/real-name/real-name.tsx";
 import { useQueryClient } from "@tanstack/react-query";
 import { Typography } from "@repo/ui/src/components/typography.tsx";
-import { RequestedUser } from "@repo/lib/queries/get-requested-user.ts";
 import { REQUESTED_USER_QUERY_KEY } from "#profile/components/cover/queries/requested-user-query.ts";
 import {
   COVER_QUERY_KEY,
   CoverQuery,
 } from "#profile/components/cover/queries/cover-query.ts";
+import { UserDetailed } from "@repo/types/entities/user-type";
 
 type UserCoverInfoProps = {
   nickname: string;
@@ -16,9 +16,8 @@ type UserCoverInfoProps = {
 
 export const UserCoverMainInfo = ({ nickname }: UserCoverInfoProps) => {
   const qc = useQueryClient();
-  const requestedUser = qc.getQueryData<RequestedUser>(
-    REQUESTED_USER_QUERY_KEY(nickname),
-  );
+  const requestedUser = qc.getQueryData<UserDetailed>(REQUESTED_USER_QUERY_KEY(nickname));
+  
   const coverState = qc.getQueryData<CoverQuery>(COVER_QUERY_KEY);
 
   if (!requestedUser || !coverState) return;

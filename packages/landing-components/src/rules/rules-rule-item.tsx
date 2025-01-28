@@ -12,7 +12,7 @@ export const RulesRuleItemContent = ({
     <div className="flex flex-col mb-6 lg:mb-4">
       <div className="flex-col flex gap-1">
         <Typography className="text-project-color text-md md:text-lg">
-          {id})&nbsp;
+          {id}{`)`}&nbsp;
           <span className="text-black dark:text-white font-semibold">
 						{title}
 					</span>
@@ -39,17 +39,17 @@ export const RulesRuleItem = ({
   categoryTitle, content,
 }: RulesRuleItem) => {
   if (!content) return null;
+
   return (
     <div
       id={categoryTitle}
-      className="flex flex-col py-2 group md:py-4 px-2 md:px-4 border-2 border-[#454545] hover:duration-300 duration-300 rounded-[8px]"
+      className="flex flex-col py-2 group md:py-4 px-2 md:px-4 border-2 
+        border-[#454545] hover:duration-300 duration-300 rounded-[8px]"
     >
       <h1 className="text-gold text-xl md:text-4xl text-shadow-xl mb-6">
         {categoryTitle}
       </h1>
-      {content.map(item =>
-        <RulesRuleItemContent key={item.id} {...item} />)
-      }
+      {content.map(i => <RulesRuleItemContent key={i.id} {...i} />)}
     </div>
   );
 };

@@ -1,12 +1,16 @@
-import { Link, Outlet, ScrollRestoration, useMatches } from '@tanstack/react-router'
-import { TanStackRouterDevtools } from '@tanstack/router-devtools'
+import { Outlet, ScrollRestoration, useMatches } from '@tanstack/react-router'
 import { Toaster } from "sonner"
 import { InfoIcon, WarningIcon, ErrorIcon, SuccessIcon } from "@repo/ui/src/components/toast-icons.tsx";
-import '../styles/index.css'
-import "@repo/ui/ui.css"
 import { createRootRouteWithContext } from '@tanstack/react-router';
 import type { QueryClient } from '@tanstack/react-query';
-import { ReactNode, useEffect } from 'react';
+import { lazy, ReactNode, Suspense, useEffect } from 'react';
+
+import '../styles/index.css'
+import "@repo/ui/ui.css"
+
+const NotFound = lazy(() => 
+  import("@repo/components/src/templates/not-found.tsx").then(m => ({ default: m.NotFound }))
+)
 
 export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()({
   component: RootComponent,
@@ -14,20 +18,27 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       {
         title: TITLE,
+        description: "Fasberry",
       },
     ],
   }),
   notFoundComponent: () => {
     return (
-      <div>
-        <p>This is the notFoundComponent configured on root route</p>
-        <Link to="/">Start Over</Link>
-      </div>
+      <Suspense>
+        <NotFound />
+      </Suspense>
     )
   }
 })
 
 const TITLE = 'Fasberry';
+
+const TanStackRouterDevtools =
+  process.env.NODE_ENV === 'production' ? () => null : lazy(() =>
+    import('@tanstack/router-devtools').then((res) => ({
+      default: res.TanStackRouterDevtools,
+    })),
+  )
 
 function Meta({ children }: { children: ReactNode }) {
   const matches = useMatches();
@@ -64,7 +75,9 @@ function RootComponent() {
         }}
       />
       <Outlet />
-      <TanStackRouterDevtools />
+      <Suspense>
+        <TanStackRouterDevtools />
+      </Suspense>
       <ScrollRestoration />
     </Meta>
   )

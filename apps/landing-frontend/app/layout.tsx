@@ -7,6 +7,7 @@ import { Header } from "@repo/landing-components/src/header/header";
 import { Footer } from "@repo/landing-components/src/footer/footer";
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { QueryProvider } from '@repo/lib/providers/query-provider.tsx';
+
 import "../styles/globals.css";
 import "../styles/minecraft-weather.css"
 import "../styles/minecraft-theme.css"
@@ -87,7 +88,6 @@ export default function RootLayout({
 						</TooltipProvider>
 					</NextThemeProvider>
 				</QueryProvider>
-				{/* <Analytics /> */}
 			</body>
 		</html>
 	);

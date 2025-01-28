@@ -246,8 +246,18 @@ module.exports = {
             transform: "translateX(100%)",
           },
         },
+        rippling: {
+          "0%": {
+            opacity: "1",
+          },
+          "100%": {
+            transform: "scale(2)",
+            opacity: "0",
+          },
+        },
       },
       animation: {
+        rippling: "rippling 0.2s ease-out",
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
         "fade-in": "fade-in 1s ease-in-out 0.25s 1",

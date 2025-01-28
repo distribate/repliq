@@ -2,12 +2,7 @@ import { Typography } from '@repo/landing-ui/src/typography';
 import Link from 'next/link';
 import { Fragment } from 'react';
 
-type FooterLink = {
-  name: string,
-  href: '/privacy' | '/terms' | '/contacts' | '/credits'
-}
-
-const FOOTER_LINKS: FooterLink[] = [
+const FOOTER_LINKS = [
   { name: 'Конфиденциальность', href: '/privacy' },
   { name: 'Соглашение', href: '/terms' },
   { name: 'Контакты', href: '/contacts' },
@@ -41,7 +36,7 @@ export const Footer = async() => {
               </Typography>
             </Link>
             {idx < FOOTER_LINKS.length - 1 &&
-              <span className="text-white hidden lg:block mx-2">|</span>
+              <span className="text-white hidden lg:block mx-2">⏺</span>
             }
           </Fragment>
         ))}

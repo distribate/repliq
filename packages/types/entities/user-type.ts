@@ -6,7 +6,8 @@ export type UserDetailed = Omit<Selectable<Users>,
   | "favorite_item"
   | "birthday"
   | "created_at"
-  | "donate"> & {
+  | "donate"
+> & {
     birthday: string | null
     created_at: string,
     favorite_item: number | null

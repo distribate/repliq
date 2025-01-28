@@ -15,17 +15,14 @@ const ModpackListNull = () => {
 
 export const ModpackList = () => {
   const { data: modpacks, isLoading, isError } = modpacksQuery();
-  
+
   if (isLoading) return <ModpackListSkeleton />;
   if (isError) return <ModpackListNull />;
   if (!modpacks) return <ModpackListNull />;
-  
+
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 grid-rows-2">
-      {modpacks.map(modpack => (
-          <ModpackItem key={modpack.id} {...modpack} />
-        ),
-      )}
+      {modpacks.map(modpack => <ModpackItem key={modpack.id} {...modpack} />)}
     </div>
   );
 };

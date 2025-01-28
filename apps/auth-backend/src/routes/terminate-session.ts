@@ -4,9 +4,14 @@ import { zValidator } from "@hono/zod-validator";
 import { getCookie } from "hono/cookie";
 import { encodeHexLowerCase } from "@oslojs/encoding";
 import { sha256 } from "@oslojs/crypto/sha2";
-import { forumDB } from "../shared/database/forum-db";
 import { createMiddleware } from "hono/factory";
 import { deleteSessionToken } from "../utils/delete-session-token";
+import type { Env } from "../types/env-type";
+import { getUserSession } from "../lib/queries/get-user-session";
+import { terminateAllSessions } from "../lib/queries/terminate-all-sessions";
+import { terminateSession } from "../lib/queries/terminate-session";
+import { getCurrentSessionCreatedAt } from "../lib/queries/get-current-session-created-at";
+import { DEFAULT_SESSION_EXPIRE } from "../shared/constants/session-expire";
 
 const terminateSessionBodySchema = z.object({
   selectedSessionId: z.string().min(6).optional(),
@@ -18,30 +23,6 @@ const terminateSessionBodySchema = z.object({
     path: ["selectedSessionId"],
   }
 );
-
-export async function getUserSession(sessionId: string) {
-  return await forumDB
-    .selectFrom("users_session")
-    .select("nickname")
-    .where("session_id", "=", sessionId)
-    .executeTakeFirst();
-}
-
-async function terminateSession(sessionId: string) {
-  return await forumDB
-    .deleteFrom("users_session")
-    .where("session_id", "=", sessionId)
-    .executeTakeFirstOrThrow();
-}
-
-async function terminateAllSessions(nickname: string, currentSessionId: string) {
-  return await forumDB
-    .deleteFrom("users_session")
-    .where("nickname", "=", nickname)
-    .where("session_id", "!=", currentSessionId)
-    .returning("token")
-    .execute();
-}
 
 export const validateUserRequest = createMiddleware(async (ctx, next) => {
   const sessionToken = getCookie(ctx, "session")
@@ -61,27 +42,14 @@ export const validateUserRequest = createMiddleware(async (ctx, next) => {
   await next()
 })
 
-async function getCurrentSessionCreatedAt(currentSessionId: string) {
-  return await forumDB
-    .selectFrom("users_session")
-    .select("created_at")
-    .where("session_id", "=", currentSessionId)
-    .executeTakeFirstOrThrow();
-}
-
-const THREE_DAYS_IN_MS = 3 * 24 * 60 * 60 * 1000;
-
-export const terminateSessionRoute = new Hono()
+export const terminateSessionRoute = new Hono<Env>()
   .use(validateUserRequest)
   .post("/terminate-session", zValidator("json", terminateSessionBodySchema), async (ctx) => {
     const body = await ctx.req.json()
     const { selectedSessionId, type } = terminateSessionBodySchema.parse(body);
 
-    // @ts-ignore
     const nickname = ctx.get("nickname")
-    // @ts-ignore
     const currentSessionId = ctx.get("currentSessionId")
-    // @ts-ignore
     const sessionToken = ctx.get("sessionToken")
 
     if (!nickname || !currentSessionId) {
@@ -89,11 +57,10 @@ export const terminateSessionRoute = new Hono()
     }
 
     if ((currentSessionId !== selectedSessionId) || type === "all") {
-      // @ts-ignore
       const currentSessionCreatedAt = await getCurrentSessionCreatedAt(currentSessionId)
       const now = new Date();
 
-      if (now.getTime() - new Date(currentSessionCreatedAt.created_at).getTime() < THREE_DAYS_IN_MS) {
+      if (now.getTime() - new Date(currentSessionCreatedAt.created_at).getTime() < DEFAULT_SESSION_EXPIRE) {
         return ctx.json({ error: "Session must be at least 3 days old" }, 401);
       }
     }

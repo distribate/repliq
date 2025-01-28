@@ -1,5 +1,3 @@
-"use client";
-
 import {
   CREATE_THREAD_COMMENT_QUERY_KEY,
   createThreadCommentQuery,

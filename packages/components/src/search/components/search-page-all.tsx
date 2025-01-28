@@ -1,7 +1,7 @@
 import { searchPageQuery } from "#search/queries/search-page-query.ts";
 import { ContentNotFound } from "#templates/content-not-found.tsx";
-import { SearchPageUser } from "#search/components/search-page-users.tsx";
 import { SearchPageThread } from "#search/components/search-page-threads.tsx";
+import { SearchPageUser } from "./search-page-user";
 
 export const SearchPageAll = () => {
   const { data: searchState } = searchPageQuery();

@@ -1,5 +1,3 @@
-"use client";
-
 import { ContentNotFound } from "#templates/content-not-found.tsx";
 import { searchPageQuery } from "#search/queries/search-page-query.ts";
 import { Typography } from "@repo/ui/src/components/typography.tsx";

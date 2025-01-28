@@ -21,7 +21,7 @@ export const AdminNavigationBadge = ({
 }: AdminNavigationBadgeProps) => {
   const { pathname } = useLocation();
   const searchParams = useSearch({
-    from: "/_protected/admin/",
+    from: "/_protected/_admin/admin/",
   });
 
   const navigate = useNavigate();

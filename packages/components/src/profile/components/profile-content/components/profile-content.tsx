@@ -1,7 +1,9 @@
 import { useUserProfile } from "../hooks/use-user-profile"
-import { profileStatusQuery } from "../queries/profile-status-query"
 import { lazy, Suspense, useEffect } from "react"
 import { ProfileContentTabs } from "./profile-content-tabs"
+import { UserContentSkeleton } from "#skeletons/user-profile-skeleton.tsx";
+import { requestedUserQuery } from "#profile/components/cover/queries/requested-user-query.ts";
+import { Skeleton } from "@repo/ui/src/components/skeleton";
 
 const UserBlocked = lazy(() => import("#templates/user-blocked.tsx")
   .then(m => ({ default: m.UserBlocked }))
@@ -16,14 +18,16 @@ const ProfilePrivated = lazy(() => import("#templates/profile-privated.tsx")
 );
 
 export type ProfileContentProps = {
-  requestedUserNickname: string
+  nickname: string
 }
 
 export const ProfileContent = ({
-  requestedUserNickname
+  nickname: requestedUserNickname
 }: ProfileContentProps) => {
   const { createProfileViewMutation } = useUserProfile()
-  const { data: profileStatus } = profileStatusQuery(requestedUserNickname)
+  const { data: requestedUser } = requestedUserQuery(requestedUserNickname)
+
+  const profileStatus = requestedUser?.details;
 
   useEffect(() => {
     if (!profileStatus?.is_viewed) {
@@ -32,24 +36,37 @@ export const ProfileContent = ({
   }, [profileStatus?.is_viewed]);
 
   if (profileStatus?.status === 'banned') {
-    return <UserBanned requestedUserNickname={requestedUserNickname} />;
+    return (
+      <Suspense fallback={<Skeleton className="w-1/3 h-1/3" />}>
+        <UserBanned requestedUserNickname={requestedUserNickname} />
+      </Suspense>
+    );
   }
 
-  const blockedType = profileStatus?.status === 'blocked-by-you' ? 'blocked-by-you' : 'blocked-by-user'
+  const blockedType = profileStatus?.status === 'blocked-by-you' ? 'blocked-by-you' : 'blocked-by-user';
+  
   const isBlocked = (profileStatus?.status === 'blocked-by-you' || profileStatus?.status === 'blocked-by-user')
   const isPrivate = profileStatus?.status === 'private'
 
   if (isBlocked) {
-    return <UserBlocked blockedType={blockedType} />
+    return (
+      <Suspense fallback={<Skeleton className="w-1/3 h-1/3" />}>
+        <UserBlocked blockedType={blockedType} />
+      </Suspense>
+    )
   }
 
-  return isPrivate ? (
-    <Suspense fallback={null}>
-      <ProfilePrivated />
-    </Suspense>
-  ) : (
-    <Suspense fallback={null}>
-      <ProfileContentTabs requestedUserNickname={requestedUserNickname} />
+  if (isPrivate) {
+    return (
+      <Suspense fallback={<Skeleton className="w-1/3 h-1/3" />}>
+        <ProfilePrivated />
+      </Suspense>
+    )
+  }
+
+  return (
+    <Suspense fallback={<UserContentSkeleton />}>
+      <ProfileContentTabs nickname={requestedUserNickname} />
     </Suspense>
   )
 }

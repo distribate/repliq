@@ -1,8 +1,5 @@
-"use client";
-
 import { Separator } from "@repo/ui/src/components/separator.tsx";
 import { currentUserQuery } from "@repo/lib/queries/current-user-query.ts";
-import { SidebarDesktopSkeleton } from "./sidebar-desktop-skeleton.tsx";
 import { CreateThread } from "../sidebar-content/create-thread/create-thread.tsx";
 import { SidebarLogotype } from "../sidebar-content/logotype/sidebar-logotype.tsx";
 import { searchQuery } from "../sidebar-content/search/queries/search-query.ts";
@@ -16,19 +13,22 @@ import {
 } from "../sidebar-layout/queries/sidebar-layout-query.ts";
 import { SidebarLayout } from "../sidebar-layout/components/sidebar-layout.tsx";
 import { getUser } from "@repo/lib/helpers/get-user.ts";
-import { DropdownWrapper } from "#wrappers/dropdown-wrapper.tsx";
 import { Avatar } from "#user/components/avatar/components/avatar.tsx";
 import { UserNickname } from "#user/components/name/nickname.tsx";
 import { HTMLAttributes, lazy } from "react";
-import { CircleFadingPlus, NotebookPen, Settings } from "lucide-react";
+import { CircleFadingPlus, CircleUserRound, NotebookPen, Settings } from "lucide-react";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@repo/ui/src/components/dropdown-menu.tsx";
-import { useNavigate } from "@tanstack/react-router";
+import { useLocation, useNavigate } from "@tanstack/react-router";
 import { Typography } from "@repo/ui/src/components/typography.tsx";
 import { Icon } from "@repo/shared/ui/icon/icon.tsx";
 import Charism from "@repo/assets/images/minecraft/charism_wallet.png"
 import Belkoin from "@repo/assets/images/minecraft/belkoin_wallet.png"
 import { Suspense } from 'react'
 import { userGlobalOptionsQuery } from "@repo/lib/queries/user-global-options-query.ts";
+import { USER_URL } from "@repo/shared/constants/routes.ts";
+import { UserMenu } from "../sidebar-content/user-menu/user-menu.tsx";
+import { Skeleton } from "@repo/ui/src/components/skeleton.tsx";
+import { SidebarButton } from "./sidebar-button.tsx";
 
 const SearchArea = lazy(() => import("../sidebar-content/search/components/search-area.tsx")
   .then(m => ({ default: m.SearchArea }))
@@ -38,31 +38,16 @@ const TicketsModal = lazy(() => import("#modals/custom/tickets-modal.tsx")
   .then(m => ({ default: m.TicketsModal }))
 )
 
-const UserMenu = lazy(() => import("#sidebar/desktop/components/sidebar-content/user-menu/user-menu.tsx")
-  .then(m => ({ default: m.UserMenu }))
-)
-
 type SidebarLayoutVariant = Exclude<SidebarFormat, "dynamic">;
 
-type SidebarFormats = {
+export const SIDEBAR_FORMATS: {
   title: string;
   value: SidebarFormat;
-};
-
-export const SIDEBAR_FORMATS: SidebarFormats[] = [
-  {
-    title: "Резиновый",
-    value: "dynamic",
-  },
-  {
-    title: "Раскрыт",
-    value: "full",
-  },
-  {
-    title: "Минимал",
-    value: "compact",
-  },
-];
+}[] = [
+    { title: "Резиновый", value: "dynamic", },
+    { title: "Раскрыт", value: "full", },
+    { title: "Минимал", value: "compact" },
+  ];
 
 interface OutlineWrapperProps extends HTMLAttributes<HTMLDivElement> { }
 
@@ -83,8 +68,8 @@ const UserMenuTrigger = () => {
   const { isExpanded, isCompact } = useSidebarControl();
 
   return (
-    <DropdownWrapper
-      trigger={
+    <DropdownMenu>
+      <DropdownMenuTrigger className="w-full focus-visible:outline-none">
         <div
           className={`flex gap-x-3 items-center bg-shark-800 hover:bg-shark-700 rounded-md w-full
 					${!isCompact ? "justify-start" : isExpanded ? "justify-start" : "justify-center"}`}
@@ -118,13 +103,11 @@ const UserMenuTrigger = () => {
             </div>
           )}
         </div>
-      }
-      content={
-        <Suspense>
-          <UserMenu />
-        </Suspense>
-      }
-    />
+      </DropdownMenuTrigger>
+      <DropdownMenuContent>
+        <UserMenu />
+      </DropdownMenuContent>
+    </DropdownMenu>
   );
 };
 
@@ -135,7 +118,7 @@ const SidebarBarNotifications = () => {
   return (
     <OutlineWrapper onClick={() => navigate({ to: "/notifications" })} title="Уведомления" className="w-full relative">
       {data?.has_new_notifications && <div className="bg-red-500 w-[16px] h-[16px] rounded-[999px] absolute top-4 right-4" />}
-      <Icon name="sprite/bell" className="text-xl text-shark-300" />
+      <Icon name="sprite/bell" className="text-xl icon-color" />
     </OutlineWrapper>
   )
 }
@@ -149,7 +132,7 @@ const SidebarBar = () => {
     <>
       <OutlineWrapper
         title="Нашли баг? Откройте заявку!"
-        onClick={() => navigate({ to: "/create-issue" })}
+        onClick={() => navigate({ to: "/create-ticket" })}
       >
         <NotebookPen size={20} className="text-shark-300" />
       </OutlineWrapper>
@@ -236,6 +219,62 @@ const SidebarDesktopContent = () => {
   );
 };
 
+const ProfileLink = () => {
+  const currentUser = getUser();
+  const navigate = useNavigate();
+  const { pathname } = useLocation()
+
+  return (
+    <div className="h-12 w-full">
+      <SidebarButton
+        className="h-12"
+        onClick={() => navigate({ to: USER_URL + currentUser.nickname })}
+        variant={pathname === USER_URL + currentUser.nickname ? "active" : "default"}
+      >
+        <CircleUserRound size={20} className="icon-color" />
+        <Typography className="text-[16px] font-medium">
+          Мой профиль
+        </Typography>
+      </SidebarButton>
+    </div>
+  );
+};
+
+const SidebarDesktopSkeleton = () => {
+  return (
+    <div
+      className={`flex flex-col justify-between
+		  px-3 rounded-lg overflow-hidden min-h-screen h-full py-6
+			bg-primary-color outline-none w-[300px]`}
+    >
+      <div className="flex flex-col gap-y-4 items-center justify-center">
+        <div className="flex flex-row items-center gap-4">
+          <Skeleton className="w-[42px] h-[42px]" />
+          <Skeleton className="h-10 w-48" />
+        </div>
+        <Separator />
+        <div className="flex items-center gap-2 justify-between w-full">
+          <Skeleton className="flex h-10 items-center gap-1 grow" />
+          <Skeleton className="flex h-10 w-10" />
+        </div>
+        <Separator />
+        <Skeleton className="flex gap-x-3 h-[50px] items-center w-full" />
+        <Separator />
+        <Skeleton className="flex h-10 items-center w-full" />
+        <Separator />
+        <Skeleton className="flex h-[230px] items-center w-full" />
+        <Separator />
+        <div className="flex flex-col gap-y-2 w-full">
+          <Skeleton className="flex h-10 items-center w-full" />
+          <Skeleton className="flex h-10 items-center w-full" />
+          <Skeleton className="flex h-10 items-center w-full" />
+          <Skeleton className="flex h-10 items-center w-full" />
+        </div>
+      </div>
+    </div>
+  );
+};
+
 export const SidebarDesktop = () => {
   const { data: sidebarState } = sidebarLayoutQuery();
   const { isLoading } = currentUserQuery();
@@ -261,6 +300,8 @@ export const SidebarDesktop = () => {
         <Separator />
         <UserMenuTrigger />
         <Separator orientation="horizontal" />
+        <ProfileLink />
+        <Separator />
         <CreateThread />
         <Separator orientation="horizontal" />
         <SidebarDesktopContent />

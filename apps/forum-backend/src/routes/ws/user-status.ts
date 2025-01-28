@@ -16,13 +16,13 @@ type NotificationObject =
   | { type: "accept-friend-request", payload: { recipient: string, initiator: string } }
 
 async function getUserNotificationsPreference(nickname: string) {
-  const query = await forumDB
+  const { send_notifications } = await forumDB
   .selectFrom("users_settings")
   .select("send_notifications")
   .where("nickname", "=", nickname)
   .executeTakeFirstOrThrow()
 
-  return query.send_notifications
+  return send_notifications
 }
 
 export const userStatusRoute = new Hono()
@@ -90,9 +90,9 @@ export const userStatusRoute = new Hono()
         try {
           const data = JSON.parse(event.data.toString());
 
-          if (data.type === "status") {
-            await updateUserStatus(nickname, true)
-          }
+          // if (data.type === "status") {
+          //   await updateUserStatus(nickname, true)
+          // }
 
           if (data.type === "pong") {
             console.log(`[UserStatus]: Received pong from ${data.nickname}`);
@@ -103,7 +103,7 @@ export const userStatusRoute = new Hono()
         }
       },
       onError: async (error) => {
-        await updateUserStatus(nickname, false)
+        // await updateUserStatus(nickname, false)
 
         if (subscription) {
           subscription.unsubscribe()
@@ -113,7 +113,7 @@ export const userStatusRoute = new Hono()
         console.error("[UserStatus]: WebSocket error:", error);
       },
       onClose: async (event) => {
-        await updateUserStatus(nickname, false);
+        // await updateUserStatus(nickname, false);
 
         if (subscription) {
           subscription.unsubscribe()

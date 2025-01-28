@@ -6,9 +6,9 @@ import { GearLoader } from "./gear-loader.tsx";
 
 const buttonVariants = cva(
   "inline-flex items-center justify-center whitespace-nowrap" +
-    " text-sm font-medium transition-all" +
-    " focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2" +
-    " disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50",
+  " text-sm font-medium transition-all" +
+  " focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2" +
+  " disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50",
   {
     variants: {
       variant: {
@@ -51,38 +51,20 @@ const buttonVariants = cva(
   },
 );
 
-interface Button {
+export interface ButtonProps
+  extends ButtonHTMLAttributes<HTMLButtonElement>,
+  VariantProps<typeof buttonVariants> {
   asChild?: boolean;
   pending?: boolean;
 }
 
-export interface ButtonProps
-  extends ButtonHTMLAttributes<HTMLButtonElement>,
-    VariantProps<typeof buttonVariants>,
-    Button {}
-
 const Button = forwardRef<HTMLButtonElement, ButtonProps>(
-  (
-    {
-      className,
-      effect,
-      variant,
-      rounded,
-      size,
-      pending,
-      state,
-      asChild = false,
-      ...props
-    },
-    ref,
-  ) => {
+  ({ className, effect, variant, rounded, size, pending, state, asChild = false, ...props }, ref) => {
     const Comp = asChild ? Slot : "button";
 
     return (
       <Comp
-        className={cn(
-          buttonVariants({ variant, state, effect, rounded, size, className }),
-        )}
+        className={cn(buttonVariants({ variant, state, effect, rounded, size, className }))}
         ref={ref}
         {...props}
       >

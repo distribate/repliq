@@ -10,7 +10,8 @@ export const getSkinRoute = new Hono()
       const skin = await getPlayerSkin({ nickname })
 
       ctx.header('Content-Type', 'image/png')
-
+      ctx.header('Cache-Control', 'public, max-age=120')
+      
       return ctx.body(skin as unknown as ReadableStream, 200)
     } catch (e) {
       return ctx.json({ error: throwError(e) }, 500);

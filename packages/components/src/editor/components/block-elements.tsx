@@ -6,7 +6,7 @@ export const DefaultElement = ({ ...props }: RenderElementProps) => {
 
 export const CodeElement = ({ ...props }: RenderElementProps) => {
   return (
-    <pre className="bg-shark-700 rounded-md p-0.5 w-fit" {...props.attributes}>
+    <pre className="bg-shark-700 rounded-md p-0.5 w-fit whitespace-pre-wrap" {...props.attributes}>
       <code>{props.children}</code>
     </pre>
   );

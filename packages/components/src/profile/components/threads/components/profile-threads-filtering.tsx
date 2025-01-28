@@ -121,7 +121,8 @@ export const ProfileThreadsFiltering = ({
       <div className="flex items-center gap-1 w-fit">
         <Typography
           textColor="shark_white"
-          className="text-[22px] font-semibold"
+          textSize="big"
+          className="font-semibold"
         >
           Треды {nickname}
         </Typography>

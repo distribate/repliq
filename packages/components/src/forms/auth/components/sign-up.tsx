@@ -1,10 +1,8 @@
-"use client";
-
 import { FormField } from "@repo/ui/src/components/form-field.tsx";
 import { Input } from "@repo/ui/src/components/input.tsx";
 import { useForm } from "react-hook-form";
 import { Button } from "@repo/ui/src/components/button.tsx";
-import { useNavigate } from "@tanstack/react-router";
+import { useNavigate, useSearch } from "@tanstack/react-router";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { registrationSchema } from "../schemas/authorization-schema.ts";
 import { useEffect, useState } from "react";
@@ -28,6 +26,10 @@ export const SignUpForm = () => {
   const [pt, setPt] = useState<PasswordVisibilityType>("password");
   const { setAuthValuesMutation } = useAuth();
   const navigate = useNavigate();
+  const referrer = useSearch({
+    from: "/auth/",
+    select: (params) => params.from
+  });
 
   const mutData = useMutationState({
     filters: { mutationKey: AUTH_MUTATION_KEY },
@@ -62,7 +64,7 @@ export const SignUpForm = () => {
     qc.setQueryData(AUTH_QUERY_KEY, (prev: AuthQuery) => ({
       ...prev,
       type: "sign-up",
-      values: { nickname, password, acceptRules, findout, realName },
+      values: { nickname, password, acceptRules, findout, realName, referrer },
     }));
 
     setAuthValuesMutation.mutate();

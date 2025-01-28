@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import type { Dispatch, SetStateAction } from "react";
-import { useEventCallback, useEventListener } from "usehooks-ts";
+import { useEventCallback } from "./use-event-callback";
+import { useEventListener } from "./use-event-listener";
 
 declare global {
   // eslint-disable-next-line @typescript-eslint/consistent-type-definitions

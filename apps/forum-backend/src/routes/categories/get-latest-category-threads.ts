@@ -7,13 +7,8 @@ export const getLatestCategoryThreadsRoute = new Hono()
     try {
       const rankedThreads = await getLatestCategoryThreads();
 
-      if (!rankedThreads) {
-        return ctx.json({ error: "Threads not found" }, 404);
-      }
-
       return ctx.json({ data: rankedThreads }, 200);
     } catch (e) {
       return ctx.json({ error: throwError(e) }, 500);
     }
-  }
-  );
+  });

@@ -1,5 +1,3 @@
-"use client"
-
 import { Skeleton } from "@repo/ui/src/components/skeleton"
 import { userSocialsQuery } from "../queries/user-socials-query"
 import { Typography } from "@repo/ui/src/components/typography"
@@ -16,13 +14,14 @@ export const ProfileAccountSocials = () => {
         <div className="flex items-center gap-1 w-fit">
           <Typography
             textColor="shark_white"
-            className="text-[22px] font-semibold"
+            textSize="big"
+            className="font-semibold"
           >
             Привязанные соцсети
           </Typography>
         </div>
       </div>
-      <div className="grid grid-cols-1 lg:grid-cols-3 auto-rows-auto gap-2 w-full h-full">
+      <div className="grid grid-cols-1 lg:grid-cols-3 auto-rows-auto gap-4 w-full h-full">
         {isLoading && (
           <>
             <Skeleton className="h-24 w-full" />

@@ -21,23 +21,22 @@ export const authorizationSchema = z.object({
     }),
 });
 
-export const registrationSchema = authorizationSchema.and(
-  z.object({
-    // email: z.string().email({
-    // 	message:  "Почта обязательна!"
-    // }),
-    realName: z.string().optional(),
-    acceptRules: z.literal<boolean>(true, {
-      errorMap: () => ({
-        message:
-          "Вы должны согласиться с правилами, прежде чем авторизовываться",
-      }),
+export const registrationSchema = authorizationSchema.and(z.object({
+  // email: z.string().email({
+  // 	message:  "Почта обязательна!"
+  // }),
+  realName: z.string().optional(),
+  acceptRules: z.literal<boolean>(true, {
+    errorMap: () => ({
+      message:
+        "Вы должны согласиться с правилами, прежде чем авторизовываться",
     }),
-    findout: z
-      .string()
-      .min(4, {
-        message: "Опишите причину подробнее, пожалуйста",
-      })
-      .max(128),
   }),
-);
+  findout: z
+    .string()
+    .min(4, {
+      message: "Опишите причину подробнее, пожалуйста",
+    })
+    .max(128),
+  referrer: z.string().optional(),
+}));

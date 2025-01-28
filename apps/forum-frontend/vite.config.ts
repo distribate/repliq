@@ -2,6 +2,7 @@ import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import { TanStackRouterVite } from '@tanstack/router-plugin/vite'
 import { ViteImageOptimizer } from 'vite-plugin-image-optimizer';
+import svg from '@neodx/svg/vite';
 
 // https://vite.dev/config/
 export default defineConfig({
@@ -41,6 +42,19 @@ export default defineConfig({
       cacheLocation: undefined,
     }),
     TanStackRouterVite(),
+    svg({
+      root: '../../packages/assets/svgs',
+      group: true,
+      output: 'public/sprites',
+      fileName: '{name}.{hash:8}.svg',
+      metadata: {
+        path: '../../packages/shared/ui/sprite.gen.ts',
+        runtime: {
+          size: true,
+          viewBox: true,
+        },
+      },
+    })
   ],
   server: {
     port: 3000,

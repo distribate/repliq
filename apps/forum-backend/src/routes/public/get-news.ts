@@ -6,8 +6,7 @@ import { getNews } from "#lib/queries/public/get-news.ts";
 
 export const getNewsRoute = new Hono()
   .get("/get-news", zValidator("query", getNewsSchema), async (ctx) => {
-    const query = ctx.req.query();
-    const result = getNewsSchema.parse(query);
+    const result = getNewsSchema.parse(ctx.req.query());
 
     try {
       const news = await getNews(result);

@@ -18,7 +18,9 @@ type SidebarMutation = {
 export const useSidebarControl = () => {
   const qc = useQueryClient();
   const { data: sidebarState } = sidebarLayoutQuery();
-  const [value, setValue] = useLocalStorage<{ format: SidebarFormat }>(SIDEBAR_FORMAT_KEY, { format: "dynamic" });
+  const [value, setValue] = useLocalStorage<{ format: SidebarFormat }>(
+    SIDEBAR_FORMAT_KEY, { format: "dynamic" }
+  );
 
   const isExpanded = sidebarState.width ? sidebarState.width > 11 : false;
   const isDynamic = value.format === "dynamic";

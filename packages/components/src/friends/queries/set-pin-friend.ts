@@ -5,11 +5,7 @@ export type SetPinFriend = Pick<FriendPinnedEntity, "friend_id" | "recipient">;
 
 export async function setPinFriend({ recipient, friend_id }: SetPinFriend) {
   const res = await forumUserClient.user["create-friend-pin"].$post({
-    json: {
-      recipient,
-      friend_id,
-      type: "pin"
-    }
+    json: { recipient, friend_id, type: "pin" }
   })
 
   const data = await res.json();

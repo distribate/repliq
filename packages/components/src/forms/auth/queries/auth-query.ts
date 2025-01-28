@@ -14,13 +14,14 @@ export type AuthQuery = {
     findout: string;
     acceptRules: boolean;
     realName: string;
+    referrer?: string;
   } | null;
 };
 
 const initial: AuthQuery = {
   status: null,
   values: null,
-  type: "sign-up",
+  type: "sign-up"
 };
 
 export const AUTH_QUERY_KEY = createQueryKey("ui", ["auth-state"]);

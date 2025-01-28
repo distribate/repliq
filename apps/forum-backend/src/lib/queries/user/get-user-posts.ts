@@ -1,126 +1,136 @@
 import { z } from 'zod';
 import { forumDB } from '#shared/database/forum-db.ts';
-import type { Expression, SqlBool } from 'kysely';
+import { sql } from 'kysely';
 import type { getUserPostsSchema } from '@repo/types/schemas/posts/user-posts-schema.ts';
 import type { GetUserPostsResponse } from '@repo/types/routes-types/get-user-posts-types.ts';
 import { getUserIsFriend } from './get-user-is-friend';
+import { executeWithCursorPagination } from 'kysely-paginate';
 
 type GetPosts = z.infer<typeof getUserPostsSchema> & {
-  requestedUserNickname: string
+  requestedUserNickname: string;
+  currentUserNickname: string,
 }
 
 export async function getUserPosts({
-  ascending, searchQuery, filteringType, range, currentUserNickname, requestedUserNickname
-}: GetPosts & { currentUserNickname: string }): Promise<GetUserPostsResponse | null> {
+  ascending, filteringType, currentUserNickname, requestedUserNickname, cursor
+}: GetPosts): Promise<GetUserPostsResponse | null> {
   const isFriend = await getUserIsFriend({
     recipient: requestedUserNickname, initiator: currentUserNickname
   });
-  
-  const getFilteredPosts = async() => {
-    let query = forumDB
-    .selectFrom('posts_with_comments_and_view_counts')
-    .selectAll()
-    .where((eb) => {
-      const filters: Expression<SqlBool>[] = [];
-      
-      filters.push(eb('user_nickname', '=', requestedUserNickname));
 
-      if (searchQuery && searchQuery.trim() !== '') {
-        filters.push(eb('content', 'like', `%${searchQuery}%`));
-      }
-      
-      return eb.and(filters);
-    })
+  const asc = ascending ? "asc" : "desc";
+
+  const query = forumDB
+    .selectFrom("posts_users")
+    .innerJoin("posts", "posts.id", "posts_users.post_id")
+    .leftJoin("posts_views", "posts_views.post_id", "posts.id")
+    .leftJoin("posts_comments", "posts_comments.post_id", "posts.id")
+    .select([
+      "posts.id",
+      "posts.content",
+      "posts.created_at",
+      "posts.visibility",
+      "posts.isComments",
+      "posts.isPinned",
+      "posts.isUpdated",
+      "posts_users.nickname as nickname",
+      sql`COUNT(DISTINCT posts_comments.id)`.as("comments_count"),
+      sql`COUNT(DISTINCT posts_views.id)`.as("views_count"),
+      sql`COALESCE(BOOL_OR(posts_views.nickname = ${currentUserNickname}), false)`.as("isViewed")
+    ])
+    .$castTo<{
+      comments_count: number;
+      views_count: number;
+      isViewed: boolean;
+      nickname: string;
+      id: string;
+      content: string;
+      created_at: string | Date;
+      visibility: "only" | "all" | "friends";
+      isComments: boolean;
+      isPinned: boolean;
+      isUpdated: boolean;
+    }>()
+    .where("posts_users.nickname", "=", requestedUserNickname)
     .where((eb) => {
-      if (isFriend) {
+      if (requestedUserNickname === currentUserNickname) {
         return eb.or([
-          eb('visibility', '=', 'all'),
-          eb('visibility', '=', 'friends'),
+          eb("visibility", "=", "only"),
+          eb("visibility", "=", "friends"),
+          eb("visibility", "=", "all"),
         ]);
-      } else if (requestedUserNickname === currentUserNickname) {
-        return eb('visibility', '=', 'only');
+      } else if (isFriend) {
+        return eb.or([
+          eb("visibility", "=", "all"),
+          eb("visibility", "=", "friends"),
+        ]);
       } else {
-        return eb("visibility", "=", 'all')
+        return eb("visibility", "=", "all");
       }
     })
-    
-    if (filteringType) {
-      query = query.orderBy(
-        filteringType === 'created_at' ? 'created_at' : 'views_count',
-        ascending ? 'asc' : 'desc',
-      );
-    }
-    
-    if (range) {
-      const offset = range[0];
-      const limit = range[1] - range[0];
-      
-      query = query.offset(offset).limit(limit);
-    } else {
-      query = query.limit(8);
-    }
-    
-    return await query.execute()
-  };
-  
-  const getPostsCount = async() => {
-    return await forumDB
-    .selectFrom('posts_with_comments_and_view_counts')
-    .select(
-      forumDB.fn.count('id').as('count')
-    )
-    .where('user_nickname', '=', requestedUserNickname)
-    .where((eb) => {
-      if (isFriend) {
-        return eb.or([
-          eb('visibility', '=', 'all'),
-          eb('visibility', '=', 'friends'),
-        ]);
-      } else if (isFriend && requestedUserNickname === currentUserNickname) {
-        return eb('visibility', '=', 'only');
-      } else {
-        return eb("visibility", "=", 'all')
+    .groupBy([
+      "posts.id",
+      "posts.content",
+      "posts.created_at",
+      "posts.visibility",
+      "posts.isComments",
+      "posts.isPinned",
+      "posts.isUpdated",
+      "posts_users.nickname",
+    ])
+
+  switch (filteringType) {
+    case "created_at":
+      const withCreatedAt = await executeWithCursorPagination(query, {
+        perPage: 8,
+        after: cursor,
+        fields: [
+          {
+            key: "created_at",
+            direction: asc,
+            expression: "created_at",
+          }
+        ],
+        parseCursor: (cursor) => ({
+          created_at: new Date(cursor.created_at),
+        })
+      });
+
+      return {
+        data: withCreatedAt.rows ?? [],
+        meta: {
+          hasNextPage: withCreatedAt.hasNextPage ?? false,
+          hasPrevPage: withCreatedAt.hasPrevPage ?? false,
+          startCursor: withCreatedAt.startCursor ?? null,
+          endCursor: withCreatedAt.endCursor ?? null
+        }
       }
-    })
-    .executeTakeFirst()
-  };
-  
-  const [ otherPosts, countResult ] = await Promise.all([
-    getFilteredPosts(), getPostsCount()
-  ]);
-  
-  if (!otherPosts.length) {
-    return {
-      data: [], meta: { count: 0 }
-    }
+    case "views_count":
+      const withViewsCount = await executeWithCursorPagination(query, {
+        perPage: 8,
+        after: cursor,
+        fields: [
+          {
+            key: "views_count",
+            direction: asc,
+            // @ts-ignore
+            expression: "views_count",
+          }
+        ],
+        parseCursor: (cursor) => ({
+          // @ts-ignore
+          views_count: Number(cursor.views_count),
+        })
+      });
+
+      return {
+        data: withViewsCount.rows ?? [],
+        meta: {
+          hasNextPage: withViewsCount.hasNextPage ?? false,
+          hasPrevPage: withViewsCount.hasPrevPage ?? false,
+          startCursor: withViewsCount.startCursor ?? null,
+          endCursor: withViewsCount.endCursor ?? null
+        }
+      }
   }
-  
-  const allPosts = otherPosts
-  const postIds = allPosts.map((post) => post.id);
-  
-  const postViews = await forumDB
-  .selectFrom('posts_views')
-  .select([ 'post_id', 'user_nickname' ])
-  .where('post_id', 'in', postIds)
-  .execute();
-  
-  const postsWithViews = allPosts.map((post) => {
-    const views = postViews
-    .filter(view => view.post_id === post.id)
-    .map(view => view.user_nickname);
-    
-    const isViewed = views.includes(currentUserNickname);
-    
-    return { ...post,
-      isViewed,
-      views_count: Number(post.views_count),
-      comments_count: Number(post.comments_count)
-    };
-  });
-
-  return {
-    // @ts-expect-error
-    data: postsWithViews,
-    meta: { count: Number(countResult?.count) ?? 0 },
-  };
 }

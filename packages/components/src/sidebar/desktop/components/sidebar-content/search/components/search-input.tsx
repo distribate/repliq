@@ -14,9 +14,7 @@ export const SearchInput = () => {
   const { data: searched } = searchQuery();
   const [value, setValue] = useState<string>("");
 
-  const updateQuery = (queryValue: string) => {
-    return setSearchQueryMutation.mutate({ queryValue });
-  };
+  const updateQuery = (queryValue: string) => setSearchQueryMutation.mutate({ queryValue });
 
   const debounceUpdateQuery = useDebounce(updateQuery, 300);
 

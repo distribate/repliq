@@ -4,47 +4,129 @@ import { throwError } from "@repo/lib/helpers/throw-error";
 import { Hono } from "hono";
 import { z } from "zod";
 import { nanoid } from "nanoid";
-import type { createCoverImageSchema } from "@repo/types/schemas/user/create-cover-image-schema";
+import { decode } from "cbor-x";
+import { forumDB } from "#shared/database/forum-db.ts";
+import { createCoverImageSchema } from "@repo/types/schemas/user/create-cover-image-schema.ts"
 
-async function uploadCoverImage(f: File, nickname: string) {
-  const id = nanoid(3);
+async function deletePrevCoverImage(nickname: string) {
+  const ci = await forumDB
+    .selectFrom("users")
+    .select("cover_image")
+    .where("nickname", "=", nickname)
+    .executeTakeFirst()
 
-  return await supabase.storage.from("user_images").upload(`cover/${nickname}-${id}.png`, f);
+  if (ci && ci.cover_image && ci.cover_image.startsWith("cover")) {
+    return await supabase.storage.from("user_images").remove([ci.cover_image])
+  }
+  
+  return;
+}
+
+async function uploadCustomCoverImage(f: File, nickname: string) {
+  return await forumDB.transaction().execute(async (trx) => {
+    const id = nanoid(3);
+
+    const fileName = `${nickname}-${id}.png`;
+
+    await supabase.storage.from("user_images").upload(`cover/${fileName}`, f);
+
+    const { cover_image } = await trx
+      .updateTable("users")
+      .set({ cover_image: `cover/${fileName}` })
+      .where("nickname", "=", nickname)
+      .returning("cover_image")
+      .executeTakeFirstOrThrow()
+
+    return { cover_image }
+  })
+}
+
+async function uploadDefaultCoverImage(fileName: string, nickname: string) {
+  const q = await forumDB
+    .updateTable("users")
+    .set({ cover_image: `default/${fileName}` })
+    .where("nickname", "=", nickname)
+    .returning("cover_image")
+    .executeTakeFirstOrThrow()
+
+  return { cover_image: q.cover_image }
+}
+
+type CreateCoverImage = Omit<z.infer<typeof createCoverImageSchema>, "file"> & {
+  file: File | null;
+  nickname: string;
 }
 
 async function createCoverImage({
-  type, file, nickname
-}: z.infer<typeof createCoverImageSchema> & {
-  nickname: string;
-}) {
+  type, nickname, file, fileName
+}: CreateCoverImage) {
   switch (type) {
     case "custom":
       if (!file) {
         throw new Error("File is required");
       }
 
-      await uploadCoverImage(file, nickname);
-      break;
-    case "default":
+      await deletePrevCoverImage(nickname)
 
-      break;
+      return await uploadCustomCoverImage(file, nickname);
+    case "default":
+      if (!fileName) {
+        throw new Error("Filename is required");
+      }
+
+      await deletePrevCoverImage(nickname)
+
+      return await uploadDefaultCoverImage(fileName, nickname);
     default:
       throw new Error("Invalid type");
   }
 }
 
+const MAX_FILE_SIZE = 4 * 1024 * 1024; // 4 MB
+
 export const createCoverImageRoute = new Hono()
   .post("/create-cover-image", async (ctx) => {
-    const body = await ctx.req.parseBody();
-    const file = body['file'] as File;
-    const type = body['type'] as z.infer<typeof createCoverImageSchema>["type"]
-
     const nickname = getNickname()
 
-    try {
-      const res = await createCoverImage({ type, file, nickname });
+    const bd = new Uint8Array(await ctx.req.arrayBuffer());
 
-      return ctx.json({ status: "Created" }, 200);
+    let dd: z.infer<typeof createCoverImageSchema>;
+
+    try {
+      dd = decode(bd);
+    } catch (e) {
+      return ctx.json({ error: "Invalid data structure" }, 400);
+    }
+
+    const { success, error, data } = createCoverImageSchema.safeParse(dd);
+
+    if (!success) {
+      return ctx.json({ error: error.message }, 400);
+    }
+
+    const { type, file: raw, fileName } = data;
+
+    let cf: globalThis.File | null = null;
+
+    if (raw) {
+      if (raw.length > MAX_FILE_SIZE) {
+        return ctx.json({ error: "File size exceeds 4 MB" }, 400);
+      }
+
+      // @ts-ignore
+      cf = new globalThis.File([raw], "cover.png", { type: "image/png" })
+    }
+
+    try {
+      const res = await createCoverImage({ type, file: cf, fileName, nickname });
+
+      if (!res.cover_image) {
+        return ctx.json({ error: "Error creating cover image" }, 400)
+      }
+
+      const url = supabase.storage.from("user_images").getPublicUrl(res.cover_image).data.publicUrl
+
+      return ctx.json({ data: url, status: "Success" }, 200);
     } catch (e) {
       return ctx.json({ error: throwError(e) }, 500);
     }

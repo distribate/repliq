@@ -2,13 +2,17 @@ import { ProfileSectionLayout } from "#layouts/profile-section-layout.tsx";
 import { SectionPrivatedContent } from "#templates/section-privated-content.tsx";
 import { ProfileAccountStats } from "#profile/components/account-stats/components/profile-account-stats-list.tsx";
 import { ProfileAccountSocials } from "./profile-account-socials";
+import { ProfileAccountReferals } from "./profile-account-refs";
 
 export const UserProfileAccount = () => {
   return (
     <ProfileSectionLayout header={<SectionPrivatedContent />}>
-      <div className="flex flex-col gap-y-6 w-full h-full">
+      <div className="flex flex-col gap-y-8 w-full h-full">
         <ProfileAccountStats />
         <ProfileAccountSocials />
+        <div className="flex flex-col w-full">
+          <ProfileAccountReferals />
+        </div>
       </div>
     </ProfileSectionLayout>
   );

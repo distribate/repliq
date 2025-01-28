@@ -1,5 +1,3 @@
-"use client";
-
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { deleteFriendRequest } from "../queries/delete-friend-request.ts";
 import { toast } from "sonner";
@@ -15,6 +13,8 @@ import { FRIENDS_QUERY_KEY } from "#friends/queries/friends-query.ts";
 import { getUser } from "@repo/lib/helpers/get-user.ts";
 import { GetFriendsResponse } from "@repo/types/schemas/friend/friend-types.ts";
 import { FRIENDS_COUNT_QUERY_KEY } from "#friends/queries/friends-count-query.ts";
+import { useRouter } from "@tanstack/react-router";
+import { REQUESTED_USER_QUERY_KEY } from "#profile/components/cover/queries/requested-user-query.ts";
 
 const friendRequestStatus: Record<string, string> = {
   "User does not have accept to send friend request": "Пользователь отключил заявки в друзья",
@@ -31,29 +31,63 @@ const friendRequestStatus: Record<string, string> = {
 export const useControlFriendRequests = () => {
   const qc = useQueryClient();
   const { nickname: currentUserNickname } = getUser();
+  const { invalidate } = useRouter()
 
   const acceptIncomingRequestMutation = useMutation({
-    mutationFn: async ({ request_id, recipient }: ControlFriendRequests) => acceptFriendRequest({ request_id }),
+    mutationFn: async ({
+      request_id, recipient
+    }: ControlFriendRequests) => acceptFriendRequest({ request_id }),
     onSuccess: async (data, variables) => {
       if (!data) return;
 
-      const { status: createRequestStatus, error: createRequestError } = data;
+      const { status, error } = data;
 
-      if (!createRequestStatus) return;
+      if (!status) return;
 
-      if (!createRequestError) {
-        toast.success(friendRequestStatus[createRequestStatus]);
+      if (!error) {
+        toast.success(friendRequestStatus[status]);
+
+        // qc.setQueryData(REQUESTS_INCOMING_QUERY_KEY, (prev: FriendRequestEntity[]) => ({
+        //   ...prev,
+        //   data: prev.filter(request => request.recipient !== variables.recipient)
+        // }))
+
+        const cachedRequestedUser = qc.getQueryData(REQUESTED_USER_QUERY_KEY(variables.recipient))
+
+        if (cachedRequestedUser) {
+          await qc.invalidateQueries({
+            queryKey: REQUESTED_USER_QUERY_KEY(variables.recipient)
+          })
+        }
+
+        const cachedFriendStatus = qc.getQueryData(FRIEND_STATUS_QUERY_KEY(variables.recipient))
+
+        if (cachedFriendStatus) {
+          await qc.invalidateQueries({
+            queryKey: FRIEND_STATUS_QUERY_KEY(variables.recipient)
+          })
+        }
 
         qc.invalidateQueries({
-          queryKey: FRIENDS_QUERY_KEY(currentUserNickname)
+          queryKey: REQUESTS_INCOMING_QUERY_KEY
         });
 
-        return qc.invalidateQueries({
-          queryKey: FRIEND_STATUS_QUERY_KEY(variables.recipient)
-        });
+        await Promise.all([
+          qc.invalidateQueries({
+            queryKey: FRIENDS_QUERY_KEY(currentUserNickname)
+          }),
+          qc.invalidateQueries({
+            queryKey: FRIENDS_COUNT_QUERY_KEY(currentUserNickname)
+          }),
+          qc.invalidateQueries({
+            queryKey: FRIEND_STATUS_QUERY_KEY(variables.recipient)
+          }),
+        ])
+
+        return invalidate()
       } else {
         return toast.error("Произошла ошибка", {
-          description: friendRequestStatus[createRequestError] ?? createRequestError,
+          description: friendRequestStatus[error] ?? error,
         });
       }
     },
@@ -63,16 +97,18 @@ export const useControlFriendRequests = () => {
   });
 
   const rejectIncomingRequestMutation = useMutation({
-    mutationFn: async ({ request_id, recipient }: ControlFriendRequests) => deleteFriendRequest({ request_id }),
+    mutationFn: async ({
+      request_id, recipient
+    }: ControlFriendRequests) => deleteFriendRequest({ request_id }),
     onSuccess: async (data, variables) => {
       if (!data) return
 
-      const { status: createRequestStatus, error: createRequestError } = data;
+      const { status, error } = data;
 
-      if (!createRequestStatus) return;
+      if (!status) return;
 
-      if (!createRequestError) {
-        toast.success(friendRequestStatus[createRequestStatus]);
+      if (!error) {
+        toast.success(friendRequestStatus[status]);
 
         const incomingRequests = qc.getQueryData(REQUESTS_INCOMING_QUERY_KEY)
 
@@ -87,7 +123,7 @@ export const useControlFriendRequests = () => {
         });
       } else {
         return toast.error("Произошла ошибка", {
-          description: friendRequestStatus[createRequestError] ?? createRequestError,
+          description: friendRequestStatus[error] ?? error,
         });
       }
     },
@@ -97,16 +133,18 @@ export const useControlFriendRequests = () => {
   });
 
   const rejectOutgoingRequestMutation = useMutation({
-    mutationFn: async ({ request_id }: ControlFriendRequests) => deleteFriendRequest({ request_id }),
+    mutationFn: async ({
+      request_id, recipient
+    }: ControlFriendRequests) => deleteFriendRequest({ request_id }),
     onSuccess: async (data, variables) => {
       if (!data) return
 
-      const { status: createRequestStatus, error: createRequestError } = data;
+      const { status, error } = data;
 
-      if (!createRequestStatus) return;
+      if (!status) return;
 
-      if (!createRequestError) {
-        toast.success(friendRequestStatus[createRequestStatus]);
+      if (!error) {
+        toast.success(friendRequestStatus[status]);
 
         const outgoingRequests = qc.getQueryData(REQUESTS_OUTGOING_QUERY_KEY)
 
@@ -121,7 +159,7 @@ export const useControlFriendRequests = () => {
         });
       } else {
         return toast.error("Произошла ошибка", {
-          description: friendRequestStatus[createRequestError] ?? createRequestError,
+          description: friendRequestStatus[error] ?? error,
         });
       }
     },
@@ -131,22 +169,25 @@ export const useControlFriendRequests = () => {
   });
 
   const createRequestFriendMutation = useMutation({
-    mutationFn: async ({ recipient }: Omit<ControlFriendRequests, "request_id">) => createFriendRequest({ recipient }),
+    mutationFn: async ({
+      recipient
+    }: Omit<ControlFriendRequests, "request_id">) => createFriendRequest({ recipient }),
     onSuccess: async (data, variables) => {
       if (!data) return;
 
-      const { status: createRequestStatus, error: createRequestError } = data;
+      const { status, error } = data;
 
-      if (!createRequestStatus) return;
+      if (!status) return;
 
-      if (!createRequestError) {
-        toast.success(friendRequestStatus[createRequestStatus]);
+      if (!error) {
+        toast.success(friendRequestStatus[status]);
+
         return qc.invalidateQueries({
           queryKey: FRIEND_STATUS_QUERY_KEY(variables.recipient)
         });
       } else {
         return toast.error("Невозможно добавить этого игрока в друзья", {
-          description: friendRequestStatus[createRequestError] ?? createRequestError,
+          description: friendRequestStatus[error] ?? error,
         });
       }
     },
@@ -157,29 +198,41 @@ export const useControlFriendRequests = () => {
 
   const removeFriendMutation = useMutation({
     mutationKey: USER_FRIEND_DELETE_MUTATION_KEY,
-    mutationFn: async ({ friend_id, recipient }: ControFriendShip) => deleteFriend({ friend_id }),
+    mutationFn: async ({
+      friend_id, recipient
+    }: ControFriendShip) => deleteFriend({ friend_id }),
     onSuccess: async (data, variables) => {
       if (!data) return;
 
-      const { status: createRequestStatus, error: createRequestError } = data;
+      const { status, error } = data;
 
-      if (!createRequestStatus) return;
+      if (!status) return;
 
-      if (!createRequestError) {
-        toast.success(friendRequestStatus[createRequestStatus]);
+      if (!error) {
+        toast.success(friendRequestStatus[status]);
 
-        qc.invalidateQueries({
-          queryKey: FRIENDS_COUNT_QUERY_KEY(currentUserNickname)
-        });
+        await Promise.all([
+          qc.invalidateQueries({
+            queryKey: FRIEND_STATUS_QUERY_KEY(variables.recipient)
+          }),
+          qc.invalidateQueries({
+            queryKey: FRIENDS_COUNT_QUERY_KEY(currentUserNickname)
+          }),
+          qc.invalidateQueries({
+            queryKey: REQUESTED_USER_QUERY_KEY(variables.recipient)
+          }),
+          invalidate()
+        ])
 
         return qc.setQueryData(FRIENDS_QUERY_KEY(currentUserNickname),
-          (prev: GetFriendsResponse) => (
-            { ...prev, data: prev.data.filter(friend => friend.friend_id !== variables.friend_id) }
-          )
+          (prev: GetFriendsResponse) => ({
+            ...prev,
+            data: prev.data.filter(friend => friend.friend_id !== variables.friend_id)
+          })
         );
       } else {
         return toast.error("Произошла ошибка", {
-          description: friendRequestStatus[createRequestError] ?? createRequestError,
+          description: friendRequestStatus[error] ?? error,
         });
       }
     },

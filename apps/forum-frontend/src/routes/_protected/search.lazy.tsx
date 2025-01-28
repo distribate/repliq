@@ -7,6 +7,7 @@ import { useSearch } from '@tanstack/react-router'
 
 export const Route = createLazyFileRoute('/_protected/search')({
   component: RouteComponent,
+  // @ts-ignore
   head: () => ({
     meta: [
       {
@@ -14,6 +15,7 @@ export const Route = createLazyFileRoute('/_protected/search')({
       },
     ],
   }),
+    // @ts-ignore
   validateSearch: (params) => {
     return {
       type: (params.type as 'users' | 'threads' | 'all') || 'all',
@@ -25,6 +27,7 @@ export const Route = createLazyFileRoute('/_protected/search')({
 function RouteComponent() {
   const searchType = useSearch({
     from: '/_protected/search',
+      // @ts-ignore
     select: (params) => params.type,
   })
 

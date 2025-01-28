@@ -1,23 +1,21 @@
-"use server";
+import { forumPostClient } from "@repo/shared/api/forum-client";
 
-import { validatePostOwner } from "#post/components/post-item/queries/validate-owner-post.ts";
-import { createClient } from "@repo/shared/api/supabase-client.ts";
-import { UserPostItem } from '@repo/types/routes-types/get-user-posts-types.ts';
+export async function pinPost({
+  id,
+  value
+}: {
+  id: string;
+  value: boolean
+}) {
+  const res = await forumPostClient.post["pin-post"].$post({
+    json: { id, value }
+  })
 
-type PinPost = Pick<UserPostItem, "id" | "isPinned">
+  const data = await res.json();
 
-export async function pinPost({ id: postId, isPinned }: PinPost) {
-  const isValid = await validatePostOwner({ postId });
-  if (!isValid) return;
+  if ("error" in data) {
+    return null
+  }
 
-  const api = createClient();
-
-  const { error } = await api
-    .from("posts")
-    .update({
-      isPinned: !isPinned,
-    })
-    .eq("id", postId);
-
-  return !error;
+  return data;
 }

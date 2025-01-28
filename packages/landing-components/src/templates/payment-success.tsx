@@ -55,7 +55,10 @@ export const PaymentSuccess = ({
 
   if (isLoading) {
     return (
-      <div className="flex flex-col p-6 justify-between bg-neutral-900 h-96 border relative overflow-hidden border-neutral-50/10 rounded-xl gap-4 w-full">
+      <div
+        className="flex flex-col p-6 justify-between bg-neutral-900 h-96 border
+         relative overflow-hidden border-neutral-50/10 rounded-xl gap-4 w-full"
+      >
         <Skeleton className="w-32 h-10" />
         <Skeleton className="self-end w-full h-16" />
       </div>
@@ -122,8 +125,8 @@ export const PaymentSuccess = ({
         </div>
       </div>
       <div
-        className={`flex w-full duration-500 transition-all items-end p-6 justify-start gap-4 select-none rounded-md overflow-hidden
-          ${expand ? "opacity-100" : "opacity-0"} `}
+        className={`flex w-full duration-500 transition-all items-end p-6 justify-start
+          gap-4 select-none rounded-md overflow-hidden ${expand ? "opacity-100" : "opacity-0"} `}
       >
         <Avatar nickname={nickname} propWidth={96} propHeight={96} />
         <div className="flex flex-col gap-1 relative">

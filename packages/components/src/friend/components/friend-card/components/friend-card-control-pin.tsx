@@ -4,16 +4,13 @@ import { Typography } from "@repo/ui/src/components/typography.tsx";
 import { useControlFriend } from "#friend/components/friend-card/hooks/use-control-friend.ts";
 import { FriendCardControlProps } from "#friend/components/friend-card/components/friend-card-control.tsx";
 
-type FriendCardControlPinProps = Pick<
-  FriendCardControlProps,
-  "is_pinned" | "nickname"
-> & {
+type FriendCardControlPinProps = Pick<FriendCardControlProps, "is_pinned" | "nickname"> & {
   friend_id: string;
 };
 
 export const FriendCardControlPin = ({
   is_pinned, nickname: recipient, friend_id
-}: FriendCardControlPinProps) => { 
+}: FriendCardControlPinProps) => {
   const { setFriendPinnedMutation, setFriendUnpinMutation } =
     useControlFriend();
 

@@ -90,6 +90,7 @@ export interface _RealtimeTenants {
 export interface Admins {
   created_at: Generated<Timestamp>;
   id: Generated<Int8>;
+  nickname: string;
   telegram_id: Int8 | null;
   user_id: string;
 }
@@ -680,15 +681,15 @@ export interface PostsComments {
 
 export interface PostsUsers {
   created_at: Generated<Timestamp>;
+  nickname: string;
   post_id: string;
-  user_nickname: string;
 }
 
 export interface PostsViews {
   created_at: Generated<Timestamp>;
   id: Generated<Int8>;
+  nickname: string;
   post_id: string;
-  user_nickname: string;
 }
 
 export interface PostsWithCommentsAndViewCounts {
@@ -736,6 +737,13 @@ export interface RealtimeSubscription {
   subscription_id: string;
 }
 
+export interface Refferals {
+  created_at: Generated<Timestamp>;
+  id: Generated<string>;
+  initiator: string;
+  recipient: string;
+}
+
 export interface Reports {
   created_at: Generated<Timestamp>;
   description: string | null;
@@ -745,6 +753,14 @@ export interface Reports {
   reported_item: Json | null;
   target_user_nickname: string;
   user_nickname: string;
+}
+
+export interface ReportsApprovals {
+  created_at: Generated<Timestamp>;
+  id: Int8;
+  message: string | null;
+  report_id: Int8;
+  status: string;
 }
 
 export interface Status {
@@ -1098,7 +1114,9 @@ export interface DB {
   "realtime.messages": RealtimeMessages;
   "realtime.schema_migrations": RealtimeSchemaMigrations;
   "realtime.subscription": RealtimeSubscription;
+  refferals: Refferals;
   reports: Reports;
+  reports_approvals: ReportsApprovals;
   status: Status;
   "storage.buckets": StorageBuckets;
   "storage.migrations": StorageMigrations;

@@ -1,10 +1,6 @@
 import { useMutation } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { useRouter } from "@tanstack/react-router"
-import {
-  deleteMinecraftItem,
-  DeleteMinecraftItem,
-} from "../queries/delete-minecraft-item.ts";
 import { forumAdminClient } from "@repo/shared/api/forum-client.ts";
 import ky from "ky";
 import { createMinecraftItemSchema } from "@repo/types/schemas/admin/create-minecraft-item-schema.ts";
@@ -62,7 +58,7 @@ export const useMinecraftItems = () => {
 
   const deleteMinecraftItemMutation = useMutation({
     mutationKey: MINECRAFT_DELETE_ITEM_MUTATION_KEY,
-    mutationFn: async (values: DeleteMinecraftItem) => deleteMinecraftItem(values),
+    mutationFn: async () => null,
     onSuccess: async (data, variables, context) => {
       if (!data) return toast.error("Произошла ошибка при удалении предмета");
 

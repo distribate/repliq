@@ -40,16 +40,12 @@ export type ReportItemProps = {
 };
 
 export const ReportCreateModal = ({
-  reportType,
-  targetId,
-  targetNickname,
-  threadId,
+  reportType, targetId, targetNickname, threadId
 }: ReportItemProps) => {
   const qc = useQueryClient();
   const [stage, setStage] = useState<"reason" | "description">("reason");
   const { data: reportState } = reportQuery();
-  const { updateReportValuesMutation, createReportMutation } =
-    useCreateReport();
+  const { updateReportValuesMutation, createReportMutation } = useCreateReport();
 
   const updateReportValues = () => {
     let id: string | number | null = null;
@@ -59,26 +55,21 @@ export const ReportCreateModal = ({
       const selectedPosts = qc.getQueryData<PostsQueryResponse | null>(
         POSTS_QUERY_KEY(targetNickname),
       );
-      const selectedPost = selectedPosts?.data?.find(
-        (post) => post.id === targetId,
-      );
+
+      const selectedPost = selectedPosts?.data?.find(p => p.id === targetId);
 
       if (!selectedPost) {
-        return toast.error("Не выбран targetId");
+        return toast.error("Target it must be a provided");
       }
 
       id = selectedPost.id;
       content = selectedPost.content;
     } else if (reportType === "comment" && threadId) {
-      const selectedComments = qc.getQueryData<ThreadComment[]>(
-        THREAD_COMMENTS_QUERY_KEY(threadId),
-      );
-      const selectedComment = selectedComments?.find(
-        (comment) => comment.id === targetId,
-      );
+      const selectedComments = qc.getQueryData<ThreadComment[]>(THREAD_COMMENTS_QUERY_KEY(threadId));
+      const selectedComment = selectedComments?.find(c => c.id === targetId,);
 
       if (!selectedComment) {
-        return toast.error("Не выбран targetId");
+        return toast.error("Target it must be a provided");
       }
 
       id = selectedComment.id;
@@ -96,7 +87,7 @@ export const ReportCreateModal = ({
       reportedItem: {
         targetNickname: targetNickname,
         targetId: id,
-        targetContent: content,
+        targetContent: content ?? "",
       },
     });
   };
@@ -106,9 +97,8 @@ export const ReportCreateModal = ({
     updateReportValuesMutation.mutate({ reason });
   };
 
-  const onChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    return updateReportValuesMutation.mutate({ description: e.target.value });
-  };
+  const onChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => 
+      updateReportValuesMutation.mutate({ description: e.target.value });
 
   const createReport = () => {
     setStage("reason");

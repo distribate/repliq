@@ -1,5 +1,3 @@
-"use client";
-
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { FRIENDS_QUERY_KEY } from "#friends/queries/friends-query.ts";
 import { setPinFriend } from "#friends/queries/set-pin-friend.ts";

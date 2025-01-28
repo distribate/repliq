@@ -2,29 +2,17 @@ import { Hono } from 'hono';
 import { z } from 'zod';
 import { zValidator } from '@hono/zod-validator';
 import { nanoid } from 'nanoid';
-import {
-  createOrderBodySchema,
-} from '@repo/types/schemas/payment/payment-schema.ts';
-import {
-  type PaymentResponse,
-  type PaymentType,
-  type PaymentValueType,
-} from '@repo/types/entities/payment-types.ts';
+import { createOrderBodySchema } from '@repo/types/schemas/payment/payment-schema.ts';
+import { type PaymentMeta, type PaymentResponse } from '@repo/types/entities/payment-types.ts';
 import { getNatsConnection } from '@repo/config-nats/nats-client';
 import { throwError } from '@repo/lib/helpers/throw-error';
 import { currencyCryptoSchema, currencyFiatSchema } from '@repo/types/schemas/entities/currencies-schema';
 
-export type CreateOrder = {
-  nickname: string,
-  paymentType: PaymentType,
-  paymentValue: PaymentValueType
-}
-
-export type CreateFiatOrder = CreateOrder & {
+export type CreateFiatOrder = PaymentMeta & {
   currency: z.infer<typeof currencyFiatSchema>
 }
 
-export type CreateCryptoOrder = CreateOrder & {
+export type CreateCryptoOrder = PaymentMeta & {
   currency: z.infer<typeof currencyCryptoSchema>
 }
 
@@ -32,17 +20,11 @@ const tonCurrencies = ['USDT(TON)', 'TON', 'LLAMA', 'GRAM'] as const;
 const tronCurrencies = ['USDT(TRC20)'] as const;
 const otherCurrenies = ["BTC", "ETH"] as const
 
-function isTonCurrency(currency: string): currency is typeof tonCurrencies[number] {
-  return tonCurrencies.includes(currency as any);
-}
+const isTonCurrency = (currency: string): currency is typeof tonCurrencies[number] =>  tonCurrencies.includes(currency as any);
 
-function isTronCurrency(currency: string): currency is typeof tronCurrencies[number] {
-  return tronCurrencies.includes(currency as any);
-}
+const isTronCurrency = (currency: string): currency is typeof tronCurrencies[number] => tronCurrencies.includes(currency as any);
 
-function isOtherCurrency(currency: string): currency is typeof otherCurrenies[number] {
-  return otherCurrenies.includes(currency as any)
-}
+const isOtherCurrency = (currency: string): currency is typeof otherCurrenies[number] =>  otherCurrenies.includes(currency as any)
 
 async function createFiatOrder({
   paymentValue, paymentType, nickname,
@@ -55,11 +37,7 @@ async function createFiatOrder({
 
   let res = await nc.request("payment.start.fiat", payload)
 
-  return res.json<{
-    errorcode: number | null,
-    errormessage: string | null,
-    data: string | null
-  }>()
+  return res.json<{ errorcode: number | null, errormessage: string | null, data: string | null }>()
 }
 
 async function createCryptoOrder({
@@ -129,7 +107,7 @@ export const createOrderRoute = new Hono()
           return ctx.json({ error: errormessage }, 400);
         }
 
-        return ctx.json({ data }, 400)
+        return ctx.json({ data }, 200)
       }
 
       return ctx.json({ error: "Error creating payment" }, 400)

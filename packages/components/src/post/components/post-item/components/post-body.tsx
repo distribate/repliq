@@ -11,10 +11,10 @@ import { useState, ChangeEvent } from "react";
 import { useControlPost } from "#post/components/post-item/hooks/use-control-post.ts";
 import { UserPostItem } from '@repo/types/routes-types/get-user-posts-types.ts';
 
-type PostItemBodyProps = Pick<UserPostItem, "content" | "id" | "user_nickname">
+type PostItemBodyProps = Pick<UserPostItem, "content" | "id" | "nickname">
 
 export const PostItemBody = ({
-  content, id, user_nickname
+  content, id, nickname
 }: PostItemBodyProps) => {
   const qc = useQueryClient();
   const [value, setValue] = useState<string>(content);
@@ -30,7 +30,7 @@ export const PostItemBody = ({
 
     qc.setQueryData(POST_CONTROL_QUERY_KEY(id), (prev: PostControlQuery) => ({
       ...prev,
-      values: { content: value.length >= 1 ? value : null },
+      content: value.length >= 1 ? value : null,
     }));
   };
 
@@ -42,7 +42,7 @@ export const PostItemBody = ({
       isEdit: false,
     }));
 
-    return controlPostMutation.mutate({ type: "edit", id, nickname: user_nickname });
+    return controlPostMutation.mutate({ type: "edit", id, nickname });
   };
 
   const handleCancelEdit = () => {

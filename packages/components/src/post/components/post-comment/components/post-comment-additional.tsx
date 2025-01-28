@@ -8,29 +8,20 @@ import React from "react";
 import { PostCommentEntity } from "@repo/types/entities/entities-type.ts";
 import { useControlComment } from "#post/components/post-comment/hooks/use-control-comment.ts";
 
-type PostCommentItemAdditional = Pick<
-  PostCommentEntity,
-  "id" | "user_nickname" | "post_id"
->;
+type PostCommentItemAdditional = Pick<PostCommentEntity, "id" | "user_nickname" | "post_id">;
 
 export const PostCommentItemAdditional = ({
-  id: comment_id,
-  user_nickname,
-  post_id,
+  id, user_nickname, post_id,
 }: PostCommentItemAdditional) => {
-  const currentUser = getUser();
-  if (!currentUser) return;
-
+  const { nickname } = getUser();
   const { controlCommentMutation } = useControlComment();
-  const isOwner = currentUser.nickname === user_nickname;
+
+  const isOwner = nickname === user_nickname;
 
   const handleRemoveComment = (e: React.MouseEvent<HTMLDivElement>) => {
     e.preventDefault();
-    return controlCommentMutation.mutate({
-      type: "remove",
-      post_id,
-      id: comment_id,
-    });
+
+    return controlCommentMutation.mutate({ type: "remove", post_id, id });
   };
 
   return (

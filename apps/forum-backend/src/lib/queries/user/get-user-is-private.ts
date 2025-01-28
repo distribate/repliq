@@ -7,19 +7,17 @@ type GetUserIsPrivate = InitiatorRecipientType
 export async function getUserIsPrivate({
   initiator, recipient,
 }: GetUserIsPrivate) {
-  const { profile_visibility } = await forumDB
+  const q = await forumDB
     .selectFrom("users_settings")
     .select('profile_visibility')
     .where('nickname', '=', recipient)
-    .executeTakeFirstOrThrow();
+    .executeTakeFirst();
+
+  if (!q) return false;
 
   if (initiator === recipient) return false;
 
-  const friendShip = await getFriendship({
-    initiator, recipient
-  })
+  await getFriendship({ initiator, recipient }) ?? false
 
-  if (friendShip) return false;
-
-  return profile_visibility === 'all' ? false : true
+  return q.profile_visibility === 'all' ? false : true
 }

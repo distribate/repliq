@@ -43,16 +43,16 @@ export const ThreadContextMenu = ({
 }: ThreadContextMenuProps) => {
   const qc = useQueryClient()
   const thread = qc.getQueryData<ThreadDetailed>(THREAD_QUERY_KEY(threadId))
-  const currentUser = getUser()
+  const { nickname } = getUser()
 
   if (!thread) return null;
 
-  const isThreadOwner = thread.owner.nickname === currentUser.nickname
+  const isOwner = thread.owner.nickname === nickname
 
   return (
     <>
       <AvailableThreadReactions threadId={threadId} />
-      {isThreadOwner && (
+      {isOwner && (
         <div className="flex flex-col bg-shark-800 p-2 rounded-md gap-1">
           <ThreadContentEdit />
         </div>

@@ -1,26 +1,24 @@
-import { SearchType } from "#sidebar/desktop/components/sidebar-content/search/queries/search-query.ts";
 import {
   SearchPageQuery,
   SearchResultsAll,
 } from "#search/queries/search-page-query.ts";
-import { shuffleArray } from "#search/helpers/shuffler.ts";
+import { shuffleArray } from "@repo/lib/helpers/shuffle-array.ts";
 import { RequestDetails } from "@repo/types/entities/entities-type.ts";
 import { forumSearchClient } from "@repo/shared/api/forum-client";
 
-type GetSearchResults = RequestDetails & {
-  value: string;
-  type: SearchType;
-  threadsType?: Pick<SearchPageQuery, "type">["type"];
-};
+type GetSearchResults = Pick<RequestDetails, "limit"> & {
+  queryValue: string;
+} & (
+  | { type: "threads"; threadsType: Pick<SearchPageQuery, "type">["type"] }
+  | { type: "users" }
+  | { type: "all" }
+)
 
 async function getSearchThreads({
-  value, limit, type,
-}: GetSearchResults) {
+  queryValue, limit
+}: Omit<GetSearchResults, "type">) {
   const res = await forumSearchClient.search["get-search"].$get({
-    query: {
-      type: "thread",
-      queryValue: value,
-    }
+    query: {  type: "thread", queryValue }
   })
 
   const data = await res.json()
@@ -33,13 +31,10 @@ async function getSearchThreads({
 }
 
 async function getSearchUsers({
-  value, limit,
-}: GetSearchResults) {
+  queryValue, limit
+}: Omit<GetSearchResults, "type">) {
   const res = await forumSearchClient.search["get-search"].$get({
-    query: {
-      type: "user",
-      queryValue: value,
-    }
+    query: { type: "user", queryValue }
   })
 
   const data = await res.json()
@@ -52,22 +47,17 @@ async function getSearchUsers({
 }
 
 export async function getSearchResults({
-  type,
-  value,
-  limit,
-  threadsType,
+  type, queryValue, limit
 }: GetSearchResults): Promise<SearchResultsAll | null> {
-  const searchThreads = () => getSearchThreads({ value, limit, type });
-  const searchUsers = () => getSearchUsers({ value, limit, type });
-
   switch (type) {
     case "threads":
-      return searchThreads();
+      return getSearchThreads({ queryValue, limit });
     case "users":
-      return value ? searchUsers() : null;
+      return queryValue ? getSearchUsers({ queryValue, limit }) : null;
     case "all": {
       const [threads, users] = await Promise.all([
-        searchThreads(), searchUsers()
+        getSearchThreads({ queryValue, limit }), 
+        getSearchUsers({ queryValue, limit })
       ]);
 
       return shuffleArray([...threads ?? [], ...users ?? []]);

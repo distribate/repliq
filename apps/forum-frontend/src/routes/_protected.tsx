@@ -16,19 +16,19 @@ export const Route = createFileRoute('/_protected')({
         to: '/auth',
         search: {
           type: "login",
-          // @ts-ignore
+          // @ts-expect-error
           redirect: location.href,
         },
       })
     }
   },
   loader: async ({ context }) => {
-    await context.queryClient.ensureQueryData({
+    await context.queryClient.prefetchQuery({
       queryKey: CURRENT_USER_QUERY_KEY,
       queryFn: () => getUserInformation()
     });
   },
-  staleTime: 30_000,
+  staleTime: 60_000,
   shouldReload: false
 })
 

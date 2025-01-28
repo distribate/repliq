@@ -17,7 +17,6 @@ await initNats()
 const payments = new Hono()
   .use(cors({ origin: originList }))
   .use(csrf({ origin: originList }))
-  .use(bearerAuth({ token: Bun.env.SECRET_TOKEN! }))
   .route('/', createOrderRoute)
 
 const hooks = new Hono()

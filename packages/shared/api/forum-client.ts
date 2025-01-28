@@ -8,7 +8,9 @@ import {
   ForumSharedAppType,
   ForumWebSocketAppType,
   ForumLandingAppType,
-  ForumSearchAppType
+  ForumSearchAppType,
+  ForumPostAppType,
+  ForumReportAppType
 } from 'forum-backend/src/types/routes-types.ts';
 import { hc } from 'hono/client';
 import { isProduction } from "@repo/lib/helpers/is-production";
@@ -26,3 +28,5 @@ export const forumUserClient = hc<ForumUserAppType>(baseUrl, fetchOptions)
 export const forumThreadClient = hc<ForumThreadAppType>(baseUrl, fetchOptions)
 export const forumCategoriesClient = hc<ForumCategoriesAppType>(baseUrl, fetchOptions)
 export const forumAdminClient = hc<ForumAdminAppType>(baseUrl, fetchOptions)
+export const forumPostClient = hc<ForumPostAppType>(baseUrl, fetchOptions)
+export const forumReportClient = hc<ForumReportAppType>(baseUrl, fetchOptions)

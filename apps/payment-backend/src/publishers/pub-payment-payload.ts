@@ -4,7 +4,7 @@ import { PAYMENT_STATUS_SUBJECT } from '@repo/shared/constants/nats-subjects';
 
 type PaymentStatus = "success" | "failed"
 
-export async function pubPaymentPayload(status: PaymentStatus, payment: PaymentCompleted["data"]) {
+export function pubPaymentPayload(status: PaymentStatus, payment: PaymentCompleted["data"]) {
   const nc = getNatsConnection()
 
   const payload = JSON.stringify({

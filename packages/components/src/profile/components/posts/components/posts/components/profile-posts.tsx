@@ -1,5 +1,3 @@
-"use client"
-
 import { ProfileSectionLayout } from '#layouts/profile-section-layout.tsx';
 import { UserPageParam } from '@repo/types/global';
 import { CreatePostSection } from '#profile/components/posts/components/create-post/create-post-section.tsx';
@@ -12,13 +10,10 @@ export const UserProfilePosts = ({
   nickname
 }: UserPageParam) => {
   const currentUser = getUser()
-
-  const isOwner = currentUser?.nickname === nickname
+  const isOwner = currentUser.nickname === nickname
 
   return (
-    <ProfileSectionLayout
-      header={currentUser && isOwner && <CreatePostSection />}
-    >
+    <ProfileSectionLayout header={isOwner && <CreatePostSection />}>
       <ProfilePosts nickname={nickname} />
     </ProfileSectionLayout>
   );

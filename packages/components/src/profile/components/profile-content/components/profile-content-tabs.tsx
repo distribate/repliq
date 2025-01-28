@@ -9,7 +9,6 @@ import { Suspense } from "react";
 import { Selectable } from 'kysely';
 import { Users } from "@repo/types/db/forum-database-types";
 import { ProfileContentProps } from "./profile-content";
-import { UserDetailed } from "@repo/types/entities/user-type";
 import { ProfileSkinControls } from "#profile/components/skin/components/profile-skin-controls.tsx";
 import { ProfileSkinRender } from "#profile/components/skin/components/profile-skin-render.tsx";
 import { lazy } from "react";
@@ -41,34 +40,29 @@ const SectionPrivatedTrigger = lazy(() => import("#templates/section-privated-tr
 export type User = Selectable<Pick<Users, "id" | "nickname" | "uuid">>;
 
 export const ProfileContentTabs = ({
-  requestedUserNickname
+  nickname: requestedUserNickname
 }: ProfileContentProps) => {
   const currentUser = getUser()
-  const { data } = requestedUserQuery(requestedUserNickname)
+  const { data: requestedUser } = requestedUserQuery(requestedUserNickname)
   const { nickname: currentUserNickname } = currentUser;
 
-  if (!data) return;
-
-  const requestedUser = data as UserDetailed
+  if (!requestedUser) return null;
 
   let requestedUserUUID: string | null = null;
+  let isGameStatsShow: boolean = false;
 
-  if (isUserDetailed(data)) {
-    requestedUserUUID = data.uuid;
+  if (isUserDetailed(requestedUser)) {
+    requestedUserUUID = requestedUser.uuid;
+    isGameStatsShow = requestedUser.preferences.game_stats_visible;
   }
 
-  const { game_stats_visible } = requestedUser.preferences;
   const isOwner = currentUserNickname === requestedUserNickname;
-
-  let isGameStatsShow: boolean;
 
   if (isOwner) {
     isGameStatsShow = true;
-  } else {
-    isGameStatsShow = game_stats_visible;
   }
 
-  const isSectionPrivatedByOwner = !game_stats_visible && requestedUserNickname === currentUserNickname;
+  const isSectionPrivatedByOwner = !isGameStatsShow && requestedUserNickname === currentUserNickname;
 
   if (!requestedUserUUID) return null;
 

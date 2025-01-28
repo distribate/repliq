@@ -6,10 +6,7 @@ export async function setUnNoteFriend({
   friend_id,
 }: Omit<SetNote, "note">) {
   const res = await forumUserClient.user["delete-friend-note"].$delete({
-    json: {
-      recipient,
-      friend_id,
-    }
+    json: { recipient, friend_id }
   })
 
   const data = await res.json();

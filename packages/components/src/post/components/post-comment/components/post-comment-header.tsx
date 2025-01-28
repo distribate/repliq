@@ -10,9 +10,7 @@ type PostCommentItemHeader = Pick<
 >;
 
 export const PostCommentItemHeader = ({
-  user_nickname,
-  id: comment_id,
-  post_id,
+  user_nickname, id, post_id,
 }: PostCommentItemHeader) => {
   return (
     <div className="flex items-center justify-between w-full">
@@ -27,7 +25,7 @@ export const PostCommentItemHeader = ({
       </div>
       <div className="flex items-center w-fit">
         <PostCommentItemAdditional
-          id={comment_id}
+          id={id}
           user_nickname={user_nickname}
           post_id={post_id}
         />

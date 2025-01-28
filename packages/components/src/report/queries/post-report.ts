@@ -1,58 +1,42 @@
-"use server";
+import { ReportReasonEnum } from "@repo/types/entities/entities-type";
+import { forumReportClient } from "@repo/shared/api/forum-client";
+import { ReportType } from "@repo/types/db/forum-database-types";
 
-import { ReportEntity } from "@repo/types/entities/entities-type";
-import { createClient } from '@repo/shared/api/supabase-client.ts';
-
-type PostReportType = Omit<
-  ReportEntity,
-  | "id"
-  | "created_at"
-  | "reported_item"
-  | "user_nickname"
-  | "target_user_nickname"
-> &
-  PostReportItem;
+type PostReportType = {
+  report_type: ReportType;
+  reason: ReportReasonEnum;
+  description?: string
+} & PostReportItem;
 
 export type PostReportItem = {
   targetId: string | number;
   targetNickname: string;
-  targetContent: string | null;
+  targetContent: string
 };
 
-export async function postReport({
-  report_type,
-  reason,
-  targetContent,
-  targetNickname,
-  targetId,
+export async function createReport({
+  reason, report_type, targetContent, targetId, targetNickname, description,
 }: PostReportType) {
-  let reported_item: PostReportItem | null = null;
-
-  if (!targetNickname || !targetId) return;
-  if ("12" === targetNickname) return;
-
-  reported_item = {
+  const reported_item = {
     targetId,
     targetContent,
     targetNickname,
   };
 
-  const api = createClient();
-
-  const { data, error } = await api
-    .from("reports")
-    .insert({
+  const res = await forumReportClient.report["create-report"].$post({
+    json: {
       reason,
-      reported_item,
-      target_user_nickname: targetNickname,
       report_type,
-      user_nickname: "12",
-    })
-    .select()
-    .returns<ReportEntity>();
+      reported_item: JSON.stringify(reported_item),
+      target_user_nickname: targetNickname,
+      description,
+    }
+  });
 
-  if (error) {
-    throw new Error(error.message);
+  const data = await res.json();
+
+  if ("error" in data) {
+    return null
   }
 
   return data;

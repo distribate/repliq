@@ -54,7 +54,7 @@ export const SORT_TYPES: Record<string, "donate" | "created_at"> = {
 export const DEFAULT_LIMIT_PER_PAGE = 6
 
 export const getUserFriends = async ({
-  nickname, with_details, ascending, sort_type, cursor
+  nickname, with_details, ascending, sort_type, cursor, limit
 }: GetUserFriends): Promise<GetFriendsResponse> => {
   const baseQuery = forumDB
     .selectFrom("users_friends")
@@ -98,9 +98,17 @@ export const getUserFriends = async ({
             )
             .on("users.nickname", "!=", nickname)
       )
-      .leftJoin("friends_pinned", "friends_pinned.recipient", "users.nickname")
-      .leftJoin("friends_notes", "friends_notes.recipient", "users.nickname")
-      .select(({ fn }) => [
+      .leftJoin("friends_pinned", (join) =>
+        join.on(
+          sql`friends_pinned.recipient = users.nickname AND friends_pinned.initiator = ${nickname}`
+        )
+      )
+      .leftJoin("friends_notes", (join) =>
+        join.on(
+          sql`friends_notes.recipient = users.nickname AND friends_notes.initiator = ${nickname}`
+        )
+      )
+      .select([
         "users_friends.id as friend_id",
         "users_friends.created_at",
         "users.nickname",
@@ -114,7 +122,7 @@ export const getUserFriends = async ({
       ])
 
     const result = await executeWithCursorPagination(withDetailsQuery, {
-      perPage: DEFAULT_LIMIT_PER_PAGE,
+      perPage: limit ?? DEFAULT_LIMIT_PER_PAGE,
       after: cursor,
       fields: [
         { key: "created_at", expression: "users_friends.created_at", direction: orderBy }

@@ -2,6 +2,7 @@ import { throwError } from "@repo/lib/helpers/throw-error";
 import { Hono } from "hono";
 import { validateUserRequest } from "./terminate-session";
 import { forumDB } from "../shared/database/forum-db";
+import type { Env } from "../types/env-type";
 
 async function getSessions(nickname: string) {
   return await forumDB
@@ -12,12 +13,10 @@ async function getSessions(nickname: string) {
     .execute();
 }
 
-export const getSessionsRoute = new Hono()
+export const getSessionsRoute = new Hono<Env>()
   .use(validateUserRequest)
   .get('/get-sessions', async (ctx) => {
-     // @ts-ignore
     const nickname = ctx.get("nickname")
-     // @ts-ignore
     const currentSessionId = ctx.get('currentSessionId')
 
     if (!nickname || !currentSessionId) {
@@ -25,7 +24,6 @@ export const getSessionsRoute = new Hono()
     }
 
     try {
-       // @ts-ignore
       const rawSessions = await getSessions(nickname)
 
       if (!rawSessions) {

@@ -1,13 +1,13 @@
 import { throwError } from '@repo/lib/helpers/throw-error.ts';
 import { Hono } from "hono";
-import { getCategories, type CategoryModel } from '#lib/queries/categories/get-categories.ts';
+import { getCategories } from '#lib/queries/categories/get-categories.ts';
 
 export const getCategoriesRoute = new Hono()
   .get("/get-categories", async (ctx) => {
     try {
       const categories = await getCategories();
 
-      return ctx.json<CategoryModel[]>(categories, 200);
+      return ctx.json({ data: categories }, 200);
     } catch (e) {
       return ctx.json({ error: throwError(e) }, 500);
     }

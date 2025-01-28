@@ -1,4 +1,3 @@
-import { getPublicUrlFromStorage } from "@repo/lib/utils/storage/get-public-url-from-storage.ts";
 import { forumAdminClient } from "@repo/shared/api/forum-client";
 
 type AuthImages = {
@@ -28,11 +27,12 @@ export async function getAuthImages() {
   for (let i = 0; i < authBackgroundImages.length; i++) {
     const name = authBackgroundImages[i]?.name;
 
-    const image = await getPublicUrlFromStorage({
-      bucket: "static",
-      fileName: `auth_background/${name}`,
-    });
+    const image = {
+      url: "asd",
+      name: "asd"
+    }
 
+    // @ts-ignore
     images.push({ name, url: image });
   }
 
