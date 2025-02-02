@@ -15,6 +15,8 @@ import { GetFriendsResponse } from "@repo/types/schemas/friend/friend-types.ts";
 import { FRIENDS_COUNT_QUERY_KEY } from "#friends/queries/friends-count-query.ts";
 import { useRouter } from "@tanstack/react-router";
 import { REQUESTED_USER_QUERY_KEY } from "#profile/components/cover/queries/requested-user-query.ts";
+import { forumUserClient } from "@repo/shared/api/forum-client.ts";
+import { InferResponseType } from "hono/client"
 
 const friendRequestStatus: Record<string, string> = {
   "User does not have accept to send friend request": "Пользователь отключил заявки в друзья",
@@ -27,6 +29,10 @@ const friendRequestStatus: Record<string, string> = {
   "Friend request accepted": "Запрос принят",
   "Friend deleted": "Пользователь удален из друзей"
 } as const;
+
+const reqClient = forumUserClient.user["get-friends-requests"].$get
+
+type FriendsRequests = InferResponseType<typeof reqClient, 200>["data"]
 
 export const useControlFriendRequests = () => {
   const qc = useQueryClient();
@@ -47,11 +53,6 @@ export const useControlFriendRequests = () => {
       if (!error) {
         toast.success(friendRequestStatus[status]);
 
-        // qc.setQueryData(REQUESTS_INCOMING_QUERY_KEY, (prev: FriendRequestEntity[]) => ({
-        //   ...prev,
-        //   data: prev.filter(request => request.recipient !== variables.recipient)
-        // }))
-
         const cachedRequestedUser = qc.getQueryData(REQUESTED_USER_QUERY_KEY(variables.recipient))
 
         if (cachedRequestedUser) {
@@ -68,11 +69,10 @@ export const useControlFriendRequests = () => {
           })
         }
 
-        qc.invalidateQueries({
-          queryKey: REQUESTS_INCOMING_QUERY_KEY
-        });
-
         await Promise.all([
+          qc.invalidateQueries({
+            queryKey: REQUESTS_INCOMING_QUERY_KEY
+          }),
           qc.invalidateQueries({
             queryKey: FRIENDS_QUERY_KEY(currentUserNickname)
           }),
@@ -107,25 +107,26 @@ export const useControlFriendRequests = () => {
 
       if (!status) return;
 
-      if (!error) {
-        toast.success(friendRequestStatus[status]);
-
-        const incomingRequests = qc.getQueryData(REQUESTS_INCOMING_QUERY_KEY)
-
-        if (incomingRequests) {
-          qc.invalidateQueries({
-            queryKey: REQUESTS_INCOMING_QUERY_KEY
-          });
-        }
-
-        return qc.invalidateQueries({
-          queryKey: FRIEND_STATUS_QUERY_KEY(variables.recipient)
-        });
-      } else {
+      if (error) {
         return toast.error("Произошла ошибка", {
           description: friendRequestStatus[error] ?? error,
         });
       }
+
+      toast.success(friendRequestStatus[status]);
+
+      const incomingRequests = qc.getQueryData(REQUESTS_INCOMING_QUERY_KEY)
+
+      if (incomingRequests) {
+        qc.setQueryData(REQUESTS_INCOMING_QUERY_KEY, (prev: FriendsRequests) => 
+          prev.filter(req => req.id !== variables.request_id));
+      }
+
+      console.log(incomingRequests, variables.recipient)
+
+      await qc.invalidateQueries({
+        queryKey: FRIEND_STATUS_QUERY_KEY(variables.recipient)
+      });
     },
     onError: e => {
       throw new Error(e.message);
@@ -143,25 +144,24 @@ export const useControlFriendRequests = () => {
 
       if (!status) return;
 
-      if (!error) {
-        toast.success(friendRequestStatus[status]);
-
-        const outgoingRequests = qc.getQueryData(REQUESTS_OUTGOING_QUERY_KEY)
-
-        if (outgoingRequests) {
-          qc.invalidateQueries({
-            queryKey: REQUESTS_OUTGOING_QUERY_KEY
-          });
-        }
-
-        return qc.invalidateQueries({
-          queryKey: FRIEND_STATUS_QUERY_KEY(variables.recipient)
-        });
-      } else {
+      if (error) {
         return toast.error("Произошла ошибка", {
           description: friendRequestStatus[error] ?? error,
         });
       }
+
+      toast.success(friendRequestStatus[status]);
+
+      const outgoingRequests = qc.getQueryData(REQUESTS_OUTGOING_QUERY_KEY)
+
+      if (outgoingRequests) {
+        qc.setQueryData(REQUESTS_OUTGOING_QUERY_KEY, (prev: FriendsRequests) => 
+          prev.filter(req => req.id !== variables.request_id));
+      }
+
+      await qc.invalidateQueries({
+        queryKey: FRIEND_STATUS_QUERY_KEY(variables.recipient)
+      });
     },
     onError: e => {
       throw new Error(e.message);
@@ -179,17 +179,25 @@ export const useControlFriendRequests = () => {
 
       if (!status) return;
 
-      if (!error) {
-        toast.success(friendRequestStatus[status]);
-
-        return qc.invalidateQueries({
-          queryKey: FRIEND_STATUS_QUERY_KEY(variables.recipient)
-        });
-      } else {
+      if (error) {
         return toast.error("Невозможно добавить этого игрока в друзья", {
           description: friendRequestStatus[error] ?? error,
         });
       }
+
+      const outgoingRequests = qc.getQueryData(REQUESTS_OUTGOING_QUERY_KEY)
+
+      if (outgoingRequests) {
+        qc.invalidateQueries({
+          queryKey: REQUESTS_OUTGOING_QUERY_KEY
+        })
+      }
+
+      toast.success(friendRequestStatus[status]);
+
+      return await qc.invalidateQueries({
+        queryKey: FRIEND_STATUS_QUERY_KEY(variables.recipient)
+      })
     },
     onError: e => {
       throw new Error(e.message);
@@ -208,33 +216,33 @@ export const useControlFriendRequests = () => {
 
       if (!status) return;
 
-      if (!error) {
-        toast.success(friendRequestStatus[status]);
-
-        await Promise.all([
-          qc.invalidateQueries({
-            queryKey: FRIEND_STATUS_QUERY_KEY(variables.recipient)
-          }),
-          qc.invalidateQueries({
-            queryKey: FRIENDS_COUNT_QUERY_KEY(currentUserNickname)
-          }),
-          qc.invalidateQueries({
-            queryKey: REQUESTED_USER_QUERY_KEY(variables.recipient)
-          }),
-          invalidate()
-        ])
-
-        return qc.setQueryData(FRIENDS_QUERY_KEY(currentUserNickname),
-          (prev: GetFriendsResponse) => ({
-            ...prev,
-            data: prev.data.filter(friend => friend.friend_id !== variables.friend_id)
-          })
-        );
-      } else {
+      if (error) {
         return toast.error("Произошла ошибка", {
           description: friendRequestStatus[error] ?? error,
         });
       }
+
+      toast.success(friendRequestStatus[status]);
+
+      await Promise.all([
+        qc.invalidateQueries({
+          queryKey: FRIEND_STATUS_QUERY_KEY(variables.recipient)
+        }),
+        qc.invalidateQueries({
+          queryKey: FRIENDS_COUNT_QUERY_KEY(currentUserNickname)
+        }),
+        qc.invalidateQueries({
+          queryKey: REQUESTED_USER_QUERY_KEY(variables.recipient)
+        }),
+        invalidate()
+      ])
+
+      return qc.setQueryData(FRIENDS_QUERY_KEY(currentUserNickname),
+        (prev: GetFriendsResponse) => ({
+          ...prev,
+          data: prev.data.filter(friend => friend.friend_id !== variables.friend_id)
+        })
+      );
     },
     onError: e => {
       throw new Error(e.message);

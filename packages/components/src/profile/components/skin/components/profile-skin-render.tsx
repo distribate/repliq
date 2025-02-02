@@ -4,9 +4,7 @@ import { Skeleton } from "@repo/ui/src/components/skeleton.tsx";
 import { UserEntity } from "@repo/types/entities/entities-type.ts";
 import { Typography } from "@repo/ui/src/components/typography.tsx";
 import Cape from "@repo/assets/images/minecraft/cape_default.png";
-import { lazy, Suspense } from "react";
-
-const ReactSkinview3d = lazy(() => import("react-skinview3d").then(m => ({ default: m.default })));
+import ReactSkinview3d from "react-skinview3d";
 
 function isHardwareAccelerationEnabled(): boolean {
   const canvas = document.createElement('canvas');
@@ -32,18 +30,16 @@ export const ProfileSkinRender = ({
   return (
     <div className="flex items-center justify-center py-2 overflow-hidden border-4 border-shark-800 rounded-lg w-full">
       {isHardwareAccEnabled ? (
-        <Suspense fallback={<Skeleton className="w-full h-full" />}>
-          <ReactSkinview3d
-            skinUrl={skinUrl}
-            height="450"
-            width="350"
-            options={{
-              zoom: 0.8
-            }}
-            capeUrl={Cape}
-            onReady={({ viewer }) => setViewerRef(viewer)}
-          />
-        </Suspense>
+        <ReactSkinview3d
+          skinUrl={skinUrl}
+          height="450"
+          width="350"
+          options={{
+            zoom: 0.8
+          }}
+          capeUrl={Cape}
+          onReady={({ viewer }) => setViewerRef(viewer)}
+        />
       ) : (
         <div className="flex w-full items-center justify-center h-full">
           <Typography textSize="large" className="truncate whitespace-pre-wrap">

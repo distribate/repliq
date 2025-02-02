@@ -61,7 +61,7 @@ export const PostComments = ({
     <>
       <Separator />
       <div className="flex flex-col gap-y-2 w-full">
-        {postComments.map((comment) => (
+        {/* {postComments.map((comment) => (
           <PostCommentItem
             key={comment.id}
             post_id={comment.post_id}
@@ -70,7 +70,7 @@ export const PostComments = ({
             content={comment.content}
             id={comment.id}
           />
-        ))}
+        ))} */}
       </div>
     </>
   );

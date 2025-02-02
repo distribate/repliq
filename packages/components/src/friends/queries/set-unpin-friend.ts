@@ -8,11 +8,13 @@ export async function setUnpinFriend({ recipient, friend_id }: SetPinFriend) {
 
   const data = await res.json();
 
+  if (!data) {
+    return null;
+  }
+
   if ("error" in data) {
     return { error: data.error }
   }
 
-  const { status } = data
-
-  return { status, friend_id };
+  return data
 }

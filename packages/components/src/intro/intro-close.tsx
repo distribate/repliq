@@ -4,5 +4,5 @@ import { DeleteButton } from "@repo/ui/src/components/detele-button";
 export const IntroClose = () => {
   const { updateIntroVisibilityMutation } = useUpdateGlobalPreferences()
 
-  return <DeleteButton variant="invisible" onClick={() => updateIntroVisibilityMutation.mutate()} className="z-[3]" />;
+  return <DeleteButton variant="invisible" onClick={() => updateIntroVisibilityMutation.mutate()} />;
 };

@@ -12,14 +12,17 @@ import { parseBooleanToString } from "@repo/lib/helpers/parse-boolean-to-string.
 export type GetFriends = Pick<UserEntity, "nickname"> & z.infer<typeof getUserFriendsSchema>
 
 export async function getFriends({
-  nickname, sort_type, with_details: rawWithDetails, ascending: rawAscending, cursor, limit
+  nickname, sort_type, with_details, ascending, cursor, limit
 }: GetFriends): Promise<GetFriendsResponse | null> {
-  const with_details = parseBooleanToString(rawWithDetails)
-  const ascending = parseBooleanToString(rawAscending)
-
   const url = forumUserClient.user["get-user-friends"][":nickname"].$url({
     param: { nickname },
-    query: { sort_type, with_details, ascending, cursor, limit: limit ? `${limit}` : undefined },
+    query: { 
+      sort_type, 
+      with_details: parseBooleanToString(with_details),
+      ascending: parseBooleanToString(ascending), 
+      cursor, 
+      limit: limit ? `${limit}` : undefined 
+    },
   })
 
   const res = await ky.get(url, {

@@ -23,58 +23,58 @@ export const EditorPanel = ({ editor, withImage }: EditorPanelProps) => {
       <Button
         title="Выделить жирным"
         type="button"
-        className="w-12 hover:bg-shark-800"
+        className={`w-14 h-10 hover:bg-shark-700 ${CustomEditor.isBoldMarkActive(editor) && "bg-shark-700"}`}
         onMouseDown={(event) => {
           event.preventDefault();
           CustomEditor.toggleBoldMark(editor);
         }}
       >
-        <Typography textColor="gray">B</Typography>
+        <Typography textColor="gray" className="text-[20px]">B</Typography>
       </Button>
       <Button
         title="Выделить курсивом"
         type="button"
-        className="w-12 hover:bg-shark-800"
+        className={`w-14 h-10 hover:bg-shark-700 ${CustomEditor.isItalicMarkActive(editor) && "bg-shark-700"}`}
         onMouseDown={(event) => {
           event.preventDefault();
           CustomEditor.toggleItalicMark(editor);
         }}
       >
-        <Typography textColor="gray">I</Typography>
+        <Typography textColor="gray" className="text-[20px]">I</Typography>
       </Button>
       <Button
         title="Выделить подчеркнутым"
         type="button"
-        className="w-12 hover:bg-shark-800"
+        className={`w-14 h-10 hover:bg-shark-700 ${CustomEditor.isUnderlineMarkActive(editor) && "bg-shark-700"}`}
         onMouseDown={(event) => {
           event.preventDefault();
           CustomEditor.toggleUnderlineMark(editor);
         }}
       >
-        <Typography textColor="gray">U</Typography>
+        <Typography textColor="gray" className="text-[20px]">U</Typography>
       </Button>
       <Button
         title="Выделить зачеркнутым"
         type="button"
-        className="w-12 hover:bg-shark-800"
+        className={`w-14 h-10 hover:bg-shark-700 ${CustomEditor.isStrikeMarkActive(editor) && "bg-shark-700"}`}
         onMouseDown={(event) => {
           event.preventDefault();
           CustomEditor.toggleStrikeMark(editor);
         }}
       >
-        <Typography textColor="gray">S</Typography>
+        <Typography textColor="gray" className="text-[20px]">S</Typography>
       </Button>
       <Separator orientation="vertical" />
       <Button
         title="Выделить в виде кода"
         type="button"
-        className="w-12 hover:bg-shark-800"
+        className={`w-14 h-10 hover:bg-shark-700 ${CustomEditor.isCodeBlockActive(editor) && "bg-shark-700"}`}
         onMouseDown={(event) => {
           event.preventDefault();
           CustomEditor.toggleCodeBlock(editor);
         }}
       >
-        <Typography textColor="gray">{"</>"}</Typography>
+        <Typography textColor="gray" className="text-[20px]">{"</>"}</Typography>
       </Button>
     </div>
   );

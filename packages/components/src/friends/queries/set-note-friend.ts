@@ -16,11 +16,15 @@ export async function setNoteFriend({
 
   const data = await res.json();
 
+  if (!data) {
+    return null;
+  }
+
   if ("error" in data) {
     return { error: data.error }
   }
 
   const { data: newNote, status } = data;
 
-  return { status, note: newNote, friend_id }
+  return { status, note: newNote }
 }

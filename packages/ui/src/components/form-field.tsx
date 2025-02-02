@@ -13,7 +13,7 @@ interface FormFieldProps extends HTMLAttributes<HTMLDivElement> {
 const FormField = forwardRef<HTMLDivElement, FormFieldProps>(
   ({ className, errorMessage, label, children, ...props }, ref) => {
     return (
-      <div ref={ref} className="flex flex-col gap-y-1" {...props}>
+      <div ref={ref} className="flex flex-col gap-y-2" {...props}>
         {label && (
           <>
             <label htmlFor={label.for} />

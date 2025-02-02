@@ -11,8 +11,8 @@ import DiamondPickaxe from "@repo/assets/images/minecraft/diamond_pickaxe.webp";
 import { UserSettingOption } from "#cards/components/user-personal-card/components/profile-settings/user-profile-settings.tsx";
 
 export const FavoriteItemModal = () => {
-  const { favorite_item } = getUser();
-  const { data: favoriteItem } = favoriteItemQuery({ favorite_item });
+  const { nickname } = getUser();
+  const { data: favoriteItem } = favoriteItemQuery(nickname);
 
   return (
     <Dialog>
@@ -23,7 +23,7 @@ export const FavoriteItemModal = () => {
         >
           <div className="flex items-center gap-1">
             <Typography className="text-base">
-              {favoriteItem && favorite_item ? favoriteItem.title : "не выбрано"}
+              {favoriteItem ? favoriteItem.title : "не выбрано"}
             </Typography>
           </div>
         </UserSettingOption>

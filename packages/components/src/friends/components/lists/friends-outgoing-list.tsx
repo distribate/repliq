@@ -1,5 +1,3 @@
-"use client";
-
 import { ContentNotFound } from "#templates/content-not-found.tsx";
 import { FriendsListLayout } from "./friends-list-layout.tsx";
 import { FriendCardOutgoing } from "#friend/components/friend-card/components/friend-card-outgoing.tsx";

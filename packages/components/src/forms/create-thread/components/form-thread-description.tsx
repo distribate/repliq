@@ -9,8 +9,7 @@ export const FormThreadDescription = ({ control, errors }: FormChildsProps) => {
   const { updateThreadFormMutation } = useCreateThread();
 
   const handleChange = (
-    e: ChangeEvent<HTMLInputElement>,
-    onChange: (...event: any[]) => void,
+    e: ChangeEvent<HTMLInputElement>, onChange: (...event: any[]) => void,
   ) => {
     onChange(e);
     return updateThreadFormMutation.mutate({
@@ -22,7 +21,7 @@ export const FormThreadDescription = ({ control, errors }: FormChildsProps) => {
     <div className="flex flex-col gap-y-1 w-full">
       <div className="flex flex-col">
         <Typography textColor="shark_white" textSize="large">
-          Описание <span className="text-shark-300">[опционально]</span>
+          Описание
         </Typography>
       </div>
       <Controller
@@ -31,12 +30,13 @@ export const FormThreadDescription = ({ control, errors }: FormChildsProps) => {
         render={({ field: { onChange, name, ref } }) => (
           <Input
             name={name}
+            autoComplete="off"
             ref={ref}
             variant="form"
             className="rounded-md"
-            placeholder="абоба дескрипшн..."
+            placeholder="Напишите что-нибудь..."
             status={errors ? "error" : "default"}
-            onChange={(e) => handleChange(e, onChange)}
+            onChange={e => handleChange(e, onChange)}
           />
         )}
       />

@@ -11,7 +11,7 @@ import { ImageWrapper } from "#wrappers/image-wrapper.tsx";
 export const ProfileDescriptionChangeModal = () => {
   return (
     <Dialog>
-      <DialogTrigger>
+      <DialogTrigger asChild>
         <Button
           title="Настройка профиля"
           type="button"

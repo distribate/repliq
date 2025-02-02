@@ -12,6 +12,7 @@ import { FriendsTab } from '@repo/components/src/friends/components/control/comp
 
 export const Route = createLazyFileRoute('/_protected/friends')({
   component: RouteComponent,
+  // @ts-ignore
   head: () => {
     return {
       meta: [
@@ -25,8 +26,8 @@ export const Route = createLazyFileRoute('/_protected/friends')({
 
 function RouteComponent() {
   return (
-    <div className="flex flex-col gap-2 items-start lg:flex-row w-full h-full relative">
-      <BlockWrapper className="lg:order-first order-last flex w-full lg:w-4/6 *:w-full !p-4 h-full">
+    <div className="flex flex-col min-h-dvh gap-2 items-start lg:flex-row w-full relative">
+      <BlockWrapper className="lg:order-first order-last flex w-full lg:w-4/6 *:w-full !p-4 min-h-dvh">
         <FriendsList />
       </BlockWrapper>
       <div className="flex lg:order-last order-first flex-col gap-4 w-full lg:w-2/6 sticky top-0 h-fit">

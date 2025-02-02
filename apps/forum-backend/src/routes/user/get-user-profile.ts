@@ -1,12 +1,30 @@
 import { getFriendship } from "#lib/queries/friend/get-friendship.ts";
-import { getUserIsViewed } from "#lib/queries/user/get-user-is-viewed.ts";
 import { getUserRelation } from "#lib/queries/user/get-user-relation.ts";
 import { getUser, type GetUserType } from "#lib/queries/user/get-user.ts";
-import { supabase } from "#shared/supabase/supabase-client.ts";
+import { forumDB } from "#shared/database/forum-db.ts";
 import { getNickname } from "#utils/get-nickname-from-storage.ts";
-import { isUserDetailed } from "@repo/lib/helpers/is-user-detailed";
+import { getPublicUrl } from "#utils/get-public-url.ts";
 import { throwError } from "@repo/lib/helpers/throw-error";
 import { Hono } from "hono";
+
+type UserProfileStatus = "banned" | "private" | "blocked-by-you" | "blocked-by-user" | null
+
+async function createUserProfileView(initiator: string, recipient: string) {
+  const exists = await forumDB
+    .selectFrom("profile_views")
+    .where("created_at", ">", new Date(new Date().getTime() - 24 * 60 * 60 * 1000))
+    .where("recipient", "=", recipient)
+    .where("initiator", "=", initiator)
+    .select("id")
+    .executeTakeFirst()
+
+  if (!exists) {
+    await forumDB
+    .insertInto("profile_views")
+    .values({ recipient, initiator })
+    .execute()
+  }
+}
 
 export const getUserProfileRoute = new Hono()
   .get("/get-user-profile/:nickname", async (ctx) => {
@@ -14,14 +32,13 @@ export const getUserProfileRoute = new Hono()
 
     const initiator = getNickname()
 
-    const [userRelation, is_viewed, friendShip] = await Promise.all([
+    const [userRelation, friendShip] = await Promise.all([
       getUserRelation({ recipient, initiator }),
-      getUserIsViewed({ recipient, initiator }),
       getFriendship({ recipient, initiator })
     ])
 
     let getUserType: GetUserType = "shorted"
-    let status: "banned" | "private" | "blocked-by-you" | "blocked-by-user" | null = null;
+    let status: UserProfileStatus = null;
 
     if (!friendShip) {
       if (userRelation === "private"
@@ -36,7 +53,6 @@ export const getUserProfileRoute = new Hono()
       status = userRelation
     } else {
       getUserType = "detailed"
-
       status = null;
     }
 
@@ -44,13 +60,17 @@ export const getUserProfileRoute = new Hono()
       const user = await getUser({ initiator, recipient, type: getUserType });
 
       if (!user) {
-        return ctx.json({ error: "User not found" }, 404)
+        return ctx.json({ error: "Not found" }, 404)
       }
 
+      if (recipient !== initiator) {
+        createUserProfileView(initiator, recipient)
+      }
+      
       let cover_image: string | null = null
 
-      if (isUserDetailed(user) && user.cover_image) {
-        cover_image = supabase.storage.from("user_images").getPublicUrl(user.cover_image).data.publicUrl
+      if ("cover_image" in user && user.cover_image) {
+        cover_image = getPublicUrl("user_images", user.cover_image)
       }
 
       return ctx.json({
@@ -58,8 +78,7 @@ export const getUserProfileRoute = new Hono()
           ...user,
           cover_image,
           details: {
-            status,
-            is_viewed
+            status
           }
         }
       }, 200);

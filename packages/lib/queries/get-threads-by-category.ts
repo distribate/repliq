@@ -3,22 +3,20 @@ import { forumCategoriesClient } from "@repo/shared/api/forum-client";
 type ThreadsFromCategories = {
   categoryId: string;
 } & {
-  range: number[]
+  cursor?: string;
   limit?: number;
 };
 
 export async function getThreadsCategories({
-  categoryId,
-  range,
-  limit = 3,
+  categoryId, limit = 3,  cursor
 }: ThreadsFromCategories) {
-  const res = await forumCategoriesClient.categories["get-category-threads"][":category_id"].$get({
-    query: { 
-      range: `${range[0]},${range[1]}`, 
+  const res = await forumCategoriesClient.categories["get-category-threads"][":id"].$get({
+    query: {
+      cursor,
       limit: limit.toString(),
       ascending: "false"
     },
-    param: { category_id: categoryId },
+    param: { id: categoryId },
   });
 
   const data = await res.json();

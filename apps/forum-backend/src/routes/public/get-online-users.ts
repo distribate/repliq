@@ -4,11 +4,11 @@ import { Hono } from "hono";
 
 async function getOnlineUsers() {
   return await forumDB
-  .selectFrom("users_status")
-  .select(["nickname"])
-  .where("status", "=", true)
-  .limit(7)
-  .execute()
+    .selectFrom("users_status")
+    .select(["nickname"])
+    .where("created_at", ">", new Date(Date.now() - 5 * 60 * 1000))
+    .limit(7)
+    .execute();
 }
 
 export const getOnlineUsersRoute = new Hono()

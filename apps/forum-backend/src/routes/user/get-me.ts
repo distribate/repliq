@@ -1,11 +1,12 @@
 import { throwError } from '@repo/lib/helpers/throw-error.ts';
 import { getUserInfo } from "#lib/queries/user/get-user-info.ts";
 import { getUserIsBanned } from "#lib/queries/user/get-user-is-banned.ts";
-import { getUserSettings } from "#lib/queries/user/get-user-setting.ts";
 import { getNickname } from "#utils/get-nickname-from-storage.ts";
 import type { UserDonateVariant } from "@repo/types/entities/entities-type";
 import { Hono } from "hono";
-import { supabase } from '#shared/supabase/supabase-client.ts';
+import { getPublicUrl } from '#utils/get-public-url.ts';
+import type { user } from '#index.ts';
+import { encode, Encoder } from 'cbor-x';
 
 export const getMeRoute = new Hono()
   .use(async (ctx, next) => {
@@ -22,25 +23,47 @@ export const getMeRoute = new Hono()
     const nickname = getNickname()
 
     try {
-      const [user, preferences] = await Promise.all([
-        getUserInfo(nickname),
-        getUserSettings(nickname)
-      ]);
+      const {
+        accept_friend_request, cover_outline_visible, game_stats_visible,
+        profile_visibility, real_name_visible, send_notifications,
+        ...user
+      } = await getUserInfo(nickname)
 
       let cover_image: string | null = null
 
-      if (user.cover_image) {
-        cover_image = supabase.storage.from("user_images").getPublicUrl(user.cover_image).data.publicUrl
+      const preferences = {
+        accept_friend_request,
+        cover_outline_visible,
+        game_stats_visible,
+        profile_visibility,
+        real_name_visible,
+        send_notifications,
       }
 
-      return ctx.json({
+      if (user.cover_image) {
+        cover_image = getPublicUrl("user_images", user.cover_image)
+      }
+
+      const res = {
         data: {
           ...user,
           cover_image,
           donate: user.donate satisfies UserDonateVariant,
           preferences
         }
-      }, 200)
+      }
+
+      const encoder = new Encoder({
+        useRecords: false, structures: [], pack: true
+      });
+
+      const encodedUser = encoder.encode(res)
+
+      return ctx.body(
+        encodedUser as unknown as ReadableStream, 
+        200, 
+        { 'Content-Type': 'application/cbor' }
+      )
     } catch (e) {
       return ctx.json({ error: throwError(e) }, 500);
     }

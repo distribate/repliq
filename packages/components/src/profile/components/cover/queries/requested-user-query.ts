@@ -14,11 +14,7 @@ async function getUserProfile(nickname: string) {
 
   const data = await res.json()
 
-  if ("error" in data) {
-    return null;
-  }
-
-  if (!data) {
+  if (!data || "error" in data) {
     return "not-exist"
   }
 

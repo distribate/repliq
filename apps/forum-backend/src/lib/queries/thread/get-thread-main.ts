@@ -4,7 +4,6 @@ import { sql } from "kysely";
 export async function getThreadMain(threadId: string) {
   const result = await forumDB
     .selectFrom('threads')
-    .leftJoin('threads_images', 'threads.id', 'threads_images.thread_id')
     .leftJoin('threads_views', 'threads.id', 'threads_views.thread_id')
     .innerJoin("threads_users", "threads.id", "threads_users.thread_id")
     .leftJoin("users", "threads_users.user_nickname", "users.nickname")
@@ -22,10 +21,22 @@ export async function getThreadMain(threadId: string) {
     )
     .leftJoin(
       forumDB
+        .selectFrom("threads_images")
+        .select([
+          "thread_id",
+          sql<number>`COUNT(*)`.as("images_count")
+        ])
+        .groupBy('thread_id')
+        .as('images_count'),
+      'images_count.thread_id',
+      'threads.id'
+    )
+    .leftJoin(
+      forumDB
         .selectFrom('comments')
         .select([
           'parent_id',
-          sql<number>`COUNT(*)`.as('comment_count')
+          sql<number>`COUNT(*)`.as('comments_count')
         ])
         .where('parent_type', '=', 'thread')
         .groupBy('parent_id')
@@ -33,7 +44,7 @@ export async function getThreadMain(threadId: string) {
       'comments_count.parent_id',
       'threads.id'
     )
-    .select([
+    .select(eb => [
       'threads.id',
       'threads.description',
       "threads.title",
@@ -43,14 +54,12 @@ export async function getThreadMain(threadId: string) {
       "threads.category_id",
       "users.nickname",
       "users.name_color",
-      sql<string>`threads.updated_at::text`.as('updated_at'),
-      sql<string>`threads.created_at::text`.as('created_at'),
-      sql<string[]>`COALESCE(thread_tags.tags_array, '{}')`.as('threads_tags'),
-      sql<boolean>`
-        EXISTS (SELECT 1 FROM threads_images WHERE thread_id = threads.id)
-        `.as('is_images'),
-      sql<number>`COUNT(threads_views.id)`.as('threads_views_count'),
-      sql<number>`COALESCE(comments_count.comment_count, 0)`.as('threads_comments_count'),
+      eb.cast<string>('threads.updated_at', 'text').as('updated_at'),
+      eb.cast<string>('threads.created_at', 'text').as('created_at'),
+      sql<string[]>`COALESCE(thread_tags.tags_array, '{}')`.as('tags'),
+      sql<number>`COUNT(threads_views.id)`.as('views_count'),
+      sql<number>`COALESCE(comments_count.comments_count, 0)`.as('comments_count'),
+      sql<number>`COALESCE(images_count.images_count, 0)`.as('images_count'),
     ])
     .where('threads.id', '=', threadId)
     .groupBy([
@@ -66,7 +75,8 @@ export async function getThreadMain(threadId: string) {
       'threads.updated_at',
       'threads.created_at',
       'thread_tags.tags_array',
-      'comments_count.comment_count',
+      'comments_count.comments_count',
+      'images_count.images_count',
     ])
     .executeTakeFirst();
 

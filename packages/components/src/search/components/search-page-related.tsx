@@ -44,7 +44,7 @@ export const SearchPageRelated = () => {
     <div className="flex flex-col gap-y-8 w-full h-full">
       {relatedState.lastUsers && (
         <div className="flex flex-col gap-y-4 w-full h-full">
-          <Typography className="text-[24px]">
+                <Typography className="font-semibold" textSize="very_big">
             Последние зарегистрированные игроки
           </Typography>
           <div className="grid grid-cols-2 xl:grid-cols-5 grid-rows-1 gap-4 w-full h-fit">
@@ -61,10 +61,12 @@ export const SearchPageRelated = () => {
       )}
       {relatedState.lastThreads && (
         <div className="flex flex-col gap-y-4 w-full h-full">
-          <Typography className="text-[24px]">Последние треды</Typography>
+          <Typography className="font-semibold" textSize="very_big">
+            Последние треды
+          </Typography>
           <div className="grid grid-cols-2 xl:grid-cols-5 grid-rows-1 gap-4 w-full h-fit">
             {relatedState.lastThreads.map((thread) => (
-              <div className="flex flex-col group gap-2 justify-between overflow-hidden items-start h-[200px] friend-card">
+              <div key={thread.id} className="flex flex-col group gap-2 justify-between overflow-hidden items-start h-[200px] friend-card">
                 <Typography className="text-[18px]">{thread.title}</Typography>
                 {thread.description && (
                   <div className="w-full h-[40px] whitespace-pre">

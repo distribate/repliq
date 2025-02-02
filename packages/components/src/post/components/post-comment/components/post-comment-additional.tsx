@@ -21,7 +21,7 @@ export const PostCommentItemAdditional = ({
   const handleRemoveComment = (e: React.MouseEvent<HTMLDivElement>) => {
     e.preventDefault();
 
-    return controlCommentMutation.mutate({ type: "remove", post_id, id });
+    return controlCommentMutation.mutate({ type: "remove", post_id });
   };
 
   return (

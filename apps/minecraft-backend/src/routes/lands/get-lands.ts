@@ -17,7 +17,7 @@ async function getLands({
     .selectAll()
     .orderBy("created_at", "desc")
 
-  const result = await executeWithCursorPagination(query, {
+  const res = await executeWithCursorPagination(query, {
     perPage: 16,
     after: cursor,
     fields: [
@@ -33,16 +33,24 @@ async function getLands({
       }
     },
   })
- 
-  const lands = result.rows.map(land => {
+
+  const lands = res.rows.map(land => {
     return {
       ...land,
       members: JSON.parse(land.members),
       area: JSON.parse(land.area),
     }
   })
-  
-  return { data: lands, ...result }
+
+  return {
+    data: lands,
+    meta: {
+      startCursor: res.startCursor,
+      endCursor: res.endCursor,
+      hasNextPage: res.hasNextPage ?? false,
+      hasPrevPage: res.hasPrevPage ?? false
+    }
+  }
 }
 
 const getLandsSchema = z.object({
@@ -54,9 +62,7 @@ export const getLandsRoute = new Hono()
     const { cursor } = getLandsSchema.parse(ctx.req.query())
 
     try {
-      const lands = await getLands({
-        cursor
-      })
+      const lands = await getLands({ cursor })
 
       return ctx.json(lands, 200)
     } catch (e) {

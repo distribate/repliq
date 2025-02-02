@@ -52,17 +52,20 @@ export const DashboardUsersList = () => {
   if (isLoading) return <DashboardUsersListSkeleton />;
 
   return (
-    users &&
-    users.data && (
-      <div className="flex flex-col gap-4 w-full min-h-full">
-        <div className="flex flex-col gap-2 w-full h-full">
-          {users.data.map((user) => (
-            <UserDashboardCard key={user.id} {...user} />
-          ))}
-        </div>
-        <Separator />
-        <DashboardUsersListPagination length={users.count} />
-      </div>
-    )
+    <>
+      
+    </>
+    // users &&
+    // users.data && (
+    //   <div className="flex flex-col gap-4 w-full min-h-full">
+    //     <div className="flex flex-col gap-2 w-full h-full">
+    //       {users.data.map((user) => (
+    //         <UserDashboardCard key={user.id} {...user} />
+    //       ))}
+    //     </div>
+    //     <Separator />
+    //     <DashboardUsersListPagination length={users.count} />
+    //   </div>
+    // )
   );
 };

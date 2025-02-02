@@ -7,6 +7,7 @@ import { decode } from "cbor-x";
 import type { CreateThreadResponse } from "@repo/types/routes-types/create-thread-types";
 import { createThread } from '#lib/queries/thread/create-thread.ts';
 import { forumDB } from '#shared/database/forum-db.ts';
+import { getUserDonate } from '#lib/queries/user/get-user-donate.ts';
 
 const DEFAULT_MAX_THREADS_PER_DAY = 3
 
@@ -35,6 +36,20 @@ async function validateThreadCooldown(nickname: string) {
   return null
 }
 
+const validateThreadImagesLength = async (nickname: string, images: File[]) => {
+  const { donate } = await getUserDonate(nickname)
+
+  if (images.length <= 2) {
+    return images
+  } else if (images.length > 2) {
+    if (donate === "default") {
+      return images.slice(0, 2)
+    }
+  }
+
+  return images.slice(0, 3)
+}
+
 export const createThreadRoute = new Hono()
   .post("/create-thread", async (ctx) => {
     const nickname = getNickname()
@@ -60,9 +75,9 @@ export const createThreadRoute = new Hono()
       return ctx.json<CreateThreadResponse>({ error: JSON.parse(result.error.message) }, 400);
     }
 
-    const { images } = result.data
+    const { images: raw } = result.data
 
-    const files = images ? images.map((ib, idx) => {
+    let images = raw ? raw.map((ib, idx) => {
       const { title } = result.data;
 
       const fileName = `${title}_${idx}.png`;
@@ -70,12 +85,12 @@ export const createThreadRoute = new Hono()
       return new File([ib], fileName, { type: "image/png" });
     }) : null;
 
+    if (images) {
+      images = await validateThreadImagesLength(nickname, images as File[])
+    }
+
     try {
-      const createdThread = await createThread({
-        ...result.data,
-        nickname,
-        images: files as File[] | null
-      });
+      const createdThread = await createThread({ ...result.data, nickname, images: images as File[] });
 
       if (!createdThread) {
         return ctx.json<CreateThreadResponse>({ error: "Error" }, 400);

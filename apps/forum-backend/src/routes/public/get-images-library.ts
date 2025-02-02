@@ -16,7 +16,7 @@ async function getImagesLibrary() {
   return await Promise.all(data.map(async (image) => ({
     name: image.name,
     id: image.id,
-    signedUrl: (await getPublicUrl("user_images", `default/${image.name}`)).data.publicUrl
+    signedUrl: getPublicUrl("user_images", `default/${image.name}`)
   })))
 }
 

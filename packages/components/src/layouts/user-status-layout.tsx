@@ -1,3 +1,4 @@
+import { getUser } from "@repo/lib/helpers/get-user"
 import { currentUserQuery } from "@repo/lib/queries/current-user-query"
 import { forumWsClient } from "@repo/shared/api/forum-client"
 import { useNavigate } from "@tanstack/react-router"
@@ -46,8 +47,6 @@ export const UserStatusLayout = ({
   children
 }: UserStatusLayoutProps) => {
   const { nickname } = currentUserQuery().data
-
-  console.log(nickname)
 
   useEffect(() => {
     const ws = forumWsClient.ws["user-status"].$ws();

@@ -4,7 +4,7 @@ import { z } from "zod";
 export const threadTitleSchema = z
   .string()
   .min(THREAD_TITLE_LIMIT[0], { message: "Слишком короткий заголовок", })
-  .max(THREAD_TITLE_LIMIT[1], { message: "Максимум 64 символа", })
+  .max(THREAD_TITLE_LIMIT[1], { message: "Слишком длинный заголовок", })
 
 export const threadDescriptionSchema = z
   .string()
@@ -19,7 +19,7 @@ export const threadDescriptionSchema = z
     (val) =>
       typeof val === "undefined" ||
       val.length <= THREAD_DESCRIPTION_LIMIT[1],
-    { message: "Максимум 80 символов" },
+    { message: "Слишком длинное описание" },
   )
   .nullable()
 

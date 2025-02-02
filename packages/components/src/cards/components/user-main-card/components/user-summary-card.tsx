@@ -69,7 +69,7 @@ const UserDetailed = ({
             {real_name && <UserRealName real_name={real_name} />}
           </div>
           <div className="w-fit">
-            <UserDonate donate={donate} favoriteItemId={favoriteItem?.id ?? null} />
+            <UserDonate donate={donate} nickname={nickname} />
           </div>
         </div>
       </div>

@@ -3,18 +3,21 @@ import {
   ResizablePanel,
   ResizablePanelGroup,
 } from "@repo/ui/src/components/resizable.tsx";
-import { lazy, ReactNode, useRef } from "react";
+import { lazy, ReactNode, Suspense, useRef } from "react";
 import { ImperativePanelHandle } from "react-resizable-panels";
 import { useMediaQuery } from "@repo/lib/hooks/use-media-query.ts";
 import { SidebarDesktop } from "../sidebar/desktop/components/sidebar/sidebar-desktop.tsx";
 import { useSidebarControl } from "../sidebar/desktop/components/sidebar-layout/hooks/use-sidebar-control.ts";
+import { Skeleton } from "@repo/ui/src/components/skeleton.tsx";
+import { Separator } from "@repo/ui/src/components/separator.tsx";
+import { RESIZABLE_COOKIE_KEY } from "@repo/shared/keys/cookie.ts";
+import { getCookieByKey } from "@repo/lib/helpers/get-cookie-by-key.ts";
 
 const SidebarMobile = lazy(() => import("#sidebar/mobile/components/sidebar-mobile.tsx")
   .then(m => ({ default: m.SidebarMobile }))
 );
 
 interface ResizableLayout {
-  defaultLayout: number[];
   children: ReactNode;
 }
 
@@ -24,7 +27,40 @@ type PanelsProps = {
 
 export const DEFAULT_LAYOUT_SIZES = [16, 84];
 
-const RESIZABLE_LAYOUT_COOKIE_KEY = `react-resizable-panels:layout`;
+const SidebarDesktopSkeleton = () => {
+  return (
+    <div
+      className={`flex flex-col justify-between
+		  px-3 rounded-lg overflow-hidden min-h-screen h-full py-6
+			bg-primary-color outline-none w-[300px]`}
+    >
+      <div className="flex flex-col gap-y-4 items-center justify-center">
+        <div className="flex flex-row items-center gap-4">
+          <Skeleton className="w-[42px] h-[42px]" />
+          <Skeleton className="h-10 w-48" />
+        </div>
+        <Separator />
+        <div className="flex items-center gap-2 justify-between w-full">
+          <Skeleton className="flex h-10 items-center gap-1 grow" />
+          <Skeleton className="flex h-10 w-10" />
+        </div>
+        <Separator />
+        <Skeleton className="flex gap-x-3 h-[50px] items-center w-full" />
+        <Separator />
+        <Skeleton className="flex h-10 items-center w-full" />
+        <Separator />
+        <Skeleton className="flex h-[230px] items-center w-full" />
+        <Separator />
+        <div className="flex flex-col gap-y-2 w-full">
+          <Skeleton className="flex h-10 items-center w-full" />
+          <Skeleton className="flex h-10 items-center w-full" />
+          <Skeleton className="flex h-10 items-center w-full" />
+          <Skeleton className="flex h-10 items-center w-full" />
+        </div>
+      </div>
+    </div>
+  );
+};
 
 export const SidebarMain = ({ defaultSize }: PanelsProps) => {
   const { isDynamic, updateSidebarPropertiesMutation } = useSidebarControl();
@@ -61,9 +97,11 @@ export const SidebarMain = ({ defaultSize }: PanelsProps) => {
       <ResizableHandle />
     </>
   ) : (
-    <div className="overflow-hidden max-h-screen">
-      <SidebarDesktop />
-    </div>
+    <Suspense fallback={<SidebarDesktopSkeleton />}>
+      <div className="overflow-hidden max-h-screen">
+        <SidebarDesktop />
+      </div>
+    </Suspense>
   );
 };
 
@@ -88,15 +126,21 @@ export const AreaMain = ({
 };
 
 export const ResizableLayout = ({
-  defaultLayout = DEFAULT_LAYOUT_SIZES,
   children,
 }: ResizableLayout) => {
+  const layout = getCookieByKey(RESIZABLE_COOKIE_KEY);
   const matches = useMediaQuery("(min-width: 768px)");
   const { isDynamic } = useSidebarControl();
   const layoutGroupGap = isDynamic ? 1 : 2;
 
+  let defaultLayout: number[] = [16, 84];
+
+  if (layout) {
+    defaultLayout = JSON.parse(layout)
+  }
+  
   const onLayout = (sizes: number[]) => {
-    document.cookie = `${RESIZABLE_LAYOUT_COOKIE_KEY}=${JSON.stringify(sizes)}`;
+    document.cookie = `${RESIZABLE_COOKIE_KEY}=${JSON.stringify(sizes)}`;
   };
 
   return (

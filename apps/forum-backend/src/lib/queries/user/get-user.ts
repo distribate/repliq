@@ -11,56 +11,44 @@ type GetUser = InitiatorRecipientType & {
 
 export async function getUser<T extends GetUserType>({
   initiator, recipient, type
-}: GetUser): Promise<T extends "shorted" ? UserShorted : UserDetailed> {
+}: GetUser): Promise<T extends "shorted" ? UserShorted | null : UserDetailed | null> {
   const query = await forumDB
     .selectFrom("users")
     .innerJoin("users_settings", "users.nickname", "users_settings.nickname")
-    .select([
+    .select(eb => [
       "users.nickname",
       "users.description",
       "users.donate",
       "users.real_name",
-      "users.created_at",
-      "users.birthday",
       "users.name_color",
       "users.favorite_item",
+      "users.cover_image",
       "users.uuid",
       "users_settings.accept_friend_request",
       "users_settings.cover_outline_visible",
       "users_settings.game_stats_visible",
       "users_settings.profile_visibility",
       "users_settings.real_name_visible",
+      eb.cast<string>("users.created_at", "text").as("created_at"),
+      eb.cast<string>("users.birthday", "text").as("birthday"),
     ])
     .where("users.nickname", "=", recipient)
-    .executeTakeFirstOrThrow();
+    .executeTakeFirst();
+
+  if (!query) return null;
 
   const isIdentity = initiator === recipient;
 
   const {
-    accept_friend_request, cover_outline_visible, game_stats_visible, profile_visibility, real_name_visible,
-    real_name, created_at, birthday, favorite_item, donate, ...userWithoutSensitiveInfo
+    accept_friend_request, cover_outline_visible, game_stats_visible, profile_visibility,
+    real_name_visible, real_name, created_at, birthday, favorite_item,
+    ...userWithoutSensitiveInfo
   } = query;
-
-  if (type === "shorted" && !isIdentity) {
-    return {
-      nickname: userWithoutSensitiveInfo.nickname,
-      description: userWithoutSensitiveInfo.description,
-      name_color: userWithoutSensitiveInfo.name_color,
-      donate: donate satisfies UserDonateVariant,
-      preferences: {
-        cover_outline_visible,
-      },
-    } as T extends "shorted" ? UserShorted : UserDetailed;
-  }
 
   const userDetails = {
     ...userWithoutSensitiveInfo,
     real_name: real_name_visible || isIdentity ? real_name : null,
-    created_at: created_at.toString(),
-    uuid: userWithoutSensitiveInfo.uuid,
-    birthday: birthday ? birthday.toString() : null,
     favorite_item: favorite_item ? Number(favorite_item) : null,
-    donate: donate satisfies UserDonateVariant,
     preferences: {
       cover_outline_visible,
       accept_friend_request,
@@ -69,6 +57,20 @@ export async function getUser<T extends GetUserType>({
       real_name_visible
     },
   };
+
+  if (type === "shorted" && !isIdentity) {
+    const { nickname, description, name_color, donate } = userWithoutSensitiveInfo;
+
+    return {
+      nickname,
+      description,
+      name_color,
+      donate,
+      preferences: {
+        cover_outline_visible,
+      },
+    } as T extends "shorted" ? UserShorted : UserDetailed;
+  }
 
   return userDetails as T extends "shorted" ? UserShorted : UserDetailed;
 }

@@ -1,17 +1,8 @@
 import { throwError } from "@repo/lib/helpers/throw-error";
 import { Hono } from "hono";
-import { validateUserRequest } from "./terminate-session";
-import { forumDB } from "../shared/database/forum-db";
 import type { Env } from "../types/env-type";
-
-async function getSessions(nickname: string) {
-  return await forumDB
-    .selectFrom('users_session')
-    .select(["browser", "os", "ip", "session_id"])
-    .where('nickname', '=', nickname)
-    .orderBy('created_at', 'desc')
-    .execute();
-}
+import { validateUserRequest } from "../middlewares/validate-user-request";
+import { getSessions } from "../lib/queries/get-sessions";
 
 export const getSessionsRoute = new Hono<Env>()
   .use(validateUserRequest)

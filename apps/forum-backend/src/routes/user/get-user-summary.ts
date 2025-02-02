@@ -10,7 +10,6 @@ import type { UserDetailed } from "@repo/types/entities/user-type";
 import { getUser } from '#lib/queries/user/get-user.ts';
 import type { InitiatorRecipientType } from '#types/initiator-recipient-type.ts';
 import { forumDB } from '#shared/database/forum-db.ts';
-import { sql } from 'kysely';
 import { getFriendship } from '#lib/queries/friend/get-friendship.ts';
 
 type UserSummaryStatus = "blocked" | "private" | "default" | "banned"
@@ -61,6 +60,12 @@ export const getUserSummaryRoute = new Hono()
     const initiator = getNickname()
 
     try {
+      const userData = await getUser({ initiator, recipient, type: "detailed" })
+
+      if (!userData) {
+        return ctx.json({ error: "User not found" }, 404)
+      }
+
       const [userStatus, friendShip] = await Promise.all([
         getUserRelation({ initiator, recipient }),
         getFriendship({ initiator, recipient })
@@ -84,9 +89,7 @@ export const getUserSummaryRoute = new Hono()
         getUserFriendsCount(recipient)
       ]);
 
-      const userData = await getUser({ initiator, recipient, type: "detailed" })
-
-      let favoriteItem = null;
+      let favoriteItem: { id: number, image: string | null } | null = null;
 
       if (!isUserDetailed(userData)) {
         return ctx.json({ status: "default", data: null }, 200)

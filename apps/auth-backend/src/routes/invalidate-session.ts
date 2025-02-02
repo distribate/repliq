@@ -4,8 +4,7 @@ import { getCookie } from "hono/cookie";
 import { encodeHexLowerCase } from "@oslojs/encoding";
 import { sha256 } from "@oslojs/crypto/sha2";
 import { invalidateSession } from "../lib/queries/invalidate-session";
-import { deleteSessionToken } from "../utils/delete-session-token";
-import { deleteCookieToken } from "../utils/delete-cookie-token";
+import { deleteCookieToken, deleteCrossDomainCookie } from "../utils/delete-cookie-token";
 
 export const invalidateSessionRoute = new Hono()
   .post("/invalidate-session", async (ctx) => {
@@ -17,15 +16,14 @@ export const invalidateSessionRoute = new Hono()
 
     try {
       const sessionId = encodeHexLowerCase(sha256(new TextEncoder().encode(sessionToken)));
-      const res = await invalidateSession(sessionId);
+      const res = await invalidateSession(sessionToken, sessionId);
 
       if (!res) {
         return ctx.json({ error: "Internal Server Error" }, 500)
       }
 
-      await deleteSessionToken(sessionToken)
-
       deleteCookieToken(ctx)
+      deleteCrossDomainCookie(ctx)
       
       return ctx.json({ status: "Success" }, 200)
     } catch (e) {

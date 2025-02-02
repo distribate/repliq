@@ -23,5 +23,4 @@ export const deleteFriendRoute = new Hono()
     } catch (e) {
       return ctx.json({ error: throwError(e), }, 400);
     }
-  }
-  );
+  });

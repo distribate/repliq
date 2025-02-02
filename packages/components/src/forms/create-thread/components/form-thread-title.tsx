@@ -21,9 +21,10 @@ export const FormThreadTitle = ({ control, errors }: FormChildsProps) => {
           <Input
             name={name}
             ref={ref}
+            autoComplete="off"
             variant="form"
             className="rounded-md"
-            placeholder="абоба тайтл..."
+            placeholder="Напишите что-нибудь..."
             status={errors ? "error" : "default"}
             onChange={(e) => {
               onChange(e);

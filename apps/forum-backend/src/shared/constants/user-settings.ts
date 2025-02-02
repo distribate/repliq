@@ -1,6 +1,6 @@
 import type { UsersSettings } from '@repo/types/db/forum-database-types.ts';
 
-export type UserSettingsKeys = keyof Omit<UsersSettings, 'id' | 'user_id'>
+export type UserSettingsKeys = keyof Omit<UsersSettings, "user_id" | "nickname" | "id">
 
 export const userSettings = [
   'accept_friend_request',
@@ -8,5 +8,5 @@ export const userSettings = [
   'real_name_visible',
   'game_stats_visible',
   "profile_visibility",
-  "send_notifications"
+  "send_notifications",
 ] satisfies readonly [ UserSettingsKeys, ...UserSettingsKeys[] ];

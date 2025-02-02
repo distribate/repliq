@@ -6,10 +6,11 @@ export const UserSummaryCardPrivated = () => {
   return (
     <div className="flex w-full items-center justify-center h-full relative z-[4]">
       <div className="flex flex-col items-center gap-6 p-6">
-        <ImageWrapper
-          propSrc={MissingTexture.src}
-          propAlt="Страница скрыта"
+        <img
+          src={MissingTexture}
+          alt=""
           width={96}
+          draggable={false}
           height={96}
         />
         <div className="flex flex-col items-center gap-y-2">

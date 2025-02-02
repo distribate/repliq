@@ -1,4 +1,4 @@
-import { useSuspenseQuery } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import { createQueryKey } from "@repo/lib/helpers/query-key-builder.ts";
 
 export type PostControlQuery = {
@@ -13,11 +13,10 @@ const initial: PostControlQuery = {
   content: null
 };
 
-export const postControlQuery = (postId: string) => useSuspenseQuery<PostControlQuery, Error>({
+export const postControlQuery = ({ postId, enabled }: { postId: string, enabled: boolean }) => useQuery<PostControlQuery, Error>({
   queryKey: POST_CONTROL_QUERY_KEY(postId),
   initialData: initial,
   refetchOnWindowFocus: false,
   refetchOnMount: false,
-  gcTime: Infinity,
-  staleTime: Infinity,
+  enabled
 });

@@ -10,6 +10,7 @@ import {
 } from "#thread/components/thread-control/queries/thread-control-query.ts";
 import { removeThread } from "#thread/components/thread-control/queries/remove-thread.ts";
 import { THREAD_QUERY_KEY } from "#thread/components/thread-main/queries/thread-query.ts";
+import { MAIN_CATEGORIES_QUERY_KEY } from "#categories/components/main-categories-list.tsx";
 
 export const THREAD_CONTROL_MUTATION_KEY = ["thread-control-update"];
 
@@ -55,9 +56,11 @@ export const useThreadControl = () => {
       if (data === "no-update-fields")
         return toast.info("Ничего не было обновлено");
 
-      qc.invalidateQueries({ queryKey: THREAD_QUERY_KEY(variables) });
-      qc.invalidateQueries({ queryKey: THREAD_REACTIONS_QUERY_KEY(variables) });
-      qc.resetQueries({ queryKey: THREAD_CONTROL_QUERY_KEY });
+      await Promise.all([
+        qc.invalidateQueries({ queryKey: THREAD_QUERY_KEY(variables) }),
+        qc.invalidateQueries({ queryKey: THREAD_REACTIONS_QUERY_KEY(variables) }),
+        qc.resetQueries({ queryKey: THREAD_CONTROL_QUERY_KEY })
+      ])
     },
     onError: (e) => {
       throw new Error(e.message);
@@ -75,7 +78,8 @@ export const useThreadControl = () => {
         qc.resetQueries({ queryKey: THREAD_REACTIONS_QUERY_KEY(variables) }),
       ]);
 
-      navigate({ to: "/" });
+      await qc.invalidateQueries({ queryKey: MAIN_CATEGORIES_QUERY_KEY })
+      await navigate({ to: "/" });
     },
   });
 

@@ -8,6 +8,7 @@ import { Typography } from "@repo/ui/src/components/typography.tsx";
 import { usePostFormControl } from "../hooks/use-post-form-control.ts";
 import { postFormQuery, VisibilityPost } from "../queries/post-form-query.ts";
 import { visibilityProperties } from "../constants/visibility-properties.ts";
+import { Eye } from "lucide-react";
 
 export const PostAdditionalForm = () => {
   const { postFormFieldsMutation } = usePostFormControl();
@@ -26,7 +27,8 @@ export const PostAdditionalForm = () => {
       defaultValue={currentVisibility}
       onValueChange={(v: VisibilityPost) => handleVisiblityOption(v)}
     >
-      <SelectTrigger className="!px-0 w-fit gap-2">
+      <SelectTrigger className="px-2 w-fit border border-shark-700/40 gap-2 items-center">
+        <Eye size={18} className="text-shark-300" />
         <Typography className="text-[16px]" textColor="gray">
           {currentVisibilityOption ? currentVisibilityOption.label : ""}
         </Typography>

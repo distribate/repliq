@@ -1,7 +1,6 @@
 import { Avatar } from '@repo/components/src/user/components/avatar/components/avatar'
 import { BlockWrapper } from '@repo/components/src/wrappers/block-wrapper'
 import dayjs from '@repo/lib/constants/dayjs-instance'
-import { landsClient } from '@repo/shared/api/minecraft-client'
 import {
   Tabs,
   TabsContent,
@@ -9,12 +8,15 @@ import {
   TabsTrigger,
 } from '@repo/ui/src/components/tabs'
 import { Typography } from '@repo/ui/src/components/typography'
-import { useQuery } from '@tanstack/react-query'
 import { createFileRoute, Link } from '@tanstack/react-router'
+  // @ts-ignore
 import Looking from '@repo/assets/images/looking.jpg'
-import { UserNickname } from '@repo/components/src/user/components/name/nickname'
-import { USER_URL } from '@repo/shared/constants/routes'
-import { createQueryKey } from '@repo/lib/helpers/query-key-builder'
+import { LandMembers } from '@repo/components/src/land/components/land-members'
+import { LAND_QUERY_KEY, landQuery } from '@repo/components/src/land/queries/land-query'
+import { getLandById } from '@repo/components/src/land/queries/get-land'
+import { AnotherLandsByOwner } from "@repo/components/src/land/components/another-lands"
+import { Suspense } from 'react'
+import { Skeleton } from '@repo/ui/src/components/skeleton'
 
 export const Route = createFileRoute('/_protected/lands/$id')({
   component: RouteComponent,
@@ -25,7 +27,7 @@ export const Route = createFileRoute('/_protected/lands/$id')({
     })
 
     return {
-      title: data?.name ?? 'Загрузка...',
+      title: data?.name ?? 'Не найдено...',
     }
   },
   head: ({ loaderData }) => ({
@@ -37,32 +39,11 @@ export const Route = createFileRoute('/_protected/lands/$id')({
   }),
 })
 
-async function getLandById(id: string) {
-  const res = await landsClient.lands['get-land'][':id'].$get({
-    param: { id },
-  })
-
-  const data = await res.json()
-
-  if (!data || 'error' in data) return null
-
-  return data
-}
-
-const LAND_QUERY_KEY = (id: string) => createQueryKey('ui', ["land", id])
-
-const landsQuery = (id: string) => useQuery({
-  queryKey: LAND_QUERY_KEY(id),
-  queryFn: () => getLandById(id),
-  refetchOnWindowFocus: false,
-  refetchOnMount: false,
-})
-
 function RouteComponent() {
   const { id } = Route.useParams()
-  const { data: land } = landsQuery(id)
+  const { data: land } = landQuery(id)
 
-  if (!land) return null
+  if (!land) return null;
 
   return (
     <div className="flex items-start gap-4 w-full h-screen">
@@ -71,7 +52,7 @@ function RouteComponent() {
           defaultValue="general"
           className="flex items-start flex-col w-full"
         >
-          <TabsList>
+          <TabsList className="gap-4">
             <TabsTrigger value="general">
               <Typography>Основное</Typography>
             </TabsTrigger>
@@ -110,25 +91,7 @@ function RouteComponent() {
             <Typography className="text-[19px]" textColor="gray">
               Участники территории
             </Typography>
-            <div className="flex flex-col gap-2 w-full h-full">
-              {land.members.map(({ uuid, nickname }) => (
-                <div
-                  key={uuid}
-                  className="flex w-full items-end gap-2 rounded-md p-2 hover:bg-shark-700"
-                >
-                  <Link to={USER_URL + nickname}>
-                    <Avatar
-                      nickname={nickname}
-                      propWidth={64}
-                      propHeight={64}
-                    />
-                  </Link>
-                  <Link to={USER_URL + nickname}>
-                    <UserNickname nickname={nickname} />
-                  </Link>
-                </div>
-              ))}
-            </div>
+            <LandMembers id={id} />
           </TabsContent>
           <TabsContent
             value="chunks"
@@ -186,7 +149,9 @@ function RouteComponent() {
       </BlockWrapper>
       <div className="flex flex-col items-center overflow-hidden justify-start gap-4 w-2/5 h-full">
         <BlockWrapper className="flex flex-col items-center overflow-hidden justify-end relative !p-0 gap-4 w-full">
-          <div className="absolute h-1/3 bg-gradient-to-t rounded-md from-black/40 z-[1] via-black/40 to-transparent backdrop-blur-sm w-full bottom-0" />
+          <div
+            className="absolute h-1/3 bg-gradient-to-t rounded-md from-black/40 z-[1] via-black/40 to-transparent backdrop-blur-sm w-full bottom-0"
+          />
           <img
             src={Looking}
             width={600}
@@ -195,75 +160,23 @@ function RouteComponent() {
             className="absolute w-full h-[400px] object-cover"
           />
           <div className="flex flex-col items-center justify-end gap-2 z-[2] pb-2 w-full h-[300px]">
-            <Avatar
-              nickname={land.members[0].nickname}
-              propWidth={128}
-              propHeight={128}
-            />
+            <Suspense fallback={<Skeleton className="w-[128px] h-[128px]" />}>
+              <Avatar
+                nickname={land.members[0].nickname}
+                propWidth={128}
+                propHeight={128}
+              />
+            </Suspense>
             <Typography className="text-[24px] font-semibold font-[Minecraft]">
               {land.name}
             </Typography>
           </div>
         </BlockWrapper>
-        <AnotherLandsByOwner exclude={id} nickname={land.members[0].nickname} />
+        <AnotherLandsByOwner
+          exclude={id}
+          nickname={land.members[0].nickname}
+        />
       </div>
     </div>
-  )
-}
-
-async function getAnotherLandsByOwner(nickname: string, exclude: string) {
-  const res = await landsClient.lands['get-user-lands'][':nickname'].$get({
-    param: {
-      nickname,
-    },
-    query: {
-      exclude,
-    },
-  })
-
-  const data = await res.json()
-
-  if (!data || 'error' in data) return null
-
-  return data.data.length > 0 ? data.data : null
-}
-
-type AnotherLandsByOwner = {
-  nickname: string
-  exclude: string
-}
-
-const ANOTHER_LANDS_BY_OWNER_QUERY_KEY = (nickname: string, exclude: string) => createQueryKey('ui', ['lands', nickname, exclude])
-
-const anotherLandsByOwnerQuery = ({
-  exclude, nickname
-}: AnotherLandsByOwner) => useQuery({
-  queryKey: ANOTHER_LANDS_BY_OWNER_QUERY_KEY(nickname, exclude),
-  queryFn: () => getAnotherLandsByOwner(nickname, exclude),
-  refetchOnWindowFocus: false,
-  refetchOnMount: false,
-})
-
-const AnotherLandsByOwner = ({
-  nickname, exclude,
-}: AnotherLandsByOwner) => {
-  const { data } = anotherLandsByOwnerQuery({ exclude, nickname })
-
-  return (
-    <BlockWrapper className="flex flex-col items-center overflow-hidden justify-end !p-4 gap-4 w-full">
-      <Typography className="text-[20px] font-semibold">
-        Территории владельца этой территории:
-      </Typography>
-      {data && (
-        data.map((land) => (
-          <div>
-            {land.name}
-          </div>
-        ))
-      )}
-      {!data && (
-        <Typography>Пусто.</Typography>
-      )}
-    </BlockWrapper>
   )
 }

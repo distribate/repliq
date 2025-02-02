@@ -3,7 +3,6 @@ import { Avatar } from "#user/components/avatar/components/avatar.tsx";
 import { UserNickname } from "#user/components/name/nickname.tsx";
 import { Separator } from "@repo/ui/src/components/separator.tsx";
 import Portfolio from "@repo/assets/images/minecraft/portfolio.webp";
-import { TicketsModal } from "#modals/custom/tickets-modal.tsx";
 import {
   UserProfileSettings,
   UserSettingOption,
@@ -11,6 +10,7 @@ import {
 import { getUser } from "@repo/lib/helpers/get-user.ts";
 import {
   Dialog,
+  DialogClose,
   DialogContent,
   DialogTrigger,
 } from "@repo/ui/src/components/dialog.tsx";
@@ -29,15 +29,13 @@ import { createQueryKey } from "@repo/lib/helpers/query-key-builder.ts";
 import { landsClient } from "@repo/shared/api/minecraft-client.ts";
 import { ContentNotFound } from "#templates/content-not-found.tsx";
 import { Skeleton } from "@repo/ui/src/components/skeleton.tsx";
+import { Suspense } from "react";
+import { BuyDonateModal } from "#modals/custom/buy-donate-modal.tsx";
 
 const getUserLands = async (nickname: string) => {
   const res = await landsClient.lands["get-user-lands"][":nickname"].$get({
-    param: {
-      nickname
-    },
-    query: {
-      exclude: undefined
-    }
+    param: { nickname },
+    query: { exclude: undefined }
   })
 
   const data = await res.json()
@@ -97,7 +95,9 @@ const UserPersonalCardHeader = () => {
 
   return (
     <>
-      <Avatar propHeight={96} propWidth={96} nickname={nickname} />
+      <Suspense fallback={<Skeleton className="w-[96px] h-[96px]" />}>
+        <Avatar propHeight={96} propWidth={96} nickname={nickname} />
+      </Suspense>
       <div className="flex flex-col items-center">
         <UserNickname
           nickname={nickname}
@@ -118,7 +118,7 @@ export const UserPersonalCard = () => {
       <UserPersonalCardHeader />
       <Separator />
       <div className="flex flex-col gap-y-2 w-full">
-        <Dialog>
+        <Dialog key="profile">
           <DialogTrigger>
             <UserSettingOption title="Профиль" imageSrc={BookAndQuill} />
           </DialogTrigger>
@@ -126,7 +126,7 @@ export const UserPersonalCard = () => {
             <UserProfileSettings />
           </DialogContent>
         </Dialog>
-        <Dialog>
+        <Dialog key="account">
           <DialogTrigger>
             <UserSettingOption title="Аккаунт" imageSrc={MinecartWithChest} />
           </DialogTrigger>
@@ -134,7 +134,7 @@ export const UserPersonalCard = () => {
             <UserSettingsCard />
           </DialogContent>
         </Dialog>
-        <Dialog>
+        <Dialog key="other">
           <DialogTrigger>
             <UserSettingOption title="Прочее" imageSrc={Campfire} />
           </DialogTrigger>
@@ -143,7 +143,7 @@ export const UserPersonalCard = () => {
           </DialogContent>
         </Dialog>
         <Separator />
-        <Dialog>
+        <Dialog key="regions">
           <DialogTrigger>
             <UserSettingOption title="Мои регионы" imageSrc={GrassBlock} />
           </DialogTrigger>
@@ -151,9 +151,9 @@ export const UserPersonalCard = () => {
             <UserLands />
           </DialogContent>
         </Dialog>
-        <Dialog>
+        <Dialog key="rating">
           <DialogTrigger>
-            <UserSettingOption title="Рейтинг" imageSrc={DragonBreath} />
+            <UserSettingOption title="Рейтинг" imageSrc={FishingRod} />
           </DialogTrigger>
           <DialogContent>
             <div className="flex flex-col gap-y-4 items-center w-full">
@@ -167,17 +167,22 @@ export const UserPersonalCard = () => {
           </DialogContent>
         </Dialog>
         <Separator />
-        <Link to="https://fasberry.su/wiki" target="_blank">
-          <UserSettingOption title="Вики" imageSrc={Portfolio} />
-        </Link>
-        {/* <Link to="/create-issue">
-          <UserSettingOption title="Задать вопрос" imageSrc={FishingRod} />
-        </Link> */}
-        {/* <TicketsModal
+        <BuyDonateModal
           trigger={
-            <UserSettingOption title="Задать вопрос" imageSrc={FishingRod} />
+            <UserSettingOption title="Донат" imageSrc={DragonBreath} />
           }
-        /> */}
+        />
+        <Separator />
+        <Link to="https://fasberry.su/wiki" target="_blank">
+          <DialogClose className="w-full">
+            <UserSettingOption title="Вики" imageSrc={Portfolio} />
+          </DialogClose>
+        </Link>
+        <Link to="/create-ticket">
+          <DialogClose className="w-full">
+            <UserSettingOption title="Задать вопрос" imageSrc={FishingRod} />
+          </DialogClose>
+        </Link>
       </div>
     </div>
   );

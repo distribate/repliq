@@ -3,9 +3,11 @@ import { UserNickname } from "#user/components/name/nickname.tsx"
 import { createQueryKey } from "@repo/lib/helpers/query-key-builder"
 import { forumCommentClient } from "@repo/shared/api/forum-client"
 import { USER_URL } from "@repo/shared/constants/routes"
+import { Skeleton } from "@repo/ui/src/components/skeleton"
 import { Typography } from "@repo/ui/src/components/typography"
 import { useQuery } from "@tanstack/react-query"
 import { Link } from "@tanstack/react-router"
+import { Suspense } from "react"
 
 const getLatestComments = async () => {
   const res = await forumCommentClient.comment["get-last-comments"].$get()
@@ -22,13 +24,11 @@ const getLatestComments = async () => {
 const latestCommentsQuery = () => useQuery({
   queryKey: createQueryKey("ui", ["latest-comments"]),
   queryFn: getLatestComments,
-  refetchOnMount: false,
-  refetchOnReconnect: true,
   refetchOnWindowFocus: false,
 })
 
 export const LatestComments = () => {
-  const { data: comments } = latestCommentsQuery();
+  const { data: comments, isLoading } = latestCommentsQuery();
 
   return (
     <div className="flex flex-col border border-shark-800 gap-y-2 w-full py-6 px-4 rounded-lg overflow-hidden bg-primary-color">
@@ -40,13 +40,26 @@ export const LatestComments = () => {
         Последние комментарии
       </Typography>
       <div className="flex flex-col w-full h-full gap-2">
-        {!comments && <Typography className="text-[16px]">тишина...</Typography>}
+        {isLoading && (
+          <>
+            <Skeleton className="h-12 w-full" />
+            <Skeleton className="h-12 w-full" />
+            <Skeleton className="h-12 w-full" />
+          </>
+        )}
+        {(!comments && !isLoading) && (
+          <Typography className="text-[16px]">
+            тишина...
+          </Typography>
+        )}
         {comments && comments.map(({ created_at, content, parent_id, parent_type, title, user_nickname }, idx) => (
           <div key={idx} className="flex flex-col bg-shark-700/60 rounded-md p-2 gap-1">
             <div className="flex items-center gap-2">
-              <Link to={USER_URL + user_nickname}>
-                <Avatar nickname={user_nickname} propWidth={24} propHeight={24} />
-              </Link>
+              <Suspense fallback={<Skeleton className="w-[24px] h-[24px]" />}>
+                <Link to={USER_URL + user_nickname}>
+                  <Avatar nickname={user_nickname} propWidth={24} propHeight={24} />
+                </Link>
+              </Suspense>
               <Link to={USER_URL + user_nickname}>
                 <UserNickname nickname={user_nickname} />
               </Link>

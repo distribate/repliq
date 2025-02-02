@@ -24,11 +24,10 @@ export const postCommentsQuery = ({
   limit,
   order,
   ascending,
-}: PostCommentsQuery) =>
-  useQuery({
-    queryKey: POST_COMMENTS_QUERY_KEY(id),
-    queryFn: () => [],
-    refetchOnWindowFocus: false,
-    refetchOnMount: false,
-    enabled: comments && !!id,
-  });
+}: PostCommentsQuery) => useQuery({
+  queryKey: POST_COMMENTS_QUERY_KEY(id),
+  queryFn: () => [],
+  refetchOnWindowFocus: false,
+  refetchOnMount: false,
+  enabled: comments && !!id,
+});

@@ -43,9 +43,9 @@ export const UserCoverPanel = ({
 
   return (
     <div className={userCoverPanelVariants({ variant, className })} {...props}>
-      <div className="flex items-center gap-2">
-        <FriendButton recipient={requestedNickname} />
-        {!isOwner && (
+      {!isOwner && (
+        <div className="flex items-center gap-2">
+          <FriendButton recipient={requestedNickname} />
           <MoreWrapper
             variant="medium"
             properties={{ sideAlign: "bottom", contentAlign: "end" }}
@@ -58,8 +58,8 @@ export const UserCoverPanel = ({
               </>
             </div>
           </MoreWrapper>
-        )}
-      </div>
+        </div>
+      )}
       {isOwner && (
         <div className="flex items-center bg-shark-900/10 backdrop-blur-lg h-10 rounded-md overflow-hidden">
           <DropdownWrapper

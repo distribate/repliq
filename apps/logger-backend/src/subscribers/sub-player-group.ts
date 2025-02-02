@@ -2,8 +2,9 @@ import { getNatsConnection } from '@repo/config-nats/nats-client';
 import { DonateVariants } from '@repo/types/db/forum-database-types';
 import { lpDB } from '../shared/database/lp-db';
 import { updateUserDonateForum } from '../lib/queries/update-user-donate-forum';
-import { permissionCheck } from '../utils/permission-check';
 import { createUserAction } from '../lib/queries/create-user-action';
+import { createErrorLog } from '../utils/create-error-log';
+import { LUCKPERMS_UPDATE_SUBJECT } from '@repo/shared/constants/nats-subjects';
 
 type LuckpermsUpdateContent = {
   userUuid: string
@@ -30,7 +31,7 @@ type LuckpermsUpdatePayload = {
     | { type: "log", content: LuckpermsLogContent }
   )
 
-export const LUCKPERMS_UPDATE_SUBJECT = "luckperms:update"
+type ActionType = "set" | "unset"
 
 export const subscribePlayerGroup = () => {
   const nc = getNatsConnection()
@@ -44,9 +45,7 @@ export const subscribePlayerGroup = () => {
 
       setImmediate(async () => {
         try {
-          const raw = new TextDecoder().decode(msg.data);
-
-          const data = raw
+          const data: string = new TextDecoder().decode(msg.data)
             .replace(/^[\x00-\x1F\x7F]+/, "")
             .trim()
             .replace(/^[^\{]+/, "");
@@ -62,24 +61,40 @@ export const subscribePlayerGroup = () => {
             // set permission -> permission set group.arkhont true -> ["permission", "set", "group.arkhont", "true"]
             // unset permission -> permission unset group.arkhont -> ["permission", "unset", "group.arkhont"]
 
-            const actionType = args[1] as "set" | "unset"
+            const action = args[1] as ActionType;
+            const initiator = content.source.name;
+            const recipient = content.target.name;
 
-            console.log(args, actionType)
+            console.log(`${action}: ${recipient}`)
 
-            switch (actionType) {
+            switch (action) {
               case "set":
                 const group = args[2]?.split(" ")[0];
-                const { result } = await permissionCheck(content.target.uniqueId, group);
+                const donate = group.split(".")[1] as DonateVariants;
 
-                if (result.includes("true")) {
-                  await updateUserDonateForum({
-                    nickname: content.target.name,
-                    donate: group.split(".")[1] as DonateVariants,
-                  });
+                const updatedRes = await updateUserDonateForum({
+                  nickname: recipient, donate
+                });
+
+                if (!updatedRes) {
+                  console.log(`Failed to update user donate: ${recipient} / group: ${group} / ${initiator}`)
+
+                  await createErrorLog({
+                    description: `Failed to update user donate: ${recipient} 
+                      / group: ${group} 
+                      / ${initiator}`,
+                    initiator,
+                    type: "update_user_donate_forum",
+                    recipient
+                  })
                 }
+
+                console.log(`[Forum] Updated for ${recipient} / group: ${group} / donate: ${updatedRes}`)
+
                 break;
               case "unset":
-                let currentPermission: DonateVariants = "default"; // default -> player
+                // default = without donate
+                let currentPermission: DonateVariants = "default";
 
                 const query = await lpDB
                   .selectFrom("luckperms_user_permissions")
@@ -96,13 +111,32 @@ export const subscribePlayerGroup = () => {
                   })
                 }
 
-                await updateUserDonateForum({
-                  nickname: content.target.name,
+                const res = await updateUserDonateForum({
+                  nickname: recipient,
                   donate: currentPermission,
                 });
+
+                if (!res) {
+                  console.log(`Failed to update user donate: ${recipient} 
+                    / group: ${currentPermission.split(".")[1]} / ${initiator}`)
+
+                  await createErrorLog({
+                    description: `Failed to update user donate: ${recipient} 
+                      / group: ${currentPermission.split(".")[1]} 
+                      / ${initiator}`,
+                    initiator,
+                    type: "update_user_donate_forum",
+                    recipient
+                  })
+                }
+
+                console.log(`[Forum] Updated for ${recipient} 
+                  / group: ${currentPermission.split(".")[1]} / donate: ${res}`)
+
+                break;
             }
 
-            await createUserAction(content);
+            createUserAction(content);
           }
         } catch (err) {
           console.error(err);

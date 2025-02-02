@@ -2,6 +2,7 @@ import { BlockWrapper } from '@repo/components/src/wrappers/block-wrapper'
 import { Typography } from '@repo/ui/src/components/typography'
 import { createFileRoute } from '@tanstack/react-router'
 import { Suspense } from 'react'
+  // @ts-ignore
 import LandsPreview from "@repo/assets/images/clan-preview.jpg"
 import { landsOpts } from "@repo/components/src/lands/queries/lands-query"
 import { LandsList } from "@repo/components/src/lands/components/lands-list"
@@ -41,7 +42,7 @@ function RouteComponent() {
             Территории сервера
           </Typography>
           <div className="flex flex-col gap-y-4 w-full">
-            <Suspense>
+            <Suspense fallback={null}>
               <LandsList />
             </Suspense>
           </div>

@@ -7,18 +7,15 @@ import { getFriendsRequestSchema } from "@repo/types/schemas/friend/get-friends-
 
 export const getFriendRequestsRoute = new Hono()
   .get("/get-friends-requests", zValidator("query", getFriendsRequestSchema), async (ctx) => {
-    const query = await ctx.req.query();
-    const { type } = getFriendsRequestSchema.parse(query);
+    const { type, cursor } = getFriendsRequestSchema.parse(ctx.req.query());
+
     const nickname = getNickname();
 
     try {
-      const outgoingFriendRequests = await getFriendRequests({
-        nickname, type
-      });
+      const friendRequests = await getFriendRequests({ nickname, type, cursor });
 
-      return ctx.json({ data: outgoingFriendRequests }, 200);
+      return ctx.json(friendRequests, 200);
     } catch (e) {
       return ctx.json({ error: throwError(e) }, 400);
     }
-  }
-  )
+  })

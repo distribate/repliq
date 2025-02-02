@@ -3,21 +3,20 @@ import { z } from 'zod';
 import { getUserPostsSchema } from '@repo/types/schemas/posts/user-posts-schema.ts';
 
 export type GetPosts = Omit<z.infer<typeof getUserPostsSchema>, 'currentUserNickname'> & {
-  nickname: string
+  nickname: string;
 }
 
 export async function getPosts({
-  nickname, ascending = false, filteringType, cursor
+  nickname, ascending = false, filteringType, cursor, searchQuery
 }: GetPosts) {
   const res = await forumUserClient.user['get-user-posts'][':nickname'].$get({
     query: {
       ascending: ascending.toString(),
       filteringType,
-      cursor
+      cursor,
+      searchQuery
     },
-    param: {
-      nickname,
-    },
+    param: { nickname },
   });
 
   const data = await res.json();

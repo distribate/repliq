@@ -1,6 +1,7 @@
 import { forumDB } from "#shared/database/forum-db.ts";
 import { zValidator } from "@hono/zod-validator";
 import { throwError } from "@repo/lib/helpers/throw-error";
+import { decode, Encoder } from "cbor-x";
 import { Hono } from "hono";
 import { z } from "zod";
 
@@ -24,7 +25,21 @@ export const getLatestRegUsersRoute = new Hono()
     try {
       const users = await getLatestRegUsers({ limit });
 
-      return ctx.json({ data: users }, 200)
+      if (!users.length) {
+        return ctx.json({ data: null }, 200)
+      }
+
+      const encoder = new Encoder({
+        useRecords: false, structures: [], pack: true
+      });
+
+      const encodedUsers = encoder.encode(users)
+
+      return ctx.body(
+        encodedUsers as unknown as ReadableStream, 
+        200, 
+        { 'Content-Type': 'application/cbor' }
+      )
     } catch (e) {
       return ctx.json({ error: throwError(e) }, 500);
     }

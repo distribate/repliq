@@ -11,13 +11,12 @@ const getStaticImageSchema = z.object({
 
 export const getStaticImageRoute = new Hono()
 .get("/get-static-image", zValidator("query", getStaticImageSchema), async (ctx) => {
-  const query = ctx.req.query();
-  const { bucket, fileName } = getStaticImageSchema.parse(query);
+  const { bucket, fileName } = getStaticImageSchema.parse(ctx.req.query());
 
   try {
-    const imageUrl = await getPublicUrl(bucket, fileName)
+    const imageUrl = getPublicUrl(bucket, fileName)
 
-    return ctx.json({ data: imageUrl.data.publicUrl }, 200)
+    return ctx.json({ data: imageUrl }, 200)
   } catch (e) {
     return ctx.json({ error: throwError(e) }, 500)
   }

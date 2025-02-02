@@ -1,10 +1,12 @@
 import type { getUserThreadsSchema } from '#routes/user/get-user-threads.ts';
 import { forumDB } from '#shared/database/forum-db.ts';
 import { sql, type Expression, type SqlBool } from 'kysely';
+import { executeWithCursorPagination } from 'kysely-paginate';
 import { z } from 'zod';
 
 type GetUserThreads = {
   nickname: string
+  cursor?: string;
 } & Pick<z.infer<typeof getUserThreadsSchema>, "querySearch">
 
 export async function getUserThreadsCount(nickname: string) {
@@ -23,9 +25,9 @@ export async function getUserThreadsCount(nickname: string) {
 }
 
 export const getUserThreads = async ({
-  nickname, querySearch
+  nickname, querySearch, cursor
 }: GetUserThreads) => {
-  const threadsWithCounts = await forumDB
+  const query = forumDB
   .selectFrom("threads_users")
   .innerJoin("threads", "threads.id", "threads_users.thread_id")
   .selectAll("threads")
@@ -44,10 +46,30 @@ export const getUserThreads = async ({
     return eb.and(filters)
   })
   .groupBy("threads.id")
-  .execute();
-  
-  return threadsWithCounts.map((thread) => ({
-    ...thread,
-    comments_count: Number(thread.comments_count),
-  }));
+ 
+  const res = await executeWithCursorPagination(query, {
+    perPage: 16,
+    fields: [
+      {
+        key: "created_at",
+        direction: "desc",
+        expression: "threads.created_at",
+      }
+    ],
+    parseCursor: (cursor) => {
+      return {
+        created_at: new Date(cursor.created_at),
+      }
+    },
+  })
+
+  return {
+    data: res.rows,
+    meta: {
+      hasNextPage: res.hasNextPage ?? false,
+      hasPrevPage: res.hasPrevPage ?? false,
+      startCursor: res.startCursor,
+      endCursor: res.endCursor
+    }
+  }
 }

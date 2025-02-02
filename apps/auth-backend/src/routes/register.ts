@@ -3,12 +3,13 @@ import { z } from 'zod';
 import { zValidator } from '@hono/zod-validator';
 import { createUserTransaction } from '../lib/transactions/create-user-transaction.ts';
 import { throwError } from '@repo/lib/helpers/throw-error.ts';
-import { checkUserExists } from './login.ts';
 import ky, { HTTPError } from 'ky';
 import { validatePasswordSafe } from '../utils/validate-password-safe.ts';
 import { generateOfflineUUID } from '../utils/generate-offline-uuid.ts';
 import { validateIpRestricts } from '../utils/validate-ip-restricts.ts';
 import { getClientIp } from '../utils/gen-client-ip.ts';
+import { checkUserExists } from "../utils/check-user-exists.ts";
+import { registerSchema } from '@repo/types/schemas/auth/create-session-schema.ts';
 
 type PremiumUser = {
   uuid: string,
@@ -21,20 +22,9 @@ type MojangError = {
   reason: string
 }
 
-export const createUserBodySchema = z.object({
-  nickname: z.string().min(1),
-  password: z.string().min(4),
-  details: z.object({
-    realName: z.string().or(z.null()),
-    findout: z.string(),
-    referrer: z.string().optional()
-  })
-});
-
 export const registerRoute = new Hono()
-  .post('/register', zValidator('json', createUserBodySchema), async (ctx) => {
-    const body = await ctx.req.json()
-    const details = createUserBodySchema.parse(body);
+  .post('/register', zValidator('json', registerSchema), async (ctx) => {
+    const details = registerSchema.parse(await ctx.req.json());
     const { password, details: { findout, realName: real_name, referrer }, nickname } = details;
 
     const IP = getClientIp(ctx) ?? "1.1.1.1"
@@ -87,8 +77,6 @@ export const registerRoute = new Hono()
       uuid: offlineUUID,
       username: nickname
     }
-
-    console.log(details)
 
     try {
       const registered = await createUserTransaction({

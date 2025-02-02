@@ -10,7 +10,7 @@ export const SidebarLogotype = () => {
     <Link
       title="Главная"
       to="."
-      className="flex bg-shark-50/10 backdrop-blur-md py-4 rounded-md items-center justify-center w-full select-none"
+      className="flex active:scale-[1.04] bg-shark-50/10 backdrop-blur-md py-4 rounded-md items-center justify-center w-full select-none"
     >
       {isCompact || !isExpanded ? (
         <img

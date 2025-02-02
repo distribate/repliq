@@ -1,5 +1,4 @@
 import { Separator } from "@repo/ui/src/components/separator.tsx";
-import { currentUserQuery } from "@repo/lib/queries/current-user-query.ts";
 import { CreateThread } from "../sidebar-content/create-thread/create-thread.tsx";
 import { SidebarLogotype } from "../sidebar-content/logotype/sidebar-logotype.tsx";
 import { searchQuery } from "../sidebar-content/search/queries/search-query.ts";
@@ -16,7 +15,7 @@ import { getUser } from "@repo/lib/helpers/get-user.ts";
 import { Avatar } from "#user/components/avatar/components/avatar.tsx";
 import { UserNickname } from "#user/components/name/nickname.tsx";
 import { HTMLAttributes, lazy } from "react";
-import { CircleFadingPlus, CircleUserRound, NotebookPen, Settings } from "lucide-react";
+import { CircleUserRound, NotebookPen, Settings } from "lucide-react";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@repo/ui/src/components/dropdown-menu.tsx";
 import { useLocation, useNavigate } from "@tanstack/react-router";
 import { Typography } from "@repo/ui/src/components/typography.tsx";
@@ -29,13 +28,13 @@ import { USER_URL } from "@repo/shared/constants/routes.ts";
 import { UserMenu } from "../sidebar-content/user-menu/user-menu.tsx";
 import { Skeleton } from "@repo/ui/src/components/skeleton.tsx";
 import { SidebarButton } from "./sidebar-button.tsx";
+import { createQueryKey } from "@repo/lib/helpers/query-key-builder.ts";
+import { useQuery } from "@tanstack/react-query";
+import { forumUserClient } from "@repo/shared/api/forum-client.ts";
+import { currentUserQuery } from "@repo/lib/queries/current-user-query.ts";
 
 const SearchArea = lazy(() => import("../sidebar-content/search/components/search-area.tsx")
   .then(m => ({ default: m.SearchArea }))
-)
-
-const TicketsModal = lazy(() => import("#modals/custom/tickets-modal.tsx")
-  .then(m => ({ default: m.TicketsModal }))
 )
 
 type SidebarLayoutVariant = Exclude<SidebarFormat, "dynamic">;
@@ -63,8 +62,53 @@ const OutlineWrapper = ({ children, className, ...props }: OutlineWrapperProps) 
   )
 }
 
-const UserMenuTrigger = () => {
+async function getUserBalance(nickname: string) {
+  const res = await forumUserClient.user["get-user-balance"][":nickname"].$get({
+    param: { nickname }
+  });
+
+  const data = await res.json()
+
+  if ("error" in data) return null
+
+  return data.data
+}
+
+const userBalanceQuery = (nickname: string) => useQuery({
+  queryKey: createQueryKey("user", ["balance"]),
+  queryFn: () => getUserBalance(nickname),
+  refetchOnWindowFocus: false
+})
+
+const UserBalance = () => {
   const { nickname, name_color } = getUser();
+  const { data: balance, isLoading } = userBalanceQuery(nickname);
+
+  return (
+    <div className="flex flex-col items-start max-w-[200px] overflow-hidden">
+      <div className="flex items-center gap-1">
+        <UserNickname className="text-base truncate" nicknameColor={name_color} nickname={nickname} />
+      </div>
+      <div className="flex items-center gap-2">
+        <div className="flex gap-1 items-center">
+          <Typography className="text-[15px]">
+            {isLoading ? <Skeleton className="w-2 h-2" /> : balance?.charism}
+          </Typography>
+          <img src={Charism} width={16} height={16} alt="" />
+        </div>
+        <div className="flex gap-1 items-center">
+          <Typography className="text-[15px]">
+            {isLoading ? <Skeleton className="w-2 h-2" /> : balance?.belkoin}
+          </Typography>
+          <img src={Belkoin} width={15} height={15} alt="" />
+        </div>
+      </div>
+    </div>
+  )
+}
+
+const UserMenuTrigger = () => {
+  const { data: { nickname } } = currentUserQuery();
   const { isExpanded, isCompact } = useSidebarControl();
 
   return (
@@ -74,34 +118,16 @@ const UserMenuTrigger = () => {
           className={`flex gap-x-3 items-center bg-shark-800 hover:bg-shark-700 rounded-md w-full
 					${!isCompact ? "justify-start" : isExpanded ? "justify-start" : "justify-center"}`}
         >
-          <Avatar
-            variant="default"
-            className="overflow-hidden min-w-[50px] min-h-[50px]"
-            propWidth={50}
-            propHeight={50}
-            nickname={nickname}
-          />
-          {!isCompact && (
-            <div className="flex flex-col items-start max-w-[200px] overflow-hidden">
-              <div className="flex items-center gap-1">
-                <UserNickname className="text-base truncate" nicknameColor={name_color} nickname={nickname} />
-              </div>
-              <div className="flex items-center gap-2">
-                <div className="flex gap-1 items-center">
-                  <Typography className="text-[15px]">
-                    1
-                  </Typography>
-                  <img src={Charism} width={16} height={16} alt="" />
-                </div>
-                <div className="flex gap-1 items-center">
-                  <Typography className="text-[15px]">
-                    1
-                  </Typography>
-                  <img src={Belkoin} width={15} height={15} alt="" />
-                </div>
-              </div>
-            </div>
-          )}
+          <Suspense fallback={<Skeleton className="w-[50px] h-[50px]" />}>
+            <Avatar
+              variant="default"
+              className="overflow-hidden min-w-[50px] min-h-[50px]"
+              propWidth={50}
+              propHeight={50}
+              nickname={nickname}
+            />
+          </Suspense>
+          {!isCompact && <UserBalance />}
         </div>
       </DropdownMenuTrigger>
       <DropdownMenuContent>
@@ -116,9 +142,15 @@ const SidebarBarNotifications = () => {
   const navigate = useNavigate()
 
   return (
-    <OutlineWrapper onClick={() => navigate({ to: "/notifications" })} title="Уведомления" className="w-full relative">
-      {data?.has_new_notifications && <div className="bg-red-500 w-[16px] h-[16px] rounded-[999px] absolute top-4 right-4" />}
-      <Icon name="sprite/bell" className="text-xl icon-color" />
+    <OutlineWrapper
+      onClick={() => navigate({ to: "/notifications" })}
+      title="Уведомления"
+      className="w-full relative"
+    >
+      {data?.has_new_notifications &&
+        <div className="bg-red-500 w-[16px] h-[16px] rounded-[999px] absolute top-4 right-4" />
+      }
+      <Icon name="sprite/bell" className="text-xl text-shark-300" />
     </OutlineWrapper>
   )
 }
@@ -131,25 +163,16 @@ const SidebarBar = () => {
   return (
     <>
       <OutlineWrapper
-        title="Нашли баг? Откройте заявку!"
+        title="Открыть тикет"
         onClick={() => navigate({ to: "/create-ticket" })}
       >
-        <NotebookPen size={20} className="text-shark-300" />
+        <NotebookPen size={20} className="icon-color" />
       </OutlineWrapper>
-      <Suspense>
-        <TicketsModal
-          trigger={
-            <OutlineWrapper title="Открыть тикет">
-              <CircleFadingPlus size={20} className="text-shark-300" />
-            </OutlineWrapper>
-          }
-        />
-      </Suspense>
       <SidebarBarNotifications />
       <DropdownMenu>
         <DropdownMenuTrigger title="Настройки сайдбара" className="w-full">
           <OutlineWrapper className="w-full">
-            <Settings size={20} className="text-shark-300" />
+            <Settings size={20} className="icon-color" />
           </OutlineWrapper>
         </DropdownMenuTrigger>
         <DropdownMenuContent>
@@ -196,7 +219,7 @@ const SidebarDesktopContent = () => {
         </div>
       </div>
       {!isCompact && isExpanded ? (
-        <div className="flex lg:flex-row items-center *:w-1/4 gap-2 w-full justify-between">
+        <div className="flex lg:flex-row items-center *:w-1/3 gap-2 w-full justify-between">
           <SidebarBar />
         </div>
       ) : (
@@ -240,47 +263,9 @@ const ProfileLink = () => {
   );
 };
 
-const SidebarDesktopSkeleton = () => {
-  return (
-    <div
-      className={`flex flex-col justify-between
-		  px-3 rounded-lg overflow-hidden min-h-screen h-full py-6
-			bg-primary-color outline-none w-[300px]`}
-    >
-      <div className="flex flex-col gap-y-4 items-center justify-center">
-        <div className="flex flex-row items-center gap-4">
-          <Skeleton className="w-[42px] h-[42px]" />
-          <Skeleton className="h-10 w-48" />
-        </div>
-        <Separator />
-        <div className="flex items-center gap-2 justify-between w-full">
-          <Skeleton className="flex h-10 items-center gap-1 grow" />
-          <Skeleton className="flex h-10 w-10" />
-        </div>
-        <Separator />
-        <Skeleton className="flex gap-x-3 h-[50px] items-center w-full" />
-        <Separator />
-        <Skeleton className="flex h-10 items-center w-full" />
-        <Separator />
-        <Skeleton className="flex h-[230px] items-center w-full" />
-        <Separator />
-        <div className="flex flex-col gap-y-2 w-full">
-          <Skeleton className="flex h-10 items-center w-full" />
-          <Skeleton className="flex h-10 items-center w-full" />
-          <Skeleton className="flex h-10 items-center w-full" />
-          <Skeleton className="flex h-10 items-center w-full" />
-        </div>
-      </div>
-    </div>
-  );
-};
-
 export const SidebarDesktop = () => {
   const { data: sidebarState } = sidebarLayoutQuery();
-  const { isLoading } = currentUserQuery();
   const { isExpanded, isDynamic, isCompact } = useSidebarControl();
-
-  if (isLoading) return <SidebarDesktopSkeleton />;
 
   const sidebarLayoutVariant = isDynamic
     ? "default"

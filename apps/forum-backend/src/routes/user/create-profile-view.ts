@@ -12,8 +12,7 @@ export const createProfileViewSchema = z.object({
 
 export const createProfileViewRoute = new Hono()
   .post("/create-profile-view", zValidator("json", createProfileViewSchema), async (ctx) => {
-    const body = await ctx.req.json();
-    const result = createProfileViewSchema.parse(body);
+    const result = createProfileViewSchema.parse(await ctx.req.json());
 
     const initiator = getNickname()
     const { recipient } = result;

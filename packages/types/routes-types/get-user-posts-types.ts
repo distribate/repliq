@@ -14,7 +14,7 @@ export type GetUserPostsResponse = {
   meta: {
     hasNextPage: boolean;
     hasPrevPage: boolean;
-    startCursor: string | null;
-    endCursor: string | null;
+    startCursor?: string;
+    endCursor?: string;
   }
 }

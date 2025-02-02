@@ -298,7 +298,9 @@ export interface AuthUsers {
 
 export interface Category {
   available: Generated<boolean>;
+  color: string;
   description: string | null;
+  emoji: string;
   id: Generated<Int8>;
   title: string;
 }
@@ -373,6 +375,15 @@ export interface CronJobRunDetails {
   start_time: Timestamp | null;
   status: string | null;
   username: string | null;
+}
+
+export interface ErrorsLog {
+  created_at: Generated<Timestamp>;
+  description: string;
+  id: Generated<Int8>;
+  initiator: string;
+  recipient: string;
+  type: string;
 }
 
 export interface ExtensionsPgStatStatements {
@@ -1009,7 +1020,6 @@ export interface UsersStatus {
   created_at: Generated<Timestamp>;
   id: Generated<Int8>;
   nickname: string;
-  status: Generated<boolean>;
 }
 
 export interface VaultDecryptedSecrets {
@@ -1078,6 +1088,7 @@ export interface DB {
   config_minecraft_items: ConfigMinecraftItems;
   "cron.job": CronJob;
   "cron.job_run_details": CronJobRunDetails;
+  errors_log: ErrorsLog;
   "extensions.pg_stat_statements": ExtensionsPgStatStatements;
   "extensions.pg_stat_statements_info": ExtensionsPgStatStatementsInfo;
   friends_notes: FriendsNotes;

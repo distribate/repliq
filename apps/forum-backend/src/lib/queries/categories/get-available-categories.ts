@@ -1,14 +1,16 @@
 import { forumDB } from "#shared/database/forum-db.ts"
-import { sql } from "kysely";
 
 export const getAvailableCategories = async () => {
   return await forumDB
     .selectFrom("category")
-    .select([
+    .select(eb => [
       "title",
       "available",
       "description",
-      sql`CAST(id AS INT)`.as("id")
+      "emoji",
+      "color",
+      eb.cast<number>('id', 'int8').as('id')
     ])
+    .orderBy("id", "asc")
     .execute();
 }

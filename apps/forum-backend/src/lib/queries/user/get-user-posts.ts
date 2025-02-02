@@ -12,19 +12,18 @@ type GetPosts = z.infer<typeof getUserPostsSchema> & {
 }
 
 export async function getUserPosts({
-  ascending, filteringType, currentUserNickname, requestedUserNickname, cursor
+  ascending, filteringType, currentUserNickname, requestedUserNickname, cursor, searchQuery
 }: GetPosts): Promise<GetUserPostsResponse | null> {
   const isFriend = await getUserIsFriend({
     recipient: requestedUserNickname, initiator: currentUserNickname
   });
 
-  const asc = ascending ? "asc" : "desc";
+  const direction = ascending ? "asc" : "desc";
 
-  const query = forumDB
+  let query = forumDB
     .selectFrom("posts_users")
     .innerJoin("posts", "posts.id", "posts_users.post_id")
     .leftJoin("posts_views", "posts_views.post_id", "posts.id")
-    .leftJoin("posts_comments", "posts_comments.post_id", "posts.id")
     .select([
       "posts.id",
       "posts.content",
@@ -33,8 +32,7 @@ export async function getUserPosts({
       "posts.isComments",
       "posts.isPinned",
       "posts.isUpdated",
-      "posts_users.nickname as nickname",
-      sql`COUNT(DISTINCT posts_comments.id)`.as("comments_count"),
+      "posts_users.nickname",
       sql`COUNT(DISTINCT posts_views.id)`.as("views_count"),
       sql`COALESCE(BOOL_OR(posts_views.nickname = ${currentUserNickname}), false)`.as("isViewed")
     ])
@@ -79,58 +77,30 @@ export async function getUserPosts({
       "posts_users.nickname",
     ])
 
-  switch (filteringType) {
-    case "created_at":
-      const withCreatedAt = await executeWithCursorPagination(query, {
-        perPage: 8,
-        after: cursor,
-        fields: [
-          {
-            key: "created_at",
-            direction: asc,
-            expression: "created_at",
-          }
-        ],
-        parseCursor: (cursor) => ({
-          created_at: new Date(cursor.created_at),
-        })
-      });
+  if (searchQuery && searchQuery.length >= 1) {
+    query = query.where("content", "like", `%${searchQuery}%`)
+  }
 
-      return {
-        data: withCreatedAt.rows ?? [],
-        meta: {
-          hasNextPage: withCreatedAt.hasNextPage ?? false,
-          hasPrevPage: withCreatedAt.hasPrevPage ?? false,
-          startCursor: withCreatedAt.startCursor ?? null,
-          endCursor: withCreatedAt.endCursor ?? null
-        }
-      }
-    case "views_count":
-      const withViewsCount = await executeWithCursorPagination(query, {
-        perPage: 8,
-        after: cursor,
-        fields: [
-          {
-            key: "views_count",
-            direction: asc,
-            // @ts-ignore
-            expression: "views_count",
-          }
-        ],
-        parseCursor: (cursor) => ({
-          // @ts-ignore
-          views_count: Number(cursor.views_count),
-        })
-      });
+  if (filteringType === "views_count") {
+    query = query.orderBy("views_count", direction)
+  }
 
-      return {
-        data: withViewsCount.rows ?? [],
-        meta: {
-          hasNextPage: withViewsCount.hasNextPage ?? false,
-          hasPrevPage: withViewsCount.hasPrevPage ?? false,
-          startCursor: withViewsCount.startCursor ?? null,
-          endCursor: withViewsCount.endCursor ?? null
-        }
-      }
+  let res = await executeWithCursorPagination(query, {
+    perPage: 8,
+    after: cursor,
+    fields: [
+      { key: "created_at", direction, expression: "posts.created_at" }
+    ],
+    parseCursor: (cursor) => ({ created_at: new Date(cursor.created_at) })
+  });
+
+  return {
+    data: res.rows ?? [],
+    meta: {
+      hasNextPage: res.hasNextPage ?? false,
+      hasPrevPage: res.hasPrevPage ?? false,
+      startCursor: res.startCursor,
+      endCursor: res.endCursor
+    }
   }
 }

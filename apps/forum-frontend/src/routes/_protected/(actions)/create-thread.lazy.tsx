@@ -4,18 +4,17 @@ import { Typography } from '@repo/ui/src/components/typography.tsx'
 import { CreateThreadForm } from '@repo/components/src/forms/create-thread/components/create-thread-form.tsx'
 import { FormThreadRecommendations } from '@repo/components/src/forms/create-thread/components/form-thread-recommendations.tsx'
 
-export const Route = createLazyFileRoute('/_protected/(actions)/create-thread')(
-  {
-    component: RouteComponent,
-    head: () => ({
-      meta: [
-        {
-          title: 'Создать тред',
-        },
-      ],
-    }),
-  },
-)
+export const Route = createLazyFileRoute('/_protected/(actions)/create-thread')({
+  component: RouteComponent,
+  // @ts-ignore
+  head: () => ({
+    meta: [
+      {
+        title: 'Создать тред',
+      },
+    ],
+  }),
+})
 
 function RouteComponent() {
   return (

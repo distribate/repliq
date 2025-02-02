@@ -7,10 +7,7 @@ import { deleteFriendRequestSchema } from "@repo/types/schemas/friend/delete-fri
 
 export const deleteFriendRequestRoute = new Hono()
   .post("/delete-friend-request", zValidator("json", deleteFriendRequestSchema), async (ctx) => {
-    const body = await ctx.req.json();
-    const result = deleteFriendRequestSchema.parse(body);
-
-    const { request_id } = result
+    const { request_id } = deleteFriendRequestSchema.parse(await ctx.req.json());
     const nickname = getNickname()
 
     try {

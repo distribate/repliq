@@ -5,7 +5,7 @@ import { Skeleton } from "@repo/ui/src/components/skeleton";
 export const ThreadMainSkeleton = () => {
   return (
     <>
-      <div className="flex flex-col min-w-3/4 w-3/4 max-w-3/4 items-start h-full justify-start">
+      <div className="flex flex-col xl:order-first order-last w-full xl:min-w-3/4 xl:w-3/4 relative xl:max-w-3/4 items-start h-full justify-start">
         <div className="flex flex-col gap-6 rounded-lg w-full py-6 bg-primary-color">
           <div className="flex flex-col gap-1 w-full px-4">
             <Skeleton className="h-6 w-60" />

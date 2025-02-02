@@ -7,6 +7,7 @@ import { nanoid } from "nanoid";
 import { decode } from "cbor-x";
 import { forumDB } from "#shared/database/forum-db.ts";
 import { createCoverImageSchema } from "@repo/types/schemas/user/create-cover-image-schema.ts"
+import { getPublicUrl } from "#utils/get-public-url.ts";
 
 async function deletePrevCoverImage(nickname: string) {
   const ci = await forumDB
@@ -124,7 +125,7 @@ export const createCoverImageRoute = new Hono()
         return ctx.json({ error: "Error creating cover image" }, 400)
       }
 
-      const url = supabase.storage.from("user_images").getPublicUrl(res.cover_image).data.publicUrl
+      const url = getPublicUrl("user_images", res.cover_image)
 
       return ctx.json({ data: url, status: "Success" }, 200);
     } catch (e) {

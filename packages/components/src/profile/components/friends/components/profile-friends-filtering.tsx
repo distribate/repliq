@@ -13,8 +13,7 @@ import {
 import { FilteringSearchWrapper } from "#wrappers/filtering-search-wrapper.tsx";
 import { useDebounce } from "@repo/lib/hooks/use-debounce.ts";
 import { Input } from "@repo/ui/src/components/input.tsx";
-import { FRIENDS_QUERY_KEY } from "#friends/queries/friends-query.ts";
-import { useLocation } from "@tanstack/react-router";
+import { useUpdateFriends } from "#friends/hooks/use-update-friends.ts";
 
 const ProfileFriendsFilteringSearch = forwardRef<HTMLInputElement>(
   (props, ref) => {
@@ -25,8 +24,7 @@ const ProfileFriendsFilteringSearch = forwardRef<HTMLInputElement>(
       return qc.setQueryData(
         FRIENDS_SORT_QUERY_KEY,
         (prev: FriendsSortQuery) => ({
-          ...prev,
-          searchQuery: value,
+          ...prev, searchQuery: value,
         }),
       );
     };
@@ -54,26 +52,17 @@ const ProfileFriendsFilteringSearch = forwardRef<HTMLInputElement>(
   },
 );
 
-const ProfileFriendsFilteringView = () => {
+const ProfileFriendsFilteringView = ({ nickname }: { nickname: string }) => {
   const qc = useQueryClient();
-  const location = useLocation();
   const { sort_type: currentSortType } = friendsSortQuery().data;
+  const { updateFriendsMutation } = useUpdateFriends();
 
   const handleSort = (e: React.MouseEvent<HTMLDivElement, MouseEvent>, sort_type: FriendsSortType) => {
     e.preventDefault();
 
-    const nickname = location.pathname.split("/")[2];
+    qc.setQueryData(FRIENDS_SORT_QUERY_KEY, (prev: FriendsSortQuery) => ({ ...prev, sort_type }));
 
-    if (!nickname) return;
-
-    qc.setQueryData(
-      FRIENDS_SORT_QUERY_KEY,
-      (prev: FriendsSortQuery) => ({ ...prev, sort_type }),
-    );
-
-    qc.refetchQueries({
-      queryKey: FRIENDS_QUERY_KEY(nickname),
-    });
+    updateFriendsMutation.mutate({ nickname, type: "update-filter" });
   };
 
   return (
@@ -118,7 +107,9 @@ const ProfileFriendsFilteringView = () => {
   );
 };
 
-export const ProfileFriendsFiltering = () => {
+export const ProfileFriendsFiltering = ({
+  nickname
+}: { nickname: string }) => {
   return (
     <div className="flex w-full justify-between items-center">
       <div className="flex items-center gap-1 w-fit">
@@ -135,7 +126,7 @@ export const ProfileFriendsFiltering = () => {
           <ProfileFriendsFilteringSearch />
         </FilteringSearchWrapper>
         <div className="w-fit">
-          <ProfileFriendsFilteringView />
+          <ProfileFriendsFilteringView nickname={nickname} />
         </div>
       </div>
     </div>

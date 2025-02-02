@@ -21,7 +21,6 @@ async function getPostViewers(id: string) {
 export const getPostViewersRoute = new Hono()
   .get("/get-post-viewers/:id", async (ctx) => {
     const { id } = ctx.req.param();
-
     const nickname = getNickname()
 
     const isValid = await validatePostOwner(nickname, id)

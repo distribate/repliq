@@ -1,5 +1,3 @@
-"use client";
-
 import { Icon } from "@repo/shared/ui/icon/icon.tsx";
 import { ArrowDownFromLine, RotateCw } from "lucide-react";
 import { useSkinStateChange } from "../hooks/use-skin-animation.ts";

@@ -1,5 +1,3 @@
-"use client";
-
 import { Typography } from "@repo/ui/src/components/typography.tsx";
 import { ThreadRemoveModal } from "#modals/action-confirmation/components/thread-remove/components/thread-remove-modal.tsx";
 import { ThreadControlTitle } from "./thread-control-title.tsx";
@@ -31,7 +29,7 @@ export const ThreadControlMain = ({
       <div className="flex flex-col gap-y-4 justify-between">
         <ThreadControlTitle title={currentThread.title} />
         <ThreadControlDescription description={currentThread.description} />
-        <ThreadControlComments is_comments={currentThread.is_comments} />
+        <ThreadControlComments is_comments={currentThread.properties.is_comments} />
         <div className="flex items-center gap-2 justify-end w-full">
           <ThreadControlSave threadId={threadId} />
           <ThreadRemoveModal id={currentThread.id} />

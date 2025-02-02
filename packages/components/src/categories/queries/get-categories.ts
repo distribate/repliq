@@ -15,5 +15,5 @@ export async function getCategories(): Promise<CategoryModel[] | null> {
     return null
   }
 
-  return data
+  return data.data
 }

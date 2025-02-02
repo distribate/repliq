@@ -10,8 +10,12 @@ import { Selectable } from 'kysely';
 import { Users } from "@repo/types/db/forum-database-types";
 import { ProfileContentProps } from "./profile-content";
 import { ProfileSkinControls } from "#profile/components/skin/components/profile-skin-controls.tsx";
-import { ProfileSkinRender } from "#profile/components/skin/components/profile-skin-render.tsx";
 import { lazy } from "react";
+import { Skeleton } from "@repo/ui/src/components/skeleton";
+
+const ProfileSkinRender = lazy(() => import("#profile/components/skin/components/profile-skin-render.tsx")
+  .then(m => ({ default: m.ProfileSkinRender }))
+)
 
 const UserProfileAccount = lazy(() => import("#profile/components/account-stats/components/profile-account.tsx")
   .then(m => ({ default: m.UserProfileAccount }))
@@ -70,7 +74,7 @@ export const ProfileContentTabs = ({
     <Tabs
       id="main-content"
       defaultValue="posts"
-      className="flex flex-col w-full h-full lg:px-12 gap-y-6 min-w-[380px] relative z-[4]"
+      className="flex flex-col w-full h-full lg:px-12 gap-y-6 relative z-[4]"
     >
       <TabsList className="grid grid-cols-2 auto-rows-auto lg:flex lg:justify-start gap-2 w-full">
         <TabsTrigger value="posts">Посты</TabsTrigger>
@@ -96,13 +100,13 @@ export const ProfileContentTabs = ({
           </>
         )}
       </TabsList>
-      <div className="flex flex-col mt-24 lg:mt-0 lg:flex-row items-start gap-12 w-full">
+      <div className="flex flex-col lg:flex-row items-start gap-12 w-full">
         <div className="flex grow *:w-full w-full">
-          <Suspense fallback={<UserPostsSkeleton />}>
-            <TabsContent value="posts">
+          <TabsContent value="posts">
+            <Suspense fallback={<UserPostsSkeleton />}>
               <UserProfilePosts nickname={requestedUserNickname} />
-            </TabsContent>
-          </Suspense>
+            </Suspense>
+          </TabsContent>
           <TabsContent value="topics">
             <Suspense>
               <UserProfileThreads nickname={requestedUserNickname} />
@@ -140,7 +144,9 @@ export const ProfileContentTabs = ({
         <div className="hidden 2xl:flex h-[500px] flex-col w-1/3">
           <div className="flex flex-col h-full w-full gap-4">
             <ProfileSkinControls nickname={requestedUserNickname} />
-            <ProfileSkinRender nickname={requestedUserNickname} />
+            <Suspense fallback={<Skeleton className="w-full h-full" />}>
+              <ProfileSkinRender nickname={requestedUserNickname} />
+            </Suspense>
           </div>
         </div>
       </div>

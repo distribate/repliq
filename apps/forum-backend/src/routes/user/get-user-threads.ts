@@ -3,20 +3,32 @@ import { z } from 'zod';
 import { zValidator } from '@hono/zod-validator';
 import { throwError } from '@repo/lib/helpers/throw-error.ts';
 import { getUserThreads } from '#lib/queries/user/get-user-threads.ts';
+import { userPreferenceAndPrivateValidation } from '#utils/validate-user-preference-private.ts';
+import { getNickname } from '#utils/get-nickname-from-storage.ts';
 
 export const getUserThreadsSchema = z.object({
-  querySearch: z.string().optional()
+  querySearch: z.string().optional(),
+  cursor: z.string().optional(),
 })
 
 export const getUserThreadsRoute = new Hono()
   .get("/get-user-threads/:nickname", zValidator("query", getUserThreadsSchema), async (ctx) => {
-    const { nickname } = ctx.req.param();
-    const { querySearch } = getUserThreadsSchema.parse(ctx.req.query())
+    const { nickname: recipient } = ctx.req.param();
+    const initiator = getNickname()
+    const { querySearch, cursor } = getUserThreadsSchema.parse(ctx.req.query());
+
+    const isValid = await userPreferenceAndPrivateValidation({
+      initiator, recipient
+    })
+
+    if (!isValid) {
+      return ctx.json({ error: "User's profile is private" }, 400)
+    }
 
     try {
-      const threads = await getUserThreads({ nickname, querySearch });
-      
-      return ctx.json({ data: threads }, 200);
+      const threads = await getUserThreads({ nickname: recipient, querySearch, cursor });
+
+      return ctx.json(threads, 200);
     } catch (e) {
       return ctx.json({ error: throwError(e) }, 500);
     }

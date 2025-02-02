@@ -5,14 +5,18 @@ import { SearchThread } from "#sidebar/desktop/components/sidebar-content/search
 import { Link } from "@tanstack/react-router";
 import { THREAD_URL } from "@repo/shared/constants/routes.ts";
 import { filterSearchResults } from "#search/helpers/filter-search-results.ts";
+import { Text } from "lucide-react";
 
 export const SearchPageThread = ({ title, id }: SearchThread) => {
   return (
     <Link
       to={THREAD_URL + id}
-      className="flex p-4 items-center gap-3 hover:bg-shark-700 w-full rounded-md"
+      className="flex p-4 items-center gap-3 hover:bg-shark-700 truncate w-full rounded-md"
     >
-      <Typography className="text-[18px]">{title}</Typography>
+      <Text size={40} className="text-shark-300" />
+      <Typography className="text-[18px] font-semibold text-shark-50">
+        {title}
+      </Typography>
     </Link>
   );
 };
@@ -29,15 +33,10 @@ export const SearchPageThreads = () => {
   );
 
   return (
-    <div className="flex flex-col gap-y-4 w-full h-fit">
-      <Typography variant="pageTitle" className="text-[24px]">
-        Треды
-      </Typography>
-      <div className="flex flex-col gap-y-2 w-full h-full">
-        {threads.map((thread) => (
-          <SearchPageThread key={thread.id} {...thread} />
-        ))}
-      </div>
+    <div className="flex flex-col gap-y-2 w-full h-full">
+      {threads.map((thread) => (
+        <SearchPageThread key={thread.id} {...thread} />
+      ))}
     </div>
   );
 };

@@ -1,7 +1,6 @@
 import { searchPageQuery } from "#search/queries/search-page-query.ts";
 import { ContentNotFound } from "#templates/content-not-found.tsx";
 import { SearchUser } from "#sidebar/desktop/components/sidebar-content/search/queries/search-query.ts";
-import { Typography } from "@repo/ui/src/components/typography.tsx";
 import { filterSearchResults } from "#search/helpers/filter-search-results.ts";
 import { SearchPageUser } from "./search-page-user";
 
@@ -15,15 +14,10 @@ export const SearchPageUsers = () => {
   const users = filterSearchResults<SearchUser>(searchState.results, "users");
 
   return (
-    <div className="flex flex-col gap-y-4 w-full h-fit">
-      <Typography variant="pageTitle" className="text-[24px]">
-        Игроки
-      </Typography>
-      <div className="flex flex-col gap-y-2 w-full h-full">
-        {users.map(({ name_color, nickname }) => (
-          <SearchPageUser key={nickname} name_color={name_color} nickname={nickname} />)
-        )}
-      </div>
+    <div className="flex flex-col gap-y-2 w-full h-full">
+      {users.map(({ name_color, nickname }) => (
+        <SearchPageUser key={nickname} name_color={name_color} nickname={nickname} />)
+      )}
     </div>
   );
 };

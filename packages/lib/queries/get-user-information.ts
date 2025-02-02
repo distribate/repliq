@@ -1,14 +1,28 @@
 import { forumUserClient } from '@repo/shared/api/forum-client.ts';
 import type { UserDetailed } from '@repo/types/entities/user-type.ts';
+import ky from 'ky';
+import { decode } from 'cbor-x';
 
 export async function getUserInformation(): Promise<UserDetailed> {
-  const res = await forumUserClient.user["get-me"].$get()
-  
-  const data = await res.json()
+  const url = forumUserClient.user["get-me"].$url()
 
-  if ("error" in data) {
-    throw new Error(data.error)
+  const res = await ky.get(url, {
+    credentials: "include"
+  })
+
+  const encodedData = await res.arrayBuffer()
+
+  if (!encodedData) {
+    throw new Error("Failed decode")
   }
 
-  return data.data as UserDetailed
+  const uint8Data = new Uint8Array(encodedData);
+
+  const data: { data: UserDetailed } | { error: string } = decode(uint8Data);
+
+  if ("error" in data) {
+    throw new Error("Failed user information")
+  }
+
+  return data.data
 }

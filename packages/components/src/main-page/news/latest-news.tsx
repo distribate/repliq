@@ -1,5 +1,6 @@
 import { createQueryKey } from "@repo/lib/helpers/query-key-builder"
 import { forumLandingClient } from "@repo/shared/api/forum-client"
+import { Skeleton } from "@repo/ui/src/components/skeleton"
 import { Typography } from "@repo/ui/src/components/typography"
 import { useQuery } from "@tanstack/react-query"
 import { Link } from "@tanstack/react-router"
@@ -29,9 +30,7 @@ const latestNewsQuery = () => useQuery({
 })
 
 export const LatestNews = () => {
-  const { data: newsList } = latestNewsQuery()
-
-  if (!newsList) return null;
+  const { data: newsList, isLoading } = latestNewsQuery()
 
   return (
     <div className="flex flex-col border border-shark-800 gap-y-2 w-full py-6 px-4 rounded-lg overflow-hidden bg-primary-color">
@@ -43,7 +42,13 @@ export const LatestNews = () => {
         Последние новости
       </Typography>
       <div className="flex flex-col gap-y-4 w-full h-full">
-        {newsList.map((newsItem) => (
+        {isLoading && (
+          <>
+            <Skeleton className="h-[200px] w-full" />
+            <Skeleton className="h-[200px] w-full" />
+          </>
+        )}
+        {newsList && newsList.map((newsItem) => (
           <div key={newsItem.id} className="flex group flex-col rounded-lg h-[200px] relative overflow-hidden">
             <img
               src={newsItem.imageUrl}

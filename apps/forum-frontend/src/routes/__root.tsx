@@ -5,7 +5,9 @@ import { createRootRouteWithContext } from '@tanstack/react-router';
 import type { QueryClient } from '@tanstack/react-query';
 import { lazy, ReactNode, Suspense, useEffect } from 'react';
 
+// @ts-ignore
 import '../styles/index.css'
+// @ts-ignore
 import "@repo/ui/ui.css"
 
 const NotFound = lazy(() => 

@@ -11,17 +11,19 @@ type FriendStatus =
   | "not-accepted-friend"
   | "not-friend"
 
+type FriendData = {
+  status: FriendStatus;
+  friend_id: string | null;
+  request_id: string | null
+}
+
 export const getFriendStatusRoute = new Hono()
   .get("/get-friend-status/:nickname", async (ctx) => {
     const { nickname: recipient } = ctx.req.param();
 
     const initiator = getNickname()
 
-    let friendData: {
-      status: FriendStatus;
-      friend_id: string | null;
-      request_id: string | null
-    };
+    let friendData: FriendData | null = null
 
     try {
       const friendPreference = await getUserFriendPreference(recipient)
@@ -67,5 +69,4 @@ export const getFriendStatusRoute = new Hono()
     } catch (e) {
       return ctx.json({ error: throwError(e) }, 500);
     }
-  }
-  );
+  });

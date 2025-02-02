@@ -3,7 +3,7 @@ import { ThreadLayout } from "./components/thread-layout/thread-layout.tsx";
 import { ThreadPreview } from "@repo/types/entities/thread-type.ts";
 
 export const ThreadItem = ({
-  created_at, description, id, is_comments, title, thread_comments_count, thread_views_count, owner
+  created_at, description, id, properties, title, comments_count, views_count, owner
 }: ThreadPreview) => {
   return (
     <ThreadLayout id={id} title={title} owner={owner}>
@@ -11,10 +11,10 @@ export const ThreadItem = ({
         created_at={created_at}
         description={description}
         id={id}
-        is_comments={is_comments}
+        properties={properties}
         title={title}
-        thread_comments_count={thread_comments_count}
-        thread_views_count={thread_views_count}
+        comments_count={comments_count}
+        views_count={views_count}
         owner={owner}
       />
     </ThreadLayout>

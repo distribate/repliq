@@ -3,6 +3,7 @@ import { forumDB } from "../../shared/database/forum-db";
 export const addNewAdmin = async (userId: string) => {
   return await forumDB
   .insertInto("admins")
+  // @ts-ignore
   .values({ user_id: userId })
   .execute();
 }

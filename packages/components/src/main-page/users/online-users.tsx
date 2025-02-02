@@ -2,6 +2,7 @@ import { UserPreviewCard } from "#cards/components/user-preview-card/user-previe
 import { getUser } from "@repo/lib/helpers/get-user"
 import { createQueryKey } from "@repo/lib/helpers/query-key-builder"
 import { forumLandingClient } from "@repo/shared/api/forum-client"
+import { Skeleton } from "@repo/ui/src/components/skeleton"
 import { Typography } from "@repo/ui/src/components/typography"
 import { useQuery } from "@tanstack/react-query"
 
@@ -44,13 +45,11 @@ const onlineUsersQuery = (currentUserNickname: string) => useQuery({
           : [{ nickname: currentUserNickname }]
       );
   },
-  refetchInterval: 1000 * 60 * 5,
-  refetchOnMount: false
 })
 
 export const OnlineUsers = () => {
   const user = getUser()
-  const { data: onlineUsers } = onlineUsersQuery(user.nickname);
+  const { data: onlineUsers, isLoading } = onlineUsersQuery(user.nickname);
 
   return (
     <div className="flex flex-col border border-shark-800 gap-y-2 w-full py-6 px-4 rounded-lg overflow-hidden bg-primary-color">
@@ -62,7 +61,17 @@ export const OnlineUsers = () => {
         Пользователи в сети
       </Typography>
       <div className="grid grid-cols-6 2xl:grid-cols-7 gap-2">
-        {!onlineUsers && (
+        {isLoading && (
+          <>
+            <Skeleton className="h-full w-full" />
+            <Skeleton className="h-full w-full" />
+            <Skeleton className="h-full w-full" />
+            <Skeleton className="h-full w-full" />
+            <Skeleton className="h-full w-full" />
+            <Skeleton className="h-full w-full" />
+          </>
+        )}
+        {(!onlineUsers && !isLoading) && (
           <Typography className="text-[16px]">
             тишина...
           </Typography>

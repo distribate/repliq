@@ -5,17 +5,26 @@ import { zValidator } from "@hono/zod-validator";
 import { Hono } from "hono";
 import { getNickname } from "#utils/get-nickname-from-storage.ts";
 import { Encoder } from "cbor-x";
+import { userPreferenceAndPrivateValidation } from "#utils/validate-user-preference-private.ts";
 
 export const getUserFriendsRoute = new Hono()
   .get("/get-user-friends/:nickname", zValidator("query", getUserFriendsSchema), async (ctx) => {
-    const { nickname } = ctx.req.param()
+    const { nickname: recipient } = ctx.req.param()
     const query = ctx.req.query()
     const result = getUserFriendsSchema.parse(query);
 
     const initiator = getNickname()
 
+    const isValid = await userPreferenceAndPrivateValidation({
+      initiator, recipient
+    })
+
+    if (!isValid) {
+      return ctx.json({ error: "User's profile is private" }, 400)
+    }
+
     try {
-      const friends = await getUserFriends({ nickname, ...result })
+      const friends = await getUserFriends({ nickname: recipient, ...result })
 
       const encoder = new Encoder({
         useRecords: false, structures: [], pack: true

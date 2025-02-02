@@ -25,15 +25,15 @@ export const UserCoverMainInfo = ({ nickname }: UserCoverInfoProps) => {
   const { description, real_name, name_color, donate, favorite_item } = requestedUser;
 
   return (
-    <div className="flex flex-col self-end justify-between h-1/2 gap-y-1">
-      <div className="flex flex-col">
+    <div className="flex flex-col lg:items-start items-center self-end justify-between h-1/2 gap-y-1">
+      <div className="flex flex-col lg:items-start items-center truncate">
         <div className="flex items-center gap-1">
           <UserNickname
             nickname={nickname}
             nicknameColor={name_color}
-            className={coverState.inView ? "text-3xl" : "text-xl"}
+            className={coverState.inView ? "text-xl lg:text-3xl" : "text-xl"}
           />
-          <UserDonate donate={donate} favoriteItemId={favorite_item} />
+          <UserDonate donate={donate} nickname={nickname} />
         </div>
         {real_name && <UserRealName real_name={real_name} />}
       </div>

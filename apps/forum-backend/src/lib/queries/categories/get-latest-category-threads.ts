@@ -17,13 +17,13 @@ export async function getLatestCategoryThreads(): Promise<CategoryThreads[] | nu
         .leftJoin('threads_views', 'threads.id', 'threads_views.thread_id')
         .leftJoin('threads_users', 'threads.id', 'threads_users.thread_id')
         .leftJoin('users', 'threads_users.user_nickname', 'users.nickname')
-        .select([
+        .select(eb => [
           'threads.category_id',
           'threads.id as id',
           'threads.title as title',
           'threads.description as description',
           'threads.is_comments as is_comments',
-          sql<string>`threads.created_at::text`.as('created_at'),
+          eb.cast<string>('threads.created_at', 'text').as('created_at'),
           sql<number>`COALESCE(COUNT(threads_views.id), 0)`.as('views_count'),
           sql<number>`(SELECT COUNT(*) FROM comments WHERE parent_type = 'thread' AND CAST(parent_id AS uuid) = threads.id)`.as('comments_count'),
           sql`ROW_NUMBER() OVER (PARTITION BY threads.category_id ORDER BY threads.created_at DESC)`.as('row_num'),
@@ -69,10 +69,12 @@ export async function getLatestCategoryThreads(): Promise<CategoryThreads[] | nu
       id: id!,
       title: title!,
       description: description!,
-      is_comments: is_comments!,
+      properties: {
+        is_comments: is_comments!,
+      },
       created_at: created_at!,
-      thread_views_count: views_count || 0,
-      thread_comments_count: comments_count || 0,
+      views_count: views_count || 0,
+      comments_count: comments_count || 0,
       owner: {
         nickname: owner_nickname!,
         name_color: owner_name_color!,

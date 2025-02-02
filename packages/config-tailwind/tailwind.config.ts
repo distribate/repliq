@@ -190,6 +190,10 @@ module.exports = {
           from: { height: "0" },
           to: { height: "var(--radix-accordion-content-height)" },
         },
+        pulse: {
+          "0%, 100%": { boxShadow: "0 0 0 0 var(--pulse-color)" },
+          "50%": { boxShadow: "0 0 0 4px var(--pulse-color)" },
+        },
         "accordion-up": {
           from: { height: "var(--radix-accordion-content-height)" },
           to: { height: "0" },
@@ -257,6 +261,7 @@ module.exports = {
         },
       },
       animation: {
+        pulse: "pulse var(--duration) ease-out infinite",
         rippling: "rippling 0.2s ease-out",
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",

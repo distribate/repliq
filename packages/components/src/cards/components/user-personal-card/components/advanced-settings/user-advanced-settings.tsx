@@ -8,17 +8,20 @@ import { useUpdateGlobalPreferences } from "@repo/lib/hooks/use-update-global-pr
 import Bell from "@repo/assets/images/minecraft/bell.webp";
 import { useUpdateUserSettings } from "@repo/lib/hooks/use-update-user-settings.ts";
 import { getUser } from "@repo/lib/helpers/get-user.ts";
+import Board from "@repo/assets/images/minecraft/chalkboard_board.webp"
 
 export const UserAdvancedSettings = () => {
   const { data: globalPreferencesState } = globalPreferencesQuery()
   const { updateAlertsShowingMutation, updateThreadsSavingMutation, updateIntroVisibilityMutation } = useUpdateGlobalPreferences()
   const { alerts, autoSaveThreads, intro } = globalPreferencesState
   const { updateUserSettingsMutation } = useUpdateUserSettings()
-  const { preferences: { send_notifications }} = getUser()
+  const { preferences: { send_notifications } } = getUser()
 
   return (
     <div className="flex flex-col gap-y-4 items-center w-full">
-      <Typography variant="dialogTitle">Дополнительные настройки</Typography>
+      <Typography variant="dialogTitle">
+        Дополнительные настройки
+      </Typography>
       <div className="flex flex-col gap-y-2 w-full">
         <UserSettingOption title="Объявления" imageSrc={CopperHorn}>
           <Switch
@@ -27,7 +30,7 @@ export const UserAdvancedSettings = () => {
             onCheckedChange={_ => updateAlertsShowingMutation.mutate()}
           />
         </UserSettingOption>
-        <UserSettingOption title="Интро" imageSrc={CopperHorn}>
+        <UserSettingOption title="Интро" imageSrc={Board}>
           <Switch
             checked={intro === "show"}
             defaultChecked={intro === "show"}

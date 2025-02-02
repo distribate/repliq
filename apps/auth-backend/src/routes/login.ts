@@ -1,33 +1,41 @@
 import { throwError } from "@repo/lib/helpers/throw-error";
 import { Hono } from "hono";
-import { forumDB } from "../shared/database/forum-db";
 import { zValidator } from "@hono/zod-validator";
 import { createSessionBodySchema } from "@repo/types/schemas/auth/create-session-schema";
-import type { Insertable } from "kysely";
-import type { Selectable } from "kysely";
-import type { DB, Users } from "@repo/types/db/forum-database-types.ts";
 import { findPlayer } from "../lib/queries/find-player-auth.ts";
 import { generateSessionToken } from "../utils/generate-session-token.ts";
 import { createSessionTransaction } from "../lib/transactions/create-session-transaction.ts";
 import { setCookie } from "hono/cookie";
-import { putSessionToken } from "../utils/put-session-token.ts";
 import bcrypt from 'bcryptjs';
-
-export type Session = Insertable<Pick<DB, "users_session">["users_session"]>;
-export type User = Selectable<Pick<Users, "id" | "nickname" | "uuid">>;
+import { getClientIp } from "../utils/gen-client-ip.ts";
+import { checkUserExists } from "../utils/check-user-exists.ts";
+import type { Context } from "hono";
+import type { Session } from "../types/session-type";
+import type { User } from "../types/session-type.ts"
 
 export type SessionValidationResult =
   | { session: Session; user: User }
   | { session: null; user: null };
 
-export async function checkUserExists(nickname: string) {
-  const exists = await forumDB
-    .selectFrom("users")
-    .select("nickname")
-    .where("nickname", "=", nickname)
-    .executeTakeFirst();
+function setSessionCookie(ctx: Context, token: string, expires: Date) {
+  return setCookie(ctx, `session`, token, {
+    httpOnly: true,
+    sameSite: "lax",
+    secure: process.env.NODE_ENV === "production",
+    expires,
+    path: "/",
+  })
+}
 
-  return !!exists
+function setCrossDomainSessionCookie(ctx: Context, nickname: string, expires: Date) {
+  return setCookie(ctx, `user`, nickname, {
+    httpOnly: true,
+    sameSite: "lax",
+    domain: "fasberry.su",
+    secure: process.env.NODE_ENV === "production",
+    expires,
+    path: "/",
+  })
 }
 
 export const loginRoute = new Hono()
@@ -42,9 +50,7 @@ export const loginRoute = new Hono()
     }
 
     const user = await findPlayer({
-      criteria: {
-        NICKNAME: nickname,
-      },
+      criteria: { NICKNAME: nickname },
       extractedFields: ["HASH"],
     });
 
@@ -60,27 +66,15 @@ export const loginRoute = new Hono()
 
     const token = generateSessionToken();
 
+    const ip = getClientIp(ctx)
+
     try {
-      const createdSession = await createSessionTransaction({ token, nickname, info })
-
-      await putSessionToken(nickname, token)
-
-      setCookie(ctx, `session`, token, {
-        httpOnly: true,
-        sameSite: "lax",
-        secure: process.env.NODE_ENV === "production",
-        expires: new Date(createdSession.expires_at),
-        path: "/",
+      const createdSession = await createSessionTransaction({
+        token, nickname, info: { ...info, ip }
       })
 
-      setCookie(ctx, `user`, nickname, {
-        httpOnly: true,
-        sameSite: "lax",
-        domain: "fasberry.su",
-        secure: process.env.NODE_ENV === "production",
-        expires: new Date(createdSession.expires_at),
-        path: "/",
-      })
+      setSessionCookie(ctx, token, new Date(createdSession.expires_at))
+      setCrossDomainSessionCookie(ctx, nickname, new Date(createdSession.expires_at))
 
       return ctx.json({ status: "Success" }, 200)
     } catch (e) {

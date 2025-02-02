@@ -11,13 +11,15 @@ export type ThreadDetailed = {
   category_id: number,
   description: string | null;
   updated_at: string | null;
-  is_comments: boolean;
-  is_updated: boolean;
-  is_images: boolean;
-  threads_tags: Array<string>;
-  threads_views_count: number;
-  threads_comments_count: number;
-  owner: ThreadOwner
+  images_count: number;
+  tags: Array<string>;
+  views_count: number;
+  comments_count: number;
+  owner: ThreadOwner,
+  properties: {
+    is_comments: boolean;
+    is_updated: boolean;
+  }
 }
 
 export type ThreadPreview = {
@@ -25,8 +27,10 @@ export type ThreadPreview = {
   title: string;
   created_at: string;
   description: string | null;
-  is_comments: boolean;
-  thread_comments_count: number;
-  thread_views_count: number;
-  owner: ThreadOwner
+  comments_count: number;
+  views_count: number;
+  owner: ThreadOwner;
+  properties: {
+    is_comments: boolean;
+  },
 };

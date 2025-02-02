@@ -8,8 +8,7 @@ import { UPDATE_FIELD_MUTATION_KEY } from "@repo/lib/hooks/use-update-current-us
 import { parseDateOrTimestamp } from "#cards/components/user-personal-card/components/profile-settings/components/birthday-picker/helpers/birthday-picker.ts";
 
 export const DateBirthdayModal = () => {
-  const currentUser = getUser();
-  const birthday = currentUser?.birthday;
+  const { birthday} = getUser();
   const initDate = parseDateOrTimestamp(birthday ?? null);
 
   return (

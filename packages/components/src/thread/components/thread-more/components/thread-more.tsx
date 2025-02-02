@@ -6,8 +6,8 @@ import {
 } from "@repo/ui/src/components/accordion.tsx";
 import { Typography } from "@repo/ui/src/components/typography.tsx";
 import dayjs from "@repo/lib/constants/dayjs-instance.ts";
-import { useState } from "react";
-import {Link} from "@tanstack/react-router";
+import { Suspense, useState } from "react";
+import { Link } from "@tanstack/react-router";
 import { USER_URL } from "@repo/shared/constants/routes.ts";
 import { Avatar } from "#user/components/avatar/components/avatar.tsx";
 import { UserNickname } from "#user/components/name/nickname.tsx";
@@ -15,6 +15,9 @@ import { Button } from "@repo/ui/src/components/button.tsx";
 import { ThreadDetailed } from "@repo/types/entities/thread-type";
 import { useQueryClient } from "@tanstack/react-query";
 import { THREAD_QUERY_KEY } from "#thread/components/thread-main/queries/thread-query.ts";
+import { Skeleton } from "@repo/ui/src/components/skeleton";
+import { Separator } from "@repo/ui/src/components/separator";
+import { FriendButton } from "#buttons/friend-button.tsx";
 
 type ThreadMoreProps = {
   threadId: string
@@ -39,7 +42,7 @@ export const ThreadMore = ({
 
   if (!thread) return null;
 
-  const { threads_tags, created_at, description, owner } = thread;
+  const { tags, created_at, description, owner, views_count } = thread;
 
   return (
     <Accordion
@@ -54,11 +57,18 @@ export const ThreadMore = ({
           className="flex items-center justify-between w-full"
           onClick={() => setExpand((prev) => !prev)}
         >
-          <div className="flex items-center gap-4 justify-start">
-            <Typography>{dayjs(created_at).fromNow()}</Typography>
-            {threads_tags && (
-              <div className="flex items-center gap-2">
-                {threads_tags.map((tag, idx) => <ThreadTag key={idx} tag={tag} />)}
+          <div className="flex items-center gap-3 justify-start">
+            <div className="flex items-center w-fit gap-1">
+              <Typography textSize="medium">
+                {views_count} просмотров
+              </Typography>
+            </div>
+            <Typography textSize="medium">
+              {dayjs(created_at).fromNow()}
+            </Typography>
+            {tags && (
+              <div className="flex items-center gap-2 ml-2">
+                {tags.map((tag, idx) => <ThreadTag key={idx} tag={tag} />)}
               </div>
             )}
           </div>
@@ -77,18 +87,18 @@ export const ThreadMore = ({
           </div>
           <div className="flex flex-col mt-2 mb-6 gap-y-4 w-full">
             <div className="flex items-end gap-2 w-fit">
-              <Link to={USER_URL + owner.nickname}>
-                <Avatar
-                  nickname={owner.nickname}
-                  propWidth={36}
-                  propHeight={36}
-                />
-              </Link>
+              <Suspense fallback={<Skeleton className="h-[36px] w-[36px]" />}>
+                <Link to={USER_URL + owner.nickname}>
+                  <Avatar nickname={owner.nickname} propWidth={36} propHeight={36} />
+                </Link>
+              </Suspense>
               <Link to={USER_URL + owner.nickname}>
                 <UserNickname nickname={owner.nickname} />
               </Link>
             </div>
             <div className="flex items-center gap-2 w-full">
+              <FriendButton recipient={owner.nickname} />
+              <Separator orientation="vertical" />
               <Link to={USER_URL + owner.nickname}>
                 <Button className="px-6" state="default">
                   <Typography className="text-[16px]">Профиль</Typography>

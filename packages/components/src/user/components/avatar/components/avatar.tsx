@@ -36,25 +36,26 @@ export interface AvatarProps
 }
 
 const AvatarUserStatus = ({ nickname }: { nickname: string }) => {
-  const { data: userStatus } = userStatusQuery(nickname)
+  const { data: userStatus, isLoading } = userStatusQuery(nickname)
 
-  const isOnline = userStatus?.status;
-  const issuedTime = userStatus?.created_at
+  const isOnline = userStatus?.status === 'online';
+  const issuedTime = userStatus?.last_active
 
   return (
     <TooltipProvider>
-      <Tooltip>
+      <Tooltip delayDuration={1}>
         <TooltipTrigger className="rounded-full min-w-[18px] min-h-[18px] absolute -bottom-2 -right-2 max-h-[32px] max-w-[32px]">
-          <img
-            // @ts-ignore
-            src={isOnline ? ExpActive : ExpNoActive}
-            alt=""
-            loading="lazy"
-            width={32}
-            height={32}
-          />
+          {!isLoading && (
+            <img
+              src={isOnline ? ExpActive : ExpNoActive}
+              alt=""
+              loading="lazy"
+              width={32}
+              height={32}
+            />
+          )}
         </TooltipTrigger>
-        <TooltipContent>
+        <TooltipContent side="bottom">
           {userStatus ? (
             <Typography>
               {isOnline ? `В сети` : issuedTime}

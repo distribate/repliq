@@ -37,10 +37,11 @@ export type ReportItemProps = {
   targetNickname: string;
   threadId?: string;
   targetId?: string | number;
+  customTrigger?: React.ReactNode;
 };
 
 export const ReportCreateModal = ({
-  reportType, targetId, targetNickname, threadId
+  reportType, targetId, targetNickname, threadId, customTrigger
 }: ReportItemProps) => {
   const qc = useQueryClient();
   const [stage, setStage] = useState<"reason" | "description">("reason");
@@ -97,8 +98,8 @@ export const ReportCreateModal = ({
     updateReportValuesMutation.mutate({ reason });
   };
 
-  const onChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => 
-      updateReportValuesMutation.mutate({ description: e.target.value });
+  const onChange = (e: React.ChangeEvent<HTMLTextAreaElement>) =>
+    updateReportValuesMutation.mutate({ description: e.target.value });
 
   const createReport = () => {
     setStage("reason");
@@ -123,12 +124,13 @@ export const ReportCreateModal = ({
       contentClassName="max-w-md"
       mutationKey={CREATE_REPORT_MUTATION_KEY}
       trigger={
-        <HoverCardItem className="group gap-2" onClick={updateReportValues}>
-          <FlagTriangleLeft size={16} className="text-red-500" />
-          <Typography className="text-red-500" textSize="small">
-            Пожаловаться
-          </Typography>
-        </HoverCardItem>
+        customTrigger ? customTrigger :
+          <HoverCardItem className="group gap-2" onClick={updateReportValues}>
+            <FlagTriangleLeft size={16} className="text-red-500" />
+            <Typography className="text-red-500" textSize="small">
+              Пожаловаться
+            </Typography>
+          </HoverCardItem>
       }
       content={
         <ConfirmationActionModalTemplate title={dialogTitle}>

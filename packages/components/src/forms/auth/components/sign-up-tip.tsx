@@ -1,5 +1,3 @@
-"use client";
-
 import { Typography } from "@repo/ui/src/components/typography.tsx";
 import { AUTH_REDIRECT } from "@repo/shared/constants/routes.ts";
 import { AUTH_QUERY_KEY } from "#forms/auth/queries/auth-query.ts";
@@ -19,9 +17,8 @@ export const SignUpTip = () => {
     <div className="flex flex-col mt-0 lg:mt-6 gap-y-4">
       <Typography
         textShadow="small"
-        textSize="medium"
         textColor="shark_black"
-        className="font-normal"
+        className="text-[15px] md:text-[18px] font-normal"
       >
         Зарегистрируйся на проекте, чтобы создавать свой контент, общаться с
         игроками и строить свою игру!
@@ -36,9 +33,8 @@ export const SignUpTip = () => {
         </Typography>
         <Typography
           textShadow="small"
-          textSize="medium"
+          className="text-[15px] md:text-[18px] font-normal"
           textColor="shark_black"
-          className="font-normal"
         >
           Никнейм чувствителен к регистру, то есть ты должен ввести игровой ник
           учитывая заглавные буквы (если они есть).
@@ -48,7 +44,7 @@ export const SignUpTip = () => {
         <Typography
           onClick={handleRedirect}
           textColor="shark_black"
-          textSize="medium"
+          className="text-[15px] md:text-[18px] font-normal"
           variant="link"
         >
           У меня уже есть аккаунт. Войти.

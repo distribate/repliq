@@ -48,10 +48,12 @@ export const CategoryThreads = ({ category_id }: { category_id: string }) => {
             id={thread.id}
             owner={{ nickname: thread.nickname, name_color: thread.name_color }}
             created_at={thread.created_at}
-            thread_comments_count={0}
-            thread_views_count={0}
-            is_comments={false}
-            description={""}
+            comments_count={thread.comments_count}
+            views_count={thread.views_count}
+            properties={{
+              is_comments: thread.is_comments
+            }}
+            description={thread.description}
           />
         </ThreadLayout>
       ))}

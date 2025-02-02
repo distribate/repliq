@@ -1,7 +1,7 @@
 import { forumUserClient } from "@repo/shared/api/forum-client"
 
 export const getUserSocials = async (nickname: string) => {
-  const res = await forumUserClient.user["get-user-socials"][":nickname"].$get({
+  const res = await forumUserClient.user["get-user-socials"].$get({
     param: {
       nickname
     }

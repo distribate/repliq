@@ -43,11 +43,14 @@ export const AvailableCategories = ({ enabled }: AvailableCategoriesProps) => {
                     withCheck={false}
                     key={category.id}
                     value={category.id.toString()}
-                    className="flex w-full p-2 group"
+                    className="flex items-center bg-shark-800 hover:bg-shark-700 w-full p-2 group"
                   >
-                    <Typography textColor="shark_white" textSize="medium">
-                      {category.title}
-                    </Typography>
+                    <div className="flex items-center gap-2">
+                      <img src={category.emoji} draggable={false} alt="" width={24} height={24} />
+                      <Typography textColor="shark_white" textSize="medium">
+                        {category.title}
+                      </Typography>
+                    </div>
                   </SelectItem>
                 ))}
               {!availableCategories && (

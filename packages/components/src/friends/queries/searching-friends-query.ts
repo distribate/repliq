@@ -1,11 +1,8 @@
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import { createQueryKey } from "@repo/lib/helpers/query-key-builder.ts";
-import { ExtendedUsers } from "#admin/components/dashboard/queries/get-users.ts";
 import { forumUserClient } from "@repo/shared/api/forum-client";
 
-export type SearchingFriend = Omit<ExtendedUsers, "uuid">;
-
-async function getSearchingFriends(): Promise<SearchingFriend[] | null> {
+async function getSearchingFriends() {
   const res = await forumUserClient.user["get-recommended-friends"].$get({
     query: { type: "searching" },
   });

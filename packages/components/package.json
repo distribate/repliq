@@ -19,6 +19,7 @@
     "@repo/ui": "*",
     "@tanstack/react-query": "5.62.3",
     "@tanstack/react-router": "1.97.3",
+    "embla-carousel-wheel-gestures": "^8.0.1",
     "lucide-react": "0.468.0",
     "react": "18.3.1",
     "react-datepicker": "7.3.0",
@@ -28,6 +29,7 @@
     "react-skinview3d": "5.1.0",
     "react-window": "1.8.10",
     "slate": "0.103.0",
+    "slate-history": "^0.110.3",
     "slate-react": "0.107.0",
     "sonner": "1.5.0",
     "zod": "3.23.8"

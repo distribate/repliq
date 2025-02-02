@@ -39,12 +39,12 @@ export async function getNews({
     res.rows.map(async (news) => {
       if (!news.imageUrl) return news;
 
-      const publicUrl = await getPublicUrl("static", news.imageUrl);
+      const publicUrl = getPublicUrl("static", news.imageUrl);
 
       return {
         ...news,
         created_at: news.created_at.toString(),
-        imageUrl: publicUrl.data.publicUrl,
+        imageUrl: publicUrl
       };
     })
   );

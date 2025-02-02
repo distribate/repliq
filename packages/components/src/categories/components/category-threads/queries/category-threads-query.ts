@@ -41,6 +41,5 @@ export const categoryThreadsQuery = ({
   queryKey: CATEGORY_THREADS_QUERY_KEY(id),
   queryFn: () => getCategoryThreads({ id, limit, cursor }),
   refetchOnWindowFocus: false,
-  refetchOnMount: false,
   placeholderData: keepPreviousData
 });

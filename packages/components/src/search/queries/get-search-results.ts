@@ -3,11 +3,11 @@ import {
   SearchResultsAll,
 } from "#search/queries/search-page-query.ts";
 import { shuffleArray } from "@repo/lib/helpers/shuffle-array.ts";
-import { RequestDetails } from "@repo/types/entities/entities-type.ts";
 import { forumSearchClient } from "@repo/shared/api/forum-client";
 
-type GetSearchResults = Pick<RequestDetails, "limit"> & {
+type GetSearchResults = {
   queryValue: string;
+  limit: number;
 } & (
   | { type: "threads"; threadsType: Pick<SearchPageQuery, "type">["type"] }
   | { type: "users" }
@@ -18,7 +18,7 @@ async function getSearchThreads({
   queryValue, limit
 }: Omit<GetSearchResults, "type">) {
   const res = await forumSearchClient.search["get-search"].$get({
-    query: {  type: "thread", queryValue }
+    query: { type: "thread", queryValue, limit: `${limit}` }
   })
 
   const data = await res.json()
@@ -34,7 +34,7 @@ async function getSearchUsers({
   queryValue, limit
 }: Omit<GetSearchResults, "type">) {
   const res = await forumSearchClient.search["get-search"].$get({
-    query: { type: "user", queryValue }
+    query: { type: "user", queryValue, limit: `${limit}` }
   })
 
   const data = await res.json()
@@ -48,7 +48,7 @@ async function getSearchUsers({
 
 export async function getSearchResults({
   type, queryValue, limit
-}: GetSearchResults): Promise<SearchResultsAll | null> {
+}: GetSearchResults & { limit: number }): Promise<SearchResultsAll | null> {
   switch (type) {
     case "threads":
       return getSearchThreads({ queryValue, limit });

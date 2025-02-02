@@ -20,7 +20,7 @@ export function paymentTypeValidator({ data, ctx }: { data: any, ctx: z.Refineme
     })
   }
 
-  if ([paymentTypeSchema.options].includes(data.paymentType) && typeof data.paymentValue !== "number") {
+  if (['belkoin', 'charism'].includes(data.paymentType) && typeof data.paymentValue !== "number") {
     ctx.addIssue({
       code: "custom",
       message: "Invalid payment value. Needed a number"

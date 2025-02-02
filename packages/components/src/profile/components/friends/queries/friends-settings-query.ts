@@ -11,7 +11,8 @@ export type FriendsSortType = "created_at" | "donate_weight";
 
 export type FriendsSortQuery = Omit<z.infer<typeof getUserFriendsSchema>, "with_details"> & {
   searchQuery: string;
-  type: "first" | "other"
+  type: "first" | "other",
+  cursor?: string
 }
 
 const initial: FriendsSortQuery = {

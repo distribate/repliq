@@ -18,7 +18,7 @@ export const getBlockedUsersRoute = new Hono()
     try {
       const blockedUsers = await getBlockedUsers({ cursor, nickname })
 
-      return ctx.json({ data: blockedUsers }, 200)
+      return ctx.json(blockedUsers, 200)
     } catch (e) {
       return ctx.json({ error: throwError(e) }, 500)
     }

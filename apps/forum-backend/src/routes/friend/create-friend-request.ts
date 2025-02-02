@@ -15,9 +15,7 @@ async function validateUserFriendPreference(nickname: string): Promise<boolean> 
 
 export const createFriendRequestRoute = new Hono()
   .post("/create-friend-request", zValidator("json", createFriendRequestSchema), async (ctx) => {
-    const body = await ctx.req.json();
-    const result = createFriendRequestSchema.parse(body);
-    const { recipient } = result
+    const { recipient } = createFriendRequestSchema.parse(await ctx.req.json());
     const initiator = getNickname()
 
     const isValidFriendPreference = await validateUserFriendPreference(recipient);

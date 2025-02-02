@@ -8,8 +8,7 @@ import { checkNotificationSchema } from "@repo/types/schemas/notification/check-
 export const checkNotificationRoute = new Hono()
   .post("/check-notification", zValidator("json", checkNotificationSchema), async (ctx) => {
     const nickname = getNickname()
-    const body = await ctx.req.json();
-    const result = checkNotificationSchema.parse(body);
+    const result = checkNotificationSchema.parse(await ctx.req.json());
 
     try {
       const res = await updateNotification({

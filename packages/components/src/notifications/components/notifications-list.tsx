@@ -1,18 +1,17 @@
-"use client"
-
 import { notificationsQuery } from "#notifications/queries/notifications-query.ts";
 import { Typography } from "@repo/ui/src/components/typography";
-import type { Notifications } from "@repo/types/db/forum-database-types.ts";
-import type { Selectable } from "kysely";
 import dayjs from "@repo/lib/constants/dayjs-instance";
 import Bell from "@repo/assets/images/minecraft/bell.webp";
 import { useNotification } from "#notifications/hooks/use-notification.ts";
 import { Separator } from "@repo/ui/src/components/separator";
 import { Skeleton } from "@repo/ui/src/components/skeleton";
+import { forumUserClient } from "@repo/shared/api/forum-client";
+import type { InferResponseType } from "hono/client";
+import { Fragment } from "react/jsx-runtime";
 
-type NotificationCardProps = Omit<Selectable<Notifications>, "created_at"> & {
-  created_at: string
-}
+const client = forumUserClient.user["get-user-notifications"].$get
+
+type NotificationCardProps = InferResponseType<typeof client, 200>["data"][number]
 
 const NotificationCard = ({
   created_at, id, message, read, type
@@ -51,7 +50,7 @@ export const NotificationsList = () => {
   )
 
   return (
-    <div className="flex flex-col gap-y-4 p-2 w-full overflow-scroll h-full">
+    <div className="flex flex-col gap-y-4 p-2 w-full h-full">
       {isLoading && (
         <>
           <Skeleton className="h-20 w-full" />
@@ -61,10 +60,10 @@ export const NotificationsList = () => {
       {notifications && (
         <div className="flex flex-col gap-y-4 w-full h-fit">
           {notifications.map((notification, idx) => (
-            <>
+            <Fragment key={notification.id}>
               <NotificationCard key={notification.id} {...notification} />
               {idx < notifications.length - 1 && <Separator />}
-            </>
+            </Fragment>
           ))}
         </div>
       )}

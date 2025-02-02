@@ -8,11 +8,8 @@ import { deleteFriendNoteSchema } from "@repo/types/schemas/friend/delete-friend
 
 export const deleteFriendNoteRoute = new Hono()
   .delete("/delete-friend-note", zValidator("json", deleteFriendNoteSchema), async (ctx) => {
-    const body = await ctx.req.json()
-    const result = deleteFriendNoteSchema.parse(body);
-
+    const { friend_id, recipient } = deleteFriendNoteSchema.parse(await ctx.req.json());
     const initiator = getNickname()
-    const { friend_id, recipient } = result
 
     try {
       const { id } = await getFriendId({

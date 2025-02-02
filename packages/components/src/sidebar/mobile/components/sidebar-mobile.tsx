@@ -19,7 +19,7 @@ const sidebarMobileVariants = cva(
   {
     variants: {
       variant: {
-        blurred: "bg-opacity-60 backdrop-blur-md",
+        blurred: "bg-opacity-90",
         default: "",
       },
     },
@@ -75,7 +75,7 @@ export const SidebarMobile = () => {
             <Avatar nickname={nickname} propHeight={64} propWidth={64} />
             <div className="flex flex-col gap-1">
               <UserNickname nickname={nickname} className="text-[18px] font-medium text-shark-50" />
-              <UserDonate donate={donate} favoriteItemId={favorite_item} />
+              <UserDonate donate={donate} nickname={nickname} />
             </div>
           </div>
           <div className="flex flex-col p-4 gap-y-4">

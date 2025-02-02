@@ -14,7 +14,7 @@ export async function getThreadImages(id: string) {
 
   const publicUrls = await Promise.all(
     images.map(image =>
-      getPublicUrl("threads", image.image_url).then(r => r.data.publicUrl)
+      getPublicUrl("threads", image.image_url)
     )
   );
 

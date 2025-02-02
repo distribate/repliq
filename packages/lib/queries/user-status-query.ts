@@ -24,11 +24,8 @@ export const userStatusQuery = (nickname: string) => useQuery({
 
     if (!res) return null;
 
-    const issuedTime = formatIssuedTime(res.created_at)
+    const issuedTime = formatIssuedTime(res.last_active ?? null)
 
-    return { ...res, created_at: issuedTime }
+    return { ...res, last_active: issuedTime }
   },
-  refetchOnWindowFocus: false,
-  refetchOnMount: false,
-  refetchInterval: 60000,
 });

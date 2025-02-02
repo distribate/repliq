@@ -4,7 +4,6 @@ import { AUTH_REDIRECT, USER_URL } from "@repo/shared/constants/routes.ts";
 import { useNavigate } from "@tanstack/react-router";
 import { registerForum } from '#forms/auth/queries/register-forum.ts';
 import { loginForum } from "../queries/login-forum.ts";
-import { CURRENT_USER_QUERY_KEY } from "@repo/lib/queries/current-user-query.ts";
 import { toast } from "sonner";
 
 export const AUTH_MUTATION_KEY = ["auth-mutation"];
@@ -55,16 +54,10 @@ export const useAuth = () => {
           status: LOGIN_MESSAGES[login.status] ?? "Что-то пошло не так",
         }))
 
-        await qc.prefetchQuery({
-          queryKey: CURRENT_USER_QUERY_KEY,
-        })
-
         navigate({ to: USER_URL + nickname });
 
         return qc.resetQueries({ queryKey: AUTH_QUERY_KEY });
       }
-
-      console.log(referrer)
 
       if (type === "sign-up") {
         const register = await registerForum({

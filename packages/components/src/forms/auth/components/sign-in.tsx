@@ -1,5 +1,3 @@
-"use client";
-
 import { Input } from "@repo/ui/src/components/input.tsx";
 import { Button } from "@repo/ui/src/components/button.tsx";
 import { useForm } from "react-hook-form";
@@ -9,7 +7,6 @@ import { FormField } from "@repo/ui/src/components/form-field.tsx";
 import { ErrorField } from "@repo/ui/src/components/form.tsx";
 import { Typography } from "@repo/ui/src/components/typography.tsx";
 import { authorizationSchema } from "../schemas/authorization-schema.ts";
-import { useNavigate } from "@tanstack/react-router";
 import { useMutationState, useQueryClient } from "@tanstack/react-query";
 import { AUTH_MUTATION_KEY, useAuth } from "../hooks/use-auth.tsx";
 import { AUTH_QUERY_KEY, AuthQuery, authQuery } from "../queries/auth-query.ts";
@@ -24,7 +21,6 @@ type zodSignInForm = z.infer<typeof authorizationSchema>;
 export const SignInForm = () => {
   const qc = useQueryClient();
   const { data: { status } } = authQuery();
-  const navigate = useNavigate();
   const [pt, setPt] = useState<PasswordVisibilityType>("password");
   const { setAuthValuesMutation } = useAuth();
 

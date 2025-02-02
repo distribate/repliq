@@ -9,6 +9,7 @@ import { validateSession } from '@repo/lib/actions/validate-session'
 import { lazy, Suspense } from 'react'
 import { createFileRoute } from '@tanstack/react-router'
 import { Skeleton } from '@repo/ui/src/components/skeleton'
+import { AUTH_FLAG_QUERY_KEY } from '@repo/components/src/modals/action-confirmation/components/logout/hooks/use-logout';
 
 const SignUpForm = lazy(() =>
   import('@repo/components/src/forms/auth/components/sign-up.tsx').then(
@@ -24,11 +25,23 @@ const SignUpTip = lazy(() =>
 
 export const Route = createFileRoute('/auth/')({
   component: RouteComponent,
-  beforeLoad: async () => {
-    const isAuthenticated = await validateSession()
+  beforeLoad: async ({ context: ctx }) => {
+    let isAuthenticated: boolean = false;
+
+    const cache = ctx.queryClient.getQueryData<boolean>(AUTH_FLAG_QUERY_KEY)
+
+    if (!cache) {
+      isAuthenticated = await validateSession()
+
+      ctx.queryClient.setQueryData(AUTH_FLAG_QUERY_KEY, isAuthenticated)
+    } else {
+      isAuthenticated = cache;
+    }
 
     if (isAuthenticated) {
-      throw redirect({ to: '/' })
+      throw redirect({
+        to: '/'
+      })
     }
   },
   head: () => ({
@@ -49,7 +62,7 @@ function RouteComponent() {
   const isSignUp = type === 'register'
 
   return (
-    <PageWrapper className="flex flex-col bg-cover py-6 relative">
+    <PageWrapper className="flex flex-col bg-cover !px-2 md:!px-4 py-6 relative">
       <AuthImage />
       <div className="absolute inset-0 bg-black/40" />
       <div className="flex relative max-w-[1024px] max-h-[256px] overflow-hidden">
@@ -64,8 +77,8 @@ function RouteComponent() {
         />
       </div>
       <div
-        className="flex flex-col p-6 lg:p-8 min-h-[320px] mt-6 lg:-mt-8 max-h-[460px] xl:max-h-[540px]
-        gap-y-4 lg:gap-y-6 min-w-[200px] max-w-[1020px] outline-none relative
+        className="flex flex-col p-4 md:p-6 lg:p-8 min-h-[320px] mt-6 lg:-mt-8 max-h-dvh xl:max-h-[540px]
+        gap-y-2 md:gap-y-4 lg:gap-y-6 min-w-[200px] max-w-[1020px] outline-none relative
 				minecraft-panel mb-8 lg:mb-6 *:font-[Minecraft] overflow-y-scroll"
       >
         {isSignIn && (
@@ -81,10 +94,10 @@ function RouteComponent() {
           <>
             <SignUpFormTitle />
             <div className="flex flex-col lg:flex-row w-full gap-4 *:w-full">
-              <Suspense fallback={<Skeleton className="w-full h-96" />}>
+              <Suspense fallback={<Skeleton className="h-96" />}>
                 <SignUpForm />
               </Suspense>
-              <Suspense>
+              <Suspense fallback={<Skeleton className="h-64" />}>
                 <SignUpTip />
               </Suspense>
             </div>

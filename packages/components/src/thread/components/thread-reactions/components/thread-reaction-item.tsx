@@ -18,7 +18,7 @@ export const ThreadReactionItem = ({
     <div
       onClick={() => addReactionToThreadMutation.mutate({ emoji, id: threadId })}
       className={`flex ${isLiked ? "bg-shark-400/50" : "bg-shark-700/50"} 
-        rounded-md py-1 items-center gap-1 px-2 group *:transition-all *:duration-150 group cursor-pointer`}
+        rounded-md py-1 cursor-pointer items-center gap-1 px-2 group *:transition-all *:duration-150 group`}
     >
       {typeof Icon === "string" ? (
         <span className="text-shark-50">

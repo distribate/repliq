@@ -10,3 +10,14 @@ export function deleteCookieToken(ctx: Context) {
     path: "/",
   })
 }
+
+export function deleteCrossDomainCookie(ctx: Context) {
+  return setCookie(ctx, `user`, "", {
+    httpOnly: true,
+    sameSite: "lax",
+    domain: "fasberry.su",
+    secure: process.env.NODE_ENV === "production",
+    maxAge: 0,
+    path: "/",
+  })
+}

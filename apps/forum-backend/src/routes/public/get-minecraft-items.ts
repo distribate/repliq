@@ -18,7 +18,7 @@ async function getMinecraftItems() {
 
   return await Promise.all(q.map(async (item) => ({
     ...item,
-    image: (await getPublicUrl("static", item.image)).data.publicUrl
+    image: getPublicUrl("static", item.image)
   })))
 }
 

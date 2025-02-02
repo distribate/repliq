@@ -53,10 +53,10 @@ export const PostTextForm = () => {
   return (
     <AutogrowingTextarea
       id="post-content"
-      placeholder="Что нового?"
+      placeholder="Напишите что-нибудь"
       maxLength={POST_CONTENT_LIMIT[1]}
       value={createPostFormState.content ?? ""}
-      className="text-[16px] !px-1 mb-2 h-full"
+      className="text-[18px] !resize-none !px-2 mb-2 h-full"
       onClick={() => postFormFieldsMutation.mutate({ isActive: true })}
       {...register("content", {
         onChange: onChange,

@@ -6,25 +6,29 @@ import dayjs from "@repo/lib/constants/dayjs-instance.ts";
 import { USER_URL } from "@repo/shared/constants/routes.ts";
 import { Pin } from "lucide-react";
 import type { UserPostItem } from '@repo/types/routes-types/get-user-posts-types.ts';
+import { Suspense } from "react";
+import { Skeleton } from "@repo/ui/src/components/skeleton";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@repo/ui/src/components/tooltip";
 
 type PostItemHeaderProps = Pick<UserPostItem, "visibility" | "isPinned" | "created_at" | "nickname">;
 
 export const PostItemHeader = ({
   nickname, created_at: postCreatedAt, visibility, isPinned,
 }: PostItemHeaderProps) => {
-  const dateCreated = dayjs(postCreatedAt).fromNow();
   const visibilityStatus = visibility === "only" ? "видно только вам" : "видно только друзьям";
 
   return (
     <div className="flex gap-3 items-center">
-      <Link to={USER_URL + nickname}>
-        <Avatar
-          variant="page"
-          propHeight={48}
-          propWidth={48}
-          nickname={nickname}
-        />
-      </Link>
+      <Suspense fallback={<Skeleton className="w-[48px] h-[48px]" />}>
+        <Link to={USER_URL + nickname}>
+          <Avatar
+            variant="page"
+            propHeight={48}
+            propWidth={48}
+            nickname={nickname}
+          />
+        </Link>
+      </Suspense>
       <div className="flex flex-col">
         <div className="flex items-center gap-2">
           <Link to={USER_URL + nickname}>
@@ -37,9 +41,20 @@ export const PostItemHeader = ({
           )}
           {isPinned && <Pin size={18} className="text-gold-500" />}
         </div>
-        <Typography className="text-shark-200 text-sm">
-          {dateCreated}
-        </Typography>
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger className="w-fit cursor-default">
+              <Typography className="text-shark-200 text-sm">
+                {dayjs(postCreatedAt).fromNow()}
+              </Typography>
+            </TooltipTrigger>
+            <TooltipContent side="right">
+              <Typography className="text-shark-300 text-base">
+                {dayjs(postCreatedAt).format("DD.MM.YYYY HH:mm")}
+              </Typography>
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
       </div>
     </div>
   );

@@ -5,6 +5,7 @@ import { MessageSquare, Text } from "lucide-react";
 import dayjs from "@repo/lib/constants/dayjs-instance.ts";
 import { profileThreadsSettingsQuery } from "#profile/components/threads/queries/profile-threads-settings-query.ts";
 import { Link } from "@tanstack/react-router";
+import { Button } from "@repo/ui/src/components/button";
 
 interface ThreadCardProps {
   thread: {
@@ -24,10 +25,9 @@ export const ProfileThreadsListCard = ({ thread }: ThreadCardProps) => {
 
   return (
     <div
-      className={`${isGrid ? "flex-col" : ""}
-      flex items-center justify-between bg-shark-950 p-4 rounded-lg gap-4 w-full`}
+      className={`${isGrid ? "flex-col" : ""} flex items-center justify-between bg-shark-950 p-2 lg:p-4 rounded-lg gap-4 w-full`}
     >
-      <div className={`${isGrid ? "w-full" : "w-2/3"} flex flex-col gap-2`}>
+      <div className={`${isGrid ? "w-full" : "w-1/2 lg:w-2/3"} flex flex-col gap-2`}>
         <div className="flex items-center gap-1 w-full relative -left-[2px]">
           <Text size={20} className="text-shark-300" />
           <Typography
@@ -59,11 +59,14 @@ export const ProfileThreadsListCard = ({ thread }: ThreadCardProps) => {
       </div>
       <Link
         to={THREAD_URL + id}
-        className={`${isGrid ? "w-full" : "w-fit"}
-         transition-all ease-in duration-150 hover:bg-shark-800 px-6 py-4 h-full rounded-md bg-shark-900`}
+        className={`w-full justify-end flex items-center h-full`}
       >
-        <Typography className="text-[18px]">Перейти к треду</Typography>
+        <Button state="default" className="px-2 hover:bg-shark-700 lg:px-6 py-2">
+          <Typography className="text-[18px]">
+            Перейти к треду
+          </Typography>
+        </Button>
       </Link>
     </div>
-  );
+  )
 };

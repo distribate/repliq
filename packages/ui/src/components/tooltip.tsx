@@ -1,5 +1,3 @@
-"use client";
-
 import * as TooltipPrimitive from "@radix-ui/react-tooltip";
 import { cn } from "@repo/lib/utils/ui/cn.ts";
 import { ComponentPropsWithoutRef, ElementRef, forwardRef } from "react";
@@ -16,7 +14,7 @@ const TooltipContent = forwardRef<
     ref={ref}
     sideOffset={sideOffset}
     className={cn(
-      "z-50 overflow-hidden rounded-lg dark:bg-shark-900 bg-shark-900 border-[1px] border-white/10 px-2 py-1 shadow-md animate-in" +
+      "z-50 overflow-hidden rounded-lg dark:bg-shark-900 bg-shark-900 px-2 py-1 shadow-md animate-in" +
         " fade-in-0 zoom-in-95 data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95" +
         " data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2" +
         " data-[side=top]:slide-in-from-bottom-2 ",

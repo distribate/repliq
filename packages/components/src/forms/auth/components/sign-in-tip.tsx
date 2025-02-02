@@ -25,10 +25,9 @@ export const SignInTip = () => {
           Внимание!
         </Typography>
         <Typography
-          textSize="medium"
           textColor="shark_black"
           textShadow="small"
-          className="font-normal"
+          className="text-[15px] md:text-[18px] font-normal"
         >
           Никнейм чувствителен к регистру, то есть ты должен вводить игровой ник
           точь-в-точь с заглавными буквами (если они есть).
@@ -36,10 +35,10 @@ export const SignInTip = () => {
       </div>
       <div className="w-full overflow-hidden">
         <Typography
-          textSize="medium"
           variant="link"
           textColor="shark_black"
           onClick={handleRedirect}
+          className="text-[15px] md:text-[18px] font-normal"
         >
           У меня нет аккаунта. Зарегистрироваться.
         </Typography>

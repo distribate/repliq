@@ -137,6 +137,14 @@ export const FriendButton = ({
   const { nickname: initiator } = getUser();
   const { data: friendStatus, isLoading } = friendStatusQuery(initiator, recipient)
 
+  if (initiator === recipient) {
+    return (
+      <Button state="default" className="px-6">
+        <Typography>Это вы</Typography>
+      </Button>
+    )
+  }
+
   if (isLoading) {
     return <Skeleton className="h-10 border border-white/10 rounded-md w-56" />
   }

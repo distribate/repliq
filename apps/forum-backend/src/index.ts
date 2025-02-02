@@ -3,7 +3,7 @@ import { logger } from 'hono/logger';
 import { bearerAuth } from 'hono/bearer-auth';
 import { showRoutes } from 'hono/dev';
 import { initNats } from '@repo/config-nats/nats-client';
-import { validateRequest, watcher } from '#middlewares/validate-request.ts';
+import { validateRequest } from '#middlewares/validate-request.ts';
 import { contextStorage } from 'hono/context-storage'
 import { editUserSettingsRoute } from '#routes/user/edit-user-settings.ts';
 import { editUserDetailsRoute } from '#routes/user/edit-user-details.ts';
@@ -93,15 +93,31 @@ import { getCategoryRoute } from '#routes/categories/get-category.ts';
 import { getIsAdminRoute } from '#routes/admin/get-is-admin.ts';
 import { getUserProfileRoute } from "#routes/user/get-user-profile.ts"
 import { getPostViewersRoute } from '#routes/post/get-post-viewers.ts';
+import { getUserFavoriteItemRoute } from '#routes/user/get-user-favorite-item.ts';
+import { getUserPurchasesRoute } from '#routes/user/get-user-purchases.ts';
+import { getUserBalanceRoute } from '#routes/user/get-user-balance.ts';
+import { subscribeUserStatus } from '#subscribers/subscribe-user-status.ts';
+import { watcher } from '#utils/kv-watcher.ts';
+import { userStatus } from '#middlewares/user-status.ts';
+import { getUserPublicSocialsRoute } from '#routes/user/get-user-public-socials.ts';
+import { sseRoute } from '#routes/sse/sse.ts';
+import { getThreadsByOwnerRoute } from '#routes/thread/get-threads-by-owner.ts';
+
+function startNatsSubscribers() {
+  subscribeUserStatus()
+  console.log("Users status subscribed")
+}
 
 await initNats()
 await watcher()
+startNatsSubscribers()
 
 const { websocket } = createBunWebSocket<ServerWebSocket>()
 
 export const report = new Hono()
   .basePath('/report')
   .use(validateRequest)
+  .use(userStatus)
   .route("/", getReportRoute)
   .route("/", createReportRoute)
   .route("/", approveReportRoute)
@@ -115,6 +131,11 @@ export const landing = new Hono()
   .route("/", getMinecraftItemsRoute)
   .route("/", getImagesLibraryRoute)
 
+export const events = new Hono()
+  .basePath("/events")
+  .use(validateRequest)
+  .route("/", sseRoute)
+
 export const shared = new Hono()
   .basePath("/shared")
   .route('/', getFactRoute)
@@ -123,7 +144,8 @@ export const shared = new Hono()
 
 export const admin = new Hono()
   .basePath('/admin')
-  .use(bearerAuth({ token }))
+  .use(validateRequest)
+  .use(userStatus)
   .route('/', callServerCommandRoute)
   .route("/", createAuthImageRoute)
   .route("/", getAuthImagesRoute)
@@ -132,6 +154,7 @@ export const admin = new Hono()
 export const comment = new Hono()
   .basePath('/comment')
   .use(validateRequest)
+  .use(userStatus)
   .route("/", createCommentRoute)
   .route("/", replyCommentRoute)
   .route("/", disableCommentsRoute)
@@ -140,6 +163,7 @@ export const comment = new Hono()
 export const category = new Hono()
   .basePath('/categories')
   .use(validateRequest)
+  .use(userStatus)
   .route("/", getCategoriesRoute)
   .route("/", getCategoryThreadsRoute)
   .route("/", getLatestCategoryThreadsRoute)
@@ -149,6 +173,7 @@ export const category = new Hono()
 export const thread = new Hono()
   .basePath('/thread')
   .use(validateRequest)
+  .use(userStatus)
   .route("/", getThreadRoute)
   .route("/", getThreadPreviewRoute)
   .route("/", removeThreadRoute)
@@ -158,10 +183,12 @@ export const thread = new Hono()
   .route("/", createThreadRoute)
   .route("/", getLatestThreadsRoute)
   .route("/", getThreadImagesRoute)
+  .route("/", getThreadsByOwnerRoute)
 
 export const post = new Hono()
   .basePath('/post')
   .use(validateRequest)
+  .use(userStatus)
   .route("/", createPostRoute)
   .route("/", deletePostRoute)
   .route("/", editPostRoute)
@@ -175,11 +202,13 @@ export const server = new Hono()
 export const reaction = new Hono()
   .basePath('/reaction')
   .use(validateRequest)
+  .use(userStatus)
   .route("/", createReactionRoute)
 
 export const user = new Hono()
   .basePath('/user')
   .use(validateRequest)
+  .use(userStatus)
   .route('/', editUserSettingsRoute)
   .route('/', editUserDetailsRoute)
   .route('/', getUserSettingsRoute)
@@ -218,10 +247,15 @@ export const user = new Hono()
   .route("/", deleteCoverImageRoute)
   .route("/", getIsAdminRoute)
   .route("/", getUserProfileRoute)
+  .route("/", getUserFavoriteItemRoute)
+  .route("/", getUserPurchasesRoute)
+  .route("/", getUserBalanceRoute)
+  .route("/", getUserPublicSocialsRoute)
 
 export const search = new Hono()
   .basePath('/search')
   .use(validateRequest)
+  .use(userStatus)
   .route("/", getSearchRoute)
 
 export const ws = new Hono()
@@ -246,7 +280,7 @@ const app = new Hono<Env>()
   .route("/", comment)
   .route("/", reaction)
   .route("/", shared)
-  .route("/", ws)
+  .route("/", events)
   .route("/", search)
   .route("/", post)
   .route("/", landing)

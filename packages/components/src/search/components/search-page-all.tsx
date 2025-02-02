@@ -6,7 +6,7 @@ import { SearchPageUser } from "./search-page-user";
 export const SearchPageAll = () => {
   const { data: searchState } = searchPageQuery();
 
-  if (!searchState.results) return <ContentNotFound title="s" />;
+  if (!searchState.results) return <ContentNotFound title={`Ничего не нашли по запросу "${searchState.queryValue}"`} />;
 
   return (
     <div className="flex flex-col gap-y-4 w-full">

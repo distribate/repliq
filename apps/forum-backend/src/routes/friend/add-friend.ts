@@ -16,8 +16,7 @@ async function validateUserFriendPreference(nickname: string): Promise<boolean> 
 
 export const addFriendRoute = new Hono()
   .post("/add-friend", zValidator("json", addFriendSchema), async (ctx) => {
-    const body = await ctx.req.json()
-    const { initiator, recipient } = addFriendSchema.parse(body)
+    const { initiator, recipient } = addFriendSchema.parse(await ctx.req.json())
 
     if (!validateUserFriendPreference(recipient)) {
       return ctx.json({ error: "User does not have accept to send friend request" }, 200)

@@ -4,23 +4,13 @@ import { getNickname } from "#utils/get-nickname-from-storage.ts";
 import { Hono } from "hono";
 
 export const getUserSocialsRoute = new Hono()
-  .get("/get-user-socials/:nickname", async (ctx) => {
-    const { nickname } = ctx.req.param();
-
-    const initiator = getNickname()
-
-    if (initiator !== nickname) {
-      return ctx.json(null, 200);
-    }
+  .get("/get-user-socials", async (ctx) => {
+    const nickname = getNickname()
 
     try {
       const socials = await getUserSocials(nickname);
 
-      if (!socials) {
-        return ctx.json({ data: null }, 200);
-      }
-
-      return ctx.json({ data: socials }, 200);
+      return ctx.json({ data: socials ?? null }, 200);
     } catch (e) {
       return ctx.json({ error: throwError(e) }, 500);
     }

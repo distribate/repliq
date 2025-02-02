@@ -1,7 +1,7 @@
 import { publishLoginNotify } from "../../publishers/pub-login-notify";
 import { forumDB } from "../../shared/database/forum-db";
+import { putSessionToken } from "../../utils/put-session-token";
 import { createSession } from "../queries/create-session";
-import { insertSessionInfo } from "../queries/insert-session-info";
 
 type CreateSessionTransaction = {
   token: string,
@@ -25,19 +25,20 @@ export const createSessionTransaction = async ({
     .transaction()
     .execute(async (trx) => {
       const session = await createSession({
-        trx, details: { token, nickname },
+        trx, details: { token, nickname }, info,
       });
 
-      await insertSessionInfo({
-        trx,
-        details: { session_id: session.session_id, ...info, nickname },
-      });
+      const check = await trx
+        .selectFrom("users_session")
+        .select(forumDB.fn.countAll().as("count"))
+        .where("nickname", "=", session.nickname)
+        .executeTakeFirst()
 
-      publishLoginNotify({
-        browser: session.browser ?? "Unknown",
-        ip: session.ip ?? "Unknown",
-        nickname
-      })
+      if (check && Number(check.count) > 1) {
+        publishLoginNotify({ browser: session.browser, ip: session.ip, nickname: session.nickname })
+      }
+
+      await putSessionToken(nickname, token)
 
       return session;
     });

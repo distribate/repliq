@@ -1,5 +1,3 @@
-"use client"
-
 import { createQueryKey } from "@repo/lib/helpers/query-key-builder"
 import { forumSharedClient } from "@repo/shared/api/forum-client"
 import { useQuery } from "@tanstack/react-query"
@@ -21,8 +19,10 @@ async function getStaticImage() {
   return data.data
 }
 
+export const AUTH_IMAGE_QUERY_KEY = createQueryKey("ui", ["auth-image"])
+
 const authImageQuery = () => useQuery({
-  queryKey: createQueryKey("ui", ["auth-image"]),
+  queryKey: AUTH_IMAGE_QUERY_KEY,
   queryFn: () => getStaticImage(),
   refetchOnWindowFocus: false,
   refetchOnMount: false,

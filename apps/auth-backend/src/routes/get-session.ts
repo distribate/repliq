@@ -2,12 +2,16 @@ import { throwError } from "@repo/lib/helpers/throw-error";
 import { Hono } from "hono";
 import { getCookie, setCookie } from "hono/cookie";
 import { validateSessionToken } from "../utils/validate-session-token";
-import { putSessionToken } from "../utils/put-session-token";
 import type { Env } from "../types/env-type";
+import { getNicknameByTokenFromKv } from "../utils/get-nickname-by-token-from-kv";
 
 export const getSessionRoute = new Hono<Env>()
   .use(async (ctx, next) => {
     const sessionToken = getCookie(ctx, "session")
+
+    if (!sessionToken) {
+      return ctx.json({ error: "Unauthorized" }, 401)
+    }
 
     // @ts-ignore
     ctx.set("sessionToken", sessionToken)
@@ -17,31 +21,27 @@ export const getSessionRoute = new Hono<Env>()
   .get("/get-session", async (ctx) => {
     const token = ctx.get("sessionToken")
 
-    if (!token) {
-      return ctx.json({ error: "Unauthorized" }, 401)
-    }
-
     try {
-      const { session, user } = await validateSessionToken(token);
+      const nickname = await getNicknameByTokenFromKv(token);
 
-      if (!user || !session) {
-        return ctx.json({ error: "Invalid session token" }, 401)
+      if (!nickname) {
+        const { session, user } = await validateSessionToken(token);
+
+        if (!user || !session) {
+          return ctx.json({ error: "Invalid session token" }, 401)
+        }
+
+        setCookie(ctx, `session`, token, {
+          httpOnly: true,
+          sameSite: "lax",
+          secure: process.env.NODE_ENV === "production",
+          expires: new Date(session.expires_at),
+          path: "/",
+        })
       }
 
-      await putSessionToken(user.nickname, token)
-
-      setCookie(ctx, `session`, token, {
-        httpOnly: true,
-        sameSite: "lax",
-        secure: process.env.NODE_ENV === "production",
-        expires: new Date(session.expires_at),
-        path: "/",
-      })
-
-      // ctx.header('Cache-Control', 'public, max-age=10')
-
-      return ctx.json({ data: user.nickname }, 200)
+      return ctx.json({ data: nickname }, 200)
     } catch (e) {
       return ctx.json({ error: throwError(e) }, 500)
     }
-})
+  })

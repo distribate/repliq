@@ -1,11 +1,13 @@
 import { Typography } from '@repo/ui/src/components/typography'
 import { createLazyFileRoute, Link } from '@tanstack/react-router'
 import { BlockWrapper } from '@repo/components/src/wrappers/block-wrapper'
+// @ts-ignore
 import FishingRod from "@repo/assets/images/minecraft/fishing_rod.webp"
 import { Button } from '@repo/ui/src/components/button'
 
 export const Route = createLazyFileRoute('/_protected/events')({
   component: RouteComponent,
+  // @ts-ignore
   head: () => {
     return {
       meta: [
@@ -19,7 +21,7 @@ export const Route = createLazyFileRoute('/_protected/events')({
 
 function RouteComponent() {
   return (
-    <div className="flex lg:flex-row flex-col w-full gap-2">
+    <div className="flex lg:flex-row flex-col w-full min-h-dvh gap-2">
       <BlockWrapper className="flex flex-col gap-y-6 w-full !p-4">
         <Typography textSize="very_big" textColor="shark_white" className="font-semibold">
           Ивенты
@@ -34,7 +36,7 @@ function RouteComponent() {
             </div>
             <Link
               // @ts-ignore
-              to='https://hotmc.ru/minecraft-server-259308'
+              to={`https://hotmc.ru/minecraft-server-259308`}
               target="_blank"
               rel="noopener noreferrer"
             >

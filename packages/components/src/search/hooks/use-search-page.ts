@@ -83,7 +83,8 @@ export const useSearchPage = () => {
 
   const handleSearchMutation = useMutation({
     mutationKey: SEARCH_PAGE_RESULTS_MUTATION_KEY,
-    mutationFn: async ({ queryValue, limit, threadsType }: HandleSearchMutation) => getSearchResults({ type: searchType, queryValue, limit, threadsType }),
+    mutationFn: async ({ queryValue, limit, threadsType }: HandleSearchMutation) => 
+      getSearchResults({ type: searchType, queryValue, limit: 16, threadsType }),
     onSuccess: async (data) => {
       if (!data) return;
 

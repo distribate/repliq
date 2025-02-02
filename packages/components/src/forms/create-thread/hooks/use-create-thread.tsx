@@ -6,17 +6,14 @@ import {
 import { createThread } from "../queries/create-thread.ts";
 import { toast } from "sonner";
 import { THREAD_URL } from "@repo/shared/constants/routes.ts";
-import { THREAD_CONTENT_LIMIT_DEFAULT } from "@repo/shared/constants/limits.ts";
+import { THREAD_CONTENT_LIMIT_DEFAULT, THREAD_IMAGES_LIMIT_DEFAULT } from "@repo/shared/constants/limits.ts";
 import { blobUrlToFile } from "@repo/lib/helpers/blobUrlToFile.ts";
 import { useNavigate } from "@tanstack/react-router";
+import { getUser } from "@repo/lib/helpers/get-user.ts";
 
-type CreateThreadImageControl = {
-  type: "add" | "delete";
-  index?: number;
-  resetField?: Function;
-  setValue?: Function;
-  images: Array<File> | null;
-};
+type CreateThreadImageControl =
+  | { type: "add", images: Array<File> | null }
+  | { type: "delete", index: number }
 
 export function getContentLimit(images: Array<File> | string[] | null): number {
   return images && images.length > 0
@@ -25,13 +22,13 @@ export function getContentLimit(images: Array<File> | string[] | null): number {
 }
 
 export const useCreateThread = () => {
+  const { donate } = getUser()
   const qc = useQueryClient();
   const navigate = useNavigate();
 
   const updateThreadFormMutation = useMutation({
-    mutationFn: async (values: Partial<ThreadFormQuery>) => {
-      return qc.setQueryData(THREAD_FORM_QUERY, (prev: ThreadFormQuery) => ({ ...prev, ...values }));
-    },
+    mutationFn: async (values: Partial<ThreadFormQuery>) =>
+      qc.setQueryData(THREAD_FORM_QUERY, (prev: ThreadFormQuery) => ({ ...prev, ...values })),
     onError: (e) => {
       throw new Error(e.message);
     },
@@ -67,8 +64,7 @@ export const useCreateThread = () => {
       const content = JSON.stringify(rawContent);
 
       return createThread({
-        category_id, title, visibility, images: imagesFiles, tags,
-        description, is_comments, permission, content,
+        category_id, title, visibility, images: imagesFiles, tags, description, is_comments, permission, content
       });
     },
     onSuccess: async (data) => {
@@ -102,36 +98,59 @@ export const useCreateThread = () => {
   });
 
   const handleControlImage = (values: CreateThreadImageControl) => {
-    const { index, type, images, resetField, setValue } = values;
+    const form = qc.getQueryData<ThreadFormQuery>(THREAD_FORM_QUERY);
 
-    if (!images) return;
+    if (!form) return;
 
-    if (type === "add") {
-      const convertedFileList = images.map(
-        file => URL.createObjectURL(file)
-      );
+    switch (values.type) {
+      case "add":
+        if (!values.images) return;
 
-      return updateThreadFormMutation.mutate({
-        images: convertedFileList
-      });
-    } else if (type === "delete" && index !== undefined && resetField && setValue) {
-      if (images.length <= 1) {
-        resetField("images");
+        let fileList: Array<string> | null = null;
 
-        return updateThreadFormMutation.mutate({
-          images: null
-        });
-      } else {
-        const updatedFormImages = images.filter((_, i) => i !== index);
+        if (form.images && form.images.length >= 1) {
+          const stringFileList = values.images.map(f => URL.createObjectURL(f));
 
-        setValue("images", updatedFormImages);
+          fileList = [...form.images, ...stringFileList];
+        } else {
+          fileList = values.images.map(f => URL.createObjectURL(f))
+        }
 
-        return updateThreadFormMutation.mutate({
-          images: updatedFormImages.map((file) => URL.createObjectURL(file)),
-        });
-      }
+        return updateThreadFormMutation.mutate({ images: fileList });
+      case "delete":
+        const { index } = values;
+        const { images } = form;
+
+        if (!images) return;
+
+        if (images.length <= 1) {
+          return updateThreadFormMutation.mutate({ images: null });
+        } else {
+          const updatedFormImages = images.filter((_, i) => i !== index);
+
+          return updateThreadFormMutation.mutate({ images: updatedFormImages });
+        }
     }
   };
 
-  return { updateThreadFormMutation, createPostThreadMutation, handleControlImage };
+  const handleAddImages = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const MAX_IMAGES = donate === "default" ? THREAD_IMAGES_LIMIT_DEFAULT[1] : 3;
+
+    const images = e.target.files
+      ? (Array.from(e.target.files).slice(THREAD_IMAGES_LIMIT_DEFAULT[0], MAX_IMAGES) as Array<File>)
+      : null;
+
+    e.preventDefault();
+
+    return handleControlImage({ type: "add", images });
+  };
+
+  const handleDeleteImage = (
+    e: React.MouseEvent<HTMLButtonElement, MouseEvent> | React.ChangeEvent<HTMLInputElement>, idx: number,
+  ) => {
+    e.preventDefault();
+    return handleControlImage({ index: idx, type: "delete" });
+  };
+
+  return { updateThreadFormMutation, createPostThreadMutation, handleControlImage, handleAddImages, handleDeleteImage };
 };

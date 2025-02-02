@@ -47,12 +47,40 @@ const PostViewCard = ({
   );
 };
 
+const ViewsList = ({
+  enabled, id, views_count
+}: PostFooterWithViewsListProps & { enabled: boolean }) => {
+  const { data: postViews, isLoading } = postViewsQuery({ id, enabled: enabled && views_count > 0 });
+
+  if (isLoading) return <PostFooterViewsListSkeleton />
+
+  if (!postViews || !views_count) {
+    return (
+      <div className="flex flex-col gap-y-2 w-full p-1">
+        <Typography textSize="small" textColor="gray">
+          Пока никто не просмотрел этот пост
+        </Typography>
+      </div>
+    )
+  }
+
+  return (
+    <div className="flex flex-col gap-y-2 w-full p-1">
+      <Typography textSize="small" className="text-shark-300">
+        Просмотрено
+      </Typography>
+      <div className="flex flex-col gap-y-2">
+        {postViews.map(u => <PostViewCard key={u.nickname} {...u} />)}
+      </div>
+    </div>
+  )
+}
+
 export const PostFooterWithViewsList = ({
   id,
   views_count,
 }: PostFooterWithViewsListProps) => {
   const [enabled, setEnabled] = useState<boolean>(false);
-  const { data: postViews, isLoading } = postViewsQuery({ id, enabled });
 
   return (
     <HoverCardWrapper
@@ -62,19 +90,9 @@ export const PostFooterWithViewsList = ({
         </div>
       }
       content={
-        <div className="flex flex-col gap-y-2 w-full p-1">
-          <Typography textSize="small" className="text-shark-300">
-            Просмотрено
-          </Typography>
-          {isLoading && <PostFooterViewsListSkeleton />}
-          <div className="flex flex-col gap-y-2">
-            {!isLoading &&
-              postViews &&
-              postViews.map((user) => (
-                <PostViewCard key={user.nickname} {...user} />
-              ))}
-          </div>
-        </div>
+        enabled && (
+          <ViewsList id={id} enabled={enabled} views_count={views_count} />
+        )
       }
     />
   );

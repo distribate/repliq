@@ -12,11 +12,11 @@ async function getDonatesList() {
   return await Promise.all(query.map(async (donate) => {
     const imageUrl = donate.imageUrl
 
-    const url = await getPublicUrl("static", imageUrl)
+    const url = getPublicUrl("static", imageUrl)
 
     return {
       ...donate,
-      imageUrl: url.data.publicUrl
+      imageUrl: url
     }
   }))
 }

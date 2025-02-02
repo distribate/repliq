@@ -14,13 +14,9 @@ const PostFooterWithViewsList = lazy(() =>
 );
 
 export const PostFooter = ({
-  views_count, isUpdated, id, isViewed, nickname, created_at
+  views_count, isUpdated, id, nickname, created_at
 }: PostFooterProps) => {
   const currentUser = getUser();
-
-  // useEffect(() => {
-  //   if (!isViewed && currentUser) postPostView(id);
-  // }, []);
 
   const isOwner = nickname === currentUser.nickname;
 

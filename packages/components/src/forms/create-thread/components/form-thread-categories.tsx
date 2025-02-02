@@ -9,8 +9,8 @@ import { useCreateThread } from "../hooks/use-create-thread.tsx";
 import { threadFormQuery } from "../queries/thread-form-query.ts";
 import { FormChildsProps } from "../types/create-thread-form-types.ts";
 
-export const FormThreadCategories = ({ 
-  errors, control 
+export const FormThreadCategories = ({
+  errors, control
 }: FormChildsProps) => {
   const [enabled, setEnabled] = useState<boolean>(false);
   const { data: availableCategories } = availableCategoriesQuery(enabled);
@@ -25,15 +25,15 @@ export const FormThreadCategories = ({
     return updateThreadFormMutation.mutate({ category_id: Number(value) });
   };
 
-  const handleOpen = (o: boolean) => {
-    if (o && !enabled) setEnabled(true);
+  const handleOpen = (v: boolean) => {
+    if (v && !enabled) {
+      setEnabled(true);
+    }
   };
 
   const isActive = threadFormState.category_id;
   const selectedCategoryId = threadFormState.category_id;
-  const selectedCategoryTitle = availableCategories?.find(
-    item => item.id === selectedCategoryId
-  )?.title || null;
+  const selectedCategory = availableCategories?.find(i => Number(i.id) === selectedCategoryId) || null;
 
   return (
     <FormField errorMessage={errors?.category_id?.message}>
@@ -55,7 +55,8 @@ export const FormThreadCategories = ({
               onValueChange={(v) => handleValueChange(v, onChange)}
             >
               <SelectTrigger
-                className={`${isActive ? "bg-shark-50" : "bg-shark-800"} flex justify-center `}
+                className={`${isActive ? "bg-shark-50 border-2" : "bg-shark-800"} flex justify-center `}
+                style={{ borderColor: selectedCategory?.color ?? "" }}
               >
                 {!threadFormState.category_id ? (
                   <Typography
@@ -65,12 +66,15 @@ export const FormThreadCategories = ({
                     Категория не выбрана
                   </Typography>
                 ) : (
-                  <Typography
-                    textSize="medium"
-                    textColor={isActive ? "shark_black" : "shark_white"}
-                  >
-                    {selectedCategoryTitle}
-                  </Typography>
+                  <div className="flex items-center gap-2">
+                    <img src={selectedCategory?.emoji} draggable={false} alt="" width={24} height={24} />
+                    <Typography
+                      textSize="medium"
+                      textColor={isActive ? "shark_black" : "shark_white"}
+                    >
+                      {selectedCategory?.title}
+                    </Typography>
+                  </div>
                 )}
               </SelectTrigger>
               <AvailableCategories enabled={enabled} />

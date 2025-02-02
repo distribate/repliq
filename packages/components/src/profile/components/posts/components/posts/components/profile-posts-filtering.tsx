@@ -17,48 +17,49 @@ import {
 } from "#profile/components/posts/components/posts/constants/posts-filtering.ts";
 import { UserEntity } from "@repo/types/entities/entities-type.ts";
 import { POSTS_QUERY_KEY } from "../queries/posts-query";
+import { useUpdatePosts } from "../hooks/use-update-posts";
 
 type ProfilePostsFilteringProps = Pick<UserEntity, "nickname">;
 
 const ProfilePostsFilteringSearch = forwardRef<
   HTMLInputElement
 >((props, ref) => {
-    const qc = useQueryClient();
-    const [value, setValue] = useState<string>("");
+  const qc = useQueryClient();
+  const [value, setValue] = useState<string>("");
 
-    const updateQuery = (value: string) => {
-      qc.setQueryData(
-        POSTS_FILTERING_QUERY_KEY,
-        (prev: PostsFilteringQuery) => ({
-          ...prev,
-          searchQuery: value,
-        }),
-      );
-      
-      console.log(qc.getQueryCache())
-    };
-
-    const debouncedUpdateQuery = useDebounce(updateQuery, 300);
-
-    const handleSearchInput = (e: ChangeEvent<HTMLInputElement>) => {
-      const { value } = e.target;
-      const convertedValue = value.replace(/ {3,}/g, "  ");
-      setValue(convertedValue);
-      debouncedUpdateQuery(convertedValue);
-    };
-
-    return (
-      <Input
-        ref={ref}
-        className="rounded-lg"
-        value={value}
-        maxLength={64}
-        placeholder="Поиск по содержанию"
-        onChange={handleSearchInput}
-        {...props}
-      />
+  const updateQuery = (value: string) => {
+    qc.setQueryData(
+      POSTS_FILTERING_QUERY_KEY,
+      (prev: PostsFilteringQuery) => ({
+        ...prev,
+        searchQuery: value,
+      }),
     );
-  },
+
+    console.log(qc.getQueryCache())
+  };
+
+  const debouncedUpdateQuery = useDebounce(updateQuery, 300);
+
+  const handleSearchInput = (e: ChangeEvent<HTMLInputElement>) => {
+    const { value } = e.target;
+    const convertedValue = value.replace(/ {3,}/g, "  ");
+    setValue(convertedValue);
+    debouncedUpdateQuery(convertedValue);
+  };
+
+  return (
+    <Input
+      ref={ref}
+      className="rounded-lg"
+      value={value}
+      maxLength={64}
+      placeholder="Поиск по содержанию"
+      onChange={handleSearchInput}
+      {...props}
+    />
+  );
+},
 );
 
 const ProfilePostsFilteringView = ({
@@ -68,6 +69,7 @@ const ProfilePostsFilteringView = ({
 }) => {
   const { data: filteringState } = postsFilteringQuery();
   const qc = useQueryClient();
+  const { updatePostsMutation } = useUpdatePosts();
 
   const handleSortType = (type: Pick<PostSort, "value">["value"]) => {
     qc.setQueryData(
@@ -75,10 +77,11 @@ const ProfilePostsFilteringView = ({
       (prev: PostsFilteringQuery) => ({
         ...prev,
         filteringType: type,
+        cursor: undefined,
       }),
     );
 
-    qc.invalidateQueries({ queryKey: POSTS_QUERY_KEY(nickname) });
+    updatePostsMutation.mutate({ nickname, type: "update-filter" });
   };
 
   const currentFilteringType = filteringState.filteringType;

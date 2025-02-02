@@ -13,12 +13,19 @@ import { port } from "./utils/init-env.ts"
 import { getLandsRoute } from '#routes/lands/get-lands.ts';
 import { getLandsByNicknameRoute } from '#routes/lands/get-lands-by-nickname.ts';
 import { getLandRoute } from '#routes/lands/get-land.ts';
+import { getRatingByRoute } from '#routes/rating/get-rating-by.ts';
+import { subscribeUserBalance } from '#subscribers/subscribe-user-balance.ts';
 
-initNats()
+await initNats()
+subscribeUserBalance()
 
 export const hooks = new Hono()
   .basePath('/hooks')
   .route("/", processPlayerVoteRoute)
+
+export const rating = new Hono()
+  .basePath("/rating")
+  .route("/", getRatingByRoute)
 
 export const skin = new Hono()
   .basePath("/skin")
@@ -54,6 +61,7 @@ const app = new Hono()
   .use(logger())
   .basePath('/api')
   .route("/", minecraft)
+  .route("/", rating)
   .route("/", hooks)
 
 showRoutes(app, { verbose: false });

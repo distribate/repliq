@@ -21,21 +21,18 @@ type GetReactionCount = {
 }
 
 async function getThreadReactionCount({ nickname, threadId }: GetReactionCount) {
-  const query = await forumDB
+  return await forumDB
     .selectFrom("threads_reactions")
     .select(forumDB.fn.countAll().as('count'))
     .where("thread_id", "=", threadId)
     .where("user_nickname", "=", nickname)
     .$castTo<{ count: number }>()
     .executeTakeFirstOrThrow()
-
-  return query.count
 }
 
 export const createReactionRoute = new Hono()
   .post("/create-reaction", zValidator("json", createReactionSchema), async (ctx) => {
-    const body = await ctx.req.json()
-    const result = createReactionSchema.parse(body)
+    const result = createReactionSchema.parse(await ctx.req.json())
     const { emoji, type, id } = result;
 
     const nickname = getNickname()
@@ -45,7 +42,7 @@ export const createReactionRoute = new Hono()
       switch (type) {
         case "thread":
           const threadId = id;
-          const reactionCount = await getThreadReactionCount({ nickname, threadId })
+          const { count: reactionCount } = await getThreadReactionCount({ nickname, threadId })
 
           const reaction = await forumDB.transaction().execute(async (trx) => {
             const existingReaction = await trx
@@ -56,7 +53,7 @@ export const createReactionRoute = new Hono()
               .orderBy("created_at", "desc")
               .execute();
 
-            if (existingReaction && existingReaction.some(item => item.emoji === emoji)) {
+            if (existingReaction && existingReaction.some(r => r.emoji === emoji)) {
               await trx
                 .deleteFrom("threads_reactions")
                 .where("emoji", "=", existingReaction[0].emoji)
@@ -66,8 +63,6 @@ export const createReactionRoute = new Hono()
 
               return "Deleted";
             }
-
-            console.log(limit)
 
             if (limit === 1) {
               const oldestReaction = await trx

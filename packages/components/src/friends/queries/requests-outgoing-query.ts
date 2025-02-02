@@ -9,7 +9,5 @@ export const requestsOutgoingQuery = (enabled: boolean = true) => useQuery({
   queryKey: REQUESTS_OUTGOING_QUERY_KEY,
   queryFn: () => getRequestsByType("outgoing"),
   refetchOnWindowFocus: false,
-  refetchOnMount: false,
-  placeholderData: keepPreviousData,
   enabled,
 });

@@ -1,9 +1,8 @@
 import { ChevronDown } from "lucide-react";
 import { SearchType } from "#sidebar/desktop/components/sidebar-content/search/queries/search-query.ts";
 import { Button } from "@repo/ui/src/components/button.tsx";
-import { DropdownWrapper } from "#wrappers/dropdown-wrapper.tsx";
 import { Typography } from "@repo/ui/src/components/typography.tsx";
-import { DropdownMenuItem } from "@repo/ui/src/components/dropdown-menu.tsx";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@repo/ui/src/components/dropdown-menu.tsx";
 import { useSearchPage } from "#search/hooks/use-search-page.ts";
 import { searchPageQuery, SearchPageQuery } from "#search/queries/search-page-query.ts";
 import { isValue } from "@repo/lib/helpers/check-is-value.ts";
@@ -31,22 +30,17 @@ export const SearchPageFilter = ({ type }: SearchPageFilterProps) => {
   const isSearchType = isValue(searchState.type);
 
   return (
-    <DropdownWrapper
-      properties={{
-        sideAlign: "bottom",
-        contentAlign: "start",
-        contentClassname: "min-w-[180px]",
-      }}
-      trigger={
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
         <Button
           disabled={type === "users"}
           className="flex cursor-pointer
             disabled:pointer-events-none items-center justify-center disabled:cursor-not-allowed rounded-md w-[40px] h-[80px]"
         >
-          <ChevronDown size={32} className="icon-color disabled:opacity-60"/>
+          <ChevronDown size={32} className="icon-color disabled:opacity-60" />
         </Button>
-      }
-      content={
+      </DropdownMenuTrigger>
+      <DropdownMenuContent side="bottom" align="start" className="min-w-[180px]">
         <div className="flex flex-col gap-y-2 w-full h-full">
           <Typography textSize="small" className="text-shark-300 px-2 pt-2">
             Параметры поиска
@@ -68,7 +62,7 @@ export const SearchPageFilter = ({ type }: SearchPageFilterProps) => {
             ))}
           </div>
         </div>
-      }
-    />
+      </DropdownMenuContent>
+    </DropdownMenu>
   );
 };

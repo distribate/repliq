@@ -6,9 +6,11 @@ import {
   MessageSquareOff,
 } from "lucide-react";
 import type { ThreadPreview } from "@repo/types/entities/thread-type.ts"
+import { Skeleton } from "@repo/ui/src/components/skeleton";
+import { Suspense } from "react";
 
 export const ThreadByCategoryItem = ({
-  created_at, is_comments, title, thread_comments_count, owner,
+  created_at, properties, title, comments_count, owner,
 }: ThreadPreview) => {
   const createdAt = dayjs(created_at).from(dayjs());
 
@@ -16,12 +18,14 @@ export const ThreadByCategoryItem = ({
     <div className="flex grow group bg-shark-900 hover:bg-shark-700 rounded-md justify-between transition-all duration-150 p-3 cursor-pointer">
       <div className="flex flex-col w-full gap-y-2 justify-between">
         <div className="flex items-center min-w-[260px] gap-x-2">
-          <Avatar
-            nickname={owner.nickname}
-            propWidth={36}
-            propHeight={36}
-            className="min-h-[36px] min-w-[36px]"
-          />
+          <Suspense fallback={<Skeleton className="w-[36px] h-[36px]" />}>
+            <Avatar
+              nickname={owner.nickname}
+              propWidth={36}
+              propHeight={36}
+              className="min-h-[36px] min-w-[36px]"
+            />
+          </Suspense>
           <div className="flex flex-col">
             <Typography textColor="shark_white" className="text-sm font-medium">
               {title}
@@ -34,11 +38,11 @@ export const ThreadByCategoryItem = ({
       </div>
       <div className="flex items-center gap-x-2 rounded-md px-2 py-1 border-white/10 border-[1px]">
         <div className="flex items-center gap-1 w-[26px]">
-          {is_comments ? (
+          {properties.is_comments ? (
             <>
               <MessageSquare className="text-shark-300" size={16} />
               <Typography className="text-shark-300 text-sm font-normal">
-                {thread_comments_count}
+                {comments_count}
               </Typography>
             </>
           ) : (

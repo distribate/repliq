@@ -20,15 +20,16 @@ async function pinPost(id: string, value: boolean) {
     .executeTakeFirstOrThrow()
 }
 
-async function checkIsPinned(): Promise<boolean> {
-  const { count } = await forumDB
+async function checkIsPinned(nickname: string): Promise<boolean> {
+  const exists = await forumDB
   .selectFrom("posts")
-  .select(forumDB.fn.countAll().as("count"))
-  .$castTo<{ count: number }>()
+  .innerJoin("posts_users", "posts_users.post_id", "posts.id")
+  .select("posts.id")
+  .where("posts_users.nickname", "=", nickname)
   .where("isPinned", "=", true)
-  .executeTakeFirstOrThrow()
+  .executeTakeFirst()
 
-  return count > 0
+  return !!exists
 }
 
 export const pinPostRoute = new Hono()
@@ -43,7 +44,7 @@ export const pinPostRoute = new Hono()
         return ctx.json({ error: "You are not the owner of this post" }, 400)
       }
 
-      const isPinned = await checkIsPinned()
+      const isPinned = await checkIsPinned(nickname)
 
       if (isPinned && value === true) {
         return ctx.json({ error: "Max number of pinned posts reached" }, 400)

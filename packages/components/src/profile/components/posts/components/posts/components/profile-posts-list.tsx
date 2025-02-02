@@ -12,7 +12,8 @@ import { Separator } from '@repo/ui/src/components/separator.tsx';
 import { useInView } from 'react-intersection-observer';
 import { useEffect } from 'react';
 import { SomethingError } from '#templates/something-error.tsx';
-import { postsFilteringQuery } from '../queries/posts-filtering-query.ts';
+import { useMutationState } from '@tanstack/react-query';
+import { UPDATE_POSTS_MUTATION_KEY, useUpdatePosts } from '../hooks/use-update-posts.ts';
 
 const PostsSkeleton = () => {
   return (
@@ -23,29 +24,32 @@ const PostsSkeleton = () => {
   );
 };
 
-const ProfilePostsList = ({
+export const ProfilePostsList = ({
   nickname,
 }: Pick<UserEntity, 'nickname'>) => {
-  const { data: { filteringType, ascending } } = postsFilteringQuery();
-  const { data, isError, isLoading, refetch, isFetching } = postsQuery(nickname, filteringType, ascending);
+  const { data, isError, isLoading } = postsQuery(nickname);
   const { ref, inView } = useInView({ triggerOnce: false, threshold: 1 });
+  const { updatePostsMutation } = useUpdatePosts()
 
+  const mutData = useMutationState({
+    filters: { mutationKey: UPDATE_POSTS_MUTATION_KEY },
+    select: m => m.state.status
+  })
+
+  const isLoadingUpdated = mutData[mutData.length - 1] === "pending";
   const postsData = data?.data;
   const postsMeta = data?.meta;
   const hasMore = postsMeta?.hasNextPage;
 
   useEffect(() => {
-    if (inView && hasMore) {
-      refetch();
-    }
-  }, [inView, refetch]);
+    if (inView && hasMore) updatePostsMutation.mutate({ nickname, type: "update-cursor" });
+  }, [inView, hasMore]);
 
   if (isLoading) return <PostsSkeleton />;
+
   if (isError) return <SomethingError />;
 
-  if (!postsData || !postsData.length) {
-    return <ContentNotFound title="Постов не найдено." />;
-  }
+  if (!postsData || !postsData.length) return <ContentNotFound title="Постов не найдено." />;
 
   const posts = postsData.filter(p => !p.isPinned);
   const pinnedPost = postsData.find(p => p.isPinned);
@@ -58,8 +62,8 @@ const ProfilePostsList = ({
           <Separator />
         </>
       )}
-      {posts.map(post => <ProfilePostsListCard key={post.id} {...post} />)}
-      {(isFetching && hasMore) && <PostsSkeleton />}
+      {posts.map(p => <ProfilePostsListCard key={p.id} {...p} />)}
+      {isLoadingUpdated && <PostsSkeleton />}
       {hasMore && <div ref={ref} className="h-[1px] w-full" />}
     </div>
   );

@@ -1,4 +1,3 @@
-import { useUserProfile } from "../hooks/use-user-profile"
 import { lazy, Suspense, useEffect } from "react"
 import { ProfileContentTabs } from "./profile-content-tabs"
 import { UserContentSkeleton } from "#skeletons/user-profile-skeleton.tsx";
@@ -24,16 +23,9 @@ export type ProfileContentProps = {
 export const ProfileContent = ({
   nickname: requestedUserNickname
 }: ProfileContentProps) => {
-  const { createProfileViewMutation } = useUserProfile()
   const { data: requestedUser } = requestedUserQuery(requestedUserNickname)
 
   const profileStatus = requestedUser?.details;
-
-  useEffect(() => {
-    if (!profileStatus?.is_viewed) {
-      createProfileViewMutation.mutate(requestedUserNickname)
-    }
-  }, [profileStatus?.is_viewed]);
 
   if (profileStatus?.status === 'banned') {
     return (
@@ -45,7 +37,9 @@ export const ProfileContent = ({
 
   const blockedType = profileStatus?.status === 'blocked-by-you' ? 'blocked-by-you' : 'blocked-by-user';
   
-  const isBlocked = (profileStatus?.status === 'blocked-by-you' || profileStatus?.status === 'blocked-by-user')
+  const isBlocked = (profileStatus?.status === 'blocked-by-you' 
+    || profileStatus?.status === 'blocked-by-user')
+    
   const isPrivate = profileStatus?.status === 'private'
 
   if (isBlocked) {

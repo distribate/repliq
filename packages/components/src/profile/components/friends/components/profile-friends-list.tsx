@@ -14,8 +14,7 @@ const filterFriendsByNickname = (data: FriendWithDetails[], querySearch: string)
   data.filter(item => item.nickname.startsWith(querySearch));
 
 const ProfileFriendsList = ({ nickname }: Pick<UserEntity, "nickname">) => {
-  const { sort_type, ascending } = friendsSortQuery().data;
-  const { data, isLoading, isError } = friendsQuery({ nickname, sort_type, ascending, limit: 32 });
+  const { data, isLoading, isError } = friendsQuery({ nickname, limit: 32 });
   const { searchQuery } = friendsSortQuery().data;
 
   if (isLoading) return <ProfileFriendsSkeleton />;
@@ -48,7 +47,7 @@ export const ProfileFriends = ({ nickname }: Pick<UserEntity, "nickname">) => {
   return (
     <Suspense fallback={<ProfileFriendsSkeleton />}>
       <div className="flex flex-col gap-4 w-full h-full">
-        <ProfileFriendsFiltering />
+        <ProfileFriendsFiltering nickname={nickname} />
         <ProfileFriendsList nickname={nickname} />
       </div>
     </Suspense>

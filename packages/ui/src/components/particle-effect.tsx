@@ -1,26 +1,18 @@
-"use client";
+import { cloneElement, ReactElement, ReactNode, useEffect, useRef } from "react";
 
-import {
-  cloneElement,
-  ReactElement,
-  ReactNode,
-  useEffect,
-  useRef,
-} from "react";
-
-export interface BaseParticle {
+type BaseParticle = {
   element: HTMLElement | SVGSVGElement;
   left: number;
   size: number;
   top: number;
 }
 
-export interface BaseParticleOptions {
+type BaseParticleOptions = {
   particle?: string;
   size?: number;
 }
 
-export interface CoolParticle extends BaseParticle {
+type CoolParticle = BaseParticle & {
   direction: number;
   speedHorz: number;
   speedUp: number;
@@ -28,11 +20,18 @@ export interface CoolParticle extends BaseParticle {
   spinVal: number;
 }
 
-export interface CoolParticleOptions extends BaseParticleOptions {
+type CoolParticleOptions = BaseParticleOptions & {
   particleCount?: number;
   speedHorz?: number;
   speedUp?: number;
 }
+
+type CoolModeProps = {
+  children: ReactNode;
+  options?: CoolParticleOptions;
+}
+
+let instanceCounter = 0;
 
 const getContainer = () => {
   const id = "_coolMode_effect";
@@ -54,12 +53,7 @@ const getContainer = () => {
   return container;
 };
 
-let instanceCounter = 0;
-
-const applyParticleEffect = (
-  element: HTMLElement,
-  options?: CoolParticleOptions,
-): (() => void) => {
+const applyParticleEffect = (element: HTMLElement, options?: CoolParticleOptions): (() => void) => {
   instanceCounter++;
 
   const defaultParticle = "circle";
@@ -75,8 +69,7 @@ const applyParticleEffect = (
   const container = getContainer();
 
   function generateParticle() {
-    const size =
-      options?.size || sizes[Math.floor(Math.random() * sizes.length)];
+    const size = options?.size || sizes[Math.floor(Math.random() * sizes.length)];
     const speedHorz = options?.speedHorz || Math.random() * 10;
     const speedUp = options?.speedUp || Math.random() * 25;
     const spinVal = Math.random() * 360;
@@ -158,10 +151,12 @@ const applyParticleEffect = (
   let animationFrame: number | undefined;
 
   let lastParticleTimestamp = 0;
-  const particleGenerationDelay = 30;
+
+  const particleGenerationDelay = 45;
 
   function loop() {
     const currentTime = performance.now();
+
     if (
       autoAddParticle &&
       particles.length < limit &&
@@ -198,16 +193,12 @@ const applyParticleEffect = (
     autoAddParticle = true;
   };
 
-  const disableAutoAddParticle = () => {
-    autoAddParticle = false;
-  };
+  const disableAutoAddParticle = () => autoAddParticle = false;
 
   element.addEventListener(move, updateMousePosition, { passive: true });
   element.addEventListener(tap, tapHandler, { passive: true });
   element.addEventListener(tapEnd, disableAutoAddParticle, { passive: true });
-  element.addEventListener("mouseleave", disableAutoAddParticle, {
-    passive: true,
-  });
+  element.addEventListener("mouseleave", disableAutoAddParticle, { passive: true });
 
   return () => {
     element.removeEventListener(move, updateMousePosition);
@@ -224,14 +215,9 @@ const applyParticleEffect = (
           container.remove();
         }
       }
-    }, 500);
+    }, 1000);
   };
 };
-
-interface CoolModeProps {
-  children: ReactNode;
-  options?: CoolParticleOptions;
-}
 
 export const ParticleEffect = ({ children, options }: CoolModeProps) => {
   const ref = useRef<HTMLElement>(null);

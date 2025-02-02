@@ -20,7 +20,7 @@ export const UserCover = ({
 
   if (!requestedUser) return null;
 
-  const { donate, preferences, nickname, name_color, cover_image } = requestedUser
+  const { donate, preferences, nickname, cover_image } = requestedUser
 
   const preferOutline = preferences?.cover_outline_visible ?? false;
   const coverOutline = donate && preferOutline ? donate : "default";
@@ -39,25 +39,29 @@ export const UserCover = ({
       {!cover_image && <UserCoverWatermark />}
       <div className="z-[2] absolute w-full h-full right-0 top-0 bottom-0 left-0 bg-black/40" />
       <div className="flex flex-col gap-y-2 lg:flex-row gap-x-6 z-[4] relative items-center lg:items-start">
-        <Suspense
-          fallback={
-            <Skeleton className={`w-[${imageHeight}px] h-[${imageHeight}px]`} />
-          }
-        >
-          <Avatar
-            variant="page"
-            propHeight={imageHeight}
-            propWidth={imageHeight}
-            withStatus={true}
-            nickname={nickname}
-          />
+        <Suspense fallback={<Skeleton className={`w-[${imageHeight}px] h-[${imageHeight}px]`} />}>
+          <div className={`lg:hidden flex w-[120px] h-[120px]`}>
+            <Avatar
+              variant="page"
+              propHeight={imageHeight}
+              propWidth={imageHeight}
+              withStatus={true}
+              nickname={nickname}
+            />
+          </div>
+          <div className={`hidden lg:flex w-[${imageHeight}px] h-[${imageHeight}px]`}>
+            <Avatar
+              variant="page"
+              propHeight={imageHeight}
+              propWidth={imageHeight}
+              withStatus={true}
+              nickname={nickname}
+            />
+          </div>
         </Suspense>
         <UserCoverMainInfo nickname={nickname} />
       </div>
-      <UserCoverPanel
-        requestedNickname={nickname}
-        variant={inView ? "end" : "default"}
-      />
+      <UserCoverPanel requestedNickname={nickname} variant={inView ? "end" : "default"} />
     </CoverArea>
   );
 };

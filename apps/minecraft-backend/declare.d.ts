@@ -6,7 +6,7 @@ declare module "bun" {
     MINIO_ROOT_PASSWORD: string
     MINIO_PORT: number
     MINIO_CLIENT_PORT: number
-    
+
     MYSQL_USER: string,
     MYSQL_ROOT_PASSWORD: string,
     SKINS_PROXY_MYSQL_PORT: number
@@ -14,7 +14,8 @@ declare module "bun" {
 
     LANDS_MYSQL_DB: string
     LANDS_MYSQL_PORT: number
-
+    REPUTATION_MYSQL_PORT: number;
+    PLAYERPOINTS_MYSQL_PORT: number,
     POSTGRES_DB: string,
     VOTIFIEF_SECRET_KEY: string,
     POSTGRES_USER: string,

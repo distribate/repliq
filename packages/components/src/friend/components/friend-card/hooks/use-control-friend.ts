@@ -21,22 +21,21 @@ export const useControlFriend = () => {
 
   const setFriendUnNoteMutation = useMutation({
     mutationFn: async ({ recipient, friend_id }: ControlFriendProperties) => setUnNoteFriend({ friend_id, recipient }),
-    onSuccess: (data) => {
+    onSuccess: (data, variables) => {
       if (!data) return;
 
-      toast.success("Заметка удалена");
+      if ("error" in data) {
+        return;
+      }
 
       return qc.setQueryData(FRIENDS_QUERY_KEY(nickname), (prev: GetFriendsResponse) => {
         const updatedFriends = prev.data.map(friend =>
-          friend.friend_id === data.friend_id
+          friend.friend_id === variables.friend_id
             ? { ...friend, note: null }
             : friend
         );
 
-        return {
-          ...prev,
-          data: updatedFriends
-        }
+        return { ...prev, data: updatedFriends }
       })
     },
     onError: (e) => {
@@ -46,22 +45,21 @@ export const useControlFriend = () => {
 
   const setFriendNoteMutation = useMutation({
     mutationFn: async ({ recipient, friend_id, note }: SetFriendNote) => setNoteFriend({ friend_id, note, recipient }),
-    onSuccess: (data) => {
+    onSuccess: (data, variables) => {
       if (!data) return;
 
-      toast.success("Заметка обновлена");
+      if ("error" in data) {
+        return;
+      }
 
       return qc.setQueryData(FRIENDS_QUERY_KEY(nickname), (prev: GetFriendsResponse) => {
         const updatedFriends = prev.data.map(friend =>
-          friend.friend_id === data.friend_id
+          friend.friend_id === variables.friend_id
             ? { ...friend, note: data.note }
             : friend
         );
 
-        return {
-          ...prev,
-          data: updatedFriends
-        }
+        return { ...prev, data: updatedFriends }
       })
     },
     onError: (e) => {
@@ -71,24 +69,21 @@ export const useControlFriend = () => {
 
   const setFriendUnpinMutation = useMutation({
     mutationFn: async ({ recipient, friend_id }: ControlFriendProperties) => setUnpinFriend({ friend_id, recipient }),
-    onSuccess: async (data) => {
+    onSuccess: async (data, variables) => {
       if (!data) return;
 
-      toast.success("Друг успешно откреплен");
+      if ("error" in data) {
+        return;
+      }
 
       return qc.setQueryData(FRIENDS_QUERY_KEY(nickname), (prev: GetFriendsResponse) => {
         const updatedFriends = prev.data.map(friend =>
-          friend.friend_id === data.friend_id
+          friend.friend_id === variables.friend_id
             ? { ...friend, is_pinned: false }
             : friend
         );
 
-        console.log(updatedFriends)
-
-        return {
-          ...prev,
-          data: updatedFriends
-        }
+        return { ...prev, data: updatedFriends }
       })
     },
     onError: (e) => {
@@ -98,22 +93,21 @@ export const useControlFriend = () => {
 
   const setFriendPinnedMutation = useMutation({
     mutationFn: async ({ recipient, friend_id }: ControlFriendProperties) => setPinFriend({ friend_id, recipient }),
-    onSuccess: async (data) => {
+    onSuccess: async (data, variables) => {
       if (!data) return;
 
-      toast.success("Друг успешно закреплен");
+      if ("error" in data) {
+        return;
+      }
 
       return qc.setQueryData(FRIENDS_QUERY_KEY(nickname), (prev: GetFriendsResponse) => {
         const updatedFriends = prev.data.map(friend =>
-          friend.friend_id === data.friend_id
+          friend.friend_id === variables.friend_id
             ? { ...friend, is_pinned: true }
             : friend
         );
 
-        return {
-          ...prev,
-          data: updatedFriends
-        }
+        return { ...prev, data: updatedFriends }
       })
     },
     onError: (e) => {

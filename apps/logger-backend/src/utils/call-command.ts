@@ -11,6 +11,12 @@ type CallServerCommand = {
   value: string
 }
 
-export const callServerCommand = async ({ 
-  parent, value 
-}: CallServerCommand) => SERVER_API.post("command", { searchParams: { "command": `${parent} ${value}`, }, })
+export const callServerCommand = async ({
+  parent, value
+}: CallServerCommand) => {
+  try {
+    await SERVER_API.post("command", { searchParams: { "command": `${parent} ${value}`, }, })
+  } catch (e) {
+    console.error(e)
+  }
+}

@@ -1,10 +1,10 @@
 import { cva, VariantProps } from "class-variance-authority";
-import { ButtonHTMLAttributes, HTMLAttributes } from "react";
+import { ButtonHTMLAttributes } from "react";
 import { X } from "lucide-react";
 import { Button } from "./button.tsx";
 
 const deleteButtonVariants = cva(
-  "rounded-md items-center duration-150 z-[3] hover:duration-150 justify-center cursor-pointer overflow-hidden flex",
+  "rounded-md items-center duration-150 z-[3] bg-red-600 hover:duration-150 justify-center cursor-pointer overflow-hidden flex",
   {
     variants: {
       variant: {
@@ -23,22 +23,15 @@ const deleteButtonVariants = cva(
   },
 );
 
-interface DeleteButtonProps
-  extends ButtonHTMLAttributes<HTMLButtonElement>,
-    VariantProps<typeof deleteButtonVariants> {}
+type DeleteButtonProps = ButtonHTMLAttributes<HTMLButtonElement> &
+  VariantProps<typeof deleteButtonVariants>
 
 export const DeleteButton = ({
-  size,
-  variant,
-  className,
-  ...props
+  size, variant, className, ...props
 }: DeleteButtonProps) => {
   return (
-    <Button
-      className={deleteButtonVariants({ variant, className, size })}
-      {...props}
-    >
-      <X size={18} className="text-red-500" />
+    <Button className={deleteButtonVariants({ variant, className, size })} {...props}>
+      <X size={18} className="text-shark-50" />
     </Button>
   );
 };

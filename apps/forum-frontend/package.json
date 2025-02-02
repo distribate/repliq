@@ -4,10 +4,12 @@
   "version": "0.1.0",
   "type": "module",
   "scripts": {
-    "dev": "vite dev",
-    "build": "vite build",
+    "dev": "rsbuild dev",
+    "build": "rsbuild build",
+    "dev:rsdoctor": "cross-env RSDOCTOR=true rsbuild dev",
+    "build:rsdoctor": "cross-env RSDOCTOR=true rsbuild build",
     "lint": "eslint .",
-    "start": "vite preview",
+    "start": "rsbuild preview",
     "type-check": "tsc --noEmit"
   },
   "dependencies": {
@@ -16,6 +18,8 @@
     "@repo/lib": "*",
     "@repo/shared": "*",
     "@repo/ui": "*",
+    "@rsbuild/core": "1.2.3",
+    "@rsbuild/plugin-react": "1.1.0",
     "@tanstack/react-query": "5.62.3",
     "@tanstack/react-router": "1.97.3",
     "ky": "1.7.2",
@@ -31,12 +35,13 @@
     "@repo/config-tailwind": "*",
     "@repo/config-typescript": "*",
     "@repo/types": "*",
+    "@rsbuild/plugin-image-compress": "1.1.0",
+    "@rsdoctor/rspack-plugin": "0.4.13",
     "@tanstack/react-query-devtools": "5.62.3",
     "@tanstack/router-devtools": "1.97.3",
     "@tanstack/router-plugin": "1.97.3",
     "@types/react": "18.3.12",
     "@types/react-dom": "18.3.1",
-    "@vitejs/plugin-react": "4.3.4",
     "autoprefixer": "10.4.18",
     "eslint": "8.57.1",
     "eslint-plugin-react-hooks": "5.0.0",
@@ -46,9 +51,7 @@
     "sharp": "0.33.5",
     "tailwindcss": "3.4.17",
     "typescript": "^5.4.5",
-    "typescript-eslint": "8.18.2",
-    "vite": "6.0.11",
-    "vite-plugin-image-optimizer": "1.1.8"
+    "typescript-eslint": "8.18.2"
   },
   "packageManager": "yarn@4.3.0"
 }

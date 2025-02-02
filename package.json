@@ -12,6 +12,8 @@
     "format": "prettier --write \"**/*.{ts,tsx,md}\""
   },
   "devDependencies": {
+    "@rsbuild/plugin-css-minimizer": "^1.0.2",
+    "@rsbuild/plugin-type-check": "^1.2.1",
     "concurrently": "9.1.0",
     "eslint": "8.57.1",
     "prettier": "3.4.2",

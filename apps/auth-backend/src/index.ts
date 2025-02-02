@@ -16,6 +16,7 @@ import { getSessionRoute } from './routes/get-session.ts';
 import { timeoutMiddleware } from './middlewares/timeout-middleware.ts';
 import { corsMiddleware } from './middlewares/cors-middleware.ts';
 import type { Env } from './types/env-type.ts';
+import { rateLimiterMiddleware } from './middlewares/rate-limiter.ts';
 
 await initNats()
 
@@ -32,6 +33,7 @@ const app = new Hono<Env>()
   .use(corsMiddleware)
   .use(csrf({ origin: originList }))
   .basePath('/api/auth')
+  .use(rateLimiterMiddleware)
   .use(timeoutMiddleware)
   .use(logger())
   .use(prettyJSON())
