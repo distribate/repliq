@@ -1,15 +1,14 @@
 import { Hono } from 'hono';
-import { z } from 'zod';
 import { zValidator } from '@hono/zod-validator';
 import { createUserTransaction } from '../lib/transactions/create-user-transaction.ts';
 import { throwError } from '@repo/lib/helpers/throw-error.ts';
-import ky, { HTTPError } from 'ky';
 import { validatePasswordSafe } from '../utils/validate-password-safe.ts';
 import { generateOfflineUUID } from '../utils/generate-offline-uuid.ts';
 import { validateIpRestricts } from '../utils/validate-ip-restricts.ts';
 import { getClientIp } from '../utils/gen-client-ip.ts';
 import { checkUserExists } from "../utils/check-user-exists.ts";
 import { registerSchema } from '@repo/types/schemas/auth/create-session-schema.ts';
+import ky, { HTTPError } from 'ky';
 
 type PremiumUser = {
   uuid: string,
@@ -22,10 +21,15 @@ type MojangError = {
   reason: string
 }
 
+const MOJANG_API_URL = "https://api.ashcon.app/mojang/v2/user"
+
 export const registerRoute = new Hono()
   .post('/register', zValidator('json', registerSchema), async (ctx) => {
-    const details = registerSchema.parse(await ctx.req.json());
-    const { password, details: { findout, realName: real_name, referrer }, nickname } = details;
+    const { 
+      password, 
+      details: { findout, realName: real_name, referrer }, 
+      nickname 
+    } = registerSchema.parse(await ctx.req.json());
 
     const IP = getClientIp(ctx) ?? "1.1.1.1"
 
@@ -48,15 +52,14 @@ export const registerRoute = new Hono()
     }
 
     const HASH = Bun.password.hashSync(password, {
-      algorithm: "bcrypt",
-      cost: 10
+      algorithm: "bcrypt", cost: 10
     })
 
     let user: PremiumUser | null;
 
     try {
       user = await ky
-        .get(`https://api.ashcon.app/mojang/v2/user/${nickname}`)
+        .get(`${MOJANG_API_URL}/${nickname}`)
         .json<PremiumUser>();
     } catch (e) {
       if (e instanceof HTTPError) {
@@ -93,7 +96,6 @@ export const registerRoute = new Hono()
 
       return ctx.json({ status: "Success" }, 201);
     } catch (e) {
-      console.log(e)
       return ctx.json({ error: throwError(e) }, 500);
     }
   });

@@ -1,9 +1,9 @@
-import { landsDB } from "#shared/database/lands-db.ts";
+import { bisquiteDB } from "#shared/database/bisquite-db.ts";
 import { throwError } from "@repo/lib/helpers/throw-error";
 import { Hono } from "hono";
 
 async function getLand(id: string) {
-  const query = await landsDB
+  const query = await bisquiteDB
     .selectFrom("lands_players")
     .innerJoin("lands_lands", "lands_players.edit_land", "lands_lands.ulid")
     .innerJoin("lands_lands_claims", "lands_lands_claims.land", "lands_lands.ulid")
@@ -30,7 +30,7 @@ async function getLand(id: string) {
     stats: query.stats ? JSON.parse(query.stats) : null,
     area: JSON.parse(query.area),
     members: await Promise.all(Object.keys(JSON.parse(query.members)).map(async (member) => {
-      const { name: nickname } = await landsDB
+      const { name: nickname } = await bisquiteDB
         .selectFrom("lands_players")
         .select("name")
         .where("uuid", "=", member)

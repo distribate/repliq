@@ -1,4 +1,4 @@
-import { Axe, NotebookTabs, Cuboid, UsersRound } from "lucide-react";
+import { Axe, Cuboid, UsersRound, Rocket } from "lucide-react";
 
 export const SIDEBAR_TARGETS = [
   {
@@ -17,8 +17,8 @@ export const SIDEBAR_TARGETS = [
     icon: Axe,
   },
   {
-    title: "Справочник",
-    link: "https://fasberry.su/wiki",
-    icon: NotebookTabs,
+    title: "Рейтинг",
+    link: "/ratings",
+    icon: Rocket,
   },
 ];

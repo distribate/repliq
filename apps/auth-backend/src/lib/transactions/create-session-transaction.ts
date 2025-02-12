@@ -35,7 +35,9 @@ export const createSessionTransaction = async ({
         .executeTakeFirst()
 
       if (check && Number(check.count) > 1) {
-        publishLoginNotify({ browser: session.browser, ip: session.ip, nickname: session.nickname })
+        publishLoginNotify({ 
+          browser: session.browser, ip: session.ip, nickname: session.nickname 
+        })
       }
 
       await putSessionToken(nickname, token)

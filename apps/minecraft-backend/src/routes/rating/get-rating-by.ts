@@ -2,14 +2,14 @@ import { Hono } from "hono";
 import { z } from "zod";
 import { zValidator } from "@hono/zod-validator";
 import { throwError } from "@repo/lib/helpers/throw-error";
-import { cmiDB } from "#shared/database/cmi-db.ts";
 import { executeWithCursorPagination } from "kysely-paginate";
 import { playerPointsDB } from "#shared/database/playerpoints-db.ts";
-import { landsDB } from "#shared/database/lands-db.ts";
+import { bisquiteDB } from "#shared/database/bisquite-db.ts";
 import { reputationDB } from "#shared/database/reputation-db.ts";
+import { lobbyDB } from "#shared/database/lobby-db.ts";
 
 const getRatingBySchema = z.object({
-  type: z.enum(["charism", "belkoin", "lands_chunks", "reputation", "playtime"]),
+  type: z.enum(["charism", "belkoin", "lands_chunks", "reputation", "playtime", "parkour"]),
   limit: z.string().transform(Number).optional(),
   cursor: z.string().optional(),
   ascending: z.string().transform((val) => val === "true").optional(),
@@ -23,9 +23,39 @@ async function getRatingBy({
   const direction = ascending ? "asc" : "desc"
 
   switch (type) {
+    case "parkour":
+      const parkourQuery = lobbyDB
+        .selectFrom("ajparkour_scores")
+        .innerJoin("ajparkour_players", "ajparkour_players.id", "ajparkour_scores.player")
+        .select([
+          "ajparkour_players.gamesplayed",
+          "ajparkour_scores.player",
+          "ajparkour_scores.score",
+          "ajparkour_players.name",
+          "ajparkour_scores.area"
+        ])
+
+      const parkourRes = await executeWithCursorPagination(parkourQuery, {
+        perPage: limit,
+        after: cursor,
+        fields: [
+          { key: "score", direction, expression: "score" }
+        ],
+        parseCursor: (cursor) => ({ score: Number(cursor.score) })
+      })
+
+      return {
+        data: parkourRes.rows,
+        meta: {
+          hasNextPage: parkourRes.hasNextPage,
+          hasPrevPage: parkourRes.hasPrevPage,
+          startCursor: parkourRes.startCursor,
+          endCursor: parkourRes.endCursor,
+        }
+      }
     case "charism":
-      const charismQuery = cmiDB
-        .selectFrom("cmi_users")
+      const charismQuery = bisquiteDB
+        .selectFrom("CMI_users")
         .select(["Balance", "username"])
 
       const charismRes = await executeWithCursorPagination(charismQuery, {
@@ -74,17 +104,34 @@ async function getRatingBy({
         }
       }
     case "lands_chunks":
-      const landsQuery = landsDB
+      const landsQuery = bisquiteDB
         .selectFrom("lands_lands_claims")
-        .select(["land", "chunks_amount", "blocks"])
+        .innerJoin("lands_lands", "lands_lands_claims.land", "lands_lands.ulid")
+        .select([
+          "lands_lands_claims.land",
+          "lands_lands_claims.chunks_amount",
+          "lands_lands_claims.blocks",
+          "lands_lands.name",
+          "lands_lands.members",
+          "lands_lands.type"
+        ])
 
-      const landsRes = await executeWithCursorPagination(landsQuery, {
+      let landsRes = await executeWithCursorPagination(landsQuery, {
         perPage: limit,
         after: cursor,
         fields: [
           { key: "chunks_amount", direction, expression: "chunks_amount" }
         ],
         parseCursor: (cursor) => ({ chunks_amount: Number(cursor.chunks_amount) })
+      })
+
+      landsRes.rows = landsRes.rows.map((item) => {
+        return {
+          ...item,
+          members: JSON.parse(item.members),
+          chunks_amount: Number(item.chunks_amount),
+          blocks: item.blocks ? JSON.parse(item.blocks) : null,
+        }
       })
 
       return {
@@ -111,8 +158,8 @@ async function getRatingBy({
       })
 
       const rows = await Promise.all(reputationRes.rows.map(async (row) => {
-        const { username, player_uuid } = await cmiDB
-          .selectFrom("cmi_users")
+        const { username, player_uuid } = await bisquiteDB
+          .selectFrom("CMI_users")
           .select(["username", "player_uuid"])
           .where("player_uuid", "=", row.uuid)
           .executeTakeFirstOrThrow()
@@ -134,8 +181,8 @@ async function getRatingBy({
         }
       }
     case "playtime":
-      const playtimeQuery = cmiDB
-        .selectFrom("cmi_users")
+      const playtimeQuery = bisquiteDB
+        .selectFrom("CMI_users")
         .select(["TotalPlayTime", "username"])
 
       const playtimeRes = await executeWithCursorPagination(playtimeQuery, {

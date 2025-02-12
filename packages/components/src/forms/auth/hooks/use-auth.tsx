@@ -10,7 +10,7 @@ export const AUTH_MUTATION_KEY = ["auth-mutation"];
 
 const LOGIN_MESSAGES: Record<string, string> = {
   "Invalid password": "Неверный пароль",
-  "User not found": "Пользователь не найден",
+  "Not found": "Пользователь не найден",
   "Success": "Входим в аккаунт..."
 }
 
@@ -20,7 +20,7 @@ const REGISTER_MESSAGES: Record<string, string> = {
   "Unsafe password": "Ненадежный пароль",
   "User already exists": "Такой пользователь уже зарегистрирован",
   "Success": "Пользователь зарегистрирован",
-  "User not found": "Пользователь не найден",
+  "Not found": "Пользователь не найден",
   "Error in creating user": "Ошибка при регистрации"
 }
 

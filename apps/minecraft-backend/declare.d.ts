@@ -10,18 +10,18 @@ declare module "bun" {
     MYSQL_USER: string,
     MYSQL_ROOT_PASSWORD: string,
     SKINS_PROXY_MYSQL_PORT: number
-    CMI_MYSQL_PORT: number
 
-    LANDS_MYSQL_DB: string
-    LANDS_MYSQL_PORT: number
-    REPUTATION_MYSQL_PORT: number;
+    BISQUITE_MYSQL_PORT: number;
+    LOBBY_MYSQL_PORT: number;
     PLAYERPOINTS_MYSQL_PORT: number,
+
     POSTGRES_DB: string,
-    VOTIFIEF_SECRET_KEY: string,
     POSTGRES_USER: string,
     POSTGRES_PASSWORD: string,
-    POSTGRES_PORT: number
-    POSTGRES_TENANT_ID: string
+    POSTGRES_PORT: number;
+    POSTGRES_TENANT_ID: string;
+    REPUTATION_MYSQL_PORT: number,
+    VOTIFIEF_SECRET_KEY: string;
   }
 }
 

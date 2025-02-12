@@ -1,10 +1,10 @@
-import { cmiDB } from "#shared/database/cmi-db.ts"
+import { bisquiteDB } from "#shared/database/bisquite-db.ts";
 import { playerPointsDB } from "#shared/database/playerpoints-db.ts"
 import { getNatsConnection } from "@repo/config-nats/nats-client"
 
 async function getUserBalance(nickname: string) {
-  const charismQ = await cmiDB
-    .selectFrom("cmi_users")
+  const charismQ = await bisquiteDB
+    .selectFrom("CMI_users")
     .select(["Balance", "player_uuid"])
     .where("username", "=", nickname)
     .executeTakeFirst()

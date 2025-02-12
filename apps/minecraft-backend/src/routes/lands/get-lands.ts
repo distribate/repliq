@@ -1,9 +1,9 @@
-import { landsDB } from "#shared/database/lands-db.ts";
 import { throwError } from "@repo/lib/helpers/throw-error";
 import { Hono } from "hono";
 import { executeWithCursorPagination } from "kysely-paginate";
 import { z } from "zod";
 import { zValidator } from "@hono/zod-validator";
+import { bisquiteDB } from "#shared/database/bisquite-db.ts";
 
 type GetLands = {
   cursor?: string
@@ -12,7 +12,7 @@ type GetLands = {
 async function getLands({
   cursor
 }: GetLands) {
-  const query = landsDB
+  const query = bisquiteDB
     .selectFrom("lands_lands")
     .selectAll()
     .orderBy("created_at", "desc")

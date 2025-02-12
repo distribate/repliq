@@ -9,7 +9,7 @@ export const AlertCard = ({
   title, id, creator, link, created_at,
 }: AlertEntity) => {
   return (
-    <div className="flex group select-none gap-4 items-center w-full border border-shark-800 relative rounded-lg min-h-12 max-h-32 px-4 bg-primary-color">
+    <div className="flex group select-none gap-4 items-center w-full relative rounded-lg min-h-12 max-h-32 px-4 bg-primary-color">
       <Typography textColor="shark_white" textSize="medium" className="font-[Minecraft]">
         {title} {link && <Link to={link} target="_blank" rel="noopener noreferrer">
           <span className="text-[18px] text-green-500">

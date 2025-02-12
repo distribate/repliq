@@ -49,7 +49,7 @@ export const LastRegisteredUsers = () => {
   const { data: lastUsers, isLoading } = lastUsersQuery();
 
   return (
-    <div className="flex flex-col gap-4 border border-shark-800 w-full py-6 px-4 rounded-lg overflow-hidden bg-primary-color">
+    <div className="flex flex-col gap-4 w-full py-6 px-4 rounded-lg overflow-hidden bg-primary-color">
       <Typography
         textSize="big"
         textColor="shark_white"

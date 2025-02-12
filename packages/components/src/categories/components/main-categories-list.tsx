@@ -56,18 +56,20 @@ export const MainCategoriesList = () => {
         {categories.map(c => (
           <div
             key={c.category_id}
-            className="flex gap-y-4 w-full py-4 border border-shark-800 flex-col rounded-lg px-4 bg-primary-color"
+            className="flex gap-y-4 w-full py-4 flex-col rounded-lg px-4 bg-primary-color"
           >
             <AccordionItem value={c.category_title}>
               <AccordionTrigger>
-                <div className="flex items-center gap-2 px-2">
+                <Link to={CATEGORY_URL + c.category_id} className="flex items-center gap-2 px-2">
                   <Typography textSize="very_big" textColor="shark_white" className="font-bold">
                     {c.category_title}
                   </Typography>
-                  <Link to={CATEGORY_URL + c.category_id}>
+                  <div
+                    className="p-1 bg-shark-900/60 rounded-md"
+                  >
                     <img src={Spyglass} alt="" width={20} height={20} draggable={false} />
-                  </Link>
-                </div>
+                  </div>
+                </Link>
               </AccordionTrigger>
               {c.threads ? (
                 <AccordionContent>
@@ -89,6 +91,6 @@ export const MainCategoriesList = () => {
           </div>
         ))}
       </div>
-    </Accordion>
+    </Accordion >
   );
 };

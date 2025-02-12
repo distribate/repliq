@@ -1,9 +1,9 @@
 import { Hono } from "hono";
 import { forumDB } from "#shared/database/forum-db.ts";
-import { cmiDB } from "#shared/database/cmi-db.ts";
 import { sql } from "kysely";
 import { VOTIFIER_REWARD } from "@repo/shared/constants/rewards";
 import { publishVoteNotify } from "#publishers/pub-vote-notify.ts";
+import { bisquiteDB } from "#shared/database/bisquite-db.ts";
 
 async function postVoted(nickname: string) {
   const result = await forumDB
@@ -16,8 +16,8 @@ async function postVoted(nickname: string) {
     return
   }
 
-  const addCharism = await cmiDB
-    .updateTable("cmi_users")
+  const addCharism = await bisquiteDB
+    .updateTable("CMI_users")
     .set({
       Balance: sql`Balance + ${VOTIFIER_REWARD}`
     })

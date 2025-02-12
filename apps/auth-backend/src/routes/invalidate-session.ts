@@ -1,15 +1,36 @@
 import { Hono } from "hono";
 import { throwError } from '@repo/lib/helpers/throw-error.ts';
-import { getCookie } from "hono/cookie";
+import { getCookie, setCookie } from "hono/cookie";
 import { encodeHexLowerCase } from "@oslojs/encoding";
 import { sha256 } from "@oslojs/crypto/sha2";
 import { invalidateSession } from "../lib/queries/invalidate-session";
-import { deleteCookieToken, deleteCrossDomainCookie } from "../utils/delete-cookie-token";
+import type { Context } from "hono";
+
+export function deleteCookieToken(ctx: Context) {
+  setCookie(ctx, `session`, "", {
+    httpOnly: true,
+    sameSite: "lax",
+    secure: process.env.NODE_ENV === "production",
+    maxAge: 0,
+    path: "/",
+  })
+}
+
+export function deleteCrossDomainCookie(ctx: Context) {
+  setCookie(ctx, `user`, "", {
+    httpOnly: true,
+    sameSite: "lax",
+    domain: "fasberry.su",
+    secure: process.env.NODE_ENV === "production",
+    maxAge: 0,
+    path: "/",
+  })
+}
 
 export const invalidateSessionRoute = new Hono()
   .post("/invalidate-session", async (ctx) => {
     const sessionToken = getCookie(ctx, "session")
-    
+
     if (!sessionToken) {
       return ctx.json({ error: "Session token not found" }, 401)
     }
@@ -24,7 +45,7 @@ export const invalidateSessionRoute = new Hono()
 
       deleteCookieToken(ctx)
       deleteCrossDomainCookie(ctx)
-      
+
       return ctx.json({ status: "Success" }, 200)
     } catch (e) {
       return ctx.json({ error: throwError(e) }, 500)

@@ -47,12 +47,10 @@ export const Route = createFileRoute('/_protected')({
         queryKey: CURRENT_USER_QUERY_KEY, queryFn: getUserInformation,
       })
     }
-  },
+  }, 
   pendingMinMs: 0,
   pendingComponent: undefined,
-  onCatch: ({ message, stack }) => {
-    console.error(message, stack)
-  },
+  onCatch: ({ message, stack }) => console.error(message, stack),
   errorComponent: ({ error, reset }) => {
     return (
       <PageWrapper className="flex flex-col gap-y-6">

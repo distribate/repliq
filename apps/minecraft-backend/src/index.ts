@@ -48,6 +48,7 @@ export const minecraft = new Hono()
   .route("/", skin)
   .route("/", achievements)
   .route("/", lands)
+  .route("/", rating)
 
 const app = new Hono()
   .use(cors({
@@ -61,7 +62,6 @@ const app = new Hono()
   .use(logger())
   .basePath('/api')
   .route("/", minecraft)
-  .route("/", rating)
   .route("/", hooks)
 
 showRoutes(app, { verbose: false });

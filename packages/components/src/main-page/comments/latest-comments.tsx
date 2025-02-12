@@ -31,7 +31,7 @@ export const LatestComments = () => {
   const { data: comments, isLoading } = latestCommentsQuery();
 
   return (
-    <div className="flex flex-col border border-shark-800 gap-y-2 w-full py-6 px-4 rounded-lg overflow-hidden bg-primary-color">
+    <div className="flex flex-col gap-y-2 w-full py-6 px-4 rounded-lg overflow-hidden bg-primary-color">
       <Typography
         textSize="big"
         textColor="shark_white"

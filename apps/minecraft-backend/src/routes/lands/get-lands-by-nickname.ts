@@ -1,12 +1,12 @@
 import { forumDB } from "#shared/database/forum-db.ts";
-import { landsDB } from "#shared/database/lands-db.ts";
 import { throwError } from "@repo/lib/helpers/throw-error";
 import { Hono } from "hono";
 import { z } from "zod";
 import { zValidator } from "@hono/zod-validator";
+import { bisquiteDB } from "#shared/database/bisquite-db.ts";
 
 async function getLandsByNickname(nickname: string) {
-  const query = await landsDB
+  const query = await bisquiteDB
     .selectFrom("lands_players")
     .innerJoin("lands_lands", "lands_players.edit_land", "lands_lands.ulid")
     .select([
@@ -25,7 +25,7 @@ async function getLandsByNickname(nickname: string) {
     let rawMembers: { [key: string]: { chunks: number } } = JSON.parse(land.members);
 
     const members = await Promise.all(Object.keys(rawMembers).map(async (member) => {
-      const { name: nickname } = await landsDB
+      const { name: nickname } = await bisquiteDB
         .selectFrom("lands_players")
         .select("name")
         .where("uuid", "=", member)

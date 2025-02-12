@@ -27,9 +27,13 @@ export async function findPlayer<T extends FindPlayerExtractedColumns>({
 
   query = query.select(extractedFields);
 
-  const result = await query.limit(1).executeTakeFirst();
+  const result = await query
+    .limit(1)
+    .executeTakeFirst();
 
-  if (!result) return null;
+  if (!result) {
+    return null;
+  }
 
   return result as Pick<AUTH, T[number]>;
 }
