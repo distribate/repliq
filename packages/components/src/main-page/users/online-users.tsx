@@ -56,9 +56,9 @@ export const OnlineUsers = () => {
       <Typography
         textSize="big"
         textColor="shark_white"
-        className="font-semibold"
+        className="font-semibold select-none"
       >
-        Пользователи в сети
+        Пользователи в сети 📀
       </Typography>
       <div className="grid grid-cols-6 2xl:grid-cols-7 gap-2">
         {isLoading && (

@@ -53,9 +53,9 @@ export const LastRegisteredUsers = () => {
       <Typography
         textSize="big"
         textColor="shark_white"
-        className="font-semibold"
+        className="font-semibold select-none"
       >
-        Новые пользователи
+        Новые пользователи 💿
       </Typography>
       <div className="grid grid-cols-6 2xl:grid-cols-7 gap-2 w-full">
         {isLoading && (

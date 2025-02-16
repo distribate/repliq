@@ -47,35 +47,38 @@ export const Route = createFileRoute('/_protected')({
         queryKey: CURRENT_USER_QUERY_KEY, queryFn: getUserInformation,
       })
     }
-  }, 
+  },
   pendingMinMs: 0,
   pendingComponent: undefined,
   onCatch: ({ message, stack }) => console.error(message, stack),
   errorComponent: ({ error, reset }) => {
     return (
-      <PageWrapper className="flex flex-col gap-y-6">
-        <div className="flex overflow-hidden rounded-md w-fit max-w-[890px] h-fit max-h-[450px]">
+      <PageWrapper className="flex flex-col gap-y-12">
+        <div className="flex overflow-hidden rounded-md">
           <img
             src={HardcodeHeart}
             alt=""
-            width={1200}
-            height={1240}
+            width={144}
+            height={144}
             loading="lazy"
-            className="w-full h-full"
+            className="max-w-1/3 max-h-1/3"
           />
         </div>
         <div className="flex flex-col items-center justify-center gap-y-4">
           <p className="text-xl font-[Minecraft] text-white">
-            Произошла ошибка {error.message}
+            Произошла ошибка! Пожалуйста, перезагрузите страницу.
           </p>
-          <div className="flex py-0.5 rounded-xl items-center gap-1 justify-between bg-white/30 backdrop-blur-md overflow-hidden">
-            <button onClick={reset}>
-              <div className="flex px-3 gap-1 cursor-pointer items-center hover:bg-secondary-color transition-all duration-150 ease-in max-h-[42px]">
-                <p className="text-md font-semibold font-[Minecraft] text-shark-200">
-                  обновить
-                </p>
-              </div>
-            </button>
+          {process.env.NODE_ENV !== 'production' && (
+                              <pre className="w-fit bg-shark-800 truncate rounded-lg px-2 py-1">
+                              <code>
+                                {error.message.slice(0, 256)}
+                              </code>
+                            </pre>
+          )}
+          <div onClick={reset} className="flex py-1 px-4 rounded-lg bg-shark-50 cursor-pointer items-center gap-1 justify-between backdrop-blur-md overflow-hidden">
+            <p className="text-[18px] font-semibold font-[Minecraft] text-shark-900">
+              Перезагрузить
+            </p>
           </div>
         </div>
       </PageWrapper>

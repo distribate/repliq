@@ -1,4 +1,5 @@
 import { checkNotification } from "#notifications/queries/check-notification.ts";
+import { GetNotificationsResponse } from "#notifications/queries/get-notifications.ts";
 import { NOTIFICATIONS_QUERY_KEY } from "#notifications/queries/notifications-query.ts";
 import { USER_GLOBAL_OPTIONS_QUERY_KEY } from "@repo/lib/queries/user-global-options-query";
 import { Notifications } from "@repo/types/db/forum-database-types";
@@ -10,7 +11,7 @@ export const useNotification = () => {
 
   const checkNotificationMutation = useMutation({
     mutationFn: async (notification_id: string) => {
-      const currentNotifications = qc.getQueryData<Selectable<Notifications>[]>(NOTIFICATIONS_QUERY_KEY)
+      const currentNotifications = qc.getQueryData<GetNotificationsResponse>(NOTIFICATIONS_QUERY_KEY)?.data
 
       const currentNotification = currentNotifications?.find(notification => notification.id === notification_id)
 
@@ -21,13 +22,13 @@ export const useNotification = () => {
     onSuccess: async (data, variables) => {
       if (!data) return;
 
-      const currentNotifications = qc.getQueryData<Selectable<Notifications>[]>(NOTIFICATIONS_QUERY_KEY)
+      const currentNotifications = qc.getQueryData<GetNotificationsResponse>(NOTIFICATIONS_QUERY_KEY)
 
-      if (!currentNotifications) {
+      if (!currentNotifications?.data) {
         return;
       }
       
-      const updatedNotifications = [...currentNotifications]; 
+      const updatedNotifications = [...currentNotifications.data]; 
       const indexToUpdate = updatedNotifications.findIndex(notification => notification.id === variables);
 
       if (indexToUpdate !== -1) {
@@ -37,15 +38,13 @@ export const useNotification = () => {
         };
       }
       
-      const checkedNotifications = currentNotifications.filter(notification => notification.read === false)
-
-      console.log(checkedNotifications)
+      const checkedNotifications = currentNotifications.data.filter(notification => notification.read === false)
 
       if (!checkedNotifications || checkedNotifications?.length <= 1) {
         qc.invalidateQueries({ queryKey: USER_GLOBAL_OPTIONS_QUERY_KEY })
       }
 
-      return qc.setQueryData(NOTIFICATIONS_QUERY_KEY, updatedNotifications)
+      return qc.setQueryData(NOTIFICATIONS_QUERY_KEY, (prev: GetNotificationsResponse) => ({ ...prev, data: updatedNotifications }))
     },
     onError: (e) => {
       throw new Error(e.message)

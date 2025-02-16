@@ -34,6 +34,7 @@ async function getRatingBy({
           "ajparkour_players.name",
           "ajparkour_scores.area"
         ])
+        .where("ajparkour_scores.area", "!=", "overall") // overall - scores from all areas
 
       const parkourRes = await executeWithCursorPagination(parkourQuery, {
         perPage: limit,

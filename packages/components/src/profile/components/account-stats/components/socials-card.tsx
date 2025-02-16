@@ -116,7 +116,7 @@ export const SocialsCard = ({
       ) : (
         <SocialsSupport>
           <Button state="default" className="w-4/5 group-hover:w-full">
-            <Typography>
+            <Typography textSize="medium" >
               Привязать
             </Typography>
           </Button>

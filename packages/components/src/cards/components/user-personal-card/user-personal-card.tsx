@@ -26,17 +26,14 @@ import { Link } from "@tanstack/react-router";
 import { userStatusQuery } from "@repo/lib/queries/user-status-query.ts";
 import { useQuery } from "@tanstack/react-query";
 import { createQueryKey } from "@repo/lib/helpers/query-key-builder.ts";
-import { landsClient } from "@repo/shared/api/minecraft-client.ts";
 import { ContentNotFound } from "#templates/content-not-found.tsx";
 import { Skeleton } from "@repo/ui/src/components/skeleton.tsx";
 import { Suspense } from "react";
 import { BuyDonateModal } from "#modals/custom/buy-donate-modal.tsx";
+import { forumUserClient } from "@repo/shared/api/forum-client.ts";
 
-const getUserLands = async (nickname: string) => {
-  const res = await landsClient.lands["get-user-lands"][":nickname"].$get({
-    param: { nickname },
-    query: { exclude: undefined }
-  })
+const getUserLands = async () => {
+  const res = await forumUserClient.user["get-my-lands"].$get()
 
   const data = await res.json()
 
@@ -47,17 +44,14 @@ const getUserLands = async (nickname: string) => {
   return data.data.length > 0 ? data.data : null
 }
 
-const userLandsQuery = (nickname: string) => useQuery({
-  queryKey: createQueryKey('user', ['lands', nickname]),
-  queryFn: () => getUserLands(nickname),
+const myLandsQuery = () => useQuery({
+  queryKey: createQueryKey('user', ['my-lands']),
+  queryFn: () => getUserLands(),
   refetchOnWindowFocus: false,
-  refetchOnReconnect: false,
-  refetchOnMount: false
 })
 
 const UserLands = () => {
-  const currentUser = getUser();
-  const { data: userLands, isLoading } = userLandsQuery(currentUser.nickname);
+  const { data: userLands, isLoading } = myLandsQuery();
 
   return (
     <div className="flex flex-col gap-y-4 items-center w-full">
@@ -149,21 +143,6 @@ export const UserPersonalCard = () => {
           </DialogTrigger>
           <DialogContent>
             <UserLands />
-          </DialogContent>
-        </Dialog>
-        <Dialog key="rating">
-          <DialogTrigger>
-            <UserSettingOption title="Рейтинг" imageSrc={FishingRod} />
-          </DialogTrigger>
-          <DialogContent>
-            <div className="flex flex-col gap-y-4 items-center w-full">
-              <Typography variant="dialogTitle">
-                Рейтинг
-              </Typography>
-              <div className="flex flex-col w-full gap-y-4">
-                <ContentNotFound title="Вас пока нет ни в каком рейтинге :/" />
-              </div>
-            </div>
           </DialogContent>
         </Dialog>
         <Separator />

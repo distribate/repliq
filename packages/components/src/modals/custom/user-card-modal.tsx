@@ -28,7 +28,7 @@ export const UserCardModal = ({
 }: UserCardModal) => {
   return (
     <Dialog>
-      <DialogTrigger>
+      <DialogTrigger className={withCustomTrigger ? "cursor-default" : ""}>
         {withCustomTrigger ? (
           trigger
         ) : (

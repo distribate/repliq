@@ -5,6 +5,7 @@ import { sql } from "kysely";
 type CategoryThreads = {
   category_id: number;
   category_title: string;
+  category_description: string;
   threads: Array<ThreadPreview>;
 };
 
@@ -38,6 +39,7 @@ export async function getLatestCategoryThreads(): Promise<CategoryThreads[] | nu
     .select([
       'category.id as category_id',
       'category.title as category_title',
+      "category.description as category_description",
       'top_threads.id',
       'top_threads.title',
       'top_threads.description',
@@ -55,14 +57,14 @@ export async function getLatestCategoryThreads(): Promise<CategoryThreads[] | nu
   const result: { [categoryId: number]: CategoryThreads } = threadsByCategory.reduce((acc, thread) => {
     const {
       category_id, category_title, id, title, created_at, views_count,
-      comments_count, description, is_comments,
+      comments_count, description, is_comments, category_description,
       owner_nickname, owner_name_color
     } = thread;
 
     const categoryKey = Number(category_id)
 
     acc[categoryKey] = acc[categoryKey] || {
-      category_id, category_title, threads: [],
+      category_id, category_title, category_description, threads: [],
     };
 
     acc[categoryKey].threads.push({

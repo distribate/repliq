@@ -10,10 +10,10 @@ import { getUser } from "@repo/lib/helpers/get-user";
 import { Suspense } from "react";
 import { Skeleton } from "@repo/ui/src/components/skeleton";
 
-export type FriendsSearchingCardProps = Pick<UserEntity, "nickname" | "name_color" | "description">;
+export type FriendsSearchingCardProps = Pick<UserEntity, "nickname">;
 
 export const FriendsSearchingCard = ({
-  nickname, name_color, description,
+  nickname
 }: FriendsSearchingCardProps) => {
   const navigate = useNavigate();
   const currentUser = getUser();
@@ -25,28 +25,10 @@ export const FriendsSearchingCard = ({
       </Suspense>
       <div className="flex flex-col items-start gap-1 w-full justify-start">
         <div className="flex items-center gap-2">
-          <UserNickname nickname={nickname} nicknameColor={name_color} />
-        </div>
-        <div className="flex items-center w-full">
-          {description && (
-            <Typography textSize="small" className="text-shark-300 truncate">
-              {description}
-            </Typography>
-          )}
+          <UserNickname nickname={nickname} />
         </div>
       </div>
       <div className="flex lg:flex-row flex-col items-center gap-2 *:w-full w-full">
-        {nickname !== currentUser.nickname ? (
-          <Suspense fallback={<Skeleton className="w-full h-8" />}>
-            <FriendButton recipient={nickname} />
-          </Suspense>
-        ) : (
-          <Button state="default">
-            <Typography>
-              Это вы
-            </Typography>
-          </Button>
-        )}
         <Button
           state="default"
           className="lg:!w-2/5"

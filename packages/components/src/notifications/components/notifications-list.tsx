@@ -8,6 +8,12 @@ import { Skeleton } from "@repo/ui/src/components/skeleton";
 import { forumUserClient } from "@repo/shared/api/forum-client";
 import type { InferResponseType } from "hono/client";
 import { Fragment } from "react/jsx-runtime";
+import { UPDATE_NOTIFICATIONS_MUTATION_KEY, useUpdateNotifications } from "#notifications/hooks/use-update-notifications.ts";
+import { useInView } from "react-intersection-observer";
+import { useMutationState } from "@tanstack/react-query";
+import { useEffect } from "react";
+import { ContentNotFound } from "#templates/content-not-found.tsx";
+import { notificationsFilterQuery } from "#notifications/queries/notifications-filter-query.ts";
 
 const client = forumUserClient.user["get-user-notifications"].$get
 
@@ -43,16 +49,33 @@ const NotificationCard = ({
 }
 
 export const NotificationsList = () => {
-  const { data: notifications, isLoading } = notificationsQuery()
+  const { data, isLoading } = notificationsQuery()
+  const { updateNotificationsMutation } = useUpdateNotifications()
+  const { inView, ref } = useInView({ triggerOnce: false, threshold: 1 });
 
-  if (!notifications && !isLoading) return (
-    <Typography>Нет уведомлений</Typography>
-  )
+  const mutData = useMutationState({
+    filters: { mutationKey: UPDATE_NOTIFICATIONS_MUTATION_KEY },
+    select: m => m.state.status
+  })
+
+  const isLoadingUpdated = mutData[mutData.length - 1] === "pending";
+
+  const notifications = data?.data
+  const notificationsMeta = data?.meta
+  const hasMore = notificationsMeta?.hasNextPage;
+
+  useEffect(() => {
+    if (inView && hasMore) updateNotificationsMutation.mutate({ type: "update-cursor" });
+  }, [inView, hasMore]);
+
+  if (notifications?.length === 0) return <ContentNotFound title="Нет уведомлений" />;
 
   return (
     <div className="flex flex-col gap-y-4 p-2 w-full h-full">
       {isLoading && (
         <>
+          <Skeleton className="h-20 w-full" />
+          <Skeleton className="h-20 w-full" />
           <Skeleton className="h-20 w-full" />
           <Skeleton className="h-20 w-full" />
         </>
@@ -65,6 +88,13 @@ export const NotificationsList = () => {
               {idx < notifications.length - 1 && <Separator />}
             </Fragment>
           ))}
+          {isLoadingUpdated && (
+            <>
+              <Skeleton className="h-20 w-full" />
+              <Skeleton className="h-20 w-full" />
+            </>
+          )}
+          {hasMore && <div ref={ref} className="h-[1px] w-full" />}
         </div>
       )}
     </div>

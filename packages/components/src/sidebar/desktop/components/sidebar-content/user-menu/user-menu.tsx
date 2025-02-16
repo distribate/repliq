@@ -1,7 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import { Separator } from "@repo/ui/src/components/separator.tsx";
 import { DropdownMenuItem } from "@repo/ui/src/components/dropdown-menu.tsx";
-import { HoverCardItem } from "@repo/ui/src/components/hover-card.tsx";
 import { Typography } from "@repo/ui/src/components/typography.tsx";
 import { LogoutModal } from "#modals/action-confirmation/components/logout/components/logout-modal.tsx";
 import { userGlobalOptionsQuery } from "@repo/lib/queries/user-global-options-query.ts";
@@ -25,8 +24,8 @@ const AdminButton = () => {
   return (
     <>
       <Link to="/admin">
-        <DropdownMenuItem>
-          <Typography>
+        <DropdownMenuItem className="gap-2 group cursor-pointer">
+          <Typography textSize="medium">
             Панель админа
           </Typography>
         </DropdownMenuItem>
@@ -45,22 +44,26 @@ export const UserMenu = () => {
           to="/collection"
           search={{ type: collection.query }}
         >
-          <DropdownMenuItem>
-            <Typography>{collection.name}</Typography>
+          <DropdownMenuItem className="gap-2 group cursor-pointer">
+            <Typography textSize="medium">
+              {collection.name}
+            </Typography>
           </DropdownMenuItem>
         </Link>
       ))}
       <Separator />
+      <AdminButton />
       <Suspense fallback={<Skeleton className="h-8 w-full" />}>
         <UserSettingsModal />
       </Suspense>
       <Separator />
-      <AdminButton />
       <LogoutModal
         trigger={
-          <HoverCardItem>
-            <Typography className="text-red-400">Выйти из аккаунта</Typography>
-          </HoverCardItem>
+          <DropdownMenuItem onSelect={(e) => e.preventDefault()} className="gap-2 group cursor-pointer">
+            <Typography className="text-red-500" textSize="medium">
+              Выйти из аккаунта
+            </Typography>
+          </DropdownMenuItem>
         }
       />
     </div>

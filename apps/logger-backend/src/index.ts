@@ -4,7 +4,7 @@ import { pgListenConnect } from './shared/events/listener.ts'
 import { initNats } from '@repo/config-nats/nats-client.ts';
 import { subscribeReceivePayment } from './subscribers/sub-receive-payment.ts';
 import { subscribeReceiveServerCommand } from './subscribers/sub-receive-server-command.ts';
-import { subscribePlayerGroup } from './subscribers/sub-player-group.ts';
+// import { subscribePlayerGroup } from './subscribers/sub-player-group.ts';
 import { subscribeServerEvents } from './subscribers/sub-server-events.ts';
 import { subscribeReceiveNotify } from './subscribers/sub-receive-notify.ts';
 import { subscribeReceiveFiatPayment } from './subscribers/sub-receive-fiat-payment.ts';
@@ -25,9 +25,6 @@ async function startNatsSubscribers() {
 
   subscribeReceiveFiatPayment()
   console.log("Subscribed to fiat payment")
-
-  subscribePlayerGroup()
-  console.log("Subscribed to player group")
 
   subscribeReceiveNotify()
   console.log("Subscribed to receive notify")

@@ -3,9 +3,7 @@ import { createQueryKey } from "@repo/lib/helpers/query-key-builder.ts";
 import { forumUserClient } from "@repo/shared/api/forum-client";
 
 async function getSearchingFriends() {
-  const res = await forumUserClient.user["get-recommended-friends"].$get({
-    query: { type: "searching" },
-  });
+  const res = await forumUserClient.user["get-recommended-friends"].$get();
 
   const data = await res.json();
 

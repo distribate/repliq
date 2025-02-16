@@ -1,5 +1,3 @@
-"use client";
-
 import { PostTextForm } from "#forms/create-post/components/post-text-form.tsx";
 import { Avatar } from "#user/components/avatar/components/avatar.tsx";
 import { getUser } from "@repo/lib/helpers/get-user.ts";
@@ -44,12 +42,19 @@ export const CreatePostSection = () => {
         <CreatePostActiveSection />
       </div>
     ) : (
-      <div className="flex items-center justify-between w-full gap-y-4 lg:gap-y-0 px-2 lg:px-4 py-2 rounded-lg bg-shark-950 border border-shark-800">
+      <div
+        className="flex items-center justify-between w-full gap-y-4 lg:gap-y-0 px-2 lg:px-4 py-2 rounded-lg bg-shark-950 border border-shark-800"
+      >
         <div className="flex gap-2 lg:gap-4 items-center w-full">
           <Suspense fallback={<Skeleton className="h-[48px] w-[48px]" />}>
-            <Avatar nickname={nickname} propWidth={48} propHeight={48} className="w-[34px] h-[34px] lg:w-[48px] lg:h-[48px]" />
+            <Avatar
+              nickname={nickname}
+              propWidth={48}
+              propHeight={48}
+              className="w-[34px] h-[34px] lg:w-[48px] lg:h-[48px]"
+            />
           </Suspense>
-          <Typography className="text-shark-300 text-base lg:text-lg">
+          <Typography className="select-none text-shark-300 text-base lg:text-lg">
             Что нового? 😇
           </Typography>
         </div>

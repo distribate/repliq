@@ -23,6 +23,21 @@ const RatingsListSkeleton = () => {
   )
 }
 
+const RatingsSkeleton = () => {
+  return (
+    <div className="flex flex-col gap-y-2 w-full">
+      <div className="grid grid-cols-[0.1fr_2.9fr_1fr_1fr] w-full gap-2">
+        <Skeleton className="h-8 w-12" />
+        <Skeleton className="h-8 w-16" />
+        <Skeleton className="h-8 w-36" />
+        <Skeleton className="h-8 w-16" />
+      </div>
+      <Separator />
+      <RatingsListSkeleton/>
+    </div>
+  )
+}
+
 const RatingIsEmpty = () => {
   return (
     <div className="flex flex-col items-center gap-y-4">
@@ -159,7 +174,7 @@ export const RatingList = () => {
     if (inView && hasMore) updateRatingMutation.mutate({ type: "update-cursor" });
   }, [inView, hasMore]);
 
-  if (isLoading) return <RatingsListSkeleton />
+  if (isLoading) return <RatingsSkeleton />
 
   if (isError) return <RatingIsEmpty />;
 
@@ -168,7 +183,7 @@ export const RatingList = () => {
   return (
     <div className="flex flex-col gap-y-2 w-full">
       {isLoadingUpdated ? (
-        <RatingsListSkeleton />
+        <RatingsSkeleton />
       ) : (
         <>
           {currentType === 'parkour' && (
@@ -177,7 +192,13 @@ export const RatingList = () => {
               <Separator />
               {(ratingData as RatingParkourCardProps[]).map((item, idx) => (
                 <RatingParkourCard
-                  key={idx} idx={idx} area={item.area} gamesplayed={item.gamesplayed} name={item.name} player={item.player} score={item.score}
+                  key={idx} 
+                  idx={idx} 
+                  area={item.area} 
+                  gamesplayed={item.gamesplayed} 
+                  name={item.name} 
+                  player={item.player} 
+                  score={item.score}
                 />
               ))}
             </div>
@@ -222,6 +243,7 @@ export const RatingList = () => {
             <div className="flex flex-col gap-2 w-full h-full">
               <RatingListLandsHeader />
               <Separator />
+              {/* @ts-ignore */}
               {(ratingData as RatingLandsCardProps[]).map((item, idx) => (
                 <RatingLandsCard
                   type={item.type} blocks={item.blocks} key={idx} idx={idx} chunks_amount={item.chunks_amount}

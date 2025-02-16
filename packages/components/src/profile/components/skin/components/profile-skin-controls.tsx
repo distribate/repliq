@@ -12,8 +12,10 @@ import { ConfirmationActionModalTemplate } from "#templates/confirmation-action-
 import { ConfirmationButton } from "#buttons/confirmation-action-button.tsx";
 import { cva, VariantProps } from "class-variance-authority";
 import { Link } from "@tanstack/react-router";
+import { getUser } from "@repo/lib/helpers/get-user.ts";
+import { Button } from "@repo/ui/src/components/button.tsx";
 
-const profileSkinControlVariants = cva("flex items-center justify-center cursor-pointer border border-shark-800 p-2 rounded-lg h-[50px] w-[50px]", {
+const profileSkinControlVariants = cva("flex items-center justify-center cursor-pointer border border-shark-800 rounded-lg h-[46px] w-[46px]", {
   variants: {
     variant: {
       default: "bg-transparent",
@@ -37,6 +39,37 @@ const ProfileSkinControl = ({ variant, className, ...props }: ProfileSkinControl
   )
 }
 
+export const ProfileSkinHowToChange = () => {
+  return (
+    <Dialog>
+      <DialogTrigger asChild>
+        <Button className="bg-shark-50 w-full h-[46px]">
+          <Typography textSize="medium"  className="text-shark-950">
+            Как изменить скин?
+          </Typography>
+        </Button>
+      </DialogTrigger>
+      <DialogContent>
+        <div className="flex flex-col gap-y-4 w-full items-center justify-center">
+          <Typography variant="dialogTitle">
+            Как изменить скин?
+          </Typography>
+          <div className="flex flex-col gap-y-2 p-2 w-full">
+            <Typography textSize="medium">
+              Чтобы изменить скин вам нужно зайти на сервер и ввести команду:
+            </Typography>
+            <Typography textSize="medium">
+              <pre className="bg-shark-900 px-2 py-1 rounded-lg w-fit">
+                <code>/skin set [никнейм]</code>
+              </pre>
+            </Typography>
+          </div>
+        </div>
+      </DialogContent>
+    </Dialog>
+  )
+}
+
 export const ProfileSkinDownloadLink = ({ nickname }: Pick<UserEntity, "nickname">) => {
   const [dialogOpen, setDialogOpen] = useState<boolean>(false);
 
@@ -46,12 +79,16 @@ export const ProfileSkinDownloadLink = ({ nickname }: Pick<UserEntity, "nickname
 
   return (
     <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-      <DialogTrigger>
-        <div
-          className="flex items-center justify-center cursor-pointer border border-shark-800 p-2 rounded-lg h-[50px] min-w-[50px] w-[50px]"
-          title="Скачать скин"
-        >
-          <ArrowDownFromLine size={20} />
+      <DialogTrigger asChild>
+        <div className="flex items-center justify-center gap-2 w-full">
+          <Button variant="positive" className="w-full h-[46px]">
+            <Typography textSize="medium" className="text-shark-50">
+              Скачать скин
+            </Typography>
+          </Button>
+          <Button variant="positive" className="h-[46px] w-[46px]">
+            <ArrowDownFromLine size={20} />
+          </Button>
         </div>
       </DialogTrigger>
       <DialogContent>
@@ -78,12 +115,13 @@ export const ProfileSkinDownloadLink = ({ nickname }: Pick<UserEntity, "nickname
 }
 
 export const ProfileSkinControls = ({ nickname }: Pick<UserEntity, "nickname">) => {
+  const { nickname: currentUser } = getUser()
   const { data: skinAnimation } = skinAnimationQuery();
   const { updateSkinStateMutation } = useSkinStateChange();
 
   return (
-    <div className="flex items-center w-full justify-between gap-4">
-      <div className="flex items-center justify-start gap-4 w-full">
+    <div className="flex flex-col items-center w-full justify-center gap-4">
+      <div className="flex items-center justify-center gap-4 w-full">
         {SKIN_ANIMATIONS.map((control, i) => (
           <ProfileSkinControl
             key={i}
@@ -101,7 +139,12 @@ export const ProfileSkinControls = ({ nickname }: Pick<UserEntity, "nickname">) 
           <RotateCw size={20} />
         </ProfileSkinControl>
       </div>
-      <ProfileSkinDownloadLink nickname={nickname} />
+      <div className="flex flex-col items-center justify-end gap-4 w-full">
+        {nickname === currentUser && (
+          <ProfileSkinHowToChange />
+        )}
+        <ProfileSkinDownloadLink nickname={nickname} />
+      </div>
     </div>
   );
 };

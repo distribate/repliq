@@ -15,9 +15,20 @@ import { getLandsByNicknameRoute } from '#routes/lands/get-lands-by-nickname.ts'
 import { getLandRoute } from '#routes/lands/get-land.ts';
 import { getRatingByRoute } from '#routes/rating/get-rating-by.ts';
 import { subscribeUserBalance } from '#subscribers/subscribe-user-balance.ts';
+import { subscribeUserLands } from '#subscribers/subscribe-user-lands.ts';
+import { subscribePlayerGroup } from '#subscribers/sub-player-group.ts';
+
+function subscribeNatsSubscribers() {
+  subscribeUserBalance()
+  console.log("Subscribed to balance")
+  subscribeUserLands()
+  console.log("Subscribed to lands")
+  subscribePlayerGroup()
+  console.log("Subscribed to player group")
+}
 
 await initNats()
-subscribeUserBalance()
+subscribeNatsSubscribers()
 
 export const hooks = new Hono()
   .basePath('/hooks')

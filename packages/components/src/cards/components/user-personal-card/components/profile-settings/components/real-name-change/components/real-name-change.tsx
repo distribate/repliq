@@ -7,61 +7,105 @@ import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { FormField } from "@repo/ui/src/components/form-field.tsx";
 import { getUser } from "@repo/lib/helpers/get-user.ts";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { DialogClose } from "@repo/ui/src/components/dialog";
+
+const realNameSchema = z.object({
+  real_name: z.string().max(32).nullable(),
+});
+
+type RealNameSchemaType = z.infer<typeof realNameSchema>;
 
 export const RealNameChange = () => {
   const { real_name } = getUser();
   const { updateFieldMutation } = useUpdateCurrentUser();
 
-  const { register, formState: { errors, isValid }, getValues, watch } = useForm({
+  const { register, formState: { errors, isValid }, getValues, watch } = useForm<RealNameSchemaType>({
+    resolver: zodResolver(realNameSchema),
     mode: "onChange",
     defaultValues: { real_name },
   });
 
   const value = watch("real_name");
-  const isIdentity = value === real_name;
+  const isIdentity = (value === real_name)
+    || (value === '' && real_name === null);
 
   const handleRealName = () => {
     const value = getValues("real_name");
 
     if (isIdentity) return;
-    
-    return updateFieldMutation.mutate({ criteria: "real_name", value, });
+
+    return updateFieldMutation.mutate({
+      criteria: "real_name", value: value ? value.length < 1 ? null : value : null
+    });
   };
-  
+
   return (
     <div className="flex flex-col items-center gap-y-4 w-full">
-      <Typography variant="dialogTitle">Смена реального имени</Typography>
-      <div className="flex items-center justify-start w-full gap-1 px-4">
-        <Typography>Текущее имя:</Typography>
-        <Typography
-          textShadow="small"
-          textSize="medium"
-          textColor="shark_white"
-        >
-          {real_name}
-        </Typography>
-      </div>
-      <Separator />
-      <div className="flex flex-col gap-y-2 w-full">
+      <Typography variant="dialogTitle">Смена имени</Typography>
+      {real_name ? (
+        <>
+          <div className="flex items-center justify-start w-full gap-1 px-2">
+            <Typography
+              textColor="shark_white"
+              textSize="large"
+            >
+              Текущее имя:
+            </Typography>
+            <Typography
+              className="font-semibold"
+              textSize="large"
+              textColor="shark_white"
+            >
+              {real_name}
+            </Typography>
+          </div>
+          <Separator />
+        </>
+      ) : (
+        <>
+          <div className="flex items-center justify-start w-full gap-1 px-2">
+            <Typography
+              textColor="gray"
+              textSize="large"
+            >
+              Введите какое-нибудь имя в поле ниже...
+            </Typography>
+          </div>
+          <Separator />
+        </>
+      )}
+      <div className="flex flex-col gap-y-2 w-full px-2 pb-2">
         <FormField>
           <Input
-            placeholder="например: Абоба"
+            placeholder="Введите новое имя, например: Абоба"
             className="!text-base"
-            maxLength={25}
-            backgroundType="transparent"
-            {...register("real_name", { maxLength: 25 })}
+            maxLength={32}
+            {...register("real_name", { maxLength: 32 })}
           />
           {errors?.real_name && (
             <span className="text-red-500 text-sm px-4">{errors.real_name.message}</span>
           )}
         </FormField>
-        <Button
-          pending={updateFieldMutation.isPending}
-          disabled={updateFieldMutation.isPending || !isValid || isIdentity}
-          onClick={handleRealName}
-        >
-          <Typography textColor="shark_white">Сохранить</Typography>
-        </Button>
+        <div className="flex items-center w-full gap-2 pt-2 justify-end">
+          <Button
+            variant="positive"
+            pending={updateFieldMutation.isPending}
+            disabled={updateFieldMutation.isPending || !isValid || isIdentity}
+            onClick={handleRealName}
+          >
+            <Typography textColor="shark_white">
+              Сохранить
+            </Typography>
+          </Button>
+          <DialogClose>
+            <Button variant="negative">
+              <Typography textColor="shark_white">
+                Отменить
+              </Typography>
+            </Button>
+          </DialogClose>
+        </div>
       </div>
     </div>
   );

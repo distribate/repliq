@@ -29,11 +29,11 @@ export const FriendCardControlPin = ({
     >
       <Pin size={16} className="text-shark-300" />
       {is_pinned ? (
-        <Typography textSize="small" className="text-caribbean-green-500">
+        <Typography textSize="medium" className="text-caribbean-green-500">
           Открепить
         </Typography>
       ) : (
-        <Typography textSize="small">Закрепить</Typography>
+        <Typography textSize="medium">Закрепить</Typography>
       )}
     </DropdownMenuItem>
   );

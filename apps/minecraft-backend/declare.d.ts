@@ -15,6 +15,11 @@ declare module "bun" {
     LOBBY_MYSQL_PORT: number;
     PLAYERPOINTS_MYSQL_PORT: number,
 
+    LUCKPERMS_POSTGRES_DB: string
+    LUCKPERMS_POSTGRES_PASSWORD: string
+    LUCKPERMS_POSTGRES_USER: string
+    LUCKPERMS_POSTGRES_PORT: string
+    
     POSTGRES_DB: string,
     POSTGRES_USER: string,
     POSTGRES_PASSWORD: string,

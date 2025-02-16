@@ -4,9 +4,6 @@ import { useSearchControl } from "../hooks/use-search-control.tsx";
 import { useDebounce } from "@repo/lib/hooks/use-debounce.ts";
 import { searchQuery } from "../queries/search-query.ts";
 import Inspector from "@repo/assets/images/minecraft/block_inspect.webp";
-import { SearchSort } from "./search-sort.tsx";
-import { Separator } from "@repo/ui/src/components/separator.tsx";
-import { ImageWrapper } from "#wrappers/image-wrapper.tsx";
 import { Link } from "@tanstack/react-router";
 
 export const SearchInput = () => {
@@ -29,38 +26,32 @@ export const SearchInput = () => {
   };
 
   return (
-    <>
-      <Separator />
-      <div className="flex bg-shark-700/80 items-center px-2 w-full justify-between rounded-md">
-        <div className="flex items-center">
-          <Link
-            to="/search"
-            className="flex items-center rounded-md w-[44px]"
-          >
-            <ImageWrapper
-              propSrc={Inspector}
-              propAlt="Search spyglass"
-              className="w-[24px] h-[24px]"
-              width={24}
-              height={24}
-              loading="lazy"
-            />
-          </Link>
-          <Input
-            onDrop={(e) => e.preventDefault()}
-            onDragOver={(e) => e.preventDefault()}
-            backgroundType="transparent"
-            value={value}
-            type="text"
-            onChange={handleSearchInput}
-            className="!px-0 w-full"
-            placeholder="Поиск"
+    <div className="flex items-center px-4 py-2 w-full justify-between border-2 border-shark-800 bg-shark-800/60 rounded-lg">
+      <div className="flex items-center w-full">
+        <Link
+          to="/search"
+          className="flex items-center rounded-md w-[44px]"
+        >
+          <img
+            src={Inspector}
+            alt=""
+            className="w-[24px] h-[24px]"
+            width={24}
+            height={24}
+            loading="lazy"
           />
-        </div>
-        <div className="flex w-fit">
-          <SearchSort />
-        </div>
+        </Link>
+        <Input
+          onDrop={(e) => e.preventDefault()}
+          onDragOver={(e) => e.preventDefault()}
+          backgroundType="transparent"
+          value={value}
+          type="text"
+          onChange={handleSearchInput}
+          className="w-full !px-0"
+          placeholder="Поиск"
+        />
       </div>
-    </>
+    </div>
   );
 };

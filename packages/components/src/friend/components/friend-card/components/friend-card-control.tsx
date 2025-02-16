@@ -42,12 +42,12 @@ export const FriendCardControl = ({
           nickname={nickname}
           withCustomTrigger={true}
           trigger={
-            <HoverCardItem className="flex justify-start items-center gap-2 group">
+            <div className="flex px-2 py-1.5 focus:bg-shark-600 hover:bg-shark-700 rounded-md transition-all duration-300 ease-in-out justify-start items-center gap-2 group">
               <Tag size={16} className="text-shark-300" />
-              <Typography textSize="small">
+              <Typography textSize="medium">
                 Показать карточку профиля
               </Typography>
-            </HoverCardItem>
+            </div>
           }
         />
         <FriendCardControlPin nickname={nickname} friend_id={friend_id} is_pinned={is_pinned} />
@@ -57,12 +57,12 @@ export const FriendCardControl = ({
           friend_id={friend_id}
           nickname={nickname}
           trigger={
-            <HoverCardItem className="flex justify-start items-center gap-2 group">
+            <div className="flex px-2 py-1.5 focus:bg-shark-600 hover:bg-shark-700 rounded-md transition-all duration-300 ease-in-out justify-start items-center gap-2 group">
               <Trash size={16} className="text-red-500" />
-              <Typography textSize="small" className="text-red-500">
+              <Typography textSize="medium" className="text-red-500">
                 Удалить из друзей
               </Typography>
-            </HoverCardItem>
+            </div>
           }
         />
       </MoreWrapper>

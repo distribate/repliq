@@ -1,14 +1,14 @@
 import { REQUESTED_USER_QUERY_KEY } from '@repo/components/src/profile/components/cover/queries/requested-user-query.ts';
-import { useLocation } from "@tanstack/react-router"
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { UpdateUserSettings, updateUserSettings } from '#queries/update-user-settings.ts';
 import { toast } from 'sonner';
 import { CURRENT_USER_QUERY_KEY } from '#queries/current-user-query.ts';
 import type { UserDetailed } from '@repo/types/entities/user-type';
+import { getUser } from '#helpers/get-user.ts';
 
 export const useUpdateUserSettings = () => {
   const qc = useQueryClient()
-  const { pathname } = useLocation()
+  const { nickname } = getUser()
 
   const updateUserSettingsMutation = useMutation({
     mutationFn: async (values: UpdateUserSettings) => updateUserSettings(values),
@@ -16,15 +16,6 @@ export const useUpdateUserSettings = () => {
       if (!data || "error" in data) return toast.error("Произошла ошибка", {
         description: "Повторите попытку позже"
       });
-      
-      qc.setQueryData(CURRENT_USER_QUERY_KEY, (prev: UserDetailed) => ({
-        ...prev,
-        preferences: { ...prev.preferences, ...data }
-      }))
-
-      const nickname = pathname.split("/").pop()
-
-      if (!nickname) return
       
       qc.setQueryData(CURRENT_USER_QUERY_KEY, (prev: UserDetailed) => ({
         ...prev,

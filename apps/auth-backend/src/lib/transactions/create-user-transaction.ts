@@ -52,6 +52,27 @@ async function createUserServer(values: CreateUserServer) {
     .executeTakeFirstOrThrow()
 }
 
+const REFFERALS_LIMIT = 5
+
+async function linkUserToReferer(trx: Transaction<DB>, nickname: string, referrer: string) {
+  const refferalsList = await trx
+    .selectFrom("refferals")
+    .select("id")
+    .where("initiator", "=", referrer)
+    .execute()
+
+  if (refferalsList && refferalsList.length >= REFFERALS_LIMIT) {
+    return;
+  }
+
+  await trx
+    .insertInto("refferals")
+    .values({ initiator: referrer, recipient: nickname })
+    .execute()
+
+  publishReferalReward({ referrer, referral: nickname })
+}
+
 export const createUserTransaction = async ({
   nickname, real_name, findout, HASH, LOWERCASENICKNAME, NICKNAME, IP, REGDATE, UUID, referrer
 }: CreateUserTransaction) => {
@@ -83,12 +104,7 @@ export const createUserTransaction = async ({
     }
 
     if (referrer) {
-      await trx
-        .insertInto("refferals")
-        .values({ initiator: referrer, recipient: nickname })
-        .execute()
-
-      publishReferalReward({ referrer, referral: nickname })
+      await linkUserToReferer(trx, nickname, referrer);
     }
 
     publishRegisterNotify(nickname)

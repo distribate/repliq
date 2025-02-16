@@ -6,9 +6,10 @@ import { DateBirthdayPicker } from "#cards/components/user-personal-card/compone
 import { DynamicModal } from "#modals/dynamic-modal.tsx";
 import { UPDATE_FIELD_MUTATION_KEY } from "@repo/lib/hooks/use-update-current-user.ts";
 import { parseDateOrTimestamp } from "#cards/components/user-personal-card/components/profile-settings/components/birthday-picker/helpers/birthday-picker.ts";
+import dayjs from "@repo/lib/constants/dayjs-instance";
 
 export const DateBirthdayModal = () => {
-  const { birthday} = getUser();
+  const { birthday } = getUser();
   const initDate = parseDateOrTimestamp(birthday ?? null);
 
   return (
@@ -18,7 +19,7 @@ export const DateBirthdayModal = () => {
         <UserSettingOption title="День рождения" imageSrc={Firework}>
           <div className="flex items-center gap-1">
             <Typography className="text-base">
-              {birthday ? birthday.toString() : `не указано`}
+              {birthday ? dayjs(birthday).format("DD MMM YYYY") : `не указано`}
             </Typography>
           </div>
         </UserSettingOption>

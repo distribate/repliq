@@ -22,7 +22,8 @@ export const AvailableThreadReactions = ({
 
   return (
     <div
-      className="flex items-center rounded-md bg-shark-800 gap-2 cursor-default pb-2 scrollbar-thin scrollbar-shark-700 scrollbar-track-transparent overflow-x-auto max-w-[200px]"
+      className="flex items-center rounded-md bg-shark-800 gap-2 cursor-default pb-2
+       scrollbar-thin scrollbar-shark-700 scrollbar-track-transparent overflow-x-auto max-w-[200px]"
       onWheel={handleWheel}
       ref={scrollRef}
     >
@@ -30,7 +31,8 @@ export const AvailableThreadReactions = ({
         <div
           key={key}
           onClick={() => handleAddReaction(key)}
-          className="flex rounded-md hover:scale-[1.2] text-[20px] hover:duration-150 duration-150 ease-in-out cursor-pointer p-1 items-center justify-center"
+          className="flex rounded-md hover:scale-[1.2] text-[20px] hover:duration-150
+           duration-150 ease-in-out cursor-pointer p-1 items-center justify-center"
         >
           {value}
         </div>

@@ -1,8 +1,6 @@
 import { Separator } from "@repo/ui/src/components/separator.tsx";
 import { CreateThread } from "../sidebar-content/create-thread/create-thread.tsx";
 import { SidebarLogotype } from "../sidebar-content/logotype/sidebar-logotype.tsx";
-import { searchQuery } from "../sidebar-content/search/queries/search-query.ts";
-import { SearchInput } from "../sidebar-content/search/components/search-input.tsx";
 import { HistoryThreads } from "../sidebar-content/history-threads/history-threads.tsx";
 import { SidebarTarget } from "../sidebar-content/links/components/sidebar-target.tsx";
 import { useSidebarControl } from "../sidebar-layout/hooks/use-sidebar-control.ts";
@@ -15,9 +13,9 @@ import { getUser } from "@repo/lib/helpers/get-user.ts";
 import { Avatar } from "#user/components/avatar/components/avatar.tsx";
 import { UserNickname } from "#user/components/name/nickname.tsx";
 import { HTMLAttributes, lazy } from "react";
-import { CircleUserRound, NotebookPen, Settings } from "lucide-react";
+import { ArrowDown, CircleUserRound, NotebookPen, Settings } from "lucide-react";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@repo/ui/src/components/dropdown-menu.tsx";
-import { useLocation, useNavigate } from "@tanstack/react-router";
+import { Link, useLocation, useNavigate } from "@tanstack/react-router";
 import { Typography } from "@repo/ui/src/components/typography.tsx";
 import { Icon } from "@repo/shared/ui/icon/icon.tsx";
 import Charism from "@repo/assets/images/minecraft/charism_wallet.png"
@@ -32,10 +30,6 @@ import { createQueryKey } from "@repo/lib/helpers/query-key-builder.ts";
 import { useQuery } from "@tanstack/react-query";
 import { forumUserClient } from "@repo/shared/api/forum-client.ts";
 import { currentUserQuery } from "@repo/lib/queries/current-user-query.ts";
-
-const SearchArea = lazy(() => import("../sidebar-content/search/components/search-area.tsx")
-  .then(m => ({ default: m.SearchArea }))
-)
 
 type SidebarLayoutVariant = Exclude<SidebarFormat, "dynamic">;
 
@@ -54,7 +48,7 @@ const OutlineWrapper = ({ children, className, ...props }: OutlineWrapperProps) 
   return (
     <div
       className={`flex items-center bg-shark-800 justify-center 
-        hover:bg-shark-700 py-3 px-4 cursor-pointer rounded-md ${className}`}
+        hover:bg-shark-700 py-3 px-4 duration-300 ease-in-out transition-all cursor-pointer rounded-md ${className}`}
       {...props}
     >
       {children}
@@ -113,21 +107,28 @@ const UserMenuTrigger = () => {
 
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger className="w-full focus-visible:outline-none">
-        <div
-          className={`flex gap-x-3 items-center bg-shark-800 hover:bg-shark-700 rounded-md w-full
-					${!isCompact ? "justify-start" : isExpanded ? "justify-start" : "justify-center"}`}
-        >
-          <Suspense fallback={<Skeleton className="w-[50px] h-[50px]" />}>
-            <Avatar
-              variant="default"
-              className="overflow-hidden min-w-[50px] min-h-[50px]"
-              propWidth={50}
-              propHeight={50}
-              nickname={nickname}
-            />
-          </Suspense>
-          {!isCompact && <UserBalance />}
+      <DropdownMenuTrigger className="w-full group focus-visible:outline-none">
+        <div className="flex items-center justify-between w-full pr-2 bg-shark-800 hover:bg-shark-700 rounded-lg">
+          <div
+            className={`flex gap-x-3 items-center w-full
+					  ${!isCompact ? "justify-start" : isExpanded ? "justify-start" : "justify-center"}`}
+          >
+            <Suspense fallback={<Skeleton className="w-[50px] h-[50px]" />}>
+              <Avatar
+                variant="default"
+                className="overflow-hidden min-w-[50px] min-h-[50px]"
+                propWidth={50}
+                propHeight={50}
+                nickname={nickname}
+              />
+            </Suspense>
+            {!isCompact && <UserBalance />}
+          </div>
+          {!isCompact && <ArrowDown
+            size={24}
+            className="transition-all duration-150 ease-in group-data-[state=closed]:rotate-0 group-data-[state=open]:rotate-180 text-shark-300"
+          />
+          }
         </div>
       </DropdownMenuTrigger>
       <DropdownMenuContent>
@@ -170,29 +171,51 @@ const SidebarBar = () => {
       </OutlineWrapper>
       <SidebarBarNotifications />
       <DropdownMenu>
-        <DropdownMenuTrigger title="Настройки сайдбара" className="w-full">
+        <DropdownMenuTrigger className="w-full">
           <OutlineWrapper className="w-full">
             <Settings size={20} className="icon-color" />
           </OutlineWrapper>
         </DropdownMenuTrigger>
-        <DropdownMenuContent>
-          <div className="flex flex-col gap-y-2">
-            {SIDEBAR_FORMATS.map(({ title, value }) => (
-              <DropdownMenuItem
-                key={title}
-                onClick={e => {
-                  e.preventDefault();
-                  updateSidebarPropertiesMutation.mutate({
-                    type: "format",
-                    values: { format: value },
-                  });
-                }}
-              >
-                <Typography state={sidebarState.format === value ? "active" : "default"}>
-                  {title}
-                </Typography>
-              </DropdownMenuItem>
-            ))}
+        <DropdownMenuContent align="start">
+          <div className="flex flex-col gap-y-2 w-full">
+            <DropdownMenu>
+              <DropdownMenuTrigger className="w-full">
+                <div className="flex px-2 py-1.5 items-center justify-start hover:bg-shark-600 rounded-md">
+                  <Typography>Формат сайдбара</Typography>
+                </div>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent side="right" align="end">
+                <div className="flex flex-col gap-y-2 w-full">
+                  {SIDEBAR_FORMATS.map(({ title, value: format }) => (
+                    <DropdownMenuItem
+                      key={title}
+                      onClick={e => {
+                        e.preventDefault();
+                        updateSidebarPropertiesMutation.mutate({
+                          type: "format",
+                          values: { format },
+                        });
+                      }}
+                    >
+                      <Typography state={sidebarState.format === format ? "active" : "default"} textSize="medium">
+                        {title}
+                      </Typography>
+                    </DropdownMenuItem>
+                  ))}
+                </div>
+              </DropdownMenuContent>
+            </DropdownMenu>
+            <Separator />
+            <Link to="/misc/monitoring" className="flex cursor-pointer px-2 py-1.5 items-center justify-start hover:bg-shark-600 rounded-md">
+              <Typography>Мониторинги</Typography>
+            </Link>
+            <Link to="/misc/status" className="flex cursor-pointer px-2 py-1.5 items-center justify-start hover:bg-shark-600 rounded-md">
+              <Typography>Статус</Typography>
+            </Link>
+            <Separator />
+            <Link to="/misc/about" className="flex cursor-pointer px-2 py-1.5 items-center justify-start hover:bg-shark-600 rounded-md">
+              <Typography>О нас</Typography>
+            </Link>
           </div>
         </DropdownMenuContent>
       </DropdownMenu>
@@ -202,43 +225,28 @@ const SidebarBar = () => {
 
 const SidebarDesktopContent = () => {
   const { isCompact, isExpanded } = useSidebarControl();
-  const { data: searchState } = searchQuery();
-
-  if (searchState.queryValue) return (
-    <Suspense>
-      <SearchArea />
-    </Suspense>
-  )
 
   return (
-    <div className="flex flex-col h-full justify-between w-full">
-      <div className="flex flex-col gap-y-4 items-center w-full">
-        <div className="flex flex-col gap-y-4 items-center w-full">
-          <HistoryThreads />
-          <SidebarTarget />
-        </div>
+    !isCompact && isExpanded ? (
+      <div className="flex lg:flex-row items-center *:w-1/3 gap-2 w-full justify-between">
+        <SidebarBar />
       </div>
-      {!isCompact && isExpanded ? (
-        <div className="flex lg:flex-row items-center *:w-1/3 gap-2 w-full justify-between">
-          <SidebarBar />
-        </div>
-      ) : (
-        <div className="flex w-full aspect-square items-center justify-center">
-          <DropdownMenu>
-            <DropdownMenuTrigger>
-              <OutlineWrapper className="w-full">
-                <Settings size={20} className="text-shark-300" />
-              </OutlineWrapper>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent side="right" align="end" className="min-w-fit">
-              <div className="flex flex-col gap-2 *:w-12 *:aspect-square *:h-12 w-full h-full">
-                <SidebarBar />
-              </div>
-            </DropdownMenuContent>
-          </DropdownMenu>
-        </div>
-      )}
-    </div>
+    ) : (
+      <div className="flex w-full aspect-square items-center justify-center">
+        <DropdownMenu>
+          <DropdownMenuTrigger>
+            <OutlineWrapper className="w-full">
+              <Settings size={20} className="text-shark-300" />
+            </OutlineWrapper>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent side="right" align="end" className="min-w-fit">
+            <div className="flex flex-col gap-2 *:w-12 *:aspect-square *:h-12 w-full h-full">
+              <SidebarBar />
+            </div>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </div>
+    )
   );
 };
 
@@ -281,7 +289,6 @@ export const SidebarDesktop = () => {
       <div className="biloba-gradient opacity-30 w-full h-[160px] z-[1] absolute left-0 right-0 top-0" />
       <div className="flex flex-col gap-y-4 items-center z-[2] h-full justify-start w-full">
         <SidebarLogotype />
-        {!isCompact && isExpanded && <SearchInput />}
         <Separator />
         <UserMenuTrigger />
         <Separator orientation="horizontal" />
@@ -289,7 +296,15 @@ export const SidebarDesktop = () => {
         <Separator />
         <CreateThread />
         <Separator orientation="horizontal" />
-        <SidebarDesktopContent />
+        <div className="flex flex-col h-full justify-between w-full">
+          <div className="flex flex-col gap-y-4 items-center w-full">
+            <div className="flex flex-col gap-y-4 items-center w-full">
+              <HistoryThreads />
+              <SidebarTarget />
+            </div>
+          </div>
+          <SidebarDesktopContent />
+        </div>
       </div>
     </SidebarLayout>
   );

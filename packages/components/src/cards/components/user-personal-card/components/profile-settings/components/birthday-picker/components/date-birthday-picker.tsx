@@ -2,7 +2,7 @@ import { Typography } from "@repo/ui/src/components/typography.tsx";
 import { useCallback, useMemo, useState } from "react";
 import { Calendar } from "@repo/ui/src/components/calendar.tsx";
 import { Button } from "@repo/ui/src/components/button.tsx";
-import { ChevronLeftIcon, ChevronRightIcon } from "lucide-react";
+import { ChevronDownIcon, ChevronLeftIcon, ChevronRightIcon, ChevronUpIcon } from "lucide-react";
 import { format } from "date-fns";
 import { cn } from "@repo/lib/utils/ui/cn.ts";
 import { ru } from "date-fns/locale";
@@ -36,7 +36,7 @@ export const DateBirthdayPicker = ({ init }: BirthdayPicker) => {
   const [monthYearPicker, setMonthYearPicker] = useState<PickerType | false>(
     false,
   );
-  
+
   const { updateFieldMutation } = useUpdateCurrentUser();
 
   const handleSaveBirthday = () => {
@@ -45,7 +45,7 @@ export const DateBirthdayPicker = ({ init }: BirthdayPicker) => {
     if (!parsedDate || parsedDate === initDate) return;
 
     return updateFieldMutation.mutate({
-      value: parsedDate as string,
+      value: format(parsedDate, "yyyy-MM-dd"),
       criteria: "birthday",
     });
   };
@@ -66,21 +66,20 @@ export const DateBirthdayPicker = ({ init }: BirthdayPicker) => {
     setMonthYearPicker(mode === "year" ? "month" : false);
   }, []);
 
-  const onNextMonth = useCallback(
-    () => setMonth(getNextMonth(month, max)),
-    [month, max],
-  );
-  const onPrevMonth = useCallback(
-    () => setMonth(getPreviousMonth(month, min)),
-    [month, min],
-  );
+  const onNextMonth = useCallback(() => {
+    setMonth(getNextMonth(month, max))
+  }, [month, max]);
+
+  const onPrevMonth = useCallback(() => {
+    setMonth(getPreviousMonth(month, min))
+  }, [month, min]);
 
   const isValid = areDatesEqual(date, initDate);
 
   return (
     <div className="flex flex-col gap-4 items-center w-full">
       <Typography variant="dialogTitle">День рождения</Typography>
-      <div className="flex flex-col gap-2 justify-center p-3 w-[360px]">
+      <div className="flex flex-col justify-center py-2 w-[360px]">
         <div className="flex items-center justify-between w-full gap-4">
           <div
             className={`${monthYearPicker ? "bg-shark-700/20" : "bg-transparent"}
@@ -108,17 +107,17 @@ export const DateBirthdayPicker = ({ init }: BirthdayPicker) => {
               onClick={onPrevMonth}
               className="p-2 hover:bg-shark-700/20 rounded-md cursor-pointer"
             >
-              <ChevronLeftIcon size={20} className="text-shark-300" />
+              <ChevronUpIcon size={20} className="text-shark-300 font-bold" />
             </div>
             <div
               onClick={onNextMonth}
               className="p-2 hover:bg-shark-700/20 rounded-md cursor-pointer"
             >
-              <ChevronRightIcon size={20} className="text-shark-300" />
+              <ChevronDownIcon size={20} className="text-shark-300 font-bold" />
             </div>
           </div>
         </div>
-        <div className="flex relative items-start h-[320px] justify-center overflow-hidden w-full">
+        <div className="flex relative items-start h-[300px] justify-center overflow-hidden w-full">
           <Calendar
             mode="single"
             selected={date}
@@ -154,7 +153,7 @@ export const DateBirthdayPicker = ({ init }: BirthdayPicker) => {
             updateFieldMutation.isError ||
             !isValid
           }
-          className="px-4 self-end w-fit"
+          className="mt-6 mb-2 px-4 self-end w-fit"
         >
           <Typography>Сохранить</Typography>
         </Button>

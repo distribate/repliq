@@ -1,4 +1,3 @@
-import { HoverCardItem } from "@repo/ui/src/components/hover-card.tsx";
 import { UserPersonalCard } from "#cards/components/user-personal-card/user-personal-card.tsx";
 import {
   Dialog,
@@ -6,6 +5,8 @@ import {
   DialogTrigger,
 } from "@repo/ui/src/components/dialog.tsx";
 import { ReactNode } from "react";
+import { Typography } from "@repo/ui/src/components/typography";
+import { DropdownMenuItem } from "@repo/ui/src/components/dropdown-menu";
 
 type UserSettingsModalProps =
   | { trigger: ReactNode }
@@ -16,7 +17,18 @@ export const UserSettingsModal = ({
 }: UserSettingsModalProps) => {
   return (
     <Dialog>
-      <DialogTrigger>{trigger ? trigger : <HoverCardItem>Настройки</HoverCardItem>}</DialogTrigger>
+      <DialogTrigger>
+        {trigger ? trigger : (
+          <DropdownMenuItem
+            onSelect={(e) => e.preventDefault()}
+            className="gap-2 group cursor-pointer"
+          >
+            <Typography textSize="medium">
+              Настройки
+            </Typography>
+          </DropdownMenuItem>
+        )}
+      </DialogTrigger>
       <DialogContent>
         <UserPersonalCard />
       </DialogContent>

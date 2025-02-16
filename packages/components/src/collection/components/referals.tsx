@@ -2,9 +2,12 @@ import { referalsQuery } from "#collection/queries/referals-query.ts"
 import { Avatar } from "#user/components/avatar/components/avatar.tsx"
 import { UserDonate } from "#user/components/donate/components/donate.tsx"
 import { UserNickname } from "#user/components/name/nickname.tsx"
+import dayjs from "@repo/lib/constants/dayjs-instance"
 import { getUser } from "@repo/lib/helpers/get-user"
+import { USER_URL } from "@repo/shared/constants/routes"
 import { Skeleton } from "@repo/ui/src/components/skeleton"
 import { Typography } from "@repo/ui/src/components/typography"
+import { Link } from "@tanstack/react-router"
 import { Suspense } from "react"
 
 export const Referals = () => {
@@ -26,31 +29,33 @@ export const Referals = () => {
           textSize="very_big"
           className="font-semibold"
         >
-          У вас нет рефералов
+          У вас ещё нет рефералов
         </Typography>
       )}
-      {referals && referals.map(item => (
-        <div key={item.id} className="flex w-full gap-4 items-center friend-card">
-          <Suspense>
-            <Avatar nickname={item.recipient} propWidth={64} propHeight={64} />
-          </Suspense>
-          <div className="flex flex-col gap-1">
-            <div className="flex items-center gap-1">
-              <UserNickname nickname={item.recipient} />
-              <UserDonate donate={item.donate} nickname={currentUser.nickname} />
+      {referals && (
+        <div className="grid lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 auto-rows-auto gap-4 w-full">
+          {referals.map(item => (
+            <div key={item.id} className="flex w-full gap-2 items-center friend-card">
+              <Suspense fallback={<Skeleton className="h-[64px] w-[64px]" />}>
+                <Link to={USER_URL + item.recipient}>
+                  <Avatar nickname={item.recipient} propWidth={64} propHeight={64} className="min-h-[64px] min-w-[64px]" />
+                </Link>
+              </Suspense>
+              <div className="flex flex-col gap-1">
+                <div className="flex items-center gap-1">
+                  <Link to={USER_URL + item.recipient}>
+                    <UserNickname nickname={item.recipient} />
+                  </Link>
+                  <UserDonate donate={item.donate} nickname={currentUser.nickname} />
+                </div>
+                <Typography textColor="gray" textSize="medium">
+                  Присоединился {dayjs(item.created_at).format("DD.MM.YYYY HH:mm")}
+                </Typography>
+              </div>
             </div>
-            {item.description && (
-              <Typography
-                key={item.id}
-                textColor="shark_white"
-                textSize="medium"
-              >
-                {item.description}
-              </Typography>
-            )}
-          </div>
+          ))}
         </div>
-      ))}
+      )}
     </div>
   )
 }

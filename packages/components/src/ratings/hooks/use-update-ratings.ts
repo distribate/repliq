@@ -47,30 +47,35 @@ export const useUpdateRating = () => {
 
         if ("TotalPlayTime" in d) {
           newRating = data.data.filter(
+            // @ts-ignore
             friend => !prev.data.some(exist => exist.username === friend.username)
           )
         }
 
         if ("player" in d) {
           newRating = data.data.filter(
+            // @ts-ignore
             friend => !prev.data.some(exist => exist.player === friend.player)
           )
         }
 
         if ("Balance" in d) {
           newRating = data.data.filter(
+            // @ts-ignore
             friend => !prev.data.some(exist => exist.username === friend.username)
           )
         }
 
         if ("points" in d) {
           newRating = data.data.filter(
+            // @ts-ignore
             friend => !prev.data.some(exist => exist.username === friend.username)
           )
         }
 
         if ("reputation" in d) {
           newRating = data.data.filter(
+            // @ts-ignore
             friend => !prev.data.some(exist => exist.nickname === friend.nickname)
           )
         }

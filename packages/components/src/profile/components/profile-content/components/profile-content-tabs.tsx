@@ -12,6 +12,7 @@ import { ProfileContentProps } from "./profile-content";
 import { ProfileSkinControls } from "#profile/components/skin/components/profile-skin-controls.tsx";
 import { lazy } from "react";
 import { Skeleton } from "@repo/ui/src/components/skeleton";
+import { Typography } from "@repo/ui/src/components/typography";
 
 const ProfileSkinRender = lazy(() => import("#profile/components/skin/components/profile-skin-render.tsx")
   .then(m => ({ default: m.ProfileSkinRender }))
@@ -76,25 +77,45 @@ export const ProfileContentTabs = ({
       defaultValue="posts"
       className="flex flex-col w-full h-full lg:px-12 gap-y-6 relative z-[4]"
     >
-      <TabsList className="grid grid-cols-2 auto-rows-auto lg:flex lg:justify-start gap-2 w-full">
-        <TabsTrigger value="posts">Посты</TabsTrigger>
-        <TabsTrigger value="topics">Треды</TabsTrigger>
-        <TabsTrigger value="friends">Друзья</TabsTrigger>
+      <TabsList className="grid grid-cols-2 auto-rows-auto bg-shark-900 lg:flex lg:justify-start w-full lg:w-fit">
+        <TabsTrigger value="posts" className="rounded-r-none !rounded-l-lg">
+          <Typography className="font-semibold">
+            Посты
+          </Typography>
+        </TabsTrigger>
+        <TabsTrigger value="topics" className="rounded-none">
+          <Typography className="font-semibold">
+            Треды
+          </Typography>
+        </TabsTrigger>
+        <TabsTrigger value="friends" className="rounded-none">
+          <Typography className="font-semibold">
+            Друзья
+          </Typography>
+        </TabsTrigger>
         <Separator orientation="vertical" className="hidden lg:block" />
         {isGameStatsShow && (
           <>
-            <TabsTrigger value="game-stats" className="peer">
-              Статистика
+            <TabsTrigger value="game-stats" className="peer rounded-none">
+              <Typography className="font-semibold">
+                Статистика
+              </Typography>
             </TabsTrigger>
             {isSectionPrivatedByOwner && <SectionPrivatedTrigger />}
           </>
         )}
-        <TabsTrigger value="achievements">Достижения</TabsTrigger>
+        <TabsTrigger value="achievements" className={`${isOwner ? "rounded-none" : "rounded-l-none rounded-r-lg"}`}>
+          <Typography className="font-semibold">
+            Достижения
+          </Typography>
+        </TabsTrigger>
         {isOwner && (
           <>
             <Separator orientation="vertical" className="hidden lg:block" />
-            <TabsTrigger value="account-stats" className="peer">
-              Аккаунт
+            <TabsTrigger value="account-stats" className="peer rounded-r-lg rounded-l-none">
+              <Typography className="font-semibold">
+                Аккаунт
+              </Typography>
             </TabsTrigger>
             <SectionPrivatedTrigger />
           </>
@@ -141,12 +162,12 @@ export const ProfileContentTabs = ({
             </TabsContent>
           )}
         </div>
-        <div className="hidden 2xl:flex h-[500px] flex-col w-1/3">
+        <div className="hidden 2xl:flex h-[600px] flex-col w-1/3">
           <div className="flex flex-col h-full w-full gap-4">
-            <ProfileSkinControls nickname={requestedUserNickname} />
             <Suspense fallback={<Skeleton className="w-full h-full" />}>
               <ProfileSkinRender nickname={requestedUserNickname} />
             </Suspense>
+            <ProfileSkinControls nickname={requestedUserNickname} />
           </div>
         </div>
       </div>

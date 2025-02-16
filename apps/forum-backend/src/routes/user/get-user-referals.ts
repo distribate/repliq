@@ -13,7 +13,8 @@ async function getUserReferals(nickname: string) {
     "refferals.recipient",
     "users.donate",
     "users.name_color",
-    "users.description"
+    "users.description",
+    "refferals.created_at"
   ])
   .where("initiator", "=", nickname)
   .execute()
@@ -25,13 +26,13 @@ export const getUserReferalsRoute = new Hono()
 
     const initiator = getNickname()
 
-    const isValid = await userPreferenceAndPrivateValidation({
-      initiator, recipient
-    })
+    // const isValid = await userPreferenceAndPrivateValidation({
+    //   initiator, recipient
+    // })
 
-    if (!isValid) {
-      return ctx.json({ error: "User's profile is private" }, 400)
-    }
+    // if (!isValid) {
+    //   return ctx.json({ error: "User's profile is private" }, 400)
+    // }
 
     try {
       const referals = await getUserReferals(recipient);

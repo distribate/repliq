@@ -86,7 +86,7 @@ export const SidebarMobile = () => {
             <SidebarMobileButton title="Создать тред" func={() => handle(() => navigate({ to: "/create-thread" }))} />
             <Separator />
             <SidebarMobileButton title="Ивенты" func={() => handle(() => navigate({ to: "/events" }))} />
-            <SidebarMobileButton title="Справочник" func={() => handle(() => navigate({ to: "https://fasberry.su/wiki" }))} />
+            <SidebarMobileButton title="Рейтинг" func={() => handle(() => navigate({ to: "/ratings" }))} />
             <SidebarMobileButton title="Территории" func={() => handle(() => navigate({ to: "/lands" }))} />
             <Separator />
             <SidebarMobileButton title="Коллекции" func={() => handle(() => navigate({ to: "/collections" }))} />

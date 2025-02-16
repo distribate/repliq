@@ -3,7 +3,7 @@ import { skinStateQuery } from "../queries/skin-query.ts";
 import { Skeleton } from "@repo/ui/src/components/skeleton.tsx";
 import { UserEntity } from "@repo/types/entities/entities-type.ts";
 import { Typography } from "@repo/ui/src/components/typography.tsx";
-import Cape from "@repo/assets/images/minecraft/cape_default.png";
+// import Cape from "@repo/assets/images/minecraft/cape_default.png";
 import ReactSkinview3d from "react-skinview3d";
 
 function isHardwareAccelerationEnabled(): boolean {
@@ -37,7 +37,7 @@ export const ProfileSkinRender = ({
           options={{
             zoom: 0.8
           }}
-          capeUrl={Cape}
+          // capeUrl={Cape}
           onReady={({ viewer }) => setViewerRef(viewer)}
         />
       ) : (

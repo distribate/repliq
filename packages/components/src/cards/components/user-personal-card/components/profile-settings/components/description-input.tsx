@@ -1,31 +1,46 @@
 import { Input } from '@repo/ui/src/components/input.tsx';
-import { ChangeEvent, useCallback, useState } from 'react';
+import { useCallback } from 'react';
 import { useDebounce } from '@repo/lib/hooks/use-debounce.ts';
 import { useUpdateCurrentUser } from '@repo/lib/hooks/use-update-current-user.ts';
-import { currentUserQuery } from '@repo/lib/queries/current-user-query.ts';
+import { z } from 'zod';
+import { getUser } from '@repo/lib/helpers/get-user';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useForm } from 'react-hook-form';
+
+const descriptionSchema = z.object({
+  description: z.string().max(32).nullable(),
+});
+
+type DescriptionSchemaType = z.infer<typeof descriptionSchema>;
 
 export const DescriptionInput = () => {
-  const { data: { description } } = currentUserQuery();
-  const [ value, setValue ] = useState<string | ''>(description || '');
+  const { description } = getUser();
   const { updateFieldMutation } = useUpdateCurrentUser();
   
+  const { register } = useForm<DescriptionSchemaType>({
+    resolver: zodResolver(descriptionSchema),
+    mode: "onChange",
+    defaultValues: { description },
+  });
+
   const debouncedHandleSearch = useCallback(useDebounce((val: string) => {
-    return updateFieldMutation.mutate({ criteria: 'description', value: val });
-  }, 600), []);
-  
-  const handleDescriptionInput = (e: ChangeEvent<HTMLInputElement>) => {
-    const { value } = e.target;
-    setValue(value);
-    debouncedHandleSearch(value);
-  };
+    if (description === val) return;
+    
+    return updateFieldMutation.mutate({ criteria: 'description', value: val.length < 1 ? null : val });
+  }, 800), []);
   
   return (
     <Input
-      value={value}
-      onChange={handleDescriptionInput}
       placeholder="Описание..."
       className="!text-base"
       backgroundType="transparent"
+      {...register("description", {
+        onChange: (e) => {
+          const { value } = e.target;
+
+          debouncedHandleSearch(value);
+        },
+      })}
     />
   );
 };

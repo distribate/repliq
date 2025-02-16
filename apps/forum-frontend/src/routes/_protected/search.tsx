@@ -39,7 +39,7 @@ const SearchCategories = () => {
         Категории
       </Typography>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 auto-rows-auto gap-4 w-full h-full">
-        {categories?.map(({ id, color, title, description, emoji }) => (
+        {categories?.map(({ id, color, title, emoji }) => (
           <Link
             to={CATEGORY_URL + id}
             key={id}
@@ -48,9 +48,6 @@ const SearchCategories = () => {
           >
             <Typography textSize="very_big" textColor="shark_white" className="font-semibold">
               {title}
-            </Typography>
-            <Typography textSize="small" textColor="shark_white" className="font-normal" >
-              {description}
             </Typography>
             <img src={emoji} draggable={false} alt="" width={52} height={52} className="absolute bottom-4 right-4 rotate-[15deg]" />
           </Link>

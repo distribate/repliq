@@ -102,6 +102,7 @@ import { userStatus } from '#middlewares/user-status.ts';
 import { getUserPublicSocialsRoute } from '#routes/user/get-user-public-socials.ts';
 import { sseRoute } from '#routes/sse/sse.ts';
 import { getThreadsByOwnerRoute } from '#routes/thread/get-threads-by-owner.ts';
+import { getMyLandsRoute } from '#routes/user/get-my-lands.ts';
 
 function startNatsSubscribers() {
   subscribeUserStatus()
@@ -251,6 +252,7 @@ export const user = new Hono()
   .route("/", getUserPurchasesRoute)
   .route("/", getUserBalanceRoute)
   .route("/", getUserPublicSocialsRoute)
+  .route("/", getMyLandsRoute)
 
 export const search = new Hono()
   .basePath('/search')

@@ -17,7 +17,7 @@ export const FriendsList = () => {
       <div className="flex justify-between items-center gap-4">
         <div className="flex items-center gap-1 w-fit">
           <Typography textColor="shark_white" textSize="very_big" className="font-semibold" >
-            Ваши друзья
+            {friendsFilteringState.listType !== 'search' ? 'Ваши друзья' : "Поиск друзей"}
           </Typography>
         </div>
         <div className="flex items-center gap-4 w-fit">
@@ -31,7 +31,11 @@ export const FriendsList = () => {
         {friendsFilteringState.listType === "all" && <FriendsAllList />}
         {friendsFilteringState.listType === "outgoing" && <FriendsOutgoingList />}
         {friendsFilteringState.listType === "incoming" && <FriendsIncomingList />}
-        {friendsFilteringState.listType === "search" && <FriendsSearchingList />}
+        {friendsFilteringState.listType === "search" && (
+          <>
+            <FriendsSearchingList />
+          </>
+        )}
       </Suspense>
     </div>
   );

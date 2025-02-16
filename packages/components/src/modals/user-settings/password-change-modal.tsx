@@ -14,16 +14,18 @@ export const PasswordChangeModal = () => {
         <UserSettingOption title="Пароль" imageSrc={GoldIngot} />
       </DialogTrigger>
       <DialogContent>
-        <div className="flex flex-col gap-y-4 w-full">
-          <Typography>
+        <div className="flex flex-col items-center justify-center gap-y-4 w-full">
+          <Typography variant="dialogTitle">
             Смена пароля
           </Typography>
-          <div className="flex flex-col gap-y-2 w-full">
-            <Typography textSize="small" textColor="shark_white">
+          <div className="flex flex-col gap-y-2 w-full p-2">
+            <Typography textSize="medium" textColor="shark_white">
               Для того чтобы сменить пароль, в игре введите команду:
             </Typography>
-            <Typography>
-              <code>/changepassword [старый пароль] [новый пароль]</code>
+            <Typography textSize="medium">
+              <pre className="bg-shark-900 px-2 py-1 rounded-lg">
+                <code>/changepassword [старый пароль] [новый пароль]</code>
+              </pre>
             </Typography>
           </div>
         </div>

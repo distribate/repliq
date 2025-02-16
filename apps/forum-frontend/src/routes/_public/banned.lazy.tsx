@@ -17,11 +17,8 @@ async function checkIsBanned(nickname: string) {
 
 export const Route = createLazyFileRoute('/_public/banned')({
   component: RouteComponent,
-  beforeLoad: async ({
-    params,
-  }: {
-    params: { nickname: string | undefined }
-  }) => {
+  // @ts-ignore
+  beforeLoad: async ({ params }: {  params: { nickname: string | undefined } }) => {
     const nickname = params.nickname
 
     if (!nickname) {
@@ -44,6 +41,7 @@ export const Route = createLazyFileRoute('/_public/banned')({
 })
 
 function RouteComponent() {
+  // @ts-ignore
   const { isBanned } = Route.useLoaderData()
 
   return (
