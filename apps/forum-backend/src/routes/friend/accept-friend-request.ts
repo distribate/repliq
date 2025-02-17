@@ -5,10 +5,36 @@ import { getNickname } from "#utils/get-nickname-from-storage.ts";
 import { z } from "zod";
 import { acceptFriendRequestTransaction } from "#lib/transactions/friend/accept-friend-request-transaction.ts";
 import { publishAcceptFriendRequest } from '#publishers/pub-accept-friend-request.ts';
+import { forumDB } from '#shared/database/forum-db.ts';
 
 const acceptFriendRequestSchema = z.object({
   request_id: z.string()
 })
+
+const FRIENDS_LIMIT = 256
+
+async function validateFriendsLength(nickname: string) {
+  const query = await forumDB
+    .selectFrom("users_friends")
+    .select("id")
+    .where((qb) =>
+      qb.or([
+        qb("user_1", "=", nickname),
+        qb("user_2", "=", nickname)
+      ])
+    )
+    .execute()
+
+  console.log(`Current friends length: ${query.length ?? 0}`, `Max: ${FRIENDS_LIMIT}`)
+  
+  if (!query) return true;
+
+  if (query.length >= FRIENDS_LIMIT) {
+    return false
+  }
+
+  return true
+}
 
 export const acceptFriendRequestRoute = new Hono()
   .post("/accept-friend-request", zValidator("json", acceptFriendRequestSchema), async (ctx) => {
@@ -17,6 +43,12 @@ export const acceptFriendRequestRoute = new Hono()
     const initiator = getNickname()
 
     try {
+      const isValid = await validateFriendsLength(initiator)
+
+      if (!isValid) {
+        return ctx.json({ error: "Max number of friends reached" }, 400)
+      }
+
       const { user_1, user_2 } = await acceptFriendRequestTransaction({ initiator, request_id })
 
       publishAcceptFriendRequest({ user_1: user_1, user_2: user_2 })
@@ -25,5 +57,4 @@ export const acceptFriendRequestRoute = new Hono()
     } catch (e) {
       return ctx.json({ error: throwError(e) }, 400);
     }
-  }
-  );
+  });

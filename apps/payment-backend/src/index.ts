@@ -41,7 +41,7 @@ const app = new Hono()
 export type OrderAppType = typeof order
 export type PaymentAppType = typeof payments
 
-showRoutes(app, { verbose: false });
+// showRoutes(app, { verbose: false });
 
 Bun.serve({
   port: Bun.env.PAYMENT_BACKEND_PORT!,

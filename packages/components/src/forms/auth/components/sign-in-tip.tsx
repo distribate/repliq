@@ -1,5 +1,3 @@
-"use client";
-
 import { Typography } from "@repo/ui/src/components/typography.tsx";
 import { AUTH_QUERY_KEY } from "#forms/auth/queries/auth-query.ts";
 import { useQueryClient } from "@tanstack/react-query";

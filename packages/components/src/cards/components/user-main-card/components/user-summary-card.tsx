@@ -16,6 +16,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@repo/ui/src/component
 import { getUser } from "@repo/lib/helpers/get-user.ts";
 import { InferResponseType } from "hono/client";
 import { forumUserClient } from "@repo/shared/api/forum-client.ts";
+import { Skeleton } from "@repo/ui/src/components/skeleton.tsx";
+import { FriendButton } from "#buttons/friend-button.tsx";
 
 const UserSummaryCardPrivated = lazy(() =>
   import("./user-summary-card-privated.tsx").then(m => ({ default: m.UserSummaryCardPrivated }))
@@ -51,7 +53,7 @@ const UserDetailed = ({
             />
           </div>
           <Link to={USER_URL + nickname}>
-            <Suspense>
+            <Suspense fallback={<Skeleton className="h-[88px] w-[88px]" />}>
               <Avatar
                 nickname={nickname}
                 propWidth={88}
@@ -73,7 +75,7 @@ const UserDetailed = ({
           </div>
         </div>
       </div>
-      <div className="flex flex-col gap-y-4 p-4 items-center w-full h-full bg-shark-950 rounded-t-lg">
+      <div className="flex flex-col gap-y-4 p-4 items-center w-full bg-shark-950 h-full rounded-t-lg">
         <div className="flex flex-col gap-y-4 items-center w-full">
           {description && (
             <div className="flex flex-col gap-y-1 w-full">
@@ -99,13 +101,25 @@ const UserDetailed = ({
         <Separator />
         <Tabs defaultValue="stats" className="flex flex-col w-full gap-2 items-start">
           <TabsList className="flex w-full min-h-1 items-center justify-start gap-4">
-            <TabsTrigger value="stats" className="data-[state=active]:bg-transparent !p-0">
+            <TabsTrigger
+              value="stats"
+              className="duration-300 transition-all ease-in-out 
+              data-[state=inactive]:bg-transparent data-[state=active]:bg-transparent 
+              data-[state=active]:decoration-2 data-[state=active]:underline data-[state=active]:underline-offset-8 
+              data-[state=active]:decoration-shark-50 !p-0"
+            >
               <Typography className="text-[18px]" textColor="gray">
                 Статистика
               </Typography>
             </TabsTrigger>
             {currentUser.nickname !== nickname && (
-              <TabsTrigger value="friends" className="data-[state=active]:bg-transparent !p-0">
+              <TabsTrigger
+                value="friends"
+                className="duration-300 transition-all ease-in-out 
+                data-[state=inactive]:bg-transparent data-[state=active]:bg-transparent 
+                data-[state=active]:decoration-2 data-[state=active]:underline 
+                data-[state=active]:underline-offset-8 data-[state=active]:decoration-shark-50 !p-0"
+              >
                 <Typography className="text-[18px]" textColor="gray">
                   Общие друзья
                 </Typography>
@@ -155,6 +169,11 @@ const UserDetailed = ({
             </TabsContent>
           )}
         </Tabs>
+        <div className="flex items-end justify-end h-full w-full">
+          <Suspense>
+            <FriendButton recipient={nickname} />
+          </Suspense>
+        </div>
       </div>
     </>
   )
@@ -169,7 +188,7 @@ export const UserSummaryCard = ({ nickname }: Pick<UserEntity, "nickname">) => {
 
   return (
     <div
-      className="flex flex-col h-[512px] relative w-full overflow-hidden rounded-lg bg-shark-900 items-center"
+      className="flex flex-col h-[512px] relative w-full border-2 border-shark-900 overflow-hidden rounded-lg bg-shark-900 items-center"
     >
       {userCard.status === 'blocked' && (
         <Suspense>

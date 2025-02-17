@@ -1,5 +1,3 @@
-"use client";
-
 import { Typography } from "@repo/ui/src/components/typography.tsx";
 import CharismWallet from "@repo/assets/images/minecraft/charism_wallet.png";
 import BelkoinWallet from "@repo/assets/images/minecraft/belkoin_wallet.png";

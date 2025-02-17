@@ -1,5 +1,3 @@
-"use client"
-
 import { zodResolver } from "@hookform/resolvers/zod";
 import { createIssueSchema } from "@repo/types/schemas/issue/create-issue-schema";
 import { Controller, useForm } from "react-hook-form";

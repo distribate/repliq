@@ -5,5 +5,7 @@ export const Route = createLazyFileRoute('/_public/misc/referal-system')({
 })
 
 function RouteComponent() {
-  return <div>Hello "/_public/misc/referal-system"!</div>
+  return (
+    <div>Hello "/_public/misc/referal-system"!</div>
+  )
 }

@@ -21,8 +21,6 @@ export async function userPreferenceAndPrivateValidation({
     .where("nickname", "=", recipient)
     .executeTakeFirstOrThrow()
 
-  console.log(userSettings, key)
-
   if (userSettings.profile_visibility === "friends") {
     const friendship = await getFriendship({ initiator, recipient })
 
@@ -30,7 +28,7 @@ export async function userPreferenceAndPrivateValidation({
       return false
     }
 
-    return false
+    return true
   }
 
   if (key) {

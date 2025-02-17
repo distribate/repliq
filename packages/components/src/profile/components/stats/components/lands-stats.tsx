@@ -1,5 +1,3 @@
-"use client";
-
 import { Typography } from "@repo/ui/src/components/typography.tsx";
 import { landsStatsQuery } from "../queries/lands-stats-query.ts";
 import { Avatar } from "#user/components/avatar/components/avatar.tsx";

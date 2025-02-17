@@ -1,5 +1,3 @@
-"use client";
-
 import MissingTexture from "@repo/assets/images/minecraft/missing_texture.webp";
 import { Typography } from "@repo/ui/src/components/typography.tsx";
 import dayjs from "@repo/lib/constants/dayjs-instance.ts";

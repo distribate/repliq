@@ -1,5 +1,3 @@
-"use client"
-
 import { Typography } from "@repo/ui/src/components/typography.tsx";
 import { USER_PROFILE_STATS_QUERY_KEY, userProfileStatsQuery } from "../queries/user-profile-stats-query";
 import { getUser } from "@repo/lib/helpers/get-user";

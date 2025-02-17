@@ -5,7 +5,6 @@ import { getNickname } from "#utils/get-nickname-from-storage.ts";
 import type { UserDonateVariant } from "@repo/types/entities/entities-type";
 import { Hono } from "hono";
 import { getPublicUrl } from '#utils/get-public-url.ts';
-import type { user } from '#index.ts';
 import { encode, Encoder } from 'cbor-x';
 
 export const getMeRoute = new Hono()
@@ -14,7 +13,7 @@ export const getMeRoute = new Hono()
     const isBanned = await getUserIsBanned(nickname);
 
     if (isBanned) {
-      return ctx.json({ error: "You are banned" }, 400);
+      return ctx.json({ data: isBanned, status: "You are banned" }, 400);
     }
 
     await next()

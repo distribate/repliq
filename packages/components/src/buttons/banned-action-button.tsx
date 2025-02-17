@@ -1,5 +1,3 @@
-"use client";
-
 import { Button } from "@repo/ui/src/components/button.tsx";
 import { useLogout } from "../modals/action-confirmation/components/logout/hooks/use-logout.ts";
 

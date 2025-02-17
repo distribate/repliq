@@ -5,8 +5,6 @@ import { getUserNicknameByTokenFromKv } from "#utils/get-user-by-token-from-kv.t
 export const validateRequest = createMiddleware(async (ctx, next) => {
   const sessionToken = getCookie(ctx, "session")
 
-  console.log(sessionToken)
-
   if (!sessionToken) {
     return ctx.json({ error: "Unauthorized" }, 401)
   }

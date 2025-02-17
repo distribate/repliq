@@ -75,7 +75,7 @@ const app = new Hono()
   .route("/", minecraft)
   .route("/", hooks)
 
-showRoutes(app, { verbose: false });
+// showRoutes(app, { verbose: false });
 
 Bun.serve({
   port,

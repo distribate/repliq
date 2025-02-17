@@ -1,5 +1,3 @@
-"use client";
-
 import { ReactNode, useEffect, useRef, useState } from "react";
 import { SelectedWrapper } from "#wrappers/selected-wrapper.tsx";
 import { Search } from "lucide-react";

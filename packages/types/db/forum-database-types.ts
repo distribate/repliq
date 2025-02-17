@@ -995,8 +995,9 @@ export interface UsersSession {
   created_at: Generated<Timestamp>;
   device: string | null;
   expires_at: Timestamp;
-  ip: string | null;
+  ip: string;
   isBot: boolean | null;
+  location: Generated<string>;
   nickname: string;
   os: string | null;
   session_id: string;

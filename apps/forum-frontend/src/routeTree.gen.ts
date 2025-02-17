@@ -17,7 +17,7 @@ import { Route as PublicImport } from './routes/_public'
 import { Route as ProtectedImport } from './routes/_protected'
 import { Route as AuthIndexImport } from './routes/auth/index'
 import { Route as ProtectedIndexImport } from './routes/_protected/index'
-import { Route as ProtectedShopImport } from './routes/_protected/shop'
+import { Route as PublicBannedImport } from './routes/_public/banned'
 import { Route as ProtectedSearchImport } from './routes/_protected/search'
 import { Route as ProtectedCollectionImport } from './routes/_protected/collection'
 import { Route as ProtectedAdminImport } from './routes/_protected/_admin'
@@ -34,7 +34,6 @@ import { Route as ProtectedactionsCreateTicketImport } from './routes/_protected
 
 const PublicNotOnlineLazyImport = createFileRoute('/_public/not-online')()
 const PublicNotExistLazyImport = createFileRoute('/_public/not-exist')()
-const PublicBannedLazyImport = createFileRoute('/_public/banned')()
 const ProtectedNotificationsLazyImport = createFileRoute(
   '/_protected/notifications',
 )()
@@ -111,14 +110,6 @@ const PublicNotExistLazyRoute = PublicNotExistLazyImport.update({
   import('./routes/_public/not-exist.lazy').then((d) => d.Route),
 )
 
-const PublicBannedLazyRoute = PublicBannedLazyImport.update({
-  id: '/banned',
-  path: '/banned',
-  getParentRoute: () => PublicRoute,
-} as any).lazy(() =>
-  import('./routes/_public/banned.lazy').then((d) => d.Route),
-)
-
 const ProtectedNotificationsLazyRoute = ProtectedNotificationsLazyImport.update(
   {
     id: '/notifications',
@@ -145,10 +136,10 @@ const ProtectedEventsLazyRoute = ProtectedEventsLazyImport.update({
   import('./routes/_protected/events.lazy').then((d) => d.Route),
 )
 
-const ProtectedShopRoute = ProtectedShopImport.update({
-  id: '/shop',
-  path: '/shop',
-  getParentRoute: () => ProtectedRoute,
+const PublicBannedRoute = PublicBannedImport.update({
+  id: '/banned',
+  path: '/banned',
+  getParentRoute: () => PublicRoute,
 } as any)
 
 const ProtectedSearchRoute = ProtectedSearchImport.update({
@@ -367,12 +358,12 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProtectedSearchImport
       parentRoute: typeof ProtectedImport
     }
-    '/_protected/shop': {
-      id: '/_protected/shop'
-      path: '/shop'
-      fullPath: '/shop'
-      preLoaderRoute: typeof ProtectedShopImport
-      parentRoute: typeof ProtectedImport
+    '/_public/banned': {
+      id: '/_public/banned'
+      path: '/banned'
+      fullPath: '/banned'
+      preLoaderRoute: typeof PublicBannedImport
+      parentRoute: typeof PublicImport
     }
     '/_protected/events': {
       id: '/_protected/events'
@@ -394,13 +385,6 @@ declare module '@tanstack/react-router' {
       fullPath: '/notifications'
       preLoaderRoute: typeof ProtectedNotificationsLazyImport
       parentRoute: typeof ProtectedImport
-    }
-    '/_public/banned': {
-      id: '/_public/banned'
-      path: '/banned'
-      fullPath: '/banned'
-      preLoaderRoute: typeof PublicBannedLazyImport
-      parentRoute: typeof PublicImport
     }
     '/_public/not-exist': {
       id: '/_public/not-exist'
@@ -599,7 +583,6 @@ interface ProtectedRouteChildren {
   ProtectedAdminRoute: typeof ProtectedAdminRouteWithChildren
   ProtectedCollectionRoute: typeof ProtectedCollectionRoute
   ProtectedSearchRoute: typeof ProtectedSearchRoute
-  ProtectedShopRoute: typeof ProtectedShopRoute
   ProtectedEventsLazyRoute: typeof ProtectedEventsLazyRoute
   ProtectedFriendsLazyRoute: typeof ProtectedFriendsLazyRoute
   ProtectedNotificationsLazyRoute: typeof ProtectedNotificationsLazyRoute
@@ -620,7 +603,6 @@ const ProtectedRouteChildren: ProtectedRouteChildren = {
   ProtectedAdminRoute: ProtectedAdminRouteWithChildren,
   ProtectedCollectionRoute: ProtectedCollectionRoute,
   ProtectedSearchRoute: ProtectedSearchRoute,
-  ProtectedShopRoute: ProtectedShopRoute,
   ProtectedEventsLazyRoute: ProtectedEventsLazyRoute,
   ProtectedFriendsLazyRoute: ProtectedFriendsLazyRoute,
   ProtectedNotificationsLazyRoute: ProtectedNotificationsLazyRoute,
@@ -642,7 +624,7 @@ const ProtectedRouteWithChildren = ProtectedRoute._addFileChildren(
 )
 
 interface PublicRouteChildren {
-  PublicBannedLazyRoute: typeof PublicBannedLazyRoute
+  PublicBannedRoute: typeof PublicBannedRoute
   PublicNotExistLazyRoute: typeof PublicNotExistLazyRoute
   PublicNotOnlineLazyRoute: typeof PublicNotOnlineLazyRoute
   PublicMiscAboutLazyRoute: typeof PublicMiscAboutLazyRoute
@@ -653,7 +635,7 @@ interface PublicRouteChildren {
 }
 
 const PublicRouteChildren: PublicRouteChildren = {
-  PublicBannedLazyRoute: PublicBannedLazyRoute,
+  PublicBannedRoute: PublicBannedRoute,
   PublicNotExistLazyRoute: PublicNotExistLazyRoute,
   PublicNotOnlineLazyRoute: PublicNotOnlineLazyRoute,
   PublicMiscAboutLazyRoute: PublicMiscAboutLazyRoute,
@@ -670,11 +652,10 @@ export interface FileRoutesByFullPath {
   '': typeof ProtectedAdminRouteWithChildren
   '/collection': typeof ProtectedCollectionRoute
   '/search': typeof ProtectedSearchRoute
-  '/shop': typeof ProtectedShopRoute
+  '/banned': typeof PublicBannedRoute
   '/events': typeof ProtectedEventsLazyRoute
   '/friends': typeof ProtectedFriendsLazyRoute
   '/notifications': typeof ProtectedNotificationsLazyRoute
-  '/banned': typeof PublicBannedLazyRoute
   '/not-exist': typeof PublicNotExistLazyRoute
   '/not-online': typeof PublicNotOnlineLazyRoute
   '/': typeof ProtectedIndexRoute
@@ -705,11 +686,10 @@ export interface FileRoutesByTo {
   '': typeof ProtectedAdminRouteWithChildren
   '/collection': typeof ProtectedCollectionRoute
   '/search': typeof ProtectedSearchRoute
-  '/shop': typeof ProtectedShopRoute
+  '/banned': typeof PublicBannedRoute
   '/events': typeof ProtectedEventsLazyRoute
   '/friends': typeof ProtectedFriendsLazyRoute
   '/notifications': typeof ProtectedNotificationsLazyRoute
-  '/banned': typeof PublicBannedLazyRoute
   '/not-exist': typeof PublicNotExistLazyRoute
   '/not-online': typeof PublicNotOnlineLazyRoute
   '/': typeof ProtectedIndexRoute
@@ -743,11 +723,10 @@ export interface FileRoutesById {
   '/_protected/_admin': typeof ProtectedAdminRouteWithChildren
   '/_protected/collection': typeof ProtectedCollectionRoute
   '/_protected/search': typeof ProtectedSearchRoute
-  '/_protected/shop': typeof ProtectedShopRoute
+  '/_public/banned': typeof PublicBannedRoute
   '/_protected/events': typeof ProtectedEventsLazyRoute
   '/_protected/friends': typeof ProtectedFriendsLazyRoute
   '/_protected/notifications': typeof ProtectedNotificationsLazyRoute
-  '/_public/banned': typeof PublicBannedLazyRoute
   '/_public/not-exist': typeof PublicNotExistLazyRoute
   '/_public/not-online': typeof PublicNotOnlineLazyRoute
   '/_protected/': typeof ProtectedIndexRoute
@@ -780,11 +759,10 @@ export interface FileRouteTypes {
     | ''
     | '/collection'
     | '/search'
-    | '/shop'
+    | '/banned'
     | '/events'
     | '/friends'
     | '/notifications'
-    | '/banned'
     | '/not-exist'
     | '/not-online'
     | '/'
@@ -814,11 +792,10 @@ export interface FileRouteTypes {
     | ''
     | '/collection'
     | '/search'
-    | '/shop'
+    | '/banned'
     | '/events'
     | '/friends'
     | '/notifications'
-    | '/banned'
     | '/not-exist'
     | '/not-online'
     | '/'
@@ -850,11 +827,10 @@ export interface FileRouteTypes {
     | '/_protected/_admin'
     | '/_protected/collection'
     | '/_protected/search'
-    | '/_protected/shop'
+    | '/_public/banned'
     | '/_protected/events'
     | '/_protected/friends'
     | '/_protected/notifications'
-    | '/_public/banned'
     | '/_public/not-exist'
     | '/_public/not-online'
     | '/_protected/'
@@ -915,7 +891,6 @@ export const routeTree = rootRoute
         "/_protected/_admin",
         "/_protected/collection",
         "/_protected/search",
-        "/_protected/shop",
         "/_protected/events",
         "/_protected/friends",
         "/_protected/notifications",
@@ -964,9 +939,9 @@ export const routeTree = rootRoute
       "filePath": "_protected/search.tsx",
       "parent": "/_protected"
     },
-    "/_protected/shop": {
-      "filePath": "_protected/shop.tsx",
-      "parent": "/_protected"
+    "/_public/banned": {
+      "filePath": "_public/banned.tsx",
+      "parent": "/_public"
     },
     "/_protected/events": {
       "filePath": "_protected/events.lazy.tsx",
@@ -979,10 +954,6 @@ export const routeTree = rootRoute
     "/_protected/notifications": {
       "filePath": "_protected/notifications.lazy.tsx",
       "parent": "/_protected"
-    },
-    "/_public/banned": {
-      "filePath": "_public/banned.lazy.tsx",
-      "parent": "/_public"
     },
     "/_public/not-exist": {
       "filePath": "_public/not-exist.lazy.tsx",

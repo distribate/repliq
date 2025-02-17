@@ -24,7 +24,7 @@ const ProfileThreadsList = ({
   )
 
   if (isError) return <SomethingError />;
-  if (!threads) return <ContentNotFound title="Треды не найдены." />;
+  if (!threads) return <ContentNotFound title="Треды не найдены" />;
 
   return (
     <div className={`${viewType === 'grid' ? 'grid-cols-2 grid lg:grid-cols-3 auto-rows-auto' : 'flex flex-col'} gap-4 w-full h-full`}>

@@ -1,5 +1,3 @@
-"use client";
-
 import { Input } from "@repo/ui/src/components/input.tsx";
 import { ChangeEvent, forwardRef, useState } from "react";
 import { useDebounce } from "@repo/lib/hooks/use-debounce.ts";

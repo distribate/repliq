@@ -1,5 +1,3 @@
-"use client"
-
 import { DynamicModal } from "../dynamic-modal.tsx";
 import { ConfirmationActionModalTemplate } from "#templates/confirmation-action-modal-template.tsx";
 import { ConfirmationButton } from "#buttons/confirmation-action-button.tsx";

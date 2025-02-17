@@ -288,7 +288,7 @@ const app = new Hono<Env>()
   .route("/", landing)
   .route("/", report)
 
-showRoutes(app, { verbose: false });
+// showRoutes(app, { verbose: false });
 
 Bun.serve({
   port, fetch: app.fetch, websocket

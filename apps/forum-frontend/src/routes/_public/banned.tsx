@@ -1,48 +1,49 @@
 import dayjs from '@repo/lib/constants/dayjs-instance'
 import { Typography } from '@repo/ui/src/components/typography'
-import { createLazyFileRoute, redirect } from '@tanstack/react-router'
+import { createFileRoute, redirect } from '@tanstack/react-router'
 import Dirt from '@repo/assets/images/minecraft/dirt.webp'
 import { BannedActionButton } from '@repo/components/src/buttons/banned-action-button.tsx'
-import { getUserBanned } from '@repo/lib/queries/get-user-banned.ts'
+import { useQuery } from '@tanstack/react-query'
+import { createQueryKey } from '@repo/lib/helpers/query-key-builder'
+import { getUserInformation } from '@repo/lib/queries/get-user-information'
 
-async function checkIsBanned(nickname: string) {
-  const isBanned = await getUserBanned(nickname)
+export const BANNED_QUERY_KEY = createQueryKey("ui", ["banned"])
 
-  if (!isBanned || isBanned.nickname !== nickname) {
-    return false
-  }
-
-  return true
+type BannedQuery = {
+  reason: string
+  time: string
+  created_at: string
 }
 
-export const Route = createLazyFileRoute('/_public/banned')({
+const bannedQuery = () => useQuery<BannedQuery, Error>({
+  queryKey: BANNED_QUERY_KEY
+})
+
+type BannedSearch = BannedQuery
+
+export const Route = createFileRoute('/_public/banned')({
   component: RouteComponent,
-  // @ts-ignore
-  beforeLoad: async ({ params }: {  params: { nickname: string | undefined } }) => {
-    const nickname = params.nickname
-
-    if (!nickname) {
-      return redirect({ to: '/' })
+  loaderDeps: ({ search: { reason, time, created_at } }) => ({ reason, time, created_at }),
+  loader: async ({ context: ctx, deps }) => {
+    const isCurrent = await getUserInformation()
+    
+    if (isCurrent) {
+      throw redirect({ to: "/" })
     }
 
-    const isBanned = await checkIsBanned(nickname)
-
-    if (!isBanned) {
-      return redirect({ to: '/' })
+    ctx.queryClient.setQueryData(BANNED_QUERY_KEY, deps)
+  },
+  validateSearch: (search: Record<string, unknown>): BannedSearch => {
+    return {
+      reason: search.reason as string ?? "нет",
+      time: search.time as string ?? "",
+      created_at: search.created_at as string ?? ""
     }
-
-    return { nickname, isBanned }
-  },
-  loader: async ({ params }: { params: { nickname: string } }) => {
-    const isBanned = await getUserBanned(params.nickname)
-
-    return { isBanned }
-  },
+  }
 })
 
 function RouteComponent() {
-  // @ts-ignore
-  const { isBanned } = Route.useLoaderData()
+  const { data } = bannedQuery()
 
   return (
     <div className="flex w-full relative h-screen items-center justify-center">
@@ -71,7 +72,7 @@ function RouteComponent() {
               textSize="medium"
               className="brightness-100 font-semibold text-red-500"
             >
-              Причина: <span className="text-shark-50">{isBanned?.reason}</span>
+              Причина: <span className="text-shark-50">{data?.reason}</span>
             </Typography>
             <Typography
               textSize="medium"
@@ -79,7 +80,7 @@ function RouteComponent() {
             >
               Разбан:{' '}
               <span className="text-shark-50">
-                {dayjs(isBanned?.time).format('DD.MM.YYYY HH:mm')}
+                {dayjs(data?.time).format('DD.MM.YYYY HH:mm')}
               </span>
             </Typography>
           </div>

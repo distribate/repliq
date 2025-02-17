@@ -1,5 +1,3 @@
-"use client"
-
 import { useMemo, createContext, useContext, forwardRef, ComponentProps, useId, ReactNode, ComponentType } from "react"
 import * as RechartsPrimitive from "recharts"
 import { cn } from "@repo/lib/utils/ui/cn"

@@ -18,6 +18,8 @@ import {
 import { UserEntity } from "@repo/types/entities/entities-type.ts";
 import { POSTS_QUERY_KEY } from "../queries/posts-query";
 import { useUpdatePosts } from "../hooks/use-update-posts";
+import { SelectedWrapper } from "#wrappers/selected-wrapper.tsx";
+import { ArrowDownNarrowWide } from "lucide-react";
 
 type ProfilePostsFilteringProps = Pick<UserEntity, "nickname">;
 
@@ -94,12 +96,15 @@ const ProfilePostsFilteringView = ({
         contentClassname: "w-[200px]",
       }}
       trigger={
-        <div className="flex items-center gap-1">
-          <Typography textColor="gray" textSize="medium">
-            {POSTS_SORT.find((item) => item.value === currentFilteringType)
-              ?.title || POSTS_SORT[0].title}
-          </Typography>
-        </div>
+        <SelectedWrapper>
+          <ArrowDownNarrowWide size={20} className="text-shark-300" />
+        </SelectedWrapper>
+        // <div className="flex items-center gap-1">
+        //   <Typography textColor="gray" textSize="medium">
+        //     {POSTS_SORT.find((item) => item.value === currentFilteringType)
+        //       ?.title || POSTS_SORT[0].title}
+        //   </Typography>
+        // </div>
       }
       content={
         <div className="flex flex-col gap-y-4">
@@ -131,7 +136,7 @@ export const ProfilePostsFiltering = ({
   nickname,
 }: ProfilePostsFilteringProps) => {
   return (
-    <div className="flex w-full justify-between items-center">
+    <div className="flex w-full justify-between h-14 items-center">
       <div className="flex items-center gap-1 w-fit">
         <Typography
           textColor="shark_white"

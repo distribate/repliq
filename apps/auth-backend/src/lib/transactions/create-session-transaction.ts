@@ -10,7 +10,7 @@ type CreateSessionTransaction = {
   info: {
     browser: string | null;
     cpu: string | null;
-    ip: string | null;
+    ip: string;
     isBot: boolean | null;
     os: string | null;
     ua: string | null;

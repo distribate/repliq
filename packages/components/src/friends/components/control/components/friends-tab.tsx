@@ -1,5 +1,3 @@
-"use client";
-
 import { Typography } from "@repo/ui/src/components/typography.tsx";
 import {
   FRIENDS_FILTERING_QUERY_KEY,

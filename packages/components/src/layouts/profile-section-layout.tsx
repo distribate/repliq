@@ -11,7 +11,7 @@ export const ProfileSectionLayout = ({
   children,
 }: ProfileSectionLayoutProps) => {
   return (
-    <div className="flex flex-col relative h-full w-full gap-y-4">
+    <div className="flex flex-col relative h-full w-full gap-4">
       {header && header}
       <Separator orientation="horizontal" />
       {children}

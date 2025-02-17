@@ -1,5 +1,3 @@
-"use client";
-
 import { LayoutGrid } from "lucide-react";
 import { Typography } from "@repo/ui/src/components/typography.tsx";
 import { DropdownMenuItem } from "@repo/ui/src/components/dropdown-menu.tsx";

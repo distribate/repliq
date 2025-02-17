@@ -21,7 +21,7 @@ const ProfileFriendsList = ({ nickname }: Pick<UserEntity, "nickname">) => {
   if (isError) return <SomethingError />;
 
   if (!data || !data.data || !data.data.length) {
-    return <ContentNotFound title="Друзей нет" />
+    return <ContentNotFound title="Друзья не найдены" />
   }
 
   const friends = data.data as FriendWithDetails[]
@@ -45,7 +45,7 @@ const ProfileFriendsList = ({ nickname }: Pick<UserEntity, "nickname">) => {
 
 export const ProfileFriends = ({ nickname }: Pick<UserEntity, "nickname">) => {
   return (
-    <Suspense fallback={<ProfileFriendsSkeleton />}>
+    <Suspense>
       <div className="flex flex-col gap-4 w-full h-full">
         <ProfileFriendsFiltering nickname={nickname} />
         <ProfileFriendsList nickname={nickname} />

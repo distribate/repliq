@@ -1,5 +1,3 @@
-"use client";
-
 import { useEffect, useRef, useState } from "react";
 import { Typography } from "@repo/ui/src/components/typography";
 import { useNavigate } from "@tanstack/react-router"

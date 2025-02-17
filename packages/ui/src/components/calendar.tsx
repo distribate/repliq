@@ -1,5 +1,3 @@
-"use client";
-
 import { DayPicker } from "react-day-picker";
 import { cn } from "@repo/lib/utils/ui/cn.ts";
 import { ComponentProps } from "react";

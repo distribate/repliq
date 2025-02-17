@@ -1,5 +1,3 @@
-"use client";
-
 import { Typography } from "@repo/ui/src/components/typography.tsx";
 import { useState } from "react";
 import { MessageSquareWarning } from "lucide-react";

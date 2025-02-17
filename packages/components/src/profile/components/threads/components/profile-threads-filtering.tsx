@@ -117,7 +117,7 @@ export const ProfileThreadsFiltering = ({
   nickname,
 }: ProfileThreadsFilteringProps) => {
   return (
-    <div className="flex w-full justify-between items-center">
+    <div className="flex w-full justify-between h-14 items-center">
       <div className="flex items-center gap-1 w-fit">
         <Typography
           textColor="shark_white"

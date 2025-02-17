@@ -1,5 +1,3 @@
-"use client";
-
 import { useEffect, useState } from "react";
 import { useCreateThreadComment } from "../hooks/use-create-thread-comment.tsx";
 import { Avatar } from "#user/components/avatar/components/avatar.tsx";

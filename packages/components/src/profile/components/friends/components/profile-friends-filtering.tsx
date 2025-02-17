@@ -14,6 +14,8 @@ import { FilteringSearchWrapper } from "#wrappers/filtering-search-wrapper.tsx";
 import { useDebounce } from "@repo/lib/hooks/use-debounce.ts";
 import { Input } from "@repo/ui/src/components/input.tsx";
 import { useUpdateFriends } from "#friends/hooks/use-update-friends.ts";
+import { ArrowDownNarrowWide } from "lucide-react";
+import { SelectedWrapper } from "#wrappers/selected-wrapper.tsx";
 
 const ProfileFriendsFilteringSearch = forwardRef<HTMLInputElement>(
   (props, ref) => {
@@ -73,14 +75,9 @@ const ProfileFriendsFilteringView = ({ nickname }: { nickname: string }) => {
         contentClassname: "w-[200px]",
       }}
       trigger={
-        <div className="flex items-center gap-1">
-          <Typography
-            className="text-shark-300"
-            textSize="medium"
-          >
-            По дате добавления
-          </Typography>
-        </div>
+        <SelectedWrapper>
+          <ArrowDownNarrowWide size={20} className="text-shark-300" />
+        </SelectedWrapper>
       }
       content={
         <div className="flex flex-col gap-y-4">
@@ -111,14 +108,14 @@ export const ProfileFriendsFiltering = ({
   nickname
 }: { nickname: string }) => {
   return (
-    <div className="flex w-full justify-between items-center">
+    <div className="flex w-full justify-between h-14 items-center">
       <div className="flex items-center gap-1 w-fit">
         <Typography
           textColor="shark_white"
           textSize="big"
           className="font-semibold"
         >
-          Друзья
+          Друзья {nickname}
         </Typography>
       </div>
       <div className="flex items-center gap-4 w-fit">

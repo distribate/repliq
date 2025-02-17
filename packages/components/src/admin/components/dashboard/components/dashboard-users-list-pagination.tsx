@@ -1,5 +1,3 @@
-"use client";
-
 import { useSearch, useNavigate, useLocation } from "@tanstack/react-router";
 import { useCallback } from "react";
 import { Button } from "@repo/ui/src/components/button.tsx";

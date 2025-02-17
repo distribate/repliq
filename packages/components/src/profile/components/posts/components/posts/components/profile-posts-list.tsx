@@ -49,7 +49,7 @@ export const ProfilePostsList = ({
 
   if (isError) return <SomethingError />;
 
-  if (!postsData || !postsData.length) return <ContentNotFound title="Постов не найдено." />;
+  if (!postsData || !postsData.length) return <ContentNotFound title="Посты не найдены" />;
 
   const posts = postsData.filter(p => !p.isPinned);
   const pinnedPost = postsData.find(p => p.isPinned);

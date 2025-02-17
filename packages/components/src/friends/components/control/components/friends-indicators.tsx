@@ -1,5 +1,3 @@
-"use client"
-
 import { friendsCountQuery } from "#friends/queries/friends-count-query.ts";
 import { requestsIncomingQuery } from "../../../queries/requests-incoming-query.ts";
 import { requestsOutgoingQuery } from "../../../queries/requests-outgoing-query.ts";
