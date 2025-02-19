@@ -4,9 +4,11 @@ import { useIsomorphicLayoutEffect } from './use-isomorphic-layout-effect'
 export function useEventCallback<Args extends unknown[], R>(
   fn: (...args: Args) => R,
 ): (...args: Args) => R
+
 export function useEventCallback<Args extends unknown[], R>(
   fn: ((...args: Args) => R) | undefined,
 ): ((...args: Args) => R) | undefined
+
 export function useEventCallback<Args extends unknown[], R>(
   fn: ((...args: Args) => R) | undefined,
 ): ((...args: Args) => R) | undefined {

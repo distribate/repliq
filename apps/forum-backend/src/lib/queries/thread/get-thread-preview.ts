@@ -8,6 +8,11 @@ export async function getThreadPreview(threadId: string): Promise<ThreadPreview 
 
   return {
     ...thread,
+    properties: {
+      is_comments: thread.is_comments
+    },
+    comments_count: thread.thread_comments_count,
+    views_count: thread.thread_views_count,
     owner: {
       nickname: thread.user_nickname,
       name_color: thread.name_color

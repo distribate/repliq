@@ -55,6 +55,16 @@ async function createUserServer(values: CreateUserServer) {
 const REFFERALS_LIMIT = 5
 
 async function linkUserToReferer(trx: Transaction<DB>, nickname: string, referrer: string) {
+  const isReffered = await trx
+    .selectFrom("refferals")
+    .select("id")
+    .where("recipient", "=", nickname)
+    .execute()
+
+  if (isReffered.length > 0) {
+    return;
+  }
+
   const refferalsList = await trx
     .selectFrom("refferals")
     .select("id")
@@ -67,10 +77,8 @@ async function linkUserToReferer(trx: Transaction<DB>, nickname: string, referre
 
   await trx
     .insertInto("refferals")
-    .values({ initiator: referrer, recipient: nickname })
+    .values({ initiator: referrer, recipient: nickname, completed: false })
     .execute()
-
-  publishReferalReward({ referrer, referral: nickname })
 }
 
 export const createUserTransaction = async ({

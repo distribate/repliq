@@ -12,7 +12,7 @@ import Board from "@repo/assets/images/minecraft/chalkboard_board.webp"
 
 export const UserAdvancedSettings = () => {
   const { data: globalPreferencesState } = globalPreferencesQuery()
-  const { updateAlertsShowingMutation, updateThreadsSavingMutation, updateIntroVisibilityMutation } = useUpdateGlobalPreferences()
+  const { updateShowingMutation, updateThreadsSavingMutation } = useUpdateGlobalPreferences()
   const { alerts, autoSaveThreads, intro } = globalPreferencesState
   const { updateUserSettingsMutation } = useUpdateUserSettings()
   const { preferences: { send_notifications } } = getUser()
@@ -27,14 +27,14 @@ export const UserAdvancedSettings = () => {
           <Switch
             checked={alerts === "show"}
             defaultChecked={alerts === "show"}
-            onCheckedChange={_ => updateAlertsShowingMutation.mutate()}
+            onCheckedChange={_ => updateShowingMutation.mutate("alerts")}
           />
         </UserSettingOption>
         <UserSettingOption title="Интро" imageSrc={Board}>
           <Switch
             checked={intro === "show"}
             defaultChecked={intro === "show"}
-            onCheckedChange={_ => updateIntroVisibilityMutation.mutate()}
+            onCheckedChange={_ => updateShowingMutation.mutate("intro")}
           />
         </UserSettingOption>
         <UserSettingOption title="История тредов" imageSrc={Paper}>

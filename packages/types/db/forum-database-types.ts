@@ -749,6 +749,7 @@ export interface RealtimeSubscription {
 }
 
 export interface Refferals {
+  completed: Generated<boolean>;
   created_at: Generated<Timestamp>;
   id: Generated<string>;
   initiator: string;
@@ -976,6 +977,14 @@ export interface UsersGameStatus {
   status: string;
 }
 
+export interface UsersPunish {
+  created_at: Generated<Timestamp>;
+  id: Generated<Int8>;
+  initiator: string;
+  nickname: string;
+  type: string;
+}
+
 export interface UsersSavedThreads {
   created_at: Generated<Timestamp>;
   id: Generated<string>;
@@ -1152,6 +1161,7 @@ export interface DB {
   users_blocked: UsersBlocked;
   users_friends: UsersFriends;
   users_game_status: UsersGameStatus;
+  users_punish: UsersPunish;
   users_saved_threads: UsersSavedThreads;
   users_security: UsersSecurity;
   users_session: UsersSession;

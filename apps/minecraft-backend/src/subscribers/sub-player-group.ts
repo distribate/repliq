@@ -54,9 +54,7 @@ export const subscribePlayerGroup = () => {
           }
 
           const { type, content } = JSON.parse(data) as LuckpermsUpdatePayload;
-
-          console.log(JSON.parse(data))
-
+          
           if (type === "log" && content.description.includes("group.")) {
             const args = content.description.split(" ");
             // set permission -> permission set group.arkhont true -> ["permission", "set", "group.arkhont", "true"]
@@ -97,24 +95,24 @@ export const subscribePlayerGroup = () => {
                 // default = without donate
                 let currentPermission: DonateVariants = "default";
 
-                const query = await lpDB
-                  .selectFrom("luckperms_user_permissions")
-                  .select(["permission"])
-                  .where("uuid", "=", content.target.uniqueId)
-                  .where("permission", "like", "group.%")
-                  .execute()
+                // const query = await lpDB
+                //   .selectFrom("luckperms_user_permissions")
+                //   .select(["permission"])
+                //   .where("uuid", "=", content.target.uniqueId)
+                //   .where("permission", "like", "group.%")
+                //   .execute()
 
-                if (query) {
-                  query.forEach(({ permission }) => {
-                    const group = permission.split(" ")[0];
+                // if (query) {
+                //   query.forEach(({ permission }) => {
+                //     const group = permission.split(" ")[0];
 
-                    currentPermission = group.split(".")[1] as DonateVariants;
-                  })
-                }
+                //     currentPermission = group.split(".")[1] as DonateVariants;
+                //   })
+                // }
 
                 const res = await updateUserDonateForum({
                   nickname: recipient,
-                  donate: currentPermission,
+                  donate: "default",
                 });
 
                 if (!res) {

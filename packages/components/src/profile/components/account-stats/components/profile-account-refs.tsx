@@ -39,7 +39,9 @@ export const ProfileAccountReferals = () => {
             <div className="flex items-center gap-4">
               <Typography className="text-[18px] font-medium">
                 Пригласи друга на сервер и получи приятный бонус к игре!&nbsp;
-                <Link to="/misc/referal-system" className="w-fit text-shark-300">(подробнее)</Link>
+                <Link to="https://fasberry.su/wiki?tab=referals" target="_blank" className="w-fit text-shark-300">
+                  (подробнее)
+                </Link>
               </Typography>
               <img src={Minecart} alt="" width={36} height={36} />
             </div>

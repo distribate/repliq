@@ -44,7 +44,7 @@ export const ProfileSkinHowToChange = () => {
     <Dialog>
       <DialogTrigger asChild>
         <Button className="bg-shark-50 w-full h-[46px]">
-          <Typography textSize="medium"  className="text-shark-950">
+          <Typography textSize="medium" className="text-shark-950">
             Как изменить скин?
           </Typography>
         </Button>
@@ -63,6 +63,15 @@ export const ProfileSkinHowToChange = () => {
                 <code>/skin set [никнейм]</code>
               </pre>
             </Typography>
+          </div>
+          <div className="flex items-center w-full p-2">
+            <Link to="https://fasberry.su/wiki?tab=skin" target="_blank">
+              <Button state="default">
+                <Typography textSize="medium">
+                  Больше о формировании скина
+                </Typography>
+              </Button>
+            </Link>
           </div>
         </div>
       </DialogContent>

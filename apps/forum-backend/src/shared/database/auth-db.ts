@@ -11,7 +11,7 @@ const authDialect = ({
 
 export const authDB = new Kysely<AuthDB>({
   dialect: authDialect({
-    host: "127.0.0.1",
+    host: "5.83.140.56",
     database: process.env.AUTHORIZATION_POSTGRES_DB!,
     user: process.env.AUTHORIZATION_POSTGRES_USER!,
     password: process.env.AUTHORIZATION_POSTGRES_PASSWORD!,

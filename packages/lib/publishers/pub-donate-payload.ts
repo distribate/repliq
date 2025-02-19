@@ -7,9 +7,10 @@ export type DonatePayload = {
   donate: z.infer<typeof donateSchema>
 }
 
-export async function pubDonatePayload(payload: DonatePayload) {
+export function pubDonatePayload(payload: DonatePayload) {
   try {
     const nc = getNatsConnection()
+    
     return nc.publish("server.give.donate", JSON.stringify(payload))
   } catch (e) {
     console.error(e)

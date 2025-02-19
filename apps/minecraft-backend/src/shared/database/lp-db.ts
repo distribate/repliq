@@ -11,7 +11,7 @@ export const lpDialect = ({
 };
 
 export const lpDB = new Kysely<lpDBType>({ dialect: lpDialect({
-    host: "127.0.0.1",
+    host: "5.83.140.56",
     database: Bun.env.LUCKPERMS_POSTGRES_DB!,
     user: Bun.env.LUCKPERMS_POSTGRES_USER!,
     password: Bun.env.LUCKPERMS_POSTGRES_PASSWORD!,

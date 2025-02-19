@@ -14,6 +14,7 @@ const UserSettingsModal = lazy(() => import("#modals/user-settings/user-settings
 const COLLECTION_LINKS = [
   { name: "Мои темы", query: "threads" },
   { name: "Мои покупки", query: "purchases" },
+  { name: "Мои тикеты", query: "tickets" }
 ];
 
 const AdminButton = () => {

@@ -11,6 +11,10 @@ declare module "bun" {
     MYSQL_ROOT_PASSWORD: string,
     SKINS_PROXY_MYSQL_PORT: number
 
+    MINECRAFT_SERVER_API_URL: string
+    MINECRAFT_SERVER_API_PASSWORD: string
+    MINECRAFT_SERVER_API_USERNAME: string
+    
     BISQUITE_MYSQL_PORT: number;
     LOBBY_MYSQL_PORT: number;
     PLAYERPOINTS_MYSQL_PORT: number,

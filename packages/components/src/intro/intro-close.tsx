@@ -2,7 +2,7 @@ import { useUpdateGlobalPreferences } from "@repo/lib/hooks/use-update-global-pr
 import { DeleteButton } from "@repo/ui/src/components/detele-button";
 
 export const IntroClose = () => {
-  const { updateIntroVisibilityMutation } = useUpdateGlobalPreferences()
+  const { updateShowingMutation } = useUpdateGlobalPreferences()
 
-  return <DeleteButton variant="invisible" onClick={() => updateIntroVisibilityMutation.mutate()} />;
+  return <DeleteButton variant="invisible" onClick={() => updateShowingMutation.mutate("intro")} />;
 };

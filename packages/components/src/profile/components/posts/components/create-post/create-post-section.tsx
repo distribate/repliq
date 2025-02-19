@@ -8,11 +8,19 @@ import { useQueryClient } from "@tanstack/react-query";
 import { CreatePostActiveSection } from "./create-post-active-section";
 import { Suspense } from "react";
 import { Skeleton } from "@repo/ui/src/components/skeleton";
+import { userGlobalOptionsQuery } from "@repo/lib/queries/user-global-options-query";
 
 export const CreatePostSection = () => {
-  const { nickname } = getUser();
   const qc = useQueryClient();
+  const { data } = userGlobalOptionsQuery()
+  const { nickname } = getUser();
   const { data: { isActive } } = postFormQuery()
+
+  if (!data) return null;
+
+  const { can_create_posts } = data;
+
+  if (!can_create_posts) return null;
 
   const handleActive = () => {
     qc.setQueryData(POST_FORM_FIELD_QUERY_KEY, (prev: CreatePostFieldType) => ({ ...prev, isActive: true }));

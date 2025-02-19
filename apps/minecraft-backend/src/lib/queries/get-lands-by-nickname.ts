@@ -1,19 +1,33 @@
 import { bisquiteDB } from "#shared/database/bisquite-db.ts";
+import { sql, type RawBuilder } from "kysely";
+
+function json<T>(value: T): RawBuilder<T> {
+  return sql`CAST(${JSON.stringify(value)} AS JSONB)`
+}
 
 export async function getLandsByNickname(nickname: string) {
+  const player = await bisquiteDB
+    .selectFrom('lands_players')
+    .select('uuid')
+    .where('name', '=', nickname)
+    .executeTakeFirst();
+
+  if (!player) {
+    return null;
+  }
+
   const query = await bisquiteDB
-    .selectFrom("lands_players")
-    .innerJoin("lands_lands", "lands_players.edit_land", "lands_lands.ulid")
+    .selectFrom("lands_lands")
     .select([
-      "lands_lands.area",
-      "lands_lands.name",
-      "lands_lands.members",
-      "lands_lands.type",
-      "lands_lands.created_at",
-      "lands_lands.title",
-      "lands_lands.ulid"
+      "area",
+      "name",
+      "members",
+      "type",
+      "created_at",
+      "title",
+      "ulid"
     ])
-    .where("lands_players.name", "=", nickname)
+    .where("members", "like", `%${player.uuid}%`)
     .execute();
 
   const lands = await Promise.all(query.map(async (land) => {

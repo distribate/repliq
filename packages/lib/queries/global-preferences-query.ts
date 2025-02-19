@@ -1,8 +1,7 @@
-import { hasAlertsShow } from "#actions/has-alerts.ts";
 import { getCookieByKey } from "#helpers/get-cookie-by-key.ts";
 import { createQueryKey } from "#helpers/query-key-builder.ts";
 import { useReadLocalStorage } from "#hooks/use-read-local-storage.ts";
-import { INTRO_COOKIE_KEY } from "@repo/shared/keys/cookie";
+import { ALERTS_COOKIE_KEY, INTRO_COOKIE_KEY } from "@repo/shared/keys/cookie";
 import { useSuspenseQuery } from "@tanstack/react-query";
 
 export const GLOBAL_PREFERENCES_QUERY_KEY = createQueryKey("ui", ["global-preferences"])
@@ -19,6 +18,14 @@ function hasIntroShow(): boolean {
   if (hasIntroShowing === "show") return true;
 
   return hasIntroShowing !== "hide";
+}
+
+function hasAlertsShow(): boolean {
+  const hasAlertsShowing = getCookieByKey(ALERTS_COOKIE_KEY);
+
+  if (hasAlertsShowing === "show") return true;
+
+  return hasAlertsShowing !== "hide";
 }
 
 export const PREFERENCES_LS_KEY = "preferences";

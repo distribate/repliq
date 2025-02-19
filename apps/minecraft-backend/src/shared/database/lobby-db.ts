@@ -16,6 +16,6 @@ export const lobbyDB = new Kysely<lobbyDBType>({
     password: Bun.env.MYSQL_ROOT_PASSWORD!,
     port: Number(Bun.env.LOBBY_MYSQL_PORT!),
     database: "lobby",
-    host: "127.0.0.1"
+    host: "5.83.140.56"
   })
 }); 

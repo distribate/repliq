@@ -1,6 +1,6 @@
 import { loggerBot } from "../../shared/bot/bot";
 import { z } from "zod"
-import { pubDonatePayload } from "@repo/utils/nats/publishers/pub-donate-payload.ts"  
+import { pubDonatePayload } from "@repo/lib/publishers/pub-donate-payload.ts"  
 
 const itemSchema = z.enum(["donate", "item", "charism", "belkoin"])
 const donateSchema = z.enum(["arkhont", "authentic", "loyal"])
@@ -42,7 +42,7 @@ loggerBot.command("give", async (ctx) => {
         `)
       }
 
-      await pubDonatePayload({
+      pubDonatePayload({
         nickname, donate: donate.data
       })
       break;

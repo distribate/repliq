@@ -1,4 +1,3 @@
-import { deleteSession } from "@repo/lib/actions/delete-session.ts";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "@tanstack/react-router";
 import { AUTH_REDIRECT } from "@repo/shared/constants/routes.ts";
@@ -6,10 +5,23 @@ import { toast } from "sonner";
 import { createQueryKey } from "@repo/lib/helpers/query-key-builder";
 import { AUTH_IMAGE_QUERY_KEY } from "#forms/auth/components/auth-image.tsx";
 import { FACT_QUERY_KEY } from "#forms/auth/components/fact-section.tsx";
+import { authClient } from "@repo/shared/api/auth-client";
 
 export const LOGOUT_MUTATION_KEY = ["logout"];
 
 export const AUTH_FLAG_QUERY_KEY = createQueryKey("user", ["is-authenticated"])
+
+async function deleteSession() {
+  const res = await authClient["invalidate-session"].$post();
+
+  const data = await res.json();
+
+  if ("error" in data) {
+    throw new Error(data.error);
+  }
+
+  return data;
+}
 
 export const useLogout = () => {
   const qc = useQueryClient();

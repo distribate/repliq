@@ -16,6 +16,6 @@ export const reputationDB = new Kysely<reputationDBType>({
     password: Bun.env.MYSQL_ROOT_PASSWORD!,
     port: Number(Bun.env.REPUTATION_MYSQL_PORT!),
     database: "reputation",
-    host: "127.0.0.1"
+    host: "5.83.140.56"
   })
 });

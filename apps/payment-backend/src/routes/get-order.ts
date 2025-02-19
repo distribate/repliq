@@ -1,4 +1,4 @@
-import { paymentsDB } from "#shared/database/auth-db.ts";
+import { paymentsDB } from "#shared/database/payments-db.ts";
 import { throwError } from "@repo/lib/helpers/throw-error";
 import { Hono } from "hono";
 

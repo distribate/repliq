@@ -58,8 +58,6 @@
 }
 
 @layer components {
-
-	/* From Uiverse.io by BlackisPlay */
 	#steve {
 		scale: 0.3;
 		width: 400px;
@@ -84,325 +82,70 @@
 		position: relative;
 	}
 
-	#div1 {
-		grid-area: a1;
-		background-color: #2f200d;
-	}
-
-	#div2 {
-		grid-area: a2;
-		background-color: #2b1e0d;
-	}
-
-	#div3 {
-		grid-area: a3;
-		background-color: #2f1f0f;
-	}
-
-	#div4 {
-		grid-area: a4;
-		background-color: #281c0b;
-	}
-
-	#div5 {
-		grid-area: a5;
-		background-color: #241808;
-	}
-
-	#div6 {
-		grid-area: a6;
-		background-color: #261a0a;
-	}
-
-	#div7 {
-		grid-area: a7;
-		background-color: #2b1e0d;
-	}
-
-	#div8 {
-		grid-area: a8;
-		background-color: #2a1d0d;
-	}
-
-	#div9 {
-		grid-area: b1;
-		background-color: #2b1e0d;
-	}
-
-	#div10 {
-		grid-area: b2;
-		background-color: #2b1e0d;
-	}
-
-	#div11 {
-		grid-area: b3;
-		background-color: #2b1e0d;
-	}
-
-	#div12 {
-		grid-area: b4;
-		background-color: #332411;
-	}
-
-	#div13 {
-		grid-area: b5;
-		background-color: #422a12;
-	}
-
-	#div14 {
-		grid-area: b6;
-		background-color: #3f2a15;
-	}
-
-	#div15 {
-		grid-area: b7;
-		background-color: #2c1e0e;
-	}
-
-	#div16 {
-		grid-area: b8;
-		background-color: #281c0b;
-	}
-
-	#div17 {
-		grid-area: c1;
-		background-color: #2b1e0d;
-	}
-
-	#div18 {
-		grid-area: c2;
-		background-color: #b6896c;
-	}
-
-	#div19 {
-		grid-area: c3;
-		background-color: #bd8e72;
-	}
-
-	#div20 {
-		grid-area: c4;
-		background-color: #c69680;
-	}
-
-	#div21 {
-		grid-area: c5;
-		background-color: #bd8b72;
-	}
-
-	#div22 {
-		grid-area: c6;
-		background-color: #bd8e74;
-	}
-
-	#div23 {
-		grid-area: c7;
-		background-color: #ac765a;
-	}
-
-	#div24 {
-		grid-area: c8;
-		background-color: #342512;
-	}
-
-	#div25 {
-		grid-area: d1;
-		background-color: #aa7d66;
-	}
-
-	#div26 {
-		grid-area: d2;
-		background-color: #b4846d;
-	}
-
-	#div27 {
-		grid-area: d3;
-		background-color: #aa7d66;
-	}
-
-	#div28 {
-		grid-area: d4;
-		background-color: #ad806d;
-	}
-
-	#div29 {
-		grid-area: d5;
-		background-color: #9c725c;
-	}
-
-	#div30 {
-		grid-area: d6;
-		background-color: #bb8972;
-	}
-
-	#div31 {
-		grid-area: d7;
-		background-color: #9c694c;
-	}
-
-	#div32 {
-		grid-area: d8;
-		background-color: #9c694c;
-	}
-
-	#div33 {
-		grid-area: e1;
-		background-color: #b4846d;
-	}
-
-	#div34 {
-		grid-area: e2;
-		background-color: #ffffff;
-	}
-
-	#div35 {
-		grid-area: e3;
-		background-color: #523d89;
-	}
-
-	#div36 {
-		grid-area: e4;
-		background-color: #b57b67;
-	}
-
-	#div37 {
-		grid-area: e5;
-		background-color: #bb8972;
-	}
-
-	#div38 {
-		grid-area: e6;
-		background-color: #523d89;
-	}
-
-	#div39 {
-		grid-area: e7;
-		background-color: #ffffff;
-	}
-
-	#div40 {
-		grid-area: e8;
-		background-color: #aa7d66;
-	}
-
-	#div41 {
-		grid-area: f1;
-		background-color: #9c6346;
-	}
-
-	#div42 {
-		grid-area: f2;
-		background-color: #b37b62;
-	}
-
-	#div43 {
-		grid-area: f3;
-		background-color: #b78272;
-	}
-
-	#div44 {
-		grid-area: f4;
-		background-color: #6a4030;
-	}
-
-	#div45 {
-		grid-area: f5;
-		background-color: #6a4030;
-	}
-
-	#div46 {
-		grid-area: f6;
-		background-color: #be886c;
-	}
-
-	#div47 {
-		grid-area: f7;
-		background-color: #a26a47;
-	}
-
-	#div48 {
-		grid-area: f8;
-		background-color: #805334;
-	}
-
-	#div49 {
-		grid-area: g1;
-		background-color: #905e43;
-	}
-
-	#div50 {
-		grid-area: g2;
-		background-color: #965f40;
-	}
-
-	#div51 {
-		grid-area: g3;
-		background-color: #41210c;
-	}
-
-	#div52 {
-		grid-area: g4;
-		background-color: #8a4c3d;
-	}
-
-	#div53 {
-		grid-area: g5;
-		background-color: #8a4c3d;
-	}
-
-	#div54 {
-		grid-area: g6;
-		background-color: #45220e;
-	}
-
-	#div55 {
-		grid-area: g7;
-		background-color: #8f5e3e;
-	}
-
-	#div56 {
-		grid-area: g8;
-		background-color: #815339;
-	}
-
-	#div57 {
-		grid-area: h1;
-		background-color: #6f452c;
-	}
-
-	#div58 {
-		grid-area: h2;
-		background-color: #6d432a;
-	}
-
-	#div59 {
-		grid-area: h3;
-		background-color: #41210c;
-	}
-
-	#div60 {
-		grid-area: h4;
-		background-color: #421d0a;
-	}
-
-	#div61 {
-		grid-area: h5;
-		background-color: #45220e;
-	}
-
-	#div62 {
-		grid-area: h6;
-		background-color: #45220e;
-	}
-
-	#div63 {
-		grid-area: h7;
-		background-color: #83553b;
-	}
-
-	#div64 {
-		grid-area: h8;
-		background-color: #7a4e33;
-	}
+	#div1 {	grid-area: a1;  background-color: #2f200d;	}
+	#div2 { grid-area: a2;  background-color: #2b1e0d; }
+	#div3 {	grid-area: a3;  background-color: #2f1f0f; }
+	#div4 { grid-area: a4;  background-color: #281c0b; }
+	#div5 {	grid-area: a5;  background-color: #241808; }
+	#div6 {	grid-area: a6;  background-color: #261a0a; }
+	#div7 { grid-area: a7;  background-color: #2b1e0d; }
+	#div8 {	grid-area: a8;  background-color: #2a1d0d; }
+	#div9 {	grid-area: b1;	background-color: #2b1e0d;	}
+	#div10 {	grid-area: b2;  background-color: #2b1e0d;	}
+	#div11 {	grid-area: b3;	background-color: #2b1e0d; }
+	#div12 {	grid-area: b4;	background-color: #332411;	}
+	#div13 {	grid-area: b5;  background-color: #422a12;	}
+	#div14 {	grid-area: b6;  background-color: #3f2a15; }
+	#div15 {	grid-area: b7;	background-color: #2c1e0e	}
+	#div16 {	grid-area: b8;	background-color: #281c0b; }
+	#div17 {	grid-area: c1;	background-color: #2b1e0d;	}
+	#div18 {	grid-area: c2;	background-color: #b6896c;}
+	#div19 {	grid-area: c3;	background-color: #bd8e72;}
+	#div20 {	grid-area: c4;	background-color: #c69680;}
+	#div21 {	grid-area: c5;	background-color: #bd8b72;}
+	#div22 {	grid-area: c6;	background-color: #bd8e74;}
+	#div23 {	grid-area: c7;	background-color: #ac765a;}
+	#div24 {	grid-area: c8;	background-color: #342512;}
+	#div25 {	grid-area: d1;	background-color: #aa7d66;}
+	#div26 {	grid-area: d2;	background-color: #b4846d;}
+	#div27 {	grid-area: d3;	background-color: #aa7d66;}
+	#div28 {	grid-area: d4;	background-color: #ad806d;}
+	#div29 {	grid-area: d5;	background-color: #9c725c;}
+	#div30 {	grid-area: d6;	background-color: #bb8972;}
+	#div31 {	grid-area: d7;	background-color: #9c694c;}
+	#div32 {	grid-area: d8;	background-color: #9c694c;}
+	#div33 {	grid-area: e1;	background-color: #b4846d;}
+	#div34 {	grid-area: e2;	background-color: #ffffff;}
+	#div35 {	grid-area: e3;	background-color: #523d89;}
+	#div36 {	grid-area: e4;	background-color: #b57b67;}
+	#div37 {	grid-area: e5;	background-color: #bb8972;}
+	#div38 {	grid-area: e6;	background-color: #523d89;}
+	#div39 {	grid-area: e7;	background-color: #ffffff;}
+	#div40 {	grid-area: e8;	background-color: #aa7d66;}
+	#div41 {	grid-area: f1;	background-color: #9c6346;}
+	#div42 {	grid-area: f2;	background-color: #b37b62;}
+	#div43 {	grid-area: f3;	background-color: #b78272;}
+	#div44 {	grid-area: f4;	background-color: #6a4030;}
+	#div45 {	grid-area: f5;	background-color: #6a4030;}
+	#div46 {	grid-area: f6;	background-color: #be886c;}
+	#div47 {	grid-area: f7;	background-color: #a26a47;}
+	#div48 {	grid-area: f8;	background-color: #805334;}
+	#div49 {	grid-area: g1;	background-color: #905e43;}
+	#div50 {	grid-area: g2;	background-color: #965f40;}
+	#div51 {	grid-area: g3;	background-color: #41210c;}
+	#div52 {	grid-area: g4;	background-color: #8a4c3d;}
+	#div53 {	grid-area: g5;	background-color: #8a4c3d;}
+	#div54 {	grid-area: g6;	background-color: #45220e;}
+	#div55 {	grid-area: g7;	background-color: #8f5e3e;}
+	#div56 {	grid-area: g8;	background-color: #815339;}
+	#div57 {	grid-area: h1;  background-color: #6f452c;}
+	#div58 {	grid-area: h2;	background-color: #6d432a;}
+	#div59 {	grid-area: h3;	background-color: #41210c;}
+	#div60 {	grid-area: h4;	background-color: #421d0a;}
+	#div61 {	grid-area: h5;	background-color: #45220e;}
+	#div62 {	grid-area: h6;	background-color: #45220e;}
+	#div63 {	grid-area: h7;	background-color: #83553b;}
+	#div64 {	grid-area: h8;	background-color: #7a4e33;}
 
 	#steve ::before {
 		content: "";
@@ -428,29 +171,12 @@
 	}
 
 	@keyframes winking {
-		0% {
-			transform: translateY(0px);
-		}
-
-		40% {
-			transform: translateY(0px);
-		}
-
-		45% {
-			transform: translateY(50px);
-		}
-
-		48% {
-			transform: translateY(50px);
-		}
-
-		53% {
-			transform: translateY(0px);
-		}
-
-		100% {
-			transform: translateY(0px);
-		}
+		0% {		transform: translateY(0px);	}
+		40% { transform: translateY(0px);	}
+		45% {	transform: translateY(50px);}
+		48% {transform: translateY(50px);}
+		53% {transform: translateY(0px);}
+		100% {	transform: translateY(0px);}
 	}
 
 	#div1::before {

@@ -17,6 +17,7 @@ import { getRatingByRoute } from '#routes/rating/get-rating-by.ts';
 import { subscribeUserBalance } from '#subscribers/subscribe-user-balance.ts';
 import { subscribeUserLands } from '#subscribers/subscribe-user-lands.ts';
 import { subscribePlayerGroup } from '#subscribers/sub-player-group.ts';
+import { subscribePlayerJoin, subscribeRefferalCheck } from '#subscribers/sub-player-join.ts';
 
 function subscribeNatsSubscribers() {
   subscribeUserBalance()
@@ -25,6 +26,10 @@ function subscribeNatsSubscribers() {
   console.log("Subscribed to lands")
   subscribePlayerGroup()
   console.log("Subscribed to player group")
+  subscribeRefferalCheck()
+  console.log("Subscribed to refferal check")
+  subscribePlayerJoin()
+  console.log("Subscribed to player join")
 }
 
 await initNats()

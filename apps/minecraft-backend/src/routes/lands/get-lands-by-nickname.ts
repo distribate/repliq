@@ -29,6 +29,10 @@ export const getLandsByNicknameRoute = new Hono()
     try {
       let lands = await getLandsByNickname(nickname)
 
+      if (!lands) {
+        return ctx.json({ data: [] }, 404)
+      }
+
       if (exclude) {
         lands = lands.filter((land) => land.ulid !== exclude)
       }

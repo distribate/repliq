@@ -14,7 +14,8 @@ async function getUserReferals(nickname: string) {
     "users.donate",
     "users.name_color",
     "users.description",
-    "refferals.created_at"
+    "refferals.created_at",
+    "refferals.completed"
   ])
   .where("initiator", "=", nickname)
   .execute()

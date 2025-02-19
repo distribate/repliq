@@ -16,6 +16,6 @@ export const bisquiteDB = new Kysely<bisquiteDBType>({
     password: Bun.env.MYSQL_ROOT_PASSWORD!,
     port: Number(Bun.env.BISQUITE_MYSQL_PORT!),
     database: "bisquite",
-    host: "127.0.0.1"
+    host: "5.83.140.56"
   })
 }); 

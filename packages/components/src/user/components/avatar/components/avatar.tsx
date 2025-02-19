@@ -47,6 +47,7 @@ const AvatarUserStatus = ({ nickname }: { nickname: string }) => {
         <TooltipTrigger className="rounded-full min-w-[18px] min-h-[18px] absolute -bottom-2 -right-2 max-h-[32px] max-w-[32px]">
           {!isLoading && (
             <img
+              // @ts-ignore
               src={isOnline ? ExpActive : ExpNoActive}
               alt=""
               loading="lazy"

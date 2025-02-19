@@ -1,85 +1,71 @@
 name: fasberry-external
 
 services:
-  luckperms-rest-api:
-    image: ghcr.io/luckperms/rest-api
-    environment:
-      LUCKPERMS_STORAGE_METHOD: postgresql
-      LUCKPERMS_DATA_ADDRESS: luckperms_db:5432
-      LUCKPERMS_DATA_DATABASE: ${LUCKPERMS_POSTGRES_DB}
-      LUCKPERMS_DATA_USERNAME: ${LUCKPERMS_POSTGRES_USER}
-      LUCKPERMS_DATA_PASSWORD: ${LUCKPERMS_POSTGRES_PASSWORD}
-      LUCKPERMS_REST_HTTP_PORT: ${LUCKPERMS_BACKEND_PORT}
-      LUCKPERMS_REST_AUTH: true
-      LUCKPERMS_MESSAGING_SERVICE: nats
-      LUCKPERMS_NATS_ENABLED: "true"
-      LUCKPERMS_NATS_ADDRESS: "nats://${NATS_AUTH_TOKEN}@nats:4222"
-      LUCKPERMS_REST_AUTH_KEYS: ${SECRET_TOKEN}
-    ports:
-      - "4000:${LUCKPERMS_BACKEND_PORT}"
-    extra_hosts:
-      - "shared-network:host-gateway"
-    networks:
-      - shared-network
+  # luckperms-rest-api:
+  #   image: ghcr.io/luckperms/rest-api
+  #   environment:
+  #     LUCKPERMS_STORAGE_METHOD: postgresql
+  #     LUCKPERMS_DATA_ADDRESS: luckperms_db:5432
+  #     LUCKPERMS_DATA_DATABASE: ${LUCKPERMS_POSTGRES_DB}
+  #     LUCKPERMS_DATA_USERNAME: ${LUCKPERMS_POSTGRES_USER}
+  #     LUCKPERMS_DATA_PASSWORD: ${LUCKPERMS_POSTGRES_PASSWORD}
+  #     LUCKPERMS_REST_HTTP_PORT: ${LUCKPERMS_BACKEND_PORT}
+  #     LUCKPERMS_REST_AUTH: true
+  #     LUCKPERMS_MESSAGING_SERVICE: nats
+  #     LUCKPERMS_NATS_ENABLED: "true"
+  #     LUCKPERMS_NATS_ADDRESS: "nats://${NATS_AUTH_TOKEN}@nats:4222"
+  #     LUCKPERMS_REST_AUTH_KEYS: ${SECRET_TOKEN}
+  #   ports:
+  #     - "4000:${LUCKPERMS_BACKEND_PORT}"
+  #   extra_hosts:
+  #     - "shared-network:host-gateway"
+  #   networks:
+  #     - shared-network
 
-  consul:
-    image: consul:1.15.4
-    container_name: consul
-    ports:
-      - "8500:8500" # Web UI
-      - "8600:8600/udp"
-    command: "agent -server -client=0.0.0.0 -bootstrap-expect=1 -data-dir=/consul/data"
-    environment:
-      - CONSUL_BIND_INTERFACE=eth0
-    networks:
-      - vault_network
-    restart: always
-    volumes:
-      - ./data/fasberry-external/consul/data:/consul/data
-      - ./packages/config-consul/consul.hcl:/consul/config/consul.hcl
+  # consul:
+  #   image: consul:1.15.4
+  #   container_name: consul
+  #   ports:
+  #     - "8500:8500" # Web UI
+  #     - "8600:8600/udp"
+  #   command: "agent -server -client=0.0.0.0 -bootstrap-expect=1 -data-dir=/consul/data"
+  #   environment:
+  #     - CONSUL_BIND_INTERFACE=eth0
+  #   networks:
+  #     - vault_network
+  #   restart: always
+  #   volumes:
+  #     - ./data/fasberry-external/consul/data:/consul/data
+  #     - ./packages/config-consul/consul.hcl:/consul/config/consul.hcl
 
-  vault:
-    image: hashicorp/vault:latest
-    container_name: vault
-    ports:
-      - "8200:8200"
-    restart: always
-    depends_on:
-      - consul
-    networks:
-      - vault_network
-    volumes:
-      - ./packages/config-vault/vault.hcl:/vault/config/vault.hcl
-    cap_add:
-      - IPC_LOCK
-    entrypoint: [ "vault", "server", "-config=/vault/config/vault.hcl" ]
-
-  minio:
-    image: minio/minio:latest
-    container_name: minio
-    ports:
-      - "${MINIO_PORT}:${MINIO_PORT}"
-      - "${MINIO_CLIENT_PORT}:${MINIO_CLIENT_PORT}"
-    environment:
-      MINIO_ROOT_USER: ${MINIO_ROOT_USER}
-      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD}
-    volumes:
-      - ./data/fasberry-external/minio/data:/data
-    command: server /data --console-address ":${MINIO_CLIENT_PORT}"
-
-  # mc:
-  #   image: minio/mc:latest
-  #   container_name: minio-client
+  # vault:
+  #   image: hashicorp/vault:latest
+  #   container_name: vault
+  #   ports:
+  #     - "8200:8200"
+  #   restart: always
   #   depends_on:
-  #     - minio
-  #   entrypoint: >
-  #     /bin/sh -c "
-  #     until (mc alias set myminio http://minio:${MINIO_PORT} ${MINIO_ROOT_USER} ${MINIO_ROOT_PASSWORD}); do
-  #       echo 'Waiting for MinIO...';
-  #       sleep 2;
-  #     done;
-  #     mc mb myminio/mybucket;
-  #     "
+  #     - consul
+  #   networks:
+  #     - vault_network
+  #   volumes:
+  #     - ./packages/config-vault/vault.hcl:/vault/config/vault.hcl
+  #   cap_add:
+  #     - IPC_LOCK
+  #   entrypoint: [ "vault", "server", "-config=/vault/config/vault.hcl" ]
+
+  # minio:
+  #   image: minio/minio:latest
+  #   container_name: minio
+  #   ports:
+  #     - "${MINIO_PORT}:${MINIO_PORT}"
+  #     - "${MINIO_CLIENT_PORT}:${MINIO_CLIENT_PORT}"
+  #   environment:
+  #     MINIO_ROOT_USER: ${MINIO_ROOT_USER}
+  #     MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD}
+  #   volumes:
+  #     - ./data/fasberry-external/minio/data:/data
+  #   command: server /data --console-address ":${MINIO_CLIENT_PORT}"
 
   payments_db:
     container_name: payments_db
@@ -104,6 +90,7 @@ services:
     command:
       - "-js"
       - "-sd=2G"
+      - "--sd=/nats/jetstream"
       - "-m=8222"
       - "--T"
       - "-VV"
@@ -113,6 +100,7 @@ services:
       - NATS_TOKEN=${NATS_AUTH_TOKEN}
     volumes:
       - ./data/fasberry-external/nats/data:/nats
+      - ./data/fasberry-external/nats/jetstream:/nats/jetstream
     networks:
       - cloudflare_network
 

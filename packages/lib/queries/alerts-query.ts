@@ -33,10 +33,7 @@ export const alertsQuery = ({
   cursor, limit, enabled = true
 }: GetAlerts) => useQuery({
   queryKey: ALERTS_QUERY_KEY,
-  queryFn: () => getAlerts({
-    cursor,
-    limit
-  }),
+  queryFn: () => getAlerts({ cursor, limit }),
   refetchOnWindowFocus: false,
   refetchOnMount: false,
   enabled

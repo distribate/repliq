@@ -112,7 +112,7 @@ const UserDetailed = ({
                 Статистика
               </Typography>
             </TabsTrigger>
-            {currentUser.nickname !== nickname && (
+            {/* {currentUser.nickname !== nickname && (
               <TabsTrigger
                 value="friends"
                 className="duration-300 transition-all ease-in-out 
@@ -124,7 +124,7 @@ const UserDetailed = ({
                   Общие друзья
                 </Typography>
               </TabsTrigger>
-            )}
+            )} */}
           </TabsList>
           <TabsContent value="stats">
             <div className="flex flex-col gap-y-2 w-full">
@@ -146,7 +146,7 @@ const UserDetailed = ({
               </div>
             </div>
           </TabsContent>
-          {currentUser.nickname !== nickname && (
+          {/* {currentUser.nickname !== nickname && (
             <TabsContent value="friends">
               {shared_friends && shared_friends.length > 0 && (
                 <div className="flex flex-col gap-y-2 w-full">
@@ -167,7 +167,7 @@ const UserDetailed = ({
                 </Typography>
               )}
             </TabsContent>
-          )}
+          )} */}
         </Tabs>
         <div className="flex items-end justify-end h-full w-full">
           <Suspense>
@@ -205,13 +205,7 @@ export const UserSummaryCard = ({ nickname }: Pick<UserEntity, "nickname">) => {
           <UserSummaryCardLimited title="Пользователь забанен" />
         </Suspense>
       )}
-      {userCard.status === 'default' && (
-        <>
-          {userCard.data && (
-            <UserDetailed {...userCard.data} />
-          )}
-        </>
-      )}
+      {userCard.status === 'default' && userCard.data &&  <UserDetailed {...userCard.data} /> }
     </div>
   );
 };

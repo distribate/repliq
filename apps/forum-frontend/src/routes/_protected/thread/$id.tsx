@@ -16,6 +16,7 @@ import { createQueryKey } from '@repo/lib/helpers/query-key-builder'
 import { Typography } from '@repo/ui/src/components/typography'
 import { THREAD_URL } from '@repo/shared/constants/routes'
 import { Skeleton } from '@repo/ui/src/components/skeleton'
+import { userGlobalOptionsQuery } from '@repo/lib/queries/user-global-options-query'
 
 export const Route = createFileRoute('/_protected/thread/$id')({
   component: RouteComponent,
@@ -55,15 +56,22 @@ const ThreadControl = lazy(() =>
 const ThreadCommentsSection = ({
   threadId
 }: ThreadContentProps) => {
+  const { data } = userGlobalOptionsQuery()
   const qc = useQueryClient()
   const thread = qc.getQueryData<ThreadDetailed>(THREAD_QUERY_KEY(threadId))
 
-  if (!thread) return null;
+  if (!thread || !data) return null;
+
+  const { can_create_comments } = data;
 
   return (
     <div className="flex flex-col w-full h-full mt-2 gap-y-4">
       <ThreadCommentsHeader non_comments={!thread.properties.is_comments} />
-      {thread.properties.is_comments ? <CreateThreadComment /> : (
+      {thread.properties.is_comments ? (
+        can_create_comments && (
+          <CreateThreadComment />
+        )
+      ) : (
         <Suspense>
           <CommentsDisabled />
         </Suspense>

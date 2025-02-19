@@ -11,6 +11,8 @@ export type Generated<T> = T extends ColumnType<infer S, infer I, infer U>
 
 export type Int8 = ColumnType<string, bigint | number | string, bigint | number | string>;
 
+export type PaymentFiatStatus = "Canceled" | "Pending" | "Succeeded" | "WaitingForCapture";
+
 export type PaymentStatus = "cancelled" | "captured" | "created" | "failed" | "received";
 
 export type Timestamp = ColumnType<Date, Date | string, Date | string>;
@@ -31,6 +33,18 @@ export interface Payments {
   wallet: string | null;
 }
 
+export interface PaymentsFiat {
+  created_at: Generated<Timestamp | null>;
+  id: Generated<string>;
+  nickname: string;
+  orderid: string;
+  payment_type: string;
+  payment_value: string;
+  price: Int8;
+  status: PaymentFiatStatus;
+}
+
 export interface DB {
   payments: Payments;
+  payments_fiat: PaymentsFiat;
 }
