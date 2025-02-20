@@ -44,7 +44,7 @@ const DonateTipPopover = () => {
                 Привилегии дают доступ к большим возможностям на форуме и в самой игре
                 (cм.&nbsp;
                 <span
-                  onClick={() => navigate({ href: "https://fasberry.su/donate", reloadDocument: true })}
+                  onClick={() => navigate({ href: "https://fasberry.su/shop", reloadDocument: true })}
                   className="cursor-pointer font-semibold"
                 >
                   привилегии

@@ -4,7 +4,7 @@ import { MainLayoutPage } from '@repo/landing-components/src/layout/main-layout.
 import { Typography } from '@repo/landing-ui/src/typography';
 import Link from 'next/link';
 import { Button } from '@repo/landing-ui/src/button';
-import { Shop } from '@repo/landing-components/src/subs/donate-list.tsx';
+import { Shop } from '@repo/landing-components/src/shop/shop.tsx';
 
 export const metadata = {
   title: 'Донат',
@@ -20,12 +20,12 @@ export const metadata = {
   ],
   author: "Fasberry Server Team",
   robots: "index, follow",
-  canonical: "https://fasberry.su/donate",
+  canonical: "https://fasberry.su/shop",
   openGraph: {
     title: "Донат на сервер Fasberry | Уникальные привилегии и товары",
     description:
       "Получите доступ к уникальным привилегиям, товарам и монетам на нашем сервере. Ваша поддержка помогает проекту развиваться!",
-    url: "https://fasberry.su/donate",
+    url: "https://fasberry.su/shop",
     type: "website",
     images: [
       {

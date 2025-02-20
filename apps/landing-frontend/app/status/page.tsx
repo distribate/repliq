@@ -58,7 +58,7 @@ export const revalidate = 60
 
 export default async function StatusPage() {
   const serverStatus = await ky.get(url).json<ServerStatusType>()
-  
+
   const isServerOnline = serverStatus.online
 
   const playersOnline = serverStatus.players?.online
@@ -78,36 +78,32 @@ export default async function StatusPage() {
             className="!rounded-[12px] w-full lg:w-1/4"
             sandbox="allow-popups allow-popups-to-escape-sandbox allow-same-origin allow-scripts"
           />
-          <div className="w-full lg:w-3/4 h-full">
-            <div className="rounded-xl max-h-[500px] overflow-hidden block-item p-[2px] w-full">
-              <div
-                className="flex flex-col max-h-[496px] overflow-y-scroll border-none
-                gap-6 p-[2px] rounded-[16px] py-4 bg-background-light dark:bg-background-dark"
-              >
-                {!isServerOnline && (
-                  <Typography className="text-xl px-6 lg:text-2xl">
-                    Список игроков недоступен
-                  </Typography>
-                )}
-                {(isServerOnline && playersList) && (
-                  <>
-                    <Typography className="text-xl px-6 lg:text-2xl">
-                      Все игроки: {playersOnline}/{playersMax}
+          <div
+            className="flex flex-col max-h-[496px] overflow-y-scroll gap-6 rounded-xl py-4 border-2 
+            border-neutral-600 bg-background-light dark:bg-background-dark w-full lg:w-3/4 h-full"
+          >
+            {!isServerOnline && (
+              <Typography className="text-xl px-4 lg:text-2xl">
+                Список игроков недоступен
+              </Typography>
+            )}
+            {(isServerOnline && playersList) && (
+              <>
+                <Typography className="text-xl px-4 lg:text-2xl">
+                  Все игроки: {playersOnline}/{playersMax}
+                </Typography>
+                <div className="flex flex-col px-4 gap-2 h-full">
+                  {playersList.length === 0 && (
+                    <Typography className="px-2">
+                      тишина...
                     </Typography>
-                    <div className="flex flex-col px-4 gap-2 h-full">
-                      {playersList.length === 0 && (
-                        <Typography className="px-2">
-                          тишина...
-                        </Typography>
-                      )}
-                      {playersList.map(({ name_raw, uuid }) =>
-                        <PlayerStatus key={uuid} nickname={name_raw} />
-                      )}
-                    </div>
-                  </>
-                )}
-              </div>
-            </div>
+                  )}
+                  {playersList.map(({ name_raw, uuid }) =>
+                    <PlayerStatus key={uuid} nickname={name_raw} />
+                  )}
+                </div>
+              </>
+            )}
           </div>
         </div>
       </div>

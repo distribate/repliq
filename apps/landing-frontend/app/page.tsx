@@ -12,6 +12,7 @@ import { Suspense } from 'react';
 import { Skeleton } from '@repo/landing-ui/src/skeleton.tsx';
 import dynamic from 'next/dynamic';
 import { IntroBackgroundImage } from "@repo/landing-components/src/intro/background-image";
+import { StatusItem } from "@repo/landing-components/src/intro/status-item";
 
 const ParamProvider = dynamic(() => import("@repo/landing-components/src/layout/param-provider")
   .then(m => m.ParamProvider), {
@@ -61,11 +62,6 @@ export const metadata = {
     images: ["https://fasberry.su/images/backgrounds/donate_background.png"],
   },
 };
-
-const StatusItem = dynamic(() =>
-  import('@repo/landing-components/src/intro/status-item').then(m => m.StatusItem), {
-  ssr: false,
-});
 
 type GamePlayItemProps = GameplayItemType & {
   id: number
@@ -192,17 +188,17 @@ export default async function Main() {
             <Typography text_color="black" className="text-3xl lg:text-4xl">
               Cообщество
             </Typography>
-            <Suspense>
-              <StatusItem />
-            </Suspense>
-            <Block blockItem type="column" size="normal" rounded="big" className="h-max gap-y-8">
-              <Typography className="text-xl lg:text-2xl">
+            <StatusItem />
+            <div
+              className="flex flex-col bg-background-light p-4 rounded-xl dark:bg-background-dark h-fit gap-y-4 border-2 border-neutral-600"
+            >
+              <Typography text_color="adaptiveWhiteBlack" className="text-xl lg:text-2xl">
                 Скриншоты от игроков
               </Typography>
               <div className="grid grid-cols-2 sm:grid-cols-4 xl:grid-cols-2 2xl:grid-cols-3 auto-rows-auto gap-2">
                 <CommunityGalleryItem />
               </div>
-            </Block>
+            </div>
           </div>
         </div>
       </div>

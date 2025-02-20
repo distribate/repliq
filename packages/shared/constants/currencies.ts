@@ -1,4 +1,4 @@
-import type { PaymentCryptoCurrency } from '@repo/types/entities/payment-types.ts';
+import { PaymentCryptoCurrency } from "@repo/types/entities/payment-types";
 
 export const PAYMENT_CURRENCIES_MAPPING: Record<PaymentCryptoCurrency, string> = {
   "BTC": "bitcoin",

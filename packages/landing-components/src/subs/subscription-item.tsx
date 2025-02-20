@@ -2,35 +2,59 @@
 
 import { Block } from '@repo/landing-ui/src/block.tsx';
 import { Typography } from '@repo/landing-ui/src/typography.tsx';
-import { useState } from 'react';
+import { ReactNode, useState } from 'react';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@repo/landing-ui/src/accordion.tsx';
 import { Dialog, DialogClose, DialogContent, DialogTrigger } from '@repo/landing-ui/src/dialog.tsx';
 import { SubscriptionItemDescription } from '@repo/landing-components/src/subs/subscription-item-description.tsx';
 import { SHOP_ITEM_QUERY_KEY, ShopItemQuery } from '@repo/lib/queries/shop-item-query.ts';
-import { useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { ShopArea } from '@repo/landing-components/src/shop/shop-area.tsx';
 import { Button } from '@repo/landing-ui/src/button.tsx';
 import type { Donates } from '@repo/lib/queries/get-donates';
 
+export const usePayment = () => {
+  const qc = useQueryClient()
+
+  const updatePaymentDetailsMutation = useMutation({
+    mutationFn: async (val: Partial<ShopItemQuery>) => {
+      return qc.setQueryData(SHOP_ITEM_QUERY_KEY, (prev: ShopItemQuery) => ({
+        ...prev, ...val,
+      }));
+    },
+    onSettled: () => qc.invalidateQueries({ queryKey: SHOP_ITEM_QUERY_KEY }),
+    onError: (e) => {
+      throw new Error(e.message);
+    },
+  })
+
+  const clearPaymentDetails = () => qc.resetQueries({ queryKey: SHOP_ITEM_QUERY_KEY })
+
+  return { updatePaymentDetailsMutation, clearPaymentDetails }
+}
+
+export const StartPayment = () => {
+  return (
+    <DialogContent className="!w-[640px] h-auto overflow-y-auto border-none gap-0">
+      <ShopArea />
+    </DialogContent>
+  )
+}
+
 export const SubscriptionItem = ({
   rating, description, id, price, title, origin, imageUrl,
 }: Donates) => {
-  const qc = useQueryClient();
   const [open, setOpen] = useState<boolean>(false);
+  const { updatePaymentDetailsMutation, clearPaymentDetails } = usePayment()
 
   const handleDialogControl = (open: boolean) => {
     if (!open) {
-      qc.resetQueries({ queryKey: SHOP_ITEM_QUERY_KEY });
+      clearPaymentDetails()
     }
 
     setOpen(open);
   };
 
-  const selectDonateItem = () => {
-    return qc.setQueryData(SHOP_ITEM_QUERY_KEY, (prev: ShopItemQuery) => ({
-      ...prev, paymentType: 'donate', paymentValue: origin,
-    }));
-  };
+  const selectDonateItem = () => updatePaymentDetailsMutation.mutate({ paymentType: 'donate', paymentValue: origin });
 
   return (
     <Dialog
@@ -94,29 +118,7 @@ export const SubscriptionItem = ({
             </Accordion>
           </div>
           <div className="flex md:flex-row flex-col items-center w-full gap-2">
-            <Dialog>
-              <DialogTrigger
-                asChild
-                className="w-full"
-              >
-                <Button
-                  className="py-2 rounded-lg w-full group hover:bg-[#05b458] bg-[#088d47] hover:duration-300
-					        duration-100 ease-in-out  backdrop-filter backdrop-blur-lg"
-                >
-                  <Typography className="text-lg text-white">
-                    Перейти к покупке
-                  </Typography>
-                </Button>
-              </DialogTrigger>
-              <DialogContent className="!w-[640px] h-auto !bg-transparent p-0 overflow-y-auto border-none gap-0">
-                <Block blockItem type="column" rounded="big" className="h-full w-full">
-                  <Typography size="xl" position="center" className="w-[90%] self-center tracking-tight mb-4 lg:mb-8">
-                    Покупка привилегии ({title})
-                  </Typography>
-                  <ShopArea />
-                </Block>
-              </DialogContent>
-            </Dialog>
+            <StartPayment />
             <DialogClose
               asChild
               className="lg:w-1/3 w-full"

@@ -49,7 +49,7 @@ export const IntroMain = () => {
 						variant="positive"
 						className="w-full rounded-xl group hover:duration-300 duration-100 ease-in-out backdrop-blur-lg"
 					>
-						<Typography className="text-white text-2xl text-shadow-xl">
+						<Typography className="!text-white text-2xl text-shadow-xl">
 							<span className="inline-block duration-150 group-hover:duration-300 group-hover:translate-x-2">
 								⏵
 							</span>

@@ -45,7 +45,7 @@ const PushButton = () => {
 
   return (
     <PulsatingButton
-      onClick={() => navigate({ reloadDocument: true, href: "https://fasberry.su/donate#donate-list" })}
+      onClick={() => navigate({ reloadDocument: true, href: "https://fasberry.su/shop#shop-list" })}
       className="w-full py-3"
     >
       <Typography className="text-[18px] font-semibold">

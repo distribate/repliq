@@ -42,7 +42,7 @@ export const Footer = async() => {
         ))}
       </div>
       <div className="flex flex-col justify-center gap-2 responsive mx-auto">
-        <Typography size="md" className="text-center text-white">
+        <Typography className="text-center text-white">
           Все права защищены. Оригинальные права принадлежат Mojang AB.
         </Typography>
       </div>

@@ -11,6 +11,7 @@ async function getDonatesByType(args: z.infer<typeof getDonatesSchema>) {
       const donateQuery = await paymentsDB
         .selectFrom("donate")
         .selectAll()
+        .orderBy("id", "asc")
         .execute()
 
       return await Promise.all(donateQuery.map(async (donate) => {

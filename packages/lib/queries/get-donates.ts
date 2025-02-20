@@ -16,6 +16,8 @@ export type Donates = {
   origin: string;
   price: string;
   rating: string;
+  commands: string[],
+  forum: string[] | null
 }
 
 export async function getDonates(args: GetDonatesRequest) {

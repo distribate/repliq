@@ -15,7 +15,7 @@ export const NewsItemWrapper = ({
   
   return (
     <Dialog>
-      <DialogTrigger className="rounded-[8px] overflow-hidden border-2 border-white/60">
+      <DialogTrigger className="rounded-[8px] overflow-hidden border-2 border-neutral-600">
         <div className="h-[200px] lg:h-[444px] w-full overflow-hidden">
           <img
             loading="lazy"

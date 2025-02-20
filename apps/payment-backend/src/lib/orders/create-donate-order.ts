@@ -3,13 +3,13 @@ import { getCurrencyPriceInRub } from '../queries/get-currency-price-in-rub.ts';
 import { getDonateDetails } from '../queries/get-donate-details.ts';
 import type { CreateCryptoOrder } from '../../routes/create-order.ts';
 import { ARC_API } from '../../shared/api/arc-api.ts';
-import { PAYMENT_CURRENCIES_MAPPING } from '../../shared/currencies/currencies.ts';
 import {
   type Payment,
   type PaymentDonateType,
   type PaymentResponse,
 } from '@repo/types/entities/payment-types.ts';
 import { arcCurrencySchema, otherCurrencySchema } from '@repo/types/schemas/entities/currencies-schema.ts';
+import { PAYMENT_CURRENCIES_MAPPING } from '@repo/shared/constants/currencies.ts';
 
 type CreateDonateOrder = Omit<CreateCryptoOrder, 'paymentType'>
 

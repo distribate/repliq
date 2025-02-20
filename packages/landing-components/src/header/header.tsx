@@ -79,7 +79,7 @@ export const Header = () => {
 
 	return (
 		<div
-			className="header flex items-center justify-between sticky lg:absolute top-0 transition w-full bg-repeat-x z-50
+			className="header flex items-center justify-between absolute top-0 transition w-full bg-repeat-x z-50
 				bg-[url('/images/static/cracked_polished_blacked.webp')] "
 			style={{ backgroundSize: '160px' }}
 		>

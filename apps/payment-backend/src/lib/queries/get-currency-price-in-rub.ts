@@ -1,6 +1,6 @@
-import type { PAYMENT_CURRENCIES_MAPPING } from '../../shared/currencies/currencies.ts';
 import { coinAPI } from '#shared/api/coin-api.ts';
 import { throwError } from '@repo/lib/helpers/throw-error.ts';
+import { PAYMENT_CURRENCIES_MAPPING } from '@repo/shared/constants/currencies.ts';
 
 type CurrencyString = typeof PAYMENT_CURRENCIES_MAPPING[keyof typeof PAYMENT_CURRENCIES_MAPPING];
 

@@ -9,7 +9,7 @@ import { Block } from '@repo/landing-ui/src/block';
 import { Button } from '@repo/landing-ui/src/button';
 import { PaymentCurrency } from "@repo/types/entities/payment-types";
 import { cva, VariantProps } from 'class-variance-authority';
-import { useFormContext } from 'react-hook-form';
+import { PRICE_BY_CURRENCY_QUERY_KEY } from './shop-footer';
 
 const currencyItemVariants = cva(`
   flex cursor-pointer items-center backdrop-blur-xl transition-all 
@@ -32,110 +32,126 @@ const CurrencyItem = ({ variant, className, ...props }: CurrencyItemProps) => {
   return <div className={currencyItemVariants({ variant, className })} {...props} />
 }
 
+const UpdatePrice = () => {
+  const qc = useQueryClient()
+  const { data } = shopItemQuery()
+
+  const currency = data?.currency
+
+  const updatePrice = () => {
+    qc.refetchQueries({ queryKey: PRICE_BY_CURRENCY_QUERY_KEY(currency) })
+  }
+
+  return (
+    <Button disabled={currency === 'RUB'} onClick={updatePrice} className="rounded-lg bg-neutral-800 hover:bg-neutral-700">
+      <Typography className="text-[14px] lg:text-[16px] text-background-dark/80 dark:text-white">
+        Обновить цену
+      </Typography>
+    </Button>
+  )
+}
+
 export const ShopSelectCurrency = () => {
   const qc = useQueryClient();
-  const { setValue, register } = useFormContext()
   const [selCurrency, setSelCurrency] = useState<PaymentCurrency | null>(null);
   const [open, setOpen] = useState(false);
-
   const { data: currencies } = currenciesQuery();
-
   const { data: shopItemState } = shopItemQuery();
 
-  if (!shopItemState) return null;
-
-  const { currency } = shopItemState;
+  const currency = shopItemState?.currency;
 
   const selectCurrency = () => {
     setOpen(false);
 
-    setValue("currency", selCurrency, { shouldValidate: true, shouldDirty: true });
-
-    qc.setQueryData(SHOP_ITEM_QUERY_KEY, (p: ShopItemQuery) => ({ ...p, currency: selCurrency }));
+    qc.setQueryData(SHOP_ITEM_QUERY_KEY, 
+      (p: ShopItemQuery) => ({ ...p, currency: selCurrency })
+    );
   };
 
   return (
-    <div className="flex justify-between w-full items-center gap-2">
+    <div className="flex flex-col sm:flex-row justify-between w-full lg:items-center gap-2">
       <Typography size="base" text_color="adaptiveWhiteBlack">
         Метод оплаты
       </Typography>
-      <Dialog open={open} onOpenChange={setOpen}>
-        <DialogTrigger>
-          <div
-            className="flex group max-w-1/3 overflow-hidden gap-2 border-2 dark:border-neutral-600 bg-white/80 
+      <div className="flex items-center gap-2 w-fit">
+        <Dialog open={open} onOpenChange={setOpen}>
+          <DialogTrigger>
+            <div
+              className="flex group max-w-1/3 overflow-hidden gap-2 border-2 dark:border-neutral-600 bg-white/80 
             border-neutral-300 dark:bg-background-dark/80 lg:px-6 px-4 py-1 lg:py-2 rounded-lg"
-          >
-            <Typography className="text-[14px] lg:text-[16px] text-background-dark/80 dark:text-white">
-              {currency ?? 'выбрать'}
-            </Typography>
-          </div>
-        </DialogTrigger>
-        <DialogContent className="p-0 !max-w-2xl">
-          <VisuallyHidden>
-            <DialogTitle>
-              Выберите способ оплаты для продолжения оформления заказа
-            </DialogTitle>
-          </VisuallyHidden>
-          <Block
-            blockItem
-            type="column"
-            rounded="big"
-            className="h-full w-full"
-          >
-            <div className="flex flex-col w-full gap-4">
-              <Typography size="xl" className="text-center">
-                Выберите способ оплаты для продолжения оформления заказа
+            >
+              <Typography className="text-[14px] lg:text-[16px] text-background-dark/80 dark:text-white">
+                {currency ?? 'выбрать'}
               </Typography>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-2 auto-rows-auto w-full h-full">
-                {!currencies && (
-                  <Typography size="lg">Доступных валют нет :/</Typography>
-                )}
-                {currencies && (
-                  currencies.map((c) => (
-                    <CurrencyItem
-                      key={c.id}
-                      onClick={() => setSelCurrency(c.value as PaymentCurrency)}
-                      variant={!c.isAvailable
-                        ? 'disabled'
-                        : selCurrency === c.value
-                          ? 'selected'
-                          : 'default'
-                      }
-                      {...register('currency')}
-                    >
-                      <img
-                        src={c.imageUrl}
-                        alt=""
-                        width={36}
-                        height={36}
-                        className="rounded-3xl"
-                      />
-                      <Typography className="text-xl" text_color="adaptiveWhiteBlack" >
-                        {c.title}
-                      </Typography>
-                    </CurrencyItem>
-                  )))}
-              </div>
-              <div className="flex flex-col lg:flex-row gap-2 items-center justify-between w-full">
-                <Typography size="base" className="text-neutral-800 dark:text-neutral-400">
-                  {selCurrency !== 'RUB' && '[!] Оплата будет через телеграм-бота'}
+            </div>
+          </DialogTrigger>
+          <DialogContent className="p-0 !max-w-2xl">
+            <VisuallyHidden>
+              <DialogTitle>
+                Выберите способ оплаты для продолжения оформления заказа
+              </DialogTitle>
+            </VisuallyHidden>
+            <Block
+              blockItem
+              type="column"
+              rounded="big"
+              className="h-full w-full"
+            >
+              <div className="flex flex-col w-full gap-4">
+                <Typography size="xl" className="text-center">
+                  Выберите способ оплаты для продолжения оформления заказа
                 </Typography>
-                <div className="flex items-center lg:w-fit w-full gap-2">
-                  <Button
-                    onClick={selectCurrency}
-                    className="py-2 w-full group rounded-lg hover:bg-[#05b458] 
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-2 auto-rows-auto w-full h-full">
+                  {!currencies && (
+                    <Typography size="lg">Доступных валют нет :/</Typography>
+                  )}
+                  {currencies && (
+                    currencies.map((c) => (
+                      <CurrencyItem
+                        key={c.id}
+                        onClick={() => setSelCurrency(c.value as PaymentCurrency)}
+                        variant={!c.isAvailable
+                          ? 'disabled'
+                          : selCurrency === c.value
+                            ? 'selected'
+                            : 'default'
+                        }
+                      >
+                        <img
+                          src={c.imageUrl}
+                          alt=""
+                          width={36}
+                          height={36}
+                          className="rounded-3xl"
+                        />
+                        <Typography className="text-xl" text_color="adaptiveWhiteBlack" >
+                          {c.title}
+                        </Typography>
+                      </CurrencyItem>
+                    )))}
+                </div>
+                <div className="flex flex-col lg:flex-row gap-2 items-center justify-between w-full">
+                  <Typography size="base" className="text-neutral-800 dark:text-neutral-400">
+                    {selCurrency !== 'RUB' && '[!] Оплата будет через телеграм-бота'}
+                  </Typography>
+                  <div className="flex items-center lg:w-fit w-full gap-2">
+                    <Button
+                      onClick={selectCurrency}
+                      className="py-2 w-full group rounded-lg hover:bg-[#05b458] 
                       bg-[#088d47] hover:duration-300 duration-100 ease-in-out  backdrop-filter backdrop-blur-lg"
-                  >
-                    <Typography className="text-lg text-white">
-                      Выбрать
-                    </Typography>
-                  </Button>
+                    >
+                      <Typography className="text-lg text-white">
+                        Выбрать
+                      </Typography>
+                    </Button>
+                  </div>
                 </div>
               </div>
-            </div>
-          </Block>
-        </DialogContent>
-      </Dialog>
+            </Block>
+          </DialogContent>
+        </Dialog>
+        <UpdatePrice/>
+      </div>
     </div>
   );
 };

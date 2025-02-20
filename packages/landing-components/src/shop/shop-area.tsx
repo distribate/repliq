@@ -7,6 +7,7 @@ import Heart from '@repo/assets/gifs/hardcore-heart-minecraft.gif';
 import Duo from '@repo/assets/gifs/duo.gif';
 import { ReactNode } from 'react';
 import { CREATE_PAYMENT_DATA_QUERY_KEY, CREATE_PAYMENT_MUTATION_KEY } from '@repo/lib/hooks/use-create-payment';
+import { ShopFinishedPreview } from './shop-preview';
 
 type ShopAreaItemProps = {
   image: string,
@@ -74,9 +75,12 @@ export const ShopArea = () => {
           </Typography>
         </ShopAreaItem>
       )}
-      {(!isPaymentSuccess && !isPaymentProccessing && !isPaymentError) &&
-        <SubscriptionItemForm />
-      }
+      {(!isPaymentSuccess && !isPaymentProccessing && !isPaymentError) && (
+        <div className="flex flex-col w-full gap-4">
+          <ShopFinishedPreview />
+          <SubscriptionItemForm />
+        </div>
+      )}
     </>
   );
 };

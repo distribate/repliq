@@ -18,6 +18,7 @@ export type PaymentStatus = "canceled" | "pending" | "succeeded" | "waitingForCa
 export type Timestamp = ColumnType<Date, Date | string, Date | string>;
 
 export interface Donate {
+  commands: string[] | null;
   created_at: Generated<Timestamp>;
   description: string;
   id: Int8;
