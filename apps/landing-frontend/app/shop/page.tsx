@@ -4,7 +4,7 @@ import { MainLayoutPage } from '@repo/landing-components/src/layout/main-layout.
 import { Typography } from '@repo/landing-ui/src/typography';
 import Link from 'next/link';
 import { Button } from '@repo/landing-ui/src/button';
-import { DonateList } from '@repo/landing-components/src/subs/donate-list.tsx';
+import { Shop } from '@repo/landing-components/src/subs/donate-list.tsx';
 
 export const metadata = {
   title: 'Донат',
@@ -57,13 +57,13 @@ export default async function DonatePage() {
           <div className="flex flex-col gap-6 items-start justify-center w-full lg:max-w-3xl">
             <div className="flex flex-col gap-1 w-full lg:max-w-3xl">
               <Typography position="left" className="text-5xl lg:text-6xl text-gold mb-2">
-                Покупка привилегий
+                Магазин
               </Typography>
               <Typography position="left" text_color="white" className="text-2xl md:text-3xl">
-                Здесь можно купить привилегии, ну или узнать о каждой больше.
+                Здесь можно купить привилегии, игровую валюту или ивент.
               </Typography>
             </div>
-            <Link href="#donate-list">
+            <Link href="#shop-list">
               <Button
                 size="default"
                 variant="pageLink"
@@ -75,7 +75,7 @@ export default async function DonatePage() {
                   >
                     ⭐
                   </span>
-                  &nbsp;К привилегиям
+                  &nbsp;К товарам
                 </Typography>
               </Button>
             </Link>
@@ -84,18 +84,18 @@ export default async function DonatePage() {
       </div>
       <div className="full-screen-section flex flex-col min-h-screen items-center">
         <div
-          id="donate-list"
+          id="shop-list"
           className="flex flex-col py-32 responsive mx-auto"
         >
           <div className="flex flex-col items-center justify-center mb-6">
             <Typography text_color="black" position="center" variant="block_title">
-              Привилегии сервера
+              Доступные товары
             </Typography>
-            <Typography size="xl" position="center" className="text-dark-red dark:text-gold">
+            {/* <Typography size="xl" position="center" className="text-dark-red dark:text-gold">
               привилегии и всё, что с ними связано
-            </Typography>
+            </Typography> */}
           </div>
-          <DonateList />
+          <Shop />
         </div>
       </div>
     </MainLayoutPage>

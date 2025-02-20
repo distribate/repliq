@@ -1,12 +1,27 @@
 import { forumLandingClient } from '@repo/shared/api/forum-client';
-import { InferResponseType } from 'hono/client';
+import { InferResponseType, InferRequestType } from 'hono/client';
 
 const client = forumLandingClient["get-donates"].$get
 
-export type DonateType = InferResponseType<typeof client, 200>
+export type GetDonatesResponse = InferResponseType<typeof client, 200>
 
-export async function getDonates() {
-  const res = await forumLandingClient["get-donates"].$get();
+type GetDonatesRequest = InferRequestType<typeof client>["query"]
+
+export type Donates = {
+  imageUrl: string;
+  id: string;
+  created_at: string;
+  description: string;
+  title: string;
+  origin: string;
+  price: string;
+  rating: string;
+}
+
+export async function getDonates(args: GetDonatesRequest) {
+  const res = await forumLandingClient["get-donates"].$get({
+    query: args
+  });
 
   const data = await res.json();
 

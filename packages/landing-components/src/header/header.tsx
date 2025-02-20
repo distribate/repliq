@@ -44,7 +44,7 @@ export const SuperLink = (props: ComponentPropsWithRef<typeof Link>) => {
 	);
 };
 
-const headerUserQuery = () => useQuery({
+export const headerUserQuery = () => useQuery({
 	queryKey: ["header-user"],
 	queryFn: () => getUserFromCookie(),
 	refetchOnWindowFocus: false,
@@ -124,7 +124,7 @@ export const Header = () => {
 									)}
 									<Typography
 										className={`hover:brightness-150 text-project-color text-lg
-          			      ${isActive && 'brightness-[1.8]'} ${name == "Привилегии" && 'text-gold'}`
+          			      ${isActive && 'brightness-[1.8]'} ${href == "/shop" && 'text-gold'}`
 										}
 									>
 										{name}

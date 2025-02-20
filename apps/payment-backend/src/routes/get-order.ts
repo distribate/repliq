@@ -4,8 +4,8 @@ import { Hono } from "hono";
 
 async function getPaymentData(id: string) {
   return await paymentsDB
-    .selectFrom("payments")
-    .select(["payments.payment_type", "payment_value", "nickname", "orderid"])
+    .selectFrom("payments_crypto_ton")
+    .select(["payment_type", "payment_value", "nickname", "orderid"])
     .where("id", "=", id)
     .executeTakeFirst()
 }

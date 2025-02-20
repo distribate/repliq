@@ -17,7 +17,7 @@ export const subscribeUserLands = () => {
         const lands = await getLandsByNickname(nickname)
 
         if (!lands) {
-          return;
+          return msg.respond(JSON.stringify([]))
         }
 
         return msg.respond(JSON.stringify(lands))

@@ -35,7 +35,7 @@ export const SubscriptionItemDescription = ({
 				<Typography size="xl" position="left" className="text-water-meadow">
 					Команды:
 				</Typography>
-				{commands.slice(0, 3).map((item, idx) => (
+				{commands?.slice(0, 3).map((item, idx) => (
 					<Typography key={idx} size="lg" className="text-black" position="left">
 						{item}
 					</Typography>

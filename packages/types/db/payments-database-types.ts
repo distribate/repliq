@@ -11,13 +11,30 @@ export type Generated<T> = T extends ColumnType<infer S, infer I, infer U>
 
 export type Int8 = ColumnType<string, bigint | number | string, bigint | number | string>;
 
-export type PaymentFiatStatus = "Canceled" | "Pending" | "Succeeded" | "WaitingForCapture";
+export type PaymentCryptoTonStatus = "cancelled" | "captured" | "created" | "failed" | "received";
 
-export type PaymentStatus = "cancelled" | "captured" | "created" | "failed" | "received";
+export type PaymentStatus = "canceled" | "pending" | "succeeded" | "waitingForCapture";
 
 export type Timestamp = ColumnType<Date, Date | string, Date | string>;
 
-export interface Payments {
+export interface Donate {
+  created_at: Generated<Timestamp>;
+  description: string;
+  id: Int8;
+  imageUrl: string;
+  origin: string;
+  price: Int8;
+  rating: Int8;
+  title: string;
+}
+
+export interface Economy {
+  id: Int8;
+  type: string;
+  value: Int8;
+}
+
+export interface PaymentsCryptoTon {
   captured: Generated<boolean | null>;
   created_at: Generated<Timestamp | null>;
   currency: string;
@@ -29,7 +46,7 @@ export interface Payments {
   payment_type: string;
   payment_value: string;
   price: Int8;
-  status: PaymentStatus;
+  status: PaymentCryptoTonStatus;
   wallet: string | null;
 }
 
@@ -41,10 +58,12 @@ export interface PaymentsFiat {
   payment_type: string;
   payment_value: string;
   price: Int8;
-  status: PaymentFiatStatus;
+  status: PaymentStatus;
 }
 
 export interface DB {
-  payments: Payments;
+  donate: Donate;
+  economy: Economy;
+  payments_crypto_ton: PaymentsCryptoTon;
   payments_fiat: PaymentsFiat;
 }

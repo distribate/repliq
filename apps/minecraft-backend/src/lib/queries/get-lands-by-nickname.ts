@@ -1,9 +1,4 @@
 import { bisquiteDB } from "#shared/database/bisquite-db.ts";
-import { sql, type RawBuilder } from "kysely";
-
-function json<T>(value: T): RawBuilder<T> {
-  return sql`CAST(${JSON.stringify(value)} AS JSONB)`
-}
 
 export async function getLandsByNickname(nickname: string) {
   const player = await bisquiteDB

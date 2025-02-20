@@ -10,7 +10,7 @@ const paymentSuccessSchema = z.object({
 
 async function getPaymentData(id: string) {
   return await paymentsDB
-  .selectFrom("payments")
+  .selectFrom("payments_crypto_ton")
   .select(["nickname", "id"])
   .where("orderid", "=", id)
   .executeTakeFirst()

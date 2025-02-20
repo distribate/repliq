@@ -14,7 +14,7 @@ export const metadata = {
 		"команды Fasberry сервера",
 		"информация о Fasberry сервере",
 	],
-	author: "Fasberry Wiki Team",
+	author: "Fasberry Team",
 	robots: "index, follow",
 	canonical: "https://fasberry.su/wiki",
 	openGraph: {

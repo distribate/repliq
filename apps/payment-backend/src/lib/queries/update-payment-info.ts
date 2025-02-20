@@ -2,7 +2,7 @@ import type { Updateable } from 'kysely';
 import type { DB } from '@repo/types/db/payments-database-types.ts';
 import { paymentsDB } from '#shared/database/payments-db.ts';
 
-type Payments = Pick<DB, 'payments'>['payments']
+type Payments = Pick<DB, 'payments_crypto_ton'>['payments_crypto_ton']
 
 type UpdatePaymentInfo = {
   orderId: string,
@@ -14,7 +14,7 @@ export async function updatePaymentInfo({
 }: UpdatePaymentInfo) {
   try {
     return await paymentsDB
-    .updateTable('payments')
+    .updateTable('payments_crypto_ton')
     .set(updateable)
     .where('orderid', '=', orderId)
     .returning("id")

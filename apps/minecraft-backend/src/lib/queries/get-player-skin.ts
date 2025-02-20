@@ -21,25 +21,29 @@ export async function getPlayerSkin({
   const queryPlayersCustomSkins = await getExistsCustomPlayerSkin({ nickname })
 
   if (queryPlayersCustomSkins) {
-    const skinUrl = queryPlayersCustomSkins.skin_identifier
-    const blob = await ky.get(skinUrl).blob() as unknown as Blob;
+    if (queryPlayersCustomSkins.value) {
+      const skinData = atob(queryPlayersCustomSkins.value);
+      const parsedSkinData = JSON.parse(skinData) as Skin
+      const blob = await ky.get(parsedSkinData.textures.SKIN.url).blob() as unknown as Blob;
 
-    if (!blob) {
-      skin = null;
-    } else {
+      if (!blob) {
+        skin = null;
+      }
+
       skin = blob
     }
+  }
+
+  if (skin !== null) {
+    return skin
   }
 
   // get vanilla player skin
   const queryPlayersSkins = await getExistsPlayerSkin({ nickname })
 
   if (queryPlayersSkins) {
-    const skinData = atob(
-      queryPlayersSkins.skin_value
-    );
-
-    const parsedSkinState: Skin = JSON.parse(skinData);
+    const skinData = atob(queryPlayersSkins.skin_value);
+    const parsedSkinState = JSON.parse(skinData) as Skin;
 
     const blob = await ky.get(
       parsedSkinState.textures.SKIN.url
@@ -47,9 +51,9 @@ export async function getPlayerSkin({
 
     if (!blob) {
       skin = null;
-    } else {
-      skin = blob
     }
+
+    skin = blob
   }
 
   if (!skin) {

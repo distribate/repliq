@@ -1,11 +1,13 @@
-import { useQuery } from '@tanstack/react-query';
+import { keepPreviousData, useQuery } from '@tanstack/react-query';
 import { getDonates } from '@repo/lib/queries/get-donates.ts';
+import { createQueryKey } from '#helpers/query-key-builder.ts';
 
-export const DONATES_QUERY_KEY = ["donates"]
+export const DONATES_QUERY_KEY = (type: "donate" | "wallet" | "events") => createQueryKey("ui", ["donates", type])
 
-export const donatesQuery = () => useQuery({
-  queryKey: DONATES_QUERY_KEY,
-  queryFn: () => getDonates(),
+export const donatesQuery = (type: "donate" | "wallet" | "events") => useQuery({
+  queryKey: DONATES_QUERY_KEY(type),
+  queryFn: () => getDonates({ type }),
   refetchOnWindowFocus: false,
-  refetchOnMount: false
+  refetchOnMount: false,
+  placeholderData: keepPreviousData
 })

@@ -39,7 +39,7 @@ export const WikiContent = () => {
 	useEffect(() => {
 		const search = searchParams.get("tab");
 
-		if (search !== null) { 
+		if (search !== null) {
 			setValueTab(`${search}`)
 		};
 	}, [searchParams])
@@ -57,7 +57,7 @@ export const WikiContent = () => {
 			defaultValue="general"
 			className="flex flex-col lg:flex-row items-start justify-between bg-transparent w-full gap-x-4"
 		>
-			<WikiNavigationBar/>
+			<WikiNavigationBar />
 			<Block
 				className="w-full overflow-hidden lg:w-auto rounded-xl"
 				border="mini_gray"
@@ -148,7 +148,7 @@ export const WikiContent = () => {
 						<span
 							onClick={() => setValueTab("jobs")}
 							className="text-[#00cdb0] cursor-pointer text-shadow-xl">работах
-                </span>,
+						</span>,
 						находя уникальные предметы, участвуя в заданиях местных
 						жителей Оффенбурга, посредством обмена белкоинов, за редкие достижения.
 					</Typography>
@@ -331,7 +331,7 @@ export const WikiContent = () => {
 					</Typography>
 					<Typography size="xl" className="mb-6">
 						Чтобы сесть на питомца (если питомец такое позволяет), нужно ввести команду <CommandLine>/pets
-						mount</CommandLine>.
+							mount</CommandLine>.
 					</Typography>
 					<div className="flex items-center justify-center">
 						<ImageAnnotation
@@ -651,7 +651,7 @@ export const WikiContent = () => {
 						/>
 						<Typography size="xl" className="w-fit">
 							Броня может дополнительно защитить игрока благодаря аттрибуту <span
-							className="italic">твердость брони</span>.
+								className="italic">твердость брони</span>.
 							Обычно броня сводит на нет меньшую часть урона от атак, наносящих больший урон.
 							Прочность брони противостоит этому эффекту, уменьшая силу сильных атак.
 							Обычно только алмазная и незеритовая броня имеют этот аттрибут, но здесь же, любая кастомная броня имеет
@@ -812,7 +812,7 @@ export const WikiContent = () => {
 					<Typography size="xl" className="mb-6">
 						Используйте канал &quot;жалобы&quot; в категории &quot;обратная связь&quot; нашего
 						<Link href="https://discord.gg/yT7xem2C9G"
-									className="text-[#00cdb0] text-shadow-xl"> Discord</Link> сервера.
+							className="text-[#00cdb0] text-shadow-xl"> Discord</Link> сервера.
 					</Typography>
 				</ContentModule>
 				<ContentModule value="quests" role="tab" id="quests">
@@ -1156,6 +1156,68 @@ export const WikiContent = () => {
 							annotation="Меню просмотра уровней региона"
 						/>
 					</div>
+				</ContentModule>
+				<ContentModule value="referals" role="tab" id="referal">
+					<Typography className="text-5xl mb-8">
+						Реферальная система
+					</Typography>
+					<Typography size="xl" className="mb-6">
+						Игроки могут получать награды за приглашение друзей в игру.
+					</Typography>
+					<Typography variant="block_subtitle" shadow="xl" className="text-project-color">
+						Условия
+					</Typography>
+					<Typography size="xl" className="mb-6">
+						Пригласивший игрок должен провести в игре не менее 6 часов, а
+						приглашённый игрок должен провести в игре не менее 3 часов.
+					</Typography>
+					<Typography variant="block_subtitle" shadow="xl" className="text-project-color">
+						Награды
+					</Typography>
+					<Typography size="xl">
+						Пригласивший игрок: 60 харизмы и 3 белкоина
+					</Typography>
+					<Typography size="xl" className="mb-6">
+						Приглашённый игрок: 30 харизмы и 1 белкоин
+					</Typography>
+					<Typography size="xl">
+						Отследить прогресс выполнения реферальных условий можно в личном кабинете.
+					</Typography>
+				</ContentModule>
+				<ContentModule value="skin" role="tab" id="skin">
+					<Typography className="text-5xl mb-8">
+						Система скинов
+					</Typography>
+					<Typography variant="block_subtitle" shadow="xl" className="text-project-color">
+						Формирование скина
+					</Typography>
+					<Typography size="xl">
+						В зависимости от типа аккаунта игрок получает определённый скин:
+					</Typography>
+					<Typography size="xl">
+						Лицензионный аккаунт – скин соответствует тому, который установлен в официальном профиле.
+					</Typography>
+					<Typography size="xl" className="mb-6">
+						Пиратский аккаунт – по умолчанию используется скин Стива, но его можно изменить в игре.
+					</Typography>
+					<Typography variant="block_subtitle" shadow="xl" className="text-project-color">
+						Как изменить скин
+					</Typography>
+					<Typography size="xl" className="mb-6">
+						В игре изменить скин можно разными способами: указать ссылку на скин, либо указать никнейм игрока, скин которого вам нужен.
+					</Typography>
+					<Typography size="xl">
+						Команда для изменения скина через никнейм: <CommandLine>/skin set [никнейм]</CommandLine>
+					</Typography>
+					<Typography size="xl" className="mb-6">
+						Команда для изменения скина через ссылку: <CommandLine>/skin url [ссылка] [тип скина]</CommandLine>
+					</Typography>
+					<Typography size="xl">
+						Доступные сайты для загрузки скина: imgur, google drive, discord, textures minecraft net
+					</Typography>
+					<Typography size="xl">
+						Типы скинов: SLIM, CLASSIC
+					</Typography>
 				</ContentModule>
 			</Block>
 			<Dialog>

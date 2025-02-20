@@ -2,10 +2,10 @@ import { cn } from "@repo/lib/utils/ui/cn"
 import { VariantProps, cva } from "class-variance-authority"
 import { HTMLAttributes } from 'react';
 
-const commandLineVariants = cva("p-1 inline-flex", {
+const commandLineVariants = cva("p-1 cursor-pointer inline-flex", {
   variants: {
     variant: {
-      default: "px-2 py-1 border border-neutral-500 dark:border-neutral-700 rounded-md bg-neutral-600 dark:bg-neutral-800"
+      default: "px-2 py-1 rounded-md bg-neutral-600 dark:bg-neutral-800"
     },
     padding: {
       normal: "px-4 py-2",

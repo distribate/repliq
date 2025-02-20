@@ -10,11 +10,11 @@ import { SHOP_ITEM_QUERY_KEY, ShopItemQuery } from '@repo/lib/queries/shop-item-
 import { useQueryClient } from '@tanstack/react-query';
 import { ShopArea } from '@repo/landing-components/src/shop/shop-area.tsx';
 import { Button } from '@repo/landing-ui/src/button.tsx';
-import { DonateType } from '@repo/lib/queries/get-donates';
+import type { Donates } from '@repo/lib/queries/get-donates';
 
 export const SubscriptionItem = ({
-  rating, description, commands, id, price, title, origin, imageUrl,
-}: DonateType["data"][0]) => {
+  rating, description, id, price, title, origin, imageUrl,
+}: Donates) => {
   const qc = useQueryClient();
   const [open, setOpen] = useState<boolean>(false);
 
@@ -46,7 +46,7 @@ export const SubscriptionItem = ({
         <SubscriptionItemDescription
           description={description}
           name={title}
-          commands={commands}
+          commands={[]}
           rating={rating}
         />
         <Typography className="text-black cursor-pointer w-max self-end">

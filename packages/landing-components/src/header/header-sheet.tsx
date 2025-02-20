@@ -71,7 +71,7 @@ export const HeaderSheet = () => {
                 >
                   <div className="flex items-center gap-1">
                     {isActive && <ExperienceCircle />}
-                    <Typography size="lg" className={href === '/donate' ? 'text-gold' : 'text-white'}>
+                    <Typography size="lg" className={href === '/shop' ? 'text-gold' : 'text-white'}>
                       {name}
                     </Typography>
                     {childs && (

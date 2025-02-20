@@ -12,6 +12,12 @@ declare module "bun" {
     POSTGRES_PASSWORD: string;
     POSTGRES_TENANT_ID: string;
 
+    PAYMENTS_POSTGRES_DB_URL: string,
+    PAYMENTS_POSTGRES_DB: string,
+    PAYMENTS_POSTGRES_PASSWORD: string,
+    PAYMENTS_POSTGRES_USER: string,
+    PAYMENTS_POSTGRES_PORT: string;
+
     LUCKPERMS_POSTGRES_DB: string;
     LUCKPERMS_POSTGRES_PASSWORD: string;
     LUCKPERMS_POSTGRES_USER: string;
