@@ -1,5 +1,5 @@
 import { Input } from "@repo/ui/src/components/input.tsx";
-import { useSearch, useRouterState, useLocation } from "@tanstack/react-router";
+import { useLocation } from "@tanstack/react-router";
 import { ChangeEvent, useEffect, useState } from "react";
 import { useSearchPage } from "#search/hooks/use-search-page.ts";
 import { useDebounce } from "@repo/lib/hooks/use-debounce.ts";
@@ -29,7 +29,7 @@ export const SearchPageInput = () => {
   return (
     <Input
       value={value}
-      placeholder="Поиск..."
+      placeholder={`Введите ${searchType === "users" ? "никнейм" : "название треда"}`}
       className="w-full h-[80px] !p-0 !rounded-md text-xl"
       backgroundType="transparent"
       onChange={handleSearch}

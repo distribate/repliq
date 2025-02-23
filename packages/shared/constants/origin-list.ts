@@ -1,9 +1,11 @@
 export const originList = [
-  // production
-  "https://fasberry.su",
-  "https://cc.fasberry.su",
-  // development
-  "http://localhost:3009",
-  "http://localhost:3001",
-  "http://localhost:3000",
+  // domains
+  "https://fasberry.su", // landing-frontend
+  "https://cc.fasberry.su", // forum-frontend
+
+  // local
+  "http://localhost:3009", // development of landing-frontend
+  "http://localhost:3001", // production of landing-frontend
+  "http://localhost:3008", // development of forum-frontend
+  "http://localhost:3000", // production of forum-frontend
 ]

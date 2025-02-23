@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { Button } from "@repo/landing-ui/src/button";
 import NetheriteSword from "@repo/assets/images/minecraft/netherite_sword.webp"
 import WildArmor from "@repo/assets/images/minecraft/wild_armor_trim_ыmithing_еemplate.webp"
+import { Skeleton } from "@repo/landing-ui/src/skeleton";
 
 export const StatusItem = () => {
 	const { data: status, isLoading } = serverStatusQuery(25565);
@@ -25,7 +26,7 @@ export const StatusItem = () => {
 				<div className="flex flex-col gap-2 w-full">
 					<div className="grid grid-cols-[1fr_1fr] grid-rows-1 w-full bg-neutral-300/80 dark:bg-neutral-900/80 p-2 rounded-xl">
 						<div className="flex items-center gap-3">
-							<div className="flex items-center justify-center bg-neutral-700/40 rounded-lg p-2">
+							<div className="hidden sm:flex items-center justify-center bg-neutral-700/40 rounded-lg p-2">
 								<img src={NetheriteSword.src} alt="" width={24} height={24} />
 							</div>
 							<Typography
@@ -35,18 +36,22 @@ export const StatusItem = () => {
 								Bisquite
 							</Typography>
 						</div>
-						<div className="flex items-center truncate justify-end gap-3">
-							<Typography
-								text_color="adaptiveWhiteBlack"
-								className="text-md sm:text-base md:text-lg lg:text-xl"
-							>
-								играет {serverOnline} игроков
-							</Typography>
+						<div className="flex items-center w-full justify-end gap-3">
+							{isLoading ? (
+								<Skeleton className="h-8 w-24" />
+							) : (
+								<Typography
+									text_color="adaptiveWhiteBlack"
+									className="text-md truncate sm:text-base md:text-lg lg:text-xl"
+								>
+									<span className="hidden sm:inline">играет</span> {serverOnline} игроков
+								</Typography>
+							)}
 						</div>
 					</div>
-					<div className="grid grid-cols-[1fr_1fr] grid-rows-1 w-full bg-neutral-300/80 dark:bg-neutral-900/80 p-2 rounded-xl">
+					<div className="grid grid-cols-[1fr_1fr] gap-2 grid-rows-1 w-full bg-neutral-300/80 dark:bg-neutral-900/80 p-2 rounded-xl">
 						<div className="flex items-center gap-3">
-							<div className="flex items-center justify-center bg-neutral-700/40 rounded-lg p-2">
+							<div className="hidden sm:flex items-center justify-center bg-neutral-700/40 rounded-lg p-2">
 								<img src={WildArmor.src} alt="" width={24} height={24} />
 							</div>
 							<Typography
@@ -56,10 +61,10 @@ export const StatusItem = () => {
 								Muffin
 							</Typography>
 						</div>
-						<div className="flex items-center justify-end gap-3">
+						<div className="flex items-center w-full justify-end gap-3">
 							<Typography
 								text_color="adaptiveGray"
-								className="text-md sm:text-base md:text-lg lg:text-xl"
+								className="text-md sm:text-base truncate md:text-lg lg:text-xl"
 							>
 								в разработке...
 							</Typography>
@@ -67,12 +72,24 @@ export const StatusItem = () => {
 					</div>
 				</div>
 				<div className="flex items-center justify-between w-full">
-					<Typography
-						text_color="adaptiveWhiteBlack"
-						className="text-right text-md sm:text-base md:text-lg lg:text-xl"
-					>
-						Всего: {serverOnline}
-					</Typography>
+					{isLoading ? (
+						<div className="flex items-center gap-2">
+							<Typography
+								text_color="adaptiveWhiteBlack"
+								className="text-right text-md sm:text-base md:text-lg lg:text-xl"
+							>
+								Всего: 
+							</Typography>
+							<Skeleton className="h-8 w-8" />
+						</div>
+					) : (
+						<Typography
+							text_color="adaptiveWhiteBlack"
+							className="text-right text-md sm:text-base md:text-lg lg:text-xl"
+						>
+							Всего: {serverOnline}
+						</Typography>
+					)}
 					<Button
 						onClick={() => push("/status")}
 						className="rounded-lg px-6 py-2 bg-neutral-400  dark:bg-neutral-800 dark:hover:bg-neutral-700"

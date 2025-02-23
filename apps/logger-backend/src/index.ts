@@ -18,22 +18,22 @@ await initNats()
 
 async function startNatsSubscribers() {
   subscribeReceivePayment()
-  console.log("Subscribed to payment status")
+  console.log("\x1b[34m[NATS]\x1b[0m Subscribed to payment status")
   
   subscribeReceiveServerCommand()
-  console.log("Subscribed to server command")
+  console.log("\x1b[34m[NATS]\x1b[0m Subscribed to server command")
 
   subscribeReceiveFiatPayment()
-  console.log("Subscribed to fiat payment")
+  console.log("\x1b[34m[NATS]\x1b[0m Subscribed to fiat payment")
 
   subscribeReceiveNotify()
-  console.log("Subscribed to receive notify")
+  console.log("\x1b[34m[NATS]\x1b[0m Subscribed to receive notify")
 
   subscribeServerEvents()
-  console.log("Subscribed to server events")
+  console.log("\x1b[34m[NATS]\x1b[0m Subscribed to server events")
 
   subscribeReferalReward()
-  console.log("Subscribed to referal reward")
+  console.log("\x1b[34m[NATS]\x1b[0m Subscribed to referal reward")
 }
 
 await fasberryBot.init()

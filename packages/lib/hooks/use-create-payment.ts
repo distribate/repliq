@@ -8,6 +8,11 @@ export const CREATE_PAYMENT_MUTATION_KEY = ["shop", 'create-payment-mutation'];
 
 export const CREATE_PAYMENT_DATA_QUERY_KEY = ["shop", "create-payment", "data"]
 
+export type CreatePaymentQuery = {
+  status: "error" | "success"
+  data: string
+}
+
 export const useCreatePayment = () => {
   const qc = useQueryClient();
 
@@ -16,11 +21,14 @@ export const useCreatePayment = () => {
     mutationFn: async (values: PaymentFields) => createPayment(values),
     onSuccess: async (data) => {
       if ("error" in data) {
-        return toast.error(data.error);
+        qc.setQueryData(CREATE_PAYMENT_DATA_QUERY_KEY, { status: "error", data: data.error })
+
+        toast.error(data.error);
+      } else if ("data" in data) {
+        qc.setQueryData(CREATE_PAYMENT_DATA_QUERY_KEY, { status: "success", data: data })
       }
 
       qc.resetQueries({ queryKey: SHOP_ITEM_QUERY_KEY })
-      qc.setQueryData(CREATE_PAYMENT_DATA_QUERY_KEY, data)
     },
     onError: e => {
       throw new Error(e.message);

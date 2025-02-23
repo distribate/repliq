@@ -1,6 +1,5 @@
 import { Hono } from 'hono';
 import { logger } from 'hono/logger';
-import { bearerAuth } from 'hono/bearer-auth';
 import { showRoutes } from 'hono/dev';
 import { initNats } from '@repo/config-nats/nats-client';
 import { validateRequest } from '#middlewares/validate-request.ts';
@@ -50,10 +49,6 @@ import { getUserBanDetailsRoute } from '#routes/user/get-user-ban-details.ts';
 import { createThreadRoute } from '#routes/thread/create-thread.ts';
 import { getUserFriendsCountRoute } from '#routes/user/get-user-friends-count.ts';
 import { getFactRoute } from '#routes/shared/get-fact-route.ts';
-import { createBunWebSocket } from 'hono/bun'
-import type { ServerWebSocket } from 'bun'
-import { confirmWebsocketConnRoute } from '#routes/ws/confirm-websocket-conn.ts';
-import { userStatusRoute } from '#routes/ws/user-status.ts';
 import { getUserStatusRoute } from '#routes/user/get-user-status.ts';
 import { getNewsRoute } from '#routes/public/get-news.ts';
 import { getOnlineUsersRoute } from '#routes/public/get-online-users.ts';
@@ -63,7 +58,7 @@ import { getAuthImageRoute } from '#routes/public/get-auth-image.ts';
 import { getDonatesRoute } from '#routes/public/get-donates.ts';
 import { getThreadImagesRoute } from './routes/thread/get-thread-images';
 import { getStaticImageRoute } from '#routes/shared/get-static-image.ts';
-import { port, token } from "./utils/init-env.ts"
+import { port } from "./utils/init-env.ts"
 import { timeoutMiddleware } from '#middlewares/timeout.ts';
 import { rateLimiterMiddleware } from '#middlewares/rate-limiter.ts';
 import { csrfProtectionMiddleware } from '#middlewares/csrf-protection.ts';
@@ -96,24 +91,22 @@ import { getPostViewersRoute } from '#routes/post/get-post-viewers.ts';
 import { getUserFavoriteItemRoute } from '#routes/user/get-user-favorite-item.ts';
 import { getUserPurchasesRoute } from '#routes/user/get-user-purchases.ts';
 import { getUserBalanceRoute } from '#routes/user/get-user-balance.ts';
-import { subscribeUserStatus } from '#subscribers/subscribe-user-status.ts';
+import { subscribeUserStatus } from '#subscribers/sub-user-status.ts';
 import { watcher } from '#utils/kv-watcher.ts';
 import { userStatus } from '#middlewares/user-status.ts';
 import { getUserPublicSocialsRoute } from '#routes/user/get-user-public-socials.ts';
-import { sseRoute } from '#routes/sse/sse.ts';
 import { getThreadsByOwnerRoute } from '#routes/thread/get-threads-by-owner.ts';
 import { getMyLandsRoute } from '#routes/user/get-my-lands.ts';
 
-function startNatsSubscribers() {
+async function startNats() {
+  await initNats()
+  await watcher()
+
   subscribeUserStatus()
-  console.log("Users status subscribed")
+  console.log("\x1b[34m[NATS]\x1b[0m Users status subscribed")
 }
 
-await initNats()
-await watcher()
-startNatsSubscribers()
-
-const { websocket } = createBunWebSocket<ServerWebSocket>()
+await startNats()
 
 export const report = new Hono()
   .basePath('/report')
@@ -131,11 +124,6 @@ export const landing = new Hono()
   .route("/", getAlertsRoute)
   .route("/", getMinecraftItemsRoute)
   .route("/", getImagesLibraryRoute)
-
-export const events = new Hono()
-  .basePath("/events")
-  .use(validateRequest)
-  .route("/", sseRoute)
 
 export const shared = new Hono()
   .basePath("/shared")
@@ -195,10 +183,6 @@ export const post = new Hono()
   .route("/", editPostRoute)
   .route('/', pinPostRoute)
   .route("/", getPostViewersRoute)
-
-export const server = new Hono()
-  .basePath('/server')
-  .use(bearerAuth({ token }))
 
 export const reaction = new Hono()
   .basePath('/reaction')
@@ -260,29 +244,21 @@ export const search = new Hono()
   .use(userStatus)
   .route("/", getSearchRoute)
 
-export const ws = new Hono()
-  .basePath('/ws')
-  .use(validateRequest)
-  .route("/", userStatusRoute)
-  .route("/", confirmWebsocketConnRoute)
-
 const app = new Hono<Env>()
+  .basePath('/api/forum')
   .use(corsProtectionMiddleware)
   .use(csrfProtectionMiddleware)
-  .basePath('/api/forum')
-  .use(timeoutMiddleware)
   .use(rateLimiterMiddleware)
+  .use(timeoutMiddleware)
   .use(logger())
   .use(contextStorage())
   .route('/', admin)
   .route('/', user)
   .route("/", thread)
-  .route("/", server)
   .route("/", category)
   .route("/", comment)
   .route("/", reaction)
   .route("/", shared)
-  .route("/", events)
   .route("/", search)
   .route("/", post)
   .route("/", landing)
@@ -290,8 +266,6 @@ const app = new Hono<Env>()
 
 // showRoutes(app, { verbose: false });
 
-Bun.serve({
-  port, fetch: app.fetch, websocket
-})
+Bun.serve({ port, fetch: app.fetch })
 
 console.log(port)

@@ -1,8 +1,8 @@
 import { Hono } from 'hono';
 import { cors } from 'hono/cors';
-import { getHeadRoute } from '#routes/get-head.ts';
-import { getSkinRoute } from '#routes/get-skins.ts';
-import { downloadSkinRoute } from '#routes/download-skin.ts';
+import { getHeadRoute } from '#routes/skins/get-head.ts';
+import { getSkinRoute } from '#routes/skins/get-skins.ts';
+import { downloadSkinRoute } from '#routes/skins/download-skin.ts';
 import { showRoutes } from 'hono/dev';
 import { logger } from 'hono/logger';
 import { timeout } from 'hono/timeout';
@@ -18,22 +18,25 @@ import { subscribeUserBalance } from '#subscribers/subscribe-user-balance.ts';
 import { subscribeUserLands } from '#subscribers/subscribe-user-lands.ts';
 import { subscribePlayerGroup } from '#subscribers/sub-player-group.ts';
 import { subscribePlayerJoin, subscribeRefferalCheck } from '#subscribers/sub-player-join.ts';
+import { getAchievementsMetaRoute, getAchievementsRoute } from '#routes/achievements/get-achievements.ts';
+import { originList } from "@repo/shared/constants/origin-list";
 
-function subscribeNatsSubscribers() {
+async function startNats() {
+  await initNats()
+
   subscribeUserBalance()
-  console.log("Subscribed to balance")
+  console.log("\x1b[34m[NATS]\x1b[0m Subscribed to balance")
   subscribeUserLands()
-  console.log("Subscribed to lands")
+  console.log("\x1b[34m[NATS]\x1b[0m Subscribed to lands")
   subscribePlayerGroup()
-  console.log("Subscribed to player group")
+  console.log("\x1b[34m[NATS]\x1b[0m Subscribed to player group")
   subscribeRefferalCheck()
-  console.log("Subscribed to refferal check")
+  console.log("\x1b[34m[NATS]\x1b[0m Subscribed to refferal check")
   subscribePlayerJoin()
-  console.log("Subscribed to player join")
+  console.log("\x1b[34m[NATS]\x1b[0m Subscribed to player join")
 }
 
-await initNats()
-subscribeNatsSubscribers()
+await startNats()
 
 export const hooks = new Hono()
   .basePath('/hooks')
@@ -51,7 +54,8 @@ export const skin = new Hono()
 
 export const achievements = new Hono()
   .basePath("/achievements")
-// .route("/", getAchievementsRoute)
+  .route("/", getAchievementsRoute)
+  .route("/", getAchievementsMetaRoute)
 
 export const lands = new Hono()
   .basePath("/lands")
@@ -68,9 +72,8 @@ export const minecraft = new Hono()
 
 const app = new Hono()
   .use(cors({
-    origin: ["http://localhost:3000", "https://cc.fasberry.su", "https://fasberry.su", "http://localhost:3001"],
+    origin: originList,
     allowMethods: ['GET', "POST", "OPTIONS"],
-    allowHeaders: ["Cookie", "cookie", "x-csrf-token", "X-CSRF-Token", "content-type", "Content-Type"],
     credentials: true
   }))
   .use(timeout(2000))
@@ -82,9 +85,6 @@ const app = new Hono()
 
 // showRoutes(app, { verbose: false });
 
-Bun.serve({
-  port,
-  fetch: app.fetch
-});
+Bun.serve({ port, fetch: app.fetch });
 
 console.log(port)

@@ -1,5 +1,4 @@
 import { Hono } from 'hono';
-import { prettyJSON } from 'hono/pretty-json';
 import { getAuthUser } from './routes/get-auth-player.ts';
 import { registerRoute } from './routes/register.ts';
 import { invalidateSessionRoute } from './routes/invalidate-session.ts';
@@ -30,21 +29,17 @@ export const auth = new Hono()
   .route("/", getSessionRoute)
 
 const app = new Hono<Env>()
+  .basePath('/api/auth')
   .use(corsMiddleware)
   .use(csrf({ origin: originList }))
-  .basePath('/api/auth')
   .use(rateLimiterMiddleware)
   .use(timeoutMiddleware)
   .use(logger())
-  .use(prettyJSON())
   .onError(exceptionHandler)
   .route("/", auth)
 
 // showRoutes(app, { verbose: false });
 
-Bun.serve({
-  port: Bun.env.AUTH_BACKEND_PORT!,
-  fetch: app.fetch
-});
+Bun.serve({ port: Bun.env.AUTH_BACKEND_PORT!, fetch: app.fetch });
 
 console.log(Bun.env.AUTH_BACKEND_PORT!)

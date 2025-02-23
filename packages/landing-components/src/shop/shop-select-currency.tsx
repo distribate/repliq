@@ -43,8 +43,12 @@ const UpdatePrice = () => {
   }
 
   return (
-    <Button disabled={currency === 'RUB'} onClick={updatePrice} className="rounded-lg bg-neutral-800 hover:bg-neutral-700">
-      <Typography className="text-[14px] lg:text-[16px] text-background-dark/80 dark:text-white">
+    <Button
+      disabled={currency === 'RUB'}
+      onClick={updatePrice}
+      className="rounded-lg bg-neutral-400 hover:bg-neutral-300 dark:bg-neutral-800 dark:hover:bg-neutral-700"
+    >
+      <Typography className="text-[14px] lg:text-[16px] text-black dark:text-white">
         Обновить цену
       </Typography>
     </Button>
@@ -63,7 +67,7 @@ export const ShopSelectCurrency = () => {
   const selectCurrency = () => {
     setOpen(false);
 
-    qc.setQueryData(SHOP_ITEM_QUERY_KEY, 
+    qc.setQueryData(SHOP_ITEM_QUERY_KEY,
       (p: ShopItemQuery) => ({ ...p, currency: selCurrency })
     );
   };
@@ -150,7 +154,7 @@ export const ShopSelectCurrency = () => {
             </Block>
           </DialogContent>
         </Dialog>
-        <UpdatePrice/>
+        <UpdatePrice />
       </div>
     </div>
   );

@@ -156,7 +156,7 @@ export const ShopFooter = () => {
             <img src={ExpActive.src} width={36} height={36} alt="" />
           </div>
           <div className="flex flex-col">
-            <Typography className="text-[16px] text-neutral-400">
+            <Typography className="text-[16px] text-neutral-600 dark:text-neutral-400">
               Стоимость
             </Typography>
             <FinishedPrice />
@@ -170,7 +170,7 @@ export const ShopFooter = () => {
               className="group hover:bg-[#05b458] transition-all duration-300
                   ease-in-out bg-[#088d47] rounded-lg px-6 py-4 "
             >
-              <Typography className="text-[20px]">
+              <Typography className="text-[20px] text-white dark:text-white">
                 Приобрести
               </Typography>
             </Button>

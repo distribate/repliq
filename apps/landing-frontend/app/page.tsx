@@ -72,13 +72,13 @@ const GameplayItem = ({
 }: GamePlayItemProps) => {
   return (
     <div
-      className={`flex flex-col w-full items-center justify-end h-[80dvh] sm:h-screen relative bg-top
+      className={`flex flex-col w-full items-center justify-end h-[80vh] lg:h-screen relative bg-top
 			 lg:bg-center border-0 border-discord-server-color ${GAMEPLAY.length - 2 === id && 'lg:border-l-2 lg:border-r-2'}`}
       style={{ backgroundImage: `url(${image})` }}
     >
       <Overlay />
       <div
-        className="flex flex-col items-center justify-center relative w-full gap-y-2 py-16 px-6 bg-black/60"
+        className="flex flex-col items-center justify-center relative w-full gap-y-2 py-16 z-[2] px-6 bg-black/60"
       >
         <h1 className="text-2xl md:text-3xl 2xl:text-5xl text-red text-center">
           {name}
@@ -97,39 +97,41 @@ const ContactItem = ({
   content, name, href
 }: ContactsListProps) => {
   return (
-    <Block key={name} blockItem rounded="big" size="big" type="column" className="justify-between">
+    <Block key={name} blockItem rounded="big" type="column" className="justify-between p-4 lg:p-6">
       <div className="flex flex-col mb-4">
         <Typography className="dark:text-neutral-50 text-neutral-800 text-3xl lg:text-4xl xl:text-5xl mb-4">
           {name}
         </Typography>
         <h1 className="text-[#5CC85C] text-lg xl:text-3xl">плюсы:</h1>
         {content.pluses && content.pluses.map((plus, plusIndex) => (
-          <Typography key={plusIndex} size="lg">
+          <Typography key={plusIndex} className="text-[14px] lg:text-lg">
             &gt;&nbsp;{plus}
           </Typography>
         ))}
         <h1 className="mt-2 xl:mt-3 text-rose-500 text-lg xl:text-3xl">минусы:</h1>
         {content.minuses && content.minuses.map((minus, minusIndex) => (
-          <Typography key={minusIndex} size="xl">
+          <Typography key={minusIndex} className="text-[14px] lg:text-lg">
             &gt;&nbsp;{minus}
           </Typography>
         ))}
       </div>
-      <Link
-        href={href}
-        target="_blank"
-        className="flex w-fit gap-4 *:ease-in-out *:duration-300 *:group-hover:duration-300 *:transition-all rounded-xl px-8 items-center gap-x-4 group
+      <div className="flex w-full items-center justify-center lg:justify-start">
+        <Link
+          href={href}
+          target="_blank"
+          className="flex w-fit gap-4 *:ease-in-out *:duration-300 *:group-hover:duration-300 *:transition-all rounded-xl px-8 items-center gap-x-4 group
           border-2 hover:border-white/80 border-white/60 py-4"
-      >
-        <Typography size="lg" className="text-black/60 group-hover:text-black/80 dark:text-white/60 dark:group-hover:text-white/80">
-          Перейти в {name}
-        </Typography>
-        <span
-          className="text-[18px] text-black/60 group-hover:text-black/80 dark:text-white/60 dark:group-hover:text-white/80"
         >
-          {`>`}
-        </span>
-      </Link>
+          <Typography size="lg" className="text-black/60 group-hover:text-black/80 dark:text-white/60 dark:group-hover:text-white/80">
+            Перейти в {name}
+          </Typography>
+          <span
+            className="text-[18px] text-black/60 group-hover:text-black/80 dark:text-white/60 dark:group-hover:text-white/80"
+          >
+            {`>`}
+          </span>
+        </Link>
+      </div>
     </Block>
   );
 };
@@ -140,19 +142,19 @@ export default async function Main() {
       <ParamProvider />
       <div
         id="title"
-        className={`flex flex-col relative items-start full-screen-section justify-center`}
+        className={`flex flex-col relative items-start full-screen-section h-[80vh] lg:h-screen justify-center`}
       >
         <div className="absolute top-0 right-0 left-0 overflow-hidden h-full">
           <IntroBackgroundImage />
           <Overlay variant="default" />
         </div>
-        <div className="responsive z-1 mx-auto">
+        <div className="flex items-center responsive z-1 mx-auto h-full">
           <IntroMain />
         </div>
       </div>
       <div
         id="gameplay-overview"
-        className="full-screen-section flex flex-col items-center"
+        className="full-screen-section relative min-h-screen flex flex-col items-center"
       >
         <div className="grid grid-cols-1 grid-rows-3 xl:grid-cols-3 xl:grid-rows-1">
           {GAMEPLAY.map((item, idx) =>
@@ -160,32 +162,22 @@ export default async function Main() {
           }
         </div>
       </div>
-      <div className="full-screen-section">
+      <div className="full-screen-section relative min-h-screen">
         <div className="flex xl:flex-row flex-col py-24 mx-auto gap-y-12 xl:gap-y-6 group gap-x-6 responsive">
           <div
             id="project-news"
             className="flex flex-col gap-y-6 w-full xl:w-3/5"
           >
-            <Typography text_color="black" className="text-3xl lg:text-4xl">
+            <Typography text_color="black" className="text-2xl sm:text-3xl lg:text-4xl">
               Новости
             </Typography>
-            <Suspense
-              fallback={
-                <>
-                  <Skeleton className="h-64 w-full" />
-                  <Skeleton className="h-64 w-full" />
-                  <Skeleton className="h-64 w-full" />
-                </>
-              }
-            >
-              <NewsList />
-            </Suspense>
+            <NewsList />
           </div>
           <div
             id="commuinity"
             className="flex flex-col gap-y-6 w-full xl:w-2/5"
           >
-            <Typography text_color="black" className="text-3xl lg:text-4xl">
+            <Typography text_color="black" className="text-2xl sm:text-3xl lg:text-4xl">
               Cообщество
             </Typography>
             <StatusItem />
@@ -204,10 +196,10 @@ export default async function Main() {
       </div>
       <div
         id="contacts"
-        className="full-screen-section flex flex-col items-center justify-center py-32 xl:py-0"
+        className="full-screen-section min-h-screen relative flex flex-col items-center justify-center py-32 xl:py-0"
       >
-        <div className="flex flex-col gap-y-12 responsive mx-auto">
-          <h2 className="text-3xl md:text-6xl lg:text-6xl xl:text-7xl text-center text-red">
+        <div className="flex flex-col gap-y-12 responsive">
+          <h2 className="text-2xl sm:text-3xl md:text-6xl lg:text-6xl xl:text-7xl text-center text-red">
             Где ещё существует проект?
           </h2>
           <div className="flex flex-col lg:flex-row gap-x-4 gap-y-6 justify-between">

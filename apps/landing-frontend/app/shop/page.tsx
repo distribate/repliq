@@ -7,41 +7,41 @@ import { Button } from '@repo/landing-ui/src/button';
 import { Shop } from '@repo/landing-components/src/shop/shop.tsx';
 
 export const metadata = {
-  title: 'Донат',
+  title: 'Магазин',
   description:
-    "Поддержите наш сервер Fasberry, приобретая привилегии, уникальные товары и игровые монеты. Улучшите свой игровой опыт и помогите развитию проекта!",
+    'Поддержите наш сервер Fasberry, приобретая привилегии, уникальные товары и игровые монеты. Улучшите свой игровой опыт и помогите развитию проекта!',
   keywords: [
-    "Fasberry донат",
-    "купить привилегии Fasberry",
-    "игровые товары Fasberry",
-    "монеты Fasberry",
-    "донат магазин Fasberry",
-    "поддержка сервера Fasberry",
+    'Fasberry магазин',
+    'купить привилегии Fasberry',
+    'игровые товары Fasberry',
+    'монеты Fasberry',
+    'донат магазин Fasberry',
+    'поддержка сервера Fasberry',
   ],
-  author: "Fasberry Server Team",
-  robots: "index, follow",
-  canonical: "https://fasberry.su/shop",
+  author: 'Fasberry Server Team',
+  robots: 'index, follow',
+  canonical: 'https://fasberry.su/shop',
   openGraph: {
-    title: "Донат на сервер Fasberry | Уникальные привилегии и товары",
+    title: 'Магазин | Fasberry',
     description:
-      "Получите доступ к уникальным привилегиям, товарам и монетам на нашем сервере. Ваша поддержка помогает проекту развиваться!",
-    url: "https://fasberry.su/shop",
-    type: "website",
+      'Получите доступ к уникальным привилегиям, товарам и монетам на нашем сервере. Ваша поддержка помогает проекту развиваться!',
+    url: 'https://fasberry.su/shop',
+    type: 'website',
     images: [
       {
-        url: "https://fasberry.su/images/community/market-seller.webp",
-        alt: "Донат на сервер Fasberry",
+        url: 'https://fasberry.su/images/community/market-seller.webp',
+        alt: "Магазин",
         width: 1200,
         height: 630,
       },
     ],
   },
   twitter: {
-    card: "summary_large_image",
-    title: "Донат на сервер Fasberry",
+    card: 'summary_large_image',
+    title: 'Магазин | Fasberry',
     description:
-      "Поддержите наш сервер Fasberry, приобретая уникальные привилегии и товары. Сделайте свой игровой процесс незабываемым!",
-    images: ["https://fasberry.su/images/community/market-seller.webp"],
+      'Поддержите наш сервер Fasberry, приобретая уникальные привилегии и товары. Сделайте свой игровой процесс незабываемым!',
+    images: ['https://fasberry.su/images/community/market-seller.webp'],
   },
 };
 
@@ -49,7 +49,7 @@ export default async function DonatePage() {
   return (
     <MainLayoutPage variant="with_section">
       <div
-        className="full-screen-section flex items-center justify-start bg-bottom md:bg-center overflow-hidden bg-no-repeat bg-cover
+        className="full-screen-section h-[80vh] lg:min-h-screen flex items-center justify-start bg-bottom md:bg-center overflow-hidden bg-no-repeat bg-cover
 					bg-[url('/images/backgrounds/donate_background.png')]"
       >
         <Overlay variant="default" />

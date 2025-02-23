@@ -12,7 +12,7 @@ const visibilityMap: Record<KeyType, string> = {
   "alerts": ALERTS_COOKIE_KEY
 }
 
-export function updateVisibility(k: keyof typeof visibilityMap) {
+export async function updateVisibility(k: keyof typeof visibilityMap) {
   const has = getCookieByKey(visibilityMap[k]);
 
   if (has && has !== "show") {

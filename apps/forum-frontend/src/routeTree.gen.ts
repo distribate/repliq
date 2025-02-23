@@ -39,6 +39,7 @@ const ProtectedNotificationsLazyImport = createFileRoute(
 )()
 const ProtectedFriendsLazyImport = createFileRoute('/_protected/friends')()
 const ProtectedEventsLazyImport = createFileRoute('/_protected/events')()
+const PublicStartIndexLazyImport = createFileRoute('/_public/start/')()
 const ProtectedRatingsIndexLazyImport = createFileRoute(
   '/_protected/ratings/',
 )()
@@ -158,6 +159,14 @@ const ProtectedAdminRoute = ProtectedAdminImport.update({
   id: '/_admin',
   getParentRoute: () => ProtectedRoute,
 } as any)
+
+const PublicStartIndexLazyRoute = PublicStartIndexLazyImport.update({
+  id: '/start/',
+  path: '/start/',
+  getParentRoute: () => PublicRoute,
+} as any).lazy(() =>
+  import('./routes/_public/start/index.lazy').then((d) => d.Route),
+)
 
 const ProtectedRatingsIndexLazyRoute = ProtectedRatingsIndexLazyImport.update({
   id: '/ratings/',
@@ -519,6 +528,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProtectedRatingsIndexLazyImport
       parentRoute: typeof ProtectedImport
     }
+    '/_public/start/': {
+      id: '/_public/start/'
+      path: '/start'
+      fullPath: '/start'
+      preLoaderRoute: typeof PublicStartIndexLazyImport
+      parentRoute: typeof PublicImport
+    }
     '/_protected/_admin/admin/configs': {
       id: '/_protected/_admin/admin/configs'
       path: '/admin/configs'
@@ -632,6 +648,7 @@ interface PublicRouteChildren {
   PublicMiscMonitoringLazyRoute: typeof PublicMiscMonitoringLazyRoute
   PublicMiscReferalSystemLazyRoute: typeof PublicMiscReferalSystemLazyRoute
   PublicMiscStatusLazyRoute: typeof PublicMiscStatusLazyRoute
+  PublicStartIndexLazyRoute: typeof PublicStartIndexLazyRoute
 }
 
 const PublicRouteChildren: PublicRouteChildren = {
@@ -643,6 +660,7 @@ const PublicRouteChildren: PublicRouteChildren = {
   PublicMiscMonitoringLazyRoute: PublicMiscMonitoringLazyRoute,
   PublicMiscReferalSystemLazyRoute: PublicMiscReferalSystemLazyRoute,
   PublicMiscStatusLazyRoute: PublicMiscStatusLazyRoute,
+  PublicStartIndexLazyRoute: PublicStartIndexLazyRoute,
 }
 
 const PublicRouteWithChildren =
@@ -675,6 +693,7 @@ export interface FileRoutesByFullPath {
   '/misc/status': typeof PublicMiscStatusLazyRoute
   '/lands': typeof ProtectedLandsIndexRoute
   '/ratings': typeof ProtectedRatingsIndexLazyRoute
+  '/start': typeof PublicStartIndexLazyRoute
   '/admin/configs': typeof ProtectedAdminAdminConfigsLazyRoute
   '/admin/dashboard': typeof ProtectedAdminAdminDashboardLazyRoute
   '/admin/stats': typeof ProtectedAdminAdminStatsLazyRoute
@@ -709,6 +728,7 @@ export interface FileRoutesByTo {
   '/misc/status': typeof PublicMiscStatusLazyRoute
   '/lands': typeof ProtectedLandsIndexRoute
   '/ratings': typeof ProtectedRatingsIndexLazyRoute
+  '/start': typeof PublicStartIndexLazyRoute
   '/admin/configs': typeof ProtectedAdminAdminConfigsLazyRoute
   '/admin/dashboard': typeof ProtectedAdminAdminDashboardLazyRoute
   '/admin/stats': typeof ProtectedAdminAdminStatsLazyRoute
@@ -746,6 +766,7 @@ export interface FileRoutesById {
   '/_public/misc/status': typeof PublicMiscStatusLazyRoute
   '/_protected/lands/': typeof ProtectedLandsIndexRoute
   '/_protected/ratings/': typeof ProtectedRatingsIndexLazyRoute
+  '/_public/start/': typeof PublicStartIndexLazyRoute
   '/_protected/_admin/admin/configs': typeof ProtectedAdminAdminConfigsLazyRoute
   '/_protected/_admin/admin/dashboard': typeof ProtectedAdminAdminDashboardLazyRoute
   '/_protected/_admin/admin/stats': typeof ProtectedAdminAdminStatsLazyRoute
@@ -782,6 +803,7 @@ export interface FileRouteTypes {
     | '/misc/status'
     | '/lands'
     | '/ratings'
+    | '/start'
     | '/admin/configs'
     | '/admin/dashboard'
     | '/admin/stats'
@@ -815,6 +837,7 @@ export interface FileRouteTypes {
     | '/misc/status'
     | '/lands'
     | '/ratings'
+    | '/start'
     | '/admin/configs'
     | '/admin/dashboard'
     | '/admin/stats'
@@ -850,6 +873,7 @@ export interface FileRouteTypes {
     | '/_public/misc/status'
     | '/_protected/lands/'
     | '/_protected/ratings/'
+    | '/_public/start/'
     | '/_protected/_admin/admin/configs'
     | '/_protected/_admin/admin/dashboard'
     | '/_protected/_admin/admin/stats'
@@ -917,7 +941,8 @@ export const routeTree = rootRoute
         "/_public/misc/faq",
         "/_public/misc/monitoring",
         "/_public/misc/referal-system",
-        "/_public/misc/status"
+        "/_public/misc/status",
+        "/_public/start/"
       ]
     },
     "/_protected/_admin": {
@@ -1029,6 +1054,10 @@ export const routeTree = rootRoute
     "/_protected/ratings/": {
       "filePath": "_protected/ratings/index.lazy.tsx",
       "parent": "/_protected"
+    },
+    "/_public/start/": {
+      "filePath": "_public/start/index.lazy.tsx",
+      "parent": "/_public"
     },
     "/_protected/_admin/admin/configs": {
       "filePath": "_protected/_admin/admin/configs.lazy.tsx",

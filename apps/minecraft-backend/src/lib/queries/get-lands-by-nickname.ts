@@ -1,52 +1,58 @@
 import { bisquiteDB } from "#shared/database/bisquite-db.ts";
 
+type LandMember = {
+  [key: string]: {
+    chunks: number
+  }
+}
+
 export async function getLandsByNickname(nickname: string) {
   const player = await bisquiteDB
-    .selectFrom('lands_players')
-    .select('uuid')
-    .where('name', '=', nickname)
-    .executeTakeFirst();
+    .selectFrom("lands_players")
+    .select("uuid")
+    .where("name", "=", nickname)
+    .executeTakeFirst()
 
-  if (!player) {
-    return null;
-  }
+  if (!player) return null;
 
-  const query = await bisquiteDB
+  const lands = await bisquiteDB
     .selectFrom("lands_lands")
-    .select([
-      "area",
-      "name",
+    .select(["area", "name", "members", "type", "created_at", "title", "ulid"])
+    .where(
       "members",
-      "type",
-      "created_at",
-      "title",
-      "ulid"
-    ])
-    .where("members", "like", `%${player.uuid}%`)
+      "like",
+      `%${player.uuid}%`
+    )
     .execute();
 
-  const lands = await Promise.all(query.map(async (land) => {
-    let rawMembers: { [key: string]: { chunks: number } } = JSON.parse(land.members);
+  if (!lands.length) return null;
 
-    const members = await Promise.all(Object.keys(rawMembers).map(async (member) => {
-      const { name: nickname } = await bisquiteDB
-        .selectFrom("lands_players")
-        .select("name")
-        .where("uuid", "=", member)
-        .executeTakeFirstOrThrow();
+  const allMemberUUIDs = new Set<string>();
 
-      return {
-        uuid: member,
-        nickname
-      }
-    }))
+  const parsedLands = lands.map((land) => {
+    const members: LandMember = JSON.parse(land.members);
 
-    return {
-      ...land,
-      area: JSON.parse(land.area),
-      members
-    }
-  }))
+    Object.keys(members).forEach((uuid) => allMemberUUIDs.add(uuid));
 
-  return lands;
+    return { ...land, area: JSON.parse(land.area), members };
+  });
+
+  const membersList = await bisquiteDB
+    .selectFrom("lands_players")
+    .select(["uuid", "name"])
+    .where("uuid", "in", Array.from(allMemberUUIDs))
+    .execute();
+
+  const nicknameMap = new Map(
+    membersList.map(({ uuid, name }) => [uuid, name])
+  );
+
+  return parsedLands.map((land) => ({
+    ...land,
+    members: Object.entries(land.members).map(([uuid, data]) => ({
+      uuid,
+      nickname: nicknameMap.get(uuid) || "Unknown",
+      chunks: data.chunks,
+    })),
+  }));
 }

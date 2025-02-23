@@ -32,6 +32,8 @@ export async function getPlayerSkin({
 
       skin = blob
     }
+
+    skin = null;
   }
 
   if (skin !== null) {

@@ -4,7 +4,6 @@ import { Typography } from "@repo/landing-ui/src/typography";
 import { Button } from "@repo/landing-ui/src/button";
 import { useEffect, useState } from "react";
 import { PROJECT_DESCRIPTION } from "@repo/shared/wiki/data/intro/project-description";
-import { serverIpQuery } from "@repo/lib/queries/server-ip-query";
 import { Carousel, CarouselApi, CarouselContent, CarouselItem } from "@repo/landing-ui/src/carousel";
 import Link from "next/link";
 
@@ -21,9 +20,9 @@ export const IntroMain = () => {
 	}, [api, sel]);
 
 	return (
-		<div className="flex flex-col select-none -top-24 relative items-start md:-top-4 w-full lg:max-w-1/3">
+		<div className="flex flex-col select-none relative items-start w-full lg:w-2/3">
 			<Carousel
-				className="w-full lg:w-2/3 self-start"
+				className="w-full self-start"
 				setApi={setApi}
 				opts={{ align: "start", dragFree: false, loop: true, slidesToScroll: 1 }}
 			>

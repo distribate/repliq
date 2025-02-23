@@ -44,13 +44,11 @@ export const WikiNavigationBar = () => {
                 <AccordionContent>
                   {WIKI_HEADERS.map((item) => (
                     item.aspect?.map((item, idx) => (
-                      <div key={idx} className="group cursor-pointer">
-                        <TabsTrigger value={item.value}>
-                          <Typography size="base" hover_effects="pink_drop">
-                            &nbsp;&nbsp;{item.title}
-                          </Typography>
-                        </TabsTrigger>
-                      </div>
+                      <TabsTrigger key={idx} value={item.value} className="flex !justify-start items-center group w-full">
+                        <Typography size="base" hover_effects="pink_drop" className="text-left">
+                          &nbsp;&nbsp;{item.title}
+                        </Typography>
+                      </TabsTrigger>
                     ))
                   ))}
                 </AccordionContent>

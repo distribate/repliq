@@ -40,23 +40,21 @@ export const CategoryThreads = ({ category_id }: { category_id: string }) => {
   if (!threads) return null;
 
   return (
-    <div className="flex flex-col gap-y-2 w-full h-full">
-      {threads.map((thread) => (
-        <ThreadLayout key={thread.id} id={thread.id} title={thread.title} owner={{ nickname: thread.nickname, name_color: thread.name_color }}>
-          <ThreadByCategoryItem
-            title={thread.title}
-            id={thread.id}
-            owner={{ nickname: thread.nickname, name_color: thread.name_color }}
-            created_at={thread.created_at}
-            comments_count={thread.comments_count}
-            views_count={thread.views_count}
-            properties={{
-              is_comments: thread.is_comments
-            }}
-            description={thread.description}
-          />
-        </ThreadLayout>
-      ))}
-    </div>
+    threads.map((thread) => (
+      <ThreadLayout key={thread.id} id={thread.id} title={thread.title} owner={{ nickname: thread.nickname, name_color: thread.name_color }}>
+        <ThreadByCategoryItem
+          title={thread.title}
+          id={thread.id}
+          owner={{ nickname: thread.nickname, name_color: thread.name_color }}
+          created_at={thread.created_at}
+          comments_count={thread.comments_count}
+          views_count={thread.views_count}
+          properties={{
+            is_comments: thread.is_comments
+          }}
+          description={thread.description}
+        />
+      </ThreadLayout>
+    ))
   );
 };

@@ -4,7 +4,7 @@ import { createQueryKey } from "@repo/lib/helpers/query-key-builder"
 import { forumLandingClient } from "@repo/shared/api/forum-client"
 import { Skeleton } from "@repo/ui/src/components/skeleton"
 import { Typography } from "@repo/ui/src/components/typography"
-import { useQuery } from "@tanstack/react-query"
+import { keepPreviousData, useQuery } from "@tanstack/react-query"
 
 const getOnlineUsers = async () => {
   const res = await forumLandingClient["get-online-users"].$get()
@@ -45,6 +45,7 @@ const onlineUsersQuery = (currentUserNickname: string) => useQuery({
           : [{ nickname: currentUserNickname }]
       );
   },
+  placeholderData: keepPreviousData,
 })
 
 export const OnlineUsers = () => {

@@ -18,19 +18,19 @@ export const ThreadByCategoryItem = ({
     <div className="flex grow group bg-shark-900 hover:bg-shark-700 rounded-md justify-between transition-all duration-150 p-3 cursor-pointer">
       <div className="flex flex-col w-full gap-y-2 justify-between">
         <div className="flex items-center min-w-[260px] gap-x-2">
-          <Suspense fallback={<Skeleton className="w-[36px] h-[36px]" />}>
+          <Suspense fallback={<Skeleton className="w-[42px] h-[42px]" />}>
             <Avatar
               nickname={owner.nickname}
-              propWidth={36}
+              propWidth={42}
               propHeight={36}
-              className="min-h-[36px] min-w-[36px]"
+              className="min-h-[42px] min-w-[42px]"
             />
           </Suspense>
           <div className="flex flex-col">
-            <Typography textColor="shark_white" className="text-sm font-medium">
+            <Typography textColor="shark_white" className="text-[18px] font-medium">
               {title}
             </Typography>
-            <Typography className="text-sm text-shark-300 font-medium">
+            <Typography className="text-[16px] text-shark-300 font-medium">
               {owner.nickname} создал {createdAt}
             </Typography>
           </div>

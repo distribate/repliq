@@ -69,7 +69,8 @@ export const DonatesList = () => {
     (donates as Donates[]).map(d => (
       <div
         key={d.origin}
-        className={`flex items-center w-full min-h-16 gap-4 rounded-lg px-4 py-3 border-2 bg-neutral-800 hover:bg-neutral-700 cursor-pointer
+        className={`flex items-center w-full min-h-16 gap-4 rounded-lg px-4 py-3 border-2 
+          bg-neutral-200 hover:bg-neutral-300 dark:bg-neutral-800 dark:hover:bg-neutral-700 cursor-pointer
         ${d.origin === selected ? 'border-green' : 'border-transparent'}
       `}
         onClick={() => changeDonate(d.origin as "authentic" | "loyal" | "arkhont")}
@@ -77,7 +78,7 @@ export const DonatesList = () => {
         <div className="flex items-center justify-center bg-neutral-600/40 p-2 rounded-lg">
           <img src={donatesMap[d.origin as "authentic" | "loyal" | "arkhont"].img} width={36} height={36} alt="" />
         </div>
-        <Typography className="text-[20px]">
+        <Typography className="text-[20px]" text_color="adaptiveWhiteBlack">
           {d.title}
         </Typography>
       </div>
@@ -102,7 +103,7 @@ const SelectedDonate = () => {
           <Typography className="text-lg md:text-xl lg:text-2xl">
             {selectedDonate.title}
           </Typography>
-          <Typography className="text-neutral-400 text-center text-sm md:text-base lg:text-lg">
+          <Typography className="text-neutral-600 dark:text-neutral-400 text-center text-sm md:text-base lg:text-lg">
             {selectedDonate.description}
           </Typography>
         </div>

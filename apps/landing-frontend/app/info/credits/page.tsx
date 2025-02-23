@@ -18,7 +18,7 @@ export default async function CreditsPage() {
               <div
                 className="flex justify-center items-center group-hover:duration-300 duration-300 transition-all group-hover:translate-y-0 translate-y-64 flex-col gap-y-2"
               >
-                <Typography className="text-2xl font-bold">
+                <Typography className="text-white text-2xl font-bold">
                   Изображения
                 </Typography>
                 <Typography size="lg" className="text-fuchsia-300">

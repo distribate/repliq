@@ -67,7 +67,7 @@ export default async function StatusPage() {
 
   return (
     <MainLayoutPage variant="with_section">
-      <div className="full-screen-section flex items-center justify-center">
+      <div className="full-screen-section h-[80vh] lg:min-h-screen flex items-center justify-center">
         <div className="flex max-h-[500px] flex-col lg:flex-row justify-start overflow-hidden items-start gap-6 h-full responsive">
           <iframe
             src="https://discord.com/widget?id=958086036393689098&theme=dark"

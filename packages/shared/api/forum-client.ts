@@ -6,7 +6,6 @@ import {
   ForumCommentAppType,
   ForumReactionAppType,
   ForumSharedAppType,
-  ForumWebSocketAppType,
   ForumLandingAppType,
   ForumSearchAppType,
   ForumPostAppType,
@@ -21,7 +20,6 @@ const baseUrl = isProduction ? `https://cc.fasberry.su/api/forum` : `http://loca
 export const forumLandingClient = hc<ForumLandingAppType>(baseUrl, fetchOptions)
 export const forumSearchClient = hc<ForumSearchAppType>(baseUrl, fetchOptions)
 export const forumSharedClient = hc<ForumSharedAppType>(baseUrl, fetchOptions)
-export const forumWsClient = hc<ForumWebSocketAppType>(baseUrl, fetchOptions)
 export const forumReactionClient = hc<ForumReactionAppType>(baseUrl, fetchOptions)
 export const forumCommentClient = hc<ForumCommentAppType>(baseUrl, fetchOptions)
 export const forumUserClient = hc<ForumUserAppType>(baseUrl, fetchOptions)

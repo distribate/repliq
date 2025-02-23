@@ -31,10 +31,10 @@ export const Shop = () => {
       >
         <ShopNavigation />
         <div className="flex flex-col xl:flex-row items-start w-full h-fit gap-4">
-          <div className="flex p-2 w-full xl:w-1/4 h-full bg-neutral-900 rounded-lg">
+          <div className="flex p-2 w-full xl:w-1/4 h-full bg-neutral-300 dark:bg-neutral-900 rounded-lg">
             <div className="flex flex-col gap-4 w-full h-full">
-              <div className="flex items-center justify-center min-h-16 w-full rounded-lg px-4 py-3 bg-neutral-50">
-                <Typography className="text-neutral-950 text-[20px]">
+              <div className="flex items-center justify-center min-h-16 w-full rounded-lg px-4 py-3 bg-neutral-400 dark:bg-neutral-50">
+                <Typography className="text-neutral-100 dark:text-neutral-950 text-[20px]">
                   Выберите товар
                 </Typography>
               </div>
@@ -42,7 +42,7 @@ export const Shop = () => {
             </div>
           </div>
           <div
-            className="flex flex-col items-center p-4 w-full xl:w-3/4 h-full bg-neutral-900 rounded-lg 
+            className="flex flex-col items-center p-4 w-full xl:w-3/4 h-full bg-neutral-300 dark:bg-neutral-900 rounded-lg 
               *:data-[state=active]:flex *:data-[state=inactive]:hidden"
           >
             <TabsContent value="donate" className="flex flex-col gap-4 w-full h-full">

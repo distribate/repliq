@@ -5,12 +5,7 @@ import { Typography } from '@repo/landing-ui/src/typography';
 import { Rules as RulesList } from '@repo/landing-components/src/rules/rules.tsx';
 import { Button } from '@repo/landing-ui/src/button';
 import Link from 'next/link';
-import { dehydrate, HydrationBoundary, QueryClient } from '@tanstack/react-query';
-import { RULES_QUERY_KEY } from '@repo/lib/queries/rules-query.ts';
-import { getRules } from '@repo/lib/queries/get-rules.ts';
-import { Suspense } from 'react';
 import { Badge } from '@repo/landing-ui/src/Badge.tsx';
-import { RulesListSkeleton } from '@repo/landing-components/src/skeletons/rules-list-skeleton.tsx';
 
 export const metadata = {
   title: 'Правила',
@@ -50,28 +45,11 @@ export const metadata = {
   },
 };
 
-const Rules = async () => {
-  const qc = new QueryClient();
-
-  await qc.prefetchQuery({
-    queryKey: RULES_QUERY_KEY,
-    queryFn: () => getRules(),
-  });
-
-  const dehydratedState = dehydrate(qc);
-
-  return (
-    <HydrationBoundary state={dehydratedState}>
-      <RulesList />
-    </HydrationBoundary>
-  );
-};
-
 export default async function RulesPage() {
   return (
     <MainLayoutPage variant="with_section">
       <div
-        className={`full-screen-section flex items-center justify-start bg-bottom md:bg-center bg-cover
+        className={`full-screen-section h-[80vh] lg:min-h-screen flex items-center justify-start bg-bottom md:bg-center bg-cover
 						bg-[url('/images/backgrounds/rules_background.png')]`}
       >
         <Overlay variant="default" />
@@ -126,9 +104,7 @@ export default async function RulesPage() {
               </div>
             </div>
           </div>
-          <Suspense fallback={<RulesListSkeleton />}>
-            <Rules />
-          </Suspense>
+          <RulesList />
         </div>
       </div>
     </MainLayoutPage>

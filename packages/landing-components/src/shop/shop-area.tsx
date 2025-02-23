@@ -29,15 +29,15 @@ export const ShopAreaItem = ({
 
 export const ShopArea = () => {
   const qc = useQueryClient();
-  const paymentData = qc.getQueryData<{ data: string }>(CREATE_PAYMENT_DATA_QUERY_KEY);
+  const paymentData = qc.getQueryData<{ data: string, status: 'success' | 'error' }>(CREATE_PAYMENT_DATA_QUERY_KEY);
 
   const mutData = useMutationState({
     filters: ({ mutationKey: CREATE_PAYMENT_MUTATION_KEY }),
     select: m => m.state.status,
   });
 
-  const isPaymentError = Array.isArray(paymentData);
-  const isPaymentSuccess = mutData[mutData.length - 1] === 'success' && !isPaymentError;
+  const isPaymentSuccess = paymentData ? paymentData.status === 'success' : false
+  const isPaymentError = paymentData ? paymentData.status === 'error' : false
   const isPaymentProccessing = mutData[mutData.length - 1] === 'pending';
 
   return (

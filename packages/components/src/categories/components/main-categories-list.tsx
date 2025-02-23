@@ -51,7 +51,7 @@ export const MainCategoriesList = () => {
             key={c.category_id}
             className="flex flex-col gap-y-4 w-full py-8 rounded-lg px-4 bg-primary-color"
           >
-            <div className="flex items-center w-fit gap-2 px-2">
+            <div className="flex items-center w-fit gap-2">
               <Typography textSize="very_big" textColor="shark_white" className="font-bold">
                 {c.category_title}
               </Typography>

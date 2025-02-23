@@ -20,54 +20,32 @@ export default async function InfoContactsPage() {
 							Социальные сети и мессенджеры
 						</Typography>
 						<div className="flex flex-col text-white text-md lg:text-lg gap-y-4">
-							<Typography>Группа VK:&nbsp;
-								<Link
-									href='https://vk.com/fasberry'
-									className="relative group"
-								>
-									<span
-										className="text-white group-hover:text-project-color-pink group-hover:inline hidden absolute left-0 duration-300 group-hover:duration-300">
-										→&nbsp;
-									</span>
-									<span
-										className="group-hover:text-project-color-pink duration-300 relative group-hover:duration-300 right-0 group-hover:-right-6">
-										{VK_GROUP_LINK}
-									</span>
+							<Typography text_color="adaptiveWhiteBlack">Группа VK:&nbsp;
+								<Link href='https://vk.com/fasberry' target="_blank">
+									{VK_GROUP_LINK}
 								</Link>
 							</Typography>
-							<Typography>Канал в Telegram:&nbsp;
-								<Link
-									href='https://t.me/fasberry'
-									className="relative group"
-								>
-									<span
-										className="text-white group-hover:text-project-color-pink group-hover:inline hidden absolute left-0 duration-300 group-hover:duration-300"
-									>
-										→&nbsp;
-									</span>
-									<span
-										className="group-hover:text-project-color-pink duration-300 relative group-hover:duration-300 right-0 group-hover:-right-6"
-									>
-										{TELEGRAM_CHANNEL_LINK}
-									</span>
+							<Typography text_color="adaptiveWhiteBlack">Канал в Telegram:&nbsp;
+								<Link href='https://t.me/fasberry' target="_blank">
+									{TELEGRAM_CHANNEL_LINK}
 								</Link>
 							</Typography>
 						</div>
 					</div>
 					<div
-						className="flex flex-col gap-y-4 border-2 border-[#454545] hover:duration-300 duration-300 rounded-[8px] p-4">
+						className="flex flex-col gap-y-4 border-2 text-md lg:text-lg border-[#454545] hover:duration-300 duration-300 rounded-[8px] p-4">
 						<Typography className="text-project-color text-xl">
 							Электронная почта
 						</Typography>
 						<div className="flex flex-col gap-y-4">
-							<Typography className="hover:text-project-color-pink duration-300 hover:duration-300 text-white text-md lg:text-lg">
-								<a
-									href={`mailto:${MAIL_FASBERRY_SUPPORT}`}
-									target="_blank"
-								>
+							<a
+								href={`mailto:${MAIL_FASBERRY_SUPPORT}`}
+								target="_blank"
+							>
+								<Typography text_color="adaptiveWhiteBlack">
 									{MAIL_FASBERRY_SUPPORT}
-								</a>
-							</Typography>
+								</Typography>
+							</a>
 						</div>
 					</div>
 				</div>

@@ -12,23 +12,17 @@ export async function watcher() {
   const watch = await kvUsers.watch();
   const watchStatus = await kvUsersStatus.watch();
 
-  (async () => {
-    for await (const e of watch) {
-      console.log(
-        `[Watch] ${e.key} / ${e.operation} / ${e.value ? e.string() : ""}`,
-      );
-    }
-  })().then();
+  // (async () => {
+  //   for await (const e of watch) {
+  //     console.log(`[Watch] ${e.key} / ${e.operation} / ${e.value ? e.string() : ""}`);
+  //   }
+  // })().then();
 
   (async () => {
     for await (const e of watchStatus) {
       if (e.operation === "PUT") {
         await updateUserStatus(e.key);
       }
-
-      console.log(
-        `[Watch] ${e.key} / ${e.operation} / ${e.value ? e.string() : ""}`,
-      );
     }
   })().then();
 }

@@ -67,10 +67,15 @@ export const LatestComments = () => {
             <Typography className="text-[16px]">
               {content}
             </Typography>
-            <div className="flex w-full">
-              <Typography textColor="gray" className="text-[14px]">
-                к треду <Link to={`/${parent_type}/${parent_id}`} className="text-shark-50">{title}</Link>
+            <div className="flex w-full items-center gap-1">
+              <Typography className="text-[14px]" textColor="gray">
+                к треду
               </Typography>
+              <div className="flex overflow-hidden w-2/3 *:px-1 *:py-0.5 *:bg-shark-700 *:rounded-md">
+                <Typography textColor="gray" className="text-[14px] truncate">
+                  <Link to={`/${parent_type}/${parent_id}`} className="text-shark-50">{title}</Link>
+                </Typography>
+              </div>
             </div>
           </div>
         ))}

@@ -10,30 +10,30 @@ export default async function InfoTermsPage() {
 				</Typography>
 				<div className="flex flex-col gap-y-8">
 					<div className="flex flex-col text-white text-md lg:text-lg gap-y-4 border-2 border-[#454545] hover:duration-300 duration-300 rounded-[8px] p-4">
-            <span>
-              Настоящее Пользовательское Соглашение (далее соглашение) регулирует отношения между владельцем fasberry.ru
+            <Typography text_color="adaptiveWhiteBlack">
+              Настоящее Пользовательское Соглашение (далее соглашение) регулирует отношения между владельцем fasberry.su
               (далее FasberryProject) с одной стороны и пользователем сайта с другой.
-            </span>
-						<span>
+            </Typography>
+						<Typography text_color="adaptiveWhiteBlack">
               Сайт FasberryProject не является средством массовой информации.
-            </span>
-						<span className="text-project-color-pink">
+            </Typography>
+						<Typography text_color="adaptiveWhiteBlack">
               Используя сайт, Вы соглашаетесь с условиями данного соглашения. Если Вы не согласны с условиями данного соглашения, не используйте сайт FasberryProject!
-            </span>
+            </Typography>
 					</div>
 					<div className="flex flex-col text-white text-md lg:text-lg gap-y-4 border-2 border-[#454545] hover:duration-300 duration-300 rounded-[8px] p-4">
 						<p className="text-project-color text-xl">Предмет соглашения</p>
 						<div className="flex flex-col text-white text-md lg:text-lg gap-y-4 ">
-              <span>
+              <Typography text_color="adaptiveWhiteBlack">
                 Администрация предоставляет пользователю право на размещение на сайте следующей информации:
                 <p>&gt; текстовой информации</p>
-              </span>
+              </Typography>
 						</div>
 					</div>
 					<div className="flex flex-col text-white text-md lg:text-lg gap-y-4 border-2 border-[#454545] hover:duration-300 duration-300 rounded-[8px] p-4">
 						<p className="text-project-color text-xl">Права и обязанности сторон</p>
 						<div className="flex flex-col text-white text-md lg:text-lg gap-y-4">
-              <span>
+              <Typography text_color="adaptiveWhiteBlack">
                 Пользователь имеет право:
                 <p>&gt; осуществлять поиск информации на сайте</p>
                 <p>&gt; получать информацию на сайте</p>
@@ -43,21 +43,21 @@ export default async function InfoTermsPage() {
                 <p>&gt; требовать от администрации скрытия любой информации о пользователе</p>
                 <p>&gt; требовать от администрации скрытия любой информации переданной пользователем сайту</p>
                 <p>&gt; использовать информацию сайта в личных некоммерческих целях</p>
-              </span>
+              </Typography>
 						</div>
 						<div className="flex flex-col text-white text-md lg:text-lg gap-y-4">
-              <span>
+              <Typography text_color="adaptiveWhiteBlack">
                 Администрация имеет право:
                 <p>&gt; по своему усмотрению и необходимости создавать, изменять, отменять правила</p>
                 <p>&gt; ограничивать доступ к любой информации на сайте</p>
                 <p>&gt; создавать, изменять, удалять информацию</p>
-              </span>
+              </Typography>
 						</div>
 					</div>
 					<div className="flex flex-col text-white text-md lg:text-lg gap-y-4 border-2 border-[#454545] hover:duration-300 duration-300 rounded-[8px] p-4">
 						<p className="text-project-color text-xl">Пользователь обязуется:</p>
 						<div className="flex flex-col text-white text-md lg:text-lg gap-y-4">
-              <span>
+              <Typography text_color="adaptiveWhiteBlack">
                 <p>
                   &gt; обеспечить достоверность предоставляемой информации
                 </p>
@@ -78,24 +78,24 @@ export default async function InfoTermsPage() {
                 <p>
                   &gt; не использовать скрипты (программы) для автоматизированного сбора информации и/или взаимодействия с сайтом и его сервисами
                 </p>
-              </span>
+              </Typography>
 						</div>
 					</div>
 					<div className="flex flex-col text-white text-md lg:text-lg gap-y-4 border-2 border-[#454545] hover:duration-300 duration-300 rounded-[8px] p-4">
 						<p className="text-project-color text-xl">Администрация обязуется:</p>
 						<div className="flex flex-col text-white text-md lg:text-lg gap-y-4">
-              <span>
+              <Typography text_color="adaptiveWhiteBlack">
                 <p>
                   &gt; поддерживать работоспособность сайта за исключением случаев,
                   когда это невозможно по независящим от администрации причинам.
                 </p>
-              </span>
+              </Typography>
 						</div>
 					</div>
 					<div className="flex flex-col text-white text-md lg:text-lg gap-y-4 border-2 border-[#454545] hover:duration-300 duration-300 rounded-[8px] p-4">
 						<p className="text-project-color text-xl">Ответственность сторон</p>
 						<div className="flex flex-col text-white text-md lg:text-lg gap-y-4">
-              <span>
+              <Typography text_color="adaptiveWhiteBlack">
                 <p>
                   &gt; пользователь лично несет полную ответственность за распространяемую им информацию
                 </p>
@@ -112,24 +112,24 @@ export default async function InfoTermsPage() {
                   &gt; в случае возникновения форс-мажорной ситуации (боевые действия, чрезвычайное положение, стихийное бедствие и т. д.)
                   администрация не гарантирует сохранность информации, размещённой пользователем, а также бесперебойную работу информационного ресурса
                 </p>
-              </span>
+              </Typography>
 						</div>
 					</div>
 					<div className="flex flex-col text-white text-md lg:text-lg gap-y-4 border-2 border-[#454545] hover:duration-300 duration-300 rounded-[8px] p-4">
 						<p className="text-project-color text-xl">Условия действия Соглашения</p>
 						<div className="flex flex-col text-white text-md lg:text-lg gap-y-4">
-              <span>
+              <Typography text_color="adaptiveWhiteBlack">
                 Данное Соглашение вступает в силу при любом использовании данного сайта.
-              </span>
-							<span>
+              </Typography>
+							<Typography text_color="adaptiveWhiteBlack">
                 Соглашение перестает действовать при появлении его новой версии.
-              </span>
-							<span>
+              </Typography>
+							<Typography text_color="adaptiveWhiteBlack">
                 Администрация оставляет за собой право в одностороннем порядке изменять данное соглашение по своему усмотрению.
-              </span>
-							<span>
+              </Typography>
+							<Typography text_color="adaptiveWhiteBlack">
                 При изменении соглашения, в некоторых случаях, администрация может оповестить пользователей удобным для нее способом.
-              </span>
+              </Typography>
 						</div>
 					</div>
 				</div>

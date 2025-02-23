@@ -108,11 +108,11 @@ type CurrentPriceProps = Wallets
 const CurrentPrice = ({ type, value }: CurrentPriceProps) => {
   return (
     <div className="flex items-center">
-      <Typography className="text-[14px] text-neutral-400">
+      <Typography className="text-[14px] text-neutral-600 dark:text-neutral-400">
         *Текущий курс: 1&nbsp;
       </Typography>
       <img src={walletsMap[type].img} width={16} height={16} alt="" />
-      <Typography className="text-[14px] text-neutral-400">
+      <Typography className="text-[14px] text-neutral-600 dark:text-neutral-400">
         &nbsp;= {value} RUB
       </Typography>
     </div>
@@ -165,7 +165,8 @@ export const WalletsList = () => {
     wallets.map(w => (
       <div
         key={w.type}
-        className={`flex items-center w-full min-h-16 gap-4 rounded-lg px-4 py-3 border-2 bg-neutral-800 hover:bg-neutral-700 cursor-pointer
+        className={`flex items-center w-full min-h-16 gap-4 rounded-lg px-4 py-3 border-2 
+          bg-neutral-200 hover:bg-neutral-300 dark:bg-neutral-800 dark:hover:bg-neutral-700 cursor-pointer
           ${w.type === selectedWallet ? 'border-green' : 'border-transparent'}`}
         onClick={() => changeWallet(w.type as "charism" | "belkoin")}
       >
@@ -234,7 +235,7 @@ const SelectedWallet = () => {
           <Typography className="text-lg md:text-xl lg:text-2xl">
             {walletsMap[selectedWallet.type].title}
           </Typography>
-          <Typography className="text-neutral-400 text-center text-sm md:text-base lg:text-lg">
+          <Typography className="text-neutral-600 dark:text-neutral-400 text-center text-sm md:text-base lg:text-lg">
             {walletsMap[selectedWallet.type].description}
           </Typography>
         </div>

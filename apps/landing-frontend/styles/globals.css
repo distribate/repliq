@@ -106,7 +106,7 @@
 	}
 
 	.full-screen-section {
-		@apply min-h-dvh relative;
+		@apply relative;
 	}
 
 	.gallery-image-trigger {

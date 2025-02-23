@@ -7,6 +7,7 @@ import { type PaymentMeta, type PaymentResponse } from '@repo/types/entities/pay
 import { getNatsConnection } from '@repo/config-nats/nats-client';
 import { throwError } from '@repo/lib/helpers/throw-error';
 import { currencyCryptoSchema, currencyFiatSchema } from '@repo/types/schemas/entities/currencies-schema';
+import { forumDB } from '#shared/database/forum-db.ts';
 
 export type CreateFiatOrder = PaymentMeta & {
   currency: z.infer<typeof currencyFiatSchema>
@@ -20,24 +21,34 @@ const tonCurrencies = ['USDT(TON)', 'TON', 'LLAMA', 'GRAM'] as const;
 const tronCurrencies = ['USDT(TRC20)'] as const;
 const otherCurrenies = ["BTC", "ETH"] as const
 
-const isTonCurrency = (currency: string): currency is typeof tonCurrencies[number] =>  tonCurrencies.includes(currency as any);
+const isTonCurrency = (currency: string): currency is typeof tonCurrencies[number] => tonCurrencies.includes(currency as any);
 
 const isTronCurrency = (currency: string): currency is typeof tronCurrencies[number] => tronCurrencies.includes(currency as any);
 
-const isOtherCurrency = (currency: string): currency is typeof otherCurrenies[number] =>  otherCurrenies.includes(currency as any)
+const isOtherCurrency = (currency: string): currency is typeof otherCurrenies[number] => otherCurrenies.includes(currency as any)
 
 async function createFiatOrder({
   paymentValue, paymentType, nickname,
 }: Omit<CreateFiatOrder, "currency">) {
-  const nc = getNatsConnection()
+  try {
+    const nc = getNatsConnection()
 
-  const payload = JSON.stringify({
-    metadata: { nickname, paymentType, paymentValue },
-  })
+    const payload = JSON.stringify({
+      metadata: { nickname, paymentType, paymentValue },
+    })
 
-  let res = await nc.request("payment.start.fiat", payload)
+    const res = await nc.request("payment.start.fiat", payload)
 
-  return res.json<{ errorcode: number | null, errormessage: string | null, data: string | null }>()
+    const { isSuccess, ErrorMessage, Data } = await res.json<{ isSuccess: boolean, ErrorMessage: string, Data: string }>()
+
+    return {
+      isSuccess,
+      ErrorMessage,
+      Data
+    }
+  } catch (e) {
+    throw new Error("Error creating payment")
+  }
 }
 
 async function createCryptoOrder({
@@ -76,14 +87,40 @@ async function createCryptoOrder({
   }
 }
 
+async function validateAvailablityByCurrency(currency: string) {
+  const query = await forumDB
+  .selectFrom("landing_currencies")
+  .select("id")
+  .where("isAvailable", "=", true)
+  .where("value", "=", currency)
+  .executeTakeFirst()
+
+  if (!query) {
+    return false
+  }
+
+  return true
+}
+
 export const createOrderRoute = new Hono()
   .post('/create-order', zValidator('json', createOrderBodySchema), async (ctx) => {
-    const body = await ctx.req.json()
-    const result = createOrderBodySchema.parse(body);
+    const result = createOrderBodySchema.parse(await ctx.req.json());
 
     const { paymentValue, paymentType, currency, nickname } = result;
     const { success: isCrypto, data: cryptoCurrency } = currencyCryptoSchema.safeParse(currency);
     const { success: isFiat, data: fiatCurrency } = currencyFiatSchema.safeParse(currency);
+
+    const isValid = false;
+
+    if (!isValid) {
+      return ctx.json({ error: "Покупка не доступна" }, 400)
+    }
+
+    const isAvailable = await validateAvailablityByCurrency(currency);
+
+    if (!isAvailable) {
+      return ctx.json({ error: "Покупка за эту валюту не доступна" }, 400)
+    }
 
     try {
       if (isCrypto) {
@@ -98,16 +135,16 @@ export const createOrderRoute = new Hono()
         return ctx.json({ data: payment.paymentUrl }, 200)
       }
 
-      if (isFiat) {
-        const { data, errorcode, errormessage } = await createFiatOrder({
-          nickname, paymentValue, paymentType,
+      if (isFiat && fiatCurrency) {
+        const { Data, isSuccess, ErrorMessage } = await createFiatOrder({
+          nickname, paymentValue, paymentType
         })
 
-        if (errorcode || errormessage) {
-          return ctx.json({ error: errormessage }, 400);
+        if (!isSuccess || ErrorMessage) {
+          return ctx.json({ error: ErrorMessage }, 400);
         }
 
-        return ctx.json({ data }, 200)
+        return ctx.json({ data: Data }, 200)
       }
 
       return ctx.json({ error: "Error creating payment" }, 400)

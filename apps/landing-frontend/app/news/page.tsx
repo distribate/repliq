@@ -46,7 +46,7 @@ export const metadata = {
 export default function NewsPage() {
 	return (
 		<MainLayoutPage variant="with_section">
-			<div className="full-screen-section flex flex-col gap-10 items-center justify-start">
+			<div className="full-screen-section h-[80vh] lg:min-h-screen flex flex-col gap-10 items-center justify-start">
 				<div className="flex flex-col responsive items-center h-full justify-center gap-10 relative top-32 pb-48">
 					<Typography className="text-4xl font-semibold text-white">
 						Новости

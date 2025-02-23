@@ -5,6 +5,7 @@ import { useNavigate } from "@tanstack/react-router";
 import { registerForum } from '#forms/auth/queries/register-forum.ts';
 import { loginForum } from "../queries/login-forum.ts";
 import { toast } from "sonner";
+import { GLOBAL_OPTION_QUERY_KEY, GlobalOptionQuery } from "@repo/lib/queries/global-option-query";
 
 export const AUTH_MUTATION_KEY = ["auth-mutation"];
 
@@ -72,6 +73,11 @@ export const useAuth = () => {
             status: REGISTER_MESSAGES[register.error] ?? "Что-то пошло не так",
           }));
         }
+
+        qc.setQueryData(GLOBAL_OPTION_QUERY_KEY, (prev: GlobalOptionQuery) => ({
+          ...prev,
+          isStarted: true
+        }))
 
         qc.setQueryData(AUTH_QUERY_KEY, (prev: AuthQuery) => ({
           ...prev,

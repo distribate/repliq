@@ -51,7 +51,7 @@ export default async function SupportPage() {
 	return (
 		<MainLayoutPage variant="with_section">
 			<div
-				className="full-screen-section flex items-center justify-start bg-bottom bg-no-repeat bg-cover
+				className="full-screen-section h-[80vh] lg:min-h-screen flex items-center justify-start bg-bottom bg-no-repeat bg-cover
 			 bg-[url('/images/backgrounds/support_background.png')]"
 			>
 				<Overlay variant="default" />

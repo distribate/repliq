@@ -9,6 +9,7 @@ import { SearchType } from '@repo/components/src/sidebar/desktop/components/side
 import { CATEGORY_URL } from '@repo/shared/constants/routes'
 import { Select, SelectContent, SelectItem, SelectTrigger } from '@repo/ui/src/components/select'
 import { useState } from 'react'
+import { Search } from "lucide-react"
 
 export const Route = createFileRoute('/_protected/search')({
   component: RouteComponent,
@@ -131,8 +132,12 @@ const SearchPageSection = () => {
 
 function RouteComponent() {
   return (
-    <div className="flex flex-col gap-y-4 w-full min-h-dvh h-full">
-      <div className="flex justify-between items-center bg-shark-950 px-6 gap-2 py-4 h-[80px] w-full rounded-lg">
+    <div className="flex flex-col gap-y-4 w-full min-h-dvh h-full p-1">
+      <div
+        className="flex justify-between items-center duration-300 ease-in-out transtion-all bg-shark-950 outline-none 
+          focus-within:outline focus-within:outline-2 focus-within:outline-biloba-flower-500 px-4 gap-3 py-4 h-[80px] w-full rounded-lg"
+      >
+        <Search size={24} className="text-shark-300" />
         <SearchPageInput />
       </div>
       <SearchPageSection />
