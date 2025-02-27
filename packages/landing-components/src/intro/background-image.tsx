@@ -36,7 +36,7 @@ export const IntroBackgroundImage = () => {
 
   return (
     <div
-      className="w-full h-full absolute top-0 right-0 left-0 bg-no-repeat bg-center bg-cover"
+      className="w-full h-full absolute top-0 right-0 brightness-[55%] left-0 bg-no-repeat bg-center bg-cover"
       style={{ backgroundImage: `url(${url})` }}
     />
   )

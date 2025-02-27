@@ -2,7 +2,7 @@ import { cn } from "@repo/lib/utils/ui/cn"
 import { VariantProps, cva } from "class-variance-authority"
 import { HTMLAttributes } from "react";
 
-const typographyVariants = cva("group-hover:duration-300 duration-300 transition ease-in", {
+const typographyVariants = cva("group-hover:duration-100 duration-100 ease-in", {
   variants: {
     variant: {
       page_title: "text-5xl lg:text-6xl xl:text-7xl",

@@ -9,7 +9,7 @@ export async function getExistsPlayerSkin({
 }: GetExistsPlayerSkinType) {
   const queryPlayersSkins = await skinsDB
     .selectFrom('sr_player_skins')
-    .select("value")
+    .select(["value"])
     .where("last_known_name", "=", nickname)
     .executeTakeFirst();
 

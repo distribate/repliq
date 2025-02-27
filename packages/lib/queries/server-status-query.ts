@@ -1,28 +1,33 @@
+import { forumLandingClient } from "@repo/shared/api/forum-client";
 import { useQuery } from "@tanstack/react-query";
-import ky from 'ky';
 
 export type Player = {
   uuid: string;
   name_raw: string;
 };
 
-type Status = {
-  online: boolean;
-  players: {
-    online: number;
-    max: number;
-    list: Player[];
-  };
-};
+async function getServerStatus() {
+  const res = await forumLandingClient["get-status"].$get({
+    query: {
+      type: "servers"
+    }
+  })
 
-async function getServerStatus(port: number) {
-  const res = await ky(`https://api.mcstatus.io/v2/status/java/mc.fasberry.su:${port}`).json<Status>();
+  const data = await res.json()
 
-  return res;
+  if (!data || "error" in data) {
+    return null;
+  }
+
+  return data.data;
 }
 
-export const serverStatusQuery = (port: number) => useQuery({
-  queryKey: ["server-status", port],
-  queryFn: () => getServerStatus(port),
-  refetchInterval: 60000
+export const SERVER_STATUS_QUERY_KEY = ["server-status", "global"];
+
+export const serverStatusQuery = () => useQuery({
+  queryKey: SERVER_STATUS_QUERY_KEY,
+  queryFn: getServerStatus,
+  refetchInterval: 60000,
+  refetchOnWindowFocus: false,
+  retry: 1
 });

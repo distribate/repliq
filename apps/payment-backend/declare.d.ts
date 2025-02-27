@@ -14,6 +14,9 @@ declare module "bun" {
     PAYMENTS_POSTGRES_USER: string,
     PAYMENTS_POSTGRES_PORT: string;
 
+    CRYPTO_PAY_MAINNET_TOKEN: string;
+    CRYPTO_PAY_TESTNET_TOKEN: string;
+
     LUCKPERMS_POSTGRES_DB: string;
     LUCKPERMS_POSTGRES_PASSWORD: string;
     LUCKPERMS_POSTGRES_USER: string;

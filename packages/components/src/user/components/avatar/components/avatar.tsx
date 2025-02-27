@@ -7,7 +7,7 @@ import ExpNoActive from '@repo/assets/images/minecraft/exp-noactive.webp';
 import { userStatusQuery } from '@repo/lib/queries/user-status-query.ts';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@repo/ui/src/components/tooltip.tsx';
 
-const avatarVariants = cva('relative rounded-sm', {
+const avatarVariants = cva('relative rounded-lg border border-shark-600/20', {
   variants: {
     variant: {
       default: 'max-w-[68px] max-h-[68px]',

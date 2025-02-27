@@ -97,6 +97,11 @@ import { userStatus } from '#middlewares/user-status.ts';
 import { getUserPublicSocialsRoute } from '#routes/user/get-user-public-socials.ts';
 import { getThreadsByOwnerRoute } from '#routes/thread/get-threads-by-owner.ts';
 import { getMyLandsRoute } from '#routes/user/get-my-lands.ts';
+import { deleteNewsRoute, createNewsRoute } from '#routes/admin/create-news.ts';
+import { adminMiddleware } from '#middlewares/admin-access.ts';
+import { getTicketsRoute } from '#routes/admin/get-tickets.ts';
+import { getReportsRoute } from '#routes/admin/get-reports.ts';
+import { getStatusRoute } from '#routes/public/get-status.ts';
 
 async function startNats() {
   await initNats()
@@ -124,6 +129,7 @@ export const landing = new Hono()
   .route("/", getAlertsRoute)
   .route("/", getMinecraftItemsRoute)
   .route("/", getImagesLibraryRoute)
+  .route("/", getStatusRoute)
 
 export const shared = new Hono()
   .basePath("/shared")
@@ -134,11 +140,15 @@ export const shared = new Hono()
 export const admin = new Hono()
   .basePath('/admin')
   .use(validateRequest)
-  .use(userStatus)
+  .use(adminMiddleware)
   .route('/', callServerCommandRoute)
   .route("/", createAuthImageRoute)
   .route("/", getAuthImagesRoute)
   .route("/", createMinecraftItemRoute)
+  .route("/", deleteNewsRoute)
+  .route("/", createNewsRoute)
+  .route("/", getTicketsRoute)
+  .route("/", getReportsRoute)
 
 export const comment = new Hono()
   .basePath('/comment')

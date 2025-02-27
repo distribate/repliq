@@ -23,13 +23,32 @@ type MojangError = {
 
 const MOJANG_API_URL = "https://api.ashcon.app/mojang/v2/user"
 
+const CLOUDFLARE_TURNSTILE_SECRET_KEY = "0x4AAAAAAA-stfzoKM9_11nOW5V0dd54VS0"
+
 export const registerRoute = new Hono()
   .post('/register', zValidator('json', registerSchema), async (ctx) => {
-    const { 
-      password, 
-      details: { findout, realName: real_name, referrer }, 
-      nickname 
+    const {
+      password,
+      details: { findout, realName: real_name, referrer },
+      nickname,
+      token
     } = registerSchema.parse(await ctx.req.json());
+ 
+    if (!token) {
+      return ctx.json({ error: "Token is not provided" }, 400)
+    }
+
+    const verifyRes = await ky.post("https://challenges.cloudflare.com/turnstile/v0/siteverify", {
+      json: { secret: CLOUDFLARE_TURNSTILE_SECRET_KEY, response: token },
+    });
+
+    if (!verifyRes.ok) {
+      return ctx.json({ error: "Ошибка капчи" }, 403);
+    }
+
+    const result = await verifyRes.json();
+    
+    console.log(result)
 
     const IP = getClientIp(ctx) ?? "1.1.1.1"
 

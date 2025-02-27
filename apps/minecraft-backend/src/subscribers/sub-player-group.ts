@@ -1,6 +1,5 @@
 import { updateUserDonateForum } from "#lib/queries/update-user-donate-forum.ts"
 import { forumDB } from "#shared/database/forum-db.ts"
-import { lpDB } from "#shared/database/lp-db.ts"
 import { getNatsConnection } from "@repo/config-nats/nats-client"
 import { LUCKPERMS_UPDATE_SUBJECT } from "@repo/shared/constants/nats-subjects"
 import type { DonateVariants } from "@repo/types/db/forum-database-types"

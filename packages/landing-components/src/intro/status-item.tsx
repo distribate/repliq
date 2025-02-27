@@ -9,10 +9,10 @@ import WildArmor from "@repo/assets/images/minecraft/wild_armor_trim_ыmithing_�
 import { Skeleton } from "@repo/landing-ui/src/skeleton";
 
 export const StatusItem = () => {
-	const { data: status, isLoading } = serverStatusQuery(25565);
+	const { data: status, isLoading } = serverStatusQuery();
 	const { push } = useRouter()
 
-	const serverOnline = status?.players.online ?? 0
+	const serverOnline = status?.proxy.online ?? 0
 	// const serverStatus = status ? status?.online ? 'работает' : "не работает" : "не работает"
 
 	return (
@@ -44,7 +44,7 @@ export const StatusItem = () => {
 									text_color="adaptiveWhiteBlack"
 									className="text-md truncate sm:text-base md:text-lg lg:text-xl"
 								>
-									<span className="hidden sm:inline">играет</span> {serverOnline} игроков
+									<span className="hidden sm:inline">играет</span> {status?.servers.bisquite.online} игроков
 								</Typography>
 							)}
 						</div>
@@ -78,7 +78,7 @@ export const StatusItem = () => {
 								text_color="adaptiveWhiteBlack"
 								className="text-right text-md sm:text-base md:text-lg lg:text-xl"
 							>
-								Всего: 
+								Всего:
 							</Typography>
 							<Skeleton className="h-8 w-8" />
 						</div>

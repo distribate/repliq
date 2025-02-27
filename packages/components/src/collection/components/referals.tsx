@@ -51,7 +51,7 @@ export const Referals = () => {
                   <Link to={USER_URL + item.recipient}>
                     <UserNickname nickname={item.recipient} />
                   </Link>
-                  <UserDonate donate={item.donate} nickname={currentUser.nickname} />
+                  <UserDonate donate={item.donate} />
                 </div>
                 <Typography textColor="gray" textSize="medium">
                   Присоединился {dayjs(item.created_at).format("DD.MM.YYYY HH:mm")}

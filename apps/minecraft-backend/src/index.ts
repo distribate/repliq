@@ -14,12 +14,13 @@ import { getLandsRoute } from '#routes/lands/get-lands.ts';
 import { getLandsByNicknameRoute } from '#routes/lands/get-lands-by-nickname.ts';
 import { getLandRoute } from '#routes/lands/get-land.ts';
 import { getRatingByRoute } from '#routes/rating/get-rating-by.ts';
-import { subscribeUserBalance } from '#subscribers/subscribe-user-balance.ts';
-import { subscribeUserLands } from '#subscribers/subscribe-user-lands.ts';
+import { subscribeUserBalance } from '#subscribers/sub-user-balance.ts';
+import { subscribeUserLands } from '#subscribers/sub-user-lands.ts';
 import { subscribePlayerGroup } from '#subscribers/sub-player-group.ts';
 import { subscribePlayerJoin, subscribeRefferalCheck } from '#subscribers/sub-player-join.ts';
 import { getAchievementsMetaRoute, getAchievementsRoute } from '#routes/achievements/get-achievements.ts';
 import { originList } from "@repo/shared/constants/origin-list";
+import { subscribeServerStatus } from '#subscribers/sub-server-status.ts';
 
 async function startNats() {
   await initNats()
@@ -34,6 +35,8 @@ async function startNats() {
   console.log("\x1b[34m[NATS]\x1b[0m Subscribed to refferal check")
   subscribePlayerJoin()
   console.log("\x1b[34m[NATS]\x1b[0m Subscribed to player join")
+  subscribeServerStatus()
+  console.log("\x1b[34m[NATS]\x1b[0m Subscribed to server status")
 }
 
 await startNats()
@@ -71,6 +74,7 @@ export const minecraft = new Hono()
   .route("/", rating)
 
 const app = new Hono()
+  .basePath('/')
   .use(cors({
     origin: originList,
     allowMethods: ['GET', "POST", "OPTIONS"],
@@ -79,7 +83,6 @@ const app = new Hono()
   .use(timeout(2000))
   .use(rateLimiterMiddleware)
   .use(logger())
-  .basePath('/api')
   .route("/", minecraft)
   .route("/", hooks)
 

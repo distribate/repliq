@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { ReactNode } from "react";
 import { TooltipProvider } from "@repo/landing-ui/src/tooltip";
 import { Toaster } from "sonner";
+import localFont from "next/font/local"
 import { NextThemeProvider } from "@repo/lib/providers/theme-provider.tsx";
 import { Header } from "@repo/landing-components/src/header/header";
 import { Footer } from "@repo/landing-components/src/footer/footer";
@@ -11,6 +12,10 @@ import { QueryProvider } from '@repo/lib/providers/query-provider.tsx';
 import "../styles/globals.css";
 import "../styles/minecraft-weather.css"
 import "../styles/minecraft-theme.css"
+
+const font = localFont({
+	src: "../public/fonts/Monocraft.woff2",
+})
 
 export const metadata: Metadata = {
 	title: {
@@ -34,11 +39,11 @@ export const metadata: Metadata = {
 		},
 	},
 	creator: "Fasberry Project Team",
-	keywords: ["fasberry", "фесберри", "фесберри проект", "фасберри", "fasberryproject", "minecraft",
+	keywords: ["fasberry", "minecraft", "фасберри", "фесберри", "фесберри проект", "майнкрафт сервер",
 		"майнкрафт", "майнкрафт играть", "minecraft play", "сервера майнкрафт бесплатно", "список серверов майнкрафта",
 		"полу-ванильные сервера майнкрафта", "полуванила майнкрафт", "rp сервер майнкрафт", "rpg сервер майнкрафт",
 		"rp rpg сервер майнкрафт", "город в майнкрафте сервер", "minecraft server", "выживание", "survival minecraft",
-		"survival", "smp", "fasberry project", "minecraft fasberry", "minecraft server play", "майнкрафт сервер"],
+		"survival", "smp", "fasberry project", "minecraft fasberry", "minecraft server play"],
 	formatDetection: {
 		email: true,
 		address: true,
@@ -59,7 +64,7 @@ export const metadata: Metadata = {
 		title: "Fasberry Project",
 		description: "Сколько хороших и комфортных для вас майнкрафт-серверов вы знаете/знали? Теперь знаете на один больше.",
 		images: "https://fasberry.su/favicon.ico"
-	},
+	}
 };
 
 export default function RootLayout({
@@ -67,7 +72,10 @@ export default function RootLayout({
 }: Readonly<{ children: ReactNode }>) {
 	return (
 		<html lang="ru" suppressHydrationWarning>
-			<body>
+			<head>
+				<meta name="yandex-verification" content="79ef4427896b5175" />
+			</head>
+			<body className={font.className}>
 				<QueryProvider>
 					<ReactQueryDevtools />
 					<NextThemeProvider>

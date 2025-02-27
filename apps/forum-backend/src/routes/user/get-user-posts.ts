@@ -5,6 +5,19 @@ import { getUserPosts } from '#lib/queries/user/get-user-posts.ts';
 import { getUserPostsSchema } from '@repo/types/schemas/posts/user-posts-schema.ts';
 import { getNickname } from '#utils/get-nickname-from-storage.ts';
 import { userPreferenceAndPrivateValidation } from '#utils/validate-user-preference-private.ts';
+import { forumDB } from '#shared/database/forum-db.ts';
+
+async function createPostsView(v: { nickname: string, post_id: string }[]) {
+  const query = await forumDB
+    .insertInto("posts_views")
+    .values(v)
+    .onConflict((oc) =>
+      oc.columns(["nickname", "post_id"]).doNothing()
+    )
+    .execute()
+
+  return query;
+}
 
 export const getUserPostsRoute = new Hono()
   .get('/get-user-posts/:nickname', zValidator('query', getUserPostsSchema), async (ctx) => {
@@ -25,6 +38,10 @@ export const getUserPostsRoute = new Hono()
       const posts = await getUserPosts({
         filteringType, ascending, cursor, currentUserNickname: initiator, requestedUserNickname, searchQuery
       });
+
+      if (posts && posts.data.length) {
+        createPostsView(posts.data.map(v => ({ nickname: initiator, post_id: v.id })))
+      }
 
       return ctx.json(posts, 200);
     } catch (e) {

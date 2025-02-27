@@ -6295,6 +6295,7 @@ __metadata:
     react-hook-form: "npm:7.53.0"
     react-intersection-observer: "npm:9.10.2"
     react-skinview3d: "npm:5.1.0"
+    react-turnstile: "npm:^1.1.4"
     react-window: "npm:1.8.10"
     slate: "npm:0.103.0"
     slate-history: "npm:^0.110.3"
@@ -17050,6 +17051,16 @@ __metadata:
     react: ">=16.6.0"
     react-dom: ">=16.6.0"
   checksum: 10c0/2ba754ba748faefa15f87c96dfa700d5525054a0141de8c75763aae6734af0740e77e11261a1e8f4ffc08fd9ab78510122e05c21c2d79066c38bb6861a886c82
+  languageName: node
+  linkType: hard
+
+"react-turnstile@npm:^1.1.4":
+  version: 1.1.4
+  resolution: "react-turnstile@npm:1.1.4"
+  peerDependencies:
+    react: ">= 16.13.1"
+    react-dom: ">= 16.13.1"
+  checksum: 10c0/2a03226eede070e56be597b1456d870eb7180b90ed46a256970374fa545151474a08cb00acfe65292e353f8a2d082e1b2f851696b714f164251928f3330d2dad
   languageName: node
   linkType: hard
 

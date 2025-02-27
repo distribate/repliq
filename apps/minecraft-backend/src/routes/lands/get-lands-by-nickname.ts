@@ -24,8 +24,6 @@ export const getLandsByNicknameRoute = new Hono()
       return ctx.json({ error: "User hide this information"}, 401)
     }
 
-    // if !user in forum then show own lands
-
     try {
       let lands = await getLandsByNickname(nickname)
 
@@ -34,7 +32,7 @@ export const getLandsByNicknameRoute = new Hono()
       }
 
       if (exclude) {
-        lands = lands.filter((land) => land.ulid !== exclude)
+        lands = lands.filter(land => land.ulid !== exclude)
       }
 
       return ctx.json({ data: lands }, 200)

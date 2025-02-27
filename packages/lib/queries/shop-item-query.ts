@@ -9,6 +9,7 @@ export type ShopItemQuery = Partial<{
   nickname: string,
 }> & {
   currency: PaymentCurrency,
+  fiatMethod: "creditCard" | "sbp",
   category: "donate" | "wallet" | "events"
 }
 
@@ -18,6 +19,7 @@ export const shopItemQuery = () => useQuery<
   queryKey: SHOP_ITEM_QUERY_KEY,
   initialData: {
     currency: "RUB",
-    category: "donate"
+    category: "donate",
+    fiatMethod: "creditCard"
   }
 });

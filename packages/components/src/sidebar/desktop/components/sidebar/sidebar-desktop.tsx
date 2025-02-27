@@ -12,7 +12,7 @@ import { SidebarLayout } from "../sidebar-layout/components/sidebar-layout.tsx";
 import { getUser } from "@repo/lib/helpers/get-user.ts";
 import { Avatar } from "#user/components/avatar/components/avatar.tsx";
 import { UserNickname } from "#user/components/name/nickname.tsx";
-import { HTMLAttributes, lazy } from "react";
+import { HTMLAttributes } from "react";
 import { ArrowDown, CircleUserRound, NotebookPen, Settings } from "lucide-react";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@repo/ui/src/components/dropdown-menu.tsx";
 import { Link, useLocation, useNavigate } from "@tanstack/react-router";
@@ -42,9 +42,22 @@ export const SIDEBAR_FORMATS: {
     { title: "Минимал", value: "compact" },
   ];
 
-interface OutlineWrapperProps extends HTMLAttributes<HTMLDivElement> { }
+export const SIDEBAR_LINKS = [
+  {
+    title: "Мониторинги",
+    link: "/misc/monitorings",
+  },
+  {
+    title: "Статус",
+    link: "/misc/status",
+  },
+  {
+    title: "О нас",
+    link: "/misc/about"
+  }
+]
 
-const OutlineWrapper = ({ children, className, ...props }: OutlineWrapperProps) => {
+const OutlineWrapper = ({ children, className, ...props }: HTMLAttributes<HTMLDivElement>) => {
   return (
     <div
       className={`flex items-center bg-shark-800 justify-center 
@@ -85,13 +98,13 @@ const UserBalance = () => {
       </div>
       <div className="flex items-center gap-2">
         <div className="flex gap-1 items-center">
-          <Typography className="text-[15px]">
+          <Typography className="text-[15px] font-[Minecraft]">
             {isLoading ? <Skeleton className="w-2 h-2" /> : balance?.charism}
           </Typography>
           <img src={Charism} width={16} height={16} alt="" />
         </div>
         <div className="flex gap-1 items-center">
-          <Typography className="text-[15px]">
+          <Typography className="text-[15px] font-[Minecraft]">
             {isLoading ? <Skeleton className="w-2 h-2" /> : balance?.belkoin}
           </Typography>
           <img src={Belkoin} width={15} height={15} alt="" />
@@ -124,11 +137,12 @@ const UserMenuTrigger = () => {
             </Suspense>
             {!isCompact && <UserBalance />}
           </div>
-          {!isCompact && <ArrowDown
-            size={24}
-            className="transition-all duration-150 ease-in group-data-[state=closed]:rotate-0 group-data-[state=open]:rotate-180 text-shark-300"
-          />
-          }
+          {!isCompact && (
+            <ArrowDown
+              size={24}
+              className="transition-all duration-150 ease-in group-data-[state=closed]:rotate-0 group-data-[state=open]:rotate-180 text-shark-300"
+            />
+          )}
         </div>
       </DropdownMenuTrigger>
       <DropdownMenuContent>
@@ -197,7 +211,10 @@ const SidebarBar = () => {
                         });
                       }}
                     >
-                      <Typography state={sidebarState.format === format ? "active" : "default"} textSize="medium">
+                      <Typography
+                        state={sidebarState.format === format ? "active" : "default"}
+                        textSize="medium"
+                      >
                         {title}
                       </Typography>
                     </DropdownMenuItem>
@@ -206,16 +223,17 @@ const SidebarBar = () => {
               </DropdownMenuContent>
             </DropdownMenu>
             <Separator />
-            <Link to="/misc/monitoring" className="flex cursor-pointer px-2 py-1.5 items-center justify-start hover:bg-shark-600 rounded-md">
-              <Typography>Мониторинги</Typography>
-            </Link>
-            <Link to="/misc/status" className="flex cursor-pointer px-2 py-1.5 items-center justify-start hover:bg-shark-600 rounded-md">
-              <Typography>Статус</Typography>
-            </Link>
-            <Separator />
-            <Link to="/misc/about" className="flex cursor-pointer px-2 py-1.5 items-center justify-start hover:bg-shark-600 rounded-md">
-              <Typography>О нас</Typography>
-            </Link>
+            {SIDEBAR_LINKS.map((link, i) => (
+              <>
+                <Link
+                  to={link.link}
+                  className="flex cursor-pointer px-2 py-1.5 items-center justify-start hover:bg-shark-600 rounded-md"
+                >
+                  <Typography>{link.title}</Typography>
+                </Link>
+                {i === (SIDEBAR_LINKS.length - 2) && <Separator />}
+              </>
+            ))}
           </div>
         </DropdownMenuContent>
       </DropdownMenu>
@@ -254,6 +272,7 @@ const ProfileLink = () => {
   const currentUser = getUser();
   const navigate = useNavigate();
   const { pathname } = useLocation()
+  const { isCompact, isExpanded } = useSidebarControl();
 
   return (
     <div className="h-12 w-full">
@@ -263,9 +282,11 @@ const ProfileLink = () => {
         variant={pathname === USER_URL + currentUser.nickname ? "active" : "default"}
       >
         <CircleUserRound size={20} className="icon-color" />
-        <Typography className="text-[16px] font-medium">
-          Мой профиль
-        </Typography>
+        {!isCompact && isExpanded && (
+          <Typography className="text-[16px] font-medium">
+            Мой профиль
+          </Typography>
+        )}
       </SidebarButton>
     </div>
   );

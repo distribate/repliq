@@ -113,8 +113,8 @@ const SelectedDonate = () => {
               ⭐ Возможности на сервере:
             </Typography>
             <div className="flex flex-col w-full">
-              {selectedDonate.commands.map(sd => (
-                <Typography className="text-[16px]">
+              {selectedDonate.commands.map((sd, i) => (
+                <Typography key={i} className="text-[16px]">
                   ⏹ {sd}
                 </Typography>
               ))}
@@ -126,8 +126,8 @@ const SelectedDonate = () => {
             </Typography>
             {selectedDonate.origin === 'authentic' && (
               <div className="flex flex-col w-full">
-                {selectedDonate.forum!.map(sd => (
-                  <Typography className="text-[16px]">
+                {selectedDonate.forum!.map((sd, i) => (
+                  <Typography key={i} className="text-[16px]">
                     ⏹ {sd}
                   </Typography>
                 ))}

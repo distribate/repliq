@@ -17,19 +17,21 @@ import EyeOfEnder from "@repo/assets/images/minecraft/eye_of_ender.webp";
 import type { PasswordVisibilityType } from "#forms/auth/types/form-types.ts";
 import { z } from "zod";
 import { Link } from "@tanstack/react-router";
+import Turnstile, { useTurnstile } from "react-turnstile";
+import { toast } from "sonner";
+import { isProduction } from "@repo/lib/helpers/is-production.ts";
 
 type zodSignUpForm = z.infer<typeof registrationSchema>;
 
 export const SignUpForm = () => {
   const qc = useQueryClient();
+  const [token, setToken] = useState<string | null>(null)
   const { data: { status } } = authQuery();
   const [pt, setPt] = useState<PasswordVisibilityType>("password");
   const { setAuthValuesMutation } = useAuth();
   const navigate = useNavigate();
-  const referrer = useSearch({
-    from: "/auth/",
-    select: (params) => params.from
-  });
+  const turnstile = useTurnstile();
+  const referrer = useSearch({ from: "/auth/", select: (params) => params.from });
 
   const mutData = useMutationState({
     filters: { mutationKey: AUTH_MUTATION_KEY },
@@ -56,6 +58,8 @@ export const SignUpForm = () => {
   }, [status]);
 
   const onSubmit = () => {
+    if (!token) return toast.error("Вы не прошли капчу!");
+
     const values = getValues();
     const { password, acceptRules, findout, nickname, realName } = values;
 
@@ -64,7 +68,7 @@ export const SignUpForm = () => {
     qc.setQueryData(AUTH_QUERY_KEY, (prev: AuthQuery) => ({
       ...prev,
       type: "sign-up",
-      values: { nickname, password, acceptRules, findout, realName, referrer },
+      values: { nickname, password, acceptRules, findout, token, realName, referrer },
     }));
 
     setAuthValuesMutation.mutate();
@@ -206,6 +210,12 @@ export const SignUpForm = () => {
           </label>
         </div>
       </FormField>
+      {(isProduction && isValid) && (
+        <Turnstile
+          sitekey="0x4AAAAAAA-stfNqE6yrheDS"
+          onVerify={(token) => setToken(token)}
+        />
+      )}
       <div className="flex items-center gap-x-2">
         <Button
           variant="minecraft"

@@ -10,6 +10,7 @@ import { giveBelkoin } from "../utils/give-belkoin"
 import { giveCharism } from "../utils/give-charism"
 import { publishPaymentNotify } from "../publishers/pub-payment-notify"
 import { createErrorLog } from "../utils/create-error-log"
+import { PAYMENT_SUCCESS_SUBJECT } from "@repo/shared/constants/nats-subjects"
 
 const receiveFiatPayload = paymentMetaSchema
   .superRefine((data, ctx) => paymentTypeValidator({ data, ctx }))
@@ -17,8 +18,10 @@ const receiveFiatPayload = paymentMetaSchema
 async function processBelkoinPayment({
   nickname, paymentType, paymentValue
 }: PaymentMeta) {
+  const value = Number(paymentValue)
+
   await Promise.all([
-    giveBelkoin(nickname, Number(paymentValue)),
+    giveBelkoin(nickname, value),
     callServerCommand({
       parent: "cmi",
       value: `toast ${nickname} Поздравляем c покупкой`
@@ -34,8 +37,10 @@ async function processBelkoinPayment({
 async function processCharismPayment({
   nickname, paymentType, paymentValue
 }: PaymentMeta) {
+  const value = Number(paymentValue)
+
   await Promise.all([
-    giveCharism(nickname, Number(paymentValue)),
+    giveCharism(nickname, value),
     callServerCommand({
       parent: "cmi",
       value: `toast ${nickname} Поздравляем с покупкой`
@@ -75,8 +80,6 @@ async function processDonatePayment({
   ])
 }
 
-export const PAYMENT_SUCCESS_SUBJECT = "payment.status.success"
-
 export const subscribeReceiveFiatPayment = () => {
   const nc = getNatsConnection()
 
@@ -92,8 +95,6 @@ export const subscribeReceiveFiatPayment = () => {
       console.log(message)
 
       const { success, data } = receiveFiatPayload.safeParse(message)
-
-      console.log(`Payment status: ${success ? "success" : "failure"}`)
 
       if (!success) return;
 

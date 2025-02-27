@@ -2,25 +2,24 @@ import { MainLayoutPage } from '@repo/landing-components/src/layout/main-layout'
 import { Overlay } from '@repo/landing-ui/src/overlay';
 import { Typography } from '@repo/landing-ui/src/typography';
 import { Block } from '@repo/landing-ui/src/block';
-import { IntroMain } from '@repo/landing-components/src/intro/intro-main';
+import { IdeaMain } from '@repo/landing-components/src/intro/intro-main';
 import { CONTACTS_LIST, ContactsListProps } from '@repo/shared/wiki/data/contacts/contacts-list';
 import { GAMEPLAY, GameplayItemType } from '@repo/shared/wiki/data/gameplay/gameplay-list';
 import { CommunityGalleryItem } from '@repo/landing-components/src/community/community-gallery-item';
 import { NewsList } from '@repo/landing-components/src/news/news-list';
 import Link from 'next/link';
-import { Suspense } from 'react';
-import { Skeleton } from '@repo/landing-ui/src/skeleton.tsx';
-import dynamic from 'next/dynamic';
-import { IntroBackgroundImage } from "@repo/landing-components/src/intro/background-image";
-import { StatusItem } from "@repo/landing-components/src/intro/status-item";
+import { IntroBackgroundImage } from '@repo/landing-components/src/intro/background-image';
+import { StatusItem } from '@repo/landing-components/src/intro/status-item';
+import { Button } from '@repo/landing-ui/src/button';
+import { SpawnCarousel } from '@repo/landing-components/src/intro/spawn-carousel';
 
-const ParamProvider = dynamic(() => import("@repo/landing-components/src/layout/param-provider")
-  .then(m => m.ParamProvider), {
-  ssr: false
-})
+// const ParamProvider = dynamic(() => import("@repo/landing-components/src/layout/param-provider")
+//   .then(m => m.ParamProvider), {
+//   ssr: false
+// })
 
 export const metadata = {
-  title: 'Главная - Fasberry',
+  title: 'Главная | Fasberry',
   description:
     "Добро пожаловать на Fasberry! Уникальные сервера, захватывающие события и дружелюбное сообщество. Играй с друзьями и создавай свой мир прямо сейчас!",
   keywords: [
@@ -42,7 +41,7 @@ export const metadata = {
   openGraph: {
     title: "Fasberry Сервер | Создай свой уникальный мир",
     description:
-      "На нашем Fasberry-сервере ты найдешь всё: креативные режимы, мини-игры, уникальные квесты и теплую атмосферу. Присоединяйся прямо сейчас!",
+      "На нашем Fasberry-сервере ты найдешь всё: новые вещи, уникальные квесты и ламповую атмосферу. Присоединяйся прямо сейчас!",
     url: "https://fasberry.su/",
     type: "website",
     images: [
@@ -139,27 +138,66 @@ const ContactItem = ({
 export default async function Main() {
   return (
     <MainLayoutPage variant="with_section">
-      <ParamProvider />
       <div
         id="title"
         className={`flex flex-col relative items-start full-screen-section h-[80vh] lg:h-screen justify-center`}
       >
         <div className="absolute top-0 right-0 left-0 overflow-hidden h-full">
           <IntroBackgroundImage />
-          <Overlay variant="default" />
         </div>
-        <div className="flex items-center responsive z-1 mx-auto h-full">
-          <IntroMain />
+        <div className="flex items-center justify-center responsive z-1 mx-auto h-full">
+          <div
+            className="flex flex-col z-[2] w-full lg:w-[60%] gap-4 justify-center items-center rounded-xl py-4 lg:py-6">
+            <div className="flex flex-col gap-1 items-center justify-center w-full">
+              <Typography className="text-green text-center mb-4 text-4xl md:text-5xl xl:text-6xl">
+                Добро пожаловать!
+              </Typography>
+              <Typography shadow="xl" className="text-white text-center text-lg lg:text-3xl">
+                Атмосферная и ламповая атмосфера ждет тебя. А еще печеньки и эмоции  ★
+              </Typography>
+            </div>
+            <div className="flex sm:flex-row flex-col select-none items-center gap-4 w-full justify-center">
+              <Link href="/start" className="w-full sm:w-fit">
+                <Button
+                  className="w-full hover:bg-[#088d47] transition-all 
+                    duration-300 ease-in-out bg-[#05b458] rounded-xl"
+                >
+                  <Typography className="!text-white text-xl text-shadow-xl">
+                    Начать играть
+                  </Typography>
+                </Button>
+              </Link>
+              <Link href="#idea" className="w-full sm:w-fit">
+                <Button
+                  className="w-full bg-white/10 sm:backdrop-blur-md 
+                    border-2 border-neutral-400 transition-all duration-300 ease-in-out rounded-xl"
+                >
+                  <Typography className="!text-white text-xl text-shadow-xl">
+                    О сервере
+                  </Typography>
+                </Button>
+              </Link>
+            </div>
+          </div>
         </div>
       </div>
       <div
-        id="gameplay-overview"
-        className="full-screen-section relative min-h-screen flex flex-col items-center"
+        id="idea"
+        className="full-screen-section relative h-screen flex flex-col items-center justify-center"
       >
-        <div className="grid grid-cols-1 grid-rows-3 xl:grid-cols-3 xl:grid-rows-1">
-          {GAMEPLAY.map((item, idx) =>
-            <GameplayItem key={item.name} id={idx} {...item} />)
-          }
+        <div className="flex flex-col items-center mx-auto responsive gap-6 justify-center select-none relative">
+          <Typography text_color="black" className="text-2xl sm:text-3xl lg:text-4xl">
+            ♦ Особенности сервера ♦
+          </Typography>
+          <IdeaMain />
+        </div>
+      </div>
+      <div
+        id="spawn"
+        className="hidden lg:flex full-screen-section relative h-[80vh] lg:h-screen flex-col items-center justify-center"
+      >
+        <div className="flex flex-col overflow-hidden h-full items-center w-full gap-6 justify-center select-none relative">
+          <SpawnCarousel />
         </div>
       </div>
       <div className="full-screen-section relative min-h-screen">

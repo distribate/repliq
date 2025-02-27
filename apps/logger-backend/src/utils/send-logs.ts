@@ -1,5 +1,4 @@
 import { format, FormattableString } from '@gramio/format';
-import type { PaymentCompleted } from '@repo/types/schemas/payment/payment-schema.ts';
 import { loggerBot } from '../shared/bot/bot.ts';
 import { AdminsWithDetails, getAdmins } from '../lib/queries/get-admins.ts';
 import { paymentLogsMessage } from '../messages/payment-logs.ts';
@@ -16,13 +15,13 @@ export type SendLogsAccountData = {
   uuid: string
 }
 
-export type PaymentData = Pick<PaymentCompleted, "data">["data"]
+export type PaymentData = {
+  item: string,
+  nickname: string,
+  orderId: string
+}
 
-export type SendLogsPaymentData = Omit<PaymentData, "meta"> & {
-  meta: {
-    nickname: PaymentData["meta"]["nickname"],
-    donate: string
-  },
+export type SendLogsPaymentData = PaymentData & {
   telegramId: string | null
 }
 
@@ -32,7 +31,37 @@ type SendLogsData<T extends MessageType> =
   T extends 'shop' ? SendLogsPaymentData :
   T extends 'punish' ? SendLogsPunishData :
   T extends 'account' ? SendLogsAccountData :
-never;
+  never;
+
+type SendLoggerBot = {
+  type: "admins" | "log",
+  text: any
+}
+
+export async function sendInLoggerBot({
+  text, type
+}: SendLoggerBot) {
+  switch (type) {
+    case "admins":
+      const adminsData = await getAdmins()
+
+      const admins = adminsData.filter(
+        (item): item is AdminsWithDetails => item.telegram_id !== null
+      )
+
+      for (const { telegram_id } of admins) {
+        if (!telegram_id) continue;
+
+        await loggerBot.api.sendMessage({ chat_id: telegram_id, text });
+      }
+
+      break;
+    case "log":
+      await loggerBot.api.sendMessage({ chat_id: "-4007811783", text });
+
+      break;
+  }
+}
 
 export async function sendLogs<T extends MessageType>({
   data
@@ -46,28 +75,19 @@ export async function sendLogs<T extends MessageType>({
     messageType = "shop"
     message = paymentLogsMessage(data);
   }
-  
-  if ('nickname' in data) {
-    messageType = "account"
-    message = loginLogsMessage(data);
-  }
-  
+
+  // if ('nickname' in data) {
+  //   messageType = "account"
+  //   message = loginLogsMessage(data);
+  // }
+
   if ('recipient' in data) {
-     messageType = "punish"
+    messageType = "punish"
   }
-  
+
   if (!message) return;
-  
+
   const text = format`#${messageType ?? ""} ${message}`;
-  
-  const adminsData = await getAdmins()
 
-  const admins = adminsData.filter(
-    (item): item is AdminsWithDetails => item.telegram_id !== null
-  )
-
-  for (const { telegram_id } of admins) {
-    if (!telegram_id) continue
-    await loggerBot.api.sendMessage({ chat_id: telegram_id, text });
-  }
+  return await sendInLoggerBot({ text, type: "admins" })
 }

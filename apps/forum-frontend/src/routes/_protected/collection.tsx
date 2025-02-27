@@ -1,11 +1,10 @@
-import { BlockWrapper } from '@repo/components/src/wrappers/block-wrapper'
 import { Typography } from '@repo/ui/src/components/typography'
-import { createFileRoute, useNavigate } from '@tanstack/react-router'
+import { createFileRoute, useNavigate, useSearch } from '@tanstack/react-router'
 import { Referals } from '@repo/components/src/collection/components/referals'
 import { Purchases } from '@repo/components/src/collection/components/purchases'
 import { MyThreads, SavedThreads } from '@repo/components/src/collection/components/threads'
 import { Tickets } from '@repo/components/src/collection/components/tickets'
-import { Button } from '@repo/ui/src/components/button'
+import { NavigationBadge } from '@repo/components/src/navigation/components/navigation-badge'
 
 type CollectionParams = {
   type: 'threads' | 'saved_threads' | 'referals' | 'purchases' | "tickets" | 'all'
@@ -31,90 +30,52 @@ export const Route = createFileRoute('/_protected/collection')({
   }),
   validateSearch: (search) => {
     return {
-      type: (search.type as CollectionParams["type"]) || 'all',
+      type: (search.type as CollectionParams["type"]) || 'purchases',
     }
   }
 })
 
 const CollectionMain = () => {
   const navigate = useNavigate()
+  // @ts-ignore
+  const type = useSearch({
+    from: "/_protected/collection",
+    select: (s) => s.type as CollectionParams["type"]
+  })
+
+  const changeRoute = (type: CollectionParams["type"]) => {
+    navigate({ to: "/collection", search: { type } })
+  }
 
   return (
-    <div className="flex flex-col gap-2 w-full h-full">
-      <Button
-        state="default"
-        onClick={() => navigate({ to: "/collection", search: { type: 'saved_threads' } })}
-        className="w-fit px-6"
-      >
-        <Typography textSize="medium">
-          Сохраненные треды
-        </Typography>
-      </Button>
-      <Button
-        state="default"
-        onClick={() => navigate({ to: "/collection", search: { type: 'purchases' } })}
-        className="w-fit px-6"
-      >
-        <Typography textSize="medium">
-          Покупки
-        </Typography>
-      </Button>
-      <Button
-        state="default"
-        onClick={() => navigate({ to: "/collection", search: { type: 'threads' } })}
-        className="w-fit px-6"
-      >
-        <Typography textSize="medium">
-          Треды
-        </Typography>
-      </Button>
-      <Button
-        state="default"
-        onClick={() => navigate({ to: "/collection", search: { type: 'referals' } })}
-        className="w-fit px-6"
-      >
-        <Typography textSize="medium">
-          Рефералы
-        </Typography>
-      </Button>
+    <div className="flex lg:flex-nowrap flex-wrap gap-2 w-full">
+      <NavigationBadge isActive={type === 'purchases'} title="Покупки" onClick={() => changeRoute('purchases')}  />
+      <NavigationBadge isActive={type === 'threads'} title="Треды" onClick={() => changeRoute('threads')}  />
+      <NavigationBadge isActive={type === 'saved_threads'} title="Сохраненные треды" onClick={() => changeRoute('saved_threads')}  />
+      <NavigationBadge isActive={type === 'referals'} title="Рефералы" onClick={() => changeRoute('referals')}  />
+      <NavigationBadge isActive={type === 'tickets'} title="Тикеты" onClick={() => changeRoute('tickets')}  />
     </div>
   )
 }
 
 function RouteComponent() {
   const { type } = Route.useSearch()
-  const navigate = useNavigate()
 
   return (
-    <div className="flex lg:flex-row h-dvh flex-col w-full gap-2">
-      <BlockWrapper className="flex flex-col gap-y-2 w-full !p-4">
-        {type !== 'all' && (
-          <>
-            <Button
-              state="default"
-              onClick={() => navigate({ to: "/collection", search: { type: 'all' } })}
-              className="w-fit px-6"
-            >
-              <Typography textSize="medium">
-                Назад
-              </Typography>
-            </Button>
-            <Typography
-              textSize="very_big"
-              textColor="shark_white"
-              className="font-semibold"
-            >
-              Ваши {ALIASES[type]}
-            </Typography>
-          </>
-        )}
-        {type === 'all' && <CollectionMain />}
-        {type === 'referals' && <Referals />}
-        {type === 'purchases' && <Purchases />}
-        {type === 'threads' && <MyThreads />}
-        {type === 'saved_threads' && <SavedThreads />}
-        {type === 'tickets' && <Tickets />}
-      </BlockWrapper>
+    <div className="flex flex-col bg-primary-color gap-6 p-2 rounded-lg w-full h-dvh">
+      <CollectionMain />
+      <Typography
+        textSize="very_big"
+        textColor="shark_white"
+        className="font-semibold"
+      >
+        Ваши {ALIASES[type]}
+      </Typography>
+      {type === 'referals' && <Referals />}
+      {type === 'purchases' && <Purchases />}
+      {type === 'threads' && <MyThreads />}
+      {type === 'saved_threads' && <SavedThreads />}
+      {type === 'tickets' && <Tickets />}
     </div>
   )
 }

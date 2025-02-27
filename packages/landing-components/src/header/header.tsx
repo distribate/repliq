@@ -49,14 +49,11 @@ export const headerUserQuery = () => useQuery({
 	queryFn: () => getUserFromCookie(),
 	refetchOnWindowFocus: false,
 	refetchOnMount: false,
-	refetchOnReconnect: false
+	refetchOnReconnect: false,
+	retry: 1
 })
 
-const HeaderUser = () => {
-	const { data: nickname } = headerUserQuery()
-
-	if (!nickname) return null
-
+const HeaderUser = ({ nickname }: { nickname: string }) => {
 	return (
 		<Link href={`https://cc.fasberry.su/user/${nickname}`} className="w-[38px] h-[38px] overflow-hidden rounded-md border border-neutral-400">
 			<Avatar nickname={nickname} propHeight={38} propWidth={38} />
@@ -66,6 +63,7 @@ const HeaderUser = () => {
 
 export const Header = () => {
 	const pathname = usePathname();
+	const { data: nickname, isError } = headerUserQuery()
 
 	const pathDetect = (href: string) => {
 		if (href) {
@@ -169,7 +167,20 @@ export const Header = () => {
 						</DropdownMenu>
 					)
 				})}
-				<HeaderUser />
+				{(nickname && !isError) ? (
+					<HeaderUser nickname={nickname} />
+				) : (
+					<SuperLink
+						href="https://cc.fasberry.su"
+						className="flex items-center gap-1 cursor-pointer"
+					>
+						<Typography
+							className={`hover:brightness-150 text-project-color text-lg`}
+						>
+							Форум
+						</Typography>
+					</SuperLink>
+				)}
 				<div className="w-[36px] h-[36px] overflow-hidden">
 					<ThemeToggle />
 				</div>

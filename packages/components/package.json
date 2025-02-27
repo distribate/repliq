@@ -27,6 +27,7 @@
     "react-hook-form": "7.53.0",
     "react-intersection-observer": "9.10.2",
     "react-skinview3d": "5.1.0",
+    "react-turnstile": "^1.1.4",
     "react-window": "1.8.10",
     "slate": "0.103.0",
     "slate-history": "^0.110.3",

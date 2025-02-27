@@ -13,7 +13,7 @@ export type Context = MessageContext<Bot<{}, DeriveDefinitions>>
 export const messageHandler = async (ctx: Context, next: () => void) => {
   if (!ctx.text || !ctx.from) return;
 
-  console.log(`[TEXT]: ${ctx.text}`)
+  console.log(`[TEXT] [${ctx.chat.id}]: ${ctx.text}`)
 
   const userId = ctx.from.id
 

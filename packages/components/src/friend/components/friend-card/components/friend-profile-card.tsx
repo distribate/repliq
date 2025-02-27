@@ -28,7 +28,7 @@ export const FriendProfileCard = ({
                 className="text-[18px] font-medium text-shark-50"
               />
             </Link>
-            <UserDonate donate={donate} nickname={nickname} />
+            <UserDonate donate={donate}/>
           </div>
         </div>
       </div>

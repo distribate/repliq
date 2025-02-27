@@ -13,9 +13,16 @@ const myThreadsQuery = (nickname: string) => useQuery({
 
 export const SavedThreads = () => {
   return (
-    <>
-
-    </>
+    <div className="flex flex-col h-full items-center justify-center gap-4 p-4 w-full">
+      <img src={FancyFeather} alt="" width={96} height={96} />
+      <Typography
+        textColor="shark_white"
+        textSize="very_big"
+        className="font-semibold"
+      >
+        У вас нет сохраненных тредов
+      </Typography>
+    </div>
   )
 }
 
@@ -26,23 +33,34 @@ export const MyThreads = () => {
   return (
     <div className="flex flex-col gap-y-4 h-full w-full">
       {threads && (
-        <div className="grid grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 auto-rows-auto gap-2 w-full h-fit">
+        <div className="grid grid-cols-1 lg:grid-cols-2 2xl:grid-cols-3 auto-rows-auto gap-2 w-full h-fit">
           {/* @ts-ignore */}
           {threads.map((t) => (
             <div
               key={t.id}
-              className="flex flex-col items-center aspect-video border border-shark-700 bg-shark-800 hover:bg-shark-700 rounded-md p-2"
+              className="flex items-center gap-4 justify-between border-2 border-shark-700 bg-shark-950 rounded-lg p-2"
             >
-              <Typography
-                textColor="shark_white"
-                textSize="medium"
-              >
-                {t.title}
-              </Typography>
-              <Link to={THREAD_URL + t.id}>
+              <div className="flex flex-col w-2/4 overflow-hidden">
                 <Typography
+                  className="truncate"
                   textColor="shark_white"
                   textSize="medium"
+                >
+                  {t.title}
+                </Typography>
+                <Typography
+                  className="truncate"
+                  textColor="gray"
+                  textSize="small"
+                >
+                  {t.description}
+                </Typography>
+              </div>
+              <Link to={THREAD_URL + t.id} className="bg-shark-50 flex items-center justify-center w-2/4 px-4 py-2 rounded-lg">
+                <Typography
+                  textColor="shark_black"
+                  textSize="medium"
+                  className='font-semibold'
                 >
                   Перейти к треду
                 </Typography>

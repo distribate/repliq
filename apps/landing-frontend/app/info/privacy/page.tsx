@@ -11,14 +11,14 @@ export default async function InfoPrivacyPage() {
         </Typography>
         <div className="flex flex-col gap-y-8 ">
           <div className="flex flex-col gap-y-4 border-2 border-[#454545] hover:duration-300 duration-300 rounded-[8px] p-4">
-            <Typography className="text-project-color text-xl">
+            <Typography text_color="adaptiveWhiteBlack" className="text-xl">
               1. Общие положения
             </Typography>
             <div className="flex flex-col text-white text-md lg:text-lg gap-y-4">
             <Typography text_color="adaptiveWhiteBlack">
                 Настоящая политика обработки персональных данных составлена в соответствии с требованиями Федерального закона от 27.07.2006.
                 №152-ФЗ «О персональных данных» и определяет порядок обработки персональных данных и меры по обеспечению безопасности персональных данных, предпринимаемые
-                FasberryProject (далее – Оператор).
+                Fasberry (далее – Оператор).
               </Typography>
               <Typography text_color="adaptiveWhiteBlack">
                 1.1. Оператор ставит своей важнейшей целью и условием осуществления своей деятельности соблюдение прав и свобод человека и
@@ -31,7 +31,9 @@ export default async function InfoPrivacyPage() {
             </div>
           </div>
           <div className="flex flex-col gap-y-4 border-2 border-[#454545] hover:duration-300 duration-300 rounded-[8px] p-4">
-            <p className="text-project-color text-xl">2. Основные понятия, используемые в Политике</p>
+            <Typography text_color="adaptiveWhiteBlack" className="text-xl">
+              2. Основные понятия, используемые в Политике
+            </Typography>
             <div className="flex flex-col text-white text-md lg:text-lg gap-y-4">
             <Typography text_color="adaptiveWhiteBlack">
                 2.1. Автоматизированная обработка персональных данных – обработка персональных данных с помощью средств вычислительной техники;
@@ -92,7 +94,9 @@ export default async function InfoPrivacyPage() {
             </div>
           </div>
           <div className="flex flex-col gap-y-4 border-2 border-[#454545] hover:duration-300 duration-300 rounded-[8px] p-4">
-            <p className="text-project-color text-xl">3. Оператор может обрабатывать следующие персональные данные Пользователя</p>
+            <Typography text_color="adaptiveWhiteBlack" className="text-xl">
+              3. Оператор может обрабатывать следующие персональные данные Пользователя
+            </Typography>
             <div className="flex flex-col text-white text-md lg:text-lg gap-y-4">
             <Typography text_color="adaptiveWhiteBlack">
                 3.1. IP адрес;
@@ -107,7 +111,9 @@ export default async function InfoPrivacyPage() {
             </div>
           </div>
           <div className="flex flex-col gap-y-4 border-2 border-[#454545] hover:duration-300 duration-300 rounded-[8px] p-4">
-            <p className="text-project-color text-xl">4. Цели обработки персональных данных</p>
+            <Typography text_color="adaptiveWhiteBlack" className="text-xl">
+              4. Цели обработки персональных данных
+            </Typography>
             <div className="flex flex-col text-white text-md lg:text-lg gap-y-4">
             <Typography text_color="adaptiveWhiteBlack">
                 4.1. Цель обработки персональных данных Пользователя — заключение, исполнение и прекращение гражданско-правовых договоров; предоставление доступа Пользователю к сервисам,
@@ -125,7 +131,9 @@ export default async function InfoPrivacyPage() {
             </div>
           </div>
           <div className="flex flex-col gap-y-4 border-2 border-[#454545] hover:duration-300 duration-300 rounded-[8px] p-4">
-            <p className="text-project-color text-xl">5. Правовые основания обработки персональных данных</p>
+            <Typography text_color="adaptiveWhiteBlack" className="text-xl">
+              5. Правовые основания обработки персональных данных
+            </Typography>
             <div className="flex flex-col text-white text-md lg:text-lg gap-y-4">
               <Typography text_color="adaptiveWhiteBlack">
                 5.1. Оператор обрабатывает персональные данные Пользователя только в случае их заполнения и/или отправки Пользователем самостоятельно через специальные формы,
@@ -139,7 +147,9 @@ export default async function InfoPrivacyPage() {
             </div>
           </div>
           <div className="flex flex-col gap-y-4 border-2 border-[#454545] hover:duration-300 duration-300 rounded-[8px] p-4">
-            <p className="text-project-color text-xl">6. Порядок сбора, хранения, передачи и других видов обработки персональных данных</p>
+            <Typography text_color="adaptiveWhiteBlack" className="text-xl">
+              6. Порядок сбора, хранения, передачи и других видов обработки персональных данных
+            </Typography>
             <div className="flex flex-col text-white text-md lg:text-lg gap-y-4">
             <Typography text_color="adaptiveWhiteBlack">
                 Безопасность персональных данных, которые обрабатываются Оператором, обеспечивается путем реализации правовых,
@@ -163,7 +173,9 @@ export default async function InfoPrivacyPage() {
             </div>
           </div>
           <div className="flex flex-col gap-y-4 border-2 border-[#454545] hover:duration-300 duration-300 rounded-[8px] p-4">
-            <p className="text-project-color text-xl">7. Трансграничная передача персональных данных</p>
+            <Typography text_color="adaptiveWhiteBlack" className="text-xl">
+              7. Трансграничная передача персональных данных
+            </Typography>
             <div className="flex flex-col text-white text-md lg:text-lg gap-y-4">
             <Typography text_color="adaptiveWhiteBlack">
                 7.1. Оператор до начала осуществления трансграничной передачи персональных данных обязан убедиться в том,
@@ -178,7 +190,9 @@ export default async function InfoPrivacyPage() {
             </div>
           </div>
           <div className="flex flex-col gap-y-4 border-2 border-[#454545] hover:duration-300 duration-300 rounded-[8px] p-4">
-            <p className="text-project-color text-xl">8. Заключительные положения</p>
+            <Typography text_color="adaptiveWhiteBlack" className="text-xl">
+              8. Заключительные положения
+            </Typography>
             <div className="flex flex-col text-white text-md lg:text-lg gap-y-4">
             <Typography text_color="adaptiveWhiteBlack">
                 8.1. Пользователь может получить любые разъяснения по интересующим вопросам, касающимся обработки его персональных данных,

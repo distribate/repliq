@@ -89,24 +89,6 @@ export const Route = createFileRoute('/_protected')({
   },
 })
 
-const BetaBadge = () => {
-  const [isExpanded, setIsExpanded] = useState(false)
-
-  return (
-    !isExpanded ? (
-      <div onClick={() => setIsExpanded(true)} className="fixed bottom-4 right-4 flex items-center p-2 z-[555] rounded-lg bg-shark-100 gap-1 cursor-pointer">
-        <Typography className="text-[20px]">
-          💥
-        </Typography>
-      </div>
-    ) : (
-      <Suspense>
-        <BetaModal open={isExpanded} onClose={() => setIsExpanded(false)} />
-      </Suspense>
-    )
-  )
-}
-
 const StartPreview = () => {
   return (
     <div className="flex h-screen overflow-hidden items-center w-full justify-center">
@@ -147,7 +129,7 @@ function RouteComponent() {
   return (
     isStarted ? <StartPreview /> : (
       <ResizableLayout>
-        <BetaBadge />
+        {/* <BetaBadge /> */}
         <Outlet />
       </ResizableLayout>
     )

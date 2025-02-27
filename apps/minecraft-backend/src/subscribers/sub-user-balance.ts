@@ -2,26 +2,32 @@ import { bisquiteDB } from "#shared/database/bisquite-db.ts";
 import { playerPointsDB } from "#shared/database/playerpoints-db.ts"
 import { getNatsConnection } from "@repo/config-nats/nats-client"
 
-async function getUserBalance(nickname: string) {
-  const charismQ = await bisquiteDB
+async function getBelkoin(nickname: string) {
+  return playerPointsDB
+    .selectFrom("playerpoints_username_cache")
+    .innerJoin("playerpoints_points", "playerpoints_points.uuid", "playerpoints_username_cache.uuid")
+    .select("playerpoints_points.points")
+    .where("playerpoints_username_cache.username", "=", nickname)
+    .executeTakeFirst()
+}
+
+async function getCharism(nickname: string) {
+  return bisquiteDB
     .selectFrom("CMI_users")
-    .select(["Balance", "player_uuid"])
+    .select("Balance")
     .where("username", "=", nickname)
     .executeTakeFirst()
+}
 
-  if (!charismQ || !charismQ.player_uuid) {
-    return null;
-  }
-
-  const belkoinQ = await playerPointsDB
-    .selectFrom("playerpoints_points")
-    .select("points")
-    .where("uuid", "=", charismQ.player_uuid)
-    .executeTakeFirst()
+async function getUserBalance(nickname: string) {
+  const [belkoin, charism] = await Promise.all([
+    getBelkoin(nickname),
+    getCharism(nickname)
+  ])
 
   return {
-    charism: Math.round(charismQ.Balance ?? 0),
-    belkoin: Math.round(belkoinQ?.points ?? 0)
+    charism: Math.round(charism?.Balance ?? 0),
+    belkoin: Math.round(belkoin?.points ?? 0)
   }
 }
 
@@ -41,7 +47,7 @@ export const subscribeUserBalance = () => {
         const balance = await getUserBalance(nickname)
 
         if (!balance) {
-          return;
+          return msg.respond(JSON.stringify({ charism: 0, belkoin: 0 }));
         }
 
         return msg.respond(JSON.stringify(balance))

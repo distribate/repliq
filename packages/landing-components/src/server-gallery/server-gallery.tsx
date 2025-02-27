@@ -4,7 +4,6 @@ import Image from 'next/image';
 import { useKeenSlider } from 'keen-slider/react';
 import { GALLERY_LIST } from '@repo/shared/wiki/data/gallery/gallery-list.ts';
 import { Typography } from '@repo/landing-ui/src/typography';
-import { animation } from '../intro/intro-main';
 import dynamic from 'next/dynamic';
 
 const DialogWrapper = dynamic(() =>
@@ -34,13 +33,13 @@ export const ServerGallery = () => {
       },
     },
     created(s) {
-      s.moveToIdx(3, true, animation);
+      s.moveToIdx(3, true, { duration: 30000 });
     },
     updated(s) {
-      s.moveToIdx(s.track.details.abs + 5, true, animation);
+      s.moveToIdx(s.track.details.abs + 5, true, { duration: 30000 });
     },
     animationEnded(s) {
-      s.moveToIdx(s.track.details.abs + 5, true, animation);
+      s.moveToIdx(s.track.details.abs + 5, true, { duration: 30000 });
     },
   });
   

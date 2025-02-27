@@ -1,92 +1,204 @@
 "use client"
 
 import { Typography } from "@repo/landing-ui/src/typography";
-import { Button } from "@repo/landing-ui/src/button";
-import { useEffect, useState } from "react";
-import { PROJECT_DESCRIPTION } from "@repo/shared/wiki/data/intro/project-description";
-import { Carousel, CarouselApi, CarouselContent, CarouselItem } from "@repo/landing-ui/src/carousel";
+import { useState } from "react";
 import Link from "next/link";
 
-export const animation = {
-	duration: 72000, easing: (t: number) => t
+type Idea = {
+	title: string,
+	image: string,
+	description: string,
+	link?: {
+		title: string,
+		href: string
+	},
+	type: "module" | "full"
 }
 
-export const IntroMain = () => {
-	const [sel, setSel] = useState<number>(0);
-	const [api, setApi] = useState<CarouselApi>();
+const IDEAS: Idea[] = [
+	{
+		title: "Геймплей",
+		image: "https://kong.fasberry.su/storage/v1/object/public/static/minecraft/steve-alex.webp",
+		description: "Выживайте, создавайте поселения и города, общайтесь с игроками, создавайте себя",
+		type: "full"
+	},
+	{
+		title: "Персонализация",
+		image: "https://kong.fasberry.su/storage/v1/object/public/static/minecraft/wild-west.webp",
+		link: {
+			title: "Узнать больше",
+			href: "https://fasberry.su/wiki?tab=profile"
+		},
+		description: "Создайте себе свой стиль: новые эмоции, частицы и питомцы",
+		type: "full"
+	},
+	{
+		title: "Карта",
+		image: "https://kong.fasberry.su/storage/v1/object/public/static/minecraft/map-preview.png",
+		link: {
+			title: "Перейти к карте",
+			href: "https://map.fasberry.su"
+		},
+		description: "На сервере имеется кастомная генерация мира с данжами и замками, поэтому вы не соскучитесь",
+		type: "module"
+	},
+	{
+		title: "Квесты",
+		image: "https://kong.fasberry.su/storage/v1/object/public/static/minecraft/casino-barebones.webp",
+		link: {
+			title: "Узнать больше",
+			href: "https://fasberry.su/wiki?tab=quests"
+		},
+		description: "Квесты - неотъемлемая часть геймплея, если вы хотите быстро заработать",
+		type: "full"
+	},
+	{
+		title: "Ресурспак",
+		image: "https://kong.fasberry.su/storage/v1/object/public/static/minecraft/custom-armor.png",
+		link: {
+			title: "Узнать больше",
+			href: "https://fasberry.su/wiki?tab=resourcepack"
+		},
+		description: "Ресурспак добавляет новые предметы: броню, инструменты, оружие и мебель.",
+		type: "module"
+	},
+	{
+		title: "Эмоции",
+		image: "https://kong.fasberry.su/storage/v1/object/public/static/minecraft/emotes-preview.webp",
+		link: {
+			title: "Узнать больше",
+			href: "https://fasberry.su/wiki?tab=emotes"
+		},
+		description: "Сервер поддерживает кастомные движения игрока",
+		type: "module"
+	}
+]
 
-	useEffect(() => {
-		if (api && sel !== null) api.scrollTo(sel, true);
-	}, [api, sel]);
+export const IdeaMain = () => {
+	const [sel, setSel] = useState<number>(0);
+
+	const handleToggle = (type: "prev" | "next") => {
+		switch (type) {
+			case "prev":
+				if (sel === 0) {
+					setSel(IDEAS.length - 1)
+					return
+				}
+
+				setSel(sel - 1);
+				break;
+			case "next":
+				if (sel === IDEAS.length - 1) {
+					setSel(0);
+					return
+				}
+
+				setSel(sel + 1);
+				break;
+		}
+	}
 
 	return (
-		<div className="flex flex-col select-none relative items-start w-full lg:w-2/3">
-			<Carousel
-				className="w-full self-start"
-				setApi={setApi}
-				opts={{ align: "start", dragFree: false, loop: true, slidesToScroll: 1 }}
-			>
-				<CarouselContent>
-					{PROJECT_DESCRIPTION.map(({ title, desc }, i) => (
-						<CarouselItem key={i} className="w-full lg:w-1/3">
-							<div
-								className="flex flex-col w-full lg:max-w-full justify-start rounded-xl py-4 lg:py-6">
-								<Typography className="text-project-color-pink mb-4 text-5xl lg:text-6xl">
-									{title}
-								</Typography>
-								<Typography shadow="xl" className="text-white text-lg lg:text-3xl">
-									{desc}
-								</Typography>
-							</div>
-						</CarouselItem>
-					))}
-				</CarouselContent>
-			</Carousel>
-			<div className="flex-col lg:flex-row h-[54px] items-start relative w-fit gap-4 hidden lg:flex">
-				<Link href="/start">
-					<Button
-						variant="positive"
-						className="w-full rounded-xl group hover:duration-300 duration-100 ease-in-out backdrop-blur-lg"
-					>
-						<Typography className="!text-white text-2xl text-shadow-xl">
-							<span className="inline-block duration-150 group-hover:duration-300 group-hover:translate-x-2">
-								⏵
-							</span>
-							&nbsp;Начать играть&nbsp;
-							<span className="inline-block duration-150 group-hover:duration-300 group-hover:-translate-x-2">
-								⏴
-							</span>
-						</Typography>
-					</Button>
-				</Link>
-				<Button
-					className="w-full h-full group hover:border-white/80 rounded-xl
-					 	border-2 border-white/60 aspect-square bg-black/60 backdrop-blur-md"
-					onClick={() => setSel((sel + 1) % PROJECT_DESCRIPTION.length)}
+		<>
+			<div className="flex items-center justify-center w-full gap-6 md:gap-4">
+				<div
+					onClick={() => handleToggle("prev")}
+					className="flex items-center gap-4 rounded-lg px-4 md:p-0 bg-neutral-800 md:bg-transparent cursor-pointer py-2"
 				>
-					<Typography className="text-[18px] group-hover:text-white/80 text-white/60 font-semibold">
-						{`>`}
+					<img
+						src="/images/minecraft/icons/large-arrow-left-hover.png"
+						width={20}
+						height={20}
+						alt="Previous"
+					/>
+					<Typography className="inline md:hidden">
+						Назад
 					</Typography>
-				</Button>
+				</div>
+				<div className="hidden md:flex items-center gap-4 justify-center w-fit">
+					{IDEAS.map((n, i) => (
+						<div
+							key={n.title}
+							onClick={() => setSel(i)}
+							className={`flex cursor-pointer duration-300 transition-all ease-in-out 
+							${sel === i ? "bg-neutral-50 text-neutral-800" : "bg-neutral-800 text-neutral-50"} rounded-xl px-4 py-2`}
+						>
+							<Typography className="truncate">
+								{n.title}
+							</Typography>
+						</div>
+					))}
+				</div>
+				<div
+					onClick={() => handleToggle("next")}
+					className="flex items-center gap-4 rounded-lg px-4 md:p-0 bg-neutral-800 md:bg-transparent cursor-pointer py-2"
+				>
+					<Typography className="inline md:hidden">
+						Далее
+					</Typography>
+					<img
+						src="/images/minecraft/icons/large-arrow-right-hover.png"
+						width={20}
+						height={20}
+						alt="Next"
+					/>
+				</div>
 			</div>
-			<div className="flex flex-col relative w-full items-center lg:hidden">
-				<Link href="/start" className="w-full">
-					<Button
-						variant="positive"
-						className="w-full h-[54px] lg:h-[64px] rounded-xl group hover:duration-300	duration-100 ease-in-out"
+			<div
+				className={`flex flex-col sm:flex-row relative sm:items-center w-full gap-2 lg:w-2/3 justify-between overflow-hidden border-2
+					${IDEAS[sel].type === 'module' ? "bg-neutral-300 border-transparent" : `border-neutral-600`} 
+					p-4 sm:p-6 xl:p-10 h-[360px] lg:h-[460px] w-full lg:max-w-full justify-start rounded-xl
+				`}
+			>
+				{IDEAS[sel].type === 'full' && (
+					<div className="absolute top-0 bottom-0 right-0 left-0 w-full h-full">
+						<img
+							src={IDEAS[sel].image}
+							alt=""
+							width={1000}
+							height={1000}
+							className="brightness-[55%] w-full h-full object-cover"
+						/>
+					</div>
+				)}
+				<div className={`flex flex-col relative ${IDEAS[sel].type === 'module' ? "w-full sm:w-2/4" : "w-full sm:w-2/3"}`}>
+					<Typography
+						className={`${IDEAS[sel].type === 'module' ? "text-neutral-900" : "text-neutral-50"} mb-4 text-xl sm:text-3xl lg:text-4xl`}
 					>
-						<Typography shadow="xl" className="font-bold text-white text-xl">
-							<span className="inline-block duration-150 group-hover:duration-150 group-hover:rotate-180">
-								⏵
-							</span>
-							&nbsp;Начать играть&nbsp;
-							<span className="inline-block duration-150 group-hover:duration-150 group-hover:-rotate-180">
-								⏴
-							</span>
-						</Typography>
-					</Button>
-				</Link>
+						{IDEAS[sel].title}
+					</Typography>
+					<Typography
+						shadow="xl"
+						className={`${IDEAS[sel].type === 'module' ? "text-neutral-900" : "text-neutral-200"} text-base sm:text-lg lg:text-xl`}
+					>
+						{IDEAS[sel].description}
+					</Typography>
+					{IDEAS[sel].link && (
+						<Link
+							target="_blank"
+							href={IDEAS[sel].link.href}
+							className="w-fit mt-2 sm:mt-4 underline underline-offset-8"
+						>
+							<Typography
+								className={`${IDEAS[sel].type === 'module' ? "text-neutral-700" : "text-neutral-300"} text-base sm:text-lg`}
+							>
+								{IDEAS[sel].link.title}
+							</Typography>
+						</Link>
+					)}
+				</div>
+				{IDEAS[sel].type === 'module' && (
+					<div className="flex items-center justify-center w-full sm:w-2/4 h-full">
+						<img
+							src={IDEAS[sel].image}
+							alt=""
+							width={1000}
+							height={1000}
+							className="w-full h-full object-cover rounded-xl"
+						/>
+					</div>
+				)}
 			</div>
-		</div>
+		</>
 	)
 }

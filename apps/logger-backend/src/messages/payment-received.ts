@@ -1,34 +1,24 @@
 import { bold, expandableBlockquote, format } from '@gramio/format';
 
-type PaymentReceivedMessage = {
+type PaymentReceiveMessage = {
+  item: string,
   nickname: string,
-  amount: number,
-  currency: string,
-  createdAt: string,
-  orderId: string,
-  wallet: string,
-  status: string,
-  donate: string
+  orderId: string
 }
 
 export const paymentReceivedMessage = ({
-  wallet, amount, currency, orderId, createdAt, nickname, donate, status,
-}: PaymentReceivedMessage) => {
+  item, nickname, orderId
+}: PaymentReceiveMessage) => {
   return format`
   ⭐ Привет ${nickname}!
 
-  Вы приобрели привилегию ${bold(`${donate}`)} за ${amount} ${currency}
+  Вы приобрели ${bold(`${item}`)}
 
   Детали заказа:
   ${expandableBlockquote(
     `Идентификатор: ${orderId}
-Создан: ${createdAt}
-Статус: ${status}
 Никнейм: ${nickname}
-Товар: привилегия ${donate}
-Кол-во: 1
-Цена: ${amount} ${currency}
-Адрес покупателя: ${wallet}
+Товар: ${item}
 `)}
   ${bold`Приятной игры!`}
   `;

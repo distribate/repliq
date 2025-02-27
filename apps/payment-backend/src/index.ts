@@ -3,7 +3,6 @@ import { showRoutes } from 'hono/dev';
 import { logger } from 'hono/logger';
 import { createOrderRoute } from './routes/create-order.ts';
 import { checkOrderRoute } from './routes/check-order.ts';
-import { bearerAuth } from 'hono/bearer-auth';
 import { initNats } from '@repo/config-nats/nats-client.ts';
 import { csrf } from 'hono/csrf';
 import { cors } from 'hono/cors';
@@ -13,19 +12,13 @@ import { getOrderRoute } from '#routes/get-order.ts';
 
 await initNats()
 
-const opts = {
-  origin: originList
-}
-
 export const payments = new Hono()
-  .use(cors(opts))
-  .use(csrf(opts))
+  .use(cors({ origin: originList }))
+  .use(csrf({ origin: originList }))
   .route('/', createOrderRoute)
 
 export const hooks = new Hono()
-  .use(cors(opts))
-  .use(csrf(opts))
-  .use(bearerAuth({ token: Bun.env.SECRET_TOKEN! }))
+  .use(cors({ origin: "*" }))
   .route('/', checkOrderRoute)
 
 export const order = new Hono()
@@ -33,14 +26,14 @@ export const order = new Hono()
   .route("/", getOrderRoute)
 
 const app = new Hono()
-  .basePath('/api/payment')
+  .basePath('/payment')
   .use(timeout(5000))
   .use(logger())
   .route('/proccessing', payments)
   .route('/hooks', hooks)
   .route("/", order)
 
-showRoutes(app, { verbose: false });
+// showRoutes(app, { verbose: false });
 
 Bun.serve({ port: Bun.env.PAYMENT_BACKEND_PORT!, fetch: app.fetch });
 

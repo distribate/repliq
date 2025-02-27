@@ -30,7 +30,18 @@ export default defineConfig({
   ],
   performance: {
     chunkSplit: {
-      strategy: 'split-by-experience'
+      strategy: 'split-by-experience',
+      override: {
+        cacheGroups: {
+          styles: {
+            name: 'styles',
+            minSize: 0,
+            chunks: 'all',
+            test: /\.(?:css|less|sass|scss|styl)$/,
+            priority: 99,
+          },
+        },
+      },
     },
     // bundleAnalyze: { }
   },

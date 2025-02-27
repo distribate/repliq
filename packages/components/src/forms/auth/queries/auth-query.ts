@@ -8,6 +8,7 @@ export type AuthQuery = {
   type: AuthType;
   status: AuthMessages | null;
   values: {
+    token: string;
     nickname: string;
     password: string;
     // email: string,

@@ -5,15 +5,16 @@ import { Typography } from '@repo/landing-ui/src/typography';
 import { Dialog, DialogContent, DialogTitle, DialogTrigger } from '@repo/landing-ui/src/dialog';
 import { VisuallyHidden } from '@radix-ui/react-visually-hidden';
 import { currenciesQuery } from '@repo/lib/queries/currencies-query';
-import { Block } from '@repo/landing-ui/src/block';
 import { Button } from '@repo/landing-ui/src/button';
 import { PaymentCurrency } from "@repo/types/entities/payment-types";
 import { cva, VariantProps } from 'class-variance-authority';
-import { PRICE_BY_CURRENCY_QUERY_KEY } from './shop-footer';
+import { PRICE_BY_CURRENCY_QUERY_KEY } from './shop-price';
+import CreditCardIcon from "@repo/assets/images/credit-card.webp"
+import SBPIcon from "@repo/assets/images/sbp.jpg"
 
 const currencyItemVariants = cva(`
   flex cursor-pointer items-center backdrop-blur-xl transition-all 
-  justify-between p-4 rounded-md border-2 bg-neutral-400/80 dark:bg-neutral-700/80 border-transparent`, {
+  justify-between p-4 rounded-lg border-2 bg-neutral-400/80 dark:bg-neutral-700/80 border-transparent`, {
   variants: {
     variant: {
       default: "",
@@ -63,6 +64,7 @@ export const ShopSelectCurrency = () => {
   const { data: shopItemState } = shopItemQuery();
 
   const currency = shopItemState?.currency;
+  const fiatMethod = shopItemState?.fiatMethod;
 
   const selectCurrency = () => {
     setOpen(false);
@@ -71,6 +73,12 @@ export const ShopSelectCurrency = () => {
       (p: ShopItemQuery) => ({ ...p, currency: selCurrency })
     );
   };
+
+  const selectFiatMethod = (fiatMethod: ShopItemQuery["fiatMethod"]) => {
+    qc.setQueryData(SHOP_ITEM_QUERY_KEY,
+      (p: ShopItemQuery) => ({ ...p, fiatMethod })
+    );
+  }
 
   return (
     <div className="flex flex-col sm:flex-row justify-between w-full lg:items-center gap-2">
@@ -92,18 +100,15 @@ export const ShopSelectCurrency = () => {
           <DialogContent className="p-0 !max-w-2xl">
             <VisuallyHidden>
               <DialogTitle>
-                Выберите способ оплаты для продолжения оформления заказа
+                Выберите способ оплаты
               </DialogTitle>
             </VisuallyHidden>
-            <Block
-              blockItem
-              type="column"
-              rounded="big"
-              className="h-full w-full"
+            <div
+              className="flex items-center p-4 border-2 border-neutral-700 rounded-xl h-full w-full"
             >
               <div className="flex flex-col w-full gap-4">
                 <Typography size="xl" className="text-center">
-                  Выберите способ оплаты для продолжения оформления заказа
+                  Выберите способ оплаты
                 </Typography>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-2 auto-rows-auto w-full h-full">
                   {!currencies && (
@@ -134,6 +139,30 @@ export const ShopSelectCurrency = () => {
                       </CurrencyItem>
                     )))}
                 </div>
+                {selCurrency === 'RUB' && (
+                  <div className="flex flex-col gap-4 w-full h-fit">
+                    <div className="flex items-center *:w-full gap-2">
+                      <CurrencyItem
+                        variant={fiatMethod === 'sbp' ? 'selected' : 'default'}
+                        onClick={() => selectFiatMethod('sbp')}
+                      >
+                        <img src={SBPIcon.src} alt="" width={36} height={36} />
+                        <Typography>
+                          СБП
+                        </Typography>
+                      </CurrencyItem>
+                      <CurrencyItem
+                        variant={fiatMethod === 'creditCard' ? 'selected' : 'default'}
+                        onClick={() => selectFiatMethod('creditCard')}
+                      >
+                        <img src={CreditCardIcon.src} alt="" width={36} height={36} />
+                        <Typography>
+                          Карта
+                        </Typography>
+                      </CurrencyItem>
+                    </div>
+                  </div>
+                )}
                 <div className="flex flex-col lg:flex-row gap-2 items-center justify-between w-full">
                   <Typography size="base" className="text-neutral-800 dark:text-neutral-400">
                     {selCurrency !== 'RUB' && '[!] Оплата будет через телеграм-бота'}
@@ -151,7 +180,7 @@ export const ShopSelectCurrency = () => {
                   </div>
                 </div>
               </div>
-            </Block>
+            </div>
           </DialogContent>
         </Dialog>
         <UpdatePrice />

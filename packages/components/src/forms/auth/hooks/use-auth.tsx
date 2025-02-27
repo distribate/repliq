@@ -36,7 +36,7 @@ export const useAuth = () => {
       if (!authValues || !authValues.values) return;
 
       const { values, type } = authValues;
-      const { findout, password, nickname, realName, referrer } = values;
+      const { findout, password, nickname, realName, referrer, token } = values;
 
       if (type === "sign-in") {
         const login = await loginForum({ nickname, password });
@@ -62,7 +62,7 @@ export const useAuth = () => {
 
       if (type === "sign-up") {
         const register = await registerForum({
-          nickname, password, details: { findout, realName, referrer },
+          nickname, password, details: { findout, realName, referrer }, token
         });
 
         if (!register) return;

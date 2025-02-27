@@ -3,7 +3,7 @@ import { getNickname } from "#utils/get-nickname-from-storage.ts";
 import { throwError } from "@repo/lib/helpers/throw-error";
 import { Hono } from "hono";
 
-async function validateAdmin(nickname: string): Promise<boolean> {
+export async function validateAdmin(nickname: string): Promise<boolean> {
   const exists = await forumDB
     .selectFrom("admins")
     .select("nickname")
@@ -19,6 +19,8 @@ export const getIsAdminRoute = new Hono()
 
     try {
       const isAdmin = await validateAdmin(nickname)
+
+      ctx.header("Cache-Control", "public, max-age=120")
 
       return ctx.json({ data: isAdmin }, 200)
     } catch (e) {

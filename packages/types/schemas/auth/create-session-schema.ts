@@ -30,6 +30,9 @@ export const passwordSchema = z
 export const registerSchema = z.object({
   nickname: nicknameSchema,
   password: passwordSchema,
+  token: z.string({
+    required_error: "Поле обязательно",
+  }),
   details: z.object({
     realName: z.string().or(z.null()),
     findout: z.string(),

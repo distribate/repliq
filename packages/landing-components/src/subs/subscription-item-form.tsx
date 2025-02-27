@@ -7,7 +7,7 @@ import { Button } from '@repo/landing-ui/src/button.tsx';
 import { createOrderBodySchema } from "@repo/types/schemas/payment/payment-schema.ts";
 import { useState } from 'react';
 import { toast } from 'sonner';
-import { FinishedPrice } from '#shop/shop-footer.tsx';
+import { ShopPrice } from '#shop/shop-price.tsx';
 
 export type PaymentFields = z.infer<typeof createOrderBodySchema>;
 
@@ -32,7 +32,8 @@ export const SubscriptionItemForm = () => {
       paymentType: shopItemState.paymentType,
       paymentValue: shopItemState.paymentValue,
       currency: shopItemState.currency,
-      privacy: privacy
+      privacy: privacy,
+      fiatMethod: shopItemState.fiatMethod ?? "creditCard"
     });
   };
 
@@ -106,7 +107,7 @@ export const SubscriptionItemForm = () => {
           <Typography className='text-[18px]'>
             Итого:
           </Typography>
-          <FinishedPrice/>
+          <ShopPrice/>
         </div>
         <Button
           type="submit"

@@ -56,7 +56,7 @@ export const FriendCard = ({
             />
             {real_name && <UserRealName real_name={real_name} with_annotation={false} />}
           </Link>
-          <UserDonate donate={donate} nickname={nickname} />
+          <UserDonate donate={donate} />
         </div>
         {description && (
           <div className="flex items-center w-fit max-w-[200px] sm:max-w-[450px] lg:max-w-[600px]">

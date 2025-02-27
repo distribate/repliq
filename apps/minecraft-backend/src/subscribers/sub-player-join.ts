@@ -3,7 +3,7 @@ import { forumDB } from "#shared/database/forum-db.ts"
 import { callServerCommand } from "#utils/call-command.ts"
 import { getNatsConnection } from "@repo/config-nats/nats-client"
 import { SERVER_USER_EVENT_SUBJECT } from "@repo/shared/constants/nats-subjects"
-import { promise, z } from "zod"
+import { z } from "zod"
 
 const userEventSchema = z.object({
   date: z.string(),

@@ -4,7 +4,6 @@ import { NavigationBadge } from "#navigation/components/navigation-badge.tsx";
 export type AdminSections =
   | "reports"
   | "tickets"
-  | "configs"
   | "main"
   | "stats";
 

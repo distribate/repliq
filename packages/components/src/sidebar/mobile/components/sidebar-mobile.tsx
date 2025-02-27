@@ -75,7 +75,7 @@ export const SidebarMobile = () => {
             <Avatar nickname={nickname} propHeight={64} propWidth={64} />
             <div className="flex flex-col gap-1">
               <UserNickname nickname={nickname} className="text-[18px] font-medium text-shark-50" />
-              <UserDonate donate={donate} nickname={nickname} />
+              <UserDonate donate={donate} />
             </div>
           </div>
           <div className="flex flex-col p-4 gap-y-4">

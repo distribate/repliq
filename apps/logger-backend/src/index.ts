@@ -13,10 +13,11 @@ import "./lib/commands/weather-command.ts"
 import "./lib/commands/keyboard-command.ts"
 import "./lib/commands/give-item-command.ts"
 import { subscribeReferalReward } from './subscribers/sub-referal-reward.ts';
+import { subscribeNewPlayer } from './subscribers/sub-new-player.ts';
 
-await initNats()
+async function startNats() {
+  await initNats()
 
-async function startNatsSubscribers() {
   subscribeReceivePayment()
   console.log("\x1b[34m[NATS]\x1b[0m Subscribed to payment status")
   
@@ -34,7 +35,12 @@ async function startNatsSubscribers() {
 
   subscribeReferalReward()
   console.log("\x1b[34m[NATS]\x1b[0m Subscribed to referal reward")
+
+  subscribeNewPlayer()
+  console.log("\x1b[34m[NATS]\x1b[0m Subscribed to new player")
 }
+
+await startNats()
 
 await fasberryBot.init()
 await loggerBot.start()
@@ -42,5 +48,3 @@ await loggerBot.start()
 loggerBot.on("message", messageHandler);
 
 pgListenConnect()
-
-await startNatsSubscribers()

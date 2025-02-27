@@ -3,15 +3,9 @@ import { SHOP_ITEM_QUERY_KEY } from '@repo/lib/queries/shop-item-query.ts';
 import { createPayment } from '@repo/lib/actions/create-payment.ts';
 import { PaymentFields } from '@repo/landing-components/src/subs/subscription-item-form.tsx';
 import { toast } from 'sonner';
+import { PAYMENT_STATUS_QUERY_KEY } from '@repo/landing-components/src/shop/shop-payment-status';
 
 export const CREATE_PAYMENT_MUTATION_KEY = ["shop", 'create-payment-mutation'];
-
-export const CREATE_PAYMENT_DATA_QUERY_KEY = ["shop", "create-payment", "data"]
-
-export type CreatePaymentQuery = {
-  status: "error" | "success"
-  data: string
-}
 
 export const useCreatePayment = () => {
   const qc = useQueryClient();
@@ -19,13 +13,27 @@ export const useCreatePayment = () => {
   const createPaymentMutation = useMutation({
     mutationKey: CREATE_PAYMENT_MUTATION_KEY,
     mutationFn: async (values: PaymentFields) => createPayment(values),
-    onSuccess: async (data) => {
+    onSuccess: async (raw, variables) => {
+      // as fiat payment response
+      const data = raw as { data: { url: string; orderId: string } } | { error: string }
+
       if ("error" in data) {
-        qc.setQueryData(CREATE_PAYMENT_DATA_QUERY_KEY, { status: "error", data: data.error })
+        qc.setQueryData(PAYMENT_STATUS_QUERY_KEY, {
+          type: "error"
+        })
 
         toast.error(data.error);
-      } else if ("data" in data) {
-        qc.setQueryData(CREATE_PAYMENT_DATA_QUERY_KEY, { status: "success", data: data })
+      }
+
+      if ("data" in data) {
+        qc.setQueryData(PAYMENT_STATUS_QUERY_KEY, {
+          current: data.data.orderId,
+          status: "pending",
+          type: "created",
+          url: data.data.url,
+          isOpened: true,
+          paymentType: variables.currency === 'RUB' ? "fiat" : "crypto"
+        })
       }
 
       qc.resetQueries({ queryKey: SHOP_ITEM_QUERY_KEY })

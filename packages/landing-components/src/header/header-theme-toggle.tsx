@@ -31,7 +31,7 @@ export const ThemeToggle = () => {
 					width={36}
 					height={36}
 					loading="eager"
-					alt={theme}
+					alt=""
 				/>
 			}
 			content={

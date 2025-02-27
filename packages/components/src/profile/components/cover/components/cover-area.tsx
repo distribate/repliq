@@ -2,7 +2,7 @@ import { cva, VariantProps } from "class-variance-authority";
 import { HTMLAttributes } from "react";
 
 const coverAreaVariants = cva(
-  `flex flex-col lg:flex-row gap-y-4 lg:gap-y-0 justify-center w-full bg-center rounded-lg lg:mt-[4px] 
+  `flex flex-col lg:flex-row gap-y-4 lg:gap-y-0 justify-center w-full bg-center rounded-xl lg:mt-[4px] 
     overflow-hidden bg-cover bg-no-repeat items-center lg:justify-between px-6 py-4 lg:px-12 lg:py-6`,
   {
     variants: {

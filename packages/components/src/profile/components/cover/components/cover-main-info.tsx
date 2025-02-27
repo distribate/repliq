@@ -43,7 +43,7 @@ export const UserCoverMainInfo = ({ nickname }: UserCoverInfoProps) => {
             nicknameColor={name_color}
             className={coverState.inView ? "text-xl lg:text-3xl" : "text-xl"}
           />
-          <UserDonate donate={donate} nickname={nickname} />
+          <UserDonate donate={donate} />
         </div>
         {real_name && <UserRealName real_name={real_name} />}
       </div>

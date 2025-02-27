@@ -1,10 +1,8 @@
 import { Typography } from "@repo/ui/src/components/typography.tsx";
-import { ParticleEffect } from "@repo/ui/src/components/particle-effect.tsx";
 import { UserDonateBadge } from "./donate-badge.tsx";
 import { DonateVariantsEnum } from '@repo/types/entities/entities-type.ts';
 import { DONATE_GROUPS } from '@repo/shared/constants/donate-aliases.ts';
 import { useState } from "react";
-import { favoriteItemQuery } from "#cards/components/user-personal-card/components/profile-settings/components/favorite-items/queries/favorite-item-query.ts";
 import { useNavigate } from "@tanstack/react-router";
 import { getCookieByKey } from "@repo/lib/helpers/get-cookie-by-key.ts";
 import { Button } from "@repo/ui/src/components/button.tsx";
@@ -14,8 +12,7 @@ import DonateTipPreview from "@repo/assets/images/bzzvanet-omagadd.jpg"
 const getDonateTitle = (donate: DonateVariantsEnum) => DONATE_GROUPS[donate];
 
 type UserDonateProps = {
-  donate: DonateVariantsEnum,
-  nickname: string
+  donate: DonateVariantsEnum
 }
 
 const DonateTipPopover = () => {
@@ -67,39 +64,21 @@ const DonateTipPopover = () => {
 }
 
 export const UserDonate = ({
-  donate, nickname
+  donate
 }: UserDonateProps) => {
   const [clicked, setClicked] = useState<boolean>(false);
-  const [hovered, setHovered] = useState<boolean>(false);
-
-  const isDonate = hovered && donate !== "default"
-
-  const { data: favoriteItem } = favoriteItemQuery(nickname, isDonate);
 
   const title = getDonateTitle(donate);
 
   return (
     <>
       {clicked && <DonateTipPopover />}
-      <div
-        onMouseEnter={_ => setHovered(true)}
-        onClick={_ => setClicked(true)}
-      >
-        {favoriteItem && favoriteItem?.image ? (
-          <ParticleEffect options={{ particle: favoriteItem.image }}>
-            <UserDonateBadge variant={donate} className="w-fit">
-              <Typography textColor="shark_white" font="minecraft" className="text-[12px]">
-                {title}
-              </Typography>
-            </UserDonateBadge>
-          </ParticleEffect>
-        ) : (
-          <UserDonateBadge variant={donate} className="w-fit">
-            <Typography textColor="shark_white" font="minecraft" className="text-[12px]">
-              {title}
-            </Typography>
-          </UserDonateBadge>
-        )}
+      <div onClick={_ => setClicked(true)}>
+        <UserDonateBadge variant={donate} className="w-fit">
+          <Typography textColor="shark_white" font="minecraft" className="text-[14px]">
+            {title}
+          </Typography>
+        </UserDonateBadge>
       </div>
     </>
   )

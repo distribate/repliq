@@ -53,7 +53,7 @@ export const getLandRoute = new Hono()
     try {
       const land = await getLand(id)
 
-      ctx.header('Cache-Control', 'public, max-age=10')
+      ctx.header('Cache-Control', 'public, max-age=30')
 
       return ctx.json(land, 200)
     } catch (e) {

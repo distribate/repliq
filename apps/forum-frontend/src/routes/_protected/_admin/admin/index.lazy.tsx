@@ -1,14 +1,55 @@
 import { createLazyFileRoute } from '@tanstack/react-router'
 import { AdminNavigation } from '@repo/components/src/admin/components/navigation/admin-navigation.tsx'
+import { Typography } from '@repo/ui/src/components/typography'
+import { AdminNewsControl } from '@repo/components/src/admin/components/news/admin-news-control'
+import { AdminTicketsList } from '@repo/components/src/admin/components/tickets/admin-tickets-list.tsx'
+import { AdminReportsList } from '@repo/components/src/admin/components/reports/admin-reports-list.tsx'
 
 export const Route = createLazyFileRoute('/_protected/_admin/admin/')({
   component: RouteComponent,
 })
 
-function RouteComponent() {
+const CreateModpack = () => {
   return (
-    <div className="flex flex-col bg-shark-950 gap-6 p-2 rounded-[12px] w-full h-full">
+    <div className="flex flex-col gap-2 w-full">
+
+    </div>
+  )
+}
+
+function RouteComponent() {
+  // @ts-ignore
+  const { section } = Route.useSearch() as { section: "tickets" | "reports" | "stats" }
+
+  return (
+    <div className="flex flex-col bg-primary-color gap-6 p-2 rounded-lg w-full h-full">
       <AdminNavigation />
+      {!section && (
+        <>
+          <AdminNewsControl />
+          <div className="flex flex-col gap-4 items-start justify-center w-full p-4 border-2 border-shark-800 rounded-lg">
+            <Typography textSize="big" className="font-semibold">
+              Публикация модпака
+            </Typography>
+            <CreateModpack />
+          </div>
+        </>
+      )}
+      {section === 'tickets' && (
+        <>
+          <AdminTicketsList/>
+        </>
+      )}
+      {section === 'reports' && (
+        <>
+          <AdminReportsList/>
+        </>
+      )}
+      {section === 'stats' && (
+        <>
+          stats
+        </>
+      )}
     </div>
   )
 }

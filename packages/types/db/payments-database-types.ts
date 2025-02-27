@@ -11,6 +11,8 @@ export type Generated<T> = T extends ColumnType<infer S, infer I, infer U>
 
 export type Int8 = ColumnType<string, bigint | number | string, bigint | number | string>;
 
+export type Numeric = ColumnType<string, number | string, number | string>;
+
 export type PaymentCryptoTonStatus = "cancelled" | "captured" | "created" | "failed" | "received";
 
 export type PaymentStatus = "canceled" | "pending" | "succeeded" | "waitingForCapture";
@@ -21,6 +23,7 @@ export interface Donate {
   commands: string[] | null;
   created_at: Generated<Timestamp>;
   description: string;
+  forum: string[] | null;
   id: Int8;
   imageUrl: string;
   origin: string;
@@ -31,24 +34,21 @@ export interface Donate {
 
 export interface Economy {
   id: Int8;
+  title: string | null;
   type: string;
   value: Int8;
 }
 
-export interface PaymentsCryptoTon {
-  captured: Generated<boolean | null>;
+export interface PaymentsCrypto {
   created_at: Generated<Timestamp | null>;
   currency: string;
-  hash: string;
   id: Generated<string>;
-  lt: Int8;
   nickname: string;
   orderid: string;
   payment_type: string;
   payment_value: string;
-  price: Int8;
+  price: Numeric;
   status: PaymentCryptoTonStatus;
-  wallet: string | null;
 }
 
 export interface PaymentsFiat {
@@ -65,6 +65,6 @@ export interface PaymentsFiat {
 export interface DB {
   donate: Donate;
   economy: Economy;
-  payments_crypto_ton: PaymentsCryptoTon;
+  payments_crypto: PaymentsCrypto;
   payments_fiat: PaymentsFiat;
 }

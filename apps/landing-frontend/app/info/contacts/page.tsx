@@ -16,7 +16,7 @@ export default async function InfoContactsPage() {
 				<div className="flex flex-col gap-y-8 rounded-[8px]">
 					<div
 						className="flex flex-col gap-y-4 border-2 border-[#454545] hover:duration-300 duration-300 rounded-[8px] p-4">
-						<Typography className="text-project-color text-xl">
+						<Typography text_color="adaptiveWhiteBlack" className="text-xl">
 							Социальные сети и мессенджеры
 						</Typography>
 						<div className="flex flex-col text-white text-md lg:text-lg gap-y-4">
@@ -34,7 +34,7 @@ export default async function InfoContactsPage() {
 					</div>
 					<div
 						className="flex flex-col gap-y-4 border-2 text-md lg:text-lg border-[#454545] hover:duration-300 duration-300 rounded-[8px] p-4">
-						<Typography className="text-project-color text-xl">
+						<Typography text_color="adaptiveWhiteBlack" className="text-xl">
 							Электронная почта
 						</Typography>
 						<div className="flex flex-col gap-y-4">
@@ -46,6 +46,20 @@ export default async function InfoContactsPage() {
 									{MAIL_FASBERRY_SUPPORT}
 								</Typography>
 							</a>
+						</div>
+					</div>
+					<div
+						className="flex flex-col gap-y-4 border-2 text-md lg:text-lg border-[#454545] hover:duration-300 duration-300 rounded-[8px] p-4">
+						<Typography text_color="adaptiveWhiteBlack" className="text-xl">
+							Реквизиты
+						</Typography>
+						<div className="flex flex-col gap-y-4">
+							<Typography text_color="adaptiveWhiteBlack">
+								ИНН: 343523219653
+							</Typography>
+							<Typography text_color="adaptiveWhiteBlack">
+								ИСКАЛИЕВ РУСЛАН НИКОЛАЕВИЧ
+							</Typography>
 						</div>
 					</div>
 				</div>

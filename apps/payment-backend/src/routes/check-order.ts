@@ -1,152 +1,68 @@
-import { pubDonatePayload } from '@repo/lib/publishers/pub-donate-payload.ts';
 import { Hono } from 'hono';
 import { HTTPException } from 'hono/http-exception';
 import {
-  checkOrderBodySchema,
-  type PaymentCompleted,
+  paymentMetaSchema,
 } from '@repo/types/schemas/payment/payment-schema.ts';
-import type { PaymentDonateType } from '@repo/types/entities/payment-types.ts';
-import * as crypto from 'node:crypto';
-import { updatePaymentInfo } from '../lib/queries/update-payment-info.ts';
-import { createPaymentInfo } from '../lib/queries/create-payment-info.ts';
-import { getDonateDetails } from '../lib/queries/get-donate-details.ts';
-import { pubPaymentPayload } from '#publishers/pub-payment-payload.ts';
+import type { InvoiceType } from '../types/payment-types.ts';
+import { validateSignatureCryptoPay } from '#utils/validators/validate-signature.ts';
+import { paymentsDB } from '#shared/database/payments-db.ts';
+import { throwError } from '@repo/lib/helpers/throw-error.ts';
+import { publishPaymentSuccess } from '#publishers/pub-payment-success.ts';
+import { publishPaymentLog } from '#publishers/pub-payment-log.ts';
 
-type PaymentOrderId = Pick<PaymentCompleted, 'data'>['data']['orderId']
-
-async function cancelPayment(orderId: PaymentOrderId) {
-  return await updatePaymentInfo({ orderId, updateable: { status: 'cancelled' } });
-}
-
-async function failedPayment(orderId: PaymentOrderId) {
-  return await updatePaymentInfo({ orderId, updateable: { status: 'failed' } });
-}
-
-async function capturePayment(orderId: PaymentOrderId) {
-  return await updatePaymentInfo({ orderId, updateable: { status: 'captured' } });
-}
-
-async function createPayment(data: PaymentCompleted['data']) {
-  const { amount: price, status, customer, currency, orderId: orderid, meta, txn, captured } = data;
-  const { paymentValue, paymentType, nickname } = meta;
-  const { lt, hash } = txn;
-  const { wallet } = customer;
-
-  switch (paymentType) {
-    case 'donate':
-      const donateDetails = await getDonateDetails({
-        origin: paymentValue as PaymentDonateType,
-      });
-
-      const { origin: donate } = donateDetails;
-
-      return await createPaymentInfo({
-        currency, nickname, captured, lt,
-        hash, status, price, orderid, wallet, payment_type: paymentType, payment_value: donate,
-      });
-    case 'charism':
-      break;
-    case 'belkoin':
-
-      break;
-  }
-}
-
-async function receivePayment(data: PaymentCompleted['data']) {
-  const { orderId, meta } = data;
-  const { paymentValue, paymentType, nickname } = meta;
-
-  switch (paymentType) {
-    case 'donate':
-      const donateDetails = await getDonateDetails({
-        origin: paymentValue as PaymentDonateType,
-      });
-
-      const { origin: donateOrigin } = donateDetails;
-
-      await Promise.all([
-        updatePaymentInfo({ orderId, updateable: { status: 'received' } }),
-        pubDonatePayload({ donate: donateOrigin as "arkhont" | "authentic" | "loyal", nickname }),
-      ]);
-
-      return pubPaymentPayload("success", data)
-    case 'belkoin':
-
-      break;
-    case 'charism':
-
-      break
-  }
-}
-
-async function validateSignature(requestedSignature: string, payload: string) {
-  const privateKey = process.env.ARC_PAY_PRIVATE_KEY;
-
-  const expectedSignature = new Bun
-    .CryptoHasher('sha256', privateKey)
-    .update(payload)
-    .digest('hex');
-
-  if (!crypto.timingSafeEqual(Buffer.from(expectedSignature), Buffer.from(requestedSignature))) {
-    throw new HTTPException(401, { message: 'Invalid signature' });
-  }
+type CheckOrderBody = {
+  update_id: number,
+  payload: InvoiceType,
+  request_date: string,
+  update_type: string
 }
 
 export const checkOrderRoute = new Hono()
-  .post('/check-order', async (c) => {
-    const payload = await c.req.text();
+  .post('/check-order', async (ctx) => {
+    const text = await ctx.req.text()
+    const body = await ctx.req.json<CheckOrderBody>()
 
-    if (!payload) {
-      throw new HTTPException(400, { message: 'Body required' });
+    const signature = ctx.req.header('crypto-pay-api-signature');
+
+    if (!signature || !text) {
+      throw new HTTPException(401, { message: 'Signature or body is required' });
     }
 
-    const requestedSignature = c.req.header('x-signature');
+    const isValid = validateSignatureCryptoPay(text, signature);
 
-    if (!requestedSignature) {
-      throw new HTTPException(401, { message: 'Signature required' });
+    if (!isValid) {
+      throw new HTTPException(400, { message: 'Invalid signature' })
     }
 
     try {
-      await validateSignature(requestedSignature, payload);
-    } catch (e) {
-      if (e instanceof HTTPException) {
-        return c.json({ error: e.message }, 400);
+      const { update_type, payload } = body;
+
+      if (payload.status === 'expired') {
+        await paymentsDB
+          .updateTable("payments_crypto")
+          .set({ status: "cancelled" })
+          .where("orderid", "=", payload.hash)
+          .executeTakeFirstOrThrow()
       }
-    }
 
-    const body = JSON.parse(payload);
-    const { success, error, data: bodyData } = checkOrderBodySchema.safeParse(body);
+      if (update_type === 'invoice_paid') {
+        const meta = paymentMetaSchema.parse(
+          JSON.parse(payload.payload ? payload.payload : "")
+        )
 
-    if (!success) {
-      return c.json({ error: error }, 400);
-    }
+        publishPaymentSuccess(meta)
+        publishPaymentLog({ ...meta, orderId: payload.hash })
 
-    const { data } = bodyData;
-    const { orderId, status } = data;
-
-    try {
-      switch (status) {
-        case 'received':
-          await receivePayment(data);
-          return c.json(200);
-        case 'created':
-          await createPayment(data);
-          return c.json(200);
-        case 'cancelled':
-          await cancelPayment(orderId);
-          return c.json(200);
-        case 'failed':
-          await failedPayment(orderId);
-          return c.json(200);
-        case 'captured':
-          await capturePayment(orderId);
-          return c.json(200);
+        await paymentsDB
+          .updateTable("payments_crypto")
+          .set({ status: "received" })
+          .where("orderid", "=", payload.hash)
+          .executeTakeFirstOrThrow()
       }
-    } catch (e) {
-      const error = e instanceof Error
-        ? e.message
-        : `Error to capture payment`;
 
-      return c.json({ error }, 400);
+      return ctx.json({ ok: true }, 200)
+    } catch (e) {
+      console.error(e)
+      return ctx.json({ error: throwError(e) }, 500)
     }
   });

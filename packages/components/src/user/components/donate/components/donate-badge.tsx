@@ -2,7 +2,7 @@ import { forwardRef, HTMLAttributes } from "react";
 import { cva, VariantProps } from "class-variance-authority";
 
 const userDonateBadgeVariants = cva(
-  "flex items-center border relative justify-center select-none backdrop-filter  cursor-pointer overflow-hidden rounded-md",
+  "flex items-center border relative justify-center select-none backdrop-filter cursor-pointer overflow-hidden rounded-md",
   {
     variants: {
       variant: {
@@ -15,7 +15,7 @@ const userDonateBadgeVariants = cva(
         dev: "border-none bg-shark-700/80",
       },
       size: {
-        small: "px-2 py-[1px]",
+        small: "px-2 py-[2px]",
         medium: "px-3 py-1",
       },
     },
