@@ -1,5 +1,5 @@
-import { lpDB } from "../shared/database/lp-db";
-import { publishUpdateGroup } from "../publishers/pub-update-group";
+import { publishUpdateGroup } from "#publishers/pub-update-group.ts";
+import { lpDB } from "#shared/database/lp-db.ts";
 
 export async function setPlayerGroup(nickname: string, permission: string) {
   try {

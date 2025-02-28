@@ -1,6 +1,6 @@
 import { getNatsConnection } from "@repo/config-nats/nats-client"
 import { USER_NOTIFICATIONS_SUBJECT } from "@repo/shared/constants/nats-subjects"
-import { PaymentMeta } from "@repo/types/entities/payment-types"
+import type { PaymentMeta } from "@repo/types/entities/payment-types"
 
 export function publishPaymentNotify({
   nickname, paymentType, paymentValue

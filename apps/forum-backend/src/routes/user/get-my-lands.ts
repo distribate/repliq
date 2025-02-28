@@ -1,6 +1,7 @@
 import { getNickname } from "#utils/get-nickname-from-storage.ts";
 import { getNatsConnection } from "@repo/config-nats/nats-client";
 import { throwError } from "@repo/lib/helpers/throw-error";
+import { USER_GET_LANDS_SUBJECT } from "@repo/shared/constants/nats-subjects";
 import { Hono } from "hono";
 
 export type UserLands = {
@@ -23,7 +24,7 @@ export const getMyLandsRoute = new Hono()
     try {
       const nc = getNatsConnection()
 
-      const req = await nc.request("get-user-lands", nickname)
+      const req = await nc.request(USER_GET_LANDS_SUBJECT, nickname)
 
       const lands: UserLands = JSON.parse(
         new TextDecoder().decode(req.data)

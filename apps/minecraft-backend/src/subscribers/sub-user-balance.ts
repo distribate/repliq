@@ -1,6 +1,7 @@
 import { bisquiteDB } from "#shared/database/bisquite-db.ts";
 import { playerPointsDB } from "#shared/database/playerpoints-db.ts"
 import { getNatsConnection } from "@repo/config-nats/nats-client"
+import { USER_GET_BALANCE_SUBJECT } from "@repo/shared/constants/nats-subjects";
 
 async function getBelkoin(nickname: string) {
   return playerPointsDB
@@ -26,15 +27,15 @@ async function getUserBalance(nickname: string) {
   ])
 
   return {
-    charism: Math.round(charism?.Balance ?? 0),
-    belkoin: Math.round(belkoin?.points ?? 0)
+    charism: charism?.Balance ? charism?.Balance.toFixed(2) : 0,
+    belkoin: belkoin?.points?.toFixed(2) ?? 0
   }
 }
 
 export const subscribeUserBalance = () => {
   const nc = getNatsConnection()
 
-  return nc.subscribe("get-user-balance", {
+  return nc.subscribe(USER_GET_BALANCE_SUBJECT, {
     callback: async (err, msg) => {
       if (err) {
         console.error(err);

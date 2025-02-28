@@ -1,4 +1,5 @@
 import { getNatsConnection } from "@repo/config-nats/nats-client"
+import { USER_REFERAL_REWARD_SUBJECT } from "@repo/shared/constants/nats-subjects"
 
 type PublishReferalReward = {
   referrer: string,
@@ -12,5 +13,5 @@ export const publishReferalReward = ({
 
   const payload = JSON.stringify({ referrer, referral })
 
-  return nc.publish("users.referal.reward", payload)
+  return nc.publish(USER_REFERAL_REWARD_SUBJECT, payload)
 }

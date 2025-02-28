@@ -27,6 +27,7 @@ declare module "bun" {
     AUTHORIZATION_POSTGRES_PASSWORD: string
     AUTHORIZATION_POSTGRES_USER: string
     AUTHORIZATION_POSTGRES_PORT: string
+    
     NATS_AUTH_TOKEN: string
 
     SUPABASE_SERVICE_ROLE_KEY: string;

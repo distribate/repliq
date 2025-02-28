@@ -1,5 +1,5 @@
 import { updateUserDonateForum } from "#lib/queries/update-user-donate-forum.ts"
-import { forumDB } from "#shared/database/forum-db.ts"
+import { createUserActionLog } from "#utils/create-user-action-log.ts"
 import { getNatsConnection } from "@repo/config-nats/nats-client"
 import { LUCKPERMS_UPDATE_SUBJECT } from "@repo/shared/constants/nats-subjects"
 import type { DonateVariants } from "@repo/types/db/forum-database-types"
@@ -134,7 +134,7 @@ export const subscribePlayerGroup = () => {
                 break;
             }
 
-            createUserAction(content);
+            createUserActionLog(content);
           }
         } catch (err) {
           console.error(err);
@@ -142,19 +142,4 @@ export const subscribePlayerGroup = () => {
       });
     }
   })
-}
-
-export async function createUserAction({
-  target: {
-    name: target_nickname, type, uniqueId: uuid
-  },
-  source: {
-    name: source_nickname
-  },
-  description
-}: LuckpermsLogContent) {
-  return await forumDB
-    .insertInto("users_actions")
-    .values({ target_nickname, source_nickname, uuid, type, description })
-    .execute()
 }

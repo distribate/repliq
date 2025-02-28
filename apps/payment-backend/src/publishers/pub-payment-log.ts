@@ -1,6 +1,7 @@
 import { getNatsConnection } from "@repo/config-nats/nats-client"
 import { getPaymentDetails } from "#utils/get-payment-details.ts"
 import type { PaymentMeta } from "@repo/types/entities/payment-types"
+import { LOGS_PAYMENT_SUBJECT } from "@repo/shared/constants/nats-subjects"
 
 export type PaymentReceived = {
   item: string,
@@ -29,5 +30,5 @@ export const publishPaymentLog = async (data: PublishPaymentLog) => {
     orderId: data.orderId
   }
 
-  return nc.publish("logs.payment", JSON.stringify(payload))
+  return nc.publish(LOGS_PAYMENT_SUBJECT, JSON.stringify(payload))
 }

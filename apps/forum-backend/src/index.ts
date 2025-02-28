@@ -102,6 +102,7 @@ import { adminMiddleware } from '#middlewares/admin-access.ts';
 import { getTicketsRoute } from '#routes/admin/get-tickets.ts';
 import { getReportsRoute } from '#routes/admin/get-reports.ts';
 import { getStatusRoute } from '#routes/public/get-status.ts';
+import { subscribePlayerGroup } from '#subscribers/sub-player-group.ts';
 
 async function startNats() {
   await initNats()
@@ -109,6 +110,8 @@ async function startNats() {
 
   subscribeUserStatus()
   console.log("\x1b[34m[NATS]\x1b[0m Users status subscribed")
+  subscribePlayerGroup()
+  console.log("\x1b[34m[NATS]\x1b[0m Player group subscribed")
 }
 
 await startNats()
@@ -274,7 +277,7 @@ const app = new Hono<Env>()
   .route("/", landing)
   .route("/", report)
 
-// showRoutes(app, { verbose: false });
+showRoutes(app, { verbose: false });
 
 Bun.serve({ port, fetch: app.fetch })
 

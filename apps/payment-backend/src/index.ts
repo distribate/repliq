@@ -33,7 +33,7 @@ const app = new Hono()
   .route('/hooks', hooks)
   .route("/", order)
 
-// showRoutes(app, { verbose: false });
+showRoutes(app, { verbose: false });
 
 Bun.serve({ port: Bun.env.PAYMENT_BACKEND_PORT!, fetch: app.fetch });
 

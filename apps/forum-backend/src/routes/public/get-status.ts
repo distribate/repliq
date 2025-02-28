@@ -1,6 +1,7 @@
 import { zValidator } from "@hono/zod-validator";
 import { getNatsConnection } from "@repo/config-nats/nats-client";
 import { throwError } from "@repo/lib/helpers/throw-error";
+import { SERVER_USER_EVENT_SUBJECT } from "@repo/shared/constants/nats-subjects";
 import { Hono } from "hono";
 import ky from "ky";
 import { z } from "zod";
@@ -78,18 +79,19 @@ const getStatusRouteSchema = z.object({
 })
 
 type StatusPayload = {
-  name: string,
-  version: string,
-  motd: string,
-  currentPlayerCount: number,
-  maxPlayerCount: number,
-  players: Array<{ name: string }>
+  maxPlayers: number,
+  players: Array<string>,
+  tps: Array<number>,
+  currentOnline: number,
+  mspt: number
 }
 
 async function getBisquiteStats() {
   const nc = getNatsConnection()
 
-  const res = await nc.request("server.status", "check")
+  const res = await nc.request(SERVER_USER_EVENT_SUBJECT, JSON.stringify({
+    event: "getServerStats"
+  }))
 
   return res.json<StatusPayload>()
 }
@@ -116,9 +118,9 @@ export const getStatusRoute = new Hono()
           const proxy = rawProxy as ServerStatus
 
           const bisquite = "players" in rawBisquite ? {
-            online: rawBisquite.currentPlayerCount,
-            max: rawBisquite.maxPlayerCount,
-            players: rawBisquite.players?.map((player) => player.name),
+            online: rawBisquite.currentOnline,
+            max: rawBisquite.maxPlayers,
+            players: rawBisquite.maxPlayers,
             status: "online"
           } : _DEFAULT
 

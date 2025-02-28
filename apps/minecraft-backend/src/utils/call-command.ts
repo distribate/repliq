@@ -1,4 +1,5 @@
-import { SERVER_API } from "#shared/api/minecraft-api.ts"
+import { getNatsConnection } from "@repo/config-nats/nats-client"
+import { SERVER_USER_EVENT_SUBJECT } from "@repo/shared/constants/nats-subjects"
 
 type CommandType =
   | "lp" // luckperms
@@ -11,12 +12,34 @@ type CallServerCommand = {
   value: string
 }
 
+type ResponseMsg = {
+  result: "ok"
+} | {
+  error: string
+}
+
 export const callServerCommand = async ({
   parent, value
 }: CallServerCommand) => {
+  const nc = getNatsConnection()
+
   try {
-    await SERVER_API.post("command", { searchParams: { "command": `${parent} ${value}`, }, })
+    const message = {
+      event: "executeCommand", 
+      command: `${parent} ${value}`
+    }
+
+    const res = await nc.request(SERVER_USER_EVENT_SUBJECT, JSON.stringify(message), { timeout: 7000 })
+    const msg = res.json<ResponseMsg>()
+
+    if ("error" in msg) {
+      throw new Error(msg.error)
+    }
+
+    return true
   } catch (e) {
     console.error(e)
+
+    return false
   }
 }

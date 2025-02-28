@@ -1,10 +1,10 @@
+import { createErrorLog } from '#lib/queries/logs/create-error-log.ts';
+import { createUserAction } from '#lib/queries/logs/create-user-action.ts';
+import { updateUserDonateForum } from '#lib/queries/user/update-user-donate-forum.ts';
+import { lpDB } from '#shared/database/lp-db.ts';
 import { getNatsConnection } from '@repo/config-nats/nats-client';
-import { DonateVariants } from '@repo/types/db/forum-database-types';
-import { lpDB } from '../shared/database/lp-db';
-import { updateUserDonateForum } from '../lib/queries/update-user-donate-forum';
-import { createUserAction } from '../lib/queries/create-user-action';
-import { createErrorLog } from '../utils/create-error-log';
 import { LUCKPERMS_UPDATE_SUBJECT } from '@repo/shared/constants/nats-subjects';
+import type { DonateVariants } from '@repo/types/db/forum-database-types';
 
 type LuckpermsUpdateContent = {
   userUuid: string

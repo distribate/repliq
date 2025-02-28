@@ -1,6 +1,6 @@
 import { getNatsConnection } from "@repo/config-nats/nats-client";
 import { nanoid } from "nanoid";
-import { LuckpermsLogContent } from "../subscribers/sub-player-group";
+import type { LuckpermsLogContent } from "../subscribers/sub-player-group";
 import { LUCKPERMS_UPDATE_SUBJECT } from '@repo/shared/constants/nats-subjects';
 
 type PublishUpdateGroup = {
