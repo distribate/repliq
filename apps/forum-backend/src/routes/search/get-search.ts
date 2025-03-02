@@ -13,21 +13,25 @@ const getSearchSchema = z.object({
 type GetSearch = Omit<z.infer<typeof getSearchSchema>, "type">
 
 async function getSearchThreads({ queryValue, limit }: GetSearch) {
-  return await forumDB
+  const query = await forumDB
     .selectFrom("threads")
     .select(["id", "title"])
     .where("title", "like", `%${queryValue}%`)
     .limit(limit ?? 10)
     .execute()
+
+  return query;
 }
 
 async function getSearchUsers({ queryValue, limit }: GetSearch) {
-  return await forumDB
+  const query = await forumDB
     .selectFrom("users")
     .select(["nickname", "name_color"])
     .where("nickname", "like", `%${queryValue}%`)
     .limit(limit ?? 10)
     .execute()
+
+  return query;
 }
 
 export const getSearchRoute = new Hono()

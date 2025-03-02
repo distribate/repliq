@@ -17,6 +17,7 @@ export const getHeadRoute = new Hono()
 
       return ctx.body(head as unknown as ReadableStream, 200)
     } catch (e) {
+      console.error(e)
       return ctx.json({ error: throwError(e) }, 500);
     }
   });

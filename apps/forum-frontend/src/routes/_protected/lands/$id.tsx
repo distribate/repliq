@@ -1,5 +1,5 @@
-import { Avatar } from '@repo/components/src/user/components/avatar/components/avatar'
-import { BlockWrapper } from '@repo/components/src/wrappers/block-wrapper'
+import { Avatar } from '#components/user/avatar/components/avatar'
+import { BlockWrapper } from '#components/wrappers/block-wrapper'
 import dayjs from '@repo/lib/constants/dayjs-instance'
 import {
   Tabs,
@@ -11,10 +11,10 @@ import { Typography } from '@repo/ui/src/components/typography'
 import { createFileRoute, Link } from '@tanstack/react-router'
   // @ts-ignore
 import Looking from '@repo/assets/images/looking.jpg'
-import { LandMembers } from '@repo/components/src/land/components/land-members'
-import { LAND_QUERY_KEY, landQuery } from '@repo/components/src/land/queries/land-query'
-import { getLandById } from '@repo/components/src/land/queries/get-land'
-import { AnotherLandsByOwner } from "@repo/components/src/land/components/another-lands"
+import { LandMembers } from '#components/land/components/land-members'
+import { LAND_QUERY_KEY, landQuery } from '#components/land/queries/land-query'
+import { getLandById } from '#components/land/queries/get-land'
+import { AnotherLandsByOwner } from "#components/land/components/another-lands"
 import { Suspense } from 'react'
 import { Skeleton } from '@repo/ui/src/components/skeleton'
 

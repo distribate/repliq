@@ -9,6 +9,8 @@ import "./lib/commands/broadcast-command.ts"
 import "./lib/commands/weather-command.ts"
 import "./lib/commands/keyboard-command.ts"
 import "./lib/commands/give-item-command.ts"
+import "./lib/commands/stats-command.ts"
+import "./lib/commands/check-online-command.ts"
 import { subscribeNewPlayer } from './subscribers/sub-new-player.ts';
 
 async function startNats() {

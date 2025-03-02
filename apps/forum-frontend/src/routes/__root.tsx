@@ -11,7 +11,7 @@ import '../styles/index.css'
 import "@repo/ui/ui.css"
 
 const NotFound = lazy(() => 
-  import("@repo/components/src/templates/not-found.tsx").then(m => ({ default: m.NotFound }))
+  import("#components/templates/not-found.tsx").then(m => ({ default: m.NotFound }))
 )
 
 export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()({

@@ -1,18 +1,8 @@
 import { forumDB } from "#shared/database/forum-db.ts";
 import { getNickname } from "#utils/get-nickname-from-storage.ts";
+import { validateAdmin } from "#lib/validators/validate-admin.ts";
 import { throwError } from "@repo/lib/helpers/throw-error";
 import { Hono } from "hono";
-
-async function isAdmin(nickname: string): Promise<boolean> {
-  const exists = await forumDB
-    .selectFrom("users")
-    .innerJoin("admins", "admins.user_id", "users.id")
-    .select("users.nickname")
-    .where("users.nickname", "=", nickname)
-    .executeTakeFirst();
-
-  return !!exists;
-}
 
 async function hasNewNotifications(nickname: string) {
   const exists = await forumDB
@@ -117,7 +107,7 @@ export const getUserGlobalOptionsRoute = new Hono()
         can_create_comments,
         can_create_threads
       ] = await Promise.all([
-        isAdmin(nickname),
+        validateAdmin(nickname),
         hasNewNotifications(nickname),
         hasNewFriends(nickname),
         hasCreatePosts(nickname),
@@ -137,7 +127,6 @@ export const getUserGlobalOptionsRoute = new Hono()
         }
       }, 200)
     } catch (e) {
-      console.log(e)
       return ctx.json({ error: throwError(e) }, 500);
     }
   })

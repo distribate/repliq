@@ -24,12 +24,14 @@ export const getMyLandsRoute = new Hono()
     try {
       const nc = getNatsConnection()
 
-      const req = await nc.request(USER_GET_LANDS_SUBJECT, nickname)
+      const req = await nc.request(USER_GET_LANDS_SUBJECT, nickname, { timeout: 7000 })
 
       const lands: UserLands = JSON.parse(
         new TextDecoder().decode(req.data)
       )
 
+      ctx.header('Cache-Control', 'public, max-age=60')
+      
       return ctx.json({ data: lands }, 200)
     } catch (e) {
       return ctx.json({ error: throwError(e) }, 500)

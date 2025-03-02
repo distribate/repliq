@@ -1,10 +1,6 @@
 import { MainLayoutPage } from '@repo/landing-components/src/layout/main-layout';
-import { Overlay } from '@repo/landing-ui/src/overlay';
 import { Typography } from '@repo/landing-ui/src/typography';
-import { Block } from '@repo/landing-ui/src/block';
 import { IdeaMain } from '@repo/landing-components/src/intro/intro-main';
-import { CONTACTS_LIST, ContactsListProps } from '@repo/shared/wiki/data/contacts/contacts-list';
-import { GAMEPLAY, GameplayItemType } from '@repo/shared/wiki/data/gameplay/gameplay-list';
 import { CommunityGalleryItem } from '@repo/landing-components/src/community/community-gallery-item';
 import { NewsList } from '@repo/landing-components/src/news/news-list';
 import Link from 'next/link';
@@ -12,11 +8,12 @@ import { IntroBackgroundImage } from '@repo/landing-components/src/intro/backgro
 import { StatusItem } from '@repo/landing-components/src/intro/status-item';
 import { Button } from '@repo/landing-ui/src/button';
 import { SpawnCarousel } from '@repo/landing-components/src/intro/spawn-carousel';
+import dynamic from 'next/dynamic';
 
-// const ParamProvider = dynamic(() => import("@repo/landing-components/src/layout/param-provider")
-//   .then(m => m.ParamProvider), {
-//   ssr: false
-// })
+const ContactsSection = dynamic(() =>
+  import('@repo/landing-components/src/contacts/contacts-section')
+    .then(m => m.ContactsSection)
+);
 
 export const metadata = {
   title: 'Главная | Fasberry',
@@ -60,79 +57,6 @@ export const metadata = {
       "Стань частью нашего Minecraft-сервера. Уникальные миры, незабываемые приключения и дружелюбные игроки ждут тебя!",
     images: ["https://fasberry.su/images/backgrounds/donate_background.png"],
   },
-};
-
-type GamePlayItemProps = GameplayItemType & {
-  id: number
-}
-
-const GameplayItem = ({
-  name, image, description, id,
-}: GamePlayItemProps) => {
-  return (
-    <div
-      className={`flex flex-col w-full items-center justify-end h-[80vh] lg:h-screen relative bg-top
-			 lg:bg-center border-0 border-discord-server-color ${GAMEPLAY.length - 2 === id && 'lg:border-l-2 lg:border-r-2'}`}
-      style={{ backgroundImage: `url(${image})` }}
-    >
-      <Overlay />
-      <div
-        className="flex flex-col items-center justify-center relative w-full gap-y-2 py-16 z-[2] px-6 bg-black/60"
-      >
-        <h1 className="text-2xl md:text-3xl 2xl:text-5xl text-red text-center">
-          {name}
-        </h1>
-        <Typography position="center" className="text-white text-xl md:text-2xl 2xl:text-3xl">
-          {description}
-        </Typography>
-      </div>
-      <div className="borders_up xl:hidden" />
-      <div className="borders_down xl:hidden" />
-    </div>
-  );
-};
-
-const ContactItem = ({
-  content, name, href
-}: ContactsListProps) => {
-  return (
-    <Block key={name} blockItem rounded="big" type="column" className="justify-between p-4 lg:p-6">
-      <div className="flex flex-col mb-4">
-        <Typography className="dark:text-neutral-50 text-neutral-800 text-3xl lg:text-4xl xl:text-5xl mb-4">
-          {name}
-        </Typography>
-        <h1 className="text-[#5CC85C] text-lg xl:text-3xl">плюсы:</h1>
-        {content.pluses && content.pluses.map((plus, plusIndex) => (
-          <Typography key={plusIndex} className="text-[14px] lg:text-lg">
-            &gt;&nbsp;{plus}
-          </Typography>
-        ))}
-        <h1 className="mt-2 xl:mt-3 text-rose-500 text-lg xl:text-3xl">минусы:</h1>
-        {content.minuses && content.minuses.map((minus, minusIndex) => (
-          <Typography key={minusIndex} className="text-[14px] lg:text-lg">
-            &gt;&nbsp;{minus}
-          </Typography>
-        ))}
-      </div>
-      <div className="flex w-full items-center justify-center lg:justify-start">
-        <Link
-          href={href}
-          target="_blank"
-          className="flex w-fit gap-4 *:ease-in-out *:duration-300 *:group-hover:duration-300 *:transition-all rounded-xl px-8 items-center gap-x-4 group
-          border-2 hover:border-white/80 border-white/60 py-4"
-        >
-          <Typography size="lg" className="text-black/60 group-hover:text-black/80 dark:text-white/60 dark:group-hover:text-white/80">
-            Перейти в {name}
-          </Typography>
-          <span
-            className="text-[18px] text-black/60 group-hover:text-black/80 dark:text-white/60 dark:group-hover:text-white/80"
-          >
-            {`>`}
-          </span>
-        </Link>
-      </div>
-    </Block>
-  );
 };
 
 export default async function Main() {
@@ -232,22 +156,7 @@ export default async function Main() {
           </div>
         </div>
       </div>
-      <div
-        id="contacts"
-        className="full-screen-section min-h-screen relative flex flex-col items-center justify-center py-32 xl:py-0"
-      >
-        <div className="flex flex-col gap-y-12 responsive">
-          <h2 className="text-2xl sm:text-3xl md:text-6xl lg:text-6xl xl:text-7xl text-center text-red">
-            Где ещё существует проект?
-          </h2>
-          <div className="flex flex-col lg:flex-row gap-x-4 gap-y-6 justify-between">
-            {CONTACTS_LIST.map(contact =>
-              <ContactItem key={contact.name} {...contact} />)
-            }
-          </div>
-        </div>
-      </div>
-      {/* <ServerGallery /> */}
+      <ContactsSection />
     </MainLayoutPage>
   );
 }

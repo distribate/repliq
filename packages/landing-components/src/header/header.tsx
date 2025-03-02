@@ -10,9 +10,9 @@ import { HeaderSheet } from "../header/header-sheet";
 import { Skeleton } from "@repo/landing-ui/src/skeleton";
 import dynamic from "next/dynamic";
 import { ComponentPropsWithRef } from 'react';
-import { Avatar } from '@repo/components/src/user/components/avatar/components/avatar';
 import { getUserFromCookie } from './get-user-from-cookie';
 import { useQuery } from '@tanstack/react-query';
+import { Avatar } from './avatar/components/avatar';
 
 const ThemeToggle = dynamic(
 	() =>

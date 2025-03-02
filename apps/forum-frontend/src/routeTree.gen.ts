@@ -39,19 +39,9 @@ const ProtectedNotificationsLazyImport = createFileRoute(
 )()
 const ProtectedFriendsLazyImport = createFileRoute('/_protected/friends')()
 const ProtectedEventsLazyImport = createFileRoute('/_protected/events')()
-const PublicStartIndexLazyImport = createFileRoute('/_public/start/')()
 const ProtectedRatingsIndexLazyImport = createFileRoute(
   '/_protected/ratings/',
 )()
-const PublicMiscStatusLazyImport = createFileRoute('/_public/misc/status')()
-const PublicMiscReferalSystemLazyImport = createFileRoute(
-  '/_public/misc/referal-system',
-)()
-const PublicMiscMonitoringLazyImport = createFileRoute(
-  '/_public/misc/monitoring',
-)()
-const PublicMiscFaqLazyImport = createFileRoute('/_public/misc/faq')()
-const PublicMiscAboutLazyImport = createFileRoute('/_public/misc/about')()
 const ProtectedactionsCreateThreadLazyImport = createFileRoute(
   '/_protected/(actions)/create-thread',
 )()
@@ -160,14 +150,6 @@ const ProtectedAdminRoute = ProtectedAdminImport.update({
   getParentRoute: () => ProtectedRoute,
 } as any)
 
-const PublicStartIndexLazyRoute = PublicStartIndexLazyImport.update({
-  id: '/start/',
-  path: '/start/',
-  getParentRoute: () => PublicRoute,
-} as any).lazy(() =>
-  import('./routes/_public/start/index.lazy').then((d) => d.Route),
-)
-
 const ProtectedRatingsIndexLazyRoute = ProtectedRatingsIndexLazyImport.update({
   id: '/ratings/',
   path: '/ratings/',
@@ -181,47 +163,6 @@ const ProtectedLandsIndexRoute = ProtectedLandsIndexImport.update({
   path: '/lands/',
   getParentRoute: () => ProtectedRoute,
 } as any)
-
-const PublicMiscStatusLazyRoute = PublicMiscStatusLazyImport.update({
-  id: '/misc/status',
-  path: '/misc/status',
-  getParentRoute: () => PublicRoute,
-} as any).lazy(() =>
-  import('./routes/_public/misc/status.lazy').then((d) => d.Route),
-)
-
-const PublicMiscReferalSystemLazyRoute =
-  PublicMiscReferalSystemLazyImport.update({
-    id: '/misc/referal-system',
-    path: '/misc/referal-system',
-    getParentRoute: () => PublicRoute,
-  } as any).lazy(() =>
-    import('./routes/_public/misc/referal-system.lazy').then((d) => d.Route),
-  )
-
-const PublicMiscMonitoringLazyRoute = PublicMiscMonitoringLazyImport.update({
-  id: '/misc/monitoring',
-  path: '/misc/monitoring',
-  getParentRoute: () => PublicRoute,
-} as any).lazy(() =>
-  import('./routes/_public/misc/monitoring.lazy').then((d) => d.Route),
-)
-
-const PublicMiscFaqLazyRoute = PublicMiscFaqLazyImport.update({
-  id: '/misc/faq',
-  path: '/misc/faq',
-  getParentRoute: () => PublicRoute,
-} as any).lazy(() =>
-  import('./routes/_public/misc/faq.lazy').then((d) => d.Route),
-)
-
-const PublicMiscAboutLazyRoute = PublicMiscAboutLazyImport.update({
-  id: '/misc/about',
-  path: '/misc/about',
-  getParentRoute: () => PublicRoute,
-} as any).lazy(() =>
-  import('./routes/_public/misc/about.lazy').then((d) => d.Route),
-)
 
 const ProtectedactionsCreateThreadLazyRoute =
   ProtectedactionsCreateThreadLazyImport.update({
@@ -479,41 +420,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProtectedactionsCreateThreadLazyImport
       parentRoute: typeof ProtectedImport
     }
-    '/_public/misc/about': {
-      id: '/_public/misc/about'
-      path: '/misc/about'
-      fullPath: '/misc/about'
-      preLoaderRoute: typeof PublicMiscAboutLazyImport
-      parentRoute: typeof PublicImport
-    }
-    '/_public/misc/faq': {
-      id: '/_public/misc/faq'
-      path: '/misc/faq'
-      fullPath: '/misc/faq'
-      preLoaderRoute: typeof PublicMiscFaqLazyImport
-      parentRoute: typeof PublicImport
-    }
-    '/_public/misc/monitoring': {
-      id: '/_public/misc/monitoring'
-      path: '/misc/monitoring'
-      fullPath: '/misc/monitoring'
-      preLoaderRoute: typeof PublicMiscMonitoringLazyImport
-      parentRoute: typeof PublicImport
-    }
-    '/_public/misc/referal-system': {
-      id: '/_public/misc/referal-system'
-      path: '/misc/referal-system'
-      fullPath: '/misc/referal-system'
-      preLoaderRoute: typeof PublicMiscReferalSystemLazyImport
-      parentRoute: typeof PublicImport
-    }
-    '/_public/misc/status': {
-      id: '/_public/misc/status'
-      path: '/misc/status'
-      fullPath: '/misc/status'
-      preLoaderRoute: typeof PublicMiscStatusLazyImport
-      parentRoute: typeof PublicImport
-    }
     '/_protected/lands/': {
       id: '/_protected/lands/'
       path: '/lands'
@@ -527,13 +433,6 @@ declare module '@tanstack/react-router' {
       fullPath: '/ratings'
       preLoaderRoute: typeof ProtectedRatingsIndexLazyImport
       parentRoute: typeof ProtectedImport
-    }
-    '/_public/start/': {
-      id: '/_public/start/'
-      path: '/start'
-      fullPath: '/start'
-      preLoaderRoute: typeof PublicStartIndexLazyImport
-      parentRoute: typeof PublicImport
     }
     '/_protected/_admin/admin/configs': {
       id: '/_protected/_admin/admin/configs'
@@ -643,24 +542,12 @@ interface PublicRouteChildren {
   PublicBannedRoute: typeof PublicBannedRoute
   PublicNotExistLazyRoute: typeof PublicNotExistLazyRoute
   PublicNotOnlineLazyRoute: typeof PublicNotOnlineLazyRoute
-  PublicMiscAboutLazyRoute: typeof PublicMiscAboutLazyRoute
-  PublicMiscFaqLazyRoute: typeof PublicMiscFaqLazyRoute
-  PublicMiscMonitoringLazyRoute: typeof PublicMiscMonitoringLazyRoute
-  PublicMiscReferalSystemLazyRoute: typeof PublicMiscReferalSystemLazyRoute
-  PublicMiscStatusLazyRoute: typeof PublicMiscStatusLazyRoute
-  PublicStartIndexLazyRoute: typeof PublicStartIndexLazyRoute
 }
 
 const PublicRouteChildren: PublicRouteChildren = {
   PublicBannedRoute: PublicBannedRoute,
   PublicNotExistLazyRoute: PublicNotExistLazyRoute,
   PublicNotOnlineLazyRoute: PublicNotOnlineLazyRoute,
-  PublicMiscAboutLazyRoute: PublicMiscAboutLazyRoute,
-  PublicMiscFaqLazyRoute: PublicMiscFaqLazyRoute,
-  PublicMiscMonitoringLazyRoute: PublicMiscMonitoringLazyRoute,
-  PublicMiscReferalSystemLazyRoute: PublicMiscReferalSystemLazyRoute,
-  PublicMiscStatusLazyRoute: PublicMiscStatusLazyRoute,
-  PublicStartIndexLazyRoute: PublicStartIndexLazyRoute,
 }
 
 const PublicRouteWithChildren =
@@ -686,14 +573,8 @@ export interface FileRoutesByFullPath {
   '/thread/$id': typeof ProtectedThreadIdRoute
   '/user/$nickname': typeof ProtectedUserNicknameRoute
   '/create-thread': typeof ProtectedactionsCreateThreadLazyRoute
-  '/misc/about': typeof PublicMiscAboutLazyRoute
-  '/misc/faq': typeof PublicMiscFaqLazyRoute
-  '/misc/monitoring': typeof PublicMiscMonitoringLazyRoute
-  '/misc/referal-system': typeof PublicMiscReferalSystemLazyRoute
-  '/misc/status': typeof PublicMiscStatusLazyRoute
   '/lands': typeof ProtectedLandsIndexRoute
   '/ratings': typeof ProtectedRatingsIndexLazyRoute
-  '/start': typeof PublicStartIndexLazyRoute
   '/admin/configs': typeof ProtectedAdminAdminConfigsLazyRoute
   '/admin/dashboard': typeof ProtectedAdminAdminDashboardLazyRoute
   '/admin/stats': typeof ProtectedAdminAdminStatsLazyRoute
@@ -721,14 +602,8 @@ export interface FileRoutesByTo {
   '/thread/$id': typeof ProtectedThreadIdRoute
   '/user/$nickname': typeof ProtectedUserNicknameRoute
   '/create-thread': typeof ProtectedactionsCreateThreadLazyRoute
-  '/misc/about': typeof PublicMiscAboutLazyRoute
-  '/misc/faq': typeof PublicMiscFaqLazyRoute
-  '/misc/monitoring': typeof PublicMiscMonitoringLazyRoute
-  '/misc/referal-system': typeof PublicMiscReferalSystemLazyRoute
-  '/misc/status': typeof PublicMiscStatusLazyRoute
   '/lands': typeof ProtectedLandsIndexRoute
   '/ratings': typeof ProtectedRatingsIndexLazyRoute
-  '/start': typeof PublicStartIndexLazyRoute
   '/admin/configs': typeof ProtectedAdminAdminConfigsLazyRoute
   '/admin/dashboard': typeof ProtectedAdminAdminDashboardLazyRoute
   '/admin/stats': typeof ProtectedAdminAdminStatsLazyRoute
@@ -759,14 +634,8 @@ export interface FileRoutesById {
   '/_protected/thread/$id': typeof ProtectedThreadIdRoute
   '/_protected/user/$nickname': typeof ProtectedUserNicknameRoute
   '/_protected/(actions)/create-thread': typeof ProtectedactionsCreateThreadLazyRoute
-  '/_public/misc/about': typeof PublicMiscAboutLazyRoute
-  '/_public/misc/faq': typeof PublicMiscFaqLazyRoute
-  '/_public/misc/monitoring': typeof PublicMiscMonitoringLazyRoute
-  '/_public/misc/referal-system': typeof PublicMiscReferalSystemLazyRoute
-  '/_public/misc/status': typeof PublicMiscStatusLazyRoute
   '/_protected/lands/': typeof ProtectedLandsIndexRoute
   '/_protected/ratings/': typeof ProtectedRatingsIndexLazyRoute
-  '/_public/start/': typeof PublicStartIndexLazyRoute
   '/_protected/_admin/admin/configs': typeof ProtectedAdminAdminConfigsLazyRoute
   '/_protected/_admin/admin/dashboard': typeof ProtectedAdminAdminDashboardLazyRoute
   '/_protected/_admin/admin/stats': typeof ProtectedAdminAdminStatsLazyRoute
@@ -796,14 +665,8 @@ export interface FileRouteTypes {
     | '/thread/$id'
     | '/user/$nickname'
     | '/create-thread'
-    | '/misc/about'
-    | '/misc/faq'
-    | '/misc/monitoring'
-    | '/misc/referal-system'
-    | '/misc/status'
     | '/lands'
     | '/ratings'
-    | '/start'
     | '/admin/configs'
     | '/admin/dashboard'
     | '/admin/stats'
@@ -830,14 +693,8 @@ export interface FileRouteTypes {
     | '/thread/$id'
     | '/user/$nickname'
     | '/create-thread'
-    | '/misc/about'
-    | '/misc/faq'
-    | '/misc/monitoring'
-    | '/misc/referal-system'
-    | '/misc/status'
     | '/lands'
     | '/ratings'
-    | '/start'
     | '/admin/configs'
     | '/admin/dashboard'
     | '/admin/stats'
@@ -866,14 +723,8 @@ export interface FileRouteTypes {
     | '/_protected/thread/$id'
     | '/_protected/user/$nickname'
     | '/_protected/(actions)/create-thread'
-    | '/_public/misc/about'
-    | '/_public/misc/faq'
-    | '/_public/misc/monitoring'
-    | '/_public/misc/referal-system'
-    | '/_public/misc/status'
     | '/_protected/lands/'
     | '/_protected/ratings/'
-    | '/_public/start/'
     | '/_protected/_admin/admin/configs'
     | '/_protected/_admin/admin/dashboard'
     | '/_protected/_admin/admin/stats'
@@ -936,13 +787,7 @@ export const routeTree = rootRoute
       "children": [
         "/_public/banned",
         "/_public/not-exist",
-        "/_public/not-online",
-        "/_public/misc/about",
-        "/_public/misc/faq",
-        "/_public/misc/monitoring",
-        "/_public/misc/referal-system",
-        "/_public/misc/status",
-        "/_public/start/"
+        "/_public/not-online"
       ]
     },
     "/_protected/_admin": {
@@ -1027,26 +872,6 @@ export const routeTree = rootRoute
       "filePath": "_protected/(actions)/create-thread.lazy.tsx",
       "parent": "/_protected"
     },
-    "/_public/misc/about": {
-      "filePath": "_public/misc/about.lazy.tsx",
-      "parent": "/_public"
-    },
-    "/_public/misc/faq": {
-      "filePath": "_public/misc/faq.lazy.tsx",
-      "parent": "/_public"
-    },
-    "/_public/misc/monitoring": {
-      "filePath": "_public/misc/monitoring.lazy.tsx",
-      "parent": "/_public"
-    },
-    "/_public/misc/referal-system": {
-      "filePath": "_public/misc/referal-system.lazy.tsx",
-      "parent": "/_public"
-    },
-    "/_public/misc/status": {
-      "filePath": "_public/misc/status.lazy.tsx",
-      "parent": "/_public"
-    },
     "/_protected/lands/": {
       "filePath": "_protected/lands/index.tsx",
       "parent": "/_protected"
@@ -1054,10 +879,6 @@ export const routeTree = rootRoute
     "/_protected/ratings/": {
       "filePath": "_protected/ratings/index.lazy.tsx",
       "parent": "/_protected"
-    },
-    "/_public/start/": {
-      "filePath": "_public/start/index.lazy.tsx",
-      "parent": "/_public"
     },
     "/_protected/_admin/admin/configs": {
       "filePath": "_protected/_admin/admin/configs.lazy.tsx",

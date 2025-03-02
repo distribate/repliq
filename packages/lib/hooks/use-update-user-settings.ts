@@ -1,4 +1,4 @@
-import { REQUESTED_USER_QUERY_KEY } from '@repo/components/src/profile/components/cover/queries/requested-user-query.ts';
+import { REQUESTED_USER_QUERY_KEY } from "@repo/lib/queries/requested-user-query.ts";
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { UpdateUserSettings, updateUserSettings } from '#queries/update-user-settings.ts';
 import { toast } from 'sonner';

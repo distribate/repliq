@@ -9,18 +9,14 @@ import { Hono } from "hono";
 import { createFriendRequestSchema } from "@repo/types/schemas/friend/create-friend-request-schema.ts";
 import { publishCreateFriendRequest } from '#publishers/pub-create-friend-request.ts';
 
-async function validateUserFriendPreference(nickname: string): Promise<boolean> {
-  return await getUserFriendPreference(nickname)
-}
-
 export const createFriendRequestRoute = new Hono()
   .post("/create-friend-request", zValidator("json", createFriendRequestSchema), async (ctx) => {
     const { recipient } = createFriendRequestSchema.parse(await ctx.req.json());
     const initiator = getNickname()
 
-    const isValidFriendPreference = await validateUserFriendPreference(recipient);
+    const isValid = await getUserFriendPreference(recipient);
 
-    if (!isValidFriendPreference) {
+    if (!isValid) {
       return ctx.json({ error: "User does not have accept to send friend request" }, 400);
     }
 

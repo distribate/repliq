@@ -1,7 +1,7 @@
 import { Typography } from '@repo/ui/src/components/typography'
 import { createLazyFileRoute } from '@tanstack/react-router'
-import { NotificationsList } from '@repo/components/src/notifications/components/notifications-list'
-import { NotificationsNavigation } from '@repo/components/src/notifications/components/notifications-navigation'
+import { NotificationsList } from '#components/notifications/components/notifications-list'
+import { NotificationsNavigation } from '#components/notifications/components/notifications-navigation'
 
 export const Route = createLazyFileRoute('/_protected/notifications')({
   component: RouteComponent,

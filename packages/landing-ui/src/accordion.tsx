@@ -20,8 +20,8 @@ AccordionItem.displayName = "AccordionItem"
 
 const AccordionTrigger = forwardRef<
   ElementRef<typeof AccordionPrimitive.Trigger>,
-  ComponentPropsWithoutRef<typeof AccordionPrimitive.Trigger> & { withBook?: boolean }
->(({ className, children, withBook = true, ...props }, ref) => (
+  ComponentPropsWithoutRef<typeof AccordionPrimitive.Trigger>
+>(({ className, children, ...props }, ref) => (
   <AccordionPrimitive.Header className="flex">
     <AccordionPrimitive.Trigger
       ref={ref}
@@ -32,15 +32,6 @@ const AccordionTrigger = forwardRef<
       {...props}
     >
       {children}
-      {withBook && (
-        <img
-          src="/images/minecraft/icons/knowledge_book.webp"
-          className="w-[16px] h-[20px]"
-          width={26}
-          height={18}
-          alt=""
-        />
-      )}
     </AccordionPrimitive.Trigger>
   </AccordionPrimitive.Header>
 ))

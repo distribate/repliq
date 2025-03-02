@@ -3,11 +3,13 @@ import { forumDB } from "#shared/database/forum-db.ts";
 import { Hono } from "hono";
 
 async function getUserBanDetails(nickname: string) {
-  return await forumDB
+  const query = await forumDB
     .selectFrom("users_banned")
     .selectAll()
     .where("nickname", "=", nickname)
     .executeTakeFirst()
+
+  return query;
 }
 
 export const getUserBanDetailsRoute = new Hono()
@@ -25,5 +27,4 @@ export const getUserBanDetailsRoute = new Hono()
     } catch (e) {
       return ctx.json({ error: throwError(e) }, 500);
     }
-  }
-)
+  })

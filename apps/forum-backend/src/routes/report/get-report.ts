@@ -3,11 +3,13 @@ import { throwError } from "@repo/lib/helpers/throw-error";
 import { Hono } from "hono";
 
 async function getReport(id: string) {
-  return await forumDB
+  const query = await forumDB
     .selectFrom("reports")
     .selectAll()
     .where("id", "=", id)
     .executeTakeFirst()
+    
+  return query;
 }
 
 export const getReportRoute = new Hono()

@@ -9,6 +9,7 @@ import { getClientIp } from '../utils/gen-client-ip.ts';
 import { checkUserExists } from "../utils/check-user-exists.ts";
 import { registerSchema } from '@repo/types/schemas/auth/create-session-schema.ts';
 import ky, { HTTPError } from 'ky';
+import { verifyAuth } from '../utils/verify-auth.ts';
 
 type PremiumUser = {
   uuid: string,
@@ -23,32 +24,25 @@ type MojangError = {
 
 const MOJANG_API_URL = "https://api.ashcon.app/mojang/v2/user"
 
-const CLOUDFLARE_TURNSTILE_SECRET_KEY = "0x4AAAAAAA-stfzoKM9_11nOW5V0dd54VS0"
+async function getMojangUser(nickname: string) {
+  return await ky
+    .get(`${MOJANG_API_URL}/${nickname}`)
+    .json<PremiumUser>()
+}
 
 export const registerRoute = new Hono()
   .post('/register', zValidator('json', registerSchema), async (ctx) => {
-    const {
-      password,
-      details: { findout, realName: real_name, referrer },
-      nickname,
-      token
-    } = registerSchema.parse(await ctx.req.json());
- 
+    const { password, findout, referrer, nickname, token } = registerSchema.parse(await ctx.req.json());
+
     if (!token) {
       return ctx.json({ error: "Token is not provided" }, 400)
     }
 
-    const verifyRes = await ky.post("https://challenges.cloudflare.com/turnstile/v0/siteverify", {
-      json: { secret: CLOUDFLARE_TURNSTILE_SECRET_KEY, response: token },
-    });
+    const isVerified = await verifyAuth(token)
 
-    if (!verifyRes.ok) {
-      return ctx.json({ error: "Ошибка капчи" }, 403);
+    if (isVerified !== "verified") {
+      return ctx.json({ error: "Invalid token" }, 400)
     }
-
-    const result = await verifyRes.json();
-    
-    console.log(result)
 
     const IP = getClientIp(ctx) ?? "1.1.1.1"
 
@@ -77,9 +71,7 @@ export const registerRoute = new Hono()
     let user: PremiumUser | null;
 
     try {
-      user = await ky
-        .get(`${MOJANG_API_URL}/${nickname}`)
-        .json<PremiumUser>();
+      user = await getMojangUser(nickname)
     } catch (e) {
       if (e instanceof HTTPError) {
         const error = await e.response.json<MojangError>();
@@ -102,7 +94,7 @@ export const registerRoute = new Hono()
 
     try {
       const registered = await createUserTransaction({
-        nickname, findout, real_name, HASH, IP, referrer,
+        nickname, findout, HASH, IP, referrer,
         UUID: user.uuid,
         LOWERCASENICKNAME: nickname.toLowerCase(),
         NICKNAME: nickname,

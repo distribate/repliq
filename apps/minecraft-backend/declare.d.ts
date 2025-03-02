@@ -19,6 +19,7 @@ declare module "bun" {
     LOBBY_MYSQL_PORT: number;
     PLAYERPOINTS_MYSQL_PORT: number,
     REPUTATION_MYSQL_PORT: number,
+    SKINS_MYSQL_PORT: number;
     
     POSTGRES_DB: string,
     POSTGRES_USER: string,

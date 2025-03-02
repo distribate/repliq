@@ -4,6 +4,7 @@ import { getCookie, setCookie } from "hono/cookie";
 import { validateSessionToken } from "../utils/validate-session-token";
 import type { Env } from "../types/env-type";
 import { getNicknameByTokenFromKv } from "../utils/get-nickname-by-token-from-kv";
+import { isProduction } from "@repo/lib/helpers/is-production";
 
 export const getSessionRoute = new Hono<Env>()
   .use(async (ctx, next) => {
@@ -34,7 +35,7 @@ export const getSessionRoute = new Hono<Env>()
         setCookie(ctx, `session`, token, {
           httpOnly: true,
           sameSite: "lax",
-          secure: process.env.NODE_ENV === "production",
+          secure: isProduction,
           expires: new Date(session.expires_at),
           path: "/",
         })

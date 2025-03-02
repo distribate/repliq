@@ -3,7 +3,7 @@ import { CURRENT_USER_QUERY_KEY } from '../queries/current-user-query.ts';
 import { toast } from 'sonner';
 import { updateUserFields } from '#queries/update-user-fields.ts';
 import type { UserDetailed } from '@repo/types/entities/user-type.ts';
-import { REQUESTED_USER_QUERY_KEY } from '@repo/components/src/profile/components/cover/queries/requested-user-query.ts';
+import { REQUESTED_USER_QUERY_KEY } from "@repo/lib/queries/requested-user-query.ts";
 import { getUser } from '#helpers/get-user.ts';
 
 export const UPDATE_FIELD_MUTATION_KEY = ['user-update-field'];

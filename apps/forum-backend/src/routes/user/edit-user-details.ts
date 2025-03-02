@@ -8,7 +8,6 @@ import { getNickname } from '#utils/get-nickname-from-storage.ts';
 export const editUserDetailsRoute = new Hono()
   .post('/edit-user-details', zValidator('json', userDetailsSchema), async (ctx) => {
     const result = userDetailsSchema.parse(await ctx.req.json());
-
     const nickname = getNickname()
 
     try {

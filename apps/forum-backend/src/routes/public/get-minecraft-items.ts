@@ -5,7 +5,7 @@ import { Hono } from "hono";
 import { sql } from "kysely";
 
 async function getMinecraftItems() {
-  const q = await forumDB
+  const query = await forumDB
     .selectFrom("config_minecraft_items")
     .select([
       "description",
@@ -16,7 +16,7 @@ async function getMinecraftItems() {
     .$castTo<{ id: number, title: string, image: string, description: string | null }>()    
     .execute();
 
-  return await Promise.all(q.map(async (item) => ({
+  return await Promise.all(query.map(async (item) => ({
     ...item,
     image: getPublicUrl("static", item.image)
   })))

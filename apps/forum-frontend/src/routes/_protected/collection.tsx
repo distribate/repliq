@@ -1,10 +1,10 @@
 import { Typography } from '@repo/ui/src/components/typography'
 import { createFileRoute, useNavigate, useSearch } from '@tanstack/react-router'
-import { Referals } from '@repo/components/src/collection/components/referals'
-import { Purchases } from '@repo/components/src/collection/components/purchases'
-import { MyThreads, SavedThreads } from '@repo/components/src/collection/components/threads'
-import { Tickets } from '@repo/components/src/collection/components/tickets'
-import { NavigationBadge } from '@repo/components/src/navigation/components/navigation-badge'
+import { Referals } from '#components/collection/components/referals'
+import { Purchases } from '#components/collection/components/purchases'
+import { MyThreads, SavedThreads } from '#components/collection/components/threads'
+import { Tickets } from '#components/collection/components/tickets'
+import { NavigationBadge } from '#components/navigation/components/navigation-badge'
 
 type CollectionParams = {
   type: 'threads' | 'saved_threads' | 'referals' | 'purchases' | "tickets" | 'all'

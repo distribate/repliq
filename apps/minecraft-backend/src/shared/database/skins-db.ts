@@ -14,7 +14,7 @@ export const skinsDB = new Kysely<skinsDBType>({
   dialect: skinsDialect({
     user: Bun.env.MYSQL_USER!,
     password: Bun.env.MYSQL_ROOT_PASSWORD!,
-    port: Number(Bun.env.SKINS_PROXY_MYSQL_PORT!),
+    port: Number(Bun.env.SKINS_MYSQL_PORT!),
     database: "skins_proxy",
     host: "5.83.140.56"
   })

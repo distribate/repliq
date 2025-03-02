@@ -10,14 +10,14 @@ import { createCoverImageSchema } from "@repo/types/schemas/user/create-cover-im
 import { getPublicUrl } from "#utils/get-public-url.ts";
 
 async function deletePrevCoverImage(nickname: string) {
-  const ci = await forumDB
+  const query = await forumDB
     .selectFrom("users")
     .select("cover_image")
     .where("nickname", "=", nickname)
     .executeTakeFirst()
 
-  if (ci && ci.cover_image && ci.cover_image.startsWith("cover")) {
-    return await supabase.storage.from("user_images").remove([ci.cover_image])
+  if (query && query.cover_image && query.cover_image.startsWith("cover")) {
+    return await supabase.storage.from("user_images").remove([query.cover_image])
   }
   
   return;
@@ -88,7 +88,6 @@ const MAX_FILE_SIZE = 4 * 1024 * 1024; // 4 MB
 export const createCoverImageRoute = new Hono()
   .post("/create-cover-image", async (ctx) => {
     const nickname = getNickname()
-
     const bd = new Uint8Array(await ctx.req.arrayBuffer());
 
     let dd: z.infer<typeof createCoverImageSchema>;

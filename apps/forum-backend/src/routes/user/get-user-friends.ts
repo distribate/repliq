@@ -7,12 +7,12 @@ import { getNickname } from "#utils/get-nickname-from-storage.ts";
 import { Encoder } from "cbor-x";
 import { userPreferenceAndPrivateValidation } from "#utils/validate-user-preference-private.ts";
 
+const encoder = new Encoder({ useRecords: false, structures: [], pack: true });
+
 export const getUserFriendsRoute = new Hono()
   .get("/get-user-friends/:nickname", zValidator("query", getUserFriendsSchema), async (ctx) => {
     const { nickname: recipient } = ctx.req.param()
-    const query = ctx.req.query()
-    const result = getUserFriendsSchema.parse(query);
-
+    const result = getUserFriendsSchema.parse(ctx.req.query());
     const initiator = getNickname()
 
     const isValid = await userPreferenceAndPrivateValidation({
@@ -26,15 +26,11 @@ export const getUserFriendsRoute = new Hono()
     try {
       const friends = await getUserFriends({ nickname: recipient, ...result })
 
-      const encoder = new Encoder({
-        useRecords: false, structures: [], pack: true
-      });
-
       const encodedFriends = encoder.encode(friends)
 
       return ctx.body(
-        encodedFriends as unknown as ReadableStream, 
-        200, 
+        encodedFriends as unknown as ReadableStream,
+        200,
         { 'Content-Type': 'application/cbor' }
       )
     } catch (e) {

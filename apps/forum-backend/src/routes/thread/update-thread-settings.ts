@@ -5,8 +5,7 @@ import { updateThreadSchema } from "@repo/types/schemas/thread/update-thread-sch
 
 export const updateThreadSettingsRoute = new Hono()
   .post("/update-thread-settings", zValidator("json", updateThreadSchema), async (ctx) => {
-    const body = ctx.req.valid("json");
-    const result = updateThreadSchema.parse(body);
+    const result = updateThreadSchema.parse(ctx.req.valid("json"));
 
     try {
       // todo

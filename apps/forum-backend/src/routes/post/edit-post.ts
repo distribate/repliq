@@ -3,38 +3,45 @@ import { zValidator } from "@hono/zod-validator"
 import { throwError } from "@repo/lib/helpers/throw-error"
 import { Hono } from "hono"
 import { z } from "zod"
-import { validatePostOwner } from "./delete-post"
 import { getNickname } from "#utils/get-nickname-from-storage.ts"
+import { validatePostOwner } from "#lib/validators/validate-post-owner.ts"
 
 const editPostSchema = z.object({
   id: z.string(),
   content: z.string()
 })
 
-async function editPost(id: string, content: string) {
-  return await forumDB
+type EditPost = {
+  postId: string
+  content: string
+}
+
+async function editPost({ postId, content }: EditPost) {
+  const query = await forumDB
     .updateTable("posts")
     .set({ content })
-    .where("id", "=", id)
+    .where("id", "=", postId)
     .returning(["content"])
     .executeTakeFirstOrThrow()
+
+  return query;
 }
 
 export const editPostRoute = new Hono()
   .post("/edit-post", zValidator("json", editPostSchema), async (ctx) => {
-    const { id, content } = editPostSchema.parse(await ctx.req.json())
+    const { id: postId, content } = editPostSchema.parse(await ctx.req.json())
     const nickname = getNickname()
 
     try {
-      const isValid = await validatePostOwner(nickname, id)
+      const isValid = await validatePostOwner({ nickname, postId })
 
       if (!isValid) {
         return ctx.json({ error: "You are not the owner of this post" }, 400)
       }
 
-      const post = await editPost(id, content)
+      const post = await editPost({ postId, content })
 
-      if (!post.content) {
+      if (!post || !post.content) {
         return ctx.json({ error: "Failed" }, 400)
       }
 

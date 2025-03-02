@@ -28,4 +28,5 @@ export const userStatusQuery = (nickname: string) => useQuery({
 
     return { ...res, last_active: issuedTime }
   },
+  refetchOnWindowFocus: true,
 });

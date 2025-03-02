@@ -1,8 +1,8 @@
 import { Typography } from '@repo/ui/src/components/typography'
 import { createLazyFileRoute } from '@tanstack/react-router'
-import { RatingList } from "@repo/components/src/ratings/components/rating-list"
-import { RatingNavigation } from "@repo/components/src/ratings/components/rating-navigation"
-// import { RatingFiltration } from "@repo/components/src/ratings/components/rating-filtration"
+import { RatingList } from "#components/ratings/components/rating-list"
+import { RatingNavigation } from "#components/ratings/components/rating-navigation"
+// import { RatingFiltration } from "#components/ratings/components/rating-filtration"
 
 export const Route = createLazyFileRoute('/_protected/ratings/')({
   component: RouteComponent,

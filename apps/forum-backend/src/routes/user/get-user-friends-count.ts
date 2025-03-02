@@ -3,7 +3,7 @@ import { forumDB } from "#shared/database/forum-db.ts";
 import { Hono } from "hono";
 
 async function getUserFriendsCount(nickname: string) {
-  return await forumDB
+  const query = await forumDB
     .selectFrom("users_friends")
     .select(forumDB.fn.countAll().as("count"))
     .where((eb) =>
@@ -14,6 +14,8 @@ async function getUserFriendsCount(nickname: string) {
     )
     .$narrowType<{ count: number }>()
     .executeTakeFirst();
+
+  return query?.count ?? 0
 }
 
 export const getUserFriendsCountRoute = new Hono()
@@ -23,11 +25,7 @@ export const getUserFriendsCountRoute = new Hono()
     try {
       const friendsCount = await getUserFriendsCount(nickname)
 
-      if (!friendsCount) {
-        return ctx.json({ data: 0 }, 200)
-      }
-
-      return ctx.json({ data: friendsCount.count }, 200)
+      return ctx.json({ data: friendsCount }, 200)
     } catch (e) {
       return ctx.json({ error: throwError(e) }, 500);
     }

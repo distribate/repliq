@@ -3,6 +3,7 @@ import { userPreferenceAndPrivateValidation } from "#utils/validate-user-prefere
 import { throwError } from "@repo/lib/helpers/throw-error";
 import { Hono } from "hono";
 
+// TODO
 async function getUserPublicSocials(nickname: string) {
   return []
 }
@@ -12,9 +13,7 @@ export const getUserPublicSocialsRoute = new Hono()
     const { nickname: recipient } = ctx.req.param()
     const initiator = getNickname()
 
-    const isValid = await userPreferenceAndPrivateValidation({
-      initiator, recipient
-    })
+    const isValid = await userPreferenceAndPrivateValidation({ initiator, recipient })
 
     if (!isValid) {
       return ctx.json({ error: "User's profile is private" }, 400)

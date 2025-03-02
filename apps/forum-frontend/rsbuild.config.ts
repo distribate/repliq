@@ -4,7 +4,6 @@ import { TanStackRouterRspack } from '@tanstack/router-plugin/rspack'
 import { pluginImageCompress } from '@rsbuild/plugin-image-compress';
 // import { RsdoctorRspackPlugin } from '@rsdoctor/rspack-plugin';
 import { pluginCssMinimizer } from "@rsbuild/plugin-css-minimizer";
-// import { pluginTypeCheck } from "@rsbuild/plugin-type-check";
 
 export default defineConfig({
   source: {
@@ -18,30 +17,11 @@ export default defineConfig({
   plugins: [
     pluginReact(),
     pluginImageCompress(),
-    pluginCssMinimizer(),
-    // pluginTypeCheck({
-    //   enable: true,
-    //   tsCheckerOptions: {
-    //     typescript: {
-    //       configFile: "./tsconfig.json",
-    //     }
-    //   }
-    // })
+    pluginCssMinimizer()
   ],
   performance: {
     chunkSplit: {
-      strategy: 'split-by-experience',
-      override: {
-        cacheGroups: {
-          styles: {
-            name: 'styles',
-            minSize: 0,
-            chunks: 'all',
-            test: /\.(?:css|less|sass|scss|styl)$/,
-            priority: 99,
-          },
-        },
-      },
+      strategy: 'split-by-experience'
     },
     // bundleAnalyze: { }
   },

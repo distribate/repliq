@@ -7,8 +7,7 @@ import { getThreadComments } from '#lib/queries/comments/get-thread-comments.ts'
 export const getThreadCommentsRoute = new Hono()
   .get("/get-thread-comments/:threadId", zValidator("query", getCommentsSchema), async (ctx) => {
     const { threadId } = ctx.req.param();
-    const query = ctx.req.query();
-    const { limit, cursor } = getCommentsSchema.parse(query);
+    const { limit, cursor } = getCommentsSchema.parse(ctx.req.query());
 
     try {
       const threadComments = await getThreadComments({

@@ -27,8 +27,8 @@ async function getUserBalance(nickname: string) {
   ])
 
   return {
-    charism: charism?.Balance ? charism?.Balance.toFixed(2) : 0,
-    belkoin: belkoin?.points?.toFixed(2) ?? 0
+    charism: charism?.Balance ? charism?.Balance.toFixed(1) : 0,
+    belkoin: belkoin?.points?.toFixed(1) ?? 0
   }
 }
 

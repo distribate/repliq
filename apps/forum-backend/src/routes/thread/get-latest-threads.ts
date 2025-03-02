@@ -4,12 +4,16 @@ import { throwError } from "@repo/lib/helpers/throw-error";
 import { Hono } from "hono";
 import { z } from "zod";
 
-async function getLatestThreads({ limit }: { limit: number }) {
-  return await forumDB
+const LIMIT = 5;
+
+async function getLatestThreads({ limit }: { limit?: number }) {
+  const query = await forumDB
     .selectFrom("threads")
     .select(["id", "title", "description"])
-    .limit(limit)
+    .limit(limit ?? LIMIT)
     .execute()
+
+  return query;
 }
 
 const getLatestThreadsSchema = z.object({
@@ -18,10 +22,10 @@ const getLatestThreadsSchema = z.object({
 
 export const getLatestThreadsRoute = new Hono()
   .get("/get-latest-threads", zValidator("query", getLatestThreadsSchema), async (ctx) => {
-    const { limit } = getLatestThreadsSchema.parse(ctx.req.query());
+    const result = getLatestThreadsSchema.parse(ctx.req.query());
 
     try {
-      const latestThreads = await getLatestThreads({ limit: limit ?? 5 });
+      const latestThreads = await getLatestThreads(result);
 
       return ctx.json({ data: latestThreads }, 200)
     } catch (e) {

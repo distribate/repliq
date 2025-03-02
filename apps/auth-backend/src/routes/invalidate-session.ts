@@ -5,25 +5,15 @@ import { encodeHexLowerCase } from "@oslojs/encoding";
 import { sha256 } from "@oslojs/crypto/sha2";
 import { invalidateSession } from "../lib/queries/invalidate-session";
 import type { Context } from "hono";
+import { isProduction } from "@repo/lib/helpers/is-production";
 
-export function deleteCookieToken(ctx: Context) {
+export function deleteCookiesToken(ctx: Context) {
   setCookie(ctx, `session`, "", {
-    httpOnly: true,
-    sameSite: "lax",
-    secure: process.env.NODE_ENV === "production",
-    maxAge: 0,
-    path: "/",
+    httpOnly: true, sameSite: "lax", secure: isProduction, maxAge: 0, path: "/",
   })
-}
 
-export function deleteCrossDomainCookie(ctx: Context) {
   setCookie(ctx, `user`, "", {
-    httpOnly: true,
-    sameSite: "lax",
-    domain: "fasberry.su",
-    secure: process.env.NODE_ENV === "production",
-    maxAge: 0,
-    path: "/",
+    httpOnly: true, sameSite: "lax", domain: "fasberry.su", secure: isProduction, maxAge: 0, path: "/",
   })
 }
 
@@ -43,8 +33,7 @@ export const invalidateSessionRoute = new Hono()
         return ctx.json({ error: "Internal Server Error" }, 500)
       }
 
-      deleteCookieToken(ctx)
-      deleteCrossDomainCookie(ctx)
+      deleteCookiesToken(ctx)
 
       return ctx.json({ status: "Success" }, 200)
     } catch (e) {

@@ -274,7 +274,7 @@ module.exports = {
         "flash-fade": "flash-fade 3s ease-out 1",
       },
       boxShadow: {
-        'minecraft-panel': 'inset 4px -4px 1px rgba(0, 0, 0, 0.6), inset -4px 4px 1px rgba(255, 255, 255, 0.4)',
+        'minecraft-panel': 'inset 6px -6px 1px rgba(0, 0, 0, 0.6), inset -4px 4px 1px rgba(255, 255, 255, 0.4)',
       },
     },
   },

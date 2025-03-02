@@ -4,9 +4,8 @@ import { forumDB } from "../../shared/database/forum-db";
 import { authDB } from '../../shared/database/auth-db';
 import type { AUTH } from '@repo/types/db/auth-database-types';
 import { publishRegisterNotify } from '../../publishers/pub-register-notify';
-import { publishReferalReward } from '../../publishers/pub-referal-reward';
 
-type InsertableUser = Pick<Insertable<Users>, "nickname" | "real_name">
+type InsertableUser = Pick<Insertable<Users>, "nickname">
 type InsertableFindout = Pick<Insertable<InfoFindout>, "findout">
 
 type CreateUserServer = Pick<Insertable<AUTH>,
@@ -82,7 +81,7 @@ async function linkUserToReferer(trx: Transaction<DB>, nickname: string, referre
 }
 
 export const createUserTransaction = async ({
-  nickname, real_name, findout, HASH, LOWERCASENICKNAME, NICKNAME, IP, REGDATE, UUID, referrer
+  nickname, findout, HASH, LOWERCASENICKNAME, NICKNAME, IP, REGDATE, UUID, referrer
 }: CreateUserTransaction) => {
   return await forumDB.transaction().execute(async (trx) => {
     const userByServer = await createUserServer({
@@ -95,7 +94,7 @@ export const createUserTransaction = async ({
 
     const userByForum = await trx
       .insertInto('users')
-      .values({ nickname, uuid: userByServer.UUID, real_name })
+      .values({ nickname, uuid: userByServer.UUID })
       .returning(['nickname', 'id'])
       .executeTakeFirstOrThrow();
 

@@ -35,5 +35,8 @@ declare module "bun" {
     POSTGRES_TENANT_ID: string,
 
     NATS_AUTH_TOKEN: string
+
+    NEXT_PUBLIC_SUPABASE_URL: string;
+    SUPABASE_SERVICE_ROLE_KEY: string;
   }
 }

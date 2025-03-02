@@ -8,8 +8,7 @@ import { createCommentSchema } from "@repo/types/schemas/comment/create-comment-
 export const createCommentRoute = new Hono()
   .post("/create-comment", zValidator("json", createCommentSchema), async (ctx) => {
     const nickname = getNickname()
-    const body = await ctx.req.json();
-    const result = createCommentSchema.parse(body);
+    const result = createCommentSchema.parse(await ctx.req.json());
 
     try {
       const createdComment = await createComment({ ...result, nickname })

@@ -1,11 +1,11 @@
 import { createLazyFileRoute } from '@tanstack/react-router'
-import { PageWrapper } from '@repo/components/src/wrappers/page-wrapper'
+import { PageWrapper } from '#components/wrappers/page-wrapper'
 import AdventureInBlossom from '@repo/assets/images/adventure-in-blossom.jpg'
 import Compass from '@repo/assets/images/minecraft/compass.webp'
 import Spyglass from '@repo/assets/images/minecraft/spyglass.webp'
 import { Link } from '@tanstack/react-router'
 import { USER_URL } from '@repo/shared/constants/routes'
-import { UserNotExistCounter } from '@repo/components/src/templates/user-not-exist-counter.tsx'
+import { UserNotExistCounter } from '#components/templates/user-not-exist-counter.tsx'
 
 export const Route = createLazyFileRoute('/_public/not-exist')({
   component: RouteComponent,

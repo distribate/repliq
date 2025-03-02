@@ -8,14 +8,12 @@ import { checkNotificationSchema } from "@repo/types/schemas/notification/check-
 export const checkNotificationRoute = new Hono()
   .post("/check-notification", zValidator("json", checkNotificationSchema), async (ctx) => {
     const nickname = getNickname()
-    const result = checkNotificationSchema.parse(await ctx.req.json());
+    const { notification_id: notificationId } = checkNotificationSchema.parse(await ctx.req.json());
 
     try {
-      const res = await updateNotification({
-        nickname, notificationId: result.notification_id
-      });
-      
-      if (!res.numUpdatedRows) {
+      const res = await updateNotification({ nickname, notificationId });
+
+      if (!res || !res.numUpdatedRows) {
         return ctx.json({ error: "Error checking notification" }, 404);
       }
 
@@ -23,5 +21,4 @@ export const checkNotificationRoute = new Hono()
     } catch (e) {
       return ctx.json({ error: throwError(e) }, 500);
     }
-  }
-);
+  });

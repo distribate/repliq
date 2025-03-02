@@ -22,6 +22,8 @@ import { subscribePlayerJoin } from '#subscribers/sub-player-join.ts';
 import { subscribeReferalReward } from '#subscribers/sub-referal-reward.ts';
 import { subscribeReceiveFiatPayment } from '#subscribers/sub-receive-fiat-payment.ts';
 import { subscribeRefferalCheck } from '#subscribers/sub-referal-check.ts';
+import { subscribeGiveBalance } from '#subscribers/sub-give-balance.ts';
+import { subscribePlayerStats } from '#subscribers/sub-player-stats.ts';
 
 async function startNats() {
   await initNats()
@@ -40,6 +42,10 @@ async function startNats() {
   console.log("\x1b[34m[NATS]\x1b[0m Subscribed to referal reward")
   subscribeReceiveFiatPayment()
   console.log("\x1b[34m[NATS]\x1b[0m Subscribed to receive fiat payment")
+  subscribeGiveBalance()
+  console.log("\x1b[34m[NATS]\x1b[0m Subscribed to give balance")
+  subscribePlayerStats()
+  console.log("\x1b[34m[NATS]\x1b[0m Subscribed to player stats")
 }
 
 await startNats()
@@ -78,11 +84,7 @@ export const minecraft = new Hono()
 
 const app = new Hono()
   .basePath('/')
-  .use(cors({
-    origin: originList,
-    allowMethods: ['GET', "POST", "OPTIONS"],
-    credentials: true
-  }))
+  .use(cors({ origin: originList, credentials: true }))
   .use(timeout(2000))
   .use(rateLimiterMiddleware)
   .use(logger())

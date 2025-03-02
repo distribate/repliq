@@ -1,11 +1,11 @@
 import { getNickname } from "#utils/get-nickname-from-storage.ts";
 import { throwError } from "@repo/lib/helpers/throw-error";
 import { Hono } from "hono";
-import { validatePostOwner } from "./delete-post";
 import { forumDB } from "#shared/database/forum-db.ts";
+import { validatePostOwner } from "#lib/validators/validate-post-owner.ts";
 
 async function getPostViewers(id: string) {
-  return await forumDB
+  const query = await forumDB
     .selectFrom("posts_views")
     .innerJoin("users", "users.nickname", "posts_views.nickname")
     .select([
@@ -16,21 +16,23 @@ async function getPostViewers(id: string) {
     ])
     .where("post_id", "=", id)
     .execute()
+
+  return query;
 }
 
 export const getPostViewersRoute = new Hono()
   .get("/get-post-viewers/:id", async (ctx) => {
-    const { id } = ctx.req.param();
+    const { id: postId } = ctx.req.param();
     const nickname = getNickname()
 
-    const isValid = await validatePostOwner(nickname, id)
+    const isValid = await validatePostOwner({ nickname, postId })
 
     if (!isValid) {
       return ctx.json({ error: "You are not the owner of this post" }, 400)
     }
 
     try {
-      const viewers = await getPostViewers(id)
+      const viewers = await getPostViewers(postId)
 
       return ctx.json({ data: viewers }, 200)
     } catch (e) {

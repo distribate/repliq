@@ -3,9 +3,8 @@ import { getPublicUrl } from "#utils/get-public-url.ts";
 import { throwError } from "@repo/lib/helpers/throw-error";
 import { Hono } from "hono";
 
-
 async function getFavoriteItem(nickname: string) {
-  return await forumDB
+  const query = await forumDB
     .selectFrom("config_minecraft_items")
     .innerJoin("users", "users.favorite_item", "config_minecraft_items.id")
     .select([
@@ -16,6 +15,8 @@ async function getFavoriteItem(nickname: string) {
     ])
     .where("users.nickname", "=", nickname)
     .executeTakeFirst();
+
+  return query;
 }
 
 export const getUserFavoriteItemRoute = new Hono()

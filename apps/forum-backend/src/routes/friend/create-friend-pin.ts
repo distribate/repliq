@@ -5,29 +5,17 @@ import { getNickname } from "#utils/get-nickname-from-storage.ts";
 import { zValidator } from "@hono/zod-validator";
 import { Hono } from "hono";
 import { friendPinSchema } from "@repo/types/schemas/friend/friend-pin-schema.ts";
-import { forumDB } from '#shared/database/forum-db.ts';
-
-async function validateFriendPin(nickname: string) {
-  const exists = await forumDB
-    .selectFrom("friends_pinned")
-    .select("id")
-    .where("initiator", "=", nickname)
-    .execute()
-
-  return exists.length < 1
-}
+import { validatePinnedFriendsLength } from '#lib/validators/validate-pinned-friends-length.ts';
 
 export const createFriendPinRoute = new Hono()
   .post("/create-friend-pin", zValidator("json", friendPinSchema), async (ctx) => {
     const result = friendPinSchema.parse(await ctx.req.json());
-
     const initiator = getNickname()
 
     try {
       switch (result.type) {
         case "pin":
-          // only 1 pin per user
-          const isValid = await validateFriendPin(initiator)
+          const isValid = await validatePinnedFriendsLength(initiator)
 
           if (!isValid) {
             return ctx.json({ error: "Error creating friend pin" }, 404)

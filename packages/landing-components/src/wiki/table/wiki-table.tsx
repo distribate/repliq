@@ -30,9 +30,9 @@ export const WikiTableComponent = ({
       <TableHeader className='table-auto'>
         {table.getHeaderGroups().map(headerGroup => (
           <TableRow key={headerGroup.id}>
-            {headerGroup.headers.map(header => (
+            {headerGroup.headers.map((header, idx) => (
               <TableHead
-                key={header.id}
+                key={idx}
                 colSpan={header.colSpan}
                 className="text-neutral-200 border bg-neutral-600 border-neutral-400 dark:border-neutral-800 dark:bg-neutral-700 p-2 text-md lg:text-lg px-12 text-center"
               >
@@ -50,9 +50,9 @@ export const WikiTableComponent = ({
       <TableBody>
         {table.getRowModel().rows.map(row => (
           <TableRow key={row.id}>
-            {row.getVisibleCells().map(cell => (
+            {row.getVisibleCells().map((cell, idx) => (
               <TableCell 
-              key={cell.id} 
+              key={idx} 
               className="text-neutral-200 first:bg-neutral-600 first:dark:border-neutral-800 
               first:dark:bg-neutral-700 border border-neutral-400 dark:border-neutral-700 bg-neutral-700 dark:bg-neutral-800 p-2 text-sm lg:text-lg overflow-hidden">
                 {flexRender(cell.column.columnDef.cell, cell.getContext())}

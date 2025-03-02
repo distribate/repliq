@@ -8,6 +8,7 @@ import { terminateSession } from "../lib/queries/terminate-session";
 import { getCurrentSessionCreatedAt } from "../lib/queries/get-current-session-created-at";
 import { DEFAULT_SESSION_EXPIRE } from "../shared/constants/session-expire";
 import { validateUserRequest } from "../middlewares/validate-user-request";
+import { throwError } from "@repo/lib/helpers/throw-error";
 
 const terminateSessionBodySchema = z.object({
   selectedSessionId: z.string().min(6).optional(),
@@ -78,6 +79,6 @@ export const terminateSessionRoute = new Hono<Env>()
           return ctx.json({ status: "Success", meta: { is_current: false } }, 200)
       }
     } catch (e) {
-      return ctx.json({ error: "Internal Server Error" }, 500)
+      return ctx.json({ error: throwError(e) }, 500)
     }
   });

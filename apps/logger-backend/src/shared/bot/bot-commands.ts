@@ -16,5 +16,13 @@ export const botCommands: TelegramBotCommand[] = [
   {
     command: "/give",
     description: "Give entity or permission for player"
+  },
+  {
+    command: "/stats",
+    description: "Get minecraft server stats"
+  },
+  {
+    command: "/check",
+    description: "Check player online status"
   }
 ]

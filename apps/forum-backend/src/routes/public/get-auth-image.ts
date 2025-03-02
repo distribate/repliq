@@ -1,4 +1,5 @@
 import { supabase } from "#shared/supabase/supabase-client.ts";
+import { getPublicUrl } from "#utils/get-public-url.ts";
 import { zValidator } from "@hono/zod-validator";
 import { throwError } from "@repo/lib/helpers/throw-error";
 import { Hono } from "hono";
@@ -18,17 +19,13 @@ const getRandomArbitrary = (min: number, max: number) => Math.random() * (max - 
 
 export const getAuthImageRoute = new Hono()
   .get("/get-auth-image", zValidator("query", getAuthImageSchema), async (ctx) => {
-    const query = ctx.req.query();
-    const { id, random } = getAuthImageSchema.parse(query);
+    const { id, random } = getAuthImageSchema.parse(ctx.req.query());
 
     try {
       const { data: authImages } = await supabase
         .storage
         .from("static")
-        .list("auth_background", {
-          limit: 100,
-          offset: 0,
-        })
+        .list("auth_background", { limit: 100, offset: 0 })
 
       if (!authImages) {
         return ctx.json({ error: "Auth images not found" }, 404)
@@ -48,10 +45,7 @@ export const getAuthImageRoute = new Hono()
         return ctx.json({ error: "Auth image not found" }, 404)
       }
 
-      const { data: { publicUrl } } = supabase
-        .storage
-        .from("static")
-        .getPublicUrl(`auth_background/${authImage.name}`)
+      const publicUrl = getPublicUrl("static", `auth_background/${authImage.name}`)
 
       return ctx.json({ data: publicUrl }, 200)
     } catch (e) {

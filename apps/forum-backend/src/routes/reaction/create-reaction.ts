@@ -21,19 +21,20 @@ type GetReactionCount = {
 }
 
 async function getThreadReactionCount({ nickname, threadId }: GetReactionCount) {
-  return await forumDB
+  const query = await forumDB
     .selectFrom("threads_reactions")
     .select(forumDB.fn.countAll().as('count'))
     .where("thread_id", "=", threadId)
     .where("user_nickname", "=", nickname)
     .$castTo<{ count: number }>()
     .executeTakeFirstOrThrow()
+
+  return query;
 }
 
 export const createReactionRoute = new Hono()
   .post("/create-reaction", zValidator("json", createReactionSchema), async (ctx) => {
-    const result = createReactionSchema.parse(await ctx.req.json())
-    const { emoji, type, id } = result;
+    const { emoji, type, id } = createReactionSchema.parse(await ctx.req.json())
 
     const nickname = getNickname()
     const limit = await validateReactionLimit(nickname)

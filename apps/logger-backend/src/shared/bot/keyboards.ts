@@ -1,6 +1,6 @@
 import { Keyboard } from "gramio";
 
-export const startKeyboardData = ["Объявление", "Погода", "Список админов", "Управление"];
+export const startKeyboardData = ["Объявление", "Погода", "Список админов", "Управление", "Статистика"];
 export const controlKeyboardData = ["Добавить администратора", "Удалить администратора"];
 
 export const backButton = "Назад"

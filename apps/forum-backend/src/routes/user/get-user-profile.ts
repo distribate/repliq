@@ -20,16 +20,15 @@ async function createUserProfileView(initiator: string, recipient: string) {
 
   if (!exists) {
     await forumDB
-    .insertInto("profile_views")
-    .values({ recipient, initiator })
-    .execute()
+      .insertInto("profile_views")
+      .values({ recipient, initiator })
+      .execute()
   }
 }
 
 export const getUserProfileRoute = new Hono()
   .get("/get-user-profile/:nickname", async (ctx) => {
     const { nickname: recipient } = ctx.req.param()
-
     const initiator = getNickname()
 
     const [userRelation, friendShip] = await Promise.all([
@@ -66,7 +65,7 @@ export const getUserProfileRoute = new Hono()
       if (recipient !== initiator) {
         createUserProfileView(initiator, recipient)
       }
-      
+
       let cover_image: string | null = null
 
       if ("cover_image" in user && user.cover_image) {
@@ -77,9 +76,7 @@ export const getUserProfileRoute = new Hono()
         data: {
           ...user,
           cover_image,
-          details: {
-            status
-          }
+          details: { status }
         }
       }, 200);
     } catch (e) {

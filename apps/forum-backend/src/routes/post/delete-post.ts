@@ -1,56 +1,56 @@
 import { forumDB } from "#shared/database/forum-db.ts";
 import { getNickname } from "#utils/get-nickname-from-storage.ts";
+import { validatePostOwner } from "#lib/validators/validate-post-owner.ts";
 import { zValidator } from "@hono/zod-validator";
 import { throwError } from "@repo/lib/helpers/throw-error";
 import { Hono } from "hono";
 import { z } from "zod";
 
-export async function validatePostOwner(nickname: string, postId: string): Promise<boolean> {
-  const q = await forumDB
-    .selectFrom("posts_users")
-    .select(forumDB.fn.countAll().as("count"))
-    .$castTo<{ count: number }>()
-    .where("nickname", "=", nickname)
-    .where("post_id", "=", postId)
-    .executeTakeFirstOrThrow()
-
-  return q.count > 0
-}
-
 const deletePostSchema = z.object({
   id: z.string()
 })
 
-async function deletePost(postId: string, nickname: string) {
-  return await forumDB.transaction().execute(async (trx) => {
-    await trx
+type DeletePost = {
+  postId: string
+  nickname: string
+}
+
+async function deletePost({ postId, nickname }: DeletePost) {
+  const query = await forumDB.transaction().execute(async (trx) => {
+    const postUser = await trx
       .deleteFrom("posts_users")
       .where("post_id", "=", postId)
       .where("nickname", "=", nickname)
       .executeTakeFirstOrThrow()
 
-    return await trx
+    if (!postUser.numDeletedRows) return;
+
+    const postItem = await trx
       .deleteFrom("posts")
       .where("id", "=", postId)
       .executeTakeFirstOrThrow()
+
+    return postItem;
   })
+
+  return query;
 }
 
 export const deletePostRoute = new Hono()
   .delete("/delete-post", zValidator("json", deletePostSchema), async (ctx) => {
     const nickname = getNickname()
-    const { id } = deletePostSchema.parse(await ctx.req.json())
+    const { id: postId } = deletePostSchema.parse(await ctx.req.json())
 
     try {
-      const isValid = await validatePostOwner(nickname, id)
+      const isValid = await validatePostOwner({ nickname, postId })
 
       if (!isValid) {
         return ctx.json({ error: "You are not the owner of this post" }, 400)
       }
 
-      const del = await deletePost(id, nickname)
+      const deleted = await deletePost({ nickname, postId })
 
-      if (!del.numDeletedRows) {
+      if (!deleted || !deleted.numDeletedRows) {
         return ctx.json({ error: "Failed" }, 404)
       }
 

@@ -1,7 +1,7 @@
-import { BlockWrapper } from '@repo/components/src/wrappers/block-wrapper'
+import { BlockWrapper } from '#components/wrappers/block-wrapper'
 import { Typography } from '@repo/ui/src/components/typography'
 import { createFileRoute } from '@tanstack/react-router'
-import { CategoryThreads } from "@repo/components/src/categories/components/category-threads/components/category-threads"
+import { CategoryThreads } from "#components/categories/components/category-threads/components/category-threads"
 import { forumCategoriesClient } from '@repo/shared/api/forum-client'
 import { useQuery, useQueryClient, useSuspenseQuery } from '@tanstack/react-query'
 import { createQueryKey } from '@repo/lib/helpers/query-key-builder'

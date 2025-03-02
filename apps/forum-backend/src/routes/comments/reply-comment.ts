@@ -6,8 +6,7 @@ import { createReplyTransaction } from "#lib/transactions/comment/create-reply-t
 
 export const replyCommentRoute = new Hono()
   .post("/reply-comment", async (ctx) => {
-    const body = await ctx.req.json();
-    const result = replyCommentBodySchema.parse(body);
+    const result = replyCommentBodySchema.parse(await ctx.req.json());
     const nickname = getNickname()
 
     try {

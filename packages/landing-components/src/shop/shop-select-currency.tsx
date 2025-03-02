@@ -39,8 +39,10 @@ const UpdatePrice = () => {
 
   const currency = data?.currency
 
-  const updatePrice = () => {
-    qc.refetchQueries({ queryKey: PRICE_BY_CURRENCY_QUERY_KEY(currency) })
+  const updatePrice = async () => {
+    await new Promise((resolve) => setTimeout(resolve, 2000));
+
+    await qc.refetchQueries({ queryKey: PRICE_BY_CURRENCY_QUERY_KEY(currency) })
   }
 
   return (
@@ -139,7 +141,7 @@ export const ShopSelectCurrency = () => {
                       </CurrencyItem>
                     )))}
                 </div>
-                {selCurrency === 'RUB' && (
+                {currency === 'RUB' && (
                   <div className="flex flex-col gap-4 w-full h-fit">
                     <div className="flex items-center *:w-full gap-2">
                       <CurrencyItem

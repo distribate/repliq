@@ -1,9 +1,9 @@
 import { Typography } from '@repo/ui/src/components/typography'
 import { createLazyFileRoute } from '@tanstack/react-router'
-import { AuthBackgroundImages } from '@repo/components/src/admin/components/configs/auth-background/components/auth-bg-images'
-import { MinecraftItemsList } from '@repo/components/src/admin/components/configs/minecraft-items/components/minecraft-items-list'
-import { Alerts } from '@repo/components/src/admin/components/configs/alerts/components/alerts'
-import { Ads } from '@repo/components/src/admin/components/configs/ads/components/ads'
+import { AuthBackgroundImages } from '#components/admin/configs/auth-background/components/auth-bg-images'
+import { MinecraftItemsList } from '#components/admin/configs/minecraft-items/components/minecraft-items-list'
+import { Alerts } from '#components/admin/configs/alerts/components/alerts'
+import { Ads } from '#components/admin/configs/ads/components/ads'
 
 export const Route = createLazyFileRoute('/_protected/_admin/admin/configs')({
   component: RouteComponent,

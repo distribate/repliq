@@ -1,4 +1,4 @@
-import { validateAdmin } from "#routes/admin/get-is-admin.ts"
+import { validateAdmin } from "#lib/validators/validate-admin.ts"
 import { getNickname } from "#utils/get-nickname-from-storage.ts"
 import { createMiddleware } from "hono/factory"
 

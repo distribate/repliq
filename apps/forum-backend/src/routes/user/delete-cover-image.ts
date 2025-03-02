@@ -5,33 +5,35 @@ import { throwError } from "@repo/lib/helpers/throw-error"
 import { Hono } from "hono"
 
 async function deleteCoverImage(nickname: string) {
-  return await forumDB.transaction().execute(async (trx) => {
-    const ci = await trx
+  const query = await forumDB.transaction().execute(async (trx) => {
+    const selected = await trx
       .selectFrom("users")
       .select("cover_image")
       .where("nickname", "=", nickname)
       .executeTakeFirst()
 
-    if (!ci || !ci.cover_image) {
+    if (!selected || !selected.cover_image) {
       return;
     }
 
-    if (ci.cover_image.startsWith("cover")) {
-      await supabase.storage.from("user_images").remove([ci.cover_image])
+    if (selected.cover_image.startsWith("cover")) {
+      await supabase.storage.from("user_images").remove([selected.cover_image])
     }
 
-    const q = await trx
+    const updated = await trx
       .updateTable("users")
       .set({ cover_image: null })
       .where("nickname", "=", nickname)
       .executeTakeFirst()
 
-    if (!q.numUpdatedRows) {
+    if (!updated.numUpdatedRows) {
       return;
     }
 
     return null
   })
+
+  return query;
 }
 
 export const deleteCoverImageRoute = new Hono()

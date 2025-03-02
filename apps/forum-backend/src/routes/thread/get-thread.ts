@@ -6,7 +6,7 @@ import { getThread } from '#lib/queries/thread/get-thread.ts';
 import { forumDB } from '#shared/database/forum-db.ts';
 
 async function createThreadView(nickname: string, threadId: string) {
-  return await forumDB
+  const query = await forumDB
     .insertInto("threads_views")
     .values({
       thread_id: threadId,
@@ -14,6 +14,8 @@ async function createThreadView(nickname: string, threadId: string) {
     })
     .onConflict((c) => c.doNothing())
     .execute()
+
+  return query;
 }
 
 export const getThreadRoute = new Hono()

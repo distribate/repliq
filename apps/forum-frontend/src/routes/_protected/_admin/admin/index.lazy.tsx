@@ -1,9 +1,9 @@
 import { createLazyFileRoute } from '@tanstack/react-router'
-import { AdminNavigation } from '@repo/components/src/admin/components/navigation/admin-navigation.tsx'
+import { AdminNavigation } from '#components/admin/navigation/admin-navigation.tsx'
 import { Typography } from '@repo/ui/src/components/typography'
-import { AdminNewsControl } from '@repo/components/src/admin/components/news/admin-news-control'
-import { AdminTicketsList } from '@repo/components/src/admin/components/tickets/admin-tickets-list.tsx'
-import { AdminReportsList } from '@repo/components/src/admin/components/reports/admin-reports-list.tsx'
+import { AdminNewsControl } from '#components/admin/news/admin-news-control'
+import { AdminTicketsList } from '#components/admin/tickets/admin-tickets-list.tsx'
+import { AdminReportsList } from '#components/admin/reports/admin-reports-list.tsx'
 
 export const Route = createLazyFileRoute('/_protected/_admin/admin/')({
   component: RouteComponent,

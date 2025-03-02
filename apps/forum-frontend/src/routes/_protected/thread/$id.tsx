@@ -1,16 +1,16 @@
 import { createFileRoute, Link } from '@tanstack/react-router'
-import { Thread } from '@repo/components/src/thread/components/thread-main/components/thread-main'
-import { THREAD_QUERY_KEY } from '@repo/components/src/thread/components/thread-main/queries/thread-query'
-import { getThreadModel } from '@repo/components/src/thread/queries/get-thread-model'
+import { Thread } from '#components/thread/components/thread-main/components/thread-main'
+import { THREAD_QUERY_KEY } from '#components/thread/components/thread-main/queries/thread-query'
+import { getThreadModel } from '#components/thread/queries/get-thread-model'
 import { lazy, Suspense } from 'react'
-import { ThreadMainSkeleton } from '@repo/components/src/thread/components/thread-main/components/thread-main-skeleton'
-import { ThreadCommentsHeader } from '@repo/components/src/thread/components/thread-comments/components/thread-comments-header'
+import { ThreadMainSkeleton } from '#components/thread/components/thread-main/components/thread-main-skeleton'
+import { ThreadCommentsHeader } from '#components/thread/components/thread-comments/components/thread-comments-header'
 import { ThreadDetailed } from '@repo/types/entities/thread-type'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
-import { CreateThreadComment } from '@repo/components/src/thread/components/create-thread-comment/components/create-thread-comment'
-import { ThreadComments } from '@repo/components/src/thread/components/thread-comments/components/thread-comments'
-import { ThreadCommentsAnchor } from '@repo/components/src/thread/components/thread-comments/components/thread-comments-anchor'
-import { ThreadMore } from '@repo/components/src/thread/components/thread-more/components/thread-more'
+import { CreateThreadComment } from '#components/thread/components/create-thread-comment/components/create-thread-comment'
+import { ThreadComments } from '#components/thread/components/thread-comments/components/thread-comments'
+import { ThreadCommentsAnchor } from '#components/thread/components/thread-comments/components/thread-comments-anchor'
+import { ThreadMore } from '#components/thread/components/thread-more/components/thread-more'
 import { forumThreadClient } from '@repo/shared/api/forum-client'
 import { createQueryKey } from '@repo/lib/helpers/query-key-builder'
 import { Typography } from '@repo/ui/src/components/typography'
@@ -46,11 +46,11 @@ type ThreadContentProps = {
 }
 
 const CommentsDisabled = lazy(() =>
-  import("@repo/components/src/templates/comments-disabled").then(m => ({ default: m.CommentsDisabled }))
+  import("#components/templates/comments-disabled").then(m => ({ default: m.CommentsDisabled }))
 )
 
 const ThreadControl = lazy(() =>
-  import("@repo/components/src/thread/components/thread-control/components/thread-control").then(m => ({ default: m.ThreadControl }))
+  import("#components/thread/components/thread-control/components/thread-control").then(m => ({ default: m.ThreadControl }))
 )
 
 const ThreadCommentsSection = ({
@@ -76,7 +76,7 @@ const ThreadCommentsSection = ({
           <CommentsDisabled />
         </Suspense>
       )}
-      <ThreadComments owner={thread.owner} id={threadId} is_comments={thread.properties.is_comments} />
+      <ThreadComments owner={thread.owner} id={threadId} properties={thread.properties} />
       <ThreadCommentsAnchor threadId={threadId} />
     </div>
   )

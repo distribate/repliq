@@ -1,19 +1,15 @@
 import { z } from 'zod';
+import { isProduction } from "@repo/lib/helpers/is-production";
 
 export const createSessionBodySchema = z.object({
-  details: z.object({
-    nickname: z.string(),
-    password: z.string().min(4),
-  }),
-  info: z.object({
-    browser: z.string().nullable(),
-    cpu: z.string().nullable(),
-    ip: z.string().nullable(),
-    isBot: z.boolean().nullable(),
-    os: z.string().nullable(),
-    ua: z.string().nullable(),
-    device: z.string().nullable(),
-  }),
+  nickname: z.string(),
+  password: z.string().min(4),
+  browser: z.string().nullable(),
+  cpu: z.string().nullable(),
+  os: z.string().nullable(),
+  ua: z.string().nullable(),
+  device: z.string().nullable(),
+  token: isProduction ? z.string() : z.string().optional()
 });
 
 export const nicknameSchema = z
@@ -30,12 +26,7 @@ export const passwordSchema = z
 export const registerSchema = z.object({
   nickname: nicknameSchema,
   password: passwordSchema,
-  token: z.string({
-    required_error: "Поле обязательно",
-  }),
-  details: z.object({
-    realName: z.string().or(z.null()),
-    findout: z.string(),
-    referrer: z.string().optional()
-  })
+  token: isProduction ? z.string() : z.string().optional(),
+  findout: z.string(),
+  referrer: z.string().optional()
 })

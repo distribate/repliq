@@ -4,13 +4,12 @@ import { throwError } from "@repo/lib/helpers/throw-error"
 import { Hono } from "hono"
 
 async function getImagesLibrary() {
-  const { data, error } = await supabase.storage.from("user_images").list("default", {
-    limit: 16,
-    offset: 0
-  })
+  const { data, error } = await supabase
+    .storage
+    .from("user_images").list("default", { limit: 16, offset: 0 })
 
   if (error) {
-    throw error
+    throw new Error(error.message)
   }
 
   return await Promise.all(data.map(async (image) => ({

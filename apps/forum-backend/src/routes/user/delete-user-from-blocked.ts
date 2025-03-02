@@ -17,9 +17,7 @@ export type UserFromBlocked = Omit<z.infer<typeof deleteUserFromBlockedSchema>, 
 
 export const controlUserBlockedRoute = new Hono()
   .post("/control-user-blocked", zValidator("json", deleteUserFromBlockedSchema), async (ctx) => {
-    const body = await ctx.req.json()
-    const result = deleteUserFromBlockedSchema.parse(body);
-
+    const result = deleteUserFromBlockedSchema.parse(await ctx.req.json());
     const initiator = getNickname()
 
     try {
@@ -44,5 +42,4 @@ export const controlUserBlockedRoute = new Hono()
     } catch (e) {
       return ctx.json({ error: throwError(e) }, 400)
     }
-  }
-  )
+  })

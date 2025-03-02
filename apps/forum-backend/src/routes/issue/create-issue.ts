@@ -9,7 +9,6 @@ import { getNickname } from "#utils/get-nickname-from-storage.ts";
 export const createIssueRoute = new Hono()
   .post("/create-issue", zValidator("json", createIssueSchema), async (ctx) => {
     const result = createIssueSchema.parse(await ctx.req.json())
-
     const nickname = getNickname()
 
     try {

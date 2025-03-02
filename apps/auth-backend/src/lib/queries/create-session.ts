@@ -7,19 +7,14 @@ import { DEFAULT_SESSION_EXPIRE } from "../../shared/constants/session-expire";
 import ky from "ky";
 
 type CreateSession = {
-  details: {
-    token: string;
-    nickname: string;
-  };
-  info: {
-    browser: string | null;
-    cpu: string | null;
-    ip: string;
-    isBot: boolean | null;
-    os: string | null;
-    ua: string | null;
-    device: string | null;
-  },
+  token: string;
+  nickname: string;
+  browser: string | null;
+  cpu: string | null;
+  ip: string;
+  os: string | null;
+  ua: string | null;
+  device: string | null;
   trx: Transaction<DB>;
 };
 
@@ -47,20 +42,16 @@ async function getLocation(ip: string) {
 }
 
 export async function createSession({
-  details, trx, info
+  trx, browser, cpu, device, ip, nickname, os, token, ua
 }: CreateSession) {
-  const { token, nickname } = details;
-
-  const session_id = encodeHexLowerCase(sha256(
-    new TextEncoder().encode(token))
-  );
+  const session_id = encodeHexLowerCase(sha256(new TextEncoder().encode(token)));
 
   let city: string = "Unknown";
   let country: string = "Unknown";
 
   try {
-    const location = await getLocation(info.ip);
-    
+    const location = await getLocation(ip);
+
     if (location.city) {
       city = location.city;
     }
@@ -72,20 +63,19 @@ export async function createSession({
     console.error(e)
   }
 
+  const expires_at = new Date(Date.now() + DEFAULT_SESSION_EXPIRE);
+
   const session: Session = {
-    ...info,
+    browser, ip, cpu, device, os, ua,
     location: `${city}, ${country}`,
-    session_id,
-    nickname,
-    token,
-    expires_at: new Date(Date.now() + DEFAULT_SESSION_EXPIRE),
+    session_id, nickname, token, expires_at,
   };
 
-  return await trx
+  const query = await trx
     .insertInto("users_session")
     .values(session)
-    .returning([
-      "nickname", "session_id", "expires_at", "browser", "ip"
-    ])
+    .returning(["nickname", "session_id", "expires_at", "browser", "ip"])
     .executeTakeFirstOrThrow();
+
+  return query;
 }

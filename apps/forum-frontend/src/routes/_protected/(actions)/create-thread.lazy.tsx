@@ -1,8 +1,8 @@
 import { createLazyFileRoute } from '@tanstack/react-router'
-import { BlockWrapper } from '@repo/components/src/wrappers/block-wrapper.tsx'
+import { BlockWrapper } from '#components/wrappers/block-wrapper.tsx'
 import { Typography } from '@repo/ui/src/components/typography.tsx'
-import { CreateThreadForm } from '@repo/components/src/forms/create-thread/components/create-thread-form.tsx'
-import { FormThreadRecommendations } from '@repo/components/src/forms/create-thread/components/form-thread-recommendations.tsx'
+import { CreateThreadForm } from '#components/forms/create-thread/components/create-thread-form.tsx'
+import { FormThreadRecommendations } from '#components/forms/create-thread/components/form-thread-recommendations.tsx'
 import { userGlobalOptionsQuery } from '@repo/lib/queries/user-global-options-query'
 
 export const Route = createLazyFileRoute('/_protected/(actions)/create-thread')({

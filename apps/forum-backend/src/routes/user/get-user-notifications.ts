@@ -16,9 +16,7 @@ export const getUserNotificationsRoute = new Hono()
     const nickname = getNickname()
 
     try {
-      const notifications = await getUserNotifications({
-        nickname, ...result
-      });
+      const notifications = await getUserNotifications({ nickname, ...result });
 
       return ctx.json(notifications, 200);
     } catch (e) {

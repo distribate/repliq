@@ -487,6 +487,7 @@ export interface LandingCurrencies {
   id: Generated<Int8>;
   imageUrl: string;
   isAvailable: Generated<boolean>;
+  public: Generated<boolean>;
   title: string;
   value: string;
 }
@@ -1005,7 +1006,6 @@ export interface UsersSession {
   device: string | null;
   expires_at: Timestamp;
   ip: string;
-  isBot: boolean | null;
   location: Generated<string>;
   nickname: string;
   os: string | null;

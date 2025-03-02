@@ -1,6 +1,6 @@
 import { Typography } from '@repo/ui/src/components/typography'
 import { createLazyFileRoute, useNavigate } from '@tanstack/react-router'
-import { BlockWrapper } from '@repo/components/src/wrappers/block-wrapper'
+import { BlockWrapper } from '#components/wrappers/block-wrapper'
 // @ts-ignore
 import FishingRod from "@repo/assets/images/minecraft/fishing_rod.webp"
 import { Button } from '@repo/ui/src/components/button'

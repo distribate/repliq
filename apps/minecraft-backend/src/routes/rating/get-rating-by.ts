@@ -216,6 +216,8 @@ export const getRatingByRoute = new Hono()
     try {
       const res = await getRatingBy({ type, limit, cursor, ascending })
 
+      ctx.header('Cache-Control', 'public, max-age=30')
+
       return ctx.json(res, 200)
     } catch (e) {
       return ctx.json({ error: throwError(e) }, 500);

@@ -14,5 +14,4 @@ export const getUserSocialsRoute = new Hono()
     } catch (e) {
       return ctx.json({ error: throwError(e) }, 500);
     }
-  }
-)
+  })

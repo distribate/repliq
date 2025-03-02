@@ -1,27 +1,15 @@
 import { redirect } from '@tanstack/react-router'
-import { FactSection } from '@repo/components/src/forms/auth/components/fact-section.tsx'
-import { PageWrapper } from '@repo/components/src/wrappers/page-wrapper.tsx'
-import { AuthImage } from '@repo/components/src/forms/auth/components/auth-image.tsx'
+import { PageWrapper } from '#components/wrappers/page-wrapper.tsx'
+import { AuthImage } from '#components/forms/auth/components/auth-image.tsx'
 import { Typography } from '@repo/ui/src/components/typography'
-import { SignInForm } from '@repo/components/src/forms/auth/components/sign-in.tsx'
-import { SignInTip } from '@repo/components/src/forms/auth/components/sign-in-tip.tsx'
+import { SignInForm } from '#components/forms/auth/components/sign-in.tsx'
 import { validateSession } from '@repo/lib/actions/validate-session'
-import { lazy, Suspense } from 'react'
 import { createFileRoute } from '@tanstack/react-router'
-import { Skeleton } from '@repo/ui/src/components/skeleton'
-import { AUTH_FLAG_QUERY_KEY } from '@repo/components/src/modals/action-confirmation/components/logout/hooks/use-logout';
-
-const SignUpForm = lazy(() =>
-  import('@repo/components/src/forms/auth/components/sign-up.tsx').then(
-    (m) => ({ default: m.SignUpForm }),
-  ),
-)
-
-const SignUpTip = lazy(() =>
-  import('@repo/components/src/forms/auth/components/sign-up-tip.tsx').then(
-    (m) => ({ default: m.SignUpTip }),
-  ),
-)
+import { AUTH_FLAG_QUERY_KEY } from '#components/modals/action-confirmation/components/logout/hooks/use-logout';
+import { useQueryClient } from '@tanstack/react-query'
+import { SignUpForm } from '#components/forms/auth/components/sign-up.tsx'
+import { AUTH_GLOBAL_OPTIONS_QUERY_KEY, AUTH_TYPE_QUERY_KEY, AuthGlobalOptionsQuery, authGlobalOptionsQuery, authTypeQuery } from '#components/forms/auth/queries/auth-query'
+import { Eye, EyeOff } from 'lucide-react'
 
 export const Route = createFileRoute('/auth/')({
   component: RouteComponent,
@@ -47,91 +35,122 @@ export const Route = createFileRoute('/auth/')({
   head: () => ({
     meta: [{ title: 'Авторизация' }],
   }),
-  validateSearch: (search) => {
+  validateSearch: (search: Record<string, unknown>) => {
     return {
-      type: (search.type as 'login' | 'register') || 'login',
+      from: search.from as string || undefined,
+      redirect: search.redirect as string || undefined,
     }
   },
 })
 
-function RouteComponent() {
-  // @ts-ignore
-  const { type } = Route.useSearch()
-
-  const isSignIn = type === 'login'
-  const isSignUp = type === 'register'
+const AuthControlPanel = () => {
+  const qc = useQueryClient()
+  const { data: { detailsVisibility } } = authGlobalOptionsQuery()
 
   return (
-    <PageWrapper className="flex flex-col bg-cover !px-2 md:!px-4 py-6 relative">
-      <AuthImage />
-      <div className="absolute inset-0 bg-black/40" />
-      <div className="flex relative max-w-[1024px] max-h-[256px] overflow-hidden">
-        <img
-          src="/images/fasberry_logo.webp"
-          alt="Fasberry"
-          width={956}
-          height={216}
-          draggable={false}
-          loading="eager"
-          className="w-full h-full"
-        />
+    <div
+      onClick={() => {
+        qc.setQueryData(AUTH_GLOBAL_OPTIONS_QUERY_KEY,
+          (prev: AuthGlobalOptionsQuery) => ({ ...prev, detailsVisibility: prev.detailsVisibility === 'hidden' ? 'visible' : 'hidden' })
+        )
+      }}
+      className="flex items-center select-none justify-end absolute z-[5] right-4 bottom-4"
+    >
+      <div className="flex items-center justify-center w-8 h-8 cursor-pointer bg-shark-800 rounded-lg">
+        {detailsVisibility === 'hidden' ? <EyeOff size={20} /> : <Eye size={20} />}
       </div>
-      <div
-        className="flex flex-col p-4 md:p-6 lg:p-8 min-h-[320px] mt-6 lg:-mt-8 max-h-dvh xl:max-h-[540px]
-        gap-y-2 md:gap-y-4 lg:gap-y-6 min-w-[200px] max-w-[1020px] outline-none relative
-				minecraft-panel mb-8 lg:mb-6 *:font-[Minecraft] overflow-y-scroll"
-      >
-        {isSignIn && (
-          <>
-            <SignInFormTitle />
-            <div className="flex flex-col lg:flex-row w-full gap-2 *:w-full">
-              <SignInForm />
-              <SignInTip />
-            </div>
-          </>
-        )}
-        {isSignUp && (
-          <>
-            <SignUpFormTitle />
-            <div className="flex flex-col lg:flex-row w-full gap-4 *:w-full">
-              <Suspense fallback={<Skeleton className="h-96" />}>
-                <SignUpForm />
-              </Suspense>
-              <Suspense fallback={<Skeleton className="h-64" />}>
-                <SignUpTip />
-              </Suspense>
-            </div>
-          </>
-        )}
-      </div>
-      <FactSection />
-    </PageWrapper>
+    </div>
   )
 }
 
-const SignInFormTitle = () => {
+const Forms = () => {
+  const qc = useQueryClient()
+  const { data: authType } = authTypeQuery()
+  const { data: { detailsVisibility } } = authGlobalOptionsQuery()
+
+  const toggleAuthType = () => {
+    qc.setQueryData(AUTH_TYPE_QUERY_KEY,
+      (prev: string) => (prev === 'login' ? 'register' : 'login')
+    )
+  }
+
   return (
-    <div className="flex flex-col items-center gap-y-1">
-      <h2 className="text-shark-950 text-xl lg:text-2xl xl:text-4xl font-semibold">
-        Вход в аккаунт
-      </h2>
+    <div
+      className={`flex flex-col p-4 md:p-6 lg:p-8 gap-y-2 md:gap-y-4 lg:gap-y-6 min-w-[200px]
+        w-full relative border-4 border-shark-600 bg-shark-200 overflow-y-auto transition-opacity ease-in-out duration-300
+        ${detailsVisibility === 'hidden' ? "opacity-0" : "opacity-100"}`}
+    >
+      {authType === 'login' && (
+        <>
+          <div className="flex flex-col items-center gap-y-1">
+            <h2 className="text-shark-950 text-xl lg:text-2xl xl:text-4xl font-semibold">
+              Вход в аккаунт
+            </h2>
+            <Typography
+              textColor="shark_black"
+              textSize="small"
+              className="font-normal text-center"
+            >
+              (используй свои игровые данные, чтобы войти в аккаунт)
+            </Typography>
+          </div>
+          <SignInForm />
+        </>
+      )}
+      {authType === 'register' && (
+        <>
+          <div className="flex flex-col items-center gap-y-1">
+            <h2 className="text-shark-950 text-xl lg:text-2xl xl:text-4xl font-semibold">
+              Регистрация аккаунта
+            </h2>
+          </div>
+          <SignUpForm />
+        </>
+      )}
       <Typography
-        textColor="shark_black"
-        textSize="small"
-        className="font-normal text-center"
+        onClick={toggleAuthType}
+        className="self-end relative text-shark-900 cursor-pointer"
       >
-        (используй свои игровые данные, чтобы войти в аккаунт)
+        {authType === 'login'
+          ? 'Нет аккаунта? Зарегистрироваться'
+          : 'Уже зарегистрирован? Войти'
+        }
       </Typography>
     </div>
   )
 }
 
-const SignUpFormTitle = () => {
+const Logotype = () => {
+  const { data: { detailsVisibility } } = authGlobalOptionsQuery()
+
   return (
-    <div className="flex flex-col items-center gap-y-1">
-      <h2 className="text-shark-950 text-xl lg:text-2xl xl:text-4xl font-semibold">
-        Регистрация аккаунта
-      </h2>
+    <div
+      className={`flex relative w-full md:w-2/4 lg:w-1/3 overflow-hidden transition-opacity ease-in-out duration-300
+      ${detailsVisibility === 'hidden' ? 'opacity-0' : 'opacity-100'}`}
+    >
+      <img
+        src="/images/fasberry_logo.webp"
+        alt="Fasberry"
+        width={512}
+        height={256}
+        draggable={false}
+        loading="eager"
+        className="h-full w-full"
+      />
     </div>
+  )
+}
+
+function RouteComponent() {
+  return (
+    <PageWrapper className="flex flex-col bg-cover !px-2 md:!px-4 py-6 relative *:font-[Minecraft]">
+      <AuthImage />
+      <AuthControlPanel />
+      <div className="absolute inset-0 bg-black/40" />
+      <Logotype />
+      <div className="flex flex-col gap-4 w-full md:w-2/3 lg:2/4 xl:w-2/5">
+        <Forms />
+      </div>
+    </PageWrapper>
   )
 }

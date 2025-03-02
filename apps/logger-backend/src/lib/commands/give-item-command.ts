@@ -1,6 +1,8 @@
 import { loggerBot } from "../../shared/bot/bot";
 import { z } from "zod"
-import { pubDonatePayload } from "@repo/lib/publishers/pub-donate-payload.ts"  
+import { pubDonatePayload } from "@repo/lib/publishers/pub-donate-payload.ts"
+import { getNatsConnection } from "@repo/config-nats/nats-client";
+import { SERVER_USER_EVENT_SUBJECT } from "@repo/shared/constants/nats-subjects";
 
 const itemSchema = z.enum(["donate", "item", "charism", "belkoin"])
 const donateSchema = z.enum(["arkhont", "authentic", "loyal"])
@@ -12,7 +14,7 @@ export type DonatePayload = {
 
 loggerBot.command("give", async (ctx) => {
   const text = ctx.text;
-  
+
   if (!text) return;
 
   const args = ctx?.args?.split(/\s+/)
@@ -30,7 +32,7 @@ loggerBot.command("give", async (ctx) => {
 
   const nickname = args[1]
   const itemValue = args[2]
-  
+
   switch (itemType.data) {
     case "donate":
       const donate = donateSchema.safeParse(itemValue)
@@ -42,12 +44,21 @@ loggerBot.command("give", async (ctx) => {
         `)
       }
 
-      pubDonatePayload({
-        nickname, donate: donate.data
-      })
+      pubDonatePayload({ nickname, donate: donate.data })
       break;
     case "belkoin":
-      
+      const nc = getNatsConnection()
+
+      const res = await nc.request("give.balance", "distribate")
+
+      const data = res.json<{ result: string } | { error: string }>()
+
+      if ("error" in data) {
+        return ctx.reply(data.error)
+      }
+
+      console.log(data)
+      break;
   }
 
   return ctx.send("Successfully gived")

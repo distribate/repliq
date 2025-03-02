@@ -64,7 +64,6 @@ export const HeaderSheet = () => {
             return (
               <AccordionItem key={name} value={name} className="w-full">
                 <AccordionTrigger
-                  withBook={false}
                   onClick={() => handleToPage(href!)}
                   className="flex border-2 border-neutral-600 hover:bg-neutral-600 group bg-neutral-800
                    rounded-md gap-x-6 py-2 px-2 w-full"

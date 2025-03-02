@@ -1,15 +1,83 @@
 import Link from 'next/link';
 import { Typography } from '@repo/landing-ui/src/typography.tsx';
-import { z } from 'zod';
 import { shopItemQuery } from '@repo/lib/queries/shop-item-query.ts';
-import { useCreatePayment } from '@repo/lib/hooks/use-create-payment.ts';
 import { Button } from '@repo/landing-ui/src/button.tsx';
 import { createOrderBodySchema } from "@repo/types/schemas/payment/payment-schema.ts";
 import { useState } from 'react';
 import { toast } from 'sonner';
 import { ShopPrice } from '#shop/shop-price.tsx';
+import { useQueryClient, useMutation } from '@tanstack/react-query';
+import { PAYMENT_STATUS_QUERY_KEY } from '#shop/shop-payment-status.tsx';
+import { paymentsClient } from '@repo/shared/api/payments-client';
+import { HTTPError } from 'ky';
+import { z, ZodError } from 'zod';
+import { parseZodErrorMessages } from '@repo/lib/helpers/parse-zod-errors.ts';
 
 export type PaymentFields = z.infer<typeof createOrderBodySchema>;
+
+export const CREATE_PAYMENT_MUTATION_KEY = ["shop", 'create-payment-mutation'];
+
+export async function createPayment(payment: z.infer<typeof createOrderBodySchema>) {
+  try {
+    const res = await paymentsClient["create-order"].$post({
+      json: payment
+    })
+
+    const data = await res.json()
+
+    if ("error" in data) {
+      return { error: data.error }
+    }
+
+    return data
+  } catch (e) {
+    if (e instanceof HTTPError) {
+      if (e instanceof ZodError) {
+        const errorBody = await e.response.json<{ error: ZodError }>();
+
+        return { error: parseZodErrorMessages(errorBody.error).join(", ") }
+      }
+
+      const { error } = await e.response.json<{ error: string }>();
+
+      return { error }
+    }
+
+    throw e;
+  }
+}
+
+export const useCreatePayment = () => {
+  const qc = useQueryClient();
+
+  const createPaymentMutation = useMutation({
+    mutationKey: CREATE_PAYMENT_MUTATION_KEY,
+    mutationFn: async (values: PaymentFields) => createPayment(values),
+    onSuccess: async (data, variables) => {
+      if (!data || "error" in data) {
+        qc.setQueryData(PAYMENT_STATUS_QUERY_KEY, { type: "error" });
+
+        toast.error(data.error);
+      }
+
+      if ("data" in data) {
+        qc.setQueryData(PAYMENT_STATUS_QUERY_KEY, {
+          current: data.data.orderId,
+          status: "pending",
+          type: "created",
+          url: data.data.url,
+          isOpened: true,
+          paymentType: variables.currency === 'RUB' ? "fiat" : "crypto"
+        })
+      }
+    },
+    onError: e => {
+      throw new Error(e.message);
+    }
+  });
+
+  return { createPaymentMutation };
+};
 
 export const SubscriptionItemForm = () => {
   const { data: shopItemState } = shopItemQuery();

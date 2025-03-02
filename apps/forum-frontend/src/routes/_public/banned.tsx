@@ -2,10 +2,11 @@ import dayjs from '@repo/lib/constants/dayjs-instance'
 import { Typography } from '@repo/ui/src/components/typography'
 import { createFileRoute, redirect } from '@tanstack/react-router'
 import Dirt from '@repo/assets/images/minecraft/dirt.webp'
-import { BannedActionButton } from '@repo/components/src/buttons/banned-action-button.tsx'
 import { useQuery } from '@tanstack/react-query'
 import { createQueryKey } from '@repo/lib/helpers/query-key-builder'
 import { getUserInformation } from '@repo/lib/queries/get-user-information'
+import { useLogout } from '#components/modals/action-confirmation/components/logout/hooks/use-logout'
+import { Button } from '@repo/ui/src/components/button'
 
 export const BANNED_QUERY_KEY = createQueryKey("ui", ["banned"])
 
@@ -41,6 +42,23 @@ export const Route = createFileRoute('/_public/banned')({
     }
   }
 })
+
+const BannedActionButton = () => {
+  const { logoutMutation } = useLogout();
+
+  return (
+    <Button
+      rounded="none"
+      variant="minecraft"
+      state="default"
+      disabled={logoutMutation.isPending || logoutMutation.isSuccess}
+      pending={logoutMutation.isPending || logoutMutation.isError}
+      onClick={() => logoutMutation.mutate()}
+    >
+      Выйти из аккаунта
+    </Button>
+  );
+};
 
 function RouteComponent() {
   const { data } = bannedQuery()

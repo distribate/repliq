@@ -2,7 +2,7 @@ import { VariantProps, cva } from "class-variance-authority"
 import { TabsContent } from "./tabs"
 import { HTMLAttributes } from 'react';
 
-const contentModuleVariants = cva("flex flex-col gap-y-4 overflow-x-auto", {
+const contentModuleVariants = cva("data-[state=active]:flex data-[state=inactive]:hidden flex-col gap-y-4 overflow-x-auto", {
   variants: {
     variant: {
       started: "items-start",

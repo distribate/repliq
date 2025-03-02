@@ -58,7 +58,6 @@ import { getAuthImageRoute } from '#routes/public/get-auth-image.ts';
 import { getDonatesRoute } from '#routes/public/get-donates.ts';
 import { getThreadImagesRoute } from './routes/thread/get-thread-images';
 import { getStaticImageRoute } from '#routes/shared/get-static-image.ts';
-import { port } from "./utils/init-env.ts"
 import { timeoutMiddleware } from '#middlewares/timeout.ts';
 import { rateLimiterMiddleware } from '#middlewares/rate-limiter.ts';
 import { csrfProtectionMiddleware } from '#middlewares/csrf-protection.ts';
@@ -103,6 +102,7 @@ import { getTicketsRoute } from '#routes/admin/get-tickets.ts';
 import { getReportsRoute } from '#routes/admin/get-reports.ts';
 import { getStatusRoute } from '#routes/public/get-status.ts';
 import { subscribePlayerGroup } from '#subscribers/sub-player-group.ts';
+import { getUserGameStatsRoute } from '#routes/user/get-user-game-stats.ts';
 
 async function startNats() {
   await initNats()
@@ -250,6 +250,7 @@ export const user = new Hono()
   .route("/", getUserBalanceRoute)
   .route("/", getUserPublicSocialsRoute)
   .route("/", getMyLandsRoute)
+  .route("/", getUserGameStatsRoute)
 
 export const search = new Hono()
   .basePath('/search')
@@ -279,6 +280,6 @@ const app = new Hono<Env>()
 
 showRoutes(app, { verbose: false });
 
-Bun.serve({ port, fetch: app.fetch })
+Bun.serve({ port: Bun.env.FORUM_BACKEND_PORT!, fetch: app.fetch })
 
-console.log(port)
+console.log(Bun.env.FORUM_BACKEND_PORT!)

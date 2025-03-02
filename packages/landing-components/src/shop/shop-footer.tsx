@@ -1,10 +1,29 @@
-import { StartPayment, usePayment } from "#subs/subscription-item.tsx";
-import { shopItemQuery } from "@repo/lib/queries/shop-item-query";
+import { StartPayment } from "#subs/subscription-item.tsx";
+import { SHOP_ITEM_QUERY_KEY, ShopItemQuery, shopItemQuery } from "@repo/lib/queries/shop-item-query";
 import { ShopSelectCurrency } from "./shop-select-currency";
 import { Button } from "@repo/landing-ui/src/button";
 import { Typography } from "@repo/landing-ui/src/typography";
 import ExpActive from "@repo/assets/images/minecraft/exp-active.webp"
 import { ShopPrice } from "./shop-price";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+
+export const usePayment = () => {
+  const qc = useQueryClient()
+
+  const updatePaymentDetailsMutation = useMutation({
+    mutationFn: async (val: Partial<ShopItemQuery>) => {
+      return qc.setQueryData(SHOP_ITEM_QUERY_KEY, (prev: ShopItemQuery) => ({
+        ...prev, ...val,
+      }));
+    },
+    onSettled: () => qc.invalidateQueries({ queryKey: SHOP_ITEM_QUERY_KEY }),
+    onError: (e) => {
+      throw new Error(e.message);
+    },
+  })
+
+  return { updatePaymentDetailsMutation }
+}
 
 export const ShopFooter = () => {
   const { data: shopItemState } = shopItemQuery()
@@ -23,8 +42,10 @@ export const ShopFooter = () => {
   }
 
   const isValid = shopItemState
-    ? !!nickname && !!shopItemState.paymentType && !!shopItemState.paymentValue
+    ? !!shopItemState.paymentType && !!shopItemState.paymentValue
     : false
+
+  if (!isValid) return null;
 
   return (
     <>
@@ -51,8 +72,7 @@ export const ShopFooter = () => {
             <Button
               onClick={startPayment}
               disabled={!isValid}
-              className="group hover:bg-[#05b458] transition-all duration-300
-                            ease-in-out bg-[#088d47] rounded-lg px-6 py-4 "
+              className="group hover:bg-[#05b458] transition-all duration-300 ease-in-out bg-[#088d47] rounded-lg px-6 py-4 "
             >
               <Typography className="text-[20px] text-white dark:text-white">
                 Приобрести

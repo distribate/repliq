@@ -21,12 +21,6 @@ declare module '@tanstack/react-router' {
   }
 }
 
-// if ('serviceWorker' in navigator) {
-//   window.addEventListener('load', () => {
-//     navigator.serviceWorker.register('/sv.js')
-//   });
-// }
-
 createRoot(document.getElementById('root')!).render(
   <QueryClientProvider client={queryClient}>
     <RouterProvider router={router} />

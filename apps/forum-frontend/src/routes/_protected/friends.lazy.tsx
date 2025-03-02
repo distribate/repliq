@@ -1,14 +1,14 @@
-import { BlockWrapper } from '@repo/components/src/wrappers/block-wrapper'
+import { BlockWrapper } from '#components/wrappers/block-wrapper'
 import { Separator } from '@repo/ui/src/components/separator'
 import { createLazyFileRoute } from '@tanstack/react-router'
 import {
   FriendsAllCountIndicator,
   FriendsIncomingRequestsIndicator,
   FriendsOutgoingRequstsIndicator,
-} from '@repo/components/src/friends/components/control/components/friends-indicators'
-import { FriendsList } from '@repo/components/src/friends/components/lists/friends-list'
-import { FriendsTab } from '@repo/components/src/friends/components/control/components/friends-tab'
-// import { FriendsStatistics } from '@repo/components/src/friends/components/statistics/friends-statistics'
+} from '#components/friends/components/control/components/friends-indicators'
+import { FriendsList } from '#components/friends/components/lists/friends-list'
+import { FriendsTab } from '#components/friends/components/control/components/friends-tab'
+// import { FriendsStatistics } from '#components/friends/components/statistics/friends-statistics'
 
 export const Route = createLazyFileRoute('/_protected/friends')({
   component: RouteComponent,

@@ -1,4 +1,4 @@
-import type { PaymentAppType, OrderAppType } from "payment-backend/src/types/routes-types.ts";
+import type { PaymentAppType, OrderAppType, CurrenciesAppType } from "payment-backend/src/types/routes-types.ts";
 import { hc } from "hono/client";
 import { isProduction } from "@repo/lib/helpers/is-production";
 
@@ -6,3 +6,4 @@ const baseUrl = isProduction ? `https://api.fasberry.su/payment` : `http://local
 
 export const ordersClient = hc<OrderAppType>(baseUrl)
 export const paymentsClient = hc<PaymentAppType>(`${baseUrl}/proccessing`)
+export const currenciesClient = hc<CurrenciesAppType>(`${baseUrl}/currencies`)

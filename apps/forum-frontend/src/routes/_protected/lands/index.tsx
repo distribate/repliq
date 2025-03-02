@@ -1,11 +1,11 @@
-import { BlockWrapper } from '@repo/components/src/wrappers/block-wrapper'
+import { BlockWrapper } from '#components/wrappers/block-wrapper'
 import { Typography } from '@repo/ui/src/components/typography'
 import { createFileRoute } from '@tanstack/react-router'
 import { Suspense } from 'react'
   // @ts-ignore
 import LandsPreview from "@repo/assets/images/clan-preview.jpg"
-import { landsOpts } from "@repo/components/src/lands/queries/lands-query"
-import { LandsList } from "@repo/components/src/lands/components/lands-list"
+import { landsOpts } from "#components/lands/queries/lands-query"
+import { LandsList } from "#components/lands/components/lands-list"
 
 export const Route = createFileRoute('/_protected/lands/')({
   component: RouteComponent,

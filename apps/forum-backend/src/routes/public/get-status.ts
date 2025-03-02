@@ -120,7 +120,7 @@ export const getStatusRoute = new Hono()
           const bisquite = "players" in rawBisquite ? {
             online: rawBisquite.currentOnline,
             max: rawBisquite.maxPlayers,
-            players: rawBisquite.maxPlayers,
+            players: rawBisquite.players,
             status: "online"
           } : _DEFAULT
 

@@ -10,15 +10,13 @@ const addFriendSchema = z.object({
   initiator: z.string()
 })
 
-async function validateUserFriendPreference(nickname: string): Promise<boolean> {
-  return await getUserFriendPreference(nickname)
-}
-
 export const addFriendRoute = new Hono()
   .post("/add-friend", zValidator("json", addFriendSchema), async (ctx) => {
     const { initiator, recipient } = addFriendSchema.parse(await ctx.req.json())
 
-    if (!validateUserFriendPreference(recipient)) {
+    const isValid = await getUserFriendPreference(recipient)
+
+    if (!isValid) {
       return ctx.json({ error: "User does not have accept to send friend request" }, 200)
     }
 
@@ -39,5 +37,4 @@ export const addFriendRoute = new Hono()
     } catch (e) {
       return ctx.json({ error: throwError(e) }, 400)
     }
-  }
-  )
+  })

@@ -13,8 +13,7 @@ export const getUserBalanceRoute = new Hono()
 
     try {
       const nc = getNatsConnection()
-
-      const req = await nc.request(USER_GET_BALANCE_SUBJECT, nickname)
+      const req = await nc.request(USER_GET_BALANCE_SUBJECT, nickname, { timeout: 7000 })
 
       const balance: UserBalance = JSON.parse(
         new TextDecoder().decode(req.data)

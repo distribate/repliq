@@ -12,7 +12,6 @@ const getBlockedUsersSchema = z.object({
 export const getBlockedUsersRoute = new Hono()
   .get("/get-blocked-users", zValidator("query", getBlockedUsersSchema), async (ctx) => {
     const nickname = getNickname()
-    
     const { cursor } = getBlockedUsersSchema.parse(ctx.req.query())
 
     try {

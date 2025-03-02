@@ -6,54 +6,13 @@ import { createThreadSchema } from "@repo/types/schemas/thread/create-thread-sch
 import { decode } from "cbor-x";
 import type { CreateThreadResponse } from "@repo/types/routes-types/create-thread-types";
 import { createThread } from '#lib/queries/thread/create-thread.ts';
-import { forumDB } from '#shared/database/forum-db.ts';
-import { getUserDonate } from '#lib/queries/user/get-user-donate.ts';
-
-const DEFAULT_MAX_THREADS_PER_DAY = 3
-
-async function validateThreadCooldown(nickname: string) {
-  const threeDayAgo = new Date(Date.now() - 3 * 24 * 60 * 60 * 1000);
-
-  const result = await forumDB
-    .selectFrom("threads_users")
-    .select([
-      forumDB.fn
-        .countAll()
-        .as("postsPerThreeDay"),
-    ])
-    // @ts-ignore
-    .where("created_at", ">", threeDayAgo.toISOString())
-    .where("user_nickname", "=", nickname)
-    .$narrowType<{ postsPerThreeDay: number }>()
-    .executeTakeFirstOrThrow();
-
-  const { postsPerThreeDay } = result
-
-  if (postsPerThreeDay >= DEFAULT_MAX_THREADS_PER_DAY) {
-    return "timeout"
-  }
-
-  return null
-}
-
-const validateThreadImagesLength = async (nickname: string, images: File[]) => {
-  const { donate } = await getUserDonate(nickname)
-
-  if (images.length <= 2) {
-    return images
-  } else if (images.length > 2) {
-    if (donate === "default") {
-      return images.slice(0, 2)
-    }
-  }
-
-  return images.slice(0, 3)
-}
+import { validateThreadsTimeout } from '#lib/validators/validate-threads-timeout.ts';
+import { validateThreadImagesLength } from '#lib/validators/validate-thread-images-length.ts';
 
 export const createThreadRoute = new Hono()
   .post("/create-thread", async (ctx) => {
     const nickname = getNickname()
-    const isValid = await validateThreadCooldown(nickname)
+    const isValid = await validateThreadsTimeout(nickname)
 
     if (isValid === "timeout") {
       return ctx.json<CreateThreadResponse>({ error: "You have reached the limit of threads per day" }, 429);

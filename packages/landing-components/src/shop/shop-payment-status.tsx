@@ -25,7 +25,7 @@ export type PaymentStatusQuery = {
 export const paymentStatusQuery = () => useQuery<PaymentStatusQuery, Error>({
   queryKey: PAYMENT_STATUS_QUERY_KEY,
   refetchOnWindowFocus: false,
-  refetchOnMount: false
+  refetchOnMount: false,
 })
 
 const paymentStatusMap: Record<PaymentStatusQuery["status"], string> = {
@@ -57,8 +57,11 @@ const usePaymentStatus = () => {
 
   const updatePaymentStatusMutation = useMutation({
     mutationKey: UPDATE_PAYMENT_STATUS_MUTATION_KEY,
-    mutationFn: async (val: Pick<PaymentStatusQuery, "current" | "paymentType">) => 
-      getPaymentStatus(val.current, val.paymentType),
+    mutationFn: async (val: Pick<PaymentStatusQuery, "current" | "paymentType">) => {
+      await new Promise((resolve) => setTimeout(resolve, 2000));
+
+      return getPaymentStatus(val.current, val.paymentType)
+    },
     onSuccess: async (data) => {
       if ("error" in data) {
         return qc.setQueryData(PAYMENT_STATUS_QUERY_KEY,
@@ -81,6 +84,8 @@ export const ShopPaymentStatus = () => {
   const { updatePaymentStatusMutation } = usePaymentStatus()
 
   if (!paymentStatus) return null;
+
+  const isFinished = paymentStatus.status === 'success' || paymentStatus.status === 'canceled'
 
   const handleUpdate = () => {
     const { current, paymentType, status } = paymentStatus
@@ -109,7 +114,7 @@ export const ShopPaymentStatus = () => {
         </Typography>
       </div>
       <Button
-        disabled={updatePaymentStatusMutation.isPending}
+        disabled={updatePaymentStatusMutation.isPending || isFinished}
         onClick={handleUpdate}
         className="w-fit bg-neutral-100 rounded-lg py-2 px-6"
       >
