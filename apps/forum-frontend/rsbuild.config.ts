@@ -5,7 +5,7 @@ import { pluginImageCompress } from '@rsbuild/plugin-image-compress';
 // import { RsdoctorRspackPlugin } from '@rsdoctor/rspack-plugin';
 import { pluginCssMinimizer } from "@rsbuild/plugin-css-minimizer";
 
-export default defineConfig({
+export default defineConfig({ 
   source: {
     entry: {
       index: './src/main.tsx'
@@ -32,6 +32,9 @@ export default defineConfig({
         // new RsdoctorRspackPlugin()
       ],
     }
+  },
+  output: {
+    polyfill: 'off',
   },
   server: {
     port: process.env.NODE_ENV === 'development' ? 3008 : 3000,

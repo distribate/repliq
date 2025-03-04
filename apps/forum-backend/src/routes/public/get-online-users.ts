@@ -2,13 +2,13 @@ import { forumDB } from "#shared/database/forum-db.ts";
 import { throwError } from "@repo/lib/helpers/throw-error";
 import { Hono } from "hono";
 
-const ONLINE_USERS_TIME = new Date(Date.now() - 5 * 60 * 1000)
+const ONLINE_USERS_TIME = 5 * 60 * 1000
 
 async function getOnlineUsers() {
   const query = await forumDB
     .selectFrom("users_status")
     .select(["nickname"])
-    .where("created_at", ">", ONLINE_USERS_TIME)
+    .where("created_at", ">", new Date(Date.now() - ONLINE_USERS_TIME))
     .limit(7)
     .execute();
 

@@ -4,7 +4,9 @@ import { notifyByAuthLoginDateChannel } from "../../lib/listeners/login-listener
 const authPostgresConnectionString = process.env.AUTHORIZATION_POSTGRES_DB_URL as string;
 
 export const authSubscriber = createSubscriber({
-  connectionString: authPostgresConnectionString
+  connectionString: authPostgresConnectionString,
+  query_timeout: 60000,
+  connectionTimeoutMillis: 2000
 })
 
 authSubscriber.events.on("connected", () => {

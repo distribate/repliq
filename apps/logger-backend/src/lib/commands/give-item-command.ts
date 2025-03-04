@@ -3,6 +3,7 @@ import { z } from "zod"
 import { pubDonatePayload } from "@repo/lib/publishers/pub-donate-payload.ts"
 import { getNatsConnection } from "@repo/config-nats/nats-client";
 import { SERVER_USER_EVENT_SUBJECT } from "@repo/shared/constants/nats-subjects";
+import { validateRequest } from "../../utils/validate-request";
 
 const itemSchema = z.enum(["donate", "item", "charism", "belkoin"])
 const donateSchema = z.enum(["arkhont", "authentic", "loyal"])
@@ -13,6 +14,17 @@ export type DonatePayload = {
 }
 
 loggerBot.command("give", async (ctx) => {
+  if (!ctx.from) {
+    return
+  }
+
+  const userId = ctx.from.id
+  const isAdmin = await validateRequest(userId);
+
+  if (!isAdmin) {
+    return ctx.reply('У вас нет доступа к этой команде');
+  }
+
   const text = ctx.text;
 
   if (!text) return;

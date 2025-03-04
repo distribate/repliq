@@ -1,7 +1,6 @@
 import { Hono } from "hono";
 import { throwError } from "@repo/lib/helpers/throw-error";
 import { forumDB } from "#shared/database/forum-db.ts";
-import { getNickname } from "#utils/get-nickname-from-storage.ts";
 
 async function getUserReferals(nickname: string) {
   const query = await forumDB

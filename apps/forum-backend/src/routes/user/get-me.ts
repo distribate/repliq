@@ -16,7 +16,7 @@ export const validateBanStatus = createMiddleware(async (ctx, next) => {
     return ctx.json({ data: isBanned, status: "You are banned" }, 400);
   }
 
-  ctx.header('Cache-Control', 'public, max-age=60')
+  ctx.header('Cache-Control', 'public, max-age=20')
 
   await next()
 })

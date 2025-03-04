@@ -6,52 +6,66 @@ import { stateToKeyboard } from "../../shared/bot/keyboards.ts"
 import { tempAdmins, userStates } from "../../shared/maps/maps.ts"
 import { validateRequest } from "../../utils/validate-request.js"
 
-export const restrictedCommands = ["Управление"]
+export const restrictedCommands = [
+  "Управление",
+  "Список админов",
+  "Назад",
+  "Добавить администратора",
+  "Удалить администратора"
+]
 
 export type Context = MessageContext<Bot<{}, DeriveDefinitions>>
 
 export const messageHandler = async (ctx: Context, next: () => void) => {
   if (!ctx.text || !ctx.from) return;
 
-  console.log(`[TEXT] [${ctx.chat.id}]: ${ctx.text}`)
-
   const userId = ctx.from.id
+  const isCommand = ctx.text.startsWith("/");
+  const commandText = isCommand ? ctx.text.slice(1) : ctx.text;
 
-  if (ctx.text.startsWith("/") || restrictedCommands.includes(ctx.text)) {
+  console.log(`${ctx.from.id} - ${ctx.text} | ${ctx.chat.id}`)
+
+  if (ctx.text.includes("абоба")) {
+    ctx.setReaction("🤡");
+    return ctx.reply("Ты абоба?");
+  }
+
+  if (isCommand && restrictedCommands.includes(commandText)) {
     const isAdmin = await validateRequest(userId);
 
     if (!isAdmin) {
       return ctx.reply('У вас нет доступа к этой команде');
     }
 
-    await next();
+    next();
   }
 
-  if (ctx.text === "Назад") {
+  if (commandText === "Назад") {
     userStates.delete(userId.toString());
     tempAdmins.delete(userId.toString());
+
     return ctx.reply("Выберите действие", {
       reply_markup: stateToKeyboard["main"]
     });
   }
 
-  if (ctx.text === 'Управление') {
+  if (commandText === 'Управление') {
     return controlHandler(ctx)
   }
 
-  if (ctx.text === "Список админов") {
+  if (commandText === "Список админов") {
     return sendAdminsList(ctx);
   }
 
-  if (ctx.text === 'Добавить администратора') {
+  if (commandText === 'Добавить администратора') {
     tempAdmins.set(userId.toString(), 'add');
-    userStates.set(userId.toString(), 'control'); 
+    userStates.set(userId.toString(), 'control');
     return ctx.reply('Введите никнейм пользователя');
   }
 
   if (ctx.text === "Удалить администратора") {
     tempAdmins.set(userId.toString(), "remove");
-    userStates.set(userId.toString(), 'control'); 
+    userStates.set(userId.toString(), 'control');
     return ctx.reply("Введите никнейм пользователя")
   }
 

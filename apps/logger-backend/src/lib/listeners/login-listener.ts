@@ -10,7 +10,7 @@ type LoginDatePayload = {
 export async function notifyByAuthLoginDateChannel() {
   return authSubscriber.notifications.on('auth_logindate_channel', async (payload: LoginDatePayload) => {
     if (payload) {
-      return await sendLogs({ data: payload })
+      return sendLogs({ data: payload })
     }
   });
 }

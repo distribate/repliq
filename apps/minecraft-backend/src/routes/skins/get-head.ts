@@ -8,12 +8,19 @@ export const getHeadRoute = new Hono()
     const { nickname } = ctx.req.param()
 
     try {
-      const skin = await getPlayerSkin({ nickname })
+      const skin = await getPlayerSkin(nickname)
+
+      const start = performance.now();
+
       const buffer = await skin.arrayBuffer();
       const head = await extractHeadFromSkin(buffer)
 
+      const end = performance.now();
+
+      console.log(`Request time: ${end - start}ms`)
+
       ctx.header('Content-Type', 'image/png')
-      ctx.header('Cache-Control', 'public, max-age=120')
+      ctx.header('Cache-Control', 'public, max-age=30')
 
       return ctx.body(head as unknown as ReadableStream, 200)
     } catch (e) {

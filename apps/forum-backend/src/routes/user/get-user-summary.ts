@@ -28,7 +28,7 @@ type UserSummary = Omit<UserDetailed, "favorite_item"> & {
 async function getSharedFriends({
   initiator, recipient
 }: InitiatorRecipientType): Promise<Array<string> | null> {
-  const q = await forumDB
+  const query = await forumDB
     .selectFrom('users_friends')
     .where((eb) =>
       eb.or([
@@ -48,8 +48,10 @@ async function getSharedFriends({
     .limit(8)
     .execute()
 
-  if (!q || q.length === 0) return null;
-
+  if (!query || !query.length) {
+    return null
+  }
+  
   return null
 }
 

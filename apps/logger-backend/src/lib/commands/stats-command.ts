@@ -2,6 +2,7 @@ import { getNatsConnection } from "@repo/config-nats/nats-client";
 import { loggerBot } from "../../shared/bot/bot";
 import { SERVER_EVENT_GET_SERVER_STATS, SERVER_USER_EVENT_SUBJECT } from "@repo/shared/constants/nats-subjects";
 import { format } from "gramio";
+import { validateRequest } from "../../utils/validate-request";
 
 type StatusPayload = {
   maxPlayers: number,
@@ -12,6 +13,19 @@ type StatusPayload = {
 }
 
 loggerBot.command("stats", async (ctx) => {
+  if (!ctx.from) {
+    return
+  }
+
+  if (ctx.chat.id !== -1002049549066) {
+    const userId = ctx.from.id
+    const isAdmin = await validateRequest(userId);
+
+    if (!isAdmin) {
+      return ctx.reply('У вас нет доступа к этой команде');
+    }
+  }
+
   const nc = getNatsConnection()
 
   const res = await nc.request(SERVER_USER_EVENT_SUBJECT, JSON.stringify({

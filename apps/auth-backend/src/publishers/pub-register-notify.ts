@@ -1,5 +1,5 @@
 import { getNatsConnection } from "@repo/config-nats/nats-client"
-import { USER_NOTIFICATIONS_SUBJECT } from "@repo/shared/constants/nats-subjects"
+import { LOGS_ADMIN_SUBJECT, USER_NOTIFICATIONS_SUBJECT } from "@repo/shared/constants/nats-subjects"
 
 export const publishRegisterNotify = (nickname: string) => {
   const nc = getNatsConnection()
@@ -9,5 +9,6 @@ export const publishRegisterNotify = (nickname: string) => {
     payload: { nickname },
   })
 
-  return nc.publish(USER_NOTIFICATIONS_SUBJECT, payload)
+  nc.publish(LOGS_ADMIN_SUBJECT, JSON.stringify({ type: "register", data: { nickname } }))
+  nc.publish(USER_NOTIFICATIONS_SUBJECT, payload)
 }

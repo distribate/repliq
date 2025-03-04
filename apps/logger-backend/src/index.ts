@@ -12,21 +12,29 @@ import "./lib/commands/give-item-command.ts"
 import "./lib/commands/stats-command.ts"
 import "./lib/commands/check-online-command.ts"
 import { subscribeNewPlayer } from './subscribers/sub-new-player.ts';
+import { subscribeAdminLog } from './subscribers/sub-admin-log.ts';
 
 async function startNats() {
-  await initNats()
+  try {
+    await initNats()
 
-  subscribeReceivePayment()
-  console.log("\x1b[34m[NATS]\x1b[0m Subscribed to payment status")
+    subscribeReceivePayment()
+    console.log("\x1b[34m[NATS]\x1b[0m Subscribed to payment status")
 
-  subscribeReceiveNotify()
-  console.log("\x1b[34m[NATS]\x1b[0m Subscribed to receive notify")
+    subscribeReceiveNotify()
+    console.log("\x1b[34m[NATS]\x1b[0m Subscribed to receive notify")
 
-  subscribeServerEvents()
-  console.log("\x1b[34m[NATS]\x1b[0m Subscribed to server events")
+    subscribeServerEvents()
+    console.log("\x1b[34m[NATS]\x1b[0m Subscribed to server events")
 
-  subscribeNewPlayer()
-  console.log("\x1b[34m[NATS]\x1b[0m Subscribed to new player")
+    subscribeNewPlayer()
+    console.log("\x1b[34m[NATS]\x1b[0m Subscribed to new player")
+
+    subscribeAdminLog()
+    console.log("\x1b[34m[NATS]\x1b[0m Subscribed to admin log")
+  } catch (e) {
+    console.error(e)
+  }
 }
 
 await startNats()

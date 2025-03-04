@@ -67,12 +67,12 @@ function RootComponent() {
         }}
         toastOptions={{
           classNames: {
-            error: "bg-black/80 text-shark-50 backdrop-blur-lg border-2 border-shark-800 rounded-lg",
+            error: "bg-black/80 text-shark-50 backdrop-blur-lg border-2 border-shark-700 rounded-md",
             success:
-              "bg-black/80 backdrop-blur-lg text-shark-50 border-2 border-shark-800 rounded-lg",
+              "bg-black/80 backdrop-blur-lg text-shark-50 border-2 border-shark-700 rounded-md",
             warning:
-              "bg-black/80 backdrop-blur-lg text-shark-50 border-2 border-shark-800 rounded-lg",
-            info: "bg-black/80 backdrop-blur-lg text-shark-50 border-2 border-shark-800 rounded-lg",
+              "bg-black/80 backdrop-blur-lg text-shark-50 border-2 border-shark-700 rounded-md",
+            info: "bg-black/80 backdrop-blur-lg text-shark-50 border-2 border-shark-700 rounded-md",
           },
         }}
       />

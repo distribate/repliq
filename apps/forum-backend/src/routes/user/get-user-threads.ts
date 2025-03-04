@@ -15,7 +15,7 @@ export const getUserThreadsRoute = new Hono()
   .get("/get-user-threads/:nickname", zValidator("query", getUserThreadsSchema), async (ctx) => {
     const { nickname: recipient } = ctx.req.param();
     const initiator = getNickname()
-    const { querySearch, cursor } = getUserThreadsSchema.parse(ctx.req.query());
+    const result = getUserThreadsSchema.parse(ctx.req.query());
 
     const isValid = await userPreferenceAndPrivateValidation({
       initiator, recipient
@@ -26,7 +26,7 @@ export const getUserThreadsRoute = new Hono()
     }
 
     try {
-      const threads = await getUserThreads({ nickname: recipient, querySearch, cursor });
+      const threads = await getUserThreads({ nickname: recipient, ...result });
 
       return ctx.json(threads, 200);
     } catch (e) {

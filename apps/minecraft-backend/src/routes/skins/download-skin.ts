@@ -7,7 +7,7 @@ export const downloadSkinRoute = new Hono()
     const { nickname } = ctx.req.param();
 
     try {
-      const skin = await getPlayerSkin({ nickname })
+      const skin = await getPlayerSkin(nickname)
       const buffer = await skin.arrayBuffer();
 
       ctx.header('Content-Type', 'image/png')

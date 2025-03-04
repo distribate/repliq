@@ -1,8 +1,20 @@
 import { getNatsConnection } from "@repo/config-nats/nats-client.ts"
 import { loggerBot } from "../../shared/bot/bot.ts"
 import { SERVER_USER_EVENT_SUBJECT } from "@repo/shared/constants/nats-subjects.js"
+import { validateRequest } from "../../utils/validate-request.ts";
 
 loggerBot.command('broadcast', async (ctx) => {
+  if (!ctx.from) {
+    return
+  }
+
+  const userId = ctx.from.id
+  const isAdmin = await validateRequest(userId);
+
+  if (!isAdmin) {
+    return ctx.reply('У вас нет доступа к этой команде');
+  }
+
   if (!ctx.args) {
     return ctx.send('Укажите текст объявления')
   }

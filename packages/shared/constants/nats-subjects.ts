@@ -29,3 +29,4 @@ export const SERVER_STATUS_SUBJECT = "server.status"
   
 // LOGS
 export const LOGS_PAYMENT_SUBJECT = "logs.payment"
+export const LOGS_ADMIN_SUBJECT = "logs.admin"

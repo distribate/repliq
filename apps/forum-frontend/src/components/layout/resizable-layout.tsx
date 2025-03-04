@@ -1,171 +1,142 @@
-import {
-  ResizableHandle,
-  ResizablePanel,
-  ResizablePanelGroup,
-} from "@repo/ui/src/components/resizable.tsx";
-import { lazy, ReactNode, Suspense, useRef } from "react";
-import { ImperativePanelHandle } from "react-resizable-panels";
-import { useMediaQuery } from "@repo/lib/hooks/use-media-query.ts";
-import { SidebarDesktop } from "#components/sidebar/desktop/components/sidebar/sidebar-desktop.tsx";
-import { useSidebarControl } from "#components/sidebar/desktop/components/sidebar-layout/hooks/use-sidebar-control.ts";
-import { Skeleton } from "@repo/ui/src/components/skeleton.tsx";
-import { Separator } from "@repo/ui/src/components/separator.tsx";
-import { RESIZABLE_COOKIE_KEY } from "@repo/shared/keys/cookie.ts";
-import { getCookieByKey } from "@repo/lib/helpers/get-cookie-by-key.ts";
+import { Avatar } from "#components/user/avatar/components/avatar";
+import { SidebarLogotype } from "#components/sidebar/desktop/components/sidebar-content/logotype/sidebar-logotype";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@repo/ui/src/components/dropdown-menu";
+import { UserMenu } from "#components/sidebar/desktop/components/sidebar-content/user-menu/user-menu";
+import { ArrowDown } from "lucide-react";
+import { UserBalance } from "#components/user/balance/user-balance";
+import { Typography } from "@repo/ui/src/components/typography";
+import { Compass, Plus, Pencil, NotebookPen } from "lucide-react"
+import { Link } from "@tanstack/react-router";
+import { Axe, Cuboid, UsersRound, Rocket } from "lucide-react";
+import { currentUserQuery } from "@repo/lib/queries/current-user-query";
 
-const SidebarMobile = lazy(() => import("#components/sidebar/mobile/components/sidebar-mobile.tsx")
-  .then(m => ({ default: m.SidebarMobile }))
-);
+const ProfileBadge = () => {
+  const { nickname } = currentUserQuery().data
 
-interface ResizableLayout {
-  children: ReactNode;
+  return (
+    <div className="flex items-center justify-between h-14 px-2 py-1 gap-3 bg-shark-950 rounded-lg">
+      <Avatar propHeight={36} propWidth={36} nickname={nickname} />
+      <UserBalance />
+      <DropdownArrow/>
+    </div>
+  )
 }
 
-type PanelsProps = {
-  defaultSize: number;
-};
+const DISCOVER = [
+  { icon: UsersRound, title: "Игроки", link: "/search?type=users" },
+  { icon: Rocket, title: "Рейтинг", link: "/ratings" },
+  { icon: Cuboid, title: "Территории", link: "/lands" },
+  { icon: UsersRound, title: "Треды", link: "/search?type=threads" },
+  { icon: Axe, title: "Ивенты", link: "/events" }
+]
 
-export const DEFAULT_LAYOUT_SIZES = [16, 84];
+const RESOURCES = [
+  { icon: Axe, title: "Справочник", link: "https://fasberry.su/wiki" },
+  { icon: NotebookPen, title: "Карта мира", link: "https://map.fasberry.su" }
+]
 
-const SidebarDesktopSkeleton = () => {
+const CREATE = [
+  { icon: Pencil, title: "Создать тред", link: "/create-thread" },
+  { icon: NotebookPen, title: "Открыть тикет", link: "/create-ticket" }
+]
+
+const DropdownArrow = () => {
   return (
-    <div
-      className={`flex flex-col justify-between
-		  px-3 rounded-lg overflow-hidden min-h-screen h-full py-6
-			bg-primary-color outline-none w-[300px]`}
-    >
-      <div className="flex flex-col gap-y-4 items-center justify-center">
-        <div className="flex flex-row items-center gap-4">
-          <Skeleton className="w-[42px] h-[42px]" />
-          <Skeleton className="h-10 w-48" />
-        </div>
-        <Separator />
-        <div className="flex items-center gap-2 justify-between w-full">
-          <Skeleton className="flex h-10 items-center gap-1 grow" />
-          <Skeleton className="flex h-10 w-10" />
-        </div>
-        <Separator />
-        <Skeleton className="flex gap-x-3 h-[50px] items-center w-full" />
-        <Separator />
-        <Skeleton className="flex h-10 items-center w-full" />
-        <Separator />
-        <Skeleton className="flex h-[230px] items-center w-full" />
-        <Separator />
-        <div className="flex flex-col gap-y-2 w-full">
-          <Skeleton className="flex h-10 items-center w-full" />
-          <Skeleton className="flex h-10 items-center w-full" />
-          <Skeleton className="flex h-10 items-center w-full" />
-          <Skeleton className="flex h-10 items-center w-full" />
-        </div>
+    <ArrowDown
+      size={20}
+      className="transition-all duration-150 ease-in 
+      group-data-[state=closed]:rotate-0 group-data-[state=open]:rotate-180 text-shark-300"
+    />
+  )
+}
+
+export const Navbar = () => {
+  return (
+    <div className="flex flex-col lg:flex-row items-center justify-between w-full gap-2">
+      <div className="flex w-full lg:w-fit bg-shark-950 h-14 rounded-lg px-6 py-1">
+        <SidebarLogotype />
+      </div>
+      <div className="flex gap-2 w-full lg:w-fit rounded-lg *:w-full">
+        <DropdownMenu>
+          <DropdownMenuTrigger
+            className="flex h-14 gap-3 rounded-lg items-center group px-6 bg-shark-950/80 hover:bg-shark-950 focus-visible:outline-none"
+          >
+            <Compass size={20} className="text-shark-300" />
+            <Typography className="font-semibold text-lg">
+              Исследовать
+            </Typography>
+            <DropdownArrow />
+          </DropdownMenuTrigger>
+          <DropdownMenuContent side="bottom" align="end">
+            <div className="flex flex-col gap-2 w-full h-full">
+              {DISCOVER.map(({ icon: Icon, title, link }, idx) => (
+                <Link key={idx} to={link}>
+                  <DropdownMenuItem className="gap-2 px-4 py-2 group cursor-pointer">
+                    <Icon size={20} className="text-shark-300" />
+                    <Typography className="text-[18px]">
+                      {title}
+                    </Typography>
+                  </DropdownMenuItem>
+                </Link>
+              ))}
+            </div>
+          </DropdownMenuContent>
+        </DropdownMenu>
+        <DropdownMenu>
+          <DropdownMenuTrigger
+            className="flex h-14 gap-3 rounded-lg items-center group px-6 bg-shark-950/80 hover:bg-shark-950 focus-visible:outline-none"
+          >
+            <Compass size={20} className="text-shark-300" />
+            <Typography className="font-semibold text-lg">
+              Ресурсы
+            </Typography>
+            <DropdownArrow />
+          </DropdownMenuTrigger>
+          <DropdownMenuContent side="bottom" align="end">
+            {RESOURCES.map(({ icon: Icon, title, link }, idx) => (
+              <a key={idx} href={link}>
+                <DropdownMenuItem className="gap-2 px-4 py-2 group cursor-pointer">
+                  <Icon size={20} className="text-shark-300" />
+                  <Typography className="text-[18px]">
+                    {title}
+                  </Typography>
+                </DropdownMenuItem>
+              </a>
+            ))}
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </div>
+      <div className="flex self-end items-center gap-2">
+        <DropdownMenu>
+          <DropdownMenuTrigger
+            className="flex items-center rounded-lg justify-center h-14 w-14 bg-shark-950 group focus-visible:outline-none"
+          >
+            <Plus size={24} className="text-shark-300" />
+          </DropdownMenuTrigger>
+          <DropdownMenuContent side="bottom" align="end">
+            <div className="flex flex-col gap-2 w-full h-full">
+              {CREATE.map(({ icon: Icon, title, link }, idx) => (
+                <Link key={idx} to={link}>
+                  <DropdownMenuItem className="gap-2 px-4 py-2 w-full">
+                    <Icon size={20} className="text-shark-300" />
+                    <Typography className="text-[16px]">
+                      {title}
+                    </Typography>
+                  </DropdownMenuItem>
+                </Link>
+              ))}
+            </div>
+          </DropdownMenuContent>
+        </DropdownMenu>
+        <DropdownMenu>
+          <DropdownMenuTrigger className="group focus-visible:outline-none">
+            <ProfileBadge />
+          </DropdownMenuTrigger>
+          <DropdownMenuContent side="bottom" align="end">
+            <UserMenu />
+          </DropdownMenuContent>
+        </DropdownMenu>
       </div>
     </div>
-  );
-};
-
-export const SidebarMain = ({ defaultSize }: PanelsProps) => {
-  const { isDynamic, updateSidebarPropertiesMutation } = useSidebarControl();
-  const sidebarRef = useRef<ImperativePanelHandle | null>(null);
-
-  const handleSizePanel = (size: number) => {
-    const sidebarPanel = sidebarRef.current;
-
-    if (sidebarPanel && size < 11) {
-      sidebarPanel.collapse();
-    }
-
-    return updateSidebarPropertiesMutation.mutate({
-      type: "width",
-      values: { width: size },
-    });
-  };
-
-  return isDynamic ? (
-    <>
-      <ResizablePanel
-        id="sidebar"
-        ref={sidebarRef}
-        defaultSize={defaultSize}
-        className="p-0 m-0 max-w-[340px] overflow-hidden"
-        order={1}
-        collapsible
-        minSize={4}
-        maxSize={16}
-        onResize={(size: number) => handleSizePanel(size)}
-      >
-        <SidebarDesktop />
-      </ResizablePanel>
-      <ResizableHandle />
-    </>
-  ) : (
-    <Suspense fallback={<SidebarDesktopSkeleton />}>
-      <div className="overflow-hidden max-h-screen">
-        <SidebarDesktop />
-      </div>
-    </Suspense>
-  );
-};
-
-export const AreaMain = ({
-  children,
-  defaultSize,
-}: PanelsProps & { children: ReactNode }) => {
-  return (
-    <ResizablePanel
-      id="main"
-      defaultSize={defaultSize}
-      order={2}
-      minSize={84}
-      maxSize={96}
-      className="flex flex-col gap-y-2 !pb-4 !overflow-visible !min-h-screen h-full !max-h-screen"
-    >
-      <div className="flex flex-col gap-y-4 h-full w-full main-section overflow-x-hidden overflow-y-scroll">
-        {children}
-      </div>
-    </ResizablePanel>
-  );
-};
-
-export const ResizableLayout = ({
-  children,
-}: ResizableLayout) => {
-  const layout = getCookieByKey(RESIZABLE_COOKIE_KEY);
-  const matches = useMediaQuery("(min-width: 768px)");
-  const { isDynamic } = useSidebarControl();
-  const layoutGroupGap = isDynamic ? 1 : 2;
-
-  let defaultLayout: number[] = [16, 84];
-
-  if (layout) {
-    defaultLayout = JSON.parse(layout)
-  }
-
-  const onLayout = (sizes: number[]) => {
-    document.cookie = `${RESIZABLE_COOKIE_KEY}=${JSON.stringify(sizes)}`;
-  };
-
-  return (
-    matches ? (
-      <ResizablePanelGroup
-        onLayout={onLayout}
-        direction="horizontal"
-        autoSaveId="conditional"
-        suppressHydrationWarning
-        style={{ overflow: "clip" }}
-        className={`flex w-full relative min-h-screen h-screen max-h-screen p-2
-            gap-${layoutGroupGap} overflow-hidden`}
-      >
-        <SidebarMain defaultSize={defaultLayout[0]} />
-        <AreaMain defaultSize={defaultLayout[1]}>
-          {children}
-        </AreaMain>
-      </ResizablePanelGroup>
-    ) : (
-      <div className="flex flex-col gap-2 min-h-screen h-full relative w-full">
-        <SidebarMobile />
-        <div className="flex overflow-y-auto h-full w-full p-2">
-          {children}
-        </div>
-      </div>
-    )
-  );
-};
+  )
+}

@@ -94,11 +94,7 @@ export const registerRoute = new Hono()
 
     try {
       const registered = await createUserTransaction({
-        nickname, findout, HASH, IP, referrer,
-        UUID: user.uuid,
-        LOWERCASENICKNAME: nickname.toLowerCase(),
-        NICKNAME: nickname,
-        REGDATE: new Date().getTime()
+        nickname, findout, HASH, IP, referrer, UUID: user.uuid, NICKNAME: nickname,
       })
 
       if (!registered || !registered.user_nickname) {

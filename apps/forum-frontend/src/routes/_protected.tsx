@@ -1,5 +1,4 @@
 import { createFileRoute, Outlet, redirect } from '@tanstack/react-router'
-import { ResizableLayout } from "#components/layout/resizable-layout.tsx"
 import { CURRENT_USER_QUERY_KEY } from '@repo/lib/queries/current-user-query';
 import { getUserInformation } from '@repo/lib/queries/get-user-information';
 import { validateSession } from '@repo/lib/actions/validate-session';
@@ -10,6 +9,7 @@ import { globalOptionQuery } from '@repo/lib/queries/global-option-query';
 import { StartPreview } from '#components/get-start/start-preview';
 import { Typography } from '@repo/ui/src/components/typography';
 import { isProduction } from '@repo/lib/helpers/is-production';
+import { Navbar } from '#components/layout/resizable-layout';
 
 type ErrorComponentProps = {
   error: Error
@@ -76,15 +76,19 @@ export const Route = createFileRoute('/_protected')({
   errorComponent: ({ error, reset }) => <ErrorComponent error={error} reset={reset} />
 })
 
-
 function RouteComponent() {
   const { data: { isStarted } } = globalOptionQuery()
 
   if (isStarted) return <StartPreview />
 
   return (
-    <ResizableLayout>
-      <Outlet />
-    </ResizableLayout>
+    <div className="flex w-full relative min-h-screen items-center justify-center p-2 overflow-hidden">
+      <div className="flex flex-col gap-2 w-full lg:w-[84%] h-full overflow-x-hidden items-center justify-start">
+        <Navbar />
+        <div id="main" className="flex gap-y-4 w-full h-full min-h-screen main-section">
+          <Outlet />
+        </div>
+      </div>
+    </div>
   )
 }

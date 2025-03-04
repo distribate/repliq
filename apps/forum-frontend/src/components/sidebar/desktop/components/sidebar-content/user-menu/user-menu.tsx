@@ -5,9 +5,11 @@ import { Typography } from "@repo/ui/src/components/typography.tsx";
 import { LogoutModal } from "#components/modals/action-confirmation/components/logout/components/logout-modal.tsx";
 import { userGlobalOptionsQuery } from "@repo/lib/queries/user-global-options-query.ts";
 import { UserSettingsModal } from "#components/modals/user-settings/user-settings-modal.tsx";
+import { CircleUserRound, UsersRound } from "lucide-react";
+import { getUser } from "@repo/lib/helpers/get-user";
+import { USER_URL } from "@repo/shared/constants/routes";
 
 const COLLECTION_LINKS = [
-  { name: "Мои темы", query: "threads" },
   { name: "Мои покупки", query: "purchases" },
   { name: "Мои тикеты", query: "tickets" }
 ];
@@ -31,13 +33,43 @@ const AdminButton = () => {
   );
 };
 
+const FriendsLink = () => {
+  return (
+    <Link to="/friends">
+      <DropdownMenuItem className="gap-2 group cursor-pointer">
+        <UsersRound size={20} className="icon-color" />
+        <Typography className="text-[16px] font-medium">
+          Друзья
+        </Typography>
+      </DropdownMenuItem>
+    </Link>
+  )
+}
+
+const ProfileLink = () => {
+  const { nickname } = getUser();
+
+  return (
+    <Link to={USER_URL + nickname}>
+      <DropdownMenuItem className="gap-2 group cursor-pointer">
+        <CircleUserRound size={20} className="icon-color" />
+        <Typography className="text-[16px] font-medium">
+          Мой профиль
+        </Typography>
+      </DropdownMenuItem>
+    </Link>
+  )
+}
+
 export const UserMenu = () => {
   return (
     <div className="flex flex-col gap-y-2 w-[200px]">
+      <ProfileLink />
       {COLLECTION_LINKS.map((collection) => (
         <Link
           key={collection.name}
           to="/collection"
+          // @ts-ignore
           search={{ type: collection.query }}
         >
           <DropdownMenuItem className="gap-2 group cursor-pointer">
@@ -47,6 +79,7 @@ export const UserMenu = () => {
           </DropdownMenuItem>
         </Link>
       ))}
+      <FriendsLink/>
       <Separator />
       <AdminButton />
       <UserSettingsModal />

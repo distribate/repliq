@@ -1053,15 +1053,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/runtime@npm:^7.0.0":
-  version: 7.26.9
-  resolution: "@babel/runtime@npm:7.26.9"
-  dependencies:
-    regenerator-runtime: "npm:^0.14.0"
-  checksum: 10c0/e8517131110a6ec3a7360881438b85060e49824e007f4a64b5dfa9192cf2bb5c01e84bfc109f02d822c7edb0db926928dd6b991e3ee460b483fb0fac43152d9b
-  languageName: node
-  linkType: hard
-
 "@babel/runtime@npm:^7.13.10, @babel/runtime@npm:^7.5.5, @babel/runtime@npm:^7.8.7":
   version: 7.26.0
   resolution: "@babel/runtime@npm:7.26.0"
@@ -2398,6 +2389,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@nats-io/jetstream@npm:3.0.0-38":
+  version: 3.0.0-38
+  resolution: "@nats-io/jetstream@npm:3.0.0-38"
+  dependencies:
+    "@nats-io/nats-core": "npm:3.0.0-51"
+  checksum: 10c0/4bc208c242200d0476de4c9b467d0087882fa0a8ec11f9429dd3b2187edff95d6f865649a213db8f9e70515ccead4325115d9645319aa05f60081dcd7aa8941b
+  languageName: node
+  linkType: hard
+
 "@nats-io/kv@npm:3.0.0-30":
   version: 3.0.0-30
   resolution: "@nats-io/kv@npm:3.0.0-30"
@@ -2438,6 +2438,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@nats-io/nats-core@npm:3.0.0-51":
+  version: 3.0.0-51
+  resolution: "@nats-io/nats-core@npm:3.0.0-51"
+  dependencies:
+    "@nats-io/nkeys": "npm:2.0.2"
+    "@nats-io/nuid": "npm:2.0.3"
+  checksum: 10c0/aacfe8aad857275e886d089fba650b3850b24e1a60c2cddf3354ab2e537ad07cbb387fa27d49e0fc3ff9592497dcb0676ac4017c52217f4e99f7c62ffb75448d
+  languageName: node
+  linkType: hard
+
 "@nats-io/nkeys@npm:2.0.0-3":
   version: 2.0.0-3
   resolution: "@nats-io/nkeys@npm:2.0.0-3"
@@ -2467,6 +2477,17 @@ __metadata:
   version: 2.0.3
   resolution: "@nats-io/nuid@npm:2.0.3"
   checksum: 10c0/9868aa38c6fefcc476f69c72b7689890ebb08742ad1c0eea39f5d46237434eb038f9a259d382a0ee219a08c126432bfb7a4ab4efd500d3afd51df9dfca49a97f
+  languageName: node
+  linkType: hard
+
+"@nats-io/obj@npm:^3.0.0-34":
+  version: 3.0.0-34
+  resolution: "@nats-io/obj@npm:3.0.0-34"
+  dependencies:
+    "@nats-io/jetstream": "npm:3.0.0-38"
+    "@nats-io/nats-core": "npm:3.0.0-51"
+    js-sha256: "npm:^0.11.0"
+  checksum: 10c0/5f5d9ec079ccb2866b4dd3d84f32e79c11e8e4bc8bbdf5d232d3918a4b485f05f008aa4ae1e1dfddb15b0bc91efa529c698f8e7e7f413490f474cc400e9ba3d4
   languageName: node
   linkType: hard
 
@@ -6306,6 +6327,7 @@ __metadata:
   dependencies:
     "@nats-io/jetstream": "npm:3.0.0-35"
     "@nats-io/kv": "npm:3.0.0-30"
+    "@nats-io/obj": "npm:^3.0.0-34"
     "@nats-io/transport-node": "npm:3.0.0-32"
   languageName: unknown
   linkType: soft
@@ -6510,7 +6532,6 @@ __metadata:
     react-aria-components: "npm:1.4.1"
     react-day-picker: "npm:9.3.0"
     react-dom: "npm:18.3.1"
-    react-resizable-panels: "npm:2.1.6"
     recharts: "npm:2.15.0"
     tailwindcss: "npm:3.4.17"
     typescript: "npm:^5.4.5"
@@ -12413,8 +12434,6 @@ __metadata:
     react-intersection-observer: "npm:9.10.2"
     react-skinview3d: "npm:5.1.0"
     react-turnstile: "npm:1.1.4"
-    react-window: "npm:1.8.10"
-    sharp: "npm:0.33.5"
     slate: "npm:0.103.0"
     slate-history: "npm:0.110.3"
     slate-react: "npm:0.107.0"
@@ -13629,6 +13648,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"js-sha256@npm:^0.11.0":
+  version: 0.11.0
+  resolution: "js-sha256@npm:0.11.0"
+  checksum: 10c0/90980fe01ca01fbd166751fb16c4caa09c1ab997e8bf77c0764cc05c772c6044946f4c1b3bad266ce78357280d2131d3dc0cf2dd7646e78272996bd4d590aa4f
+  languageName: node
+  linkType: hard
+
 "js-tokens@npm:^3.0.0 || ^4.0.0, js-tokens@npm:^4.0.0":
   version: 4.0.0
   resolution: "js-tokens@npm:4.0.0"
@@ -14384,13 +14410,6 @@ __metadata:
     tree-dump: "npm:^1.0.1"
     tslib: "npm:^2.0.0"
   checksum: 10c0/2901f69e80e1fbefa8aafe994a253fff6f34eb176d8b80d57476311611e516a11ab4dd93f852c8739fe04f2b57d6a4ca7a1828fa0bd401ce631bcac214b3d58b
-  languageName: node
-  linkType: hard
-
-"memoize-one@npm:>=3.1.1 <6":
-  version: 5.2.1
-  resolution: "memoize-one@npm:5.2.1"
-  checksum: 10c0/fd22dbe9a978a2b4f30d6a491fc02fb90792432ad0dab840dc96c1734d2bd7c9cdeb6a26130ec60507eb43230559523615873168bcbe8fafab221c30b11d54c1
   languageName: node
   linkType: hard
 
@@ -17040,19 +17059,6 @@ __metadata:
     react: ">= 16.13.1"
     react-dom: ">= 16.13.1"
   checksum: 10c0/2a03226eede070e56be597b1456d870eb7180b90ed46a256970374fa545151474a08cb00acfe65292e353f8a2d082e1b2f851696b714f164251928f3330d2dad
-  languageName: node
-  linkType: hard
-
-"react-window@npm:1.8.10":
-  version: 1.8.10
-  resolution: "react-window@npm:1.8.10"
-  dependencies:
-    "@babel/runtime": "npm:^7.0.0"
-    memoize-one: "npm:>=3.1.1 <6"
-  peerDependencies:
-    react: ^15.0.0 || ^16.0.0 || ^17.0.0 || ^18.0.0
-    react-dom: ^15.0.0 || ^16.0.0 || ^17.0.0 || ^18.0.0
-  checksum: 10c0/eda9afb667d9784513dcc2755b65edf3a1412e7877975322993c1382908aaef0c0b948b7e3b2d705e353306556274d90f7ab19ac40aef2184fa39d4c1e2232ea
   languageName: node
   linkType: hard
 

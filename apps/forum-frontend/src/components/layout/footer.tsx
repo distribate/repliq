@@ -27,7 +27,7 @@ const FooterItem = ({ href, label }: { href: string, label: string }) => {
 
 export const Footer = () => {
   return (
-    <div id="footer" className="biloba-background max-h-[180px] w-full rounded-xl overflow-hidden relative">
+    <div id="footer" className="hidden lg:block biloba-background max-h-[180px] w-full rounded-xl overflow-hidden relative">
       <div className="flex items-start justify-center px-12 py-4 gap-4 bg-white/10 backdrop-blur-md h-full w-full">
         <a id="main" href="https://fasberry.su" className="flex items-end gap-1 w-2/5">
           <img src={Logotype} alt="" width={48} height={48} loading="lazy" />

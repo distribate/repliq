@@ -1,6 +1,7 @@
 import { getNatsConnection } from "@repo/config-nats/nats-client.ts"
 import { loggerBot } from "../../shared/bot/bot.ts"
 import { SERVER_USER_EVENT_SUBJECT } from "@repo/shared/constants/nats-subjects.ts"
+import { validateRequest } from "../../utils/validate-request.ts"
 
 const weatherTitle: Record<WeatherType, string> = {
   rain: 'дождливая',
@@ -17,6 +18,19 @@ const weatherEmojis: Record<WeatherType, string> = {
 type WeatherType = 'rain' | 'sun' | 'storm'
 
 loggerBot.command('weather', async (ctx) => {
+  if (!ctx.from) {
+    return
+  }
+
+  if (ctx.chat.id !== -1002049549066) {
+    const userId = ctx.from.id
+    const isAdmin = await validateRequest(userId);
+
+    if (!isAdmin) {
+      return ctx.reply('У вас нет доступа к этой команде');
+    }
+  }
+  
   if (!ctx.args) {
     return ctx.send('Укажите тип погоды: rain, sun, storm')
   }

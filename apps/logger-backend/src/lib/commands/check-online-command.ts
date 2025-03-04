@@ -2,8 +2,20 @@ import { getNatsConnection } from "@repo/config-nats/nats-client";
 import { loggerBot } from "../../shared/bot/bot";
 import { SERVER_EVENT_CHECK_PLAYER_STATUS, SERVER_USER_EVENT_SUBJECT } from "@repo/shared/constants/nats-subjects";
 import { bold, format } from "gramio";
+import { validateRequest } from "../../utils/validate-request";
 
 loggerBot.command("check", async (ctx) => {
+  if (!ctx.from) {
+    return
+  }
+
+  const userId = ctx.from.id
+  const isAdmin = await validateRequest(userId);
+
+  if (!isAdmin) {
+    return ctx.reply('У вас нет доступа к этой команде');
+  }
+
   if (!ctx.args) {
     return ctx.reply('Укажите ник игрока')
   }

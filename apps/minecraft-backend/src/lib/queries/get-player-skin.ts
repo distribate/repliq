@@ -1,5 +1,4 @@
 import { getExistsCustomPlayerSkin } from "./get-exists-custom-player-skin";
-import { getExistsPlayerSkin } from "./get-exists-player-skin";
 import type { Skin } from "#types/skin-type.ts";
 import ky from "ky";
 import fs from "fs/promises";
@@ -8,16 +7,14 @@ import SteveSkin from "@repo/assets/images/minecraft/steve_skin.png";
 import { Blob } from "buffer";
 import path from "path";
 import { skinsDB } from "#shared/database/skins-db.ts";
+import { getNatsConnection } from "@repo/config-nats/nats-client";
+import { USERS_SKINS_BUCKET } from "#index.ts";
+import { Objm } from "@nats-io/obj";
+import type { NatsConnection } from "@nats-io/transport-node";
+import { readableStreamToBlob } from "bun";
+import { blobToUint8Array, readableStreamFrom } from "#helpers/streams.ts";
 
-type GetPlayerSkin = {
-  nickname: string
-}
-
-const CRAFATAR_API = ky.extend({
-  prefixUrl: "https://api.mineatar.io/skin/"
-})
-
-async function getVanillaPlayerSkin(nickname: string) {
+async function getVanillaPlayerSkin(nickname: string): Promise<Blob | null> {
   const playerUUID = await skinsDB
     .selectFrom("sr_cache")
     .select("uuid")
@@ -28,31 +25,22 @@ async function getVanillaPlayerSkin(nickname: string) {
     return null
   }
 
-  const queryPlayersSkins = await getExistsPlayerSkin({ nickname })
+  const blob = await ky.get(`https://api.mineatar.io/skin/${playerUUID.uuid}`).blob() as unknown as Blob;
 
-  if (queryPlayersSkins) {
-    // const skinData = atob(queryPlayersSkins.skin_value);
-    // const parsedSkinState = JSON.parse(skinData) as Skin;
+  console.log(blob)
 
-    const blob = await CRAFATAR_API.get(playerUUID.uuid).blob() as unknown as Blob;
-
-    if (!blob) {
-      return null;
-    }
-
-    return blob
+  if (!blob) {
+    return null;
   }
 
-  return null;
+  return blob
 }
 
-async function getCustomPlayerSkin(nickname: string) {
-  const queryPlayersCustomSkins = await getExistsCustomPlayerSkin({ nickname })
+async function getCustomPlayerSkin(nickname: string): Promise<Blob | null> {
+  const query = await getExistsCustomPlayerSkin({ nickname })
 
-  if (!queryPlayersCustomSkins) return null;
-
-  if (queryPlayersCustomSkins.value) {
-    const skinData = atob(queryPlayersCustomSkins.value);
+  if (query && query.value) {
+    const skinData = atob(query.value);
     const parsedSkinData = JSON.parse(skinData) as Skin
     const blob = await ky.get(parsedSkinData.textures.SKIN.url).blob() as unknown as Blob;
 
@@ -61,19 +49,57 @@ async function getCustomPlayerSkin(nickname: string) {
     }
 
     return blob
+  } else {
+    return null;
   }
-
-  return null;
 }
 
-export async function getPlayerSkin({
-  nickname
-}: GetPlayerSkin): Promise<Blob> {
+async function getSkinByKv(nickname: string): Promise<Blob | null> {
+  const nc = getNatsConnection();
+  // @ts-ignore
+  const objm = new Objm(nc);
+  const bucket = await objm.open(USERS_SKINS_BUCKET);
+
+  const entry = await bucket.get(nickname)
+
+  if (!entry || !entry?.data) {
+    return null;
+  }
+
+  return readableStreamToBlob(entry.data)
+}
+
+async function putSkinInKv(nickname: string, skinData: Uint8Array) {
+  const nc: NatsConnection = getNatsConnection();
+  // @ts-ignore
+  const objm = new Objm(nc);
+  const bucket = await objm.open(USERS_SKINS_BUCKET);
+
+  const stream = readableStreamFrom(skinData);
+  
+  await bucket.put({ name: nickname }, stream);
+}
+
+export async function getPlayerSkin(nickname: string): Promise<Blob> {
   let skin: Blob | null = null;
+
+  const existsSkinByKv = await getSkinByKv(nickname)
+
+  if (existsSkinByKv) {
+    skin = existsSkinByKv
+  }
+
+  if (skin) {
+    return skin;
+  }
 
   const customSkin = await getCustomPlayerSkin(nickname)
 
   if (customSkin) {
+    const array = await blobToUint8Array(customSkin as globalThis.Blob)
+
+    await putSkinInKv(nickname, array)
+
     skin = customSkin
   }
 
@@ -84,6 +110,10 @@ export async function getPlayerSkin({
   const vanillaSkin = await getVanillaPlayerSkin(nickname)
 
   if (vanillaSkin) {
+    const array = await blobToUint8Array(vanillaSkin as globalThis.Blob)
+
+    await putSkinInKv(nickname, array)
+
     skin = vanillaSkin
   }
 

@@ -11,25 +11,20 @@ import {
 import { SidebarLayout } from "../sidebar-layout/components/sidebar-layout.tsx";
 import { getUser } from "@repo/lib/helpers/get-user.ts";
 import { Avatar } from "#components/user/avatar/components/avatar.tsx";
-import { UserNickname } from "#components/user/name/nickname.tsx";
 import { HTMLAttributes } from "react";
-import { ArrowDown, CircleUserRound, NotebookPen, Settings } from "lucide-react";
+import { ArrowDown, NotebookPen, Settings } from "lucide-react";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@repo/ui/src/components/dropdown-menu.tsx";
 import { Link, useLocation, useNavigate } from "@tanstack/react-router";
 import { Typography } from "@repo/ui/src/components/typography.tsx";
 import { Icon } from "@repo/shared/ui/icon/icon.tsx";
-import Charism from "@repo/assets/images/minecraft/charism_wallet.png"
-import Belkoin from "@repo/assets/images/minecraft/belkoin_wallet.png"
 import { Suspense } from 'react'
 import { userGlobalOptionsQuery } from "@repo/lib/queries/user-global-options-query.ts";
 import { USER_URL } from "@repo/shared/constants/routes.ts";
 import { UserMenu } from "../sidebar-content/user-menu/user-menu.tsx";
 import { Skeleton } from "@repo/ui/src/components/skeleton.tsx";
 import { SidebarButton } from "./sidebar-button.tsx";
-import { createQueryKey } from "@repo/lib/helpers/query-key-builder.ts";
-import { useQuery } from "@tanstack/react-query";
-import { forumUserClient } from "@repo/shared/api/forum-client.ts";
 import { currentUserQuery } from "@repo/lib/queries/current-user-query.ts";
+import { UserBalance } from "#components/user/balance/user-balance.tsx";
 
 type SidebarLayoutVariant = Exclude<SidebarFormat, "dynamic">;
 
@@ -61,51 +56,6 @@ const OutlineWrapper = ({ children, className, ...props }: HTMLAttributes<HTMLDi
       {...props}
     >
       {children}
-    </div>
-  )
-}
-
-async function getUserBalance(nickname: string) {
-  const res = await forumUserClient.user["get-user-balance"][":nickname"].$get({
-    param: { nickname }
-  });
-
-  const data = await res.json()
-
-  if ("error" in data) return null
-
-  return data.data
-}
-
-const userBalanceQuery = (nickname: string) => useQuery({
-  queryKey: createQueryKey("user", ["balance"]),
-  queryFn: () => getUserBalance(nickname),
-  refetchOnWindowFocus: false
-})
-
-const UserBalance = () => {
-  const { nickname, name_color } = getUser();
-  const { data: balance, isLoading } = userBalanceQuery(nickname);
-
-  return (
-    <div className="flex flex-col items-start max-w-[200px] overflow-hidden">
-      <div className="flex items-center gap-1">
-        <UserNickname className="text-base truncate" nicknameColor={name_color} nickname={nickname} />
-      </div>
-      <div className="flex items-center gap-2">
-        <div className="flex gap-1 items-center">
-          <Typography className="text-[15px] font-[Minecraft]">
-            {isLoading ? <Skeleton className="w-4 h-4 rounded-none" /> : balance?.charism}
-          </Typography>
-          <img src={Charism} width={16} height={16} alt="" />
-        </div>
-        <div className="flex gap-1 items-center">
-          <Typography className="text-[15px] font-[Minecraft]">
-            {isLoading ? <Skeleton className="w-4 h-4 rounded-none" /> : balance?.belkoin}
-          </Typography>
-          <img src={Belkoin} width={15} height={15} alt="" />
-        </div>
-      </div>
     </div>
   )
 }
@@ -274,7 +224,7 @@ const ProfileLink = () => {
         onClick={() => navigate({ to: USER_URL + currentUser.nickname })}
         variant={pathname === USER_URL + currentUser.nickname ? "active" : "default"}
       >
-        <CircleUserRound size={20} className="icon-color" />
+        {/* <CircleUserRound size={20} className="icon-color" /> */}
         {!isCompact && isExpanded && (
           <Typography className="text-[16px] font-medium">
             Мой профиль

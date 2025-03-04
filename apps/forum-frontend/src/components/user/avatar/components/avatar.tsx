@@ -39,7 +39,7 @@ const AvatarUserStatus = ({ nickname }: { nickname: string }) => {
   const { data: userStatus, isLoading } = userStatusQuery(nickname)
 
   const isOnline = userStatus?.status === 'online';
-  const issuedTime = userStatus?.last_active
+  const issuedTime = userStatus?.issuedTime
 
   return (
     <TooltipProvider>

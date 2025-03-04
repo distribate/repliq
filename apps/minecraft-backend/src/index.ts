@@ -7,7 +7,7 @@ import { showRoutes } from 'hono/dev';
 import { logger } from 'hono/logger';
 import { timeout } from 'hono/timeout';
 import { processPlayerVoteRoute } from '#routes/hooks/process-player-vote.ts';
-import { initNats } from '@repo/config-nats/nats-client';
+import { getNatsConnection, initNats } from '@repo/config-nats/nats-client';
 import { rateLimiterMiddleware } from '#middlewars/rate-limiter.ts';
 import { getLandsRoute } from '#routes/lands/get-lands.ts';
 import { getLandsByNicknameRoute } from '#routes/lands/get-lands-by-nickname.ts';
@@ -24,9 +24,53 @@ import { subscribeReceiveFiatPayment } from '#subscribers/sub-receive-fiat-payme
 import { subscribeRefferalCheck } from '#subscribers/sub-referal-check.ts';
 import { subscribeGiveBalance } from '#subscribers/sub-give-balance.ts';
 import { subscribePlayerStats } from '#subscribers/sub-player-stats.ts';
+import { Objm } from '@nats-io/obj';
+import { jetstream } from "@nats-io/jetstream";
+
+export const USERS_SKINS_BUCKET = "users_skins"
+
+async function initSkinsBucket() {
+  const nc = getNatsConnection();
+  const js = jetstream(nc, { timeout: 10_000 });
+
+  // @ts-ignore
+  const objm = new Objm(js);
+
+  let bucket = null;
+
+  const list = objm.list()
+  const next = await list.next()
+  const buckets = next.map(key => key.bucket)
+
+  if (buckets.includes(USERS_SKINS_BUCKET)) {
+    console.log("\x1b[34m[NATS]\x1b[0m Opened 'users_skins' bucket");
+
+    bucket = await objm.open(USERS_SKINS_BUCKET)
+  } else {
+    console.log("\x1b[34m[NATS]\x1b[0m Created 'users_skins' bucket");
+
+    bucket = await objm.create(USERS_SKINS_BUCKET, { ttl: 2592000000000000, storage: "file" });
+  }
+
+  if (!bucket) {
+    throw new Error("Failed to open bucket");
+  }
+
+  const watch = await bucket.watch();
+
+  console.log(await bucket.list());
+
+  (async () => {
+    for await (const e of watch) {
+      console.log(`[Watch] ${e.name} / ${e.size} / ${e.revision}`);
+    }
+  })().then();
+}
 
 async function startNats() {
   await initNats()
+
+  await initSkinsBucket()
 
   subscribeUserBalance()
   console.log("\x1b[34m[NATS]\x1b[0m Subscribed to balance")
