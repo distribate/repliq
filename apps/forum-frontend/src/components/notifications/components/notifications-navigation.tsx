@@ -19,7 +19,7 @@ export const NotificationsNavigation = () => {
   const isActive = (section: "system" | "requests" | "news") => section === type
 
   return (
-    <div className="flex items-center gap-4 w-3/5 justify-center">
+    <div className="grid grid-cols-2 auto-rows-auto lg:flex lg:flex-nowrap w-full *:w-full">
       <NavigationBadge
         onClick={() => handleSection("system")}
         isActive={isActive("system")}

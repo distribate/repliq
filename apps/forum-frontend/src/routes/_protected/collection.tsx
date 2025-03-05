@@ -48,12 +48,12 @@ const CollectionMain = () => {
   }
 
   return (
-    <div className="flex lg:flex-nowrap flex-wrap gap-2 w-full">
-      <NavigationBadge isActive={type === 'purchases'} title="Покупки" onClick={() => changeRoute('purchases')}  />
-      <NavigationBadge isActive={type === 'threads'} title="Треды" onClick={() => changeRoute('threads')}  />
-      <NavigationBadge isActive={type === 'saved_threads'} title="Сохраненные треды" onClick={() => changeRoute('saved_threads')}  />
-      <NavigationBadge isActive={type === 'referals'} title="Рефералы" onClick={() => changeRoute('referals')}  />
-      <NavigationBadge isActive={type === 'tickets'} title="Тикеты" onClick={() => changeRoute('tickets')}  />
+    <div className="grid grid-cols-2 auto-rows-auto lg:flex lg:flex-nowrap w-full *:w-full">
+      <NavigationBadge isActive={type === 'purchases'} title="Покупки" onClick={() => changeRoute('purchases')} />
+      <NavigationBadge isActive={type === 'threads'} title="Треды" onClick={() => changeRoute('threads')} />
+      <NavigationBadge isActive={type === 'referals'} title="Рефералы" onClick={() => changeRoute('referals')} />
+      <NavigationBadge isActive={type === 'tickets'} title="Тикеты" onClick={() => changeRoute('tickets')} />
+      <NavigationBadge isActive={type === 'saved_threads'} title="Сохраненные треды" onClick={() => changeRoute('saved_threads')} />
     </div>
   )
 }
@@ -62,20 +62,22 @@ function RouteComponent() {
   const { type } = Route.useSearch()
 
   return (
-    <div className="flex flex-col bg-primary-color gap-6 p-2 rounded-lg w-full h-dvh">
+    <div className="flex flex-col bg-primary-color rounded-lg w-full h-dvh">
       <CollectionMain />
-      <Typography
-        textSize="very_big"
-        textColor="shark_white"
-        className="font-semibold"
-      >
-        Ваши {ALIASES[type]}
-      </Typography>
-      {type === 'referals' && <Referals />}
-      {type === 'purchases' && <Purchases />}
-      {type === 'threads' && <MyThreads />}
-      {type === 'saved_threads' && <SavedThreads />}
-      {type === 'tickets' && <Tickets />}
+      <div className="flex flex-col gap-6 w-full h-full p-4">
+        <Typography
+          textSize="very_big"
+          textColor="shark_white"
+          className="font-semibold"
+        >
+          Ваши {ALIASES[type]}
+        </Typography>
+        {type === 'referals' && <Referals />}
+        {type === 'purchases' && <Purchases />}
+        {type === 'threads' && <MyThreads />}
+        {type === 'tickets' && <Tickets />}
+        {type === 'saved_threads' && <SavedThreads />}
+      </div>
     </div>
   )
 }

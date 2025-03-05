@@ -1,13 +1,13 @@
 import { UserPageParam } from "@repo/types/global";
-import { ProfileSectionLayout } from '#components/layout/profile-section-layout.tsx';
 import { ProfileGameAch } from "#components/profile/achievements/components/profile-game-ach-list.tsx";
+import { ProfileWrapper } from "#components/wrappers/profile-wrapper";
 
 export const UserProfileGameAchievements = ({
   nickname,
 }: UserPageParam) => {
   return (
-    <ProfileSectionLayout>
+    <ProfileWrapper>
       <ProfileGameAch nickname={nickname} />
-    </ProfileSectionLayout>
+    </ProfileWrapper>
   );
 };

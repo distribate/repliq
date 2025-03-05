@@ -22,34 +22,36 @@ function RouteComponent() {
   const { section } = Route.useSearch() as { section: "tickets" | "reports" | "stats" }
 
   return (
-    <div className="flex flex-col bg-primary-color gap-6 p-2 rounded-lg w-full h-full">
+    <div className="flex flex-col bg-primary-color rounded-lg w-full h-dvh">
       <AdminNavigation />
-      {!section && (
-        <>
-          <AdminNewsControl />
-          <div className="flex flex-col gap-4 items-start justify-center w-full p-4 border-2 border-shark-800 rounded-lg">
-            <Typography textSize="big" className="font-semibold">
-              Публикация модпака
-            </Typography>
-            <CreateModpack />
-          </div>
-        </>
-      )}
-      {section === 'tickets' && (
-        <>
-          <AdminTicketsList/>
-        </>
-      )}
-      {section === 'reports' && (
-        <>
-          <AdminReportsList/>
-        </>
-      )}
-      {section === 'stats' && (
-        <>
-          stats
-        </>
-      )}
+      <div className="flex flex-col gap-6 w-full h-full p-4">
+        {!section && (
+          <>
+            <AdminNewsControl />
+            <div className="flex flex-col gap-4 items-start justify-center w-full p-4 border-2 border-shark-800 rounded-lg">
+              <Typography textSize="big" className="font-semibold">
+                Публикация модпака
+              </Typography>
+              <CreateModpack />
+            </div>
+          </>
+        )}
+        {section === 'tickets' && (
+          <>
+            <AdminTicketsList />
+          </>
+        )}
+        {section === 'reports' && (
+          <>
+            <AdminReportsList />
+          </>
+        )}
+        {section === 'stats' && (
+          <>
+            stats
+          </>
+        )}
+      </div>
     </div>
   )
 }

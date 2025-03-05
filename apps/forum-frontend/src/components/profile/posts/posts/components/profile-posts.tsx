@@ -1,20 +1,19 @@
-import { ProfileSectionLayout } from '#components/layout/profile-section-layout.tsx';
 import { UserPageParam } from '@repo/types/global';
 import { CreatePostSection } from '#components/profile/posts/create-post/create-post-section.tsx';
 import {
   ProfilePosts,
 } from '#components/profile/posts/posts/components/profile-posts-list.tsx';
 import { getUser } from '@repo/lib/helpers/get-user';
+import { ProfileWrapper } from '#components/wrappers/profile-wrapper';
 
 export const UserProfilePosts = ({
   nickname
 }: UserPageParam) => {
   const currentUser = getUser()
-  const isOwner = currentUser.nickname === nickname
 
   return (
-    <ProfileSectionLayout header={isOwner && <CreatePostSection />}>
+    <ProfileWrapper header={currentUser.nickname === nickname && <CreatePostSection />}>
       <ProfilePosts nickname={nickname} />
-    </ProfileSectionLayout>
+    </ProfileWrapper>
   );
 };

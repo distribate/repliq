@@ -476,10 +476,18 @@ export interface IpList {
 export interface Issues {
   created_at: Generated<Timestamp>;
   description: string;
-  id: Generated<string>;
+  id: Int8;
   title: string;
   type: IssueType;
   user_nickname: string;
+}
+
+export interface IssuesApprovals {
+  created_at: Generated<Timestamp>;
+  id: Generated<Int8>;
+  issue_id: Int8;
+  message: string | null;
+  responser: Generated<string | null>;
 }
 
 export interface LandingCurrencies {
@@ -1107,6 +1115,7 @@ export interface DB {
   info_findout: InfoFindout;
   ip_list: IpList;
   issues: Issues;
+  issues_approvals: IssuesApprovals;
   landing_currencies: LandingCurrencies;
   landing_donate: LandingDonate;
   landing_economy: LandingEconomy;

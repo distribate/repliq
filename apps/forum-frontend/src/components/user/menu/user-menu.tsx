@@ -8,10 +8,11 @@ import { UserSettingsModal } from "#components/modals/user-settings/user-setting
 import { CircleUserRound, UsersRound } from "lucide-react";
 import { getUser } from "@repo/lib/helpers/get-user";
 import { USER_URL } from "@repo/shared/constants/routes";
+import { TicketCheck, ShoppingBasket, Shield, LogOut } from 'lucide-react';
 
-const COLLECTION_LINKS = [
-  { name: "Мои покупки", query: "purchases" },
-  { name: "Мои тикеты", query: "tickets" }
+const COLLECTION_LINKS: { icon: any, name: string, query: "purchases" | "tickets" }[] = [
+  { icon: ShoppingBasket, name: "Мои покупки", query: "purchases" },
+  { icon: TicketCheck, name: "Мои тикеты", query: "tickets" }
 ];
 
 const AdminButton = () => {
@@ -23,6 +24,7 @@ const AdminButton = () => {
     <>
       <Link to="/admin">
         <DropdownMenuItem className="gap-2 group cursor-pointer">
+          <Shield size={20} className="text-shark-300" />
           <Typography textSize="medium">
             Панель админа
           </Typography>
@@ -38,8 +40,21 @@ const FriendsLink = () => {
     <Link to="/friends">
       <DropdownMenuItem className="gap-2 group cursor-pointer">
         <UsersRound size={20} className="icon-color" />
-        <Typography className="text-[16px] font-medium">
+        <Typography textSize="medium">
           Друзья
+        </Typography>
+      </DropdownMenuItem>
+    </Link>
+  )
+}
+
+const NotificationsLink = () => {
+  return (
+    <Link to="/notifications">
+      <DropdownMenuItem className="gap-2 group cursor-pointer">
+        <CircleUserRound size={20} className="icon-color" />
+        <Typography textSize="medium">
+          Уведомления
         </Typography>
       </DropdownMenuItem>
     </Link>
@@ -53,7 +68,7 @@ const ProfileLink = () => {
     <Link to={USER_URL + nickname}>
       <DropdownMenuItem className="gap-2 group cursor-pointer">
         <CircleUserRound size={20} className="icon-color" />
-        <Typography className="text-[16px] font-medium">
+        <Typography textSize="medium">
           Мой профиль
         </Typography>
       </DropdownMenuItem>
@@ -63,23 +78,20 @@ const ProfileLink = () => {
 
 export const UserMenu = () => {
   return (
-    <div className="flex flex-col gap-y-2 w-[200px]">
+    <div className="flex flex-col gap-y-2 w-full">
       <ProfileLink />
-      {COLLECTION_LINKS.map((collection) => (
-        <Link
-          key={collection.name}
-          to="/collection"
-          // @ts-ignore
-          search={{ type: collection.query }}
-        >
+      {COLLECTION_LINKS.map(({ icon: Icon, name, query }) => (
+        <Link key={name} to="/collection" search={{ type: query }}>
           <DropdownMenuItem className="gap-2 group cursor-pointer">
+            <Icon size={20} className="text-shark-300" />
             <Typography textSize="medium">
-              {collection.name}
+              {name}
             </Typography>
           </DropdownMenuItem>
         </Link>
       ))}
-      <FriendsLink/>
+      <FriendsLink />
+      <NotificationsLink/>
       <Separator />
       <AdminButton />
       <UserSettingsModal />
@@ -87,6 +99,7 @@ export const UserMenu = () => {
       <LogoutModal
         trigger={
           <DropdownMenuItem onSelect={(e) => e.preventDefault()} className="gap-2 group cursor-pointer">
+            <LogOut size={20} className="text-red-500" />
             <Typography className="text-red-500" textSize="medium">
               Выйти из аккаунта
             </Typography>

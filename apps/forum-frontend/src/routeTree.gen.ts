@@ -15,8 +15,8 @@ import { createFileRoute } from '@tanstack/react-router'
 import { Route as rootRoute } from './routes/__root'
 import { Route as PublicImport } from './routes/_public'
 import { Route as ProtectedImport } from './routes/_protected'
+import { Route as IndexImport } from './routes/index'
 import { Route as AuthIndexImport } from './routes/auth/index'
-import { Route as ProtectedIndexImport } from './routes/_protected/index'
 import { Route as PublicBannedImport } from './routes/_public/banned'
 import { Route as ProtectedSearchImport } from './routes/_protected/search'
 import { Route as ProtectedCollectionImport } from './routes/_protected/collection'
@@ -73,16 +73,16 @@ const ProtectedRoute = ProtectedImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
+const IndexRoute = IndexImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => rootRoute,
+} as any)
+
 const AuthIndexRoute = AuthIndexImport.update({
   id: '/auth/',
   path: '/auth/',
   getParentRoute: () => rootRoute,
-} as any)
-
-const ProtectedIndexRoute = ProtectedIndexImport.update({
-  id: '/',
-  path: '/',
-  getParentRoute: () => ProtectedRoute,
 } as any)
 
 const PublicNotOnlineLazyRoute = PublicNotOnlineLazyImport.update({
@@ -273,6 +273,13 @@ const ProtectedAdminAdminConfigsLazyRoute =
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/': {
+      id: '/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof IndexImport
+      parentRoute: typeof rootRoute
+    }
     '/_protected': {
       id: '/_protected'
       path: ''
@@ -349,13 +356,6 @@ declare module '@tanstack/react-router' {
       fullPath: '/not-online'
       preLoaderRoute: typeof PublicNotOnlineLazyImport
       parentRoute: typeof PublicImport
-    }
-    '/_protected/': {
-      id: '/_protected/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof ProtectedIndexImport
-      parentRoute: typeof ProtectedImport
     }
     '/auth/': {
       id: '/auth/'
@@ -501,7 +501,6 @@ interface ProtectedRouteChildren {
   ProtectedEventsLazyRoute: typeof ProtectedEventsLazyRoute
   ProtectedFriendsLazyRoute: typeof ProtectedFriendsLazyRoute
   ProtectedNotificationsLazyRoute: typeof ProtectedNotificationsLazyRoute
-  ProtectedIndexRoute: typeof ProtectedIndexRoute
   ProtectedactionsCreateTicketRoute: typeof ProtectedactionsCreateTicketRoute
   ProtectedCategoryIdRoute: typeof ProtectedCategoryIdRoute
   ProtectedDashboardProfileRoute: typeof ProtectedDashboardProfileRoute
@@ -521,7 +520,6 @@ const ProtectedRouteChildren: ProtectedRouteChildren = {
   ProtectedEventsLazyRoute: ProtectedEventsLazyRoute,
   ProtectedFriendsLazyRoute: ProtectedFriendsLazyRoute,
   ProtectedNotificationsLazyRoute: ProtectedNotificationsLazyRoute,
-  ProtectedIndexRoute: ProtectedIndexRoute,
   ProtectedactionsCreateTicketRoute: ProtectedactionsCreateTicketRoute,
   ProtectedCategoryIdRoute: ProtectedCategoryIdRoute,
   ProtectedDashboardProfileRoute: ProtectedDashboardProfileRoute,
@@ -554,6 +552,7 @@ const PublicRouteWithChildren =
   PublicRoute._addFileChildren(PublicRouteChildren)
 
 export interface FileRoutesByFullPath {
+  '/': typeof IndexRoute
   '': typeof ProtectedAdminRouteWithChildren
   '/collection': typeof ProtectedCollectionRoute
   '/search': typeof ProtectedSearchRoute
@@ -563,7 +562,6 @@ export interface FileRoutesByFullPath {
   '/notifications': typeof ProtectedNotificationsLazyRoute
   '/not-exist': typeof PublicNotExistLazyRoute
   '/not-online': typeof PublicNotOnlineLazyRoute
-  '/': typeof ProtectedIndexRoute
   '/auth': typeof AuthIndexRoute
   '/create-ticket': typeof ProtectedactionsCreateTicketRoute
   '/category/$id': typeof ProtectedCategoryIdRoute
@@ -583,6 +581,7 @@ export interface FileRoutesByFullPath {
 }
 
 export interface FileRoutesByTo {
+  '/': typeof IndexRoute
   '': typeof ProtectedAdminRouteWithChildren
   '/collection': typeof ProtectedCollectionRoute
   '/search': typeof ProtectedSearchRoute
@@ -592,7 +591,6 @@ export interface FileRoutesByTo {
   '/notifications': typeof ProtectedNotificationsLazyRoute
   '/not-exist': typeof PublicNotExistLazyRoute
   '/not-online': typeof PublicNotOnlineLazyRoute
-  '/': typeof ProtectedIndexRoute
   '/auth': typeof AuthIndexRoute
   '/create-ticket': typeof ProtectedactionsCreateTicketRoute
   '/category/$id': typeof ProtectedCategoryIdRoute
@@ -613,6 +611,7 @@ export interface FileRoutesByTo {
 
 export interface FileRoutesById {
   __root__: typeof rootRoute
+  '/': typeof IndexRoute
   '/_protected': typeof ProtectedRouteWithChildren
   '/_public': typeof PublicRouteWithChildren
   '/_protected/_admin': typeof ProtectedAdminRouteWithChildren
@@ -624,7 +623,6 @@ export interface FileRoutesById {
   '/_protected/notifications': typeof ProtectedNotificationsLazyRoute
   '/_public/not-exist': typeof PublicNotExistLazyRoute
   '/_public/not-online': typeof PublicNotOnlineLazyRoute
-  '/_protected/': typeof ProtectedIndexRoute
   '/auth/': typeof AuthIndexRoute
   '/_protected/(actions)/create-ticket': typeof ProtectedactionsCreateTicketRoute
   '/_protected/category/$id': typeof ProtectedCategoryIdRoute
@@ -646,6 +644,7 @@ export interface FileRoutesById {
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
+    | '/'
     | ''
     | '/collection'
     | '/search'
@@ -655,7 +654,6 @@ export interface FileRouteTypes {
     | '/notifications'
     | '/not-exist'
     | '/not-online'
-    | '/'
     | '/auth'
     | '/create-ticket'
     | '/category/$id'
@@ -674,6 +672,7 @@ export interface FileRouteTypes {
     | '/admin'
   fileRoutesByTo: FileRoutesByTo
   to:
+    | '/'
     | ''
     | '/collection'
     | '/search'
@@ -683,7 +682,6 @@ export interface FileRouteTypes {
     | '/notifications'
     | '/not-exist'
     | '/not-online'
-    | '/'
     | '/auth'
     | '/create-ticket'
     | '/category/$id'
@@ -702,6 +700,7 @@ export interface FileRouteTypes {
     | '/admin'
   id:
     | '__root__'
+    | '/'
     | '/_protected'
     | '/_public'
     | '/_protected/_admin'
@@ -713,7 +712,6 @@ export interface FileRouteTypes {
     | '/_protected/notifications'
     | '/_public/not-exist'
     | '/_public/not-online'
-    | '/_protected/'
     | '/auth/'
     | '/_protected/(actions)/create-ticket'
     | '/_protected/category/$id'
@@ -734,12 +732,14 @@ export interface FileRouteTypes {
 }
 
 export interface RootRouteChildren {
+  IndexRoute: typeof IndexRoute
   ProtectedRoute: typeof ProtectedRouteWithChildren
   PublicRoute: typeof PublicRouteWithChildren
   AuthIndexRoute: typeof AuthIndexRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
+  IndexRoute: IndexRoute,
   ProtectedRoute: ProtectedRouteWithChildren,
   PublicRoute: PublicRouteWithChildren,
   AuthIndexRoute: AuthIndexRoute,
@@ -755,10 +755,14 @@ export const routeTree = rootRoute
     "__root__": {
       "filePath": "__root.tsx",
       "children": [
+        "/",
         "/_protected",
         "/_public",
         "/auth/"
       ]
+    },
+    "/": {
+      "filePath": "index.tsx"
     },
     "/_protected": {
       "filePath": "_protected.tsx",
@@ -769,7 +773,6 @@ export const routeTree = rootRoute
         "/_protected/events",
         "/_protected/friends",
         "/_protected/notifications",
-        "/_protected/",
         "/_protected/(actions)/create-ticket",
         "/_protected/category/$id",
         "/_protected/dashboard/profile",
@@ -832,10 +835,6 @@ export const routeTree = rootRoute
     "/_public/not-online": {
       "filePath": "_public/not-online.lazy.tsx",
       "parent": "/_public"
-    },
-    "/_protected/": {
-      "filePath": "_protected/index.tsx",
-      "parent": "/_protected"
     },
     "/auth/": {
       "filePath": "auth/index.tsx"

@@ -15,12 +15,12 @@ export const NavigationBadge = ({
     <div
       data-state={isActive ? "active" : "disabled"}
       className="flex items-center duration-150 select-none ease-in data-[state=active]:bg-shark-50/80
-       data-[state=disabled]:bg-shark-900/80 backdrop-filter-lg group cursor-pointer justify-center px-6 py-1 rounded-[18px]"
+       data-[state=disabled]:bg-shark-900/80 group cursor-pointer justify-center py-4"
       {...props}
     >
       <Typography
         title={title}
-        className="duration-150 group-hover:duration-150 group-data-[state=active]:text-black font-medium text-[18px]"
+        className="duration-150 group-hover:duration-150 group-data-[state=active]:text-black text-[18px]"
       >
         {title}
       </Typography>

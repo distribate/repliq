@@ -41,9 +41,7 @@ export const requestedUserQuery = (nickname: string) => {
       const res = await getUserProfile(nickname)
 
       if (!res) {
-        throw navigate({
-          to: "."
-        })
+        throw navigate({ to: "." })
       }
 
       if (res === 'not-exist') {

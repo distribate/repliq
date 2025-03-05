@@ -17,7 +17,7 @@ export async function getLandsByNickname(nickname: string) {
 
   const lands = await bisquiteDB
     .selectFrom("lands_lands")
-    .select(["area", "name", "members", "type", "created_at", "title", "ulid"])
+    .select(["area", "name", "members", "type", "created_at", "title", "ulid", "balance"])
     .where(
       "members",
       "like",

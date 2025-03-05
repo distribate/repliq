@@ -70,7 +70,7 @@ export const NotificationsList = () => {
   if (notifications?.length === 0) return <ContentNotFound title="Нет уведомлений" />;
 
   return (
-    <div className="flex flex-col gap-y-4 p-2 w-full h-full">
+    <div className="flex flex-col gap-y-4 w-full h-full">
       {isLoading && (
         <>
           <Skeleton className="h-20 w-full" />

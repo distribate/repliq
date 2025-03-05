@@ -29,7 +29,7 @@ export const RatingNavigation = () => {
   }
 
   return (
-    <div className="flex items-center justify-center gap-2 flex-wrap lg:flex-nowrap w-full">
+    <div className="grid grid-cols-2 auto-rows-auto lg:flex lg:flex-nowrap w-full *:w-full">
       {RATING_NAVIGATION.map(rating => (
         <NavigationBadge
           key={rating.type}

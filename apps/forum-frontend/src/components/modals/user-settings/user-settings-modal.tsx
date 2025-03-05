@@ -7,6 +7,7 @@ import {
 import { ReactNode } from "react";
 import { Typography } from "@repo/ui/src/components/typography";
 import { DropdownMenuItem } from "@repo/ui/src/components/dropdown-menu";
+import { SlidersVertical } from 'lucide-react';
 
 type UserSettingsModalProps =
   | { trigger: ReactNode }
@@ -23,6 +24,7 @@ export const UserSettingsModal = ({
             onSelect={(e) => e.preventDefault()}
             className="gap-2 group cursor-pointer"
           >
+            <SlidersVertical size={20} className="text-shark-300" />
             <Typography textSize="medium">
               Настройки
             </Typography>

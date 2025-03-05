@@ -1,12 +1,12 @@
 import { ProfileAccountSocials } from "./socials/profile-account-socials";
 import { ProfileAccountReferals } from "./refs/profile-account-refs";
-import { ProfileSectionLayout } from "#components/layout/profile-section-layout";
 import { SectionPrivatedContent } from "#components/templates/section-privated-content";
 import { ProfileAccountStats } from "./stats/profile-account-stats-list";
+import { ProfileWrapper } from "#components/wrappers/profile-wrapper";
 
 export const UserProfileAccount = () => {
   return (
-    <ProfileSectionLayout header={<SectionPrivatedContent />}>
+    <ProfileWrapper header={<SectionPrivatedContent />}>
       <div className="flex flex-col gap-y-8 w-full h-full">
         <ProfileAccountStats />
         <ProfileAccountSocials />
@@ -14,6 +14,6 @@ export const UserProfileAccount = () => {
           <ProfileAccountReferals />
         </div>
       </div>
-    </ProfileSectionLayout>
+    </ProfileWrapper>
   );
 };

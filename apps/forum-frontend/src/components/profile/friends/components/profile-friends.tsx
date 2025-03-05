@@ -1,11 +1,11 @@
 import { UserPageParam } from "@repo/types/global";
 import { ProfileFriends } from './profile-friends-list';
-import { ProfileSectionLayout } from "#components/layout/profile-section-layout";
+import { ProfileWrapper } from "#components/wrappers/profile-wrapper";
 
 export const UserProfileFriends = ({ nickname }: UserPageParam) => {
   return (
-    <ProfileSectionLayout>
+    <ProfileWrapper>
       <ProfileFriends nickname={nickname} />
-    </ProfileSectionLayout>
+    </ProfileWrapper>
   );
 };

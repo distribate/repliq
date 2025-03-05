@@ -158,7 +158,7 @@ function RouteComponent() {
   const category = data.data
 
   return (
-    <div className="flex flex-col gap-4 w-full p-1">
+    <div className="flex flex-col gap-4 w-full">
       <BlockWrapper className="flex flex-col gap-y-2 w-full !p-4">
         <div className="flex flex-col gap-2">
           <Typography

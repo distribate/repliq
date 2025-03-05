@@ -3,6 +3,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { RouterProvider, createRouter } from '@tanstack/react-router'
 import { routeTree } from './routeTree.gen'
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
+import { Skeleton } from '@repo/ui/src/components/skeleton'
 
 const queryClient = new QueryClient()
 
@@ -11,8 +12,11 @@ const router = createRouter({
   context: {
     queryClient,
   },
-  defaultPreload: false,
-  defaultPreloadStaleTime: 0,
+  defaultPreload: "intent",
+  defaultPreloadStaleTime: 200,
+  defaultPendingComponent: () => (
+    <Skeleton className="w-full h-full"/>
+  ),
 })
 
 declare module '@tanstack/react-router' {

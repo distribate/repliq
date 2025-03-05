@@ -4,13 +4,15 @@ import { useSuspenseQuery } from "@tanstack/react-query"
 export const GLOBAL_OPTION_QUERY_KEY = createQueryKey("ui", ["global-type"])
 
 export type GlobalOptionQuery = {
-  isStarted: boolean
+  isStarted: boolean,
+  isAuthenticated: boolean,
 }
 
 export const globalOptionQuery = () => useSuspenseQuery<GlobalOptionQuery>({
   queryKey: GLOBAL_OPTION_QUERY_KEY,
   initialData: {
-    isStarted: false
+    isStarted: false,
+    isAuthenticated: false
   },
   refetchOnWindowFocus: false,
   refetchOnMount: false,

@@ -1,14 +1,15 @@
 import { Avatar } from "#components/user/avatar/components/avatar";
-import { SidebarLogotype } from "#components/sidebar/desktop/components/sidebar-content/logotype/sidebar-logotype";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@repo/ui/src/components/dropdown-menu";
-import { UserMenu } from "#components/sidebar/desktop/components/sidebar-content/user-menu/user-menu";
+import { UserMenu } from "#components/user/menu/user-menu";
 import { ArrowDown } from "lucide-react";
 import { UserBalance } from "#components/user/balance/user-balance";
 import { Typography } from "@repo/ui/src/components/typography";
-import { Compass, Plus, Pencil, NotebookPen } from "lucide-react"
-import { Link } from "@tanstack/react-router";
-import { Axe, Cuboid, UsersRound, Rocket } from "lucide-react";
+import { Compass, Plus, Pencil, Pickaxe, NotebookPen, Axe, Cuboid, UsersRound, Rocket } from "lucide-react"
+import { Link, useNavigate } from "@tanstack/react-router";
 import { currentUserQuery } from "@repo/lib/queries/current-user-query";
+import { globalOptionQuery } from "@repo/lib/queries/global-option-query";
+import { Button } from "@repo/ui/src/components/button";
+import LogotypeImage from "@repo/assets/images/logotype.png";
 
 const ProfileBadge = () => {
   const { nickname } = currentUserQuery().data
@@ -17,7 +18,7 @@ const ProfileBadge = () => {
     <div className="flex items-center justify-between h-14 px-2 py-1 gap-3 bg-shark-950 rounded-lg">
       <Avatar propHeight={36} propWidth={36} nickname={nickname} />
       <UserBalance />
-      <DropdownArrow/>
+      <DropdownArrow />
     </div>
   )
 }
@@ -26,7 +27,6 @@ const DISCOVER = [
   { icon: UsersRound, title: "Игроки", link: "/search?type=users" },
   { icon: Rocket, title: "Рейтинг", link: "/ratings" },
   { icon: Cuboid, title: "Территории", link: "/lands" },
-  { icon: UsersRound, title: "Треды", link: "/search?type=threads" },
   { icon: Axe, title: "Ивенты", link: "/events" }
 ]
 
@@ -50,30 +50,46 @@ const DropdownArrow = () => {
   )
 }
 
+const Logotype = () => {
+  return (
+    <Link title="Главная" to="/" className="flex active:scale-[1.04] backdrop-blur-md rounded-lg items-center justify-center w-full select-none">
+      <img src={LogotypeImage} width={32} height={32} alt="" draggable={false} />
+      <div className="w-fit ml-2">
+        <Typography textSize="very_big" textColor="shark_white" font="minecraft" className="truncate">
+          Fasberry
+        </Typography>
+      </div>
+    </Link>
+  );
+};
+
 export const Navbar = () => {
+  const { isAuthenticated: isAuth } = globalOptionQuery().data
+  const navigate = useNavigate()
+
   return (
     <div className="flex flex-col lg:flex-row items-center justify-between w-full gap-2">
       <div className="flex w-full lg:w-fit bg-shark-950 h-14 rounded-lg px-6 py-1">
-        <SidebarLogotype />
+        <Logotype />
       </div>
       <div className="flex gap-2 w-full lg:w-fit rounded-lg *:w-full">
         <DropdownMenu>
           <DropdownMenuTrigger
-            className="flex h-14 gap-3 rounded-lg items-center group px-6 bg-shark-950/80 hover:bg-shark-950 focus-visible:outline-none"
+            className="flex h-14 gap-3 rounded-lg items-center group px-6 bg-shark-950 focus-visible:outline-none"
           >
             <Compass size={20} className="text-shark-300" />
-            <Typography className="font-semibold text-lg">
+            <Typography className="font-semibold text-base">
               Исследовать
             </Typography>
             <DropdownArrow />
           </DropdownMenuTrigger>
-          <DropdownMenuContent side="bottom" align="end">
+          <DropdownMenuContent side="bottom" align="end" className="min-w-[200px]">
             <div className="flex flex-col gap-2 w-full h-full">
               {DISCOVER.map(({ icon: Icon, title, link }, idx) => (
                 <Link key={idx} to={link}>
-                  <DropdownMenuItem className="gap-2 px-4 py-2 group cursor-pointer">
+                  <DropdownMenuItem className="gap-2 pr-6 py-2 group cursor-pointer">
                     <Icon size={20} className="text-shark-300" />
-                    <Typography className="text-[18px]">
+                    <Typography textSize="medium">
                       {title}
                     </Typography>
                   </DropdownMenuItem>
@@ -84,20 +100,20 @@ export const Navbar = () => {
         </DropdownMenu>
         <DropdownMenu>
           <DropdownMenuTrigger
-            className="flex h-14 gap-3 rounded-lg items-center group px-6 bg-shark-950/80 hover:bg-shark-950 focus-visible:outline-none"
+            className="flex h-14 gap-3 rounded-lg items-center group px-6 bg-shark-950 focus-visible:outline-none"
           >
-            <Compass size={20} className="text-shark-300" />
-            <Typography className="font-semibold text-lg">
+            <Pickaxe size={20} className="text-shark-300" />
+            <Typography className="font-semibold text-base">
               Ресурсы
             </Typography>
             <DropdownArrow />
           </DropdownMenuTrigger>
-          <DropdownMenuContent side="bottom" align="end">
+          <DropdownMenuContent side="bottom" align="end" className="min-w-[200px]">
             {RESOURCES.map(({ icon: Icon, title, link }, idx) => (
               <a key={idx} href={link}>
-                <DropdownMenuItem className="gap-2 px-4 py-2 group cursor-pointer">
+                <DropdownMenuItem className="gap-2 pr-6 py-2 group cursor-pointer">
                   <Icon size={20} className="text-shark-300" />
-                  <Typography className="text-[18px]">
+                  <Typography textSize="medium">
                     {title}
                   </Typography>
                 </DropdownMenuItem>
@@ -113,13 +129,13 @@ export const Navbar = () => {
           >
             <Plus size={24} className="text-shark-300" />
           </DropdownMenuTrigger>
-          <DropdownMenuContent side="bottom" align="end">
+          <DropdownMenuContent side="bottom" align="end" className="min-w-[200px]">
             <div className="flex flex-col gap-2 w-full h-full">
               {CREATE.map(({ icon: Icon, title, link }, idx) => (
                 <Link key={idx} to={link}>
-                  <DropdownMenuItem className="gap-2 px-4 py-2 w-full">
+                  <DropdownMenuItem className="gap-2 pr-6 py-2 w-full">
                     <Icon size={20} className="text-shark-300" />
-                    <Typography className="text-[16px]">
+                    <Typography textSize="medium">
                       {title}
                     </Typography>
                   </DropdownMenuItem>
@@ -128,14 +144,22 @@ export const Navbar = () => {
             </div>
           </DropdownMenuContent>
         </DropdownMenu>
-        <DropdownMenu>
-          <DropdownMenuTrigger className="group focus-visible:outline-none">
-            <ProfileBadge />
-          </DropdownMenuTrigger>
-          <DropdownMenuContent side="bottom" align="end">
-            <UserMenu />
-          </DropdownMenuContent>
-        </DropdownMenu>
+        {isAuth ? (
+          <DropdownMenu>
+            <DropdownMenuTrigger className="group focus-visible:outline-none">
+              <ProfileBadge />
+            </DropdownMenuTrigger>
+            <DropdownMenuContent side="bottom" align="end" className="min-w-[240px]">
+              <UserMenu />
+            </DropdownMenuContent>
+          </DropdownMenu>
+        ) : (
+          <Button onClick={() => navigate({ to: "/auth" })} className="flex items-center rounded-lg bg-shark-50 h-14 px-6">
+            <Typography textSize="large" className="text-shark-900 font-semibold">
+              Авторизоваться
+            </Typography>
+          </Button>
+        )}
       </div>
     </div>
   )

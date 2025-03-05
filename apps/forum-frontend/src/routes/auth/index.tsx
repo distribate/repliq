@@ -3,42 +3,40 @@ import { PageWrapper } from '#components/wrappers/page-wrapper.tsx'
 import { AuthImage } from '#components/forms/auth/components/auth-image.tsx'
 import { Typography } from '@repo/ui/src/components/typography'
 import { SignInForm } from '#components/forms/auth/components/sign-in.tsx'
-import { validateSession } from '@repo/lib/actions/validate-session'
 import { createFileRoute } from '@tanstack/react-router'
-import { AUTH_FLAG_QUERY_KEY } from '#components/modals/action-confirmation/components/logout/hooks/use-logout';
 import { useQueryClient } from '@tanstack/react-query'
 import { SignUpForm } from '#components/forms/auth/components/sign-up.tsx'
-import { AUTH_GLOBAL_OPTIONS_QUERY_KEY, AUTH_TYPE_QUERY_KEY, AuthGlobalOptionsQuery, authGlobalOptionsQuery, authTypeQuery } from '#components/forms/auth/queries/auth-query'
+import {
+  AUTH_GLOBAL_OPTIONS_QUERY_KEY,
+  AUTH_TYPE_QUERY_KEY,
+  AuthGlobalOptionsQuery,
+  authGlobalOptionsQuery,
+  authTypeQuery
+} from '#components/forms/auth/queries/auth-query'
 import { Eye, EyeOff } from 'lucide-react'
+import { validatePage } from "@repo/lib/utils/validate-page.ts"
+
+type AuthSearch = {
+  from?: string
+  redirect?: string
+}
 
 export const Route = createFileRoute('/auth/')({
   component: RouteComponent,
   beforeLoad: async ({ context: ctx }) => {
-    let isAuthenticated: boolean = false;
+    const isValid = await validatePage(ctx.queryClient)
 
-    const cache = ctx.queryClient.getQueryData<boolean>(AUTH_FLAG_QUERY_KEY)
-
-    if (!cache) {
-      isAuthenticated = await validateSession()
-
-      ctx.queryClient.setQueryData(AUTH_FLAG_QUERY_KEY, isAuthenticated)
-    } else {
-      isAuthenticated = cache;
-    }
-
-    if (isAuthenticated) {
-      throw redirect({
-        to: '/'
-      })
+    if (isValid) {
+      throw redirect({ to: '/' })
     }
   },
   head: () => ({
     meta: [{ title: 'Авторизация' }],
   }),
-  validateSearch: (search: Record<string, unknown>) => {
+  validateSearch: (search: Record<string, unknown>): AuthSearch => {
     return {
-      from: search.from as string || undefined,
-      redirect: search.redirect as string || undefined,
+      from: search.from as string ?? undefined,
+      redirect: search.redirect as string ?? undefined,
     }
   },
 })

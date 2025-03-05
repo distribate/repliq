@@ -2,7 +2,7 @@ import { AdminNavigationBadge } from "./admin-navigation-badge.tsx";
 
 export const AdminNavigation = () => {
   return (
-    <div className="flex flex-wrap lg:flex-nowrap py-4 px-2 gap-3 rounded-[16px] overflow-hidden items-center w-fit">
+    <div className="grid grid-cols-2 auto-rows-auto lg:flex lg:flex-nowrap w-full *:w-full">
       <AdminNavigationBadge title="Главная" paramValue="main" />
       <AdminNavigationBadge title="Репорты" paramValue="reports" />
       <AdminNavigationBadge title="Тикеты" paramValue="tickets" />

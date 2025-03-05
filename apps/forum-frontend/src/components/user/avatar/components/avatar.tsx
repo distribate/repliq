@@ -7,7 +7,7 @@ import ExpNoActive from '@repo/assets/images/minecraft/exp-noactive.webp';
 import { userStatusQuery } from '@repo/lib/queries/user-status-query.ts';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@repo/ui/src/components/tooltip.tsx';
 
-const avatarVariants = cva('relative rounded-lg border border-shark-600/20', {
+const avatarVariants = cva('relative overflow-hidden border border-shark-600/20', {
   variants: {
     variant: {
       default: 'max-w-[68px] max-h-[68px]',
@@ -19,7 +19,14 @@ const avatarVariants = cva('relative rounded-lg border border-shark-600/20', {
     shadow: {
       default: 'shadow-md shadow-black/70',
     },
+    rounded: {
+      default: "rounded-lg",
+      medium: "rounded-md"
+    }
   },
+  defaultVariants: {
+    rounded: "default"
+  }
 });
 
 interface Avatar {
@@ -73,20 +80,14 @@ const AvatarUserStatus = ({ nickname }: { nickname: string }) => {
 }
 
 export const Avatar = forwardRef<HTMLDivElement, AvatarProps>(({
-  className, children, withStatus, variant, shadow, propWidth, propHeight, border, nickname, ...props
+  className, children, withStatus, variant, shadow, rounded, propWidth, propHeight, border, nickname, ...props
 }, ref) => {
   const { data: avatarUrl } = userAvatarQuery(nickname);
 
   return (
-    <div
-      className={avatarVariants({ variant, shadow, border, className })}
-      ref={ref}
-      {...props}
-    >
-      <img src={avatarUrl} width={propWidth} height={propHeight} className="rounded-sm" loading="eager" alt="" />
-      {withStatus && (
-        <AvatarUserStatus nickname={nickname} />
-      )}
+    <div className={avatarVariants({ variant, shadow, border, rounded, className })} ref={ref}  {...props}>
+      <img src={avatarUrl} width={propWidth} height={propHeight} loading="eager" alt="" />
+      {withStatus && <AvatarUserStatus nickname={nickname} />}
     </div>
   );
 });

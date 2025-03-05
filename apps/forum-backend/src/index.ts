@@ -103,6 +103,7 @@ import { getReportsRoute } from '#routes/admin/get-reports.ts';
 import { getStatusRoute } from '#routes/public/get-status.ts';
 import { subscribePlayerGroup } from '#subscribers/sub-player-group.ts';
 import { getUserGameStatsRoute } from '#routes/user/get-user-game-stats.ts';
+import { getUserTicketsRoute } from '#routes/user/get-user-tickets.ts';
 
 async function startNats() {
   await initNats()
@@ -251,6 +252,7 @@ export const user = new Hono()
   .route("/", getUserPublicSocialsRoute)
   .route("/", getMyLandsRoute)
   .route("/", getUserGameStatsRoute)
+  .route("/", getUserTicketsRoute)
 
 export const search = new Hono()
   .basePath('/search')

@@ -87,6 +87,8 @@ export const useUpdateGlobalPreferences = () => {
               });
               break;
           }
+          break;
+          
         case "intro":
           qc.setQueryData(GLOBAL_PREFERENCES_QUERY_KEY,
             (prev: GlobalPreferencesQuery) => ({ ...prev, intro: data })

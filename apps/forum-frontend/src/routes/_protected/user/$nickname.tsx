@@ -10,10 +10,11 @@ import { getUser } from "@repo/lib/helpers/get-user";
 import { isUserDetailed } from "@repo/lib/helpers/is-user-detailed";
 import { Separator } from "@repo/ui/src/components/separator";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@repo/ui/src/components/tabs";
-import { Selectable } from 'kysely';
-import { Users } from "@repo/types/db/forum-database-types";
 import { ProfileSkinControls } from "#components/profile/skin/components/profile-skin-controls.tsx";
 import { Typography } from "@repo/ui/src/components/typography";
+import { friendStatusOpts } from '#components/buttons/friend-button';
+import { CURRENT_USER_QUERY_KEY } from '@repo/lib/queries/current-user-query';
+import { UserDetailed } from '@repo/types/entities/user-type';
 
 export const Route = createFileRoute('/_protected/user/$nickname')({
   component: RouteComponent,
@@ -25,91 +26,37 @@ export const Route = createFileRoute('/_protected/user/$nickname')({
         keywords: [nickname ?? "player", `fasberry profile player`, `${nickname} profile`,],
       }
     ]
-  })
+  }),
+  loader: async ({ context: ctx, params: { nickname } }) => {
+    const currentUser = ctx.queryClient.getQueryData<UserDetailed>(CURRENT_USER_QUERY_KEY)
+
+    if (!currentUser) return;
+
+    await ctx.queryClient.ensureQueryData({ ...friendStatusOpts(currentUser.nickname, nickname) })
+  }
 })
-
-const UserBlocked = lazy(() => import("#components/templates/user-blocked.tsx")
-  .then(m => ({ default: m.UserBlocked }))
-);
-
-const UserBanned = lazy(() => import("#components/templates/user-banned.tsx")
-  .then(m => ({ default: m.UserBanned }))
-);
-
-const ProfilePrivated = lazy(() => import("#components/templates/profile-privated.tsx")
-  .then(m => ({ default: m.ProfilePrivated }))
-);
-
-export type ProfileContentProps = {
-  nickname: string
-}
-
-const ProfileContent = ({
-  nickname: requestedUserNickname
-}: ProfileContentProps) => {
-  const { data: requestedUser } = requestedUserQuery(requestedUserNickname)
-
-  const profileStatus = requestedUser?.details;
-
-  if (profileStatus?.status === 'banned') {
-    return (
-      <Suspense fallback={<Skeleton className="w-1/3 h-1/3" />}>
-        <UserBanned requestedUserNickname={requestedUserNickname} />
-      </Suspense>
-    );
-  }
-
-  const blockedType = profileStatus?.status === 'blocked-by-you' ? 'blocked-by-you' : 'blocked-by-user';
-  
-  const isBlocked = (profileStatus?.status === 'blocked-by-you' 
-    || profileStatus?.status === 'blocked-by-user')
-    
-  const isPrivate = profileStatus?.status === 'private'
-
-  if (isBlocked) {
-    return (
-      <Suspense fallback={<Skeleton className="w-1/3 h-1/3" />}>
-        <UserBlocked blockedType={blockedType} />
-      </Suspense>
-    )
-  }
-
-  if (isPrivate) {
-    return (
-      <Suspense fallback={<Skeleton className="w-1/3 h-1/3" />}>
-        <ProfilePrivated />
-      </Suspense>
-    )
-  }
-
-  return (
-    <Suspense fallback={<UserContentSkeleton />}>
-      <ProfileContentTabs nickname={requestedUserNickname} />
-    </Suspense>
-  )
-}
 
 const ProfileSkinRender = lazy(() => import("#components/profile/skin/components/profile-skin-render.tsx")
   .then(m => ({ default: m.ProfileSkinRender }))
 )
 
-const UserProfileAccount = lazy(() => import("#components/profile/account/components/profile-account.tsx")
+const ProfileAccount = lazy(() => import("#components/profile/account/components/profile-account.tsx")
   .then(m => ({ default: m.UserProfileAccount }))
 )
 
-const UserProfileGameStats = lazy(() => import("#components/profile/stats/components/profile-stats.tsx")
+const ProfileGameStats = lazy(() => import("#components/profile/stats/components/profile-stats.tsx")
   .then(m => ({ default: m.UserProfileGameStats }))
 )
 
-const UserProfileFriends = lazy(() => import("#components/profile/friends/components/profile-friends.tsx")
+const ProfileFriends = lazy(() => import("#components/profile/friends/components/profile-friends.tsx")
   .then(m => ({ default: m.UserProfileFriends }))
 )
 
-const UserProfileThreads = lazy(() => import("#components/profile/threads/components/profile-threads.tsx")
+const ProfileThreads = lazy(() => import("#components/profile/threads/components/profile-threads.tsx")
   .then(m => ({ default: m.UserProfileThreads }))
 )
 
-const UserProfileGameAchievements = lazy(() => import("#components/profile/achievements/components/profile-game-ach.tsx")
+const ProfileGameAchievements = lazy(() => import("#components/profile/achievements/components/profile-game-ach.tsx")
   .then(m => ({ default: m.UserProfileGameAchievements }))
 )
 
@@ -117,22 +64,29 @@ const SectionPrivatedTrigger = lazy(() => import("#components/templates/section-
   .then(m => ({ default: m.SectionPrivatedTrigger }))
 );
 
-export type User = Selectable<Pick<Users, "id" | "nickname" | "uuid">>;
+const Blocked = lazy(() => import("#components/templates/user-blocked.tsx")
+  .then(m => ({ default: m.UserBlocked }))
+);
 
-export const ProfileContentTabs = ({
+const Banned = lazy(() => import("#components/templates/user-banned.tsx")
+  .then(m => ({ default: m.UserBanned }))
+);
+
+const ProfilePrivated = lazy(() => import("#components/templates/profile-privated.tsx")
+  .then(m => ({ default: m.ProfilePrivated }))
+);
+
+const ProfileContentTabs = ({
   nickname: requestedUserNickname
-}: ProfileContentProps) => {
-  const currentUser = getUser()
+}: Pick<UserDetailed, "nickname">) => {
+  const { nickname: currentUserNickname } = getUser()
   const { data: requestedUser } = requestedUserQuery(requestedUserNickname)
-  const { nickname: currentUserNickname } = currentUser;
 
   if (!requestedUser) return null;
 
-  let requestedUserUUID: string | null = null;
   let isGameStatsShow: boolean = false;
 
   if (isUserDetailed(requestedUser)) {
-    requestedUserUUID = requestedUser.uuid;
     isGameStatsShow = requestedUser.preferences.game_stats_visible;
   }
 
@@ -142,9 +96,7 @@ export const ProfileContentTabs = ({
     isGameStatsShow = true;
   }
 
-  const isSectionPrivatedByOwner = !isGameStatsShow && requestedUserNickname === currentUserNickname;
-
-  if (!requestedUserUUID) return null;
+  const isSectionPrivated = !isGameStatsShow && requestedUserNickname === currentUserNickname;
 
   return (
     <Tabs
@@ -154,43 +106,31 @@ export const ProfileContentTabs = ({
     >
       <TabsList className="grid grid-cols-2 auto-rows-auto bg-shark-900 lg:flex lg:justify-start w-full lg:w-fit">
         <TabsTrigger value="posts" className="rounded-r-none !rounded-l-lg">
-          <Typography className="font-semibold">
-            Посты
-          </Typography>
+          <Typography className="font-semibold">Посты</Typography>
         </TabsTrigger>
         <TabsTrigger value="topics" className="rounded-none">
-          <Typography className="font-semibold">
-            Треды
-          </Typography>
+          <Typography className="font-semibold">Треды</Typography>
         </TabsTrigger>
         <TabsTrigger value="friends" className="rounded-none">
-          <Typography className="font-semibold">
-            Друзья
-          </Typography>
+          <Typography className="font-semibold">Друзья</Typography>
         </TabsTrigger>
         <Separator orientation="vertical" className="hidden lg:block" />
         {isGameStatsShow && (
           <>
             <TabsTrigger value="game-stats" className="peer rounded-none">
-              <Typography className="font-semibold">
-                Статистика
-              </Typography>
+              <Typography className="font-semibold">Статистика</Typography>
             </TabsTrigger>
-            {isSectionPrivatedByOwner && <SectionPrivatedTrigger />}
+            {isSectionPrivated && <SectionPrivatedTrigger />}
           </>
         )}
         <TabsTrigger value="achievements" className={`${isOwner ? "rounded-none" : "rounded-l-none rounded-r-lg"}`}>
-          <Typography className="font-semibold">
-            Достижения
-          </Typography>
+          <Typography className="font-semibold">Достижения</Typography>
         </TabsTrigger>
         {isOwner && (
           <>
             <Separator orientation="vertical" className="hidden lg:block" />
             <TabsTrigger value="account-stats" className="peer rounded-r-lg rounded-l-none">
-              <Typography className="font-semibold">
-                Аккаунт
-              </Typography>
+              <Typography className="font-semibold">Аккаунт</Typography>
             </TabsTrigger>
             <SectionPrivatedTrigger />
           </>
@@ -205,34 +145,30 @@ export const ProfileContentTabs = ({
           </TabsContent>
           <TabsContent value="topics">
             <Suspense>
-              <UserProfileThreads nickname={requestedUserNickname} />
+              <ProfileThreads nickname={requestedUserNickname} />
             </Suspense>
           </TabsContent>
           <TabsContent value="friends">
             <Suspense>
-              <UserProfileFriends nickname={requestedUserNickname} />
+              <ProfileFriends nickname={requestedUserNickname} />
             </Suspense>
           </TabsContent>
           {isGameStatsShow && (
             <TabsContent value="game-stats">
               <Suspense>
-                <UserProfileGameStats
-                  nickname={requestedUserNickname}
-                  uuid={requestedUserUUID}
-                  isSectionPrivatedByOwner={isSectionPrivatedByOwner}
-                />
+                <ProfileGameStats nickname={requestedUserNickname} isSectionPrivated={isSectionPrivated} />
               </Suspense>
             </TabsContent>
           )}
           <TabsContent value="achievements">
             <Suspense>
-              <UserProfileGameAchievements nickname={requestedUserNickname} />
+              <ProfileGameAchievements nickname={requestedUserNickname} />
             </Suspense>
           </TabsContent>
           {isOwner && (
             <TabsContent value="account-stats">
               <Suspense>
-                <UserProfileAccount />
+                <ProfileAccount />
               </Suspense>
             </TabsContent>
           )}
@@ -251,12 +187,48 @@ export const ProfileContentTabs = ({
 };
 
 function RouteComponent() {
-  const { nickname } = Route.useParams()
+  const { nickname: requestedUserNickname } = Route.useParams()
+  const { data: requestedUser } = requestedUserQuery(requestedUserNickname)
+
+  const profileStatus = requestedUser?.details;
+
+  if (profileStatus?.status === 'banned') {
+    return (
+      <Suspense fallback={<Skeleton className="w-1/3 h-1/3" />}>
+        <Banned requestedUserNickname={requestedUserNickname} />
+      </Suspense>
+    );
+  }
+
+  const blockedType = profileStatus?.status === 'blocked-by-you' ? 'blocked-by-you' : 'blocked-by-user';
+
+  const isBlocked = (profileStatus?.status === 'blocked-by-you'
+    || profileStatus?.status === 'blocked-by-user')
+
+  const isPrivate = profileStatus?.status === 'private'
+
+  if (isBlocked) {
+    return (
+      <Suspense fallback={<Skeleton className="w-1/3 h-1/3" />}>
+        <Blocked blockedType={blockedType} />
+      </Suspense>
+    )
+  }
+
+  if (isPrivate) {
+    return (
+      <Suspense fallback={<Skeleton className="w-1/3 h-1/3" />}>
+        <ProfilePrivated />
+      </Suspense>
+    )
+  }
 
   return (
     <div className="flex flex-col gap-6 w-full h-full relative">
-      <UserCoverLayout nickname={nickname}>
-        <ProfileContent nickname={nickname} />
+      <UserCoverLayout nickname={requestedUserNickname}>
+        <Suspense fallback={<UserContentSkeleton />}>
+          <ProfileContentTabs nickname={requestedUserNickname} />
+        </Suspense>
       </UserCoverLayout>
     </div>
   )

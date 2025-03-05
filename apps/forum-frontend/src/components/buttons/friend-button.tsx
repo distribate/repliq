@@ -31,17 +31,23 @@ const getUserFriendStatus = async (recipient: string) => {
   return data.data
 }
 
-export const friendStatusQuery = (initiator: string, recipient: string) => useSuspenseQuery({
-  queryKey: FRIEND_STATUS_QUERY_KEY(recipient),
-  queryFn: async () => {
-    if (initiator === recipient) {
-      return null
-    }
+export const friendStatusOpts = (initiator: string, recipient: string) => {
+  return {
+    queryKey: FRIEND_STATUS_QUERY_KEY(recipient),
+    queryFn: async () => {
+      if (initiator === recipient) {
+        return null
+      }
 
-    return await getUserFriendStatus(recipient)
-  },
-  refetchOnMount: false,
-  refetchOnWindowFocus: false
+      return await getUserFriendStatus(recipient)
+    },
+    refetchOnMount: false,
+    refetchOnWindowFocus: false
+  }
+}
+
+export const friendStatusQuery = (initiator: string, recipient: string) => useSuspenseQuery({
+  ...friendStatusOpts(initiator, recipient)
 })
 
 const IncomingFriendButton = ({
