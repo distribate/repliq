@@ -1,4 +1,4 @@
-import { MainLayoutPage } from '@repo/landing-components/src/layout/main-layout.tsx';
+import { MainLayoutPage } from '#components/layout/default/main-layout.tsx';
 import { Typography } from '@repo/landing-ui/src/typography.tsx';
 import Bzzvanet from '@repo/assets/images/credits-bzzvanet.jpg';
 import Link from 'next/link';

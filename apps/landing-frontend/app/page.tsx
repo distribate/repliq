@@ -1,17 +1,17 @@
-import { MainLayoutPage } from '@repo/landing-components/src/layout/main-layout';
+import { MainLayoutPage } from "#components/layout/default/main-layout";
 import { Typography } from '@repo/landing-ui/src/typography';
-import { IdeaMain } from '@repo/landing-components/src/intro/intro-main';
-import { CommunityGalleryItem } from '@repo/landing-components/src/community/community-gallery-item';
-import { NewsList } from '@repo/landing-components/src/news/news-list';
+import { IdeaMain } from '#components/intro/intro-main';
+import { CommunityGalleryItem } from '#components/gallery/community-gallery-item';
+import { NewsList } from '#components/news/news-list';
 import Link from 'next/link';
-import { IntroBackgroundImage } from '@repo/landing-components/src/intro/background-image';
-import { StatusItem } from '@repo/landing-components/src/intro/status-item';
+import { IntroBackgroundImage } from '#components/intro/background-image';
+import { StatusItem } from '#components/intro/status-item';
 import { Button } from '@repo/landing-ui/src/button';
-import { SpawnCarousel } from '@repo/landing-components/src/intro/spawn-carousel';
+import { SpawnCarousel } from '#components/intro/spawn-carousel';
 import dynamic from 'next/dynamic';
 
 const ContactsSection = dynamic(() =>
-  import('@repo/landing-components/src/contacts/contacts-section')
+  import('#components/contacts/contacts-section')
     .then(m => m.ContactsSection)
 );
 

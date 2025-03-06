@@ -14,6 +14,8 @@ declare module "bun" {
     PAYMENTS_POSTGRES_USER: string,
     PAYMENTS_POSTGRES_PORT: string;
 
+    CRYPTO_PAY_MAINNET_URL: string;
+    CRYPTO_PAY_TESTNET_URL: string;
     CRYPTO_PAY_MAINNET_TOKEN: string;
     CRYPTO_PAY_TESTNET_TOKEN: string;
 

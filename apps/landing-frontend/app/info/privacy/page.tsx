@@ -1,4 +1,4 @@
-import { MainLayoutPage } from "@repo/landing-components/src/layout/main-layout";
+import { MainLayoutPage } from "#components/layout/default/main-layout";
 import { Typography } from "@repo/landing-ui/src/typography";
 import { MAIL_FASBERRY_SUPPORT } from "@repo/shared/wiki/data/configs";
 

@@ -1,5 +1,5 @@
 import type { ProfileViewsDetails } from "@repo/types/routes-types/get-user-profile-stats-types";
-import { format, parseISO } from "date-fns"
+import dayjs from "@repo/lib/constants/dayjs-instance"
 
 type PrepareChartsData = {
   details: ProfileViewsDetails[]
@@ -26,7 +26,7 @@ function fillMissingHours(chartData: Array<DailyChartType>): Array<DailyChartTyp
     const currentHour = new Date(startOfDay);
     currentHour.setHours(i);
 
-    const formattedHour = format(currentHour, "yyyy-MM-dd HH");
+    const formattedHour = dayjs(currentHour).format("yyyy-MM-dd HH");
 
     const existingData = chartData.find((data) => data.hour === formattedHour);
 
@@ -57,7 +57,7 @@ function fillMissingDays(
   let currentDate = new Date(startOfMonth);
 
   while (currentDate <= endOfMonth) {
-    const formattedDate = format(currentDate, "yyyy-MM-dd");
+    const formattedDate = dayjs(currentDate).format("yyyy-MM-dd");
     const count = chartDataMap.get(formattedDate) || 0;
 
     result.push({
@@ -75,7 +75,7 @@ export function prepareHourlyChartData({
   details, with_missing
 }: PrepareChartsData) {
   const grouped = details.reduce((acc, detail) => {
-    const hourKey = format(parseISO(detail.created_at), "yyyy-MM-dd HH");
+    const hourKey = dayjs(detail.created_at).format("yyyy-MM-dd HH")
 
     if (!acc[hourKey]) {
       acc[hourKey] = 0;
@@ -101,7 +101,7 @@ export function prepareMonthlyChartData({
   details, with_missing
 }: PrepareChartsData) {
   const grouped = details.reduce((acc, detail) => {
-    const dateKey = format(parseISO(detail.created_at), "yyyy-MM-dd");
+    const dateKey = dayjs(detail.created_at).format("yyyy-MM-dd");
 
     if (!acc[dateKey]) {
       acc[dateKey] = 0;

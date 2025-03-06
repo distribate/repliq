@@ -8,8 +8,7 @@ module.exports = {
   darkMode: "class",
   content: [
     "./app/**/*.{ts,tsx}",
-    "./src/**/*.{ts,tsx}",
-    "../../packages/landing-components/src/**/*.{ts,tsx}",
+    "./components/**/*.{ts,tsx}",
     "../../packages/landing-ui/src/**/*.{ts,tsx}",
   ],
   plugins: [tailwindCSSAnimate, tailwindCSSTextShadow],

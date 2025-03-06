@@ -1,7 +1,6 @@
 import { ChartContainer, type ChartConfig, ChartTooltipContent, ChartTooltip } from "@repo/ui/src/components/chart.tsx";
 import { Bar, BarChart, CartesianGrid, XAxis, YAxis } from "recharts"
-import { format } from "date-fns"
-import { ru } from "date-fns/locale";
+import dayjs from "@repo/lib/constants/dayjs-instance"
 import { ProfileAccountStatsChartsProps } from "./profile-account-stats-charts";
 
 export const ProfileAccountStatsMonthlyCharts = ({
@@ -31,7 +30,7 @@ export const ProfileAccountStatsMonthlyCharts = ({
             tickFormatter={(value, index) => {
               if (index % 5 === 0) {
                 const date = new Date(value);
-                return format(date, 'd MMM', { locale: ru });
+                return dayjs(date).format('d MMM');
               }
 
               return ""
@@ -52,7 +51,7 @@ export const ProfileAccountStatsMonthlyCharts = ({
                 indicator="dot"
                 labelKey={chartConfig.views_by_month.label}
                 formatter={(value, name, props) => {
-                  const day = format(props.payload.day, 'd MMMM', { locale: ru })
+                  const day = dayjs(props.payload.day).format('d MMMM')
 
                   return [
                     `${day}: ${value} просмотров`,

@@ -1,8 +1,8 @@
-import { MainLayoutPage } from "@repo/landing-components/src/layout/main-layout";
-import { NewsPageList } from "@repo/landing-components/src/news/news-page-list";
+import { MainLayoutPage } from "#components/layout/default/main-layout";
+import { NewsPageList } from "#components/news/news-page-list";
 import { Typography } from "@repo/landing-ui/src/typography";
-import { NewsPageSearch } from "@repo/landing-components/src/news/news-page-search";
-import { NewsPageListInView } from "@repo/landing-components/src/news/news-page-list-scroller";
+import { NewsPageSearch } from "#components/news/news-page-search";
+import { NewsPageListInView } from "#components/news/news-page-list-scroller";
 
 export const metadata = {
 	title: "Новости",

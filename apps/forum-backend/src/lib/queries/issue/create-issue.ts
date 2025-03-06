@@ -11,6 +11,7 @@ export async function createIssue({
 }: CreateIssue) {
   return await forumDB
     .insertInto("issues")
+    // @ts-ignore
     .values({
       title,
       description,

@@ -1,10 +1,10 @@
 import { WrapperTitle } from '@repo/landing-ui/src/wrapper-title.tsx';
 import { Overlay } from '@repo/landing-ui/src/overlay';
-import { MainLayoutPage } from '@repo/landing-components/src/layout/main-layout.tsx';
+import { MainLayoutPage } from "#components/layout/default/main-layout";
 import { Typography } from '@repo/landing-ui/src/typography';
 import Link from 'next/link';
 import { Button } from '@repo/landing-ui/src/button';
-import { Shop } from '@repo/landing-components/src/shop/shop.tsx';
+import { Shop } from '#components/shop/shop.tsx';
 
 export const metadata = {
   title: 'Магазин',

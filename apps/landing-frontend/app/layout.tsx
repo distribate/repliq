@@ -4,8 +4,8 @@ import { TooltipProvider } from "@repo/landing-ui/src/tooltip";
 import { Toaster } from "sonner";
 import localFont from "next/font/local"
 import { NextThemeProvider } from "@repo/lib/providers/theme-provider.tsx";
-import { Header } from "@repo/landing-components/src/header/header";
-import { Footer } from "@repo/landing-components/src/footer/footer";
+import { Header } from "#components/layout/default/header.tsx";
+import { Footer } from "#components/layout/default/footer.tsx";
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { QueryProvider } from '@repo/lib/providers/query-provider.tsx';
 

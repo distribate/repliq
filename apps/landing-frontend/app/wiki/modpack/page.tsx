@@ -1,6 +1,6 @@
-import { MainLayoutPage } from '@repo/landing-components/src/layout/main-layout';
+import { MainLayoutPage } from "#components/layout/default/main-layout";
 import { Typography } from '@repo/landing-ui/src/typography';
-import { ModpackList } from '@repo/landing-components/src/modpacks/modpack-list.tsx';
+import { ModpackList } from '#components/modpacks/modpack-list.tsx';
 
 export const metadata = {
   title: 'Модпак',

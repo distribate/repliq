@@ -1,5 +1,5 @@
-import { HowToConnectOnServer } from "@repo/landing-components/src/intro/how-to-connect-on-server";
-import { MainLayoutPage } from "@repo/landing-components/src/layout/main-layout";
+import { HowToConnectOnServer } from "#components/intro/how-to-connect-on-server";
+import { MainLayoutPage } from "#components/layout/default/main-layout";
 import { Typography } from "@repo/landing-ui/src/typography";
 import Link from "next/link";
 

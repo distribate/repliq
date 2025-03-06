@@ -66,6 +66,7 @@ async function getSkinByKv(nickname: string): Promise<Blob | null> {
     return null;
   }
 
+  // @ts-ignore
   return readableStreamToBlob(entry.data)
 }
 
@@ -96,6 +97,7 @@ export async function getPlayerSkin(nickname: string): Promise<Blob> {
   const customSkin = await getCustomPlayerSkin(nickname)
 
   if (customSkin) {
+    // @ts-ignore
     const array = await blobToUint8Array(customSkin as globalThis.Blob)
 
     await putSkinInKv(nickname, array)
@@ -110,6 +112,7 @@ export async function getPlayerSkin(nickname: string): Promise<Blob> {
   const vanillaSkin = await getVanillaPlayerSkin(nickname)
 
   if (vanillaSkin) {
+    // @ts-ignore
     const array = await blobToUint8Array(vanillaSkin as globalThis.Blob)
 
     await putSkinInKv(nickname, array)

@@ -6,7 +6,7 @@ import { Hono } from "hono";
 async function getCurrencies() {
   const query = await forumDB
     .selectFrom("landing_currencies")
-    .select(["id", "value", "imageUrl", "title"])
+    .select(["id", "value", "imageUrl", "title", "isAvailable"])
     .where("public", "=", true)
     .execute()
 

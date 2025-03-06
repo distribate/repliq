@@ -1,9 +1,9 @@
 /** @type {import('next').NextConfig} */
 module.exports = {
 	reactStrictMode: false,
-	transpilePackages: ['@repo/landing-ui', "@repo/landing-components"],
+	transpilePackages: ['@repo/landing-ui'],
 	experimental: {
-		optimizePackageImports: ['@repo/landing-ui', "@repo/landing-components"]
+		optimizePackageImports: ['@repo/landing-ui']
 	},
 	images: {
 		remotePatterns: [

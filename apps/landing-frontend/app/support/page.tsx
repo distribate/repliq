@@ -1,4 +1,4 @@
-import { MainLayoutPage } from "@repo/landing-components/src/layout/main-layout";
+import { MainLayoutPage } from "#components/layout/default/main-layout";
 import { Overlay } from "@repo/landing-ui/src/overlay";
 import { WrapperTitle } from "@repo/landing-ui/src/wrapper-title";
 import { Typography } from "@repo/landing-ui/src/typography";

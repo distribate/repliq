@@ -1,5 +1,5 @@
-import { MainLayoutPage } from '@repo/landing-components/src/layout/main-layout';
-import { PageServerStatus } from '@repo/landing-components/src/status/page-server-status';
+import { MainLayoutPage } from "#components/layout/default/main-layout";
+import { PageServerStatus } from '#components/status/page-server-status';
 
 export const metadata = {
   title: 'Статус',

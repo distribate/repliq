@@ -1,11 +1,10 @@
-import { MainLayoutPage } from '@repo/landing-components/src/layout/main-layout';
+import { MainLayoutPage } from "#components/layout/default/main-layout";
 import { Overlay } from '@repo/landing-ui/src/overlay';
 import { WrapperTitle } from '@repo/landing-ui/src/wrapper-title';
 import { Typography } from '@repo/landing-ui/src/typography';
-import { Rules as RulesList } from '@repo/landing-components/src/rules/rules.tsx';
+import { Rules as RulesList } from '#components/rules/rules.tsx';
 import { Button } from '@repo/landing-ui/src/button';
 import Link from 'next/link';
-import { Badge } from '@repo/landing-ui/src/Badge.tsx';
 
 export const metadata = {
   title: 'Правила',
@@ -97,10 +96,26 @@ export default async function RulesPage() {
                 Теги:
               </Typography>
               <div className="flex flex-wrap gap-2">
-                <Badge>#правила</Badge>
-                <Badge variant="destructive">#база</Badge>
-                <Badge>#кодекс</Badge>
-                <Badge variant="violet">#никтонечитает</Badge>
+                <div
+                  className="flex bg-white/10 items-center rounded-[8px] px-2 text-xs md:text-base lg:text-md transition-colors"
+                >
+                  #правила
+                </div>
+                <div
+                  className="flex bg-white/10 items-center rounded-[8px] px-2 text-xs md:text-base lg:text-md transition-colors"
+                >
+                  #база
+                </div>
+                <div
+                  className="flex bg-white/10 items-center rounded-[8px] px-2 text-xs md:text-base lg:text-md transition-colors"
+                >
+                  #кодекс
+                </div>
+                <div
+                  className="flex bg-white/10 items-center rounded-[8px] px-2 text-xs md:text-base lg:text-md transition-colors"
+                >
+                  #никтонечитает
+                </div>
               </div>
             </div>
           </div>

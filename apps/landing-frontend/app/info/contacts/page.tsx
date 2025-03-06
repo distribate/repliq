@@ -1,4 +1,4 @@
-import { MainLayoutPage } from "@repo/landing-components/src/layout/main-layout";
+import { MainLayoutPage } from "#components/layout/default/main-layout";
 import { Typography } from "@repo/landing-ui/src/typography";
 import { MAIL_FASBERRY_SUPPORT, TELEGRAM_CHANNEL_LINK, VK_GROUP_LINK } from "@repo/shared/wiki//data/configs";
 import Link from "next/link";
@@ -19,7 +19,7 @@ export default async function InfoContactsPage() {
 						<Typography text_color="adaptiveWhiteBlack" className="text-xl">
 							Социальные сети и мессенджеры
 						</Typography>
-						<div className="flex flex-col text-white text-md lg:text-lg gap-y-4">
+						<div className="flex flex-col text-white text- md lg:text-lg gap-y-4">
 							<Typography text_color="adaptiveWhiteBlack">Группа VK:&nbsp;
 								<Link href='https://vk.com/fasberry' target="_blank">
 									{VK_GROUP_LINK}
@@ -46,20 +46,6 @@ export default async function InfoContactsPage() {
 									{MAIL_FASBERRY_SUPPORT}
 								</Typography>
 							</a>
-						</div>
-					</div>
-					<div
-						className="flex flex-col gap-y-4 border-2 text-md lg:text-lg border-[#454545] hover:duration-300 duration-300 rounded-[8px] p-4">
-						<Typography text_color="adaptiveWhiteBlack" className="text-xl">
-							Реквизиты
-						</Typography>
-						<div className="flex flex-col gap-y-4">
-							<Typography text_color="adaptiveWhiteBlack">
-								ИНН: 343523219653
-							</Typography>
-							<Typography text_color="adaptiveWhiteBlack">
-								ИСКАЛИЕВ РУСЛАН НИКОЛАЕВИЧ
-							</Typography>
 						</div>
 					</div>
 				</div>
