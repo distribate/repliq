@@ -1,6 +1,6 @@
 import { messageHandler } from './lib/handlers/message-handler.ts'
 import { fasberryBot, loggerBot } from './shared/bot/bot.ts'
-import { pgListenConnect } from './shared/events/listener.ts'
+// import { pgListenConnect } from './shared/events/listener.ts'
 import { initNats } from '@repo/config-nats/nats-client.ts';
 import { subscribeReceivePayment } from './subscribers/sub-receive-payment.ts';
 import { subscribeServerEvents } from './subscribers/sub-server-events.ts';
@@ -44,4 +44,4 @@ await loggerBot.start()
 
 loggerBot.on("message", messageHandler);
 
-pgListenConnect()
+// pgListenConnect()

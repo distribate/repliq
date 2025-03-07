@@ -7,9 +7,11 @@ type CreateNotification = {
 }
 
 export async function createNotification({ nickname, message, type }: CreateNotification) {
-  return await forumDB
+  const query = await forumDB
     .insertInto("notifications")
     .values({ nickname, message, type })
     .returningAll()
     .executeTakeFirstOrThrow();
+
+  return query;
 }

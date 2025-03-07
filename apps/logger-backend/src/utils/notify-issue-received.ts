@@ -8,7 +8,7 @@ export const notifyIssueReceived = async (issue: Selectable<Issues>) => {
   const admins = await getAdmins()
 
   const message = format`
-  [Новая заявка] ${issue.title}
+  ${issue.title}
   Описание: ${issue.description}
   Создана: ${issue.created_at}
   Создал: ${issue.user_nickname}
