@@ -104,6 +104,8 @@ import { getStatusRoute } from '#routes/public/get-status.ts';
 import { subscribePlayerGroup } from '#subscribers/sub-player-group.ts';
 import { getUserGameStatsRoute } from '#routes/user/get-user-game-stats.ts';
 import { getUserTicketsRoute } from '#routes/user/get-user-tickets.ts';
+import { getRulesRoute } from '#routes/public/get-rules.ts';
+import { getModpacksRoute } from '#routes/public/get-modpacks.ts';
 
 async function startNats() {
   await initNats()
@@ -134,6 +136,8 @@ export const landing = new Hono()
   .route("/", getMinecraftItemsRoute)
   .route("/", getImagesLibraryRoute)
   .route("/", getStatusRoute)
+  .route("/", getRulesRoute)
+  .route("/", getModpacksRoute)
 
 export const shared = new Hono()
   .basePath("/shared")

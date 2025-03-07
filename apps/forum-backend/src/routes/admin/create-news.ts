@@ -7,6 +7,7 @@ import { z } from "zod";
 import { nanoid } from "nanoid";
 import { createNewsSchema } from "@repo/types/schemas/admin/create-news-schema";
 import { zValidator } from "@hono/zod-validator";
+import { STATIC_IMAGES_BUCKET } from "@repo/shared/constants/buckets";
 
 type CreateNews = Omit<z.infer<typeof createNewsSchema>, "image"> & {
   image: File | null;
@@ -23,7 +24,7 @@ async function createNews(data: CreateNews) {
       const imageName = `news/${data.image.name}.${imageMimeTypeSplitted}`
 
       const uploaded = await supabase.storage
-        .from("static")
+        .from(STATIC_IMAGES_BUCKET)
         .upload(imageName, data.image, { contentType: imageMimeType })
 
       if (uploaded.error) {
@@ -58,7 +59,7 @@ async function deleteNews(id: string) {
     if (newsImage) {
       await supabase
         .storage
-        .from("static")
+        .from(STATIC_IMAGES_BUCKET)
         .remove([newsImage.imageUrl])
     }
 

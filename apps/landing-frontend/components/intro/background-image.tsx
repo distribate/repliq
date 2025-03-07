@@ -2,12 +2,13 @@
 
 import { createQueryKey } from "@repo/lib/helpers/query-key-builder"
 import { forumSharedClient } from "@repo/shared/api/forum-client"
+import { USER_IMAGES_BUCKET } from "@repo/shared/constants/buckets"
 import { useQuery } from "@tanstack/react-query"
 
 async function getIntroBackgroundImage() {
   const res = await forumSharedClient.shared["get-static-image"].$get({
     query: {
-      bucket: "user_images",
+      bucket: USER_IMAGES_BUCKET,
       fileName: "default/rain-weather.jpg"
     }
   })

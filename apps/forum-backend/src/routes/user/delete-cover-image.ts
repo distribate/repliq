@@ -2,6 +2,7 @@ import { forumDB } from "#shared/database/forum-db.ts"
 import { supabase } from "#shared/supabase/supabase-client.ts"
 import { getNickname } from "#utils/get-nickname-from-storage.ts"
 import { throwError } from "@repo/lib/helpers/throw-error"
+import { USER_IMAGES_BUCKET } from "@repo/shared/constants/buckets"
 import { Hono } from "hono"
 
 async function deleteCoverImage(nickname: string) {
@@ -17,7 +18,7 @@ async function deleteCoverImage(nickname: string) {
     }
 
     if (selected.cover_image.startsWith("cover")) {
-      await supabase.storage.from("user_images").remove([selected.cover_image])
+      await supabase.storage.from(USER_IMAGES_BUCKET).remove([selected.cover_image])
     }
 
     const updated = await trx

@@ -36,7 +36,7 @@ services:
   #   restart: always
   #   volumes:
   #     - ./data/fasberry-external/consul/data:/consul/data
-  #     - ./packages/config-consul/consul.hcl:/consul/config/consul.hcl
+  #     - ./packages/config-vault/consul.hcl:/consul/config/consul.hcl
 
   # vault:
   #   image: hashicorp/vault:latest

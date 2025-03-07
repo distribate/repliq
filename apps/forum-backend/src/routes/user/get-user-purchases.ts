@@ -6,6 +6,7 @@ import { throwError } from "@repo/lib/helpers/throw-error";
 import type { PaymentCryptoTonStatus, PaymentStatus } from "@repo/types/db/payments-database-types";
 import { Hono } from "hono";
 import type { PaymentMeta } from "@repo/types/entities/payment-types";
+import { STATIC_IMAGES_BUCKET } from "@repo/shared/constants/buckets";
 
 async function getFiatPayments(nickname: string) {
   const query = await paymentsDB
@@ -48,14 +49,14 @@ async function getCryptoPayments(nickname: string) {
 
 function processDonatePayment(meta: PaymentMeta) {
   const title = `Привилегия ${donateTitles[meta.paymentValue as keyof typeof donateTitles]} для ${meta.nickname}`
-  const imageUrl = getPublicUrl("static", donateIcons[meta.paymentValue as keyof typeof donateIcons]);
+  const imageUrl = getPublicUrl(STATIC_IMAGES_BUCKET, donateIcons[meta.paymentValue as keyof typeof donateIcons]);
 
   return { title, imageUrl }
 }
 
 function processWalletPayment(meta: PaymentMeta) {
   const title = `Валюта ${donateTitles[meta.paymentType as keyof typeof donateTitles]} в количестве ${meta.paymentValue} для ${meta.nickname}`
-  const imageUrl = getPublicUrl("static", donateIcons[meta.paymentType as keyof typeof donateIcons])
+  const imageUrl = getPublicUrl(STATIC_IMAGES_BUCKET, donateIcons[meta.paymentType as keyof typeof donateIcons])
 
   return { title, imageUrl }
 }

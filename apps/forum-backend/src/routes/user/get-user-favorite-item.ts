@@ -1,6 +1,7 @@
 import { forumDB } from "#shared/database/forum-db.ts";
 import { getPublicUrl } from "#utils/get-public-url.ts";
 import { throwError } from "@repo/lib/helpers/throw-error";
+import { STATIC_IMAGES_BUCKET } from "@repo/shared/constants/buckets";
 import { Hono } from "hono";
 
 async function getFavoriteItem(nickname: string) {
@@ -30,7 +31,7 @@ export const getUserFavoriteItemRoute = new Hono()
         return ctx.json({ data: null }, 200)
       }
 
-      let favoriteItemImage = getPublicUrl("static", favoriteItem.image)
+      let favoriteItemImage = getPublicUrl(STATIC_IMAGES_BUCKET, favoriteItem.image)
 
       return ctx.json({ data: { ...favoriteItem, image: favoriteItemImage } }, 200)
     } catch (e) {

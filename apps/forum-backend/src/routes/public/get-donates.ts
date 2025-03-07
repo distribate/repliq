@@ -2,6 +2,7 @@ import { paymentsDB } from "#shared/database/payments-db.ts";
 import { getPublicUrl } from "#utils/get-public-url.ts";
 import { zValidator } from "@hono/zod-validator";
 import { throwError } from "@repo/lib/helpers/throw-error";
+import { STATIC_IMAGES_BUCKET } from "@repo/shared/constants/buckets";
 import { Hono } from "hono";
 import { z } from "zod";
 
@@ -14,12 +15,12 @@ async function getDonatesByType(args: z.infer<typeof getDonatesSchema>) {
         .orderBy("id", "asc")
         .execute()
 
-      return await Promise.all(donateQuery.map(async (donate) => {
+      return donateQuery.map((donate) => {
         const imageUrl = donate.imageUrl
-        const url = getPublicUrl("static", imageUrl)
+        const url = getPublicUrl(STATIC_IMAGES_BUCKET, imageUrl)
 
         return { ...donate, imageUrl: url }
-      }))
+      })
     case "wallet":
       const walletQuery = await paymentsDB
         .selectFrom("economy")

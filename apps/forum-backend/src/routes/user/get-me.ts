@@ -7,6 +7,7 @@ import { Hono } from "hono";
 import { getPublicUrl } from '#utils/get-public-url.ts';
 import { Encoder } from 'cbor-x';
 import { createMiddleware } from 'hono/factory';
+import { USER_IMAGES_BUCKET } from '@repo/shared/constants/buckets';
 
 export const validateBanStatus = createMiddleware(async (ctx, next) => {
   const nickname = getNickname()
@@ -45,7 +46,7 @@ export const getMeRoute = new Hono()
       }
 
       if (user.cover_image) {
-        cover_image = getPublicUrl("user_images", user.cover_image)
+        cover_image = getPublicUrl(USER_IMAGES_BUCKET, user.cover_image)
       }
 
       const res = {

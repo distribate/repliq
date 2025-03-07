@@ -2,11 +2,12 @@ import { supabase } from "#shared/supabase/supabase-client.ts"
 import { getPublicUrl } from "#utils/get-public-url.ts"
 import { throwError } from "@repo/lib/helpers/throw-error"
 import { Hono } from "hono"
+import { USER_IMAGES_BUCKET } from "@repo/shared/constants/buckets"
 
 async function getImagesLibrary() {
   const { data, error } = await supabase
     .storage
-    .from("user_images").list("default", { limit: 16, offset: 0 })
+    .from(USER_IMAGES_BUCKET).list("default", { limit: 16, offset: 0 })
 
   if (error) {
     throw new Error(error.message)
@@ -15,7 +16,7 @@ async function getImagesLibrary() {
   return await Promise.all(data.map(async (image) => ({
     name: image.name,
     id: image.id,
-    signedUrl: getPublicUrl("user_images", `default/${image.name}`)
+    signedUrl: getPublicUrl(USER_IMAGES_BUCKET, `default/${image.name}`)
   })))
 }
 

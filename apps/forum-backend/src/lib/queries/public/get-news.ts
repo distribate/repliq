@@ -1,5 +1,6 @@
 import { forumDB } from "#shared/database/forum-db.ts";
 import { getPublicUrl } from "#utils/get-public-url.ts";
+import { STATIC_IMAGES_BUCKET } from "@repo/shared/constants/buckets";
 import type { getNewsSchema } from "@repo/types/schemas/news/get-news-schema";
 import { executeWithCursorPagination } from "kysely-paginate";
 import type { z } from "zod";
@@ -39,7 +40,7 @@ export async function getNews({
     res.rows.map(async (news) => {
       if (!news.imageUrl) return news;
 
-      const publicUrl = getPublicUrl("static", news.imageUrl);
+      const publicUrl = getPublicUrl(STATIC_IMAGES_BUCKET, news.imageUrl);
 
       return {
         ...news,

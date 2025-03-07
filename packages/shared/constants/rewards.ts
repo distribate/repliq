@@ -1,1 +1,1 @@
-export const VOTIFIER_REWARD = 20 // charism
+export const VOTIFIER_REWARD = 25 // charism

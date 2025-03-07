@@ -2,6 +2,7 @@ import { supabase } from "#shared/supabase/supabase-client.ts";
 import { getPublicUrl } from "#utils/get-public-url.ts";
 import { zValidator } from "@hono/zod-validator";
 import { throwError } from "@repo/lib/helpers/throw-error";
+import { STATIC_IMAGES_BUCKET } from "@repo/shared/constants/buckets";
 import { Hono } from "hono";
 import { z } from "zod";
 
@@ -24,7 +25,7 @@ export const getAuthImageRoute = new Hono()
     try {
       const { data: authImages } = await supabase
         .storage
-        .from("static")
+        .from(STATIC_IMAGES_BUCKET)
         .list("auth_background", { limit: 100, offset: 0 })
 
       if (!authImages) {
@@ -45,7 +46,7 @@ export const getAuthImageRoute = new Hono()
         return ctx.json({ error: "Auth image not found" }, 404)
       }
 
-      const publicUrl = getPublicUrl("static", `auth_background/${authImage.name}`)
+      const publicUrl = getPublicUrl(STATIC_IMAGES_BUCKET, `auth_background/${authImage.name}`)
 
       return ctx.json({ data: publicUrl }, 200)
     } catch (e) {

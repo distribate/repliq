@@ -1,6 +1,7 @@
 import { forumDB } from "#shared/database/forum-db.ts";
 import { getPublicUrl } from "#utils/get-public-url.ts";
 import { throwError } from "@repo/lib/helpers/throw-error";
+import { STATIC_IMAGES_BUCKET } from "@repo/shared/constants/buckets";
 import { Hono } from "hono";
 import { sql } from "kysely";
 
@@ -18,7 +19,7 @@ async function getMinecraftItems() {
 
   return await Promise.all(query.map(async (item) => ({
     ...item,
-    image: getPublicUrl("static", item.image)
+    image: getPublicUrl(STATIC_IMAGES_BUCKET, item.image)
   })))
 }
 

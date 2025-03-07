@@ -6192,12 +6192,6 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@repo/config-consul@workspace:packages/config-consul":
-  version: 0.0.0-use.local
-  resolution: "@repo/config-consul@workspace:packages/config-consul"
-  languageName: unknown
-  linkType: soft
-
 "@repo/config-eslint@npm:*, @repo/config-eslint@workspace:packages/config-eslint":
   version: 0.0.0-use.local
   resolution: "@repo/config-eslint@workspace:packages/config-eslint"

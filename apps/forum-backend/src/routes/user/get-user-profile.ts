@@ -5,6 +5,7 @@ import { forumDB } from "#shared/database/forum-db.ts";
 import { getNickname } from "#utils/get-nickname-from-storage.ts";
 import { getPublicUrl } from "#utils/get-public-url.ts";
 import { throwError } from "@repo/lib/helpers/throw-error";
+import { USER_IMAGES_BUCKET } from "@repo/shared/constants/buckets";
 import { Hono } from "hono";
 
 type UserProfileStatus = "banned" | "private" | "blocked-by-you" | "blocked-by-user" | null
@@ -69,7 +70,7 @@ export const getUserProfileRoute = new Hono()
       let cover_image: string | null = null
 
       if ("cover_image" in user && user.cover_image) {
-        cover_image = getPublicUrl("user_images", user.cover_image)
+        cover_image = getPublicUrl(USER_IMAGES_BUCKET, user.cover_image)
       }
 
       return ctx.json({

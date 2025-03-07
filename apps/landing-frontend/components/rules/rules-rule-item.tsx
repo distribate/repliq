@@ -1,13 +1,14 @@
-import { RulesSectionData } from '@repo/lib/queries/get-rules';
-import { Tables } from '@repo/types/entities/gen-supabase';
 import { Typography } from '@repo/landing-ui/src/typography.tsx';
+import { forumLandingClient } from '@repo/shared/api/forum-client';
+import type { InferResponseType } from "hono/client"
 
-type RulesRuleItem = RulesSectionData<Tables<'landing_rule_content'>>
-type RulesRuleItemContent = Tables<"landing_rule_content">
+const client = forumLandingClient["get-rules"].$get
+
+type RulesRuleItemContent = InferResponseType<typeof client, 200>["data"]
 
 export const RulesRuleItemContent = ({
   title, punishment, description, id
-}: RulesRuleItemContent) => {
+}: RulesRuleItemContent["rules"]["chat"]["content"][0]) => {
   return (
     <div className="flex flex-col mb-6 lg:mb-4">
       <div className="flex-col flex gap-1">
@@ -37,7 +38,7 @@ export const RulesRuleItemContent = ({
 
 export const RulesRuleItem = ({
   categoryTitle, content,
-}: RulesRuleItem) => {
+}: { categoryTitle: string, content: Array<any> }) => {
   if (!content) return null;
 
   return (

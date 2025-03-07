@@ -1,13 +1,14 @@
 import { Typography } from '@repo/landing-ui/src/typography.tsx';
-import { RulesSectionData } from '@repo/lib/queries/get-rules.ts';
-import { Tables } from '@repo/types/entities/gen-supabase.ts';
+import { forumLandingClient } from '@repo/shared/api/forum-client';
+import type { InferResponseType } from "hono/client"
 
-type RulesTerminItem = RulesSectionData<Tables<'landing_termin_content'>>
-type RulesTerminItemContent = Tables<'landing_termin_content'>
+const client = forumLandingClient["get-rules"].$get
+
+type RulesTerminItemContent = InferResponseType<typeof client, 200>["data"]
 
 export const RulesTerminItemContent = ({
   article_desc, article_title, id
-}: RulesTerminItemContent) => {
+}: RulesTerminItemContent["terms"]["content"][0]) => {
   return (
     <div className="flex flex-col mb-6 lg:mb-4">
       <div className="flex-col flex gap-1">
@@ -29,7 +30,7 @@ export const RulesTerminItemContent = ({
 
 export const RulesTerminItem = ({
   categoryTitle, content,
-}: RulesTerminItem) => {
+}: { categoryTitle: string, content: any[] }) => {
   if (!content) return null;
   return (
     <div

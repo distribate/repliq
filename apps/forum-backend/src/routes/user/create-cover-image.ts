@@ -8,6 +8,7 @@ import { decode } from "cbor-x";
 import { forumDB } from "#shared/database/forum-db.ts";
 import { createCoverImageSchema } from "@repo/types/schemas/user/create-cover-image-schema.ts"
 import { getPublicUrl } from "#utils/get-public-url.ts";
+import { USER_IMAGES_BUCKET } from "@repo/shared/constants/buckets";
 
 async function deletePrevCoverImage(nickname: string) {
   const query = await forumDB
@@ -17,7 +18,7 @@ async function deletePrevCoverImage(nickname: string) {
     .executeTakeFirst()
 
   if (query && query.cover_image && query.cover_image.startsWith("cover")) {
-    return await supabase.storage.from("user_images").remove([query.cover_image])
+    return await supabase.storage.from(USER_IMAGES_BUCKET).remove([query.cover_image])
   }
   
   return;
@@ -29,7 +30,7 @@ async function uploadCustomCoverImage(f: File, nickname: string) {
 
     const fileName = `${nickname}-${id}.png`;
 
-    await supabase.storage.from("user_images").upload(`cover/${fileName}`, f);
+    await supabase.storage.from(USER_IMAGES_BUCKET).upload(`cover/${fileName}`, f);
 
     const { cover_image } = await trx
       .updateTable("users")
@@ -124,7 +125,7 @@ export const createCoverImageRoute = new Hono()
         return ctx.json({ error: "Error creating cover image" }, 400)
       }
 
-      const url = getPublicUrl("user_images", res.cover_image)
+      const url = getPublicUrl(USER_IMAGES_BUCKET, res.cover_image)
 
       return ctx.json({ data: url, status: "Success" }, 200);
     } catch (e) {

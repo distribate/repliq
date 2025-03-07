@@ -1,9 +1,31 @@
 'use client';
 
-import { modpacksQuery } from '@repo/lib/queries/modpacks-query.ts';
 import { ModpackItem } from '../modpacks/modpack-item.tsx';
 import { Typography } from '@repo/landing-ui/src/typography.tsx';
 import { Skeleton } from '@repo/landing-ui/src/skeleton.tsx';
+import { useQuery } from '@tanstack/react-query';
+import { forumLandingClient } from "@repo/shared/api/forum-client";
+
+export const MODPACKS_QUERY_KEY = ["modpacks"]
+
+const getModpacks = async () => {
+  const res = await forumLandingClient["get-modpacks"].$get()
+
+  const data = await res.json()
+
+  if ("error" in data) {
+    return null;
+  }
+
+  return data.data
+}
+
+const modpacksQuery = () => useQuery({
+  queryKey: MODPACKS_QUERY_KEY,
+  queryFn: () => getModpacks(),
+  refetchOnWindowFocus: false,
+  refetchOnMount: false
+})
 
 const ModpackListNull = () => {
   return (
@@ -28,7 +50,9 @@ export const ModpackList = () => {
   const { data: modpacks, isLoading, isError } = modpacksQuery();
 
   if (isLoading) return <ModpackListSkeleton />;
+
   if (isError) return <ModpackListNull />;
+
   if (!modpacks) return <ModpackListNull />;
 
   return (

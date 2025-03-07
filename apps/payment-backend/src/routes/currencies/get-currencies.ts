@@ -2,6 +2,7 @@ import { forumDB } from "#shared/database/forum-db.ts";
 import { getPublicUrl } from "#utils/get-public-url.ts";
 import { throwError } from "@repo/lib/helpers/throw-error";
 import { Hono } from "hono";
+import { STATIC_IMAGES_BUCKET } from '@repo/shared/constants/buckets';
 
 async function getCurrencies() {
   const query = await forumDB
@@ -12,7 +13,7 @@ async function getCurrencies() {
 
   return query.map(currency => ({
     ...currency,
-    imageUrl: getPublicUrl("static", currency.imageUrl)
+    imageUrl: getPublicUrl(STATIC_IMAGES_BUCKET, currency.imageUrl)
   }))
 }
 
