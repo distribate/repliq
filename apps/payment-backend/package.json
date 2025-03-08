@@ -17,7 +17,7 @@
   "dependencies": {
     "@hono/zod-validator": "0.4.1",
     "@nats-io/transport-node": "3.0.0-32",
-    "@repo/shared": "workspace:*",
+    "@repo/shared": "*",
     "hono": "4.6.15",
     "hono-rate-limiter": "0.4.2",
     "ky": "1.7.2",
@@ -27,10 +27,10 @@
     "zod": "3.23.8"
   },
   "devDependencies": {
-    "@repo/config-eslint": "workspace:*",
-    "@repo/config-tailwind": "workspace:*",
-    "@repo/config-typescript": "workspace:*",
-    "@repo/types": "workspace:*",
+    "@repo/config-eslint": "*",
+    "@repo/config-tailwind": "*",
+    "@repo/config-typescript": "*",
+    "@repo/types": "*",
     "@types/bun": "1.1.13",
     "@types/pg": "8.11.10",
     "typescript": "^5.4.5"

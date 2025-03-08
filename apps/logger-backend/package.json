@@ -12,8 +12,8 @@
   },
   "dependencies": {
     "@gramio/format": "0.1.5",
-    "@repo/config-nats": "workspace:*",
-    "@repo/shared": "workspace:*",
+    "@repo/config-nats": "*",
+    "@repo/shared": "*",
     "dayjs": "1.11.11",
     "gramio": "0.1.2",
     "ky": "1.7.2",
@@ -22,10 +22,10 @@
   "devDependencies": {
     "@antfu/eslint-config": "3.8.0",
     "@gramio/types": "8.1.0",
-    "@repo/config-eslint": "workspace:*",
-    "@repo/config-tailwind": "workspace:*",
-    "@repo/config-typescript": "workspace:*",
-    "@repo/types": "workspace:*",
+    "@repo/config-eslint": "*",
+    "@repo/config-tailwind": "*",
+    "@repo/config-typescript": "*",
+    "@repo/types": "*",
     "@types/bun": "1.1.13",
     "typescript": "^5.4.5"
   }
