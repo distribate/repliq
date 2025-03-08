@@ -12,8 +12,8 @@ const router = createRouter({
   context: {
     queryClient,
   },
-  defaultPreload: "intent",
-  defaultPreloadStaleTime: 200,
+  defaultPreload: false,
+  defaultPreloadStaleTime: 0,
   defaultPendingComponent: () => (
     <Skeleton className="w-full h-full"/>
   ),

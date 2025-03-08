@@ -5,8 +5,7 @@ import { callServerCommandSchema } from '@repo/types/schemas/server/server-comma
 
 export const callServerCommandRoute = new Hono()
   .post("/call-server-command", zValidator("json", callServerCommandSchema), async (ctx) => {
-    const body = await ctx.req.json()
-    const result = callServerCommandSchema.parse(body)
+    const result = callServerCommandSchema.parse(await ctx.req.json())
 
     try {
 

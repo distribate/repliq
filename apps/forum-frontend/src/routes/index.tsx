@@ -63,21 +63,9 @@ function RouteComponent() {
           <div className="flex flex-col w-full 2xl:w-3/4 gap-2 h-full">
             <StatusWidget />
             <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 *:h-[160px] gap-2 w-full">
-              <SearchWidget
-                title="Найти игрока"
-                imageSrc={statue}
-                link="/search?type=users"
-              />
-              <SearchWidget
-                title="Найти тред"
-                imageSrc={GhZwggQbMAA}
-                link="/search?type=threads"
-              />
-              <SearchWidget
-                title="Найти территорию"
-                imageSrc={GhWLYezW0AA6co3}
-                link="/lands"
-              />
+              <SearchWidget title="Найти игрока" imageSrc={statue} link="/search?type=users" />
+              <SearchWidget title="Найти тред" imageSrc={GhZwggQbMAA} link="/search?type=threads" />
+              <SearchWidget title="Найти территорию" imageSrc={GhWLYezW0AA6co3} link="/lands" />
             </div>
             {isAuthenticated ? (
               <MainCategoriesList />

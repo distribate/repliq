@@ -1,4 +1,4 @@
-import { forumLandingClient } from "@repo/shared/api/forum-client";
+import { forumSharedClient } from "@repo/shared/api/forum-client";
 import { useQuery } from "@tanstack/react-query";
 
 export type Player = {
@@ -7,7 +7,7 @@ export type Player = {
 };
 
 async function getServerStatus() {
-  const res = await forumLandingClient["get-status"].$get({
+  const res = await forumSharedClient.shared["get-status"].$get({
     query: {
       type: "servers"
     }

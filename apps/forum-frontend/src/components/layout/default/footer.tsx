@@ -9,13 +9,13 @@ const LINKS = [
 ]
 
 const SOCIALS = [
-  { label: "Телеграм", href: "https://t.me/fasberry", },
-  { label: "Дискорд", href: "https://discord.com/invite/fasberry", }
+  { label: "Телеграм", href: "https://cc.fasberry.su/api/forum/shared/get-media/telegram", },
+  { label: "Дискорд", href: "https://cc.fasberry.su/api/forum/shared/get-media/discord", }
 ]
 
 const FooterItem = ({ href, label }: { href: string, label: string }) => {
   return (
-    <a id={label} href={href} className="group">
+    <a id={label} href={href} target="_blank" className="group">
       <Typography
         className="group-hover:underline group-hover:underline-offset-4 decoration-shark-100 text-base truncate text-shark-100"
       >

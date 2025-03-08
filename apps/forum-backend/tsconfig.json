@@ -6,6 +6,7 @@
   "compilerOptions": {
     "allowImportingTsExtensions": true,
     "skipLibCheck": true,
+    "preserveSymlinks": false,
     "strict": true,
     "noFallthroughCasesInSwitch": true,
     "forceConsistentCasingInFileNames": true

@@ -1,4 +1,4 @@
-import { createQueryKey } from "#helpers/query-key-builder.ts";
+import { createQueryKey } from "@repo/lib/helpers/query-key-builder.ts";
 import { forumUserClient } from "@repo/shared/api/forum-client"
 import { useQuery } from "@tanstack/react-query"
 

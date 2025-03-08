@@ -8,6 +8,7 @@ import { zValidator } from "@hono/zod-validator";
 import { Hono } from "hono";
 import { createFriendRequestSchema } from "@repo/types/schemas/friend/create-friend-request-schema.ts";
 import { publishCreateFriendRequest } from '#publishers/pub-create-friend-request.ts';
+import { pushNotificationOnClient } from '@repo/lib/utils/push-notifications-on-client.ts';
 
 export const createFriendRequestRoute = new Hono()
   .post("/create-friend-request", zValidator("json", createFriendRequestSchema), async (ctx) => {
@@ -47,6 +48,11 @@ export const createFriendRequestRoute = new Hono()
       }
 
       publishCreateFriendRequest({ initiator, recipient })
+
+      pushNotificationOnClient({
+        event: "create-friend-request",
+        data: { initiator, recipient }
+      })
 
       return ctx.json({ status: "Friend request sent" }, 200);
     } catch (e) {

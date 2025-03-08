@@ -6,7 +6,7 @@ import { Hono } from "hono";
 
 async function getModpacks() {
   const query = await forumDB
-    .selectFrom("landing_modpack")
+    .selectFrom("modpack")
     .selectAll()
     .execute()
 

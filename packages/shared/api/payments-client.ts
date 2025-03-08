@@ -1,4 +1,8 @@
-import type { PaymentAppType, OrderAppType, CurrenciesAppType } from "payment-backend/src/types/routes-types.ts";
+import type { 
+  PaymentAppType, 
+  OrderAppType, 
+  CurrenciesAppType 
+} from "apps/payment-backend/src/types/routes-types.ts";
 import { hc } from "hono/client";
 import { isProduction } from "@repo/lib/helpers/is-production";
 

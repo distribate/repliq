@@ -1,11 +1,11 @@
-import { createQueryKey } from "#helpers/query-key-builder.ts";
-import { forumLandingClient } from "@repo/shared/api/forum-client.ts";
+import { createQueryKey } from "@repo/lib/helpers/query-key-builder.ts";
+import { forumSharedClient } from "@repo/shared/api/forum-client.ts";
 import { useQuery } from "@tanstack/react-query";
 import ky from "ky";
 import { decode } from "cbor-x"
 
 export const getLatestRegUsers = async (limit?: number) => {
-  const url = forumLandingClient["get-latest-reg-users"].$url({
+  const url = forumSharedClient.shared["get-latest-reg-users"].$url({
     query: {
       limit: limit ? `${limit}` : undefined
     }

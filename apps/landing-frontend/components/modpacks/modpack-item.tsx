@@ -4,10 +4,10 @@ import { Block } from '@repo/landing-ui/src/block.tsx';
 import { Button } from '@repo/landing-ui/src/button.tsx';
 import { Dialog, DialogContent, DialogTrigger } from '@repo/landing-ui/src/dialog.tsx';
 import dayjs from 'dayjs';
-import { forumLandingClient } from '@repo/shared/api/forum-client';
+import { forumSharedClient } from '@repo/shared/api/forum-client';
 import type { InferResponseType } from "hono/client" 
 
-const client = forumLandingClient["get-modpacks"].$get
+const client = forumSharedClient.shared["get-modpacks"].$get
 
 type ModpackItemProps = InferResponseType<typeof client, 200>["data"][0]
 

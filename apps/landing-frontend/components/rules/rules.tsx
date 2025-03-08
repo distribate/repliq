@@ -5,12 +5,12 @@ import { RulesRuleItem } from '../rules/rules-rule-item.tsx';
 import { RulesTerminItem } from '../rules/rules-termin-item.tsx';
 import { Skeleton } from '@repo/landing-ui/src/skeleton.tsx';
 import { useQuery } from "@tanstack/react-query";
-import { forumLandingClient } from '@repo/shared/api/forum-client';
+import { forumSharedClient } from '@repo/shared/api/forum-client';
 
 export const RULES_QUERY_KEY = ["rules"]
 
 async function getRules() {
-  const res = await forumLandingClient["get-rules"].$get()
+  const res = await forumSharedClient.shared["get-rules"].$get()
 
   const data = await res.json()
 

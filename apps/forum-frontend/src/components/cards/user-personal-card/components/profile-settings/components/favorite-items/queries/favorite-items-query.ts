@@ -1,10 +1,10 @@
 import { useQuery } from "@tanstack/react-query";
 import { MinecraftItemEntity } from "@repo/types/entities/entities-type.ts";
-import { forumLandingClient } from "@repo/shared/api/forum-client";
+import { forumSharedClient } from "@repo/shared/api/forum-client";
 import { createQueryKey } from "@repo/lib/helpers/query-key-builder";
 
 async function getFavoriteItems() {
-  const res = await forumLandingClient["get-minecraft-items"].$get()
+  const res = await forumSharedClient.shared["get-minecraft-items"].$get()
 
   const data = await res.json()
 

@@ -11,12 +11,12 @@ const ruleTypes: Record<"chat" | "game" | "based", string> = {
 async function getRules() {
   const [rules, terms] = await Promise.all([
     forumDB
-      .selectFrom("landing_rule_content")
+      .selectFrom("rules_rule_content")
       .selectAll()
       .where("rule_list_id", "in", ["chat", "game", "based"])
       .execute(),
     forumDB
-      .selectFrom("landing_termin_content")
+      .selectFrom("rules_termin_content")
       .selectAll()
       .execute()
   ])

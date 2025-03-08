@@ -1,8 +1,7 @@
 import { forumDB } from "#shared/database/forum-db.ts";
 import { throwError } from "@repo/lib/helpers/throw-error";
 import { Hono } from "hono";
-
-const DEFAULT_EXPIRE_ONLINE = 5 * 60 * 1000
+import { DEFAULT_EXPIRE_ONLINE } from "#shared/constants/user-limits.ts"
 
 async function getUserStatus(nickname: string) {
   const query = await forumDB

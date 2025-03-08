@@ -4,12 +4,12 @@ import { ModpackItem } from '../modpacks/modpack-item.tsx';
 import { Typography } from '@repo/landing-ui/src/typography.tsx';
 import { Skeleton } from '@repo/landing-ui/src/skeleton.tsx';
 import { useQuery } from '@tanstack/react-query';
-import { forumLandingClient } from "@repo/shared/api/forum-client";
+import { forumSharedClient } from "@repo/shared/api/forum-client";
 
 export const MODPACKS_QUERY_KEY = ["modpacks"]
 
 const getModpacks = async () => {
-  const res = await forumLandingClient["get-modpacks"].$get()
+  const res = await forumSharedClient.shared["get-modpacks"].$get()
 
   const data = await res.json()
 

@@ -1,6 +1,11 @@
 import { fetchOptions } from '../constants/fetch-options.ts';
 import { hc } from 'hono/client';
-import { AchievementsAppType, SkinAppType, LandsAppType, RatingAppType } from 'minecraft-backend/src/types/routes-types';
+import type { 
+  AchievementsAppType, 
+  SkinAppType, 
+  LandsAppType, 
+  RatingAppType 
+} from 'apps/minecraft-backend/src/types/routes-types.ts';
 
 const baseUrl = `https://api.fasberry.su/minecraft`;
 

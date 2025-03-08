@@ -24,5 +24,9 @@ export const botCommands: TelegramBotCommand[] = [
   {
     command: "/check",
     description: "Check player online status"
+  },
+  {
+    command: "/notify",
+    description: "Alert for all online users on forum"
   }
 ]

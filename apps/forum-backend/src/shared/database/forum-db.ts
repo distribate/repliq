@@ -6,16 +6,23 @@ import { Pool } from 'pg';
 const forumDialect = ({
   host, database, user, password, port, tenantId
 }: DatabaseConnection & { tenantId: string }) => {
-  return new PostgresDialect({ pool: new Pool({ database, host, port, password, user: `${user}.${tenantId}`, max: 40, idleTimeoutMillis: 2000 }) });
+  return new PostgresDialect({
+    pool: async () => new Pool({
+      database, host, port, password, user: `${user}.${tenantId}`,
+      max: 16,
+      idleTimeoutMillis: 30000,
+      keepAlive: true
+    })
+  });
 };
 
 export const forumDB = new Kysely<forumDBType>({
   dialect: forumDialect({
     host: "127.0.0.1",
-    database: process.env.POSTGRES_DB!,
-    user: process.env.POSTGRES_USER!,
-    password: process.env.POSTGRES_PASSWORD!,
-    port: Number(process.env.POSTGRES_PORT!),
-    tenantId: process.env.POSTGRES_TENANT_ID!,
+    database: Bun.env.POSTGRES_DB!,
+    user: Bun.env.POSTGRES_USER!,
+    password: Bun.env.POSTGRES_PASSWORD!,
+    port: Number(Bun.env.POSTGRES_PORT!),
+    tenantId: Bun.env.POSTGRES_TENANT_ID!,
   }),
 });

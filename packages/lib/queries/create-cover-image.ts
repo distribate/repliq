@@ -2,8 +2,8 @@ import { forumUserClient } from "@repo/shared/api/forum-client";
 import type { InferResponseType } from "hono/client"
 import { encode } from "cbor-x"
 import ky from "ky"
-import { createCoverImageSchema } from "@repo/types/schemas/user/create-cover-image-schema.ts"
-import { fileArrayToUint8Array } from "@repo/lib/helpers/file-array-to-uint8-array.ts";
+import { createCoverImageSchema } from "@repo/types/schemas/user/create-cover-image-schema"
+import { fileArrayToUint8Array } from "@repo/lib/helpers/file-array-to-uint8-array";
 import { z } from "zod"
 
 const client = forumUserClient.user["create-cover-image"].$post

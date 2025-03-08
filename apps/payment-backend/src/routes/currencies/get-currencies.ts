@@ -6,7 +6,7 @@ import { STATIC_IMAGES_BUCKET } from '@repo/shared/constants/buckets';
 
 async function getCurrencies() {
   const query = await forumDB
-    .selectFrom("landing_currencies")
+    .selectFrom("currencies")
     .select(["id", "value", "imageUrl", "title", "isAvailable"])
     .where("public", "=", true)
     .execute()

@@ -7,3 +7,5 @@ export const PREMIUM_MAX_POSTS_PER_DAY = 100;
 
 export const DEFAULT_MAX_THREADS_PER_DAY = 3
 export const PREMIUM_MAX_THREADS_PER_DAY = 6
+
+export const DEFAULT_EXPIRE_ONLINE = 5 * 60 * 1000

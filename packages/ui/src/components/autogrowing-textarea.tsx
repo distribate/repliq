@@ -1,4 +1,4 @@
-import { Textarea } from "@repo/ui/src/components/textarea";
+import { Textarea } from "./textarea";
 import { ChangeEvent, TextareaHTMLAttributes, useRef } from "react";
 import { cn } from "@repo/lib/utils/ui/cn.ts";
 

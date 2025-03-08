@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { isProduction } from "@repo/lib/helpers/is-production";
+import { isProduction } from "../../../lib/helpers/is-production";
 
 export const createSessionBodySchema = z.object({
   nickname: z.string(),

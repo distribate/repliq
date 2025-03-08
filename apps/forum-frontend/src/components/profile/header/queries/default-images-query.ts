@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { createQueryKey } from '@repo/lib/helpers/query-key-builder.ts';
-import { forumLandingClient } from '@repo/shared/api/forum-client';
+import { forumSharedClient } from '@repo/shared/api/forum-client';
 
 export const DEFAULT_IMAGES_QUERY = createQueryKey('ui', [
   'cover',
@@ -8,7 +8,7 @@ export const DEFAULT_IMAGES_QUERY = createQueryKey('ui', [
 ]);
 
 async function getLibraryImages() {
-  const res = await forumLandingClient["get-images-library"].$get();
+  const res = await forumSharedClient.shared["get-images-library"].$get();
 
   const data = await res.json()
 

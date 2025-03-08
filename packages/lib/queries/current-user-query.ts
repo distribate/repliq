@@ -1,6 +1,6 @@
 import { useSuspenseQuery } from '@tanstack/react-query';
 import { getUserInformation } from './get-user-information.ts';
-import { createQueryKey } from '#helpers/query-key-builder.ts';
+import { createQueryKey } from '@repo/lib/helpers/query-key-builder.ts';
 import type { UserDetailed } from '@repo/types/entities/user-type.ts';
 
 export const CURRENT_USER_QUERY_KEY = createQueryKey("user", ["current"])

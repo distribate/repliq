@@ -1,12 +1,12 @@
 import { createQueryKey } from "@repo/lib/helpers/query-key-builder"
-import { forumLandingClient } from "@repo/shared/api/forum-client"
+import { forumSharedClient } from "@repo/shared/api/forum-client"
 import { Skeleton } from "@repo/ui/src/components/skeleton"
 import { Typography } from "@repo/ui/src/components/typography"
 import { keepPreviousData, useQuery } from "@tanstack/react-query"
 import { Link } from "@tanstack/react-router"
 
 const getLatestNews = async () => {
-  const res = await forumLandingClient["get-news"].$get({
+  const res = await forumSharedClient.shared["get-news"].$get({
     query: {
       limit: "2",
       ascending: "true",

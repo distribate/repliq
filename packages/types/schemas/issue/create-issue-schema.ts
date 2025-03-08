@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { ISSUE_MAX_DESCRIPTION_LIMIT } from "@repo/shared/constants/limits.ts";
+import { ISSUE_MAX_DESCRIPTION_LIMIT } from "../../../shared/constants/limits.ts";
 
 export const createIssueSchema = z.object({
   title: z.string().min(4, {

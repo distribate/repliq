@@ -28,14 +28,12 @@ export const Route = createFileRoute('/_protected')({
       })
     }
   },
-  errorComponent: ({ error, reset }) => {
-    return (
-      <Suspense>
-        <ErrorComponent error={error} reset={reset} />
-      </Suspense>
-    )
-  },
-  pendingComponent: () => <Skeleton className="w-full h-full"/>
+  errorComponent: ({ error, reset }) => (
+    <Suspense>
+      <ErrorComponent error={error} reset={reset} />
+    </Suspense >
+  ),
+  pendingComponent: () => <Skeleton className="w-full h-full" />
 })
 
 function RouteComponent() {

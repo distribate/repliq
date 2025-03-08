@@ -12,18 +12,27 @@
     "type-check": "tsc --noEmit"
   },
   "dependencies": {
-    "@repo/assets": "*",
-    "@repo/shared": "*",
+    "@repo/assets": "workspace:*",
+    "@repo/shared": "workspace:*",
     "dayjs": "1.11.11",
+    "hono": "4.6.15",
     "ky": "1.7.2",
     "nanoid": "5.0.7",
     "zod": "3.23.8"
   },
   "devDependencies": {
-    "@repo/config-typescript": "*",
-    "@repo/types": "*",
+    "@repo/config-typescript": "workspace:*",
+    "@repo/types": "workspace:*",
+    "@tanstack/react-query": "5.62.3",
+    "@tanstack/react-router": "1.97.3",
     "@types/react": "18.3.12",
     "@types/react-dom": "18.3.1",
+    "cbor-x": "1.6.0",
+    "clsx": "2.1.1",
+    "react": "18.3.1",
+    "slate": "0.103.0",
+    "sonner": "1.5.0",
+    "tailwind-merge": "2.6.0",
     "typescript": "^5.4.5"
   }
 }

@@ -1,12 +1,12 @@
 import { createQueryKey } from "@repo/lib/helpers/query-key-builder"
-import { forumLandingClient } from "@repo/shared/api/forum-client"
+import { forumSharedClient } from "@repo/shared/api/forum-client"
 import { Skeleton } from "@repo/ui/src/components/skeleton"
 import { Typography } from "@repo/ui/src/components/typography"
 import { useQuery } from "@tanstack/react-query"
 import { toast } from "sonner"
 
 async function getServerStatus() {
-  const res = await forumLandingClient["get-status"].$get({
+  const res = await forumSharedClient.shared["get-status"].$get({
     query: {
       type: "servers"
     }

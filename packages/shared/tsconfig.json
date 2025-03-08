@@ -1,9 +1,11 @@
 {
 	"extends": "@repo/config-typescript/base.json",
-	"include": [".", "../lib/constants/dayjs-instance.ts"],
+	"include": [
+		".", 
+		"../lib/constants/dayjs-instance.ts",
+	],
 	"compilerOptions": {
-		"composite": true,
-		"jsx": "preserve",
+		"jsx": "react-jsx",
 		"module": "ESNext",
 		"moduleResolution": "bundler",
 		"skipLibCheck": true,

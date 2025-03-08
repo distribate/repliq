@@ -1,10 +1,10 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
-import { CURRENT_USER_QUERY_KEY } from "@repo/lib/queries/current-user-query.ts";
+import { CURRENT_USER_QUERY_KEY } from "#queries/current-user-query.ts";
 import { z } from "zod";
 import { createCoverImageSchema } from "@repo/types/schemas/user/create-cover-image-schema.ts"
-import { REQUESTED_USER_QUERY_KEY } from "@repo/lib/queries/requested-user-query";
-import { getUser } from "@repo/lib/helpers/get-user";
+import { REQUESTED_USER_QUERY_KEY } from "#queries/requested-user-query";
+import { getUser } from "#helpers/get-user";
 import { deleteCoverImage } from "#queries/delete-cover-image";
 import { CreateCoverImage, createCoverImage } from "#queries/create-cover-image.ts";
 

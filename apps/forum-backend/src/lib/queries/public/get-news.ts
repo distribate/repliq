@@ -11,7 +11,7 @@ export async function getNews({
   ascending, cursor, limit, searchQuery
 }: GetNews) {
   let query = forumDB
-    .selectFrom("landing_news")
+    .selectFrom("news")
     .select(["id", "title", "description", "imageUrl", "created_at"])
     .limit(limit ?? 2)
 

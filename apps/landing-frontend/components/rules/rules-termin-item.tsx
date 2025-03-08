@@ -1,8 +1,8 @@
 import { Typography } from '@repo/landing-ui/src/typography.tsx';
-import { forumLandingClient } from '@repo/shared/api/forum-client';
+import { forumSharedClient } from '@repo/shared/api/forum-client';
 import type { InferResponseType } from "hono/client"
 
-const client = forumLandingClient["get-rules"].$get
+const client = forumSharedClient.shared["get-rules"].$get
 
 type RulesTerminItemContent = InferResponseType<typeof client, 200>["data"]
 

@@ -1,5 +1,5 @@
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
-import { forumLandingClient } from '@repo/shared/api/forum-client';
+import { forumSharedClient } from '@repo/shared/api/forum-client';
 import { getNewsSchema } from "@repo/types/schemas/news/get-news-schema.ts";
 import { z } from 'zod';
 
@@ -8,7 +8,7 @@ export const NEWS_QUERY_KEY = ['news'];
 export const getNews = async ({
   ascending, cursor, limit, searchQuery
 }: z.infer<typeof getNewsSchema>) => {
-  const res = await forumLandingClient["get-news"].$get({
+  const res = await forumSharedClient.shared["get-news"].$get({
     query: {
       ascending: ascending ? ascending.toString() : undefined,
       limit: limit ? limit.toString() : undefined,

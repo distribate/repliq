@@ -377,6 +377,16 @@ export interface CronJobRunDetails {
   username: string | null;
 }
 
+export interface Currencies {
+  created_at: Generated<Timestamp>;
+  id: Int8;
+  imageUrl: string;
+  isAvailable: Generated<boolean>;
+  public: Generated<boolean>;
+  title: string;
+  value: string;
+}
+
 export interface ErrorsLog {
   created_at: Generated<Timestamp>;
   description: string;
@@ -384,6 +394,23 @@ export interface ErrorsLog {
   initiator: string;
   recipient: string;
   type: string;
+}
+
+export interface Events {
+  created_at: Generated<Timestamp>;
+  description: string | null;
+  id: Generated<Int8>;
+  imageUrl: string | null;
+  reward: string;
+  title: string;
+}
+
+export interface EventsPlayers {
+  created_at: Generated<Timestamp>;
+  event_id: Int8;
+  id: Int8;
+  nickname: string;
+  status: string;
 }
 
 export interface ExtensionsPgStatStatements {
@@ -490,87 +517,29 @@ export interface IssuesApprovals {
   responser: Generated<string | null>;
 }
 
-export interface LandingCurrencies {
+export interface Links {
   created_at: Generated<Timestamp>;
   id: Generated<Int8>;
-  imageUrl: string;
-  isAvailable: Generated<boolean>;
-  public: Generated<boolean>;
-  title: string;
+  link: string;
   value: string;
-}
-
-export interface LandingDonate {
-  commands: string[];
-  created_at: Generated<Timestamp>;
-  description: string;
-  id: Generated<Int8>;
-  imageUrl: string;
-  origin: string;
-  price: Int8;
-  rating: Int8;
-  title: string;
-}
-
-export interface LandingEconomy {
-  id: Generated<Int8>;
-  type: string;
-  value: Int8;
-}
-
-export interface LandingModpack {
-  client: string | null;
-  created_at: Generated<Timestamp>;
-  downloadLink: string | null;
-  id: Generated<Int8>;
-  imageUrl: Generated<string>;
-  mods: string[] | null;
-  name: string | null;
-  shaders: string[] | null;
-  version: string | null;
-}
-
-export interface LandingNews {
-  created_at: Generated<Timestamp>;
-  description: string;
-  id: Generated<string>;
-  imageUrl: Generated<string>;
-  media_links: Json | null;
-  tags: string[] | null;
-  title: string;
-}
-
-export interface LandingRuleContent {
-  description: string | null;
-  id: Generated<number>;
-  punishment: string | null;
-  rule_list_id: string | null;
-  subtitle: string | null;
-  title: string;
-}
-
-export interface LandingRulesList {
-  id: string;
-  name: string;
-}
-
-export interface LandingTerminContent {
-  article_desc: string;
-  article_title: string;
-  id: Generated<number>;
-  section_id: string | null;
-}
-
-export interface LandingTermins {
-  section_id: string;
-  subtitle: string | null;
-  title: string;
 }
 
 export interface Moderators {
   created_at: Generated<Timestamp>;
   id: Generated<Int8>;
   user_id: string | null;
+}
+
+export interface Modpack {
+  client: string | null;
+  created_at: Generated<Timestamp>;
+  downloadLink: string | null;
+  id: Int8;
+  imageUrl: Generated<string>;
+  mods: string[] | null;
+  name: string | null;
+  shaders: string[] | null;
+  version: string | null;
 }
 
 export interface NetHttpRequestQueue {
@@ -591,6 +560,16 @@ export interface NetHttpResponse {
   id: Int8 | null;
   status_code: number | null;
   timed_out: boolean | null;
+}
+
+export interface News {
+  created_at: Generated<Timestamp>;
+  description: string;
+  id: Generated<string>;
+  imageUrl: Generated<string>;
+  media_links: Json | null;
+  tags: string[] | null;
+  title: string;
 }
 
 export interface Notifications {
@@ -712,19 +691,6 @@ export interface PostsViews {
   post_id: string;
 }
 
-export interface PostsWithCommentsAndViewCounts {
-  comments_count: Int8 | null;
-  content: string | null;
-  created_at: Timestamp | null;
-  id: string | null;
-  isComments: boolean | null;
-  isPinned: boolean | null;
-  isUpdated: boolean | null;
-  user_nickname: string | null;
-  views_count: Int8 | null;
-  visibility: PostVisibility | null;
-}
-
 export interface ProfileViews {
   created_at: Generated<Timestamp>;
   id: Generated<Int8>;
@@ -782,6 +748,21 @@ export interface ReportsApprovals {
   message: string | null;
   report_id: Int8;
   status: string;
+}
+
+export interface RulesRuleContent {
+  description: string | null;
+  id: Generated<number>;
+  punishment: string | null;
+  rule_list_id: string | null;
+  subtitle: string | null;
+  title: string;
+}
+
+export interface RulesTerminContent {
+  article_desc: string;
+  article_title: string;
+  id: Generated<number>;
 }
 
 export interface Status {
@@ -1069,13 +1050,6 @@ export interface VotedUsers {
   nickname: string;
 }
 
-export interface WebsocketTokens {
-  created_at: Generated<Timestamp>;
-  id: Generated<Int8>;
-  nickname: string;
-  token: string;
-}
-
 export interface DB {
   "_realtime.extensions": _RealtimeExtensions;
   "_realtime.schema_migrations": _RealtimeSchemaMigrations;
@@ -1106,7 +1080,10 @@ export interface DB {
   config_minecraft_items: ConfigMinecraftItems;
   "cron.job": CronJob;
   "cron.job_run_details": CronJobRunDetails;
+  currencies: Currencies;
   errors_log: ErrorsLog;
+  events: Events;
+  events_players: EventsPlayers;
   "extensions.pg_stat_statements": ExtensionsPgStatStatements;
   "extensions.pg_stat_statements_info": ExtensionsPgStatStatementsInfo;
   friends_notes: FriendsNotes;
@@ -1116,18 +1093,12 @@ export interface DB {
   ip_list: IpList;
   issues: Issues;
   issues_approvals: IssuesApprovals;
-  landing_currencies: LandingCurrencies;
-  landing_donate: LandingDonate;
-  landing_economy: LandingEconomy;
-  landing_modpack: LandingModpack;
-  landing_news: LandingNews;
-  landing_rule_content: LandingRuleContent;
-  landing_rules_list: LandingRulesList;
-  landing_termin_content: LandingTerminContent;
-  landing_termins: LandingTermins;
+  links: Links;
   moderators: Moderators;
+  modpack: Modpack;
   "net._http_response": NetHttpResponse;
   "net.http_request_queue": NetHttpRequestQueue;
+  news: News;
   notifications: Notifications;
   permissions: Permissions;
   "pgsodium.decrypted_key": PgsodiumDecryptedKey;
@@ -1139,7 +1110,6 @@ export interface DB {
   posts_comments: PostsComments;
   posts_users: PostsUsers;
   posts_views: PostsViews;
-  posts_with_comments_and_view_counts: PostsWithCommentsAndViewCounts;
   profile_views: ProfileViews;
   "realtime.messages": RealtimeMessages;
   "realtime.schema_migrations": RealtimeSchemaMigrations;
@@ -1147,6 +1117,8 @@ export interface DB {
   refferals: Refferals;
   reports: Reports;
   reports_approvals: ReportsApprovals;
+  rules_rule_content: RulesRuleContent;
+  rules_termin_content: RulesTerminContent;
   status: Status;
   "storage.buckets": StorageBuckets;
   "storage.migrations": StorageMigrations;
@@ -1179,5 +1151,4 @@ export interface DB {
   "vault.decrypted_secrets": VaultDecryptedSecrets;
   "vault.secrets": VaultSecrets;
   voted_users: VotedUsers;
-  websocket_tokens: WebsocketTokens;
 }

@@ -6,6 +6,7 @@ import { z } from "zod";
 import { acceptFriendRequestTransaction } from "#lib/transactions/friend/accept-friend-request-transaction.ts";
 import { publishAcceptFriendRequest } from '#publishers/pub-accept-friend-request.ts';
 import { validateFriendsLength } from '#lib/validators/validate-friends-length.ts';
+import { pushNotificationOnClient } from '@repo/lib/utils/push-notifications-on-client.ts';
 
 const acceptFriendRequestSchema = z.object({
   request_id: z.string()
@@ -26,7 +27,15 @@ export const acceptFriendRequestRoute = new Hono()
 
       const { user_1, user_2 } = await acceptFriendRequestTransaction({ initiator, request_id })
 
-      publishAcceptFriendRequest({ user_1, user_2 })
+      publishAcceptFriendRequest({ 
+        user_1, 
+        user_2 
+      })
+      
+      pushNotificationOnClient({
+        event: "accept-friend-request",
+        data: { recipient: user_1, initiator: user_2 }
+      })
 
       return ctx.json({ status: "Friend request accepted" }, 200);
     } catch (e) {

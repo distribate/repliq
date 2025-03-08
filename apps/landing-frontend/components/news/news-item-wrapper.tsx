@@ -2,9 +2,9 @@ import { Typography } from '@repo/landing-ui/src/typography';
 import dayjs from 'dayjs';
 import { Dialog, DialogContent, DialogTrigger } from '@repo/landing-ui/src/dialog.tsx';
 import type { InferResponseType } from 'hono/client'
-import { forumLandingClient } from '@repo/shared/api/forum-client';
+import { forumSharedClient } from '@repo/shared/api/forum-client';
 
-const $get = forumLandingClient["get-news"].$get
+const $get = forumSharedClient.shared["get-news"].$get
 
 export type NewsType = InferResponseType<typeof $get, 200>
 

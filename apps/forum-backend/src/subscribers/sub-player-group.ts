@@ -65,8 +65,6 @@ export const subscribePlayerGroup = () => {
             const initiator = content.source.name;
             const recipient = content.target.name;
 
-            console.log(`${action}: ${recipient}`)
-
             switch (action) {
               case "set":
                 const group = args[2]?.split(" ")[0];
@@ -89,7 +87,7 @@ export const subscribePlayerGroup = () => {
                   })
                 }
 
-                console.log(`[Forum] Updated for ${recipient} / group: ${group} / donate: ${updatedRes}`)
+                console.log(`upd: [${recipient} -> ${group} (${updatedRes})`)
 
                 break;
               case "unset":

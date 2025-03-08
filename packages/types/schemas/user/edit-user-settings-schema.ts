@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import type { UsersSettings } from '@repo/types/db/forum-database-types.ts';
+import type { UsersSettings } from '../../db/forum-database-types.ts';
 
 export type UserSettingsKeys = keyof Omit<UsersSettings, 'id' | 'user_id'>
 

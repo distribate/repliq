@@ -1,4 +1,4 @@
-import { THREAD_CONTENT_LIMIT_DEFAULT, THREAD_DESCRIPTION_LIMIT, THREAD_TITLE_LIMIT } from "@repo/shared/constants/limits";
+import { THREAD_CONTENT_LIMIT_DEFAULT, THREAD_DESCRIPTION_LIMIT, THREAD_TITLE_LIMIT } from "../../../shared/constants/limits";
 import { z } from "zod";
 
 export const threadTitleSchema = z

@@ -1,39 +1,36 @@
 import { Outlet, ScrollRestoration, useMatches } from '@tanstack/react-router'
-import { Toaster } from "sonner"
+import { toast, Toaster } from "sonner"
 import { InfoIcon, WarningIcon, ErrorIcon, SuccessIcon } from "@repo/ui/src/components/toast-icons.tsx";
 import { createRootRouteWithContext } from '@tanstack/react-router';
 import type { QueryClient } from '@tanstack/react-query';
 import { lazy, ReactNode, Suspense, useEffect } from 'react';
-
 // @ts-ignore
 import '../styles/index.css'
 // @ts-ignore
 import "@repo/ui/ui.css"
+import type { NotificationsEventsPayload, ConfigEventsData } from "@repo/types/entities/notifications-events-type.ts"
+import { globalOptionQuery } from '@repo/lib/queries/global-option-query';
+import { config, updateEvent, ping } from "@repo/shared/constants/sse-events.ts"
 
-const NotFound = lazy(() => 
-  import("#components/templates/not-found.tsx").then(m => ({ default: m.NotFound }))
+const NotFound = lazy(() => import("#components/templates/not-found.tsx")
+  .then(m => ({ default: m.NotFound }))
 )
+
+const TITLE = 'Fasberry';
 
 export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()({
   component: RootComponent,
   head: () => ({
     meta: [
-      {
-        title: TITLE,
-        description: "Fasberry",
-      },
+      { title: TITLE, description: "Fasberry" },
     ],
   }),
-  notFoundComponent: () => {
-    return (
-      <Suspense>
-        <NotFound />
-      </Suspense>
-    )
-  }
+  notFoundComponent: () => (
+    <Suspense>
+      <NotFound />
+    </Suspense>
+  )
 })
-
-const TITLE = 'Fasberry';
 
 const TanStackRouterDevtools =
   process.env.NODE_ENV === 'production' ? () => null : lazy(() =>
@@ -51,6 +48,38 @@ function Meta({ children }: { children: ReactNode }) {
   }, [meta]);
 
   return children;
+}
+
+const URL = "https://cc.fasberry.su/api/forum/sse"
+
+const NotificationsWrapper = () => {
+  const { isAuthenticated } = globalOptionQuery().data
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      const es = new EventSource(URL, { withCredentials: true });
+
+      // es.onopen = () => console.log(">>> Connection opened!");
+
+      es.addEventListener(config, (event) => {
+        const data: ConfigEventsData = event.data;
+
+        if (data === 'Exit') es.close();
+      })
+
+      es.addEventListener(ping, () => { });
+
+      es.addEventListener(updateEvent, (event) => {
+        const data: NotificationsEventsPayload = JSON.parse(event.data);
+
+        toast[data.data.status](data.data.message)
+      });
+
+      return () => es.close();
+    }
+  }, [isAuthenticated])
+
+  return <></>
 }
 
 function RootComponent() {
@@ -76,6 +105,7 @@ function RootComponent() {
           },
         }}
       />
+      <NotificationsWrapper />
       <Outlet />
       <Suspense>
         <TanStackRouterDevtools />

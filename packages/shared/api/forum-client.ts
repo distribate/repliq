@@ -1,4 +1,4 @@
-import {
+import type {
   ForumUserAppType,
   ForumThreadAppType,
   ForumAdminAppType,
@@ -6,18 +6,16 @@ import {
   ForumCommentAppType,
   ForumReactionAppType,
   ForumSharedAppType,
-  ForumLandingAppType,
   ForumSearchAppType,
   ForumPostAppType,
   ForumReportAppType
-} from 'forum-backend/src/types/routes-types.ts';
+} from 'apps/forum-backend/src/types/routes-types.ts';
 import { hc } from 'hono/client';
-import { isProduction } from "@repo/lib/helpers/is-production";
+import { isProduction } from "../../lib/helpers/is-production.ts";
 import { fetchOptions } from '../constants/fetch-options.ts';
 
 const baseUrl = isProduction ? `https://cc.fasberry.su/api/forum` : `http://localhost:4101/api/forum`
 
-export const forumLandingClient = hc<ForumLandingAppType>(baseUrl, fetchOptions)
 export const forumSearchClient = hc<ForumSearchAppType>(baseUrl, fetchOptions)
 export const forumSharedClient = hc<ForumSharedAppType>(baseUrl, fetchOptions)
 export const forumReactionClient = hc<ForumReactionAppType>(baseUrl, fetchOptions)

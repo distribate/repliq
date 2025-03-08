@@ -48,7 +48,7 @@ import { createReactionRoute } from '#routes/reaction/create-reaction.ts';
 import { getUserBanDetailsRoute } from '#routes/user/get-user-ban-details.ts';
 import { createThreadRoute } from '#routes/thread/create-thread.ts';
 import { getUserFriendsCountRoute } from '#routes/user/get-user-friends-count.ts';
-import { getFactRoute } from '#routes/shared/get-fact-route.ts';
+import { getFactRoute } from '#routes/public/get-fact-route.ts';
 import { getUserStatusRoute } from '#routes/user/get-user-status.ts';
 import { getNewsRoute } from '#routes/public/get-news.ts';
 import { getOnlineUsersRoute } from '#routes/public/get-online-users.ts';
@@ -57,7 +57,7 @@ import { getLastCommentsRoute } from '#routes/comments/get-last-comments.ts';
 import { getAuthImageRoute } from '#routes/public/get-auth-image.ts';
 import { getDonatesRoute } from '#routes/public/get-donates.ts';
 import { getThreadImagesRoute } from './routes/thread/get-thread-images';
-import { getStaticImageRoute } from '#routes/shared/get-static-image.ts';
+import { getStaticImageRoute } from '#routes/public/get-static-image.ts';
 import { timeoutMiddleware } from '#middlewares/timeout.ts';
 import { rateLimiterMiddleware } from '#middlewares/rate-limiter.ts';
 import { csrfProtectionMiddleware } from '#middlewares/csrf-protection.ts';
@@ -106,6 +106,11 @@ import { getUserGameStatsRoute } from '#routes/user/get-user-game-stats.ts';
 import { getUserTicketsRoute } from '#routes/user/get-user-tickets.ts';
 import { getRulesRoute } from '#routes/public/get-rules.ts';
 import { getModpacksRoute } from '#routes/public/get-modpacks.ts';
+import { getServerIpRoute } from '#routes/public/get-server-ip.ts';
+import { createBanRoute } from '#routes/warns/create-ban.ts';
+import { createUserRestrictRoute } from '#routes/warns/create-user-restrict.ts';
+import { notificationsSSERoute } from '#routes/notifications/notifications-sse.ts';
+import { getMediaRoute } from '#routes/public/get-media.ts';
 
 async function startNats() {
   await initNats()
@@ -127,7 +132,11 @@ export const report = new Hono()
   .route("/", createReportRoute)
   .route("/", approveReportRoute)
 
-export const landing = new Hono()
+export const shared = new Hono()
+  .basePath("/shared")
+  .route('/', getFactRoute)
+  .route("/", getAuthImageRoute)
+  .route("/", getStaticImageRoute)
   .route("/", getNewsRoute)
   .route("/", getOnlineUsersRoute)
   .route("/", getLatestRegUsersRoute)
@@ -138,12 +147,8 @@ export const landing = new Hono()
   .route("/", getStatusRoute)
   .route("/", getRulesRoute)
   .route("/", getModpacksRoute)
-
-export const shared = new Hono()
-  .basePath("/shared")
-  .route('/', getFactRoute)
-  .route("/", getAuthImageRoute)
-  .route("/", getStaticImageRoute)
+  .route("/", getServerIpRoute)
+  .route("/", getMediaRoute)
 
 export const admin = new Hono()
   .basePath('/admin')
@@ -157,6 +162,13 @@ export const admin = new Hono()
   .route("/", createNewsRoute)
   .route("/", getTicketsRoute)
   .route("/", getReportsRoute)
+
+export const moderator = new Hono()
+  .basePath("/moderator")
+  .use(validateRequest)
+  .use(adminMiddleware)
+  .route("/", createBanRoute)
+  .route("/", createUserRestrictRoute)
 
 export const comment = new Hono()
   .basePath('/comment')
@@ -258,6 +270,11 @@ export const user = new Hono()
   .route("/", getUserGameStatsRoute)
   .route("/", getUserTicketsRoute)
 
+export const sse = new Hono()
+  // http-only cookies accepted for only production mode
+  .use(validateRequest)
+  .route("/", notificationsSSERoute)
+
 export const search = new Hono()
   .basePath('/search')
   .use(validateRequest)
@@ -273,15 +290,16 @@ const app = new Hono<Env>()
   .use(logger())
   .use(contextStorage())
   .route('/', admin)
+  .route("/", moderator)
   .route('/', user)
   .route("/", thread)
   .route("/", category)
   .route("/", comment)
   .route("/", reaction)
+  .route("/", sse)
   .route("/", shared)
   .route("/", search)
   .route("/", post)
-  .route("/", landing)
   .route("/", report)
 
 showRoutes(app, { verbose: false });

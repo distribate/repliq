@@ -1,11 +1,9 @@
-import { Heart } from "lucide-react";
-
-export const THREAD_REACTIONS: Record<string, JSX.Element | string> = {
+export const THREAD_REACTIONS: Record<string, string> = {
   "like": "👍", 
   "love": "❤️",
   "laugh": "😂",
   "sad": "😢",
-  "heart": <Heart size={16} />,
+  "heart": "❤",
   "ghost": "👻",
   "clap": "👏",  
   "fire": "🔥",

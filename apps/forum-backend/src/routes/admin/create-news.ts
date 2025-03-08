@@ -35,7 +35,7 @@ async function createNews(data: CreateNews) {
     }
 
     return await trx
-      .insertInto("landing_news")
+      .insertInto("news")
       .values({
         description: data.description,
         title: data.title,
@@ -51,7 +51,7 @@ async function createNews(data: CreateNews) {
 async function deleteNews(id: string) {
   return await forumDB.transaction().execute(async (trx) => {
     const newsImage = await trx
-      .selectFrom("landing_news")
+      .selectFrom("news")
       .selectAll()
       .where("id", "=", id)
       .executeTakeFirst()
@@ -64,7 +64,7 @@ async function deleteNews(id: string) {
     }
 
     return await trx
-      .deleteFrom("landing_news")
+      .deleteFrom("news")
       .where("id", "=", id)
       .executeTakeFirst()
   })

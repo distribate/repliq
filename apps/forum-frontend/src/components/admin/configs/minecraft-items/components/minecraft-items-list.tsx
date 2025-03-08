@@ -1,12 +1,12 @@
 import { Typography } from "@repo/ui/src/components/typography.tsx";
 import { MinecraftItemsAddButton } from "./minecraft-items-add-button.tsx";
 import { MinecraftItemsDeleteButton } from "./minecraft-items-delete-button.tsx";
-import { forumLandingClient } from "@repo/shared/api/forum-client.ts";
+import { forumSharedClient } from "@repo/shared/api/forum-client.ts";
 import { useQuery } from "@tanstack/react-query";
 import { createQueryKey } from "@repo/lib/helpers/query-key-builder.ts";
 
 async function getAvailableMinecraftItems() {
-  const res = await forumLandingClient["get-minecraft-items"].$get();
+  const res = await forumSharedClient.shared["get-minecraft-items"].$get();
 
   const data = await res.json();
 

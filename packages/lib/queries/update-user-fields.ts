@@ -1,5 +1,5 @@
 import { forumUserClient } from '@repo/shared/api/forum-client.ts';
-import { userDetailsSchema } from '@repo/types/schemas/user/edit-user-details-schema.ts';
+import { userDetailsSchema } from '../../types/schemas/user/edit-user-details-schema.ts';
 import { z } from 'zod';
 
 type UpdateUserFields = z.infer<typeof userDetailsSchema>

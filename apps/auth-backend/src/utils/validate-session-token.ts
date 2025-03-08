@@ -11,7 +11,7 @@ import { putSessionToken } from "./put-session-token.ts";
 import { deleteSessionToken } from "./delete-session-token.ts";
 
 export type SessionValidationResult =
-  | { session: Omit<Session, "token">; user: User }
+  | { session: Omit<Session, "token" | "ip">; user: User }
   | { session: null; user: null };
 
 export async function validateSessionToken(
@@ -29,7 +29,7 @@ export async function validateSessionToken(
 
   const { session_id, expires_at, nickname, uuid, userId } = res;
 
-  const session: Omit<Session, "token"> = {
+  const session: Omit<Session, "token" | "ip"> = {
     session_id, nickname, expires_at
   };
 
