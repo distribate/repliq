@@ -1,7 +1,6 @@
 import { Hono } from "hono";
 import { forumDB } from "#shared/database/forum-db.ts";
 import { sql } from "kysely";
-import { VOTIFIER_REWARD } from "@repo/shared/constants/rewards";
 import { publishVoteNotify } from "#publishers/pub-vote-notify.ts";
 import { bisquiteDB } from "#shared/database/bisquite-db.ts";
 
@@ -16,10 +15,16 @@ async function postVoted(nickname: string) {
     return
   }
 
+  const { reward } = await forumDB
+    .selectFrom("events")
+    .select("reward")
+    .where("origin", "=", "vote-for-server")
+    .executeTakeFirstOrThrow()
+
   const addCharism = await bisquiteDB
     .updateTable("CMI_users")
     .set({
-      Balance: sql`Balance + ${VOTIFIER_REWARD}`
+      Balance: sql`Balance + ${Number(reward)}`
     })
     .where("username", "=", nickname)
     .executeTakeFirstOrThrow()

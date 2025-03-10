@@ -15,8 +15,8 @@ const ProfileBadge = () => {
   const { nickname } = currentUserQuery().data
 
   return (
-    <div className="flex items-center justify-between h-14 px-2 py-1 gap-3 bg-shark-950 rounded-lg">
-      <Avatar propHeight={36} propWidth={36} nickname={nickname} />
+    <div className="flex items-center justify-between h-12 px-2 py-1 gap-3 bg-shark-950 rounded-lg">
+      <Avatar propHeight={32} propWidth={32} nickname={nickname} />
       <UserBalance />
       <DropdownArrow />
     </div>
@@ -69,13 +69,13 @@ export const Navbar = () => {
 
   return (
     <div className="flex flex-col lg:flex-row items-center justify-between w-full gap-2">
-      <div className="flex w-full lg:w-fit bg-shark-950 h-14 rounded-lg px-6 py-1">
+      <div className="flex w-full lg:w-fit bg-shark-950 h-12 rounded-lg px-6 py-1">
         <Logotype />
       </div>
       <div className="flex gap-2 w-full lg:w-fit rounded-lg *:w-full">
         <DropdownMenu>
           <DropdownMenuTrigger
-            className="flex h-14 gap-3 rounded-lg items-center group px-6 bg-shark-950 focus-visible:outline-none"
+            className="flex h-12 gap-3 rounded-lg items-center group px-6 bg-shark-950 focus-visible:outline-none"
           >
             <Compass size={20} className="text-shark-300" />
             <Typography className="font-semibold text-base">
@@ -100,7 +100,7 @@ export const Navbar = () => {
         </DropdownMenu>
         <DropdownMenu>
           <DropdownMenuTrigger
-            className="flex h-14 gap-3 rounded-lg items-center group px-6 bg-shark-950 focus-visible:outline-none"
+            className="flex h-12 gap-3 rounded-lg items-center group px-6 bg-shark-950 focus-visible:outline-none"
           >
             <Pickaxe size={20} className="text-shark-300" />
             <Typography className="font-semibold text-base">
@@ -125,7 +125,7 @@ export const Navbar = () => {
       <div className="flex self-end items-center gap-2">
         <DropdownMenu>
           <DropdownMenuTrigger
-            className="flex items-center rounded-lg justify-center h-14 w-14 bg-shark-950 group focus-visible:outline-none"
+            className="flex items-center rounded-lg justify-center h-12 w-12 bg-shark-950 group focus-visible:outline-none"
           >
             <Plus size={24} className="text-shark-300" />
           </DropdownMenuTrigger>

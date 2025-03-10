@@ -9,9 +9,9 @@ import type {
   ForumSearchAppType,
   ForumPostAppType,
   ForumReportAppType
-} from 'apps/forum-backend/src/types/routes-types.ts';
+} from 'forum-backend/src/types/routes-types.ts';
 import { hc } from 'hono/client';
-import { isProduction } from "../../lib/helpers/is-production.ts";
+import { isProduction } from "@repo/lib/helpers/is-production.ts";
 import { fetchOptions } from '../constants/fetch-options.ts';
 
 const baseUrl = isProduction ? `https://cc.fasberry.su/api/forum` : `http://localhost:4101/api/forum`

@@ -401,6 +401,7 @@ export interface Events {
   description: string | null;
   id: Generated<Int8>;
   imageUrl: string | null;
+  origin: string;
   reward: string;
   title: string;
 }

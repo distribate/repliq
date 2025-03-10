@@ -111,6 +111,7 @@ import { createBanRoute } from '#routes/warns/create-ban.ts';
 import { createUserRestrictRoute } from '#routes/warns/create-user-restrict.ts';
 import { notificationsSSERoute } from '#routes/notifications/notifications-sse.ts';
 import { getMediaRoute } from '#routes/public/get-media.ts';
+import { getUserLocationRoute } from '#routes/user/get-user-location.ts';
 
 async function startNats() {
   await initNats()
@@ -269,7 +270,8 @@ export const user = new Hono()
   .route("/", getMyLandsRoute)
   .route("/", getUserGameStatsRoute)
   .route("/", getUserTicketsRoute)
-
+  .route("/", getUserLocationRoute)
+  
 export const sse = new Hono()
   // http-only cookies accepted for only production mode
   .use(validateRequest)

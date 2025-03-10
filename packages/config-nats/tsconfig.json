@@ -1,11 +1,16 @@
 {
   "extends": "@repo/config-typescript/base.json",
+  "include": [
+    "**/*.ts",
+    "*.ts"
+  ],
   "compilerOptions": {
     "module": "ESNext",
     "target": "ESNext",
     "composite": true,
     "declaration": true
   },
-  "include": ["**/*.ts", "*.ts"],
-  "exclude": ["node_modules"]
+  "exclude": [
+    "node_modules"
+  ]
 }

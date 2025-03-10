@@ -16,4 +16,4 @@ export const DONATE_TITLE: Record<keyof typeof DONATE_GROUPS, string> = {
   "helper": "Хелпер",
   "dev": "Разработчик",
   "moder": "Модератор",
-}
+} as const;

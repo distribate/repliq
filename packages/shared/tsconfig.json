@@ -9,9 +9,6 @@
 		"module": "ESNext",
 		"moduleResolution": "bundler",
 		"skipLibCheck": true,
-		"strict": true,
-		"paths": {
-			"#/*": ["./*"]
-		}
-	}
+		"strict": true
+	},
 }

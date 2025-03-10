@@ -11,6 +11,7 @@ import "@repo/ui/ui.css"
 import type { NotificationsEventsPayload, ConfigEventsData } from "@repo/types/entities/notifications-events-type.ts"
 import { globalOptionQuery } from '@repo/lib/queries/global-option-query';
 import { config, updateEvent, ping } from "@repo/shared/constants/sse-events.ts"
+import { isProduction } from '@repo/lib/helpers/is-production';
 
 const NotFound = lazy(() => import("#components/templates/not-found.tsx")
   .then(m => ({ default: m.NotFound }))
@@ -50,7 +51,7 @@ function Meta({ children }: { children: ReactNode }) {
   return children;
 }
 
-const URL = "https://cc.fasberry.su/api/forum/sse"
+const URL = isProduction ? "https://cc.fasberry.su/api/forum/sse" : "http://localhost:4101/api/forum/sse"
 
 const NotificationsWrapper = () => {
   const { isAuthenticated } = globalOptionQuery().data
@@ -96,12 +97,12 @@ function RootComponent() {
         }}
         toastOptions={{
           classNames: {
-            error: "bg-black/80 text-shark-50 backdrop-blur-lg border-2 border-shark-700 rounded-md",
+            error: "bg-black/80 text-lg text-shark-50 backdrop-blur-lg border-2 border-shark-700 rounded-md",
             success:
-              "bg-black/80 backdrop-blur-lg text-shark-50 border-2 border-shark-700 rounded-md",
+              "bg-black/80 text-lg backdrop-blur-lg text-shark-50 border-2 border-shark-700 rounded-md",
             warning:
-              "bg-black/80 backdrop-blur-lg text-shark-50 border-2 border-shark-700 rounded-md",
-            info: "bg-black/80 backdrop-blur-lg text-shark-50 border-2 border-shark-700 rounded-md",
+              "bg-black/80 text-lg backdrop-blur-lg text-shark-50 border-2 border-shark-700 rounded-md",
+            info: "bg-black/80 text-lg backdrop-blur-lg text-shark-50 border-2 border-shark-700 rounded-md",
           },
         }}
       />

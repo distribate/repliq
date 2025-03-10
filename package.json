@@ -21,8 +21,8 @@
   "engines": {
     "node": ">=18"
   },
-  "name": "fasberry-forum",
-  "packageManager": "yarn@4.7.0",
+  "name": "fasberry-web",
+  "packageManager": "yarn@4.3.0",
   "workspaces": [
     "apps/*",
     "packages/*"

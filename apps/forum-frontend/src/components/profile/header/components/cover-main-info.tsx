@@ -15,29 +15,40 @@ type UserCoverInfoProps = {
   nickname: string;
 };
 
+const BirthdayEvent = ({ nickname }: UserCoverInfoProps) => {
+  const qc = useQueryClient();
+  const requestedUser = qc.getQueryData<UserDetailed>(REQUESTED_USER_QUERY_KEY(nickname));
+
+  if (!requestedUser) return;
+
+  const isBirthday = requestedUser.birthday
+    ? dayjs(requestedUser.birthday).format('MM-DD') === dayjs(new Date().toISOString().split('T')[0]).format('MM-DD')
+    : false;
+
+  if (!isBirthday) return null;
+
+  return (
+    <Typography className="font-[Minecraft] text-xl lg:text-3xl">
+      🎉
+    </Typography>
+  )
+}
+
 export const UserCoverMainInfo = ({ nickname }: UserCoverInfoProps) => {
   const qc = useQueryClient();
   const requestedUser = qc.getQueryData<UserDetailed>(REQUESTED_USER_QUERY_KEY(nickname));
-  
+
   const coverState = qc.getQueryData<CoverQuery>(COVER_QUERY_KEY);
 
   if (!requestedUser || !coverState) return;
 
-  const { description, real_name, name_color, donate, favorite_item } = requestedUser;
-
-  const isBirthday = requestedUser.birthday ? dayjs(requestedUser.birthday).format('MM-DD') === dayjs(new Date().toISOString().split('T')[0]).format('MM-DD') : false;
-
-  console.log(new Date().toISOString().split('T')[0], requestedUser.birthday)
+  const { description, real_name, name_color, donate } = requestedUser;
 
   return (
     <div className="flex flex-col lg:items-start items-center self-end justify-between h-1/2 gap-y-1">
       <div className="flex flex-col lg:items-start items-center truncate">
         <div className="flex items-center gap-1">
-          {isBirthday && 
-            <Typography className="font-[Minecraft] text-xl lg:text-3xl">
-              🎉
-            </Typography>
-          }
+          <BirthdayEvent nickname={nickname}/>
           <UserNickname
             nickname={nickname}
             nicknameColor={name_color}

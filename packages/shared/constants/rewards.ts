@@ -1,1 +1,0 @@
-export const VOTIFIER_REWARD = 25 // charism

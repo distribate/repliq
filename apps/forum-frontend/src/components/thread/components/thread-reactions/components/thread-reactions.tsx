@@ -1,5 +1,5 @@
 import { ThreadEntity } from "@repo/types/entities/entities-type.ts";
-import { THREAD_REACTIONS } from "@repo/shared/constants/emojis.tsx";
+import { REACTIONS } from "@repo/shared/constants/emojis";
 import { threadReactionsQuery } from "../queries/thread-reactions-query";
 import { ThreadReactionsSkeleton } from "./thread-reactions-skeleton";
 import { ThreadReactionItem } from "./thread-reaction-item";
@@ -24,7 +24,7 @@ export const ThreadReactions = ({ threadId }: ThreadRatingProps) => {
         const count = threadReactions[emojiName];
         const isLiked = userReactions.reactions.includes(emojiName) ? true : false;
 
-        const Icon = THREAD_REACTIONS[emojiName];
+        const Icon = REACTIONS[emojiName];
 
         return (
           <ThreadReactionItem

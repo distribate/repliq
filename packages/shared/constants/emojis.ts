@@ -1,4 +1,4 @@
-export const THREAD_REACTIONS: Record<string, string> = {
+export const REACTIONS: Record<string, string> = {
   "like": "👍", 
   "love": "❤️",
   "laugh": "😂",

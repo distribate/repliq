@@ -2,6 +2,7 @@ import { throwError } from '@repo/lib/helpers/throw-error.ts';
 import { getUserLastVisitTime } from "#lib/queries/user/get-user-last-visit-time.ts";
 import { getNatsConnection } from "@repo/config-nats/nats-client";
 import { Hono } from "hono";
+import { SERVER_EVENT_CHECK_PLAYER_STATUS, SERVER_USER_EVENT_SUBJECT } from '@repo/shared/constants/nats-subjects';
 
 type PlayerStatus = {
   nickname: string;
@@ -13,16 +14,18 @@ async function getPlayerStatus(nickname: string) {
 
   const lastVisitTime = await getUserLastVisitTime(nickname);
 
-  let response;
-
-  try {
-    response = await nc.request("server.user.status", JSON.stringify({ nickname }));
-  } catch (e) {
-    console.error(`No responders for server.user.status`);
+  const payload = {
+    event: SERVER_EVENT_CHECK_PLAYER_STATUS, 
+    nickname
   }
 
-  if (response) {
-    const status = response.json<PlayerStatus>();
+  const res = await nc.request(SERVER_USER_EVENT_SUBJECT, JSON.stringify(payload), { timeout: 7000 })
+
+  if (res) {
+
+    console.log(res.json())
+
+    const status = res.json<PlayerStatus>();
 
     if (!lastVisitTime) {
       return { ...status, issued_date: null }

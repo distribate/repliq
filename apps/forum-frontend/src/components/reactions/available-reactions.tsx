@@ -1,5 +1,5 @@
 import { useThreadReaction } from "#components/thread/components/thread-reactions/hooks/use-thread-reaction.ts";
-import { THREAD_REACTIONS } from "@repo/shared/constants/emojis";
+import { REACTIONS } from "@repo/shared/constants/emojis";
 import React, { useRef } from "react";
 
 type AvailableReactionsProps = {
@@ -27,7 +27,7 @@ export const AvailableThreadReactions = ({
       onWheel={handleWheel}
       ref={scrollRef}
     >
-      {Object.entries(THREAD_REACTIONS).map(([key, value]) => (
+      {Object.entries(REACTIONS).map(([key, value]) => (
         <div
           key={key}
           onClick={() => handleAddReaction(key)}

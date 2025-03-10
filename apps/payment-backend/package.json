@@ -18,7 +18,7 @@
     "@hono/zod-validator": "0.4.1",
     "@nats-io/transport-node": "3.0.0-32",
     "@repo/shared": "*",
-    "hono": "4.6.15",
+    "hono": "4.7.4",
     "hono-rate-limiter": "0.4.2",
     "ky": "1.7.2",
     "kysely": "0.27.4",

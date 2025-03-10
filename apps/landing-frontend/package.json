@@ -49,7 +49,6 @@
     "dayjs": "1.11.11",
     "embla-carousel-react": "8.5.1",
     "eslint": "8.57.1",
-    "hono": "4.6.15",
     "postcss": "8.4.35",
     "react-intersection-observer": "9.10.2",
     "tailwind-merge": "2.6.0",

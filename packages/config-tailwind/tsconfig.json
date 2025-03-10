@@ -1,8 +1,14 @@
 {
   "extends": "@repo/config-typescript/base.json",
+  "include": [
+    "."
+  ],
   "compilerOptions": {
     "moduleResolution": "NodeNext"
   },
-  "include": ["."],
-  "exclude": ["dist", "build", "node_modules"]
+  "exclude": [
+    "dist",
+    "build",
+    "node_modules"
+  ]
 }

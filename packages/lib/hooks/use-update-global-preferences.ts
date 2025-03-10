@@ -2,7 +2,7 @@ import { GLOBAL_PREFERENCES_QUERY_KEY, globalPreferencesQuery, GlobalPreferences
 import { useQueryClient, useMutation } from "@tanstack/react-query";
 import { useLocalStorage } from "./use-local-storage";
 import { getCookieByKey } from "#helpers/get-cookie-by-key.ts";
-import { ALERTS_COOKIE_KEY, INTRO_COOKIE_KEY } from "@repo/shared/keys/cookie";
+import { ALERTS_COOKIE_KEY, INTRO_COOKIE_KEY } from "@repo/shared/constants/cookies.ts";
 import { toast } from "sonner";
 
 type KeyType = "intro" | "alerts"

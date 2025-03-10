@@ -1,15 +1,17 @@
 {
   "extends": "@repo/config-typescript/hono.json",
   "include": [
-    "**/*.ts", "*.ts"
+    "**/*.ts",
+    "*.ts"
   ],
   "compilerOptions": {
     "allowImportingTsExtensions": true,
     "skipLibCheck": true,
-    "preserveSymlinks": false,
     "strict": true,
     "noFallthroughCasesInSwitch": true,
     "forceConsistentCasingInFileNames": true
   },
-  "exclude": ["node_modules"],
+  "exclude": [
+    "node_modules"
+  ],
 }
