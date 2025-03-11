@@ -12,9 +12,10 @@ export const ConfirmationButton = ({
   ...props
 }: ConfirmationButtonProps) => {
   return (
-    <Button className="bg-shark-50" {...props}>
+    <Button className="hover:bg-shark-50/80 focus:bg-shark-50/80 group  backdrop-blur-lg duration-300 ease-in-out transition" {...props}>
       <Typography
-        className={`text-base ${actionType === "continue" ? "text-shark-950" : "text-red-600"} font-medium`}
+        className={`duration-300 ease-in-out transition text-base 
+          ${actionType === "continue" ? "text-white group-hover:text-shark-950 group-focus:text-shark-950" : "text-red-600"} font-semibold`}
       >
         {title}
       </Typography>

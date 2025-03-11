@@ -1,7 +1,6 @@
 import { Typography } from "@repo/landing-ui/src/typography";
 import { shopItemQuery } from "@repo/lib/queries/shop-item-query";
 import { walletsMap } from "./shop-list-wallets";
-import { donatesMap } from "./shop-list-donates";
 import { useQueryClient } from "@tanstack/react-query";
 import { Donates } from "@repo/lib/queries/get-donates";
 import { DONATES_QUERY_KEY } from "@repo/lib/queries/donates-query";
@@ -16,9 +15,7 @@ export const ShopFinishedPreview = () => {
   const qc = useQueryClient()
   const { data: shopItemState } = shopItemQuery()
 
-  if (!shopItemState || !shopItemState.paymentType || !walletsMap || !donatesMap) return null;
-
-  const mainMap: Record<string, { img: string }> = Object.assign({}, walletsMap, donatesMap);
+  if (!shopItemState || !shopItemState.paymentType || !walletsMap) return null;
 
   const paymentType: string = shopItemState.category === 'donate'
     ? shopItemState.paymentValue as "arkhont" | "authentic" | "loyal"
@@ -33,7 +30,8 @@ export const ShopFinishedPreview = () => {
 
         return {
           title: selDonate?.title ?? "",
-          description: selDonate?.description ?? ""
+          description: selDonate?.description ?? "",
+          img: selDonate?.imageUrl ?? ""
         }
       case "charism":
       case "belkoin":
@@ -41,24 +39,35 @@ export const ShopFinishedPreview = () => {
 
         return {
           title: selWallet.title,
-          description: selWallet.description
+          description: selWallet.description,
+          img: walletsMap[paymentType].img
         }
     }
   }
 
   const details = getSelectedDetails()
 
+  if (!details) return null;
+
   return (
     <div className="flex items-center select-none justify-start gap-4 w-full p-4 lg:p-6 rounded-xl bg-neutral-400 dark:bg-neutral-900">
       <div className="flex items-center justify-center bg-neutral-600/40 p-2 rounded-lg">
-        <img src={mainMap[paymentType].img} width={42} height={42} alt="" className="lg:w-[42px] lg:h-[42px] h-[32px] w-[32px]" />
+        <img
+          src={details.img}
+          width={42}
+          height={42}
+          alt=""
+          className="lg:w-[42px] lg:h-[42px] h-[32px] w-[32px]"
+        />
       </div>
       <div className="flex flex-col">
         <Typography className="text-[20px]">
-          {titleMap[shopItemState.category]} {details?.title}
+          {titleMap[shopItemState.category]} {details.title}
         </Typography>
         <Typography className="text-[18px]">
-          для <span className="text-neutral-600 dark:text-neutral-400 font-semibold">{shopItemState?.nickname}</span>
+          для <span className="text-neutral-600 dark:text-neutral-400 font-semibold">
+            {shopItemState?.nickname}
+          </span>
         </Typography>
       </div>
     </div>

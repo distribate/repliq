@@ -116,16 +116,14 @@ export const IdeaMain = () => {
 					</Typography>
 				</div>
 				<div className="hidden md:flex items-center gap-4 justify-center w-fit">
-					{IDEAS.map((n, i) => (
+					{IDEAS.map((n, idx) => (
 						<div
 							key={n.title}
-							onClick={() => setSel(i)}
-							className={`flex cursor-pointer duration-300 transition-all ease-in-out 
-							${sel === i ? "bg-neutral-50 text-neutral-800" : "bg-neutral-800 text-neutral-50"} rounded-xl px-4 py-2`}
+							onClick={() => setSel(idx)}
+							className={`flex cursor-pointer duration-300 transition-all border-2 border-neutral-800 rounded-xl px-4 py-2
+							${sel === idx ? "bg-neutral-50 text-neutral-900" : "text-neutral-900 dark:text-neutral-50"}`}
 						>
-							<Typography className="truncate">
-								{n.title}
-							</Typography>
+							<Typography className="truncate">{n.title}</Typography>
 						</div>
 					))}
 				</div>
@@ -145,13 +143,14 @@ export const IdeaMain = () => {
 				</div>
 			</div>
 			<div
-				className={`flex flex-col sm:flex-row relative sm:items-center w-full gap-2 lg:w-2/3 justify-between overflow-hidden border-2
-					${IDEAS[sel].type === 'module' ? "bg-neutral-300 border-transparent" : `border-neutral-600`} 
-					p-4 sm:p-6 xl:p-10 h-[360px] lg:h-[460px] w-full lg:max-w-full justify-start rounded-xl
+				className={`flex flex-col sm:flex-row relative sm:items-center w-full gap-2 lg:w-2/3 justify-between overflow-hidden
+					${IDEAS[sel].type === 'module' && "bg-neutral-300"} 
+					p-4 sm:p-6 xl:p-14 h-[360px] lg:h-[460px] w-full lg:max-w-full justify-start rounded-xl
 				`}
 			>
 				{IDEAS[sel].type === 'full' && (
 					<div className="absolute top-0 bottom-0 right-0 left-0 w-full h-full">
+						<div className="absolute left-0 h-full w-full z-[2] bg-gradient-to-r from-neutral-900/60 via-transparent to-transparent"/>
 						<img
 							src={IDEAS[sel].image}
 							alt=""
@@ -161,7 +160,7 @@ export const IdeaMain = () => {
 						/>
 					</div>
 				)}
-				<div className={`flex flex-col relative ${IDEAS[sel].type === 'module' ? "w-full sm:w-2/4" : "w-full sm:w-2/3"}`}>
+				<div className={`flex z-[3] flex-col relative ${IDEAS[sel].type === 'module' ? "w-full sm:w-2/4" : "w-full sm:w-2/3"}`}>
 					<Typography
 						className={`${IDEAS[sel].type === 'module' ? "text-neutral-900" : "text-neutral-50"} mb-4 text-xl sm:text-3xl lg:text-4xl`}
 					>

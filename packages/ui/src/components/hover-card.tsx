@@ -23,7 +23,7 @@ const HoverCardItem = forwardRef<
       ref={ref}
       className={cn(
         `${isActive && "text-caribbean-green-500"}
-			    flex hover:bg-shark-600 focus:bg-shark-600 border data-[disabled]:opacity-50
+			    flex hover:bg-shark-600 focus:bg-shark-600 data-[disabled]:opacity-50
 			     border-none cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm relative`,
         className,
       )}

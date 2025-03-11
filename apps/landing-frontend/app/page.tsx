@@ -110,7 +110,7 @@ export default async function Main() {
         className="full-screen-section relative h-screen flex flex-col items-center justify-center"
       >
         <div className="flex flex-col items-center mx-auto responsive gap-6 justify-center select-none relative">
-          <Typography text_color="black" className="text-2xl sm:text-3xl lg:text-4xl">
+          <Typography text_color="black" className="text-xl text-center sm:text-3xl lg:text-4xl">
             ♦ Особенности сервера ♦
           </Typography>
           <IdeaMain />
@@ -120,7 +120,7 @@ export default async function Main() {
         id="spawn"
         className="hidden lg:flex full-screen-section relative h-[80vh] lg:h-screen flex-col items-center justify-center"
       >
-        <div className="flex flex-col overflow-hidden h-full items-center w-full gap-6 justify-center select-none relative">
+        <div className="flex h-[80%] w-[80%] items-center gap-6 justify-center relative">
           <SpawnCarousel />
         </div>
       </div>

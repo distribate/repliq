@@ -20,6 +20,7 @@ export async function getUserInfo(nickname: string) {
       "users_settings.profile_visibility",
       "users_settings.real_name_visible",
       "users_settings.send_notifications",
+      "users_settings.show_game_location",
       eb.cast<string>("users.created_at", "text").as("created_at"),
       eb.cast<string>("users.birthday", "text").as("birthday"),
     ])

@@ -2,13 +2,13 @@ import { Typography } from "@repo/ui/src/components/typography.tsx";
 import {
   UPDATE_FIELD_MUTATION_KEY,
 } from "@repo/lib/hooks/use-update-current-user.ts";
-import { UserSettingOption } from "#components/cards/user-personal-card/components/profile-settings/user-profile-settings.tsx";
 import Barrier from "@repo/assets/images/minecraft/barrier.webp";
 import { DynamicModal } from "#components/modals/dynamic-modal.tsx";
 import { currentUserQuery } from '@repo/lib/queries/current-user-query.ts';
 import { useUpdateUserSettings } from '@repo/lib/hooks/use-update-user-settings.ts';
 import { ProfileVisibilityEnum } from '@repo/types/entities/entities-type.ts';
 import { LockKeyhole, LockOpen } from "lucide-react";
+import { UserSettingOption } from "#components/cards/user-setting-option";
 
 export const ProfileVisibilityChange = () => {
   const { preferences: { profile_visibility } } = currentUserQuery().data;

@@ -12,12 +12,14 @@ export function parseDateOrTimestamp(input: string | null | Date): dayjs.Dayjs |
   if (!input) {
     return null;
   }
+
   if (typeof input === "string") {
     const date = dayjs(input);
+
     if (!date.isValid()) {
-      console.error("Invalid timestamp format");
       return null;
     }
+    
     return date;
   } else if (input instanceof Date) {
     return dayjs(input).toISOString();
@@ -35,15 +37,26 @@ export const getMaxDate = () => dayjs();
 
 export const getEndMonth = (month: dayjs.Dayjs) => month.add(1, "year");
 
-export const changeDayWithinRange = (
+type ChangeDayWithinRange = {
   d: dayjs.Dayjs,
   date: dayjs.Dayjs,
   min: dayjs.Dayjs,
   max: dayjs.Dayjs
-): dayjs.Dayjs => {
+}
+
+export const changeDayWithinRange = ({
+  d, date, max, min
+}: ChangeDayWithinRange): dayjs.Dayjs => {
   let updated = d.hour(date.hour()).minute(date.minute()).second(date.second());
-  if (updated.isBefore(min)) updated = updated.hour(min.hour()).minute(min.minute()).second(min.second());
-  if (updated.isAfter(max)) updated = updated.hour(max.hour()).minute(max.minute()).second(max.second());
+
+  if (updated.isBefore(min)) {
+    updated = updated.hour(min.hour()).minute(min.minute()).second(min.second());
+  }
+
+  if (updated.isAfter(max)) {
+    updated = updated.hour(max.hour()).minute(max.minute()).second(max.second());
+  }
+
   return updated;
 };
 
@@ -53,14 +66,23 @@ export const generateYears = (
   maxDate?: dayjs.Dayjs
 ): TimeOption[] => {
   const years: TimeOption[] = [];
+
   for (let i = 1924; i < 2025; i++) {
     let disabled = false;
+
     const startY = dayjs(value).year(i).startOf("year");
     const endY = dayjs(value).year(i).endOf("year");
+
     if (minDate && endY.isBefore(minDate)) disabled = true;
     if (maxDate && startY.isAfter(maxDate)) disabled = true;
-    years.push({ value: i, label: i.toString(), disabled });
+
+    years.push({
+      value: i,
+      label: i.toString(),
+      disabled
+    });
   }
+
   return years;
 };
 
@@ -70,23 +92,34 @@ export const generateMonths = (
   maxDate?: dayjs.Dayjs
 ): TimeOption[] => {
   const months: TimeOption[] = [];
+
   for (let i = 0; i < 12; i++) {
     let disabled = false;
+
     const startM = value.month(i).startOf("month");
     const endM = value.month(i).endOf("month");
+
     if (minDate && endM.isBefore(minDate)) disabled = true;
     if (maxDate && startM.isAfter(maxDate)) disabled = true;
-    months.push({ value: i, label: dayjs().month(i).format("MMM"), disabled });
+
+    months.push({
+      value: i,
+      label: dayjs().month(i).format("MMM"),
+      disabled
+    });
   }
+
   return months;
 };
 
 export const getNextMonth = (month: dayjs.Dayjs, max: dayjs.Dayjs) => {
   const nextMonth = month.add(1, "month");
+
   return nextMonth.isBefore(max) || nextMonth.isSame(max) ? nextMonth : month;
 };
 
 export const getPreviousMonth = (month: dayjs.Dayjs, min: dayjs.Dayjs) => {
   const prevMonth = month.subtract(1, "month");
+
   return prevMonth.isAfter(min) || prevMonth.isSame(min) ? prevMonth : month;
 };

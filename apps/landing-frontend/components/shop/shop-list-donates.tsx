@@ -18,18 +18,6 @@ const DonateListNull = () => {
   )
 }
 
-export const donatesMap: Record<"authentic" | "loyal" | "arkhont", { img: string }> = {
-  "authentic": {
-    img: LeatherTunic.src
-  },
-  "loyal": {
-    img: IronChestplate.src
-  },
-  "arkhont": {
-    img: NetheriteChestplate.src
-  }
-}
-
 export const DonatesList = () => {
   const qc = useQueryClient()
   const { data, isLoading, isError } = donatesQuery("donate")
@@ -76,7 +64,7 @@ export const DonatesList = () => {
         onClick={() => changeDonate(d.origin as "authentic" | "loyal" | "arkhont")}
       >
         <div className="flex items-center justify-center bg-neutral-600/40 p-2 rounded-lg">
-          <img src={donatesMap[d.origin as "authentic" | "loyal" | "arkhont"].img} width={36} height={36} alt="" />
+          <img src={d.imageUrl} width={36} height={36} alt="" />
         </div>
         <Typography className="text-[20px]" text_color="adaptiveWhiteBlack">
           {d.title}

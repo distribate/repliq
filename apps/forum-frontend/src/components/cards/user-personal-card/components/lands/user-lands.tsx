@@ -1,3 +1,4 @@
+import { UserSettingsBack } from "#components/modals/user-settings/components/user-settings-back"
 import { ContentNotFound } from "#components/templates/content-not-found"
 import { createQueryKey } from "@repo/lib/helpers/query-key-builder"
 import { forumUserClient } from "@repo/shared/api/forum-client"
@@ -30,6 +31,7 @@ export const UserLands = () => {
 
   return (
     <div className="flex flex-col gap-y-4 items-center w-full">
+      <UserSettingsBack to="main" />
       <Typography variant="dialogTitle">Ваши регионы</Typography>
       <div className="flex flex-col w-full gap-y-4">
         {isLoading && (

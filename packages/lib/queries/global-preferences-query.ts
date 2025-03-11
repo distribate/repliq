@@ -31,22 +31,17 @@ function hasAlertsShow(): boolean {
 export const PREFERENCES_LS_KEY = "preferences";
 
 export const globalPreferencesQuery = () => {
-  const value = useReadLocalStorage<Pick<GlobalPreferencesQuery, "autoSaveThreads">>(PREFERENCES_LS_KEY, {
-    initializeWithValue: false
-  });
+  const value = useReadLocalStorage<Pick<GlobalPreferencesQuery, "autoSaveThreads">>(PREFERENCES_LS_KEY);
+
+  const hasAlertsShowing = hasAlertsShow()
+  const hasIntroShowing = hasIntroShow()
 
   return useSuspenseQuery<GlobalPreferencesQuery>({
     queryKey: GLOBAL_PREFERENCES_QUERY_KEY,
-    queryFn: async () => {
-      const hasAlertsShowing = hasAlertsShow()
-      const hasIntroShowing = hasIntroShow()
-
-      return {
-        alerts: hasAlertsShowing ? "show" : "hide",
-        intro: hasIntroShowing ? "show" : "hide",
-        autoSaveThreads: value ? value.autoSaveThreads : false
-      }
-    },
-    refetchOnMount: false
+    initialData: {
+      alerts: hasAlertsShowing ? "show" : "hide",
+      intro: hasIntroShowing ? "show" : "hide",
+      autoSaveThreads: value ? value.autoSaveThreads : false
+    }
   })
 }

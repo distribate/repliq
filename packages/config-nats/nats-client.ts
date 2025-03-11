@@ -1,7 +1,7 @@
 import { connect, type NatsConnection, type ConnectionOptions } from "@nats-io/transport-node";
 
 const token = process.env.NATS_AUTH_TOKEN!
-const host = process.env.NATS_HOST ?? "localhost:4222"
+const host = process.env.NATS_HOST! ?? "localhost:4222"
 
 const NATS_CONFIG: ConnectionOptions = {
   servers: `nats://${host}`,

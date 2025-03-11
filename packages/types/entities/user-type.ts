@@ -18,7 +18,8 @@ export type UserDetailed = Omit<Selectable<Users>,
       real_name_visible: boolean,
       game_stats_visible: boolean,
       profile_visibility: "all" | "friends",
-      send_notifications: boolean
+      send_notifications: boolean;
+      show_game_location: boolean;
     },
   }
 
@@ -29,5 +30,6 @@ export type UserShorted = {
   description: string | null,
   preferences: {
     cover_outline_visible: boolean,
+    show_game_location: boolean;
   },
 }

@@ -1,6 +1,5 @@
 import { forumDB } from "#shared/database/forum-db.ts";
 import type { InitiatorRecipientType } from "#types/initiator-recipient-type.ts";
-import type { UserDonateVariant } from "@repo/types/entities/entities-type";
 import type { UserDetailed, UserShorted } from "@repo/types/entities/user-type";
 
 export type GetUserType = "shorted" | "detailed"
@@ -29,6 +28,7 @@ export async function getUser<T extends GetUserType>({
       "users_settings.game_stats_visible",
       "users_settings.profile_visibility",
       "users_settings.real_name_visible",
+      "users_settings.show_game_location",
       eb.cast<string>("users.created_at", "text").as("created_at"),
       eb.cast<string>("users.birthday", "text").as("birthday"),
     ])
@@ -41,7 +41,7 @@ export async function getUser<T extends GetUserType>({
 
   const {
     accept_friend_request, cover_outline_visible, game_stats_visible, profile_visibility,
-    real_name_visible, real_name, created_at, birthday, favorite_item,
+    real_name_visible, real_name, created_at, birthday, favorite_item, show_game_location,
     ...userWithoutSensitiveInfo
   } = query;
 
@@ -54,7 +54,8 @@ export async function getUser<T extends GetUserType>({
       accept_friend_request,
       game_stats_visible,
       profile_visibility,
-      real_name_visible
+      real_name_visible,
+      show_game_location
     },
   };
 

@@ -43,20 +43,18 @@ export const ProfileBackgroundUpdateModal = () => {
     <DynamicModal
       withLoader
       mutationKey={USER_COVER_UPDATE_IMAGE_MUTATION_KEY}
-      contentClassName="max-w-xl"
       trigger={
-        <HoverCardItem className="gap-2 items-center group">
-          <ImageUp
-            size={16}
-            className="icon-color group-hover:text-pink-500"
-          />
+        <div className="flex hover:bg-shark-600 rounded-md p-2 gap-2 items-center group">
+          <ImageUp size={20} className="icon-color group-hover:text-pink-500" />
           <Typography>Обновить фон</Typography>
-        </HoverCardItem>
+        </div>
       }
       content={
-        <div className="flex flex-col items-center gap-y-4 w-full">
-          <Typography variant="dialogTitle">Обновление фона</Typography>
-          <div className="flex flex-col items-center justify-center *:w-full w-full">
+        <div className="flex flex-col items-center gap-4 w-full">
+          <Typography variant="dialogTitle">
+            Обновление фона
+          </Typography>
+          <div className="flex flex-col items-center p-2 justify-center *:w-full w-full">
             <Suspense fallback={<Skeleton className="h-10 w-full" />}>
               <ProfileBackgroundDefaultImagesModal />
             </Suspense>

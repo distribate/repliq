@@ -5,11 +5,13 @@ import { Encoder } from "cbor-x";
 import { Hono } from "hono";
 import { z } from "zod";
 
+const DEFAULT_LIMIT = 7
+
 async function getLatestRegUsers({ limit }: { limit?: number }) {
   const query = await forumDB
     .selectFrom("users")
     .select(["id", "nickname", "name_color", "description"])
-    .limit(limit ?? 7)
+    .limit(limit ?? DEFAULT_LIMIT)
     .orderBy("created_at", "desc")
     .execute()
 

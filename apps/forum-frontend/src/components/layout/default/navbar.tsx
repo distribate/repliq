@@ -10,18 +10,7 @@ import { currentUserQuery } from "@repo/lib/queries/current-user-query";
 import { globalOptionQuery } from "@repo/lib/queries/global-option-query";
 import { Button } from "@repo/ui/src/components/button";
 import LogotypeImage from "@repo/assets/images/logotype.png";
-
-const ProfileBadge = () => {
-  const { nickname } = currentUserQuery().data
-
-  return (
-    <div className="flex items-center justify-between h-12 px-2 py-1 gap-3 bg-shark-950 rounded-lg">
-      <Avatar propHeight={32} propWidth={32} nickname={nickname} />
-      <UserBalance />
-      <DropdownArrow />
-    </div>
-  )
-}
+import { Suspense } from "react";
 
 const DISCOVER = [
   { icon: UsersRound, title: "Игроки", link: "/search?type=users" },
@@ -40,7 +29,23 @@ const CREATE = [
   { icon: NotebookPen, title: "Открыть тикет", link: "/create-ticket" }
 ]
 
-const DropdownArrow = () => {
+const ProfileBadge = () => {
+  const { nickname } = currentUserQuery().data
+
+  return (
+    <div className="flex w-full items-center justify-between h-12 px-2 py-1 gap-3 bg-shark-950 rounded-lg">
+      <div className="flex items-center gap-3">
+        <Suspense>
+          <Avatar propHeight={32} propWidth={32} nickname={nickname} />
+        </Suspense>
+        <UserBalance />
+      </div>
+      <DropdownArrow />
+    </div>
+  )
+}
+
+export const DropdownArrow = () => {
   return (
     <ArrowDown
       size={20}
@@ -122,7 +127,7 @@ export const Navbar = () => {
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
-      <div className="flex self-end items-center gap-2">
+      <div className="flex w-full lg:w-fit lg:self-end items-center gap-2">
         <DropdownMenu>
           <DropdownMenuTrigger
             className="flex items-center rounded-lg justify-center h-12 w-12 bg-shark-950 group focus-visible:outline-none"
@@ -145,14 +150,7 @@ export const Navbar = () => {
           </DropdownMenuContent>
         </DropdownMenu>
         {isAuth ? (
-          <DropdownMenu>
-            <DropdownMenuTrigger className="group focus-visible:outline-none">
-              <ProfileBadge />
-            </DropdownMenuTrigger>
-            <DropdownMenuContent side="bottom" align="end" className="min-w-[240px]">
-              <UserMenu />
-            </DropdownMenuContent>
-          </DropdownMenu>
+          <UserMenu trigger={<ProfileBadge />} />
         ) : (
           <Button onClick={() => navigate({ to: "/auth" })} className="flex items-center rounded-lg bg-shark-50 h-14 px-6">
             <Typography textSize="large" className="text-shark-900 font-semibold">

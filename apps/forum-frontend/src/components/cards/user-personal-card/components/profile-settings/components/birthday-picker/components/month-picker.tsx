@@ -83,6 +83,10 @@ export const MonthYearPicker = ({
     }
   }, [mode, value]);
 
+  const selectMonth = (month: TimeOption) => {
+    onChange(dayjsValue.set('month', month.value).toDate(), "month")
+  }
+
   return (
     <div className={cn(className)}>
       <ScrollArea className="h-full">
@@ -119,7 +123,7 @@ export const MonthYearPicker = ({
                   flex px-4 py-2 rounded-md
                   ${dayjsValue.month() === month.value ? "bg-emerald-500/50" : "bg-shark-700/50 hover:bg-shark-700/80"}
                 `}
-                onClick={() => onChange(dayjsValue.set('month', month.value).toDate(), "month")}
+                onClick={() => selectMonth(month)}
               >
                 <Typography textColor="shark_white" textSize="medium">
                   {month.label}

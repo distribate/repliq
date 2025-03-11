@@ -37,15 +37,23 @@ export const UserBalance = () => {
       </div>
       <div className="flex items-center gap-2">
         <div className="flex gap-1 items-center">
-          <Typography className="text-[15px] font-[Minecraft]">
-            {isLoading ? <Skeleton className="w-4 h-4 rounded-none" /> : balance?.charism}
+          {isLoading ? (
+            <Skeleton className="w-4 h-4 rounded-none" />
+          ) : (
+            <Typography className="text-[15px] font-[Minecraft]">
+            {balance?.charism}
           </Typography>
+          )}
           <img src={Charism} width={16} height={16} alt="" />
         </div>
         <div className="flex gap-1 items-center">
-          <Typography className="text-[15px] font-[Minecraft]">
-            {isLoading ? <Skeleton className="w-4 h-4 rounded-none" /> : balance?.belkoin}
+          {isLoading ? (
+            <Skeleton className="w-4 h-4 rounded-none" />
+          ) : (
+            <Typography className="text-[15px] font-[Minecraft]">
+            {balance?.belkoin}
           </Typography>
+          )}
           <img src={Belkoin} width={15} height={15} alt="" />
         </div>
       </div>

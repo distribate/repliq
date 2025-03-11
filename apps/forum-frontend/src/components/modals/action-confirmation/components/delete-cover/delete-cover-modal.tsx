@@ -1,4 +1,3 @@
-import { HoverCardItem } from "@repo/ui/src/components/hover-card.tsx";
 import { X } from "lucide-react";
 import { Typography } from "@repo/ui/src/components/typography.tsx";
 import { ConfirmationButton } from "#components/buttons/confirmation-action-button.tsx";
@@ -19,10 +18,10 @@ export const DeleteCoverModal = () => {
       withLoader
       mutationKey={USER_COVER_DELETE_IMAGE_MUTATION_KEY}
       trigger={
-        <HoverCardItem className="gap-2 items-center group">
-          <X size={16} className="text-shark-300 group-hover:text-pink-500" />
+        <div className="flex hover:bg-shark-600 rounded-md p-2 gap-2 items-center group">
+          <X size={20} className="text-shark-300 group-hover:text-pink-500" />
           <Typography>Удалить фон</Typography>
-        </HoverCardItem>
+        </div>
       }
       content={
         <ConfirmationActionModalTemplate title="Подтверждение действия">

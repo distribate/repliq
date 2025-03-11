@@ -1,53 +1,24 @@
 import { Typography } from "@repo/ui/src/components/typography.tsx";
 import { Separator } from "@repo/ui/src/components/separator.tsx";
-import { ImageWrapper } from "#components/wrappers/image-wrapper.tsx";
 import { DescriptionInput } from "./components/description/description-input.tsx";
-import { HoverCardItem } from "@repo/ui/src/components/hover-card.tsx";
 import { OutlineCover } from "./components/outline-cover/outline-cover.tsx";
 import Lead from "@repo/assets/images/minecraft/lead.webp";
-import { RealNameChangeModal } from "#components/modals/user-settings/real-name-change-modal.tsx";
-import { NicknameColorPickerModal } from "#components/modals/user-settings/nickname-color-picker-modal.tsx";
-import { FavoriteItemModal } from "#components/modals/user-settings/favorite-item-modal.tsx";
-import { ReactNode } from "react";
+import { RealNameChangeModal } from "#components/modals/user-settings/components/real-name-change-modal.tsx";
+import { NicknameColorPickerModal } from "#components/modals/user-settings/components/nickname-color-picker-modal.tsx";
+import { FavoriteItemModal } from "#components/modals/user-settings/components/favorite-item-modal.tsx";
 import { ProfileVisibilityChange } from "./components/visibility-profile/components/profile-visibility-change.tsx";
-import { DateBirthdayModal } from "#components/modals/user-settings/date-birthday-modal.tsx";
+import { DateBirthdayModal } from "#components/modals/user-settings/components/date-birthday-modal.tsx";
 import { getUser } from "@repo/lib/helpers/get-user.ts";
-
-type ProfileSetting = {
-  title: string;
-  imageSrc?: string;
-  children?: ReactNode;
-};
-
-export const UserSettingOption = ({
-  title, children, imageSrc,
-}: ProfileSetting) => {
-  return (
-    <HoverCardItem className="py-2 justify-between w-full">
-      <div className="flex gap-x-2 items-center w-full">
-        {imageSrc && (
-          <ImageWrapper
-            propSrc={imageSrc}
-            propAlt={title}
-            width={26}
-            className="max-w-[26px] max-h-[26px]"
-            height={26}
-          />
-        )}
-        <Typography className="text-base">{title}</Typography>
-      </div>
-      <div className="min-w-fit">{children || " "}</div>
-    </HoverCardItem>
-  );
-};
+import { UserSettingOption } from "#components/cards/user-setting-option.tsx";
+import { UserSettingsBack } from "#components/modals/user-settings/components/user-settings-back.tsx";
 
 export const UserProfileSettings = () => {
   const { donate } = getUser();
-
   const isAccess = donate !== "default";
 
   return (
     <div className="flex flex-col gap-y-4 items-center w-full">
+      <UserSettingsBack to="main" />
       <Typography variant="dialogTitle">Профиль</Typography>
       <div className="flex flex-col w-full gap-y-4">
         <DescriptionInput />

@@ -1,6 +1,5 @@
 import { loggerBot } from "../../shared/bot/bot";
 import { z } from "zod"
-import { pubDonatePayload } from "@repo/lib/publishers/pub-donate-payload.ts"
 import { getNatsConnection } from "@repo/config-nats/nats-client";
 import { SERVER_USER_EVENT_SUBJECT } from "@repo/shared/constants/nats-subjects";
 import { validateRequest } from "../../utils/validate-request";
@@ -11,6 +10,16 @@ const donateSchema = z.enum(["arkhont", "authentic", "loyal"])
 export type DonatePayload = {
   nickname: string,
   donate: z.infer<typeof donateSchema>
+}
+
+function pubDonatePayload(payload: DonatePayload) {
+  try {
+    const nc = getNatsConnection()
+    
+    return nc.publish("server.give.donate", JSON.stringify(payload))
+  } catch (e) {
+    console.error(e)
+  }
 }
 
 loggerBot.command("give", async (ctx) => {

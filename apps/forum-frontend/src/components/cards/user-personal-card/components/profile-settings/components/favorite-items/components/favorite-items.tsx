@@ -1,7 +1,23 @@
 import { Typography } from "@repo/ui/src/components/typography.tsx";
-import { FavoriteItemsSkeleton } from "./favorite-items-skeleton.tsx";
 import { favoriteItemsQuery } from "../queries/favorite-items-query.ts";
 import { FavoriteItem } from "./favorite-item.tsx";
+import { Skeleton } from "@repo/ui/src/components/skeleton.tsx";
+
+const FavoriteItemsSkeleton = () => {
+  return (
+    <div className="grid grid-flow-col grid-rows-4 overflow-y-scroll max-h-[540px] gap-2 w-full">
+      <Skeleton className="w-full h-[112px]" />
+      <Skeleton className="w-full h-[112px]" />
+      <Skeleton className="w-full h-[112px]" />
+      <Skeleton className="w-full h-[112px]" />
+      <Skeleton className="w-full h-[112px]" />
+      <Skeleton className="w-full h-[112px]" />
+      <Skeleton className="w-full h-[112px]" />
+      <Skeleton className="w-full h-[112px]" />
+      <Skeleton className="w-full h-[112px]" />
+    </div>
+  );
+};
 
 export const FavoriteItems = () => {
   const { data: items, isLoading } = favoriteItemsQuery();

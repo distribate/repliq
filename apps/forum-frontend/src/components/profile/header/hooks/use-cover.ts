@@ -8,10 +8,9 @@ export const useCover = () => {
   const qc = useQueryClient();
 
   const setCoverStateMutation = useMutation({
-    mutationFn: async (values: CoverQuery) => {
+    mutationFn: async (values: Partial<CoverQuery>) => {
       return qc.setQueryData(COVER_QUERY_KEY, (prev: CoverQuery) => ({
-        ...prev,
-        ...values,
+        ...prev,...values,
       }));
     },
     onSuccess: () => qc.invalidateQueries({ queryKey: COVER_QUERY_KEY }),

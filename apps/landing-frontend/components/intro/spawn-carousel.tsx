@@ -21,16 +21,16 @@ export const SpawnCarousel = () => {
   }, [api, sel]);
 
   return (
-    <>
+    <div className="flex items-center justify-center w-full h-full overflow-hidden rounded-xl">
       <Carousel
-        className="w-full self-start z-[5] h-full"
+        className="w-full z-[5] h-full"
         setApi={setApi}
         opts={{ align: "start", dragFree: false, loop: true, slidesToScroll: 1 }}
       >
         <CarouselContent>
           {SPAWN_IMAGES.map((image, i) => (
-            <CarouselItem key={i} className="!p-0 w-full h-full">
-              <img src={image} className="w-full brightness-75 h-screen object-cover" width={1920} height={1080} alt="" />
+            <CarouselItem key={i} className="!p-0 w-full h-screen">
+              <img src={image} className="w-full brightness-75 h-full object-cover" width={1920} height={1080} alt="" />
             </CarouselItem>
           ))}
         </CarouselContent>
@@ -51,7 +51,7 @@ export const SpawnCarousel = () => {
           {`>`}
         </Typography>
       </div>
-      <div className="flex absolute bottom-28 right-0 left-0 w-full items-end justify-center h-full">
+      <div className="flex absolute bottom-8 right-0 left-0 w-full items-end justify-center h-full">
         <div className="flex flex-col w-full gap-2 z-[6] lg:w-[50%]">
           <Typography className="!text-white text-2xl font-semibold text-center">
             Спавн сервера
@@ -62,6 +62,6 @@ export const SpawnCarousel = () => {
           </Typography>
         </div>
       </div>
-    </>
+    </div>
   )
 }

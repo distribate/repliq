@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { USER_BLOCKED_QUERY_KEY } from "../../user-personal-card/components/account-settings/queries/user-blocked-query.ts";
+import { USER_BLOCKED_QUERY_KEY } from "../../../modals/user-settings/queries/user-blocked-query.ts";
 import {
   deleteUserFromBlocked,
 } from "../queries/delete-user-from-blocked.ts";

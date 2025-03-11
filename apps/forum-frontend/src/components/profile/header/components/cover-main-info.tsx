@@ -59,7 +59,7 @@ export const UserCoverMainInfo = ({ nickname }: UserCoverInfoProps) => {
         {real_name && <UserRealName real_name={real_name} />}
       </div>
       {description && (
-        <div className="flex">
+        <div className="hidden lg:flex">
           <Typography
             textColor="shark_white"
             className="font-[Minecraft]"

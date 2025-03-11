@@ -3,11 +3,11 @@ import { ReactNode } from "react";
 import { TooltipProvider } from "@repo/landing-ui/src/tooltip";
 import { Toaster } from "sonner";
 import localFont from "next/font/local"
-import { NextThemeProvider } from "@repo/lib/providers/theme-provider.tsx";
+import { NextThemeProvider } from "#components/providers/theme-provider.tsx";
 import { Header } from "#components/layout/default/header.tsx";
 import { Footer } from "#components/layout/default/footer.tsx";
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
-import { QueryProvider } from '@repo/lib/providers/query-provider.tsx';
+import { QueryProvider } from '#components/providers/query-provider.tsx';
 
 import "../styles/globals.css";
 import "../styles/minecraft-weather.css"

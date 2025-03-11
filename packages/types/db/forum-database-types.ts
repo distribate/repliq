@@ -1013,6 +1013,7 @@ export interface UsersSettings {
   profile_visibility: Generated<ProfileVisibility>;
   real_name_visible: Generated<boolean>;
   send_notifications: Generated<boolean>;
+  show_game_location: Generated<boolean>;
   user_id: string;
 }
 

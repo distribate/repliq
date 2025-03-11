@@ -4,6 +4,13 @@ import { useQuery } from "@tanstack/react-query";
 import ky from "ky";
 import { decode } from "cbor-x"
 
+type LatestRegUser = {
+  id: string;
+  description: string | null;
+  name_color: string;
+  nickname: string;
+}
+
 export const getLatestRegUsers = async (limit?: number) => {
   const url = forumSharedClient.shared["get-latest-reg-users"].$url({
     query: {
@@ -22,15 +29,9 @@ export const getLatestRegUsers = async (limit?: number) => {
   }
 
   const uint8Data = new Uint8Array(encodedData)
+  const data: Array<LatestRegUser> = decode(uint8Data)
 
-  const data: {
-    id: string;
-    description: string | null;
-    name_color: string;
-    nickname: string;
-  }[] = decode(uint8Data)
-
-  if ("error" in data) {
+  if (!data || "error" in data) {
     return null
   }
 
@@ -39,8 +40,8 @@ export const getLatestRegUsers = async (limit?: number) => {
 
 export const LATEST_REG_USERS_QUERY_KEY = createQueryKey("ui", ["last-users"])
 
-export const latestUsersQuery = () => useQuery({
+export const latestUsersQuery = (limit?: number) => useQuery({
   queryKey: LATEST_REG_USERS_QUERY_KEY,
-  queryFn: () => getLatestRegUsers(),
-  refetchOnWindowFocus: false,
+  queryFn: () => getLatestRegUsers(limit),
+  refetchOnWindowFocus: false
 })

@@ -1,6 +1,6 @@
 import { Dialog, DialogContent, DialogTrigger } from "@repo/ui/src/components/dialog"
 import { Typography } from "@repo/ui/src/components/typography"
-import { forwardRef, HTMLAttributes, ReactNode, RefAttributes, useEffect, useRef, useState } from "react"
+import { forwardRef, HTMLAttributes, ReactNode, RefAttributes } from "react"
 import { useInView } from "react-intersection-observer"
 import { useNavigate } from "@tanstack/react-router"
 // @ts-ignore
@@ -57,7 +57,6 @@ const PushButton = () => {
 
 const DonateDialog = () => {
   const { ref, inView } = useInView({ threshold: 0.01 })
-  console.log(inView)
 
   return (
     <div className="flex flex-col items-center w-full h-full">
@@ -66,10 +65,10 @@ const DonateDialog = () => {
         <img src={Chestplate} alt="" width={112} height={112} />
         <div className="flex flex-col">
           <Typography className="text-[20px] font-semibold text-center break-words">
-            Получите больше возможностей.
+            Любая привилегия - доступ к большим возможностям
           </Typography>
           <Typography className="text-[20px] font-semibold text-center break-words">
-            Будьте аутентиком!
+            на форуме и в игре!
           </Typography>
         </div>
       </div>
