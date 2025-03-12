@@ -1,7 +1,8 @@
 import { bisquiteDB } from "#shared/database/bisquite-db.ts";
-import { playerPointsDB } from "#shared/database/playerpoints-db.ts"
-import { getNatsConnection } from "@repo/config-nats/nats-client"
-import { USER_GET_BALANCE_SUBJECT } from "@repo/shared/constants/nats-subjects";
+import { playerPointsDB } from "#shared/database/playerpoints-db.ts";
+import { getNickname } from "#utils/get-nickname-from-storage.ts";
+import { throwError } from "@repo/lib/helpers/throw-error";
+import { Hono } from "hono";
 
 async function getBelkoin(nickname: string) {
   return playerPointsDB
@@ -32,29 +33,19 @@ async function getUserBalance(nickname: string) {
   }
 }
 
-export const subscribeUserBalance = () => {
-  const nc = getNatsConnection()
+export const getPlayerBalanceRoute = new Hono()
+  .get("/get-player-balance", async (ctx) => {
+    const nickname = getNickname()
 
-  return nc.subscribe(USER_GET_BALANCE_SUBJECT, {
-    callback: async (err, msg) => {
-      if (err) {
-        console.error(err);
-        return;
+    try {
+      const balance = await getUserBalance(nickname)
+
+      if (!balance) {
+        return ctx.json({ data: { charism: 0, belkoin: 0 } }, 200)
       }
 
-      const nickname = new TextDecoder().decode(msg.data)
-
-      try {
-        const balance = await getUserBalance(nickname)
-
-        if (!balance) {
-          return msg.respond(JSON.stringify({ charism: 0, belkoin: 0 }));
-        }
-
-        return msg.respond(JSON.stringify(balance))
-      } catch (e) {
-        console.error(e)
-      }
+      return ctx.json({ data: balance }, 200)
+    } catch (e) {
+      return ctx.json({ error: throwError(e) }, 500)
     }
   })
-}

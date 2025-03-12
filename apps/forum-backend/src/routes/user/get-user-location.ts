@@ -127,7 +127,7 @@ export const getUserLocationRoute = new Hono()
 
       location = {
         ...rawLocation,
-        world: rawLocation.world,
+        world,
         customLocation: getCustomLocation({
           world,
           coords: { x: rawLocation.x, z: rawLocation.z }

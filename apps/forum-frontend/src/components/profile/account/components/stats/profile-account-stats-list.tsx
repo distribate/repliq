@@ -3,16 +3,20 @@ import { USER_PROFILE_STATS_QUERY_KEY, userProfileStatsQuery } from "../../queri
 import { getUser } from "@repo/lib/helpers/get-user";
 import { Dialog, DialogContent, DialogTrigger } from "@repo/ui/src/components/dialog";
 import { Button } from "@repo/ui/src/components/button";
-import { ProfileAccountStatsCharts } from "./profile-account-stats-charts";
 import { ProfileStatsDetailed, ProfileStatsMeta, ProfileViewsDetails } from "@repo/types/routes-types/get-user-profile-stats-types";
 import { useQueryClient } from "@tanstack/react-query";
 import { BuyDonateModal } from "#components/modals/custom/buy-donate-modal";
 import { Avatar } from "#components/user/avatar/components/avatar";
+import { useNavigate } from "@tanstack/react-router";
+import { HTMLAttributes, Suspense } from "react";
+import dayjs from "@repo/lib/constants/dayjs-instance"
+import { Skeleton } from "@repo/ui/src/components/skeleton";
+import { Link } from "@tanstack/react-router";
+import { USER_URL } from "@repo/shared/constants/routes";
 
 type AccountStatSectionProps = {
   title: string,
-  children?: React.ReactNode
-}
+} & HTMLAttributes<HTMLDivElement>
 
 type ProfileAccountStatsMetaProps = {
   meta: ProfileStatsMeta
@@ -22,11 +26,11 @@ type ProfileAccountStatsPlayersProps = {
   details: ProfileViewsDetails[]
 }
 
-const AccountStatSection = ({
-  title, children
+export const AccountStatSection = ({
+  title, children, ...props
 }: AccountStatSectionProps) => {
   return (
-    <div className="flex flex-col gap-2 items-start p-4 w-full bg-shark-950 rounded-lg">
+    <div className="flex flex-col gap-2 items-start p-4 w-full bg-shark-950 rounded-lg" {...props}>
       <Typography className="text-[18px] font-medium">
         {title}
       </Typography>
@@ -35,7 +39,7 @@ const AccountStatSection = ({
   )
 }
 
-const ProfileAccountStatsMeta = ({
+export const ProfileAccountStatsMeta = ({
   meta
 }: ProfileAccountStatsMetaProps) => {
   return (
@@ -53,7 +57,7 @@ const ProfileAccountStatsMeta = ({
   )
 }
 
-const ProfileAccountStatsPlayers = ({
+export const ProfileAccountStatsPlayers = ({
   details
 }: ProfileAccountStatsPlayersProps) => {
   return (
@@ -69,85 +73,72 @@ const ProfileAccountStatsPlayers = ({
             </Typography>
           </Button>
         </DialogTrigger>
-        <DialogContent>
-          {details.map(({ created_at, initiator, recipient }) =>
-            <div className="flex items-center gap-2 w-fit">
-              <Avatar nickname={initiator} propWidth={20} propHeight={20} />
-              <Typography>
-                {initiator}
-              </Typography>
+        <DialogContent className="w-full px-4">
+          <div className="flex flex-col gap-4 items-center justify-center w-full h-full">
+            <Typography variant="dialogTitle">
+              Пользователи, просмотревшие ваш профиль недавно
+            </Typography>
+            <div className="flex flex-col gap-1 w-full p-2">
+              {details.map((item, idx) =>
+                <div key={idx} className="flex bg-shark-800 p-2 rounded-lg w-full items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <Suspense fallback={<Skeleton className="h-[36px] w-[36px]" />}>
+                      <Link to={USER_URL + item.initiator}>
+                        <Avatar nickname={item.initiator} propWidth={36} propHeight={36} />
+                      </Link>
+                    </Suspense>
+                    <div className="flex flex-col">
+                      <Link to={USER_URL + item.initiator}>
+                        <Typography className="text-base text-shark-50">
+                          {item.initiator}
+                        </Typography>
+                      </Link>
+                      <Typography className="text-shark-300 text-sm">
+                        {dayjs(item.created_at).format("DD MMM YYYY HH:mm")}
+                      </Typography>
+                    </div>
+                  </div>
+                </div>
+              )}
             </div>
-          )}
+          </div>
         </DialogContent>
       </Dialog>
     </div>
   )
 }
 
-const ProfileAccountStatsDetails = () => {
+export const ProfileAccountStatsDetails = () => {
   const qc = useQueryClient()
   const profileStats = qc.getQueryData<ProfileStatsDetailed>(USER_PROFILE_STATS_QUERY_KEY)
+  const navigate = useNavigate()
 
-  const details = profileStats?.details
-  const meta = profileStats?.meta
-  const charts = profileStats?.charts
+  const handleRedirect = () => {
+    if (!profileStats?.details) {
+      return;
+    }
+
+    navigate({ to: "/dashboard/profile" })
+  }
 
   return (
-    <Dialog>
-      <DialogTrigger>
-        <AccountStatSection title="Детали">
-          <Typography textColor="gray" className="text-[18px] font-medium">
-            детальная информация о профиле
-          </Typography>
-        </AccountStatSection>
-      </DialogTrigger>
-      <DialogContent className="max-w-6xl">
-        {!details && (
-          <div className="flex items-center justify-center w-full h-full p-4">
-            <Typography className="text-[18px] font-medium">
-              Информация о профиле недоступна
-            </Typography>
-          </div>
-        )}
-        {details && (
-          <div className="flex flex-col items-center gap-y-4 w-full h-full">
-            <Typography variant="dialogTitle">
-              Статистика профиля
-            </Typography>
-            <div className="flex flex-row items-start p-4 w-full gap-4 h-fit">
-              <div className="flex flex-col gap-y-4 w-2/4 h-full">
-                <div className="flex flex-col gap-y-2 w-full h-full">
-                  <Typography textColor="shark_white" className="text-[18px] font-semibold">
-                    Общая информация
-                  </Typography>
-                  {meta && <ProfileAccountStatsMeta meta={meta} />}
-                </div>
-                {details && <ProfileAccountStatsPlayers details={details} />}
-              </div>
-              <div className="flex flex-col w-2/4 h-full">
-                {charts && <ProfileAccountStatsCharts charts={charts} />}
-              </div>
-            </div>
-          </div>
-        )}
-      </DialogContent>
-    </Dialog>
+    <AccountStatSection title="Детали">
+      <Typography textColor="gray" onClick={handleRedirect} className="text-[18px] cursor-pointer font-medium">
+        детальная информация о профиле
+      </Typography>
+    </AccountStatSection>
   )
 }
 
 export const ProfileAccountStats = () => {
-  const { data: profileStats, isError, failureReason } = userProfileStatsQuery()
+  const { data: profileStats } = userProfileStatsQuery()
   const { donate } = getUser()
 
   return (
     <div className="flex flex-col gap-4 w-full h-full">
       <div className="flex w-full justify-between items-center">
         <div className="flex items-center gap-1 w-fit">
-          <Typography
-            textColor="shark_white"
-            textSize="big"
-            className="font-semibold"
-          >
+          <Typography textColor="shark_white" textSize="big" className="font-semibold">
             Статистика аккаунта
           </Typography>
         </div>

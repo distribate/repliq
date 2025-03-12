@@ -1,13 +1,19 @@
 import { UserSettingsBack } from "#components/modals/user-settings/components/user-settings-back"
 import { ContentNotFound } from "#components/templates/content-not-found"
+import { getUser } from "@repo/lib/helpers/get-user"
 import { createQueryKey } from "@repo/lib/helpers/query-key-builder"
-import { forumUserClient } from "@repo/shared/api/forum-client"
+import { playerClient } from "@repo/shared/api/minecraft-client"
 import { Skeleton } from "@repo/ui/src/components/skeleton"
 import { Typography } from "@repo/ui/src/components/typography"
 import { useQuery } from "@tanstack/react-query"
 
-const getUserLands = async () => {
-  const res = await forumUserClient.user["get-my-lands"].$get()
+const getUserLands = async (nickname: string) => {
+  const res = await playerClient.player["get-player-lands"][":nickname"].$get({
+    param: {
+      nickname
+    },
+    query: { exclude: undefined }
+  })
 
   const data = await res.json()
 
@@ -20,14 +26,15 @@ const getUserLands = async () => {
 
 export const USER_LANDS_QUERY_KEY = createQueryKey("user", ["my-lands"])
 
-const userLandsQuery = () => useQuery({
+const userLandsQuery = (nickname: string) => useQuery({
   queryKey: USER_LANDS_QUERY_KEY,
-  queryFn: () => getUserLands(),
+  queryFn: () => getUserLands(nickname),
   refetchOnWindowFocus: false,
 })
 
 export const UserLands = () => {
-  const { data: userLands, isLoading } = userLandsQuery();
+  const { nickname } = getUser()
+  const { data: userLands, isLoading } = userLandsQuery(nickname);
 
   return (
     <div className="flex flex-col gap-y-4 items-center w-full">

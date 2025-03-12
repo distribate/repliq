@@ -29,11 +29,11 @@ function setSessionCookies({
   ctx, expires, nickname, token
 }: SetCookieOpts) {
   setCookie(ctx, `user`, nickname, {
-    httpOnly: true, sameSite: "lax", domain: "fasberry.su", secure: isProduction, expires, path: "/",
+    httpOnly: true, sameSite: "lax", secure: isProduction, expires, path: "/", domain: ".fasberry.su"
   })
 
   setCookie(ctx, `session`, token, {
-    httpOnly: true, sameSite: "lax", secure: isProduction, expires, path: "/",
+    httpOnly: true, sameSite: "lax", secure: isProduction, expires, path: "/", domain: ".fasberry.su"
   })
 }
 

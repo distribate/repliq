@@ -22,9 +22,6 @@ async function getPlayerStatus(nickname: string) {
   const res = await nc.request(SERVER_USER_EVENT_SUBJECT, JSON.stringify(payload), { timeout: 7000 })
 
   if (res) {
-
-    console.log(res.json())
-
     const status = res.json<PlayerStatus>();
 
     if (!lastVisitTime) {

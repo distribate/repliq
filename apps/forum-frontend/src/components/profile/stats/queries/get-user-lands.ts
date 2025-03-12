@@ -1,9 +1,9 @@
-import { landsClient } from "@repo/shared/api/minecraft-client";
+import { playerClient } from "@repo/shared/api/minecraft-client";
 
 export async function getUserLands(
   nickname: string
 ) {
-  const res = await landsClient.lands['get-user-lands'][':nickname'].$get({
+  const res = await playerClient.player['get-player-lands'][':nickname'].$get({
     param: { nickname },
     query: { exclude: undefined },
   })

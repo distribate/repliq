@@ -9,8 +9,8 @@ const getLandsByNicknameSchema = z.object({
   exclude: z.string().optional()
 })
 
-export const getLandsByNicknameRoute = new Hono()
-  .get("/get-user-lands/:nickname", zValidator("query", getLandsByNicknameSchema), async (ctx) => {
+export const getPlayerLandsRoute = new Hono()
+  .get("/get-player-lands/:nickname", zValidator("query", getLandsByNicknameSchema), async (ctx) => {
     const { nickname } = ctx.req.param()
     const { exclude } = getLandsByNicknameSchema.parse(ctx.req.query())
 

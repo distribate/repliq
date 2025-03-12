@@ -1,5 +1,5 @@
 import { createQueryKey } from "@repo/lib/helpers/query-key-builder"
-import { landsClient } from "@repo/shared/api/minecraft-client"
+import { playerClient } from "@repo/shared/api/minecraft-client"
 import { useQuery } from "@tanstack/react-query"
 
 export type AnotherLandsByOwner = {
@@ -8,7 +8,7 @@ export type AnotherLandsByOwner = {
 }
 
 async function getAnotherLandsByOwner(nickname: string, exclude: string) {
-  const res = await landsClient.lands['get-user-lands'][':nickname'].$get({
+  const res = await playerClient.player['get-player-lands'][':nickname'].$get({
     param: { nickname },
     query: { exclude },
   })

@@ -2,15 +2,15 @@ import { Avatar } from "#components/user/avatar/components/avatar";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@repo/ui/src/components/dropdown-menu";
 import { UserMenu } from "#components/user/menu/user-menu";
 import { ArrowDown } from "lucide-react";
-import { UserBalance } from "#components/user/balance/user-balance";
 import { Typography } from "@repo/ui/src/components/typography";
 import { Compass, Plus, Pencil, Pickaxe, NotebookPen, Axe, Cuboid, UsersRound, Rocket } from "lucide-react"
-import { Link, useNavigate } from "@tanstack/react-router";
+import { Link, useLocation, useNavigate } from "@tanstack/react-router";
 import { currentUserQuery } from "@repo/lib/queries/current-user-query";
 import { globalOptionQuery } from "@repo/lib/queries/global-option-query";
 import { Button } from "@repo/ui/src/components/button";
 import LogotypeImage from "@repo/assets/images/logotype.png";
 import { Suspense } from "react";
+import { HoverCard, HoverCardContent, HoverCardItem, HoverCardTrigger } from "@repo/ui/src/components/hover-card";
 
 const DISCOVER = [
   { icon: UsersRound, title: "Игроки", link: "/search?type=users" },
@@ -38,7 +38,6 @@ const ProfileBadge = () => {
         <Suspense>
           <Avatar propHeight={32} propWidth={32} nickname={nickname} />
         </Suspense>
-        <UserBalance />
       </div>
       <DropdownArrow />
     </div>
@@ -57,7 +56,11 @@ export const DropdownArrow = () => {
 
 const Logotype = () => {
   return (
-    <Link title="Главная" to="/" className="flex active:scale-[1.04] backdrop-blur-md rounded-lg items-center justify-center w-full select-none">
+    <Link
+      title="Главная"
+      to="/"
+      className="flex active:scale-[1.04] backdrop-blur-md rounded-lg items-center justify-center w-full select-none"
+    >
       <img src={LogotypeImage} width={32} height={32} alt="" draggable={false} />
       <div className="w-fit ml-2">
         <Typography textSize="very_big" textColor="shark_white" font="minecraft" className="truncate">
@@ -71,66 +74,80 @@ const Logotype = () => {
 export const Navbar = () => {
   const { isAuthenticated: isAuth } = globalOptionQuery().data
   const navigate = useNavigate()
+  const pathname = useLocation({
+    select: l => l.pathname
+  })
+
+  const isActive = (links: Array<string>): boolean => links.map(i => i.split("?")[0]).includes(pathname)
 
   return (
     <div className="flex flex-col lg:flex-row items-center justify-between w-full gap-2">
-      <div className="flex w-full lg:w-fit bg-shark-950 h-12 rounded-lg px-6 py-1">
+      <div className="flex w-full lg:w-fit h-12 rounded-lg px-6 py-1">
         <Logotype />
       </div>
-      <div className="flex gap-2 w-full lg:w-fit rounded-lg *:w-full">
-        <DropdownMenu>
-          <DropdownMenuTrigger
-            className="flex h-12 gap-3 rounded-lg items-center group px-6 bg-shark-950 focus-visible:outline-none"
+      <div className="flex flex-col md:flex-row gap-2 w-full lg:w-fit rounded-lg">
+        <HoverCard openDelay={1}>
+          <HoverCardTrigger
+            className={`flex h-12 gap-3 select-none duration-150 ease-in rounded-lg items-center group px-6 cursor-pointer 
+              ${isActive(DISCOVER.map(i => i.link)) ? "bg-biloba-flower-800/60" : "data-[state=open]:bg-shark-950"}`}
           >
-            <Compass size={20} className="text-shark-300" />
+            <Compass
+              size={20}
+              className={isActive(DISCOVER.map(i => i.link)) ? "text-biloba-flower-500 brightness-125" : "text-shark-300"}
+            />
             <Typography className="font-semibold text-base">
               Исследовать
             </Typography>
             <DropdownArrow />
-          </DropdownMenuTrigger>
-          <DropdownMenuContent side="bottom" align="end" className="min-w-[200px]">
+          </HoverCardTrigger>
+          <HoverCardContent side="bottom" align="end">
             <div className="flex flex-col gap-2 w-full h-full">
               {DISCOVER.map(({ icon: Icon, title, link }, idx) => (
                 <Link key={idx} to={link}>
-                  <DropdownMenuItem className="gap-2 pr-6 py-2 group cursor-pointer">
+                  <HoverCardItem className="gap-3 px-4 py-2 group cursor-pointer">
                     <Icon size={20} className="text-shark-300" />
                     <Typography textSize="medium">
                       {title}
                     </Typography>
-                  </DropdownMenuItem>
+                  </HoverCardItem>
                 </Link>
               ))}
             </div>
-          </DropdownMenuContent>
-        </DropdownMenu>
-        <DropdownMenu>
-          <DropdownMenuTrigger
-            className="flex h-12 gap-3 rounded-lg items-center group px-6 bg-shark-950 focus-visible:outline-none"
+          </HoverCardContent>
+        </HoverCard>
+        <HoverCard openDelay={1}>
+          <HoverCardTrigger
+            className="flex h-12 gap-3 select-none duration-150 ease-in rounded-lg items-center group px-6 
+              cursor-pointer data-[state=open]:bg-shark-950"
           >
-            <Pickaxe size={20} className="text-shark-300" />
+            <Pickaxe
+              size={20}
+              className="text-shark-300"
+            />
             <Typography className="font-semibold text-base">
               Ресурсы
             </Typography>
             <DropdownArrow />
-          </DropdownMenuTrigger>
-          <DropdownMenuContent side="bottom" align="end" className="min-w-[200px]">
+          </HoverCardTrigger>
+          <HoverCardContent side="bottom" align="end">
             {RESOURCES.map(({ icon: Icon, title, link }, idx) => (
               <a key={idx} href={link}>
-                <DropdownMenuItem className="gap-2 pr-6 py-2 group cursor-pointer">
+                <HoverCardItem className="gap-2 pr-6 py-2 group cursor-pointer">
                   <Icon size={20} className="text-shark-300" />
                   <Typography textSize="medium">
                     {title}
                   </Typography>
-                </DropdownMenuItem>
+                </HoverCardItem>
               </a>
             ))}
-          </DropdownMenuContent>
-        </DropdownMenu>
+          </HoverCardContent>
+        </HoverCard>
       </div>
       <div className="flex w-full lg:w-fit lg:self-end items-center gap-2">
         <DropdownMenu>
           <DropdownMenuTrigger
-            className="flex items-center rounded-lg justify-center h-12 w-12 bg-shark-950 group focus-visible:outline-none"
+            className="flex items-center rounded-lg justify-center h-12 w-12 
+              bg-shark-950 group focus-visible:outline-none"
           >
             <Plus size={24} className="text-shark-300" />
           </DropdownMenuTrigger>

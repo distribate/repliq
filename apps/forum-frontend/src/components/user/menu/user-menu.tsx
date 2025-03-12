@@ -13,6 +13,7 @@ import { Dialog, DialogTrigger } from "@repo/ui/src/components/dialog";
 import { userSettingsQuery } from "#components/modals/user-settings/queries/user-settings-query";
 import { useUserSettingsModal } from "#components/modals/user-settings/hooks/use-user-settings-modal";
 import { ReactNode } from "react";
+import { UserBalance } from "../balance/user-balance";
 
 const COLLECTION_LINKS: { icon: any, name: string, query: "purchases" | "tickets" }[] = [
   { icon: ShoppingBasket, name: "Мои покупки", query: "purchases" },
@@ -50,18 +51,21 @@ export const UserMenu = ({
   const { global } = userSettingsQuery().data
   const { toggleGlobalDialogMutation } = useUserSettingsModal()
 
-  const handleClose = (value: boolean) => {
-    toggleGlobalDialogMutation.mutate({ reset: true, value })
-  }
-
   return (
-    <Dialog open={global} onOpenChange={handleClose}>
+    <Dialog
+      open={global}
+      onOpenChange={value => toggleGlobalDialogMutation.mutate({ reset: true, value })}
+    >
       <DropdownMenu>
         <DropdownMenuTrigger className="w-full lg:w-fit group focus-visible:outline-none">
           {trigger}
         </DropdownMenuTrigger>
         <DropdownMenuContent side="bottom" align="end" className="min-w-[240px]">
           <div className="flex flex-col gap-y-2 w-full">
+            <div className="flex flex-col gap-2 w-full p-2">
+              <UserBalance />
+            </div>
+            <Separator />
             <Link to={USER_URL + nickname}>
               <DropdownMenuItem className="gap-2 group cursor-pointer" >
                 <CircleUserRound size={20} className="icon-color" />

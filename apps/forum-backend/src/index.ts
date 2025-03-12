@@ -89,20 +89,17 @@ import { getUserProfileRoute } from "#routes/user/get-user-profile.ts"
 import { getPostViewersRoute } from '#routes/post/get-post-viewers.ts';
 import { getUserFavoriteItemRoute } from '#routes/user/get-user-favorite-item.ts';
 import { getUserPurchasesRoute } from '#routes/user/get-user-purchases.ts';
-import { getUserBalanceRoute } from '#routes/user/get-user-balance.ts';
 import { subscribeUserStatus } from '#subscribers/sub-user-status.ts';
 import { watcher } from '#utils/kv-watcher.ts';
 import { userStatus } from '#middlewares/user-status.ts';
 import { getUserPublicSocialsRoute } from '#routes/user/get-user-public-socials.ts';
 import { getThreadsByOwnerRoute } from '#routes/thread/get-threads-by-owner.ts';
-import { getMyLandsRoute } from '#routes/user/get-my-lands.ts';
 import { deleteNewsRoute, createNewsRoute } from '#routes/admin/create-news.ts';
 import { adminMiddleware } from '#middlewares/admin-access.ts';
 import { getTicketsRoute } from '#routes/admin/get-tickets.ts';
 import { getReportsRoute } from '#routes/admin/get-reports.ts';
 import { getStatusRoute } from '#routes/public/get-status.ts';
 import { subscribePlayerGroup } from '#subscribers/sub-player-group.ts';
-import { getUserGameStatsRoute } from '#routes/user/get-user-game-stats.ts';
 import { getUserTicketsRoute } from '#routes/user/get-user-tickets.ts';
 import { getRulesRoute } from '#routes/public/get-rules.ts';
 import { getModpacksRoute } from '#routes/public/get-modpacks.ts';
@@ -265,10 +262,7 @@ export const user = new Hono()
   .route("/", getUserProfileRoute)
   .route("/", getUserFavoriteItemRoute)
   .route("/", getUserPurchasesRoute)
-  .route("/", getUserBalanceRoute)
   .route("/", getUserPublicSocialsRoute)
-  .route("/", getMyLandsRoute)
-  .route("/", getUserGameStatsRoute)
   .route("/", getUserTicketsRoute)
   .route("/", getUserLocationRoute)
   

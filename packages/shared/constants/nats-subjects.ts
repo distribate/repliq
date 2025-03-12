@@ -9,8 +9,6 @@ export const FORUM_USER_REGISTER_SUBJECT = "forum.user.register"
 export const USER_NOTIFICATIONS_SUBJECT = "forum.user.notifications";
 export const USER_STATUS_SUBJECT = "forum.users.status";
   // REQUESTS
-  export const USER_GET_BALANCE_SUBJECT = "get-user-balance"
-  export const USER_GET_LANDS_SUBJECT = "get-user-lands"
     // .*
     export const USER_GET_STATS_SUBJECT = "forum.user.stats"
 
