@@ -35,7 +35,7 @@ export const Route = createFileRoute('/_protected/collection')({
   }
 })
 
-const CollectionMain = () => {
+const CollectionNavigation = () => {
   const navigate = useNavigate()
   // @ts-ignore
   const type = useSearch({
@@ -47,13 +47,15 @@ const CollectionMain = () => {
     navigate({ to: "/collection", search: { type } })
   }
 
+  const isActive = (input: CollectionParams["type"]): "active" | "inactive" => input === type ? "active" : "inactive"
+
   return (
-    <div className="grid grid-cols-2 auto-rows-auto lg:flex lg:flex-nowrap w-full *:w-full">
-      <NavigationBadge isActive={type === 'purchases'} title="Покупки" onClick={() => changeRoute('purchases')} />
-      <NavigationBadge isActive={type === 'threads'} title="Треды" onClick={() => changeRoute('threads')} />
-      <NavigationBadge isActive={type === 'referals'} title="Рефералы" onClick={() => changeRoute('referals')} />
-      <NavigationBadge isActive={type === 'tickets'} title="Тикеты" onClick={() => changeRoute('tickets')} />
-      <NavigationBadge isActive={type === 'saved_threads'} title="Сохраненные треды" onClick={() => changeRoute('saved_threads')} />
+    <div className="grid grid-cols-2 bg-shark-950 auto-rows-auto rounded-xl overflow-hidden p-2 gap-2 lg:flex lg:flex-nowrap w-full *:w-full">
+      <NavigationBadge data-state={isActive("purchases")} title="Покупки" onClick={() => changeRoute('purchases')} />
+      <NavigationBadge data-state={isActive('threads')} title="Треды" onClick={() => changeRoute('threads')} />
+      <NavigationBadge data-state={isActive('referals')} title="Рефералы" onClick={() => changeRoute('referals')} />
+      <NavigationBadge data-state={isActive('tickets')} title="Тикеты" onClick={() => changeRoute('tickets')} />
+      <NavigationBadge data-state={isActive('saved_threads')} title="Сохраненные треды" onClick={() => changeRoute('saved_threads')} />
     </div>
   )
 }
@@ -62,9 +64,9 @@ function RouteComponent() {
   const { type } = Route.useSearch()
 
   return (
-    <div className="flex flex-col bg-primary-color rounded-lg w-full h-dvh">
-      <CollectionMain />
-      <div className="flex flex-col gap-6 w-full h-full p-4">
+    <div className="flex flex-col gap-4 rounded-lg w-full h-dvh">
+      <CollectionNavigation />
+      <div className="flex flex-col bg-primary-color rounded-lg overflow-hidden gap-6 w-full h-full p-4">
         <Typography
           textSize="very_big"
           textColor="shark_white"

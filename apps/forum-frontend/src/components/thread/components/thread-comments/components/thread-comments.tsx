@@ -7,8 +7,8 @@ import { useInView } from 'react-intersection-observer';
 import { useEffect } from 'react';
 import { ThreadDetailed } from '@repo/types/entities/thread-type.ts';
 import { UPDATE_COMMENTS_MUTATION_KEY, useUpdateComments } from '../hooks/use-update-comments.ts';
-import { ThreadCommentsSkeleton } from './thread-comments-skeleton.tsx';
 import { useMutationState } from '@tanstack/react-query';
+import { SectionSkeleton } from '#components/templates/section-skeleton.tsx';
 
 type ThreadCommentsProps = Pick<ThreadDetailed, 'id' | "properties" | "owner">
 
@@ -16,19 +16,14 @@ export const ThreadComments = ({
   id: thread_id, owner, properties,
 }: ThreadCommentsProps) => {
   const { updateCommentsMutation } = useUpdateComments()
-  const { data, isLoading } = threadCommentsQuery({ id: thread_id, is_comments: properties.is_comments });
+  const { data, isLoading } = threadCommentsQuery({ id: thread_id, properties });
   const { inView, ref } = useInView({ triggerOnce: false, threshold: 1 });
-
-  const mutData = useMutationState({
-    filters: { mutationKey: UPDATE_COMMENTS_MUTATION_KEY },
-    select: (m) => m.state.status
-  })
+  const mutData = useMutationState({ filters: { mutationKey: UPDATE_COMMENTS_MUTATION_KEY }, select: m => m.state.status })
 
   const isLoadingUpdated = mutData[mutData.length - 1] === "pending";
 
   const threadComments = data?.data;
   const threadMeta = data?.meta;
-  const nonComments = properties.is_comments && !threadComments;
   const hasMore = threadMeta?.hasNextPage;
   const cursor = threadMeta?.endCursor ?? undefined;
 
@@ -38,16 +33,16 @@ export const ThreadComments = ({
     }
   }, [inView, hasMore]);
 
-  if (isLoading) return <ThreadCommentsSkeleton />;
+  if (isLoading) return <SectionSkeleton />;
 
   return (
     <div className="flex flex-col items-center relative w-full">
       {threadComments && (
         <div className="flex flex-col items-start gap-y-2 w-full">
-          {threadComments.map((comment, i) => (
+          {threadComments.map((comment, idx) => (
             <ThreadCommentItem
-              key={i}
-              idx={i + 1} // index for comment's id
+              key={comment.id}
+              idx={idx + 1} // index for comment's id
               thread_id={thread_id}
               id={comment.id}
               replied={comment.replied}

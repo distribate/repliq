@@ -5,10 +5,11 @@ import { validateSessionToken } from "../utils/validate-session-token";
 import type { Env } from "../types/env-type";
 import { getNicknameByTokenFromKv } from "../utils/get-nickname-by-token-from-kv";
 import { isProduction } from "@repo/lib/helpers/is-production";
+import { SESSION_DOMAIN, SESSION_KEY } from "../shared/constants/session-details";
 
 export const getSessionRoute = new Hono<Env>()
   .use(async (ctx, next) => {
-    const sessionToken = getCookie(ctx, "session")
+    const sessionToken = getCookie(ctx, SESSION_KEY)
 
     if (!sessionToken) {
       return ctx.json({ error: "Unauthorized" }, 401)
@@ -32,9 +33,10 @@ export const getSessionRoute = new Hono<Env>()
           return ctx.json({ error: "Invalid session token" }, 401)
         }
 
-        setCookie(ctx, `session`, token, {
+        setCookie(ctx, SESSION_KEY, token, {
           httpOnly: true,
           sameSite: "lax",
+          domain: SESSION_DOMAIN,
           secure: isProduction,
           expires: new Date(session.expires_at),
           path: "/",

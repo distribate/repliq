@@ -3,7 +3,7 @@ import { Typography } from "@repo/ui/src/components/typography.tsx";
 export const UserCoverWatermark = () => {
   const WatermarkItem = () => {
     return (
-      <div className="flex space-x-4 justify-between">
+      <div className="flex space-x-4 justify-between *:opacity-20">
         <Typography
           font="minecraft"
           className="text-[26px] whitespace-nowrap"

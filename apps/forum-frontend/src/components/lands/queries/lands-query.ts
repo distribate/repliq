@@ -21,10 +21,9 @@ export const LANDS_QUERY_KEY = createQueryKey("ui", ["lands"])
 export const landsOpts = {
   queryKey: LANDS_QUERY_KEY,
   queryFn: () => getLands(),
+  refetchOnWindowFocus: false
 }
 
 export const landsQuery = () => useQuery({
   ...landsOpts,
-  refetchOnWindowFocus: false,
-  refetchOnMount: false,
 })

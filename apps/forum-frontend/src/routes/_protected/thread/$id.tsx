@@ -3,7 +3,6 @@ import { Thread } from '#components/thread/components/thread-main/components/thr
 import { THREAD_QUERY_KEY } from '#components/thread/components/thread-main/queries/thread-query'
 import { getThreadModel } from '#components/thread/queries/get-thread-model'
 import { lazy, Suspense } from 'react'
-import { ThreadMainSkeleton } from '#components/thread/components/thread-main/components/thread-main-skeleton'
 import { ThreadCommentsHeader } from '#components/thread/components/thread-comments/components/thread-comments-header'
 import { ThreadDetailed } from '@repo/types/entities/thread-type'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
@@ -36,9 +35,7 @@ export const Route = createFileRoute('/_protected/thread/$id')({
         title: `${loaderData?.title ?? "Загрузка..."}`
       }
     ]
-  }),
-  pendingComponent: () => <ThreadMainSkeleton />,
-  pendingMinMs: 500
+  })
 })
 
 type ThreadContentProps = {
@@ -65,19 +62,25 @@ const ThreadCommentsSection = ({
   const { can_create_comments } = data;
 
   return (
-    <div className="flex flex-col w-full h-full mt-2 gap-y-4">
-      <ThreadCommentsHeader non_comments={!thread.properties.is_comments} />
+    <div className="flex flex-col w-full h-full mt-4 gap-y-4">
       {thread.properties.is_comments ? (
-        can_create_comments && (
-          <CreateThreadComment />
-        )
+        <>
+          <ThreadCommentsHeader non_comments={!thread.properties.is_comments} />
+          {can_create_comments ? (
+            <CreateThreadComment />
+          ) : (
+            <Typography className="text-red-500 text-base">
+              Вы были наказаны и теперь не сможете оставлять комментарии!
+            </Typography>
+          )}
+        </>
       ) : (
         <Suspense>
           <CommentsDisabled />
         </Suspense>
       )}
       <ThreadComments owner={thread.owner} id={threadId} properties={thread.properties} />
-      <ThreadCommentsAnchor threadId={threadId} />
+      {thread.comments_count >= 8 && <ThreadCommentsAnchor threadId={threadId} />}
     </div>
   )
 }
@@ -135,6 +138,8 @@ const ThreadsRecommendations = ({
 
   const threads = data?.data
 
+  if (!threads || !threads.length) return null;
+
   return (
     <div className="flex flex-col gap-y-4 bg-shark-950 rounded-lg p-4 w-full h-full">
       <Typography textSize="big" className="font-semibold">
@@ -157,11 +162,6 @@ const ThreadsRecommendations = ({
           {thread.title}
         </Link>
       ))}
-      {(!threads || !threads.length) && (
-        <Typography textSize="medium" textColor="gray">
-          Ничего не нашли :/
-        </Typography>
-      )}
     </div>
   )
 }
@@ -170,28 +170,26 @@ function RouteComponent() {
   const { id } = Route.useParams()
 
   return (
-    <Suspense fallback={<ThreadMainSkeleton />}>
-      <div className="flex xl:flex-row flex-col gap-2 items-start h-full w-full relative">
-        <div
-          className="flex flex-col xl:order-first order-last w-full 
+    <div className="flex xl:flex-row flex-col gap-2 items-start h-full w-full relative">
+      <div
+        className="flex flex-col xl:order-first order-last w-full 
             xl:min-w-3/4 xl:w-3/4 relative xl:max-w-3/4 items-start h-full justify-start"
-        >
-          <Thread threadId={id} />
-          <div className="flex w-full bg-shark-950 rounded-lg mt-4">
-            <ThreadMore threadId={id} />
-          </div>
-          <ThreadCommentsSection threadId={id} />
+      >
+        <Thread threadId={id} />
+        <div className="flex w-full bg-shark-950 rounded-lg mt-4">
+          <ThreadMore threadId={id} />
         </div>
-        <div
-          className="flex flex-col order-first xl:order-last gap-y-4 
-            lg:min-w-1/4 xl:w-1/4 w-full xl:max-w-1/4 h-fit relative xl:sticky top-0 overflow-hidden"
-        >
-          <Suspense>
-            <ThreadControl threadId={id} />
-          </Suspense>
-          <ThreadsRecommendations threadId={id} />
-        </div>
+        <ThreadCommentsSection threadId={id} />
       </div>
-    </Suspense>
+      <div
+        className="flex flex-col order-first xl:order-last gap-y-4 
+            lg:min-w-1/4 xl:w-1/4 w-full xl:max-w-1/4 h-fit relative xl:sticky top-0 overflow-hidden"
+      >
+        <Suspense>
+          <ThreadControl threadId={id} />
+        </Suspense>
+        <ThreadsRecommendations threadId={id} />
+      </div>
+    </div>
   )
 }

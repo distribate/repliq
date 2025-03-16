@@ -80,7 +80,7 @@ export const Purchases = () => {
           </div>
           <div className="flex justify-end items-center w-1/4">
             <Typography className="font-semibold" textSize="big">
-              - {payment.price} {payment.currency}
+              - {Number(payment.price).toFixed(2)} {payment.currency}
             </Typography>
           </div>
         </div>

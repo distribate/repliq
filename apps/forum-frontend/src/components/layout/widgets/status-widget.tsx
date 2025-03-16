@@ -41,7 +41,7 @@ export const StatusWidget = () => {
   return (
     <div className="relative rounded-lg overflow-hidden">
       <img
-        src="https://kong.fasberry.su/storage/v1/object/public/static/minecraft/backrooms-art.webp"
+        src="https://kong.fasberry.su/storage/v1/object/public/static/widgets/server-status-widget.png"
         alt=""
         width={1000}
         height={600}

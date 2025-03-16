@@ -6,5 +6,7 @@ export async function putSessionToken(nickname: string, token: string): Promise<
   const kvm = new Kvm(nc);
   const kv = await kvm.open("users");
 
-  await kv.put(token, nickname);
+  const put = await kv.put(token, nickname);
+
+  console.log(put)
 }

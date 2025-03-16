@@ -3,6 +3,7 @@ import { Typography } from "@repo/ui/src/components/typography.tsx";
 import { achievementsClient } from "@repo/shared/api/minecraft-client";
 import { useQuery } from "@tanstack/react-query";
 import { createQueryKey } from "@repo/lib/helpers/query-key-builder";
+import { SectionSkeleton } from "#components/templates/section-skeleton";
 
 type ProfileGameAchProps = Pick<UserEntity, "nickname">;
 
@@ -43,12 +44,13 @@ const achievementsQuery = (nickname: string) => useQuery({
   queryKey: createQueryKey("ui", ["achievements", nickname]),
   queryFn: () => getAchievements(nickname),
   refetchOnWindowFocus: false,
-  refetchOnMount: false
 })
 
 export const ProfileGameAch = ({ nickname }: ProfileGameAchProps) => {
   const { data: meta } = achievementsMetaQuery()
-  const { data: achievements } = achievementsQuery(nickname)
+  const { data: achievements, isLoading } = achievementsQuery(nickname)
+
+  if (isLoading) return <SectionSkeleton/>
 
   if (!meta || !achievements) return null
 

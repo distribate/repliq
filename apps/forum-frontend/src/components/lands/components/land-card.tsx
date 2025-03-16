@@ -9,20 +9,24 @@ import Charism from "@repo/assets/images/minecraft/charism_wallet.png"
 import SteveHead from "@repo/assets/images/minecraft/steve_head.jpg"
 import { LAND_URL } from "@repo/shared/constants/routes"
 import { getUser } from "@repo/lib/helpers/get-user"
+import { ColoredText } from "#components/wrappers/colored-text-wrapper"
 
 const client = landsClient.lands['get-lands'].$get
 
 type LandCard = InferResponseType<typeof client, 200>["data"][0]
 
-export const LandCard = ({ balance, created_at, level, members, name, title, ulid }: LandCard) => {
-  const currentUser = getUser()
+export const LandCard = ({ 
+  balance, level, members, name, title, ulid 
+}: LandCard) => {
+  const currentUserUUID = getUser().uuid
 
-  const landOwner = Object.keys(members)[0]
-
-  const isOwner = landOwner === currentUser.uuid
+  const isOwner = Object.keys(members)[0] === currentUserUUID
 
   return (
-    <div className={`relative ${isOwner && "outline-1 outline-green-500"} bg-shark-950 w-full border-b border-shark-800 rounded-lg p-4`}>
+    <div
+      className={`relative ${isOwner && "outline-1 outline-green-500"} 
+      bg-shark-950 w-full border-b border-shark-800 rounded-lg p-4`}
+    >
       <div className="flex items-center gap-4 overflow-hidden rounded-md">
         <img
           src={Looking}
@@ -33,9 +37,12 @@ export const LandCard = ({ balance, created_at, level, members, name, title, uli
           className="rounded-md"
         />
         <div className="flex flex-col gap-y-2">
-          <Typography className="text-[20px] font-[Minecraft]">
-            {name} {title ? `(${title})` : ''}
-          </Typography>
+          <div className="flex items-center gap-2">
+            <Typography className="text-[20px] font-[Minecraft]">
+              {name}
+            </Typography>
+            {title && <ColoredText className="font-[Minecraft]" text={title} />}
+          </div>
           <div className="flex select-none items-center gap-4">
             <div className="flex items-center gap-1">
               <img src={BottleEnchating} draggable={false} alt="lvl" width={16} height={16} />

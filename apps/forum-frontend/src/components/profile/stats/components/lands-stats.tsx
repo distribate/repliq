@@ -46,7 +46,7 @@ export const LandsStats = ({ nickname }: { nickname: string }) => {
             <AccordionContent className="!p-0 !m-0">
               <div className="flex flex-col gap-2">
                 <Typography>
-                  Название: {land.name}
+                  Название:{" "}{land.name}
                 </Typography>
                 <Typography>
                   Описание:{" "}
@@ -54,35 +54,34 @@ export const LandsStats = ({ nickname }: { nickname: string }) => {
                 </Typography>
                 <div className="flex items-center">
                   <Typography>
-                    Баланс: {land.balance}
+                    Хранилище:{" "}{land.balance}
                   </Typography>
                   <img src={Charism} width={18} height={18} alt="" />
                 </div>
                 <div className="flex flex-col">
                   <Typography>Участники:</Typography>
-                  <div className="flex flex-col gap-1">
+                  <div className="flex flex-col gap-2">
                     {land.members.map(({ nickname, chunks }) => (
                       <div
                         key={nickname}
-                        className="flex items-center gap-2 p-4 rounded-md bg-shark-900 w-full lg:w-2/3"
+                        className="flex items-center gap-2 p-2 rounded-md bg-shark-900 w-full lg:w-2/3"
                       >
-                        <Suspense fallback={<Skeleton className="w-[32px] h-[32px]" />}>
+                        <Suspense fallback={<Skeleton className="w-[42px] h-[42px]" />}>
                           <Link to={USER_URL + nickname}>
                             <Avatar
                               rounded="medium"
-                              className="min-w-[32px] min-h-[32px]"
-                              propHeight={32}
-                              propWidth={32}
+                              className="min-w-[42px] min-h-[42px]"
+                              propHeight={42}
+                              propWidth={42}
                               nickname={nickname}
                             />
                           </Link>
                         </Suspense>
-                        <div className="flex items-center gap-2">
+                        <div className="flex flex-col">
                           <Link to={USER_URL + nickname}>
-                            <UserNickname nickname={nickname} />
+                            <UserNickname nickname={nickname}/>
                           </Link>
-                          <span className="text-shark-50 text-lg">⏺</span>
-                          <Typography>
+                          <Typography className="text-shark-300">
                             {chunks} чанков
                           </Typography>
                         </div>

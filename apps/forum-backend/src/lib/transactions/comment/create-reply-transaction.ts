@@ -10,6 +10,16 @@ export async function createReplyTransaction({
   content, recipient_comment_id, parent_id, parent_type, nickname
 }: CreateReply) {
   const createdRepliedComments = await forumDB.transaction().execute(async (trx) => {
+    const validateThreadCommentable = await trx
+      .selectFrom("threads")
+      .select("is_comments")
+      .where("id", "=", parent_id)
+      .executeTakeFirstOrThrow()
+
+    if (!validateThreadCommentable) {
+      return { data: null, status: "Not commentable" }
+    }
+
     const comment = await trx
       .insertInto('comments')
       .values({
@@ -21,15 +31,20 @@ export async function createReplyTransaction({
       .returning(['id', 'user_nickname', 'content', 'created_at', 'updated_at', 'is_updated'])
       .executeTakeFirstOrThrow();
 
-    return await trx
+    const replies = await trx
       .insertInto('comments_replies')
       .values({
         initiator_comment_id: comment.id,
         recipient_comment_id,
       })
-      .returning("id")
+      .returningAll()
       .executeTakeFirstOrThrow();
+
+    return { comment, replies }
   })
 
-  return createdRepliedComments;
+  return {
+    data: createdRepliedComments.comment,
+    status: "Created"
+  }
 }

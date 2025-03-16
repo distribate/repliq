@@ -9,7 +9,7 @@ export default defineConfig({
   source: {
     entry: {
       index: './src/main.tsx'
-    }
+    },
   },
   html: {
     template: './index.html',
@@ -35,6 +35,9 @@ export default defineConfig({
   },
   output: {
     polyfill: 'off',
+    distPath: {
+      root: process.env.NODE_ENV === 'development' ? "dist" : "build",
+    }
   },
   server: {
     port: process.env.NODE_ENV === 'development' ? 3008 : 3000,

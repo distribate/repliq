@@ -1,4 +1,3 @@
-import { Typography } from '@repo/ui/src/components/typography'
 import { createLazyFileRoute } from '@tanstack/react-router'
 import { RatingList } from "#components/ratings/components/rating-list"
 import { RatingNavigation } from "#components/ratings/components/rating-navigation"
@@ -10,7 +9,8 @@ export const Route = createLazyFileRoute('/_protected/ratings/')({
   head: () => ({
     meta: [
       {
-        title: 'Рейтинги',
+        title: 'Рейтинг игроков',
+        description: "Игровой рейтинг игроков"
       },
     ],
   }),
@@ -18,13 +18,12 @@ export const Route = createLazyFileRoute('/_protected/ratings/')({
 
 function RouteComponent() {
   return (
-    <div className="flex flex-col w-full items-center justify-center h-full gap-6 lg:py-6 relative">
-      <Typography textSize="very_big">
-        Рейтинг
-      </Typography>
+    <div className="flex flex-col w-full gap-4 items-center justify-center h-full relative">
       <RatingNavigation />
-      {/* <RatingFiltration /> */}
-      <RatingList />
+      <div className="flex w-full bg-primary-color p-2 rounded-lg h-full">
+        {/* <RatingFiltration /> */}
+        <RatingList />
+      </div>
     </div>
   )
 }

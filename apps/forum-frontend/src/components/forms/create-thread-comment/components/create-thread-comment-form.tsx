@@ -13,6 +13,7 @@ import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import AutogrowingTextarea from "@repo/ui/src/components/autogrowing-textarea.tsx";
 import { createThreadCommentSchema } from "../schemas/create-thread-comment-schema.ts";
+import { Suspense } from "react"
 
 type createThreadForm = z.infer<typeof createThreadCommentSchema>
 
@@ -63,6 +64,7 @@ export const CreateThreadCommentForm = () => {
       state={isActive ? "active" : "none"}
     >
       <form onSubmit={handleSubmit(onSubmit)} className="flex items-start h-full w-full justify-between px-4 py-4">
+        <Suspense fallback={null}>
         <Avatar
           className="self-start min-h-[36px] min-w-[36px]"
           variant="page"
@@ -70,6 +72,7 @@ export const CreateThreadCommentForm = () => {
           propHeight={36}
           nickname={nickname}
         />
+        </Suspense>
         <div className="flex w-full items-start *:w-full h-fit">
           <Controller
             render={({ field: { onChange, onBlur, value } }) => (
@@ -98,7 +101,7 @@ export const CreateThreadCommentForm = () => {
         <Button
           type="submit"
           variant="default"
-          className="shadow-none bg-transparent border-none p-0 m-0"
+          className="shadow-none bg-transparent border-none relative top-1 p-0 m-0"
           disabled={!isValid || createThreadCommentMutation.isPending}
         >
           <SendHorizontal

@@ -13,6 +13,7 @@ import dayjs from "@repo/lib/constants/dayjs-instance"
 import { Skeleton } from "@repo/ui/src/components/skeleton";
 import { Link } from "@tanstack/react-router";
 import { USER_URL } from "@repo/shared/constants/routes";
+import { Separator } from "@repo/ui/src/components/separator";
 
 type AccountStatSectionProps = {
   title: string,
@@ -43,15 +44,15 @@ export const ProfileAccountStatsMeta = ({
   meta
 }: ProfileAccountStatsMetaProps) => {
   return (
-    <div className="flex flex-col gap-y-1 w-full h-full">
+    <div className="flex items-center gap-2 w-full h-full">
+      <div className="flex items-center *:font-semibold *:text-lg">
+        <Typography>{meta.views_by_day}/</Typography>
+        <Typography>{meta.views_by_month}/</Typography>
+        <Typography>{meta.views_all}</Typography>
+      </div>
+      <Separator orientation="vertical"/>
       <Typography>
-        Просмотров за день: {meta.views_by_day}
-      </Typography>
-      <Typography>
-        Просмотров за месяц: {meta.views_by_month}
-      </Typography>
-      <Typography>
-        Просмотров за все время: {meta.views_all}
+        [день/месяц/всего]
       </Typography>
     </div>
   )

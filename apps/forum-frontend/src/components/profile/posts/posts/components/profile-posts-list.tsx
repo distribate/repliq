@@ -14,6 +14,7 @@ import { useEffect } from 'react';
 import { SomethingError } from '#components/templates/something-error.tsx';
 import { useMutationState } from '@tanstack/react-query';
 import { UPDATE_POSTS_MUTATION_KEY, useUpdatePosts } from '../hooks/use-update-posts.ts';
+import { SectionSkeleton } from '#components/templates/section-skeleton.tsx';
 
 const PostsSkeleton = () => {
   return (
@@ -45,7 +46,7 @@ export const ProfilePostsList = ({
     if (inView && hasMore) updatePostsMutation.mutate({ nickname, type: "update-cursor" });
   }, [inView, hasMore]);
 
-  if (isLoading) return <PostsSkeleton />;
+  if (isLoading) return <SectionSkeleton />;
 
   if (isError) return <SomethingError />;
 

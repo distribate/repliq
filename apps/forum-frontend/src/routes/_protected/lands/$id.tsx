@@ -9,7 +9,7 @@ import {
 } from '@repo/ui/src/components/tabs'
 import { Typography } from '@repo/ui/src/components/typography'
 import { createFileRoute, Link } from '@tanstack/react-router'
-  // @ts-ignore
+// @ts-ignore
 import Looking from '@repo/assets/images/looking.jpg'
 import { LandMembers } from '#components/land/components/land-members'
 import { LAND_QUERY_KEY, landQuery } from '#components/land/queries/land-query'
@@ -17,6 +17,8 @@ import { getLandById } from '#components/land/queries/get-land'
 import { AnotherLandsByOwner } from "#components/land/components/another-lands"
 import { Suspense } from 'react'
 import { Skeleton } from '@repo/ui/src/components/skeleton'
+import { ContentNotFound } from '#components/templates/content-not-found'
+import { ColoredText } from '#components/wrappers/colored-text-wrapper'
 
 export const Route = createFileRoute('/_protected/lands/$id')({
   component: RouteComponent,
@@ -43,7 +45,7 @@ function RouteComponent() {
   const { id } = Route.useParams()
   const { data: land } = landQuery(id)
 
-  if (!land) return null;
+  if (!land) return <ContentNotFound title="Упс, похоже этого региона уже нет :/" />
 
   return (
     <div className="flex items-start gap-4 w-full h-screen">
@@ -73,9 +75,12 @@ function RouteComponent() {
             className="flex flex-col pt-2 gap-2 w-full h-full"
           >
             <div className="flex flex-col">
-              <Typography className="text-[24px] font-semibold font-[Minecraft]">
-                {land.name} {land.title ? `(${land.title})` : null}
-              </Typography>
+              <div className="flex items-center gap-2">
+                <Typography className="text-[24px] font-semibold font-[Minecraft]">
+                  {land.name}
+                </Typography>
+                {land.title && <ColoredText className="font-[Minecraft]" text={land.title} />}
+              </div>
             </div>
             <div className="flex flex-col gap-4 h-full w-full">
               <Typography className="text-[18px]">

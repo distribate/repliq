@@ -1,5 +1,4 @@
 import { ChevronDown } from "lucide-react";
-import { SearchType } from "#components/sidebar/desktop/components/sidebar-content/search/queries/search-query.ts";
 import { Button } from "@repo/ui/src/components/button.tsx";
 import { Typography } from "@repo/ui/src/components/typography.tsx";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@repo/ui/src/components/dropdown-menu.tsx";
@@ -8,7 +7,7 @@ import { searchPageQuery, SearchPageQuery } from "#components/search/queries/sea
 import { isValue } from "@repo/lib/helpers/check-is-value.ts";
 
 type SearchPageFilterProps = {
-  type: SearchType;
+  type: "users" | "threads";
 };
 
 type SearchPageFilter = {

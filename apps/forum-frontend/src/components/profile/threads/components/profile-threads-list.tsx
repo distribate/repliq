@@ -1,11 +1,11 @@
 import { profileThreadsQuery } from '../queries/profile-threads-query.ts';
 import { UserEntity } from '@repo/types/entities/entities-type.ts';
-import { Skeleton } from '@repo/ui/src/components/skeleton.tsx';
 import { ProfileThreadsFiltering } from '#components/profile/threads/components/profile-threads-filtering.tsx';
 import { ProfileThreadsListCard } from '#components/profile/threads/components/profile-threads-list-card.tsx';
 import { profileThreadsSettingsQuery } from '#components/profile/threads/queries/profile-threads-settings-query.ts';
 import { SomethingError } from '#components/templates/something-error.tsx';
 import { ContentNotFound } from '#components/templates/content-not-found.tsx';
+import { SectionSkeleton } from '#components/templates/section-skeleton.tsx';
 
 const ProfileThreadsList = ({
   nickname,
@@ -14,12 +14,7 @@ const ProfileThreadsList = ({
   const { data: profileThreadsViewState } = profileThreadsSettingsQuery();
   const { viewType } = profileThreadsViewState;
 
-  if (isLoading) return (
-    <div className="flex flex-col gap-y-2 w-full">
-      <Skeleton className="h-[100px] w-full" />
-      <Skeleton className="h-[100px] w-full" />
-    </div>
-  )
+  if (isLoading) return <SectionSkeleton />
 
   if (isError) return <SomethingError />;
   if (!threads) return <ContentNotFound title="Треды не найдены" />;

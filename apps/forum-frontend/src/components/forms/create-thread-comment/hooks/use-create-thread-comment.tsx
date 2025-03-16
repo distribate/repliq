@@ -6,31 +6,28 @@ import {
 import { toast } from "sonner";
 import { THREAD_COMMENTS_QUERY_KEY } from "#components/thread/components/thread-comments/queries/thread-comments-query.ts";
 import { GetThreadCommentsResponse } from "@repo/types/entities/thread-comments-types.ts";
-import { useUpdateComments } from "#components/thread/components/thread-comments/hooks/use-update-comments.ts";
 import { replyThreadComment } from "../queries/reply-thread-comment.ts";
 import { createThreadComment } from "../queries/create-thread-comment.ts";
 
+function validateContent(input?: string): string | null {
+  return input ? input.trim().split(/\s+/).length > 0 ? input : null : null
+}
+
 export const useCreateThreadComment = () => {
   const qc = useQueryClient();
-  const { updateCommentsMutation } = useUpdateComments()
 
   const updateCreateThreadCommentMutation = useMutation({
     mutationFn: async (values: Partial<CreateThreadCommentQuery>) => {
       const { content, replied, type, threadId } = values;
 
-      const updatedContent = content
-        ? content.trim().split(/\s+/).length > 0
-          ? content
-          : null
-        : null;
-
-      return qc.setQueryData(
-        CREATE_THREAD_COMMENT_QUERY_KEY,
+      return qc.setQueryData(CREATE_THREAD_COMMENT_QUERY_KEY,
         (prev: CreateThreadCommentQuery) => ({
           threadId: threadId ?? prev.threadId,
           type: type ?? prev.type,
-          content: updatedContent ?? prev.content,
-          replied: { ...prev.replied, ...replied },
+          content: validateContent(content) ?? prev.content,
+          replied: {
+            ...prev.replied, ...replied
+          },
         }),
       );
     },
@@ -40,31 +37,27 @@ export const useCreateThreadComment = () => {
   const createThreadCommentMutation = useMutation({
     mutationFn: async () => {
       const threadComment = qc.getQueryData<CreateThreadCommentQuery>(CREATE_THREAD_COMMENT_QUERY_KEY);
+
       if (!threadComment) return;
 
-      const thread_id = threadComment.threadId;
-      const content = threadComment.content;
-      const type = threadComment.type || "single";
+      const { threadId, content, type } = threadComment;
 
-      if (!thread_id || !content) return;
+      if (!threadId || !content) return;
 
       switch (type) {
         case "reply":
           if (!threadComment.replied?.commentId) return;
 
-          const recipient_comment_id = threadComment.replied.commentId
-
-          const repliedThreadComment = await replyThreadComment({
-            content, threadId: thread_id, recipient_comment_id: recipient_comment_id.toString()
+          const createdRepliedComment = await replyThreadComment({
+            content, threadId,
+            recipient_comment_id: threadComment.replied.commentId.toString()
           });
 
-          return { repliedThreadComment, thread_id };
+          return { createdRepliedComment, threadId }
         case "single":
-          const threadCommentId = await createThreadComment({
-            threadId: thread_id, content
-          });
+          const createdSingleComment = await createThreadComment({ threadId, content });
 
-          return { threadCommentId, thread_id };
+          return { createdSingleComment, threadId }
         default:
           break;
       }
@@ -72,25 +65,82 @@ export const useCreateThreadComment = () => {
     onSuccess: async (data) => {
       if (!data) return toast.error("Что-то пошло не так!");
 
+      if (data.createdSingleComment && "error" in data.createdSingleComment) {
+        return toast.error("Что-то пошло не так!")
+      }
+
+      if (data.createdRepliedComment && "error" in data.createdRepliedComment) {
+        return toast.error("Что-то пошло не так!")
+      }
+
       const threadComment = qc.getQueryData<CreateThreadCommentQuery>(CREATE_THREAD_COMMENT_QUERY_KEY);
       if (!threadComment) return;
 
-      const currentThreadComments = qc.getQueryData<GetThreadCommentsResponse>(
-        THREAD_COMMENTS_QUERY_KEY(data.thread_id)
-      );
+      const currentThreadComments = qc.getQueryData<GetThreadCommentsResponse>(THREAD_COMMENTS_QUERY_KEY(data.threadId));
 
-      if (!currentThreadComments || (currentThreadComments && currentThreadComments.data.length === 0)) {
-        return qc.invalidateQueries({
-          queryKey: THREAD_COMMENTS_QUERY_KEY(data.thread_id),
-        });
+      if (!currentThreadComments?.data || !currentThreadComments?.data.length) {
+        return qc.invalidateQueries({ queryKey: THREAD_COMMENTS_QUERY_KEY(data.threadId) });
+      } else {
+        let newComment: GetThreadCommentsResponse["data"][0] | null = null
+
+        switch (threadComment.type) {
+          case "reply":
+            if (data.createdRepliedComment!.data.status !== 'Created') {
+              return;
+            }
+
+            let repliedComment = data.createdRepliedComment!.data.data!
+
+            const repliedInitComment = threadComment.replied?.commentId
+              ? currentThreadComments.data.find(d => d.id === threadComment.replied?.commentId)
+              : null
+
+            newComment = {
+              id: Number(repliedComment.id),
+              content: repliedComment.content,
+              created_at: repliedComment.created_at,
+              is_updated: repliedComment.is_updated,
+              replied: repliedInitComment ?? null,
+              updated_at: repliedComment.updated_at,
+              user_nickname: repliedComment.user_nickname
+            }
+
+            break;
+          case "single":
+            if (data.createdSingleComment!.data.status !== 'Created') {
+              return
+            }
+
+            let singleComment = data.createdSingleComment!.data.data!
+
+            newComment = {
+              id: Number(singleComment.id),
+              content: singleComment.content,
+              created_at: singleComment.created_at,
+              is_updated: singleComment.is_updated,
+              replied: null,
+              updated_at: singleComment.updated_at,
+              user_nickname: singleComment.user_nickname
+            }
+
+            break;
+          default:
+            break;
+        }
+
+        if (newComment) {
+          qc.setQueryData(THREAD_COMMENTS_QUERY_KEY(data.threadId), (prev: GetThreadCommentsResponse) => ({
+            ...prev,
+            data: [newComment, ...prev.data]
+          }))
+        } else {
+          qc.invalidateQueries({ queryKey: THREAD_COMMENTS_QUERY_KEY(data.threadId) });
+        }
       }
 
-      updateCommentsMutation.mutate({
-        cursor: currentThreadComments.meta.endCursor,
-        threadId: threadComment.threadId
-      })
-
-      qc.resetQueries({ queryKey: CREATE_THREAD_COMMENT_QUERY_KEY });
+      qc.setQueryData(CREATE_THREAD_COMMENT_QUERY_KEY, (prev: CreateThreadCommentQuery) => ({
+        ...prev, type: "single", content: null, replied: null
+      }))
     },
     onError: e => { throw new Error(e.message) },
   });

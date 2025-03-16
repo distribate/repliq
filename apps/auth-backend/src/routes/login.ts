@@ -13,6 +13,7 @@ import type { Session } from "../types/session-type";
 import type { User } from "../types/session-type.ts"
 import { verifyAuth } from "../utils/verify-auth.ts";
 import { isProduction } from "@repo/lib/helpers/is-production.ts";
+import { SESSION_DOMAIN, SESSION_KEY } from "../shared/constants/session-details.ts";
 
 export type SessionValidationResult =
   | { session: Session; user: User }
@@ -28,28 +29,36 @@ type SetCookieOpts = {
 function setSessionCookies({
   ctx, expires, nickname, token
 }: SetCookieOpts) {
-  setCookie(ctx, `user`, nickname, {
-    httpOnly: true, sameSite: "lax", secure: isProduction, expires, path: "/", domain: ".fasberry.su"
+  setCookie(ctx, SESSION_KEY, token, {
+    httpOnly: true,
+    sameSite: "None",
+    secure: true,
+    expires,
+    path: "/",
+    domain: SESSION_DOMAIN
   })
 
-  setCookie(ctx, `session`, token, {
-    httpOnly: true, sameSite: "lax", secure: isProduction, expires, path: "/", domain: ".fasberry.su"
+  setCookie(ctx, `user`, nickname, {
+    httpOnly: true,
+    sameSite: "None",
+    secure: true,
+    expires,
+    path: "/",
+    domain: SESSION_DOMAIN
   })
 }
 
 export const loginRoute = new Hono()
   .post("/login", zValidator("json", createSessionBodySchema), async (ctx) => {
-    const {
-      browser, cpu, device, os, ua, nickname, password, token: cloudFlareToken
-    } = createSessionBodySchema.parse(await ctx.req.json())
+    const { browser, cpu, device, os, ua, nickname, password, token: cfToken } = createSessionBodySchema.parse(await ctx.req.json())
 
-    if (isProduction && !cloudFlareToken) {
+    if (isProduction && !cfToken) {
       return ctx.json({ error: "Token is not provided" }, 400)
     }
 
-    const isVerified = await verifyAuth(cloudFlareToken!)
+    const isVerified = await verifyAuth(cfToken!)
 
-    if (isVerified !== "verified") {
+    if (isProduction && isVerified !== "verified") {
       return ctx.json({ error: "Invalid token" }, 400)
     }
 

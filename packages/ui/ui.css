@@ -527,8 +527,6 @@
 
 	.windows-loading-spinner {
 		box-sizing: border-box;
-		width: 3rem;
-		height: 3rem;
 		padding: 2px;
 		overflow: visible;
 	}

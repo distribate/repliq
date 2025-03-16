@@ -6,7 +6,7 @@ import { StartPreview } from '#components/get-start/start-preview';
 import { lazy, Suspense } from 'react';
 import { validatePage } from '@repo/lib/utils/validate-page';
 import { MainLayout } from '#components/layout/default/layout';
-import { Skeleton } from '@repo/ui/src/components/skeleton';
+import { WindowLoader } from '@repo/ui/src/components/window-loader';
 
 const ErrorComponent = lazy(() => import("#components/layout/default/error").then(m => ({ default: m.ErrorComponent })))
 
@@ -33,7 +33,11 @@ export const Route = createFileRoute('/_protected')({
       <ErrorComponent error={error} reset={reset} />
     </Suspense >
   ),
-  pendingComponent: () => <Skeleton className="w-full h-full" />
+  pendingComponent: () => (
+    <div className="flex h-dvh w-full items-center justify-center">
+      <WindowLoader />
+    </div>
+  )
 })
 
 function RouteComponent() {

@@ -17,7 +17,7 @@ export const createCommentRoute = new Hono()
         return ctx.json({ error: "Error creating comment" }, 400);
       }
 
-      return ctx.json({ status: createdComment }, 200);
+      return ctx.json({ data: createdComment }, 200);
     } catch (e) {
       return ctx.json({ error: throwError(e) }, 500);
     }

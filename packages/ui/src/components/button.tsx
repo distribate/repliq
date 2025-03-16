@@ -2,7 +2,7 @@ import { Slot } from "@radix-ui/react-slot";
 import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@repo/lib/utils/ui/cn.ts";
 import { ButtonHTMLAttributes, forwardRef } from "react";
-import { GearLoader } from "./gear-loader.tsx";
+import { WindowLoader } from "./window-loader.tsx";
 
 const buttonVariants = cva(
   "inline-flex items-center justify-center whitespace-nowrap" +
@@ -69,7 +69,7 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
         {...props}
       >
         <div className="flex items-center gap-2">
-          {pending && <GearLoader height={16} width={16} />}
+          {pending && <WindowLoader size="small"/>}
           {props.children}
         </div>
       </Comp>

@@ -29,11 +29,11 @@ export const RatingNavigation = () => {
   }
 
   return (
-    <div className="grid grid-cols-2 auto-rows-auto lg:flex lg:flex-nowrap w-full *:w-full">
+    <div className="grid grid-cols-2 bg-shark-950 p-2 gap-2 overflow-hidden rounded-xl auto-rows-auto lg:flex lg:flex-nowrap w-full *:w-full">
       {RATING_NAVIGATION.map(rating => (
         <NavigationBadge
           key={rating.type}
-          isActive={currentType === rating.type}
+          data-state={currentType === rating.type ? "active" : "inactive"}
           title={rating.title}
           onClick={() => changeRatingType(rating.type)}
         />

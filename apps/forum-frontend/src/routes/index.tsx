@@ -19,6 +19,7 @@ import { MainLayout } from '#components/layout/default/layout'
 import { validatePage } from '@repo/lib/utils/validate-page'
 import { StatusWidget } from '#components/layout/widgets/status-widget'
 import { Typography } from '@repo/ui/src/components/typography'
+import { WindowLoader } from '@repo/ui/src/components/window-loader'
 
 const AlertWidget = lazy(() =>
   import('#components/layout/widgets/alert-widget').then((m) => ({ default: m.AlertWidget })),
@@ -38,6 +39,11 @@ export const Route = createFileRoute('/')({
       })
     }
   },
+  pendingComponent: () => (
+    <div className="flex h-dvh w-full items-center justify-center">
+      <WindowLoader />
+    </div>
+  ),
   notFoundComponent: () => <NotFound />,
 })
 
@@ -67,9 +73,7 @@ function RouteComponent() {
               <SearchWidget title="Найти тред" imageSrc={GhZwggQbMAA} link="/search?type=threads" />
               <SearchWidget title="Найти территорию" imageSrc={GhWLYezW0AA6co3} link="/lands" />
             </div>
-            {isAuthenticated ? (
-              <MainCategoriesList />
-            ) : (
+            {isAuthenticated ? <MainCategoriesList /> : (
               <div className="relative w-full min-h-[300px] h-fit rounded-lg overflow-hidden">
                 <div className="flex flex-col gap-2 absolute w-full p-4 h-full">
                   <div className="bg-shark-950 w-full rounded-lg h-20" />

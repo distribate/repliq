@@ -17,7 +17,7 @@ export const replyThreadComment = async ({
 
   const data = await res.json();
 
-  if (!data || "error" in data) {
+  if (!data) {
     return null
   }
 

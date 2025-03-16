@@ -4,12 +4,15 @@ import { SearchPageResults as Results } from '#components/search/components/sear
 import { availableCategoriesQuery } from '#components/forms/create-thread/queries/available-query'
 import { Typography } from '@repo/ui/src/components/typography'
 import { searchPageQuery } from '#components/search/queries/search-page-query'
-import { SearchPageRelated } from '#components/search/components/search-page-related'
-import { SearchType } from '#components/sidebar/desktop/components/sidebar-content/search/queries/search-query'
+import { SearchRelatedThreads, SearchRelatedUsers } from '#components/search/components/search-page-related'
 import { CATEGORY_URL } from '@repo/shared/constants/routes'
 import { Select, SelectContent, SelectItem, SelectTrigger } from '@repo/ui/src/components/select'
 import { useState } from 'react'
 import { Search } from "lucide-react"
+
+type SearchParams = {
+  type?: 'users' | 'threads' | 'all'
+}
 
 export const Route = createFileRoute('/_protected/search')({
   component: RouteComponent,
@@ -18,11 +21,9 @@ export const Route = createFileRoute('/_protected/search')({
       { title: 'Поиск' },
     ],
   }),
-  validateSearch: (params) => {
-    return {
-      type: (params.type as 'users' | 'threads' | 'all') || 'all',
-    }
-  },
+  validateSearch: (search: Record<string, unknown>): SearchParams => ({
+    type: search.type as SearchParams["type"] ?? 'all',
+  })
 })
 
 const SearchCategories = () => {
@@ -32,11 +33,7 @@ const SearchCategories = () => {
 
   return (
     <div className="flex flex-col gap-y-4 w-full h-full">
-      <Typography
-        textSize="very_big"
-        textColor="shark_white"
-        className="font-semibold"
-      >
+      <Typography textSize="very_big" textColor="shark_white" className="font-semibold">
         Категории
       </Typography>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 auto-rows-auto gap-4 w-full h-full">
@@ -104,10 +101,7 @@ const SearchPageFiltration = () => {
 }
 
 const SearchPageSection = () => {
-  const searchType = searchRoute.useSearch({
-    select: (params) => params.type as SearchType,
-  })
-
+  const searchType = searchRoute.useSearch({ select: s => s.type })
   const { data: searchState } = searchPageQuery()
 
   return (
@@ -123,8 +117,11 @@ const SearchPageSection = () => {
       </div>
     ) : (
       <>
-        <SearchCategories />
-        <SearchPageRelated />
+        {searchType === 'threads' && <SearchCategories />}
+        <div className="flex flex-col gap-y-8 w-full h-full">
+          {searchType === 'users' && <SearchRelatedUsers />}
+          {searchType === 'threads' && <SearchRelatedThreads />}
+        </div>
       </>
     )
   )

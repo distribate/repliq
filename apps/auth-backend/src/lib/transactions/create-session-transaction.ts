@@ -12,14 +12,12 @@ type CreateSessionTransaction = Omit<z.infer<typeof createSessionBodySchema>, "t
   ip: string;
 }
 
-type PushLoginNotify = Pick<CreateSessionTransaction, "nickname" | "browser" | "ip"> & {
-  trx: Transaction<DB>,
-}
+type PushLoginNotify = Pick<CreateSessionTransaction, "nickname" | "browser" | "ip">
 
 async function pushLoginNotify({
-  browser, ip, nickname, trx
+  browser, ip, nickname
 }: PushLoginNotify) {
-  const check = await trx
+  const check = await forumDB
     .selectFrom("users_session")
     .select(forumDB.fn.countAll().as("count"))
     .where("nickname", "=", nickname)
@@ -38,11 +36,12 @@ export const createSessionTransaction = async ({
       trx, token, nickname, browser, cpu, ip, os, ua, device
     });
 
-    await pushLoginNotify({ browser, ip, nickname, trx })
     await putSessionToken(nickname, token)
 
     return session;
   });
+
+  await pushLoginNotify({ browser, ip, nickname })
 
   return query;
 }

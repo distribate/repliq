@@ -6,14 +6,25 @@ import { sha256 } from "@oslojs/crypto/sha2";
 import { invalidateSession } from "../lib/queries/invalidate-session";
 import type { Context } from "hono";
 import { isProduction } from "@repo/lib/helpers/is-production";
+import { SESSION_DOMAIN } from "../shared/constants/session-details";
 
 export function deleteCookiesToken(ctx: Context) {
   setCookie(ctx, `session`, "", {
-    httpOnly: true, sameSite: "lax", secure: isProduction, maxAge: 0, path: "/",
+    httpOnly: true,
+    sameSite: "None",
+    secure: isProduction,
+    domain: SESSION_DOMAIN,
+    maxAge: 0,
+    path: "/",
   })
 
   setCookie(ctx, `user`, "", {
-    httpOnly: true, sameSite: "lax", domain: "fasberry.su", secure: isProduction, maxAge: 0, path: "/",
+    httpOnly: true,
+    sameSite: "None",
+    domain: SESSION_DOMAIN,
+    secure: isProduction,
+    maxAge: 0,
+    path: "/",
   })
 }
 

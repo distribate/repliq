@@ -18,7 +18,7 @@ export const removeThreadRoute = new Hono()
     try {
       const deletedThread = await removeThread(threadId)
 
-      if (!deletedThread.id) {
+      if (!deletedThread || !deletedThread.id) {
         return ctx.json({ error: "Error deleting thread" }, 404)
       }
 

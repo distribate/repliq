@@ -1,4 +1,4 @@
-import { CreateNews, useNews } from "./admin-create-news";
+import { CreateNews } from "./admin-create-news";
 import { Typography } from "@repo/ui/src/components/typography";
 import { NewsList } from "./admin-news-list";
 

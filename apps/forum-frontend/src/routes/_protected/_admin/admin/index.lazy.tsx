@@ -1,57 +1,53 @@
-import { createLazyFileRoute } from '@tanstack/react-router'
-import { AdminNavigation } from '#components/admin/navigation/admin-navigation.tsx'
+import { createLazyFileRoute, useSearch } from '@tanstack/react-router'
 import { Typography } from '@repo/ui/src/components/typography'
-import { AdminNewsControl } from '#components/admin/news/admin-news-control'
-import { AdminTicketsList } from '#components/admin/tickets/admin-tickets-list.tsx'
-import { AdminReportsList } from '#components/admin/reports/admin-reports-list.tsx'
+import { lazy, ReactNode, Suspense } from 'react'
+import type { AdminSections } from '#components/admin/navigation/admin-navigation-badge'
 
 export const Route = createLazyFileRoute('/_protected/_admin/admin/')({
   component: RouteComponent,
 })
 
+const AdminNavigation = lazy(() => import("#components/admin/navigation/admin-navigation.tsx").then(m => ({ default: m.AdminNavigation })))
+const AdminNewsControl = lazy(() => import("#components/admin/news/admin-news-control.tsx").then(m => ({ default: m.AdminNewsControl })))
+const AdminTicketsList = lazy(() => import("#components/admin/tickets/admin-tickets-list.tsx").then(m => ({ default: m.AdminTicketsList })))
+const AdminReportsList = lazy(() => import("#components/admin/reports/admin-reports-list.tsx").then(m => ({ default: m.AdminReportsList })))
+
 const CreateModpack = () => {
   return (
-    <div className="flex flex-col gap-2 w-full">
+    <div className="flex flex-col gap-4 items-start justify-center w-full p-4 border-2 border-shark-800 rounded-lg">
+      <Typography textSize="big" className="font-semibold">
+        Публикация модпака
+      </Typography>
+      <div className="flex flex-col gap-2 w-full">
 
+      </div>
     </div>
   )
 }
 
+const ADMIN: Record<AdminSections, ReactNode> = {
+  "tickets": <AdminTicketsList />,
+  "reports": <AdminReportsList />,
+  "stats": "s"
+}
+
 function RouteComponent() {
-  // @ts-ignore
-  const { section } = Route.useSearch() as { section: "tickets" | "reports" | "stats" }
+  const section = useSearch({ select: s => s.section, from: "/_protected/_admin" })
 
   return (
-    <div className="flex flex-col bg-primary-color rounded-lg w-full h-dvh">
-      <AdminNavigation />
-      <div className="flex flex-col gap-6 w-full h-full p-4">
+    <>
+      <Suspense>
+        <AdminNavigation />
+      </Suspense>
+      <div className="flex flex-col bg-primary-color rounded-lg overflow-hidden gap-6 w-full p-2">
         {!section && (
           <>
             <AdminNewsControl />
-            <div className="flex flex-col gap-4 items-start justify-center w-full p-4 border-2 border-shark-800 rounded-lg">
-              <Typography textSize="big" className="font-semibold">
-                Публикация модпака
-              </Typography>
-              <CreateModpack />
-            </div>
+            <CreateModpack />
           </>
         )}
-        {section === 'tickets' && (
-          <>
-            <AdminTicketsList />
-          </>
-        )}
-        {section === 'reports' && (
-          <>
-            <AdminReportsList />
-          </>
-        )}
-        {section === 'stats' && (
-          <>
-            stats
-          </>
-        )}
+        {section && ADMIN[section]}
       </div>
-    </div>
+    </>
   )
 }

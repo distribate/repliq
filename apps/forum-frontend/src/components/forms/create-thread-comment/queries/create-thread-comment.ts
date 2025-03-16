@@ -18,7 +18,7 @@ export async function createThreadComment({
 
   const data = await res.json();
 
-  if (!data || "error" in data) {
+  if (!data) {
     return null
   }
 

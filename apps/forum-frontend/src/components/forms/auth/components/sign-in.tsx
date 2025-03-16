@@ -90,7 +90,7 @@ export const SignInForm = () => {
       {(isProduction && isDirty) && (
         <Turnstile
           sitekey="0x4AAAAAAA-stfNqE6yrheDS"
-          onVerify={token => setValue("token", token)}
+          onVerify={token => setValue("token", token, { shouldValidate: true, shouldDirty: true })}
           className="self-end"
         />
       )}

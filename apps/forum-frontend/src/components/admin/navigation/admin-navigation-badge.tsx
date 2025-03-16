@@ -1,59 +1,36 @@
-import { useLocation, useNavigate, useSearch } from "@tanstack/react-router";
-import { NavigationBadge } from "#components/navigation/components/navigation-badge.tsx";
+import { useNavigate, useSearch } from "@tanstack/react-router";
+import { NavigationBadge } from "#components/navigation/components/navigation-badge";
 
-export type AdminSections =
-  | "reports"
-  | "tickets"
-  | "main"
-  | "stats";
+export type AdminSections = "reports" | "tickets" | "stats"
 
 const SECTION_QUERY_KEY = "section";
 
 type AdminNavigationBadgeProps = {
   title: string;
-  paramValue: AdminSections;
+  paramValue: AdminSections | null;
 };
 
 export const AdminNavigationBadge = ({
-  title,
-  paramValue,
+  title, paramValue,
 }: AdminNavigationBadgeProps) => {
-  const { pathname } = useLocation();
-  const searchParams = useSearch({
-    from: "/_protected/_admin/admin/",
-  });
-
+  const searchParams = useSearch({ from: "/_protected/_admin" });
   const navigate = useNavigate();
 
-  const createQueryString = () => {
-    const query = new URLSearchParams(searchParams);
-    query.set(SECTION_QUERY_KEY, paramValue);
-    return query.toString();
-  };
-
   const handleSection = () => {
-    const url = pathname + "?";
-
-    if (paramValue === "main") {
-      return navigate({ to: pathname });
+    if (!paramValue) {
+      return navigate({ to: ".", search: { section: undefined } });
     }
 
-    navigate({ to: url + createQueryString() });
+    navigate({ to: ".", search: { section: paramValue } });
   };
 
-  const isActive = (): boolean => {
-    if (paramValue === "main" && !searchParams[SECTION_QUERY_KEY]) {
-      return true;
+  const isActive = (): "active" | "inactive" => {
+    if (!paramValue && !searchParams[SECTION_QUERY_KEY]) {
+      return "active"
     }
 
-    return paramValue === searchParams[SECTION_QUERY_KEY]
+    return paramValue === searchParams[SECTION_QUERY_KEY] ? "active" : "inactive"
   };
 
-  return (
-    <NavigationBadge
-      onClick={handleSection}
-      isActive={isActive()}
-      title={title}
-    />
-  );
+  return <NavigationBadge onClick={handleSection} data-state={isActive()} title={title} />
 };

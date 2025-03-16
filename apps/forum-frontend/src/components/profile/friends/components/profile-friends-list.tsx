@@ -7,8 +7,8 @@ import { friendsSortQuery } from "#components/profile/friends/queries/friends-se
 import { ProfileFriendsFiltering } from "#components/profile/friends/components/profile-friends-filtering.tsx";
 import { type FriendWithDetails } from '@repo/types/schemas/friend/friend-types';
 import { Suspense } from "react";
-import { ProfileFriendsSkeleton } from "./profile-friends-skeleton";
 import { SomethingError } from "#components/templates/something-error.tsx";
+import { SectionSkeleton } from "#components/templates/section-skeleton";
 
 const filterFriendsByNickname = (data: FriendWithDetails[], querySearch: string) =>
   data.filter(item => item.nickname.startsWith(querySearch));
@@ -17,7 +17,7 @@ const ProfileFriendsList = ({ nickname }: Pick<UserEntity, "nickname">) => {
   const { data, isLoading, isError } = friendsQuery({ nickname, limit: 32 });
   const { searchQuery } = friendsSortQuery().data;
 
-  if (isLoading) return <ProfileFriendsSkeleton />;
+  if (isLoading) return <SectionSkeleton />;
   if (isError) return <SomethingError />;
 
   if (!data || !data.data || !data.data.length) {

@@ -13,7 +13,6 @@ import { AUTH_MUTATION_KEY, useAuth } from "../hooks/use-auth.tsx";
 import { AUTH_QUERY_KEY, AUTH_TYPE_QUERY_KEY, authGlobalOptionsQuery, AuthQuery, authQuery } from "../queries/auth-query.ts";
 import { GearLoader } from "@repo/ui/src/components/gear-loader.tsx";
 import { z } from "zod";
-import { Link } from "@tanstack/react-router";
 import Turnstile from "react-turnstile";
 import { isProduction } from "@repo/lib/helpers/is-production.ts";
 import { PasswordVisibilityBadge } from "./password-visibility-badge.tsx";
@@ -146,13 +145,13 @@ export const SignUpForm = () => {
           <label className="select-none cursor-pointer " htmlFor="rules">
             <Typography className="text-[15px] break-words lg:text-[18px]" textColor="shark_black">
               Согласен с&nbsp;
-              <Link
-                to="https://fasberry.su/rules"
+              <a
+                href="https://fasberry.su/rules"
                 target="_blank"
                 className="underline underline-offset-4"
               >
                 правилами
-              </Link>
+              </a>
               &nbsp;проекта
             </Typography>
           </label>
@@ -161,7 +160,7 @@ export const SignUpForm = () => {
       {(isProduction && isDirty) && (
         <Turnstile
           sitekey="0x4AAAAAAA-stfNqE6yrheDS"
-          onVerify={token => setValue("token", token)}
+          onVerify={token => setValue("token", token, { shouldValidate: true, shouldDirty: true })}
           className="self-end"
         />
       )}

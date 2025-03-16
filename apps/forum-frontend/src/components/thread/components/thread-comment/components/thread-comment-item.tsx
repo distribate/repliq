@@ -13,6 +13,7 @@ import { Link } from "@tanstack/react-router";
 import { getUser } from "@repo/lib/helpers/get-user.ts";
 import { ThreadCommentItemContent } from "#components/thread/components/thread-comment/components/thread-comment-item-content.tsx";
 import { lazy, Suspense } from "react";
+import { Skeleton } from "@repo/ui/src/components/skeleton.tsx";
 
 const ThreadCommentMoreActions = lazy(() =>
   import("./thread-comment-more-actions.tsx").then(
@@ -58,14 +59,16 @@ export const ThreadCommentItem = ({
         </Suspense>
       )}
       <div className="flex items-center gap-2">
-        <Link to={USER_URL + user_nickname}>
-          <Avatar
-            nickname={user_nickname}
-            propWidth={42}
-            propHeight={42}
-            className="min-h-[42px] min-w-[42px]"
-          />
-        </Link>
+        <Suspense fallback={<Skeleton className="w-[42px] h-[42px]"/>}>
+          <Link to={USER_URL + user_nickname}>
+            <Avatar
+              nickname={user_nickname}
+              propWidth={42}
+              propHeight={42}
+              className="min-h-[42px] min-w-[42px]"
+            />
+          </Link>
+        </Suspense>
         <div className="flex justify-between w-full">
           <div className="flex flex-col">
             <div className="flex items-center gap-1">

@@ -17,7 +17,7 @@ export const createComment = async ({
       .executeTakeFirstOrThrow()
 
     if (!validateThreadCommentable) {
-      return "Not commentable"
+      return { data: null, status: "Not commentable" }
     }
 
     const comment = await trx
@@ -28,11 +28,11 @@ export const createComment = async ({
         parent_id,
         parent_type
       })
-      .returning("id")
+      .returningAll()
       .executeTakeFirstOrThrow()
 
     if (comment.id) {
-      return "Created"
+      return { data: comment, status: "Created" }
     }
   })
 
