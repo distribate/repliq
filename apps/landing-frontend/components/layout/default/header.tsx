@@ -63,7 +63,7 @@ export const headerUserQuery = () => useQuery({
 
 const HeaderUser = ({ nickname }: { nickname: string }) => {
 	return (
-		<Link href={`https://cc.fasberry.su/user/${nickname}`} className="w-[38px] h-[38px] overflow-hidden rounded-md border border-neutral-400">
+		<Link href={`https://hub.fasberry.su/user/${nickname}`} className="w-[38px] h-[38px] overflow-hidden rounded-md border border-neutral-400">
 			<Avatar nickname={nickname} propHeight={38} propWidth={38} />
 		</Link>
 	)
@@ -179,7 +179,7 @@ export const Header = () => {
 					<HeaderUser nickname={nickname} />
 				) : (
 					<SuperLink
-						href="https://cc.fasberry.su"
+						href="https://hub.fasberry.su"
 						className="flex items-center gap-1 cursor-pointer"
 					>
 						<Typography

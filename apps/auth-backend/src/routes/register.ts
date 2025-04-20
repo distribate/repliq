@@ -25,7 +25,7 @@ type MojangError = {
 const MOJANG_API_URL = "https://api.ashcon.app/mojang/v2/user"
 
 async function getMojangUser(nickname: string) {
-  return await ky
+  return ky
     .get(`${MOJANG_API_URL}/${nickname}`)
     .json<PremiumUser>()
 }
@@ -68,7 +68,7 @@ export const registerRoute = new Hono()
       algorithm: "bcrypt", cost: 10
     })
 
-    let user: PremiumUser | null;
+    let user: PremiumUser | null = null;
 
     try {
       user = await getMojangUser(nickname)
@@ -79,10 +79,7 @@ export const registerRoute = new Hono()
         if (error.reason.includes("User not found")) {
           return ctx.json({ error: "Nickname invalid" }, 400);
         }
-
-        user = null
       }
-      user = null
     }
 
     const offlineUUID = generateOfflineUUID(nickname);

@@ -1,0 +1,104 @@
+entryPoints:
+  http:
+    address: ":80"
+  https:
+    address: ":443"
+
+providers:
+  docker:
+    endpoint: "unix:///var/run/docker.sock"
+    exposedByDefault: false
+  file:
+    filename: /traefik.yml
+    watch: true
+
+api: 
+  dashboard: true
+  debug: true
+
+tls:
+  certificates:
+    - certFile: "/certs/cert.pem"
+      keyFile: "/certs/key.pem"
+
+log:
+  level: DEBUG
+  filePath: "/logs/traefik.log"
+  format: common
+accessLog:
+  filePath: "/logs/access.log"
+  bufferingSize: 100
+
+http:
+  routers:
+    kong:
+      rule: "Host(`kong.fasberry.su`)"
+      entryPoints: [https]
+      tls: true
+      service: kong-svc
+    payment:
+      rule: "Host(`api.fasberry.su`) && PathPrefix(`/payment`)"
+      entryPoints: [https]
+      tls: true
+      service: payment-svc
+    minecraft:
+      rule: "Host(`api.fasberry.su`) && PathPrefix(`/minecraft`)"
+      entryPoints: [https]
+      tls: true
+      service: minecraft-svc
+    auth:
+      rule: "Host(`api.fasberry.su`) && PathPrefix(`/auth`)"
+      entryPoints: [https]
+      tls: true
+      service: auth-svc
+    forum:
+      rule: "Host(`api.fasberry.su`) && PathPrefix(`/forum`)"
+      entryPoints: [https]
+      tls: true
+      service: forum-svc
+    hub:
+      rule: "Host(`hub.fasberry.su`)"
+      entryPoints: [https]
+      tls: true
+      service: hub-svc
+    fasberry:
+      rule: "Host(`fasberry.su`)"
+      entryPoints: [https]
+      tls: true
+      service: fasberry-svc
+
+  middlewares:
+    redirect-to-https:
+      redirectScheme:
+        scheme: https
+        permanent: true
+
+  services:
+    kong-svc:
+      loadBalancer:
+        servers:
+          - url: "http://host.docker.internal:8000"
+    payment-svc:
+      loadBalancer:
+        servers:
+          - url: "http://host.docker.internal:4103"
+    minecraft-svc:
+      loadBalancer:
+        servers:
+          - url: "http://host.docker.internal:4102"
+    auth-svc:
+      loadBalancer:
+        servers:
+          - url: "http://host.docker.internal:4100"
+    forum-svc:
+      loadBalancer:
+        servers:
+          - url: "http://host.docker.internal:4101"
+    hub-svc:
+      loadBalancer:
+        servers:
+          - url: "http://host.docker.internal:3000"
+    fasberry-svc:
+      loadBalancer:
+        servers:
+          - url: "http://host.docker.internal:3001"

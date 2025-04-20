@@ -62,7 +62,7 @@ export default async function StartPage() {
             <NumericItem index={1} />
             <Typography className="text-black dark:text-white text-md md:text-xl lg:text-2xl">
               <Link
-                href="https://cc.fasberry.su/auth?type=register"
+                href="https://hub.fasberry.su/auth?type=register"
                 target="_blank"
                 className="text-green text-shadow-lg hover:underline-offset-8 hover:underline"
               >

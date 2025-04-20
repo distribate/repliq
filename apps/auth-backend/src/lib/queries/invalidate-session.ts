@@ -16,5 +16,5 @@ export async function invalidateSession(token: string, sessionId: string) {
 
   await deleteSessionToken(token);
 
-  return await deleteSession(sessionId);
+  return deleteSession(sessionId);
 }

@@ -14,7 +14,7 @@ import { hc } from 'hono/client';
 import { isProduction } from "@repo/lib/helpers/is-production.ts";
 import { fetchOptions } from '../constants/fetch-options.ts';
 
-const baseUrl = isProduction ? `https://cc.fasberry.su/api/forum` : `http://localhost:4101/api/forum`
+const baseUrl = isProduction ? `https://api.fasberry.su/forum` : `http://localhost:4101/forum`
 
 export const forumSearchClient = hc<ForumSearchAppType>(baseUrl, fetchOptions)
 export const forumSharedClient = hc<ForumSharedAppType>(baseUrl, fetchOptions)

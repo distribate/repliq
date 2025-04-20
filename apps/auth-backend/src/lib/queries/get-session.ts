@@ -1,7 +1,7 @@
 import { forumDB } from "../../shared/database/forum-db";
 
 export const getSession = async (session_id: string) => {
-  return await forumDB
+  return forumDB
     .selectFrom("users_session")
     .innerJoin("users", "users.nickname", "users_session.nickname")
     .select([

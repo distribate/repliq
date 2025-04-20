@@ -1,13 +1,15 @@
+import { MAX_USERS_PER_IP } from "../shared/constants/limits";
 import { authDB } from "../shared/database/auth-db";
 
 export async function validateIpRestricts(ip: string): Promise<boolean> {
-  const query = await authDB
+  const result = await authDB
     .selectFrom("AUTH")
     .select(authDB.fn.countAll().as("count"))
     .where("IP", "=", ip)
     .$castTo<{ count: number }>()
     .executeTakeFirst();
 
-  // more than 2 users with the same IP
-  return query ? query.count > 2 : false
+  if (!result) return false;
+
+  return result.count > MAX_USERS_PER_IP;
 }

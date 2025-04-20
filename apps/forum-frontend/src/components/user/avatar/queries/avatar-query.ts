@@ -12,4 +12,5 @@ export const userAvatarQuery = (nickname: string) => useSuspenseQuery({
   refetchOnMount: false,
   gcTime: Infinity,
   staleTime: Infinity,
+  retry: 1
 });

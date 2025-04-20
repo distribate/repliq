@@ -1,26 +1,35 @@
 name: fasberry-external
 
 services:
-  # luckperms-rest-api:
-  #   image: ghcr.io/luckperms/rest-api
-  #   environment:
-  #     LUCKPERMS_STORAGE_METHOD: postgresql
-  #     LUCKPERMS_DATA_ADDRESS: luckperms_db:5432
-  #     LUCKPERMS_DATA_DATABASE: ${LUCKPERMS_POSTGRES_DB}
-  #     LUCKPERMS_DATA_USERNAME: ${LUCKPERMS_POSTGRES_USER}
-  #     LUCKPERMS_DATA_PASSWORD: ${LUCKPERMS_POSTGRES_PASSWORD}
-  #     LUCKPERMS_REST_HTTP_PORT: ${LUCKPERMS_BACKEND_PORT}
-  #     LUCKPERMS_REST_AUTH: true
-  #     LUCKPERMS_MESSAGING_SERVICE: nats
-  #     LUCKPERMS_NATS_ENABLED: "true"
-  #     LUCKPERMS_NATS_ADDRESS: "nats://${NATS_AUTH_TOKEN}@nats:4222"
-  #     LUCKPERMS_REST_AUTH_KEYS: ${SECRET_TOKEN}
-  #   ports:
-  #     - "4000:${LUCKPERMS_BACKEND_PORT}"
-  #   extra_hosts:
-  #     - "shared-network:host-gateway"
-  #   networks:
-  #     - shared-network
+  traefik:
+    image: traefik:v3.3
+    command: --providers.docker
+    security_opt:
+      - no-new-privileges:true
+    volumes:
+      - ./packages/config-traefik/traefik.yml:/traefik.yml
+      - ./packages/config-traefik/certs:/certs
+      - ./packages/config-traefik/logs:/logs
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+      - "9080:9080" 
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.traefik.entrypoints=http"
+      - "traefik.http.routers.traefik.rule=Host(`traefik.${DOMAIN_NAME}`)"
+      - "traefik.http.middlewares.traefik-auth.basicauth.users=${TRAEFIK_USERNAME}:${TRAEFIK_PASSWORD}"
+      - "traefik.http.middlewares.traefik-https-redirect.redirectscheme.scheme=https"
+      - "traefik.http.routers.traefik.middlewares=traefik-https-redirect"
+      - "traefik.http.routers.traefik-secure.entrypoints=https"
+      - "traefik.http.routers.traefik-secure.rule=Host(`traefik.${DOMAIN_NAME}`)"
+      - "traefik.http.routers.traefik-secure.middlewares=traefik-auth"
+      - "traefik.http.routers.traefik-secure.tls=true"
+      - "traefik.http.routers.traefik-secure.tls.certresolver=http"
+      - "traefik.http.routers.traefik-secure.service=api@internal"
+      - "traefik.http.services.traefik.loadbalancer.server.port=9080"
 
   # consul:
   #   image: consul:1.15.4

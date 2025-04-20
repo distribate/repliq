@@ -8,7 +8,7 @@ type UpdateSessionExpire = {
 export const updateSessionExpires = async ({
   expires_at, session_id
 }: UpdateSessionExpire) => {
-  return await forumDB
+  return forumDB
     .updateTable("users_session")
     .set({ expires_at: expires_at })
     .where("session_id", "=", session_id)

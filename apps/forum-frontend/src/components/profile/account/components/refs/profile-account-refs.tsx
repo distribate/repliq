@@ -12,7 +12,7 @@ export const ProfileAccountReferals = () => {
   const navigate = useNavigate()
 
   const copyToClipboard = async () => {
-    await navigator.clipboard.writeText(`https://cc.fasberry.su/auth?type=register&from=${currentUser.nickname}`);
+    await navigator.clipboard.writeText(`https://hub.fasberry.su/auth?type=register&from=${currentUser.nickname}`);
 
     toast.success("Ссылка скопирована")
 

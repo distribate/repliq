@@ -2,9 +2,13 @@ import { throwError } from '@repo/lib/helpers/throw-error.ts';
 import { getNickname } from "#utils/get-nickname-from-storage.ts";
 import { Hono } from "hono";
 import { getNatsConnection } from '@repo/config-nats/nats-client';
-import type { UserLands } from '#routes/user/get-my-lands.ts';
 import { forumDB } from '#shared/database/forum-db.ts';
 import { sql } from 'kysely';
+
+type UserLands = {
+  nickname: string,
+  uuid: string 
+}
 
 type Fof = {
   nickname: string,
@@ -91,7 +95,7 @@ type UniqueUsers = {
     ulid: string;
     name: string
   };
-  members: UserLands[0]['members'][0]
+  members: UserLands
 }
 
 async function getSimilarUsersByLand(nickname: string) {
@@ -99,7 +103,7 @@ async function getSimilarUsersByLand(nickname: string) {
 
   const req = await nc.request("get-user-lands", nickname)
 
-  const lands: UserLands = JSON.parse(
+  const lands = JSON.parse(
     new TextDecoder().decode(req.data)
   )
 

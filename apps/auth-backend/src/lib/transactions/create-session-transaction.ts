@@ -1,9 +1,7 @@
-import type { DB } from "@repo/types/db/forum-database-types";
 import { publishLoginNotify } from "../../publishers/pub-login-notify";
 import { forumDB } from "../../shared/database/forum-db";
 import { putSessionToken } from "../../utils/put-session-token";
 import { createSession } from "../queries/create-session";
-import type { Transaction } from "kysely";
 import type { createSessionBodySchema } from "@repo/types/schemas/auth/create-session-schema";
 import type { z } from "zod";
 

@@ -27,7 +27,8 @@ const initial: Omit<SkinStateQuery, "skinUrl"> = {
 export const skinStateQuery = (nickname: string) => useSuspenseQuery({
   queryKey: SKIN_STATE_QUERY_KEY(nickname),
   queryFn: () => getSkinDetails({ type: "skin", nickname }),
-  refetchOnWindowFocus: false
+  refetchOnWindowFocus: false,
+  retry: 1
 });
 
 export const skinAnimationQuery = () => useSuspenseQuery<Omit<SkinStateQuery, "skinUrl">, Error>({

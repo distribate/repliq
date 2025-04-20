@@ -27,6 +27,6 @@ export async function pgListenConnect() {
   authSubscriber.listenTo("auth_logindate_channel")
 
   await notifyByAuthLoginDateChannel()
-
+                                            
   console.log("\x1b[32m[Listener]\x1b[0m PG Listener connected")
-}
+}  

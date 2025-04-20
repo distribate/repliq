@@ -2,15 +2,15 @@ import { Typography } from "@repo/ui/src/components/typography"
 import Logotype from "@repo/assets/images/logotype.png"
 
 const LINKS = [
-  { label: "Статус", href: "https://fasberry.su/status", },
+  { label: "Статус", href: "https://status.fasberry.su", },
   { label: "Новости", href: "https://fasberry.su/news", },
   { label: "Помощь", href: "https://fasberry.su/help", },
   { label: "Вики", href: "https://fasberry.su/wiki", }
 ]
 
 const SOCIALS = [
-  { label: "Телеграм", href: "https://cc.fasberry.su/api/forum/shared/get-media/telegram", },
-  { label: "Дискорд", href: "https://cc.fasberry.su/api/forum/shared/get-media/discord", }
+  { label: "Телеграм", href: "https://api.fasberry.su/forum/shared/get-media/telegram", },
+  { label: "Дискорд", href: "https://api.fasberry.su/forum/shared/get-media/discord", }
 ]
 
 const FooterItem = ({ href, label }: { href: string, label: string }) => {

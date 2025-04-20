@@ -29,7 +29,7 @@ export const auth = new Hono()
   .route("/", getSessionRoute)
 
 const app = new Hono<Env>()
-  .basePath('/api/auth')
+  .basePath('/auth')
   .use(corsMiddleware)
   .use(csrf({ origin: originList }))
   .use(rateLimiterMiddleware)

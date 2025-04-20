@@ -38,7 +38,7 @@ type GeoType = {
 const url = "http://ip-api.com/json"
 
 async function getLocation(ip: string) {
-  return await ky.get(`${url}/${ip}`).json<GeoType>();
+  return ky.get(`${url}/${ip}`).json<GeoType>();
 }
 
 export async function createSession({
@@ -66,15 +66,16 @@ export async function createSession({
   const expires_at = new Date(Date.now() + DEFAULT_SESSION_EXPIRE);
 
   const session: Session = {
-    browser, ip, cpu, device, os, ua,
+    browser, ip, cpu, device, os, ua, session_id, nickname, token, expires_at,
     location: `${city}, ${country}`,
-    session_id, nickname, token, expires_at,
   };
 
   const query = await trx
     .insertInto("users_session")
     .values(session)
-    .returning(["nickname", "session_id", "expires_at", "browser", "ip"])
+    .returning([
+      "nickname", "session_id", "expires_at", "browser", "ip"
+    ])
     .executeTakeFirstOrThrow();
 
   return query;

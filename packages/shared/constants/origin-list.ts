@@ -1,7 +1,7 @@
 export const originList = [
   // domains
   "https://fasberry.su", // landing-frontend
-  "https://cc.fasberry.su", // forum-frontend
+  "https://hub.fasberry.su", // forum-frontend
 
   // local
   "http://localhost:3009", // development of landing-frontend

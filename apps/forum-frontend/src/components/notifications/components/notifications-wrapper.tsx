@@ -5,7 +5,7 @@ import { ConfigEventsData, NotificationsEventsPayload } from "@repo/types/entiti
 import { useEffect } from "react";
 import { toast } from "sonner";
 
-const URL = isProduction ? "https://cc.fasberry.su/api/forum/sse" : "http://localhost:4101/api/forum/sse"
+const URL = isProduction ? "https://api.fasberry.su/forum/sse" : "http://localhost:4101/forum/sse"
 
 export const NotificationsWrapper = () => {
   const { isAuthenticated } = globalOptionQuery().data

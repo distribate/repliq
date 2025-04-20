@@ -14,10 +14,8 @@ export const getAuthPlayerBodySchema = z.object({
 
 export const getAuthUser = new Hono()
   .post("/get/:detail", zValidator("json", getAuthPlayerBodySchema), async (ctx) => {
-    const body = await ctx.req.json()
-    const parsedBody = getAuthPlayerBodySchema.parse(body);
+    const { fields } = getAuthPlayerBodySchema.parse(await ctx.req.json());
     const { detail } = ctx.req.param();
-    const { fields } = parsedBody;
 
     if (!fields || !fields.length) {
       return ctx.json({ error: "Extracted fields must be required" }, 400);

@@ -14,9 +14,6 @@ node_modules
 # Containers data
 data
 
-# map data
-apps/map-frontend/tiles
-
 # Local env files
 .env
 .env.local
@@ -49,4 +46,5 @@ yarn-error.log*
 *.pem
 
 # cf tunnel config
-packages/config-cloudflare-tunnel
+packages/config-traefik/certs
+packages/config-traefik/logs

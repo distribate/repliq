@@ -109,6 +109,7 @@ import { createUserRestrictRoute } from '#routes/warns/create-user-restrict.ts';
 import { notificationsSSERoute } from '#routes/notifications/notifications-sse.ts';
 import { getMediaRoute } from '#routes/public/get-media.ts';
 import { getUserLocationRoute } from '#routes/user/get-user-location.ts';
+import { getHealthRoute } from '#routes/public/get-health.ts';
 
 async function startNats() {
   await initNats()
@@ -278,13 +279,14 @@ export const search = new Hono()
   .route("/", getSearchRoute)
 
 const app = new Hono<Env>()
-  .basePath('/api/forum')
+  .basePath('/forum')
   .use(corsProtectionMiddleware)
   .use(csrfProtectionMiddleware)
   .use(rateLimiterMiddleware)
   .use(timeoutMiddleware)
   .use(logger())
   .use(contextStorage())
+  .route("/", getHealthRoute)
   .route("/", shared)
   .route('/', admin)
   .route("/", moderator)

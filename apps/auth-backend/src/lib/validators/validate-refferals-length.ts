@@ -1,9 +1,15 @@
 import type { DB } from "@repo/types/db/forum-database-types";
 import type { Transaction } from "kysely";
+import { REFFERALS_LIMIT } from "../../shared/constants/limits";
 
-const REFFERALS_LIMIT = 5
+type ValidateRefsLength = {
+  trx: Transaction<DB>,
+  referrer: string
+}
 
-export async function validateRefferalsLength(trx: Transaction<DB>, referrer: string) {
+export async function validateRefferalsLength({
+  referrer, trx
+}: ValidateRefsLength) {
   const refferalsList = await trx
     .selectFrom("refferals")
     .select("id")
