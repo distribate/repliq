@@ -6,7 +6,7 @@ import { generalStatsQuery } from "#components/profile/stats/queries/general-sta
 import { ProfileStatsLayout } from "#components/profile/stats/components/profile-stats-layout.tsx";
 import { StatsRequest } from "#components/profile/stats/types/stats-types.ts";
 import { Skeleton } from "@repo/ui/src/components/skeleton.tsx";
-import { SomethingError } from "#components/templates/something-error.tsx";
+import { SomethingError } from "#components/templates/components/something-error";
 
 const GeneralStatsSkeleton = () => (
   <Skeleton className="flex flex-col gap-y-2 h-[400px] w-full rounded-md px-4 py-2" />

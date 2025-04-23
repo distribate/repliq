@@ -1,24 +1,16 @@
 import { AlertEntity } from "@repo/types/entities/entities-type.ts";
 import { useState } from "react";
-import { AlertValues } from "../types/alert-values-types.ts";
 import { useAlerts } from "../hooks/use-alerts.ts";
 import { Input } from "@repo/ui/src/components/input.tsx";
 import { Button } from "@repo/ui/src/components/button.tsx";
 import { Typography } from "@repo/ui/src/components/typography.tsx";
 import { DialogClose } from "@repo/ui/src/components/dialog.tsx";
+import { AlertValues } from "./create-alert-form.tsx";
 
 export const AlertUpdateForm = ({
-  id,
-  description,
-  link,
-  title,
+  id, description, link, title,
 }: Omit<AlertEntity, "created_at" | "creator">) => {
-  const [alertValues, setAlertValues] = useState<AlertValues>({
-    title: title,
-    description: description,
-    link: link,
-  });
-
+  const [alertValues, setAlertValues] = useState<AlertValues>({ title: title, description: description, link: link });
   const { updateAlertMutation } = useAlerts();
 
   const handleInputChange =
@@ -29,8 +21,7 @@ export const AlertUpdateForm = ({
 
   const handleUpdateAlert = () => {
     updateAlertMutation.mutate({
-      ...alertValues,
-      id,
+      ...alertValues, id,
     });
   };
 

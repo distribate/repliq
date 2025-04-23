@@ -3,10 +3,10 @@ import { toast } from "sonner";
 import { CURRENT_USER_QUERY_KEY } from "#queries/current-user-query.ts";
 import { z } from "zod";
 import { createCoverImageSchema } from "@repo/types/schemas/user/create-cover-image-schema.ts"
-import { REQUESTED_USER_QUERY_KEY } from "#queries/requested-user-query";
-import { getUser } from "#helpers/get-user";
-import { deleteCoverImage } from "#queries/delete-cover-image";
 import { CreateCoverImage, createCoverImage } from "#queries/create-cover-image.ts";
+import { getUser } from "#helpers/get-user.ts";
+import { deleteCoverImage } from "#queries/delete-cover-image.ts";
+import { REQUESTED_USER_QUERY_KEY } from "#queries/requested-user-query.ts";
 
 export type CoverImageInput = z.infer<typeof createCoverImageSchema>;
 

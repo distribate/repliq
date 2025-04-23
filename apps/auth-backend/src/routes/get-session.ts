@@ -11,6 +11,8 @@ export const getSessionRoute = new Hono<Env>()
   .use(async (ctx, next) => {
     const sessionToken = getCookie(ctx, SESSION_KEY)
 
+    console.log(sessionToken)
+
     if (!sessionToken) {
       return ctx.json({ error: "Unauthorized" }, 401)
     }
@@ -25,6 +27,8 @@ export const getSessionRoute = new Hono<Env>()
 
     try {
       const nickname = await getNicknameByTokenFromKv(token);
+
+      console.log(nickname)
 
       if (!nickname) {
         const { session, user } = await validateSessionToken(token);

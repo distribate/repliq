@@ -1,6 +1,6 @@
 import { landsQuery } from "#components/lands/queries/lands-query.ts"
 import { LandCard } from "./land-card"
-import { SectionSkeleton } from "#components/templates/section-skeleton"
+import { SectionSkeleton } from "#components/templates/components/section-skeleton"
 
 export const LandsList = () => {
   const { data, isLoading } = landsQuery()

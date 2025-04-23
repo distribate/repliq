@@ -6,7 +6,18 @@ import { setNoteFriend } from "#components/friends/queries/set-note-friend.ts";
 import { setUnNoteFriend } from "#components/friends/queries/set-unnote-friend.ts";
 import { getUser } from "@repo/lib/helpers/get-user.ts";
 import { GetFriendsResponse } from "@repo/types/schemas/friend/friend-types.ts";
-import { ControlFriendProperties } from "../types/friend-request-types";
+
+export type ControlFriendRequests = {
+  recipient: string;
+  request_id: string
+}
+
+export type ControFriendShip = {
+  recipient: string;
+  friend_id: string
+}
+
+type ControlFriendProperties = ControFriendShip
 
 type SetFriendNote = ControlFriendProperties & {
   note: string;

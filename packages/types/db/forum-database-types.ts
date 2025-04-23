@@ -968,6 +968,19 @@ export interface UsersGameStatus {
   status: string;
 }
 
+export interface UsersMain {
+  created_at: Generated<Timestamp>;
+  hash: string;
+  id: Generated<Int8>;
+  name: string;
+}
+
+export interface UsersProfiles {
+  id: Int8;
+  profile_id: string | null;
+  user_id: Int8 | null;
+}
+
 export interface UsersPunish {
   created_at: Generated<Timestamp>;
   id: Generated<Int8>;
@@ -1144,6 +1157,8 @@ export interface DB {
   users_blocked: UsersBlocked;
   users_friends: UsersFriends;
   users_game_status: UsersGameStatus;
+  users_main: UsersMain;
+  users_profiles: UsersProfiles;
   users_punish: UsersPunish;
   users_saved_threads: UsersSavedThreads;
   users_security: UsersSecurity;

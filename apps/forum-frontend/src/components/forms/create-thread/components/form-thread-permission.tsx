@@ -3,12 +3,12 @@ import { Controller } from "react-hook-form";
 import { Toggle } from "@repo/ui/src/components/toggle.tsx";
 import { FormField } from "@repo/ui/src/components/form-field.tsx";
 import { threadFormQuery } from "../queries/thread-form-query.ts";
-import { useCreateThread } from "../hooks/use-create-thread.tsx";
-import { FormChildsProps } from "../types/create-thread-form-types.ts";
+import { FormChildsProps } from "./form-thread.tsx";
+import { useEditThread } from "../hooks/use-edit-thread.tsx";
 
 export const FormThreadPermissions = ({ errors, control }: FormChildsProps) => {
   const { data: threadFormState } = threadFormQuery();
-  const { updateThreadFormMutation } = useCreateThread();
+  const { updateThreadFormMutation } = useEditThread();
 
   if (!threadFormState) return;
 

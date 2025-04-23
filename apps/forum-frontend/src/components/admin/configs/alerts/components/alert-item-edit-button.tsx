@@ -10,7 +10,7 @@ import { AlertUpdateForm } from "#components/forms/create-alert/components/updat
 import { useEffect, useState } from "react";
 import { useMutationState } from "@tanstack/react-query";
 import { ALERT_UPDATE_MUTATION_KEY } from "#components/forms/create-alert/hooks/use-alerts.ts";
-import { DialogLoader } from "#components/templates/dialog-loader.tsx";
+import { DialogLoader } from "#components/templates/components/dialog-loader";
 import { Typography } from "@repo/ui/src/components/typography.tsx";
 
 export const AlertItemEditButton = ({

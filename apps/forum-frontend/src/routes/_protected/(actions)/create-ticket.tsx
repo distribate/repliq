@@ -1,4 +1,4 @@
-import { BlockWrapper } from '#components/wrappers/block-wrapper'
+import { BlockWrapper } from '#components/wrappers/components/block-wrapper'
 import { Typography } from '@repo/ui/src/components/typography'
 import { createFileRoute } from '@tanstack/react-router'
 import { CreateIssueForm } from '#components/forms/create-issue/components/create-issue-form'

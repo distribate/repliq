@@ -13,7 +13,7 @@ import {
   FormFieldContext,
   FormItemContext,
   useFormField,
-} from "../hooks/use-form-field";
+} from "../hooks/use-form-field.ts";
 import {
   ComponentPropsWithoutRef,
   ElementRef,

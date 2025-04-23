@@ -1,6 +1,7 @@
 import { Hono } from 'hono';
 import { getPlayerSkin } from '#lib/queries/get-player-skin.ts';
 import { extractHeadFromSkin } from '#utils/extract-head-from-skin.ts';
+// @ts-ignore
 import SteveHead from "@repo/assets/images/minecraft/steve_head.jpg"
 import fs from 'fs';
 import path from 'path';

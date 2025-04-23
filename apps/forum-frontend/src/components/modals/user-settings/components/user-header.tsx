@@ -1,5 +1,5 @@
 import { Avatar } from "#components/user/avatar/components/avatar";
-import { UserNickname } from "#components/user/name/nickname";
+import { UserNickname } from "#components/user/name/components/nickname";
 import { getUser } from "@repo/lib/helpers/get-user";
 import { userStatusQuery } from "@repo/lib/queries/user-status-query";
 import { Button } from "@repo/ui/src/components/button";

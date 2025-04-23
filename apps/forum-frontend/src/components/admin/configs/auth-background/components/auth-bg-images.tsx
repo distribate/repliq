@@ -7,7 +7,7 @@ import {
 import { AuthBackgroundImagesAddButton } from "./auth-bg-images-add-button.tsx";
 import { OctagonAlert, X } from "lucide-react";
 import { AuthBackgroundImagesDeleteButton } from "./auth-bg-images-delete-button.tsx";
-import { HoverCardWrapper } from "#components/wrappers/hover-card-wrapper.tsx";
+import { HoverCardWrapper } from "#components/wrappers/components/hover-card-wrapper.tsx";
 import { Separator } from "@repo/ui/src/components/separator.tsx";
 import { getAuthImages } from "../queries/get-auth-images.ts";
 import { useQuery } from "@tanstack/react-query";

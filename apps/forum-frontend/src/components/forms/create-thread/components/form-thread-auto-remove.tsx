@@ -1,11 +1,15 @@
 import { FormField } from "@repo/ui/src/components/form-field.tsx";
 import { threadFormQuery } from "../queries/thread-form-query.ts";
-import { useCreateThread } from "../hooks/use-create-thread.tsx";
-import { FormChildsProps } from "../types/create-thread-form-types.ts";
+import { FormChildsProps } from "./form-thread.tsx";
+import { Typography } from "@repo/ui/src/components/typography.tsx";
+import { useEditThread } from "../hooks/use-edit-thread.tsx";
 
-export const FormThreadAutoRemove = ({ control, errors }: FormChildsProps) => {
+// @ts-ignore
+export const FormThreadAutoRemove = ({ 
+  control, errors 
+}: FormChildsProps) => {
   const { data: threadFormState } = threadFormQuery();
-  const { updateThreadFormMutation } = useCreateThread();
+  const { updateThreadFormMutation } = useEditThread();
 
   if (!threadFormState) return;
 
@@ -14,7 +18,7 @@ export const FormThreadAutoRemove = ({ control, errors }: FormChildsProps) => {
   return (
     <FormField>
       {/*  todo  */}
-      {/* <div className="flex flex-col gap-y-2">
+      <div className="flex flex-col gap-y-2">
         <div className="flex flex-col">
           <Typography textColor="shark_white" textSize="large">
             Авто-удаление
@@ -23,7 +27,7 @@ export const FormThreadAutoRemove = ({ control, errors }: FormChildsProps) => {
             (автоматическое удаление поста через заданное время)
           </Typography>
         </div>
-        <Controller
+        {/* <Controller
           control={control}
           name="auto_remove"
           render={({ field: { onChange } }) => {
@@ -47,8 +51,8 @@ export const FormThreadAutoRemove = ({ control, errors }: FormChildsProps) => {
               </Toggle>
             );
           }}
-        />
-      </div> */}
+        /> */}
+      </div>
     </FormField>
   );
 };

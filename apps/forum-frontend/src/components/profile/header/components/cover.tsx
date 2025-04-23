@@ -17,7 +17,7 @@ type UserCoverProps = {
   nickname: string
 };
 
-const UserLocation = lazy(() => import("#components/user/location/user-location.tsx")
+const UserLocation = lazy(() => import("#components/user/location/components/user-location.tsx")
   .then(m => ({ default: m.UserLocation }))
 )
 

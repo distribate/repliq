@@ -4,7 +4,7 @@ import {
   ProfilePosts,
 } from '#components/profile/posts/posts/components/profile-posts-list.tsx';
 import { getUser } from '@repo/lib/helpers/get-user';
-import { ProfileWrapper } from '#components/wrappers/profile-wrapper';
+import { ProfileWrapper } from '#components/wrappers/components/profile-wrapper';
 
 export const UserProfilePosts = ({
   nickname

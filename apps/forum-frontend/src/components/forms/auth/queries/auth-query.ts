@@ -1,6 +1,11 @@
 import { useQuery, useSuspenseQuery } from "@tanstack/react-query";
-import { AuthMessages } from "../types/error-message-type.ts";
 import { createQueryKey } from "@repo/lib/helpers/query-key-builder.ts";
+
+type AuthMessages =
+  | "Unsafe password"
+  | "Nickname invalid"
+  | "Success"
+  | null;
 
 export type AuthGlobalOptionsQuery = {
   passwordVisibility: "password" | "text";

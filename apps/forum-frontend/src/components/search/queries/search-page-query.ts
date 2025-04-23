@@ -1,10 +1,7 @@
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import { createQueryKey } from "@repo/lib/helpers/query-key-builder.ts";
-import {
-  SearchThread,
-  SearchUser,
-} from "#sidebar/desktop/components/sidebar-content/search/queries/search-query.ts";
 import { SEARCH_PAGE_LIMIT } from "@repo/shared/constants/limits.ts";
+import { SearchThread, SearchUser } from "./get-search-results";
 
 export const SEARCH_PAGE_QUERY_KEY = createQueryKey("ui", [
   "search-page-state",

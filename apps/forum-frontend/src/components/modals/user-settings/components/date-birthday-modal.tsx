@@ -5,8 +5,8 @@ import { DateBirthdayPicker } from "#components/cards/user-personal-card/compone
 import { UPDATE_FIELD_MUTATION_KEY } from "@repo/lib/hooks/use-update-current-user.ts";
 import { parseDateOrTimestamp } from "#components/cards/user-personal-card/components/profile-settings/components/birthday-picker/helpers/birthday-picker.ts";
 import dayjs from "@repo/lib/constants/dayjs-instance";
-import { DynamicModal } from "../../dynamic-modal";
-import { UserSettingOption } from "#components/cards/user-setting-option";
+import { DynamicModal } from "../../dynamic-modal/components/dynamic-modal";
+import { UserSettingOption } from "#components/cards/user-setting-option-card/components/user-setting-option";
 
 export const DateBirthdayModal = () => {
   const { birthday } = getUser();

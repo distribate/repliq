@@ -1,5 +1,5 @@
 import { Typography } from "@repo/ui/src/components/typography.tsx";
-import { ImageWrapper } from "#components/wrappers/image-wrapper.tsx";
+import { ImageWrapper } from "#components/wrappers/components/image-wrapper";
 import { cva, VariantProps } from "class-variance-authority";
 import { forwardRef, HTMLAttributes } from "react";
 import { useUpdateCurrentUser } from "@repo/lib/hooks/use-update-current-user.ts";

@@ -3,7 +3,7 @@ import { Typography } from "@repo/ui/src/components/typography.tsx";
 import { achievementsClient } from "@repo/shared/api/minecraft-client";
 import { useQuery } from "@tanstack/react-query";
 import { createQueryKey } from "@repo/lib/helpers/query-key-builder";
-import { SectionSkeleton } from "#components/templates/section-skeleton";
+import { SectionSkeleton } from "#components/templates/components/section-skeleton";
 
 type ProfileGameAchProps = Pick<UserEntity, "nickname">;
 

@@ -1,4 +1,7 @@
-import type { admin, category, search, thread, post, report, user, comment, reaction, shared } from "../index.ts"
+import type { 
+  admin, category, search, thread, post, 
+  report, user, comment, reaction, shared 
+} from "../index.ts"
 
 export type ForumUserAppType = typeof user
 export type ForumThreadAppType = typeof thread

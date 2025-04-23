@@ -1,10 +1,9 @@
 import { NavigationBadge } from "#components/navigation/components/navigation-badge.tsx";
 import { useNavigate, useLocation, getRouteApi } from "@tanstack/react-router";
-import { SearchType } from "#components/sidebar/desktop/components/sidebar-content/search/queries/search-query.ts";
 
 type SearchNavigationBadgeProps = {
   title: string;
-  paramValue: SearchType;
+  paramValue: "threads" | "saved_threads" | "referals" | "purchases" | "tickets" | "all";
 };
 
 const searchRoute = getRouteApi("/_protected/search")
@@ -32,5 +31,5 @@ export const SearchNavigationBadge = ({
     return paramValue === searchParams.type
   };
 
-  return <NavigationBadge onClick={handleSection} title={title} isActive={isActive()} />
+  return <NavigationBadge onClick={handleSection} title={title} data-state={isActive() ? "active" : "inactive"} />
 };

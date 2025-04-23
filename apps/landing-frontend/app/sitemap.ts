@@ -5,7 +5,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
 		{
 			url: 'https://fasberry.su',
 			lastModified: new Date(),
-			changeFrequency: 'yearly',
+			changeFrequency: 'always',
 			priority: 1,
 		},
 		{
@@ -23,7 +23,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
 		{
 			url: 'https://fasberry.su/rules',
 			lastModified: new Date(),
-			changeFrequency: 'monthly',
+			changeFrequency: 'weekly',
 			priority: 0.3,
 		},
 	]

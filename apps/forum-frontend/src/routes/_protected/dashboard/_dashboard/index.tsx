@@ -1,6 +1,6 @@
 import { userProfileStatsQuery } from '#components/profile/account/queries/user-profile-stats-query'
 import { Avatar } from '#components/user/avatar/components/avatar'
-import { UserNickname } from '#components/user/name/nickname'
+import { UserNickname } from '#components/user/name/components/nickname'
 import { currentUserQuery } from '@repo/lib/queries/current-user-query'
 import { USER_URL } from '@repo/shared/constants/routes'
 import { Skeleton } from '@repo/ui/src/components/skeleton'

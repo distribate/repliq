@@ -12,7 +12,7 @@ import { UPDATE_NOTIFICATIONS_MUTATION_KEY, useUpdateNotifications } from "#comp
 import { useInView } from "react-intersection-observer";
 import { useMutationState } from "@tanstack/react-query";
 import { useEffect } from "react";
-import { ContentNotFound } from "#components/templates/content-not-found.tsx";
+import { ContentNotFound } from "#components/templates/components/content-not-found";
 
 const client = forumUserClient.user["get-user-notifications"].$get
 

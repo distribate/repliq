@@ -1,25 +1,25 @@
 import { Typography } from "@repo/ui/src/components/typography.tsx";
-import { DynamicModal } from "#components/modals/dynamic-modal.tsx";
+import { DynamicModal } from "#components/modals/dynamic-modal/components/dynamic-modal.tsx";
 import {
   CREATE_REPORT_MUTATION_KEY,
   useCreateReport,
 } from "../hooks/use-create-report.ts";
-import { ConfirmationActionModalTemplate } from "#components/templates/confirmation-action-modal-template.tsx";
-import { REPORT_REASONS } from "#components/report/constants/report-reason.ts";
+import { ConfirmationActionModalTemplate } from "#components/modals/confirmation-modal/components/confirmation-action-modal.tsx";
+import { REPORT_REASONS } from "#components/modals/action-confirmation/components/report/constants/report-reason.ts";
 import { Button } from "@repo/ui/src/components/button.tsx";
 import { DialogClose } from "@repo/ui/src/components/dialog.tsx";
-import { ConfirmationButton } from "#components/buttons/confirmation-action-button.tsx";
+import { ConfirmationButton } from "#components/modals/confirmation-modal/components/confirmation-action-button.tsx";
 import { useQueryClient } from "@tanstack/react-query";
 import {
   REPORT_QUERY_KEY,
   reportQuery,
-} from "#components/report/queries/report-query.ts";
+} from "#components/modals/action-confirmation/components/report/queries/report-query.ts";
 import React, { useState } from "react";
 import { toast } from "sonner";
 import {
   THREAD_COMMENTS_QUERY_KEY,
   ThreadComment,
-} from '#components/thread/components/thread-comments/queries/thread-comments-query.ts';
+} from '#components/thread/thread-comments/queries/thread-comments-query.ts';
 import { Textarea } from "@repo/ui/src/components/textarea.tsx";
 import {
   ReportEntity,

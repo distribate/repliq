@@ -1,7 +1,4 @@
-import {
-  SearchResult,
-  SearchResultsAll,
-} from "#search/queries/search-page-query.ts";
+import { SearchResult, SearchResultsAll } from "../queries/search-page-query";
 
 export function filterSearchResults<T extends SearchResult>(
   results: SearchResultsAll, type: "threads" | "users",

@@ -1,5 +1,5 @@
 import { redirect } from '@tanstack/react-router'
-import { PageWrapper } from '#components/wrappers/page-wrapper.tsx'
+import { PageWrapper } from '#components/wrappers/components/page-wrapper'
 import { AuthImage } from '#components/forms/auth/components/auth-image.tsx'
 import { Typography } from '@repo/ui/src/components/typography'
 import { SignInForm } from '#components/forms/auth/components/sign-in.tsx'

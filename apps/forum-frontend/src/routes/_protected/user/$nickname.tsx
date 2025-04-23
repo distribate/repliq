@@ -1,20 +1,20 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { UserCoverLayout } from '#components/profile/header/components/cover-layout.tsx'
 import { lazy, Suspense } from "react"
-import { UserContentSkeleton } from "#components/skeletons/user-profile-skeleton.tsx";
+import { UserContentSkeleton } from "#components/skeletons/components/user-profile-skeleton";
 import { Skeleton } from "@repo/ui/src/components/skeleton";
 import { requestedUserQuery } from "@repo/lib/queries/requested-user-query.ts";
 import { UserProfilePosts } from "#components/profile/posts/posts/components/profile-posts.tsx";
-import { UserPostsSkeleton } from "#components/skeletons/user-posts-skeleton.tsx";
+import { UserPostsSkeleton } from "#components/skeletons/components/user-posts-skeleton";
 import { getUser } from "@repo/lib/helpers/get-user";
 import { isUserDetailed } from "@repo/lib/helpers/is-user-detailed";
 import { Separator } from "@repo/ui/src/components/separator";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@repo/ui/src/components/tabs";
 import { ProfileSkinControls } from "#components/profile/skin/components/profile-skin-controls.tsx";
 import { Typography } from "@repo/ui/src/components/typography";
-import { friendStatusOpts } from '#components/buttons/friend-button';
-import { CURRENT_USER_QUERY_KEY } from '@repo/lib/queries/current-user-query';
 import { UserDetailed } from '@repo/types/entities/user-type';
+import { friendStatusOpts } from '#components/friend/components/friend-button/queries/friend-status-query';
+import { CURRENT_USER_QUERY_KEY } from '@repo/lib/queries/current-user-query';
 
 export const Route = createFileRoute('/_protected/user/$nickname')({
   component: RouteComponent,
@@ -60,19 +60,19 @@ const ProfileGameAchievements = lazy(() => import("#components/profile/achieveme
   .then(m => ({ default: m.UserProfileGameAchievements }))
 )
 
-const SectionPrivatedTrigger = lazy(() => import("#components/templates/section-privated-trigger.tsx")
+const SectionPrivatedTrigger = lazy(() => import("#components/templates/components/section-privated-trigger")
   .then(m => ({ default: m.SectionPrivatedTrigger }))
 );
 
-const Blocked = lazy(() => import("#components/templates/user-blocked.tsx")
+const Blocked = lazy(() => import("#components/templates/components/user-blocked")
   .then(m => ({ default: m.UserBlocked }))
 );
 
-const Banned = lazy(() => import("#components/templates/user-banned.tsx")
+const Banned = lazy(() => import("#components/templates/components/user-banned")
   .then(m => ({ default: m.UserBanned }))
 );
 
-const ProfilePrivated = lazy(() => import("#components/templates/profile-privated.tsx")
+const ProfilePrivated = lazy(() => import("#components/templates/components/profile-privated")
   .then(m => ({ default: m.ProfilePrivated }))
 );
 

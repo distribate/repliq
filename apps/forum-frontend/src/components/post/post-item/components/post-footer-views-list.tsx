@@ -3,9 +3,9 @@ import {
   PostViewsQuery,
   postViewsQuery,
 } from "#components/post/post-item/queries/post-views-query.ts";
-import { HoverCardWrapper } from "#components/wrappers/hover-card-wrapper.tsx";
+import { HoverCardWrapper } from "#components/wrappers/components/hover-card-wrapper";
 import { Skeleton } from "@repo/ui/src/components/skeleton.tsx";
-import { UserNickname } from "#components/user/name/nickname.tsx";
+import { UserNickname } from "#components/user/name/components/nickname";
 import { Typography } from "@repo/ui/src/components/typography.tsx";
 import dayjs from "@repo/lib/constants/dayjs-instance.ts";
 import { PostFooterViews } from "#components/post/post-item/components/post-footer-views.tsx";

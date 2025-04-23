@@ -9,6 +9,7 @@ import { UPDATE_RATING_MUTATION_KEY, useUpdateRating } from "#components/ratings
 import { useEffect } from "react";
 import { ratingFilterQuery } from "#components/ratings/queries/ratings-filter-query.ts";
 import { Separator } from "@repo/ui/src/components/separator";
+import { ContentNotFound } from "#components/templates/components/content-not-found";
 
 const RatingsListSkeleton = () => {
   return (
@@ -152,9 +153,8 @@ const RatingListLandsHeader = () => {
 }
 
 export const RatingList = () => {
-  const { data, isLoading, isError } = ratingQuery({
-    type: "playtime", ascending: String(false)
-  })
+  const { data, isLoading, isError } = ratingQuery({ type: "playtime", ascending: String(false) })
+
   const { data: { type: currentType } } = ratingFilterQuery()
   const { updateRatingMutation } = useUpdateRating()
 
@@ -178,13 +178,14 @@ export const RatingList = () => {
 
   if (isError) return <RatingIsEmpty />;
 
-  if (!ratingData) return null;
+  if (!ratingData) return (
+    <ContentNotFound title="Пока ничего нет :/"/>
+  )
 
   return (
     <div className="flex flex-col gap-y-2 w-full">
-      {isLoadingUpdated ? (
-        <RatingsSkeleton />
-      ) : (
+      {isLoadingUpdated && <RatingsSkeleton />}
+      {!isLoadingUpdated && (
         <>
           {currentType === 'parkour' && (
             <div className="flex flex-col gap-2 w-full h-full">

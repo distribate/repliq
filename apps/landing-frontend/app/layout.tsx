@@ -9,9 +9,9 @@ import { Footer } from "#components/layout/default/footer.tsx";
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { QueryProvider } from '#components/providers/query-provider.tsx';
 
-import "../styles/globals.css";
-import "../styles/minecraft-weather.css"
-import "../styles/minecraft-theme.css"
+import "./globals.css";
+import "./minecraft-weather.css"
+import "./minecraft-theme.css"
 
 const font = localFont({
 	src: "../public/fonts/Monocraft.woff2",

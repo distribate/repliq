@@ -7,7 +7,7 @@ import {
   DialogContent,
   DialogTrigger,
 } from "@repo/ui/src/components/dialog.tsx";
-import { UserSettingOption } from "#components/cards/user-setting-option";
+import { UserSettingOption } from "#components/cards/user-setting-option-card/components/user-setting-option";
 import { TerminateAllSessionsModal } from "./terminate-all-sessions-modal";
 import dayjs from "@repo/lib/constants/dayjs-instance";
 import BlockGold from "@repo/assets/images/minecraft/block_gold.webp";

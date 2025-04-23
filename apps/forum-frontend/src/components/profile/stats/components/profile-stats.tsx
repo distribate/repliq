@@ -1,7 +1,7 @@
-import { SectionPrivatedContent } from "#components/templates/section-privated-content.tsx";
+import { SectionPrivatedContent } from "#components/templates/components/section-privated-content";
 import { GeneralStats } from "./general-stats";
 import { LandsStats } from "./lands-stats";
-import { ProfileWrapper } from "#components/wrappers/profile-wrapper";
+import { ProfileWrapper } from "#components/wrappers/components/profile-wrapper";
 import { Typography } from "@repo/ui/src/components/typography";
 
 type UserProfileGameStatsProps = {

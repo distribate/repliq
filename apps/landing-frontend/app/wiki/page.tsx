@@ -18,7 +18,8 @@ export const metadata = {
 	robots: "index, follow",
 	canonical: "https://fasberry.su/wiki",
 	openGraph: {
-		title: "Википедия Fasberry Проекта | Гид для игроков",
+		siteName: "Википедия Fasberry",
+		title: "Википедия Fasberry",
 		description:
 			"Исследуй нашу википедию проекта и узнай всё: от правил и гайдов до уникальных функций сервера. Твое приключение начинается здесь!",
 		url: "https://fasberry.su/wiki",

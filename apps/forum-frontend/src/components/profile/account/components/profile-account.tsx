@@ -1,8 +1,8 @@
 import { ProfileAccountSocials } from "./socials/profile-account-socials";
 import { ProfileAccountReferals } from "./refs/profile-account-refs";
-import { SectionPrivatedContent } from "#components/templates/section-privated-content";
+import { SectionPrivatedContent } from "#components/templates/components/section-privated-content";
 import { ProfileAccountStats } from "./stats/profile-account-stats-list";
-import { ProfileWrapper } from "#components/wrappers/profile-wrapper";
+import { ProfileWrapper } from "#components/wrappers/components/profile-wrapper";
 
 export const UserProfileAccount = () => {
   return (

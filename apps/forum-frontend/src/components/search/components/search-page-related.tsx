@@ -6,7 +6,7 @@ import { Link, useNavigate } from "@tanstack/react-router";
 import { THREAD_URL, USER_URL } from "@repo/shared/constants/routes.ts";
 import { Suspense } from "react";
 import { Avatar } from "#components/user/avatar/components/avatar.tsx";
-import { UserNickname } from "#components/user/name/nickname.tsx";
+import { UserNickname } from "#components/user/name/components/nickname";
 
 const SearchPageRelatedSkeleton = () => {
   return (

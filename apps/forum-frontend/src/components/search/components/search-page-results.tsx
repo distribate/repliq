@@ -6,7 +6,6 @@ import {
 } from "#components/search/queries/search-page-query.ts";
 import { SearchPageUsers } from "#components/search/components/search-page-users.tsx";
 import { SearchPageThreads } from "#components/search/components/search-page-threads.tsx";
-import { SearchType } from "#components/sidebar/desktop/components/sidebar-content/search/queries/search-query.ts";
 import { SearchPageAll } from "#components/search/components/search-page-all.tsx";
 import { useMutationState, useQueryClient } from "@tanstack/react-query";
 import { SEARCH_PAGE_RESULTS_MUTATION_KEY } from "#components/search/hooks/use-search-page.ts";
@@ -15,7 +14,7 @@ import { Suspense, useEffect } from "react";
 import { SEARCH_PAGE_LIMIT } from "@repo/shared/constants/limits.ts";
 
 type SearchPageResultsProps = {
-  type: SearchType;
+  type: "users" | "threads" | "all";
 };
 
 const SearchPageResultsSkeleton = () => {

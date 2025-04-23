@@ -1,9 +1,9 @@
 import { Typography } from "@repo/ui/src/components/typography.tsx";
 import { HoverCardItem } from "@repo/ui/src/components/hover-card.tsx";
 import Barrier from "@repo/assets/images/minecraft/barrier.webp";
-import { ConfirmationActionModalTemplate } from "#components/templates/confirmation-action-modal-template.tsx";
-import { ConfirmationButton } from "#components/buttons/confirmation-action-button.tsx";
-import { DynamicModal } from "../../dynamic-modal.tsx";
+import { ConfirmationActionModalTemplate } from "#components/modals/confirmation-modal/components/confirmation-action-modal.tsx";
+import { ConfirmationButton } from "#components/modals/confirmation-modal/components/confirmation-action-button.tsx";
+import { DynamicModal } from "../../dynamic-modal/components/dynamic-modal.tsx";
 import { DialogClose } from "@repo/ui/src/components/dialog.tsx";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { authClient } from "@repo/shared/api/auth-client.ts";

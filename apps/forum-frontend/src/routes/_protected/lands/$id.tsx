@@ -1,5 +1,5 @@
 import { Avatar } from '#components/user/avatar/components/avatar'
-import { BlockWrapper } from '#components/wrappers/block-wrapper'
+import { BlockWrapper } from '#components/wrappers/components/block-wrapper'
 import dayjs from '@repo/lib/constants/dayjs-instance'
 import {
   Tabs,
@@ -17,8 +17,8 @@ import { getLandById } from '#components/land/queries/get-land'
 import { AnotherLandsByOwner } from "#components/land/components/another-lands"
 import { Suspense } from 'react'
 import { Skeleton } from '@repo/ui/src/components/skeleton'
-import { ContentNotFound } from '#components/templates/content-not-found'
-import { ColoredText } from '#components/wrappers/colored-text-wrapper'
+import { ContentNotFound } from '#components/templates/components/content-not-found'
+import { ColoredText } from '#components/wrappers/components/colored-text-wrapper'
 
 export const Route = createFileRoute('/_protected/lands/$id')({
   component: RouteComponent,

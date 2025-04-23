@@ -1,10 +1,10 @@
 import { ReactNode } from "react";
-import { DynamicModal } from "../../../../dynamic-modal.tsx";
-import { ConfirmationActionModalTemplate } from "#components/templates/confirmation-action-modal-template.tsx";
-import { ConfirmationButton } from "#components/buttons/confirmation-action-button.tsx";
+import { DynamicModal } from "../../../../dynamic-modal/components/dynamic-modal.tsx";
+import { ConfirmationActionModalTemplate } from "#components/modals/confirmation-modal/components/confirmation-action-modal.tsx";
+import { ConfirmationButton } from "#components/modals/confirmation-modal/components/confirmation-action-button.tsx";
 import { LOGOUT_MUTATION_KEY, useLogout } from "../hooks/use-logout.ts";
 import { DialogClose } from "@repo/ui/src/components/dialog.tsx";
-import { DialogLoader } from "#components/templates/dialog-loader.tsx";
+import { DialogLoader } from "#components/templates/components/dialog-loader.tsx";
 
 type LogoutModal = {
   trigger: ReactNode;

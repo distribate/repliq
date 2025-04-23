@@ -4,15 +4,15 @@ import Photo from "@repo/assets/images/minecraft/photo.webp";
 import { ProfileDescriptionChangeModal } from "#components/modals/user-settings/components/profile-description-change-modal";
 import { Button } from "@repo/ui/src/components/button.tsx";
 import { getUser } from "@repo/lib/helpers/get-user.ts";
-import { MoreWrapper } from "#components/wrappers/more-wrapper.tsx";
+import { MoreWrapper } from "#components/wrappers/components/more-wrapper";
 import { Separator } from "@repo/ui/src/components/separator.tsx";
-import { FriendButton } from "#components/buttons/friend-button.tsx";
 import { ReportCreateModal } from "#components/modals/action-confirmation/components/report/components/report-create-modal.tsx";
 import { BlockUserModal } from "#components/modals/action-confirmation/components/block-user/components/block-user-modal.tsx";
-import { ProfileBackgroundUpdateModal } from "#components/modals/custom/profile-background-update-modal.tsx";
-import { DeleteCoverModal } from "#components/modals/action-confirmation/components/delete-cover/delete-cover-modal.tsx";
+import { ProfileBackgroundUpdateModal } from "#components/modals/custom/components/profile-background-update-modal";
+import { DeleteCoverModal } from "#components/modals/action-confirmation/components/delete-cover/delete-cover/delete-cover-modal";
 import { Dialog, DialogContent, DialogTrigger } from "@repo/ui/src/components/dialog";
 import { Typography } from "@repo/ui/src/components/typography";
+import { FriendButton } from "#components/friend/components/friend-button/components/friend-button";
 
 const userCoverPanelVariants = cva(
   "relative z-[3] flex w-full lg:w-fit items-center bg-transparent gap-4",
@@ -63,10 +63,10 @@ export const UserCoverPanel = ({
       ) : (
         <div className="flex items-center bg-shark-50/10 w-full backdrop-blur-lg h-10 rounded-md overflow-hidden">
           <Dialog>
-            <DialogTrigger className="w-1/2">
-              <Button className="w-full rounded-r-none px-6 hover:bg-shark-800">
+            <DialogTrigger className="w-1/2 h-full">
+              <div className="flex items-center justify-center w-full h-full rounded-r-none px-6 hover:bg-shark-800">
                 <img src={Photo} width={24} height={24} alt="" />
-              </Button>
+              </div>
             </DialogTrigger>
             <DialogContent>
               <div className="flex flex-col gap-4 items-center justify-center w-full h-full">

@@ -8,7 +8,7 @@ import Bell from "@repo/assets/images/minecraft/bell.webp";
 import { useUpdateUserSettings } from "@repo/lib/hooks/use-update-user-settings.ts";
 import { getUser } from "@repo/lib/helpers/get-user.ts";
 import Board from "@repo/assets/images/minecraft/chalkboard_board.webp"
-import { UserSettingOption } from "#components/cards/user-setting-option";
+import { UserSettingOption } from "#components/cards/user-setting-option-card/components/user-setting-option";
 import { UserSettingsBack } from "#components/modals/user-settings/components/user-settings-back";
 import FutureChickenMini from "@repo/assets/images/minecraft/future_chicken_mini.png"
 

@@ -22,6 +22,7 @@ export const metadata = {
   robots: 'index, follow',
   canonical: 'https://fasberry.su/shop',
   openGraph: {
+    siteName: 'Магазин Fasberry',
     title: 'Магазин | Fasberry',
     description:
       'Получите доступ к уникальным привилегиям, товарам и монетам на нашем сервере. Ваша поддержка помогает проекту развиваться!',

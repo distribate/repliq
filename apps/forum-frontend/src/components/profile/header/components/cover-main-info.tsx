@@ -1,6 +1,6 @@
-import { UserNickname } from "#components/user/name/nickname.tsx";
+import { UserNickname } from "#components/user/name/components/nickname";
 import { UserDonate } from "#components/user/donate/components/donate.tsx";
-import { UserRealName } from "#components/user/real-name/real-name.tsx";
+import { UserRealName } from "#components/user/real-name/components/real-name";
 import { useQueryClient } from "@tanstack/react-query";
 import { Typography } from "@repo/ui/src/components/typography.tsx";
 import { REQUESTED_USER_QUERY_KEY } from "@repo/lib/queries/requested-user-query.ts";

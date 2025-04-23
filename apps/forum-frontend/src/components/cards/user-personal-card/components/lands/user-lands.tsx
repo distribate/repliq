@@ -1,6 +1,6 @@
 import { UserSettingsBack } from "#components/modals/user-settings/components/user-settings-back"
 import { useUserSettingsModal } from "#components/modals/user-settings/hooks/use-user-settings-modal"
-import { ContentNotFound } from "#components/templates/content-not-found"
+import { ContentNotFound } from "#components/templates/components/content-not-found"
 import { getUser } from "@repo/lib/helpers/get-user"
 import { createQueryKey } from "@repo/lib/helpers/query-key-builder"
 import { playerClient } from "@repo/shared/api/minecraft-client"

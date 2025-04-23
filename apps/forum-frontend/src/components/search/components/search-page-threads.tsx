@@ -1,11 +1,11 @@
-import { ContentNotFound } from "#components/templates/content-not-found.tsx";
+import { ContentNotFound } from "#components/templates/components/content-not-found";
 import { searchPageQuery } from "#components/search/queries/search-page-query.ts";
 import { Typography } from "@repo/ui/src/components/typography.tsx";
-import { SearchThread } from "#components/sidebar/desktop/components/sidebar-content/search/queries/search-query.ts";
 import { Link } from "@tanstack/react-router";
 import { THREAD_URL } from "@repo/shared/constants/routes.ts";
 import { filterSearchResults } from "#components/search/helpers/filter-search-results.ts";
 import { Text } from "lucide-react";
+import { SearchThread } from "../queries/get-search-results";
 
 export const SearchPageThread = ({ title, id }: SearchThread) => {
   return (

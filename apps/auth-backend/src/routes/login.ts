@@ -31,20 +31,20 @@ function setSessionCookies({
 }: SetCookieOpts) {
   setCookie(ctx, SESSION_KEY, token, {
     httpOnly: true,
-    sameSite: "None",
-    secure: true,
+    sameSite: isProduction ? "None" : "Lax",
+    secure: isProduction,
     expires,
     path: "/",
-    domain: SESSION_DOMAIN
+    domain: isProduction ? SESSION_DOMAIN : undefined
   })
 
   setCookie(ctx, `user`, nickname, {
     httpOnly: true,
-    sameSite: "None",
-    secure: true,
+    sameSite: isProduction ? "None" : "Lax",
+    secure: isProduction,
     expires,
     path: "/",
-    domain: SESSION_DOMAIN
+    domain: isProduction ? SESSION_DOMAIN : undefined
   })
 }
 
@@ -85,6 +85,8 @@ export const loginRoute = new Hono()
       })
 
       const expires = new Date(createdSession.expires_at)
+
+      console.log(createdSession)
 
       setSessionCookies({ ctx, expires, nickname, token })
 

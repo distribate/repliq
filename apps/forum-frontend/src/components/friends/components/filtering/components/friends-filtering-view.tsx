@@ -1,8 +1,8 @@
 import { LayoutGrid } from "lucide-react";
 import { Typography } from "@repo/ui/src/components/typography.tsx";
 import { DropdownMenuItem } from "@repo/ui/src/components/dropdown-menu.tsx";
-import { DropdownWrapper } from "#components/wrappers/dropdown-wrapper.tsx";
-import { SelectedWrapper } from "#components/wrappers/selected-wrapper.tsx";
+import { DropdownWrapper } from "#components/wrappers/components/dropdown-wrapper.tsx";
+import { SelectedWrapper } from "#components/wrappers/components/selected-wrapper.tsx";
 import {
   FRIENDS_FILTERING_QUERY_KEY,
   FriendsFilteringQuery,
@@ -10,7 +10,7 @@ import {
   FriendsFilteringViewType,
 } from "../queries/friends-filtering-query.ts";
 import { isValue } from "@repo/lib/helpers/check-is-value.ts";
-import { VIEW_COMPONENTS_TYPE } from "#components/friends/components/filtering/contants/view-components-type.ts";
+import { VIEW_COMPONENTS_TYPE } from "#components/friends/components/filtering/constants/view-components-type.ts";
 import { useQueryClient } from "@tanstack/react-query";
 
 export const FriendsFilteringView = () => {

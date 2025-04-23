@@ -11,13 +11,13 @@ import { userSettingsQuery, UserSettingsQuery } from "#components/modals/user-se
 import { useUserSettingsModal } from "../hooks/use-user-settings-modal";
 import { UserPersonalCardHeader } from "#components/modals/user-settings/components/user-header";
 import { Link } from "@tanstack/react-router";
-import { UserSettingOption } from "#components/cards/user-setting-option";
+import { UserSettingOption } from "#components/cards/user-setting-option-card/components/user-setting-option";
 import Campfire from "@repo/assets/images/minecraft/campfire.webp";
 import BookAndQuill from "@repo/assets/images/minecraft/book_quill.webp";
 import DragonBreath from "@repo/assets/images/minecraft/dragon_breath.webp";
 import GrassBlock from "@repo/assets/images/minecraft/grass_block.webp";
 import FishingRod from "@repo/assets/images/minecraft/fishing_rod.webp";
-import { BuyDonateModal } from "../../custom/buy-donate-modal";
+import { BuyDonateModal } from "../../custom/components/buy-donate-modal";
 import Portfolio from "@repo/assets/images/minecraft/portfolio.webp";
 import MinecartWithChest from "@repo/assets/images/minecraft/minecart_chest.webp";
 import { UserAccountSettingsCard } from "./user-account-settings";

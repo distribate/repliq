@@ -1,7 +1,7 @@
 import { ChangeEvent, forwardRef, useState } from "react";
 import { Input } from "@repo/ui/src/components/input.tsx";
 import { Typography } from "@repo/ui/src/components/typography.tsx";
-import { DropdownWrapper } from "#components/wrappers/dropdown-wrapper.tsx";
+import { DropdownWrapper } from "#components/wrappers/components/dropdown-wrapper";
 import { DropdownMenuItem } from "@repo/ui/src/components/dropdown-menu.tsx";
 import { useQueryClient } from "@tanstack/react-query";
 import {
@@ -16,7 +16,7 @@ import {
 } from "#components/profile/posts/posts/constants/posts-filtering.ts";
 import { UserEntity } from "@repo/types/entities/entities-type.ts";
 import { useUpdatePosts } from "../hooks/use-update-posts";
-import { SelectedWrapper } from "#components/wrappers/selected-wrapper.tsx";
+import { SelectedWrapper } from "#components/wrappers/components/selected-wrapper";
 import { ArrowDownNarrowWide } from "lucide-react";
 
 type ProfilePostsFilteringProps = Pick<UserEntity, "nickname">;

@@ -2,11 +2,9 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { deleteFriendRequest } from "../queries/delete-friend-request.ts";
 import { toast } from "sonner";
 import { acceptFriendRequest } from "../queries/accept-friend-request.ts";
-import { USER_FRIEND_DELETE_MUTATION_KEY } from "#components/friend/hooks/use-control-friend.ts";
+import { ControFriendShip, ControlFriendRequests, USER_FRIEND_DELETE_MUTATION_KEY } from "#components/friend/hooks/use-control-friend.ts";
 import { createFriendRequest } from "#components/friend/queries/create-friend-request.ts";
 import { deleteFriend } from "#components/friend/queries/delete-friend.ts";
-import { FRIEND_STATUS_QUERY_KEY } from "#components/buttons/friend-button.tsx";
-import { ControFriendShip, ControlFriendRequests } from "../types/friend-request-types.ts";
 import { getUser } from "@repo/lib/helpers/get-user.ts";
 import { GetFriendsResponse } from "@repo/types/schemas/friend/friend-types.ts";
 import { useRouter } from "@tanstack/react-router";
@@ -17,6 +15,7 @@ import { REQUESTS_INCOMING_QUERY_KEY } from "#components/friends/queries/request
 import { FRIENDS_COUNT_QUERY_KEY } from "#components/friends/queries/friends-count-query.ts";
 import { REQUESTS_OUTGOING_QUERY_KEY } from "#components/friends/queries/requests-outgoing-query.ts";
 import { FRIENDS_QUERY_KEY } from "#components/friends/queries/friends-query.ts";
+import { FRIEND_STATUS_QUERY_KEY } from "../components/friend-button/queries/friend-status-query.ts";
 
 const friendRequestStatus: Record<string, string> = {
   "User does not have accept to send friend request": "Пользователь отключил заявки в друзья",

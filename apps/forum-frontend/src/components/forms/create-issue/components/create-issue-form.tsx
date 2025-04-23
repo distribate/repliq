@@ -8,7 +8,7 @@ import { Button } from "@repo/ui/src/components/button";
 import { Typography } from "@repo/ui/src/components/typography";
 import { HTMLAttributes } from "react";
 import Mealing from "@repo/assets/images/mealing.jpg";
-import { BlockWrapper } from "#components/wrappers/block-wrapper.tsx";
+import { BlockWrapper } from "#components/wrappers/components/block-wrapper";
 import { MessageSquareWarning } from "lucide-react";
 import AutogrowingTextarea from "@repo/ui/src/components/autogrowing-textarea";
 import { ISSUE_MAX_DESCRIPTION_LIMIT } from "@repo/shared/constants/limits";

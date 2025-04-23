@@ -6,8 +6,8 @@ import {
   POSTS_QUERY_KEY,
   PostsQueryResponse,
 } from "#components/profile/posts/posts/queries/posts-query.ts";
-import { DropdownWrapper } from "#components/wrappers/dropdown-wrapper.tsx";
-import { PostAdditionalModal } from "#components/modals/custom/post-additional-modal.tsx";
+import { DropdownWrapper } from "#components/wrappers/components/dropdown-wrapper";
+import { PostAdditionalModal } from "#components/modals/custom/components/post-additional-modal";
 import { PostEntity, UserEntity } from "@repo/types/entities/entities-type.ts";
 import { useControlPost } from "#components/post/post-item/hooks/use-control-post.ts";
 import { getUser } from "@repo/lib/helpers/get-user.ts";

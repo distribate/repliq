@@ -20,14 +20,15 @@ const SEARCH_PAGE_FILTER: SearchPageFilter[] = [
   { title: "По игроку", value: "user" },
 ];
 
-export const SearchPageFilter = ({ type }: SearchPageFilterProps) => {
+export const SearchPageFilter = ({ 
+  type 
+}: SearchPageFilterProps) => {
   const { setValueMutation } = useSearchPage();
   const { data: searchState } = searchPageQuery();
 
-  const handleSearchFilter = (t: Pick<SearchPageFilter, "value">["value"]) => setValueMutation.mutate({ type: t });
-
-  const isSearchType = isValue(searchState.type);
-
+  const handleSearchFilter = (t: Pick<SearchPageFilter, "value">["value"]) => 
+    setValueMutation.mutate({ type: t });
+  
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -54,7 +55,7 @@ export const SearchPageFilter = ({ type }: SearchPageFilterProps) => {
                   handleSearchFilter(option.value);
                 }}
               >
-                <Typography state={isSearchType(option.value) ? "active" : "default"}>
+                <Typography state={isValue(searchState.type)(option.value) ? "active" : "default"}>
                   {option.title}
                 </Typography>
               </DropdownMenuItem>

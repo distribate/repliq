@@ -1,10 +1,50 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { REPORT_QUERY_KEY, ReportQuery } from "#components/report/queries/report-query.ts";
-import { createReport } from "#components/report/queries/post-report.ts";
+import { REPORT_QUERY_KEY, ReportQuery } from "#components/modals/action-confirmation/components/report/queries/report-query";
 import { toast } from "sonner";
 import { getUser } from "@repo/lib/helpers/get-user.ts";
+import { ReportType } from "@repo/types/db/forum-database-types";
+import { ReportReasonEnum } from "@repo/types/entities/entities-type";
+import { forumReportClient } from "@repo/shared/api/forum-client";
 
 export const CREATE_REPORT_MUTATION_KEY = ["create-report"];
+
+export type CreateReport = {
+  report_type: ReportType;
+  reason: ReportReasonEnum;
+  description?: string
+} & {
+  targetId: string | number;
+  targetNickname: string;
+  targetContent: string
+};
+
+async function createReport({
+  reason, report_type, targetContent, targetId, targetNickname, description,
+}: CreateReport) {
+  const reported_item = {
+    targetId,
+    targetContent,
+    targetNickname,
+  };
+
+  const res = await forumReportClient.report["create-report"].$post({
+    json: {
+      reason,
+      report_type,
+      reported_item: JSON.stringify(reported_item),
+      target_user_nickname: targetNickname,
+      description,
+    }
+  });
+
+  const data = await res.json();
+
+  if ("error" in data) {
+    return null
+  }
+
+  return data;
+}
 
 export const useCreateReport = () => {
   const qc = useQueryClient();

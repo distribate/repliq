@@ -10,10 +10,7 @@ import { Button } from '@repo/landing-ui/src/button';
 import { SpawnCarousel } from '#components/intro/spawn-carousel';
 import dynamic from 'next/dynamic';
 
-const ContactsSection = dynamic(() =>
-  import('#components/contacts/contacts-section')
-    .then(m => m.ContactsSection)
-);
+const ContactsSection = dynamic(() => import('#components/contacts/contacts-section').then(m => m.ContactsSection));
 
 export const metadata = {
   title: 'Главная | Fasberry',
@@ -36,7 +33,8 @@ export const metadata = {
   robots: "index, follow",
   canonical: "https://fasberry.su/",
   openGraph: {
-    title: "Fasberry Сервер | Создай свой уникальный мир",
+    siteName: "Fasberry Project",
+    title: "Fasberry Project",
     description:
       "На нашем Fasberry-сервере ты найдешь всё: новые вещи, уникальные квесты и ламповую атмосферу. Присоединяйся прямо сейчас!",
     url: "https://fasberry.su/",
@@ -64,7 +62,7 @@ export default async function Main() {
     <MainLayoutPage variant="with_section">
       <div
         id="title"
-        className={`flex flex-col relative items-start full-screen-section h-[80vh] lg:h-screen justify-center`}
+        className="flex flex-col relative items-start full-screen-section h-[80vh] lg:h-screen justify-center"
       >
         <div className="absolute top-0 right-0 left-0 overflow-hidden h-full">
           <IntroBackgroundImage />

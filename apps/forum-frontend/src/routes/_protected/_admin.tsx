@@ -1,4 +1,4 @@
-import { AdminSections } from '#components/admin/navigation/admin-navigation-badge';
+import { AdminSections } from '#components/admin/navigation/components/admin-navigation-badge';
 import { forumUserClient } from '@repo/shared/api/forum-client'
 import { createFileRoute, Outlet, redirect } from '@tanstack/react-router'
 

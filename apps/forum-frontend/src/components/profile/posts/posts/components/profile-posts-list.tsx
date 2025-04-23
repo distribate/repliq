@@ -1,6 +1,6 @@
 import { postsQuery } from '../queries/posts-query.ts';
 import { Skeleton } from '@repo/ui/src/components/skeleton.tsx';
-import { ContentNotFound } from '#components/templates/content-not-found.tsx';
+import { ContentNotFound } from '#components/templates/components/content-not-found.tsx';
 import {
   ProfilePostsFiltering,
 } from '#components/profile/posts/posts/components/profile-posts-filtering.tsx';
@@ -11,10 +11,10 @@ import { UserEntity } from '@repo/types/entities/entities-type.ts';
 import { Separator } from '@repo/ui/src/components/separator.tsx';
 import { useInView } from 'react-intersection-observer';
 import { useEffect } from 'react';
-import { SomethingError } from '#components/templates/something-error.tsx';
+import { SomethingError } from '#components/templates/components/something-error.tsx';
 import { useMutationState } from '@tanstack/react-query';
 import { UPDATE_POSTS_MUTATION_KEY, useUpdatePosts } from '../hooks/use-update-posts.ts';
-import { SectionSkeleton } from '#components/templates/section-skeleton.tsx';
+import { SectionSkeleton } from '#components/templates/components/section-skeleton.tsx';
 
 const PostsSkeleton = () => {
   return (

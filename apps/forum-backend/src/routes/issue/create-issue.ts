@@ -30,5 +30,4 @@ export const createIssueRoute = new Hono()
 
       return ctx.json({ error: throwError(e) }, 500)
     }
-  }
-  )
+  })

@@ -23,6 +23,7 @@ export const ratingQuery = ({
 
       return res;
     },
+    retry: 2,
     refetchOnWindowFocus: false,
     placeholderData: keepPreviousData,
   })

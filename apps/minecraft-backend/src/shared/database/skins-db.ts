@@ -16,6 +16,6 @@ export const skinsDB = new Kysely<skinsDBType>({
     password: Bun.env.MYSQL_ROOT_PASSWORD!,
     port: Number(Bun.env.SKINS_MYSQL_PORT!),
     database: "skins_proxy",
-    host: "5.83.140.56"
+    host: "127.0.0.1"
   })
 });

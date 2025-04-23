@@ -1,10 +1,8 @@
 import { usersQuery } from "../queries/users-query.ts";
 import { Skeleton } from "@repo/ui/src/components/skeleton.tsx";
-import { UserDashboardCard } from "../../../../cards/components/user-dashboard-card/user-dashboard-card.tsx";
 import { useEffect } from "react";
 import { useSearch } from "@tanstack/react-router";
 import { Separator } from "@repo/ui/src/components/separator.tsx";
-import { DashboardUsersListPagination } from "./dashboard-users-list-pagination.tsx";
 
 export const USERS_QUERY_KEY = "users-page";
 
@@ -36,11 +34,7 @@ export const DashboardUsersList = () => {
   const start = Number(searchParams) * 6;
   const end = start + 6;
 
-  const {
-    data: users,
-    isLoading,
-    refetch,
-  } = usersQuery({
+  const { data: users, isLoading, refetch } = usersQuery({
     range: [start, end],
     limit: LIMIT_USERS_PER_PAGE,
   });

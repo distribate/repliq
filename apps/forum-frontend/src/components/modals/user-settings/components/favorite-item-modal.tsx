@@ -8,7 +8,7 @@ import {
 } from "@repo/ui/src/components/dialog.tsx";
 import { getUser } from "@repo/lib/helpers/get-user.ts";
 import DiamondPickaxe from "@repo/assets/images/minecraft/diamond_pickaxe.webp";
-import { UserSettingOption } from "#components/cards/user-setting-option";
+import { UserSettingOption } from "#components/cards/user-setting-option-card/components/user-setting-option";
 
 export const FavoriteItemModal = () => {
   const { nickname } = getUser();

@@ -2,12 +2,12 @@
 import { HoverCardItem } from "@repo/ui/src/components/hover-card.tsx";
 import { Ban } from "lucide-react";
 import { Typography } from "@repo/ui/src/components/typography.tsx";
-import { ConfirmationButton } from "#components/buttons/confirmation-action-button.tsx";
+import { ConfirmationButton } from "#components/modals/confirmation-modal/components/confirmation-action-button";
 import { DialogClose } from "@repo/ui/src/components/dialog.tsx";
-import { ConfirmationActionModalTemplate } from "#components/templates/confirmation-action-modal-template.tsx";
+import { ConfirmationActionModalTemplate } from "#components/modals/confirmation-modal/components/confirmation-action-modal";
 import { blockedUserQuery } from "../queries/blocked-user-query";
 import { BLOCK_USER_MUTATION_KEY, UNBLOCK_USER_MUTATION_KEY, useBlockUser } from "../hooks/use-block-user";
-import { DynamicModal } from "#components/modals/dynamic-modal";
+import { DynamicModal } from "#components/modals/dynamic-modal/components/dynamic-modal";
 
 type BlockUserModalProps = {
   recipient: string;

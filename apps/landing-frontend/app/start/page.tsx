@@ -17,9 +17,10 @@ export const metadata = {
   robots: "index, follow",
   canonical: "https://fasberry.su/start",
   openGraph: {
+    siteName: "Начать играть на Fasberry",
     title: "Начать играть",
     description:
-      "Начать играть на Fasberry сервере.",
+      "Начать играть на Fasberry.",
     url: "https://fasberry.su/start",
     type: "website",
     images: [

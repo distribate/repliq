@@ -1,8 +1,8 @@
 import { Separator } from "@repo/ui/src/components/separator.tsx";
 import { Typography } from "@repo/ui/src/components/typography.tsx";
 import { Avatar } from '#components/user/avatar/components/avatar.tsx';
-import { UserNickname } from "#components/user/name/nickname.tsx";
-import { UserRealName } from "#components/user/real-name/real-name.tsx";
+import { UserNickname } from "#components/user/name/components/nickname.tsx";
+import { UserRealName } from "#components/user/real-name/components/real-name.tsx";
 import { UserDonate } from "#components/user/donate/components/donate.tsx";
 import { userCardQuery } from "../queries/user-main-card-query.ts";
 import Glass from "@repo/assets/images/minecraft/glass.webp";
@@ -16,7 +16,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@repo/ui/src/component
 import { InferResponseType } from "hono/client";
 import { forumUserClient } from "@repo/shared/api/forum-client.ts";
 import { Skeleton } from "@repo/ui/src/components/skeleton.tsx";
-import { FriendButton } from "#components/buttons/friend-button.tsx";
+import { FriendButton } from "#components/friend/components/friend-button/components/friend-button.tsx";
 
 const UserSummaryCardPrivated = lazy(() =>
   import("./user-summary-card-privated.tsx").then(m => ({ default: m.UserSummaryCardPrivated }))

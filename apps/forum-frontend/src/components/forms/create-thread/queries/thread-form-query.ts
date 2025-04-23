@@ -1,8 +1,8 @@
 import { useQuery } from "@tanstack/react-query";
-import { Descendant } from "slate";
 import { createQueryKey } from "@repo/lib/helpers/query-key-builder.ts";
 import { createThreadSchema } from "@repo/types/schemas/thread/create-thread-schema.ts";
 import { z } from "zod";
+import { Value } from "@udecode/plate";
 
 export const THREAD_FORM_QUERY = createQueryKey("ui", ["create-thread-form"]);
 
@@ -13,7 +13,7 @@ export type ThreadFormQuery = Omit<z.infer<typeof createThreadSchema>,
   | "tags"
   | "visibility"
 > & {
-  content: Descendant[]
+  content: Value
   images: string[] | null
   tags: string[] | null
   visibility: "all" | "friends"

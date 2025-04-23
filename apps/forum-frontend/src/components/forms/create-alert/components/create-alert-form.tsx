@@ -4,7 +4,9 @@ import { Button } from "@repo/ui/src/components/button.tsx";
 import { Typography } from "@repo/ui/src/components/typography.tsx";
 import { DialogClose } from "@repo/ui/src/components/dialog.tsx";
 import { useAlerts } from "../hooks/use-alerts.ts";
-import { AlertValues } from "../types/alert-values-types.ts";
+import { AlertEntity } from "@repo/types/entities/entities-type.ts";
+
+export type AlertValues = Pick<AlertEntity, "title" | "description" | "link">;
 
 export const AlertCreateForm = () => {
   const { addAlertMutation } = useAlerts();

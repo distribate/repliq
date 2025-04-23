@@ -20,9 +20,10 @@ export const metadata = {
 	robots: "index, follow",
 	canonical: "https://fasberry.su/news",
 	openGraph: {
-		title: "Новости сервера Fasberry | Будьте в курсе событий",
+		siteName: "Новости сервера Fasberry",
+		title: "Новости сервера Fasberry",
 		description:
-			"Последние новости и обновления с нашего сервера Fasberry. Узнайте о новых возможностях, ивентах и акциях!",
+			"Последние новости и обновления с нашего сервера Fasberry. Узнайте о новых возможностях и ивентах!",
 		url: "https://fasberry.su/news",
 		type: "website",
 		images: [

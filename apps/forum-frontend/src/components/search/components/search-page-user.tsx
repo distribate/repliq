@@ -1,6 +1,6 @@
 import { SearchUser } from "#components/sidebar/desktop/components/sidebar-content/search/queries/search-query.ts";
 import { Avatar } from "#components/user/avatar/components/avatar.tsx";
-import { UserNickname } from "#components/user/name/nickname.tsx";
+import { UserNickname } from "#components/user/name/components/nickname";
 import { USER_URL } from "@repo/shared/constants/routes";
 import { Skeleton } from "@repo/ui/src/components/skeleton";
 import { Link } from "@tanstack/react-router";

@@ -4,8 +4,7 @@ import {
   searchPageQuery,
   SearchPageQuery,
 } from "#components/search/queries/search-page-query.ts";
-import { SearchType } from "#components/sidebar/desktop/components/sidebar-content/search/queries/search-query.ts";
-import { getSearchResults } from "#components/search/queries/get-search-results.ts";
+import { getSearchResults, SearchUser } from "#components/search/queries/get-search-results.ts";
 import { SEARCH_PAGE_LIMIT } from "@repo/shared/constants/limits.ts";
 import { useSearch } from "@tanstack/react-router"
 import { useEffect } from "react";
@@ -24,8 +23,8 @@ export const useSearchPage = () => {
     from: "/_protected/search",
     select: (params) => {
       return {
-        type: params.type as SearchType,
-        user: params.user as string
+        type: params.type,
+        user: params.user as SearchUser
       }
     }
   });

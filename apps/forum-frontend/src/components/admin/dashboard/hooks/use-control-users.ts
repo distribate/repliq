@@ -1,6 +1,12 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { ADMIN_USERS_QUERY_KEY } from "../queries/users-query.ts";
-import { BanUser } from "../types/ban-user-types.ts";
+import { BanEntity } from "@repo/types/entities/entities-type.ts";
+
+type BanUser = {
+  type: "ban" | "unban";
+  nickname: string;
+  parameters?: Partial<Omit<BanEntity, "id" | "created_at" | "nickname">>;
+};
 
 export const useControlUsers = () => {
   const qc = useQueryClient();

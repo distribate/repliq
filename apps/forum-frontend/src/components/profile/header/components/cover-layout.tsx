@@ -3,7 +3,7 @@ import { useCover } from "#components/profile/header/hooks/use-cover.ts";
 import { coverQuery } from "#components/profile/header/queries/cover-query.ts";
 import { UserCover } from "./cover";
 import { Suspense } from "react";
-import { UserCoverSkeleton } from "#components/skeletons/user-cover-skeleton.tsx";
+import { UserCoverSkeleton } from "#components/skeletons/components/user-cover-skeleton";
 import { requestedUserQuery } from "@repo/lib/queries/requested-user-query";
 import { Typography } from "@repo/ui/src/components/typography";
 

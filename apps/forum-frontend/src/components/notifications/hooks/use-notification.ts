@@ -1,10 +1,24 @@
-import { checkNotification } from "#components/notifications/queries/check-notification.ts";
 import { GetNotificationsResponse } from "#components/notifications/queries/get-notifications.ts";
 import { NOTIFICATIONS_QUERY_KEY } from "#components/notifications/queries/notifications-query.ts";
 import { USER_GLOBAL_OPTIONS_QUERY_KEY } from "@repo/lib/queries/user-global-options-query";
-import { Notifications } from "@repo/types/db/forum-database-types";
+import { forumUserClient } from "@repo/shared/api/forum-client";
 import { useMutation, useQueryClient } from "@tanstack/react-query"
-import { Selectable } from "kysely"
+
+const checkNotification = async (notification_id: string) => {
+  const res = await forumUserClient.user["check-notification"].$post({
+    json: {
+      notification_id
+    }
+  })
+
+  const data = await res.json()
+
+  if (!data || "error" in data) {
+    return { error: data.error };
+  }
+
+  return data;
+}
 
 export const useNotification = () => {
   const qc = useQueryClient()

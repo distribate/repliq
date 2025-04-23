@@ -17,5 +17,6 @@ export const userGameStatusQuery = (nickname: string, enabled: boolean) => useQu
     return { ...res, issued_date: issuedTime }
   },
   refetchOnWindowFocus: true,
+  retry: 1,
   enabled
 });

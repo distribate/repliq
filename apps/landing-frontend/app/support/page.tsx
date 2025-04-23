@@ -24,7 +24,8 @@ export const metadata = {
 	robots: "index, follow",
 	canonical: "https://fasberry.su/support",
 	openGraph: {
-		title: "Поддержка проекта Fasberry | Вложите свой вклад",
+		siteName: "Поддержка проекта Fasberry",
+		title: "Поддержка проекта Fasberry",
 		description:
 			"Станьте частью нашего проекта Fasberry, поддержав нас! Ваши пожертвования помогают развивать сервера и создавать новый контент.",
 		url: "https://example.com/support",

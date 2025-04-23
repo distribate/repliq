@@ -6,14 +6,14 @@ import {
   DialogTrigger,
 } from "@repo/ui/src/components/dialog.tsx";
 import { DeleteButton } from "@repo/ui/src/components/detele-button.tsx";
-import { useCreateThread } from "#components/forms/create-thread/hooks/use-create-thread.tsx";
 import { getUser } from "@repo/lib/helpers/get-user.ts";
 import { Plus } from "lucide-react";
-import { BuyDonateModal } from "#components/modals/custom/buy-donate-modal.tsx";
+import { BuyDonateModal } from "#components/modals/custom/components/buy-donate-modal.tsx";
+import { useEditThread } from "../hooks/use-edit-thread.tsx";
 
 export const FormThreadPreviewImages = () => {
   const { donate } = getUser()
-  const { handleDeleteImage, handleAddImages } = useCreateThread();
+  const { handleDeleteImage, handleAddImages } = useEditThread();
   const { data: threadFormState } = threadFormQuery();
 
   if (!threadFormState || !threadFormState.images) return null;

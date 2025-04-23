@@ -1,9 +1,9 @@
 import { Typography } from '@repo/ui/src/components/typography'
 import { createFileRoute, useNavigate, useSearch } from '@tanstack/react-router'
-import { Referals } from '#components/collection/components/referals'
-import { Purchases } from '#components/collection/components/purchases'
-import { MyThreads, SavedThreads } from '#components/collection/components/threads'
-import { Tickets } from '#components/collection/components/tickets'
+import { Referals } from '#components/collection/components/referals/components/referals'
+import { Purchases } from '#components/collection/components/purchases/components/purchases'
+import { MyThreads, SavedThreads } from '#components/collection/components/my-threads/components/my-threads'
+import { MyTickets } from '#components/collection/components/my-tickets/components/my-tickets'
 import { NavigationBadge } from '#components/navigation/components/navigation-badge'
 
 type CollectionParams = {
@@ -77,7 +77,7 @@ function RouteComponent() {
         {type === 'referals' && <Referals />}
         {type === 'purchases' && <Purchases />}
         {type === 'threads' && <MyThreads />}
-        {type === 'tickets' && <Tickets />}
+        {type === 'tickets' && <MyTickets />}
         {type === 'saved_threads' && <SavedThreads />}
       </div>
     </div>

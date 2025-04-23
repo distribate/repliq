@@ -1,12 +1,14 @@
 import { searchPageQuery } from "#components/search/queries/search-page-query.ts";
-import { ContentNotFound } from "#components/templates/content-not-found.tsx";
+import { ContentNotFound } from "#components/templates/components/content-not-found";
 import { SearchPageThread } from "#components/search/components/search-page-threads.tsx";
 import { SearchPageUser } from "./search-page-user";
 
 export const SearchPageAll = () => {
   const { data: searchState } = searchPageQuery();
 
-  if (!searchState.results) return <ContentNotFound title={`Ничего не нашли по запросу "${searchState.queryValue}"`} />;
+  if (!searchState.results) {
+    return <ContentNotFound title={`Ничего не нашли по запросу "${searchState.queryValue}"`} />;
+  }
 
   return (
     <div className="flex flex-col gap-y-4 w-full">

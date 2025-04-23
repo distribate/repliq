@@ -22,5 +22,5 @@ export async function getRatings({
     return null
   }
 
-  return data
+  return data.data.length >= 1 ? data : null
 }

@@ -1,11 +1,16 @@
 import { Typography } from "@repo/ui/src/components/typography.tsx";
-import { NicknameColorPicker } from "#components/cards/user-personal-card/components/profile-settings/components/nickname-color/nickname-color-picker.tsx";
-import { DynamicModal } from "../../dynamic-modal.tsx";
+import { DynamicModal } from "../../dynamic-modal/components/dynamic-modal.tsx";
 import { UPDATE_FIELD_MUTATION_KEY } from "@repo/lib/hooks/use-update-current-user.ts";
 import BlueDye from "@repo/assets/images/minecraft/blue_dye.webp";
 import { currentUserQuery } from '@repo/lib/queries/current-user-query.ts';
 import { hexToRgba } from "@repo/lib/helpers/hex-to-rgba.ts";
-import { UserSettingOption } from "#components/cards/user-setting-option.tsx";
+import { UserSettingOption } from "#components/cards/user-setting-option-card/components/user-setting-option.tsx";
+import { lazy, Suspense } from "react";
+
+const NicknameColorPicker = lazy(() =>
+  import("#components/cards/user-personal-card/components/profile-settings/components/nickname-color/components/nickname-color-picker/nickname-color-picker.tsx")
+    .then(m => ({ default: m.NicknameColorPicker }))
+)
 
 export const NicknameColorPickerModal = () => {
   const { data: { nickname, name_color } } = currentUserQuery();
@@ -29,7 +34,9 @@ export const NicknameColorPickerModal = () => {
         </UserSettingOption>
       }
       content={
-        <NicknameColorPicker nickname={nickname} name_color={name_color} />
+        <Suspense>
+          <NicknameColorPicker nickname={nickname} name_color={name_color} />
+        </Suspense>
       }
     />
   );

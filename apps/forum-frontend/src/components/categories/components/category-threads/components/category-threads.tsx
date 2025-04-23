@@ -2,9 +2,9 @@ import {
   categoryThreadsQuery,
 } from "../queries/category-threads-query.ts";
 import { Skeleton } from "@repo/ui/src/components/skeleton.tsx";
-import { ThreadLayout } from "#components/thread/components/thread-layout/thread-layout.tsx";
-import { ThreadByCategoryItem } from "#components/thread/components/thread-card-category/thread-by-category-item.tsx";
-import { ThreadNotFound } from "#components/templates/threads-not-found.tsx";
+import { ThreadLayout } from "#components/thread/thread-layout/thread-layout.tsx";
+import { ThreadByCategoryItem } from "#components/thread/thread-card-category/thread-by-category-item.tsx";
+import { ThreadNotFound } from "#components/templates/components/threads-not-found.tsx";
 
 const CategoryThreadsSkeleton = () => {
   return (

@@ -1,6 +1,6 @@
 import { LAND_QUERY_KEY, landQuery } from "#components/land/queries/land-query.ts"
 import { Avatar } from "#components/user/avatar/components/avatar.tsx"
-import { UserNickname } from "#components/user/name/nickname.tsx"
+import { UserNickname } from "#components/user/name/components/nickname"
 import { landsClient } from "@repo/shared/api/minecraft-client"
 import { USER_URL } from "@repo/shared/constants/routes"
 import { Skeleton } from "@repo/ui/src/components/skeleton"

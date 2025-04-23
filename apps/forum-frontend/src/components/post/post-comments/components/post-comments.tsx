@@ -1,7 +1,7 @@
 import { Separator } from "@repo/ui/src/components/separator.tsx";
 import { PostEntity } from "@repo/types/entities/entities-type.ts";
 import { Skeleton } from "@repo/ui/src/components/skeleton.tsx";
-import { BlockWrapper } from "#components/wrappers/block-wrapper.tsx";
+import { BlockWrapper } from "#components/wrappers/components/block-wrapper";
 import { postCommentsQuery } from "#components/post/post-comments/queries/post-comments-query.ts";
 
 type PostCommentsProps = Pick<PostEntity, "id"> & {

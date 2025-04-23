@@ -1,16 +1,16 @@
 import { createLazyFileRoute, useSearch } from '@tanstack/react-router'
 import { Typography } from '@repo/ui/src/components/typography'
 import { lazy, ReactNode, Suspense } from 'react'
-import type { AdminSections } from '#components/admin/navigation/admin-navigation-badge'
+import type { AdminSections } from '#components/admin/navigation/components/admin-navigation-badge'
 
 export const Route = createLazyFileRoute('/_protected/_admin/admin/')({
   component: RouteComponent,
 })
 
-const AdminNavigation = lazy(() => import("#components/admin/navigation/admin-navigation.tsx").then(m => ({ default: m.AdminNavigation })))
-const AdminNewsControl = lazy(() => import("#components/admin/news/admin-news-control.tsx").then(m => ({ default: m.AdminNewsControl })))
-const AdminTicketsList = lazy(() => import("#components/admin/tickets/admin-tickets-list.tsx").then(m => ({ default: m.AdminTicketsList })))
-const AdminReportsList = lazy(() => import("#components/admin/reports/admin-reports-list.tsx").then(m => ({ default: m.AdminReportsList })))
+const AdminNavigation = lazy(() => import("#components/admin/navigation/components/admin-navigation").then(m => ({ default: m.AdminNavigation })))
+const AdminNewsControl = lazy(() => import("#components/admin/news/components/admin-news-control").then(m => ({ default: m.AdminNewsControl })))
+const AdminTicketsList = lazy(() => import("#components/admin/tickets/components/admin-tickets-list").then(m => ({ default: m.AdminTicketsList })))
+const AdminReportsList = lazy(() => import("#components/admin/reports/components/admin-reports-list").then(m => ({ default: m.AdminReportsList })))
 
 const CreateModpack = () => {
   return (

@@ -1,17 +1,17 @@
 import { Typography } from "@repo/ui/src/components/typography.tsx";
 import { Input } from "@repo/ui/src/components/input.tsx";
-import { useCreateThread } from "../hooks/use-create-thread.tsx";
 import { Controller } from "react-hook-form";
-import { FormChildsProps } from "../types/create-thread-form-types.ts";
+import { FormChildsProps } from "./form-thread.tsx";
+import { useEditThread } from "../hooks/use-edit-thread.tsx";
 
 export const FormThreadTitle = ({ control, errors }: FormChildsProps) => {
-  const { updateThreadFormMutation } = useCreateThread();
+  const { updateThreadFormMutation } = useEditThread();
 
   return (
     <div className="flex flex-col gap-y-1 w-full">
       <div className="flex flex-col">
         <Typography textColor="shark_white" textSize="large">
-          Заголовок
+          Заголовок <span className="text-red-500">*</span>
         </Typography>
       </div>
       <Controller

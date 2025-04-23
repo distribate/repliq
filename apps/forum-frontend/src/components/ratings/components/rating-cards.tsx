@@ -1,5 +1,5 @@
 import { Avatar } from "#components/user/avatar/components/avatar.tsx";
-import { UserNickname } from "#components/user/name/nickname.tsx";
+import { UserNickname } from "#components/user/name/components/nickname";
 import dayjs from "@repo/lib/constants/dayjs-instance";
 import { getUser } from "@repo/lib/helpers/get-user";
 import { LAND_URL, USER_URL } from "@repo/shared/constants/routes";

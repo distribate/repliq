@@ -21,7 +21,8 @@ export const metadata = {
   robots: "index, follow",
   canonical: "https://fasberry.su/rules",
   openGraph: {
-    title: "Правила сервера Fasberry | Уважение и честная игра",
+    siteName: "Правила сервера Fasberry",
+    title: "Правила сервера Fasberry",
     description:
       "Правила нашего Fasberry-сервера для комфортной игры. Соблюдайте установленные нормы и поддерживайте дружелюбную атмосферу!",
     url: "https://fasberry.su/rules",

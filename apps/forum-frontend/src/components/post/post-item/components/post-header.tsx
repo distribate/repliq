@@ -1,6 +1,6 @@
 import { Typography } from "@repo/ui/src/components/typography.tsx";
 import { Avatar } from "#components/user/avatar/components/avatar.tsx";
-import { UserNickname } from "#components/user/name/nickname.tsx";
+import { UserNickname } from "#components/user/name/components/nickname";
 import { Link } from "@tanstack/react-router";
 import dayjs from "@repo/lib/constants/dayjs-instance.ts";
 import { USER_URL } from "@repo/shared/constants/routes.ts";

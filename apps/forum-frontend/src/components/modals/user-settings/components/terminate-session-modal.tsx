@@ -1,6 +1,6 @@
-import { DynamicModal } from "../../dynamic-modal.tsx";
-import { ConfirmationActionModalTemplate } from "#components/templates/confirmation-action-modal-template.tsx";
-import { ConfirmationButton } from "#components/buttons/confirmation-action-button.tsx";
+import { DynamicModal } from "../../dynamic-modal/components/dynamic-modal.tsx";
+import { ConfirmationActionModalTemplate } from "#components/modals/confirmation-modal/components/confirmation-action-modal.tsx";
+import { ConfirmationButton } from "#components/modals/confirmation-modal/components/confirmation-action-button.tsx";
 import { DialogClose } from "@repo/ui/src/components/dialog.tsx";
 import { DeleteButton } from "@repo/ui/src/components/detele-button.tsx";
 import { TERMINATE_SESSIONS_MUTATION_KEY, useTerminateSession } from "./terminate-all-sessions-modal.tsx";

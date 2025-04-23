@@ -5,7 +5,7 @@ import {
 } from "@repo/ui/src/components/dialog.tsx";
 import { useEffect, useState } from "react";
 import { Plus } from "lucide-react";
-import { DialogLoader } from "#components/templates/dialog-loader.tsx";
+import { DialogLoader } from "#components/templates/components/dialog-loader";
 import { useMutationState } from "@tanstack/react-query";
 import { MINECRAFT_CREATE_ITEM_MUTATION_KEY } from "#components/forms/create-minecraft-items/hooks/use-minecraft-items.tsx";
 import { MinecraftItemCreateForm } from "#components/forms/create-minecraft-items/components/minecraft-item-create-form.tsx";

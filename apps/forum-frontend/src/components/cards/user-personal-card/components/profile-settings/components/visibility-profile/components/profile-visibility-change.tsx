@@ -3,12 +3,12 @@ import {
   UPDATE_FIELD_MUTATION_KEY,
 } from "@repo/lib/hooks/use-update-current-user.ts";
 import Barrier from "@repo/assets/images/minecraft/barrier.webp";
-import { DynamicModal } from "#components/modals/dynamic-modal.tsx";
+import { DynamicModal } from "#components/modals/dynamic-modal/components/dynamic-modal";
 import { currentUserQuery } from '@repo/lib/queries/current-user-query.ts';
 import { useUpdateUserSettings } from '@repo/lib/hooks/use-update-user-settings.ts';
 import { ProfileVisibilityEnum } from '@repo/types/entities/entities-type.ts';
 import { LockKeyhole, LockOpen } from "lucide-react";
-import { UserSettingOption } from "#components/cards/user-setting-option";
+import { UserSettingOption } from "#components/cards/user-setting-option-card/components/user-setting-option";
 
 export const ProfileVisibilityChange = () => {
   const { preferences: { profile_visibility } } = currentUserQuery().data;

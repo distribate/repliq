@@ -3,7 +3,6 @@ import { createLazyFileRoute } from '@tanstack/react-router'
 import { AuthBackgroundImages } from '#components/admin/configs/auth-background/components/auth-bg-images'
 import { MinecraftItemsList } from '#components/admin/configs/minecraft-items/components/minecraft-items-list'
 import { Alerts } from '#components/admin/configs/alerts/components/alerts'
-import { Ads } from '#components/admin/configs/ads/components/ads'
 
 export const Route = createLazyFileRoute('/_protected/_admin/admin/configs')({
   component: RouteComponent,
@@ -35,7 +34,6 @@ function RouteComponent() {
           </div>
           <div className="flex flex-col bg-shark-900/60 relative p-4 rounded-md gap-4 w-fit h-fit">
             <Typography textSize="big">Рекламные объявления</Typography>
-            <Ads />
           </div>
         </div>
       </div>

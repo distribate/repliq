@@ -5,12 +5,15 @@ import { createRootRouteWithContext } from '@tanstack/react-router';
 import type { QueryClient } from '@tanstack/react-query';
 import { lazy, ReactNode, Suspense, useEffect } from 'react';
 // @ts-ignore
-import '../styles/index.css'
+import '../global.css'
 // @ts-ignore
 import "@repo/ui/ui.css"
+import "@repo/plate-editor/src/editor.css"
+import '@mdxeditor/editor/style.css'
+
 import { NotificationsWrapper } from '#components/notifications/components/notifications-wrapper';
 
-const NotFound = lazy(() => import("#components/templates/not-found.tsx")
+const NotFound = lazy(() => import("#components/templates/components/not-found")
   .then(m => ({ default: m.NotFound }))
 )
 

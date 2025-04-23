@@ -1,7 +1,7 @@
 import { Ellipsis } from "lucide-react";
 import { Typography } from "@repo/ui/src/components/typography.tsx";
 import { HoverCardItem } from "@repo/ui/src/components/hover-card.tsx";
-import { DropdownWrapper } from "#components/wrappers/dropdown-wrapper.tsx";
+import { DropdownWrapper } from "#components/wrappers/components/dropdown-wrapper";
 import { Separator } from "@repo/ui/src/components/separator.tsx";
 import { getUser } from "@repo/lib/helpers/get-user.ts";
 import React from "react";

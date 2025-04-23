@@ -11,6 +11,7 @@ import { useState } from 'react'
 import { Search } from "lucide-react"
 
 type SearchParams = {
+  queryValue?: string,
   type?: 'users' | 'threads' | 'all'
 }
 
@@ -23,6 +24,7 @@ export const Route = createFileRoute('/_protected/search')({
   }),
   validateSearch: (search: Record<string, unknown>): SearchParams => ({
     type: search.type as SearchParams["type"] ?? 'all',
+    queryValue: search.queryValue as string | undefined ?? undefined
   })
 })
 

@@ -19,7 +19,7 @@ type CreateThreadItem = Omit<CreateThread, "images" | "tags" | "content">
   & CreateThreadTransaction & {
     content: JsonValue<string>
   }
-
+  
 type AddTagsToThread = CreateThreadTransaction & {
   thread_id: string
   tags: string[]
@@ -106,7 +106,7 @@ export async function createThread({
   const parsedContent = JSON.parse(rawContent);
   const content = new JsonValue(parsedContent)
 
-  return await forumDB.transaction().execute(async (trx) => {
+  return forumDB.transaction().execute(async (trx) => {
     const thread_id = await createThreadItem({
       title, content, category_id, description,
       visibility, permission, is_comments, trx,

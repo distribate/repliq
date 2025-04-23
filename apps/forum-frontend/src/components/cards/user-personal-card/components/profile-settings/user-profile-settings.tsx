@@ -9,7 +9,7 @@ import { FavoriteItemModal } from "#components/modals/user-settings/components/f
 import { ProfileVisibilityChange } from "./components/visibility-profile/components/profile-visibility-change.tsx";
 import { DateBirthdayModal } from "#components/modals/user-settings/components/date-birthday-modal.tsx";
 import { getUser } from "@repo/lib/helpers/get-user.ts";
-import { UserSettingOption } from "#components/cards/user-setting-option.tsx";
+import { UserSettingOption } from "#components/cards/user-setting-option-card/components/user-setting-option.tsx";
 import { UserSettingsBack } from "#components/modals/user-settings/components/user-settings-back.tsx";
 
 export const UserProfileSettings = () => {

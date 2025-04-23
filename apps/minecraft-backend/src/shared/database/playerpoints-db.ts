@@ -16,6 +16,6 @@ export const playerPointsDB = new Kysely<playerPointsDBType>({
     password: Bun.env.MYSQL_ROOT_PASSWORD!,
     port: Number(Bun.env.PLAYERPOINTS_MYSQL_PORT!),
     database: "playerpoints",
-    host: "5.83.140.56"
+    host: "127.0.0.1"
   })
 }); 

@@ -4,7 +4,7 @@ import {
   CreateThreadCommentQuery,
 } from "../queries/create-thread-comment-query.ts";
 import { toast } from "sonner";
-import { THREAD_COMMENTS_QUERY_KEY } from "#components/thread/components/thread-comments/queries/thread-comments-query.ts";
+import { THREAD_COMMENTS_QUERY_KEY } from "#components/thread/thread-comments/queries/thread-comments-query.ts";
 import { GetThreadCommentsResponse } from "@repo/types/entities/thread-comments-types.ts";
 import { replyThreadComment } from "../queries/reply-thread-comment.ts";
 import { createThreadComment } from "../queries/create-thread-comment.ts";

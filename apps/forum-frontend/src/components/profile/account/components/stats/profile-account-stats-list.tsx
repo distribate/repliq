@@ -5,7 +5,7 @@ import { Dialog, DialogContent, DialogTrigger } from "@repo/ui/src/components/di
 import { Button } from "@repo/ui/src/components/button";
 import { ProfileStatsDetailed, ProfileStatsMeta, ProfileViewsDetails } from "@repo/types/routes-types/get-user-profile-stats-types";
 import { useQueryClient } from "@tanstack/react-query";
-import { BuyDonateModal } from "#components/modals/custom/buy-donate-modal";
+import { BuyDonateModal } from "#components/modals/custom/components/buy-donate-modal";
 import { Avatar } from "#components/user/avatar/components/avatar";
 import { useNavigate } from "@tanstack/react-router";
 import { HTMLAttributes, Suspense } from "react";

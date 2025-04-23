@@ -1,9 +1,6 @@
-import {
-  SearchPageQuery,
-  SearchResultsAll,
-} from "#search/queries/search-page-query.ts";
 import { shuffleArray } from "@repo/lib/helpers/shuffle-array.ts";
 import { forumSearchClient } from "@repo/shared/api/forum-client";
+import { SearchPageQuery, SearchResultsAll } from "./search-page-query";
 
 type GetSearchResults = {
   queryValue: string;
@@ -13,6 +10,16 @@ type GetSearchResults = {
   | { type: "users" }
   | { type: "all" }
 )
+
+export type SearchUser = {
+  nickname: string,
+  name_color: string
+}
+
+export type SearchThread = {
+  title: string
+  id: string
+}
 
 async function getSearchThreads({
   queryValue, limit

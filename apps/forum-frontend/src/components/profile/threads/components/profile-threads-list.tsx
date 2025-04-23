@@ -3,9 +3,9 @@ import { UserEntity } from '@repo/types/entities/entities-type.ts';
 import { ProfileThreadsFiltering } from '#components/profile/threads/components/profile-threads-filtering.tsx';
 import { ProfileThreadsListCard } from '#components/profile/threads/components/profile-threads-list-card.tsx';
 import { profileThreadsSettingsQuery } from '#components/profile/threads/queries/profile-threads-settings-query.ts';
-import { SomethingError } from '#components/templates/something-error.tsx';
-import { ContentNotFound } from '#components/templates/content-not-found.tsx';
-import { SectionSkeleton } from '#components/templates/section-skeleton.tsx';
+import { SomethingError } from '#components/templates/components/something-error.tsx';
+import { ContentNotFound } from '#components/templates/components/content-not-found.tsx';
+import { SectionSkeleton } from '#components/templates/components/section-skeleton.tsx';
 
 const ProfileThreadsList = ({
   nickname,

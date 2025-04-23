@@ -1,6 +1,6 @@
 import { Typography } from "@repo/ui/src/components/typography.tsx";
 import { DropdownMenuItem } from "@repo/ui/src/components/dropdown-menu.tsx";
-import { DropdownWrapper } from "#components/wrappers/dropdown-wrapper.tsx";
+import { DropdownWrapper } from "#components/wrappers/components/dropdown-wrapper";
 import React, { ChangeEvent, forwardRef, useState } from "react";
 import { FRIENDS_SORT } from "#components/profile/friends/constants/friends-filtering.ts";
 import { useQueryClient } from "@tanstack/react-query";
@@ -10,12 +10,12 @@ import {
   FriendsSortQuery,
   FriendsSortType,
 } from "#components/profile/friends/queries/friends-settings-query.ts";
-import { FilteringSearchWrapper } from "#components/wrappers/filtering-search-wrapper.tsx";
+import { FilteringSearchWrapper } from "#components/wrappers/components/filtering-search-wrapper";
 import { useDebounce } from "@repo/lib/hooks/use-debounce.ts";
 import { Input } from "@repo/ui/src/components/input.tsx";
 import { useUpdateFriends } from "#components/friends/hooks/use-update-friends.ts";
 import { ArrowDownNarrowWide } from "lucide-react";
-import { SelectedWrapper } from "#components/wrappers/selected-wrapper.tsx";
+import { SelectedWrapper } from "#components/wrappers/components/selected-wrapper";
 
 const ProfileFriendsFilteringSearch = forwardRef<HTMLInputElement>(
   (props, ref) => {

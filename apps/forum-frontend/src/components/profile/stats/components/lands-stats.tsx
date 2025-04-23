@@ -9,10 +9,10 @@ import {
 import { LandsStatsNotFound } from "./lands-stats-not-found.tsx";
 import { ProfileStatsLayout } from "#components/profile/stats/components/profile-stats-layout.tsx";
 import { Skeleton } from "@repo/ui/src/components/skeleton.tsx";
-import { SomethingError } from "#components/templates/something-error.tsx";
+import { SomethingError } from "#components/templates/components/something-error.tsx";
 import { Avatar } from "#components/user/avatar/components/avatar.tsx";
 import { Suspense } from "react";
-import { UserNickname } from "#components/user/name/nickname.tsx";
+import { UserNickname } from "#components/user/name/components/nickname.tsx";
 import { Link } from "@tanstack/react-router";
 import { USER_URL } from "@repo/shared/constants/routes.ts";
 import Charism from "@repo/assets/images/minecraft/charism_wallet.png"

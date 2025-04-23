@@ -1,15 +1,15 @@
 import { UserEntity } from "@repo/types/entities/entities-type.ts";
 import { useNavigate } from "@tanstack/react-router";
 import { Avatar } from '#components/user/avatar/components/avatar.tsx';
-import { UserNickname } from '#components/user/name/nickname.tsx';
+import { UserNickname } from '#components/user/name/components/nickname.tsx';
 import { Separator } from "@repo/ui/src/components/separator.tsx";
 import { Typography } from "@repo/ui/src/components/typography.tsx";
 import dayjs from "dayjs";
-import { DropdownWrapper } from '#components/wrappers/dropdown-wrapper.tsx';
+import { DropdownWrapper } from '#components/wrappers/components/dropdown-wrapper.tsx';
 import { Ellipsis } from "lucide-react";
 import { HoverCardItem } from "@repo/ui/src/components/hover-card.tsx";
 import { useDeleteFromBlocked } from "../hooks/use-delete-from-blocked.ts";
-import { UserCardModal } from '#components/modals/custom/user-card-modal.tsx';
+import { UserCardModal } from '#components/modals/custom/components/user-card-modal.tsx';
 import { USER_URL } from "@repo/shared/constants/routes.ts";
 
 type UserBlockedCardProps = Pick<UserEntity, "nickname" | "name_color"> & {

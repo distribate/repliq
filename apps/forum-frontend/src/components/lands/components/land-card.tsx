@@ -9,7 +9,7 @@ import Charism from "@repo/assets/images/minecraft/charism_wallet.png"
 import SteveHead from "@repo/assets/images/minecraft/steve_head.jpg"
 import { LAND_URL } from "@repo/shared/constants/routes"
 import { getUser } from "@repo/lib/helpers/get-user"
-import { ColoredText } from "#components/wrappers/colored-text-wrapper"
+import { ColoredText } from "#components/wrappers/components/colored-text-wrapper"
 
 const client = landsClient.lands['get-lands'].$get
 

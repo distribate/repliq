@@ -1,12 +1,12 @@
 import { Typography } from "@repo/ui/src/components/typography.tsx";
-import { DropdownWrapper } from "#components/wrappers/dropdown-wrapper.tsx";
-import { SelectedWrapper } from "#components/wrappers/selected-wrapper.tsx";
+import { DropdownWrapper } from "#components/wrappers/components/dropdown-wrapper";
+import { SelectedWrapper } from "#components/wrappers/components/selected-wrapper";
 import { LayoutGrid } from "lucide-react";
-import { VIEW_COMPONENTS_TYPE } from "#components/friends/components/filtering/contants/view-components-type.ts";
+import { VIEW_COMPONENTS_TYPE } from "#components/friends/components/filtering/constants/view-components-type";
 import { DropdownMenuItem } from "@repo/ui/src/components/dropdown-menu.tsx";
 import { ChangeEvent, forwardRef, useState } from "react";
 import { Input } from "@repo/ui/src/components/input.tsx";
-import { FilteringSearchWrapper } from "#components/wrappers/filtering-search-wrapper.tsx";
+import { FilteringSearchWrapper } from "#components/wrappers/components/filtering-search-wrapper";
 import { UserEntity } from "@repo/types/entities/entities-type.ts";
 import { useQueryClient } from "@tanstack/react-query";
 import {

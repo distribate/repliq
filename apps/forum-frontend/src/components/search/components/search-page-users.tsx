@@ -1,8 +1,8 @@
 import { searchPageQuery } from "#components/search/queries/search-page-query.ts";
-import { ContentNotFound } from "#components/templates/content-not-found.tsx";
-import { SearchUser } from "#components/sidebar/desktop/components/sidebar-content/search/queries/search-query.ts";
+import { ContentNotFound } from "#components/templates/components/content-not-found";
 import { filterSearchResults } from "#components/search/helpers/filter-search-results.ts";
 import { SearchPageUser } from "./search-page-user";
+import { SearchUser } from "../queries/get-search-results";
 
 export const SearchPageUsers = () => {
   const { data: searchState } = searchPageQuery();

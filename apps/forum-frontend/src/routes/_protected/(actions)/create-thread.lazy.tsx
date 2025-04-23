@@ -1,8 +1,7 @@
 import { createLazyFileRoute } from '@tanstack/react-router'
-import { BlockWrapper } from '#components/wrappers/block-wrapper.tsx'
+import { BlockWrapper } from '#components/wrappers/components/block-wrapper'
 import { Typography } from '@repo/ui/src/components/typography.tsx'
-import { CreateThreadForm } from '#components/forms/create-thread/components/create-thread-form.tsx'
-import { FormThreadRecommendations } from '#components/forms/create-thread/components/form-thread-recommendations.tsx'
+import { CreateThreadForm } from '#components/forms/create-thread/components/form-thread'
 import { userGlobalOptionsQuery } from '@repo/lib/queries/user-global-options-query'
 
 export const Route = createLazyFileRoute('/_protected/(actions)/create-thread')({
@@ -26,12 +25,6 @@ function RouteComponent() {
 
   return (
     <div className="flex flex-col w-full h-full gap-4">
-      <BlockWrapper className="flex flex-col gap-y-4 w-full !p-4">
-        <Typography textSize="big" textColor="shark_white">
-          Создание треда
-        </Typography>
-        <FormThreadRecommendations />
-      </BlockWrapper>
       {can_create_threads ? (
         <CreateThreadForm />
       ) : (

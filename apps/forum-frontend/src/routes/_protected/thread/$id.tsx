@@ -1,15 +1,14 @@
 import { createFileRoute, Link } from '@tanstack/react-router'
-import { Thread } from '#components/thread/components/thread-main/components/thread-main'
-import { THREAD_QUERY_KEY } from '#components/thread/components/thread-main/queries/thread-query'
-import { getThreadModel } from '#components/thread/queries/get-thread-model'
+import { Thread } from '#components/thread/thread-main/components/thread-main'
+import { getThreadModel, THREAD_QUERY_KEY } from '#components/thread/thread-main/queries/thread-query'
 import { lazy, Suspense } from 'react'
-import { ThreadCommentsHeader } from '#components/thread/components/thread-comments/components/thread-comments-header'
+import { ThreadCommentsHeader } from '#components/thread/thread-comments/components/thread-comments-header'
 import { ThreadDetailed } from '@repo/types/entities/thread-type'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
-import { CreateThreadComment } from '#components/thread/components/create-thread-comment/components/create-thread-comment'
-import { ThreadComments } from '#components/thread/components/thread-comments/components/thread-comments'
-import { ThreadCommentsAnchor } from '#components/thread/components/thread-comments/components/thread-comments-anchor'
-import { ThreadMore } from '#components/thread/components/thread-more/components/thread-more'
+import { CreateThreadComment } from '#components/thread/create-thread-comment/components/create-thread-comment'
+import { ThreadComments } from '#components/thread/thread-comments/components/thread-comments'
+import { ThreadCommentsAnchor } from '#components/thread/thread-comments/components/thread-comments-anchor'
+import { ThreadMore } from '#components/thread/thread-more/components/thread-more'
 import { forumThreadClient } from '@repo/shared/api/forum-client'
 import { createQueryKey } from '@repo/lib/helpers/query-key-builder'
 import { Typography } from '@repo/ui/src/components/typography'
@@ -43,11 +42,11 @@ type ThreadContentProps = {
 }
 
 const CommentsDisabled = lazy(() =>
-  import("#components/templates/comments-disabled").then(m => ({ default: m.CommentsDisabled }))
+  import("#components/templates/components/comments-disabled").then(m => ({ default: m.CommentsDisabled }))
 )
 
 const ThreadControl = lazy(() =>
-  import("#components/thread/components/thread-control/components/thread-control").then(m => ({ default: m.ThreadControl }))
+  import("#components/thread/thread-control/components/thread-control").then(m => ({ default: m.ThreadControl }))
 )
 
 const ThreadCommentsSection = ({

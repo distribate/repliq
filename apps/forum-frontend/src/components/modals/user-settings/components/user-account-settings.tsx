@@ -7,11 +7,11 @@ import {
   userBlockedQuery,
 } from '#components/modals/user-settings/queries/user-blocked-query';
 import { UserBlockedCard } from '#components/cards/user-blocked-card/components/user-blocked-card.tsx';
-import { ContentNotFound } from '#components/templates/content-not-found.tsx';
+import { ContentNotFound } from '#components/templates/components/content-not-found';
 import { Skeleton } from '@repo/ui/src/components/skeleton.tsx';
 import { PasswordChangeModal } from '#components/modals/user-settings/components/password-change-modal.tsx';
 import { ActiveSessionsModal } from '#components/modals/user-settings/components/active-sessions-modal.tsx';
-import { UserSettingOption } from '#components/cards/user-setting-option.tsx';
+import { UserSettingOption } from '#components/cards/user-setting-option-card/components/user-setting-option';
 import { UserSettingsBack } from '#components/modals/user-settings/components/user-settings-back.tsx';
 import AllaySpawnEgg from '@repo/assets/images/minecraft/allay_spawn_egg.webp';
 import { useUpdateUserSettings } from '@repo/lib/hooks/use-update-user-settings.ts';

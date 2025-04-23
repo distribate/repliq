@@ -1,4 +1,4 @@
-import { BlockWrapper } from '#components/wrappers/block-wrapper'
+import { BlockWrapper } from '#components/wrappers/components/block-wrapper'
 import { Separator } from '@repo/ui/src/components/separator'
 import { createLazyFileRoute } from '@tanstack/react-router'
 import {
@@ -6,7 +6,7 @@ import {
   FriendsIncomingRequestsIndicator,
   FriendsOutgoingRequstsIndicator,
 } from '#components/friends/components/control/components/friends-indicators'
-import { FriendsList } from '#components/friends/components/lists/friends-list'
+import { FriendsList } from '#components/friends/components/lists/components/friends-list'
 import { FriendsTab } from '#components/friends/components/control/components/friends-tab'
 // import { FriendsStatistics } from '#components/friends/components/statistics/friends-statistics'
 

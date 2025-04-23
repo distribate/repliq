@@ -1,14 +1,14 @@
 import { Typography } from "@repo/ui/src/components/typography.tsx";
 import { Controller } from "react-hook-form";
-import { Toggle } from "@repo/ui/src/components/toggle.tsx";
 import { FormField } from "@repo/ui/src/components/form-field.tsx";
 import { threadFormQuery } from "../queries/thread-form-query.ts";
-import { useCreateThread } from "../hooks/use-create-thread.tsx";
-import { FormChildsProps } from "../types/create-thread-form-types.ts";
+import { FormChildsProps } from "./form-thread.tsx";
+import { Switch } from "@repo/ui/src/components/switch.tsx";
+import { useEditThread } from "../hooks/use-edit-thread.tsx";
 
 export const FormThreadComments = ({ errors, control }: FormChildsProps) => {
   const { data: threadFormState } = threadFormQuery();
-  const { updateThreadFormMutation } = useCreateThread();
+  const { updateThreadFormMutation } = useEditThread();
 
   if (!threadFormState) return null;
 
@@ -16,13 +16,13 @@ export const FormThreadComments = ({ errors, control }: FormChildsProps) => {
 
   return (
     <FormField errorMessage={errors?.is_comments?.message}>
-      <div className="flex flex-col gap-y-2">
+      <div className="flex items-center justify-between w-full gap-y-2">
         <div className="flex flex-col">
-          <Typography textColor="shark_white" textSize="large">
+          <Typography textColor="shark_white" textSize="large" className="text-semibold">
             Комментирование
           </Typography>
           <Typography textColor="gray" textSize="medium">
-            (возможность комментировать пост)
+            возможность комментировать пост
           </Typography>
         </div>
         <Controller
@@ -30,23 +30,17 @@ export const FormThreadComments = ({ errors, control }: FormChildsProps) => {
           name="is_comments"
           render={({ field: { onChange } }) => {
             return (
-              <Toggle
-                pressed={isActive}
-                defaultPressed={isActive}
-                onPressedChange={(checked) => {
+              <Switch
+                defaultChecked={isActive}
+                checked={isActive}
+                onCheckedChange={(checked) => {
                   onChange(checked);
+
                   return updateThreadFormMutation.mutate({
                     is_comments: checked,
                   });
                 }}
-              >
-                <Typography
-                  textColor={isActive ? "shark_black" : "shark_white"}
-                  textSize="medium"
-                >
-                  {isActive ? "включено" : "выключено"}
-                </Typography>
-              </Toggle>
+              />
             );
           }}
         />
