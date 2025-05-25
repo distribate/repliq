@@ -1,52 +1,79 @@
-import { createLazyFileRoute, useSearch } from '@tanstack/react-router'
-import { Typography } from '@repo/ui/src/components/typography'
+import { createLazyFileRoute, getRouteApi } from '@tanstack/react-router'
 import { lazy, ReactNode, Suspense } from 'react'
-import type { AdminSections } from '#components/admin/navigation/components/admin-navigation-badge'
+import type { AdminSections as AdminSectionsType } from '#components/admin/navigation/admin-navigation-badge'
+import { AdminNavigation } from '#components/admin/navigation/admin-navigation'
+import { reatomComponent, useUpdate } from '@reatom/npm-react'
+import { atom } from '@reatom/core'
+
+const NewsControl = lazy(() => import("#components/admin/news/components/admin-news-control").then(m => ({ default: m.AdminNewsControl })))
+const TicketsList = lazy(() => import("#components/admin/tickets/components/admin-tickets-list").then(m => ({ default: m.AdminTicketsList })))
+const ReportsList = lazy(() => import("#components/admin/reports/components/admin-reports-list").then(m => ({ default: m.AdminReportsList })))
+const CreateModpack = lazy(() => import("#components/admin/modpack/components/admin-create-modpack").then(m => ({ default: m.AdminCreateModpack })))
 
 export const Route = createLazyFileRoute('/_protected/_admin/admin/')({
   component: RouteComponent,
 })
 
-const AdminNavigation = lazy(() => import("#components/admin/navigation/components/admin-navigation").then(m => ({ default: m.AdminNavigation })))
-const AdminNewsControl = lazy(() => import("#components/admin/news/components/admin-news-control").then(m => ({ default: m.AdminNewsControl })))
-const AdminTicketsList = lazy(() => import("#components/admin/tickets/components/admin-tickets-list").then(m => ({ default: m.AdminTicketsList })))
-const AdminReportsList = lazy(() => import("#components/admin/reports/components/admin-reports-list").then(m => ({ default: m.AdminReportsList })))
-
-const CreateModpack = () => {
+const Stats = () => {
   return (
-    <div className="flex flex-col gap-4 items-start justify-center w-full p-4 border-2 border-shark-800 rounded-lg">
-      <Typography textSize="big" className="font-semibold">
-        Публикация модпака
-      </Typography>
-      <div className="flex flex-col gap-2 w-full">
-
-      </div>
-    </div>
+    <>
+      Stats
+    </>
   )
 }
 
-const ADMIN: Record<AdminSections, ReactNode> = {
-  "tickets": <AdminTicketsList />,
-  "reports": <AdminReportsList />,
-  "stats": "s"
+const COMPONENTS: Record<AdminSectionsType, ReactNode> = {
+  "tickets": <TicketsList />,
+  "reports": <ReportsList />,
+  "stats": <Stats />
 }
 
-function RouteComponent() {
-  const section = useSearch({ select: s => s.section, from: "/_protected/_admin" })
+const adminRoute = getRouteApi("/_protected/_admin")
+
+export const adminSectionParamAtom = atom<AdminSectionsType | undefined>(undefined, "adminSectionParam")
+
+export const SyncAdminSectionParam = () => {
+  // @ts-expect-error
+  const section = adminRoute.useSearch({ select: params => params.section }) as AdminSectionsType | undefined
+  useUpdate((ctx) => adminSectionParamAtom(ctx, section), [section])
+  return null;
+}
+
+const AdminDefault = reatomComponent(({ ctx }) => {
+  const section = ctx.spy(adminSectionParamAtom)
+
+  if (section) return null;
 
   return (
     <>
       <Suspense>
-        <AdminNavigation />
+        <NewsControl />
+        <CreateModpack />
       </Suspense>
+    </>
+  )
+})
+
+const AdminSections = reatomComponent(({ ctx }) => {
+  const section = ctx.spy(adminSectionParamAtom)
+
+  if (!section) return null;
+
+  return (
+    <Suspense>
+      {section && COMPONENTS[section]}
+    </Suspense>
+  )
+})
+
+function RouteComponent() {
+  return (
+    <>
+      <SyncAdminSectionParam />
+      <AdminNavigation />
       <div className="flex flex-col bg-primary-color rounded-lg overflow-hidden gap-6 w-full p-2">
-        {!section && (
-          <>
-            <AdminNewsControl />
-            <CreateModpack />
-          </>
-        )}
-        {section && ADMIN[section]}
+        <AdminDefault />
+        <AdminSections />
       </div>
     </>
   )

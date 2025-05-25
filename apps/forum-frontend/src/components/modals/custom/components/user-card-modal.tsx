@@ -7,6 +7,9 @@ import {
   DialogTrigger,
 } from "@repo/ui/src/components/dialog.tsx";
 import { UserSummaryCard } from "#components/cards/user-main-card/components/user-summary-card";
+import { reatomComponent } from "@reatom/npm-react";
+import { selectedUserCardAtom } from "#components/cards/user-main-card/models/user-main-card.model";
+import { atom } from "@reatom/core";
 
 type UserCardModalProperties =
   | {
@@ -20,14 +23,19 @@ type UserCardModalProperties =
 
 type UserCardModal = Pick<UserEntity, "nickname"> & UserCardModalProperties;
 
-export const UserCardModal = ({
-  nickname,
-  trigger,
-  withCustomTrigger = false,
-}: UserCardModal) => {
+export const userCardDialogIsOpenAtom = atom(false, "userCardDialogIsOpen")
+
+export const UserCardModal = reatomComponent<UserCardModal>(({ 
+  ctx, nickname, trigger, withCustomTrigger = false 
+}) => {
+  const handleOpenChange = (value: boolean) => {
+    userCardDialogIsOpenAtom(ctx, value)
+    selectedUserCardAtom(ctx, nickname)
+  }
+
   return (
-    <Dialog>
-      <DialogTrigger className={withCustomTrigger ? "cursor-default" : ""}>
+    <Dialog open={ctx.spy(userCardDialogIsOpenAtom)} onOpenChange={handleOpenChange}>
+      <DialogTrigger asChild={withCustomTrigger} className={withCustomTrigger ? "cursor-default" : ""}>
         {withCustomTrigger ? (
           trigger
         ) : (
@@ -38,8 +46,8 @@ export const UserCardModal = ({
         withClose={false}
         className="!p-0 !w-[424px] !overflow-visible !border-none !bg-transparent"
       >
-        <UserSummaryCard nickname={nickname} />
+        <UserSummaryCard />
       </DialogContent>
     </Dialog>
   );
-};
+}, "UserCardModal")

@@ -1,12 +1,9 @@
-import { usersQuery } from "../queries/users-query.ts";
 import { Skeleton } from "@repo/ui/src/components/skeleton.tsx";
-import { useEffect } from "react";
-import { useSearch } from "@tanstack/react-router";
+import { getRouteApi } from "@tanstack/react-router";
 import { Separator } from "@repo/ui/src/components/separator.tsx";
-
-export const USERS_QUERY_KEY = "users-page";
-
-const LIMIT_USERS_PER_PAGE = 6;
+import { usersAction, usersAtom } from "../models/users.model.ts";
+import { reatomComponent } from "@reatom/npm-react";
+import { DashboardUsersListPagination } from "./dashboard-users-list-pagination.tsx";
 
 export const DashboardUsersListSkeleton = () => {
   return (
@@ -25,41 +22,26 @@ export const DashboardUsersListSkeleton = () => {
   );
 };
 
-export const DashboardUsersList = () => {
-  const searchParams = useSearch({
-    from: "/admin/dashboard",
-    select: (params) => params[USERS_QUERY_KEY] || "0",
-  });
+const dashboardRoute = getRouteApi("/_protected/_admin/admin/dashboard")
 
-  const start = Number(searchParams) * 6;
-  const end = start + 6;
+export const DashboardUsersList = reatomComponent(({ ctx }) => {
+  if (ctx.spy(usersAction.statusesAtom).isPending) return <DashboardUsersListSkeleton />;
 
-  const { data: users, isLoading, refetch } = usersQuery({
-    range: [start, end],
-    limit: LIMIT_USERS_PER_PAGE,
-  });
+  const users = ctx.spy(usersAtom)
 
-  useEffect(() => {
-    refetch();
-  }, [searchParams]);
-
-  if (isLoading) return <DashboardUsersListSkeleton />;
+  if (!users) return null;
 
   return (
     <>
-      
+      <div className="flex flex-col gap-4 w-full min-h-full">
+        <div className="flex flex-col gap-2 w-full h-full">
+          {/* {users.map((user) => (
+            <UserDashboardCard key={user.id} {...user} />
+          ))} */}
+        </div>
+        <Separator />
+        <DashboardUsersListPagination length={users.length} />
+      </div>
     </>
-    // users &&
-    // users.data && (
-    //   <div className="flex flex-col gap-4 w-full min-h-full">
-    //     <div className="flex flex-col gap-2 w-full h-full">
-    //       {users.data.map((user) => (
-    //         <UserDashboardCard key={user.id} {...user} />
-    //       ))}
-    //     </div>
-    //     <Separator />
-    //     <DashboardUsersListPagination length={users.count} />
-    //   </div>
-    // )
   );
-};
+}, "DashboardUsersList")

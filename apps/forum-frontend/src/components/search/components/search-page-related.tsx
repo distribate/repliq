@@ -1,12 +1,13 @@
 import { Typography } from "@repo/ui/src/components/typography.tsx";
-import { relatedQuery } from "#components/search/queries/related-query.ts";
+import { relatedAction } from "#components/search/queries/related-query.ts";
 import { Skeleton } from "@repo/ui/src/components/skeleton.tsx";
 import { Button } from "@repo/ui/src/components/button.tsx";
 import { Link, useNavigate } from "@tanstack/react-router";
 import { THREAD_URL, USER_URL } from "@repo/shared/constants/routes.ts";
-import { Suspense } from "react";
 import { Avatar } from "#components/user/avatar/components/avatar.tsx";
-import { UserNickname } from "#components/user/name/components/nickname";
+import { UserNickname } from "#components/user/name/nickname";
+import { reatomComponent } from "@reatom/npm-react";
+import { onConnect } from "@reatom/framework";
 
 const SearchPageRelatedSkeleton = () => {
   return (
@@ -35,14 +36,16 @@ const SearchPageRelatedSkeleton = () => {
   );
 };
 
-export const SearchRelatedUsers = () => {
-  const { data: relatedState, isLoading } = relatedQuery();
+onConnect(relatedAction.dataAtom, relatedAction)
+
+export const SearchRelatedUsers = reatomComponent(({ ctx }) => {
+  const relatedState = ctx.spy(relatedAction.dataAtom)
   const navigate = useNavigate();
 
-  if (isLoading) return <SearchPageRelatedSkeleton />;
+  if (ctx.spy(relatedAction.statusesAtom).isPending) return <SearchPageRelatedSkeleton />;
 
   if (!relatedState || !relatedState.lastUsers) return null;
-  
+
   return (
     <div className="flex flex-col gap-y-4 w-full h-full">
       <Typography className="font-semibold" textSize="very_big">
@@ -50,12 +53,10 @@ export const SearchRelatedUsers = () => {
       </Typography>
       <div className="grid grid-cols-2 xl:grid-cols-5 grid-rows-1 gap-4 w-full h-fit">
         {relatedState.lastUsers.map(({ nickname }) => (
-          <div className="flex flex-col group gap-2 justify-between items-center lg:h-[280px] friend-card">
-            <Suspense fallback={<Skeleton className="w-[128px] h-[128px]" />}>
-              <Link to={USER_URL + nickname}>
-                <Avatar nickname={nickname} propWidth={128} propHeight={128} />
-              </Link>
-            </Suspense>
+          <div key={nickname} className="flex flex-col group gap-2 justify-between items-center lg:h-[280px] friend-card">
+            <Link to={USER_URL + nickname}>
+              <Avatar nickname={nickname} propWidth={128} propHeight={128} />
+            </Link>
             <div className="flex flex-col items-start gap-1 w-full justify-start">
               <Link to={USER_URL + nickname}>
                 <UserNickname nickname={nickname} />
@@ -76,10 +77,12 @@ export const SearchRelatedUsers = () => {
       </div>
     </div>
   )
-}
+}, "SearchRelatedUsers")
 
-export const SearchRelatedThreads = () => {
-  const { data: relatedState } = relatedQuery();
+onConnect(relatedAction.dataAtom, relatedAction)
+
+export const SearchRelatedThreads = reatomComponent(({ ctx }) => {
+  const relatedState = ctx.spy(relatedAction.dataAtom)
 
   if (!relatedState || !relatedState.lastThreads) return null;
 
@@ -115,4 +118,4 @@ export const SearchRelatedThreads = () => {
       </div>
     </div>
   )
-}
+}, "SearchRelatedThreads")

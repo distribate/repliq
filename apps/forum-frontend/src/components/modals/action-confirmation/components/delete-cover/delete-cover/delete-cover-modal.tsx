@@ -5,18 +5,17 @@ import { ConfirmationActionModalTemplate } from "#components/modals/confirmation
 import { DialogClose } from "@repo/ui/src/components/dialog.tsx";
 import { DynamicModal } from "../../../../dynamic-modal/components/dynamic-modal.tsx";
 import { getUser } from "@repo/lib/helpers/get-user.ts";
-import { useControlCoverImage, USER_COVER_DELETE_IMAGE_MUTATION_KEY } from "@repo/lib/hooks/use-control-cover-image.ts";
+import { reatomComponent } from "@reatom/npm-react";
+import { deleteBackgroundImageAction } from "#components/profile/header/models/cover-image.model.ts";
 
-export const DeleteCoverModal = () => {
-  const { cover_image } = getUser();
-  const { deleteBackgroundImageMutation } = useControlCoverImage();
-
+export const DeleteCoverModal = reatomComponent(({ ctx }) => {
+  const cover_image = getUser(ctx).cover_image;
   if (!cover_image) return null;
 
   return (
     <DynamicModal
+      isPending={ctx.spy(deleteBackgroundImageAction.statusesAtom).isPending}
       withLoader
-      mutationKey={USER_COVER_DELETE_IMAGE_MUTATION_KEY}
       trigger={
         <div className="flex hover:bg-shark-600 rounded-md p-2 gap-2 items-center group">
           <X size={20} className="text-shark-300 group-hover:text-pink-500" />
@@ -28,19 +27,19 @@ export const DeleteCoverModal = () => {
           <ConfirmationButton
             title="Удалить"
             actionType="continue"
-            onClick={() => deleteBackgroundImageMutation.mutate()}
-            disabled={deleteBackgroundImageMutation.isPending}
-            pending={deleteBackgroundImageMutation.isPending}
+            onClick={() => deleteBackgroundImageAction(ctx)}
+            disabled={ctx.spy(deleteBackgroundImageAction.statusesAtom).isPending}
+            pending={ctx.spy(deleteBackgroundImageAction.statusesAtom).isPending}
           />
           <DialogClose>
             <ConfirmationButton
               title="Отмена"
               actionType="cancel"
-              disabled={deleteBackgroundImageMutation.isPending}
+              disabled={ctx.spy(deleteBackgroundImageAction.statusesAtom).isPending}
             />
           </DialogClose>
         </ConfirmationActionModalTemplate>
       }
     />
   );
-};
+}, "DeleteCoverModal")

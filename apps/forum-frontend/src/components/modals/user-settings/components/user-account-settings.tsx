@@ -4,7 +4,7 @@ import IronHelmet from '@repo/assets/images/minecraft/iron_helmet.webp';
 import { Separator } from '@repo/ui/src/components/separator.tsx';
 import { Dialog, DialogContent, DialogTrigger } from '@repo/ui/src/components/dialog.tsx';
 import {
-  userBlockedQuery,
+  userBlockedAction,
 } from '#components/modals/user-settings/queries/user-blocked-query';
 import { UserBlockedCard } from '#components/cards/user-blocked-card/components/user-blocked-card.tsx';
 import { ContentNotFound } from '#components/templates/components/content-not-found';
@@ -14,14 +14,19 @@ import { ActiveSessionsModal } from '#components/modals/user-settings/components
 import { UserSettingOption } from '#components/cards/user-setting-option-card/components/user-setting-option';
 import { UserSettingsBack } from '#components/modals/user-settings/components/user-settings-back.tsx';
 import AllaySpawnEgg from '@repo/assets/images/minecraft/allay_spawn_egg.webp';
-import { useUpdateUserSettings } from '@repo/lib/hooks/use-update-user-settings.ts';
-import { currentUserQuery } from '@repo/lib/queries/current-user-query.ts';
 import { Switch } from '@repo/ui/src/components/switch.tsx';
 import WildArmorTrim from '@repo/assets/images/minecraft/wild_armor_trim_ыmithing_еemplate.webp';
 import FancyFeather from '@repo/assets/images/minecraft/fancy_feather.webp';
+import { getUser } from '@repo/lib/helpers/get-user';
+import { reatomComponent } from '@reatom/npm-react';
+import { updateCurrentUserSettingsAction } from '#components/cards/user-personal-card/components/profile-settings/models/update-current-user.model';
+import { onConnect, spawn } from '@reatom/framework';
 
-const BlockedList = () => {
-  const { data: usersBlocked, isLoading } = userBlockedQuery();
+onConnect(userBlockedAction.dataAtom, userBlockedAction)
+
+const BlockedList = reatomComponent(({ ctx }) => {
+  const usersBlocked = ctx.spy(userBlockedAction.dataAtom)
+  const isLoading = ctx.spy(userBlockedAction.statusesAtom).isPending
 
   return (
     <>
@@ -48,18 +53,17 @@ const BlockedList = () => {
       </div>
     </>
   );
-};
+}, "BlockedList")
 
-const FriendRequest = () => {
-  const { preferences: { accept_friend_request } } = currentUserQuery().data;
-  const { updateUserSettingsMutation } = useUpdateUserSettings()
+const FriendRequest = reatomComponent(({ ctx }) => {
+  const accept_friend_request = getUser(ctx).preferences.accept_friend_request
 
   const handleToggleFriendRequest = (value: boolean) => {
     if (value === accept_friend_request) return;
 
-    return updateUserSettingsMutation.mutate({
+    void spawn(ctx, async (spawnCtx) => updateCurrentUserSettingsAction(spawnCtx, {
       setting: "accept_friend_request", value
-    })
+    }))
   }
 
   return (
@@ -74,18 +78,17 @@ const FriendRequest = () => {
       />
     </UserSettingOption>
   );
-};
+}, "FriendRequest")
 
-const RealNameVisibility = () => {
-  const { preferences: { real_name_visible } } = currentUserQuery().data;
-  const { updateUserSettingsMutation } = useUpdateUserSettings();
+const RealNameVisibility = reatomComponent(({ ctx }) => {
+  const real_name_visible = getUser(ctx).preferences.real_name_visible;
 
   const handleRealNameVisibility = (value: boolean) => {
     if (value === real_name_visible) return;
 
-    return updateUserSettingsMutation.mutate({
+    void spawn(ctx, async (spawnCtx) => updateCurrentUserSettingsAction(spawnCtx, {
       setting: 'real_name_visible', value,
-    });
+    }))
   };
 
   return (
@@ -97,18 +100,17 @@ const RealNameVisibility = () => {
       />
     </UserSettingOption>
   );
-};
+}, "RealNameVisibility")
 
-const GameStatsVisibility = () => {
-  const { preferences: { game_stats_visible } } = currentUserQuery().data;
-  const { updateUserSettingsMutation } = useUpdateUserSettings();
+const GameStatsVisibility = reatomComponent(({ ctx }) => {
+  const game_stats_visible = getUser(ctx).preferences.game_stats_visible;
 
   const handleGameStatsVisibility = (value: boolean) => {
     if (value === game_stats_visible) return;
 
-    return updateUserSettingsMutation.mutate({
-      setting: 'game_stats_visible', value
-    });
+    void spawn(ctx, async (spawnCtx) => 
+      updateCurrentUserSettingsAction(spawnCtx, { setting: 'game_stats_visible', value })
+    );
   };
 
   return (
@@ -120,7 +122,7 @@ const GameStatsVisibility = () => {
       />
     </UserSettingOption>
   )
-}
+}, "GameStatsVisibility")
 
 export const UserAccountSettingsCard = () => {
   return (

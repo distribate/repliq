@@ -1,53 +1,51 @@
-import { useSkinViewer } from "../hooks/use-skin-viewer.ts";
-import { skinStateQuery } from "../queries/skin-query.ts";
+import { skinAtom, skinStateAction } from "../models/skin.model.ts";
 import { Skeleton } from "@repo/ui/src/components/skeleton.tsx";
-import { UserEntity } from "@repo/types/entities/entities-type.ts";
 import { Typography } from "@repo/ui/src/components/typography.tsx";
-// import Cape from "@repo/assets/images/minecraft/cape_default.png";
-import ReactSkinview3d from "react-skinview3d";
+import { reatomComponent } from "@reatom/npm-react";
+import { onConnect } from "@reatom/framework";
+import { skinViewerAtom } from "../models/skin-animation.model.ts";
+import { lazy, Suspense } from "react";
+import { hardwareAccelerationIsActive } from "@repo/lib/helpers/hardware-acceleration-check.ts"
 
-function isHardwareAccelerationEnabled(): boolean {
-  const canvas = document.createElement('canvas');
-  const gl = (canvas.getContext('webgl') || canvas.getContext('experimental-webgl')) as WebGLRenderingContext | null;
+const ReactSkinview3d = lazy(() => import("react-skinview3d").then(m => ({ default: m.default })))
 
-  if (!gl) {
-    return false;
+onConnect(skinStateAction, (ctx) => {
+  const isHardwareAccEnabled = hardwareAccelerationIsActive();
+  if (!isHardwareAccEnabled) return;
+
+  skinStateAction(ctx)
+})
+
+export const ProfileSkinRender = reatomComponent(({ ctx }) => {
+  const skinUrl = ctx.spy(skinAtom)!
+
+  if (ctx.spy(skinStateAction.statusesAtom).isPending) {
+    return <Skeleton className="w-full h-full" />;
   }
 
-  return true;
-}
-
-export const ProfileSkinRender = ({
-  nickname
-}: Pick<UserEntity, "nickname">) => {
-  const { setViewerRef } = useSkinViewer();
-  const { data: skinUrl, isLoading } = skinStateQuery(nickname);
-
-  if (isLoading) return <Skeleton className="w-full h-full" />;
-
-  const isHardwareAccEnabled = isHardwareAccelerationEnabled();
+  const isHardwareAccEnabled = hardwareAccelerationIsActive();
 
   return (
     <div className="flex items-center justify-center py-2 overflow-hidden border-4 border-shark-800 rounded-lg w-full">
       {isHardwareAccEnabled ? (
-        <ReactSkinview3d
-          skinUrl={skinUrl}
-          height="450"
-          width="350"
-          options={{
-            zoom: 0.8
-          }}
-          className="cursor-move"
-          // capeUrl={Cape}
-          onReady={({ viewer }) => setViewerRef(viewer)}
-        />
+        <Suspense>
+          <ReactSkinview3d
+            skinUrl={skinUrl}
+            height="450"
+            width="350"
+            options={{ zoom: 0.8 }}
+            className="cursor-move"
+            // @ts-expect-error
+            onReady={({ viewer }) => skinViewerAtom(ctx, viewer)}
+          />
+        </Suspense>
       ) : (
-        <div className="flex w-full items-center justify-center h-full">
-          <Typography textSize="large" className="truncate whitespace-pre-wrap">
+        <div className="flex w-full px-2 py-6 items-center justify-center h-full">
+          <Typography textSize="large" textColor="gray" className="truncate text-center whitespace-pre-wrap">
             Графическое аппаратное ускорение не включено.
           </Typography>
         </div>
       )}
     </div>
   );
-};
+}, "ProfileSkinRender")

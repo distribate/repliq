@@ -1,9 +1,9 @@
 import { createRoot } from 'react-dom/client'
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { RouterProvider, createRouter } from '@tanstack/react-router'
 import { routeTree } from './routeTree.gen'
-import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
-import { WindowLoader } from '@repo/ui/src/components/window-loader'
+import { createCtx } from '@reatom/core'
+import { connectLogger as logger } from '@reatom/framework'
+import { reatomContext } from '@reatom/npm-react'
 
 declare module '@tanstack/react-router' {
   interface Register {
@@ -11,23 +11,19 @@ declare module '@tanstack/react-router' {
   }
 }
 
-const queryClient = new QueryClient()
+const reatomCtx = createCtx()
 
-const router = createRouter({
+logger(reatomCtx)
+
+export const router = createRouter({
   routeTree,
-  context: { queryClient },
+  context: { reatomCtx },
   defaultPreload: false,
-  defaultPreloadStaleTime: 0,
-  defaultPendingComponent: () => (
-    <div className="flex h-dvh w-full items-center justify-center">
-      <WindowLoader />
-    </div>
-  ),
+  defaultPreloadStaleTime: 0
 })
 
 createRoot(document.getElementById('root')!).render(
-  <QueryClientProvider client={queryClient}>
+  <reatomContext.Provider value={reatomCtx}>
     <RouterProvider router={router} />
-    <ReactQueryDevtools />
-  </QueryClientProvider>
+  </reatomContext.Provider>
 )

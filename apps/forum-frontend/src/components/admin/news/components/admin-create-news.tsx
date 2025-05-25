@@ -1,7 +1,5 @@
 import { fileArrayToUint8Array } from "@repo/lib/helpers/file-array-to-uint8-array.ts";
 import { blobUrlToFile } from "@repo/lib/helpers/blobUrlToFile";
-import { createQueryKey } from "@repo/lib/helpers/query-key-builder";
-import { NEWS_QUERY_KEY } from "@repo/lib/queries/news-query";
 import { forumAdminClient } from "@repo/shared/api/forum-client";
 import { createNewsSchema } from "@repo/types/schemas/admin/create-news-schema";
 import AutogrowingTextarea from "@repo/ui/src/components/autogrowing-textarea";
@@ -9,11 +7,14 @@ import { Button } from "@repo/ui/src/components/button";
 import { DeleteButton } from "@repo/ui/src/components/detele-button";
 import { Input } from "@repo/ui/src/components/input";
 import { Typography } from "@repo/ui/src/components/typography";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { encode } from "@tanstack/react-router";
 import ky from "ky"
 import { toast } from "sonner";
 import { z } from "zod";
+import { atom } from "@reatom/core";
+import { reatomComponent } from "@reatom/npm-react";
+import { reatomAsync, withStatusesAtom } from "@reatom/async";
+import { withReset } from "@reatom/framework";
 
 type CreateNews = Omit<z.infer<typeof createNewsSchema>, "image"> & {
   image: File | null
@@ -52,94 +53,78 @@ async function createNews({ title, description, image, media_links, tags }: Crea
 }
 
 async function deleteNews(id: string) {
-  const res = await forumAdminClient.admin["delete-news"][":id"].$delete({
-    param: {
-      id
-    }
-  })
-
+  const res = await forumAdminClient.admin["delete-news"][":id"].$delete({ param: { id } })
   const data = await res.json() as { status: 'success' } | { error: string };
 
-  if ("error" in data) {
-    return null
-  }
+  if ("error" in data) return null
 
   return data;
 }
-
-export const CREATE_NEWS_QUERY_KEY = createQueryKey("ui", ["create-news"])
 
 export type CreateNewsQuery = Omit<z.infer<typeof createNewsSchema>, 'image'> & {
   imageUrl?: string
 }
 
-export const createNewsQuery = () => useQuery<CreateNewsQuery, Error>({
-  queryKey: CREATE_NEWS_QUERY_KEY,
-})
+export const createNewsAtom = atom<CreateNewsQuery | null>(null, "createNews").pipe(withReset())
 
-export const useNews = () => {
-  const qc = useQueryClient()
+export const createNewsAction = reatomAsync(async (ctx) => {
+  const formState = ctx.get(createNewsAtom)
+  if (!formState) return;
 
-  const createNewsMutation = useMutation({
-    mutationFn: async () => {
-      const formState = qc.getQueryData<CreateNewsQuery>(CREATE_NEWS_QUERY_KEY)
+  let image: File | null = null
 
-      if (!formState) return;
+  if (formState.imageUrl) {
+    image = await blobUrlToFile(formState.imageUrl)
+  }
 
-      let image: File | null = null
+  return await createNews({ image, ...formState })
+}, {
+  name: "createNewsAction",
+  onFulfill: (ctx, res) => {
+    if (!res) return
 
-      if (formState.imageUrl) {
-        image = await blobUrlToFile(formState.imageUrl)
-      }
+    if (res.data) {
+      createNewsAtom.reset(ctx)
 
-      return createNews({ image, ...formState })
-    },
-    onSuccess: async (data) => {
-      if (!data) return
+      return toast.success('Новость успешно создана')
+    }
 
-      if (data.data) {
-        qc.resetQueries({
-          queryKey: CREATE_NEWS_QUERY_KEY
-        })
+    return toast.error("Произошла ошибка при создании новости")
+  }
+}).pipe(withStatusesAtom())
 
-        return toast.success('Новость успешно создана')
-      }
+const deleteNewsActionVariablesAtom = atom<string | null>(null, "deleteNewsActionVariables")
 
-      return toast.error("Произошла ошибка при создании новости")
-    },
-    onError: (e) => { throw new Error(e.message) }
-  })
+export const deleteNewsAction = reatomAsync(async (ctx, id: string) => {
+  deleteNewsActionVariablesAtom(ctx, id)
+  return await ctx.schedule(() => deleteNews(id))
+}, {
+  name: "deleteNewsAction",
+  onFulfill: (ctx, res) => {
+    if (!res) return;
 
-  const deleteNewsMutation = useMutation({
-    mutationFn: async (id: string) => deleteNews(id),
-    onSuccess: (data, variables) => {
-      if (!data) return;
+    const variables = ctx.get(deleteNewsActionVariablesAtom)
+    if (!variables) return;
 
-      qc.setQueryData(NEWS_QUERY_KEY, (prev: { data: { id: string }[], meta: any }) => ({
-        ...prev,
-        data: prev?.data.filter(n => n.id !== variables),
-      }))
+    // todo: replace to newsAtom
+    // qc.setQueryData(NEWS_QUERY_KEY, (prev: { data: { id: string }[], meta: any }) => ({
+    //   ...prev,
+    //   data: prev?.data.filter(n => n.id !== variables),
+    // }))
 
-      return toast.success('Новость успешно удалена')
-    },
-    onError: e => { throw new Error(e.message) }
-  })
+    return toast.success('Новость успешно удалена')
+  }
+}).pipe(withStatusesAtom())
 
-  return { createNewsMutation, deleteNewsMutation }
-}
-
-export const CreateNews = () => {
-  const qc = useQueryClient()
-  const { data } = createNewsQuery()
-  const { createNewsMutation } = useNews()
+export const CreateNews = reatomComponent(({ ctx }) => {
+  const data = ctx.spy(createNewsAtom)
 
   const onChange = (
     e: React.ChangeEvent<HTMLInputElement> | React.ChangeEvent<HTMLTextAreaElement>,
     type: "title" | "description"
   ) => {
-    qc.setQueryData(CREATE_NEWS_QUERY_KEY,
-      (prev: CreateNewsQuery) => ({ ...prev, [type]: e.target.value })
-    )
+    // @ts-ignore
+    createNewsAtom(ctx, (state) => ({ ...state, [type]: e.target.value }))
   }
 
   const onChangeImage = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -147,19 +132,16 @@ export const CreateNews = () => {
     if (!e.target.files) return;
 
     const image = e.target.files[0];
-
-    qc.setQueryData(CREATE_NEWS_QUERY_KEY,
-      (prev: CreateNewsQuery) => ({ ...prev, imageUrl: URL.createObjectURL(image) })
-    )
+// @ts-ignore
+    createNewsAtom(ctx, (state) => ({ ...state, imageUrl: URL.createObjectURL(image) }))
   }
 
   const deleteImage = () => {
-    qc.setQueryData(CREATE_NEWS_QUERY_KEY,
-      (prev: CreateNewsQuery) => ({ ...prev, imageUrl: undefined })
-    )
+    // @ts-ignore
+    createNewsAtom(ctx, (state) => ({ ...state, imageUrl: undefined }))
   }
 
-  const onSubmit = () => createNewsMutation.mutate()
+  const onSubmit = () => createNewsAction(ctx)
 
   return (
     <div className="flex flex-col gap-2 w-full">
@@ -211,7 +193,7 @@ export const CreateNews = () => {
       <div className="flex relative overflow-hidden w-full items-center justify-end h-10">
         <Button
           onClick={onSubmit}
-          disabled={createNewsMutation.isPending}
+          disabled={ctx.spy(createNewsAction.statusesAtom).isPending}
           className="w-fit bg-shark-50 relative"
         >
           <Typography className="text-[18px] text-shark-950 font-semibold">
@@ -228,8 +210,8 @@ export const CreateNews = () => {
       <Button
         variant="positive"
         onClick={onSubmit}
-        pending={createNewsMutation.isPending}
-        disabled={createNewsMutation.isPending || !data?.title || !data?.description}
+        pending={ctx.spy(createNewsAction.statusesAtom).isPending}
+        disabled={ctx.spy(createNewsAction.statusesAtom).isPending || !data?.title || !data?.description}
         className="w-full lg:w-fit mt-2 px-12"
       >
         <Typography className="font-semibold text-[18px]">
@@ -238,4 +220,4 @@ export const CreateNews = () => {
       </Button>
     </div>
   )
-}
+}, "CreateNews")

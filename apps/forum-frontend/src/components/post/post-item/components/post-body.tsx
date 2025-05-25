@@ -1,42 +1,32 @@
 import { Typography } from "@repo/ui/src/components/typography.tsx";
 import {
-  POST_CONTROL_QUERY_KEY,
-  PostControlQuery,
-  postControlQuery,
+  editPostsControlAtom,
+  getPostsControlAtom,
 } from "#components/post/post-item/queries/post-control-query.ts";
 import { Input } from "@repo/ui/src/components/input.tsx";
-import { useQueryClient } from "@tanstack/react-query";
 import { Button } from "@repo/ui/src/components/button.tsx";
 import { useState, ChangeEvent } from "react";
-import { useControlPost } from "#components/post/post-item/hooks/use-control-post.ts";
+import { controlPostAction } from "#components/post/post-item/hooks/use-control-post.ts";
 import { UserPostItem } from '@repo/types/routes-types/get-user-posts-types.ts';
-import { getUser } from "@repo/lib/helpers/get-user";
+import { reatomComponent } from "@reatom/npm-react";
 
 type PostItemBodyProps = Pick<UserPostItem, "content" | "id" | "nickname">
 
-const PostItemBodyEditable = ({
-  content, id, nickname
-}: PostItemBodyProps) => {
-  const qc = useQueryClient();
+const PostItemBodyEditable = reatomComponent<PostItemBodyProps>(({
+  ctx, content, id, nickname
+}) => {
   const [value, setValue] = useState<string>(content);
-  const { controlPostMutation } = useControlPost();
 
   const handleUpdateContent = () => {
     if (!isValid) return;
 
-    qc.setQueryData(POST_CONTROL_QUERY_KEY(id), (prev: PostControlQuery) => ({
-      ...prev,
-      isEdit: false,
-    }));
+    editPostsControlAtom(ctx, id, { isEdit: false })
 
-    return controlPostMutation.mutate({ type: "edit", id, nickname });
+    return controlPostAction(ctx, { type: "edit", id, nickname });
   };
 
   const handleCancelEdit = () => {
-    qc.setQueryData(POST_CONTROL_QUERY_KEY(id), (prev: PostControlQuery) => ({
-      ...prev,
-      isEdit: false,
-    }));
+    editPostsControlAtom(ctx, id, { isEdit: false })
   };
 
   const onChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -44,13 +34,10 @@ const PostItemBodyEditable = ({
 
     setValue(value);
 
-    qc.setQueryData(POST_CONTROL_QUERY_KEY(id), (prev: PostControlQuery) => ({
-      ...prev,
-      content: value.length >= 1 ? value : null,
-    }));
+    editPostsControlAtom(ctx, id, { content: value.length >= 1 ? value : null })
   };
 
-  const isValid = value !== content && !controlPostMutation.isPending;
+  const isValid = value !== content && !ctx.spy(controlPostAction.statusesAtom).isPending;
 
   return (
     <div className="flex flex-col gap-2 w-full">
@@ -80,7 +67,7 @@ const PostItemBodyEditable = ({
       </div>
     </div>
   )
-}
+}, "PostItemBodyEditable")
 
 type ProcessText = {
   input: string,
@@ -125,12 +112,11 @@ const processText = ({ input, truncate }: ProcessText) => {
   });
 };
 
-export const PostItemBody = ({
-  content, id, nickname
-}: PostItemBodyProps) => {
-  const currentUser = getUser()
+export const PostItemBody = reatomComponent<PostItemBodyProps>(({
+  ctx, content, id, nickname
+}) => {
   const [expanded, setExpanded] = useState<boolean>(content.length >= MAX_LENGHT_NON_EXPANDED);
-  const { data: postControlState } = postControlQuery({ postId: id, enabled: currentUser.nickname === nickname });
+  const postControlState = getPostsControlAtom(ctx, id)
 
   const isEdit = postControlState.isEdit;
 
@@ -157,4 +143,4 @@ export const PostItemBody = ({
       )}
     </div>
   );
-};
+}, "PostItemBody")

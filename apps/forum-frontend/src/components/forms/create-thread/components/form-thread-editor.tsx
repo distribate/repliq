@@ -5,17 +5,16 @@ import { FixedToolbar } from '@repo/plate-editor/src/ui/fixed-toolbar';
 import { FixedToolbarButtons } from '@repo/plate-editor/src/ui/fixed-toolbar-buttons';
 import { FloatingToolbar } from '@repo/plate-editor/src/ui/floating-toolbar';
 import { FloatingToolbarButtons } from '@repo/plate-editor/src/ui/floating-toolbar-buttons';
-import { useEditThread } from '../hooks/use-edit-thread';
-import { threadFormQuery } from '../queries/thread-form-query';
+import { threadFormContentAtom } from '../models/thread-form.model';
 import type { Value } from "@udecode/plate"
+import { reatomComponent } from '@reatom/npm-react';
 
-export const FormThreadEditor = () => {
-  const { content } = threadFormQuery().data
-  const { updateThreadFormMutation } = useEditThread()
+export const FormThreadEditor = reatomComponent(({ ctx }) => {
+  const content = ctx.spy(threadFormContentAtom)
   const editor = useCreateEditor({ value: content });
 
   const onChange = (value: Value) => {
-    updateThreadFormMutation.mutate({ content: value })
+    threadFormContentAtom(ctx, (state) => ({ ...state, ...value }))
   }
 
   return (
@@ -31,4 +30,4 @@ export const FormThreadEditor = () => {
       </EditorContainer>
     </Plate>
   )
-}
+}, "FormThreadEditor")

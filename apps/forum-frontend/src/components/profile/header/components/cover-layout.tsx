@@ -1,61 +1,57 @@
 import { InView } from "react-intersection-observer";
-import { useCover } from "#components/profile/header/hooks/use-cover.ts";
-import { coverQuery } from "#components/profile/header/queries/cover-query.ts";
+import { coverAtom } from "#components/profile/header/models/cover.model";
 import { UserCover } from "./cover";
-import { Suspense } from "react";
+import { lazy, PropsWithChildren, Suspense } from "react";
 import { UserCoverSkeleton } from "#components/skeletons/components/user-cover-skeleton";
-import { requestedUserQuery } from "@repo/lib/queries/requested-user-query";
 import { Typography } from "@repo/ui/src/components/typography";
+import { reatomComponent } from "@reatom/npm-react";
+import { requestedUserAction, requestedUserAtom, requestedUserProfileStatusAtom } from "#components/profile/requested-user.model";
 
-export type UserCoverLayoutProps = {
-  nickname: string;
-  children?: React.ReactNode;
-};
+const Privated = lazy(() => import("#components/templates/components/profile-privated").then(m => ({ default: m.ProfilePrivated })));
 
-const UserDescription = ({ nickname }: Omit<UserCoverLayoutProps, "children">) => {
-  const { data } = requestedUserQuery(nickname)
-
-  const description = data?.description
+const UserDescription = reatomComponent(({ ctx }) => {
+  const description = ctx.spy(requestedUserAtom)?.description
 
   if (!description) return null;
 
   return (
     <div className="flex lg:hidden bg-shark-950 p-2 rounded-md mt-4">
-      <Typography
-        textColor="shark_white"
-        className="font-[Minecraft]"
-        textSize="medium"
-      >
+      <Typography textColor="shark_white" className="font-[Minecraft]" textSize="medium">
         О себе: {description}
       </Typography>
     </div>
   )
-}
+}, "UserDescription")
 
-export const UserCoverLayout = ({
-  nickname, children
-}: UserCoverLayoutProps) => {
-  const { data: { inView } } = coverQuery();
-  const { setCoverStateMutation } = useCover();
+export const UserCoverLayout = reatomComponent<PropsWithChildren>(({ ctx, children }) => {
+  const inView = ctx.spy(coverAtom).inView
+  const isLoading = ctx.spy(requestedUserAction.statusesAtom).isPending || !ctx.spy(requestedUserAtom)
+  const status = ctx.spy(requestedUserProfileStatusAtom)
 
   return (
     <>
-      <Suspense fallback={<UserCoverSkeleton />}>
-        <InView
-          as="div"
-          className={inView ? `h-svh absolute left-0 top-0 right-0` : "h-[20px] absolute left-0 top-0 right-0"}
-          onChange={(inView, _) =>
-            setCoverStateMutation.mutate({ inView })
-          }
-        />
+      {isLoading ? <UserCoverSkeleton /> : (
+        <>
+          <InView
+            as="div"
+            className={inView ? `h-svh absolute left-0 top-0 right-0` : "h-[20px] absolute left-0 top-0 right-0"}
+            onChange={(inView, _) => coverAtom(ctx, (state) => ({ ...state, inView }))}
+          />
+          <div className="w-full h-full relative">
+            <UserCover />
+            <UserDescription />
+          </div>
+        </>
+      )}
+      {status === 'privated' ? (
+        <Suspense>
+          <Privated />
+        </Suspense>
+      ) : (
         <div className="w-full h-full relative">
-          <UserCover nickname={nickname} />
-          <UserDescription nickname={nickname} />
+          {children}
         </div>
-      </Suspense>
-      <div className="w-full h-full relative">
-        {children}
-      </div>
+      )}
     </>
   );
-};
+}, "UserCoverLayout")

@@ -5,9 +5,10 @@ import { getUser } from "@repo/lib/helpers/get-user";
 import { toast } from "sonner";
 import { useState } from "react";
 import { Link, useNavigate } from "@tanstack/react-router";
+import { reatomComponent } from "@reatom/npm-react";
 
-export const ProfileAccountReferals = () => {
-  const currentUser = getUser()
+export const ProfileAccountReferals = reatomComponent(({ ctx }) => {
+  const currentUser = getUser(ctx)
   const [open, setOpen] = useState(false)
   const navigate = useNavigate()
 
@@ -66,4 +67,4 @@ export const ProfileAccountReferals = () => {
       </div>
     </>
   );
-};
+}, "ProfileAccountReferals")

@@ -6,8 +6,6 @@ import {
   MessageSquareOff,
 } from "lucide-react";
 import type { ThreadPreview } from "@repo/types/entities/thread-type.ts"
-import { Skeleton } from "@repo/ui/src/components/skeleton";
-import { Suspense } from "react";
 
 export const ThreadByCategoryItem = ({
   created_at, properties, title, comments_count, owner,
@@ -16,28 +14,21 @@ export const ThreadByCategoryItem = ({
 
   return (
     <div className="flex grow group bg-shark-900 hover:bg-shark-700 rounded-md justify-between transition-all duration-150 p-3 cursor-pointer">
-      <div className="flex flex-col w-full gap-y-2 justify-between">
-        <div className="flex items-center min-w-[260px] gap-x-2">
-          <Suspense fallback={<Skeleton className="w-[42px] h-[42px]" />}>
-            <Avatar
-              nickname={owner.nickname}
-              propWidth={42}
-              propHeight={36}
-              className="min-h-[42px] min-w-[42px]"
-            />
-          </Suspense>
-          <div className="flex flex-col">
-            <Typography textColor="shark_white" className="text-[17px] font-medium">
+      <div className="flex flex-col gap-y-2 justify-between w-2/3">
+        <div className="flex items-center gap-x-2">
+          <Avatar nickname={owner.nickname} propWidth={42} propHeight={36} className="min-h-[42px] min-w-[42px]" />
+          <div className="flex flex-col truncate">
+            <Typography textColor="shark_white" className="text-[17px] truncate font-medium">
               {title}
             </Typography>
-            <Typography className="text-[16px] text-shark-300 font-medium">
+            <Typography className="text-[16px] text-shark-300 truncate font-medium">
               {owner.nickname} создал {createdAt}
             </Typography>
           </div>
         </div>
       </div>
-      <div className="flex items-center gap-x-2 rounded-md px-2 py-1 border-white/10 border-[1px]">
-        <div className="flex items-center gap-1 w-[26px]">
+      <div className="flex items-center gap-x-2 rounded-md px-2 py-1 aspect-square border-white/10 border-[1px]">
+        <div className="flex items-center gap-1 w-full">
           {properties.is_comments ? (
             <>
               <MessageSquare className="text-shark-300" size={16} />

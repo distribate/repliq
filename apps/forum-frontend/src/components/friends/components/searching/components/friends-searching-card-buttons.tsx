@@ -1,21 +1,16 @@
 import { Button } from "@repo/ui/src/components/button.tsx";
 import { Plus, RotateCcw } from "lucide-react";
-import { useControlFriendRequests } from "#components/friend/hooks/use-control-friend-requests.ts";
+import { controlOutgoingRequestAction } from "#components/friend/models/control-friend-requests.model";
+import { reatomComponent } from "@reatom/npm-react";
 
 type t = {
   recipient: string;
   request_id: string
 }
 
-export const FriendsSearchingCardActionDeny = ({
-  recipient, request_id
-}: t) => {
-  const { rejectOutgoingRequestMutation } = useControlFriendRequests();
-
+export const FriendsSearchingCardActionDeny = reatomComponent<t>(({ ctx, recipient, request_id }) => {
   const handleDeniedFriendReq = () => {
-    return rejectOutgoingRequestMutation.mutate({
-      recipient, request_id
-    });
+    controlOutgoingRequestAction(ctx, { type: "reject", recipient, request_id });
   };
 
   return (
@@ -24,24 +19,20 @@ export const FriendsSearchingCardActionDeny = ({
       variant="pending"
       className="!p-2 rounded-lg"
       disabled={
-        rejectOutgoingRequestMutation.isPending ||
-        rejectOutgoingRequestMutation.isError
+        ctx.spy(controlOutgoingRequestAction.statusesAtom).isPending ||
+        ctx.spy(controlOutgoingRequestAction.statusesAtom).isRejected
       }
     >
       <RotateCcw size={20} className="text-shark-950" />
     </Button>
   );
-};
+}, "FriendsSearchingCardActionDeny")
 
-export const FriendsSearchingCardActionAdd = ({
-  recipient, request_id
-}: t) => {
-  const { createRequestFriendMutation } = useControlFriendRequests();
-
+export const FriendsSearchingCardActionAdd = reatomComponent<t>(({ ctx, recipient, request_id }) => {
   const handleAddFriend = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
 
-    return createRequestFriendMutation.mutate({ recipient });
+    return controlOutgoingRequestAction(ctx, { type: "create", recipient, request_id });
   };
 
   return (
@@ -50,11 +41,11 @@ export const FriendsSearchingCardActionAdd = ({
       variant="positive"
       className="!p-2 rounded-lg"
       disabled={
-        createRequestFriendMutation.isPending ||
-        createRequestFriendMutation.isError
+        ctx.spy(controlOutgoingRequestAction.statusesAtom).isPending ||
+        ctx.spy(controlOutgoingRequestAction.statusesAtom).isRejected
       }
     >
       <Plus size={20} className="text-shark-950" />
     </Button>
   );
-};
+}, "FriendsSearchingCardActionAdd")

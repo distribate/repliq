@@ -1,9 +1,7 @@
-import { useQuery } from "@tanstack/react-query";
-import { createQueryKey } from '@repo/lib/helpers/query-key-builder.ts';
 import { authClient } from "@repo/shared/api/auth-client";
 import type { InferResponseType } from "hono/client"
-
-export const USER_ACTIVE_SESSIONS_QUERY_KEY = createQueryKey("user", ["active-sessions"])
+import { atom } from "@reatom/core";
+import { reatomAsync, withStatusesAtom } from "@reatom/async";
 
 const client = authClient["get-sessions"].$get
 
@@ -20,9 +18,15 @@ const getUserSessions = async () => {
   return data.data
 }
 
-export const userActiveSessionsQuery = () => useQuery({
-  queryKey: USER_ACTIVE_SESSIONS_QUERY_KEY,
-  queryFn: () => getUserSessions(),
-  refetchOnWindowFocus: false,
-  refetchOnMount: false,
-});
+export const userActiveSessionsAtom = atom<GetUserActiveSessionsResponse | null>(null, "userActiveSessions")
+
+export const userActiveSessionsAction = reatomAsync(async (ctx) => {
+  if (ctx.get(userActiveSessionsAtom)) return ctx.get(userActiveSessionsAtom)
+    
+  return await ctx.schedule(() => getUserSessions())
+}, {
+  name: "userActiveSessionsAction",
+  onFulfill: (ctx, res) => {
+    userActiveSessionsAtom(ctx, res)
+  }
+}).pipe(withStatusesAtom())

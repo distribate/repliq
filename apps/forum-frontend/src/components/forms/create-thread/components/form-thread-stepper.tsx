@@ -1,5 +1,6 @@
 import { serializeNodes } from "@repo/lib/helpers/nodes-serializer";
-import { ThreadFormQuery, threadFormQuery } from "../queries/thread-form-query";
+import { ThreadFormQuery } from "../models/thread-form.model";
+import { reatomComponent } from "@reatom/npm-react";
 
 type Step = "title" | "category" | "content" | "done"
 
@@ -28,9 +29,9 @@ const getCurrentStep = (data: ThreadFormQuery): Step => {
   return "done";
 };
 
-export const FormThreadStep = () => {
-  const data = threadFormQuery().data
-  const currentStep = getCurrentStep(data)
+export const FormThreadStep = reatomComponent(({ ctx }) => {
+  // const data = ctx.spy(threadFormAtom)
+  const currentStep = "done"
   
   return (
     <div className="flex items-center select-none justify-center border border-shark-500 rounded-lg px-2 py-0.5">
@@ -39,4 +40,4 @@ export const FormThreadStep = () => {
       </span>
     </div>
   )
-}
+}, "FormThreadStep")

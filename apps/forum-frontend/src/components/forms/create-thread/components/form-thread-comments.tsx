@@ -1,18 +1,13 @@
 import { Typography } from "@repo/ui/src/components/typography.tsx";
 import { Controller } from "react-hook-form";
 import { FormField } from "@repo/ui/src/components/form-field.tsx";
-import { threadFormQuery } from "../queries/thread-form-query.ts";
 import { FormChildsProps } from "./form-thread.tsx";
 import { Switch } from "@repo/ui/src/components/switch.tsx";
-import { useEditThread } from "../hooks/use-edit-thread.tsx";
+import { reatomComponent } from "@reatom/npm-react";
+import { threadFormPreferencesAtom } from "../models/thread-form.model.ts";
 
-export const FormThreadComments = ({ errors, control }: FormChildsProps) => {
-  const { data: threadFormState } = threadFormQuery();
-  const { updateThreadFormMutation } = useEditThread();
-
-  if (!threadFormState) return null;
-
-  const isActive = threadFormState.is_comments;
+export const FormThreadComments = reatomComponent<FormChildsProps>(({ ctx, errors, control }) => {
+  const is_comments = ctx.spy(threadFormPreferencesAtom).is_comments
 
   return (
     <FormField errorMessage={errors?.is_comments?.message}>
@@ -31,14 +26,12 @@ export const FormThreadComments = ({ errors, control }: FormChildsProps) => {
           render={({ field: { onChange } }) => {
             return (
               <Switch
-                defaultChecked={isActive}
-                checked={isActive}
+                defaultChecked={is_comments}
+                checked={is_comments}
                 onCheckedChange={(checked) => {
                   onChange(checked);
 
-                  return updateThreadFormMutation.mutate({
-                    is_comments: checked,
-                  });
+                  threadFormPreferencesAtom(ctx, (state) => ({...state, is_comments: checked }))
                 }}
               />
             );
@@ -47,4 +40,4 @@ export const FormThreadComments = ({ errors, control }: FormChildsProps) => {
       </div>
     </FormField>
   );
-};
+}, "FormThreadComments")

@@ -1,42 +1,24 @@
-import { ChangeEvent, forwardRef, useState } from "react";
-import { Input } from "@repo/ui/src/components/input.tsx";
+import { ChangeEvent, useState } from "react";
+import { Input, InputProps } from "@repo/ui/src/components/input.tsx";
 import { Typography } from "@repo/ui/src/components/typography.tsx";
 import { DropdownWrapper } from "#components/wrappers/components/dropdown-wrapper";
 import { DropdownMenuItem } from "@repo/ui/src/components/dropdown-menu.tsx";
-import { useQueryClient } from "@tanstack/react-query";
 import {
-  POSTS_FILTERING_QUERY_KEY,
-  postsFilteringQuery,
+  postsFilteringAtom,
   PostsFilteringQuery,
-} from "#components/profile/posts/posts/queries/posts-filtering-query.ts";
+} from "#components/profile/posts/posts/models/filter-posts.model";
 import { useDebounce } from "@repo/lib/hooks/use-debounce.ts";
-import {
-  POSTS_SORT,
-  PostSort,
-} from "#components/profile/posts/posts/constants/posts-filtering.ts";
-import { UserEntity } from "@repo/types/entities/entities-type.ts";
-import { useUpdatePosts } from "../hooks/use-update-posts";
+import { updatePostsAction } from "../models/update-posts.model";
 import { SelectedWrapper } from "#components/wrappers/components/selected-wrapper";
 import { ArrowDownNarrowWide } from "lucide-react";
+import { reatomComponent } from "@reatom/npm-react";
+import { requestedUserParamAtom } from "#components/profile/requested-user.model";
 
-type ProfilePostsFilteringProps = Pick<UserEntity, "nickname">;
-
-const ProfilePostsFilteringSearch = forwardRef<
-  HTMLInputElement
->((props, ref) => {
-  const qc = useQueryClient();
+const ProfilePostsFilteringSearch = reatomComponent<InputProps>(({ ctx, ...props }) => {
   const [value, setValue] = useState<string>("");
 
   const updateQuery = (value: string) => {
-    qc.setQueryData(
-      POSTS_FILTERING_QUERY_KEY,
-      (prev: PostsFilteringQuery) => ({
-        ...prev,
-        searchQuery: value,
-      }),
-    );
-
-    console.log(qc.getQueryCache())
+    postsFilteringAtom(ctx, (state: PostsFilteringQuery) => ({ ...state, searchQuery: value }))
   };
 
   const debouncedUpdateQuery = useDebounce(updateQuery, 300);
@@ -50,7 +32,6 @@ const ProfilePostsFilteringSearch = forwardRef<
 
   return (
     <Input
-      ref={ref}
       className="rounded-lg"
       value={value}
       maxLength={64}
@@ -59,29 +40,30 @@ const ProfilePostsFilteringSearch = forwardRef<
       {...props}
     />
   );
-},
-);
+}, "ProfilePostsFilteringSearch");
 
-const ProfilePostsFilteringView = ({
-  nickname
-}: {
-  nickname: string
-}) => {
-  const { data: filteringState } = postsFilteringQuery();
-  const qc = useQueryClient();
-  const { updatePostsMutation } = useUpdatePosts();
+type PostSort = {
+  title: string;
+  value: Pick<PostsFilteringQuery, "filteringType">["filteringType"];
+};
+
+const POSTS_SORT: PostSort[] = [
+  { title: "По дате публикации", value: "created_at" },
+  { title: "По кол-ву просмотров", value: "views_count" },
+];
+
+const ProfilePostsFilteringView = reatomComponent(({ ctx }) => {
+  const filteringState = ctx.spy(postsFilteringAtom)
+  const nickname = ctx.spy(requestedUserParamAtom)
 
   const handleSortType = (type: Pick<PostSort, "value">["value"]) => {
-    qc.setQueryData(
-      POSTS_FILTERING_QUERY_KEY,
-      (prev: PostsFilteringQuery) => ({
-        ...prev,
-        filteringType: type,
-        cursor: undefined,
-      }),
-    );
+    if (!nickname) return;
 
-    updatePostsMutation.mutate({ nickname, type: "update-filter" });
+    postsFilteringAtom(ctx, (state: PostsFilteringQuery) => ({
+      ...state, filteringType: type, cursor: undefined,
+    }))
+
+    updatePostsAction(ctx, { nickname, type: "update-filter" });
   };
 
   const currentFilteringType = filteringState.filteringType;
@@ -128,11 +110,12 @@ const ProfilePostsFilteringView = ({
       }
     />
   );
-};
+}, "ProfilePostsFilteringView")
 
-export const ProfilePostsFiltering = ({
-  nickname,
-}: ProfilePostsFilteringProps) => {
+export const ProfilePostsFiltering = reatomComponent(({ ctx }) => {
+  const nickname = ctx.spy(requestedUserParamAtom)
+  if (!nickname) return;
+
   return (
     <div className="flex w-full justify-between h-14 items-center">
       <div className="flex items-center gap-1 w-fit">
@@ -149,9 +132,9 @@ export const ProfilePostsFiltering = ({
           <ProfilePostsFilteringSearch />
         </FilteringSearchWrapper> */}
         <div className="w-fit">
-          <ProfilePostsFilteringView nickname={nickname} />
+          <ProfilePostsFilteringView />
         </div>
       </div>
     </div>
   );
-};
+}, "ProfilePostsFiltering")

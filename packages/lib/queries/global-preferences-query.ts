@@ -1,47 +1,18 @@
-import { getCookieByKey } from "#helpers/get-cookie-by-key.ts";
-import { createQueryKey } from "#helpers/query-key-builder.ts";
-import { useReadLocalStorage } from "#hooks/use-read-local-storage.ts";
-import { ALERTS_COOKIE_KEY, INTRO_COOKIE_KEY } from "@repo/shared/constants/cookies.ts";
-import { useSuspenseQuery } from "@tanstack/react-query";
+import { atom } from '@reatom/core';
+import { withCookie } from "@reatom/persist-web-storage"
 
-export const GLOBAL_PREFERENCES_QUERY_KEY = createQueryKey("ui", ["global-preferences"])
-
-export type GlobalPreferencesQuery = {
+type GlobalPreferences = {
   alerts: "show" | "hide",
   autoSaveThreads: boolean,
   intro: "show" | "hide"
 }
 
-function hasIntroShow(): boolean {
-  const hasIntroShowing = getCookieByKey(INTRO_COOKIE_KEY);
-
-  if (hasIntroShowing === "show") return true;
-
-  return hasIntroShowing !== "hide";
+const initial: GlobalPreferences = {
+  alerts: "show",
+  intro: "show", 
+  autoSaveThreads: true
 }
 
-function hasAlertsShow(): boolean {
-  const hasAlertsShowing = getCookieByKey(ALERTS_COOKIE_KEY);
-
-  if (hasAlertsShowing === "show") return true;
-
-  return hasAlertsShowing !== "hide";
-}
-
-export const PREFERENCES_LS_KEY = "preferences";
-
-export const globalPreferencesQuery = () => {
-  const value = useReadLocalStorage<Pick<GlobalPreferencesQuery, "autoSaveThreads">>(PREFERENCES_LS_KEY);
-
-  const hasAlertsShowing = hasAlertsShow()
-  const hasIntroShowing = hasIntroShow()
-
-  return useSuspenseQuery<GlobalPreferencesQuery>({
-    queryKey: GLOBAL_PREFERENCES_QUERY_KEY,
-    initialData: {
-      alerts: hasAlertsShowing ? "show" : "hide",
-      intro: hasIntroShowing ? "show" : "hide",
-      autoSaveThreads: value ? value.autoSaveThreads : false
-    }
-  })
-}
+export const globalPreferencesAtom = atom<GlobalPreferences>(initial, "globalPreferences").pipe(
+  withCookie({ maxAge: 999999999 })("preferences")
+)

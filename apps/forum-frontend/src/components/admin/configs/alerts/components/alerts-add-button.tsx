@@ -5,25 +5,12 @@ import {
   DialogTrigger,
 } from "@repo/ui/src/components/dialog.tsx";
 import { Typography } from "@repo/ui/src/components/typography.tsx";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { DialogLoader } from "#components/templates/components/dialog-loader";
-import { useMutationState } from "@tanstack/react-query";
 import { AlertCreateForm } from "#components/forms/create-alert/components/create-alert-form.tsx";
-import { ALERT_CREATE_MUTATION_KEY } from "#components/forms/create-alert/hooks/use-alerts.ts";
 
 export const AlertsAddButton = () => {
   const [isShow, setIsShow] = useState<boolean>(false);
-
-  const data = useMutationState({
-    filters: { mutationKey: ALERT_CREATE_MUTATION_KEY },
-    select: (mutation) => mutation.state.status,
-  });
-
-  const alertCreatingMutationStatus = data[data.length - 1];
-
-  useEffect(() => {
-    if (alertCreatingMutationStatus === "success") setIsShow(false);
-  }, [alertCreatingMutationStatus]);
 
   return (
     <Dialog onOpenChange={setIsShow} open={isShow}>
@@ -33,7 +20,7 @@ export const AlertsAddButton = () => {
         </div>
       </DialogTrigger>
       <DialogContent>
-        {alertCreatingMutationStatus === "pending" ? (
+        {false ? (
           <DialogLoader />
         ) : (
           <div className="flex flex-col gap-y-6 px-2 items-center w-full">

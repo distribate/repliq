@@ -2,7 +2,7 @@ import { Ellipsis } from "lucide-react";
 import { Typography } from "@repo/ui/src/components/typography.tsx";
 import { Separator } from "@repo/ui/src/components/separator.tsx";
 import { DropdownWrapper } from "#components/wrappers/components/dropdown-wrapper.tsx";
-import { UserCardProps } from "../user-preview-card.tsx";
+import { UserCardProps } from "./user-preview-card.tsx";
 import { UserCardModal } from "#components/modals/custom/components/user-card-modal.tsx";
 import { USER_URL } from "@repo/shared/constants/routes.ts";
 import { ReportCreateModal } from "#components/modals/action-confirmation/components/report/components/report-create-modal.tsx";

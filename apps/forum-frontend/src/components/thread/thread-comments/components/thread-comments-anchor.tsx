@@ -1,21 +1,17 @@
-import { useQueryClient } from "@tanstack/react-query";
-import { useUpdateComments } from "../hooks/use-update-comments";
-import { THREAD_QUERY_KEY } from "#components/thread/thread-main/queries/thread-query";
-import { ThreadDetailed } from "@repo/types/entities/thread-type";
-import { GetThreadCommentsResponse } from "@repo/types/entities/thread-comments-types";
-import { THREAD_COMMENTS_QUERY_KEY } from "../queries/thread-comments-query";
+import { updateCommentsAction } from "../models/update-comments.model";
+import { threadAtom } from "#components/thread/thread-main/models/thread.model";
+import { threadCommentsDataAtom, threadCommentsMetaAtom } from "../models/thread-comments.model";
 import { ArrowDown } from "lucide-react";
+import { reatomComponent, useAtom } from "@reatom/npm-react";
 
 const THREAD_COMMENTS_LENGTH_FOR_PAGE = 16;
 
-export const ThreadCommentsAnchor = ({
-  threadId
-}: {
-  threadId: string
+export const ThreadCommentsAnchor = reatomComponent<{ threadId: string }>(({
+  ctx, threadId
 }) => {
-  const qc = useQueryClient();
-  const currentThread = qc.getQueryData<ThreadDetailed>(THREAD_QUERY_KEY(threadId));
-  const { updateCommentsMutation } = useUpdateComments()
+  const [currentThread] = useAtom(threadAtom)
+  const [threadComments] = useAtom(threadCommentsDataAtom)
+  const [threadCommentsMeta] = useAtom(threadCommentsMetaAtom)
 
   if (!currentThread) return null
 
@@ -25,25 +21,15 @@ export const ThreadCommentsAnchor = ({
 
     let updatedCommentsCount = 0;
 
-    const threadComments = qc.getQueryData<GetThreadCommentsResponse>(
-      THREAD_COMMENTS_QUERY_KEY(threadId)
-    )
-
-    const currentThreadCommentsLength = threadComments?.data.length
+    const currentThreadCommentsLength = threadComments?.length
 
     if (totalCommentsLength !== currentThreadCommentsLength) {
       for (let i = 0; i < iter; i++) {
-        const threadComments = qc.getQueryData<GetThreadCommentsResponse>(
-          THREAD_COMMENTS_QUERY_KEY(threadId)
-        )
-
-        const cursor = threadComments?.meta.endCursor
+        const cursor = threadCommentsMeta?.endCursor
 
         if (cursor) {
-          await updateCommentsMutation.mutateAsync({
-            threadId, cursor,
-          });
-          
+          updateCommentsAction(ctx, { threadId, cursor })
+
           updatedCommentsCount += THREAD_COMMENTS_LENGTH_FOR_PAGE;
         } else {
           break;
@@ -82,4 +68,4 @@ export const ThreadCommentsAnchor = ({
       </div>
     )
   )
-}
+}, "ThreadCommentsAnchor")

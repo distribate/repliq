@@ -1,17 +1,14 @@
 import { Button } from "@repo/ui/src/components/button.tsx";
 import { Typography } from "@repo/ui/src/components/typography.tsx";
-import { useThreadControl } from "#components/thread/thread-control/hooks/use-thread-control";
-import { threadControlQuery } from "#components/thread/thread-control/queries/thread-control-query";
+import { threadControlAtom, updateThreadAction } from "#components/thread/thread-control/models/thread-control.model";
+import { reatomComponent } from "@reatom/npm-react";
 
 type ThreadControlSaveProps = {
   threadId: string
 };
 
-export const ThreadControlSave = ({ threadId }: ThreadControlSaveProps) => {
-  const { updateThreadMutation } = useThreadControl();
-  const { data: threadControlValues } = threadControlQuery();
-
-  const handleSave = () => updateThreadMutation.mutate(threadId);
+export const ThreadControlSave = reatomComponent<ThreadControlSaveProps>(({ ctx, threadId }) => {
+  const threadControlValues = ctx.spy(threadControlAtom)
 
   if (!threadControlValues || !threadControlValues.state) return;
 
@@ -20,9 +17,9 @@ export const ThreadControlSave = ({ threadId }: ThreadControlSaveProps) => {
       variant="positive"
       className="px-4"
       disabled={!threadControlValues.state.isValid}
-      onClick={handleSave}
+      onClick={() => updateThreadAction(ctx, threadId)}
     >
       <Typography>Сохранить</Typography>
     </Button>
   );
-};
+}, "ThreadControlSave")

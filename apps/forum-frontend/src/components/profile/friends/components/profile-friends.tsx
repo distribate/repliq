@@ -1,11 +1,14 @@
-import { UserPageParam } from "@repo/types/global";
 import { ProfileFriends } from './profile-friends-list';
 import { ProfileWrapper } from "#components/wrappers/components/profile-wrapper";
+import { onConnect } from '@reatom/framework';
+import { friendsAction } from '../models/profile-friends.model';
 
-export const UserProfileFriends = ({ nickname }: UserPageParam) => {
+onConnect(friendsAction, (ctx) => friendsAction(ctx, { limit: 32 }))
+
+export const UserProfileFriends = () => {
   return (
     <ProfileWrapper>
-      <ProfileFriends nickname={nickname} />
+      <ProfileFriends />
     </ProfileWrapper>
   );
 };

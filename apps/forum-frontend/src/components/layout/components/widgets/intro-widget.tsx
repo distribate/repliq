@@ -1,17 +1,16 @@
 import Intro from "@repo/assets/images/intro.jpg"
 import { Typography } from "@repo/ui/src/components/typography";
-import { globalPreferencesQuery } from "@repo/lib/queries/global-preferences-query";
-import { useUpdateGlobalPreferences } from "@repo/lib/hooks/use-update-global-preferences";
+import { globalPreferencesAtom } from "@repo/lib/queries/global-preferences-query";
 import { DeleteButton } from "@repo/ui/src/components/detele-button";
+import { reatomComponent } from "@reatom/npm-react";
+import { updateVisibilityAction } from "@repo/lib/hooks/use-update-global-preferences";
 
-const IntroClose = () => {
-  const { updateShowingMutation } = useUpdateGlobalPreferences()
+const IntroClose = reatomComponent(({ ctx }) => {
+  return <DeleteButton variant="invisible" onClick={() => updateVisibilityAction(ctx, "intro")} />;
+}, "IntroClose")
 
-  return <DeleteButton variant="invisible" onClick={() => updateShowingMutation.mutate("intro")} />;
-};
-
-export const IntroWidget = () => {
-  const { data: { intro } } = globalPreferencesQuery()
+export const IntroWidget = reatomComponent(({ ctx }) => {
+  const { intro } = ctx.spy(globalPreferencesAtom)
 
   if (intro === "hide") return null;
 
@@ -29,7 +28,7 @@ export const IntroWidget = () => {
       <Typography className="font-[Minecraft] mb-2 text-[16px] md:text-[21px] z-[2]">
         Добро пожаловать на форум!
       </Typography>
-      <IntroClose/>
+      <IntroClose />
     </div>
   )
-}
+}, "IntroWidget")

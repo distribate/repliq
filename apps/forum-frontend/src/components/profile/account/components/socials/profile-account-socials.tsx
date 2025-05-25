@@ -1,12 +1,12 @@
 import { Skeleton } from "@repo/ui/src/components/skeleton"
-import { userSocialsQuery } from "../../queries/user-socials-query"
+import { userSocialsResource } from "../../models/user-socials.model"
 import { Typography } from "@repo/ui/src/components/typography"
 import { SocialsCard } from "./socials-card"
-import { getUser } from "@repo/lib/helpers/get-user"
+import { reatomComponent } from "@reatom/npm-react"
 
-export const ProfileAccountSocials = () => {
-  const currentUser = getUser()
-  const { data: userSocials, isLoading } = userSocialsQuery(currentUser.nickname)
+export const ProfileAccountSocials = reatomComponent(({ ctx }) => {
+  const userSocials = ctx.spy(userSocialsResource.dataAtom)
+  const isLoading = ctx.spy(userSocialsResource.statusesAtom).isPending
 
   return (
     <div className="flex flex-col gap-4 w-full h-full">
@@ -43,4 +43,4 @@ export const ProfileAccountSocials = () => {
       </div>
     </div>
   )
-}
+}, "ProfileAccountSocials")

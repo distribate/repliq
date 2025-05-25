@@ -1,32 +1,16 @@
-import { USER_SETTINGS_QUERY_KEY, UserSettingsQuery } from "#components/modals/user-settings/queries/user-settings-query"
-import { useMutation, useQueryClient } from "@tanstack/react-query"
+import { userSettingsAtom, UserSettingsDialog } from "#components/modals/user-settings/queries/user-settings-query"
+import { action } from "@reatom/core"
 
-export const useUserSettingsModal = () => {
-  const qc = useQueryClient()
+export const updateDialogSectionAction = action((ctx, to: UserSettingsDialog["current"]) => {
+  userSettingsAtom(ctx, (state) => ({ ...state, current: to }))
+})
 
-  const updateDialogSectionMutation = useMutation({
-    mutationFn: async ({ to }: { to: UserSettingsQuery["current"] }) => {
-      return qc.setQueryData(USER_SETTINGS_QUERY_KEY, 
-        (prev: UserSettingsQuery) => ({ ...prev, current: to })
-      )
-    },
-    onError: e => { throw new Error(e.message) }
-  })
+export const toggleGlobalDialogAction = action((ctx, { value, reset }: { value: boolean, reset: boolean }) => {
+  userSettingsAtom(ctx, (state) => ({ ...state, global: value }))
 
-  const toggleGlobalDialogMutation = useMutation({
-    mutationFn: async ({ value, reset }: { value: boolean, reset: boolean }) => {
-      qc.setQueryData(USER_SETTINGS_QUERY_KEY, 
-        (prev: UserSettingsQuery) => ({ ...prev, global: value })
-      )
-
-      if (reset && value === false) {
-        setTimeout(() => {
-          qc.resetQueries({ queryKey: USER_SETTINGS_QUERY_KEY })
-        }, 300)
-      }
-    },
-    onError: e => { throw new Error(e.message) }
-  })
-
-  return { updateDialogSectionMutation, toggleGlobalDialogMutation }
-}
+  if (reset && value === false) {
+    setTimeout(() => {
+      userSettingsAtom.reset(ctx)
+    }, 300)
+  }
+})

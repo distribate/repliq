@@ -10,15 +10,14 @@ import SteveHead from "@repo/assets/images/minecraft/steve_head.jpg"
 import { LAND_URL } from "@repo/shared/constants/routes"
 import { getUser } from "@repo/lib/helpers/get-user"
 import { ColoredText } from "#components/wrappers/components/colored-text-wrapper"
+import { reatomComponent } from "@reatom/npm-react"
 
 const client = landsClient.lands['get-lands'].$get
 
 type LandCard = InferResponseType<typeof client, 200>["data"][0]
 
-export const LandCard = ({ 
-  balance, level, members, name, title, ulid 
-}: LandCard) => {
-  const currentUserUUID = getUser().uuid
+export const LandCard = reatomComponent<LandCard>(({ ctx, balance, level, members, name, title, ulid }) => {
+  const currentUserUUID = getUser(ctx).uuid
 
   const isOwner = Object.keys(members)[0] === currentUserUUID
 
@@ -76,4 +75,4 @@ export const LandCard = ({
       </div>
     </div>
   )
-}
+}, "LandCard")

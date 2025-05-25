@@ -1,26 +1,21 @@
-import { useControlFriendRequests } from "#components/friend/hooks/use-control-friend-requests";
+import { controlOutgoingRequestAction } from "#components/friend/models/control-friend-requests.model";
+import { spawn } from "@reatom/framework";
+import { reatomComponent } from "@reatom/npm-react";
 import { Button } from "@repo/ui/src/components/button";
 
-type FriendButtonProps = {
+type AddFriendButtonProps = {
   recipient: string;
-};
-
-export type AddFriendButtonProps = FriendButtonProps & {
-  friend_id: string
 }
 
-export const AddFriendButton = ({
-  recipient,
-}: Pick<AddFriendButtonProps, "recipient">) => {
-  const { createRequestFriendMutation } = useControlFriendRequests();
-
+export const AddFriendButton = reatomComponent<AddFriendButtonProps>(({ ctx, recipient }) => {
   return (
     <Button
-      onClick={() => createRequestFriendMutation.mutate({ recipient })}
+      // @ts-ignore
+      onClick={() => spawn(ctx, async (spawnCtx) => controlOutgoingRequestAction(spawnCtx, { type: "create", recipient }))}
       variant="positive"
-      disabled={createRequestFriendMutation.isPending}
+      disabled={ctx.spy(controlOutgoingRequestAction.statusesAtom).isPending}
     >
       Добавить в друзья
     </Button>
   );
-};
+}, "AddFriendButton")

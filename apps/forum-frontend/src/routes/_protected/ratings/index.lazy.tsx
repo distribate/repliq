@@ -1,7 +1,6 @@
 import { createLazyFileRoute } from '@tanstack/react-router'
 import { RatingList } from "#components/ratings/components/rating-list"
 import { RatingNavigation } from "#components/ratings/components/rating-navigation"
-// import { RatingFiltration } from "#components/ratings/components/rating-filtration"
 
 export const Route = createLazyFileRoute('/_protected/ratings/')({
   component: RouteComponent,
@@ -21,7 +20,6 @@ function RouteComponent() {
     <div className="flex flex-col w-full gap-4 items-center justify-center h-full relative">
       <RatingNavigation />
       <div className="flex w-full bg-primary-color p-2 rounded-lg h-full">
-        {/* <RatingFiltration /> */}
         <RatingList />
       </div>
     </div>

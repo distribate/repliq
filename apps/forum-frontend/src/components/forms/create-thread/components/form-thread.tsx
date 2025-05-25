@@ -1,4 +1,4 @@
-import { useCreateThread } from "../hooks/use-create-thread.tsx";
+import { createThreadAction } from "../models/create-thread.model.ts";
 import { Button } from "@repo/ui/src/components/button.tsx";
 import { BlockWrapper } from "#components/wrappers/components/block-wrapper.tsx";
 import { FormThreadCategories } from "./form-thread-categories.tsx";
@@ -7,33 +7,32 @@ import { FormThreadDescription } from "./form-thread-description.tsx";
 import { FormThreadTitle } from "./form-thread-title.tsx";
 import { Control, FieldErrors, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { threadFormQuery } from "#components/forms/create-thread/queries/thread-form-query.ts";
+import {
+  threadFormDescriptionAtom,
+  threadFormPermissionAtom,
+  threadFormPreferencesAtom,
+  threadFormTagsAtom,
+  threadFormVisibilityAtom
+} from "#components/forms/create-thread/models/thread-form.model.ts";
 import { FormThreadAdditional } from "./form-thread-additional.tsx";
 import { Typography } from "@repo/ui/src/components/typography.tsx";
 import { lazy, Suspense } from "react";
 import { z } from "zod";
 import { createThreadSchema } from "../schemas/create-form-schema.ts";
-import { Edit, Eye, HelpCircle, ImagePlus, Info } from "lucide-react";
+import { HelpCircle, ImagePlus, Info } from "lucide-react";
 import { Separator } from "@repo/ui/src/components/separator.tsx";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@repo/ui/src/components/tabs.tsx";
-import { Skeleton } from "@repo/ui/src/components/skeleton.tsx";
 import { FormThreadStep } from "./form-thread-stepper.tsx";
-import { useEditThread } from "../hooks/use-edit-thread.tsx";
-import { serializeNodes } from "@repo/lib/helpers/nodes-serializer.ts";
+import { handleAddImagesAction } from "../models/edit-thread.model.ts";
+import { reatomComponent } from "@reatom/npm-react";
+import { FormThreadContent } from "./form-thread-content.tsx";
 
-const FormThreadPreviewImages = lazy(() => import("./form-thread-preview-images.tsx")
-  .then(m => ({ default: m.FormThreadPreviewImages }))
-);
+const FormThreadPreviewImages = lazy(() => import("./form-thread-preview-images.tsx").then(m => ({ default: m.FormThreadPreviewImages })));
 
-const FormThreadEditor = lazy(() => import('./form-thread-editor.tsx')
-  .then(m => ({ default: m.FormThreadEditor }))
-)
-
-type zodCreateThreadForm = z.infer<typeof createThreadSchema>;
+type createThreadForm = z.infer<typeof createThreadSchema>;
 
 export type FormChildsProps = {
-  control: Control<zodCreateThreadForm, any>;
-  errors: FieldErrors<zodCreateThreadForm>;
+  control: Control<createThreadForm, any>;
+  errors: FieldErrors<createThreadForm>;
 };
 
 const FormThreadRecommendations = () => {
@@ -94,13 +93,11 @@ const FormThreadFormatHelp = () => {
   )
 }
 
-const CreateImage = () => {
-  const { handleAddImages } = useEditThread();
-
+const CreateImage = reatomComponent(({ ctx }) => {
   return (
     <Button
-      onMouseDown={e => e.preventDefault()}
       type="button"
+      onMouseDown={e => e.preventDefault()}
       className="group hover:bg-shark-700 h-10 relative w-fit overflow-hidden"
     >
       <ImagePlus size={20} className="text-shark-300" />
@@ -113,11 +110,11 @@ const CreateImage = () => {
         accept="image/*"
         multiple
         className="absolute cursor-pointer right-0 top-0 left-0 bottom-0 opacity-0 w-full"
-        onChange={e => handleAddImages(e)}
+        onChange={e => handleAddImagesAction(ctx, e)}
       />
     </Button>
   )
-}
+}, "CreateImage")
 
 const FormThreadHead = () => {
   return (
@@ -135,79 +132,25 @@ const FormThreadHead = () => {
   )
 }
 
-const FormThreadContent = () => {
-  return (
-    <div className="flex flex-col gap-y-1 w-full max-w-full overflow-hidden">
-      <Typography textColor="shark_white" textSize="large">
-        Контент <span className="text-red-500">*</span>
-      </Typography>
-      <Tabs defaultValue="edit" className="flex flex-col w-full gap-4">
-        <TabsList className="flex flex-col sm:flex-row items-center justify-between w-full gap-2 *:w-full">
-          <TabsTrigger value="edit" className="flex group items-center justify-center gap-2">
-            <Edit
-              size={20}
-              className="group-data-[state=active]:text-shark-900 text-shark-50"
-            />
-            <span>Редактирование</span>
-          </TabsTrigger>
-          <TabsTrigger disabled value="preview" className="flex group items-center justify-center gap-2">
-            <Eye
-              size={20}
-              className="group-data-[state=active]:text-shark-900 text-shark-50"
-            />
-            <span>Предварительный просмотр</span>
-          </TabsTrigger>
-        </TabsList>
-        <TabsContent value="edit">
-          <Suspense fallback={<Skeleton className="h-44 w-full" />}>
-            <FormThreadEditor />
-          </Suspense>
-        </TabsContent>
-        <TabsContent value="preview">
-          Preview built...
-        </TabsContent>
-      </Tabs>
-    </div>
-  )
-}
-
-export const CreateThreadForm = () => {
-  const { createPostThreadMutation } = useCreateThread();
-  const { data: threadFormState } = threadFormQuery();
-
-  const {
-    control,
-    handleSubmit,
-    formState: { errors, isValid }
-  } = useForm<zodCreateThreadForm>({
+export const CreateThreadForm = reatomComponent(({ ctx }) => {
+  const { control, handleSubmit, formState: { errors, isValid } } = useForm<createThreadForm>({
     mode: "onSubmit",
     resolver: zodResolver(createThreadSchema),
-    values: {
-      title: threadFormState.title,
-      category_id: threadFormState.category_id ?? undefined,
-      images: null,
-      is_comments: false,
-      permission: false,
-      tags: [],
-      visibility: "all",
-      description: null,
-      content: serializeNodes(threadFormState.content)
-    },
     defaultValues: {
-      is_comments: threadFormState.is_comments,
-      permission: threadFormState.permission,
-      tags: threadFormState.tags,
-      visibility: threadFormState.visibility,
-      description: threadFormState.description,
+      is_comments: ctx.get(threadFormPreferencesAtom).is_comments,
+      permission: ctx.get(threadFormPermissionAtom),
+      tags: ctx.get(threadFormTagsAtom),
+      visibility: ctx.get(threadFormVisibilityAtom),
+      description: ctx.get(threadFormDescriptionAtom),
       images: null,
     },
   });
 
-  const onSubmit = () => createPostThreadMutation.mutate()
+  const isPending = ctx.spy(createThreadAction.statusesAtom).isPending
 
   return (
     <form
-      onSubmit={handleSubmit(onSubmit)}
+      onSubmit={handleSubmit(() => createThreadAction(ctx))}
       className="flex 2xl:flex-row flex-col items-start gap-4 w-full"
     >
       <div className="flex flex-col gap-y-4 w-full 2xl:w-3/4 2xl:max-w-3/4 overflow-hidden">
@@ -227,10 +170,7 @@ export const CreateThreadForm = () => {
           </div>
           <Separator />
           <Button
-            variant="positive"
-            className="self-end w-fit"
-            disabled={createPostThreadMutation.isPending || !isValid}
-            pending={createPostThreadMutation.isPending}
+            variant="positive" className="self-end w-fit" disabled={isPending || !isValid} pending={isPending}
           >
             <Typography textSize="medium" className="font-semibold">
               Опубликовать
@@ -249,4 +189,4 @@ export const CreateThreadForm = () => {
       </div>
     </form>
   );
-};
+}, "CreateThreadForm")

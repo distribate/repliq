@@ -1,6 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import { Typography } from "@repo/ui/src/components/typography.tsx";
-import { NavigationLinkProps } from "../constants/navigation-links.ts";
+import { NavigationLinkProps } from "./navigation-panel";
 
 export const NavigationLink = (link: NavigationLinkProps) => {
   return (

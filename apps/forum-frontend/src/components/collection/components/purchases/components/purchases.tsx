@@ -3,12 +3,13 @@ import { Typography } from "@repo/ui/src/components/typography"
 import { Skeleton } from "@repo/ui/src/components/skeleton"
 import { Star } from "lucide-react"
 import dayjs from "@repo/lib/constants/dayjs-instance"
-import { purchasesQuery } from "../queries/purchases-query"
+import { myPurchasesResource } from "../queries/purchases-query"
+import { reatomComponent } from "@reatom/npm-react"
 
-export const Purchases = () => {
-  const { data, isLoading, isError } = purchasesQuery()
+export const Purchases = reatomComponent(({ ctx }) => {
+  const data = ctx.spy(myPurchasesResource.dataAtom)
 
-  if (isLoading) {
+  if (ctx.spy(myPurchasesResource.statusesAtom).isPending) {
     return (
       <>
         <Skeleton className="h-14 w-full" />
@@ -17,7 +18,7 @@ export const Purchases = () => {
     )
   }
 
-  if (!data || !data.length || isError) return (
+  if (!data || !data.length || ctx.spy(myPurchasesResource.statusesAtom).isRejected) return (
     <div className="flex flex-col h-full items-center justify-center gap-4 p-4 w-full">
       <img src={FancyFeather} alt="" width={96} height={96} />
       <Typography
@@ -66,4 +67,4 @@ export const Purchases = () => {
       ))}
     </div>
   )
-}
+}, "Purchases")

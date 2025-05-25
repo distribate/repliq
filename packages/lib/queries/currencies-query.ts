@@ -5,12 +5,9 @@ export const CURRENCIES_QUERY_KEY = ["currencies"]
 
 async function getCurrencies() {
   const res = await currenciesClient["get-currencies"].$get()
-
   const data = await res.json()
 
-  if ("error" in data) {
-    return null
-  }
+  if ("error" in data) return null
 
   return data.data
 }

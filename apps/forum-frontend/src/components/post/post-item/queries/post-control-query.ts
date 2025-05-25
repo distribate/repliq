@@ -1,22 +1,27 @@
-import { useQuery } from "@tanstack/react-query";
-import { createQueryKey } from "@repo/lib/helpers/query-key-builder.ts";
-
 export type PostControlQuery = {
   isEdit: boolean;
   content: string | null
 };
-
-export const POST_CONTROL_QUERY_KEY = (postId: string) => createQueryKey("ui", ["post", "edit"], postId);
 
 const initial: PostControlQuery = {
   isEdit: false,
   content: null
 };
 
-export const postControlQuery = ({ postId, enabled }: { postId: string, enabled: boolean }) => useQuery<PostControlQuery, Error>({
-  queryKey: POST_CONTROL_QUERY_KEY(postId),
-  initialData: initial,
-  refetchOnWindowFocus: false,
-  refetchOnMount: false,
-  enabled
-});
+import { Ctx, reatomMap } from '@reatom/framework';
+
+export const postsControlAtom = reatomMap<string, PostControlQuery>();
+
+export const getPostsControlAtom = (ctx: Ctx, postId: string) => {
+  return postsControlAtom.getOrCreate(ctx, postId, () => initial);
+}
+
+export const editPostsControlAtom = (ctx: Ctx, postId: string, value: Partial<PostControlQuery>) => {
+  const current = getPostsControlAtom(ctx, postId)
+
+  return postsControlAtom.set(ctx, postId, { ...current, ...value })
+}
+
+export const resetPostsControlAtom = (ctx: Ctx, postId: string) => {
+  return postsControlAtom.set(ctx, postId, initial)
+}

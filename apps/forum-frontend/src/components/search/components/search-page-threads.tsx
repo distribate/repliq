@@ -1,11 +1,12 @@
 import { ContentNotFound } from "#components/templates/components/content-not-found";
-import { searchPageQuery } from "#components/search/queries/search-page-query.ts";
+import { searchPageAtom } from "#components/search/queries/search-page-query.ts";
 import { Typography } from "@repo/ui/src/components/typography.tsx";
 import { Link } from "@tanstack/react-router";
 import { THREAD_URL } from "@repo/shared/constants/routes.ts";
 import { filterSearchResults } from "#components/search/helpers/filter-search-results.ts";
 import { Text } from "lucide-react";
 import { SearchThread } from "../queries/get-search-results";
+import { reatomComponent } from "@reatom/npm-react";
 
 export const SearchPageThread = ({ title, id }: SearchThread) => {
   return (
@@ -21,8 +22,8 @@ export const SearchPageThread = ({ title, id }: SearchThread) => {
   );
 };
 
-export const SearchPageThreads = () => {
-  const { data: searchState } = searchPageQuery();
+export const SearchPageThreads = reatomComponent(({ ctx }) => {
+  const searchState = ctx.spy(searchPageAtom)
 
   if (!searchState.results)
     return <ContentNotFound title="Ничего не найдено" />;
@@ -39,4 +40,4 @@ export const SearchPageThreads = () => {
       ))}
     </div>
   );
-};
+}, "SearchPageThreads")

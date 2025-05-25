@@ -1,17 +1,14 @@
-import { createQueryKey } from "@repo/lib/helpers/query-key-builder"
-import { useSuspenseQuery } from "@tanstack/react-query"
+import { atom } from "@reatom/core"
+import { withReset } from "@reatom/framework"
 
-export type UserSettingsQuery = {
+export type UserSettingsDialog = {
   current: "main" | "profile" | "account" | "other" | "lands",
   global: boolean
 }
 
-export const USER_SETTINGS_QUERY_KEY = createQueryKey("ui", ["settings-modal"])
+const initial: UserSettingsDialog = {
+  current: "main",
+  global: false
+}
 
-export const userSettingsQuery = () => useSuspenseQuery<UserSettingsQuery, Error>({
-  queryKey: USER_SETTINGS_QUERY_KEY,
-  initialData: {
-    current: "main",
-    global: false
-  }
-})
+export const userSettingsAtom = atom<UserSettingsDialog>(initial, "userSettings").pipe(withReset())

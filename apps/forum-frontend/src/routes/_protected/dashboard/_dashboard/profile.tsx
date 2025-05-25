@@ -1,15 +1,12 @@
 import { ProfileAccountStatsCharts } from '#components/profile/account/components/stats/profile-account-stats-charts'
 import { ProfileAccountStatsMeta, ProfileAccountStatsPlayers } from '#components/profile/account/components/stats/profile-account-stats-list'
-import { userProfileStatsQuery } from '#components/profile/account/queries/user-profile-stats-query'
+import { userProfileStatsResource } from '#components/profile/account/models/user-stats.model'
+import { reatomComponent } from '@reatom/npm-react'
 import { Typography } from '@repo/ui/src/components/typography'
 import { createFileRoute } from '@tanstack/react-router'
 
-export const Route = createFileRoute('/_protected/dashboard/_dashboard/profile')({
-  component: RouteComponent
-})
-
-function RouteComponent() {
-  const { data: profileStats } = userProfileStatsQuery()
+const RouteComponent = reatomComponent(({ ctx }) => {
+  const profileStats = ctx.spy(userProfileStatsResource.dataAtom)
 
   const details = profileStats?.details
   const meta = profileStats?.meta
@@ -18,7 +15,7 @@ function RouteComponent() {
   return (
     <div className="flex flex-col gap-4 w-full h-full">
       <div className="flex flex-col md:flex-row 
-        items-center justify-end gap-4 w-full h-36 *:w-full *:lg:w-1/3 *:p-4 *:border-2 *:rounded-lg"
+        items-center justify-end gap-4 w-full md:h-36 *:w-full *:lg:w-1/3 *:p-4 *:border-2 *:rounded-lg"
       >
         <div
           className="flex cursor-pointer border-green-600 h-full bg-green-800/60 items-end justify-end"
@@ -54,4 +51,8 @@ function RouteComponent() {
       </div>
     </div>
   )
-}
+}, "RouteComponent")
+
+export const Route = createFileRoute('/_protected/dashboard/_dashboard/profile')({
+  component: RouteComponent
+})

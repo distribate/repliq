@@ -3,15 +3,19 @@ import { GeneralStats } from "./general-stats";
 import { LandsStats } from "./lands-stats";
 import { ProfileWrapper } from "#components/wrappers/components/profile-wrapper";
 import { Typography } from "@repo/ui/src/components/typography";
+import { requestedUserParamAtom } from "#components/profile/requested-user.model";
+import { reatomComponent } from "@reatom/npm-react";
 
 type UserProfileGameStatsProps = {
-  nickname: string,
   isSectionPrivated: boolean;
 };
 
-export const UserProfileGameStats = ({
-  nickname, isSectionPrivated
-}: UserProfileGameStatsProps) => {
+export const UserProfileGameStats = reatomComponent<UserProfileGameStatsProps>(({
+  ctx, isSectionPrivated
+}) => {
+  const nickname = ctx.spy(requestedUserParamAtom);
+  if (!nickname) return;
+
   return (
     <ProfileWrapper header={isSectionPrivated && <SectionPrivatedContent />}>
       <div className="flex flex-col gap-6 w-full h-full">
@@ -30,4 +34,4 @@ export const UserProfileGameStats = ({
       </div>
     </ProfileWrapper>
   );
-};
+}, "UserProfileGameStats")

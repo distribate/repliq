@@ -7,16 +7,12 @@ export async function getUserBanned(
   nickname: string,
 ): Promise<UserBanDetails | null> {
   const res = await forumUserClient.user["get-user-ban-details"][":nickname"].$get({
-    param: {
-      nickname
-    }
+    param: { nickname }
   })
 
   const data = await res.json()
 
-  if (!data || "error" in data) {
-    return null;
-  }
+  if (!data || "error" in data) return null;
 
   return data.data;
 }

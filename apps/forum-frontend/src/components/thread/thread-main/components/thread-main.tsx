@@ -1,5 +1,5 @@
 import { Typography } from "@repo/ui/src/components/typography"
-import { threadQuery } from "../queries/thread-query"
+import { threadAction, threadAtom } from "../models/thread.model"
 import { ContextMenu, ContextMenuContent, ContextMenuTrigger } from "@repo/ui/src/components/context-menu"
 import { ThreadReactions } from "#components/thread/thread-reactions/components/thread-reactions"
 import { ThreadMainSkeleton } from "./thread-main-skeleton"
@@ -9,29 +9,23 @@ import { ThreadImagesSkeleton } from "#components/thread/thread-images/component
 import { Suspense, lazy } from "react"
 import { ThreadShare } from "#components/thread/thread-share/components/thread-share"
 import { ThreadSave } from "#components/thread/thread-save/components/thread-save"
+import { reatomComponent } from "@reatom/npm-react"
+import { ThreadContent } from "#components/thread/thread-content/components/thread-content"
 
-const ThreadContent = lazy(() =>
-  import("../../thread-content/components/thread-content").then(m => ({ default: m.ThreadContent }))
-)
+const ThreadImages = lazy(() => import("../../thread-images/components/thread-images").then(m => ({ default: m.ThreadImages })))
 
-const ThreadImages = lazy(() =>
-  import("../../thread-images/components/thread-images").then(m => ({ default: m.ThreadImages }))
-)
+export const Thread = reatomComponent(({ ctx }) => {
+  const thread = ctx.spy(threadAtom)
 
-type ThreadContentProps = {
-  threadId: string
-}
+  if (ctx.spy(threadAction.statusesAtom).isPending) {
+    return <ThreadMainSkeleton />
+  }
 
-export const Thread = ({
-  threadId
-}: ThreadContentProps) => {
-  const { data: thread, isLoading } = threadQuery(threadId)
+  if (!thread) {
+    return <ContentNotFound title="Тред не найден" />
+  }
 
-  if (isLoading) return <ThreadMainSkeleton />
-
-  if (!thread) return <ContentNotFound title="Тема не найдена" />
-
-  const { created_at, title, updated_at, images_count, properties: { is_updated } } = thread
+  const { updated_at, properties: { is_updated } } = thread
 
   return (
     <ContextMenu>
@@ -39,19 +33,17 @@ export const Thread = ({
         <div className="flex flex-col gap-6 rounded-lg w-full py-6 bg-shark-950">
           <div className="flex flex-col w-fit px-4">
             <Typography textSize="very_big" className="font-semibold" textColor="shark_white">
-              {title}
+              {thread.title}
             </Typography>
           </div>
-          <Suspense>
-            <ThreadContent threadId={threadId} />
-          </Suspense>
-          {images_count > 0 && (
-            <Suspense fallback={<ThreadImagesSkeleton images_count={images_count} />}>
-              <ThreadImages threadId={threadId} />
+          <ThreadContent />
+          {thread.images_count > 0 && (
+            <Suspense fallback={<ThreadImagesSkeleton images_count={thread.images_count} />}>
+              <ThreadImages />
             </Suspense>
           )}
           <div className="flex flex-col md:flex-row md:items-center px-4 w-full justify-start gap-1">
-            <ThreadReactions threadId={threadId} />
+            <ThreadReactions threadId={thread.id} />
             <div className="flex flex-col w-full gap-2">
               <div className="flex w-full gap-1 justify-end">
                 {(is_updated && updated_at) && (
@@ -71,8 +63,8 @@ export const Thread = ({
         </div>
       </ContextMenuTrigger>
       <ContextMenuContent className="flex flex-col bg-transparent gap-y-2">
-        <ThreadContextMenu threadId={threadId} />
+        <ThreadContextMenu />
       </ContextMenuContent>
     </ContextMenu>
   )
-}
+}, "Thread")

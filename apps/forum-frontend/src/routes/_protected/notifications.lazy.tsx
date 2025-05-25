@@ -6,13 +6,7 @@ import { NotificationsNavigation } from '#components/notifications/components/no
 export const Route = createLazyFileRoute('/_protected/notifications')({
   component: RouteComponent,
   // @ts-ignore
-  head: () => ({
-    meta: [
-      {
-        title: 'Уведомления',
-      },
-    ],
-  }),
+  head: () => ({ meta: [{ title: 'Уведомления' }] }),
 })
 
 function RouteComponent() {

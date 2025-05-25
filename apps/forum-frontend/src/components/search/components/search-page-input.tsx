@@ -1,26 +1,24 @@
 import { Input } from "@repo/ui/src/components/input.tsx";
 import { getRouteApi, } from "@tanstack/react-router";
 import { ChangeEvent, useEffect } from "react";
-import { useSearchPage } from "#components/search/hooks/use-search-page.ts";
+import { searchValueAction, SyncParams } from "#components/search/hooks/use-search-page.ts";
 import { useDebounce } from "@repo/lib/hooks/use-debounce.ts";
+import { reatomComponent } from "@reatom/npm-react";
 
 const searchApiRoute = getRouteApi("/_protected/search")
 
-export const SearchPageInput = () => {
+const PageInput = reatomComponent(({ ctx }) => {
   const { type, queryValue } = searchApiRoute.useSearch()
-  const { setValueMutation } = useSearchPage();
 
   useEffect(() => {
-    setValueMutation.mutate({ queryValue });
+    searchValueAction(ctx, { queryValue });
   }, [type]);
 
-  const updateQuery = (queryValue: string) => setValueMutation.mutate({ queryValue });
+  const updateQuery = (queryValue: string) => searchValueAction(ctx, { queryValue });
   const debounceUpdateQuery = useDebounce(updateQuery, 300);
 
   const handleSearch = (e: ChangeEvent<HTMLInputElement>) => {
-    const { value } = e.target;
-
-    debounceUpdateQuery(value);
+    debounceUpdateQuery(e.target.value);
   };
 
   return (
@@ -32,4 +30,13 @@ export const SearchPageInput = () => {
       onChange={handleSearch}
     />
   );
-};
+}, "SearchPageInput")
+
+export const SearchPageInput = () => {
+  return (
+    <>
+      <SyncParams />
+      <PageInput />
+    </>
+  )
+}

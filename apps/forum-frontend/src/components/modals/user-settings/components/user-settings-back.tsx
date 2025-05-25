@@ -1,22 +1,16 @@
 import { useEffect } from "react"
-import { userSettingsQuery, UserSettingsQuery } from "../queries/user-settings-query"
+import { userSettingsAtom, UserSettingsDialog } from "../queries/user-settings-query"
 import { ArrowLeft } from "lucide-react"
-import { useUserSettingsModal } from "#components/modals/user-settings/hooks/use-user-settings-modal"
+import { updateDialogSectionAction } from "#components/modals/user-settings/hooks/use-user-settings-modal"
+import { reatomComponent } from "@reatom/npm-react"
 
-type ProfileSettingsBackProps = {
-  to: UserSettingsQuery["current"]
-}
-
-export const UserSettingsBack = ({
-  to
-}: ProfileSettingsBackProps) => {
-  const { global } = userSettingsQuery().data
-  const { updateDialogSectionMutation } = useUserSettingsModal()
+export const UserSettingsBack = reatomComponent<{ to: UserSettingsDialog["current"] }>(({ ctx, to }) => {
+  const { global } = ctx.spy(userSettingsAtom)
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
-        updateDialogSectionMutation.mutate({ to })
+        updateDialogSectionAction(ctx, to)
       }
     };
 
@@ -31,10 +25,10 @@ export const UserSettingsBack = ({
 
   return (
     <div
-      onClick={() => updateDialogSectionMutation.mutate({ to })}
+      onClick={() => updateDialogSectionAction(ctx, to)}
       className="absolute left-2 top-2 cursor-pointer rounded-lg hover:bg-shark-800 p-2"
     >
       <ArrowLeft size={24} className='text-shark-300' />
     </div>
   )
-}
+}, "UserSettingsBack")

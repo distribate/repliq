@@ -27,7 +27,7 @@ export async function acceptFriendRequestTransaction({
         user_1: requestInitiator,
         user_2: recipient
       })
-      .returning(["user_2", "user_1"])
+      .returning(["user_2", "user_1", "id"])
       .executeTakeFirstOrThrow();
   });
 }

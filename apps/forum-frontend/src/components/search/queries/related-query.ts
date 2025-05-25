@@ -1,20 +1,15 @@
-import { keepPreviousData, useQuery } from "@tanstack/react-query";
-import { createQueryKey } from "@repo/lib/helpers/query-key-builder.ts";
 import { forumThreadClient } from "@repo/shared/api/forum-client";
-import { getLatestRegUsers } from "@repo/lib/queries/last-reg-users-query";
+import { reatomAsync, withCache, withDataAtom, withStatusesAtom } from "@reatom/async";
+import { getLatestRegUsers } from "#components/layout/components/stats/last-res-users.model";
 
 async function getLastThreads(limit: number) {
   const res = await forumThreadClient.thread["get-latest-threads"].$get({
-    query: {
-      limit: `${limit}`
-    }
+    query: { limit: `${limit}`  }
   })
 
   const data = await res.json()
 
-  if ("error" in data) {
-    return null
-  }
+  if ("error" in data) return null
 
   return data.data
 }
@@ -29,13 +24,6 @@ export async function getSearchRelated() {
   return { lastUsers, lastThreads };
 }
 
-export const RELATED_QUERY_KEY = createQueryKey("ui", ["related"]);
-
-export const relatedQuery = () => useQuery({
-  queryKey: RELATED_QUERY_KEY,
-  queryFn: getSearchRelated,
-  refetchOnMount: false,
-  refetchOnWindowFocus: false,
-  placeholderData: keepPreviousData,
-  retry: 1
-});
+export const relatedAction = reatomAsync(async (ctx) => {
+  return await ctx.schedule(() => getSearchRelated())
+}, "relatedAction").pipe(withStatusesAtom(), withDataAtom(), withCache())

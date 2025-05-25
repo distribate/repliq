@@ -3,10 +3,9 @@ import { ThreadControlTitle } from "./thread-control-title.tsx";
 import { ThreadControlDescription } from "./thread-control-description.tsx";
 import { ThreadControlComments } from "./thread-control-comments.tsx";
 import { ThreadControlSave } from "#components/thread/thread-control/components/thread-control-save.tsx";
-import { THREAD_QUERY_KEY } from "#components/thread/thread-main/queries/thread-query.ts";
-import { useQueryClient } from "@tanstack/react-query";
-import { ThreadDetailed } from "@repo/types/entities/thread-type.ts";
+import { threadAtom } from "#components/thread/thread-main/models/thread.model.ts";
 import { ThreadRemoveModal } from "#components/modals/action-confirmation/components/thread-remove/thread-remove/thread-remove-modal.tsx";
+import { useAtom } from "@reatom/npm-react";
 
 type ThreadControlMainProps = {
   threadId: string;
@@ -15,8 +14,7 @@ type ThreadControlMainProps = {
 export const ThreadControlMain = ({
   threadId
 }: ThreadControlMainProps) => {
-  const qc = useQueryClient()
-  const currentThread = qc.getQueryData<ThreadDetailed>(THREAD_QUERY_KEY(threadId));
+  const [currentThread] = useAtom(threadAtom)
 
   if (!currentThread) return null;
 

@@ -1,15 +1,16 @@
 import { Skeleton } from "@repo/ui/src/components/skeleton";
 import { RatingBelkoinCard, RatingBelkoinCardProps, RatingCharismCard, RatingCharismCardProps, RatingLandsCard, RatingLandsCardProps, RatingParkourCard, RatingParkourCardProps, RatingPlaytimeCard, RatingPlaytimeCardProps, RatingReputationCard, RatingReputationCardProps } from "./rating-cards";
-import { ratingQuery } from "../queries/ratings-query"
+import { ratingAction, ratingDataAtom, ratingMetaAtom } from "../queries/ratings-query"
 import Events from '@repo/assets/gifs/minecraft-boime.gif'
 import { Typography } from "@repo/ui/src/components/typography";
 import { useInView } from "react-intersection-observer";
-import { useMutationState } from "@tanstack/react-query";
-import { UPDATE_RATING_MUTATION_KEY, useUpdateRating } from "#components/ratings/hooks/use-update-ratings.ts";
+import { updateRatingAction } from "#components/ratings/hooks/use-update-ratings.ts";
 import { useEffect } from "react";
-import { ratingFilterQuery } from "#components/ratings/queries/ratings-filter-query.ts";
+import { ratingFilterAtom } from "#components/ratings/queries/ratings-filter-query.ts";
 import { Separator } from "@repo/ui/src/components/separator";
 import { ContentNotFound } from "#components/templates/components/content-not-found";
+import { reatomComponent } from "@reatom/npm-react";
+import { onConnect } from "@reatom/framework";
 
 const RatingsListSkeleton = () => {
   return (
@@ -34,7 +35,7 @@ const RatingsSkeleton = () => {
         <Skeleton className="h-8 w-16" />
       </div>
       <Separator />
-      <RatingsListSkeleton/>
+      <RatingsListSkeleton />
     </div>
   )
 }
@@ -152,34 +153,27 @@ const RatingListLandsHeader = () => {
   )
 }
 
-export const RatingList = () => {
-  const { data, isLoading, isError } = ratingQuery({ type: "playtime", ascending: String(false) })
+onConnect(ratingDataAtom, (ctx) => ratingAction(ctx, { type: "playtime", ascending: String(false) }))
 
-  const { data: { type: currentType } } = ratingFilterQuery()
-  const { updateRatingMutation } = useUpdateRating()
-
+export const RatingList = reatomComponent(({ ctx }) => {
+  const ratingData = ctx.spy(ratingDataAtom)
+  const ratingMeta = ctx.spy(ratingMetaAtom)
+  const currentType = ctx.spy(ratingFilterAtom).type
   const { inView, ref } = useInView({ triggerOnce: false, threshold: 1 });
 
-  const mutData = useMutationState({
-    filters: { mutationKey: UPDATE_RATING_MUTATION_KEY },
-    select: m => m.state.status
-  })
-
-  const ratingData = data?.data;
-  const ratingMeta = data?.meta;
   const hasMore = ratingMeta?.hasNextPage;
-  const isLoadingUpdated = mutData[mutData.length - 1] === "pending";
+  const isLoadingUpdated = ctx.spy(updateRatingAction.statusesAtom).isPending;
 
   useEffect(() => {
-    if (inView && hasMore) updateRatingMutation.mutate({ type: "update-cursor" });
+    if (inView && hasMore) updateRatingAction(ctx, "update-cursor");
   }, [inView, hasMore]);
 
-  if (isLoading) return <RatingsSkeleton />
+  if (ctx.spy(ratingAction.statusesAtom).isPending) return <RatingsSkeleton />
 
-  if (isError) return <RatingIsEmpty />;
+  if (ctx.spy(ratingAction.statusesAtom).isRejected) return <RatingIsEmpty />;
 
   if (!ratingData) return (
-    <ContentNotFound title="Пока ничего нет :/"/>
+    <ContentNotFound title="Пока ничего нет :/" />
   )
 
   return (
@@ -193,12 +187,12 @@ export const RatingList = () => {
               <Separator />
               {(ratingData as RatingParkourCardProps[]).map((item, idx) => (
                 <RatingParkourCard
-                  key={idx} 
-                  idx={idx} 
-                  area={item.area} 
-                  gamesplayed={item.gamesplayed} 
-                  name={item.name} 
-                  player={item.player} 
+                  key={idx}
+                  idx={idx}
+                  area={item.area}
+                  gamesplayed={item.gamesplayed}
+                  name={item.name}
+                  player={item.player}
                   score={item.score}
                 />
               ))}
@@ -259,4 +253,4 @@ export const RatingList = () => {
       {hasMore && <div ref={ref} className="h-[1px] w-full" />}
     </div>
   )
-}
+}, "RatingList")

@@ -1,14 +1,15 @@
 import {
+  Dialog,
   DialogClose,
   DialogContent,
 } from "@repo/ui/src/components/dialog.tsx";
 import { ReactNode } from "react";
 import { Typography } from "@repo/ui/src/components/typography";
-import { UserLands } from "#components/cards/user-personal-card/components/lands/user-lands";
+import { UserLands } from "#components/cards/user-personal-card/components/lands/components/user-lands";
 import { UserProfileSettings } from "#components/cards/user-personal-card/components/profile-settings/user-profile-settings";
 import { UserAdvancedSettings } from "#components/modals/user-settings/components/user-advanced-settings";
-import { userSettingsQuery, UserSettingsQuery } from "#components/modals/user-settings/queries/user-settings-query";
-import { useUserSettingsModal } from "../hooks/use-user-settings-modal";
+import { userSettingsAtom, UserSettingsDialog } from "#components/modals/user-settings/queries/user-settings-query";
+import { toggleGlobalDialogAction, updateDialogSectionAction } from "../hooks/use-user-settings-modal";
 import { UserPersonalCardHeader } from "#components/modals/user-settings/components/user-header";
 import { Link } from "@tanstack/react-router";
 import { UserSettingOption } from "#components/cards/user-setting-option-card/components/user-setting-option";
@@ -22,9 +23,10 @@ import Portfolio from "@repo/assets/images/minecraft/portfolio.webp";
 import MinecartWithChest from "@repo/assets/images/minecraft/minecart_chest.webp";
 import { UserAccountSettingsCard } from "./user-account-settings";
 import { Separator } from "@repo/ui/src/components/separator.tsx"
+import { reatomComponent } from "@reatom/npm-react";
 
-const Main = () => {
-  const { updateDialogSectionMutation } = useUserSettingsModal()
+const Main = reatomComponent(({ ctx }) => {
+  const handleUpdate = (to: UserSettingsDialog["current"]) => updateDialogSectionAction(ctx, to)
 
   return (
     <div className="flex flex-col gap-y-4 items-center w-full">
@@ -35,25 +37,17 @@ const Main = () => {
       <Separator />
       <div className="flex flex-col gap-y-2 w-full">
         <UserSettingOption
-          onClick={() => updateDialogSectionMutation.mutate({ to: "profile" })}
-          title="Профиль"
-          imageSrc={BookAndQuill}
+          onClick={() => handleUpdate("profile")} title="Профиль" imageSrc={BookAndQuill}
         />
         <UserSettingOption
-          onClick={() => updateDialogSectionMutation.mutate({ to: "account" })}
-          title="Аккаунт"
-          imageSrc={MinecartWithChest}
+          onClick={() => handleUpdate("account")} title="Аккаунт" imageSrc={MinecartWithChest}
         />
         <UserSettingOption
-          onClick={() => updateDialogSectionMutation.mutate({ to: "other" })}
-          title="Прочее"
-          imageSrc={Campfire}
+          onClick={() => handleUpdate("other")} title="Прочее" imageSrc={Campfire}
         />
         <Separator />
         <UserSettingOption
-          onClick={() => updateDialogSectionMutation.mutate({ to: "lands" })}
-          title="Мои регионы"
-          imageSrc={GrassBlock}
+          onClick={() => handleUpdate("lands")} title="Мои регионы" imageSrc={GrassBlock}
         />
         <Separator />
         <BuyDonateModal
@@ -75,19 +69,19 @@ const Main = () => {
       </div>
     </div>
   )
+}, "Main")
+
+const SETTINGS_SECTIONS: Record<UserSettingsDialog["current"], ReactNode> = {
+  main: <Main />,
+  lands: <UserLands />,
+  account: <UserAccountSettingsCard />,
+  profile: <UserProfileSettings />,
+  other: <UserAdvancedSettings />
 }
 
-const SETTINGS_SECTIONS: Record<UserSettingsQuery["current"], ReactNode> = {
-  "main": <Main />,
-  "lands": <UserLands />,
-  "account": <UserAccountSettingsCard />,
-  "profile": <UserProfileSettings />,
-  "other": <UserAdvancedSettings />
-}
+export const UserSettingsModal = reatomComponent(({ ctx }) => {
+  const { current, global } = ctx.spy(userSettingsAtom)
 
-export const UserSettingsModal = () => {
-  const { current } = userSettingsQuery().data
-  
   const handleEscKeyDown = (e: KeyboardEvent) => {
     if (current !== 'main') {
       e.preventDefault()
@@ -95,10 +89,10 @@ export const UserSettingsModal = () => {
   }
 
   return (
-    <>
+    <Dialog open={global} onOpenChange={value => toggleGlobalDialogAction(ctx, { reset: true, value })}>
       <DialogContent onEscapeKeyDown={handleEscKeyDown}>
         {SETTINGS_SECTIONS[current]}
       </DialogContent>
-    </>
+    </Dialog>
   );
-};
+}, "UserSettingsModal")

@@ -3,7 +3,7 @@ import {
   threadCategorySchema, threadContentSchema, threadDescriptionSchema, 
   threadTitleSchema, threadVisibilitySchema 
 } from "@repo/types/schemas/thread/create-thread-schema";
-import { getContentLimit } from "../hooks/use-create-thread";
+import { getContentLimit } from "../models/create-thread.model";
 
 export const createThreadSchema = z
   .object({

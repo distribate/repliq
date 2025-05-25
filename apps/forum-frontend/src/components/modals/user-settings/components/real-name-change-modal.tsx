@@ -3,22 +3,23 @@ import {
   RealNameChange,
 } from '#components/cards/user-personal-card/components/profile-settings/components/real-name-change/components/real-name-change.tsx';
 import { DynamicModal } from '../../dynamic-modal/components/dynamic-modal.tsx';
-import { UPDATE_FIELD_MUTATION_KEY } from '@repo/lib/hooks/use-update-current-user.ts';
 import Nametag from '@repo/assets/images/minecraft/nametag.webp';
-import { currentUserQuery } from '@repo/lib/queries/current-user-query.ts';
 import { UserSettingOption } from '#components/cards/user-setting-option-card/components/user-setting-option.tsx';
+import { currentUserAtom } from '@repo/lib/helpers/get-user.ts';
+import { reatomComponent } from '@reatom/npm-react';
+import { updateCurrentUserAction } from '#components/cards/user-personal-card/components/profile-settings/models/update-current-user.model.ts';
 
-export const RealNameChangeModal = () => {
-  const { data: { real_name } } = currentUserQuery();
-
+export const RealNameChangeModal = reatomComponent(({ ctx }) => {
   return (
     <DynamicModal
-      mutationKey={UPDATE_FIELD_MUTATION_KEY}
+      withLoader
+      autoClose
+      isPending={ctx.spy(updateCurrentUserAction.statusesAtom).isPending}
       trigger={
         <UserSettingOption title="Реальное имя" imageSrc={Nametag}>
           <div className="flex items-center gap-1">
             <Typography className="text-base">
-              {real_name ?? 'нет'}
+              {ctx.spy(currentUserAtom)?.real_name ?? 'нет'}
             </Typography>
           </div>
         </UserSettingOption>
@@ -26,4 +27,4 @@ export const RealNameChangeModal = () => {
       content={<RealNameChange />}
     />
   );
-};
+}, "RealNameChangeModal")

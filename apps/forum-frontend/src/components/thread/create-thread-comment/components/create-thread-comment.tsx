@@ -1,20 +1,16 @@
 import {
-  CREATE_THREAD_COMMENT_QUERY_KEY,
-  createThreadCommentQuery,
+  createThreadCommentAtom,
 } from "#components/forms/create-thread-comment/queries/create-thread-comment-query.ts";
 import { ReplyComment } from "./reply-comment.tsx";
-import { useQueryClient } from "@tanstack/react-query";
 import { CreateThreadCommentForm } from "#components/forms/create-thread-comment/components/create-thread-comment-form.tsx";
 import { useEffect } from "react";
+import { reatomComponent } from "@reatom/npm-react";
 
-export const CreateThreadComment = () => {
-  const qc = useQueryClient();
-  const { data: createThreadCommentState } = createThreadCommentQuery();
-
-  const type = createThreadCommentState?.type ?? "single";
+export const CreateThreadComment = reatomComponent(({ ctx }) => {
+  const type = ctx.spy(createThreadCommentAtom)?.type ?? "single"
 
   useEffect(() => {
-    qc.resetQueries({ queryKey: CREATE_THREAD_COMMENT_QUERY_KEY }).then();
+    createThreadCommentAtom.reset(ctx)
   }, []);
 
   return (
@@ -23,4 +19,4 @@ export const CreateThreadComment = () => {
       <CreateThreadCommentForm />
     </div>
   );
-};
+}, "CreateThreadComment")

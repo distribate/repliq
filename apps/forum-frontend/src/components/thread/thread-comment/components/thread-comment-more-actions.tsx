@@ -1,44 +1,27 @@
 import { MoreWrapper } from "#components/wrappers/components/more-wrapper";
-import { useQueryClient } from "@tanstack/react-query";
 import { Typography } from "@repo/ui/src/components/typography.tsx";
 import { Pen, Trash } from "lucide-react";
 import { DropdownMenuItem } from "@repo/ui/src/components/dropdown-menu.tsx";
-import { COMMENT_ACTIONS_QUERY_KEY, CommentActionsQuery } from "../queries/comment-actions-query";
+import { editCommentActionsAtom } from "../models/comment-actions.model";
+import { reatomComponent } from "@reatom/npm-react";
 
-export const ThreadCommentMoreActions = ({ 
-  id: commentId, thread_id 
-}: { 
-  id: number, thread_id: string 
+export const ThreadCommentMoreActions = reatomComponent<{ id: number }>(({ 
+  ctx, id
 }) => {
-  const qc = useQueryClient();
-  // const { deleteCommentItemMutation } = useControlThreadComment();
-
-  const handleEditContent = () => {
-    return qc.setQueryData(
-      COMMENT_ACTIONS_QUERY_KEY(commentId),
-      (prev: CommentActionsQuery) => ({ ...prev, isEdit: true }),
-    );
-  };
-
-  const handleDeleteContent = async () => {
-    await qc.resetQueries({ queryKey: COMMENT_ACTIONS_QUERY_KEY(commentId) });
-    // return deleteCommentItemMutation.mutate({ thread_id, id: commentId });
-  };
-
   return (
     <div className="absolute right-2 top-2">
       <MoreWrapper variant="small" background="transparent">
         <div className="flex flex-col gap-y-2">
           <DropdownMenuItem
             className="items-center gap-2"
-            onClick={handleEditContent}
+            onClick={() => editCommentActionsAtom(ctx, id, { isEdit: true })}
           >
             <Pen size={16} className="text-shark-300" />
             <Typography>Редактировать</Typography>
           </DropdownMenuItem>
           <DropdownMenuItem
             className="items-center gap-2"
-            onClick={handleDeleteContent}
+            // onClick={}
           >
             <Trash size={16} className="text-shark-300" />
             <Typography>Удалить комментарий</Typography>
@@ -47,4 +30,4 @@ export const ThreadCommentMoreActions = ({
       </MoreWrapper>
     </div>
   );
-};
+}, "ThreadCommentMoreActions")

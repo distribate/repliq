@@ -25,7 +25,7 @@ export const acceptFriendRequestRoute = new Hono()
         return ctx.json({ error: "Max number of friends reached" }, 400)
       }
 
-      const { user_1, user_2 } = await acceptFriendRequestTransaction({ initiator, request_id })
+      const { user_1, user_2, id } = await acceptFriendRequestTransaction({ initiator, request_id })
 
       publishAcceptFriendRequest({ 
         user_1, 
@@ -37,7 +37,7 @@ export const acceptFriendRequestRoute = new Hono()
         data: { recipient: user_1, initiator: user_2 }
       })
 
-      return ctx.json({ status: "Friend request accepted" }, 200);
+      return ctx.json({ friend_id: id, status: "Friend request accepted" }, 200);
     } catch (e) {
       return ctx.json({ error: throwError(e) }, 400);
     }

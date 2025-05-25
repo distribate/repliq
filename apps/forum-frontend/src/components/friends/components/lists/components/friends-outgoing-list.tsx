@@ -1,85 +1,63 @@
 import { ContentNotFound } from "#components/templates/components/content-not-found.tsx";
 import { FriendsListLayout } from "./friends-list-layout.tsx";
-import { friendsFilteringQuery } from "#components/friends/components/filtering/queries/friends-filtering-query.ts";
-import { requestsOutgoingQuery } from "#components/friends/queries/requests-outgoing-query.ts";
-import { useControlFriendRequests } from "#components/friend/hooks/use-control-friend-requests.ts";
-import { FriendCardLayout } from "#components/friend/components/friend-card/components/friend-card-layout.tsx";
-import { Suspense } from "react";
+import { controlOutgoingRequestAction } from "#components/friend/models/control-friend-requests.model.ts";
+import { FriendCardLayout } from "#components/friend/components/friend-card/friend-card-layout.tsx";
 import { Avatar } from "#components/user/avatar/components/avatar.tsx";
-import { Skeleton } from "@repo/ui/src/components/skeleton.tsx";
 import { Link } from "@tanstack/react-router";
 import { USER_URL } from "@repo/shared/constants/routes.ts";
 import { Typography } from "@repo/ui/src/components/typography.tsx";
 import { Button } from "@repo/ui/src/components/button.tsx";
-import { UserNickname } from "#components/user/name/components/nickname.tsx";
-import { ControlFriendRequests } from "#components/friend/types/friend-request-types.ts";
+import { UserNickname } from "#components/user/name/nickname.tsx";
+import { reatomComponent } from "@reatom/npm-react";
+import { ControlFriendRequests } from "#components/friend/models/control-friend.model.ts";
+import { outgoingRequestsAtom } from "#components/friends/models/friends-requests.model.ts";
 
-const FriendOutgoingCard = ({
-  recipient,
-  request_id,
-}: ControlFriendRequests) => {
-  const { rejectOutgoingRequestMutation } = useControlFriendRequests();
-
+const FriendOutgoingCard = reatomComponent<ControlFriendRequests>(({
+  ctx, recipient, request_id
+}) => {
   return (
     <FriendCardLayout>
-      <Suspense fallback={<Skeleton className="w-[60px] h-[60px] lg:w-[112px] lg:h-[112px]" />}>
-        <div className="md:hidden flex w-[60px] h-[60px]">
-          <Avatar
-            nickname={recipient}
-            propHeight={60}
-            propWidth={60}
-            className="rounded-lg"
-          />
-        </div>
-        <div className="hidden md:flex w-[112px] h-[112px]">
-          <Avatar
-            nickname={recipient}
-            propHeight={112}
-            propWidth={112}
-            className="rounded-lg"
-          />
-        </div>
-      </Suspense>
-      <div className="flex flex-col gap-y-1 w-fit">
+      <div
+        className="flex min-w-[48px] min-h-[48px] max-h-[48px] max-w-[48px] w-[48px] h-[48px] 
+          md:max-w-[112px] md:max-h-[112px] md:min-w-[112px] md:min-h-[112px] md:w-[112px] md:h-[112px]"
+      >
+        <Avatar nickname={recipient} propHeight={112} propWidth={112} className="rounded-lg" />
+      </div>
+      <div className="flex flex-col gap-y-1 w-full">
         <div className="flex items-center gap-1 w-fit">
           <Link to={USER_URL + recipient} className="flex items-center gap-1">
-            <UserNickname nickname={recipient} className="text-lg" />
+            <UserNickname nickname={recipient} className="text-lg leading-3" />
           </Link>
         </div>
-        <div className="flex items-center mt-2 gap-1 w-fit">
+        <div className="flex md:justify-start justify-end items-center mt-2 w-full">
           <Button
-            onClick={() => rejectOutgoingRequestMutation.mutate({ request_id, recipient })}
+            onClick={() => controlOutgoingRequestAction(ctx, { type: "reject", request_id, recipient })}
             variant="pending"
             disabled={
-              rejectOutgoingRequestMutation.isPending ||
-              rejectOutgoingRequestMutation.isError
+              ctx.spy(controlOutgoingRequestAction.statusesAtom).isPending ||
+              ctx.spy(controlOutgoingRequestAction.statusesAtom).isRejected
             }
           >
-            <Typography textSize="small">Отменить заявку</Typography>
+            <Typography textSize="small" className="truncate">Отменить заявку</Typography>
           </Button>
         </div>
       </div>
     </FriendCardLayout>
   );
-};
+}, "FriendOutgoingCard")
 
-export const FriendsOutgoingList = () => {
-  const { data: friendsFiltering } = friendsFilteringQuery();
-  const { data: outgoingFriends } = requestsOutgoingQuery();
+export const FriendsOutgoingList = reatomComponent(({ ctx }) => {
+  const outgoingFriends = ctx.spy(outgoingRequestsAtom)
 
-  if (!outgoingFriends || (outgoingFriends && !outgoingFriends.length)) {
+  if (!outgoingFriends || !outgoingFriends.length) {
     return <ContentNotFound title="Исходящих заявок в друзья нет" />;
   }
 
   return (
-    <FriendsListLayout variant={friendsFiltering.viewType}>
-      {outgoingFriends.map(({ initiator, recipient, id: request_id }) => (
-        <FriendOutgoingCard
-          key={recipient}
-          request_id={request_id}
-          recipient={recipient}
-        />
+    <FriendsListLayout>
+      {outgoingFriends.map(({ recipient, id }) => (
+        <FriendOutgoingCard key={recipient} request_id={id} recipient={recipient} />
       ))}
     </FriendsListLayout>
-  );
-};
+  )
+})

@@ -9,9 +9,7 @@ export const createProfileView = async (initiator: string, recipient: string) =>
 
   const data = await res.json();
 
-  if (!data || "error" in data) {
-    return;
-  }
+  if (!data || "error" in data) return
 
   return data;
 }

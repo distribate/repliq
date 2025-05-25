@@ -3,12 +3,12 @@ import { Input } from "@repo/ui/src/components/input.tsx";
 import { ThreadControlFields } from "../types/thread-control-types.ts";
 import { Typography } from "@repo/ui/src/components/typography.tsx";
 import { Info } from "lucide-react";
-import { useThreadControl } from "#components/thread/thread-control/hooks/use-thread-control.ts";
+import { reatomComponent } from "@reatom/npm-react";
+import { threadControlAtom } from "../models/thread-control.model.ts";
 
-export const ThreadControlDescription = ({
-  description: currentDescription,
-}: Pick<ThreadControlFields, "description">) => {
-  const { setThreadNewValuesMutation } = useThreadControl();
+export const ThreadControlDescription = reatomComponent<Pick<ThreadControlFields, "description">>(({
+  ctx, description: currentDescription,
+}) => {
   const [descriptionValue, setDescriptionValue] = useState(
     currentDescription || "",
   );
@@ -16,9 +16,7 @@ export const ThreadControlDescription = ({
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = e.target;
     setDescriptionValue(value);
-    return setThreadNewValuesMutation.mutate({
-      values: { description: value.length < 1 ? null : value },
-    });
+    threadControlAtom(ctx, (state) => ({ ...state, values: { description: value.length < 1 ? null : value } }))
   };
 
   return (
@@ -40,4 +38,4 @@ export const ThreadControlDescription = ({
       </div>
     </div>
   );
-};
+}, "ThreadControlDescription")

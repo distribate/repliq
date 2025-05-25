@@ -66,6 +66,11 @@ http:
       entryPoints: [https]
       tls: true
       service: fasberry-svc
+    archivio:
+      rule: "Host(`mvp.fasberry.su`)"
+      entryPoints: [https]
+      tls: true
+      service: archivio-svc
 
   middlewares:
     redirect-to-https:
@@ -102,3 +107,7 @@ http:
       loadBalancer:
         servers:
           - url: "http://host.docker.internal:3001"
+    archivio-svc:
+      loadBalancer:
+        servers:
+          - url: "http://host.docker.internal:3006"

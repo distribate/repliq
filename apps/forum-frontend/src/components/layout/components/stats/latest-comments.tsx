@@ -1,35 +1,29 @@
 import { Avatar } from "#components/user/avatar/components/avatar"
-import { UserNickname } from "#components/user/name/components/nickname"
-import { createQueryKey } from "@repo/lib/helpers/query-key-builder"
+import { UserNickname } from "#components/user/name/nickname"
+import { reatomResource, withCache, withDataAtom, withStatusesAtom } from "@reatom/async"
+import { reatomComponent } from "@reatom/npm-react"
 import { forumCommentClient } from "@repo/shared/api/forum-client"
 import { USER_URL } from "@repo/shared/constants/routes"
 import { Skeleton } from "@repo/ui/src/components/skeleton"
 import { Typography } from "@repo/ui/src/components/typography"
-import { keepPreviousData, useQuery } from "@tanstack/react-query"
 import { Link } from "@tanstack/react-router"
-import { Suspense } from "react"
 
 const getLatestComments = async () => {
   const res = await forumCommentClient.comment["get-last-comments"].$get()
-
   const data = await res.json()
 
-  if ("error" in data) {
-    return null
-  }
+  if ("error" in data) return null
 
   return data.data.length >= 1 ? data.data : null;
 }
 
-const latestCommentsQuery = () => useQuery({
-  queryKey: createQueryKey("ui", ["latest-comments"]),
-  queryFn: getLatestComments,
-  refetchOnWindowFocus: false,
-  placeholderData: keepPreviousData,
-})
+const latestCommentsResource = reatomResource(async (ctx) => {
+  return await ctx.schedule(() => getLatestComments())
+}).pipe(withDataAtom(), withStatusesAtom(), withCache())
 
-export const LatestComments = () => {
-  const { data: comments, isLoading } = latestCommentsQuery();
+export const LatestComments = reatomComponent(({ ctx }) => {
+  const comments = ctx.spy(latestCommentsResource.dataAtom)
+  const isLoading = ctx.spy(latestCommentsResource.statusesAtom).isPending
 
   if (!comments) return null;
 
@@ -50,14 +44,12 @@ export const LatestComments = () => {
             <Skeleton className="h-12 w-full" />
           </>
         )}
-        {comments && comments.map(({ created_at, content, parent_id, parent_type, title, user_nickname }, idx) => (
+        {comments && comments.map(({ content, parent_id, parent_type, title, user_nickname }, idx) => (
           <div key={idx} className="flex flex-col bg-shark-700/60 rounded-md p-2 gap-1">
             <div className="flex items-center gap-2">
-              <Suspense fallback={<Skeleton className="w-[24px] h-[24px]" />}>
-                <Link to={USER_URL + user_nickname}>
-                  <Avatar nickname={user_nickname} propWidth={24} propHeight={24} />
-                </Link>
-              </Suspense>
+              <Link to={USER_URL + user_nickname}>
+                <Avatar nickname={user_nickname} propWidth={24} propHeight={24} />
+              </Link>
               <Link to={USER_URL + user_nickname}>
                 <UserNickname nickname={user_nickname} />
               </Link>
@@ -81,4 +73,4 @@ export const LatestComments = () => {
       </div>
     </div>
   )
-}
+}, "LatestComments")

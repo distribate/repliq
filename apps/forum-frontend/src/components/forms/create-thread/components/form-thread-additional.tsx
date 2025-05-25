@@ -5,35 +5,28 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@repo/ui/src/components/accordion.tsx";
-import { threadFormQuery } from "../queries/thread-form-query.ts";
+import { threadFormTagsAtom } from "../models/thread-form.model.ts";
 import { Input } from "@repo/ui/src/components/input.tsx";
 import { useState, ChangeEvent } from "react";
 import { X } from "lucide-react";
 import { THREAD_TAGS_LIMIT } from "@repo/shared/constants/limits.ts";
-import { useEditThread } from "../hooks/use-edit-thread.tsx";
+import { reatomComponent } from "@reatom/npm-react";
 
 function parseStringToArray(input: string) {
   const parts = input.split(",");
   return parts.map((item) => item.trim()).filter((item) => item);
 }
 
-export const FormThreadAdditional = () => {
-  const { updateThreadFormMutation } = useEditThread();
-  const { data: threadFormState } = threadFormQuery();
+export const FormThreadAdditional = reatomComponent(({ ctx }) => {
+  const tags = ctx.spy(threadFormTagsAtom)
   const [inputValue, setInputValue] = useState<string>("");
-
-  if (!threadFormState) return;
-
-  const tags = threadFormState.tags;
 
   const handleDeleteTag = (index: number) => {
     if (!tags) return;
 
     const updatedTags = tags.filter((_, i) => i !== index);
 
-    return updateThreadFormMutation.mutate({
-      tags: updatedTags.length >= 1 ? updatedTags : null,
-    });
+    threadFormTagsAtom(ctx, updatedTags.length >= 1 ? updatedTags : null)
   };
 
   const handleAddTags = (e: ChangeEvent<HTMLInputElement>) => {
@@ -49,9 +42,7 @@ export const FormThreadAdditional = () => {
       const lastTag = tags[tags.length - 1];
 
       if (lastTag) {
-        updateThreadFormMutation.mutate({
-          tags: [...(threadFormState.tags || []), lastTag],
-        });
+        threadFormTagsAtom(ctx, (state) => [...(state || []), lastTag])
       }
 
       setInputValue("");
@@ -79,9 +70,9 @@ export const FormThreadAdditional = () => {
                   </Typography>
                 </div>
                 <div className="flex flex-col gap-2 min-h-[100px] max-h-[200px] rounded-md p-2 bg-shark-900">
-                  {threadFormState.tags && (
+                  {tags && (
                     <div className="flex flex-wrap items-center gap-2">
-                      {threadFormState.tags.map((tag, i) => (
+                      {tags.map((tag, i) => (
                         <div
                           key={i}
                           className="flex items-center justify-between bg-shark-500 rounded-sm px-2 py-3 h-3 overflow-hidden"
@@ -101,7 +92,7 @@ export const FormThreadAdditional = () => {
                   {!tags || (tags && tags.length < THREAD_TAGS_LIMIT[1]) ? (
                     <Input
                       value={inputValue}
-                      placeholder={!threadFormState.tags ? "тег" : ""}
+                      placeholder={!tags ? "тег" : ""}
                       className="!p-0 !m-0 !min-h-3 w-fit !text-[15px]"
                       onChange={handleAddTags}
                     />
@@ -118,4 +109,4 @@ export const FormThreadAdditional = () => {
       </div>
     </>
   );
-};
+}, "FormThreadAdditional")

@@ -1,13 +1,14 @@
-import { UserPageParam } from "@repo/types/global";
 import { ProfileGameAch } from "#components/profile/achievements/components/profile-game-ach-list.tsx";
 import { ProfileWrapper } from "#components/wrappers/components/profile-wrapper";
+import { onConnect } from "@reatom/framework";
+import { achievementsAction } from "../models/achievements.model";
 
-export const UserProfileGameAchievements = ({
-  nickname,
-}: UserPageParam) => {
+onConnect(achievementsAction, achievementsAction)
+
+export const UserProfileGameAchievements = () => {
   return (
     <ProfileWrapper>
-      <ProfileGameAch nickname={nickname} />
+      <ProfileGameAch />
     </ProfileWrapper>
   );
 };

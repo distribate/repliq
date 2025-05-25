@@ -2,13 +2,9 @@ import { ChevronDown } from "lucide-react";
 import { Button } from "@repo/ui/src/components/button.tsx";
 import { Typography } from "@repo/ui/src/components/typography.tsx";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@repo/ui/src/components/dropdown-menu.tsx";
-import { useSearchPage } from "#components/search/hooks/use-search-page.ts";
-import { searchPageQuery, SearchPageQuery } from "#components/search/queries/search-page-query.ts";
-import { isValue } from "@repo/lib/helpers/check-is-value.ts";
-
-type SearchPageFilterProps = {
-  type: "users" | "threads";
-};
+import { searchValueAction, SyncParams } from "#components/search/hooks/use-search-page.ts";
+import { searchPageAtom, SearchPageQuery } from "#components/search/queries/search-page-query.ts";
+import { reatomComponent } from "@reatom/npm-react";
 
 type SearchPageFilter = {
   title: string;
@@ -20,15 +16,21 @@ const SEARCH_PAGE_FILTER: SearchPageFilter[] = [
   { title: "По игроку", value: "user" },
 ];
 
-export const SearchPageFilter = ({ 
-  type 
-}: SearchPageFilterProps) => {
-  const { setValueMutation } = useSearchPage();
-  const { data: searchState } = searchPageQuery();
+export const SearchPageFilter = () => {
+  return (
+    <>
+      <SyncParams />
+      <PageFilter />
+    </>
+  )
+}
 
-  const handleSearchFilter = (t: Pick<SearchPageFilter, "value">["value"]) => 
-    setValueMutation.mutate({ type: t });
-  
+const PageFilter = reatomComponent(({ ctx }) => {
+  const searchState = ctx.spy(searchPageAtom)
+
+  const handleSearchFilter = (t: Pick<SearchPageFilter, "value">["value"]) =>
+    searchValueAction(ctx, { type: t });
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -55,7 +57,7 @@ export const SearchPageFilter = ({
                   handleSearchFilter(option.value);
                 }}
               >
-                <Typography state={isValue(searchState.type)(option.value) ? "active" : "default"}>
+                <Typography state={searchState.type === option.value ? "active" : "default"}>
                   {option.title}
                 </Typography>
               </DropdownMenuItem>
@@ -65,4 +67,4 @@ export const SearchPageFilter = ({
       </DropdownMenuContent>
     </DropdownMenu>
   );
-};
+}, "SearchPageFilter")

@@ -1,33 +1,37 @@
 import { createFileRoute, Outlet, redirect } from '@tanstack/react-router'
-import { CURRENT_USER_QUERY_KEY } from '@repo/lib/queries/current-user-query';
-import { getUserInformation } from '@repo/lib/queries/get-user-information';
-import { globalOptionQuery } from '@repo/lib/queries/global-option-query';
-import { StartPreview } from '#components/templates/components/start-preview';
+import { globalOptionsAtom } from '@repo/lib/queries/global-option-query';
 import { lazy, Suspense } from 'react';
 import { validatePage } from '@repo/lib/utils/validate-page';
 import { MainLayout } from '#components/layout/components/default/layout';
 import { WindowLoader } from '@repo/ui/src/components/window-loader';
+import { reatomComponent } from '@reatom/npm-react';
+import { reatomLoader } from '@repo/lib/utils/reatom-loader';
+import { currentUserResource } from '@repo/lib/helpers/get-user';
+import { AUTH_REDIRECT } from '@repo/shared/constants/routes';
 
 const ErrorComponent = lazy(() => import("#components/layout/components/default/error").then(m => ({ default: m.ErrorComponent })))
+const StartPreview = lazy((() => import("#components/templates/components/start-preview").then(m => ({ default: m.StartPreview }))))
 
 export const Route = createFileRoute('/_protected')({
-  component: RouteComponent,
-  beforeLoad: async ({ context }) => {
-    const isValid = await validatePage(context.queryClient)
+  component: reatomComponent(({ ctx }) => {
+    const { isStarted } = ctx.spy(globalOptionsAtom)
 
-    if (!isValid) {
-      throw redirect({ to: '/auth' })
-    }
-  },
-  loader: async ({ context: ctx }) => {
-    const isValid = await validatePage(ctx.queryClient)
+    if (isStarted) return <Suspense><StartPreview /></Suspense>
 
-    if (isValid) {
-      await ctx.queryClient.ensureQueryData({
-        queryKey: CURRENT_USER_QUERY_KEY, queryFn: getUserInformation,
-      })
-    }
-  },
+    return (
+      <MainLayout>
+        <Outlet />
+      </MainLayout>
+    )
+  }, "RouteComponent"),
+  beforeLoad: reatomLoader(async (context) => {
+    const isValid = await validatePage(context)
+    if (!isValid) throw redirect({ to: AUTH_REDIRECT })
+  }),
+  loader: reatomLoader(async (context) => {
+    const isValid = await validatePage(context)
+    if (isValid) await currentUserResource(context)
+  }),
   errorComponent: ({ error, reset }) => (
     <Suspense>
       <ErrorComponent error={error} reset={reset} />
@@ -39,15 +43,3 @@ export const Route = createFileRoute('/_protected')({
     </div>
   )
 })
-
-function RouteComponent() {
-  const { data: { isStarted } } = globalOptionQuery()
-
-  if (isStarted) return <StartPreview />
-
-  return (
-    <MainLayout>
-      <Outlet />
-    </MainLayout>
-  )
-}

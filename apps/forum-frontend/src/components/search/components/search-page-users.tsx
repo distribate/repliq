@@ -1,11 +1,12 @@
-import { searchPageQuery } from "#components/search/queries/search-page-query.ts";
+import { searchPageAtom } from "#components/search/queries/search-page-query.ts";
 import { ContentNotFound } from "#components/templates/components/content-not-found";
 import { filterSearchResults } from "#components/search/helpers/filter-search-results.ts";
 import { SearchPageUser } from "./search-page-user";
 import { SearchUser } from "../queries/get-search-results";
+import { reatomComponent } from "@reatom/npm-react";
 
-export const SearchPageUsers = () => {
-  const { data: searchState } = searchPageQuery();
+export const SearchPageUsers = reatomComponent(({ ctx }) => {
+  const searchState = ctx.spy(searchPageAtom)
 
   if (!searchState.results) {
     return <ContentNotFound title="Ничего не найдено" />
@@ -20,4 +21,4 @@ export const SearchPageUsers = () => {
       )}
     </div>
   );
-};
+}, "SearchPageUsers")

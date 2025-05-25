@@ -1,34 +1,38 @@
 import { Typography } from "@repo/ui/src/components/typography.tsx";
 import { DynamicModal } from "#components/modals/dynamic-modal/components/dynamic-modal.tsx";
 import {
-  CREATE_REPORT_MUTATION_KEY,
-  useCreateReport,
-} from "../hooks/use-create-report.ts";
+  createReportAction,
+} from "../models/create-report.model.ts";
 import { ConfirmationActionModalTemplate } from "#components/modals/confirmation-modal/components/confirmation-action-modal.tsx";
-import { REPORT_REASONS } from "#components/modals/action-confirmation/components/report/constants/report-reason.ts";
 import { Button } from "@repo/ui/src/components/button.tsx";
 import { DialogClose } from "@repo/ui/src/components/dialog.tsx";
 import { ConfirmationButton } from "#components/modals/confirmation-modal/components/confirmation-action-button.tsx";
-import { useQueryClient } from "@tanstack/react-query";
 import {
-  REPORT_QUERY_KEY,
-  reportQuery,
-} from "#components/modals/action-confirmation/components/report/queries/report-query.ts";
+  reportAtom,
+} from "#components/modals/action-confirmation/components/report/models/report.model.ts";
 import React, { useState } from "react";
 import { toast } from "sonner";
-import {
-  THREAD_COMMENTS_QUERY_KEY,
-  ThreadComment,
-} from '#components/thread/thread-comments/queries/thread-comments-query.ts';
 import { Textarea } from "@repo/ui/src/components/textarea.tsx";
 import {
   ReportEntity,
-  ReportReasonEnum,
 } from "@repo/types/entities/entities-type.ts";
 import { FlagTriangleLeft } from "lucide-react";
 import { HoverCardItem } from "@repo/ui/src/components/hover-card.tsx";
-import { createQueryKey } from "@repo/lib/helpers/query-key-builder.ts";
-import { GetUserPostsResponse } from "@repo/types/routes-types/get-user-posts-types.ts";
+import { reatomComponent } from "@reatom/npm-react";
+import { threadCommentsDataAtom } from "#components/thread/thread-comments/models/thread-comments.model.ts";
+import { postsDataAtom } from "#components/profile/posts/posts/models/posts.model.ts";
+import { ReportReasonEnum } from "@repo/types/entities/entities-type.ts";
+
+type ReportReasons = {
+  title: string;
+  type: ReportReasonEnum;
+};
+
+export const REPORT_REASONS: ReportReasons[] = [
+  { title: "Не нравится", type: "dont-like", },
+  { title: "Спам", type: "spam", },
+  { title: "Оскорбления", type: "offensive", },
+];
 
 export type ReportItemProps = {
   reportType: Pick<ReportEntity, "report_type">["report_type"];
@@ -38,27 +42,21 @@ export type ReportItemProps = {
   customTrigger?: React.ReactNode;
 };
 
-const POSTS_QUERY_KEY = (nickname: string) =>
-  createQueryKey('user', ['posts'], nickname);
-
-export const ReportCreateModal = ({
-  reportType, targetId, targetNickname, threadId, customTrigger
-}: ReportItemProps) => {
-  const qc = useQueryClient();
+export const ReportCreateModal = reatomComponent<ReportItemProps>(({
+  ctx, reportType, targetId, targetNickname, threadId, customTrigger
+}) => {
   const [stage, setStage] = useState<"reason" | "description">("reason");
-  const { data: reportState } = reportQuery();
-  const { updateReportValuesMutation, createReportMutation } = useCreateReport();
-
+  const reportState = ctx.spy(reportAtom)
+  const threadComments = ctx.spy(threadCommentsDataAtom)
+  
   const updateReportValues = () => {
     let id: string | number | null = null;
     let content: string | null = null;
 
     if (reportType === "post") {
-      const selectedPosts = qc.getQueryData<GetUserPostsResponse | null>(
-        POSTS_QUERY_KEY(targetNickname),
-      );
+      const selectedPosts = ctx.get(postsDataAtom)
 
-      const selectedPost = selectedPosts?.data?.find(p => p.id === targetId);
+      const selectedPost = selectedPosts?.find(p => p.id === targetId);
 
       if (!selectedPost) {
         return toast.error("Target it must be a provided");
@@ -67,7 +65,7 @@ export const ReportCreateModal = ({
       id = selectedPost.id;
       content = selectedPost.content;
     } else if (reportType === "comment" && threadId) {
-      const selectedComments = qc.getQueryData<ThreadComment[]>(THREAD_COMMENTS_QUERY_KEY(threadId));
+      const selectedComments = threadComments
       const selectedComment = selectedComments?.find(c => c.id === targetId,);
 
       if (!selectedComment) {
@@ -84,32 +82,32 @@ export const ReportCreateModal = ({
 
     setStage("reason");
 
-    return updateReportValuesMutation.mutate({
-      type: reportType,
+    reportAtom(ctx, (state) => ({
+      ...state, type: reportType,
       reportedItem: {
         targetNickname: targetNickname,
         targetId: id,
         targetContent: content ?? "",
       },
-    });
+    }))
   };
 
   const handleReason = (reason: ReportReasonEnum) => {
     setStage("description");
-    updateReportValuesMutation.mutate({ reason });
+    reportAtom(ctx, (state) => ({ ...state, reason }))
   };
 
   const onChange = (e: React.ChangeEvent<HTMLTextAreaElement>) =>
-    updateReportValuesMutation.mutate({ description: e.target.value });
+    reportAtom(ctx, (state) => ({ ...state, description: e.target.value }))
 
   const createReport = () => {
     setStage("reason");
-    return createReportMutation.mutate();
+    createReportAction(ctx)
   };
 
   const onClose = () => {
     setStage("reason");
-    return qc.resetQueries({ queryKey: REPORT_QUERY_KEY });
+    reportAtom.reset(ctx)
   };
 
   const dialogTitle =
@@ -122,8 +120,8 @@ export const ReportCreateModal = ({
   return (
     <DynamicModal
       withLoader
+      isPending={ctx.spy(createReportAction.statusesAtom).isPending}
       contentClassName="max-w-md"
-      mutationKey={CREATE_REPORT_MUTATION_KEY}
       trigger={
         customTrigger ? customTrigger :
           <HoverCardItem className="group gap-2" onClick={updateReportValues}>
@@ -170,7 +168,7 @@ export const ReportCreateModal = ({
                 <Button
                   variant="positive"
                   onClick={createReport}
-                  disabled={createReportMutation.isPending}
+                  disabled={ctx.spy(createReportAction.statusesAtom).isPending}
                 >
                   <Typography className="text-base font-medium">
                     Отправить
@@ -181,7 +179,7 @@ export const ReportCreateModal = ({
                 <ConfirmationButton
                   title="Отмена"
                   actionType="cancel"
-                  disabled={createReportMutation.isPending}
+                  disabled={ctx.spy(createReportAction.statusesAtom).isPending}
                 />
               </DialogClose>
             </div>
@@ -190,4 +188,4 @@ export const ReportCreateModal = ({
       }
     />
   );
-};
+}, "ReportCreateModal")

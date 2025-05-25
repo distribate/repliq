@@ -1,9 +1,5 @@
-import { useQuery } from "@tanstack/react-query";
-import { createQueryKey } from "@repo/lib/helpers/query-key-builder.ts";
-
-export const CREATE_THREAD_COMMENT_QUERY_KEY = createQueryKey("ui", [
-  "create-thread-comment",
-]);
+import { atom } from "@reatom/core";
+import { withReset } from "@reatom/framework";
 
 export type CreateThreadCommentType = "single" | "reply";
 
@@ -13,22 +9,20 @@ export type RepliedValuesType = {
   commentContent: string;
 };
 
-export type CreateThreadCommentQuery = {
+export type CreateThreadComment = {
   threadId: string;
   type: CreateThreadCommentType;
   replied: RepliedValuesType | null;
   content: string;
 }
 
-export const createThreadCommentQuery = () => useQuery<CreateThreadCommentQuery | null, Error>({
-  queryKey: CREATE_THREAD_COMMENT_QUERY_KEY,
-  staleTime: Infinity,
-  gcTime: Infinity,
-  initialData: {
-    content: "",
-    threadId: "",
-    type: "single",
-    replied: null
-  },
-  refetchOnMount: true,
-});
+const initial: CreateThreadComment = { 
+  content: "", 
+  threadId: "", 
+  type: "single",
+  replied: null 
+}
+
+export const createThreadCommentAtom = atom<CreateThreadComment>(initial, "createThreadComment").pipe(
+  withReset()
+)

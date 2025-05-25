@@ -1,25 +1,20 @@
-import { createQueryKey } from "@repo/lib/helpers/query-key-builder"
-import { forumUserClient } from "@repo/shared/api/forum-client"
-import { useQuery } from "@tanstack/react-query"
 import FancyFeather from "@repo/assets/images/minecraft/fancy_feather.webp"
 import { Typography } from "@repo/ui/src/components/typography"
-import { getUser } from "@repo/lib/helpers/get-user"
 import { Skeleton } from "@repo/ui/src/components/skeleton"
-import { Suspense } from "react"
 import { Avatar } from "#components/user/avatar/components/avatar"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from "@repo/ui/src/components/dropdown-menu"
-import { UserNickname } from "#components/user/name/components/nickname"
+import { UserNickname } from "#components/user/name/nickname"
 import dayjs from "@repo/lib/constants/dayjs-instance"
 import { Separator } from "@repo/ui/src/components/separator"
 import { Link } from "@tanstack/react-router"
 import { USER_URL } from "@repo/shared/constants/routes"
-import { myTicketsQuery } from "../queries/my-tickets-query"
+import { myTicketsResource } from "../queries/my-tickets-query"
+import { reatomComponent } from "@reatom/npm-react"
 
-export const MyTickets = () => {
-  const { nickname } = getUser()
-  const { data, isLoading, isError } = myTicketsQuery(nickname)
+export const MyTickets = reatomComponent(({ ctx }) => {
+  const data = ctx.spy(myTicketsResource.dataAtom)
 
-  if (isLoading) {
+  if (ctx.spy(myTicketsResource.statusesAtom).isPending) {
     return (
       <div className="flex flex-col h-full gap-4 p-4 w-full">
         <Skeleton className="h-20 w-full" />
@@ -29,7 +24,7 @@ export const MyTickets = () => {
     )
   }
 
-  if (!data || isError) {
+  if (!data || ctx.spy(myTicketsResource.statusesAtom).isRejected) {
     return (
       <div className="flex flex-col h-full items-center justify-center gap-4 p-4 w-full">
         <img src={FancyFeather} alt="" width={96} height={96} />
@@ -49,9 +44,7 @@ export const MyTickets = () => {
       {data?.map(ticket => (
         <div className="flex items-center justify-between gap-4 bg-shark-950 py-2 lg:py-4 px-4 lg:px-6 rounded-lg w-full h-20">
           <div className="flex items-center gap-2 lg:gap-4">
-            <Suspense fallback={<Skeleton className="w-[56px] h-[56px]" />}>
-              <Avatar nickname={ticket.user_nickname} className="min-h-[56px] min-w-[56px]" propWidth={56} propHeight={56} />
-            </Suspense>
+            <Avatar nickname={ticket.user_nickname} className="min-h-[56px] min-w-[56px]" propWidth={56} propHeight={56} />
             <Typography>
               {ticket.title}
             </Typography>
@@ -80,11 +73,9 @@ export const MyTickets = () => {
                         Рассмотрен:
                       </Typography>
                       <div className="flex items-center gap-2">
-                        <Suspense>
-                          <Link to={USER_URL + ticket.approved_by}>
-                            <Avatar nickname={ticket.approved_by} propWidth={36} propHeight={36} />
-                          </Link>
-                        </Suspense>
+                        <Link to={USER_URL + ticket.approved_by}>
+                          <Avatar nickname={ticket.approved_by} propWidth={36} propHeight={36} />
+                        </Link>
                         <Link to={USER_URL + ticket.approved_by}>
                           <UserNickname nickname={ticket.approved_by} />
                         </Link>
@@ -109,4 +100,4 @@ export const MyTickets = () => {
       ))}
     </div>
   )
-}
+}, "MyTickets")

@@ -1,4 +1,4 @@
-import { UserSettingOption } from "#components/cards/user-personal-card/components/profile-settings/user-profile-settings.tsx";
+import { UserSettingOption } from "#components/cards/user-setting-option-card/components/user-setting-option";
 import BannerPattern from "@repo/assets/images/minecraft/banner_pattern.webp";
 import {
   Dialog,

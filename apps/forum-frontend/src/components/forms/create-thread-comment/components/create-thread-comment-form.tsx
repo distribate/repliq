@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
-import { useCreateThreadComment } from "../hooks/use-create-thread-comment.tsx";
+import { createThreadCommentAction, updateCreateThreadCommentAction } from "../models/create-thread-comment.model.ts";
 import { Avatar } from "#components/user/avatar/components/avatar.tsx";
 import { Button } from "@repo/ui/src/components/button.tsx";
 import { SendHorizontal } from "lucide-react";
-import { createThreadCommentQuery } from "../queries/create-thread-comment-query.ts";
+import { createThreadCommentAtom } from "../queries/create-thread-comment-query.ts";
 import { CreateThreadCommentLayout } from "./create-thread-comment-layout.tsx";
 import { useParams } from "@tanstack/react-router";
 import { getUser } from "@repo/lib/helpers/get-user.ts";
@@ -13,16 +13,15 @@ import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import AutogrowingTextarea from "@repo/ui/src/components/autogrowing-textarea.tsx";
 import { createThreadCommentSchema } from "../schemas/create-thread-comment-schema.ts";
-import { Suspense } from "react"
+import { reatomComponent } from "@reatom/npm-react";
 
 type createThreadForm = z.infer<typeof createThreadCommentSchema>
 
-export const CreateThreadCommentForm = () => {
+export const CreateThreadCommentForm = reatomComponent(({ ctx }) => {
   const { id: paramId } = useParams({ from: "/_protected/thread/$id" });
 
-  const { nickname } = getUser();
-  const { data: createThreadCommentState } = createThreadCommentQuery();
-  const { updateCreateThreadCommentMutation, createThreadCommentMutation } = useCreateThreadComment();
+  const nickname = getUser(ctx).nickname;
+  const createThreadCommentState = ctx.spy(createThreadCommentAtom)
   const [isActive, setIsActive] = useState<boolean>(false);
 
   const { formState: { isValid }, handleSubmit, control, reset } = useForm<createThreadForm>({
@@ -39,7 +38,7 @@ export const CreateThreadCommentForm = () => {
     if (!createThreadCommentState) return;
 
     if (isValid) {
-      return createThreadCommentMutation.mutateAsync().then(() => reset());
+      return createThreadCommentAction(ctx).then(() => reset())
     }
   };
 
@@ -52,27 +51,16 @@ export const CreateThreadCommentForm = () => {
 
   useEffect(() => {
     if (paramId) {
-      updateCreateThreadCommentMutation.mutate({ threadId: paramId });
+      updateCreateThreadCommentAction(ctx, { threadId: paramId });
     }
   }, [paramId]);
 
   const type = createThreadCommentState?.type || "single";
 
   return (
-    <CreateThreadCommentLayout
-      variant={type}
-      state={isActive ? "active" : "none"}
-    >
+    <CreateThreadCommentLayout variant={type} state={isActive ? "active" : "none"}>
       <form onSubmit={handleSubmit(onSubmit)} className="flex items-start h-full w-full justify-between px-4 py-4">
-        <Suspense fallback={null}>
-        <Avatar
-          className="self-start min-h-[36px] min-w-[36px]"
-          variant="page"
-          propWidth={36}
-          propHeight={36}
-          nickname={nickname}
-        />
-        </Suspense>
+        <Avatar className="self-start min-h-[36px] min-w-[36px]" variant="page" propWidth={36} propHeight={36} nickname={nickname} />
         <div className="flex w-full items-start *:w-full h-fit">
           <Controller
             render={({ field: { onChange, onBlur, value } }) => (
@@ -88,7 +76,7 @@ export const CreateThreadCommentForm = () => {
                 }}
                 onChange={(e) => {
                   onChange(e)
-                  updateCreateThreadCommentMutation.mutate({ content: e.target.value })
+                  updateCreateThreadCommentAction(ctx, { content: e.target.value })
                 }}
                 value={value}
                 onKeyDown={handleKeyDown}
@@ -102,7 +90,7 @@ export const CreateThreadCommentForm = () => {
           type="submit"
           variant="default"
           className="shadow-none bg-transparent border-none relative top-1 p-0 m-0"
-          disabled={!isValid || createThreadCommentMutation.isPending}
+          disabled={!isValid || ctx.spy(createThreadCommentAction.statusesAtom).isPending}
         >
           <SendHorizontal
             size={26}
@@ -112,4 +100,4 @@ export const CreateThreadCommentForm = () => {
       </form>
     </CreateThreadCommentLayout>
   );
-};
+}, "CreateThreadCommentForm")

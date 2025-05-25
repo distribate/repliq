@@ -8,16 +8,12 @@ export type Player = {
 
 async function getServerStatus() {
   const res = await forumSharedClient.shared["get-status"].$get({
-    query: {
-      type: "servers"
-    }
+    query: { type: "servers" }
   })
 
   const data = await res.json()
 
-  if (!data || "error" in data) {
-    return null;
-  }
+  if (!data || "error" in data) return null;
 
   return data.data;
 }

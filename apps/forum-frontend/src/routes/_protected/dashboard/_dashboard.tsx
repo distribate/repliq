@@ -1,16 +1,31 @@
-import { currentUserQuery } from '@repo/lib/queries/current-user-query'
 import { Typography } from '@repo/ui/src/components/typography'
 import { Link, useLocation } from '@tanstack/react-router'
 import { createFileRoute, Outlet } from '@tanstack/react-router'
 import FutureChickenMini from "@repo/assets/images/minecraft/future_chicken_mini.png"
+import { reatomComponent } from '@reatom/npm-react'
+import { getUser } from '@repo/lib/helpers/get-user'
 
 export const Route = createFileRoute('/_protected/dashboard/_dashboard')({
-  component: RouteComponent,
+  component: reatomComponent(({ ctx }) => {
+    const { donate } = getUser(ctx)
+    const isValid = donate !== 'default'
+
+    if (!isValid) return <NoAccessDashboard />
+
+    return (
+      <div className="flex flex-col md:flex-row items-start w-full gap-6 h-full">
+        <DashboardNavigation />
+        <div className="flex w-full md:w-3/4 h-full">
+          <Outlet />
+        </div>
+      </div>
+    )
+  }, "RouteComponent"),
 })
 
 const NoAccessDashboard = () => {
   return (
-    <div className="flex flex-col gap-4 items-center justify-center w-full h-[80vh]">
+    <div className="flex flex-col gap-4 items-center justify-center w-full md:h-[80vh]">
       <img src={FutureChickenMini} alt="" width={256} height={256} className="h-[128px] w-[128px] md:w-[256px] md:h-[256px]" />
       <Typography className="text-2xl text-center font-semibold w-full lg:w-[60%]">
         Приобретите любую привилегию на сервере, чтобы открыть доступ к статистике своего профиля!
@@ -33,7 +48,7 @@ const DashboardNavigation = () => {
   const pathname = useLocation({ select: s => s.pathname })
 
   return (
-    <div className="flex flex-col gap-4 bg-primary-color rounded-lg p-4 w-1/4">
+    <div className="flex flex-col gap-4 bg-primary-color rounded-lg p-4 w-full md:w-1/4">
       <Typography textSize="very_big" className="font-semibold">
         Дашборд
       </Typography>
@@ -66,22 +81,6 @@ const DashboardNavigation = () => {
             Треды
           </Typography>
         </Link>
-      </div>
-    </div>
-  )
-}
-
-function RouteComponent() {
-  const { donate } = currentUserQuery().data
-  const isValid = donate !== 'default'
-
-  if (!isValid) return <NoAccessDashboard />
-
-  return (
-    <div className="flex items-start w-full gap-6 h-full">
-      <DashboardNavigation />
-      <div className="flex w-3/4 h-full">
-        <Outlet />
       </div>
     </div>
   )

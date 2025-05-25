@@ -1,25 +1,22 @@
-import { useMutation } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { createIssue, CreateIssue } from "../queries/create-issue";
+import { reatomAsync, withStatusesAtom } from "@reatom/async";
 
 export const CREATE_ISSUE_LIMITATIONS: Record<string, string> = {
   "daily_limit": "Сообщение можно создать только раз в сутки"
 } as const
 
-export const useCreateIssue = () => {
-  const createIssueMutation = useMutation({
-    mutationFn: async (values: CreateIssue) => createIssue(values),
-    onSuccess: async (data) => {
-      if (!data) return
+export const createIssueAction = reatomAsync(async (ctx, values: CreateIssue) => {
+  return await ctx.schedule(() => createIssue(values))
+}, {
+  name: "createIssueAction",
+  onFulfill: (_, res) => {
+    if (!res) return
 
-      if ("error" in data) {
-        return toast.error(CREATE_ISSUE_LIMITATIONS[data.error])
-      }
+    if ("error" in res) {
+      return toast.error(CREATE_ISSUE_LIMITATIONS[res.error])
+    }
 
-      toast.success(`Проблема создана!`)
-    },
-    onError: e => { throw new Error(e.message) }
-  })
-
-  return { createIssueMutation }
-}
+    toast.success(`Заявка создана!`)
+  }
+}).pipe(withStatusesAtom())

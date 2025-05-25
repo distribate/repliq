@@ -1,30 +1,24 @@
-import { createQueryKey } from "@repo/lib/helpers/query-key-builder";
-import { keepPreviousData, useQuery, useQueryClient } from "@tanstack/react-query";
 import { getRatings, GetRatings } from "./get-ratings";
-import { RATING_FILTER_QUERY_KEY, RatingFilterQuery } from "./ratings-filter-query";
+import { ratingFilterAtom } from "./ratings-filter-query";
+import { reatomAsync, withStatusesAtom } from "@reatom/async";
+import { atom } from "@reatom/core";
+import { UnwrapPromise } from "@repo/lib/helpers/unwrap-promise-type";
 
-export const RATING_QUERY_KEY = createQueryKey("ui", ["ratings"])
+type RatingData = UnwrapPromise<ReturnType<typeof getRatings>>["data"]
+type RatingMeta = UnwrapPromise<ReturnType<typeof getRatings>>["meta"]
 
-export const ratingQuery = ({
-  type, ascending
-}: Omit<GetRatings, "cursor" | "limit">) => {
-  const qc = useQueryClient();
+export const ratingDataAtom = atom<RatingData | null>(null, "ratingData")
+export const ratingMetaAtom = atom<RatingMeta | null>(null, "ratingMeta")
 
-  return useQuery({
-    queryKey: RATING_QUERY_KEY,
-    queryFn: async () => {
-      const res = await getRatings({ type, ascending })
+export const ratingAction = reatomAsync(async (ctx, options: Omit<GetRatings, "cursor" | "limit">) => {
+  return await ctx.schedule(() => getRatings(options))
+}, {
+  name: "ratingAction",
+  onFulfill: (ctx, res) => {
+    if (!res) return;
 
-      if (!res) return null;
-
-      qc.setQueryData(RATING_FILTER_QUERY_KEY, (prev: RatingFilterQuery) =>
-        ({ ...prev, cursor: res.meta?.endCursor })
-      )
-
-      return res;
-    },
-    retry: 2,
-    refetchOnWindowFocus: false,
-    placeholderData: keepPreviousData,
-  })
-}
+    ratingDataAtom(ctx, res.data)
+    ratingMetaAtom(ctx, res.meta)
+    ratingFilterAtom(ctx, (state) => ({ ...state, cursor: res.meta?.endCursor }))
+  }
+}).pipe(withStatusesAtom())

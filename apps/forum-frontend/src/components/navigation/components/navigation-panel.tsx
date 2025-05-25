@@ -1,8 +1,32 @@
 import { BlockWrapper } from "#components/wrappers/components/block-wrapper.tsx";
 import { Separator } from "@repo/ui/src/components/separator.tsx";
 import { Fragment } from "react";
-import { NAVIGATION_LINKS } from "../constants/navigation-links.ts";
 import { NavigationLink } from "./navigation-link.tsx";
+
+export type NavigationLinkProps = {
+  href: string;
+  title: string;
+};
+
+export const NAVIGATION_LINKS: NavigationLinkProps[] = [
+  {
+    title: "Главная",
+    href: "/",
+  },
+  {
+    title: "Рейтинги",
+    href: "/ratings",
+  },
+  {
+    title: "Территории",
+    href: "/lands",
+  },
+  {
+    title: "Треды",
+    href: "/threads",
+  },
+];
+
 
 export const NavigationPanel = () => {
   return (

@@ -1,12 +1,10 @@
 import { USER_URL } from "@repo/shared/constants/routes.ts";
 import { Avatar } from "#components/user/avatar/components/avatar.tsx";
 import { Typography } from "@repo/ui/src/components/typography.tsx";
-import { UserNickname } from "#components/user/name/components/nickname";
+import { UserNickname } from "#components/user/name/nickname";
 import { Button } from "@repo/ui/src/components/button.tsx";
 import { Link, useNavigate } from "@tanstack/react-router";
 import { UserEntity } from "@repo/types/entities/entities-type";
-import { Suspense } from "react";
-import { Skeleton } from "@repo/ui/src/components/skeleton";
 
 export type FriendsSearchingCardProps = Pick<UserEntity, "nickname"> & (
   { type: "byLands"; land: string, friend?: never }
@@ -21,11 +19,9 @@ export const FriendsSearchingCard = ({
 
   return (
     <div className="flex flex-col group gap-2 justify-between items-center lg:h-[280px] friend-card">
-      <Suspense fallback={<Skeleton className="w-[128px] h-[128px]" />}>
-        <Link to={USER_URL + nickname}>
-          <Avatar nickname={nickname} propWidth={128} propHeight={128} />
-        </Link>
-      </Suspense>
+      <Link to={USER_URL + nickname}>
+        <Avatar nickname={nickname} propWidth={128} propHeight={128} />
+      </Link>
       <div className="flex flex-col items-start gap-1 w-full justify-start">
         <Link to={USER_URL + nickname}>
           <UserNickname nickname={nickname} />
@@ -49,11 +45,9 @@ export const FriendsSearchingCard = ({
                 Общий друг с
               </Typography>
               <div className="flex items-center gap-1">
-                <Suspense fallback={<Skeleton className="w-[20px] h-[20px]" />}>
-                  <Link to={USER_URL + friend}>
-                    <Avatar nickname={friend} propWidth={20} propHeight={20} />
-                  </Link>
-                </Suspense>
+                <Link to={USER_URL + friend}>
+                  <Avatar nickname={friend} propWidth={20} propHeight={20} />
+                </Link>
                 <Link to={USER_URL + friend}>
                   <Typography textSize="medium">
                     {friend}

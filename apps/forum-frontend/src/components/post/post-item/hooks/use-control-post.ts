@@ -1,16 +1,12 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { POST_CONTROL_QUERY_KEY, PostControlQuery } from "#components/post/post-item/queries/post-control-query.ts";
+import { getPostsControlAtom } from "#components/post/post-item/queries/post-control-query.ts";
 import { toast } from "sonner";
-import { getUser } from "@repo/lib/helpers/get-user";
 import { pinPost } from "../queries/pin-post";
 import { disablePostComments } from "../queries/disable-post-comments";
 import { deletePost } from "../queries/delete-post";
 import { editPost } from "../queries/edit-post";
-import { createQueryKey } from "@repo/lib/helpers/query-key-builder";
-import { GetUserPostsResponse } from "@repo/types/routes-types/get-user-posts-types";
-
-const POSTS_QUERY_KEY = (nickname: string) =>
-  createQueryKey('user', ['posts'], nickname);
+import { reatomAsync, withStatusesAtom } from "@reatom/async";
+import { postsDataAtom } from "#components/profile/posts/posts/models/posts.model";
+import { atom } from "@reatom/core";
 
 type ControlPostActionType = "delete" | "edit" | "pin" | "comments";
 
@@ -20,135 +16,109 @@ type ControlPost = {
   type: ControlPostActionType;
 };
 
-export const useControlPost = () => {
-  const qc = useQueryClient();
-  const { nickname } = getUser();
+const controlPostActionVariablesAtom = atom<ControlPost | null>(null, "controlPostActionVariables")
 
-  const controlPostMutation = useMutation({
-    mutationFn: async (values: ControlPost) => {
-      const { id, type, nickname } = values;
+export const controlPostAction = reatomAsync(async (ctx, values: ControlPost) => {
+  const { id, type } = values;
 
-      const posts = qc.getQueryData<GetUserPostsResponse>(POSTS_QUERY_KEY(nickname))?.data;
+  const posts = ctx.get(postsDataAtom)
+  if (!posts) return;
 
-      if (!posts) return;
+  let post = posts.find(p => p.id === id);
 
-      let post = posts.find(p => p.id === id);
+  if (!post) return;
 
-      if (!post) return;
+  const { content: prev } = post;
 
-      const { content: prev } = post;
+  const content = getPostsControlAtom(ctx, id).content
 
-      const content = qc.getQueryData<PostControlQuery>(POST_CONTROL_QUERY_KEY(id))?.content;
+  controlPostActionVariablesAtom(ctx, values)
 
-      switch (type) {
-        case "pin":
-          return pinPost({ id, value: !post.isPinned });
-        case "comments":
-          return disablePostComments({ id });
-        case "delete":
-          return deletePost({ id });
-        case "edit":
-          return editPost({ id, content: content ?? prev });
-        default:
-          break;
-      }
-    },
-    onSuccess: async (data, variables) => {
-      if (!data) return toast.error("Произошла ошибка");
+  switch (type) {
+    case "pin":
+      return pinPost({ id, value: !post.isPinned });
+    case "comments":
+      return disablePostComments({ id });
+    case "delete":
+      return deletePost({ id });
+    case "edit":
+      return editPost({ id, content: content ?? prev });
+    default:
+      break;
+  }
+}, {
+  name: "controlPostAction",
+  onFulfill: (ctx, res) => {
+    if (!res) return toast.error("Произошла ошибка");
 
-      switch (variables.type) {
-        case "comments":
-          return qc.setQueryData(POSTS_QUERY_KEY(nickname), (prev: GetUserPostsResponse) => {
-            if (!prev.data) return prev;
+    const variables = ctx.get(controlPostActionVariablesAtom)!
 
+    switch (variables.type) {
+      case "comments":
+        return postsDataAtom(ctx, (state) => {
+          if (!state) return state;
+
+          // @ts-ignore
+          if ((res.status !== 'Success') || ("is_comments" in res.data)) {
+            return;
+          }
+
+          const post = state.find((post) => post.id === variables.id);
+
+          const updatedPost = {
+            ...post,
             // @ts-ignore
-            if ((data.status !== 'Success') || ("is_comments" in data.data)) {
-              return;
-            }
+            isComments: data.data.isComments,
+          };
 
-            const post = prev.data.find((post) => post.id === variables.id);
+          return state.map((post) => post.id === updatedPost.id ? updatedPost : post,)
+        })
+      case "delete":
+        return postsDataAtom(ctx, (state) => {
+          if (!state) return null;
 
-            const updatedPost = {
-              ...post,
+          if (res.status !== 'Success') {
+            return;
+          }
+
+          const newData = state.filter(
+            (post) => post.id !== variables.id,
+          );
+
+          return newData
+        })
+      case "edit":
+        return postsDataAtom(ctx, (state) => {
+          if (!state) return null;
+
+          if (res.status !== 'Success') {
+            return;
+          }
+
+          return state.map((post) =>
+            post.id === variables.id
               // @ts-ignore
-              isComments: data.data.isComments,
-            };
+              ? { ...post, content: data.data.content }
+              : post,
+          )
+        })
+      case "pin":
+        return postsDataAtom(ctx, (state) => {
+          if (!state) return null;
 
-            return {
-              ...prev,
-              data: prev.data.map((post) =>
-                post.id === updatedPost.id ? updatedPost : post,
-              ),
-            };
-          });
-        case "delete":
-          return qc.setQueryData(POSTS_QUERY_KEY(nickname),
-            (prev: GetUserPostsResponse) => {
-              if (!prev.data) return null;
+          if (res.status !== 'Success') {
+            return;
+          }
 
-              if (data.status !== 'Success') {
-                return;
-              }
-
-              const newData = prev.data.filter(
-                (post) => post.id !== variables.id,
-              );
-
-              return {
-                data: newData,
-                meta: {
-                  count: newData.length ?? 0,
-                },
-              };
-            },
-          );
-        case "edit":
-          return qc.setQueryData(POSTS_QUERY_KEY(nickname),
-            (prev: GetUserPostsResponse) => {
-              if (!prev.data) return null;
-
-              if (data.status !== 'Success') {
-                return;
-              }
-
-              return {
-                ...prev,
-                data: prev.data.map((post) =>
-                  post.id === variables.id
-                    // @ts-ignore
-                    ? { ...post, content: data.data.content }
-                    : post,
-                ),
-              };
-            });
-        case "pin":
-          return qc.setQueryData(POSTS_QUERY_KEY(nickname),
-            (prev: GetUserPostsResponse) => {
-              if (!prev.data) return null;
-
-              if (data.status !== 'Success') {
-                return;
-              }
-
-              return {
-                ...prev,
-                data: prev.data.map((post) =>
-                  post.id === variables.id
-                    // @ts-ignore
-                    ? { ...post, isPinned: data.data.isPinned }
-                    : post,
-                ),
-              };
-            },
-          );
-        default:
-          break;
-      }
-    },
-    onError: (e) => {
-      throw new Error(e.message);
-    },
-  });
-
-  return { controlPostMutation };
-}
+          return state.map((post) =>
+            post.id === variables.id
+              // @ts-ignore
+              ? { ...post, isPinned: data.data.isPinned }
+              : post,
+          )
+        })
+      default:
+        break;
+    }
+  }
+}).pipe(withStatusesAtom())

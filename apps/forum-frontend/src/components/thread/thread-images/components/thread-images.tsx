@@ -1,4 +1,3 @@
-import { threadImagesQuery } from "../queries/thread-images-query.ts";
 import { Skeleton } from "@repo/ui/src/components/skeleton.tsx";
 import {
   Carousel,
@@ -12,13 +11,13 @@ import {
   DialogTrigger,
 } from "@repo/ui/src/components/dialog.tsx";
 import { useEffect, useState } from "react";
-import { ArrowLeft, ArrowRight, Plus } from "lucide-react";
+import { ArrowLeft, ArrowRight } from "lucide-react";
 import type { EmblaCarouselType } from "embla-carousel";
-import { useQueryClient } from "@tanstack/react-query";
-import { ThreadDetailed } from "@repo/types/entities/thread-type.ts";
-import { THREAD_QUERY_KEY } from "#components/thread/thread-main/queries/thread-query.ts";
+import { threadAtom } from "#components/thread/thread-main/models/thread.model";
 import { Typography } from "@repo/ui/src/components/typography.tsx";
 import { WheelGesturesPlugin } from 'embla-carousel-wheel-gestures'
+import { reatomComponent } from "@reatom/npm-react";
+import { threadImagesAction, threadImagesAtom } from "../models/thread-images.model";
 
 export const ThreadImagesSkeleton = ({ images_count }: { images_count: number }) => {
   return (
@@ -59,18 +58,11 @@ const ThreadImagesNavigation = ({ api }: ThreadImagesNavigationProps) => {
   );
 };
 
-type ThreadImagesProps = {
-  threadId: string
-}
-
-export const ThreadImages = ({
-  threadId
-}: ThreadImagesProps) => {
-  const qc = useQueryClient()
-  const { data: threadImages, isLoading } = threadImagesQuery(threadId);
+export const ThreadImages = reatomComponent(({ ctx }) => {
+  const threadImages = ctx.spy(threadImagesAtom)
+  const thread = ctx.spy(threadAtom)
   const [selectedIndex, setSelectedIndex] = useState<number>(0);
   const [api, setApi] = useState<CarouselApi>();
-  const thread = qc.getQueryData<ThreadDetailed>(THREAD_QUERY_KEY(threadId))
   const [hover, setHover] = useState<boolean>(false)
 
   useEffect(() => {
@@ -79,7 +71,7 @@ export const ThreadImages = ({
     }
   }, [api, selectedIndex]);
 
-  if (isLoading) {
+  if (ctx.spy(threadImagesAction.statusesAtom).isPending) {
     return <ThreadImagesSkeleton images_count={thread?.images_count ?? 2} />
   }
 
@@ -90,8 +82,8 @@ export const ThreadImages = ({
   return (
     <Dialog>
       <div className="grid grid-cols-3 max-h-[200px] grid-rows-1 rounded-lg overflow-hidden gap-2 bg-black/20 px-4 py-2 items-start w-full">
-        {threadImages.map((image, i) => (
-          <DialogTrigger key={i} onClick={() => setSelectedIndex(i)}>
+        {threadImages.map((image, idx) => (
+          <DialogTrigger key={idx} onClick={() => setSelectedIndex(idx)}>
             <img
               src={image}
               alt=""
@@ -121,7 +113,7 @@ export const ThreadImages = ({
               <CarouselItem
                 key={i}
                 className="max-h-[720px] rounded-lg overflow-hidden h-full !p-0 relative"
-                onMouseEnter={() => setHover(true)} 
+                onMouseEnter={() => setHover(true)}
                 onMouseLeave={() => setHover(false)}
               >
                 <img
@@ -151,4 +143,4 @@ export const ThreadImages = ({
       </DialogContent>
     </Dialog >
   );
-};
+}, "ThreadImages")

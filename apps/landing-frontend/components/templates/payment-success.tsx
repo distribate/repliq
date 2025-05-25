@@ -4,7 +4,6 @@
 // import { Button } from "@repo/landing-ui/src/button";
 // import { Skeleton } from "@repo/landing-ui/src/skeleton";
 // import { Typography } from "@repo/landing-ui/src/typography";
-// import { createQueryKey } from "@repo/lib/helpers/query-key-builder";
 // import { ordersClient } from "@repo/shared/api/payments-client";
 // import { useState } from "react";
 // import { useQuery } from "@tanstack/react-query";
@@ -31,7 +30,7 @@
 // }
 
 // const paymentQuery = (id: string, enabled: boolean) => useQuery({
-//   queryKey: createQueryKey("ui", ["payment"], id),
+//   queryKey: ["ui", "payment", id],
 //   queryFn: () => getPayment(id),
 //   refetchOnWindowFocus: false,
 //   refetchOnMount: false,

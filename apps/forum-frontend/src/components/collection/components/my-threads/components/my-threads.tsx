@@ -1,9 +1,9 @@
-import { getUser } from "@repo/lib/helpers/get-user";
 import { Typography } from "@repo/ui/src/components/typography";
 import FancyFeather from "@repo/assets/images/minecraft/fancy_feather.webp"
 import { Link } from "@tanstack/react-router";
 import { THREAD_URL } from "@repo/shared/constants/routes";
-import { myThreadsQuery } from "../queries/my-threads-query";
+import { myThreadsResource } from "../queries/my-threads-query";
+import { reatomComponent } from "@reatom/npm-react";
 
 export const SavedThreads = () => {
   return (
@@ -20,9 +20,9 @@ export const SavedThreads = () => {
   )
 }
 
-export const MyThreads = () => {
-  const { nickname } = getUser()
-  const { data: threads, isLoading } = myThreadsQuery(nickname)
+export const MyThreads = reatomComponent(({ ctx }) => {
+  const threads = ctx.spy(myThreadsResource.dataAtom)
+  const isLoading = ctx.spy(myThreadsResource.statusesAtom).isPending
 
   return (
     <div className="flex flex-col gap-y-4 h-full w-full">
@@ -77,4 +77,4 @@ export const MyThreads = () => {
       )}
     </div>
   )
-}
+}, "MyThreads")

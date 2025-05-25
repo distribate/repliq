@@ -1,21 +1,13 @@
-import { createQueryKey } from "#helpers/query-key-builder.ts"
-import { useSuspenseQuery } from "@tanstack/react-query"
+import { atom } from '@reatom/core';
 
-export const GLOBAL_OPTION_QUERY_KEY = createQueryKey("ui", ["global-type"])
-
-export type GlobalOptionQuery = {
+type GlobalOption = {
   isStarted: boolean,
   isAuthenticated: boolean,
 }
 
-export const globalOptionQuery = () => useSuspenseQuery<GlobalOptionQuery>({
-  queryKey: GLOBAL_OPTION_QUERY_KEY,
-  initialData: {
-    isStarted: false,
-    isAuthenticated: false
-  },
-  refetchOnWindowFocus: false,
-  refetchOnMount: false,
-  staleTime: Infinity,
-  gcTime: Infinity
-})
+const initial = {
+  isStarted: false,
+  isAuthenticated: false
+}
+
+export const globalOptionsAtom = atom<GlobalOption>(initial, "globalOptions")

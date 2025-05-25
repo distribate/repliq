@@ -6,22 +6,22 @@ import { Separator } from "@repo/ui/src/components/separator.tsx";
 import { getUser } from "@repo/lib/helpers/get-user.ts";
 import React from "react";
 import { PostCommentEntity } from "@repo/types/entities/entities-type.ts";
-import { useControlComment } from "#components/post/post-comment/hooks/use-control-comment.ts";
+import { controlCommentAction } from "#components/post/post-comment/hooks/use-control-comment.ts";
+import { reatomComponent } from "@reatom/npm-react";
 
 type PostCommentItemAdditional = Pick<PostCommentEntity, "id" | "user_nickname" | "post_id">;
 
-export const PostCommentItemAdditional = ({
-  id, user_nickname, post_id,
-}: PostCommentItemAdditional) => {
-  const { nickname } = getUser();
-  const { controlCommentMutation } = useControlComment();
+export const PostCommentItemAdditional = reatomComponent<PostCommentItemAdditional>(({
+  ctx, id, user_nickname, post_id,
+}) => {
+  const { nickname } = getUser(ctx);
 
   const isOwner = nickname === user_nickname;
 
   const handleRemoveComment = (e: React.MouseEvent<HTMLDivElement>) => {
     e.preventDefault();
 
-    return controlCommentMutation.mutate({ type: "remove", post_id });
+    return controlCommentAction(ctx, { type: "remove", post_id });
   };
 
   return (
@@ -55,4 +55,4 @@ export const PostCommentItemAdditional = ({
       }
     />
   );
-};
+}, "PostCommentItemAdditional")

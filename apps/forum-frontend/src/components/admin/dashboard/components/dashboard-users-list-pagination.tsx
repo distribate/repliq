@@ -1,18 +1,17 @@
-import { useSearch, useNavigate, useLocation } from "@tanstack/react-router";
+import { useNavigate, useLocation, getRouteApi } from "@tanstack/react-router";
 import { useCallback } from "react";
 import { Button } from "@repo/ui/src/components/button.tsx";
-import { USERS_QUERY_KEY } from "./dashboard-users-list.tsx";
 
 type DashboardUsersListPaginationProps = {
   length: number | null;
 };
 
+const dashboardRoute = getRouteApi("/_protected/_admin/admin/dashboard")
+
 export const DashboardUsersListPagination = ({
-  length,
+  length
 }: DashboardUsersListPaginationProps) => {
-  const searchParams = useSearch({
-    from: "/admin/dashboard/users",
-  });
+  const searchParams = dashboardRoute.useSearch();
 
   const { pathname } = useLocation();
   const navigate = useNavigate();
@@ -36,12 +35,12 @@ export const DashboardUsersListPagination = ({
       {Array.from({ length: buttonsLength }).map((_, i) => (
         <Button
           key={i}
-          onClick={() =>
-            navigate({
-              to:
-                pathname + "?" + createQueryString(USERS_QUERY_KEY, i.toString()),
-            })
-          }
+          // onClick={() =>
+          //   navigate({
+          //     to:
+          //       pathname + "?" + createQueryString(USERS_QUERY_KEY, i.toString()),
+          //   })
+          // }
           state="default"
           className="flex items-center justify-center p-1 hover:brightness-75 w-8 h-8"
         >

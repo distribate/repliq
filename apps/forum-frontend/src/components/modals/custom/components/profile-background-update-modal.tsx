@@ -4,22 +4,18 @@ import { HoverCardItem } from "@repo/ui/src/components/hover-card.tsx";
 import { DynamicModal } from "../../dynamic-modal/components/dynamic-modal.tsx";
 import { ChangeEvent, Suspense, lazy } from "react";
 import { Skeleton } from "@repo/ui/src/components/skeleton.tsx";
-import { useControlCoverImage, USER_COVER_UPDATE_IMAGE_MUTATION_KEY } from "@repo/lib/hooks/use-control-cover-image.ts";
+import { reatomComponent } from "@reatom/npm-react";
+import { uploadBackgroundImageAction } from "#components/profile/header/models/cover-image.model.ts";
 
-const ProfileBackgroundDefaultImagesModal = lazy(() =>
-  import("./profile-background-default-images-modal.tsx")
-    .then(m => ({ default: m.ProfileBackgroundDefaultImagesModal }))
-);
+const BackgroundDefaultImagesModal = lazy(() => import("./profile-background-default-images-modal.tsx").then(m => ({ default: m.ProfileBackgroundDefaultImagesModal })));
 
-const ProfileBackgroundUploadCustom = () => {
-  const { uploadBackgroundImageMutation } = useControlCoverImage();
-
+const ProfileBackgroundUploadCustom = reatomComponent(({ ctx }) => {
   const handleCoverImageInput = (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target?.files ? e.target.files[0] : null;
 
     if (!file) return;
 
-    uploadBackgroundImageMutation.mutate({ file, type: "custom" });
+    uploadBackgroundImageAction(ctx, { file, type: "custom" })
   };
 
   return (
@@ -36,13 +32,14 @@ const ProfileBackgroundUploadCustom = () => {
       />
     </HoverCardItem>
   );
-};
+}, "ProfileBackgroundUploadCustom")
 
-export const ProfileBackgroundUpdateModal = () => {
+export const ProfileBackgroundUpdateModal = reatomComponent(({ ctx }) => {
   return (
     <DynamicModal
+      autoClose
       withLoader
-      mutationKey={USER_COVER_UPDATE_IMAGE_MUTATION_KEY}
+      isPending={ctx.spy(uploadBackgroundImageAction.statusesAtom).isPending}
       trigger={
         <div className="flex hover:bg-shark-600 rounded-md p-2 gap-2 items-center group">
           <ImageUp size={20} className="icon-color group-hover:text-pink-500" />
@@ -56,7 +53,7 @@ export const ProfileBackgroundUpdateModal = () => {
           </Typography>
           <div className="flex flex-col items-center p-2 justify-center *:w-full w-full">
             <Suspense fallback={<Skeleton className="h-10 w-full" />}>
-              <ProfileBackgroundDefaultImagesModal />
+              <BackgroundDefaultImagesModal />
             </Suspense>
             <ProfileBackgroundUploadCustom />
           </div>
@@ -64,4 +61,4 @@ export const ProfileBackgroundUpdateModal = () => {
       }
     />
   );
-};
+}, "ProfileBackgroundUpdateModal")

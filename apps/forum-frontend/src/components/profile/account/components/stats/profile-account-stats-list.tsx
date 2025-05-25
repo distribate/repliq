@@ -1,19 +1,19 @@
 import { Typography } from "@repo/ui/src/components/typography.tsx";
-import { USER_PROFILE_STATS_QUERY_KEY, userProfileStatsQuery } from "../../queries/user-profile-stats-query";
+import { userProfileStatsResource } from "../../models/user-stats.model";
 import { getUser } from "@repo/lib/helpers/get-user";
 import { Dialog, DialogContent, DialogTrigger } from "@repo/ui/src/components/dialog";
 import { Button } from "@repo/ui/src/components/button";
-import { ProfileStatsDetailed, ProfileStatsMeta, ProfileViewsDetails } from "@repo/types/routes-types/get-user-profile-stats-types";
-import { useQueryClient } from "@tanstack/react-query";
+import { ProfileStatsMeta, ProfileViewsDetails } from "@repo/types/routes-types/get-user-profile-stats-types";
 import { BuyDonateModal } from "#components/modals/custom/components/buy-donate-modal";
 import { Avatar } from "#components/user/avatar/components/avatar";
 import { useNavigate } from "@tanstack/react-router";
-import { HTMLAttributes, Suspense } from "react";
+import { HTMLAttributes } from "react";
 import dayjs from "@repo/lib/constants/dayjs-instance"
-import { Skeleton } from "@repo/ui/src/components/skeleton";
 import { Link } from "@tanstack/react-router";
 import { USER_URL } from "@repo/shared/constants/routes";
 import { Separator } from "@repo/ui/src/components/separator";
+import { reatomComponent } from "@reatom/npm-react";
+import { onConnect } from "@reatom/framework";
 
 type AccountStatSectionProps = {
   title: string,
@@ -50,7 +50,7 @@ export const ProfileAccountStatsMeta = ({
         <Typography>{meta.views_by_month}/</Typography>
         <Typography>{meta.views_all}</Typography>
       </div>
-      <Separator orientation="vertical"/>
+      <Separator orientation="vertical" />
       <Typography>
         [день/месяц/всего]
       </Typography>
@@ -83,11 +83,9 @@ export const ProfileAccountStatsPlayers = ({
               {details.map((item, idx) =>
                 <div key={idx} className="flex bg-shark-800 p-2 rounded-lg w-full items-center justify-between">
                   <div className="flex items-center gap-2">
-                    <Suspense fallback={<Skeleton className="h-[36px] w-[36px]" />}>
-                      <Link to={USER_URL + item.initiator}>
-                        <Avatar nickname={item.initiator} propWidth={36} propHeight={36} />
-                      </Link>
-                    </Suspense>
+                    <Link to={USER_URL + item.initiator}>
+                      <Avatar nickname={item.initiator} propWidth={36} propHeight={36} />
+                    </Link>
                     <div className="flex flex-col">
                       <Link to={USER_URL + item.initiator}>
                         <Typography className="text-base text-shark-50">
@@ -109,9 +107,8 @@ export const ProfileAccountStatsPlayers = ({
   )
 }
 
-export const ProfileAccountStatsDetails = () => {
-  const qc = useQueryClient()
-  const profileStats = qc.getQueryData<ProfileStatsDetailed>(USER_PROFILE_STATS_QUERY_KEY)
+export const ProfileAccountStatsDetails = reatomComponent(({ ctx }) => {
+  const profileStats = ctx.spy(userProfileStatsResource.dataAtom)
   const navigate = useNavigate()
 
   const handleRedirect = () => {
@@ -129,11 +126,13 @@ export const ProfileAccountStatsDetails = () => {
       </Typography>
     </AccountStatSection>
   )
-}
+}, "ProfileAccountStatsDetails")
 
-export const ProfileAccountStats = () => {
-  const { data: profileStats } = userProfileStatsQuery()
-  const { donate } = getUser()
+onConnect(userProfileStatsResource.dataAtom, userProfileStatsResource)
+
+export const ProfileAccountStats = reatomComponent(({ ctx }) => {
+  const profileStats = ctx.spy(userProfileStatsResource.dataAtom)
+  const { donate } = getUser(ctx)
 
   return (
     <div className="flex flex-col gap-4 w-full h-full">
@@ -179,4 +178,4 @@ export const ProfileAccountStats = () => {
       </div>
     </div>
   );
-};
+}, "ProfileAccountStats")

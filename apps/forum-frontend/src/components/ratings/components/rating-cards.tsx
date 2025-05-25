@@ -1,13 +1,13 @@
 import { Avatar } from "#components/user/avatar/components/avatar.tsx";
-import { UserNickname } from "#components/user/name/components/nickname";
+import { UserNickname } from "#components/user/name/nickname";
+import { reatomComponent } from "@reatom/npm-react";
 import dayjs from "@repo/lib/constants/dayjs-instance";
 import { getUser } from "@repo/lib/helpers/get-user";
 import { LAND_URL, USER_URL } from "@repo/shared/constants/routes";
-import { Skeleton } from "@repo/ui/src/components/skeleton";
 import { Typography } from "@repo/ui/src/components/typography";
 import { Link } from "@tanstack/react-router";
 import { cva, VariantProps } from "class-variance-authority";
-import { forwardRef, HTMLAttributes, Suspense } from "react";
+import { forwardRef, HTMLAttributes } from "react";
 
 const ratingCardVariants = cva("grid grid-cols-[0.1fr_2.9fr_1fr_1fr] select-none grid-rows-1 gap-2 w-full p-2 rounded-lg", {
   variants: {
@@ -78,10 +78,10 @@ export type RatingLandsCardProps = RatingInitial & {
   blocks: any
 }
 
-export const RatingLandsCard = ({
-  land, chunks_amount, members, name, type, idx, blocks
-}: RatingLandsCardProps) => {
-  const currentUser = getUser()
+export const RatingLandsCard = reatomComponent<RatingLandsCardProps>(({
+  ctx, land, chunks_amount, members, name, type, idx, blocks
+}) => {
+  const currentUser = getUser(ctx)
 
   const isOwner = currentUser.nickname === Object.keys(members)[0]
 
@@ -111,12 +111,12 @@ export const RatingLandsCard = ({
       </div>
     </RatingCard>
   )
-}
+}, "RatingLandsCard")
 
-export const RatingReputationCard = ({
-  nickname, reputation, uuid, idx
-}: RatingReputationCardProps) => {
-  const currentUser = getUser()
+export const RatingReputationCard = reatomComponent<RatingReputationCardProps>(({
+  nickname, reputation, uuid, idx, ctx
+}) => {
+  const currentUser = getUser(ctx)
 
   const isOwner = currentUser.nickname === nickname
 
@@ -128,11 +128,9 @@ export const RatingReputationCard = ({
         </Typography>
       </div>
       <div className="flex items-center gap-2">
-        <Suspense fallback={<Skeleton className="h-[42px] w-[42px]" />}>
-          <Link to={USER_URL + nickname}>
-            <Avatar nickname={nickname || "a"} propHeight={42} propWidth={42} />
-          </Link>
-        </Suspense>
+        <Link to={USER_URL + nickname}>
+          <Avatar nickname={nickname || "a"} propHeight={42} propWidth={42} />
+        </Link>
         <Link to={USER_URL + nickname}>
           <UserNickname nickname={nickname!} className="text-[18px] truncate" />
         </Link>
@@ -144,12 +142,12 @@ export const RatingReputationCard = ({
       </div>
     </RatingCard>
   )
-}
+}, "RatingReputationCard")
 
-export const RatingCharismCard = ({
-  Balance, username: nickname, idx
-}: RatingCharismCardProps) => {
-  const currentUser = getUser()
+export const RatingCharismCard = reatomComponent<RatingCharismCardProps>(({
+  Balance, username: nickname, idx, ctx
+}) => {
+  const currentUser = getUser(ctx)
 
   const isOwner = currentUser.nickname === nickname
 
@@ -161,11 +159,9 @@ export const RatingCharismCard = ({
         </Typography>
       </div>
       <div className="flex items-center gap-2">
-        <Suspense fallback={<Skeleton className="h-[42px] w-[42px]" />}>
-          <Link to={USER_URL + nickname}>
-            <Avatar nickname={nickname || "a"} propHeight={42} propWidth={42} />
-          </Link>
-        </Suspense>
+        <Link to={USER_URL + nickname}>
+          <Avatar nickname={nickname || "a"} propHeight={42} propWidth={42} />
+        </Link>
         <Link to={USER_URL + nickname}>
           <UserNickname nickname={nickname!} className="text-[18px] truncate" />
         </Link>
@@ -177,12 +173,12 @@ export const RatingCharismCard = ({
       </div>
     </RatingCard>
   )
-}
+}, "RatingCharismCard")
 
-export const RatingBelkoinCard = ({
-  points, username: nickname, idx
-}: RatingBelkoinCardProps) => {
-  const currentUser = getUser()
+export const RatingBelkoinCard = reatomComponent<RatingBelkoinCardProps>(({
+  points, username: nickname, idx, ctx
+}) => {
+  const currentUser = getUser(ctx)
 
   const isOwner = currentUser.nickname === nickname
 
@@ -194,11 +190,9 @@ export const RatingBelkoinCard = ({
         </Typography>
       </div>
       <div className="flex items-center gap-2">
-        <Suspense fallback={<Skeleton className="h-[42px] w-[42px]" />}>
-          <Link to={USER_URL + nickname}>
-            <Avatar nickname={nickname || "a"} propHeight={42} propWidth={42} />
-          </Link>
-        </Suspense>
+        <Link to={USER_URL + nickname}>
+          <Avatar nickname={nickname || "a"} propHeight={42} propWidth={42} />
+        </Link>
         <Link to={USER_URL + nickname}>
           <UserNickname nickname={nickname!} className="text-[18px] truncate" />
         </Link>
@@ -210,12 +204,12 @@ export const RatingBelkoinCard = ({
       </div>
     </RatingCard>
   )
-}
+}, "RatingBelkoinCard")
 
-export const RatingParkourCard = ({
-  gamesplayed, player, score, area, name: nickname, idx
-}: RatingParkourCardProps) => {
-  const currentUser = getUser()
+export const RatingParkourCard = reatomComponent<RatingParkourCardProps>(({
+  gamesplayed, player, score, area, name: nickname, idx, ctx
+}) => {
+  const currentUser = getUser(ctx)
 
   const isOwner = currentUser.nickname === nickname
 
@@ -227,11 +221,9 @@ export const RatingParkourCard = ({
         </Typography>
       </div>
       <div className="flex items-center gap-2">
-        <Suspense fallback={<Skeleton className="h-[42px] w-[42px]" />}>
-          <Link to={USER_URL + nickname}>
-            <Avatar nickname={nickname || "a"} propHeight={42} propWidth={42} />
-          </Link>
-        </Suspense>
+        <Link to={USER_URL + nickname}>
+          <Avatar nickname={nickname || "a"} propHeight={42} propWidth={42} />
+        </Link>
         <Link to={USER_URL + nickname}>
           <UserNickname nickname={nickname!} className="text-[18px] truncate" />
         </Link>
@@ -248,12 +240,12 @@ export const RatingParkourCard = ({
       </div>
     </RatingCard>
   )
-}
+}, "RatingParkourCard")
 
-export const RatingPlaytimeCard = ({
-  TotalPlayTime, username: nickname, idx
-}: RatingPlaytimeCardProps) => {
-  const currentUser = getUser()
+export const RatingPlaytimeCard = reatomComponent<RatingPlaytimeCardProps>(({
+  TotalPlayTime, username: nickname, idx, ctx
+}) => {
+  const currentUser = getUser(ctx)
 
   const isOwner = currentUser.nickname === nickname
 
@@ -265,11 +257,9 @@ export const RatingPlaytimeCard = ({
         </Typography>
       </div>
       <div className="flex items-center gap-2">
-        <Suspense fallback={<Skeleton className="h-[42px] w-[42px]" />}>
-          <Link to={USER_URL + nickname}>
-            <Avatar nickname={nickname || "a"} propHeight={42} propWidth={42} />
-          </Link>
-        </Suspense>
+        <Link to={USER_URL + nickname}>
+          <Avatar nickname={nickname || "a"} propHeight={42} propWidth={42} />
+        </Link>
         <Link to={USER_URL + nickname}>
           <UserNickname nickname={nickname!} className="text-[18px] truncate" />
         </Link>
@@ -281,4 +271,4 @@ export const RatingPlaytimeCard = ({
       </div>
     </RatingCard>
   )
-}
+}, "RatingPlaytimeCard")

@@ -54,7 +54,7 @@ export const createFriendRequestRoute = new Hono()
         data: { initiator, recipient }
       })
 
-      return ctx.json({ status: "Friend request sent" }, 200);
+      return ctx.json({ request_id: res.id, status: "Friend request sent" }, 200);
     } catch (e) {
       return ctx.json({ error: throwError(e) }, 400);
     }

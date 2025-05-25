@@ -1,17 +1,14 @@
 import { Skeleton } from "@repo/ui/src/components/skeleton.tsx";
 import {
-  SEARCH_PAGE_QUERY_KEY,
-  SearchPageQuery,
-  searchPageQuery,
+  searchPageAtom,
 } from "#components/search/queries/search-page-query.ts";
 import { SearchPageUsers } from "#components/search/components/search-page-users.tsx";
 import { SearchPageThreads } from "#components/search/components/search-page-threads.tsx";
 import { SearchPageAll } from "#components/search/components/search-page-all.tsx";
-import { useMutationState, useQueryClient } from "@tanstack/react-query";
-import { SEARCH_PAGE_RESULTS_MUTATION_KEY } from "#components/search/hooks/use-search-page.ts";
+import { handleSearchAction } from "#components/search/hooks/use-search-page.ts";
 import { useInView } from "react-intersection-observer";
-import { Suspense, useEffect } from "react";
 import { SEARCH_PAGE_LIMIT } from "@repo/shared/constants/limits.ts";
+import { reatomComponent, useUpdate } from "@reatom/npm-react";
 
 type SearchPageResultsProps = {
   type: "users" | "threads" | "all";
@@ -36,36 +33,34 @@ const SearchPageResultsSkeleton = () => {
   );
 };
 
-export const SearchPageResults = ({ type }: SearchPageResultsProps) => {
-  const { data: searchState } = searchPageQuery();
-  const qc = useQueryClient();
+const SyncInView = ({ inView }: { inView: boolean }) => {
+  useUpdate((ctx) => {
+    if (!inView) return;
 
+    searchPageAtom(ctx, (state) => {
+      if (state.isLimited) return state;
+
+      return { ...state, limit: state.limit + SEARCH_PAGE_LIMIT }
+    })
+  }, [inView])
+
+  return null;
+}
+
+export const SearchPageResults = reatomComponent<SearchPageResultsProps>(({ ctx, type }) => {
   const { inView, ref } = useInView({ threshold: 0 });
 
-  useEffect(() => {
-    if (inView && !searchState.isLimited) {
-      qc.setQueryData(SEARCH_PAGE_QUERY_KEY, (prev: SearchPageQuery) => ({
-        ...prev,
-        limit: searchState.limit + SEARCH_PAGE_LIMIT,
-      }));
-    }
-  }, [inView]);
-
-  const mutData = useMutationState({
-    filters: { mutationKey: SEARCH_PAGE_RESULTS_MUTATION_KEY },
-    select: (m) => m.state.status,
-  });
-
-  const isLoading = mutData[mutData.length - 1] === "pending";
-
-  if (isLoading) return <SearchPageResultsSkeleton />;
+  if (ctx.spy(handleSearchAction.statusesAtom).isPending) return <SearchPageResultsSkeleton />;
 
   return (
-    <Suspense fallback={<SearchPageResultsSkeleton />}>
-      {type === "users" && <SearchPageUsers />}
-      {type === "threads" && <SearchPageThreads />}
-      {type === "all" && <SearchPageAll />}
-      <div ref={ref} className="h-[1px] w-full" />
-    </Suspense>
+    <>
+      <SyncInView inView={inView} />
+      <>
+        {type === "users" && <SearchPageUsers />}
+        {type === "threads" && <SearchPageThreads />}
+        {type === "all" && <SearchPageAll />}
+        <div ref={ref} className="h-[1px] w-full" />
+      </>
+    </>
   );
-};
+}, "SearchPageResults")

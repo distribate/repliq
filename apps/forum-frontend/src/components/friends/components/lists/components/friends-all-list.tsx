@@ -1,50 +1,71 @@
 import { ContentNotFound } from "#components/templates/components/content-not-found.tsx";
 import { FriendsListLayout } from "./friends-list-layout.tsx";
-import { FriendCard } from "#components/friend/components/friend-card/components/friend-card.tsx";
-import { friendsQuery } from "#components/friends/queries/friends-query.ts";
-import { friendsFilteringQuery } from "#components/friends/components/filtering/queries/friends-filtering-query.ts";
+import { FriendCard } from "#components/friend/components/friend-card/friend-card.tsx";
+import {
+  myFriendsAction,
+  myFriendsDataAtom,
+  myFriendsMetaAtom,
+  myFriendsNotPinnedDataAtom,
+  myFriendsPinnedDataAtom
+} from "#components/friends/models/friends.model.ts";
 import { FriendsAllListSkeleton } from "#components/skeletons/components/friends-all-list-skeleton.tsx";
-import { FriendWithDetails } from "@repo/types/schemas/friend/friend-types.ts";
-import { UPDATE_FRIENDS_MUTATION_KEY, useUpdateFriends } from "#components/friends/hooks/use-update-friends.ts";
+import { updateFriendsAction } from "#components/friends/models/update-friends.model.ts";
 import { useInView } from "react-intersection-observer";
-import { useMutationState } from "@tanstack/react-query";
-import { useEffect } from "react";
-import { getUser } from "@repo/lib/helpers/get-user.ts";
+import { reatomComponent, useUpdate } from "@reatom/npm-react";
+import { onConnect, onDisconnect } from "@reatom/framework";
 
-export const FriendsAllList = () => {
-  const { nickname } = getUser();
-  const { data: { viewType } } = friendsFilteringQuery();
-  const { data: friends, isLoading } = friendsQuery({ nickname });
-  const { updateFriendsMutation } = useUpdateFriends()
+onConnect(myFriendsAction, myFriendsAction)
+
+onDisconnect(myFriendsDataAtom, myFriendsDataAtom.reset)
+onDisconnect(myFriendsMetaAtom, myFriendsMetaAtom.reset)
+
+const SyncInView = ({ inView }: { inView: boolean }) => {
+  useUpdate((ctx) => {
+    const hasMore = ctx.get(myFriendsMetaAtom)?.hasNextPage
+
+    if (inView && hasMore) updateFriendsAction(ctx, "update-cursor");
+  }, [inView])
+
+  return null;
+}
+
+const List = reatomComponent(({ ctx }) => {
+  return (
+    <>
+      {ctx.spy(myFriendsPinnedDataAtom).map(target => (
+        <FriendCard key={target.nickname} {...target} />
+      ))}
+      {ctx.spy(myFriendsNotPinnedDataAtom).map(target => (
+        <FriendCard key={target.nickname} {...target} />
+      ))}
+      {ctx.spy(updateFriendsAction.statusesAtom).isPending && (
+        <FriendsAllListSkeleton />
+      )}
+      <InViewer />
+    </>
+  )
+})
+
+const InViewer = () => {
   const { inView, ref } = useInView({ triggerOnce: false, threshold: 1 });
 
-  const mutData = useMutationState({
-    filters: { mutationKey: UPDATE_FRIENDS_MUTATION_KEY },
-    select: m => m.state.status
-  })
+  return (
+    <>
+      <SyncInView inView={inView} />
+      <div ref={ref} className="h-[1px] w-full" />
+    </>
+  )
+}
 
-  const isLoadingUpdated = mutData[mutData.length - 1] === "pending";
-  const friendsData = friends?.data as FriendWithDetails[]
-  const friendsMeta = friends?.meta;
-  const hasMore = friendsMeta?.hasNextPage;
-
-  useEffect(() => {
-    if (inView && hasMore) updateFriendsMutation.mutate({ with_details: true, nickname, type: "update-cursor" });
-  }, [inView, hasMore]);
-
-  if (isLoading) return <FriendsAllListSkeleton />
-
-  if (!friendsData.length) return <ContentNotFound title="Пока нет друзей" />
-
-  const pinnedFriends = friendsData.filter(f => f.is_pinned);
-  const notPinnedFriends = friendsData.filter(f => !f.is_pinned);
+export const FriendsAllList = reatomComponent(({ ctx }) => {
+  const isLoading = ctx.spy(myFriendsAction.statusesAtom).isPending
+  const data = ctx.spy(myFriendsDataAtom);
 
   return (
-    <FriendsListLayout variant={viewType}>
-      {pinnedFriends.map(f => <FriendCard key={f.nickname} {...f} />)}
-      {notPinnedFriends.map(f => <FriendCard key={f.nickname} {...f} />)}
-      {isLoadingUpdated && <FriendsAllListSkeleton />}
-      {hasMore && <div ref={ref} className="h-[1px] w-full" />}
+    <FriendsListLayout>
+      {isLoading ? <FriendsAllListSkeleton /> : (
+        data.length >= 1 ? <List /> : <ContentNotFound title="Пока нет друзей" />
+      )}
     </FriendsListLayout>
   );
-}
+}, "FriendsAllList")

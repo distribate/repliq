@@ -1,5 +1,6 @@
+import { reatomComponent } from "@reatom/npm-react";
 import { isProduction } from "@repo/lib/helpers/is-production";
-import { globalOptionQuery } from "@repo/lib/queries/global-option-query";
+import { globalOptionsAtom } from "@repo/lib/queries/global-option-query";
 import { config, ping, updateEvent } from "@repo/shared/constants/sse-events";
 import { ConfigEventsData, NotificationsEventsPayload } from "@repo/types/entities/notifications-events-type";
 import { useEffect } from "react";
@@ -7,8 +8,8 @@ import { toast } from "sonner";
 
 const URL = isProduction ? "https://api.fasberry.su/forum/sse" : "http://localhost:4101/forum/sse"
 
-export const NotificationsWrapper = () => {
-  const { isAuthenticated } = globalOptionQuery().data
+export const NotificationsWrapper = reatomComponent(({ ctx }) => {
+  const { isAuthenticated } = ctx.spy(globalOptionsAtom)
 
   useEffect(() => {
     if (isAuthenticated) {
@@ -35,4 +36,4 @@ export const NotificationsWrapper = () => {
   }, [isAuthenticated])
 
   return <></>
-}
+}, "NotificationsWrapper")

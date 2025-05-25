@@ -2,12 +2,12 @@ import { Typography } from "@repo/ui/src/components/typography.tsx";
 import { Controller } from "react-hook-form";
 import { Select, SelectContent, SelectItem, SelectTrigger } from "@repo/ui/src/components/select.tsx";
 import { FormField } from "@repo/ui/src/components/form-field.tsx";
-import { availableCategoriesQuery } from "../queries/available-query.ts";
+import { availableCategoriesResource } from "../models/available-categories.model.ts";
 import { useState } from "react";
-import { threadFormQuery } from "../queries/thread-form-query.ts";
 import { FormChildsProps } from "./form-thread.tsx";
-import { useEditThread } from "../hooks/use-edit-thread.tsx";
 import { Skeleton } from "@repo/ui/src/components/skeleton.tsx";
+import { reatomComponent } from "@reatom/npm-react";
+import { threadFormCategoryAtom } from "../models/thread-form.model.ts";
 
 type AvailableCategoriesProps = {
   enabled: boolean;
@@ -21,8 +21,9 @@ const AvailableCategoriesSkeleton = () => {
   );
 };
 
-const AvailableCategories = ({ enabled }: AvailableCategoriesProps) => {
-  const { data: availableCategories, isLoading } = availableCategoriesQuery(enabled);
+const AvailableCategories = reatomComponent<AvailableCategoriesProps>(({ ctx }) => {
+  const availableCategories = ctx.spy(availableCategoriesResource.dataAtom)
+  const isLoading = ctx.spy(availableCategoriesResource.statusesAtom).isPending;
 
   return (
     <SelectContent
@@ -65,22 +66,16 @@ const AvailableCategories = ({ enabled }: AvailableCategoriesProps) => {
       </div>
     </SelectContent>
   );
-};
+}, "AvailableCategories")
 
-export const FormThreadCategories = ({
-  errors, control
-}: FormChildsProps) => {
+export const FormThreadCategories = reatomComponent<FormChildsProps>(({ ctx, errors, control }) => {
   const [enabled, setEnabled] = useState<boolean>(false);
-  const { data: availableCategories } = availableCategoriesQuery(enabled);
-  const { data: threadFormState } = threadFormQuery();
-  const { updateThreadFormMutation } = useEditThread();
-
-  if (!threadFormState) return;
+  const availableCategories = ctx.spy(availableCategoriesResource.dataAtom)
+  const threadCategory = ctx.spy(threadFormCategoryAtom)
 
   const handleValueChange = (value: string, onChange: (v: number) => void) => {
     onChange(Number(value));
-
-    return updateThreadFormMutation.mutate({ category_id: Number(value) });
+    threadFormCategoryAtom(ctx, Number(value))
   };
 
   const handleOpen = (v: boolean) => {
@@ -89,9 +84,7 @@ export const FormThreadCategories = ({
     }
   };
 
-  const isActive = threadFormState.category_id;
-  const selectedCategoryId = threadFormState.category_id;
-  const selectedCategory = availableCategories?.find(i => Number(i.id) === selectedCategoryId) || null;
+  const selectedCategory = availableCategories?.find(i => Number(i.id) === threadCategory) || null;
 
   return (
     <FormField errorMessage={errors?.category_id?.message}>
@@ -110,13 +103,13 @@ export const FormThreadCategories = ({
               onValueChange={(v) => handleValueChange(v, onChange)}
             >
               <SelectTrigger
-                className={`${isActive ? "bg-shark-50 border-2" : "bg-shark-800"} flex `}
+                className={`${threadCategory ? "bg-shark-50 border-2" : "bg-shark-800"} flex `}
                 style={{ borderColor: selectedCategory?.color ?? "" }}
               >
-                {!threadFormState.category_id ? (
+                {!threadCategory ? (
                   <Typography
                     textSize="medium"
-                    textColor={isActive ? "shark_black" : "shark_white"}
+                    textColor={threadCategory ? "shark_black" : "shark_white"}
                   >
                     Категория не выбрана
                   </Typography>
@@ -125,7 +118,7 @@ export const FormThreadCategories = ({
                     <img src={selectedCategory?.emoji} draggable={false} alt="" width={24} height={24} />
                     <Typography
                       textSize="medium"
-                      textColor={isActive ? "shark_black" : "shark_white"}
+                      textColor={threadCategory ? "shark_black" : "shark_white"}
                     >
                       {selectedCategory?.title}
                     </Typography>
@@ -139,4 +132,4 @@ export const FormThreadCategories = ({
       />
     </FormField>
   );
-};
+}, "FormThreadCategories")

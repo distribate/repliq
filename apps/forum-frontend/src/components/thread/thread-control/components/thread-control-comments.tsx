@@ -1,25 +1,19 @@
-import { useThreadControl } from "../hooks/use-thread-control.ts";
 import { MessageCircle, MessageCircleOff } from "lucide-react";
 import { Typography } from "@repo/ui/src/components/typography.tsx";
-import { ThreadControlFields } from "../types/thread-control-types.ts";
 import { Toggle } from "@repo/ui/src/components/toggle.tsx";
 import { useState } from "react";
+import { reatomComponent } from "@reatom/npm-react";
+import { threadControlAtom } from "../models/thread-control.model";
 
-export const ThreadControlComments = ({
-  is_comments: currentIsComments,
-}: Pick<ThreadControlFields, "is_comments">) => {
+export const ThreadControlComments = reatomComponent<{ is_comments: boolean }>(({
+  ctx, is_comments: currentIsComments,
+}) => {
   const [commentsValue, setCommentsValue] = useState<boolean>(currentIsComments);
-  const { setThreadNewValuesMutation } = useThreadControl();
 
   const handleToggleThreadComments = () => {
     setCommentsValue((prev) => !prev);
-
-    return setThreadNewValuesMutation.mutate({
-      values: { is_comments: !commentsValue },
-    });
+    threadControlAtom(ctx, (state) => ({ ...state, values: { is_comments: !commentsValue } }))
   };
-
-  const disabled = setThreadNewValuesMutation.isPending || setThreadNewValuesMutation.isError;
 
   return (
     <div className="flex flex-col items-start gap-2 w-full">
@@ -28,7 +22,6 @@ export const ThreadControlComments = ({
         variant="outline"
         pressed={commentsValue}
         onPressedChange={handleToggleThreadComments}
-        disabled={disabled}
         aria-label="Комментирование"
       >
         {!currentIsComments ? (
@@ -39,4 +32,4 @@ export const ThreadControlComments = ({
       </Toggle>
     </div>
   );
-};
+}, "ThreadControlComments")

@@ -1,10 +1,5 @@
 import { ReactNode, useEffect, useState } from "react";
 import {
-  MutationKey,
-  MutationStatus,
-  useMutationState,
-} from "@tanstack/react-query";
-import {
   Dialog,
   DialogContent,
   DialogTrigger,
@@ -14,44 +9,48 @@ import { DialogLoader } from "#components/templates/components/dialog-loader";
 type DynamicModalProps = {
   trigger: ReactNode;
   content: ReactNode;
-  mutationKey: MutationKey;
-  status?: MutationStatus;
   contentClassName?: string;
-  withLoader?: boolean;
-};
+  autoClose?: boolean
+} & (
+    {
+      withLoader?: true, isPending: boolean,
+    }
+    | { withLoader?: false, isPending?: never }
+  )
 
 export const DynamicModal = ({
-  content,
-  trigger,
-  mutationKey,
-  contentClassName,
-  withLoader,
-  status = "success",
+  content, trigger, contentClassName, withLoader, isPending, autoClose = false,
 }: DynamicModalProps) => {
-  const [open, setOpen] = useState<boolean>(false);
-
-  const data = useMutationState({
-    filters: { mutationKey },
-    select: (mutation) => mutation.state.status,
-  });
-
-  const mutationStatus = data[data.length - 1];
+  const [open, setOpen] = useState(false)
+  const [operationWasPending, setOperationWasPending] = useState(false);
 
   useEffect(() => {
-    if (mutationStatus === status) {
+    if (open) {
+      if (withLoader && isPending) {
+        setOperationWasPending(true);
+      }
+    } else {
+      setOperationWasPending(false);
+    }
+  }, [open, withLoader, isPending]);
+
+  useEffect(() => {
+    if (
+      withLoader &&
+      operationWasPending &&
+      !isPending && 
+      autoClose && 
+      open 
+    ) {
       setOpen(false);
     }
-  }, [mutationStatus]);
-  
+  }, [withLoader, isPending, autoClose, operationWasPending, open]);
+
   return (
-    <Dialog open={open} onOpenChange={o => setOpen(o)}>
+    <Dialog open={open} onOpenChange={value => setOpen(value)}>
       <DialogTrigger>{trigger}</DialogTrigger>
-      <DialogContent className={contentClassName}>
-        {withLoader ? (
-          <>{mutationStatus === "pending" ? <DialogLoader /> : content}</>
-        ) : (
-          content
-        )}
+      <DialogContent forceMount className={contentClassName}>
+        {withLoader ? isPending ? <DialogLoader /> : content : content}
       </DialogContent>
     </Dialog>
   );

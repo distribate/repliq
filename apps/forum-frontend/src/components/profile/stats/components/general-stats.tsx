@@ -2,18 +2,21 @@ import { Typography } from "@repo/ui/src/components/typography.tsx";
 import CharismWallet from "@repo/assets/images/minecraft/charism_wallet.png";
 import BelkoinWallet from "@repo/assets/images/minecraft/belkoin_wallet.png";
 import dayjs from "@repo/lib/constants/dayjs-instance.ts";
-import { generalStatsQuery } from "#components/profile/stats/queries/general-stats-query.ts";
+import { generalStatsResource } from "#components/profile/stats/models/general-stats.model";
 import { ProfileStatsLayout } from "#components/profile/stats/components/profile-stats-layout.tsx";
-import { StatsRequest } from "#components/profile/stats/types/stats-types.ts";
 import { Skeleton } from "@repo/ui/src/components/skeleton.tsx";
 import { SomethingError } from "#components/templates/components/something-error";
+import { reatomComponent } from "@reatom/npm-react";
+import { requestedUserParamAtom } from "#components/profile/requested-user.model";
 
 const GeneralStatsSkeleton = () => (
   <Skeleton className="flex flex-col gap-y-2 h-[400px] w-full rounded-md px-4 py-2" />
 );
 
-export const GeneralStats = ({ nickname }: StatsRequest) => {
-  const { data, isLoading, isError } = generalStatsQuery(nickname);
+export const GeneralStats = reatomComponent(({ ctx }) => {
+  const data = ctx.spy(generalStatsResource.dataAtom)
+  const isLoading = ctx.spy(generalStatsResource.statusesAtom).isPending
+  const isError = ctx.spy(generalStatsResource.statusesAtom).isRejected
 
   if (isLoading) return <GeneralStatsSkeleton />;
   if (isError) return <SomethingError />;
@@ -26,7 +29,7 @@ export const GeneralStats = ({ nickname }: StatsRequest) => {
             Ник
           </Typography>
           <div className="flex flex-col w-full">
-            <Typography>Реальный ник: {nickname}</Typography>
+            <Typography>Реальный ник: {ctx.spy(requestedUserParamAtom)}</Typography>
             <Typography>
               Псевдоним: {data?.displayName ? data?.displayName : "нет"}
             </Typography>
@@ -97,4 +100,4 @@ export const GeneralStats = ({ nickname }: StatsRequest) => {
       </div>
     </div>
   );
-};
+}, "GeneralStats")

@@ -1,43 +1,34 @@
-import { ReactNode } from "react";
-import { DynamicModal } from "../../../../dynamic-modal/components/dynamic-modal.tsx";
 import { ConfirmationActionModalTemplate } from "#components/modals/confirmation-modal/components/confirmation-action-modal.tsx";
 import { ConfirmationButton } from "#components/modals/confirmation-modal/components/confirmation-action-button.tsx";
-import { LOGOUT_MUTATION_KEY, useLogout } from "../hooks/use-logout.ts";
-import { DialogClose } from "@repo/ui/src/components/dialog.tsx";
+import { logoutAction, logoutModalIsOpenAtom } from "../models/logout.model.ts";
+import { Dialog, DialogClose, DialogContent } from "@repo/ui/src/components/dialog.tsx";
 import { DialogLoader } from "#components/templates/components/dialog-loader.tsx";
+import { reatomComponent } from "@reatom/npm-react";
 
-type LogoutModal = {
-  trigger: ReactNode;
-};
-
-export const LogoutModal = ({ trigger }: LogoutModal) => {
-  const { logoutMutation } = useLogout();
-
+export const LogoutModal = reatomComponent(({ ctx }) => {
   return (
-    <DynamicModal
-      mutationKey={LOGOUT_MUTATION_KEY}
-      trigger={trigger}
-      content={
-        logoutMutation.isPending ? (
+    <Dialog open={ctx.spy(logoutModalIsOpenAtom)} onOpenChange={v => logoutModalIsOpenAtom(ctx, v)}>
+      <DialogContent>
+        {ctx.spy(logoutAction.statusesAtom).isPending ? (
           <DialogLoader />
         ) : (
           <ConfirmationActionModalTemplate title="Уверены, что хотите выйти?">
             <ConfirmationButton
               title="Да, выйти"
               actionType="continue"
-              onClick={() => logoutMutation.mutate()}
-              disabled={logoutMutation.isPending}
+              onClick={() => logoutAction(ctx)}
+              disabled={ctx.spy(logoutAction.statusesAtom).isPending}
             />
-            <DialogClose>
+            <DialogClose asChild>
               <ConfirmationButton
                 title="Отмена"
                 actionType="cancel"
-                disabled={logoutMutation.isPending}
+                disabled={ctx.spy(logoutAction.statusesAtom).isPending}
               />
             </DialogClose>
           </ConfirmationActionModalTemplate>
-        )
-      }
-    />
+        )}
+      </DialogContent>
+    </Dialog>
   );
-};
+}, "LogoutModal")

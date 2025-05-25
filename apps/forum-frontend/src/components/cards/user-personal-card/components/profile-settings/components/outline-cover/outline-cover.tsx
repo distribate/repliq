@@ -1,6 +1,8 @@
-import { currentUserQuery } from '@repo/lib/queries/current-user-query.ts';
-import { useUpdateUserSettings } from '@repo/lib/hooks/use-update-user-settings.ts';
 import { Switch } from '@repo/ui/src/components/switch';
+import { reatomComponent } from '@reatom/npm-react';
+import { getUser } from '@repo/lib/helpers/get-user';
+import { updateCurrentUserSettingsAction } from '../../models/update-current-user.model';
+import { spawn } from '@reatom/framework';
 
 {/* <div className="flex flex-col gap-y-2 w-full p-2">
 <Typography textSize="small" textColor="shark_white">
@@ -12,16 +14,15 @@ import { Switch } from '@repo/ui/src/components/switch';
 </Typography>
 </div> */}
 
-export const OutlineCover = () => {
-  const { preferences: { cover_outline_visible } } = currentUserQuery().data;
-  const { updateUserSettingsMutation } = useUpdateUserSettings()
+export const OutlineCover = reatomComponent(({ ctx }) => {
+  const cover_outline_visible= getUser(ctx).preferences.cover_outline_visible
 
   const handleCoverOutlineVisibility = (value: boolean) => {
     if (value === cover_outline_visible) return;
 
-    return updateUserSettingsMutation.mutate({
+    void spawn(ctx, async (spawnCtx) => updateCurrentUserSettingsAction(spawnCtx, {
       setting: "cover_outline_visible", value
-    })
+    }))
   }
 
   return (
@@ -31,4 +32,4 @@ export const OutlineCover = () => {
       onCheckedChange={v => handleCoverOutlineVisibility(v)}
     />
   );
-};
+}, "OutlineCover")

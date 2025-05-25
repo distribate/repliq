@@ -1,13 +1,16 @@
-import { getUser } from "@repo/lib/helpers/get-user";
 import { Skeleton } from "@repo/ui/src/components/skeleton";
 import { Typography } from "@repo/ui/src/components/typography";
 import Charism from "@repo/assets/images/minecraft/charism_wallet.png"
 import Belkoin from "@repo/assets/images/minecraft/belkoin_wallet.png"
-import { userBalanceQuery } from "../queries/balance-query";
+import { userBalanceAction, userBalanceAtom } from "../models/balance.model";
+import { reatomComponent } from "@reatom/npm-react";
+import { onConnect } from "@reatom/framework";
 
-export const UserBalance = () => {
-  const { nickname } = getUser();
-  const { data: balance, isLoading } = userBalanceQuery(nickname);
+onConnect(userBalanceAction, userBalanceAction)
+
+export const UserBalance = reatomComponent(({ ctx }) => {
+  const balance = ctx.spy(userBalanceAtom)
+  const isLoading = ctx.spy(userBalanceAction.statusesAtom).isPending
 
   return (
     <div className="flex flex-col items-start max-w-[200px] overflow-hidden">
@@ -35,4 +38,4 @@ export const UserBalance = () => {
       </div>
     </div>
   )
-}
+}, "UserBalance")

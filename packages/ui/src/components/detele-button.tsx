@@ -9,7 +9,7 @@ const deleteButtonVariants = cva(
     variants: {
       variant: {
         invisible:
-          "opacity-0 group-hover:opacity-100 absolute top-2 right-1 group-hover:duration-150",
+          "md:opacity-0 md:group-hover:opacity-100 absolute top-2 right-1 group-hover:duration-150",
       },
       size: {
         default: "h-7 w-7",

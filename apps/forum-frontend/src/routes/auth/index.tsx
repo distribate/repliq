@@ -4,17 +4,15 @@ import { AuthImage } from '#components/forms/auth/components/auth-image.tsx'
 import { Typography } from '@repo/ui/src/components/typography'
 import { SignInForm } from '#components/forms/auth/components/sign-in.tsx'
 import { createFileRoute } from '@tanstack/react-router'
-import { useQueryClient } from '@tanstack/react-query'
 import { SignUpForm } from '#components/forms/auth/components/sign-up.tsx'
 import {
-  AUTH_GLOBAL_OPTIONS_QUERY_KEY,
-  AUTH_TYPE_QUERY_KEY,
-  AuthGlobalOptionsQuery,
-  authGlobalOptionsQuery,
-  authTypeQuery
-} from '#components/forms/auth/queries/auth-query'
+  authGlobalOptionsAtom,
+  authTypeAtom
+} from '#components/forms/auth/models/auth.model'
 import { Eye, EyeOff } from 'lucide-react'
 import { validatePage } from "@repo/lib/utils/validate-page.ts"
+import { reatomLoader } from '@repo/lib/utils/reatom-loader'
+import { reatomComponent } from '@reatom/npm-react'
 
 type AuthSearch = {
   from?: string
@@ -23,35 +21,23 @@ type AuthSearch = {
 
 export const Route = createFileRoute('/auth/')({
   component: RouteComponent,
-  beforeLoad: async ({ context: ctx }) => {
-    const isValid = await validatePage(ctx.queryClient)
-
-    if (isValid) {
-      throw redirect({ to: '/' })
-    }
-  },
-  head: () => ({
-    meta: [{ title: 'Авторизация' }],
+  beforeLoad: reatomLoader(async (context) => {
+    const isValid = await validatePage(context)
+    if (isValid) throw redirect({ to: '/' })
   }),
-  validateSearch: (search: Record<string, unknown>): AuthSearch => {
-    return {
-      from: search.from as string ?? undefined,
-      redirect: search.redirect as string ?? undefined,
-    }
-  },
+  head: () => ({ meta: [{ title: 'Авторизация' }] }),
+  validateSearch: (search: Record<string, unknown>): AuthSearch => ({
+    from: search.from as string ?? undefined,
+    redirect: search.redirect as string ?? undefined,
+  }),
 })
 
-const AuthControlPanel = () => {
-  const qc = useQueryClient()
-  const { data: { detailsVisibility } } = authGlobalOptionsQuery()
+const AuthControlPanel = reatomComponent(({ ctx }) => {
+  const detailsVisibility = ctx.spy(authGlobalOptionsAtom).detailsVisibility
 
   return (
     <div
-      onClick={() => {
-        qc.setQueryData(AUTH_GLOBAL_OPTIONS_QUERY_KEY,
-          (prev: AuthGlobalOptionsQuery) => ({ ...prev, detailsVisibility: prev.detailsVisibility === 'hidden' ? 'visible' : 'hidden' })
-        )
-      }}
+      onClick={() => authGlobalOptionsAtom(ctx, (state) => ({ ...state, detailsVisibility: state.detailsVisibility === 'hidden' ? 'visible' : 'hidden' }))}
       className="flex items-center select-none justify-end absolute z-[5] right-4 bottom-4"
     >
       <div className="flex items-center justify-center w-8 h-8 cursor-pointer bg-shark-800 rounded-lg">
@@ -59,18 +45,13 @@ const AuthControlPanel = () => {
       </div>
     </div>
   )
-}
+}, "AuthControlPanel")
 
-const Forms = () => {
-  const qc = useQueryClient()
-  const { data: authType } = authTypeQuery()
-  const { data: { detailsVisibility } } = authGlobalOptionsQuery()
+const Forms = reatomComponent(({ ctx }) => {
+  const authType = ctx.spy(authTypeAtom)
+  const detailsVisibility = ctx.spy(authGlobalOptionsAtom).detailsVisibility
 
-  const toggleAuthType = () => {
-    qc.setQueryData(AUTH_TYPE_QUERY_KEY,
-      (prev: string) => (prev === 'login' ? 'register' : 'login')
-    )
-  }
+  const toggleAuthType = () => authTypeAtom(ctx, (state) => state === 'login' ? "register" : "login")
 
   return (
     <div
@@ -116,10 +97,10 @@ const Forms = () => {
       </Typography>
     </div>
   )
-}
+}, "Forms")
 
-const Logotype = () => {
-  const { data: { detailsVisibility } } = authGlobalOptionsQuery()
+const Logotype = reatomComponent(({ ctx }) => {
+  const detailsVisibility = ctx.spy(authGlobalOptionsAtom).detailsVisibility
 
   return (
     <div
@@ -137,7 +118,7 @@ const Logotype = () => {
       />
     </div>
   )
-}
+}, "Logotype")
 
 function RouteComponent() {
   return (

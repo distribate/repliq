@@ -3,18 +3,15 @@ import { Input } from "@repo/ui/src/components/input.tsx";
 import { Controller } from "react-hook-form";
 import { ChangeEvent } from "react";
 import { FormChildsProps } from "./form-thread.tsx";
-import { useEditThread } from "../hooks/use-edit-thread.tsx";
+import { threadFormDescriptionAtom } from "../models/thread-form.model.ts";
+import { reatomComponent } from "@reatom/npm-react";
 
-export const FormThreadDescription = ({ control, errors }: FormChildsProps) => {
-  const { updateThreadFormMutation } = useEditThread();
-
+export const FormThreadDescription = reatomComponent<FormChildsProps>(({ ctx, control, errors }) => {
   const handleChange = (
     e: ChangeEvent<HTMLInputElement>, onChange: (...event: any[]) => void,
   ) => {
     onChange(e);
-    return updateThreadFormMutation.mutate({
-      description: e.target.value,
-    });
+    threadFormDescriptionAtom(ctx,  e.target.value)
   };
 
   return (
@@ -47,4 +44,4 @@ export const FormThreadDescription = ({ control, errors }: FormChildsProps) => {
       )}
     </div>
   );
-};
+}, "FormThreadDescription")

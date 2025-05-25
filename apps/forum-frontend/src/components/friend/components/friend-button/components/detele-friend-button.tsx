@@ -1,26 +1,21 @@
-import { useControlFriendRequests } from "#components/friend/hooks/use-control-friend-requests";
+import { removeFriendAction } from "#components/friend/models/control-friend-requests.model";
+import { spawn } from "@reatom/framework";
+import { reatomComponent } from "@reatom/npm-react";
 import { Button } from "@repo/ui/src/components/button";
 
-type FriendButtonProps = {
-  recipient: string;
-};
-
-export type DeleteFriendButton = FriendButtonProps & {
+type DeleteFriendButton = {
   friend_id: string
+  recipient: string;
 }
 
-export const DeleteFriendButton = ({
-  friend_id, recipient
-}: DeleteFriendButton) => {
-  const { removeFriendMutation } = useControlFriendRequests();
-
+export const DeleteFriendButton = reatomComponent<DeleteFriendButton>(({ ctx, friend_id, recipient }) => {
   return (
     <Button
-      onClick={() => removeFriendMutation.mutate({ friend_id, recipient })}
-      disabled={removeFriendMutation.isPending}
+      onClick={() => spawn(ctx, async (spawnCtx) => removeFriendAction(spawnCtx, { friend_id, recipient }))}
+      disabled={ctx.spy(removeFriendAction.statusesAtom).isPending}
       variant="negative"
     >
       Удалить из друзей
     </Button>
   );
-};
+}, "DeleteFriendButton")

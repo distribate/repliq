@@ -1,41 +1,32 @@
 import { Separator } from "@repo/ui/src/components/separator.tsx";
 import { Typography } from "@repo/ui/src/components/typography.tsx";
 import { Avatar } from '#components/user/avatar/components/avatar.tsx';
-import { UserNickname } from "#components/user/name/components/nickname.tsx";
-import { UserRealName } from "#components/user/real-name/components/real-name.tsx";
+import { UserNickname } from "#components/user/name/nickname.tsx";
 import { UserDonate } from "#components/user/donate/components/donate.tsx";
-import { userCardQuery } from "../queries/user-main-card-query.ts";
 import Glass from "@repo/assets/images/minecraft/glass.webp";
 import dayjs from "@repo/lib/constants/dayjs-instance.ts";
-import { UserEntity } from '@repo/types/entities/entities-type.ts';
-import { UserSummaryCardSkeleton } from "./user-summary-card-skeleton.tsx";
 import { Link } from "@tanstack/react-router";
 import { USER_URL } from "@repo/shared/constants/routes.ts";
 import { lazy, Suspense } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@repo/ui/src/components/tabs.tsx";
 import { InferResponseType } from "hono/client";
 import { forumUserClient } from "@repo/shared/api/forum-client.ts";
-import { Skeleton } from "@repo/ui/src/components/skeleton.tsx";
 import { FriendButton } from "#components/friend/components/friend-button/components/friend-button.tsx";
+import { reatomComponent } from "@reatom/npm-react";
+import { userCardResource } from "../models/user-main-card.model.ts";
+import { SteveLoader } from "@repo/ui/src/components/steve-loader.tsx";
+import { UserRealName } from "#components/user/real-name/real-name.tsx";
+import { userCardDialogIsOpenAtom } from "#components/modals/custom/components/user-card-modal.tsx";
 
-const UserSummaryCardPrivated = lazy(() =>
-  import("./user-summary-card-privated.tsx").then(m => ({ default: m.UserSummaryCardPrivated }))
-)
-
-const UserSummaryCardLimited = lazy(() =>
-  import("./user-summary-card-limited.tsx").then(m => ({ default: m.UserSummaryCardLimited }))
-)
+const SummaryCardPrivated = lazy(() => import("./user-summary-card-privated.tsx").then(m => ({ default: m.UserSummaryCardPrivated })))
+const SummaryCardLimited = lazy(() => import("./user-summary-card-limited.tsx").then(m => ({ default: m.UserSummaryCardLimited })))
 
 const client = forumUserClient.user["get-user-summary"][":nickname"].$get
 
 type UserDetailedProps = InferResponseType<typeof client, 200>["data"]
 
-const UserDetailed = ({
-  ...userData
-}: UserDetailedProps) => {
-  const {
-    nickname, threads_count, friends_count, real_name, created_at, description, donate
-  } = userData
+const UserDetailed = reatomComponent<UserDetailedProps>(({ ctx, ...userData }) => {
+  const { nickname, threads_count, friends_count, real_name, created_at, description, donate } = userData
 
   const joinedAt = dayjs(created_at).format("Присоединился в DD.MM.YYYY");
 
@@ -46,20 +37,13 @@ const UserDetailed = ({
           <div className="z-1 absolute w-full h-full right-0 left-0 bottom-0 top-0">
             <img src={Glass} alt="" width={104} height={104} />
           </div>
-          <Suspense fallback={<Skeleton className="h-[88px] w-[88px]" />}>
-            <Link to={USER_URL + nickname}>
-              <Avatar
-                nickname={nickname}
-                propWidth={88}
-                propHeight={88}
-                className="z-2 relative !rounded-none"
-              />
-            </Link>
-          </Suspense>
+          <Link to={USER_URL + nickname} onClick={() => userCardDialogIsOpenAtom(ctx, false)}>
+            <Avatar nickname={nickname} propWidth={88} propHeight={88} className="z-2 relative !rounded-none" />
+          </Link>
         </div>
         <div className="flex flex-col gap-y-2">
           <div className="flex flex-col">
-            <Link to={USER_URL + nickname}>
+            <Link to={USER_URL + nickname} onClick={() => userCardDialogIsOpenAtom(ctx, false)}>
               <UserNickname nickname={nickname} nicknameColor={`#ffffff`} />
             </Link>
             {real_name && <UserRealName real_name={real_name} />}
@@ -171,10 +155,23 @@ const UserDetailed = ({
       </div>
     </>
   )
-}
+}, "UserDetailed")
 
-export const UserSummaryCard = ({ nickname }: Pick<UserEntity, "nickname">) => {
-  const { data: userCard, isLoading, isError } = userCardQuery(nickname);
+const UserSummaryCardSkeleton = () => {
+  return (
+    <div
+      className="flex flex-col h-[512px] gap-y-4 relative w-full 
+        rounded-lg p-4 bg-shark-950 border-[1px] border-white/10 items-center"
+    >
+      <SteveLoader />
+    </div>
+  );
+};
+
+export const UserSummaryCard = reatomComponent(({ ctx }) => {
+  const userCard = ctx.spy(userCardResource.dataAtom)
+  const isLoading = ctx.spy(userCardResource.statusesAtom).isPending
+  const isError = !!ctx.spy(userCardResource.errorAtom)
 
   if (isLoading) return <UserSummaryCardSkeleton />;
 
@@ -184,22 +181,17 @@ export const UserSummaryCard = ({ nickname }: Pick<UserEntity, "nickname">) => {
     <div
       className="flex flex-col h-[512px] relative w-full border-2 border-shark-900 overflow-hidden rounded-lg bg-shark-900 items-center"
     >
-      {userCard.status === 'blocked' && (
+      {((userCard.status === 'blocked') || (userCard.status === 'private')) && (
         <Suspense>
-          <UserSummaryCardPrivated />
-        </Suspense>
-      )}
-      {userCard.status === 'private' && (
-        <Suspense>
-          <UserSummaryCardPrivated />
+          <SummaryCardPrivated />
         </Suspense>
       )}
       {userCard.status === 'banned' && (
         <Suspense>
-          <UserSummaryCardLimited title="Пользователь забанен" />
+          <SummaryCardLimited title="Пользователь забанен" />
         </Suspense>
       )}
       {userCard.status === 'default' && userCard.data && <UserDetailed {...userCard.data} />}
     </div>
   );
-};
+}, "UserSummaryCard")

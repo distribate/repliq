@@ -1,43 +1,43 @@
-import { createQueryKey } from "@repo/lib/helpers/query-key-builder"
+import { reatomResource, withCache, withDataAtom, withStatusesAtom } from "@reatom/async"
+import { reatomComponent } from "@reatom/npm-react"
+import { globalPreferencesAtom } from "@repo/lib/queries/global-preferences-query"
 import { forumSharedClient } from "@repo/shared/api/forum-client"
 import { Skeleton } from "@repo/ui/src/components/skeleton"
 import { Typography } from "@repo/ui/src/components/typography"
-import { useQuery } from "@tanstack/react-query"
 import { toast } from "sonner"
 
 async function getServerStatus() {
-  const res = await forumSharedClient.shared["get-status"].$get({
-    query: {
-      type: "servers"
-    }
-  })
-
+  const res = await forumSharedClient.shared["get-status"].$get({ query: { type: "servers" }})
   const data = await res.json()
 
-  if ("error" in data) {
-    return null
-  }
+  if ("error" in data) return null
 
   return data
 }
 
-const statusQuery = () => useQuery({
-  queryKey: createQueryKey("ui", ["status-servers"]),
-  queryFn: getServerStatus,
-  refetchOnWindowFocus: false,
-  refetchInterval: 60000,
-  retry: 1
-})
+// impl refetch
+export const REFETCH_INTERVAL = 60000
 
-export const StatusWidget = () => {
-  const { data, isLoading } = statusQuery()
+export const statusResource = reatomResource(async (ctx) => {
+  const isEnabled = ctx.spy(globalPreferencesAtom).intro === 'show'
+
+  if (!isEnabled) return;
+
+  return await ctx.schedule(() => getServerStatus())
+}, "statusResource").pipe(withDataAtom(), withCache(), withStatusesAtom())
+
+export const StatusWidget = reatomComponent(({ ctx }) => {
+  const isEnabled = ctx.spy(globalPreferencesAtom).intro === 'show'
+  const data = ctx.spy(statusResource.dataAtom)
+  const isLoading = ctx.spy(statusResource.statusesAtom).isPending
 
   const copyClipboard = async () => {
     toast.info("Скопировано!")
-
     await navigator.clipboard.writeText("mc.fasberry.su")
   }
 
+  if (!isEnabled) return null;
+  
   return (
     <div className="relative rounded-lg overflow-hidden">
       <img
@@ -91,4 +91,4 @@ export const StatusWidget = () => {
       </div>
     </div>
   )
-}
+}, "StatusWidget")

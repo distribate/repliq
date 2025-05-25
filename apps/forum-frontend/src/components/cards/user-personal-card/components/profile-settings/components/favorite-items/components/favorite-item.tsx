@@ -2,9 +2,10 @@ import { Typography } from "@repo/ui/src/components/typography.tsx";
 import { ImageWrapper } from "#components/wrappers/components/image-wrapper";
 import { cva, VariantProps } from "class-variance-authority";
 import { forwardRef, HTMLAttributes } from "react";
-import { useUpdateCurrentUser } from "@repo/lib/hooks/use-update-current-user.ts";
 import { MinecraftItemEntity } from "@repo/types/entities/entities-type.ts";
 import { getUser } from "@repo/lib/helpers/get-user.ts";
+import { reatomComponent } from "@reatom/npm-react";
+import { updateCurrentUserAction } from "../../../models/update-current-user.model";
 
 type FavoriteItem = MinecraftItemEntity;
 
@@ -36,12 +37,8 @@ const MinecraftItem = forwardRef<HTMLDivElement, MinecraftItemProps>(
   },
 );
 
-export const FavoriteItem = ({
-  id, title, image
-}: FavoriteItem) => {
-  const { favorite_item } = getUser();
-  const { updateFieldMutation } = useUpdateCurrentUser();
-
+export const FavoriteItem = reatomComponent<FavoriteItem>(({ id, title, image, ctx }) => {
+  const { favorite_item } = getUser(ctx);
   const currentFavoriteItem = favorite_item ? favorite_item === Number(id) : false;
 
   return (
@@ -70,7 +67,7 @@ export const FavoriteItem = ({
           </Typography>
         ) : (
           <Typography
-            onClick={() => updateFieldMutation.mutate({ value: id, criteria: "favorite_item" })}
+            onClick={() => updateCurrentUserAction(ctx, { value: id, criteria: "favorite_item" })}
             className="text-shark-300 hover:text-shark-50 cursor-pointer font-[Minecraft]"
             textSize="small"
           >
@@ -80,4 +77,4 @@ export const FavoriteItem = ({
       </div>
     </MinecraftItem>
   );
-};
+}, "FavoriteItem")

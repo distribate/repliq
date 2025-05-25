@@ -6,23 +6,18 @@ import {
 import { useEffect, useState } from "react";
 import { Plus } from "lucide-react";
 import { DialogLoader } from "#components/templates/components/dialog-loader";
-import { useMutationState } from "@tanstack/react-query";
-import { MINECRAFT_CREATE_ITEM_MUTATION_KEY } from "#components/forms/create-minecraft-items/hooks/use-minecraft-items.tsx";
+import { createMinecraftItemAction } from "#components/forms/create-minecraft-items/hooks/use-minecraft-items.tsx";
 import { MinecraftItemCreateForm } from "#components/forms/create-minecraft-items/components/minecraft-item-create-form.tsx";
 import { Typography } from "@repo/ui/src/components/typography.tsx";
+import { reatomComponent } from "@reatom/npm-react";
 
-export const MinecraftItemsAddButton = () => {
+export const MinecraftItemsAddButton = reatomComponent(({ ctx }) => {
   const [isShow, setIsShow] = useState<boolean>(false);
 
-  const data = useMutationState({
-    filters: { mutationKey: MINECRAFT_CREATE_ITEM_MUTATION_KEY },
-    select: (mutation) => mutation.state.status,
-  });
-
-  const minecraftItemMutationStatus = data[data.length - 1];
+  const minecraftItemMutationStatus = ctx.spy(createMinecraftItemAction.statusesAtom)
 
   useEffect(() => {
-    if (minecraftItemMutationStatus === "success") setIsShow(false);
+    if (minecraftItemMutationStatus.isFulfilled) setIsShow(false);
   }, [minecraftItemMutationStatus]);
 
   return (
@@ -33,7 +28,7 @@ export const MinecraftItemsAddButton = () => {
         </div>
       </DialogTrigger>
       <DialogContent>
-        {minecraftItemMutationStatus === "pending" ? (
+        {minecraftItemMutationStatus.isPending ? (
           <DialogLoader />
         ) : (
           <div className="flex flex-col gap-y-6 px-2 items-center w-full">
@@ -44,4 +39,4 @@ export const MinecraftItemsAddButton = () => {
       </DialogContent>
     </Dialog>
   );
-};
+}, "MinecraftItemsAddButton")

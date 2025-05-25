@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { UserNickname } from '#components/user/name/components/nickname';
+import { UserNickname } from '#components/user/name/nickname';
 import {
   ColorArea,
   SliderTrack,
@@ -10,18 +10,19 @@ import {
 import { Typography } from "@repo/ui/src/components/typography.tsx";
 import { Separator } from "@repo/ui/src/components/separator.tsx";
 import { Button } from "@repo/ui/src/components/button.tsx";
-import { useUpdateCurrentUser } from "@repo/lib/hooks/use-update-current-user.ts";
 import { UserEntity } from "@repo/types/entities/entities-type.ts";
 import { parseHexToHSL } from '@repo/lib/helpers/color-parser.ts';
+import { updateCurrentUserAction } from "../../../../models/update-current-user.model";
+import { reatomComponent } from "@reatom/npm-react";
+import { spawn } from "@reatom/framework";
 
 type NicknameColorPickerProps = Pick<UserEntity, "nickname" | "name_color">;
 
-export const NicknameColorPicker = ({
-  nickname, name_color,
-}: NicknameColorPickerProps) => {
+export const NicknameColorPicker = reatomComponent<NicknameColorPickerProps>(({
+  ctx, nickname, name_color,
+}) => {
   const [color, setColor] = useState(parseColor(`hsl(${parseHexToHSL(name_color)})`));
   const [finalColor, setFinalColor] = useState(color);
-  const { updateFieldMutation } = useUpdateCurrentUser();
 
   const currentColor = name_color.toString();
   const currentSelectedColor = finalColor.toString("hex");
@@ -30,7 +31,7 @@ export const NicknameColorPicker = ({
   const handleUpdateColor = () => {
     if (isIdentity) return;
 
-    return updateFieldMutation.mutate({ value: finalColor.toString("hex"), criteria: "name_color" });
+    void spawn(ctx, async (spawnCtx) => updateCurrentUserAction(spawnCtx, { value: finalColor.toString("hex"), criteria: "name_color" }));
   };
 
   return (
@@ -70,8 +71,8 @@ export const NicknameColorPicker = ({
           <Button
             onClick={handleUpdateColor}
             type="button"
-            pending={updateFieldMutation.isPending}
-            disabled={updateFieldMutation.isPending || isIdentity}
+            pending={ctx.spy(updateCurrentUserAction.statusesAtom).isPending}
+            disabled={ctx.spy(updateCurrentUserAction.statusesAtom).isPending || isIdentity}
             state="default"
           >
             Сохранить
@@ -103,4 +104,4 @@ export const NicknameColorPicker = ({
       </div>
     </div>
   );
-};
+}, "NicknameColorPicker")

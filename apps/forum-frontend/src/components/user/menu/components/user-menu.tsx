@@ -1,29 +1,29 @@
 import { Link } from "@tanstack/react-router";
 import { Separator } from "@repo/ui/src/components/separator.tsx";
 import { Typography } from "@repo/ui/src/components/typography.tsx";
-import { LogoutModal } from "#components/modals/action-confirmation/components/logout/components/logout-modal.tsx";
-import { userGlobalOptionsQuery } from "@repo/lib/queries/user-global-options-query.ts";
-import { UserSettingsModal } from "#components/modals/user-settings/components/user-settings-modal";
 import { CircleUserRound, SlidersVertical, UsersRound } from "lucide-react";
-import { getUser } from "@repo/lib/helpers/get-user";
+import { getUser, userGlobalOptionsAtom } from "@repo/lib/helpers/get-user";
 import { USER_URL } from "@repo/shared/constants/routes";
 import { TicketCheck, ShoppingBasket, Shield, LogOut } from 'lucide-react';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@repo/ui/src/components/dropdown-menu";
-import { Dialog, DialogTrigger } from "@repo/ui/src/components/dialog";
-import { userSettingsQuery } from "#components/modals/user-settings/queries/user-settings-query";
-import { useUserSettingsModal } from "#components/modals/user-settings/hooks/use-user-settings-modal";
-import { ReactNode } from "react";
+import { toggleGlobalDialogAction } from "#components/modals/user-settings/hooks/use-user-settings-modal";
+import { lazy, ReactNode, Suspense } from "react";
 import { UserBalance } from "../../balance/components/user-balance";
+import { reatomComponent } from "@reatom/npm-react";
+import { logoutModalIsOpenAtom } from "#components/modals/action-confirmation/components/logout/models/logout.model";
+
+const SettingsModal = lazy(() => import("#components/modals/user-settings/components/user-settings-modal").then(m => ({ default: m.UserSettingsModal })))
+const LogoutModal = lazy(() => import("#components/modals/action-confirmation/components/logout/components/logout-modal.tsx").then(m => ({ default: m.LogoutModal })))
 
 const COLLECTION_LINKS: { icon: any, name: string, query: "purchases" | "tickets" }[] = [
   { icon: ShoppingBasket, name: "Мои покупки", query: "purchases" },
   { icon: TicketCheck, name: "Мои тикеты", query: "tickets" }
 ];
 
-const AdminButton = () => {
-  const { data } = userGlobalOptionsQuery();
+const Admin = reatomComponent(({ ctx }) => {
+  const is_admin = ctx.spy(userGlobalOptionsAtom).is_admin
 
-  if (!data || !data?.is_admin) return null;
+  if (!is_admin) return null;
 
   return (
     <>
@@ -38,25 +38,65 @@ const AdminButton = () => {
       <Separator />
     </>
   );
-};
+}, "Admin")
 
-type UserMenuProps = {
-  trigger: ReactNode
-}
-
-export const UserMenu = ({
-  trigger
-}: UserMenuProps) => {
-  const { nickname } = getUser();
-  const { global } = userSettingsQuery().data
-  const { toggleGlobalDialogMutation } = useUserSettingsModal()
+const Profile = reatomComponent(({ ctx }) => {
+  const nickname = getUser(ctx).nickname;
 
   return (
-    <Dialog
-      open={global}
-      onOpenChange={value => toggleGlobalDialogMutation.mutate({ reset: true, value })}
+    <Link to={USER_URL + nickname}>
+      <DropdownMenuItem className="gap-2 group cursor-pointer" >
+        <CircleUserRound size={20} className="icon-color" />
+        <Typography textSize="medium">
+          Мой профиль
+        </Typography>
+      </DropdownMenuItem>
+    </Link>
+  )
+})
+
+const Settings = reatomComponent(({ ctx }) => {
+  return (
+    <DropdownMenuItem
+      onSelect={() => {
+        requestAnimationFrame(() => toggleGlobalDialogAction(ctx, { reset: true, value: true }));
+      }}
     >
-      <DropdownMenu>
+      <div className="flex items-center w-full gap-2 group cursor-pointer">
+        <SlidersVertical size={20} className="text-shark-300" />
+        <Typography textSize="medium">Настройки</Typography>
+      </div>
+    </DropdownMenuItem >
+  )
+})
+
+const Logout = reatomComponent(({ ctx }) => {
+  return (
+    <DropdownMenuItem
+      onSelect={() => {
+        requestAnimationFrame(() => logoutModalIsOpenAtom(ctx, true));
+      }}
+    >
+      <div className="flex hover:bg-shark-600 rounded-md px-2 py-1.5 gap-2 group cursor-pointer" >
+        <LogOut size={20} className="text-red-500" />
+        <Typography className="text-red-500" textSize="medium">
+          Выйти из аккаунта
+        </Typography>
+      </div>
+    </DropdownMenuItem>
+  )
+})
+
+export const UserMenu = ({ trigger }: { trigger: ReactNode }) => {
+  return (
+    <>
+      <Suspense>
+        <SettingsModal />
+      </Suspense>
+      <Suspense>
+        <LogoutModal />
+      </Suspense>
+      <DropdownMenu modal={true}>
         <DropdownMenuTrigger className="w-full lg:w-fit group focus-visible:outline-none">
           {trigger}
         </DropdownMenuTrigger>
@@ -66,14 +106,7 @@ export const UserMenu = ({
               <UserBalance />
             </div>
             <Separator />
-            <Link to={USER_URL + nickname}>
-              <DropdownMenuItem className="gap-2 group cursor-pointer" >
-                <CircleUserRound size={20} className="icon-color" />
-                <Typography textSize="medium">
-                  Мой профиль
-                </Typography>
-              </DropdownMenuItem>
-            </Link>
+            <Profile />
             {COLLECTION_LINKS.map(({ icon: Icon, name, query }) => (
               <Link key={name} to="/collection" search={{ type: query }}>
                 <DropdownMenuItem className="gap-2 group cursor-pointer" >
@@ -101,28 +134,13 @@ export const UserMenu = ({
               </DropdownMenuItem>
             </Link>
             <Separator />
-            <AdminButton />
-            <DropdownMenuItem asChild>
-              <DialogTrigger className="flex items-center w-full gap-2 group cursor-pointer">
-                <SlidersVertical size={20} className="text-shark-300" />
-                <Typography textSize="medium">Настройки</Typography>
-              </DialogTrigger>
-            </DropdownMenuItem>
+            <Admin />
+            <Settings />
             <Separator />
-            <LogoutModal
-              trigger={
-                <div className="flex hover:bg-shark-600 rounded-md px-2 py-1.5 gap-2 group cursor-pointer" >
-                  <LogOut size={20} className="text-red-500" />
-                  <Typography className="text-red-500" textSize="medium">
-                    Выйти из аккаунта
-                  </Typography>
-                </div>
-              }
-            />
+            <Logout />
           </div>
         </DropdownMenuContent>
       </DropdownMenu>
-      <UserSettingsModal />
-    </Dialog>
+    </>
   );
-};
+}

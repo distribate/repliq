@@ -18,7 +18,9 @@ import {
   getPreviousMonth,
   parseDateOrTimestamp,
 } from "#components/cards/user-personal-card/components/profile-settings/components/birthday-picker/helpers/birthday-picker.ts";
-import { useUpdateCurrentUser } from "@repo/lib/hooks/use-update-current-user.ts";
+import { reatomComponent } from "@reatom/npm-react";
+import { updateCurrentUserAction } from "../../../models/update-current-user.model";
+import { spawn } from "@reatom/framework";
 
 type BirthdayPicker = {
   init: string | null;
@@ -28,24 +30,22 @@ function areDatesEqual(date1: Date, date2: Date): boolean {
   return !dayjs(date1).isSame(date2, "day");
 }
 
-export const DateBirthdayPicker = ({ init }: BirthdayPicker) => {
+export const DateBirthdayPicker = reatomComponent<BirthdayPicker>(({ ctx, init }) => {
   // @ts-ignore
   const initDate = getInitialDate(init ? init : new Date());
   const [date, setDate] = useState<dayjs.Dayjs>(initDate);
   const [month, setMonth] = useState<dayjs.Dayjs>(initDate);
   const [monthYearPicker, setMonthYearPicker] = useState<PickerType | false>(false);
 
-  const { updateFieldMutation } = useUpdateCurrentUser();
-
   const handleSaveBirthday = () => {
     const parsedDate = parseDateOrTimestamp(date.toDate());
 
     if (!parsedDate || parsedDate === initDate) return;
 
-    return updateFieldMutation.mutate({
+    void spawn(ctx, async (spawnCtx) => updateCurrentUserAction(spawnCtx, {
       value: dayjs(parsedDate).format("YYYY-MM-DD"),
       criteria: "birthday",
-    });
+    }));
   };
 
   const min = useMemo(() => getMinDate(), []);
@@ -133,7 +133,7 @@ export const DateBirthdayPicker = ({ init }: BirthdayPicker) => {
         <Button
           variant="positive"
           onClick={handleSaveBirthday}
-          disabled={updateFieldMutation.isPending || !isValid}
+          disabled={ctx.spy(updateCurrentUserAction.statusesAtom).isPending || !isValid}
           className="mt-6 mb-2 px-4 self-end w-fit"
         >
           <Typography>Сохранить</Typography>
@@ -141,4 +141,4 @@ export const DateBirthdayPicker = ({ init }: BirthdayPicker) => {
       </div>
     </div>
   );
-};
+}, "DateBirthdayPicker")

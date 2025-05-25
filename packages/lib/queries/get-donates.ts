@@ -21,15 +21,10 @@ export type Donates = {
 }
 
 export async function getDonates(args: GetDonatesRequest) {
-  const res = await forumSharedClient.shared["get-donates"].$get({
-    query: args
-  });
-
+  const res = await forumSharedClient.shared["get-donates"].$get({ query: args });
   const data = await res.json();
 
-  if ("error" in data) {
-    return null;
-  }
+  if ("error" in data) return null;
 
   return data.data.length > 0 ? data.data : null
 }

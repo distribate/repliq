@@ -1,42 +1,41 @@
-import { ReactNode } from "react";
 import { ConfirmationActionModalTemplate } from "#components/modals/confirmation-modal/components/confirmation-action-modal";
 import { ConfirmationButton } from "#components/modals/confirmation-modal/components/confirmation-action-button";
-import { DialogClose } from "@repo/ui/src/components/dialog.tsx";
-import { useControlFriendRequests } from "#components/friend/hooks/use-control-friend-requests.ts";
-import { USER_FRIEND_DELETE_MUTATION_KEY } from "#components/friend/hooks/use-control-friend.ts";
+import { Dialog, DialogClose, DialogContent } from "@repo/ui/src/components/dialog.tsx";
+import { removeFriendAction, removeFriendIsOpenAtom, removeFriendOptionsAtom } from "#components/friend/models/control-friend-requests.model";
 import { FriendWithDetails } from "@repo/types/schemas/friend/friend-types.ts";
-import { DynamicModal } from "#components/modals/dynamic-modal/components/dynamic-modal";
+import { reatomComponent } from "@reatom/npm-react";
 
-type DeleteFriendModal = {
-  trigger: ReactNode;
-} & Pick<FriendWithDetails, "friend_id" | "nickname">;
+type DeleteFriendModal = Pick<FriendWithDetails, "friend_id" | "nickname">;
 
-export const DeleteFriendModal = ({
-  friend_id, trigger, nickname,
-}: DeleteFriendModal) => {
-  const { removeFriendMutation } = useControlFriendRequests();
+export const DeleteFriendModal = reatomComponent(({ ctx }) => {
+  const removeFriendOptions = ctx.spy(removeFriendOptionsAtom)
+  if (!removeFriendOptions) return null;
+
+  const handleDelete = () => {
+    removeFriendAction(ctx, { 
+      friend_id: removeFriendOptions.friend_id, recipient: removeFriendOptions.nickname 
+    })
+  }
 
   return (
-    <DynamicModal
-      mutationKey={USER_FRIEND_DELETE_MUTATION_KEY}
-      trigger={trigger}
-      content={
+    <Dialog open={ctx.spy(removeFriendIsOpenAtom)} onOpenChange={value => removeFriendIsOpenAtom(ctx, value)}>
+      <DialogContent>
         <ConfirmationActionModalTemplate title="Подтверждение действия">
           <ConfirmationButton
             title="Удалить"
             actionType="continue"
-            onClick={() => removeFriendMutation.mutate({ friend_id, recipient: nickname })}
-            disabled={removeFriendMutation.isPending}
+            onClick={handleDelete}
+            disabled={ctx.spy(removeFriendAction.statusesAtom).isPending}
           />
           <DialogClose>
             <ConfirmationButton
               title="Отмена"
               actionType="cancel"
-              disabled={removeFriendMutation.isPending}
+              disabled={ctx.spy(removeFriendAction.statusesAtom).isPending}
             />
           </DialogClose>
         </ConfirmationActionModalTemplate>
-      }
-    />
+      </DialogContent>
+    </Dialog>
   );
-};
+}, "DeleteFriendModal")

@@ -4,30 +4,13 @@ import { DropdownMenuItem } from "@repo/ui/src/components/dropdown-menu.tsx";
 import { DropdownWrapper } from "#components/wrappers/components/dropdown-wrapper.tsx";
 import { SelectedWrapper } from "#components/wrappers/components/selected-wrapper.tsx";
 import {
-  FRIENDS_FILTERING_QUERY_KEY,
-  FriendsFilteringQuery,
-  friendsFilteringQuery,
-  FriendsFilteringViewType,
-} from "../queries/friends-filtering-query.ts";
-import { isValue } from "@repo/lib/helpers/check-is-value.ts";
+  friendsViewAtom,
+} from "../models/friends-filtering.model.ts";
 import { VIEW_COMPONENTS_TYPE } from "#components/friends/components/filtering/constants/view-components-type.ts";
-import { useQueryClient } from "@tanstack/react-query";
+import { reatomComponent } from "@reatom/npm-react";
 
-export const FriendsFilteringView = () => {
-  const qc = useQueryClient();
-  const { data: friendsFiltering } = friendsFilteringQuery();
-
-  const handleView = (viewType: FriendsFilteringViewType) => {
-    return qc.setQueryData(
-      FRIENDS_FILTERING_QUERY_KEY,
-      (prev: FriendsFilteringQuery) => ({
-        ...prev,
-        viewType,
-      }),
-    );
-  };
-
-  const isViewType = isValue(friendsFiltering.viewType);
+export const FriendsFilteringView = reatomComponent(({ ctx }) => {
+  const friendsFiltering = ctx.spy(friendsViewAtom)
 
   return (
     <div className="w-fit">
@@ -51,11 +34,11 @@ export const FriendsFilteringView = () => {
               {VIEW_COMPONENTS_TYPE.map(({ title, value, icon: Icon }) => (
                 <DropdownMenuItem
                   key={value}
-                  onClick={() => handleView(value)}
+                  onClick={() => friendsViewAtom(ctx, (state) => ({ ...state, viewType: value }))}
                   className="items-center gap-1"
                 >
                   <Icon size={16} className="text-shark-300" />
-                  <Typography state={isViewType(value) ? "active" : "default"}>
+                  <Typography state={friendsFiltering.viewType === value ? "active" : "default"}>
                     {title}
                   </Typography>
                 </DropdownMenuItem>
@@ -66,4 +49,4 @@ export const FriendsFilteringView = () => {
       />
     </div>
   );
-};
+}, "FriendsFilteringView")

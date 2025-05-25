@@ -1,4 +1,4 @@
-import { postsQuery } from '../queries/posts-query.ts';
+import { postsAction, postsDataAtom, postsMetaAtom } from '../models/posts.model.ts';
 import { Skeleton } from '@repo/ui/src/components/skeleton.tsx';
 import { ContentNotFound } from '#components/templates/components/content-not-found.tsx';
 import {
@@ -7,14 +7,14 @@ import {
 import {
   ProfilePostsListCard,
 } from '#components/profile/posts/posts/components/profile-posts-list-card.tsx';
-import { UserEntity } from '@repo/types/entities/entities-type.ts';
 import { Separator } from '@repo/ui/src/components/separator.tsx';
 import { useInView } from 'react-intersection-observer';
 import { useEffect } from 'react';
 import { SomethingError } from '#components/templates/components/something-error.tsx';
-import { useMutationState } from '@tanstack/react-query';
-import { UPDATE_POSTS_MUTATION_KEY, useUpdatePosts } from '../hooks/use-update-posts.ts';
+import { updatePostsAction } from '../models/update-posts.model.ts';
 import { SectionSkeleton } from '#components/templates/components/section-skeleton.tsx';
+import { reatomComponent } from '@reatom/npm-react';
+import { requestedUserParamAtom } from '#components/profile/requested-user.model.ts';
 
 const PostsSkeleton = () => {
   return (
@@ -25,30 +25,23 @@ const PostsSkeleton = () => {
   );
 };
 
-export const ProfilePostsList = ({
-  nickname,
-}: Pick<UserEntity, 'nickname'>) => {
-  const { data, isError, isLoading } = postsQuery(nickname);
+const ProfilePostsList = reatomComponent(({ ctx }) => {
   const { ref, inView } = useInView({ triggerOnce: false, threshold: 1 });
-  const { updatePostsMutation } = useUpdatePosts()
 
-  const mutData = useMutationState({
-    filters: { mutationKey: UPDATE_POSTS_MUTATION_KEY },
-    select: m => m.state.status
-  })
-
-  const isLoadingUpdated = mutData[mutData.length - 1] === "pending";
-  const postsData = data?.data;
-  const postsMeta = data?.meta;
+  const postsData = ctx.spy(postsDataAtom)
+  const postsMeta = ctx.spy(postsMetaAtom)
+  const isLoadingUpdated = ctx.spy(updatePostsAction.statusesAtom).isPending
+  const nickname = ctx.spy(requestedUserParamAtom)
   const hasMore = postsMeta?.hasNextPage;
 
   useEffect(() => {
-    if (inView && hasMore) updatePostsMutation.mutate({ nickname, type: "update-cursor" });
-  }, [inView, hasMore]);
+    if (nickname && inView && hasMore) {
+      updatePostsAction(ctx, { nickname, type: "update-cursor" })
+    };
+  }, [inView, hasMore, nickname]);
 
-  if (isLoading) return <SectionSkeleton />;
-
-  if (isError) return <SomethingError />;
+  if (ctx.spy(postsAction.statusesAtom).isPending) return <SectionSkeleton />;
+  if (ctx.spy(postsAction.statusesAtom).isRejected) return <SomethingError />;
 
   if (!postsData || !postsData.length) return <ContentNotFound title="Посты не найдены" />;
 
@@ -68,15 +61,13 @@ export const ProfilePostsList = ({
       {hasMore && <div ref={ref} className="h-[1px] w-full" />}
     </div>
   );
-};
+}, "ProfilePostsList")
 
-export const ProfilePosts = ({
-  nickname,
-}: Pick<UserEntity, 'nickname'>) => {
+export const ProfilePosts = () => {
   return (
     <div className="flex flex-col gap-4 w-full h-full">
-      <ProfilePostsFiltering nickname={nickname} />
-      <ProfilePostsList nickname={nickname} />
+      <ProfilePostsFiltering />
+      <ProfilePostsList />
     </div>
   );
 };

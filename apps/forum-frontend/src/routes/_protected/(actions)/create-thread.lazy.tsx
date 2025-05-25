@@ -2,26 +2,11 @@ import { createLazyFileRoute } from '@tanstack/react-router'
 import { BlockWrapper } from '#components/wrappers/components/block-wrapper'
 import { Typography } from '@repo/ui/src/components/typography.tsx'
 import { CreateThreadForm } from '#components/forms/create-thread/components/form-thread'
-import { userGlobalOptionsQuery } from '@repo/lib/queries/user-global-options-query'
+import { reatomComponent } from '@reatom/npm-react'
+import { userGlobalOptionsAtom } from '@repo/lib/helpers/get-user'
 
-export const Route = createLazyFileRoute('/_protected/(actions)/create-thread')({
-  component: RouteComponent,
-  // @ts-ignore
-  head: () => ({
-    meta: [
-      {
-        title: 'Создать тред',
-      },
-    ],
-  }),
-})
-
-function RouteComponent() {
-  const { data } = userGlobalOptionsQuery()
-
-  if (!data) return null;
-
-  const { can_create_threads } = data;
+const RouteComponent = reatomComponent(({ ctx }) => {
+  const can_create_threads = ctx.spy(userGlobalOptionsAtom).can_create_threads
 
   return (
     <div className="flex flex-col w-full h-full gap-4">
@@ -36,4 +21,10 @@ function RouteComponent() {
       )}
     </div>
   )
-}
+}, "RouteComponent")
+
+export const Route = createLazyFileRoute('/_protected/(actions)/create-thread')({
+  component: RouteComponent,
+  // @ts-ignore
+  head: () => ({ meta: [{ title: 'Создать тред', }] }),
+})

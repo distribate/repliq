@@ -6,6 +6,8 @@ import { Dialog, DialogContent, DialogTrigger } from "@repo/ui/src/components/di
 import { toast } from "sonner";
 import { getUser } from "@repo/lib/helpers/get-user";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@repo/ui/src/components/tooltip";
+import { reatomComponent } from "@reatom/npm-react";
+import { PropsWithChildren } from "react";
 
 type SocialsCardProps = {
   title: string,
@@ -17,12 +19,10 @@ const socialsImages: Record<string, string> = {
   "Discord": DiscordLogo,
 }
 
-const SocialsSupport = ({
-  children
-}: {
-  children: React.ReactNode
+const SocialsSupport = reatomComponent<PropsWithChildren>(({
+  ctx, children
 }) => {
-  const { nickname } = getUser()
+  const { nickname } = getUser(ctx)
 
   const handleCopyLink = async (text: string) => {
     await navigator.clipboard.writeText(text)
@@ -93,7 +93,7 @@ const SocialsSupport = ({
       </DialogContent>
     </Dialog>
   )
-}
+}, "SocialsSupport")
 
 export const SocialsCard = ({
   title, value

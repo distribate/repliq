@@ -7,26 +7,18 @@ import { FormField } from "@repo/ui/src/components/form-field.tsx";
 import { ErrorField } from "@repo/ui/src/components/form.tsx";
 import { Typography } from "@repo/ui/src/components/typography.tsx";
 import { authorizationSchema } from "../schemas/authorization-schema.ts";
-import { useMutationState, useQueryClient } from "@tanstack/react-query";
-import { AUTH_MUTATION_KEY, useAuth } from "../hooks/use-auth.tsx";
-import { AUTH_QUERY_KEY, authGlobalOptionsQuery, AuthQuery, authQuery } from "../queries/auth-query.ts";
+import { authAction, authGlobalOptionsAtom, AuthValues, authValuesAtom } from "../models/auth.model.ts";
 import { GearLoader } from "@repo/ui/src/components/gear-loader.tsx";
 import { z } from "zod";
 import { PasswordVisibilityBadge } from "./password-visibility-badge.tsx";
 import Turnstile from "react-turnstile";
 import { isProduction } from "@repo/lib/helpers/is-production.ts";
+import { reatomComponent } from "@reatom/npm-react";
 
-export const SignInForm = () => {
-  const qc = useQueryClient();
-  const { data } = authQuery();
-  const { setAuthValuesMutation } = useAuth();
-  const { data: { passwordVisibility } } = authGlobalOptionsQuery()
-
-  const mutData = useMutationState({
-    filters: { mutationKey: AUTH_MUTATION_KEY }, select: m => m.state.status,
-  });
-
-  const isLoading = mutData[mutData.length - 1] === "pending";
+export const SignInForm = reatomComponent(({ ctx }) => {
+  const data = ctx.spy(authValuesAtom)
+  const passwordVisibility = ctx.spy(authGlobalOptionsAtom).passwordVisibility
+  const isLoading = ctx.spy(authAction.statusesAtom).isPending
 
   const {
     register, handleSubmit, resetField, setValue, formState: { errors, isValid, isDirty }, getValues
@@ -46,18 +38,13 @@ export const SignInForm = () => {
   }, [data?.status]);
 
   const onSubmit = () => {
-    const values = getValues();
-
-    qc.setQueryData(AUTH_QUERY_KEY, (prev: AuthQuery) => ({ ...prev, ...values }));
-
-    setAuthValuesMutation.mutate();
+    const values = getValues()
+    authValuesAtom(ctx, values as AuthValues)
+    authAction(ctx)
   };
 
   return (
-    <form
-      onSubmit={handleSubmit(onSubmit)}
-      className="flex flex-col p-2 gap-y-4 w-full"
-    >
+    <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col p-2 gap-y-4 w-full">
       <FormField label={{ name: "Никнейм", for: "nickname" }} errorMessage={errors?.nickname?.message}>
         <Input
           id="nickname"
@@ -129,4 +116,4 @@ export const SignInForm = () => {
       )}
     </form>
   );
-};
+}, "SignInForm")

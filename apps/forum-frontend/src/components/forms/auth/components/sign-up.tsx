@@ -8,30 +8,19 @@ import { registrationSchema } from "../schemas/authorization-schema.ts";
 import { useEffect } from "react";
 import { ErrorField } from "@repo/ui/src/components/form.tsx";
 import { Typography } from "@repo/ui/src/components/typography.tsx";
-import { useMutationState, useQueryClient } from "@tanstack/react-query";
-import { AUTH_MUTATION_KEY, useAuth } from "../hooks/use-auth.tsx";
-import { AUTH_QUERY_KEY, AUTH_TYPE_QUERY_KEY, authGlobalOptionsQuery, AuthQuery, authQuery } from "../queries/auth-query.ts";
+import { authAction, authGlobalOptionsAtom, authTypeAtom, authValuesAtom } from "../models/auth.model.ts";
 import { GearLoader } from "@repo/ui/src/components/gear-loader.tsx";
 import { z } from "zod";
 import Turnstile from "react-turnstile";
 import { isProduction } from "@repo/lib/helpers/is-production.ts";
 import { PasswordVisibilityBadge } from "./password-visibility-badge.tsx";
+import { reatomComponent } from "@reatom/npm-react";
 
-export const SignUpForm = () => {
-  const qc = useQueryClient();
-  const { data } = authQuery();
-  const { setAuthValuesMutation } = useAuth();
-  const { data: { passwordVisibility } } = authGlobalOptionsQuery()
-
-  const referrer = useSearch({
-    from: "/auth/", select: (params) => params.from
-  }) as string | undefined;
-
-  const mutData = useMutationState({
-    filters: { mutationKey: AUTH_MUTATION_KEY }, select: m => m.state.status,
-  });
-
-  const isLoading = mutData[mutData.length - 1] === "pending";
+export const SignUpForm = reatomComponent(({ ctx }) => {
+  const data = ctx.spy(authValuesAtom)
+  const { passwordVisibility } = ctx.spy(authGlobalOptionsAtom)
+  const referrer = useSearch({ from: "/auth/", select: (params) => params.from }) as string | undefined;
+  const isLoading = ctx.spy(authAction.statusesAtom).isPending
 
   const { 
     register,resetField, formState: { errors, isValid, isDirty },  setValue, handleSubmit, getValues
@@ -52,15 +41,13 @@ export const SignUpForm = () => {
 
   const onSubmit = () => {
     const values = getValues();
-
-    qc.setQueryData(AUTH_QUERY_KEY, (prev: AuthQuery) => ({ ...prev, ...values, referrer }));
-
-    setAuthValuesMutation.mutate();
+    authValuesAtom(ctx, (state) => state ? ({ ...state, ...values, referrer }) : null)
+    authAction(ctx)
   };
 
   const handleRedirect = () => {
-    qc.setQueryData(AUTH_TYPE_QUERY_KEY, "login");
-    qc.resetQueries({ queryKey: AUTH_QUERY_KEY });
+    authTypeAtom(ctx, "login")
+    authValuesAtom.reset(ctx)
   };
 
   return (
@@ -200,4 +187,4 @@ export const SignUpForm = () => {
       )}
     </form>
   );
-};
+}, "SignUpForm")

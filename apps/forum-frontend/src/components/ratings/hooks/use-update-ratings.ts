@@ -1,90 +1,77 @@
-import { getRatings, GetRatingsResponse } from "#components/ratings/queries/get-ratings.ts"
-import { RATING_FILTER_QUERY_KEY, RatingFilterQuery } from "#components/ratings/queries/ratings-filter-query.ts"
-import { RATING_QUERY_KEY } from "#components/ratings/queries/ratings-query.ts"
-import { useMutation, useQueryClient } from "@tanstack/react-query"
+import { getRatings } from "#components/ratings/queries/get-ratings.ts"
+import { ratingFilterAtom } from "#components/ratings/queries/ratings-filter-query.ts"
+import { ratingDataAtom, ratingMetaAtom } from "#components/ratings/queries/ratings-query.ts"
+import { reatomAsync, withStatusesAtom } from "@reatom/async"
+import { atom } from "@reatom/core"
 
-type UseUpdateRating = {
-  type: "update-filter" | "update-cursor"
-}
+const updateRatingActionVariablesAtom = atom<"update-filter" | "update-cursor" | null>(null, "updateRatingVariables")
 
-export const UPDATE_RATING_MUTATION_KEY = ["update-rating"]
+export const updateRatingAction = reatomAsync(async (ctx, type: "update-filter" | "update-cursor") => {
+  const filtering = ctx.get(ratingFilterAtom)
 
-export const useUpdateRating = () => {
-  const qc = useQueryClient()
+  if (!filtering) return;
+  updateRatingActionVariablesAtom(ctx, type)
+  return await getRatings({ ...filtering, cursor: type === 'update-filter' ? undefined : filtering.cursor })
+}, {
+  name: "updateRatingAction",
+  onFulfill: (ctx, res) => {
+    if (!res) return;
 
-  const updateRatingMutation = useMutation({
-    mutationKey: UPDATE_RATING_MUTATION_KEY,
-    mutationFn: async ({ type }: UseUpdateRating) => {
-      const filtering = qc.getQueryData<RatingFilterQuery>(RATING_FILTER_QUERY_KEY)
+    const variables = ctx.get(updateRatingActionVariablesAtom)
+    if (!variables) return
 
-      if (!filtering) return;
+    if (variables === "update-filter") {
+      ratingFilterAtom(ctx, (state) => ({ ...state, cursor: undefined }))
+      ratingDataAtom(ctx, res.data)
+      ratingMetaAtom(ctx, res.meta)
+      return
+    }
 
-      return getRatings({ ...filtering, cursor: type === 'update-filter' ? undefined : filtering.cursor })
-    },
-    onSuccess: async (data, variables) => {
-      if (!data) {
-        const currentRating = qc.getQueryData<GetRatingsResponse>(RATING_QUERY_KEY);
+    ratingDataAtom(ctx, (state) => {
+      if (!state) return res.data;
 
-        return { data: currentRating?.data, meta: currentRating?.meta };
+      const d = state[0]
+
+      let newRating: Array<any> = [];
+
+      if ("TotalPlayTime" in d) {
+        newRating = res.data.filter(
+          // @ts-ignore
+          friend => !prev.data.some(exist => exist.username === friend.username)
+        )
       }
 
-      if (variables.type === "update-filter") {
-        qc.setQueryData(RATING_FILTER_QUERY_KEY, (prev: RatingFilterQuery) => ({
-          ...prev, cursor: undefined,
-        }));
-
-        return qc.setQueryData(RATING_QUERY_KEY, data)
+      if ("player" in d) {
+        newRating = res.data.filter(
+          // @ts-ignore
+          friend => !prev.data.some(exist => exist.player === friend.player)
+        )
       }
 
-      qc.setQueryData(RATING_QUERY_KEY, (prev: GetRatingsResponse) => {
-        if (!prev) {
-          return { data: data.data, meta: data.meta };
-        }
+      if ("Balance" in d) {
+        newRating = res.data.filter(
+          // @ts-ignore
+          friend => !prev.data.some(exist => exist.username === friend.username)
+        )
+      }
 
-        const d = prev.data[0]
+      if ("points" in d) {
+        newRating = res.data.filter(
+          // @ts-ignore
+          friend => !prev.data.some(exist => exist.username === friend.username)
+        )
+      }
 
-        let newRating: Array<any> = [];
+      if ("reputation" in d) {
+        newRating = res.data.filter(
+          // @ts-ignore
+          friend => !prev.data.some(exist => exist.nickname === friend.nickname)
+        )
+      }
 
-        if ("TotalPlayTime" in d) {
-          newRating = data.data.filter(
-            // @ts-ignore
-            friend => !prev.data.some(exist => exist.username === friend.username)
-          )
-        }
+      return [...res.data, ...newRating]
+    })
 
-        if ("player" in d) {
-          newRating = data.data.filter(
-            // @ts-ignore
-            friend => !prev.data.some(exist => exist.player === friend.player)
-          )
-        }
-
-        if ("Balance" in d) {
-          newRating = data.data.filter(
-            // @ts-ignore
-            friend => !prev.data.some(exist => exist.username === friend.username)
-          )
-        }
-
-        if ("points" in d) {
-          newRating = data.data.filter(
-            // @ts-ignore
-            friend => !prev.data.some(exist => exist.username === friend.username)
-          )
-        }
-
-        if ("reputation" in d) {
-          newRating = data.data.filter(
-            // @ts-ignore
-            friend => !prev.data.some(exist => exist.nickname === friend.nickname)
-          )
-        }
-
-        return { data: [...prev.data, ...newRating], meta: data.meta };
-      });
-    },
-    onError: e => { throw new Error(e.message) }
-  })
-
-  return { updateRatingMutation }
-}
+    ratingMetaAtom(ctx, res.meta)
+  }
+}).pipe(withStatusesAtom())

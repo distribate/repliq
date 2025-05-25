@@ -4,11 +4,7 @@ import { PostFooter } from "#components/post/post-item/components/post-footer.ts
 import type { UserPostItem } from '@repo/types/routes-types/get-user-posts-types.ts';
 import { lazy, Suspense } from "react";
 
-const PostControl = lazy(() =>
-  import(
-    "#components/post/post-item/components/post-control.tsx"
-  ).then((m) => ({ default: m.PostControl })),
-);
+const PostControl = lazy(() => import("#components/post/post-item/components/post-control.tsx").then((m) => ({ default: m.PostControl })));
 
 type ProfilePostsListCardProps = Pick<UserPostItem,
   | "id"

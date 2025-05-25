@@ -2,29 +2,27 @@ import { Typography } from "@repo/ui/src/components/typography.tsx";
 import { MinecraftItemsAddButton } from "./minecraft-items-add-button.tsx";
 import { MinecraftItemsDeleteButton } from "./minecraft-items-delete-button.tsx";
 import { forumSharedClient } from "@repo/shared/api/forum-client.ts";
-import { useQuery } from "@tanstack/react-query";
-import { createQueryKey } from "@repo/lib/helpers/query-key-builder.ts";
+import { reatomResource, withCache, withDataAtom, withStatusesAtom } from "@reatom/async";
+import { onConnect } from "@reatom/framework";
+import { reatomComponent } from "@reatom/npm-react";
 
 async function getAvailableMinecraftItems() {
   const res = await forumSharedClient.shared["get-minecraft-items"].$get();
-
   const data = await res.json();
 
-  if ("error" in data) {
-    return null;
-  }
+  if ("error" in data) return null;
 
   return data.data;
 }
 
-const availableMinecraftItemsQuery = () => useQuery({
-  queryKey: createQueryKey("ui", ["available-minecraft-items"]),
-  queryFn: () => getAvailableMinecraftItems(),
-  refetchOnWindowFocus: false
-})
+const availableMinecraftItemsResource = reatomResource(async (ctx) => {
+  return await ctx.schedule(() => getAvailableMinecraftItems())
+}, "availableMinecraftItemsResource").pipe(withDataAtom(), withStatusesAtom(), withCache())
 
-export const MinecraftItemsList = () => {
-  const { data: availableMinecraftItems } = availableMinecraftItemsQuery();
+onConnect(availableMinecraftItemsResource.dataAtom, availableMinecraftItemsResource)
+
+export const MinecraftItemsList = reatomComponent(({ ctx }) => {
+  const availableMinecraftItems = ctx.spy(availableMinecraftItemsResource.dataAtom)
 
   return (
     <div
@@ -61,4 +59,4 @@ export const MinecraftItemsList = () => {
       <MinecraftItemsAddButton />
     </div>
   );
-};
+}, "MinecraftItemsList")

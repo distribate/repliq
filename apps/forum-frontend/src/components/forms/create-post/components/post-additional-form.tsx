@@ -5,18 +5,13 @@ import {
   SelectTrigger,
 } from "@repo/ui/src/components/select.tsx";
 import { Typography } from "@repo/ui/src/components/typography.tsx";
-import { usePostFormControl } from "../hooks/use-post-form-control.ts";
-import { postFormQuery, VisibilityPost } from "../queries/post-form-query.ts";
-import { visibilityProperties } from "../constants/visibility-properties.ts";
+import { postFormFieldAtom, VisibilityPost } from "../models/post-form.model.ts";
 import { Eye } from "lucide-react";
+import { reatomComponent } from "@reatom/npm-react";
+import { visibilityProperties } from "../models/create-post.model.ts";
 
-export const PostAdditionalForm = () => {
-  const { postFormFieldsMutation } = usePostFormControl();
-  const { data: createPostFormState } = postFormQuery();
-  const { visibility: currentVisibility } = createPostFormState;
-
-  const handleVisiblityOption = (visibility: VisibilityPost) =>
-    postFormFieldsMutation.mutate({ visibility });
+export const PostAdditionalForm = reatomComponent(({ ctx }) => {
+  const { visibility: currentVisibility } = ctx.spy(postFormFieldAtom)
 
   const currentVisibilityOption = visibilityProperties.find(
     (option) => option.value === currentVisibility,
@@ -25,7 +20,7 @@ export const PostAdditionalForm = () => {
   return (
     <Select
       defaultValue={currentVisibility}
-      onValueChange={(v: VisibilityPost) => handleVisiblityOption(v)}
+      onValueChange={(value: VisibilityPost) => postFormFieldAtom(ctx, (state) => ({ ...state, visibility: value }))}
     >
       <SelectTrigger className="px-2 w-fit border border-shark-700/40 gap-2 items-center">
         <Eye size={18} className="text-shark-300" />
@@ -47,4 +42,4 @@ export const PostAdditionalForm = () => {
       </SelectContent>
     </Select>
   );
-};
+}, "PostAdditionalForm")

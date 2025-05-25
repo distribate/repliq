@@ -30,6 +30,7 @@ export const FriendsAllListSkeleton = () => {
       <FriendCardSkeleton />
       <FriendCardSkeleton />
       <FriendCardSkeleton />
+      <FriendCardSkeleton />
     </>
   );
 };

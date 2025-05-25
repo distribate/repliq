@@ -10,7 +10,7 @@ export type UserDetailed = Omit<Selectable<Users>,
 > & {
     birthday: string | null
     created_at: string,
-    favorite_item: number | null
+    favorite_item: number | string | null
     donate: DonateVariantsEnum;
     preferences: {
       cover_outline_visible: boolean,
@@ -26,6 +26,7 @@ export type UserDetailed = Omit<Selectable<Users>,
 export type UserShorted = {
   donate: DonateVariantsEnum,
   nickname: string,
+  cover_image: string | null,
   name_color: string,
   description: string | null,
   preferences: {

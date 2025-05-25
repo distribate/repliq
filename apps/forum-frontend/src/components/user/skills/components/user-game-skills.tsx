@@ -1,35 +1,15 @@
-import { getUser } from "@repo/lib/helpers/get-user"
-import { createQueryKey } from "@repo/lib/helpers/query-key-builder"
-import { playerClient } from "@repo/shared/api/minecraft-client"
-import { useQuery } from "@tanstack/react-query"
+import { onConnect } from "@reatom/framework"
+import { reatomComponent } from "@reatom/npm-react"
+import { userGameSkillsResource } from "../models/user-game-skills.model"
 
-async function getUserSkills(nickname: string) {
-  const res = await playerClient.player["get-player-skills"][":nickname"].$get({
-    param: { nickname }
-  })
+onConnect(userGameSkillsResource.dataAtom, userGameSkillsResource)
 
-  const data = await res.json()
-
-  if ("error" in data) {
-    return null;
-  }
-
-  return data.data
-}
-
-const userGameSkillsQuery = (nickname: string) => useQuery({
-  queryKey: createQueryKey("user", ["skills"]),
-  queryFn: () => getUserSkills(nickname),
-  refetchOnWindowFocus: false
-})
-
-export const UserGameSkills = () => {
-  const { nickname } = getUser()
-  const { data } = userGameSkillsQuery(nickname)
+export const UserGameSkills = reatomComponent(({ ctx }) => {
+  const data = ctx.spy(userGameSkillsResource.dataAtom)
 
   return (
     <div>
       {data?.skillLines.ranged.xp}
     </div>
   )
-}
+}, "UserGameSkills")

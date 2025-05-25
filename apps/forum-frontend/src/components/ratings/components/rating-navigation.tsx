@@ -1,8 +1,8 @@
 import { NavigationBadge } from "#components/navigation/components/navigation-badge.tsx"
-import { useUpdateRating } from "#components/ratings/hooks/use-update-ratings.ts"
+import { updateRatingAction } from "#components/ratings/hooks/use-update-ratings.ts"
 import { GetRatings } from "#components/ratings/queries/get-ratings.ts"
-import { RATING_FILTER_QUERY_KEY, RatingFilterQuery, ratingFilterQuery } from "#components/ratings/queries/ratings-filter-query.ts"
-import { useQueryClient } from "@tanstack/react-query"
+import { ratingFilterAtom, RatingFilterQuery } from "#components/ratings/queries/ratings-filter-query.ts"
+import { reatomComponent } from "@reatom/npm-react"
 
 const RATING_NAVIGATION: { title: string, type: GetRatings["type"] }[] = [
   { title: "Время игры", type: "playtime" },
@@ -13,19 +13,15 @@ const RATING_NAVIGATION: { title: string, type: GetRatings["type"] }[] = [
   { title: "Репутация", type: "reputation" }
 ]
 
-export const RatingNavigation = () => {
-  const { data: { type: currentType } } = ratingFilterQuery()
-  const { updateRatingMutation } = useUpdateRating()
-  const qc = useQueryClient()
+export const RatingNavigation = reatomComponent(({ ctx }) => {
+  const currentType = ctx.spy(ratingFilterAtom).type
 
   const changeRatingType = (type: RatingFilterQuery["type"]) => {
     if (type === currentType) return
 
-    qc.setQueryData(RATING_FILTER_QUERY_KEY, (prev: RatingFilterQuery) => ({
-      ...prev, type
-    }))
+    ratingFilterAtom(ctx, (state) => ({ ...state, type }))
 
-    updateRatingMutation.mutate({ type: "update-filter" })
+    updateRatingAction(ctx, "update-filter")
   }
 
   return (
@@ -40,4 +36,4 @@ export const RatingNavigation = () => {
       ))}
     </div>
   )
-}
+}, "RatingNavigation")

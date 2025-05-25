@@ -3,24 +3,25 @@ import { ConfirmationActionModalTemplate } from "#components/modals/confirmation
 import { ConfirmationButton } from "#components/modals/confirmation-modal/components/confirmation-action-button.tsx";
 import { DialogClose } from "@repo/ui/src/components/dialog.tsx";
 import { DeleteButton } from "@repo/ui/src/components/detele-button.tsx";
-import { TERMINATE_SESSIONS_MUTATION_KEY, useTerminateSession } from "./terminate-all-sessions-modal.tsx";
+import { terminateSessionAction } from "./terminate-all-sessions-modal.tsx";
+import { reatomComponent } from "@reatom/npm-react";
 
 type TerminateSessionModalProps = {
   session_id: string;
 };
 
-export const TerminateSessionModal = ({
+export const TerminateSessionModal = reatomComponent<TerminateSessionModalProps>(({ ctx,
   session_id,
-}: TerminateSessionModalProps) => {
-  const { terminateSessionMutation } = useTerminateSession();
-  
+}) => {
   return (
     <DynamicModal
-      mutationKey={TERMINATE_SESSIONS_MUTATION_KEY}
+    autoClose
+      withLoader
+      isPending={ctx.spy(terminateSessionAction.statusesAtom).isPending}
       trigger={
         <DeleteButton
           title="Уничтожить сессию"
-          disabled={terminateSessionMutation.isPending}
+          disabled={ctx.spy(terminateSessionAction.statusesAtom).isPending}
           variant="invisible"
         />
       }
@@ -29,18 +30,18 @@ export const TerminateSessionModal = ({
           <ConfirmationButton
             actionType="continue"
             title="Да, уничтожить"
-            onClick={() => terminateSessionMutation.mutate({ type: 'single', selectedSessionId: session_id })}
-            disabled={terminateSessionMutation.isPending}
+            onClick={() => terminateSessionAction(ctx, { type: 'single', selectedSessionId: session_id })}
+            disabled={ctx.spy(terminateSessionAction.statusesAtom).isPending}
           />
           <DialogClose>
             <ConfirmationButton
               actionType="cancel"
               title="Отмена"
-              disabled={terminateSessionMutation.isPending}
+              disabled={ctx.spy(terminateSessionAction.statusesAtom).isPending}
             />
           </DialogClose>
         </ConfirmationActionModalTemplate>
       }
     />
   );
-};
+}, "TerminateSessionModal")

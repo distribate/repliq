@@ -3,14 +3,14 @@ import { Typography } from '@repo/ui/src/components/typography.tsx';
 import { DynamicModal } from '../../dynamic-modal/components/dynamic-modal.tsx';
 import { Skeleton } from '@repo/ui/src/components/skeleton.tsx';
 import { HoverCardItem } from '@repo/ui/src/components/hover-card.tsx';
-import { CoverImageInput, useControlCoverImage, USER_COVER_DELETE_IMAGE_MUTATION_KEY } from '@repo/lib/hooks/use-control-cover-image.ts';
-import { defaultImagesQuery } from '@repo/lib/queries/default-images-query.ts';
+import { reatomComponent } from '@reatom/npm-react';
+import { CoverImageInput, uploadBackgroundImageAction } from '#components/profile/header/models/cover-image.model.ts';
+import { imagesLibraryAction } from '#components/profile/header/models/cover-image.model.ts';
 
-const BackgroundImagesList = () => {
-  const { data: defaultImages, isLoading } = defaultImagesQuery();
-  const { uploadBackgroundImageMutation } = useControlCoverImage();
+const BackgroundImagesList = reatomComponent(({ ctx }) => {
+  const defaultImages = ctx.spy(imagesLibraryAction.dataAtom)
 
-  if (isLoading) {
+  if (ctx.spy(imagesLibraryAction.statusesAtom).isPending) {
     return (
       <>
         <Skeleton className="w-full h-full" />
@@ -24,15 +24,12 @@ const BackgroundImagesList = () => {
 
   const handleCoverImageInput = (fileName: Pick<CoverImageInput, 'fileName'>["fileName"]) => {
     if (!fileName) return;
-
-    uploadBackgroundImageMutation.mutate({ type: "default", fileName });
+    uploadBackgroundImageAction(ctx, { type: "default", fileName });
   };
 
   return (
     <>
-      {!defaultImages && (
-        <Typography>Изображения не найдены</Typography>
-      )}
+      {!defaultImages && <Typography>Изображения не найдены</Typography>}
       {defaultImages && defaultImages.map(({ name, id, signedUrl }) => (
         <div
           key={id}
@@ -52,13 +49,15 @@ const BackgroundImagesList = () => {
       ))}
     </>
   );
-};
+}, "BackgroundImagesList")
 
-export const ProfileBackgroundDefaultImagesModal = () => {
+export const ProfileBackgroundDefaultImagesModal = reatomComponent(({ ctx }) => {
   return (
     <DynamicModal
+      autoClose
+      withLoader
+      isPending={ctx.spy(uploadBackgroundImageAction.statusesAtom).isPending}
       contentClassName="max-w-6xl"
-      mutationKey={USER_COVER_DELETE_IMAGE_MUTATION_KEY}
       trigger={
         <HoverCardItem className="w-full gap-2 p-6 group items-center">
           <Image size={24} className="icon-color" />
@@ -79,4 +78,4 @@ export const ProfileBackgroundDefaultImagesModal = () => {
       }
     />
   );
-};
+}, "ProfileBackgroundDefaultImagesModal")

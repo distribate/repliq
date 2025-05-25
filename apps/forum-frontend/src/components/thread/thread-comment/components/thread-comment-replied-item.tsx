@@ -1,7 +1,8 @@
 import { Separator } from "@repo/ui/src/components/separator.tsx";
 import { Typography } from "@repo/ui/src/components/typography.tsx";
 import { ThreadCommentProps } from "../types/thread-comment-types.ts";
-import { useScrollToComment } from "../hooks/use-scroll-to-replied.ts";
+import { scrollToCommentAction } from "../models/scroll-to-replied.model.ts";
+import { useAction } from "@reatom/npm-react";
 
 type ThreadRepliedCommentItemProps = {
   replied: NonNullable<ThreadCommentProps["replied"]>
@@ -11,9 +12,9 @@ type ThreadRepliedCommentItemProps = {
 export const ThreadRepliedCommentItem = ({
   replied, threadId
 }: ThreadRepliedCommentItemProps) => {
-  const { scrollToComment } = useScrollToComment({ threadId, repliedId: replied.id })
+  const scrollToComment = useAction((ctx) => scrollToCommentAction(ctx, { threadId, repliedId: replied.id }))
 
-  const repliedMessage = replied.content.length >= 28 
+  const repliedMessage = replied.content.length >= 28
     ? replied.content.slice(0, 28) + "..." : replied.content;
 
   return (

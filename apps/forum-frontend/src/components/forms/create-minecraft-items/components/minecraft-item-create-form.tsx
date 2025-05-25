@@ -1,10 +1,11 @@
-import { useMinecraftItems } from "../hooks/use-minecraft-items.tsx";
+import { createMinecraftItemAction } from "../hooks/use-minecraft-items.tsx";
 import { Input } from "@repo/ui/src/components/input.tsx";
 import { Button } from "@repo/ui/src/components/button.tsx";
 import { Typography } from "@repo/ui/src/components/typography.tsx";
 import { DialogClose } from "@repo/ui/src/components/dialog.tsx";
 import { useEffect, ChangeEvent, useState } from "react";
 import { Image as ImageIcon } from "lucide-react";
+import { reatomComponent } from "@reatom/npm-react";
 
 type MinecraftItemValues = {
   title: string;
@@ -12,9 +13,8 @@ type MinecraftItemValues = {
   description: string;
 };
 
-export const MinecraftItemCreateForm = () => {
+export const MinecraftItemCreateForm = reatomComponent(({ ctx }) => {
   const [tipShow, setTipShow] = useState<boolean>(false);
-  const { createMinecraftItemMutation } = useMinecraftItems();
   const [previewImage, setPreviewImage] = useState<string | null>(null);
   const [itemValues, setItemValues] = useState<MinecraftItemValues>({
     title: "",
@@ -40,7 +40,7 @@ export const MinecraftItemCreateForm = () => {
   const handleCreateItem = () => {
     if (!itemValues.image || !itemValues.image) return;
 
-    return createMinecraftItemMutation.mutate({
+    return createMinecraftItemAction(ctx, {
       title: itemValues.title,
       description: itemValues.description,
       image: itemValues.image,
@@ -62,7 +62,7 @@ export const MinecraftItemCreateForm = () => {
   };
 
   const isDisabled =
-    createMinecraftItemMutation.isPending ||
+    ctx.spy(createMinecraftItemAction.statusesAtom).isPending ||
     !itemValues.title ||
     !itemValues.image;
 
@@ -122,4 +122,4 @@ export const MinecraftItemCreateForm = () => {
       </div>
     </>
   );
-};
+}, "MinecraftItemCreateForm")

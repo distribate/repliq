@@ -1,26 +1,30 @@
 import { Typography } from "@repo/ui/src/components/typography.tsx";
-import {
-  UPDATE_FIELD_MUTATION_KEY,
-} from "@repo/lib/hooks/use-update-current-user.ts";
 import Barrier from "@repo/assets/images/minecraft/barrier.webp";
 import { DynamicModal } from "#components/modals/dynamic-modal/components/dynamic-modal";
-import { currentUserQuery } from '@repo/lib/queries/current-user-query.ts';
-import { useUpdateUserSettings } from '@repo/lib/hooks/use-update-user-settings.ts';
 import { ProfileVisibilityEnum } from '@repo/types/entities/entities-type.ts';
 import { LockKeyhole, LockOpen } from "lucide-react";
 import { UserSettingOption } from "#components/cards/user-setting-option-card/components/user-setting-option";
+import { reatomComponent } from "@reatom/npm-react";
+import { getUser } from "@repo/lib/helpers/get-user";
+import { updateCurrentUserSettingsAction } from "../../../models/update-current-user.model";
+import { spawn } from "@reatom/framework";
 
-export const ProfileVisibilityChange = () => {
-  const { preferences: { profile_visibility } } = currentUserQuery().data;
-  const { updateUserSettingsMutation } = useUpdateUserSettings()
+export const ProfileVisibilityChange = reatomComponent(({ ctx }) => {
+  const profile_visibility = getUser(ctx).preferences.profile_visibility
 
-  const handleProfileVisibility = (value: ProfileVisibilityEnum) => updateUserSettingsMutation.mutate({
-    setting: "profile_visibility", value
-  })
+  const handleProfileVisibility = (value: ProfileVisibilityEnum) => {
+    if (profile_visibility === value) return;
+
+    void spawn(ctx, async (spawnCtx) => updateCurrentUserSettingsAction(spawnCtx, {
+      setting: "profile_visibility", value
+    }))
+  }
 
   return (
     <DynamicModal
-      mutationKey={UPDATE_FIELD_MUTATION_KEY}
+      autoClose
+      withLoader
+      isPending={ctx.spy(updateCurrentUserSettingsAction.statusesAtom).isPending}
       trigger={
         <UserSettingOption title="Тип аккаунта:" imageSrc={Barrier}>
           <Typography className="text-base">
@@ -77,4 +81,4 @@ export const ProfileVisibilityChange = () => {
       }
     />
   );
-};
+}, "ProfileVisibilityChange")

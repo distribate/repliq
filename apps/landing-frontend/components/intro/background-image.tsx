@@ -1,6 +1,5 @@
 "use client"
 
-import { createQueryKey } from "@repo/lib/helpers/query-key-builder"
 import { forumSharedClient } from "@repo/shared/api/forum-client"
 import { USER_IMAGES_BUCKET } from "@repo/shared/constants/buckets"
 import { useQuery } from "@tanstack/react-query"
@@ -23,7 +22,7 @@ async function getIntroBackgroundImage() {
 }
 
 const introBackgroundImageQuery = () => useQuery({
-  queryKey: createQueryKey("ui", ["intro-background-image"]),
+  queryKey: ["ui", "intro-background-image"],
   queryFn: () => getIntroBackgroundImage(),
   refetchOnWindowFocus: false,
   refetchOnMount: false,

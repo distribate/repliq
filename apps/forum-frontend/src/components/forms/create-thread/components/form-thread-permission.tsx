@@ -2,17 +2,11 @@ import { Typography } from "@repo/ui/src/components/typography.tsx";
 import { Controller } from "react-hook-form";
 import { Toggle } from "@repo/ui/src/components/toggle.tsx";
 import { FormField } from "@repo/ui/src/components/form-field.tsx";
-import { threadFormQuery } from "../queries/thread-form-query.ts";
 import { FormChildsProps } from "./form-thread.tsx";
-import { useEditThread } from "../hooks/use-edit-thread.tsx";
+import { reatomComponent } from "@reatom/npm-react";
 
-export const FormThreadPermissions = ({ errors, control }: FormChildsProps) => {
-  const { data: threadFormState } = threadFormQuery();
-  const { updateThreadFormMutation } = useEditThread();
-
-  if (!threadFormState) return;
-
-  const isActive = threadFormState.permission;
+export const FormThreadPermissions = reatomComponent<FormChildsProps>(({ ctx, errors, control }) => {
+  const permission = false
 
   return (
     <FormField errorMessage={errors?.permission?.message}>
@@ -31,19 +25,17 @@ export const FormThreadPermissions = ({ errors, control }: FormChildsProps) => {
           render={({ field: { onChange } }) => {
             return (
               <Toggle
-                defaultPressed={isActive || false}
+                defaultPressed={permission || false}
                 onPressedChange={(checked: boolean) => {
                   onChange(checked);
-                  return updateThreadFormMutation.mutate({
-                    permission: checked,
-                  });
+                  // threadFormAtom(ctx, (state) => ({...state, permission: checked}))
                 }}
               >
                 <Typography
-                  textColor={isActive ? "shark_black" : "shark_white"}
+                  textColor={permission ? "shark_black" : "shark_white"}
                   textSize="medium"
                 >
-                  {isActive ? "включено" : "выключено"}
+                  {permission ? "включено" : "выключено"}
                 </Typography>
               </Toggle>
             );
@@ -52,4 +44,4 @@ export const FormThreadPermissions = ({ errors, control }: FormChildsProps) => {
       </div>
     </FormField>
   );
-};
+}, "FormThreadPermissions")

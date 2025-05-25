@@ -1,51 +1,44 @@
 import { Ellipsis, Pen, Pin, Trash } from "lucide-react";
 import { HoverCardItem } from "@repo/ui/src/components/hover-card.tsx";
 import { Separator } from "@repo/ui/src/components/separator.tsx";
-import { useQueryClient } from "@tanstack/react-query";
 import {
-  POSTS_QUERY_KEY,
-  PostsQueryResponse,
-} from "#components/profile/posts/posts/queries/posts-query.ts";
+  postsDataAtom,
+} from "#components/profile/posts/posts/models/posts.model";
 import { DropdownWrapper } from "#components/wrappers/components/dropdown-wrapper";
 import { PostAdditionalModal } from "#components/modals/custom/components/post-additional-modal";
 import { PostEntity, UserEntity } from "@repo/types/entities/entities-type.ts";
-import { useControlPost } from "#components/post/post-item/hooks/use-control-post.ts";
+import { controlPostAction } from "#components/post/post-item/hooks/use-control-post.ts";
 import { getUser } from "@repo/lib/helpers/get-user.ts";
 import { ReportCreateModal } from "#components/modals/action-confirmation/components/report/components/report-create-modal.tsx";
 import {
-  POST_CONTROL_QUERY_KEY,
-  PostControlQuery,
+  editPostsControlAtom,
 } from "#components/post/post-item/queries/post-control-query.ts";
 import { Typography } from "@repo/ui/src/components/typography.tsx";
 import { Cloud } from "lucide-react";
+import { reatomComponent } from "@reatom/npm-react";
 
 export type PostControlProps = Pick<PostEntity, "id" | "isComments"> & Pick<UserEntity, "nickname">;
 
-export const PostControl = ({ id, nickname, isComments }: PostControlProps) => {
-  const qc = useQueryClient();
-  const { nickname: currentUserNickname } = getUser();
-  const { controlPostMutation } = useControlPost();
+export const PostControl = reatomComponent<PostControlProps>(({ ctx, id, nickname, isComments }) => {
+  const { nickname: currentUserNickname } = getUser(ctx);
 
-  const posts = qc.getQueryData<PostsQueryResponse>(POSTS_QUERY_KEY(nickname))?.data;
+  const posts = ctx.spy(postsDataAtom)
   if (!posts) return null;
 
-  let post = posts.find(p => p.id === id);
+  let post = posts.find(target => target.id === id);
   if (!post) return null;
 
   const { isPinned } = post;
 
-  const handleRemovePost = () => controlPostMutation.mutate({ type: "delete", id, nickname });
-  const handlePin = () => controlPostMutation.mutate({ type: "pin", id, nickname });
-  const handleComments = () => controlPostMutation.mutate({ type: "comments", id, nickname });
+  const handleRemovePost = () => controlPostAction(ctx, { type: "delete", id, nickname });
+  const handlePin = () => controlPostAction(ctx, { type: "pin", id, nickname });
+  const handleComments = () => controlPostAction(ctx, { type: "comments", id, nickname });
 
   const handleEditContent = () => {
-    return qc.setQueryData(POST_CONTROL_QUERY_KEY(id),
-      (prev: PostControlQuery) => ({ ...prev, isEdit: true }),
-    );
+    editPostsControlAtom(ctx, id, { isEdit: true, content: "" })
   };
 
   const isOwner = currentUserNickname === nickname;
-
   const pinnedPost = posts.find(p => p.isPinned) && !isPinned || false;
 
   return (
@@ -108,4 +101,4 @@ export const PostControl = ({ id, nickname, isComments }: PostControlProps) => {
       />
     </div>
   );
-};
+}, "PostControl")

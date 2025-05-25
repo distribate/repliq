@@ -1,24 +1,22 @@
-import { threadFormQuery } from "../queries/thread-form-query.ts";
+import { threadFormImagesAtom } from "../models/thread-form.model.ts";
 import { Typography } from "@repo/ui/src/components/typography.tsx";
 import {
   Dialog,
   DialogContent,
   DialogTrigger,
 } from "@repo/ui/src/components/dialog.tsx";
-import { DeleteButton } from "@repo/ui/src/components/detele-button.tsx";
+import { DeleteButton } from "@repo/ui/src/components/detele-button";
 import { getUser } from "@repo/lib/helpers/get-user.ts";
 import { Plus } from "lucide-react";
-import { BuyDonateModal } from "#components/modals/custom/components/buy-donate-modal.tsx";
-import { useEditThread } from "../hooks/use-edit-thread.tsx";
+import { BuyDonateModal } from "#components/modals/custom/components/buy-donate-modal";
+import { reatomComponent } from "@reatom/npm-react";
+import { handleAddImagesAction, handleDeleteImageAction } from "../models/edit-thread.model.ts";
 
-export const FormThreadPreviewImages = () => {
-  const { donate } = getUser()
-  const { handleDeleteImage, handleAddImages } = useEditThread();
-  const { data: threadFormState } = threadFormQuery();
+export const FormThreadPreviewImages = reatomComponent(({ ctx }) => {
+  const donate = getUser(ctx).donate
+  const threadFormImages = ctx.spy(threadFormImagesAtom)
 
-  if (!threadFormState || !threadFormState.images) return null;
-
-  const previewFormImages = threadFormState.images;
+  if (!threadFormImages) return null;
 
   return (
     <>
@@ -27,11 +25,11 @@ export const FormThreadPreviewImages = () => {
           Прикрепленные изображения
         </Typography>
         <div className="grid grid-cols-3 auto-rows-auto gap-2">
-          {previewFormImages.reverse().map((image, i) => (
+          {threadFormImages.length >= 1 && threadFormImages.reverse().map((image, i) => (
             <Dialog>
               <DialogTrigger>
                 <div className="relative w-fit group overflow-hidden">
-                  <DeleteButton onClick={e => handleDeleteImage(e, i)} variant="invisible" />
+                  <DeleteButton onClick={e => handleDeleteImageAction(ctx, e, i)} variant="invisible" />
                   <img
                     src={image}
                     alt=""
@@ -46,7 +44,7 @@ export const FormThreadPreviewImages = () => {
               </DialogContent>
             </Dialog>
           ))}
-          {(previewFormImages.length === 1) && (
+          {(threadFormImages.length === 1) && (
             <div
               className="flex items-center relative justify-center rounded-lg bg-shark-900 hover:bg-shark-800 cursor-pointer w-full h-full"
             >
@@ -57,12 +55,12 @@ export const FormThreadPreviewImages = () => {
                 accept="image/*"
                 multiple
                 className="absolute cursor-pointer right-0 top-0 left-0 bottom-0 opacity-0 w-full"
-                onChange={e => handleAddImages(e)}
+                onChange={e => handleAddImagesAction(ctx, e)}
               />
               <Plus size={40} className="text-shark-50" />
             </div>
           )}
-          {(previewFormImages.length === 2 && previewFormImages.length < 3) && (
+          {(threadFormImages.length === 2 && threadFormImages.length < 3) && (
             donate === "default" ? (
               <BuyDonateModal
                 trigger={
@@ -82,7 +80,7 @@ export const FormThreadPreviewImages = () => {
                   accept="image/*"
                   multiple
                   className="absolute cursor-pointer right-0 top-0 left-0 bottom-0 opacity-0 w-full"
-                  onChange={e => handleAddImages(e)}
+                  onChange={e => handleAddImagesAction(ctx, e)}
                 />
                 <Plus size={40} className="text-shark-50" />
               </div>
@@ -92,4 +90,4 @@ export const FormThreadPreviewImages = () => {
       </div>
     </>
   );
-};
+}, "FormThreadPreviewImages")

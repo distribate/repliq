@@ -3,19 +3,13 @@ import { HoverCardItem } from "@repo/ui/src/components/hover-card.tsx";
 import { Ban } from "lucide-react";
 import { Typography } from "@repo/ui/src/components/typography.tsx";
 import { ConfirmationButton } from "#components/modals/confirmation-modal/components/confirmation-action-button";
-import { DialogClose } from "@repo/ui/src/components/dialog.tsx";
+import { Dialog, DialogClose, DialogContent, DialogTrigger } from "@repo/ui/src/components/dialog.tsx";
 import { ConfirmationActionModalTemplate } from "#components/modals/confirmation-modal/components/confirmation-action-modal";
-import { blockedUserQuery } from "../queries/blocked-user-query";
-import { BLOCK_USER_MUTATION_KEY, UNBLOCK_USER_MUTATION_KEY, useBlockUser } from "../hooks/use-block-user";
-import { DynamicModal } from "#components/modals/dynamic-modal/components/dynamic-modal";
+import { blockedUserAtom, blockUserAction, unblockUserAction } from "../models/blocked-user.model";
+import { reatomComponent, useAtom } from "@reatom/npm-react";
 
-type BlockUserModalProps = {
-  recipient: string;
-};
-
-export const BlockUserModal = ({ recipient }: BlockUserModalProps) => {
-  const { data: blocked } = blockedUserQuery(recipient);
-  const { blockUserMutation, unblockUserMutation } = useBlockUser();
+export const BlockUserModal = reatomComponent<{ recipient: string; }>(({ ctx, recipient }) => {
+  const [blocked] = useAtom(blockedUserAtom)
 
   if (!blocked) return null;
 
@@ -23,46 +17,37 @@ export const BlockUserModal = ({ recipient }: BlockUserModalProps) => {
 
   const handleBlockUser = () => {
     if (isBlocked) {
-      return unblockUserMutation.mutate(recipient);
+      return blockUserAction(ctx, recipient);
     } else {
-      return blockUserMutation.mutate(recipient);
+      return unblockUserAction(ctx, recipient)
     }
   };
 
+  const isPending = ctx.spy(blockUserAction.statusesAtom).isPending || ctx.spy(unblockUserAction.statusesAtom).isPending
+
   return (
-    <DynamicModal
-      trigger={
+    <Dialog>
+      <DialogTrigger>
         <HoverCardItem className="group gap-2">
           <Ban size={16} className="text-shark-300" />
           <Typography>
             {isBlocked ? `Разблокировать` : `Заблокировать`}
           </Typography>
         </HoverCardItem>
-      }
-      content={
+      </DialogTrigger>
+      <DialogContent>
         <ConfirmationActionModalTemplate title="Подтверждение действия">
           <ConfirmationButton
             title={isBlocked ? "Удалить" : "Добавить"}
             actionType="continue"
             onClick={handleBlockUser}
-            disabled={
-              blockUserMutation.isPending || unblockUserMutation.isPending
-            }
+            disabled={isPending}
           />
           <DialogClose>
-            <ConfirmationButton
-              title="Отмена"
-              actionType="cancel"
-              disabled={
-                blockUserMutation.isPending || unblockUserMutation.isPending
-              }
-            />
+            <ConfirmationButton title="Отмена" actionType="cancel" disabled={isPending} />
           </DialogClose>
         </ConfirmationActionModalTemplate>
-      }
-      mutationKey={
-        isBlocked ? UNBLOCK_USER_MUTATION_KEY : BLOCK_USER_MUTATION_KEY
-      }
-    />
+      </DialogContent>
+    </Dialog>
   );
-};
+}, "BlockUserModal")

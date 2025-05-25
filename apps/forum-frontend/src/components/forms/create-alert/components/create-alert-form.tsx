@@ -3,13 +3,11 @@ import { Input } from "@repo/ui/src/components/input.tsx";
 import { Button } from "@repo/ui/src/components/button.tsx";
 import { Typography } from "@repo/ui/src/components/typography.tsx";
 import { DialogClose } from "@repo/ui/src/components/dialog.tsx";
-import { useAlerts } from "../hooks/use-alerts.ts";
 import { AlertEntity } from "@repo/types/entities/entities-type.ts";
 
 export type AlertValues = Pick<AlertEntity, "title" | "description" | "link">;
 
 export const AlertCreateForm = () => {
-  const { addAlertMutation } = useAlerts();
   const [alertValues, setAlertValues] = useState<AlertValues>({
     title: "",
     description: "",
@@ -24,7 +22,6 @@ export const AlertCreateForm = () => {
 
   const handleAddAlert = () => {
     if (!alertValues.title) return;
-    addAlertMutation.mutate(alertValues);
   };
 
   const handleClose = () => {
@@ -32,7 +29,6 @@ export const AlertCreateForm = () => {
   };
 
   const isDisabled =
-    addAlertMutation.isPending ||
     !alertValues.title ||
     alertValues.title.length <= 6;
 

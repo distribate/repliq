@@ -2,11 +2,10 @@ import { Typography } from "@repo/ui/src/components/typography.tsx";
 import { Input } from "@repo/ui/src/components/input.tsx";
 import { Controller } from "react-hook-form";
 import { FormChildsProps } from "./form-thread.tsx";
-import { useEditThread } from "../hooks/use-edit-thread.tsx";
+import { threadFormTitleAtom } from "../models/thread-form.model.ts";
+import { reatomComponent } from "@reatom/npm-react";
 
-export const FormThreadTitle = ({ control, errors }: FormChildsProps) => {
-  const { updateThreadFormMutation } = useEditThread();
-
+export const FormThreadTitle = reatomComponent<FormChildsProps>(({ ctx, control, errors }) => {
   return (
     <div className="flex flex-col gap-y-1 w-full">
       <div className="flex flex-col">
@@ -28,7 +27,7 @@ export const FormThreadTitle = ({ control, errors }: FormChildsProps) => {
             status={errors ? "error" : "default"}
             onChange={(e) => {
               onChange(e);
-              return updateThreadFormMutation.mutate({ title: e.target.value });
+              threadFormTitleAtom(ctx, e.target.value)
             }}
           />
         )}
@@ -40,4 +39,4 @@ export const FormThreadTitle = ({ control, errors }: FormChildsProps) => {
       )}
     </div>
   );
-};
+}, "FormThreadTitle")

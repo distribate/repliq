@@ -1,10 +1,15 @@
 import { Typography } from "@repo/ui/src/components/typography.tsx";
 import { Skeleton } from "@repo/ui/src/components/skeleton";
-import { UserPreviewCard } from "#components/cards/user-preview-card/user-preview-card";
-import { latestUsersQuery } from "@repo/lib/queries/last-reg-users-query";
+import { UserPreviewCard } from "#components/cards/user-preview-card/components/user-preview-card";
+import { reatomComponent } from "@reatom/npm-react";
+import { onConnect } from "@reatom/framework";
+import { latestUsersAction } from "./last-res-users.model";
 
-export const LastRegUsers = () => {
-  const { data: lastUsers, isLoading } = latestUsersQuery();
+onConnect(latestUsersAction.dataAtom, (ctx) => latestUsersAction(ctx, { limit: 6 }))
+
+export const LastRegUsers = reatomComponent(({ ctx }) => {
+  const lastUsers = ctx.spy(latestUsersAction.dataAtom)
+  const isLoading = ctx.spy(latestUsersAction.statusesAtom).isPending
 
   return (
     <div className="flex flex-col gap-4 w-full py-6 px-4 rounded-lg overflow-hidden bg-primary-color">
@@ -30,4 +35,4 @@ export const LastRegUsers = () => {
       </div>
     </div>
   );
-};
+}, "LatestRegUsers")

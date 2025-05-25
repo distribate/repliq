@@ -1,25 +1,18 @@
 import { Reply } from "lucide-react";
 import { Typography } from "@repo/ui/src/components/typography.tsx";
-import { createThreadCommentQuery } from "#components/forms/create-thread-comment/queries/create-thread-comment-query.ts";
+import { createThreadCommentAtom } from "#components/forms/create-thread-comment/queries/create-thread-comment-query.ts";
 import { CloseButton } from "@repo/ui/src/components/close-button.tsx";
-import { useCreateThreadComment } from "#components/forms/create-thread-comment/hooks/use-create-thread-comment.tsx";
+import { updateCreateThreadCommentAction } from "#components/forms/create-thread-comment/models/create-thread-comment.model";
+import { reatomComponent } from "@reatom/npm-react";
 
-export const ReplyComment = () => {
-  const { data: createThreadCommentState } = createThreadCommentQuery();
-  const { updateCreateThreadCommentMutation } = useCreateThreadComment();
+export const ReplyComment = reatomComponent(({ ctx }) => {
+  const createThreadCommentState = ctx.spy(createThreadCommentAtom)
   const values = createThreadCommentState?.replied;
 
   if (createThreadCommentState?.type === "single" || !values) return null;
 
   const { commentNickname, commentContent } = values;
-
-  const handleCommentType = () => {
-    return updateCreateThreadCommentMutation.mutate({
-      type: "single",
-      replied: null,
-    });
-  };
-
+  
   return (
     <div className="flex relative items-center gap-4 rounded-t-md bg-secondary-color px-4 py-2 w-full">
       <Reply size={26} />
@@ -31,7 +24,15 @@ export const ReplyComment = () => {
           </Typography>
         </div>
       </div>
-      <CloseButton variant="center" onClick={handleCommentType} />
+      <CloseButton
+        variant="center"
+        onClick={() => {
+          updateCreateThreadCommentAction(ctx, {
+            type: "single",
+            replied: null,
+          });
+        }}
+      />
     </div>
   );
-};
+}, "ReplyComment")

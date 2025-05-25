@@ -1,12 +1,10 @@
 import { cva, VariantProps } from 'class-variance-authority';
-import { forwardRef, HTMLAttributes } from 'react';
-import { Typography } from '@repo/ui/src/components/typography.tsx';
-import { userAvatarQuery } from '../queries/avatar-query.ts';
-import ExpActive from '@repo/assets/images/minecraft/exp-active.webp';
-import ExpNoActive from '@repo/assets/images/minecraft/exp-noactive.webp';
-import { userStatusQuery } from '@repo/lib/queries/user-status-query.ts';
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@repo/ui/src/components/tooltip.tsx';
+import { HTMLAttributes, lazy, Suspense } from 'react';
+import { avatarAction, avatarAtom } from '../models/avatar.model.ts';
 import { Skeleton } from '@repo/ui/src/components/skeleton.tsx';
+import { reatomComponent, useUpdate } from '@reatom/npm-react';
+
+const AvatarUserStatus = lazy(() => import("./avatar-user-status.tsx").then(m => ({ default: m.AvatarUserStatus })))
 
 const avatarVariants = cva('relative border border-shark-600/20', {
   variants: {
@@ -30,83 +28,54 @@ const avatarVariants = cva('relative border border-shark-600/20', {
   }
 });
 
-interface Avatar {
-  withStatus?: boolean,
-  propHeight?: number;
-  propWidth?: number;
+type Avatar = Partial<{
+  withStatus: boolean,
+  propHeight: number;
+  propWidth: number;
+}> & {
   nickname: string;
 }
 
-export interface AvatarProps
-  extends HTMLAttributes<HTMLDivElement>,
-  VariantProps<typeof avatarVariants>,
-  Avatar {
+type AvatarProps = HTMLAttributes<HTMLDivElement> & VariantProps<typeof avatarVariants> & Avatar
+
+const S = ({ nickname }: { nickname: string }) => {
+  useUpdate((ctx) => avatarAction(ctx, nickname), [nickname])
+  return null;
 }
 
-const AvatarUserStatus = ({ nickname }: { nickname: string }) => {
-  const { data: userStatus, isLoading } = userStatusQuery(nickname)
-
-  const isOnline = userStatus?.status === 'online';
-  const issuedTime = userStatus?.issuedTime
-
+export const Avatar = reatomComponent<AvatarProps>(({
+  ctx, className, children, withStatus, variant, shadow, rounded, propWidth, propHeight, border, nickname, ...props
+}) => {
   return (
-    <>
-      <TooltipProvider>
-        <Tooltip delayDuration={1}>
-          <TooltipTrigger className="min-w-[18px] min-h-[18px] absolute -bottom-2 -right-2 max-h-[32px] max-w-[32px]">
-            {!isLoading && (
-              <img
-                src={isOnline ? ExpActive : ExpNoActive}
-                alt=""
-                loading="lazy"
-                width={32}
-                height={32}
-              />
-            )}
-          </TooltipTrigger>
-          <TooltipContent side="bottom">
-            <div className="flex flex-col gap-1">
-              {userStatus ? (
-                <Typography>
-                  {isOnline ? `Онлайн` : issuedTime}
-                </Typography>
-              ) : (
-                <Typography>
-                  Был давно
-                </Typography>
-              )}
-            </div>
-          </TooltipContent>
-        </Tooltip>
-      </TooltipProvider>
-    </>
+    <div className={avatarVariants({ variant, shadow, border, className })} {...props}>
+      <S nickname={nickname} />
+      <AvatarImage propHeight={propHeight} propWidth={propWidth} rounded={rounded} nickname={nickname} />
+      {withStatus && (
+        <Suspense>
+          <AvatarUserStatus nickname={nickname} />
+        </Suspense>
+      )}
+    </div>
   )
-}
+}, "Avatar")
 
-export const Avatar = forwardRef<HTMLDivElement, AvatarProps>(({
-  className, children, withStatus, variant, shadow, rounded, propWidth, propHeight, border, nickname, ...props
-}, ref) => {
-  const { data: avatarUrl, isLoading } = userAvatarQuery(nickname);
+const AvatarImage = reatomComponent<Pick<AvatarProps, "rounded" | "propWidth" | "propHeight" | "nickname">>(({
+  ctx, rounded, propWidth, propHeight, nickname
+}) => {
+  const { url, isLoading } = ctx.spy(avatarAtom(nickname))
 
   if (isLoading) {
-    return <Skeleton className={avatarVariants({ variant, shadow, border, className })} />
+    return <Skeleton style={{ height: propHeight, width: propWidth }} />
   }
 
   return (
-    <div
-      className={avatarVariants({ variant, shadow, border, className })}
-      ref={ref}
-      {...props}
-    >
-      <img
-        src={avatarUrl}
-        width={propWidth}
-        height={propHeight}
-        loading="eager"
-        className={`${rounded === 'default' ? "rounded-sm" : "rounded-lg"}`}
-        alt=""
-      />
-      {withStatus && <AvatarUserStatus nickname={nickname} />}
-    </div>
+    <img
+      src={url}
+      width={propWidth}
+      height={propHeight}
+      data-rounded={rounded}
+      className="rounded-lg data-[rounded=default]:rounded-sm"
+      alt=""
+    />
   );
-});
+}, "AvatarImage")

@@ -1,6 +1,6 @@
 import { Typography } from "@repo/ui/src/components/typography.tsx";
 import { Skeleton } from "@repo/ui/src/components/skeleton.tsx";
-import { GetUserActiveSessionsResponse, userActiveSessionsQuery } from "#components/modals/user-settings/queries/user-sessions-query";
+import { GetUserActiveSessionsResponse, userActiveSessionsAction, userActiveSessionsAtom } from "#components/modals/user-settings/queries/user-sessions-query";
 import YellowCandle from "@repo/assets/images/minecraft/yellow_candle.webp";
 import {
   Dialog,
@@ -12,6 +12,8 @@ import { TerminateAllSessionsModal } from "./terminate-all-sessions-modal";
 import dayjs from "@repo/lib/constants/dayjs-instance";
 import BlockGold from "@repo/assets/images/minecraft/block_gold.webp";
 import { TerminateSessionModal } from "./terminate-session-modal";
+import { reatomComponent } from "@reatom/npm-react";
+import { onConnect } from "@reatom/framework";
 
 export const UserSessionBlock = ({
   is_current, browser, location, session_id, created_at
@@ -48,8 +50,11 @@ export const UserSessionBlock = ({
   );
 };
 
-const UserActiveSessions = () => {
-  const { data: activeSessions, isError } = userActiveSessionsQuery();
+onConnect(userActiveSessionsAtom, userActiveSessionsAction)
+
+const UserActiveSessions = reatomComponent(({ ctx }) => {
+  const activeSessions = ctx.spy(userActiveSessionsAtom)
+  const isError = ctx.spy(userActiveSessionsAction.statusesAtom).isRejected
 
   const currentSession = activeSessions
     ? activeSessions.find((item) => (item ? item.is_current : null))
@@ -90,10 +95,11 @@ const UserActiveSessions = () => {
       )}
     </div>
   );
-};
+}, "UserActiveSessions")
 
-export const ActiveSessionsModal = () => {
-  const { data: activeSessions, isLoading } = userActiveSessionsQuery();
+export const ActiveSessionsModal = reatomComponent(({ ctx }) => {
+  const activeSessions = ctx.spy(userActiveSessionsAtom)
+  const isLoading = ctx.spy(userActiveSessionsAction.statusesAtom).isPending
 
   return (
     <Dialog>
@@ -113,4 +119,4 @@ export const ActiveSessionsModal = () => {
       </DialogContent>
     </Dialog>
   );
-};
+}, "ActiveSessionsModal")

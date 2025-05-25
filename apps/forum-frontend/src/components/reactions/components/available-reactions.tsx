@@ -1,4 +1,5 @@
-import { useThreadReaction } from "#components/thread/thread-reactions/hooks/use-thread-reaction";
+import { addReactionAction } from "#components/thread/thread-reactions/models/thread-reactions.model";
+import { reatomComponent } from "@reatom/npm-react";
 import { REACTIONS } from "@repo/shared/constants/emojis";
 import React, { useRef } from "react";
 
@@ -6,13 +7,12 @@ type AvailableReactionsProps = {
   threadId: string
 }
 
-export const AvailableThreadReactions = ({
-  threadId
-}: AvailableReactionsProps) => {
-  const { addReactionToThreadMutation } = useThreadReaction();
+export const AvailableThreadReactions = reatomComponent<AvailableReactionsProps>(({
+  ctx, threadId
+}) => {
   const scrollRef = useRef<HTMLDivElement | null>(null);
 
-  const handleAddReaction = (emoji: string) => addReactionToThreadMutation.mutate({ emoji, id: threadId });
+  const handleAddReaction = (emoji: string) => addReactionAction(ctx, { emoji, id: threadId });
 
   const handleWheel = (e: React.WheelEvent) => {
     if (scrollRef.current) {
@@ -39,4 +39,4 @@ export const AvailableThreadReactions = ({
       ))}
     </div>
   )
-}
+}, "AvailableThreadReactions")

@@ -1,5 +1,6 @@
 import { Typography } from "@repo/ui/src/components/typography.tsx";
-import { useThreadReaction } from "../hooks/use-thread-reaction";
+import { addReactionAction } from "../models/thread-reactions.model";
+import { reatomComponent } from "@reatom/npm-react";
 
 type RatingActionItemProps = {
   emoji: string;
@@ -9,14 +10,12 @@ type RatingActionItemProps = {
   Icon: JSX.Element | string;
 };
 
-export const ThreadReactionItem = ({
-  emoji, reactionCount, threadId, isLiked, Icon
-}: RatingActionItemProps) => {
-  const { addReactionToThreadMutation } = useThreadReaction();
-
+export const ThreadReactionItem = reatomComponent<RatingActionItemProps>(({
+  ctx, emoji, reactionCount, threadId, isLiked, Icon
+}) => {
   return (
     <div
-      onClick={() => addReactionToThreadMutation.mutate({ emoji, id: threadId })}
+      onClick={() => addReactionAction(ctx, { emoji, id: threadId })}
       className={`flex ${isLiked ? "bg-shark-400/50" : "bg-shark-700/50"} 
         rounded-md py-1 cursor-pointer items-center gap-1 px-2 group *:transition-all *:duration-150 group`}
     >
@@ -34,4 +33,4 @@ export const ThreadReactionItem = ({
       </Typography>
     </div>
   );
-};
+}, "ThreadReactionItem")

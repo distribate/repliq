@@ -1,8 +1,7 @@
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
 import { getDonates } from '@repo/lib/queries/get-donates.ts';
-import { createQueryKey } from '@repo/lib/helpers/query-key-builder.ts';
 
-export const DONATES_QUERY_KEY = (type: "donate" | "wallet" | "events") => createQueryKey("ui", ["donates", type])
+export const DONATES_QUERY_KEY = (type: "donate" | "wallet" | "events") => ["ui", "donates", type]
 
 export const donatesQuery = (type: "donate" | "wallet" | "events") => useQuery({
   queryKey: DONATES_QUERY_KEY(type),

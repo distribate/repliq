@@ -1,30 +1,17 @@
-import { cva, VariantProps } from "class-variance-authority";
-import { forwardRef, HTMLAttributes } from "react";
+import { reatomComponent } from "@reatom/npm-react";
+import { HTMLAttributes } from "react";
+import { friendsViewAtom } from "../../filtering/models/friends-filtering.model";
 
-const friendsListLayoutVariants = cva("flex gap-2 h-full", {
-  variants: {
-    variant: {
-      grid: "grid grid-cols-2 auto-rows-auto",
-      list: "flex-col",
-    },
-  },
-  defaultVariants: {
-    variant: "list",
-  },
-});
+export const FriendsListLayout = reatomComponent<HTMLAttributes<HTMLDivElement>>(({ ctx, ...props }) => {
+  const viewType = ctx.spy(friendsViewAtom).viewType
 
-interface FriendsListLayout
-  extends HTMLAttributes<HTMLDivElement>,
-    VariantProps<typeof friendsListLayoutVariants> {}
-
-export const FriendsListLayout = forwardRef<HTMLDivElement, FriendsListLayout>(
-  ({ className, variant, ...props }, ref) => {
-    return (
-      <div
-        ref={ref}
-        className={friendsListLayoutVariants({ variant, className })}
-        {...props}
-      />
-    );
-  },
-);
+  return (
+    <div
+      data-view={viewType}
+      className="flex gap-2 h-full 
+        data-[view=list]:flex-col 
+        data-[view=grid]:grid data-[view=grid]:grid-cols-1 data-[view=grid]:md:grid-cols-2 data-[view=grid]:auto-rows-auto"
+      {...props}
+    />
+  );
+}, "FriendsListLayout")

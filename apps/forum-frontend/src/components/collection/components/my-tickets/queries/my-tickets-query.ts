@@ -1,25 +1,19 @@
-import { createQueryKey } from "@repo/lib/helpers/query-key-builder"
+import { reatomResource, withDataAtom, withStatusesAtom } from "@reatom/async"
+import { currentUserAtom } from "@repo/lib/helpers/get-user"
 import { forumUserClient } from "@repo/shared/api/forum-client"
-import { useQuery } from "@tanstack/react-query"
 
 async function getTickets(nickname: string) {
-  const res = await forumUserClient.user["get-user-tickets"][":nickname"].$get({
-    param: {
-      nickname
-    }
-  })
-
+  const res = await forumUserClient.user["get-user-tickets"][":nickname"].$get({ param: { nickname } })
   const data = await res.json()
 
-  if ("error" in data) {
-    return null
-  }
+  if ("error" in data) return null
 
   return data.data
 }
 
-export const myTicketsQuery = (nickname: string) => useQuery({
-  queryKey: createQueryKey("user", ["tickets"]),
-  queryFn: () => getTickets(nickname),
-  refetchOnWindowFocus: false,
-})
+export const myTicketsResource = reatomResource(async (ctx) => {
+  const nickname = ctx.spy(currentUserAtom)?.nickname
+  if (!nickname) return;
+
+  return await ctx.schedule(() => getTickets(nickname))
+}, "myTicketsResource").pipe(withDataAtom(), withStatusesAtom())

@@ -1,9 +1,5 @@
-import { cva, VariantProps } from "class-variance-authority";
-import { HTMLAttributes } from "react";
 import Photo from "@repo/assets/images/minecraft/photo.webp";
 import { ProfileDescriptionChangeModal } from "#components/modals/user-settings/components/profile-description-change-modal";
-import { Button } from "@repo/ui/src/components/button.tsx";
-import { getUser } from "@repo/lib/helpers/get-user.ts";
 import { MoreWrapper } from "#components/wrappers/components/more-wrapper";
 import { Separator } from "@repo/ui/src/components/separator.tsx";
 import { ReportCreateModal } from "#components/modals/action-confirmation/components/report/components/report-create-modal.tsx";
@@ -13,37 +9,24 @@ import { DeleteCoverModal } from "#components/modals/action-confirmation/compone
 import { Dialog, DialogContent, DialogTrigger } from "@repo/ui/src/components/dialog";
 import { Typography } from "@repo/ui/src/components/typography";
 import { FriendButton } from "#components/friend/components/friend-button/components/friend-button";
+import { reatomComponent } from "@reatom/npm-react";
+import { requestedUserIsSameAtom, requestedUserParamAtom } from "#components/profile/requested-user.model";
+import { coverAtom } from "../models/cover.model";
 
-const userCoverPanelVariants = cva(
-  "relative z-[3] flex w-full lg:w-fit items-center bg-transparent gap-4",
-  {
-    variants: {
-      variant: {
-        default: "",
-        end: "lg:self-end justify-center lg:justify-end"
-      },
-    },
-  },
-);
+export const UserCoverPanel = reatomComponent(({ ctx }) => {
+  const requestedNickname = ctx.spy(requestedUserParamAtom)
+  if (!requestedNickname) return null;
 
-interface UserCoverPanelProps
-  extends HTMLAttributes<HTMLDivElement>,
-  VariantProps<typeof userCoverPanelVariants> {
-  requestedNickname: string;
-}
-
-export const UserCoverPanel = ({
-  variant,
-  className,
-  requestedNickname,
-  ...props
-}: UserCoverPanelProps) => {
-  const { nickname: currentUserNickname } = getUser();
-
-  const isOwner = currentUserNickname === requestedNickname;
+  const isOwner = ctx.spy(requestedUserIsSameAtom)
 
   return (
-    <div className={userCoverPanelVariants({ variant, className })} {...props}>
+    <div
+      data-state={ctx.spy(coverAtom).inView ? "end" : "default"}
+      className={`
+        relative z-[3] flex w-full lg:w-fit items-center bg-transparent gap-4
+        data-[state=end]:lg:self-end data-[state=end]:justify-center data-[state=end]:lg:justify-end 
+      `}
+    >
       {!isOwner ? (
         <div className="flex items-center gap-2 justify-end lg:w-fit">
           <FriendButton recipient={requestedNickname} />
@@ -53,10 +36,8 @@ export const UserCoverPanel = ({
           >
             <div className="flex flex-col gap-y-1 *:w-full w-full items-start">
               <BlockUserModal recipient={requestedNickname} />
-              <>
-                <Separator />
-                <ReportCreateModal reportType="account" targetNickname={requestedNickname} />
-              </>
+              <Separator />
+              <ReportCreateModal reportType="account" targetNickname={requestedNickname} />
             </div>
           </MoreWrapper>
         </div>
@@ -85,4 +66,4 @@ export const UserCoverPanel = ({
       )}
     </div>
   );
-};
+}, "UserCoverPanel")

@@ -1,37 +1,29 @@
-import { createQueryKey } from "@repo/lib/helpers/query-key-builder"
+import { reatomResource, withCache, withDataAtom, withStatusesAtom } from "@reatom/async"
+import { reatomComponent } from "@reatom/npm-react"
 import { forumSharedClient } from "@repo/shared/api/forum-client"
 import { Skeleton } from "@repo/ui/src/components/skeleton"
 import { Typography } from "@repo/ui/src/components/typography"
-import { keepPreviousData, useQuery } from "@tanstack/react-query"
 import { Link } from "@tanstack/react-router"
 
 const getLatestNews = async () => {
   const res = await forumSharedClient.shared["get-news"].$get({
-    query: {
-      limit: "2",
-      ascending: "true",
-    }
+    query: { limit: "2", ascending: "true" }
   })
 
   const data = await res.json()
 
-  if ("error" in data) {
-    return null
-  }
+  if ("error" in data) return null
 
   return data.data
 }
 
-const latestNewsQuery = () => useQuery({
-  queryKey: createQueryKey("ui", ["latest-news"]),
-  queryFn: () => getLatestNews(),
-  refetchOnMount: false,
-  refetchOnWindowFocus: false,
-  placeholderData: keepPreviousData,
-})
+const latestNewsResource =reatomResource(async (ctx) => {
+  return await ctx.schedule(() => getLatestNews())
+}).pipe(withDataAtom(), withCache(), withStatusesAtom())
 
-export const LatestNews = () => {
-  const { data: newsList, isLoading } = latestNewsQuery()
+export const LatestNews = reatomComponent(({ ctx }) => {
+  const newsList = ctx.spy(latestNewsResource.dataAtom)
+  const isLoading = ctx.spy(latestNewsResource.statusesAtom).isPending
 
   return (
     <div className="flex flex-col gap-4 w-full py-6 px-4 rounded-lg overflow-hidden bg-primary-color">
@@ -77,4 +69,4 @@ export const LatestNews = () => {
       </Link>
     </div>
   )
-}
+}, "LatestNews")

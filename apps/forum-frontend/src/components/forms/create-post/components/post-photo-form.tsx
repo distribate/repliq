@@ -1,6 +1,6 @@
 import { Camera } from "lucide-react";
 import { Typography } from "@repo/ui/src/components/typography.tsx";
-import { TooltipWrapper } from "#wrappers/tooltip-wrapper.tsx";
+import { TooltipWrapper } from "#components/wrappers/components/tooltip-wrapper";
 
 export const PostPhotoForm = () => {
   return (

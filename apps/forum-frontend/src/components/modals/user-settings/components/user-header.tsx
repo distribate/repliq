@@ -1,22 +1,27 @@
 import { Avatar } from "#components/user/avatar/components/avatar";
-import { UserNickname } from "#components/user/name/components/nickname";
+import { UserNickname } from "#components/user/name/nickname";
+import { reatomComponent, useUpdate } from "@reatom/npm-react";
 import { getUser } from "@repo/lib/helpers/get-user";
-import { userStatusQuery } from "@repo/lib/queries/user-status-query";
+import { userStatusAction, userStatusAtom } from "@repo/lib/queries/user-status.model";
 import { Button } from "@repo/ui/src/components/button";
 import { Dialog, DialogClose, DialogContent, DialogTrigger } from "@repo/ui/src/components/dialog";
-import { Skeleton } from "@repo/ui/src/components/skeleton";
 import { Typography } from "@repo/ui/src/components/typography";
-import { Suspense } from "react";
 
-export const UserPersonalCardHeader = () => {
-  const { nickname, name_color } = getUser();
-  const { data: userStatus } = userStatusQuery(nickname);
+const Sync = ({ target }: { target: string }) => {
+  useUpdate((ctx) => userStatusAction(ctx, target), [target])
+  return null;
+}
+
+export const UserPersonalCardHeader = reatomComponent(({ ctx }) => {
+  const { nickname, name_color } = getUser(ctx);
+  const userStatus = ctx.spy(userStatusAtom)
 
   const isOnline = userStatus?.status === 'online';
 
   return (
-    <div className="flex items-center gap-4 justify-start w-full px-2">
-      <Suspense fallback={<Skeleton className="w-[82px] h-[82px]" />}>
+    <>
+      <Sync target={nickname} />
+      <div className="flex items-center gap-4 justify-start w-full px-2">
         <Dialog>
           <DialogTrigger>
             <Avatar rounded="medium" propHeight={82} propWidth={82} nickname={nickname} />
@@ -34,13 +39,13 @@ export const UserPersonalCardHeader = () => {
             </div>
           </DialogContent>
         </Dialog>
-      </Suspense>
-      <div className="flex flex-col items-start">
-        <UserNickname nickname={nickname} nicknameColor={name_color} className="text-base font-semibold" />
-        <Typography>
-          {isOnline ? "онлайн" : "оффлайн"}
-        </Typography>
+        <div className="flex flex-col items-start">
+          <UserNickname nickname={nickname} nicknameColor={name_color} className="text-base font-semibold" />
+          <Typography>
+            {isOnline ? "онлайн" : "оффлайн"}
+          </Typography>
+        </div>
       </div>
-    </div>
+    </>
   );
-};
+}, "UserPersonalCardHeader")

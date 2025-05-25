@@ -5,13 +5,13 @@ import { ConfirmationActionModalTemplate } from "#components/modals/confirmation
 import { ConfirmationButton } from "#components/modals/confirmation-modal/components/confirmation-action-button.tsx";
 import { DynamicModal } from "../../dynamic-modal/components/dynamic-modal.tsx";
 import { DialogClose } from "@repo/ui/src/components/dialog.tsx";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { authClient } from "@repo/shared/api/auth-client.ts";
 import { toast } from "sonner";
-import { USER_ACTIVE_SESSIONS_QUERY_KEY } from "#components/modals/user-settings/queries/user-sessions-query.ts";
-import { CURRENT_USER_QUERY_KEY } from "@repo/lib/queries/current-user-query.ts";
+import { userActiveSessionsAction } from "#components/modals/user-settings/queries/user-sessions-query.ts";
 import { AUTH_REDIRECT } from "@repo/shared/constants/routes.ts";
-import { useNavigate } from "@tanstack/react-router"
+import { reatomComponent } from "@reatom/npm-react";
+import { reatomAsync, withStatusesAtom } from "@reatom/async";
+import { router } from "#main.tsx";
 
 type TerminateSession =
   | { type: "single", selectedSessionId: string }
@@ -20,65 +20,45 @@ type TerminateSession =
 const terminateSession = async ({
   selectedSessionId, type
 }: TerminateSession) => {
-  const res = await authClient["terminate-session"].$post({
-    json: { selectedSessionId, type }
-  })
-
+  const res = await authClient["terminate-session"].$post({ json: { selectedSessionId, type } })
   const data = await res.json()
 
-  if (!data) {
-    return null;
-  }
+  if (!data) return null;
 
   return data
 }
 
-export const TERMINATE_SESSIONS_MUTATION_KEY = ["terminate-sessions"];
+export const terminateSessionAction = reatomAsync(async (ctx, values: TerminateSession) => {
+  return await ctx.schedule(() => terminateSession(values))
+}, {
+  name: "terminateSessionAction",
+  onFulfill: (ctx, res) => {
+    if (!res) return;
 
-export const useTerminateSession = () => {
-  const qc = useQueryClient()
-  const navigate = useNavigate()
-
-  const terminateSessionMutation = useMutation({
-    mutationKey: TERMINATE_SESSIONS_MUTATION_KEY,
-    mutationFn: async (values: TerminateSession) => terminateSession(values),
-    onSuccess: async (data) => {
-      if (!data) return;
-
-      if ("error" in data) {
-        if (data.error === 'Session must be at least 3 days old') {
-          return toast.error('Для этого действия требуется быть больше в сети');
-        }
-
-        return toast.error(data.error);
+    if ("error" in res) {
+      if (res.error === 'Session must be at least 3 days old') {
+        return toast.error('Для этого действия требуется быть больше в сети');
       }
 
-      if (data.status) {
-        if (data.meta.is_current) {
-          navigate({ to: AUTH_REDIRECT })
-
-          return setTimeout(() => {
-            qc.clear()
-          }, 3000)
-        }
-
-        await Promise.all([
-          qc.invalidateQueries({ queryKey: USER_ACTIVE_SESSIONS_QUERY_KEY }),
-          qc.invalidateQueries({ queryKey: CURRENT_USER_QUERY_KEY })
-        ])
-      }
+      return toast.error(res.error);
     }
-  })
 
-  return { terminateSessionMutation }
-}
+    if (res.status) {
+      if (res.meta.is_current) {
+        ctx.schedule(() => router.navigate({ to: AUTH_REDIRECT }))
+      }
 
-export const TerminateAllSessionsModal = () => {
-  const { terminateSessionMutation } = useTerminateSession();
+      userActiveSessionsAction(ctx)
+    }
+  }
+}).pipe(withStatusesAtom())
 
+export const TerminateAllSessionsModal = reatomComponent(({ ctx }) => {
   return (
     <DynamicModal
-      mutationKey={TERMINATE_SESSIONS_MUTATION_KEY}
+      autoClose
+      withLoader
+      isPending={ctx.spy(terminateSessionAction.statusesAtom).isPending}
       trigger={
         <HoverCardItem className="gap-2 px-2">
           <img
@@ -98,18 +78,18 @@ export const TerminateAllSessionsModal = () => {
           <ConfirmationButton
             actionType="continue"
             title="Да, уничтожить"
-            onClick={() => terminateSessionMutation.mutate({ type: 'all' })}
-            disabled={terminateSessionMutation.isPending}
+            onClick={() => terminateSessionAction(ctx, { type: 'all' })}
+            disabled={ctx.spy(terminateSessionAction.statusesAtom).isPending}
           />
           <DialogClose>
             <ConfirmationButton
               actionType="cancel"
               title="Отмена"
-              disabled={terminateSessionMutation.isPending}
+              disabled={ctx.spy(terminateSessionAction.statusesAtom).isPending}
             />
           </DialogClose>
         </ConfirmationActionModalTemplate>
       }
     />
   );
-};
+}, "TerminateAllSessionsModal")

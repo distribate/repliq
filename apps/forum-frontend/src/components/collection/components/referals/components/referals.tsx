@@ -1,19 +1,19 @@
 import { Avatar } from "#components/user/avatar/components/avatar.tsx"
 import { UserDonate } from "#components/user/donate/components/donate.tsx"
-import { UserNickname } from "#components/user/name/components/nickname"
+import { UserNickname } from "#components/user/name/nickname"
 import dayjs from "@repo/lib/constants/dayjs-instance"
-import { getUser } from "@repo/lib/helpers/get-user"
 import { USER_URL } from "@repo/shared/constants/routes"
 import { Button } from "@repo/ui/src/components/button"
 import { Skeleton } from "@repo/ui/src/components/skeleton"
 import { Typography } from "@repo/ui/src/components/typography"
 import { Link } from "@tanstack/react-router"
 import { Suspense } from "react"
-import { referalsQuery } from "../queries/referals-query"
+import { myReferalsResource } from "../queries/referals-query"
+import { reatomComponent } from "@reatom/npm-react"
 
-export const Referals = () => {
-  const { nickname } = getUser()
-  const { data: referals, isLoading } = referalsQuery(nickname)
+export const Referals = reatomComponent(({ ctx }) => {
+  const referals = ctx.spy(myReferalsResource.dataAtom)
+  const isLoading = ctx.spy(myReferalsResource.statusesAtom).isPending
 
   return (
     <div className="flex flex-col gap-4 w-full h-full">
@@ -41,11 +41,9 @@ export const Referals = () => {
               className={`flex w-full gap-2 items-center friend-card border-2 
                 ${item.completed ? "border-green-500" : "border-shark-800"}`}
             >
-              <Suspense fallback={<Skeleton className="h-[64px] w-[64px]" />}>
-                <Link to={USER_URL + item.recipient}>
-                  <Avatar nickname={item.recipient} propWidth={64} propHeight={64} className="min-h-[64px] min-w-[64px]" />
-                </Link>
-              </Suspense>
+              <Link to={USER_URL + item.recipient}>
+                <Avatar nickname={item.recipient} propWidth={64} propHeight={64} className="min-h-[64px] min-w-[64px]" />
+              </Link>
               <div className="flex flex-col">
                 <div className="flex items-center gap-1">
                   <Link to={USER_URL + item.recipient}>
@@ -79,4 +77,4 @@ export const Referals = () => {
       </div>
     </div>
   )
-}
+}, "Referals")

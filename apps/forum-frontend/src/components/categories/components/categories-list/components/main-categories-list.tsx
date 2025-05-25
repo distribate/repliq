@@ -1,6 +1,3 @@
-import { keepPreviousData, useQuery } from '@tanstack/react-query';
-import { createQueryKey } from '@repo/lib/helpers/query-key-builder.ts';
-import { forumCategoriesClient } from '@repo/shared/api/forum-client.ts';
 import { Link } from "@tanstack/react-router";
 import { Typography } from '@repo/ui/src/components/typography.tsx';
 import { CATEGORY_URL } from '@repo/shared/constants/routes';
@@ -12,31 +9,13 @@ import { ThreadByCategoryItem } from '#components/thread/thread-card-category/th
 import { ThreadPreview } from '@repo/types/entities/thread-type';
 import { ThreadLayout } from '#components/thread/thread-layout/thread-layout';
 import { Skeleton } from '@repo/ui/src/components/skeleton';
+import { onConnect } from '@reatom/framework';
+import { reatomComponent } from '@reatom/npm-react';
+import { categoriesResource } from '../models/categories.model';
+import { globalOptionsAtom } from "@repo/lib/queries/global-option-query";
+import { AuthTemplate } from "#components/templates/components/auth-template";
 
-const ThreadNotFound = lazy(() => import("#components/templates/components/threads-not-found").then(m => ({
-  default: m.ThreadNotFound
-})));
-
-export const MAIN_CATEGORIES_QUERY_KEY = createQueryKey("ui", ["categories"]);
-
-const categoriesQuery = () => useQuery({
-  queryKey: MAIN_CATEGORIES_QUERY_KEY,
-  queryFn: () => getMainCategoriesWithThreads(),
-  refetchOnWindowFocus: false,
-  placeholderData: keepPreviousData
-})
-
-async function getMainCategoriesWithThreads() {
-  const res = await forumCategoriesClient.categories["get-latest-category-threads"].$get();
-
-  const data = await res.json();
-
-  if (!data || "error" in data) {
-    return null
-  }
-
-  return data.data;
-}
+const ThreadNotFound = lazy(() => import("#components/templates/components/threads-not-found").then(m => ({ default: m.ThreadNotFound })));
 
 const ThreadItem = ({
   created_at, description, id, properties, title, comments_count, views_count, owner
@@ -57,22 +36,67 @@ const ThreadItem = ({
   );
 };
 
-const MainCategoriesSkeleton = () => {
+export const MainCategoriesSkeleton = () => {
   return (
-    <>
-      <Skeleton className="h-[200px] w-full" />
-      <Skeleton className="h-[200px] w-full" />
-      <Skeleton className="h-[200px] w-full" />
-      <Skeleton className="h-[200px] w-full" />
-      <Skeleton className="h-[200px] w-full" />
-    </>
-  );
+    <div className="flex flex-col gap-y-4 w-full">
+      <div className="flex flex-col rounded-lg gap-2 w-full">
+        {Array.from({ length: 3 }).map((_, idx) => (
+          <div
+            key={idx}
+            className="flex flex-col gap-y-4 w-full py-8 rounded-lg px-4 bg-primary-color"
+          >
+            <div className="flex items-center w-fit gap-2">
+              <Skeleton className="h-12 w-36" />
+            </div>
+            <div className="flex flex-col gap-y-2 w-full">
+              <Skeleton className="h-10 w-24" />
+              <div className="flex flex-col gap-y-2 w-full h-full">
+                {Array.from({ length: 3 }).map((_, idx) => 
+                  <Skeleton key={idx} className="h-20 w-full" />
+                )}
+              </div>
+            </div>
+            <Separator />
+            <div className="flex items-center gap-2 w-fit h-full">
+              <Skeleton className="h-10 w-16" />
+              <Skeleton className="h-10 w-16" />
+            </div>
+          </div>
+        ))}
+      </div>
+    </div >
+  )
+}
+
+const CategoriesListSkeleton = () => {
+  return Array.from({ length: 5 }).map((_, idx) => 
+    <Skeleton key={idx} className="h-[200px] w-full" />
+  )
 };
 
-export const MainCategoriesList = () => {
-  const { data: categories, isLoading } = categoriesQuery();
+onConnect(categoriesResource.dataAtom, categoriesResource)
 
-  if (isLoading) return <MainCategoriesSkeleton />
+export const MainCategories = reatomComponent(({ ctx }) => {
+  return (
+    ctx.spy(globalOptionsAtom).isAuthenticated ? <MainCategoriesList /> : (
+      <div className="relative w-full min-h-[300px] h-fit rounded-lg overflow-hidden">
+        <div className="flex flex-col gap-2 absolute w-full p-4 h-full">
+          <div className="bg-shark-950 w-full rounded-lg h-20" />
+          <div className="bg-shark-950 w-full rounded-lg h-20" />
+          <div className="bg-shark-950 w-full rounded-lg h-20" />
+        </div>
+        <Suspense>
+          <AuthTemplate />
+        </Suspense>
+      </div>
+    )
+  )
+}, "Categories")
+
+const MainCategoriesList = reatomComponent(({ ctx }) => {
+  const categories = ctx.spy(categoriesResource.dataAtom)
+
+  if (ctx.spy(categoriesResource.statusesAtom).isPending) return <CategoriesListSkeleton />
 
   if (!categories) return null;
 
@@ -107,7 +131,8 @@ export const MainCategoriesList = () => {
             <div className="flex items-center gap-2 w-fit h-full">
               <Link
                 to={CATEGORY_URL + c.category_id}
-                className="flex gap-2 items-center justify-start hover:bg-shark-700 transition-all duration-300 ease-in-out group bg-shark-900 px-2 py-1 rounded-md"
+                className="flex gap-2 items-center justify-start hover:bg-shark-700 transition-all 
+                duration-300 ease-in-out group bg-shark-900 px-2 py-1 rounded-md"
               >
                 <img src={Spyglass} alt="" width={20} height={20} draggable={false} />
                 <Typography>
@@ -116,7 +141,10 @@ export const MainCategoriesList = () => {
               </Link>
               <Dialog>
                 <DialogTrigger>
-                  <div className="flex gap-2 items-center justify-start hover:bg-shark-700 transition-all duration-300 ease-in-out group bg-shark-900 px-2 py-1 rounded-md">
+                  <div 
+                    className="flex gap-2 items-center justify-start 
+                      hover:bg-shark-700 transition-all duration-300 ease-in-out group bg-shark-900 px-2 py-1 rounded-md"
+                    >
                     <Typography>
                       О категории
                     </Typography>
@@ -141,4 +169,4 @@ export const MainCategoriesList = () => {
       </div>
     </div >
   );
-};
+}, "MainCategoriesList")

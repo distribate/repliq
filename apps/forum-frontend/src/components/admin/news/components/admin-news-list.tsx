@@ -1,12 +1,12 @@
 import { newsQuery } from "@repo/lib/queries/news-query";
-import { useNews } from "./admin-create-news";
+import { deleteNewsAction } from "./admin-create-news";
 import { Button } from "@repo/ui/src/components/button";
 import { Typography } from "@repo/ui/src/components/typography";
 import { Skeleton } from "@repo/ui/src/components/skeleton";
+import { reatomComponent } from "@reatom/npm-react";
 
-export const NewsList = () => {
+export const NewsList = reatomComponent(({ ctx }) => {
   const { data, isLoading } = newsQuery({ limit: 12, ascending: true })
-  const { deleteNewsMutation } = useNews()
 
   if (isLoading) {
     return (
@@ -37,8 +37,8 @@ export const NewsList = () => {
           </div>
           <Button
             variant="negative"
-            disabled={deleteNewsMutation.isPending}
-            onClick={() => deleteNewsMutation.mutate(n.id)}
+            disabled={ctx.spy(deleteNewsAction.statusesAtom).isPending}
+            onClick={() => deleteNewsAction(ctx, n.id)}
             className="self-end w-fit"
           >
             <Typography className="font-semibold text-[18px]">
@@ -49,4 +49,4 @@ export const NewsList = () => {
       ))}
     </div>
   )
-}
+}, "NewsList")

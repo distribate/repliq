@@ -4,34 +4,18 @@ import { SelectedWrapper } from "#components/wrappers/components/selected-wrappe
 import { LayoutGrid } from "lucide-react";
 import { VIEW_COMPONENTS_TYPE } from "#components/friends/components/filtering/constants/view-components-type";
 import { DropdownMenuItem } from "@repo/ui/src/components/dropdown-menu.tsx";
-import { ChangeEvent, forwardRef, useState } from "react";
-import { Input } from "@repo/ui/src/components/input.tsx";
+import { ChangeEvent, useState } from "react";
+import { Input, InputProps } from "@repo/ui/src/components/input.tsx";
 import { FilteringSearchWrapper } from "#components/wrappers/components/filtering-search-wrapper";
-import { UserEntity } from "@repo/types/entities/entities-type.ts";
-import { useQueryClient } from "@tanstack/react-query";
 import {
-  PROFILE_THREADS_SORT_QUERY_KEY,
-  ProfileThreadsSettingsQuery,
-  ProfileThreadsViewType,
-  profileThreadsSettingsQuery,
-} from "#components/profile/threads/queries/profile-threads-settings-query.ts";
+  profileThreadsSettingsAtom,
+} from "#components/profile/threads/models/profile-threads-settings.model";
 import { useDebounce } from "@repo/lib/hooks/use-debounce.ts";
+import { reatomComponent } from "@reatom/npm-react";
+import { requestedUserParamAtom } from "#components/profile/requested-user.model";
 
-type ProfileThreadsFilteringProps = Pick<UserEntity, "nickname">;
-
-const ProfileThreadsFilteringView = () => {
-  const qc = useQueryClient();
-  const { data: profileThreadsViewState } = profileThreadsSettingsQuery();
-
-  const handleView = (type: ProfileThreadsViewType) => {
-    return qc.setQueryData(
-      PROFILE_THREADS_SORT_QUERY_KEY,
-      (prev: ProfileThreadsSettingsQuery) => ({
-        ...prev,
-        viewType: type,
-      }),
-    );
-  };
+const ProfileThreadsFilteringView = reatomComponent(({ ctx }) => {
+  const profileThreadsViewState = ctx.spy(profileThreadsSettingsAtom)
 
   return (
     <DropdownWrapper
@@ -54,7 +38,7 @@ const ProfileThreadsFilteringView = () => {
             {VIEW_COMPONENTS_TYPE.map(({ value, title, icon: Icon }) => (
               <DropdownMenuItem
                 key={value}
-                onClick={() => handleView(value)}
+                onClick={() => profileThreadsSettingsAtom(ctx, (state) => ({ ...state, viewType: value }))}
                 className="items-center gap-1"
               >
                 <Icon size={16} className="text-shark-300" />
@@ -74,56 +58,40 @@ const ProfileThreadsFilteringView = () => {
       }
     />
   );
-};
+}, "ProfileThreadsFilteringView")
 
-const ProfileThreadsFilteringSearch = forwardRef<HTMLInputElement>(
-  (props, ref) => {
-    const qc = useQueryClient();
-    const [value, setValue] = useState<string>("");
+const ProfileThreadsFilteringSearch = reatomComponent<InputProps>(({ ctx, ...props }) => {
+  const [value, setValue] = useState<string>("");
 
-    const updateQuery = (value: string) => {
-      return qc.setQueryData(
-        PROFILE_THREADS_SORT_QUERY_KEY,
-        (prev: ProfileThreadsSettingsQuery) => ({
-          ...prev,
-          querySearch: value,
-        }),
-      );
-    };
+  const debouncedUpdateQuery = useDebounce((value: string) =>
+    profileThreadsSettingsAtom(ctx, (state) => ({ ...state, querySearch: value })
+    ), 300);
 
-    const debouncedUpdateQuery = useDebounce(updateQuery, 300);
+  const handleSearchInput = (e: ChangeEvent<HTMLInputElement>) => {
+    const { value } = e.target;
+    setValue(value);
+    debouncedUpdateQuery(value);
+  };
 
-    const handleSearchInput = (e: ChangeEvent<HTMLInputElement>) => {
-      const { value } = e.target;
-      setValue(value);
-      debouncedUpdateQuery(value);
-    };
+  return (
+    <Input
+      className="rounded-lg"
+      value={value}
+      maxLength={96}
+      placeholder="Поиск по названию"
+      onChange={handleSearchInput}
+      {...props}
+    />
+  );
+}, "ProfileThreadsFilteringSearch")
 
-    return (
-      <Input
-        ref={ref}
-        className="rounded-lg"
-        value={value}
-        maxLength={96}
-        placeholder="Поиск по названию"
-        onChange={handleSearchInput}
-        {...props}
-      />
-    );
-  },
-);
+export const ProfileThreadsFiltering = reatomComponent(({ ctx }) => {
+  const nickname = ctx.spy(requestedUserParamAtom)!
 
-export const ProfileThreadsFiltering = ({
-  nickname,
-}: ProfileThreadsFilteringProps) => {
   return (
     <div className="flex w-full justify-between h-14 items-center">
       <div className="flex items-center gap-1 w-fit">
-        <Typography
-          textColor="shark_white"
-          textSize="big"
-          className="font-semibold"
-        >
+        <Typography textColor="shark_white" textSize="big" className="font-semibold" >
           Треды {nickname}
         </Typography>
       </div>
@@ -137,4 +105,4 @@ export const ProfileThreadsFiltering = ({
       </div>
     </div>
   );
-};
+}, "ProfileThreadsFiltering")

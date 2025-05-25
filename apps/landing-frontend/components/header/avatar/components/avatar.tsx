@@ -4,8 +4,8 @@ import { Typography } from '@repo/ui/src/components/typography.tsx';
 import { userAvatarQuery } from '../queries/avatar-query.ts';
 import ExpActive from '@repo/assets/images/minecraft/exp-active.webp';
 import ExpNoActive from '@repo/assets/images/minecraft/exp-noactive.webp';
-import { userStatusQuery } from '@repo/lib/queries/user-status-query.ts';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@repo/ui/src/components/tooltip.tsx';
+import { userStatusQuery } from '../queries/user-status-query.ts';
 
 const avatarVariants = cva('relative rounded-lg border border-shark-600/20', {
   variants: {

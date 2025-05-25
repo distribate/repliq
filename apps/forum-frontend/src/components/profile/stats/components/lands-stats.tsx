@@ -1,5 +1,5 @@
 import { Typography } from "@repo/ui/src/components/typography.tsx";
-import { landsStatsQuery } from "../queries/lands-stats-query.ts";
+import {landsStatsResource } from "../models/lands-stats.model.ts";
 import {
   Accordion,
   AccordionContent,
@@ -11,18 +11,23 @@ import { ProfileStatsLayout } from "#components/profile/stats/components/profile
 import { Skeleton } from "@repo/ui/src/components/skeleton.tsx";
 import { SomethingError } from "#components/templates/components/something-error.tsx";
 import { Avatar } from "#components/user/avatar/components/avatar.tsx";
-import { Suspense } from "react";
-import { UserNickname } from "#components/user/name/components/nickname.tsx";
+import { UserNickname } from "#components/user/name/nickname.tsx";
 import { Link } from "@tanstack/react-router";
 import { USER_URL } from "@repo/shared/constants/routes.ts";
 import Charism from "@repo/assets/images/minecraft/charism_wallet.png"
+import { onConnect } from "@reatom/framework";
+import { reatomComponent } from "@reatom/npm-react";
 
 const LandsStatsSkeleton = () => (
   <Skeleton className="flex flex-col h-[400px] gap-y-2 rounded-md px-4 py-2" />
 );
 
-export const LandsStats = ({ nickname }: { nickname: string }) => {
-  const { data: lands, isLoading, isError } = landsStatsQuery(nickname);
+onConnect(landsStatsResource.dataAtom, landsStatsResource)
+
+export const LandsStats = reatomComponent(({ ctx }) => {
+  const lands = ctx.spy(landsStatsResource.dataAtom)
+  const isLoading = ctx.spy(landsStatsResource.statusesAtom).isPending;
+  const isError = ctx.spy(landsStatsResource.statusesAtom).isRejected;
 
   if (isLoading) return <LandsStatsSkeleton />;
   if (isError) return <SomethingError />;
@@ -66,20 +71,18 @@ export const LandsStats = ({ nickname }: { nickname: string }) => {
                         key={nickname}
                         className="flex items-center gap-2 p-2 rounded-md bg-shark-900 w-full lg:w-2/3"
                       >
-                        <Suspense fallback={<Skeleton className="w-[42px] h-[42px]" />}>
-                          <Link to={USER_URL + nickname}>
-                            <Avatar
-                              rounded="medium"
-                              className="min-w-[42px] min-h-[42px]"
-                              propHeight={42}
-                              propWidth={42}
-                              nickname={nickname}
-                            />
-                          </Link>
-                        </Suspense>
+                        <Link to={USER_URL + nickname}>
+                          <Avatar
+                            rounded="medium"
+                            className="min-w-[42px] min-h-[42px]"
+                            propHeight={42}
+                            propWidth={42}
+                            nickname={nickname}
+                          />
+                        </Link>
                         <div className="flex flex-col">
                           <Link to={USER_URL + nickname}>
-                            <UserNickname nickname={nickname}/>
+                            <UserNickname nickname={nickname} />
                           </Link>
                           <Typography className="text-shark-300">
                             {chunks} чанков
@@ -101,4 +104,4 @@ export const LandsStats = ({ nickname }: { nickname: string }) => {
       ))}
     </Accordion>
   );
-};
+}, "LandsStats")

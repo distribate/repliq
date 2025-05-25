@@ -3,31 +3,27 @@ import { Input } from "@repo/ui/src/components/input.tsx";
 import { Info } from "lucide-react";
 import { Typography } from "@repo/ui/src/components/typography.tsx";
 import { ThreadDetailed } from "@repo/types/entities/thread-type.ts";
-import { useQueryClient } from "@tanstack/react-query";
-import { THREAD_CONTROL_QUERY_KEY, ThreadControlQuery } from "../queries/thread-control-query";
+import { reatomComponent } from "@reatom/npm-react";
+import { threadControlAtom } from "../models/thread-control.model";
 
 type ThreadControlTitleProps = Pick<ThreadDetailed, "title">;
 
-export const ThreadControlTitle = ({
-  title: currentTitle,
-}: ThreadControlTitleProps) => {
-  const qc = useQueryClient();
+export const ThreadControlTitle = reatomComponent<ThreadControlTitleProps>(({
+  ctx, title: currentTitle,
+}) => {
   const [titleValue, setTitleValue] = useState<string>(currentTitle);
 
   const onChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { value } = e.target;
     setTitleValue(value);
 
-    return qc.setQueryData(
-      THREAD_CONTROL_QUERY_KEY,
-      (prev: ThreadControlQuery) => ({
-        state: {
-          ...prev.state,
-          isValid: value.length > 2,
-        },
-        values: { ...prev.values },
-      }),
-    )
+    threadControlAtom(ctx, (prev) => ({
+      state: {
+        ...prev.state,
+        isValid: value.length > 2,
+      },
+      values: { ...prev.values },
+    }))
   };
 
   return (
@@ -49,4 +45,4 @@ export const ThreadControlTitle = ({
       </div>
     </div>
   );
-};
+}, "ThreadControlTitle")

@@ -1,6 +1,6 @@
-import { keepPreviousData, useQuery } from '@tanstack/react-query';
-import { createQueryKey } from '@repo/lib/helpers/query-key-builder.ts';
 import { forumCategoriesClient } from '@repo/shared/api/forum-client.ts';
+import { reatomAsync, withDataAtom, withStatusesAtom } from '@reatom/async';
+import { atom } from '@reatom/core';
 
 async function getCategoryThreads({
   id, limit = 12, cursor, ascending = true
@@ -12,34 +12,22 @@ async function getCategoryThreads({
 }) {
   const res = await forumCategoriesClient.categories["get-category-threads"][":id"].$get({
     param: { id },
-    query: {
-      limit: `${limit}`, 
-      ascending: `${ascending}`,
-      cursor
-    }
+    query: { limit: `${limit}`, ascending: `${ascending}`, cursor }
   })
 
   const data = await res.json()
 
-  if ("error" in data) {
-    return null;
-  }
+  if ("error" in data) return null;
 
   return data.data;
 }
 
-export const CATEGORY_THREADS_QUERY_KEY = (categoryId: string) =>
-  createQueryKey('ui', ['category-threads'], categoryId);
+export const cursorAtom = atom<string | null>(null, "categoryThreadCursor")
+export const limitAtom = atom<number>(12, "categoryThreadLimit")
 
-export const categoryThreadsQuery = ({
-  id, limit = 12, cursor,
-}: {
-  id: string,
-  limit?: number,
-  cursor?: string
-}) => useQuery({
-  queryKey: CATEGORY_THREADS_QUERY_KEY(id),
-  queryFn: () => getCategoryThreads({ id, limit, cursor }),
-  refetchOnWindowFocus: false,
-  placeholderData: keepPreviousData
-});
+export const categoryThreadsAction = reatomAsync(async (ctx, id: string) => {
+  const limit = ctx.get(limitAtom)
+  const cursor = ctx.get(cursorAtom)
+
+  return await ctx.schedule(() => getCategoryThreads({ id, limit, cursor: cursor ?? undefined }))
+}, "categoryThreadsAction").pipe(withDataAtom(), withStatusesAtom())

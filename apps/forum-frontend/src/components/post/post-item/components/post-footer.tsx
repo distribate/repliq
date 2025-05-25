@@ -4,6 +4,7 @@ import { lazy } from "react";
 import { PostFooterViews } from "#components/post/post-item/components/post-footer-views.tsx";
 import type { UserPostItem } from '@repo/types/routes-types/get-user-posts-types.ts';
 import dayjs from "@repo/lib/constants/dayjs-instance";
+import { reatomComponent } from "@reatom/npm-react";
 
 type PostFooterProps = Pick<UserPostItem, "views_count" | "isUpdated" | "id" | "isViewed" | "nickname" | "created_at">
 
@@ -13,10 +14,10 @@ const PostFooterWithViewsList = lazy(() =>
   })),
 );
 
-export const PostFooter = ({
-  views_count, isUpdated, id, nickname, created_at
-}: PostFooterProps) => {
-  const currentUser = getUser();
+export const PostFooter = reatomComponent<PostFooterProps>(({
+  ctx, views_count, isUpdated, id, nickname, created_at
+}) => {
+  const currentUser = getUser(ctx);
 
   const isOwner = nickname === currentUser.nickname;
 
@@ -36,4 +37,4 @@ export const PostFooter = ({
       </div>
     </div>
   );
-};
+}, "PostFooter")

@@ -2,7 +2,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { createIssueSchema } from "@repo/types/schemas/issue/create-issue-schema";
 import { Controller, useForm } from "react-hook-form";
 import { z } from "zod"
-import { useCreateIssue } from "../hooks/use-create-issue";
+import { createIssueAction } from "../hooks/use-create-issue";
 import { Input } from "@repo/ui/src/components/input";
 import { Button } from "@repo/ui/src/components/button";
 import { Typography } from "@repo/ui/src/components/typography";
@@ -12,6 +12,7 @@ import { BlockWrapper } from "#components/wrappers/components/block-wrapper";
 import { MessageSquareWarning } from "lucide-react";
 import AutogrowingTextarea from "@repo/ui/src/components/autogrowing-textarea";
 import { ISSUE_MAX_DESCRIPTION_LIMIT } from "@repo/shared/constants/limits";
+import { reatomComponent } from "@reatom/npm-react";
 
 type IssueFormType = z.infer<typeof createIssueSchema>;
 
@@ -45,9 +46,7 @@ const Badge = ({
   )
 }
 
-export const CreateIssueForm = () => {
-  const { createIssueMutation } = useCreateIssue()
-
+export const CreateIssueForm = reatomComponent(({ ctx }) => {
   const { formState: { errors, isValid }, control, setValue, reset, handleSubmit, getValues, watch } = useForm<IssueFormType>({
     resolver: zodResolver(createIssueSchema)
   });
@@ -55,13 +54,12 @@ export const CreateIssueForm = () => {
   const onSubmit = async () => {
     const values = getValues()
 
-    return createIssueMutation
-      .mutateAsync(values)
-      .then((res) => {
-        if (!("error" in res)) {
-          reset({ type: undefined, title: "", description: "", })
-        }
-      })
+    return createIssueAction(ctx, values).then(res => {
+      if ("error" in res) {
+        return
+      }
+      reset()
+    })
   }
 
   const currentIssueType = watch("type")
@@ -131,8 +129,8 @@ export const CreateIssueForm = () => {
           </div>
           <Button
             variant="positive"
-            disabled={createIssueMutation.isPending || !isValid}
-            pending={createIssueMutation.isPending}
+            disabled={ctx.spy(createIssueAction.statusesAtom).isPending || !isValid}
+            pending={ctx.spy(createIssueAction.statusesAtom).isPending}
             className="max-w-44 w-full py-3 bg-[#088d47]/80 hover:bg-[#05b458]/80 self-end"
           >
             <Typography className="text-[18px] font-medium">
@@ -168,4 +166,4 @@ export const CreateIssueForm = () => {
       </BlockWrapper>
     </div>
   )
-};
+}, "CreateIssueForm")

@@ -1,42 +1,61 @@
 import { ThreadEntity } from "@repo/types/entities/entities-type.ts";
 import { REACTIONS } from "@repo/shared/constants/emojis";
-import { threadReactionsQuery } from "../queries/thread-reactions-query";
 import { ThreadReactionsSkeleton } from "./thread-reactions-skeleton";
 import { ThreadReactionItem } from "./thread-reaction-item";
+import { reatomComponent, useUpdate } from "@reatom/npm-react";
+import { threadReactionsAction, threadReactionsAtom } from "../models/thread-reactions.model";
+import { threadParamAtom } from "#components/thread/thread-main/models/thread.model";
 
 type ThreadRatingProps = {
   threadId: Pick<ThreadEntity, "id">["id"];
 };
 
-export const ThreadReactions = ({ threadId }: ThreadRatingProps) => {
-  const { data, isLoading } = threadReactionsQuery(threadId);
+const Sync = ({ target }: { target: string }) => {
+  useUpdate((ctx) => threadReactionsAction(ctx, target), [target])
+  return null;
+}
 
-  if (isLoading) return <ThreadReactionsSkeleton />;
+const Reactions = reatomComponent(({ ctx }) => {
+  const threadId = ctx.spy(threadParamAtom)
+  const data = ctx.spy(threadReactionsAtom)
 
-  if (!threadId || !data) return null;
+  if (!data || !threadId) return null;
 
   const userReactions = data.userReactions ?? { reactions: [] };
-  const threadReactions = data.threadReactions.reactions ?? { };
+  const threadReactions = data.threadReactions.reactions ?? {};
 
   return (
-    <div className="flex items-center w-fit gap-2">
-      {Object.keys(threadReactions).map((emojiName) => {
-        const count = threadReactions[emojiName];
-        const isLiked = userReactions.reactions.includes(emojiName) ? true : false;
+    ctx.spy(threadReactionsAction.statusesAtom).isPending ? (
+      <ThreadReactionsSkeleton />
+    ) : (
+      <div className="flex items-center w-fit gap-2">
+        {Object.keys(threadReactions).map((emojiName) => {
+          const count = threadReactions[emojiName];
+          const isLiked = userReactions.reactions.includes(emojiName) ? true : false;
 
-        const Icon = REACTIONS[emojiName];
+          const Icon = REACTIONS[emojiName];
 
-        return (
-          <ThreadReactionItem
-            key={emojiName}
-            isLiked={isLiked}
-            threadId={threadId}
-            emoji={emojiName}
-            reactionCount={count}
-            Icon={Icon}
-          />
-        );
-      })}
-    </div>
+          return (
+            <ThreadReactionItem
+              key={emojiName}
+              isLiked={isLiked}
+              threadId={threadId}
+              emoji={emojiName}
+              reactionCount={count}
+              Icon={Icon}
+            />
+          );
+        })}
+      </div>
+    )
   )
-};
+})
+
+export const ThreadReactions = ({ threadId }: ThreadRatingProps) => {
+  return (
+    <>
+      <Sync target={threadId} />
+      <Reactions/>
+    </>
+  )
+}

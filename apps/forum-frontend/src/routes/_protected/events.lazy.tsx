@@ -10,15 +10,7 @@ import CharismIcon from "@repo/assets/images/minecraft/charism_wallet.png"
 export const Route = createLazyFileRoute('/_protected/events')({
   component: RouteComponent,
   // @ts-ignore
-  head: () => {
-    return {
-      meta: [
-        {
-          title: 'Ивенты',
-        },
-      ],
-    }
-  },
+  head: () => ({ meta: [{ title: 'Ивенты', }] }),
 })
 
 // <div className="flex w-full items-center justify-center h-full gap-12 px-12 py-6 relative">
@@ -30,11 +22,7 @@ export const Route = createLazyFileRoute('/_protected/events')({
 //   </div>
 // </div>
 
-type CharismProps = {
-  amount: number
-}
-
-const Charism = ({ amount }: CharismProps) => {
+const Charism = ({ amount }: { amount: number }) => {
   return (
     <div className="flex items-center gap-1">
       <img src={CharismIcon} alt="" width={32} height={32} />

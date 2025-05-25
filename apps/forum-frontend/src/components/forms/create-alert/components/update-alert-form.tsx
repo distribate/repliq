@@ -1,6 +1,5 @@
 import { AlertEntity } from "@repo/types/entities/entities-type.ts";
 import { useState } from "react";
-import { useAlerts } from "../hooks/use-alerts.ts";
 import { Input } from "@repo/ui/src/components/input.tsx";
 import { Button } from "@repo/ui/src/components/button.tsx";
 import { Typography } from "@repo/ui/src/components/typography.tsx";
@@ -8,10 +7,9 @@ import { DialogClose } from "@repo/ui/src/components/dialog.tsx";
 import { AlertValues } from "./create-alert-form.tsx";
 
 export const AlertUpdateForm = ({
-  id, description, link, title,
+  description, link, title,
 }: Omit<AlertEntity, "created_at" | "creator">) => {
   const [alertValues, setAlertValues] = useState<AlertValues>({ title: title, description: description, link: link });
-  const { updateAlertMutation } = useAlerts();
 
   const handleInputChange =
     (field: keyof typeof alertValues) =>
@@ -20,12 +18,10 @@ export const AlertUpdateForm = ({
     };
 
   const handleUpdateAlert = () => {
-    updateAlertMutation.mutate({
-      ...alertValues, id,
-    });
+ 
   };
 
-  const isDisabled = updateAlertMutation.isPending;
+  const isDisabled = false;
 
   return (
     <>

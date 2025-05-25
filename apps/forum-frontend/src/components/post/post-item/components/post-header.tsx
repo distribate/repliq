@@ -1,13 +1,11 @@
 import { Typography } from "@repo/ui/src/components/typography.tsx";
 import { Avatar } from "#components/user/avatar/components/avatar.tsx";
-import { UserNickname } from "#components/user/name/components/nickname";
+import { UserNickname } from "#components/user/name/nickname";
 import { Link } from "@tanstack/react-router";
 import dayjs from "@repo/lib/constants/dayjs-instance.ts";
 import { USER_URL } from "@repo/shared/constants/routes.ts";
 import { Pin } from "lucide-react";
 import type { UserPostItem } from '@repo/types/routes-types/get-user-posts-types.ts';
-import { Suspense } from "react";
-import { Skeleton } from "@repo/ui/src/components/skeleton";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@repo/ui/src/components/tooltip";
 
 type PostItemHeaderProps = Pick<UserPostItem, "visibility" | "isPinned" | "created_at" | "nickname">;
@@ -19,16 +17,14 @@ export const PostItemHeader = ({
 
   return (
     <div className="flex gap-3 items-center">
-      <Suspense fallback={<Skeleton className="w-[48px] h-[48px]" />}>
-        <Link to={USER_URL + nickname}>
-          <Avatar
-            variant="page"
-            propHeight={48}
-            propWidth={48}
-            nickname={nickname}
-          />
-        </Link>
-      </Suspense>
+      <Link to={USER_URL + nickname}>
+        <Avatar
+          variant="page"
+          propHeight={48}
+          propWidth={48}
+          nickname={nickname}
+        />
+      </Link>
       <div className="flex flex-col">
         <div className="flex items-center gap-2">
           <Link to={USER_URL + nickname}>

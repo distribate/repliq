@@ -2,37 +2,34 @@ import { Typography } from "@repo/ui/src/components/typography.tsx";
 import { THREAD_URL } from "@repo/shared/constants/routes.ts";
 import { MessageSquare, Text } from "lucide-react";
 import dayjs from "@repo/lib/constants/dayjs-instance.ts";
-import { profileThreadsSettingsQuery } from "#components/profile/threads/queries/profile-threads-settings-query.ts";
+import { profileThreadsSettingsAtom, } from "#components/profile/threads/models/profile-threads-settings.model";
 import { Link } from "@tanstack/react-router";
 import { Button } from "@repo/ui/src/components/button";
+import { reatomComponent } from "@reatom/npm-react";
 
-interface ThreadCardProps {
-  thread: {
-    id: string;
-    title: string;
-    created_at: string;
-    comments_count: number;
-  }
+type ThreadCardProps = {
+  id: string;
+  title: string;
+  created_at: string;
+  comments_count: number;
 }
 
-export const ProfileThreadsListCard = ({ thread }: ThreadCardProps) => {
-  const { data: profileThreadsViewState } = profileThreadsSettingsQuery();
+export const ProfileThreadsListCard = reatomComponent<ThreadCardProps>(({ id, title, comments_count, created_at, ctx }) => {
+  const profileThreadsViewState = ctx.spy(profileThreadsSettingsAtom)
   const { viewType } = profileThreadsViewState;
-
-  const { id, title, created_at, comments_count } = thread;
-  const isGrid = viewType === "grid";
-
+ 
   return (
     <div
-      className={`${isGrid ? "flex-col" : ""} flex items-center justify-between bg-shark-950 p-2 lg:p-4 rounded-lg gap-4 w-full`}
+      data-state={viewType === "grid" ? "grid" : "default"}
+      className="flex data-[state=grid]:flex-col items-center group justify-between bg-shark-950 p-2 lg:p-4 rounded-lg gap-4 w-full"
     >
-      <div className={`${isGrid ? "w-full" : "w-1/2 lg:w-2/3"} flex flex-col gap-2`}>
+      <div 
+        className="flex flex-col gap-2 
+          group-data-[state=grid]:w-full group-data-[state=default]:w-1/2 group-data-[state=default]:lg:w-2/3"
+      >
         <div className="flex items-center gap-1 w-full relative -left-[2px]">
           <Text size={20} className="text-shark-300" />
-          <Typography
-            textColor="shark_white"
-            className="font-medium text-[20px] truncate"
-          >
+          <Typography textColor="shark_white" className="font-medium text-[20px] truncate">
             {title}
           </Typography>
         </div>
@@ -68,4 +65,4 @@ export const ProfileThreadsListCard = ({ thread }: ThreadCardProps) => {
       </Link>
     </div>
   )
-};
+}, "ProfileThreadsListCard")

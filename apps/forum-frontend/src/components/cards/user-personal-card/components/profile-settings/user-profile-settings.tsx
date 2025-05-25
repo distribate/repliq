@@ -11,9 +11,10 @@ import { DateBirthdayModal } from "#components/modals/user-settings/components/d
 import { getUser } from "@repo/lib/helpers/get-user.ts";
 import { UserSettingOption } from "#components/cards/user-setting-option-card/components/user-setting-option.tsx";
 import { UserSettingsBack } from "#components/modals/user-settings/components/user-settings-back.tsx";
+import { reatomComponent } from "@reatom/npm-react";
 
-export const UserProfileSettings = () => {
-  const { donate } = getUser();
+export const UserProfileSettings = reatomComponent(({ ctx }) => {
+  const { donate } = getUser(ctx);
   const isAccess = donate !== "default";
 
   return (
@@ -59,4 +60,4 @@ export const UserProfileSettings = () => {
       </div>
     </div>
   );
-};
+}, "UserProfileSettings")

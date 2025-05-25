@@ -1,21 +1,19 @@
 import { NavigationBadge } from "#components/navigation/components/navigation-badge.tsx"
-import { useUpdateNotifications } from "#components/notifications/hooks/use-update-notifications.ts"
-import { NOTIFICATIONS_FILTER_QUERY_KEY, NotificationsFilterQuery, notificationsFilterQuery } from "#components/notifications/queries/notifications-filter-query.ts"
-import { useQueryClient } from "@tanstack/react-query"
+import { notificationsFilterAtom, NotificationsFilterQuery } from "#components/notifications/models/notifications.model"
+import { reatomComponent } from "@reatom/npm-react"
+import { updateNotificationsAction } from "../models/notifications.model"
 
 type NotificationsSections = "system" | "requests" | "news"
 
-export const NotificationsNavigation = () => {
-  const qc = useQueryClient()
-  const { data: { type } } = notificationsFilterQuery()
-  const { updateNotificationsMutation } = useUpdateNotifications()
+export const NotificationsNavigation = reatomComponent(({ ctx }) => {
+  const { type } = ctx.spy(notificationsFilterAtom)
 
   const handleSection = (section: NotificationsSections) => {
-    qc.setQueryData(NOTIFICATIONS_FILTER_QUERY_KEY, (prev: NotificationsFilterQuery) => ({
-      ...prev, type: section, cursor: undefined
+    notificationsFilterAtom(ctx, (state: NotificationsFilterQuery) => ({
+      ...state, type: section, cursor: undefined
     }))
 
-    updateNotificationsMutation.mutate({ type: "update-filter" })
+    updateNotificationsAction(ctx, { type: "update-filter" })
   }
 
   const isActive = (input: NotificationsSections) => input === type ? "active" : "inactive"
@@ -27,4 +25,4 @@ export const NotificationsNavigation = () => {
       <NavigationBadge onClick={() => handleSection("news")} data-state={isActive("news")} title="Новости" />
     </div>
   )
-}
+}, "NotificationsNavigation")

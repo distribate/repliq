@@ -1,7 +1,8 @@
-import { DropdownWrapper, DropdownWrapperProps } from "./dropdown-wrapper.tsx";
+import { DropdownWrapperProps } from "./dropdown-wrapper.tsx";
 import { MoreVertical } from "lucide-react";
-import { forwardRef, HTMLAttributes } from "react";
+import { HTMLAttributes } from "react";
 import { cva, VariantProps } from "class-variance-authority";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from "@repo/ui/src/components/dropdown-menu.tsx";
 
 const moreWrapperVariants = cva(
   "flex backdrop-blur-lg rounded-md items-center justify-center",
@@ -24,33 +25,26 @@ const moreWrapperVariants = cva(
   },
 );
 
-interface MoreWrapperProps
-  extends Omit<DropdownWrapperProps, "trigger" | "content">,
-    HTMLAttributes<HTMLDivElement>,
-    VariantProps<typeof moreWrapperVariants> {}
+type MoreWrapperProps = Omit<DropdownWrapperProps, "trigger" | "content">
+  & HTMLAttributes<HTMLDivElement>
+  & VariantProps<typeof moreWrapperVariants>
 
-export const MoreWrapper = forwardRef<HTMLDivElement, MoreWrapperProps>(
-  ({ className, variant, background, ...props }, ref) => {
-    return (
-      <DropdownWrapper
-        trigger={
-          <div
-            className={moreWrapperVariants({ background, variant, className })}
-          >
-            <MoreVertical size={20} className="text-shark-300" />
-          </div>
-        }
-        content={
-          <div
-            ref={ref}
-            className="flex flex-col gap-y-2 w-full"
-            onClick={(e) => e.stopPropagation()}
-          >
-            {props.children}
-          </div>
-        }
-        {...props}
-      />
-    );
-  },
-);
+export const MoreWrapper = ({ className, variant, background, ...props }: MoreWrapperProps) => {
+  return (
+    <DropdownMenu modal={false}>
+      <DropdownMenuTrigger>
+        <div className={moreWrapperVariants({ background, variant, className })}>
+          <MoreVertical size={20} className="text-shark-300" />
+        </div>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent>
+        <div
+          className="flex flex-col gap-y-2 w-full"
+          onClick={(e) => e.stopPropagation()}
+        >
+          {props.children}
+        </div>
+      </DropdownMenuContent>
+    </DropdownMenu>
+  );
+}

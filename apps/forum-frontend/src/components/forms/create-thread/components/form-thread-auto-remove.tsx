@@ -1,15 +1,14 @@
 import { FormField } from "@repo/ui/src/components/form-field.tsx";
-import { threadFormQuery } from "../queries/thread-form-query.ts";
+import { threadFormAtom } from "../models/thread-form.model.ts";
 import { FormChildsProps } from "./form-thread.tsx";
 import { Typography } from "@repo/ui/src/components/typography.tsx";
-import { useEditThread } from "../hooks/use-edit-thread.tsx";
+import { reatomComponent } from "@reatom/npm-react";
 
 // @ts-ignore
-export const FormThreadAutoRemove = ({ 
-  control, errors 
-}: FormChildsProps) => {
-  const { data: threadFormState } = threadFormQuery();
-  const { updateThreadFormMutation } = useEditThread();
+export const FormThreadAutoRemove = reatomComponent<FormChildsProps>(({ 
+  ctx, control, errors
+}) => {
+  const threadFormState = ctx.spy(threadFormAtom)
 
   if (!threadFormState) return;
 
@@ -55,4 +54,4 @@ export const FormThreadAutoRemove = ({
       </div>
     </FormField>
   );
-};
+}, "FormThreadAutoRemove")
