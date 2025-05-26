@@ -1,15 +1,15 @@
 import { AlertEntity } from "@repo/types/entities/entities-type.ts";
 import { Typography } from "@repo/ui/src/components/typography.tsx";
-import { Link } from "@tanstack/react-router";
 import { USER_URL } from "@repo/shared/constants/routes";
 import { Skeleton } from "@repo/ui/src/components/skeleton";
 import { UserNickname } from "#components/user/name/nickname";
 import { DeleteButton } from "@repo/ui/src/components/detele-button.tsx";
-import { alertsResource } from "@repo/lib/queries/alerts.model"
 import { globalPreferencesAtom } from "@repo/lib/queries/global-preferences-query";
 import { reatomComponent } from "@reatom/npm-react";
 import { AlertCircle } from "lucide-react";
 import { updateVisibilityAction } from "@repo/lib/hooks/update-global-preferences.model" 
+import { CustomLink } from "#components/shared/link";
+import { alertsResource } from "./alert-widget.model";
 
 const AlertClose = reatomComponent(({ ctx }) => {
   return <DeleteButton variant="invisible" onClick={() => updateVisibilityAction(ctx, "alerts")} />;
@@ -42,9 +42,9 @@ const AlertCard = ({
         <span className="text-[14px] text-shark-50">
           Автор:{' '}
         </span>
-        <Link to={USER_URL + creator}>
+        <CustomLink to={USER_URL + creator}>
           <UserNickname nickname={creator} className="text-[14px]" />
-        </Link>
+        </CustomLink>
       </div>
       <AlertClose />
     </div>
@@ -52,7 +52,7 @@ const AlertCard = ({
 };
 
 const Alert = reatomComponent(({ ctx }) => {
-  if (ctx.spy(alertsResource.statusesAtom).isPending) return <Skeleton className="h-12 w-full" />
+  if (ctx.spy(alertsResource.statusesAtom).isPending) return <Skeleton className="w-full h-28" />
 
   const alert = ctx.spy(alertsResource.dataAtom)?.data[0]
 

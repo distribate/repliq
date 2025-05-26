@@ -8,10 +8,9 @@ import { Typography } from "@repo/ui/src/components/typography";
 import { UserLands } from "#components/cards/user-personal-card/components/lands/components/user-lands";
 import { UserProfileSettings } from "#components/cards/user-personal-card/components/profile-settings/user-profile-settings";
 import { UserAdvancedSettings } from "#components/modals/user-settings/components/user-advanced-settings";
-import { userSettingsAtom, UserSettingsDialog } from "#components/modals/user-settings/queries/user-settings-query";
-import { toggleGlobalDialogAction, updateDialogSectionAction } from "../hooks/use-user-settings-modal";
+import { userSettingsAtom, UserSettingsDialog } from "#components/modals/user-settings/models/user-settings.model";
+import { toggleGlobalDialogAction, updateDialogSectionAction } from "../models/update-user-settings.model";
 import { UserPersonalCardHeader } from "#components/modals/user-settings/components/user-header";
-import { Link } from "@tanstack/react-router";
 import { UserSettingOption } from "#components/cards/user-setting-option-card/components/user-setting-option";
 import Campfire from "@repo/assets/images/minecraft/campfire.webp";
 import BookAndQuill from "@repo/assets/images/minecraft/book_quill.webp";
@@ -24,6 +23,7 @@ import MinecartWithChest from "@repo/assets/images/minecraft/minecart_chest.webp
 import { UserAccountSettingsCard } from "./user-account-settings";
 import { Separator } from "@repo/ui/src/components/separator.tsx"
 import { reatomComponent } from "@reatom/npm-react";
+import { CustomLink } from "#components/shared/link";
 
 const Main = reatomComponent(({ ctx }) => {
   const handleUpdate = (to: UserSettingsDialog["current"]) => updateDialogSectionAction(ctx, to)
@@ -56,16 +56,16 @@ const Main = reatomComponent(({ ctx }) => {
           }
         />
         <Separator />
-        <a href="https://fasberry.su/wiki" target="_blank">
+        <a href="https://fasberry.su/wiki" rel="noreferrer" target="_blank">
           <DialogClose className="w-full">
             <UserSettingOption title="Вики" imageSrc={Portfolio} />
           </DialogClose>
         </a>
-        <Link to="/create-ticket">
+        <CustomLink to="/create-ticket">
           <DialogClose className="w-full">
             <UserSettingOption title="Задать вопрос" imageSrc={FishingRod} />
           </DialogClose>
-        </Link>
+        </CustomLink>
       </div>
     </div>
   )

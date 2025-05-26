@@ -25,7 +25,7 @@ const UserDescription = reatomComponent(({ ctx }) => {
 
 export const UserCoverLayout = reatomComponent<PropsWithChildren>(({ ctx, children }) => {
   const inView = ctx.spy(coverAtom).inView
-  const isLoading = ctx.spy(requestedUserAction.statusesAtom).isPending || !ctx.spy(requestedUserAtom)
+  const isLoading = ctx.spy(requestedUserAction.statusesAtom).isPending
   const status = ctx.spy(requestedUserProfileStatusAtom)
 
   return (

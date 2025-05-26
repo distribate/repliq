@@ -7,12 +7,12 @@ import {
 import { DropdownWrapper } from "#components/wrappers/components/dropdown-wrapper";
 import { PostAdditionalModal } from "#components/modals/custom/components/post-additional-modal";
 import { PostEntity, UserEntity } from "@repo/types/entities/entities-type.ts";
-import { controlPostAction } from "#components/post/post-item/hooks/use-control-post.ts";
+import { controlPostAction } from "#components/post/post-item/models/control-post.model";
 import { getUser } from "@repo/lib/helpers/get-user.ts";
 import { ReportCreateModal } from "#components/modals/action-confirmation/components/report/components/report-create-modal.tsx";
 import {
   editPostsControlAtom,
-} from "#components/post/post-item/queries/post-control-query.ts";
+} from "#components/post/post-item/models/post-control.model";
 import { Typography } from "@repo/ui/src/components/typography.tsx";
 import { Cloud } from "lucide-react";
 import { reatomComponent } from "@reatom/npm-react";

@@ -12,12 +12,9 @@ import { FriendsAllListSkeleton } from "#components/skeletons/components/friends
 import { updateFriendsAction } from "#components/friends/models/update-friends.model.ts";
 import { useInView } from "react-intersection-observer";
 import { reatomComponent, useUpdate } from "@reatom/npm-react";
-import { onConnect, onDisconnect } from "@reatom/framework";
+import { onConnect } from "@reatom/framework";
 
 onConnect(myFriendsAction, myFriendsAction)
-
-onDisconnect(myFriendsDataAtom, myFriendsDataAtom.reset)
-onDisconnect(myFriendsMetaAtom, myFriendsMetaAtom.reset)
 
 const SyncInView = ({ inView }: { inView: boolean }) => {
   useUpdate((ctx) => {
@@ -64,7 +61,7 @@ export const FriendsAllList = reatomComponent(({ ctx }) => {
   return (
     <FriendsListLayout>
       {isLoading ? <FriendsAllListSkeleton /> : (
-        data.length >= 1 ? <List /> : <ContentNotFound title="Пока нет друзей" />
+        data && data.length >= 1 ? <List /> : <ContentNotFound title="Пока нет друзей" />
       )}
     </FriendsListLayout>
   );

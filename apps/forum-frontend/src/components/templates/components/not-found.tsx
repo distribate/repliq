@@ -1,7 +1,7 @@
+import { CustomLink } from '#components/shared/link'
 import { PageWrapper } from '#components/wrappers/components/page-wrapper'
 import AdventureInBlossom from '@repo/assets/images/adventure-in-blossom.jpg'
 import Compass from '@repo/assets/images/minecraft/compass.webp'
-import { Link } from '@tanstack/react-router'
 
 export const NotFound = () => {
   return (
@@ -21,7 +21,7 @@ export const NotFound = () => {
           Ресурс не найден {`;(`}
         </p>
         <div className="flex py-0.5 rounded-xl items-center gap-1 justify-between bg-white/30 backdrop-blur-md overflow-hidden">
-          <Link to="/">
+          <CustomLink to="/">
             <div className="flex px-3 gap-1 cursor-pointer items-center hover:bg-secondary-color transition-all duration-150 ease-in max-h-[42px]">
               <img
                 src={Compass}
@@ -33,7 +33,7 @@ export const NotFound = () => {
               />
               <p className="text-md font-semibold font-[Minecraft] text-shark-200">главная</p>
             </div>
-          </Link>
+          </CustomLink>
         </div>
       </div>
     </PageWrapper>

@@ -13,7 +13,6 @@ import { reatomLoader } from '@repo/lib/utils/reatom-loader';
 import {
   requestedUserSectionIsPrivatedAtom,
   requestedUserAction,
-  requestedUserAtom,
   requestedUserGameStatsVisibleAtom,
   requestedUserIsSameAtom,
   requestedUserParamAtom,
@@ -114,8 +113,7 @@ const TabsListContent = reatomComponent(({ ctx }) => {
 }, "TabsListContent")
 
 const ProfileContentTabs = reatomComponent(({ ctx }) => {
-  const requestedUser = ctx.spy(requestedUserAtom)
-  const isLoading = ctx.spy(requestedUserAction.statusesAtom).isPending || !requestedUser
+  const isLoading = ctx.spy(requestedUserAction.statusesAtom).isPending
 
   if (isLoading) return <UserContentSkeleton />
 

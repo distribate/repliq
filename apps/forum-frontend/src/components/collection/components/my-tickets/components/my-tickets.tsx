@@ -6,10 +6,10 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from "@repo/ui
 import { UserNickname } from "#components/user/name/nickname"
 import dayjs from "@repo/lib/constants/dayjs-instance"
 import { Separator } from "@repo/ui/src/components/separator"
-import { Link } from "@tanstack/react-router"
 import { USER_URL } from "@repo/shared/constants/routes"
 import { myTicketsResource } from "../queries/my-tickets-query"
 import { reatomComponent } from "@reatom/npm-react"
+import { CustomLink } from "#components/shared/link"
 
 export const MyTickets = reatomComponent(({ ctx }) => {
   const data = ctx.spy(myTicketsResource.dataAtom)
@@ -24,7 +24,7 @@ export const MyTickets = reatomComponent(({ ctx }) => {
     )
   }
 
-  if (!data || ctx.spy(myTicketsResource.statusesAtom).isRejected) {
+  if (!data || !data.length) {
     return (
       <div className="flex flex-col h-full items-center justify-center gap-4 p-4 w-full">
         <img src={FancyFeather} alt="" width={96} height={96} />
@@ -42,7 +42,7 @@ export const MyTickets = reatomComponent(({ ctx }) => {
   return (
     <div className="flex flex-col h-full gap-4 w-full">
       {data?.map(ticket => (
-        <div className="flex items-center justify-between gap-4 bg-shark-950 py-2 lg:py-4 px-4 lg:px-6 rounded-lg w-full h-20">
+        <div key={ticket.id} className="flex items-center justify-between gap-4 bg-shark-950 py-2 lg:py-4 px-4 lg:px-6 rounded-lg w-full h-20">
           <div className="flex items-center gap-2 lg:gap-4">
             <Avatar nickname={ticket.user_nickname} className="min-h-[56px] min-w-[56px]" propWidth={56} propHeight={56} />
             <Typography>
@@ -73,12 +73,12 @@ export const MyTickets = reatomComponent(({ ctx }) => {
                         Рассмотрен:
                       </Typography>
                       <div className="flex items-center gap-2">
-                        <Link to={USER_URL + ticket.approved_by}>
+                        <CustomLink to={USER_URL + ticket.approved_by}>
                           <Avatar nickname={ticket.approved_by} propWidth={36} propHeight={36} />
-                        </Link>
-                        <Link to={USER_URL + ticket.approved_by}>
+                        </CustomLink>
+                        <CustomLink to={USER_URL + ticket.approved_by}>
                           <UserNickname nickname={ticket.approved_by} />
-                        </Link>
+                        </CustomLink>
                       </div>
                       <Typography>
                         Одобрен {dayjs(ticket.approved_at).format("DD.MM.YYYY HH:mm")}

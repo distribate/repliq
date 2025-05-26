@@ -24,7 +24,7 @@ export const FriendsTab = reatomComponent<FriendsTabProps>(({ ctx, children, typ
       <Typography textSize="medium" className="font-medium">
         {title}
       </Typography>
-      {children && children}
+      {children}
     </div>
   );
 }, "FriendsTab")

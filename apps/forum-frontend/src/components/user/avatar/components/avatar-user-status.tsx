@@ -19,7 +19,7 @@ export const AvatarUserStatus = reatomComponent<{ nickname: string }>(({ ctx, ni
       <SyncUserStatus target={nickname} />
       <TooltipProvider>
         <Tooltip delayDuration={1}>
-          <TooltipTrigger className="min-w-[18px] min-h-[18px] absolute -bottom-2 -right-2 max-h-[32px] max-w-[32px]">
+          <TooltipTrigger className="min-w-[18px] min-h-[18px] absolute -bottom-2 -right-2 max-h-[26px] max-w-[26px] md:max-h-[32px] md:max-w-[32px]">
             {!ctx.spy(userStatusAction.statusesAtom).isPending && (
               <img
                 src={isOnline ? ExpActive : ExpNoActive}
@@ -30,18 +30,12 @@ export const AvatarUserStatus = reatomComponent<{ nickname: string }>(({ ctx, ni
               />
             )}
           </TooltipTrigger>
-          <TooltipContent side="bottom">
-            <div className="flex flex-col gap-1">
-              {userStatus ? (
-                <Typography>
-                  {isOnline ? `Онлайн` : userStatus.issuedTime}
-                </Typography>
-              ) : (
-                <Typography>
-                  Был давно
-                </Typography>
-              )}
-            </div>
+          <TooltipContent side="bottom" className="flex flex-col gap-1">
+            {userStatus ? (
+              <Typography>{isOnline ? `Онлайн` : userStatus.issuedTime}</Typography>
+            ) : (
+              <Typography>Был давно</Typography>
+            )}
           </TooltipContent>
         </Tooltip>
       </TooltipProvider>

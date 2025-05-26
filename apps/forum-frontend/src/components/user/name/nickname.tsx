@@ -1,31 +1,19 @@
-import { cva, VariantProps } from "class-variance-authority";
 import { HTMLAttributes } from "react";
 import { Typography } from "@repo/ui/src/components/typography.tsx";
-
-const nicknameVariants = cva("font-[Minecraft]", {
-  variants: {
-    variant: {
-      default: "",
-    },
-  },
-  defaultVariants: {
-    variant: "default",
-  },
-});
+import { cn } from "@repo/lib/utils/ui/cn";
 
 type UserNickname = {
   nickname: string;
   nicknameColor?: string;
 };
 
-type UserNicknameProps = HTMLAttributes<HTMLParagraphElement> 
-  & VariantProps<typeof nicknameVariants> & UserNickname
+type UserNicknameProps = HTMLAttributes<HTMLParagraphElement> & UserNickname
 
 export const UserNickname = ({
-  nickname, nicknameColor = "#ffffff", className, variant, ...props
+  nickname, nicknameColor = "#ffffff", className, ...props
 }: UserNicknameProps) => {
   return (
-    <Typography className={nicknameVariants({ variant, className })} style={{ color: nicknameColor }} {...props}>
+    <Typography className={cn("font-[Minecraft]", className)} style={{ color: nicknameColor }} {...props}>
       {nickname}
     </Typography>
   );

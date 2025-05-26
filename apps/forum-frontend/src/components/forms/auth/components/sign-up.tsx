@@ -135,6 +135,7 @@ export const SignUpForm = reatomComponent(({ ctx }) => {
               <a
                 href="https://fasberry.su/rules"
                 target="_blank"
+                rel="noreferrer"
                 className="underline underline-offset-4"
               >
                 правилами

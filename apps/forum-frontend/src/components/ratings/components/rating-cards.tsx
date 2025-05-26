@@ -1,3 +1,4 @@
+import { CustomLink } from "#components/shared/link";
 import { Avatar } from "#components/user/avatar/components/avatar.tsx";
 import { UserNickname } from "#components/user/name/nickname";
 import { reatomComponent } from "@reatom/npm-react";
@@ -5,7 +6,6 @@ import dayjs from "@repo/lib/constants/dayjs-instance";
 import { getUser } from "@repo/lib/helpers/get-user";
 import { LAND_URL, USER_URL } from "@repo/shared/constants/routes";
 import { Typography } from "@repo/ui/src/components/typography";
-import { Link } from "@tanstack/react-router";
 import { cva, VariantProps } from "class-variance-authority";
 import { forwardRef, HTMLAttributes } from "react";
 
@@ -93,11 +93,11 @@ export const RatingLandsCard = reatomComponent<RatingLandsCardProps>(({
         </Typography>
       </div>
       <div className="flex items-center gap-2">
-        <Link to={LAND_URL + land}>
+        <CustomLink to={LAND_URL + land}>
           <Typography className="text-[18px]">
             {name}
           </Typography>
-        </Link>
+        </CustomLink>
       </div>
       <div className="flex items-center justify-start relative -left-1">
         <Typography textSize="large">
@@ -128,12 +128,12 @@ export const RatingReputationCard = reatomComponent<RatingReputationCardProps>((
         </Typography>
       </div>
       <div className="flex items-center gap-2">
-        <Link to={USER_URL + nickname}>
+        <CustomLink to={USER_URL + nickname}>
           <Avatar nickname={nickname || "a"} propHeight={42} propWidth={42} />
-        </Link>
-        <Link to={USER_URL + nickname}>
+        </CustomLink>
+        <CustomLink to={USER_URL + nickname}>
           <UserNickname nickname={nickname!} className="text-[18px] truncate" />
-        </Link>
+        </CustomLink>
       </div>
       <div className="flex items-center justify-start relative -left-1">
         <Typography textSize="large">
@@ -159,12 +159,12 @@ export const RatingCharismCard = reatomComponent<RatingCharismCardProps>(({
         </Typography>
       </div>
       <div className="flex items-center gap-2">
-        <Link to={USER_URL + nickname}>
+        <CustomLink to={USER_URL + nickname}>
           <Avatar nickname={nickname || "a"} propHeight={42} propWidth={42} />
-        </Link>
-        <Link to={USER_URL + nickname}>
+        </CustomLink>
+        <CustomLink to={USER_URL + nickname}>
           <UserNickname nickname={nickname!} className="text-[18px] truncate" />
-        </Link>
+        </CustomLink>
       </div>
       <div className="flex items-center justify-start relative -left-1">
         <Typography textSize="large">
@@ -190,12 +190,12 @@ export const RatingBelkoinCard = reatomComponent<RatingBelkoinCardProps>(({
         </Typography>
       </div>
       <div className="flex items-center gap-2">
-        <Link to={USER_URL + nickname}>
+        <CustomLink to={USER_URL + nickname}>
           <Avatar nickname={nickname || "a"} propHeight={42} propWidth={42} />
-        </Link>
-        <Link to={USER_URL + nickname}>
+        </CustomLink>
+        <CustomLink to={USER_URL + nickname}>
           <UserNickname nickname={nickname!} className="text-[18px] truncate" />
-        </Link>
+        </CustomLink>
       </div>
       <div className="flex items-center justify-start relative -left-1">
         <Typography textSize="large">
@@ -221,12 +221,12 @@ export const RatingParkourCard = reatomComponent<RatingParkourCardProps>(({
         </Typography>
       </div>
       <div className="flex items-center gap-2">
-        <Link to={USER_URL + nickname}>
+        <CustomLink to={USER_URL + nickname}>
           <Avatar nickname={nickname || "a"} propHeight={42} propWidth={42} />
-        </Link>
-        <Link to={USER_URL + nickname}>
+        </CustomLink>
+        <CustomLink to={USER_URL + nickname}>
           <UserNickname nickname={nickname!} className="text-[18px] truncate" />
-        </Link>
+        </CustomLink>
       </div>
       <div className="flex items-center justify-start">
         <Typography textSize="large">
@@ -257,12 +257,12 @@ export const RatingPlaytimeCard = reatomComponent<RatingPlaytimeCardProps>(({
         </Typography>
       </div>
       <div className="flex items-center gap-2">
-        <Link to={USER_URL + nickname}>
+        <CustomLink to={USER_URL + nickname}>
           <Avatar nickname={nickname || "a"} propHeight={42} propWidth={42} />
-        </Link>
-        <Link to={USER_URL + nickname}>
+        </CustomLink>
+        <CustomLink to={USER_URL + nickname}>
           <UserNickname nickname={nickname!} className="text-[18px] truncate" />
-        </Link>
+        </CustomLink>
       </div>
       <div className="flex items-center justify-start relative -left-1">
         <Typography textSize="large">

@@ -2,7 +2,7 @@ import { throwError } from '@repo/lib/helpers/throw-error.ts';
 import { forumDB } from "#shared/database/forum-db.ts";
 import { Hono } from "hono";
 
-async function getUserFriendsCount(nickname: string) {
+export async function getUserFriendsCount(nickname: string) {
   const query = await forumDB
     .selectFrom("users_friends")
     .select(forumDB.fn.countAll().as("count"))
@@ -15,7 +15,38 @@ async function getUserFriendsCount(nickname: string) {
     .$narrowType<{ count: number }>()
     .executeTakeFirst();
 
-  return query?.count ?? 0
+  return Number(query?.count) ?? 0
+}
+
+async function getUserRequestsCount(nickname: string) {
+  const queryOutgoing = forumDB
+    .selectFrom("friends_requests")
+    .select(forumDB.fn.countAll().as("count"))
+    .where((eb) =>
+      eb.or([
+        eb("initiator", "=", nickname),
+      ])
+    )
+    .$narrowType<{ count: number }>()
+    .executeTakeFirst()
+    
+  const queryIncoming = forumDB
+    .selectFrom("friends_requests")
+    .select(forumDB.fn.countAll().as("count"))
+    .where((eb) =>
+      eb.or([
+        eb("recipient", "=", nickname),
+      ])
+    )
+    .$narrowType<{ count: number }>()
+    .executeTakeFirst()
+
+  const [outgoing, incoming] = await Promise.all([queryOutgoing, queryIncoming])
+
+  return {
+    outgoing: Number(outgoing?.count) ?? 0,
+    incoming: Number(incoming?.count) ?? 0,
+  }
 }
 
 export const getUserFriendsCountRoute = new Hono()
@@ -23,9 +54,12 @@ export const getUserFriendsCountRoute = new Hono()
     const { nickname } = ctx.req.param()
 
     try {
-      const friendsCount = await getUserFriendsCount(nickname)
+      const [requestsCount, friendsCount] = await Promise.all([
+        getUserRequestsCount(nickname),
+        getUserFriendsCount(nickname),
+      ])
 
-      return ctx.json({ data: friendsCount }, 200)
+      return ctx.json({ data: { friendsCount, requestsCount } }, 200)
     } catch (e) {
       return ctx.json({ error: throwError(e) }, 500);
     }

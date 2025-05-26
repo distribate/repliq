@@ -3,9 +3,9 @@ import { THREAD_URL } from "@repo/shared/constants/routes.ts";
 import { MessageSquare, Text } from "lucide-react";
 import dayjs from "@repo/lib/constants/dayjs-instance.ts";
 import { profileThreadsSettingsAtom, } from "#components/profile/threads/models/profile-threads-settings.model";
-import { Link } from "@tanstack/react-router";
 import { Button } from "@repo/ui/src/components/button";
 import { reatomComponent } from "@reatom/npm-react";
+import { CustomLink } from "#components/shared/link";
 
 type ThreadCardProps = {
   id: string;
@@ -53,7 +53,7 @@ export const ProfileThreadsListCard = reatomComponent<ThreadCardProps>(({ id, ti
           </div>
         </div>
       </div>
-      <Link
+      <CustomLink
         to={THREAD_URL + id}
         className={`w-full justify-end flex items-center h-full`}
       >
@@ -62,7 +62,7 @@ export const ProfileThreadsListCard = reatomComponent<ThreadCardProps>(({ id, ti
             Перейти к треду
           </Typography>
         </Button>
-      </Link>
+      </CustomLink>
     </div>
   )
 }, "ProfileThreadsListCard")

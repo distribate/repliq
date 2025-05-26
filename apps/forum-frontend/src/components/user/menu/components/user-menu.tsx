@@ -1,4 +1,3 @@
-import { Link } from "@tanstack/react-router";
 import { Separator } from "@repo/ui/src/components/separator.tsx";
 import { Typography } from "@repo/ui/src/components/typography.tsx";
 import { CircleUserRound, SlidersVertical, UsersRound } from "lucide-react";
@@ -6,11 +5,12 @@ import { getUser, userGlobalOptionsAtom } from "@repo/lib/helpers/get-user";
 import { USER_URL } from "@repo/shared/constants/routes";
 import { TicketCheck, ShoppingBasket, Shield, LogOut } from 'lucide-react';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@repo/ui/src/components/dropdown-menu";
-import { toggleGlobalDialogAction } from "#components/modals/user-settings/hooks/use-user-settings-modal";
+import { toggleGlobalDialogAction } from "#components/modals/user-settings/models/update-user-settings.model";
 import { lazy, ReactNode, Suspense } from "react";
 import { UserBalance } from "../../balance/components/user-balance";
 import { reatomComponent } from "@reatom/npm-react";
 import { logoutModalIsOpenAtom } from "#components/modals/action-confirmation/components/logout/models/logout.model";
+import { CustomLink } from "#components/shared/link";
 
 const SettingsModal = lazy(() => import("#components/modals/user-settings/components/user-settings-modal").then(m => ({ default: m.UserSettingsModal })))
 const LogoutModal = lazy(() => import("#components/modals/action-confirmation/components/logout/components/logout-modal.tsx").then(m => ({ default: m.LogoutModal })))
@@ -27,14 +27,14 @@ const Admin = reatomComponent(({ ctx }) => {
 
   return (
     <>
-      <Link to="/admin">
+      <CustomLink to="/admin">
         <DropdownMenuItem className="gap-2 group cursor-pointer" >
           <Shield size={20} className="text-shark-300" />
           <Typography textSize="medium">
             Панель админа
           </Typography>
         </DropdownMenuItem>
-      </Link>
+      </CustomLink>
       <Separator />
     </>
   );
@@ -44,14 +44,14 @@ const Profile = reatomComponent(({ ctx }) => {
   const nickname = getUser(ctx).nickname;
 
   return (
-    <Link to={USER_URL + nickname}>
+    <CustomLink to={USER_URL + nickname}>
       <DropdownMenuItem className="gap-2 group cursor-pointer" >
         <CircleUserRound size={20} className="icon-color" />
         <Typography textSize="medium">
           Мой профиль
         </Typography>
       </DropdownMenuItem>
-    </Link>
+    </CustomLink>
   )
 })
 
@@ -108,31 +108,31 @@ export const UserMenu = ({ trigger }: { trigger: ReactNode }) => {
             <Separator />
             <Profile />
             {COLLECTION_LINKS.map(({ icon: Icon, name, query }) => (
-              <Link key={name} to="/collection" search={{ type: query }}>
+              <CustomLink key={name} to="/collection" search={{ type: query }}>
                 <DropdownMenuItem className="gap-2 group cursor-pointer" >
                   <Icon size={20} className="text-shark-300" />
                   <Typography textSize="medium">
                     {name}
                   </Typography>
                 </DropdownMenuItem>
-              </Link>
+              </CustomLink>
             ))}
-            <Link to="/friends">
+            <CustomLink to="/friends">
               <DropdownMenuItem className="gap-2 group cursor-pointer" >
                 <UsersRound size={20} className="icon-color" />
                 <Typography textSize="medium">
                   Друзья
                 </Typography>
               </DropdownMenuItem>
-            </Link>
-            <Link to="/notifications">
+            </CustomLink>
+            <CustomLink to="/notifications">
               <DropdownMenuItem className="gap-2 group cursor-pointer" >
                 <CircleUserRound size={20} className="icon-color" />
                 <Typography textSize="medium">
                   Уведомления
                 </Typography>
               </DropdownMenuItem>
-            </Link>
+            </CustomLink>
             <Separator />
             <Admin />
             <Settings />

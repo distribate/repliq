@@ -6,12 +6,12 @@ import { ThreadCommentActions } from "./thread-comment-actions.tsx";
 import { ThreadCommentProps } from "../types/thread-comment-types.ts";
 import { USER_URL } from "@repo/shared/constants/routes.ts";
 import { Badge } from "@repo/ui/src/components/badge.tsx";
-import { Link } from "@tanstack/react-router";
 import { currentUserAtom } from "@repo/lib/helpers/get-user.ts";
 import { lazy, Suspense } from "react";
 import { ThreadCommentItemContent } from "./thread-comment-item-content.tsx";
 import { reatomComponent } from "@reatom/npm-react";
 import { highlightActiveAtom, selectedCommentAtom } from "../models/scroll-to-replied.model.ts";
+import { CustomLink } from "#components/shared/link.tsx";
 
 const ThreadCommentMoreActions = lazy(() =>
   import("./thread-comment-more-actions.tsx").then(m => ({ default: m.ThreadCommentMoreActions })),
@@ -38,9 +38,9 @@ export const ThreadCommentItem = reatomComponent<ThreadCommentProps & { idx: num
         </Suspense>
       )}
       <div className="flex items-center gap-2">
-        <Link to={USER_URL + user_nickname}>
+        <CustomLink to={USER_URL + user_nickname}>
           <Avatar nickname={user_nickname} propWidth={42} propHeight={42} className="min-h-[42px] min-w-[42px]" />
-        </Link>
+        </CustomLink>
         <div className="flex justify-between w-full">
           <div className="flex flex-col">
             <div className="flex items-center gap-1">

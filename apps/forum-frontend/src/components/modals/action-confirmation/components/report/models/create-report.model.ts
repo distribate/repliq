@@ -6,8 +6,6 @@ import { ReportReasonEnum } from "@repo/types/entities/entities-type";
 import { forumReportClient } from "@repo/shared/api/forum-client";
 import { reatomAsync, withStatusesAtom } from "@reatom/async";
 
-export const CREATE_REPORT_MUTATION_KEY = ["create-report"];
-
 export type CreateReport = {
   report_type: ReportType;
   reason: ReportReasonEnum;

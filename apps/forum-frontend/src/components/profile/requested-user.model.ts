@@ -13,31 +13,28 @@ import { coverAreaVariants } from './header/components/cover-area';
 
 type RequestedUserDetails = Pick<UserDetailed["preferences"],
   "game_stats_visible" | "real_name_visible" | "accept_friend_request" | "show_game_location" | "cover_outline_visible"
-> | null
+>
 
-type RequestedUser = UserShorted | UserDetailed | null
+type RequestedUserProfileStatus = "banned" | "blocked" | "privated"
+type RequestedUserBlocked = "blocked-by-you" | "blocked-by-user"
 
-type RequestedUserProfileStatus = "banned" | "blocked" | "privated" | null
-
-type RequestedUserBlocked = "blocked-by-you" | "blocked-by-user" | null
-
-type RequestedUserCoverDetails = { 
-  coverImage: string | undefined | null, 
+type RequestedUserCoverDetails = {
+  coverImage: string | undefined | null,
   backgroundColor: Pick<VariantProps<typeof coverAreaVariants>, "backgroundColor">["backgroundColor"]
-  backgroundImage: string | undefined, 
+  backgroundImage: string | undefined,
   outline: Pick<VariantProps<typeof coverAreaVariants>, "outline">["outline"]
-} | null
+}
 
 export const requestedUserParamAtom = atom<string | null>(null, "requestedUserParam").pipe(withHistory(1), withReset())
-export const requestedUserAtom = atom<RequestedUser>(null, "requestedUser").pipe(withReset())
+export const requestedUserAtom = atom<UserShorted | UserDetailed | null>(null, "requestedUser").pipe(withReset())
 export const requestedUserIsSameAtom = atom(false, "requestedUserIsSame").pipe(withReset())
-export const requestedUserPreferencesAtom = atom<RequestedUserDetails>(null, "requestedUserDetails").pipe(withReset())
+export const requestedUserPreferencesAtom = atom<RequestedUserDetails | null>(null, "requestedUserDetails").pipe(withReset())
 export const requestedUserGameStatsVisibleAtom = atom(false, "requestedUserGameStatsVisible").pipe(withReset())
 export const requestedUserSectionIsPrivatedAtom = atom(false, "requestedUsersectionIsPrivated").pipe(withReset())
-export const requestedUserProfileStatusAtom = atom<RequestedUserProfileStatus>(null, "requestedUserProfileStatus").pipe(withReset())
-export const requestedUserProfileBlockedAtom = atom<RequestedUserBlocked>(null, "requestedUserProfileBlocked").pipe(withReset())
+export const requestedUserProfileStatusAtom = atom<RequestedUserProfileStatus | null>(null, "requestedUserProfileStatus").pipe(withReset())
+export const requestedUserProfileBlockedAtom = atom<RequestedUserBlocked | null>(null, "requestedUserProfileBlocked").pipe(withReset())
 export const requestedUserCoverImageAtom = atom<string | null>(null, "requestedUserCoverImage").pipe(withReset())
-export const requestedUserCoverDetailsAtom = atom<RequestedUserCoverDetails>(null, "requestedUserCoverDetails").pipe(withReset())
+export const requestedUserCoverDetailsAtom = atom<RequestedUserCoverDetails | null>(null, "requestedUserCoverDetails").pipe(withReset())
 
 requestedUserAtom.onChange((_, v) => consola.info("requestedUserAtom", v))
 requestedUserIsSameAtom.onChange((_, v) => consola.info("requestedUserIsSameAtom", v))
@@ -179,6 +176,8 @@ export const requestedUserAction = reatomAsync(async (ctx, target: string) => {
 
         requestedUserGameStatsVisibleAtom(ctx, payload.preferences.game_stats_visible)
       }
+      // @ts-ignore
+      requestedUserPreferencesAtom(ctx, payload.preferences)
     } else {
       consola.error("Unexpected payload type", payload);
     }

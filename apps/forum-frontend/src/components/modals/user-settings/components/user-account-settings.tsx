@@ -5,7 +5,7 @@ import { Separator } from '@repo/ui/src/components/separator.tsx';
 import { Dialog, DialogContent, DialogTrigger } from '@repo/ui/src/components/dialog.tsx';
 import {
   userBlockedAction,
-} from '#components/modals/user-settings/queries/user-blocked-query';
+} from '#components/modals/user-settings/models/user-blocked.model';
 import { UserBlockedCard } from '#components/cards/user-blocked-card/components/user-blocked-card.tsx';
 import { ContentNotFound } from '#components/templates/components/content-not-found';
 import { Skeleton } from '@repo/ui/src/components/skeleton.tsx';

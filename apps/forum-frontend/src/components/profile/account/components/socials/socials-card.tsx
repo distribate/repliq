@@ -50,7 +50,7 @@ const SocialsSupport = reatomComponent<PropsWithChildren>(({
                     1. Написать сообщение ниже следующим ботам:
                   </Typography>
                   <Typography textColor="shark_white">
-                    Telegram: <a href="https://t.me/fasberry_bot" className="text-shark-300" target="_blank">@fasberry_bot</a>
+                    Telegram: <a href="https://t.me/fasberry_bot" className="text-shark-300" rel="noreferrer" target="_blank">@fasberry_bot</a>
                   </Typography>
                   <Typography textColor="shark_white">
                     Discord: <span className="text-shark-300">FasberryBot#7635</span>

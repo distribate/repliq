@@ -2,18 +2,18 @@ import { useState } from "react";
 import {
   postViewsAction,
   PostViewsQuery,
-} from "#components/post/post-item/queries/post-views-query.ts";
+} from "#components/post/post-item/models/post-views.model";
 import { HoverCardWrapper } from "#components/wrappers/components/hover-card-wrapper";
 import { Skeleton } from "@repo/ui/src/components/skeleton.tsx";
 import { UserNickname } from "#components/user/name/nickname";
 import { Typography } from "@repo/ui/src/components/typography.tsx";
 import dayjs from "@repo/lib/constants/dayjs-instance.ts";
 import { PostFooterViews } from "#components/post/post-item/components/post-footer-views.tsx";
-import { Link } from "@tanstack/react-router";
 import { USER_URL } from "@repo/shared/constants/routes.ts";
 import { UserEntity } from "@repo/types/entities/entities-type.ts";
 import { UserPostItem } from '@repo/types/routes-types/get-user-posts-types.ts';
 import { reatomComponent, useUpdate } from "@reatom/npm-react";
+import { CustomLink } from "#components/shared/link";
 
 type PostFooterWithViewsListProps = Pick<PostViewsQuery, "id"> &
   Pick<UserPostItem, "views_count">;
@@ -37,9 +37,9 @@ const PostViewCard = ({
       className="flex justify-between h-6 items-center gap-2 w-full"
     >
       <div className="flex items-center gap-2 w-1/2 justify-between">
-        <Link to={USER_URL + nickname}>
+        <CustomLink to={USER_URL + nickname}>
           <UserNickname nickname={nickname} className="truncate text-[14px]" />
-        </Link>
+        </CustomLink>
       </div>
       <Typography textSize="small" textColor="gray">
         {dayjs(viewCreatedAt).fromNow()}

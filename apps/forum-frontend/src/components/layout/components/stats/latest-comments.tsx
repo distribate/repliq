@@ -1,43 +1,22 @@
+import { CustomLink } from "#components/shared/link"
 import { Avatar } from "#components/user/avatar/components/avatar"
 import { UserNickname } from "#components/user/name/nickname"
-import { reatomResource, withCache, withDataAtom, withStatusesAtom } from "@reatom/async"
 import { reatomComponent } from "@reatom/npm-react"
-import { forumCommentClient } from "@repo/shared/api/forum-client"
 import { USER_URL } from "@repo/shared/constants/routes"
 import { Skeleton } from "@repo/ui/src/components/skeleton"
 import { Typography } from "@repo/ui/src/components/typography"
-import { Link } from "@tanstack/react-router"
-
-const getLatestComments = async () => {
-  const res = await forumCommentClient.comment["get-last-comments"].$get()
-  const data = await res.json()
-
-  if ("error" in data) return null
-
-  return data.data.length >= 1 ? data.data : null;
-}
-
-const latestCommentsResource = reatomResource(async (ctx) => {
-  return await ctx.schedule(() => getLatestComments())
-}).pipe(withDataAtom(), withStatusesAtom(), withCache())
+import { latestCommentsResource } from "./latest-comments.model"
 
 export const LatestComments = reatomComponent(({ ctx }) => {
   const comments = ctx.spy(latestCommentsResource.dataAtom)
-  const isLoading = ctx.spy(latestCommentsResource.statusesAtom).isPending
-
-  if (!comments) return null;
 
   return (
     <div className="flex flex-col gap-4 w-full py-6 px-4 rounded-lg overflow-hidden bg-primary-color">
-      <Typography
-        textSize="big"
-        textColor="shark_white"
-        className="font-semibold"
-      >
+      <Typography textSize="big" textColor="shark_white" className="font-semibold">
         Последние комментарии
       </Typography>
       <div className="flex flex-col w-full h-full gap-2">
-        {isLoading && (
+        {ctx.spy(latestCommentsResource.statusesAtom).isPending && (
           <>
             <Skeleton className="h-12 w-full" />
             <Skeleton className="h-12 w-full" />
@@ -47,12 +26,12 @@ export const LatestComments = reatomComponent(({ ctx }) => {
         {comments && comments.map(({ content, parent_id, parent_type, title, user_nickname }, idx) => (
           <div key={idx} className="flex flex-col bg-shark-700/60 rounded-md p-2 gap-1">
             <div className="flex items-center gap-2">
-              <Link to={USER_URL + user_nickname}>
+              <CustomLink to={USER_URL + user_nickname}>
                 <Avatar nickname={user_nickname} propWidth={24} propHeight={24} />
-              </Link>
-              <Link to={USER_URL + user_nickname}>
+              </CustomLink>
+              <CustomLink to={USER_URL + user_nickname}>
                 <UserNickname nickname={user_nickname} />
-              </Link>
+              </CustomLink>
             </div>
             <Typography className="text-[16px]">
               {content}
@@ -64,7 +43,7 @@ export const LatestComments = reatomComponent(({ ctx }) => {
               <div className="flex overflow-hidden w-2/3 *:px-1 *:py-0.5 *:bg-shark-700 *:rounded-md">
                 <Typography textColor="gray" className="text-[14px] truncate">
                   {/* @ts-ignore */}
-                  <Link to={`/${parent_type}/${parent_id}`} className="text-shark-50">{title}</Link>
+                  <CustomLink to={`/${parent_type}/${parent_id}`} className="text-shark-50">{title}</CustomLink>
                 </Typography>
               </div>
             </div>

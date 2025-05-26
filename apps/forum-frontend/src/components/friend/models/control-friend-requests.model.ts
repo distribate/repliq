@@ -3,12 +3,14 @@ import { ControFriendShip, ControlFriendRequests } from "#components/friend/mode
 import { friendsCountAction } from "#components/friends/models/friends-count.model.ts";
 import { reatomAsync, withStatusesAtom } from "@reatom/async";
 import { router } from "#main.tsx";
-import { atom, Ctx } from "@reatom/core";
-import { incomingRequestsAction, incomingRequestsAtom, outgoingRequestsAction, outgoingRequestsAtom } from "#components/friends/models/friends-requests.model.ts";
+import { atom } from "@reatom/core";
+import { incomingRequestsAtom, outgoingRequestsAtom } from "#components/friends/models/friends-requests.model.ts";
 import { forumUserClient } from '@repo/shared/api/forum-client.ts';
 import { friendStatusesAtom } from "../components/friend-button/models/friend-status.model";
 import { myFriendsAction, myFriendsDataAtom } from "#components/friends/models/friends.model";
 import { withReset } from "@reatom/framework";
+import { currentUserNicknameAtom } from "@repo/lib/helpers/get-user";
+import dayjs from "dayjs";
 
 type ControlIncomingRequest = ControlFriendRequests & { type: "reject" | "accept" }
 type ControlOutgoingRequest = ControlFriendRequests & { type: "reject" | "create" }
@@ -97,13 +99,6 @@ export async function acceptFriendRequest({ request_id }: Pick<ControlFriendRequ
   }
 }
 
-const updateFriendsCount = (ctx: Ctx, type: "remove" | "add") => {
-  if (ctx.get(friendsCountAction.dataAtom)) {
-    const amount = type === 'add' ? 1 : -1;
-    friendsCountAction.dataAtom(ctx, (count) => (count ?? 0) + amount);
-  }
-}
-
 export const controlOutgoingRequestAction = reatomAsync(async (ctx, options: ControlOutgoingRequest) => {
   controlOutgoingRequestVariablesAtom(ctx, options)
 
@@ -115,7 +110,7 @@ export const controlOutgoingRequestAction = reatomAsync(async (ctx, options: Con
   }
 }, {
   name: "controlOutgoingRequestAction",
-  onFulfill: (ctx, res) => {
+  onFulfill: async (ctx, res) => {
     if (!res) return;
 
     const variables = ctx.get(controlOutgoingRequestVariablesAtom)
@@ -136,8 +131,19 @@ export const controlOutgoingRequestAction = reatomAsync(async (ctx, options: Con
       }
 
       if (currentPath === '/friends') {
-        outgoingRequestsAtom(ctx, null)
-        outgoingRequestsAction(ctx)
+        outgoingRequestsAtom(ctx, (state) => {
+          if (!state) state = []
+          return state.filter(target => target.recipient !== variables.recipient)
+        })
+
+        friendsCountAction.dataAtom(ctx, (state) => {
+          if (!state) return null;
+
+          return {
+            ...state,
+            requestsCount: { ...state.requestsCount, outgoing: state.requestsCount.outgoing - 1 }
+          }
+        })
       } else {
         friendStatusesAtom(ctx, (state) => ({
           ...state,
@@ -156,9 +162,28 @@ export const controlOutgoingRequestAction = reatomAsync(async (ctx, options: Con
       }
 
       if (currentPath === '/friends') {
-        outgoingRequestsAtom(ctx, null)
-        outgoingRequestsAction(ctx)
-        updateFriendsCount(ctx, "add")
+        outgoingRequestsAtom(ctx, (state) => {
+          if (!state) state = []
+
+          const newRequest = {
+            id: data.request_id!,
+            initiator: ctx.get(currentUserNicknameAtom)!,
+            recipient: variables.recipient,
+            created_at: dayjs().toString()
+          }
+
+          return [...state, newRequest]
+        })
+
+        friendsCountAction.dataAtom(ctx, (state) => {
+          if (!state) return null;
+
+          return {
+            ...state,
+            requestsCount: { ...state.requestsCount, outgoing: state.requestsCount.outgoing + 1 }
+          }
+        })
+
         myFriendsAction(ctx)
       } else {
         friendStatusesAtom(ctx, (state) => ({
@@ -202,9 +227,21 @@ export const controlIncomingRequestAction = reatomAsync(async (ctx, options: Con
 
     if (variables.type === 'accept') {
       if (currentPath === '/friends') {
-        incomingRequestsAtom(ctx, null)
-        incomingRequestsAction(ctx)
-        updateFriendsCount(ctx, "add")
+        incomingRequestsAtom(ctx, (state) => {
+          if (!state) state = []
+
+          return state.filter(target => target.recipient !== variables.recipient)
+        })
+
+        friendsCountAction.dataAtom(ctx, (state) => {
+          if (!state) return null;
+
+          return {
+            ...state,
+            friendsCount: state.friendsCount + 1,
+            requestsCount: { ...state.requestsCount, incoming: state.requestsCount.incoming - 1 }
+          }
+        })
         myFriendsAction(ctx)
       } else {
         if ("friend_id" in data) {
@@ -220,8 +257,20 @@ export const controlIncomingRequestAction = reatomAsync(async (ctx, options: Con
 
     if (variables.type === 'reject') {
       if (currentPath === '/friends') {
-        incomingRequestsAtom(ctx, null)
-        incomingRequestsAction(ctx)
+        incomingRequestsAtom(ctx, (state) => {
+          if (!state) state = []
+
+          return state.filter(target => target.recipient !== variables.recipient)
+        })
+
+        friendsCountAction.dataAtom(ctx, (state) => {
+          if (!state) return null;
+
+          return {
+            ...state,
+            requestsCount: { ...state.requestsCount, incoming: state.requestsCount.incoming - 1 }
+          }
+        })
       } else {
         friendStatusesAtom(ctx, (state) => ({
           ...state,
@@ -258,8 +307,8 @@ export const removeFriendAction = reatomAsync(async (ctx, options: ControFriendS
     if (!status || !variables) return;
 
     if (error) {
-      return toast.error("Произошла ошибка", { 
-        description: friendRequestStatus[error] ?? error 
+      return toast.error("Произошла ошибка", {
+        description: friendRequestStatus[error] ?? error
       });
     }
 
@@ -269,7 +318,7 @@ export const removeFriendAction = reatomAsync(async (ctx, options: ControFriendS
 
     if (currentPath === '/friends') {
       myFriendsDataAtom(ctx, (state) => state.filter(target => target.nickname !== variables.recipient))
-      updateFriendsCount(ctx, "remove")
+      friendsCountAction(ctx)
     } else {
       friendStatusesAtom(ctx, (state) => ({
         ...state,

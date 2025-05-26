@@ -17,6 +17,6 @@ export const friendsCountAction = reatomAsync(async (ctx) => {
   if (!nickname) return;
 
   return await ctx.schedule(() => getFriendsCount(nickname))
-}, "friendsCountAction").pipe(withDataAtom(0), withCache())
+}, "friendsCountAction").pipe(withDataAtom(), withCache())
 
 friendsCountAction.dataAtom.onChange((_, state) => consola.info("friendsCountAction.dataAtom", state))

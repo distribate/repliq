@@ -6,8 +6,8 @@ import { UserCardProps } from "./user-preview-card.tsx";
 import { UserCardModal } from "#components/modals/custom/components/user-card-modal.tsx";
 import { USER_URL } from "@repo/shared/constants/routes.ts";
 import { ReportCreateModal } from "#components/modals/action-confirmation/components/report/components/report-create-modal.tsx";
-import { Link } from "@tanstack/react-router";
 import { DropdownMenuItem } from "@repo/ui/src/components/dropdown-menu.tsx";
+import { CustomLink } from "#components/shared/link.tsx";
 
 export const UserPreviewCardProperties = ({
   nickname,
@@ -19,11 +19,11 @@ export const UserPreviewCardProperties = ({
       content={
         <div className="flex flex-col gap-y-1 w-full *:w-full items-center">
           <UserCardModal nickname={nickname} />
-          <Link to={USER_URL + nickname}>
+          <CustomLink to={USER_URL + nickname}>
             <DropdownMenuItem>
               <Typography>Перейти к профилю</Typography>
             </DropdownMenuItem>
-          </Link>
+          </CustomLink>
           <Separator />
           <ReportCreateModal reportType="account" targetNickname={nickname} />
         </div>

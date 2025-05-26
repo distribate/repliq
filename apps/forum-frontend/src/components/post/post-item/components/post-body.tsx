@@ -2,11 +2,11 @@ import { Typography } from "@repo/ui/src/components/typography.tsx";
 import {
   editPostsControlAtom,
   getPostsControlAtom,
-} from "#components/post/post-item/queries/post-control-query.ts";
+} from "#components/post/post-item/models/post-control.model";
 import { Input } from "@repo/ui/src/components/input.tsx";
 import { Button } from "@repo/ui/src/components/button.tsx";
 import { useState, ChangeEvent } from "react";
-import { controlPostAction } from "#components/post/post-item/hooks/use-control-post.ts";
+import { controlPostAction } from "#components/post/post-item/models/control-post.model";
 import { UserPostItem } from '@repo/types/routes-types/get-user-posts-types.ts';
 import { reatomComponent } from "@reatom/npm-react";
 
@@ -96,7 +96,7 @@ const processText = ({ input, truncate }: ProcessText) => {
 
     if (part.match(LINK_REGEX)) {
       return (
-        <a key={index} href={part} className="text-contessa-300 italic cursor-pointer" target="_blank">
+        <a key={index} href={part} rel="noreferrer" className="text-contessa-300 italic cursor-pointer" target="_blank">
           {part}
         </a>
       );

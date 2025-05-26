@@ -2,7 +2,6 @@ import { toast } from "sonner";
 import { authClient } from "@repo/shared/api/auth-client";
 import { globalOptionsAtom } from "@repo/lib/queries/global-option-query";
 import { reatomAsync, withStatusesAtom } from "@reatom/async";
-import { router } from "#main";
 import { atom } from "@reatom/core";
 
 async function deleteSession() {
@@ -31,7 +30,7 @@ export const logoutAction = reatomAsync(async (ctx) => {
     globalOptionsAtom(ctx, (prev) => ({ ...prev, isAuthenticated: false }))
     toast.info("Вы вышли из аккаунта")
 
-    return ctx.schedule(() => router.navigate({ to: "/auth" }))
+    return ctx.schedule(() => window.location.reload())
   },
   onReject: (e) => {
     if (e instanceof Error) {

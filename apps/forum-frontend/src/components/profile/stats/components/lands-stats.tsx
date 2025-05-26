@@ -1,5 +1,5 @@
 import { Typography } from "@repo/ui/src/components/typography.tsx";
-import {landsStatsResource } from "../models/lands-stats.model.ts";
+import { landsStatsResource } from "../models/lands-stats.model.ts";
 import {
   Accordion,
   AccordionContent,
@@ -12,11 +12,11 @@ import { Skeleton } from "@repo/ui/src/components/skeleton.tsx";
 import { SomethingError } from "#components/templates/components/something-error.tsx";
 import { Avatar } from "#components/user/avatar/components/avatar.tsx";
 import { UserNickname } from "#components/user/name/nickname.tsx";
-import { Link } from "@tanstack/react-router";
 import { USER_URL } from "@repo/shared/constants/routes.ts";
 import Charism from "@repo/assets/images/minecraft/charism_wallet.png"
 import { onConnect } from "@reatom/framework";
 import { reatomComponent } from "@reatom/npm-react";
+import { CustomLink } from "#components/shared/link.tsx";
 
 const LandsStatsSkeleton = () => (
   <Skeleton className="flex flex-col h-[400px] gap-y-2 rounded-md px-4 py-2" />
@@ -71,7 +71,7 @@ export const LandsStats = reatomComponent(({ ctx }) => {
                         key={nickname}
                         className="flex items-center gap-2 p-2 rounded-md bg-shark-900 w-full lg:w-2/3"
                       >
-                        <Link to={USER_URL + nickname}>
+                        <CustomLink to={USER_URL + nickname}>
                           <Avatar
                             rounded="medium"
                             className="min-w-[42px] min-h-[42px]"
@@ -79,11 +79,11 @@ export const LandsStats = reatomComponent(({ ctx }) => {
                             propWidth={42}
                             nickname={nickname}
                           />
-                        </Link>
+                        </CustomLink>
                         <div className="flex flex-col">
-                          <Link to={USER_URL + nickname}>
+                          <CustomLink to={USER_URL + nickname}>
                             <UserNickname nickname={nickname} />
-                          </Link>
+                          </CustomLink>
                           <Typography className="text-shark-300">
                             {chunks} чанков
                           </Typography>

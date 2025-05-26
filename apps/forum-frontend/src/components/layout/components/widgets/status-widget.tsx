@@ -1,35 +1,13 @@
-import { reatomResource, withCache, withDataAtom, withStatusesAtom } from "@reatom/async"
 import { reatomComponent } from "@reatom/npm-react"
 import { globalPreferencesAtom } from "@repo/lib/queries/global-preferences-query"
-import { forumSharedClient } from "@repo/shared/api/forum-client"
 import { Skeleton } from "@repo/ui/src/components/skeleton"
 import { Typography } from "@repo/ui/src/components/typography"
 import { toast } from "sonner"
-
-async function getServerStatus() {
-  const res = await forumSharedClient.shared["get-status"].$get({ query: { type: "servers" }})
-  const data = await res.json()
-
-  if ("error" in data) return null
-
-  return data
-}
-
-// impl refetch
-export const REFETCH_INTERVAL = 60000
-
-export const statusResource = reatomResource(async (ctx) => {
-  const isEnabled = ctx.spy(globalPreferencesAtom).intro === 'show'
-
-  if (!isEnabled) return;
-
-  return await ctx.schedule(() => getServerStatus())
-}, "statusResource").pipe(withDataAtom(), withCache(), withStatusesAtom())
+import { statusResource } from "./status-widget.model"
 
 export const StatusWidget = reatomComponent(({ ctx }) => {
   const isEnabled = ctx.spy(globalPreferencesAtom).intro === 'show'
   const data = ctx.spy(statusResource.dataAtom)
-  const isLoading = ctx.spy(statusResource.statusesAtom).isPending
 
   const copyClipboard = async () => {
     toast.info("Скопировано!")
@@ -64,7 +42,7 @@ export const StatusWidget = reatomComponent(({ ctx }) => {
             <span className="animate-pulse mr-1 text-[24px] font-semibold ease-in-out text-green-500">
               ◈
             </span>
-            {isLoading ? (
+            {ctx.spy(statusResource.statusesAtom).isPending ? (
               <Skeleton className="h-4 w-4" />
             ) : (
               <Typography className="font-semibold text-[17px]">

@@ -1,13 +1,15 @@
+import type { UnwrapPromise } from '@repo/lib/helpers/unwrap-promise-type';
 import { throwError } from '@repo/lib/helpers/throw-error.ts';
 import { getNickname } from "#utils/get-nickname-from-storage.ts";
 import { Hono } from "hono";
 import { getNatsConnection } from '@repo/config-nats/nats-client';
 import { forumDB } from '#shared/database/forum-db.ts';
 import { sql } from 'kysely';
+import { getUserFriendsCount } from '#routes/user/get-user-friends-count.ts';
 
 type UserLands = {
   nickname: string,
-  uuid: string 
+  uuid: string
 }
 
 type Fof = {
@@ -128,17 +130,55 @@ async function getSimilarUsersByLand(nickname: string) {
   return Array.from(uniqueUsers);
 }
 
+async function getRandomUsers(nickname: string) {
+  const randomUsers = await forumDB
+    .selectFrom("users")
+    .select(["nickname", "uuid"])
+    .where("nickname", "!=", nickname)
+    .orderBy(sql`random()`)
+    .limit(15)
+    .execute()
+
+  return randomUsers
+}
+
+type RecommendedFriendsGlobal = {
+  byLands: UnwrapPromise<ReturnType<typeof getSimilarUsersByLand>>,
+  byFriends: UnwrapPromise<ReturnType<typeof getSimilarUsersByFriends>>
+}
+
+type RecommendedFriendsIndividual = Array<{ nickname: string; uuid: string }>
+
 export const getRecommendedFriendsRoute = new Hono()
   .get("/get-recommended-friends", async (ctx) => {
     const nickname = getNickname()
 
     try {
-      const [usersByLands, friendsOfFriends] = await Promise.all([
-        getSimilarUsersByLand(nickname),
-        getSimilarUsersByFriends(nickname),
-      ])
+      const currentFriendsCount = await getUserFriendsCount(nickname)
 
-      return ctx.json({ data: { byLands: usersByLands, byFriends: friendsOfFriends } }, 200)
+      let data: RecommendedFriendsIndividual | RecommendedFriendsGlobal | null = null
+
+      if (currentFriendsCount <= 1) {
+        const randomUsers = await getRandomUsers(nickname)
+
+        data = randomUsers
+      } else {
+        try {
+          const [usersByLands, friendsOfFriends] = await Promise.all([
+            getSimilarUsersByLand(nickname),
+            getSimilarUsersByFriends(nickname),
+          ])
+
+          data = { byLands: usersByLands, byFriends: friendsOfFriends }
+        } catch (e) {
+          console.error(e)
+          const randomUsers = await getRandomUsers(nickname)
+
+          data = randomUsers
+        }
+      }
+
+      return ctx.json({ data }, 200)
     } catch (e) {
       return ctx.json({ error: throwError(e) }, 500);
     }

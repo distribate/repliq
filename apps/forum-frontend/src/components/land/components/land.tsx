@@ -89,7 +89,7 @@ const Main = reatomComponent(({ ctx }) => {
             </Typography>
           </div>
           <div className="flex items-center gap-4 w-full h-full">
-            <a target="_blank" href="https://map.fasberry.su/" className="flex items-center justify-center px-6 py-2 rounded-md bg-shark-800">
+            <a target="_blank" href="https://map.fasberry.su/" rel="noreferrer" className="flex items-center justify-center px-6 py-2 rounded-md bg-shark-800">
               <Typography>Перейти к карте территории</Typography>
             </a>
           </div>

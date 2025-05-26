@@ -7,13 +7,13 @@ import { lazy, Suspense } from "react";
 
 const FriendsOutgoingList = lazy(() => import("./friends-outgoing-list").then(m => ({ default: m.FriendsOutgoingList })))
 const FriendsIncomingList = lazy(() => import("./friends-incoming-list").then(m => ({ default: m.FriendsIncomingList })))
-const FriendsSearchingList = lazy(() => import("./friends-searching-list").then(m => ({ default: m.FriendsSearchingList })))
+const FriendsRecommendedList = lazy(() => import("./friends-recommended-list").then(m => ({ default: m.FriendsRecommendedList })))
 
 const LISTS: Record<string, ReactNode> = {
   all: <FriendsAllList />,
   outgoing: <FriendsOutgoingList />,
   incoming: <FriendsIncomingList />,
-  search: <FriendsSearchingList />
+  search: <FriendsRecommendedList />
 }
 
 export const FriendsListTitle = reatomComponent(({ ctx }) => {

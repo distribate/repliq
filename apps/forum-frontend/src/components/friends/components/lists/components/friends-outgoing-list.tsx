@@ -3,7 +3,6 @@ import { FriendsListLayout } from "./friends-list-layout.tsx";
 import { controlOutgoingRequestAction } from "#components/friend/models/control-friend-requests.model.ts";
 import { FriendCardLayout } from "#components/friend/components/friend-card/friend-card-layout.tsx";
 import { Avatar } from "#components/user/avatar/components/avatar.tsx";
-import { Link } from "@tanstack/react-router";
 import { USER_URL } from "@repo/shared/constants/routes.ts";
 import { Typography } from "@repo/ui/src/components/typography.tsx";
 import { Button } from "@repo/ui/src/components/button.tsx";
@@ -11,6 +10,8 @@ import { UserNickname } from "#components/user/name/nickname.tsx";
 import { reatomComponent } from "@reatom/npm-react";
 import { ControlFriendRequests } from "#components/friend/models/control-friend.model.ts";
 import { outgoingRequestsAtom } from "#components/friends/models/friends-requests.model.ts";
+import { spawn } from "@reatom/framework";
+import { CustomLink } from "#components/shared/link.tsx";
 
 const FriendOutgoingCard = reatomComponent<ControlFriendRequests>(({
   ctx, recipient, request_id
@@ -25,13 +26,13 @@ const FriendOutgoingCard = reatomComponent<ControlFriendRequests>(({
       </div>
       <div className="flex flex-col gap-y-1 w-full">
         <div className="flex items-center gap-1 w-fit">
-          <Link to={USER_URL + recipient} className="flex items-center gap-1">
+          <CustomLink to={USER_URL + recipient} className="flex items-center gap-1">
             <UserNickname nickname={recipient} className="text-lg leading-3" />
-          </Link>
+          </CustomLink>
         </div>
         <div className="flex md:justify-start justify-end items-center mt-2 w-full">
           <Button
-            onClick={() => controlOutgoingRequestAction(ctx, { type: "reject", request_id, recipient })}
+            onClick={() => spawn(ctx, async (spawnCtx) => controlOutgoingRequestAction(spawnCtx, { type: "reject", request_id, recipient }))}
             variant="pending"
             disabled={
               ctx.spy(controlOutgoingRequestAction.statusesAtom).isPending ||

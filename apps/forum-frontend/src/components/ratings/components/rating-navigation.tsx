@@ -1,8 +1,8 @@
 import { NavigationBadge } from "#components/navigation/components/navigation-badge.tsx"
-import { updateRatingAction } from "#components/ratings/hooks/use-update-ratings.ts"
-import { GetRatings } from "#components/ratings/queries/get-ratings.ts"
-import { ratingFilterAtom, RatingFilterQuery } from "#components/ratings/queries/ratings-filter-query.ts"
+import { updateRatingAction } from "#components/ratings/models/update-ratings.model"
+import { ratingFilterAtom, RatingFilterQuery } from "#components/ratings/models/rating-filter.model"
 import { reatomComponent } from "@reatom/npm-react"
+import { GetRatings } from "../models/ratings.model"
 
 const RATING_NAVIGATION: { title: string, type: GetRatings["type"] }[] = [
   { title: "Время игры", type: "playtime" },

@@ -1,9 +1,10 @@
 import { Typography } from '@repo/ui/src/components/typography'
-import { Link, useLocation } from '@tanstack/react-router'
+import { useLocation } from '@tanstack/react-router'
 import { createFileRoute, Outlet } from '@tanstack/react-router'
 import FutureChickenMini from "@repo/assets/images/minecraft/future_chicken_mini.png"
 import { reatomComponent } from '@reatom/npm-react'
 import { getUser } from '@repo/lib/helpers/get-user'
+import { CustomLink } from '#components/shared/link'
 
 export const Route = createFileRoute('/_protected/dashboard/_dashboard')({
   component: reatomComponent(({ ctx }) => {
@@ -30,10 +31,10 @@ const NoAccessDashboard = () => {
       <Typography className="text-2xl text-center font-semibold w-full lg:w-[60%]">
         Приобретите любую привилегию на сервере, чтобы открыть доступ к статистике своего профиля!
       </Typography>
-      {/* @ts-ignore */}
       <a
         href="https://fasberry.su/shop"
         target="_blank"
+        rel="noreferrer"
         className="flex items-center justify-center w-fit py-2 bg-green-600 px-6 rounded-lg"
       >
         <Typography className="text-xl font-semibold">
@@ -53,7 +54,7 @@ const DashboardNavigation = () => {
         Дашборд
       </Typography>
       <div className="flex flex-col gap-1 w-full *:duration-150 *:ease-in-out">
-        <Link
+        <CustomLink
           to="/dashboard"
           data-state={pathname === "/dashboard" ? "active" : "inactive"}
           className="flex cursor-pointer items-center gap-2 group w-full 
@@ -62,8 +63,8 @@ const DashboardNavigation = () => {
           <Typography className="font-semibold text-lg">
             Обзор
           </Typography>
-        </Link>
-        <Link
+        </CustomLink>
+        <CustomLink
           to="/dashboard/profile"
           className="flex cursor-pointer items-center gap-2 group w-full 
               [&.active]:bg-shark-900 rounded-lg p-2"
@@ -71,8 +72,8 @@ const DashboardNavigation = () => {
           <Typography className="font-semibold text-lg">
             Профиль
           </Typography>
-        </Link>
-        <Link
+        </CustomLink>
+        <CustomLink
           to="/dashboard/threads"
           className="flex cursor-pointer items-center gap-2 group w-full 
             [&.active]:bg-shark-900 rounded-lg p-2"
@@ -80,7 +81,7 @@ const DashboardNavigation = () => {
           <Typography className="font-semibold text-lg">
             Треды
           </Typography>
-        </Link>
+        </CustomLink>
       </div>
     </div>
   )

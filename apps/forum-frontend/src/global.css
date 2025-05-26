@@ -30,6 +30,17 @@
   ::-webkit-scrollbar-thumb {
     @apply bg-shark-800 m-4 rounded-lg;
   }
+
+  html:active-view-transition-type(slide-left) {
+    &::view-transition-old(main-content) {
+      opacity: 1;
+      transition: opacity 0.3s ease-in-out;
+    }
+
+    &::view-transition-new(main-content) {
+      opacity: 0;
+    }
+  }
 }
 
 @layer theme {
@@ -47,6 +58,10 @@
 }
 
 @layer components {
+  .responsive-width {
+    @apply w-[calc(100%-8px)] sm:w-[calc(100%-32px)] md:w-[calc(100%-48px)] 2xl:w-[85%]
+  }
+  
   .nickname-color-picker .react-colorful {
     @apply w-auto;
   }
@@ -99,7 +114,7 @@
   }
 
   .minecraft-panel {
-    @apply  bg-shark-200;
+    @apply bg-shark-200;
   }
 
   .friend-card {

@@ -1,7 +1,6 @@
 import { landsClient } from "@repo/shared/api/minecraft-client"
 import { Button } from "@repo/ui/src/components/button"
 import { Typography } from "@repo/ui/src/components/typography"
-import { Link } from "@tanstack/react-router"
 import { InferResponseType } from "hono/client"
 import Looking from '@repo/assets/images/looking.jpg'
 import BottleEnchating from "@repo/assets/images/minecraft/bottle_enchanting.webp"
@@ -11,6 +10,7 @@ import { LAND_URL } from "@repo/shared/constants/routes"
 import { getUser } from "@repo/lib/helpers/get-user"
 import { ColoredText } from "#components/wrappers/components/colored-text-wrapper"
 import { reatomComponent } from "@reatom/npm-react"
+import { CustomLink } from "#components/shared/link"
 
 const client = landsClient.lands['get-lands'].$get
 
@@ -63,13 +63,13 @@ export const LandCard = reatomComponent<LandCard>(({ ctx, balance, level, member
             </div>
           </div>
           <div className="flex items-center gap-2">
-            <Link to={LAND_URL + ulid}>
+            <CustomLink to={LAND_URL + ulid}>
               <Button state="default">
                 <Typography className="text-[16px] font-[Minecraft]">
                   Перейти
                 </Typography>
               </Button>
-            </Link>
+            </CustomLink>
           </div>
         </div>
       </div>

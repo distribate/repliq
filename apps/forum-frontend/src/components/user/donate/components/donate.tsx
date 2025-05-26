@@ -50,7 +50,7 @@ const DonateTipPopover = reatomComponent(({ ctx }) => {
               <Typography textSize="large" textColor="shark_white">
                 Привилегии дают доступ к большим возможностям на форуме и в самой игре
                 (cм.&nbsp;
-                <a href="https://fasberry.su/shop" target="_blank" className="cursor-pointer font-semibold">
+                <a href="https://fasberry.su/shop" target="_blank" rel="noreferrer" className="cursor-pointer font-semibold">
                   привилегии
                 </a>
                 ).

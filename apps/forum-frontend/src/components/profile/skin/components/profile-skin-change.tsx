@@ -3,7 +3,6 @@ import { reatomComponent } from "@reatom/npm-react";
 import { Button } from "@repo/ui/src/components/button";
 import { Dialog, DialogContent, DialogTrigger } from "@repo/ui/src/components/dialog";
 import { Typography } from "@repo/ui/src/components/typography";
-import { Link } from "@tanstack/react-router";
 
 export const ProfileSkinHowToChange = reatomComponent(({ ctx }) => {
   const isOwner = ctx.spy(requestedUserIsSameAtom)
@@ -34,14 +33,13 @@ export const ProfileSkinHowToChange = reatomComponent(({ ctx }) => {
             </Typography>
           </div>
           <div className="flex items-center w-full p-2">
-            {/*  @ts-ignore */}
-            <Link to="https://fasberry.su/wiki?tab=skin" target="_blank">
+            <a href="https://fasberry.su/wiki?tab=skin" rel="noreferrer" target="_blank">
               <Button state="default">
                 <Typography textSize="medium">
                   Больше о формировании скина
                 </Typography>
               </Button>
-            </Link>
+            </a>
           </div>
         </div>
       </DialogContent>

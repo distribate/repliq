@@ -1,6 +1,6 @@
-import { Link } from "@tanstack/react-router";
 import Inspector from "@repo/assets/images/minecraft/block_inspect.webp";
 import { Typography } from '@repo/ui/src/components/typography';
+import { CustomLink } from "#components/shared/link";
 
 type SearchWidgetProps = {
   title: string;
@@ -12,7 +12,7 @@ export const SearchWidget = ({
   imageSrc, link, title
 }: SearchWidgetProps) => {
   return (
-    <Link
+    <CustomLink
       to={link}
       className="flex items-center bg-shark-900/60 group overflow-hidden relative rounded-lg"
     >
@@ -36,6 +36,6 @@ export const SearchWidget = ({
         height={32}
         loading="lazy"
       />
-    </Link>
+    </CustomLink>
   )
 }

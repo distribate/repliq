@@ -1,6 +1,6 @@
 import { Icon } from "@repo/shared/ui/icon/icon.tsx";
 import { RotateCw } from "lucide-react";
-import { HTMLAttributes, lazy } from "react";
+import { HTMLAttributes, lazy, Suspense } from "react";
 import { cva, VariantProps } from "class-variance-authority";
 import { reatomComponent } from "@reatom/npm-react";
 import { skinRotatingAtom, skinAnimationAtom, SKIN_ANIMATIONS } from "../models/skin-animation.model.ts";
@@ -61,7 +61,9 @@ export const ProfileSkinControls = () => {
         <ProfileSkinControlRotate />
       </div>
       <div className="flex flex-col items-center justify-end gap-4 w-full">
-        <ProfileSkinHowToChange />
+        <Suspense>
+          <ProfileSkinHowToChange />
+        </Suspense>
         <ProfileSkinDownloadLink />
       </div>
     </div >

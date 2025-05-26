@@ -6,10 +6,9 @@ import { USER_URL } from "@repo/shared/constants/routes"
 import { Button } from "@repo/ui/src/components/button"
 import { Skeleton } from "@repo/ui/src/components/skeleton"
 import { Typography } from "@repo/ui/src/components/typography"
-import { Link } from "@tanstack/react-router"
-import { Suspense } from "react"
 import { myReferalsResource } from "../queries/referals-query"
 import { reatomComponent } from "@reatom/npm-react"
+import { CustomLink } from "#components/shared/link"
 
 export const Referals = reatomComponent(({ ctx }) => {
   const referals = ctx.spy(myReferalsResource.dataAtom)
@@ -41,14 +40,14 @@ export const Referals = reatomComponent(({ ctx }) => {
               className={`flex w-full gap-2 items-center friend-card border-2 
                 ${item.completed ? "border-green-500" : "border-shark-800"}`}
             >
-              <Link to={USER_URL + item.recipient}>
+              <CustomLink to={USER_URL + item.recipient}>
                 <Avatar nickname={item.recipient} propWidth={64} propHeight={64} className="min-h-[64px] min-w-[64px]" />
-              </Link>
+              </CustomLink>
               <div className="flex flex-col">
                 <div className="flex items-center gap-1">
-                  <Link to={USER_URL + item.recipient}>
+                  <CustomLink to={USER_URL + item.recipient}>
                     <UserNickname nickname={item.recipient} />
-                  </Link>
+                  </CustomLink>
                   <UserDonate donate={item.donate} />
                 </div>
                 <Typography textColor="gray" textSize="medium">
@@ -66,14 +65,13 @@ export const Referals = reatomComponent(({ ctx }) => {
         </div>
       )}
       <div className="flex w-full items-center justify-start">
-        {/* @ts-ignore */}
-        <Link to="https://fasberry.su/wiki?tab=referals" target="_blank">
+        <a href="https://fasberry.su/wiki?tab=referals" target="_blank" rel="noreferrer">
           <Button state="default">
             <Typography textSize="medium">
               Больше о реферальной системе
             </Typography>
           </Button>
-        </Link>
+        </a>
       </div>
     </div>
   )

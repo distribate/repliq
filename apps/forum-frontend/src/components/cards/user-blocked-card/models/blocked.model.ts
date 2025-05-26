@@ -13,18 +13,13 @@ async function deleteUserFromBlocked({
   recipient,
 }: DeleteUserFromBlocked) {
   const res = await forumUserClient.user["control-user-blocked"].$post({
-    json: {
-      recipient, type: "unblock"
-    }
+    json: { recipient, type: "unblock" }
   })
-
   const data = await res.json();
 
   if (!data || "error" in data)  return null
 
-  const { status } = data;
-
-  return { status }
+  return { status: data.status }
 }
 
 export const blockedUsersAtom = atom<BlockedUsers | null>(null, "blockedUsers")
@@ -53,6 +48,5 @@ export const deleteFromBlockedAction = reatomAsync(async (ctx, recipient: string
     }
 
     blockedUsersAtom(ctx, updatedBlockedUsers)
-    // useRouter().invalidate()
   },
 }).pipe(withStatusesAtom(), withVariables(deleteFromBlockedVariablesAtom))

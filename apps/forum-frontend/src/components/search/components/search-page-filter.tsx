@@ -2,9 +2,9 @@ import { ChevronDown } from "lucide-react";
 import { Button } from "@repo/ui/src/components/button.tsx";
 import { Typography } from "@repo/ui/src/components/typography.tsx";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@repo/ui/src/components/dropdown-menu.tsx";
-import { searchValueAction, SyncParams } from "#components/search/hooks/use-search-page.ts";
-import { searchPageAtom, SearchPageQuery } from "#components/search/queries/search-page-query.ts";
+import { searchPageAtom, SearchPageQuery } from "#components/search/models/search-page.model";
 import { reatomComponent } from "@reatom/npm-react";
+import { searchTypeParamAtom } from "../models/search-related.model";
 
 type SearchPageFilter = {
   title: string;
@@ -16,20 +16,9 @@ const SEARCH_PAGE_FILTER: SearchPageFilter[] = [
   { title: "По игроку", value: "user" },
 ];
 
-export const SearchPageFilter = () => {
-  return (
-    <>
-      <SyncParams />
-      <PageFilter />
-    </>
-  )
-}
-
-const PageFilter = reatomComponent(({ ctx }) => {
+export const SearchPageFilter = reatomComponent(({ ctx }) => {
   const searchState = ctx.spy(searchPageAtom)
-
-  const handleSearchFilter = (t: Pick<SearchPageFilter, "value">["value"]) =>
-    searchValueAction(ctx, { type: t });
+  const type = ctx.spy(searchTypeParamAtom)
 
   return (
     <DropdownMenu>
@@ -54,7 +43,7 @@ const PageFilter = reatomComponent(({ ctx }) => {
                 className="items-center gap-1"
                 onClick={(e) => {
                   e.preventDefault();
-                  handleSearchFilter(option.value);
+                  // handleSearchFilter(option.value);
                 }}
               >
                 <Typography state={searchState.type === option.value ? "active" : "default"}>

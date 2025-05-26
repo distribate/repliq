@@ -26,7 +26,7 @@ function isFriendDetailed(input: GetFriendsResponse["data"][number]): input is F
   return "is_pinned" in input && input.is_pinned !== undefined;
 }
 
-export const myFriendsDataAtom = atom<FriendWithDetails[]>([], "myFriendsData").pipe(withReset())
+export const myFriendsDataAtom = atom<FriendWithDetails[] | null>(null, "myFriendsData").pipe(withReset())
 export const myFriendsMetaAtom = atom<GetFriendsResponse["meta"] | null>(null, "myFriendsMeta").pipe(withReset())
 export const myFriendsPinnedDataAtom = atom<FriendWithDetails[]>([], "myFriendsPinnedData").pipe(withReset())
 export const myFriendsNotPinnedDataAtom = atom<FriendWithDetails[]>([], "myFriendsNotPinnedData").pipe(withReset())
@@ -47,8 +47,6 @@ myFriendsDataAtom.onChange((ctx, state) => {
     )
   }
 })
-
-export const friendsCountAtom = atom<number | null>(null, 'friendsCountAtom')
 
 export async function getFriends({
   nickname, sort_type, with_details, ascending, cursor, limit
@@ -78,14 +76,15 @@ export async function getFriends({
 }
 
 export const myFriendsAction = reatomAsync(async (ctx) => {
-  await sleep(400)
-  
-  if (ctx.get(myFriendsDataAtom).length >= 1) {
+  console.log(ctx.get(myFriendsDataAtom))
+  if (ctx.get(myFriendsDataAtom)) {
     const cache = { data: ctx.get(myFriendsDataAtom), meta: ctx.get(myFriendsMetaAtom) }
-    consola.info(`returned cached data for ${ctx.get(currentUserNicknameAtom)}: `, cache)
+    console.log('cache', cache)
     return cache
   }
 
+  await sleep(200)
+  
   let nickname = ctx.get(currentUserNicknameAtom)
 
   if (!nickname) {
@@ -94,15 +93,14 @@ export const myFriendsAction = reatomAsync(async (ctx) => {
 
   if (!nickname) return;
 
-  const filtering = ctx.get(friendsUpdateOptionsAtom)
-  const { sort_type, ascending, limit } = filtering
+  const { sort_type, ascending, limit } = ctx.get(friendsUpdateOptionsAtom)
 
   return await ctx.schedule(() => getFriends({ nickname, with_details: true, limit, sort_type, ascending }))
 }, {
   name: "myFriendsAction",
   onFulfill: (ctx, res) => {
     if (!res) return;
-
+    
     myFriendsDataAtom(ctx, res.data as FriendWithDetails[])
     myFriendsMetaAtom(ctx, res.meta)
     friendsUpdateOptionsAtom(ctx, (state) => ({ ...state, cursor: res.meta?.endCursor }))

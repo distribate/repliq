@@ -2,23 +2,30 @@ import { requestedUserParamAtom } from "#components/profile/requested-user.model
 import { reatomComponent } from "@reatom/npm-react";
 import { coverAtom } from "../models/cover.model";
 import { Avatar } from "#components/user/avatar/components/avatar";
+import { cva, VariantProps } from "class-variance-authority";
+import { HTMLAttributes } from "react";
 
-export const COVER_AVATAR_HEIGHT = [76, 168]
+const userCoverAvatarVariants = cva(`flex items-center justify-center md:size-[160px] size-[80px]`, {
+  variants: {
+    variant: {
+      full: "size-[160px]",
+      compact: "size-[80px]"
+    }
+  }
+})
 
-export const UserCoverAvatar = reatomComponent(({ ctx }) => {
+type UserCoverAvatarProps = HTMLAttributes<HTMLDivElement>
+  & VariantProps<typeof userCoverAvatarVariants>
+
+export const UserCoverAvatar = reatomComponent<UserCoverAvatarProps>(({ ctx, className, variant }) => {
   const nickname = ctx.spy(requestedUserParamAtom)
   if (!nickname) return null;
 
-  const imageHeight = ctx.spy(coverAtom).inView ? COVER_AVATAR_HEIGHT[1] : COVER_AVATAR_HEIGHT[0];
+  const imageSizes = ctx.spy(coverAtom).inView ? 160 : 80
 
   return (
-    <>
-      <div className={`lg:hidden flex w-[120px] h-[120px]`}>
-        <Avatar variant="page" propHeight={imageHeight} propWidth={imageHeight} withStatus={true} nickname={nickname} />
-      </div>
-      <div className={`hidden lg:flex w-[${imageHeight}px] h-[${imageHeight}px]`}>
-        <Avatar variant="page" propHeight={imageHeight} propWidth={imageHeight} withStatus={true} nickname={nickname} />
-      </div>
-    </>
+    <div className={userCoverAvatarVariants({ variant, className })}>
+      <Avatar propHeight={imageSizes} propWidth={imageSizes} withStatus={true} nickname={nickname} />
+    </div>
   )
 })

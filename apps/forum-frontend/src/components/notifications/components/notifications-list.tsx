@@ -20,7 +20,7 @@ const client = forumUserClient.user["get-user-notifications"].$get
 type NotificationCardProps = InferResponseType<typeof client, 200>["data"][number]
 
 const NotificationCard = reatomComponent<NotificationCardProps>(({
-  ctx, created_at, id, message, read, type
+  ctx, created_at, id, message, read
 }) => {
   const date = dayjs(created_at).fromNow()
 

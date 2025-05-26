@@ -2,10 +2,10 @@ import { BlockWrapper } from "#components/wrappers/components/block-wrapper"
 import { reatomComponent } from "@reatom/npm-react"
 import { LAND_URL } from "@repo/shared/constants/routes"
 import { Typography } from "@repo/ui/src/components/typography"
-import { Link } from "@tanstack/react-router"
 import { anotherLandsByOwnerAction, anotherLandsByOwnerAtom } from "../models/land.model"
 import { Skeleton } from "@repo/ui/src/components/skeleton"
 import { Avatar } from "#components/user/avatar/components/avatar"
+import { CustomLink } from "#components/shared/link"
 
 const List = reatomComponent(({ ctx }) => {
   const data = ctx.spy(anotherLandsByOwnerAtom)
@@ -14,10 +14,10 @@ const List = reatomComponent(({ ctx }) => {
 
   return (
     data.map((land) => (
-      <Link key={land.ulid} to={LAND_URL + land.ulid} className="flex bg-shark-900 gap-2 rounded-lg p-2 w-full items-center">
+      <CustomLink key={land.ulid} to={LAND_URL + land.ulid} className="flex bg-shark-900 gap-2 rounded-lg p-2 w-full items-center">
         <Avatar nickname={land.members[0].nickname} propHeight={22} propWidth={22} rounded="default" />
         {land.name}
-      </Link>
+      </CustomLink>
     ))
   )
 })

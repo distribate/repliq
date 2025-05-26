@@ -14,6 +14,7 @@ export const DeleteCoverModal = reatomComponent(({ ctx }) => {
 
   return (
     <DynamicModal
+      autoClose
       isPending={ctx.spy(deleteBackgroundImageAction.statusesAtom).isPending}
       withLoader
       trigger={

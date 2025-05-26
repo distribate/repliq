@@ -1,11 +1,12 @@
 import { userProfileStatsResource } from '#components/profile/account/models/user-stats.model'
+import { CustomLink } from '#components/shared/link'
 import { Avatar } from '#components/user/avatar/components/avatar'
 import { UserNickname } from '#components/user/name/nickname'
 import { reatomComponent } from '@reatom/npm-react'
 import { getUser } from '@repo/lib/helpers/get-user'
 import { USER_URL } from '@repo/shared/constants/routes'
 import { Typography } from '@repo/ui/src/components/typography'
-import { createFileRoute, Link } from '@tanstack/react-router'
+import { createFileRoute } from '@tanstack/react-router'
 
 export const Route = createFileRoute('/_protected/dashboard/_dashboard/')({
   component: reatomComponent(({ ctx }) => {
@@ -20,11 +21,11 @@ export const Route = createFileRoute('/_protected/dashboard/_dashboard/')({
           <Avatar nickname={nickname} propWidth={96} propHeight={96} />
           <div className="flex flex-col">
             <UserNickname nickname={nickname} className="text-2xl" />
-            <Link to={USER_URL + nickname}>
+            <CustomLink to={USER_URL + nickname}>
               <Typography className="font-semibold text-base text-shark-300">
                 к профилю {`>`}
               </Typography>
-            </Link>
+            </CustomLink>
           </div>
         </div>
         <div className="flex flex-col bg-primary-color p-4 gap-4 rounded-lg w-full h-full">

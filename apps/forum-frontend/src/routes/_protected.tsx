@@ -3,11 +3,11 @@ import { globalOptionsAtom } from '@repo/lib/queries/global-option-query';
 import { lazy, Suspense } from 'react';
 import { validatePage } from '@repo/lib/utils/validate-page';
 import { MainLayout } from '#components/layout/components/default/layout';
-import { WindowLoader } from '@repo/ui/src/components/window-loader';
 import { reatomComponent } from '@reatom/npm-react';
 import { reatomLoader } from '@repo/lib/utils/reatom-loader';
 import { currentUserResource } from '@repo/lib/helpers/get-user';
 import { AUTH_REDIRECT } from '@repo/shared/constants/routes';
+import { PageLoader } from "@repo/ui/src/components/page-loader"
 
 const ErrorComponent = lazy(() => import("#components/layout/components/default/error").then(m => ({ default: m.ErrorComponent })))
 const StartPreview = lazy((() => import("#components/templates/components/start-preview").then(m => ({ default: m.StartPreview }))))
@@ -39,7 +39,7 @@ export const Route = createFileRoute('/_protected')({
   ),
   pendingComponent: () => (
     <div className="flex h-dvh w-full items-center justify-center">
-      <WindowLoader />
+      <PageLoader />
     </div>
   )
 })

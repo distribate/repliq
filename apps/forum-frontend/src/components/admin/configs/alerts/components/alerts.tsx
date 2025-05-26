@@ -6,7 +6,7 @@ import { AlertsAddButton } from "./alerts-add-button.tsx";
 import { reatomComponent } from "@reatom/npm-react";
 import { DeleteButton } from "@repo/ui/src/components/detele-button.tsx";
 import { AlertEntity } from "@repo/types/entities/entities-type.ts";
-import { alertsResource } from "@repo/lib/queries/alerts.model";
+import { alertsResource } from "#components/layout/components/widgets/alert-widget.model.ts";
 
 const AlertItemDeleteButton = ({ id }: Pick<AlertEntity, "id">) => {
   return <DeleteButton title="Удалить" disabled={false} onClick={() => {}} />;

@@ -6,7 +6,6 @@ import { skinClient } from "@repo/shared/api/minecraft-client";
 import { Button } from "@repo/ui/src/components/button";
 import { Dialog, DialogClose, DialogContent, DialogTrigger } from "@repo/ui/src/components/dialog";
 import { Typography } from "@repo/ui/src/components/typography";
-import { Link } from "@tanstack/react-router";
 import { ArrowDownFromLine } from "lucide-react";
 import { useState } from "react";
 
@@ -34,8 +33,8 @@ export const ProfileSkinDownloadLink = reatomComponent(({ ctx }) => {
       </DialogTrigger>
       <DialogContent>
         <ConfirmationActionModalTemplate title="Скачать скин?">
-          <Link
-            to={downloadUrl.href}
+          <a
+            href={downloadUrl.href}
             onClick={() => setDialogOpen(false)}
             target="_blank"
             rel="noopener noreferrer"
@@ -45,7 +44,7 @@ export const ProfileSkinDownloadLink = reatomComponent(({ ctx }) => {
             <Typography className="text-shark-950 text-base font-medium">
               Скачать
             </Typography>
-          </Link>
+          </a>
           <DialogClose>
             <ConfirmationButton actionType="cancel" title="Отмена" />
           </DialogClose>

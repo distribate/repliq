@@ -1,13 +1,13 @@
+import { userCardDialogIsOpenAtom } from "#components/modals/custom/components/user-card-modal";
+import { router } from "#main";
 import { reatomResource, withDataAtom, withErrorAtom, withStatusesAtom } from "@reatom/async";
-import { atom } from "@reatom/core";
+import { action, atom } from "@reatom/core";
 import { sleep } from "@reatom/framework";
 import { forumUserClient } from "@repo/shared/api/forum-client";
+import { USER_URL } from "@repo/shared/constants/routes";
 
 async function getUserSummary(nickname: string) {
-  const res = await forumUserClient.user["get-user-summary"][":nickname"].$get({
-    param: { nickname },
-  });
-
+  const res = await forumUserClient.user["get-user-summary"][":nickname"].$get({ param: { nickname } });
   const data = await res.json();
 
   if (!data || "error" in data) return null;
@@ -17,12 +17,29 @@ async function getUserSummary(nickname: string) {
 
 export const selectedUserCardAtom = atom<string | null>(null, "selectedUserCard")
 
+export const controlUserCardAtom = action((ctx, value: boolean, type?: "link") => {
+  if (!value) {
+    userCardDialogIsOpenAtom(ctx, value)
+    
+    if (type) {
+      const target = ctx.get(userCardResource.dataAtom)?.data?.nickname
+      if (!target) return;
+
+      ctx.schedule(() => router.navigate({ to: USER_URL + target }))
+    }
+
+    userCardResource.dataAtom.reset(ctx)
+  }
+  
+  userCardDialogIsOpenAtom(ctx, value)
+})
+
 export const userCardResource = reatomResource(async (ctx) => {
   const target = ctx.spy(selectedUserCardAtom)
   if (!target) return null
 
-  await sleep(120)
-  
+  await sleep(100)
+
   return await ctx.schedule(() => getUserSummary(target))
 }, "userCardResource").pipe(
   withDataAtom(), withStatusesAtom(), withErrorAtom()

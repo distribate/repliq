@@ -1,6 +1,6 @@
 import { Typography } from "@repo/ui/src/components/typography.tsx";
 import { Skeleton } from "@repo/ui/src/components/skeleton.tsx";
-import { GetUserActiveSessionsResponse, userActiveSessionsAction, userActiveSessionsAtom } from "#components/modals/user-settings/queries/user-sessions-query";
+import { GetUserActiveSessionsResponse, userActiveSessionsAction, userActiveSessionsAtom } from "#components/modals/user-settings/models/user-sessions.model";
 import YellowCandle from "@repo/assets/images/minecraft/yellow_candle.webp";
 import {
   Dialog,

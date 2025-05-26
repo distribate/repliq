@@ -1,12 +1,12 @@
 import { UserSettingsBack } from "#components/modals/user-settings/components/user-settings-back"
-import { toggleGlobalDialogAction } from "#components/modals/user-settings/hooks/use-user-settings-modal"
+import { toggleGlobalDialogAction } from "#components/modals/user-settings/models/update-user-settings.model"
 import { ContentNotFound } from "#components/templates/components/content-not-found"
 import { reatomComponent } from "@reatom/npm-react"
 import { LAND_URL } from "@repo/shared/constants/routes"
 import { Skeleton } from "@repo/ui/src/components/skeleton"
 import { Typography } from "@repo/ui/src/components/typography"
-import { Link } from "@tanstack/react-router"
 import { myLandsResource } from "../models/my-lands.model"
+import { CustomLink } from "#components/shared/link"
 
 export const UserLands = reatomComponent(({ ctx }) => {  
   const userLands = ctx.spy(myLandsResource.dataAtom)
@@ -31,7 +31,7 @@ export const UserLands = reatomComponent(({ ctx }) => {
             <Typography className="text-lg text-shark-200">
               {land.name}
             </Typography>
-            <Link
+            <CustomLink
               to={LAND_URL + land.ulid}
               onClick={() => toggleGlobalDialogAction(ctx, { reset: true, value: false })}
               className="w-fit rounded-lg py-1 px-3 flex bg-shark-50 items-center justify-center"
@@ -39,7 +39,7 @@ export const UserLands = reatomComponent(({ ctx }) => {
               <Typography className="text-shark-950 font-semibold">
                 Перейти к региону
               </Typography>
-            </Link>
+            </CustomLink>
           </div>
         ))}
       </div>

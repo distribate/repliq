@@ -1,4 +1,3 @@
-import { Link } from "@tanstack/react-router";
 import { Typography } from '@repo/ui/src/components/typography.tsx';
 import { CATEGORY_URL } from '@repo/shared/constants/routes';
 import Spyglass from "@repo/assets/images/minecraft/spyglass.webp";
@@ -14,6 +13,7 @@ import { reatomComponent } from '@reatom/npm-react';
 import { categoriesResource } from '../models/categories.model';
 import { globalOptionsAtom } from "@repo/lib/queries/global-option-query";
 import { AuthTemplate } from "#components/templates/components/auth-template";
+import { CustomLink } from "#components/shared/link";
 
 const ThreadNotFound = lazy(() => import("#components/templates/components/threads-not-found").then(m => ({ default: m.ThreadNotFound })));
 
@@ -129,7 +129,7 @@ const MainCategoriesList = reatomComponent(({ ctx }) => {
             )}
             <Separator />
             <div className="flex items-center gap-2 w-fit h-full">
-              <Link
+              <CustomLink
                 to={CATEGORY_URL + c.category_id}
                 className="flex gap-2 items-center justify-start hover:bg-shark-700 transition-all 
                 duration-300 ease-in-out group bg-shark-900 px-2 py-1 rounded-md"
@@ -138,7 +138,7 @@ const MainCategoriesList = reatomComponent(({ ctx }) => {
                 <Typography>
                   Все треды
                 </Typography>
-              </Link>
+              </CustomLink>
               <Dialog>
                 <DialogTrigger>
                   <div 

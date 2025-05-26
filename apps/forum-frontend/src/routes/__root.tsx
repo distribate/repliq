@@ -76,9 +76,9 @@ function RootComponent() {
       <NotificationsWrapper />
       <Outlet />
       <ScrollRestoration />
-      {/* <Suspense>
+      <Suspense>
         <TanStackRouterDevtools />
-      </Suspense> */}
+      </Suspense>
     </Meta>
   )
 }

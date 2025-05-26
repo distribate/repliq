@@ -7,7 +7,7 @@ import { DynamicModal } from "../../dynamic-modal/components/dynamic-modal.tsx";
 import { DialogClose } from "@repo/ui/src/components/dialog.tsx";
 import { authClient } from "@repo/shared/api/auth-client.ts";
 import { toast } from "sonner";
-import { userActiveSessionsAction } from "#components/modals/user-settings/queries/user-sessions-query.ts";
+import { userActiveSessionsAction } from "#components/modals/user-settings/models/user-sessions.model.ts";
 import { AUTH_REDIRECT } from "@repo/shared/constants/routes.ts";
 import { reatomComponent } from "@reatom/npm-react";
 import { reatomAsync, withStatusesAtom } from "@reatom/async";

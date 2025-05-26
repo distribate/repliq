@@ -1,10 +1,10 @@
 import { X } from "lucide-react";
 import { Avatar } from "#components/user/avatar/components/avatar.tsx";
-import { Link } from "@tanstack/react-router";
 import { Typography } from "@repo/ui/src/components/typography.tsx";
 import { ThreadHistoryType, updateHistoryThreadsAction } from "../models/history-threads.model.ts";
 import { THREAD_URL } from "@repo/shared/constants/routes.ts";
 import { reatomComponent } from "@reatom/npm-react";
+import { CustomLink } from "#components/shared/link.tsx";
 
 export type ThreadHistoryProps = {
   index?: number;
@@ -21,11 +21,11 @@ const ThreadHistoryCompact = reatomComponent<Omit<ThreadHistoryProps, "index" | 
       >
         <X className="w-3 h-3 hover:text-red-500" />
       </div>
-      <Link to={THREAD_URL + id}>
+      <CustomLink to={THREAD_URL + id}>
         <Typography textSize="small" textColor="shark_white">
           {title}
         </Typography>
-      </Link>
+      </CustomLink>
       <Typography className="text-[12px] text-shark-300">
         Игрок: {owner}
       </Typography>
@@ -51,7 +51,7 @@ const ThreadHistoryFull = reatomComponent<Omit<ThreadHistoryProps, "index" | "ac
         propWidth={30}
       />
       <div className="flex flex-col w-full truncate overflow-hidden">
-        <Link to={THREAD_URL + id}>
+        <CustomLink to={THREAD_URL + id}>
           <Typography
             textSize="small"
             textColor="shark_white"
@@ -59,7 +59,7 @@ const ThreadHistoryFull = reatomComponent<Omit<ThreadHistoryProps, "index" | "ac
           >
             {title}
           </Typography>
-        </Link>
+        </CustomLink>
         <Typography className="text-[12px] leading-3 text-shark-300">
           {owner}
         </Typography>

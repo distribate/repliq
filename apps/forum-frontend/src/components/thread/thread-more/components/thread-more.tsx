@@ -6,7 +6,6 @@ import {
 } from "@repo/ui/src/components/accordion.tsx";
 import { Typography } from "@repo/ui/src/components/typography.tsx";
 import dayjs from "@repo/lib/constants/dayjs-instance.ts";
-import { Link } from "@tanstack/react-router";
 import { USER_URL } from "@repo/shared/constants/routes.ts";
 import { Avatar } from "#components/user/avatar/components/avatar.tsx";
 import { UserNickname } from "#components/user/name/nickname";
@@ -16,6 +15,7 @@ import { Separator } from "@repo/ui/src/components/separator";
 import { FriendButton } from "#components/friend/components/friend-button/components/friend-button";
 import { reatomComponent } from "@reatom/npm-react";
 import { atom } from "@reatom/core";
+import { CustomLink } from "#components/shared/link";
 
 const ThreadTag = ({ tag }: { tag: string; }) => {
   return (
@@ -75,22 +75,22 @@ export const ThreadMore = reatomComponent(({ ctx }) => {
           </div>
           <div className="flex flex-col mt-2 mb-6 gap-y-4 w-full">
             <div className="flex items-end gap-2 w-fit">
-              <Link to={USER_URL + owner.nickname}>
+              <CustomLink to={USER_URL + owner.nickname}>
                 <Avatar nickname={owner.nickname} propWidth={36} propHeight={36} />
-              </Link>
-              <Link to={USER_URL + owner.nickname}>
+              </CustomLink>
+              <CustomLink to={USER_URL + owner.nickname}>
                 <UserNickname nickname={owner.nickname} />
-              </Link>
+              </CustomLink>
             </div>
             <div className="flex items-center gap-2 w-full">
               <FriendButton recipient={owner.nickname} />
               <Separator orientation="vertical" />
-              <Link to={USER_URL + owner.nickname}>
+              <CustomLink to={USER_URL + owner.nickname}>
                 <Button className="px-6" state="default">
                   <Typography className="text-[16px]">Профиль</Typography>
                 </Button>
-              </Link>
-              <Link
+              </CustomLink>
+              <CustomLink
                 to="/search"
                 search={{
                   type: "threads",
@@ -101,7 +101,7 @@ export const ThreadMore = reatomComponent(({ ctx }) => {
                 <Button state="default" className="px-6">
                   <Typography className="text-[16px]">Треды</Typography>
                 </Button>
-              </Link>
+              </CustomLink>
             </div>
           </div>
           <div

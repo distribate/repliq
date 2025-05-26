@@ -1,9 +1,9 @@
 import { Typography } from "@repo/ui/src/components/typography";
 import FancyFeather from "@repo/assets/images/minecraft/fancy_feather.webp"
-import { Link } from "@tanstack/react-router";
 import { THREAD_URL } from "@repo/shared/constants/routes";
 import { myThreadsResource } from "../queries/my-threads-query";
 import { reatomComponent } from "@reatom/npm-react";
+import { CustomLink } from "#components/shared/link";
 
 export const SavedThreads = () => {
   return (
@@ -50,7 +50,7 @@ export const MyThreads = reatomComponent(({ ctx }) => {
                   {t.description}
                 </Typography>
               </div>
-              <Link to={THREAD_URL + t.id} className="bg-shark-50 flex items-center justify-center w-2/4 px-4 py-2 rounded-lg">
+              <CustomLink to={THREAD_URL + t.id} className="bg-shark-50 flex items-center justify-center w-2/4 px-4 py-2 rounded-lg">
                 <Typography
                   textColor="shark_black"
                   textSize="medium"
@@ -58,7 +58,7 @@ export const MyThreads = reatomComponent(({ ctx }) => {
                 >
                   Перейти к треду
                 </Typography>
-              </Link>
+              </CustomLink>
             </div>
           ))}
         </div>

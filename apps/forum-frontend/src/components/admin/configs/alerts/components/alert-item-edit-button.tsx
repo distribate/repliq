@@ -6,7 +6,7 @@ import { Typography } from "@repo/ui/src/components/typography.tsx";
 import { DynamicModal } from "#components/modals/dynamic-modal/components/dynamic-modal";
 import { reatomComponent } from "@reatom/npm-react";
 
-export const AlertItemEditButton = reatomComponent<Omit<AlertEntity, "created_at" | "creator">>(({ ctx, ...currentAlert}) => {
+export const AlertItemEditButton = reatomComponent<Omit<AlertEntity, "created_at" | "creator">>(({ ...currentAlert }) => {
   return (
     <DynamicModal
       autoClose

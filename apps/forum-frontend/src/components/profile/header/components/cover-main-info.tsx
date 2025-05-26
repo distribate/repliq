@@ -18,7 +18,7 @@ const BirthdayEvent = reatomComponent(({ ctx }) => {
 
   if (!isBirthday) return null;
 
-  return <Typography className="font-[Minecraft] text-xl lg:text-3xl">🎉</Typography>
+  return <Typography className="font-[Minecraft] text-xl lg:text-3xl select-none">🎉</Typography>
 }, "BirthdayEvent")
 
 export const UserCoverMainInfo = reatomComponent(({ ctx }) => {
@@ -27,22 +27,24 @@ export const UserCoverMainInfo = reatomComponent(({ ctx }) => {
 
   const inView = ctx.spy(coverAtom).inView
 
-  const { nickname, description, real_name, name_color, donate } = requestedUser;
-
   return (
     <div className="flex flex-col lg:items-start items-center self-end justify-between h-1/2 gap-y-1">
       <div className="flex flex-col lg:items-start items-center truncate">
         <div className="flex items-center gap-1">
           <BirthdayEvent />
-          <UserNickname nickname={nickname} nicknameColor={name_color} className={inView ? "text-xl lg:text-3xl" : "text-xl"} />
-          <UserDonate donate={donate} />
+          <UserNickname
+            nickname={requestedUser.nickname}
+            nicknameColor={requestedUser.name_color}
+            className={inView ? "text-xl lg:text-3xl" : "text-xl"}
+          />
+          <UserDonate donate={requestedUser.donate} />
         </div>
-        {real_name && <UserRealName real_name={real_name} />}
+        {requestedUser.real_name && <UserRealName real_name={requestedUser.real_name} />}
       </div>
-      {description && (
+      {requestedUser.description && (
         <div className="hidden lg:flex">
           <Typography textColor="shark_white" className="font-[Minecraft]" textSize="medium">
-            {description}
+            {requestedUser.description}
           </Typography>
         </div>
       )}

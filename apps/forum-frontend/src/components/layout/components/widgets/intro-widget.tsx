@@ -3,16 +3,15 @@ import { Typography } from "@repo/ui/src/components/typography";
 import { globalPreferencesAtom } from "@repo/lib/queries/global-preferences-query";
 import { DeleteButton } from "@repo/ui/src/components/detele-button";
 import { reatomComponent } from "@reatom/npm-react";
-import { updateVisibilityAction } from "@repo/lib/hooks/use-update-global-preferences";
+import { updateVisibilityAction } from "@repo/lib/hooks/update-global-preferences.model";
 
 const IntroClose = reatomComponent(({ ctx }) => {
   return <DeleteButton variant="invisible" onClick={() => updateVisibilityAction(ctx, "intro")} />;
 }, "IntroClose")
 
 export const IntroWidget = reatomComponent(({ ctx }) => {
-  const { intro } = ctx.spy(globalPreferencesAtom)
-
-  if (intro === "hide") return null;
+  const isIntro = ctx.spy(globalPreferencesAtom).intro === "show"
+  if (!isIntro) return null;
 
   return (
     <div className="flex select-none flex-col px-4 group items-center justify-end relative overflow-hidden h-[100px] md:h-[150px] rounded-lg w-full">

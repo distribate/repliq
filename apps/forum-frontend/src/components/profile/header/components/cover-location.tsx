@@ -12,7 +12,7 @@ export const UserCoverLocation = reatomComponent(({ ctx }) => {
   if (!isOnlineInGame) return null;
 
   return (
-    <div className="absolute top-4 font-[Minecraft] right-4 z-[5] bg-black/40 px-4 py-1 rounded-md w-fit">
+    <div className="flex items-center justify-center bg-black/40 px-4 py-1 rounded-md w-fit font-[Minecraft]">
       <Suspense>
         <Location />
       </Suspense>

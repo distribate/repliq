@@ -1,7 +1,7 @@
 import { useEffect } from "react"
-import { userSettingsAtom, UserSettingsDialog } from "../queries/user-settings-query"
+import { userSettingsAtom, UserSettingsDialog } from "../models/user-settings.model"
 import { ArrowLeft } from "lucide-react"
-import { updateDialogSectionAction } from "#components/modals/user-settings/hooks/use-user-settings-modal"
+import { updateDialogSectionAction } from "#components/modals/user-settings/models/update-user-settings.model"
 import { reatomComponent } from "@reatom/npm-react"
 
 export const UserSettingsBack = reatomComponent<{ to: UserSettingsDialog["current"] }>(({ ctx, to }) => {

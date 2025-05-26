@@ -6,14 +6,12 @@ import { ConfirmationButton } from "#components/modals/confirmation-modal/compon
 import { Dialog, DialogClose, DialogContent, DialogTrigger } from "@repo/ui/src/components/dialog.tsx";
 import { ConfirmationActionModalTemplate } from "#components/modals/confirmation-modal/components/confirmation-action-modal";
 import { blockedUserAtom, blockUserAction, unblockUserAction } from "../models/blocked-user.model";
-import { reatomComponent, useAtom } from "@reatom/npm-react";
+import { reatomComponent } from "@reatom/npm-react";
 
 export const BlockUserModal = reatomComponent<{ recipient: string; }>(({ ctx, recipient }) => {
-  const [blocked] = useAtom(blockedUserAtom)
+  const blocked = ctx.spy(blockedUserAtom)
 
-  if (!blocked) return null;
-
-  const isBlocked = blocked.recipient === recipient || false;
+  const isBlocked = blocked?.recipient === recipient || false;
 
   const handleBlockUser = () => {
     if (isBlocked) {
@@ -27,7 +25,7 @@ export const BlockUserModal = reatomComponent<{ recipient: string; }>(({ ctx, re
 
   return (
     <Dialog>
-      <DialogTrigger>
+      <DialogTrigger disabled={!isBlocked}>
         <HoverCardItem className="group gap-2">
           <Ban size={16} className="text-shark-300" />
           <Typography>

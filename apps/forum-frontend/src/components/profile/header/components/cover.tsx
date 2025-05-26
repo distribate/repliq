@@ -14,23 +14,40 @@ export const UserCover = reatomComponent(({ ctx }) => {
   const coverDetails = ctx.spy(requestedUserCoverDetailsAtom)
   if (!coverDetails) return;
 
+  const inView = ctx.spy(coverAtom).inView
   const { backgroundColor, backgroundImage, outline, coverImage } = coverDetails;
-  const variant = ctx.spy(coverAtom).inView ? "full" : "compact"
+  const variant = inView ? "full" : "compact"
 
   return (
-    <CoverArea variant={variant} backgroundColor={backgroundColor} outline={outline} style={{ backgroundImage }}>
+    <CoverArea data-variant={variant} variant={variant} backgroundColor={backgroundColor} outline={outline} style={{ backgroundImage }}>
       {!coverImage && (
         <Suspense>
           <UserCoverWatermark />
         </Suspense>
       )}
       <div className="z-[2] absolute w-full h-full right-0 top-0 bottom-0 left-0 bg-black/40" />
-      <div className="flex flex-col gap-y-2 lg:flex-row gap-x-6 z-[4] relative items-center lg:items-start">
-        <UserCoverAvatar />
+      <div
+        className="flex gap-x-6 gap-y-2 relative items-center z-[4]
+          group-data-[variant=compact]:flex-row flex-col group-data-[variant=compact]:justify-between
+          group-data-[variant=full]:lg:flex-row group-data-[variant=full]:lg:items-start"
+      >
+        <UserCoverAvatar variant={variant} />
         <UserCoverMainInfo />
+        <div className="group-data-[variant=compact]:hidden block lg:hidden">
+          <UserCoverLocation />
+        </div>
       </div>
-      <UserCoverLocation />
-      <UserCoverPanel />
+      <div className="group-data-[variant=compact]:hidden hidden lg:block absolute top-4 right-4 z-[5]">
+        <UserCoverLocation />
+      </div>
+      <div
+        className="flex w-1/2 lg:w-fit items-center bg-transparent gap-4 relative z-[3]
+          group-data-[variant=compact]:hidden
+          group-data-[variant=full]:lg:self-end group-data-[variant=full]:justify-center group-data-[variant=full]:lg:justify-end 
+      "
+      >
+        <UserCoverPanel />
+      </div>
     </CoverArea>
   );
 }, "UserCover")

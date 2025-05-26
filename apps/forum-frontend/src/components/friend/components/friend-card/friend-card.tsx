@@ -8,11 +8,11 @@ import { FriendNote } from "#components/friend/components/friend-card-details/co
 import { Pin } from "lucide-react";
 import { FriendWithDetails } from "@repo/types/schemas/friend/friend-types.ts";
 import type { UserDetailed } from "@repo/types/entities/user-type";
-import { Link } from "@tanstack/react-router"
 import { Avatar } from "#components/user/avatar/components/avatar.tsx";
 import { UserRealName } from "#components/user/real-name/real-name";
 import { friendsViewAtom } from "#components/friends/components/filtering/models/friends-filtering.model";
 import { reatomComponent } from "@reatom/npm-react";
+import { CustomLink } from "#components/shared/link";
 
 type FriendCardProps = Pick<UserDetailed, "nickname" | "real_name" | "description" | "donate"> & FriendWithDetails
 
@@ -29,10 +29,10 @@ export const FriendCard = reatomComponent<FriendCardProps>(({
       </div>
       <div className="flex flex-col group-data-[view=grid]:justify-between h-full sm:gap-y-1 w-full">
         <div className="flex items-start lg:items-center gap-1 w-full">
-          <Link to={USER_URL + nickname} className="flex truncate lg:flex-row flex-col lg:items-center gap-1">
+          <CustomLink to={USER_URL + nickname} className="flex truncate lg:flex-row flex-col lg:items-center gap-1">
             <UserNickname nickname={nickname} className="text-lg leading-3" nicknameColor={name_color} />
             {real_name && <UserRealName real_name={real_name} with_annotation={false} />}
-          </Link>
+          </CustomLink>
           <UserDonate donate={donate} />
         </div>
         {description && (

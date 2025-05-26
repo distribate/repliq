@@ -1,12 +1,12 @@
 import { Skeleton } from "@repo/ui/src/components/skeleton";
 import { RatingBelkoinCard, RatingBelkoinCardProps, RatingCharismCard, RatingCharismCardProps, RatingLandsCard, RatingLandsCardProps, RatingParkourCard, RatingParkourCardProps, RatingPlaytimeCard, RatingPlaytimeCardProps, RatingReputationCard, RatingReputationCardProps } from "./rating-cards";
-import { ratingAction, ratingDataAtom, ratingMetaAtom } from "../queries/ratings-query"
+import { ratingAction, ratingDataAtom, ratingMetaAtom } from "../models/ratings.model"
 import Events from '@repo/assets/gifs/minecraft-boime.gif'
 import { Typography } from "@repo/ui/src/components/typography";
 import { useInView } from "react-intersection-observer";
-import { updateRatingAction } from "#components/ratings/hooks/use-update-ratings.ts";
+import { updateRatingAction } from "#components/ratings/models/update-ratings.model";
 import { useEffect } from "react";
-import { ratingFilterAtom } from "#components/ratings/queries/ratings-filter-query.ts";
+import { ratingFilterAtom } from "#components/ratings/models/rating-filter.model";
 import { Separator } from "@repo/ui/src/components/separator";
 import { ContentNotFound } from "#components/templates/components/content-not-found";
 import { reatomComponent } from "@reatom/npm-react";

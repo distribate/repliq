@@ -3,21 +3,16 @@ import { Typography } from "@repo/ui/src/components/typography";
 import Minecart from "@repo/assets/images/minecraft/minecart_chest.webp"
 import { getUser } from "@repo/lib/helpers/get-user";
 import { toast } from "sonner";
-import { useState } from "react";
-import { Link, useNavigate } from "@tanstack/react-router";
+import { useNavigate } from "@tanstack/react-router";
 import { reatomComponent } from "@reatom/npm-react";
 
 export const ProfileAccountReferals = reatomComponent(({ ctx }) => {
-  const currentUser = getUser(ctx)
-  const [open, setOpen] = useState(false)
+  const nickname = getUser(ctx).nickname
   const navigate = useNavigate()
 
   const copyToClipboard = async () => {
-    await navigator.clipboard.writeText(`https://hub.fasberry.su/auth?type=register&from=${currentUser.nickname}`);
-
+    await navigator.clipboard.writeText(`https://hub.fasberry.su/auth?type=register&from=${nickname}`);
     toast.success("Ссылка скопирована")
-
-    setOpen(true)
   };
 
   return (
@@ -25,11 +20,7 @@ export const ProfileAccountReferals = reatomComponent(({ ctx }) => {
       <div className="flex flex-col gap-4 w-full h-full">
         <div className="flex w-full justify-between items-center">
           <div className="flex items-center gap-1 w-fit">
-            <Typography
-              textColor="shark_white"
-              textSize="big"
-              className="font-semibold"
-            >
+            <Typography textColor="shark_white" textSize="big"  className="font-semibold">
               Реферальная система
             </Typography>
           </div>
@@ -39,10 +30,9 @@ export const ProfileAccountReferals = reatomComponent(({ ctx }) => {
             <div className="flex items-center gap-4">
               <Typography className="text-[18px] font-medium">
                 Пригласи друга на сервер и получи приятный бонус к игре!&nbsp;
-                {/* @ts-ignore */}
-                <Link to="https://fasberry.su/wiki?tab=referals" target="_blank" className="w-fit text-shark-300">
+                <a href="https://fasberry.su/wiki?tab=referals" target="_blank" rel="noreferrer" className="w-fit text-shark-300">
                   (подробнее)
-                </Link>
+                </a>
               </Typography>
               <img src={Minecart} alt="" width={36} height={36} />
             </div>
