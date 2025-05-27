@@ -12,14 +12,13 @@ import { Footer } from '#components/layout/components/default/footer'
 import { SearchWidget } from '#components/layout/components/widgets/search-widget'
 import { globalPreferencesAtom } from '@repo/lib/queries/global-preferences-query'
 import { LatestRegUsers as RegUsers } from '#components/layout/components/stats/latest-reg-users'
-import { globalOptionsAtom } from '@repo/lib/queries/global-option-query'
+import { isAuthenticatedAtom } from '@repo/lib/queries/global-option-query'
 import { MainLayout } from '#components/layout/components/default/layout'
 import { validatePage } from '@repo/lib/utils/validate-page'
 import { StatusWidget } from '#components/layout/components/widgets/status-widget'
 import { Skeleton } from '@repo/ui/src/components/skeleton'
 import { reatomComponent } from '@reatom/npm-react'
 import { reatomLoader } from "@repo/lib/utils/reatom-loader"
-import { currentUserResource } from '@repo/lib/helpers/get-user'
 import { LatestCommentsSkeleton, MainPageSkeleton, OnlineUsersSkeleton } from '#components/templates/components/main-page-skeleton'
 import { Typography } from '@repo/ui/src/components/typography'
 import { Button } from '@repo/ui/src/components/button'
@@ -32,19 +31,14 @@ const OnlineUsers = lazy(() => import('#components/layout/components/stats/onlin
 
 export const Route = createFileRoute('/')({
   component: RouteComponent,
-  loader: reatomLoader(async (context) => {
-    const isValid = await validatePage(context)
-
-    if (isValid) await currentUserResource(context)
-  }),
+  beforeLoad: reatomLoader(async (ctx) => validatePage(ctx)),
   head: () => ({ meta: [{ title: 'Главная' }] }),
-  pendingMinMs: 100,
   pendingComponent: () => <MainPageSkeleton />,
   notFoundComponent: () => <NotFound />,
 })
 
 const LatestComments = reatomComponent(({ ctx }) => {
-  if (!ctx.spy(globalOptionsAtom).isAuthenticated) return null;
+  if (!ctx.spy(isAuthenticatedAtom)) return null;
 
   return (
     <Suspense fallback={<LatestCommentsSkeleton />}>
@@ -59,7 +53,7 @@ const LatestRegUsers = reatomComponent(({ ctx }) => {
       <div className="absolute w-full h-full">
         <RegUsers />
       </div>
-      {!ctx.spy(globalOptionsAtom).isAuthenticated && (
+      {!ctx.spy(isAuthenticatedAtom) && (
         <Suspense>
           <AuthTemplate />
         </Suspense>
@@ -69,7 +63,7 @@ const LatestRegUsers = reatomComponent(({ ctx }) => {
 }, "LastRegUsers")
 
 const LandingIntro = reatomComponent(({ ctx }) => {
-  if (ctx.spy(globalOptionsAtom).isAuthenticated) return null;
+  if (ctx.spy(isAuthenticatedAtom)) return null;
 
   return (
     <div className="flex items-center justify-center h-[46vh] relative overflow-hidden w-full">
@@ -100,7 +94,7 @@ const LandingIntro = reatomComponent(({ ctx }) => {
 }, "LandingIntro")
 
 const Online = reatomComponent(({ ctx }) => {
-  if (!ctx.spy(globalOptionsAtom).isAuthenticated) return null;
+  if (!ctx.spy(isAuthenticatedAtom)) return null;
 
   return (
     <Suspense fallback={<OnlineUsersSkeleton />}>
@@ -110,7 +104,7 @@ const Online = reatomComponent(({ ctx }) => {
 }, "Online")
 
 const Alerts = reatomComponent(({ ctx }) => {
-  if (!ctx.spy(globalOptionsAtom).isAuthenticated) return null;
+  if (!ctx.spy(isAuthenticatedAtom)) return null;
 
   return (
     ctx.spy(globalPreferencesAtom).alerts === 'show' && (
@@ -124,7 +118,7 @@ const Alerts = reatomComponent(({ ctx }) => {
 }, "Alerts")
 
 const MainNavigation = reatomComponent(({ ctx }) => {
-  if (!ctx.spy(globalOptionsAtom).isAuthenticated) return null;
+  if (!ctx.spy(isAuthenticatedAtom)) return null;
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 *:h-[160px] gap-2 w-full">
@@ -137,27 +131,25 @@ const MainNavigation = reatomComponent(({ ctx }) => {
 
 function RouteComponent() {
   return (
-    <>
-      <MainLayout>
-        <main className="flex flex-col w-full gap-2 h-full">
-          <LandingIntro />
-          <Alerts />
-          <div className="flex xl:flex-row gap-2 flex-col w-full h-full">
-            <div className="flex flex-col w-full xl:w-3/4 gap-2 h-full">
-              <StatusWidget />
-              <MainNavigation />
-              <MainCategories />
-              <Footer />
-            </div>
-            <div className="flex flex-col gap-2 w-full xl:w-1/4 h-full">
-              <LatestComments />
-              <LatestNews />
-              <LatestRegUsers />
-              <Online />
-            </div>
+    <MainLayout>
+      <main className="flex flex-col w-full gap-2 h-full">
+        <LandingIntro />
+        <Alerts />
+        <div className="flex xl:flex-row gap-2 flex-col w-full h-full">
+          <div className="flex flex-col w-full xl:w-3/4 gap-2 h-full">
+            <StatusWidget />
+            <MainNavigation />
+            <MainCategories />
+            <Footer />
           </div>
-        </main>
-      </MainLayout>
-    </>
+          <div className="flex flex-col gap-2 w-full xl:w-1/4 h-full">
+            <LatestComments />
+            <LatestNews />
+            <LatestRegUsers />
+            <Online />
+          </div>
+        </div>
+      </main>
+    </MainLayout>
   )
 }

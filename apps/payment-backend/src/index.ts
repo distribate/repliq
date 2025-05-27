@@ -1,6 +1,6 @@
 import { Hono } from 'hono';
 import { showRoutes } from 'hono/dev';
-import { logger } from 'hono/logger';
+import { logger as honoLogger } from 'hono/logger';
 import { createOrderRoute } from './routes/order/create-order.ts';
 import { checkOrderRoute } from './routes/order/check-order.ts';
 import { initNats } from '@repo/config-nats/nats-client.ts';
@@ -10,6 +10,7 @@ import { originList } from "@repo/shared/constants/origin-list.ts";
 import { timeout } from 'hono/timeout';
 import { getOrderRoute } from '#routes/order/get-order.ts';
 import { getCurrenciesRoute } from '#routes/currencies/get-currencies.ts';
+import { logger } from '@repo/lib/utils/logger';
 
 await initNats()
 
@@ -33,14 +34,14 @@ export const currencies = new Hono()
 const app = new Hono()
   .basePath('/payment')
   .use(timeout(5000))
-  .use(logger())
+  .use(honoLogger())
   .route('/proccessing', payments)
   .route('/hooks', hooks)
   .route('/currencies', currencies)
   .route("/", order)
 
-showRoutes(app, { verbose: false });
+// showRoutes(app, { verbose: false });
 
 Bun.serve({ port: Bun.env.PAYMENT_BACKEND_PORT!, fetch: app.fetch });
 
-console.log(Bun.env.PAYMENT_BACKEND_PORT)
+logger.success(`Fasberry Payment Backend started on ${Bun.env.PAYMENT_BACKEND_PORT!}`)

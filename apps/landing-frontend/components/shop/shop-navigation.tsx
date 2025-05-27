@@ -3,8 +3,8 @@ import { Typography } from "@repo/landing-ui/src/typography"
 import EndCrystal from "@repo/assets/images/minecraft/end_crystal.webp"
 import Belkoin from "@repo/assets/images/minecraft/belkoin_wallet.png"
 import Elytra from "@repo/assets/images/minecraft/elytra.webp"
-import { SHOP_ITEM_QUERY_KEY, ShopItemQuery } from "@repo/lib/queries/shop-item-query"
 import { useQueryClient } from "@tanstack/react-query"
+import { SHOP_ITEM_QUERY_KEY, ShopItemQuery } from "./shop"
 
 export const ShopNavigation = () => {
   const qc = useQueryClient()

@@ -1,28 +1,15 @@
-import { reatomResource, withCache, withDataAtom, withStatusesAtom } from "@reatom/async"
 import { reatomComponent } from "@reatom/npm-react"
-import { forumSharedClient } from "@repo/shared/api/forum-client"
 import { Skeleton } from "@repo/ui/src/components/skeleton"
 import { useState } from "react"
-
-async function getStaticImage() {
-  const res = await forumSharedClient.shared["get-auth-image"].$get({ query: { random: "true" } })
-  const data = await res.json()
-
-  if ("error" in data) return null
-
-  return data.data
-}
-
-export const authImageResource = reatomResource(async (ctx) => {
-  return await ctx.schedule(() => getStaticImage())
-}).pipe(withDataAtom(), withStatusesAtom(), withCache())
+import { authImageResource } from "../models/auth-image.model"
 
 export const AuthImage = reatomComponent(({ ctx }) => {
   const [isLoaded, setIsLoaded] = useState(false);
   const url = ctx.spy(authImageResource.dataAtom)
-  const isLoading = ctx.spy(authImageResource.statusesAtom).isPending
 
-  if (isLoading) return <Skeleton className="absolute w-full h-screen" />
+  if (ctx.spy(authImageResource.statusesAtom).isPending) {
+    return <Skeleton className="absolute w-full h-screen" />
+  }
 
   if (!url) return null;
 
@@ -34,7 +21,9 @@ export const AuthImage = reatomComponent(({ ctx }) => {
       alt=""
       draggable={false}
       onLoad={() => setIsLoaded(true)}
-      className={`w-full h-screen absolute object-cover transition-opacity duration-700 ${isLoaded ? "opacity-100" : "opacity-0"}`}
+      data-state={isLoaded}
+      className="w-full h-screen absolute object-cover transition-opacity duration-700 
+        data-[state=true]:opacity-100 data-[state=false]:opacity-0"
     />
   )
 }, "AuthImage")

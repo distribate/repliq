@@ -1,27 +1,11 @@
 import { toast } from "sonner";
-import { postFormFieldAtom } from "./post-form.model.ts";
 import { currentUserNicknameAtom } from "@repo/lib/helpers/get-user.ts";
-import { PostEntity } from "@repo/types/entities/entities-type.ts";
 import type { GetUserPostsResponse } from '@repo/types/routes-types/get-user-posts-types.ts';
 import { reatomAsync, withErrorAtom, withStatusesAtom } from "@reatom/async";
 import { postsDataAtom } from "#components/profile/posts/posts/models/posts.model.ts";
 import { forumPostClient } from "@repo/shared/api/forum-client";
-import { VisibilityPost } from "../models/post-form.model.ts";
-
-export const outputValidator = (
-  output: string,
-  bannedWords: string[],
-): string => {
-  const censorWord = (word: string) => word.length > 2
-    ? word[0] + "*".repeat(word.length - 2) + word[word.length - 1]
-    : "*".repeat(word.length);
-
-  const bannedPattern = new RegExp(`\\b(${bannedWords.join("|")})\\b`, "giu");
-
-  return output.replace(bannedPattern, (match) => censorWord(match));
-};
-
-export const bannedWords = ["FUCK", "fuck", "сука", "бля"];
+import { postContentSchema, postFormContentAtom, postFormResetAction, postFormVisibilityAtom, VisibilityPost } from "../models/post-form.model.ts";
+import { z } from "zod";
 
 type VisibilityOption = {
   label: string;
@@ -29,18 +13,9 @@ type VisibilityOption = {
 };
 
 export const visibilityProperties: VisibilityOption[] = [
-  {
-    label: "Видно всем",
-    value: "all",
-  },
-  {
-    label: "Видно только мне",
-    value: "only",
-  },
-  {
-    label: "Только друзьям",
-    value: "friends",
-  },
+  { label: "Видно всем", value: "all" },
+  { label: "Видно только мне", value: "only" },
+  { label: "Только друзьям", value: "friends" },
 ];
 
 async function createPost({
@@ -59,10 +34,45 @@ async function createPost({
   return data;
 }
 
-export const createPostAction = reatomAsync(async (_, { content, visibility }: Pick<PostEntity, "visibility"> & { content: string | null }) => {
+const bannedWords = ["fuck", "shit", "сука", "бля", "идиот", "глупый"];
+
+export const sanitizeInput = (input: string): string => {
+  let sanitized = input;
+
+  sanitized = sanitized.replace(/\s{3,}/g, " ");
+
+  const attackPattern =
+    /<script.*?>.*?<\/script>|onerror=|onload=|SELECT.*?FROM|DROP TABLE|INSERT INTO|DELETE FROM/gi;
+  sanitized = sanitized.replace(attackPattern, "");
+
+  const bannedPattern = new RegExp(
+    `(?<!\\w)(${bannedWords.join("|")})(?!\\w)`,
+    "giu",
+  );
+  sanitized = sanitized.replace(bannedPattern, "***");
+
+  return sanitized;
+};
+
+export const postSchema = z.object({
+  content: postContentSchema,
+  visibility: z.enum(["only", "all", "friends"]),
+});
+
+export const createPostAction = reatomAsync(async (ctx) => {
+  const content = ctx.get(postFormContentAtom);
+  const visibility = ctx.get(postFormVisibilityAtom);
+
   if (!content) return;
   
-  const fixedContent = outputValidator(content, bannedWords);
+  const fixedContent = sanitizeInput(content);
+
+  const result = postSchema.safeParse({ content: fixedContent, visibility });
+
+  if (!result.success) {
+    toast.error("Validation error");
+    return
+  }
 
   return await createPost({ isComments: false, isPinned: false, content: fixedContent, visibility });
 }, {
@@ -77,8 +87,6 @@ export const createPostAction = reatomAsync(async (_, { content, visibility }: P
     const nickname = ctx.get(currentUserNicknameAtom)
     if (!nickname) return;
 
-    toast.success("Опубликовано");
-
     const newPost: Pick<GetUserPostsResponse, "data">["data"][0] = {
       ...res.data,
       nickname,
@@ -87,9 +95,8 @@ export const createPostAction = reatomAsync(async (_, { content, visibility }: P
       comments_count: 0,
     };
 
+    postFormResetAction(ctx)
     postsDataAtom(ctx, (state) => state ? [newPost, ...state] : null)
-
-    postFormFieldAtom.reset(ctx)
   },
   onReject: (_, error) => {
     if (error instanceof Error) {

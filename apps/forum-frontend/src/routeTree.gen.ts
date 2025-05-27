@@ -20,8 +20,8 @@ import { Route as AuthIndexImport } from './routes/auth/index'
 import { Route as ProtectedSearchImport } from './routes/_protected/search'
 import { Route as ProtectedCollectionImport } from './routes/_protected/collection'
 import { Route as ProtectedLandsIndexImport } from './routes/_protected/lands/index'
-import { Route as ProtectedUserNicknameImport } from './routes/_protected/user/$nickname'
-import { Route as ProtectedThreadIdImport } from './routes/_protected/thread/$id'
+import { Route as PublicUserNicknameImport } from './routes/_public/user/$nickname'
+import { Route as PublicThreadIdImport } from './routes/_public/thread/$id'
 import { Route as ProtectedLandsIdImport } from './routes/_protected/lands/$id'
 import { Route as ProtectedDashboardDashboardImport } from './routes/_protected/dashboard/_dashboard'
 import { Route as ProtectedCategoryIdImport } from './routes/_protected/category/$id'
@@ -201,16 +201,16 @@ const ProtectedactionsCreateThreadLazyRoute =
     ),
   )
 
-const ProtectedUserNicknameRoute = ProtectedUserNicknameImport.update({
+const PublicUserNicknameRoute = PublicUserNicknameImport.update({
   id: '/user/$nickname',
   path: '/user/$nickname',
-  getParentRoute: () => ProtectedRoute,
+  getParentRoute: () => PublicRoute,
 } as any)
 
-const ProtectedThreadIdRoute = ProtectedThreadIdImport.update({
+const PublicThreadIdRoute = PublicThreadIdImport.update({
   id: '/thread/$id',
   path: '/thread/$id',
-  getParentRoute: () => ProtectedRoute,
+  getParentRoute: () => PublicRoute,
 } as any)
 
 const ProtectedLandsIdRoute = ProtectedLandsIdImport.update({
@@ -426,19 +426,19 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProtectedLandsIdImport
       parentRoute: typeof ProtectedImport
     }
-    '/_protected/thread/$id': {
-      id: '/_protected/thread/$id'
+    '/_public/thread/$id': {
+      id: '/_public/thread/$id'
       path: '/thread/$id'
       fullPath: '/thread/$id'
-      preLoaderRoute: typeof ProtectedThreadIdImport
-      parentRoute: typeof ProtectedImport
+      preLoaderRoute: typeof PublicThreadIdImport
+      parentRoute: typeof PublicImport
     }
-    '/_protected/user/$nickname': {
-      id: '/_protected/user/$nickname'
+    '/_public/user/$nickname': {
+      id: '/_public/user/$nickname'
       path: '/user/$nickname'
       fullPath: '/user/$nickname'
-      preLoaderRoute: typeof ProtectedUserNicknameImport
-      parentRoute: typeof ProtectedImport
+      preLoaderRoute: typeof PublicUserNicknameImport
+      parentRoute: typeof PublicImport
     }
     '/_protected/(actions)/create-thread': {
       id: '/_protected/(actions)/create-thread'
@@ -591,8 +591,6 @@ interface ProtectedRouteChildren {
   ProtectedCategoryIdRoute: typeof ProtectedCategoryIdRoute
   ProtectedDashboardRoute: typeof ProtectedDashboardRouteWithChildren
   ProtectedLandsIdRoute: typeof ProtectedLandsIdRoute
-  ProtectedThreadIdRoute: typeof ProtectedThreadIdRoute
-  ProtectedUserNicknameRoute: typeof ProtectedUserNicknameRoute
   ProtectedactionsCreateThreadLazyRoute: typeof ProtectedactionsCreateThreadLazyRoute
   ProtectedactionsCreateTicketLazyRoute: typeof ProtectedactionsCreateTicketLazyRoute
   ProtectedLandsIndexRoute: typeof ProtectedLandsIndexRoute
@@ -609,8 +607,6 @@ const ProtectedRouteChildren: ProtectedRouteChildren = {
   ProtectedCategoryIdRoute: ProtectedCategoryIdRoute,
   ProtectedDashboardRoute: ProtectedDashboardRouteWithChildren,
   ProtectedLandsIdRoute: ProtectedLandsIdRoute,
-  ProtectedThreadIdRoute: ProtectedThreadIdRoute,
-  ProtectedUserNicknameRoute: ProtectedUserNicknameRoute,
   ProtectedactionsCreateThreadLazyRoute: ProtectedactionsCreateThreadLazyRoute,
   ProtectedactionsCreateTicketLazyRoute: ProtectedactionsCreateTicketLazyRoute,
   ProtectedLandsIndexRoute: ProtectedLandsIndexRoute,
@@ -625,12 +621,16 @@ interface PublicRouteChildren {
   PublicBannedLazyRoute: typeof PublicBannedLazyRoute
   PublicNotExistLazyRoute: typeof PublicNotExistLazyRoute
   PublicNotOnlineLazyRoute: typeof PublicNotOnlineLazyRoute
+  PublicThreadIdRoute: typeof PublicThreadIdRoute
+  PublicUserNicknameRoute: typeof PublicUserNicknameRoute
 }
 
 const PublicRouteChildren: PublicRouteChildren = {
   PublicBannedLazyRoute: PublicBannedLazyRoute,
   PublicNotExistLazyRoute: PublicNotExistLazyRoute,
   PublicNotOnlineLazyRoute: PublicNotOnlineLazyRoute,
+  PublicThreadIdRoute: PublicThreadIdRoute,
+  PublicUserNicknameRoute: PublicUserNicknameRoute,
 }
 
 const PublicRouteWithChildren =
@@ -651,8 +651,8 @@ export interface FileRoutesByFullPath {
   '/category/$id': typeof ProtectedCategoryIdRoute
   '/dashboard': typeof ProtectedDashboardDashboardRouteWithChildren
   '/lands/$id': typeof ProtectedLandsIdRoute
-  '/thread/$id': typeof ProtectedThreadIdRoute
-  '/user/$nickname': typeof ProtectedUserNicknameRoute
+  '/thread/$id': typeof PublicThreadIdRoute
+  '/user/$nickname': typeof PublicUserNicknameRoute
   '/create-thread': typeof ProtectedactionsCreateThreadLazyRoute
   '/create-ticket': typeof ProtectedactionsCreateTicketLazyRoute
   '/lands': typeof ProtectedLandsIndexRoute
@@ -682,8 +682,8 @@ export interface FileRoutesByTo {
   '/category/$id': typeof ProtectedCategoryIdRoute
   '/dashboard': typeof ProtectedDashboardDashboardIndexRoute
   '/lands/$id': typeof ProtectedLandsIdRoute
-  '/thread/$id': typeof ProtectedThreadIdRoute
-  '/user/$nickname': typeof ProtectedUserNicknameRoute
+  '/thread/$id': typeof PublicThreadIdRoute
+  '/user/$nickname': typeof PublicUserNicknameRoute
   '/create-thread': typeof ProtectedactionsCreateThreadLazyRoute
   '/create-ticket': typeof ProtectedactionsCreateTicketLazyRoute
   '/lands': typeof ProtectedLandsIndexRoute
@@ -716,8 +716,8 @@ export interface FileRoutesById {
   '/_protected/dashboard': typeof ProtectedDashboardRouteWithChildren
   '/_protected/dashboard/_dashboard': typeof ProtectedDashboardDashboardRouteWithChildren
   '/_protected/lands/$id': typeof ProtectedLandsIdRoute
-  '/_protected/thread/$id': typeof ProtectedThreadIdRoute
-  '/_protected/user/$nickname': typeof ProtectedUserNicknameRoute
+  '/_public/thread/$id': typeof PublicThreadIdRoute
+  '/_public/user/$nickname': typeof PublicUserNicknameRoute
   '/_protected/(actions)/create-thread': typeof ProtectedactionsCreateThreadLazyRoute
   '/_protected/(actions)/create-ticket': typeof ProtectedactionsCreateTicketLazyRoute
   '/_protected/lands/': typeof ProtectedLandsIndexRoute
@@ -811,8 +811,8 @@ export interface FileRouteTypes {
     | '/_protected/dashboard'
     | '/_protected/dashboard/_dashboard'
     | '/_protected/lands/$id'
-    | '/_protected/thread/$id'
-    | '/_protected/user/$nickname'
+    | '/_public/thread/$id'
+    | '/_public/user/$nickname'
     | '/_protected/(actions)/create-thread'
     | '/_protected/(actions)/create-ticket'
     | '/_protected/lands/'
@@ -873,8 +873,6 @@ export const routeTree = rootRoute
         "/_protected/category/$id",
         "/_protected/dashboard",
         "/_protected/lands/$id",
-        "/_protected/thread/$id",
-        "/_protected/user/$nickname",
         "/_protected/(actions)/create-thread",
         "/_protected/(actions)/create-ticket",
         "/_protected/lands/",
@@ -886,7 +884,9 @@ export const routeTree = rootRoute
       "children": [
         "/_public/banned",
         "/_public/not-exist",
-        "/_public/not-online"
+        "/_public/not-online",
+        "/_public/thread/$id",
+        "/_public/user/$nickname"
       ]
     },
     "/_protected/collection": {
@@ -959,13 +959,13 @@ export const routeTree = rootRoute
       "filePath": "_protected/lands/$id.tsx",
       "parent": "/_protected"
     },
-    "/_protected/thread/$id": {
-      "filePath": "_protected/thread/$id.tsx",
-      "parent": "/_protected"
+    "/_public/thread/$id": {
+      "filePath": "_public/thread/$id.tsx",
+      "parent": "/_public"
     },
-    "/_protected/user/$nickname": {
-      "filePath": "_protected/user/$nickname.tsx",
-      "parent": "/_protected"
+    "/_public/user/$nickname": {
+      "filePath": "_public/user/$nickname.tsx",
+      "parent": "/_public"
     },
     "/_protected/(actions)/create-thread": {
       "filePath": "_protected/(actions)/create-thread.lazy.tsx",

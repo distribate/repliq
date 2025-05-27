@@ -15,14 +15,14 @@ export const createFriendRequestRoute = new Hono()
     const { recipient } = createFriendRequestSchema.parse(await ctx.req.json());
     const initiator = getNickname()
 
+    if (initiator === recipient) {
+      return ctx.json({ error: "You cannot add yourself" }, 400);
+    }
+    
     const isValid = await getUserFriendPreference(recipient);
 
     if (!isValid) {
       return ctx.json({ error: "User does not have accept to send friend request" }, 400);
-    }
-
-    if (initiator === recipient) {
-      return ctx.json({ error: "You cannot add yourself" }, 400);
     }
 
     const blockStatus = await getUserBlockStatus({ initiator, recipient });

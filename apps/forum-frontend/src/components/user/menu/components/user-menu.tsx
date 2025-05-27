@@ -61,11 +61,10 @@ const Settings = reatomComponent(({ ctx }) => {
       onSelect={() => {
         requestAnimationFrame(() => toggleGlobalDialogAction(ctx, { reset: true, value: true }));
       }}
+      className="gap-2 group cursor-pointer"
     >
-      <div className="flex items-center w-full gap-2 group cursor-pointer">
-        <SlidersVertical size={20} className="text-shark-300" />
-        <Typography textSize="medium">Настройки</Typography>
-      </div>
+      <SlidersVertical size={20} className="text-shark-300" />
+      <Typography textSize="medium">Настройки</Typography>
     </DropdownMenuItem >
   )
 })
@@ -76,13 +75,12 @@ const Logout = reatomComponent(({ ctx }) => {
       onSelect={() => {
         requestAnimationFrame(() => logoutModalIsOpenAtom(ctx, true));
       }}
+      className="gap-2 group cursor-pointer"
     >
-      <div className="flex hover:bg-shark-600 rounded-md px-2 py-1.5 gap-2 group cursor-pointer" >
-        <LogOut size={20} className="text-red-500" />
-        <Typography className="text-red-500" textSize="medium">
-          Выйти из аккаунта
-        </Typography>
-      </div>
+      <LogOut size={20} className="text-red-500" />
+      <Typography className="text-red-500" textSize="medium">
+        Выйти из аккаунта
+      </Typography>
     </DropdownMenuItem>
   )
 })

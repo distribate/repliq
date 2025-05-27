@@ -4,7 +4,7 @@ import { registerRoute } from './routes/register.ts';
 import { invalidateSessionRoute } from './routes/invalidate-session.ts';
 import { showRoutes } from 'hono/dev';
 import { exceptionHandler } from './helpers/exception-handler.ts';
-import { logger } from 'hono/logger';
+import { logger as honoLogger } from 'hono/logger';
 import { initNats } from '@repo/config-nats/nats-client.ts';
 import { csrf } from 'hono/csrf';
 import { originList } from '@repo/shared/constants/origin-list.ts';
@@ -16,10 +16,12 @@ import { timeoutMiddleware } from './middlewares/timeout-middleware.ts';
 import { corsMiddleware } from './middlewares/cors-middleware.ts';
 import type { Env } from './types/env-type.ts';
 import { rateLimiterMiddleware } from './middlewares/rate-limiter.ts';
+import { logger } from "@repo/lib/utils/logger.ts"
+import { timing, type TimingVariables } from 'hono/timing'
 
 await initNats()
 
-export const auth = new Hono()
+export const auth = new Hono<{ Variables: TimingVariables }>()
   .route('/', invalidateSessionRoute)
   .route('/', getAuthUser)
   .route('/', registerRoute)
@@ -33,13 +35,14 @@ const app = new Hono<Env>()
   .use(corsMiddleware)
   .use(csrf({ origin: originList }))
   .use(rateLimiterMiddleware)
+  .use(timing())
   .use(timeoutMiddleware)
-  .use(logger())
+  .use(honoLogger())
   .onError(exceptionHandler)
   .route("/", auth)
 
-showRoutes(app, { verbose: false });
+// showRoutes(app, { verbose: false });
 
 Bun.serve({ port: Bun.env.AUTH_BACKEND_PORT!, fetch: app.fetch });
 
-console.log(Bun.env.AUTH_BACKEND_PORT!)
+logger.success(`Fasberry Auth Backend started on ${Bun.env.AUTH_BACKEND_PORT!}`)

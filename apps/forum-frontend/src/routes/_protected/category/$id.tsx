@@ -10,9 +10,8 @@ import { CategoryThreadsFilter } from '#components/categories/components/categor
 
 export const Route = createFileRoute('/_protected/category/$id')({
   component: RouteComponent,
-  loader: reatomLoader(async (context, routerCtx) => {
-    // @ts-expect-error
-    categoryIdAtom(context, routerCtx.params.id)
+  loader: reatomLoader(async (context, { params }) => {
+    categoryIdAtom(context, params.id as string)
   })
 })
 

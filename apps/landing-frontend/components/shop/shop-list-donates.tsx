@@ -1,14 +1,15 @@
 import { Skeleton } from "@repo/landing-ui/src/skeleton"
 import { Typography } from "@repo/landing-ui/src/typography"
-import { DONATES_QUERY_KEY, donatesQuery } from "@repo/lib/queries/donates-query"
 import { Donates } from "@repo/lib/queries/get-donates"
 import { ShopFooter } from "./shop-footer"
-import { SHOP_ITEM_QUERY_KEY, ShopItemQuery, shopItemQuery } from "@repo/lib/queries/shop-item-query"
 import { useQueryClient } from "@tanstack/react-query";
 import LeatherTunic from "@repo/assets/images/minecraft/leather_tunic.webp"
 import IronChestplate from "@repo/assets/images/minecraft/iron_chestplate.webp"
 import NetheriteChestplate from "@repo/assets/images/minecraft/netherite_chestplate.webp"
 import { ShopNickname } from "./shop-list-wallets"
+import { keepPreviousData, useQuery } from '@tanstack/react-query';
+import { getDonates } from '@repo/lib/queries/get-donates.ts';
+import { SHOP_ITEM_QUERY_KEY, ShopItemQuery, shopItemQuery } from "./shop";
 
 const DonateListNull = () => {
   return (
@@ -17,6 +18,16 @@ const DonateListNull = () => {
     </Typography>
   )
 }
+
+export const DONATES_QUERY_KEY = (type: "donate" | "wallet" | "events") => ["ui", "donates", type]
+
+export const donatesQuery = (type: "donate" | "wallet" | "events") => useQuery({
+  queryKey: DONATES_QUERY_KEY(type),
+  queryFn: () => getDonates({ type }),
+  refetchOnWindowFocus: false,
+  refetchOnMount: false,
+  placeholderData: keepPreviousData
+})
 
 export const DonatesList = () => {
   const qc = useQueryClient()

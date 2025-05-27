@@ -1,6 +1,10 @@
 import { Ctx } from '@reatom/core';
-import { globalOptionsAtom } from "#queries/global-option-query.ts";
+import { isAuthenticatedAtom } from "#queries/global-option-query.ts";
 import { authClient } from "@repo/shared/api/auth-client";
+import { redirect } from '@tanstack/react-router';
+import { AUTH_REDIRECT } from '@repo/shared/constants/routes';
+import { currentUserResource } from '#helpers/get-user.ts';
+import { logger } from './logger';
 
 async function validateSession (): Promise<boolean> {
   const res = await authClient["get-session"].$get();
@@ -12,17 +16,27 @@ async function validateSession (): Promise<boolean> {
   return false
 }
 
-export async function validatePage(ctx: Ctx): Promise<boolean> {
+export async function validatePage(ctx: Ctx, type: "redirect" | undefined = undefined): Promise<boolean> {
   let isAuthenticated: boolean = false;
 
-  const cache = ctx.get(globalOptionsAtom).isAuthenticated;
+  const cache = ctx.get(isAuthenticatedAtom);
+
+  logger.info(`cache (isAuthenticated): ${cache}`)
 
   if (!cache) {
     isAuthenticated = await validateSession();
 
-    globalOptionsAtom(ctx, (prev) => ({...prev, isAuthenticated }) )
+    isAuthenticatedAtom(ctx, isAuthenticated)
   } else {
     isAuthenticated = cache;
+  }
+
+  if (!isAuthenticated && type === "redirect") {
+    throw redirect({ to: AUTH_REDIRECT })
+  }
+
+  if (isAuthenticated) {
+    await currentUserResource(ctx)
   }
 
   return isAuthenticated

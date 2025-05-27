@@ -20,11 +20,12 @@ async function validateUserNotificationsPreference(nickname: string) {
 
 export const notificationsSSERoute = new Hono()
   .get("/sse", async (ctx) => {
+    const nickname = getNickname()
+    
+    const isValid = await validateUserNotificationsPreference(nickname)
+
     const nc = getNatsConnection()
     const sub = nc.subscribe(updateEvent)
-    const nickname = getNickname()
-
-    const isValid = await validateUserNotificationsPreference(nickname)
 
     return streamSSE(ctx, async (stream) => {
       while (true) {
@@ -36,7 +37,7 @@ export const notificationsSSERoute = new Hono()
           });
 
           stream.close();
-          
+
           return;
         }
 

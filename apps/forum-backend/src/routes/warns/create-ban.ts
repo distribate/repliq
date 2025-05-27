@@ -19,9 +19,7 @@ async function createBan({
 }: CreateBan) {
   const query = await forumDB
     .insertInto("users_banned")
-    .values({
-      nickname: recipient, time, reason
-    })
+    .values({ nickname: recipient, time, reason })
     .returning("id")
     .executeTakeFirstOrThrow()
 

@@ -8,9 +8,27 @@ type GetUser = InitiatorRecipientType & {
   type: GetUserType,
 }
 
-export async function getUser<T extends GetUserType>({
-  initiator, recipient, type
-}: GetUser): Promise<T extends "shorted" ? UserShorted | null : UserDetailed | null> {
+async function getUserShortedDetails(recipient: string) {
+  const query = await forumDB
+    .selectFrom("users")
+    .innerJoin("users_settings", "users.nickname", "users_settings.nickname")
+    .select(eb => [
+      "users.nickname",
+      "users.description",
+      "users.donate",
+      "users.name_color",
+      "users.cover_image",
+      "users.uuid",
+      "users_settings.cover_outline_visible",
+      "users_settings.show_game_location",
+    ])
+    .where("users.nickname", "=", recipient)
+    .executeTakeFirst();
+
+  return query;
+}
+
+async function getUserFullDetails(recipient: string) {
   const query = await forumDB
     .selectFrom("users")
     .innerJoin("users_settings", "users.nickname", "users_settings.nickname")
@@ -34,6 +52,38 @@ export async function getUser<T extends GetUserType>({
     ])
     .where("users.nickname", "=", recipient)
     .executeTakeFirst();
+
+  return query;
+}
+
+export async function getUserProfilePreview(recipient: string): Promise<UserShorted | null> {
+  const query = await getUserShortedDetails(recipient)
+
+  if (!query) return null;
+
+  const {
+    cover_outline_visible, show_game_location, cover_image,
+    nickname, description, name_color, donate
+  } = query;
+
+  const userDetails: UserShorted = {
+    nickname,
+    description,
+    name_color,
+    cover_image,
+    donate,
+    preferences: {
+      cover_outline_visible, show_game_location
+    },
+  };
+
+  return userDetails
+}
+
+export async function getUser<T extends GetUserType>({
+  initiator, recipient, type
+}: GetUser): Promise<T extends "shorted" ? UserShorted | null : UserDetailed | null> {
+  const query = await getUserFullDetails(recipient)
 
   if (!query) return null;
 
@@ -68,7 +118,7 @@ export async function getUser<T extends GetUserType>({
       name_color,
       donate,
       preferences: {
-        cover_outline_visible,
+        cover_outline_visible, show_game_location
       },
     } as T extends "shorted" ? UserShorted : UserDetailed;
   }

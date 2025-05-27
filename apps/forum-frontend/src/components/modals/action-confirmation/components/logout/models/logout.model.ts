@@ -1,6 +1,6 @@
 import { toast } from "sonner";
 import { authClient } from "@repo/shared/api/auth-client";
-import { globalOptionsAtom } from "@repo/lib/queries/global-option-query";
+import { isAuthenticatedAtom } from "@repo/lib/queries/global-option-query";
 import { reatomAsync, withStatusesAtom } from "@reatom/async";
 import { atom } from "@reatom/core";
 
@@ -27,7 +27,7 @@ export const logoutAction = reatomAsync(async (ctx) => {
     }
     
     logoutModalIsOpenAtom(ctx, false)
-    globalOptionsAtom(ctx, (prev) => ({ ...prev, isAuthenticated: false }))
+    isAuthenticatedAtom(ctx, false)
     toast.info("Вы вышли из аккаунта")
 
     return ctx.schedule(() => window.location.reload())

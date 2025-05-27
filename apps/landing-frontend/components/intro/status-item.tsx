@@ -1,12 +1,12 @@
 "use client"
 
 import { Typography } from "@repo/landing-ui/src/typography"
-import { serverStatusQuery } from "@repo/lib/queries/server-status-query";
 import { useRouter } from "next/navigation";
 import { Button } from "@repo/landing-ui/src/button";
 import NetheriteSword from "@repo/assets/images/minecraft/netherite_sword.webp"
 import WildArmor from "@repo/assets/images/minecraft/wild_armor_trim_ыmithing_еemplate.webp"
 import { Skeleton } from "@repo/landing-ui/src/skeleton";
+import { serverStatusQuery } from "#components/status/server-status";
 
 export const StatusItem = () => {
 	const { data: status, isLoading } = serverStatusQuery();

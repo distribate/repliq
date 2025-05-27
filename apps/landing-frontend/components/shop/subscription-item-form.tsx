@@ -1,6 +1,5 @@
 import Link from 'next/link';
 import { Typography } from '@repo/landing-ui/src/typography.tsx';
-import { shopItemQuery } from '@repo/lib/queries/shop-item-query.ts';
 import { Button } from '@repo/landing-ui/src/button.tsx';
 import { createOrderBodySchema } from "@repo/types/schemas/payment/payment-schema.ts";
 import { useState } from 'react';
@@ -12,6 +11,7 @@ import { paymentsClient } from '@repo/shared/api/payments-client';
 import { HTTPError } from 'ky';
 import { z, ZodError } from 'zod';
 import { parseZodErrorMessages } from '@repo/lib/helpers/parse-zod-errors.ts';
+import { shopItemQuery } from './shop.tsx';
 
 export type PaymentFields = z.infer<typeof createOrderBodySchema>;
 

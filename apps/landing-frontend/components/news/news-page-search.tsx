@@ -4,10 +4,10 @@ import React from "react";
 import { Input } from "@repo/landing-ui/src/input";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { ArrowDown, ArrowUp } from "lucide-react";
-import { getNews, NEWS_QUERY_KEY } from "@repo/lib/queries/news-query";
 import { z } from "zod";
 import { getNewsSchema } from "@repo/types/schemas/news/get-news-schema";
 import { NewsType } from "./news-item-wrapper";
+import { getNews, NEWS_QUERY_KEY } from "./news-page-list";
 
 export const NEWS_FILTRATION_QUERY_KEY = ['news-filtration'];
 

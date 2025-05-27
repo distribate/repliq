@@ -1,29 +1,14 @@
-import { reatomResource, withCache, withDataAtom, withStatusesAtom } from "@reatom/async";
 import { reatomComponent } from "@reatom/npm-react";
-import { forumSharedClient } from "@repo/shared/api/forum-client";
 import { Skeleton } from "@repo/ui/src/components/skeleton";
 import { Typography } from "@repo/ui/src/components/typography";
-
-async function getFact() {
-  const res = await forumSharedClient.shared["get-fact"].$get()
-  const data = await res.json();
-
-  if (!data || "error" in data) return null;
-
-  return data.data
-}
-
-const factResource = reatomResource(async (ctx) => {
-  return await ctx.schedule(() => getFact())
-}).pipe(withDataAtom(), withCache(), withStatusesAtom())
+import { factResource } from "../models/fact-section.model";
 
 export const FactSection = reatomComponent(({ ctx }) => {
   const data = ctx.spy(factResource.dataAtom)
-  const isLoading = ctx.spy(factResource.statusesAtom).isPending
 
   return (
-    <div className="flex gap-1 select-none relative minecraft-panel w-full items-start py-2 px-4 lg:px-10 overflow-x-auto">
-      {isLoading ? (
+    <div className="flex gap-1 select-none relative bg-shark-200 minecraft-panel w-full items-start py-2 px-4 lg:px-10 overflow-x-auto">
+      {ctx.spy(factResource.statusesAtom).isPending ? (
         <Skeleton className="h-8 w-full" />
       ) : (
         <Typography

@@ -1,10 +1,11 @@
 import { getFriendship } from "#lib/queries/friend/get-friendship.ts";
 import { getUserRelation } from "#lib/queries/user/get-user-relation.ts";
-import { getUser, type GetUserType } from "#lib/queries/user/get-user.ts";
+import { getUserProfilePreview, getUser, type GetUserType } from "#lib/queries/user/get-user.ts";
 import { forumDB } from "#shared/database/forum-db.ts";
 import { getNickname } from "#utils/get-nickname-from-storage.ts";
 import { getPublicUrl } from "#utils/get-public-url.ts";
 import { throwError } from "@repo/lib/helpers/throw-error";
+import { logger } from "@repo/lib/utils/logger";
 import { USER_IMAGES_BUCKET } from "@repo/shared/constants/buckets";
 import { Hono } from "hono";
 
@@ -30,15 +31,40 @@ async function createUserProfileView(initiator: string, recipient: string) {
 export const getUserProfileRoute = new Hono()
   .get("/get-user-profile/:nickname", async (ctx) => {
     const { nickname: recipient } = ctx.req.param()
-    const initiator = getNickname()
+    const initiator = getNickname(true)
+    logger.debug(`Nickname: ${initiator}`);
+
+    if (!initiator) {
+      const user = await getUserProfilePreview(recipient)
+
+      if (!user) {
+        return ctx.json({ error: "Not found" }, 404)
+      }
+
+      let cover_image: string | null = null
+
+      if ("cover_image" in user && user.cover_image) {
+        cover_image = getPublicUrl(USER_IMAGES_BUCKET, user.cover_image)
+      }
+
+      logger.info(`Gived public profile an recipient: ${recipient}`)
+
+      return ctx.json({
+        data: {
+          ...user,
+          cover_image,
+          details: { status: null }
+        }
+      }, 200);
+    }
+
+    let getUserType: GetUserType = "shorted"
+    let status: UserProfileStatus = null;
 
     const [userRelation, friendShip] = await Promise.all([
       getUserRelation({ recipient, initiator }),
       getFriendship({ recipient, initiator })
     ])
-
-    let getUserType: GetUserType = "shorted"
-    let status: UserProfileStatus = null;
 
     if (!friendShip) {
       if (userRelation === "private"
@@ -72,6 +98,8 @@ export const getUserProfileRoute = new Hono()
       if ("cover_image" in user && user.cover_image) {
         cover_image = getPublicUrl(USER_IMAGES_BUCKET, user.cover_image)
       }
+
+      logger.info(`Gived full profile an recipient: ${recipient}`)
 
       return ctx.json({
         data: {

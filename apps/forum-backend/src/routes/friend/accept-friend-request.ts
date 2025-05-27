@@ -15,7 +15,6 @@ const acceptFriendRequestSchema = z.object({
 export const acceptFriendRequestRoute = new Hono()
   .post("/accept-friend-request", zValidator("json", acceptFriendRequestSchema), async (ctx) => {
     const { request_id } = acceptFriendRequestSchema.parse(await ctx.req.json());
-
     const initiator = getNickname()
 
     try {
@@ -27,11 +26,8 @@ export const acceptFriendRequestRoute = new Hono()
 
       const { user_1, user_2, id } = await acceptFriendRequestTransaction({ initiator, request_id })
 
-      publishAcceptFriendRequest({ 
-        user_1, 
-        user_2 
-      })
-      
+      publishAcceptFriendRequest({ user_1, user_2 })
+
       pushNotificationOnClient({
         event: "accept-friend-request",
         data: { recipient: user_1, initiator: user_2 }

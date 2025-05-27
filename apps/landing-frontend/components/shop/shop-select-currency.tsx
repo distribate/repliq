@@ -1,16 +1,17 @@
 import { useQueryClient } from '@tanstack/react-query';
 import { HTMLAttributes, useState } from 'react';
-import { SHOP_ITEM_QUERY_KEY, ShopItemQuery, shopItemQuery } from '@repo/lib/queries/shop-item-query';
 import { Typography } from '@repo/landing-ui/src/typography';
 import { Dialog, DialogContent, DialogTitle, DialogTrigger } from '@repo/landing-ui/src/dialog';
 import { VisuallyHidden } from '@radix-ui/react-visually-hidden';
-import { currenciesQuery } from '@repo/lib/queries/currencies-query';
 import { Button } from '@repo/landing-ui/src/button';
 import { PaymentCurrency } from "@repo/types/entities/payment-types";
 import { cva, VariantProps } from 'class-variance-authority';
 import { PRICE_BY_CURRENCY_QUERY_KEY } from './shop-price';
 import CreditCardIcon from "@repo/assets/images/credit-card.webp"
 import SBPIcon from "@repo/assets/images/sbp.jpg"
+import { currenciesClient } from '@repo/shared/api/payments-client';
+import { useQuery } from '@tanstack/react-query';
+import { SHOP_ITEM_QUERY_KEY, ShopItemQuery, shopItemQuery } from './shop';
 
 const currencyItemVariants = cva(`
   flex cursor-pointer items-center backdrop-blur-xl transition-all 
@@ -57,6 +58,23 @@ const UpdatePrice = () => {
     </Button>
   )
 }
+export const CURRENCIES_QUERY_KEY = ["currencies"]
+
+async function getCurrencies() {
+  const res = await currenciesClient["get-currencies"].$get()
+  const data = await res.json()
+
+  if ("error" in data) return null
+
+  return data.data
+}
+
+export const currenciesQuery = () => useQuery({
+  queryKey: CURRENCIES_QUERY_KEY,
+  queryFn: () => getCurrencies(),
+  refetchOnMount: false,
+  refetchOnWindowFocus: false
+})
 
 export const ShopSelectCurrency = () => {
   const qc = useQueryClient();

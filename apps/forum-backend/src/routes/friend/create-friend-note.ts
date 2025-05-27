@@ -13,7 +13,7 @@ export const createFriendNoteRoute = new Hono()
     try {
       const { note } = await createFriendNote({ ...result, initiator });
 
-      return ctx.json({ status: "Friend note added", data: note }, 200);
+      return ctx.json({ data: note, status: "Friend note added" }, 200);
     } catch (e) {
       return ctx.json({ error: throwError(e) }, 400);
     }

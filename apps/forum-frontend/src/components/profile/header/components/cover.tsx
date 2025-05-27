@@ -7,6 +7,7 @@ import { UserCoverAvatar } from "./cover-avatar.tsx";
 import { UserCoverLocation } from "./cover-location.tsx";
 import { CoverArea } from "./cover-area.tsx";
 import { lazy, Suspense } from "react";
+import { isAuthenticatedAtom } from "@repo/lib/queries/global-option-query.ts";
 
 const UserCoverWatermark = lazy(() => import("./cover-watermark.tsx").then(m => ({ default: m.UserCoverWatermark })))
 
@@ -40,14 +41,16 @@ export const UserCover = reatomComponent(({ ctx }) => {
       <div className="group-data-[variant=compact]:hidden hidden lg:block absolute top-4 right-4 z-[5]">
         <UserCoverLocation />
       </div>
-      <div
-        className="flex w-1/2 lg:w-fit items-center bg-transparent gap-4 relative z-[3]
+      {ctx.spy(isAuthenticatedAtom) && (
+        <div
+          className="flex w-1/2 lg:w-fit items-center bg-transparent gap-4 relative z-[3]
           group-data-[variant=compact]:hidden
           group-data-[variant=full]:lg:self-end group-data-[variant=full]:justify-center group-data-[variant=full]:lg:justify-end 
       "
-      >
-        <UserCoverPanel />
-      </div>
+        >
+          <UserCoverPanel />
+        </div>
+      )}
     </CoverArea>
   );
 }, "UserCover")

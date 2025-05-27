@@ -3,8 +3,28 @@
 import { Typography } from "@repo/landing-ui/src/typography";
 import { TooltipWrapper } from "#components/wrappers/tooltip-wrapper";
 import { toast } from "sonner";
-import { serverIpQuery } from "@repo/lib/queries/server-ip-query";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@repo/landing-ui/src/tooltip";
+import { useQuery } from "@tanstack/react-query";
+import { forumSharedClient } from "@repo/shared/api/forum-client";
+
+async function getServerIp(): Promise<string  | null> {
+  const res = await forumSharedClient.shared["get-server-ip"].$get()
+
+  const data = await res.json()
+
+  if ("error" in data) {
+    return null;
+  }
+
+  return data.data?.ip ?? null;
+}
+
+export const serverIpQuery = () => useQuery({
+	queryKey: ["server-ip"],
+	queryFn: () => getServerIp(),
+	refetchOnWindowFocus: false,
+	refetchOnMount: false
+})
 
 export const actionCopyboard = async (ip: string) => {
 	await navigator.clipboard.writeText(ip);

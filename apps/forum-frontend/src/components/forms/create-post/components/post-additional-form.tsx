@@ -5,40 +5,48 @@ import {
   SelectTrigger,
 } from "@repo/ui/src/components/select.tsx";
 import { Typography } from "@repo/ui/src/components/typography.tsx";
-import { postFormFieldAtom, VisibilityPost } from "../models/post-form.model.ts";
+import { POST_VISIBILITY_INITIAL, postFormVisibilityAtom, VisibilityPost } from "../models/post-form.model.ts";
 import { Eye } from "lucide-react";
 import { reatomComponent } from "@reatom/npm-react";
 import { visibilityProperties } from "../models/create-post.model.ts";
 
-export const PostAdditionalForm = reatomComponent(({ ctx }) => {
-  const { visibility: currentVisibility } = ctx.spy(postFormFieldAtom)
-
-  const currentVisibilityOption = visibilityProperties.find(
-    (option) => option.value === currentVisibility,
-  );
+const CurrentVisibilityOption = reatomComponent(({ ctx }) => {
+  const currentVisibilityOption = visibilityProperties.find((option) => option.value === ctx.spy(postFormVisibilityAtom));
 
   return (
+    <Typography className="text-[16px]" textColor="gray">
+      {currentVisibilityOption ? currentVisibilityOption.label : ""}
+    </Typography>
+  )
+}, "CurrentVisibilityOption")
+
+const PostVisibilityOptions = reatomComponent(({ ctx }) => {
+  return (
+    visibilityProperties.map(({ value, label }) => (
+      <SelectItem key={value} value={value}>
+        <Typography
+          state={value === ctx.spy(postFormVisibilityAtom) ? "active" : "default"}
+          className="text-[16px]"
+        >
+          {label}
+        </Typography>
+      </SelectItem>
+    ))
+  )
+}, "PostVisibilityOptions")
+
+export const PostAdditionalForm = reatomComponent(({ ctx }) => {
+  return (
     <Select
-      defaultValue={currentVisibility}
-      onValueChange={(value: VisibilityPost) => postFormFieldAtom(ctx, (state) => ({ ...state, visibility: value }))}
+      defaultValue={POST_VISIBILITY_INITIAL}
+      onValueChange={(value: VisibilityPost) => postFormVisibilityAtom(ctx, value)}
     >
       <SelectTrigger className="px-2 w-fit border border-shark-700/40 gap-2 items-center">
         <Eye size={18} className="text-shark-300" />
-        <Typography className="text-[16px]" textColor="gray">
-          {currentVisibilityOption ? currentVisibilityOption.label : ""}
-        </Typography>
+        <CurrentVisibilityOption />
       </SelectTrigger>
       <SelectContent className="max-w-[420px]" side="bottom">
-        {visibilityProperties.map(({ value, label }) => (
-          <SelectItem key={value} value={value}>
-            <Typography
-              state={value === currentVisibility ? "active" : "default"}
-              className="text-[16px]"
-            >
-              {label}
-            </Typography>
-          </SelectItem>
-        ))}
+        <PostVisibilityOptions/>
       </SelectContent>
     </Select>
   );

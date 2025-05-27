@@ -21,8 +21,12 @@ async function createThreadView(nickname: string, threadId: string) {
 export const getThreadRoute = new Hono()
   .get("/get-thread/:threadId", async (ctx) => {
     const { threadId } = ctx.req.param();
+    const nickname = getNickname(true)
 
-    const nickname = getNickname()
+    if (!nickname) {
+      // todo: implement shorted variant of thread model
+      return ctx.json({ error: "Unauthorized" }, 401)
+    }
 
     try {
       const thread = await getThread({ threadId });

@@ -1,5 +1,5 @@
 import { Typography } from "@repo/ui/src/components/typography.tsx";
-import { getUser } from "@repo/lib/helpers/get-user.ts";
+import { currentUserNicknameAtom } from "@repo/lib/helpers/get-user.ts";
 import { lazy } from "react";
 import { PostFooterViews } from "#components/post/post-item/components/post-footer-views.tsx";
 import type { UserPostItem } from '@repo/types/routes-types/get-user-posts-types.ts';
@@ -17,9 +17,9 @@ const PostFooterWithViewsList = lazy(() =>
 export const PostFooter = reatomComponent<PostFooterProps>(({
   ctx, views_count, isUpdated, id, nickname, created_at
 }) => {
-  const currentUser = getUser(ctx);
+  const currentUserNickname = ctx.spy(currentUserNicknameAtom)
 
-  const isOwner = nickname === currentUser.nickname;
+  const isOwner = nickname === currentUserNickname;
 
   return (
     <div className="flex w-full select-none gap-4 group-hover:opacity-100 opacity-0 justify-end items-center">

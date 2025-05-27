@@ -5,7 +5,13 @@ import { CreateThreadForm } from '#components/forms/create-thread/components/for
 import { reatomComponent } from '@reatom/npm-react'
 import { userGlobalOptionsAtom } from '@repo/lib/helpers/get-user'
 
-const RouteComponent = reatomComponent(({ ctx }) => {
+export const Route = createLazyFileRoute('/_protected/(actions)/create-thread')({
+  component: RouteComponent,
+  // @ts-ignore
+  head: () => ({ meta: [{ title: 'Создать тред', }] }),
+})
+
+const Page = reatomComponent(({ ctx }) => {
   const can_create_threads = ctx.spy(userGlobalOptionsAtom).can_create_threads
 
   return (
@@ -23,8 +29,8 @@ const RouteComponent = reatomComponent(({ ctx }) => {
   )
 }, "RouteComponent")
 
-export const Route = createLazyFileRoute('/_protected/(actions)/create-thread')({
-  component: RouteComponent,
-  // @ts-ignore
-  head: () => ({ meta: [{ title: 'Создать тред', }] }),
-})
+function RouteComponent() {
+  return (
+    <Page />
+  )
+}

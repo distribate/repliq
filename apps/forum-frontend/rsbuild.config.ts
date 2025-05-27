@@ -15,7 +15,7 @@ export default defineConfig({
   },
   plugins: [
     pluginReact(),
-    pluginImageCompress(),
+    pluginImageCompress(["jpeg", "pngLossless", "ico"]),
     pluginCssMinimizer()
   ],
   performance: {

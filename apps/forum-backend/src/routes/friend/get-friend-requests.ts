@@ -8,7 +8,6 @@ import { getFriendsRequestSchema } from "@repo/types/schemas/friend/get-friends-
 export const getFriendRequestsRoute = new Hono()
   .get("/get-friends-requests", zValidator("query", getFriendsRequestSchema), async (ctx) => {
     const { type, cursor } = getFriendsRequestSchema.parse(ctx.req.query());
-
     const nickname = getNickname();
 
     try {

@@ -3,8 +3,8 @@
 import { NewsItemWrapper } from '../news/news-item-wrapper';
 import Link from 'next/link';
 import { Typography } from '@repo/landing-ui/src/typography';
-import { newsQuery } from '@repo/lib/queries/news-query.ts';
 import { Skeleton } from '@repo/landing-ui/src/skeleton';
+import { newsQuery } from './news-page-list';
 
 export const NewsList = () => {
   const { data, isLoading } = newsQuery({ limit: 4, ascending: true });

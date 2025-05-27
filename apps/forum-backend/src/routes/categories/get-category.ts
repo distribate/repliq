@@ -3,14 +3,13 @@ import { throwError } from "@repo/lib/helpers/throw-error";
 import { Hono } from "hono";
 
 async function getCategory(id: string) {
-  return await forumDB
-  .selectFrom("category")
-  .select([
-    "title",
-    "description",
-  ])
-  .where("id", "=", id)
-  .executeTakeFirstOrThrow()
+  const query = await forumDB
+    .selectFrom("category")
+    .select(["title", "description"])
+    .where("id", "=", id)
+    .executeTakeFirstOrThrow()
+
+  return query;
 }
 
 export const getCategoryRoute = new Hono()

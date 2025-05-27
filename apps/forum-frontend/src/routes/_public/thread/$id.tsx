@@ -17,11 +17,16 @@ import { userGlobalOptionsAtom } from '@repo/lib/helpers/get-user'
 const CommentsDisabled = lazy(() => import("#components/templates/components/comments-disabled").then(m => ({ default: m.CommentsDisabled })))
 const ThreadControl = lazy(() => import("#components/thread/thread-control/components/thread-control").then(m => ({ default: m.ThreadControl })))
 
-export const Route = createFileRoute('/_protected/thread/$id')({
+function generateMetadata(data: { title: string | undefined }) {
+  return { 
+    title: data?.title ?? "Загрузка..." 
+  }
+}
+
+export const Route = createFileRoute('/_public/thread/$id')({
   component: RouteComponent,
-  loader: reatomLoader(async (context, routerCtx) => {
-    // @ts-expect-error
-    threadParamAtom(context, routerCtx.params.id)
+  loader: reatomLoader(async (context, { params }) => {
+    threadParamAtom(context, params.id as string)
 
     let data = context.get(threadAtom)
 
@@ -33,9 +38,8 @@ export const Route = createFileRoute('/_protected/thread/$id')({
       title: data?.title ?? "Не найдено..."
     }
   }),
-  head: ({ loaderData }) => ({
-    // @ts-expect-error
-    meta: [{ title: loaderData?.title ?? "Загрузка..." }]
+  head: ({ loaderData }) => ({ 
+    meta: [generateMetadata(loaderData as { title: string | undefined })] 
   })
 })
 

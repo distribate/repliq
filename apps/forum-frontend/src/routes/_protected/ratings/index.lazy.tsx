@@ -2,17 +2,17 @@ import { createLazyFileRoute } from '@tanstack/react-router'
 import { RatingList } from "#components/ratings/components/rating-list"
 import { RatingNavigation } from "#components/ratings/components/rating-navigation"
 
+function generateMetadata() {
+  return {
+    title: 'Рейтинг игроков',
+    description: "Игровой рейтинг игроков"
+  }
+}
+
 export const Route = createLazyFileRoute('/_protected/ratings/')({
   component: RouteComponent,
   // @ts-ignore
-  head: () => ({
-    meta: [
-      {
-        title: 'Рейтинг игроков',
-        description: "Игровой рейтинг игроков"
-      },
-    ],
-  }),
+  head: () => ({ meta: [generateMetadata()] }),
 })
 
 function RouteComponent() {

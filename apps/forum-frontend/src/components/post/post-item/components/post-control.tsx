@@ -8,7 +8,7 @@ import { DropdownWrapper } from "#components/wrappers/components/dropdown-wrappe
 import { PostAdditionalModal } from "#components/modals/custom/components/post-additional-modal";
 import { PostEntity, UserEntity } from "@repo/types/entities/entities-type.ts";
 import { controlPostAction } from "#components/post/post-item/models/control-post.model";
-import { getUser } from "@repo/lib/helpers/get-user.ts";
+import { currentUserNicknameAtom } from "@repo/lib/helpers/get-user.ts";
 import { ReportCreateModal } from "#components/modals/action-confirmation/components/report/components/report-create-modal.tsx";
 import {
   editPostsControlAtom,
@@ -20,7 +20,7 @@ import { reatomComponent } from "@reatom/npm-react";
 export type PostControlProps = Pick<PostEntity, "id" | "isComments"> & Pick<UserEntity, "nickname">;
 
 export const PostControl = reatomComponent<PostControlProps>(({ ctx, id, nickname, isComments }) => {
-  const { nickname: currentUserNickname } = getUser(ctx);
+  const currentUserNickname = ctx.spy(currentUserNicknameAtom)
 
   const posts = ctx.spy(postsDataAtom)
   if (!posts) return null;

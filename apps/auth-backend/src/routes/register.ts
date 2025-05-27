@@ -1,3 +1,4 @@
+import { isProduction } from '@repo/lib/helpers/is-production';
 import { Hono } from 'hono';
 import { zValidator } from '@hono/zod-validator';
 import { createUserTransaction } from '../lib/transactions/create-user-transaction.ts';
@@ -34,11 +35,11 @@ export const registerRoute = new Hono()
   .post('/register', zValidator('json', registerSchema), async (ctx) => {
     const { password, findout, referrer, nickname, token } = registerSchema.parse(await ctx.req.json());
 
-    if (!token) {
+    if (isProduction && !token) {
       return ctx.json({ error: "Token is not provided" }, 400)
     }
 
-    const isVerified = await verifyAuth(token)
+    const isVerified = await verifyAuth(token!)
 
     if (isVerified !== "verified") {
       return ctx.json({ error: "Invalid token" }, 400)

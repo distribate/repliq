@@ -6,9 +6,8 @@ import { Land } from '#components/land/components/land'
 
 export const Route = createFileRoute('/_protected/lands/$id')({
   component: RouteComponent,
-  loader: reatomLoader(async (context, routerCtx) => {
-    // @ts-expect-error
-    landParamAtom(context, routerCtx.params.id)
+  loader: reatomLoader(async (context, { params }) => {
+    landParamAtom(context, params.id as string)
 
     let data = context.get(landAtom)
 

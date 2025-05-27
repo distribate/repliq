@@ -11,7 +11,7 @@ import { Skeleton } from '@repo/ui/src/components/skeleton';
 import { onConnect } from '@reatom/framework';
 import { reatomComponent } from '@reatom/npm-react';
 import { categoriesResource } from '../models/categories.model';
-import { globalOptionsAtom } from "@repo/lib/queries/global-option-query";
+import { isAuthenticatedAtom } from "@repo/lib/queries/global-option-query";
 import { AuthTemplate } from "#components/templates/components/auth-template";
 import { CustomLink } from "#components/shared/link";
 
@@ -78,7 +78,7 @@ onConnect(categoriesResource.dataAtom, categoriesResource)
 
 export const MainCategories = reatomComponent(({ ctx }) => {
   return (
-    ctx.spy(globalOptionsAtom).isAuthenticated ? <MainCategoriesList /> : (
+    ctx.spy(isAuthenticatedAtom) ? <MainCategoriesList /> : (
       <div className="relative w-full min-h-[300px] h-fit rounded-lg overflow-hidden">
         <div className="flex flex-col gap-2 absolute w-full p-4 h-full">
           <div className="bg-shark-950 w-full rounded-lg h-20" />

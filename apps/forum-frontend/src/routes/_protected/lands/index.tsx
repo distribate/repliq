@@ -5,6 +5,15 @@ import { createFileRoute } from '@tanstack/react-router'
 import LandsPreview from "@repo/assets/images/clan-preview.jpg"
 import { LandsList } from "#components/lands/components/lands-list"
 
+function generateMetadata() {
+  return { title: 'Территории', description: "Территории сервера" }
+}
+
+export const Route = createFileRoute('/_protected/lands/')({
+  component: RouteComponent,
+  head: () => ({ meta: [generateMetadata()] }),
+})
+
 const LandsPreviewImage = () => {
   return (
     <div className="flex select-none flex-col items-center justify-end relative overflow-hidden h-[180px] rounded-lg w-full">
@@ -20,13 +29,6 @@ const LandsPreviewImage = () => {
     </div>
   )
 }
-
-export const Route = createFileRoute('/_protected/lands/')({
-  component: RouteComponent,
-  head: () => ({
-    meta: [{ title: 'Территории', description: "Территории сервера" }],
-  }),
-})
 
 function RouteComponent() {
   return (

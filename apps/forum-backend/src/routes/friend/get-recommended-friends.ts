@@ -133,7 +133,7 @@ async function getSimilarUsersByLand(nickname: string) {
 async function getRandomUsers(nickname: string) {
   const randomUsers = await forumDB
     .selectFrom("users")
-    .select(["nickname", "uuid"])
+    .select(["nickname", "name_color"])
     .where("nickname", "!=", nickname)
     .orderBy(sql`random()`)
     .limit(15)
@@ -147,7 +147,7 @@ type RecommendedFriendsGlobal = {
   byFriends: UnwrapPromise<ReturnType<typeof getSimilarUsersByFriends>>
 }
 
-type RecommendedFriendsIndividual = Array<{ nickname: string; uuid: string }>
+type RecommendedFriendsIndividual = Array<{ nickname: string; name_color: string }>
 
 export const getRecommendedFriendsRoute = new Hono()
   .get("/get-recommended-friends", async (ctx) => {

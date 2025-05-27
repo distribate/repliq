@@ -1,11 +1,11 @@
 import { StartPayment } from "./subscription-item.tsx";
-import { SHOP_ITEM_QUERY_KEY, ShopItemQuery, shopItemQuery } from "@repo/lib/queries/shop-item-query";
 import { ShopSelectCurrency } from "./shop-select-currency";
 import { Button } from "@repo/landing-ui/src/button";
 import { Typography } from "@repo/landing-ui/src/typography";
 import ExpActive from "@repo/assets/images/minecraft/exp-active.webp"
 import { ShopPrice } from "./shop-price";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { SHOP_ITEM_QUERY_KEY, shopItemQuery, ShopItemQuery } from "./shop.tsx";
 
 export const usePayment = () => {
   const qc = useQueryClient()

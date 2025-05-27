@@ -13,8 +13,7 @@ export const getCategoryThreadsSchema = z.object({
 export const getCategoryThreadsRoute = new Hono()
   .get("/get-category-threads/:id", zValidator("query", getCategoryThreadsSchema), async (ctx) => {
     const { id } = ctx.req.param();
-    const query = ctx.req.query();
-    const { limit, cursor, ascending } = getCategoryThreadsSchema.parse(query);
+    const { limit, cursor, ascending } = getCategoryThreadsSchema.parse(ctx.req.query());
 
     try {
       const threads = await getThreadsCategories({ id, limit, cursor, ascending });

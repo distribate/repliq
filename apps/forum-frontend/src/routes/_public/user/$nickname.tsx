@@ -2,7 +2,6 @@ import { createFileRoute } from '@tanstack/react-router'
 import { UserCoverLayout } from '#components/profile/header/components/cover-layout.tsx'
 import { lazy, Suspense } from "react"
 import { UserContentSkeleton } from "#components/skeletons/components/user-profile-skeleton";
-import { Skeleton } from "@repo/ui/src/components/skeleton";
 import { UserProfilePosts as Posts } from "#components/profile/posts/posts/components/profile-posts.tsx";
 import { Separator } from "@repo/ui/src/components/separator";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@repo/ui/src/components/tabs";
@@ -20,6 +19,8 @@ import {
   requestedUserProfileStatusAtom
 } from '#components/profile/requested-user.model';
 import { SectionPrivatedTrigger } from '#components/templates/components/section-privated-trigger';
+import { isAuthenticatedAtom } from '@repo/lib/queries/global-option-query';
+import { AuthorizeTemplate } from '#components/templates/components/auth-template';
 
 const SkinRender = lazy(() => import("#components/profile/skin/components/profile-skin-render.tsx").then(m => ({ default: m.ProfileSkinRender })))
 const Account = lazy(() => import("#components/profile/account/components/profile-account.tsx").then(m => ({ default: m.UserProfileAccount })))
@@ -30,46 +31,53 @@ const GameAchievements = lazy(() => import("#components/profile/achievements/com
 const Blocked = lazy(() => import("#components/templates/components/user-blocked").then(m => ({ default: m.UserBlocked })));
 const Banned = lazy(() => import("#components/templates/components/user-banned").then(m => ({ default: m.UserBanned })));
 
-export const Route = createFileRoute('/_protected/user/$nickname')({
-  component: reatomComponent(({ ctx }) => {
-    const { nickname: target } = Route.useParams()
+function generateMetadata(nickname: string) {
+  return {
+    title: nickname,
+    description: `Профиль игрока ${nickname}`,
+    keywords: [
+      nickname ?? "player", `fasberry profile player`, `${nickname} profile`
+    ],
+  }
+}
 
-    switch (ctx.spy(requestedUserProfileStatusAtom)) {
-      case "banned":
-        return (
-          <Suspense><Banned requestedUserNickname={target} /></Suspense>
-        );
-      case "blocked":
-        return (
-          <Suspense><Blocked blockedType={ctx.spy(requestedUserProfileBlockedAtom)} /></Suspense>
-        )
-      default:
-        return (
-          <div className="flex flex-col gap-6 w-full h-full relative">
-            <UserCoverLayout>
-              <ProfileContentTabs />
-            </UserCoverLayout>
-          </div>
-        )
-    }
-  }, "RouteComponent"),
-  loader: reatomLoader(async (context, routerCtx) => {
-    // todo: fix ts error with params
-    // @ts-ignore
-    const target = routerCtx.params.nickname
-
-    requestedUserParamAtom(context, target)
-  }),
+export const Route = createFileRoute('/_public/user/$nickname')({
+  component: RouteComponent,
+  loader: reatomLoader(async (ctx, { params }) => requestedUserParamAtom(ctx, params.nickname as string)),
   head: ({ params: { nickname } }) => ({
-    meta: [
-      {
-        title: nickname,
-        description: `Профиль игрока ${nickname}`,
-        keywords: [nickname ?? "player", `fasberry profile player`, `${nickname} profile`,],
-      }
-    ]
+    meta: [generateMetadata(nickname)],
+    links: [{ rel: "canonical", href: `/user/${nickname}` }],
   }),
 })
+
+function RouteComponent() {
+  return <Page />
+}
+
+const Page = reatomComponent(({ ctx }) => {
+  switch (ctx.spy(requestedUserProfileStatusAtom)) {
+    case "banned":
+      return (
+        <Suspense>
+          <Banned requestedUserNickname={ctx.spy(requestedUserParamAtom)!} />
+        </Suspense>
+      );
+    case "blocked":
+      return (
+        <Suspense>
+          <Blocked blockedType={ctx.spy(requestedUserProfileBlockedAtom)!} />
+        </Suspense>
+      )
+    default:
+      return (
+        <div className="flex flex-col gap-6 w-full h-full relative">
+          <UserCoverLayout>
+            <ProfileContentTabs />
+          </UserCoverLayout>
+        </div>
+      )
+  }
+}, "RouteComponent")
 
 const TabsListContent = reatomComponent(({ ctx }) => {
   return (
@@ -113,50 +121,82 @@ const TabsListContent = reatomComponent(({ ctx }) => {
 }, "TabsListContent")
 
 const ProfileContentTabs = reatomComponent(({ ctx }) => {
-  const isLoading = ctx.spy(requestedUserAction.statusesAtom).isPending
+  const isAuthenticated = ctx.spy(isAuthenticatedAtom)
 
-  if (isLoading) return <UserContentSkeleton />
+  if (ctx.spy(requestedUserAction.statusesAtom).isPending) {
+    return <UserContentSkeleton />
+  }
 
   return (
-    <Tabs defaultValue="posts" className="flex flex-col w-full h-full lg:px-12 gap-y-6 relative z-[4]">
-      <TabsList className="md:hidden flex items-center profile-tabs-list justify-start px-2 py-4 overflow-x-auto bg-shark-900 w-full">
-        <TabsListContent />
-      </TabsList>
-      <TabsList className="hidden md:flex justify-start w-fit bg-shark-900">
-        <TabsListContent />
-      </TabsList>
-      <div id="profile-content" className="flex flex-col lg:flex-row items-start gap-12 w-full">
-        <div className="flex grow *:w-full w-full">
+    <div className="flex flex-col lg:flex-row w-full gap-12 h-full lg:px-12 relative z-[4]">
+      <Tabs defaultValue="posts" className="flex flex-col gap-6 w-full h-full">
+        <TabsList className="md:hidden flex items-center profile-tabs-list justify-start px-2 py-4 overflow-x-auto bg-shark-900 w-full">
+          <TabsListContent />
+        </TabsList>
+        <TabsList className="hidden md:flex justify-start w-fit bg-shark-900">
+          <TabsListContent />
+        </TabsList>
+        <div className="flex flex-col lg:flex-row items-start grow *:w-full w-full">
           <TabsContent value="posts">
-            <Posts />
+            {isAuthenticated && (
+              <Posts />
+            )}
+            {!isAuthenticated && <AuthorizeTemplate />}
           </TabsContent>
           <TabsContent value="threads">
-            <Suspense><Threads /></Suspense>
+            {isAuthenticated && (
+              <Suspense>
+                <Threads />
+              </Suspense>
+            )}
+            {!isAuthenticated && <AuthorizeTemplate />}
           </TabsContent>
           <TabsContent value="friends">
-            <Suspense><Friends /></Suspense>
+            {isAuthenticated && (
+              <Suspense>
+                <Friends />
+              </Suspense>
+            )}
+            {!isAuthenticated && <AuthorizeTemplate />}
           </TabsContent>
-          {ctx.spy(requestedUserGameStatsVisibleAtom) && (
-            <TabsContent value="game-stats">
-              <Suspense><GameStats isSectionPrivated={ctx.spy(requestedUserSectionIsPrivatedAtom)} /></Suspense>
-            </TabsContent>
-          )}
+          <TabsContent value="game-stats">
+            {isAuthenticated && (
+              ctx.spy(requestedUserGameStatsVisibleAtom) && (
+                <Suspense>
+                  <GameStats />
+                </Suspense>
+              )
+            )}
+            {!isAuthenticated && <AuthorizeTemplate />}
+          </TabsContent>
           <TabsContent value="achievements">
-            <Suspense><GameAchievements /></Suspense>
+            {isAuthenticated && (
+              <Suspense>
+                <GameAchievements />
+              </Suspense>
+            )}
+            {!isAuthenticated && <AuthorizeTemplate />}
           </TabsContent>
-          {ctx.spy(requestedUserIsSameAtom) && (
-            <TabsContent value="account">
-              <Suspense><Account /></Suspense>
-            </TabsContent>
-          )}
+          <TabsContent value="account">
+            {isAuthenticated && (
+              ctx.spy(requestedUserIsSameAtom) && (
+                <Suspense>
+                  <Account />
+                </Suspense>
+              )
+            )}
+            {!isAuthenticated && <AuthorizeTemplate />}
+          </TabsContent>
         </div>
-        <div className="hidden 2xl:flex h-[600px] flex-col w-1/3">
-          <div className="flex flex-col h-full w-full gap-4">
-            <Suspense fallback={<Skeleton className="w-full h-full" />}><SkinRender /></Suspense>
-            <ProfileSkinControls />
-          </div>
+      </Tabs>
+      <div className="hidden xl:flex h-[600px] flex-col w-1/3">
+        <div className="flex flex-col h-full w-full gap-4">
+          <Suspense>
+            <SkinRender />
+          </Suspense>
+          <ProfileSkinControls />
         </div>
       </div>
-    </Tabs>
+    </div>
   );
 }, "ProfileContentTabs")

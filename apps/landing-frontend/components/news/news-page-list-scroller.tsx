@@ -4,8 +4,8 @@ import { useEffect } from "react";
 import { useInView } from "react-intersection-observer";
 import { useQueryClient } from "@tanstack/react-query";
 import { newsFiltrationQuery, useUpdateNews } from "./news-page-search";
-import { NEWS_QUERY_KEY } from "@repo/lib/queries/news-query";
 import { NewsType } from "./news-item-wrapper";
+import { NEWS_QUERY_KEY } from "./news-page-list";
 
 export const NewsPageListInView = () => {
   const qc = useQueryClient()

@@ -49,6 +49,8 @@ requestedUserCoverDetailsAtom.onChange((_, v) => consola.info("requestedUserCove
 const defineUserAction = reatomAsync(async (ctx, target: string) => {
   let nickname = ctx.get(currentUserNicknameAtom)
 
+  requestedUserAction(ctx, target)
+
   if (!nickname) {
     nickname = await take(ctx, currentUserNicknameAtom)
   }
@@ -56,7 +58,6 @@ const defineUserAction = reatomAsync(async (ctx, target: string) => {
   if (!nickname) return
 
   requestedUserIsSameAtom(ctx, nickname === target)
-  requestedUserAction(ctx, target)
 })
 
 requestedUserPreferencesAtom.onChange((ctx, state) => {
@@ -117,10 +118,12 @@ async function getUserProfile(nickname: string) {
 export const requestedUserAction = reatomAsync(async (ctx, target: string) => {
   const currentUser = ctx.get(currentUserAtom)
 
-  if (!target || !currentUser) return null;
+  if (!target) return null;
 
-  if (currentUser.nickname === target) {
-    return { ...currentUser, details: { status: null } }
+  if (currentUser) {
+    if (currentUser.nickname === target) {
+      return { ...currentUser, details: { status: null } }
+    }
   }
 
   return await ctx.schedule(() => getUserProfile(target))

@@ -14,27 +14,28 @@ import "./lib/commands/check-online-command.ts"
 import "./lib/commands/alert-command.ts"
 import { subscribeNewPlayer } from './subscribers/sub-new-player.ts';
 import { subscribeAdminLog } from './subscribers/sub-admin-log.ts';
+import { logger, natsLogger } from "@repo/lib/utils/logger.ts"
 
 async function startNats() {
   try {
     await initNats()
 
     subscribeReceivePayment()
-    console.log("\x1b[34m[NATS]\x1b[0m Subscribed to payment status")
+    natsLogger.success("Subscribed to payment status")
 
     subscribeReceiveNotify()
-    console.log("\x1b[34m[NATS]\x1b[0m Subscribed to receive notify")
+    natsLogger.success("Subscribed to receive notify")
 
     subscribeServerEvents()
-    console.log("\x1b[34m[NATS]\x1b[0m Subscribed to server events")
+    natsLogger.success("Subscribed to server events")
 
     subscribeNewPlayer()
-    console.log("\x1b[34m[NATS]\x1b[0m Subscribed to new player")
+    natsLogger.success("Subscribed to new player")
 
     subscribeAdminLog()
-    console.log("\x1b[34m[NATS]\x1b[0m Subscribed to admin log")
+    natsLogger.success("Subscribed to admin log")
   } catch (e) {
-    console.error(e)
+    natsLogger.error(e)
   }
 }
 
@@ -45,4 +46,5 @@ await loggerBot.start()
 
 loggerBot.on("message", messageHandler);
 
+logger.success("Logger Backend started")
 // pgListenConnect()

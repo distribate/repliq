@@ -12,13 +12,18 @@ async function validateAdmin() {
   return false
 }
 
+async function validateAdminRoute() {
+  const isValid = await validateAdmin()
+
+  if (!isValid) {
+    throw redirect({ to: "/" })
+  }
+}
+
 export const Route = createLazyFileRoute('/_protected/_admin')({
   component: RouteComponent,
   // @ts-ignore
-  beforeLoad: async () => {
-    const isValid = await validateAdmin()
-    if (!isValid) throw redirect({ to: "/" })
-  },
+  beforeLoad: async () => validateAdminRoute(),
   // @ts-ignore
   validateSearch: (search: Record<string, unknown>): { section?: AdminSections } => ({
     section: search.section as AdminSections ?? undefined

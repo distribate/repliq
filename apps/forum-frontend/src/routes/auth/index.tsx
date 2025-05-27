@@ -6,18 +6,20 @@ import { SignInForm } from '#components/forms/auth/components/sign-in.tsx'
 import { createFileRoute } from '@tanstack/react-router'
 import { SignUpForm } from '#components/forms/auth/components/sign-up.tsx'
 import {
-  authGlobalOptionsAtom,
+  authDetailsVisibilityAtom,
+  authReferrerAtom,
   authTypeAtom
 } from '#components/forms/auth/models/auth.model'
 import { Eye, EyeOff } from 'lucide-react'
 import { validatePage } from "@repo/lib/utils/validate-page.ts"
 import { reatomLoader } from '@repo/lib/utils/reatom-loader'
-import { reatomComponent } from '@reatom/npm-react'
+import { reatomComponent, useUpdate } from '@reatom/npm-react'
+import { CustomLink } from '#components/shared/link'
 
-type AuthSearch = {
-  from?: string
-  redirect?: string
-}
+type AuthSearch = Partial<{
+  from: string
+  redirect: string
+}>
 
 export const Route = createFileRoute('/auth/')({
   component: RouteComponent,
@@ -33,11 +35,11 @@ export const Route = createFileRoute('/auth/')({
 })
 
 const AuthControlPanel = reatomComponent(({ ctx }) => {
-  const detailsVisibility = ctx.spy(authGlobalOptionsAtom).detailsVisibility
+  const detailsVisibility = ctx.spy(authDetailsVisibilityAtom)
 
   return (
     <div
-      onClick={() => authGlobalOptionsAtom(ctx, (state) => ({ ...state, detailsVisibility: state.detailsVisibility === 'hidden' ? 'visible' : 'hidden' }))}
+      onClick={() => authDetailsVisibilityAtom(ctx, (state) => state === 'hidden' ? 'visible' : 'hidden')}
       className="flex items-center select-none justify-end absolute z-[5] right-4 bottom-4"
     >
       <div className="flex items-center justify-center w-8 h-8 cursor-pointer bg-shark-800 rounded-lg">
@@ -49,15 +51,15 @@ const AuthControlPanel = reatomComponent(({ ctx }) => {
 
 const Forms = reatomComponent(({ ctx }) => {
   const authType = ctx.spy(authTypeAtom)
-  const detailsVisibility = ctx.spy(authGlobalOptionsAtom).detailsVisibility
 
   const toggleAuthType = () => authTypeAtom(ctx, (state) => state === 'login' ? "register" : "login")
 
   return (
     <div
+      data-variant={ctx.spy(authDetailsVisibilityAtom)}
       className={`flex flex-col p-4 md:p-6 lg:p-8 gap-y-2 md:gap-y-4 lg:gap-y-6 min-w-[200px]
         w-full relative border-4 border-shark-600 bg-shark-200 overflow-y-auto transition-opacity ease-in-out duration-300
-        ${detailsVisibility === 'hidden' ? "opacity-0" : "opacity-100"}`}
+        data-[variant=hidden]:opacity-0 data-[variant=visible]:opacity-100`}
     >
       {authType === 'login' && (
         <>
@@ -65,11 +67,7 @@ const Forms = reatomComponent(({ ctx }) => {
             <h2 className="text-shark-950 text-xl lg:text-2xl xl:text-4xl font-semibold">
               Вход в аккаунт
             </h2>
-            <Typography
-              textColor="shark_black"
-              textSize="small"
-              className="font-normal text-center"
-            >
+            <Typography textColor="shark_black" textSize="small" className="text-center">
               (используй свои игровые данные, чтобы войти в аккаунт)
             </Typography>
           </div>
@@ -86,10 +84,7 @@ const Forms = reatomComponent(({ ctx }) => {
           <SignUpForm />
         </>
       )}
-      <Typography
-        onClick={toggleAuthType}
-        className="self-end relative text-shark-900 cursor-pointer"
-      >
+      <Typography onClick={toggleAuthType} className="self-end relative text-shark-900 cursor-pointer">
         {authType === 'login'
           ? 'Нет аккаунта? Зарегистрироваться'
           : 'Уже зарегистрирован? Войти'
@@ -100,25 +95,25 @@ const Forms = reatomComponent(({ ctx }) => {
 }, "Forms")
 
 const Logotype = reatomComponent(({ ctx }) => {
-  const detailsVisibility = ctx.spy(authGlobalOptionsAtom).detailsVisibility
-
   return (
-    <div
+    <CustomLink
+      to="/"
+      data-variant={ctx.spy(authDetailsVisibilityAtom)}
       className={`flex relative w-full md:w-2/4 lg:w-1/3 overflow-hidden transition-opacity ease-in-out duration-300
-      ${detailsVisibility === 'hidden' ? 'opacity-0' : 'opacity-100'}`}
+        data-[variant=hidden]:opacity-0 data-[variant=visible]:opacity-100`}
     >
-      <img
-        src="/images/fasberry_logo.webp"
-        alt="Fasberry"
-        width={512}
-        height={256}
-        draggable={false}
-        loading="eager"
-        className="h-full w-full"
-      />
-    </div>
+      <img src="/images/fasberry_logo.webp" alt="Fasberry" width={512} height={256} draggable={false} className="h-full w-full" />
+    </CustomLink>
   )
 }, "Logotype")
+
+const SyncParams = () => {
+  const referrer = Route.useSearch({ select: (params) => params.from }) as string | undefined;
+
+  useUpdate((ctx) => authReferrerAtom(ctx, referrer), [referrer])
+
+  return null;
+}
 
 function RouteComponent() {
   return (
@@ -128,6 +123,7 @@ function RouteComponent() {
       <div className="absolute inset-0 bg-black/40" />
       <Logotype />
       <div className="flex flex-col gap-4 w-full md:w-2/3 lg:2/4 xl:w-2/5">
+        <SyncParams />
         <Forms />
       </div>
     </PageWrapper>

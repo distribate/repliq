@@ -1,5 +1,5 @@
 import { Hono } from 'hono';
-import { logger } from 'hono/logger';
+import { logger as honoLogger } from 'hono/logger';
 import { showRoutes } from 'hono/dev';
 import { initNats } from '@repo/config-nats/nats-client';
 import { validateRequest } from '#middlewares/validate-request.ts';
@@ -110,22 +110,23 @@ import { notificationsSSERoute } from '#routes/notifications/notifications-sse.t
 import { getMediaRoute } from '#routes/public/get-media.ts';
 import { getUserLocationRoute } from '#routes/user/get-user-location.ts';
 import { getHealthRoute } from '#routes/public/get-health.ts';
+import { logger, natsLogger } from "@repo/lib/utils/logger.ts"
+import { timing } from 'hono/timing'
 
 async function startNats() {
   await initNats()
   await watcher()
-
   subscribeUserStatus()
-  console.log("\x1b[34m[NATS]\x1b[0m Users status subscribed")
+  natsLogger.success("Users status subscribed")
   subscribePlayerGroup()
-  console.log("\x1b[34m[NATS]\x1b[0m Player group subscribed")
+  natsLogger.success("Player group subscribed")
 }
 
 await startNats()
 
 export const report = new Hono()
   .basePath('/report')
-  .use(validateRequest)
+  .use(validateRequest("prevent"))
   .use(userStatus)
   .route("/", getReportRoute)
   .route("/", createReportRoute)
@@ -151,7 +152,7 @@ export const shared = new Hono()
 
 export const admin = new Hono()
   .basePath('/admin')
-  .use(validateRequest)
+  .use(validateRequest("prevent"))
   .use(adminMiddleware)
   .route('/', callServerCommandRoute)
   .route("/", createAuthImageRoute)
@@ -164,14 +165,14 @@ export const admin = new Hono()
 
 export const moderator = new Hono()
   .basePath("/moderator")
-  .use(validateRequest)
+  .use(validateRequest("prevent"))
   .use(adminMiddleware)
   .route("/", createBanRoute)
   .route("/", createUserRestrictRoute)
 
 export const comment = new Hono()
   .basePath('/comment')
-  .use(validateRequest)
+  .use(validateRequest("prevent"))
   .use(userStatus)
   .route("/", createCommentRoute)
   .route("/", replyCommentRoute)
@@ -180,7 +181,7 @@ export const comment = new Hono()
 
 export const category = new Hono()
   .basePath('/categories')
-  .use(validateRequest)
+  .use(validateRequest("prevent"))
   .use(userStatus)
   .route("/", getCategoriesRoute)
   .route("/", getCategoryThreadsRoute)
@@ -190,9 +191,13 @@ export const category = new Hono()
 
 export const thread = new Hono()
   .basePath('/thread')
-  .use(validateRequest)
-  .use(userStatus)
+  // public routes
+  .use(validateRequest())
   .route("/", getThreadRoute)
+  
+  // private routes
+  .use(validateRequest("prevent"))
+  .use(userStatus)
   .route("/", getThreadPreviewRoute)
   .route("/", removeThreadRoute)
   .route("/", updateThreadSettingsRoute)
@@ -205,7 +210,7 @@ export const thread = new Hono()
 
 export const post = new Hono()
   .basePath('/post')
-  .use(validateRequest)
+  .use(validateRequest("prevent"))
   .use(userStatus)
   .route("/", createPostRoute)
   .route("/", deletePostRoute)
@@ -215,66 +220,99 @@ export const post = new Hono()
 
 export const reaction = new Hono()
   .basePath('/reaction')
-  .use(validateRequest)
+  .use(validateRequest("prevent"))
   .use(userStatus)
   .route("/", createReactionRoute)
 
 export const user = new Hono()
   .basePath('/user')
-  .use(validateRequest)
+
+  // public routes
+  .use(validateRequest())
+  .route("/", getUserProfileRoute)
+  //--------------------------------------
+
+  // private routes
+  .use(validateRequest("prevent"))
   .use(userStatus)
+  .route("/", getMeRoute)
+  .route("/", getUserGlobalOptionsRoute)
+  //--------------------------------------
+
+  // current user preferences and details routes
+  .route('/', getUserSettingsRoute)
   .route('/', editUserSettingsRoute)
   .route('/', editUserDetailsRoute)
-  .route('/', getUserSettingsRoute)
-  .route('/', getBlockedUsersRoute)
+  .route("/", createCoverImageRoute)
+  .route("/", deleteCoverImageRoute)
+  //--------------------------------------
+
+  // user info routes
+  .route("/", getUserSummaryRoute)
+  //--------------------------------------
+
+  // current user info routes
+  .route("/", getUserStatusRoute)
+  .route("/", getUserBanDetailsRoute)
+  .route("/", getUserReferalsRoute)
+  .route("/", getUserPurchasesRoute)
+  .route("/", getUserTicketsRoute)
+  .route("/", getUserSocialsRoute)
+  .route("/", getUserProfileStatsRoute)
+  //--------------------------------------
+
+  // profile routes
   .route('/', getUserThreadsRoute)
   .route('/', getUserPostsRoute)
   .route('/', getUserFriendsRoute)
+  .route("/", getUserFavoriteItemRoute)
+  .route("/", getUserPublicSocialsRoute)
+  .route("/", getUserGameStatusRoute)
+  .route("/", getUserLocationRoute)
+  .route("/", createProfileViewRoute)
+  //--------------------------------------
+
+  // user friends routes
+  .route("/", getUserFriendsCountRoute)
   .route("/", createFriendRequestRoute)
   .route("/", deleteFriendRequestRoute)
   .route("/", acceptFriendRequestRoute)
   .route("/", deleteFriendRoute)
   .route("/", createFriendNoteRoute)
   .route("/", deleteFriendNoteRoute)
-  .route("/", createFriendPinRoute)
-  .route("/", controlUserBlockedRoute)
-  .route("/", getUserSocialsRoute)
-  .route("/", getUserProfileStatsRoute)
-  .route("/", createProfileViewRoute)
-  .route("/", createIssueRoute)
-  .route("/", getUserNotificationsRoute)
-  .route("/", checkNotificationRoute)
-  .route("/", getUserGameStatusRoute)
-  .route("/", getMeRoute)
   .route("/", getFriendStatusRoute)
   .route("/", getFriendRequestsRoute)
+  .route("/", createFriendPinRoute)
   .route("/", getRecommendedFriendsRoute)
   .route("/", getFriendRequestsRoute)
-  .route("/", getUserSummaryRoute)
-  .route("/", getUserBanDetailsRoute)
-  .route("/", getUserFriendsCountRoute)
-  .route("/", getUserStatusRoute)
-  .route("/", getUserGlobalOptionsRoute)
-  .route("/", getUserBanDetailsRoute)
-  .route("/", createCoverImageRoute)
-  .route("/", getUserReferalsRoute)
-  .route("/", deleteCoverImageRoute)
+  //--------------------------------------
+
+  // user's actions routes
+  .route("/", createIssueRoute)
+  //--------------------------------------
+
+  // user's notifications
+  .route("/", getUserNotificationsRoute)
+  .route("/", checkNotificationRoute)
+  //--------------------------------------
+
+  // blocked users routes
+  .route('/', getBlockedUsersRoute)
+  .route("/", controlUserBlockedRoute)
+  //--------------------------------------
+
+  // validation routes
   .route("/", getIsAdminRoute)
-  .route("/", getUserProfileRoute)
-  .route("/", getUserFavoriteItemRoute)
-  .route("/", getUserPurchasesRoute)
-  .route("/", getUserPublicSocialsRoute)
-  .route("/", getUserTicketsRoute)
-  .route("/", getUserLocationRoute)
-  
+//--------------------------------------
+
 export const sse = new Hono()
   // http-only cookies accepted for only production mode
-  .use(validateRequest)
+  .use(validateRequest("prevent"))
   .route("/", notificationsSSERoute)
 
 export const search = new Hono()
   .basePath('/search')
-  .use(validateRequest)
+  .use(validateRequest("prevent"))
   .use(userStatus)
   .route("/", getSearchRoute)
 
@@ -284,7 +322,8 @@ const app = new Hono<Env>()
   .use(csrfProtectionMiddleware)
   .use(rateLimiterMiddleware)
   .use(timeoutMiddleware)
-  .use(logger())
+  .use(timing())
+  .use(honoLogger())
   .use(contextStorage())
   .route("/", getHealthRoute)
   .route("/", shared)
@@ -300,8 +339,8 @@ const app = new Hono<Env>()
   .route("/", post)
   .route("/", report)
 
-showRoutes(app, { verbose: false });
+// showRoutes(app, { verbose: false });
 
 Bun.serve({ port: Bun.env.FORUM_BACKEND_PORT!, fetch: app.fetch })
 
-console.log(Bun.env.FORUM_BACKEND_PORT!)
+logger.success(`Fasberry Forum Backend started on ${Bun.env.FORUM_BACKEND_PORT!}`)

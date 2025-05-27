@@ -1,12 +1,12 @@
 import { Skeleton } from "@repo/landing-ui/src/skeleton"
-import { shopItemQuery } from "@repo/lib/queries/shop-item-query"
 import { useQuery, useQueryClient } from "@tanstack/react-query"
 import { Wallets } from "./shop-list-wallets"
-import { DONATES_QUERY_KEY } from "@repo/lib/queries/donates-query"
 import { Donates } from "@repo/lib/queries/get-donates"
 import { PAYMENT_CURRENCIES_MAPPING } from "@repo/shared/constants/currencies"
 import ky from "ky"
 import { Typography } from "@repo/landing-ui/src/typography"
+import { DONATES_QUERY_KEY } from "./shop-list-donates"
+import { shopItemQuery } from "./shop"
 
 type CurrencyString = typeof PAYMENT_CURRENCIES_MAPPING[keyof typeof PAYMENT_CURRENCIES_MAPPING];
 

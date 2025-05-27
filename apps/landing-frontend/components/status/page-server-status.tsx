@@ -1,9 +1,9 @@
 "use client"
 
 import { Typography } from "@repo/landing-ui/src/typography"
-import { serverStatusQuery } from "@repo/lib/queries/server-status-query"
 import { PlayerStatus } from "./player-status"
 import { Skeleton } from "@repo/landing-ui/src/skeleton"
+import { serverStatusQuery } from "./server-status"
 
 export const PageServerStatus = () => {
   const { data, isLoading } = serverStatusQuery()

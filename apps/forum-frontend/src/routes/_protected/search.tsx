@@ -21,11 +21,10 @@ export const Route = createFileRoute('/_protected/search')({
   head: () => ({
     meta: [{ title: 'Поиск' }],
   }),
-  loader: reatomLoader(async (context, routerCtx) => {
-    // @ts-expect-error
-    const param = routerCtx.location.search.type
+  loader: reatomLoader(async (context, { location }) => {
+    const { type } = location.search as { type: Params["type"] }
 
-    searchTypeParamAtom(context, param)
+    searchTypeParamAtom(context, type)
   }),
   validateSearch: (search: Record<string, unknown>): Params => ({
     type: search.type as Params["type"] ?? DEFAULT_TYPE_PARAM,

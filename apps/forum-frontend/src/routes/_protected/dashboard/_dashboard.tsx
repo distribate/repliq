@@ -7,22 +7,30 @@ import { getUser } from '@repo/lib/helpers/get-user'
 import { CustomLink } from '#components/shared/link'
 
 export const Route = createFileRoute('/_protected/dashboard/_dashboard')({
-  component: reatomComponent(({ ctx }) => {
-    const { donate } = getUser(ctx)
-    const isValid = donate !== 'default'
-
-    if (!isValid) return <NoAccessDashboard />
-
-    return (
-      <div className="flex flex-col md:flex-row items-start w-full gap-6 h-full">
-        <DashboardNavigation />
-        <div className="flex w-full md:w-3/4 h-full">
-          <Outlet />
-        </div>
-      </div>
-    )
-  }, "RouteComponent"),
+  component: RouteComponent,
 })
+
+const Page = reatomComponent(({ ctx }) => {
+  const donate = getUser(ctx).donate
+  const isValid = donate !== 'default'
+
+  if (!isValid) return <NoAccessDashboard />
+
+  return (
+    <div className="flex flex-col md:flex-row items-start w-full gap-6 h-full">
+      <DashboardNavigation />
+      <div className="flex w-full md:w-3/4 h-full">
+        <Outlet />
+      </div>
+    </div>
+  )
+}, "RouteComponent")
+
+function RouteComponent() {
+  return (
+    <Page/>
+  )
+}
 
 const NoAccessDashboard = () => {
   return (

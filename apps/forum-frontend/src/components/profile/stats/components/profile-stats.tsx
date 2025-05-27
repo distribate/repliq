@@ -3,18 +3,11 @@ import { GeneralStats } from "./general-stats";
 import { LandsStats } from "./lands-stats";
 import { ProfileWrapper } from "#components/wrappers/components/profile-wrapper";
 import { Typography } from "@repo/ui/src/components/typography";
-import { requestedUserParamAtom } from "#components/profile/requested-user.model";
+import { requestedUserSectionIsPrivatedAtom } from "#components/profile/requested-user.model";
 import { reatomComponent } from "@reatom/npm-react";
 
-type UserProfileGameStatsProps = {
-  isSectionPrivated: boolean;
-};
-
-export const UserProfileGameStats = reatomComponent<UserProfileGameStatsProps>(({
-  ctx, isSectionPrivated
-}) => {
-  const nickname = ctx.spy(requestedUserParamAtom);
-  if (!nickname) return;
+export const UserProfileGameStats = reatomComponent(({ ctx }) => {
+  const isSectionPrivated = ctx.spy(requestedUserSectionIsPrivatedAtom)
 
   return (
     <ProfileWrapper header={isSectionPrivated && <SectionPrivatedContent />}>
@@ -23,13 +16,13 @@ export const UserProfileGameStats = reatomComponent<UserProfileGameStatsProps>((
           <Typography textSize="large" className="font-semibold">
             Основная статистика
           </Typography>
-          <GeneralStats nickname={nickname} />
+          <GeneralStats />
         </div>
         <div className="flex flex-col gap-4 w-full">
           <Typography textSize="large" className="font-semibold">
             Территории
           </Typography>
-          <LandsStats nickname={nickname} />
+          <LandsStats />
         </div>
       </div>
     </ProfileWrapper>

@@ -4,7 +4,7 @@ import { getHeadRoute } from '#routes/skins/get-head.ts';
 import { getSkinRoute } from '#routes/skins/get-skins.ts';
 import { downloadSkinRoute } from '#routes/skins/download-skin.ts';
 import { showRoutes } from 'hono/dev';
-import { logger } from 'hono/logger';
+import { logger as honoLogger } from 'hono/logger';
 import { timeout } from 'hono/timeout';
 import { processPlayerVoteRoute } from '#routes/hooks/process-player-vote.ts';
 import { getNatsConnection, initNats } from '@repo/config-nats/nats-client';
@@ -32,6 +32,8 @@ import { getPlayerSkillsRoute } from '#routes/player/get-player-skills.ts';
 import { corsOptions } from "@repo/shared/constants/cors-options.ts"
 import { createMiddleware } from 'hono/factory';
 import { csrf } from 'hono/csrf';
+import { natsLogger, logger } from '@repo/lib/utils/logger';
+import { timing, type TimingVariables } from 'hono/timing'
 
 export const USERS_SKINS_BUCKET = "users_skins"
 
@@ -49,11 +51,11 @@ async function initSkinsBucket() {
   const buckets = next.map(key => key.bucket)
 
   if (buckets.includes(USERS_SKINS_BUCKET)) {
-    console.log("\x1b[34m[NATS]\x1b[0m Opened 'users_skins' bucket");
+    natsLogger.success("Opened 'users_skins' bucket");
 
     bucket = await objm.open(USERS_SKINS_BUCKET)
   } else {
-    console.log("\x1b[34m[NATS]\x1b[0m Created 'users_skins' bucket");
+    natsLogger.info("Created 'users_skins' bucket");
 
     bucket = await objm.create(USERS_SKINS_BUCKET, { ttl: 2592000000000000, storage: "file" });
   }
@@ -66,7 +68,7 @@ async function initSkinsBucket() {
 
   (async () => {
     for await (const e of watch) {
-      console.log(`[Watch] ${e.name} / ${e.size} / ${e.revision}`);
+      natsLogger.debug(`[Watch] ${e.name} / ${e.size} / ${e.revision}`);
     }
   })().then();
 }
@@ -77,19 +79,19 @@ async function startNats() {
   await initSkinsBucket()
 
   subscribePlayerGroup()
-  console.log("\x1b[34m[NATS]\x1b[0m Subscribed to player group")
+  natsLogger.success("Subscribed to player group")
   subscribeRefferalCheck()
-  console.log("\x1b[34m[NATS]\x1b[0m Subscribed to refferal check")
+  natsLogger.success("Subscribed to refferal check")
   subscribePlayerJoin()
-  console.log("\x1b[34m[NATS]\x1b[0m Subscribed to player join")
+  natsLogger.success("Subscribed to player join")
   subscribeReferalReward()
-  console.log("\x1b[34m[NATS]\x1b[0m Subscribed to referal reward")
+  natsLogger.success("Subscribed to referal reward")
   subscribeReceiveFiatPayment()
-  console.log("\x1b[34m[NATS]\x1b[0m Subscribed to receive fiat payment")
+  natsLogger.success("Subscribed to receive fiat payment")
   subscribeGiveBalance()
-  console.log("\x1b[34m[NATS]\x1b[0m Subscribed to give balance")
+  natsLogger.success("Subscribed to give balance")
   subscribePlayerStats()
-  console.log("\x1b[34m[NATS]\x1b[0m Subscribed to player stats")
+  natsLogger.success("Subscribed to player stats")
 }
 
 await startNats()
@@ -138,19 +140,20 @@ export const csrfProtectionMiddleware = createMiddleware(csrf({
   origin: (origin) => /^(https:\/\/(\w+\.)?fasberry\.su|http:\/\/localhost:3000|http:\/\/localhost:3008|http:\/\/localhost:3009)$/.test(origin),
 }))
 
-const app = new Hono()
+const app = new Hono<{ Variables: TimingVariables }>()
   .basePath('/')
   .use(cors(corsOptions))
   .use(csrfProtectionMiddleware)
   .use(timeout(10000))
+  .use(timing())
   .use(rateLimiterMiddleware)
-  .use(logger())
+  .use(honoLogger())
   .use(contextStorage())
   .route("/", minecraft)
   .route("/", hooks)
 
-showRoutes(app, { verbose: true });
+// showRoutes(app, { verbose: true });
 
 Bun.serve({ port: Bun.env.MINECRAFT_BACKEND_PORT!, fetch: app.fetch });
 
-console.log(Bun.env.MINECRAFT_BACKEND_PORT!)
+logger.success(`Fasberry Minecraft Backend started on ${Bun.env.MINECRAFT_BACKEND_PORT!}`)

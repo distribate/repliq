@@ -1,3 +1,4 @@
+import { AuthorizationButton } from "#components/layout/components/default/navbar"
 import { Typography } from "@repo/ui/src/components/typography"
 
 export const AuthTemplate = () => {
@@ -6,6 +7,17 @@ export const AuthTemplate = () => {
       <Typography className="text-[18px] font-bold text-center">
         Авторизуйтесь и станьте частью сообщества Fasberry!
       </Typography>
+    </div>
+  )
+}
+
+export const AuthorizeTemplate = () => {
+  return (
+    <div className="flex flex-col gap-4 items-center justify-center w-full min-h-36 h-full">
+      <Typography textSize="big" className='text-center font-semibold'>
+        Для просмотра профиля необходимо авторизоваться.
+      </Typography>
+      <AuthorizationButton />
     </div>
   )
 }

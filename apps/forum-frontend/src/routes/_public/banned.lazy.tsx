@@ -29,16 +29,15 @@ export const Route = createLazyFileRoute('/_public/banned')({
       throw redirect({ to: "/" })
     }
 
+    // @ts-expect-error
     bannedAtom(context, routerCtx.deps)
   }),
   // @ts-ignore
-  validateSearch: (search: Record<string, unknown>): Banned => {
-    return {
-      reason: search.reason as string ?? "нет",
-      time: search.time as string ?? "",
-      created_at: search.created_at as string ?? ""
-    }
-  }
+  validateSearch: (search: Record<string, unknown>): Banned => ({
+    reason: search.reason as string ?? "нет",
+    time: search.time as string ?? "",
+    created_at: search.created_at as string ?? ""
+  })
 })
 
 const BannedActionButton = reatomComponent(({ ctx }) => {

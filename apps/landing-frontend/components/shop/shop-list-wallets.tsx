@@ -3,13 +3,13 @@ import { Button } from "@repo/landing-ui/src/button";
 import { Input } from "@repo/landing-ui/src/input";
 import { Skeleton } from "@repo/landing-ui/src/skeleton";
 import { Typography } from "@repo/landing-ui/src/typography";
-import { DONATES_QUERY_KEY, donatesQuery } from "@repo/lib/queries/donates-query";
 import Charism from "@repo/assets/images/minecraft/charism_wallet.png"
 import Belkoin from "@repo/assets/images/minecraft/belkoin_wallet.png"
 import { useQueryClient } from "@tanstack/react-query";
-import { SHOP_ITEM_QUERY_KEY, shopItemQuery, ShopItemQuery } from "@repo/lib/queries/shop-item-query";
 import { ShopFooter } from "./shop-footer";
 import { useState } from "react";
+import { DONATES_QUERY_KEY, donatesQuery } from "./shop-list-donates";
+import { SHOP_ITEM_QUERY_KEY, ShopItemQuery, shopItemQuery } from "./shop";
 
 export type Wallets = {
   type: string;

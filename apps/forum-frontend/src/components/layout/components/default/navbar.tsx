@@ -2,7 +2,7 @@ import { Avatar } from "#components/user/avatar/components/avatar";
 import { Typography } from "@repo/ui/src/components/typography";
 import { Compass, Plus, Pencil, Pickaxe, NotebookPen, Axe, Cuboid, UsersRound, Rocket } from "lucide-react"
 import { useLocation, useNavigate } from "@tanstack/react-router";
-import { globalOptionsAtom } from "@repo/lib/queries/global-option-query";
+import { isAuthenticatedAtom } from "@repo/lib/queries/global-option-query";
 import { Button } from "@repo/ui/src/components/button";
 import LogotypeImage from "@repo/assets/images/logotype.png";
 import { HoverCard, HoverCardContent, HoverCardItem, HoverCardTrigger } from "@repo/ui/src/components/hover-card";
@@ -85,7 +85,7 @@ export const AuthorizationButton = () => {
 }
 
 export const Navbar = reatomComponent(({ ctx }) => {
-  const isAuthenticated = ctx.spy(globalOptionsAtom).isAuthenticated
+  const isAuthenticated = ctx.spy(isAuthenticatedAtom)
   const pathname = useLocation({ select: params => params.pathname })
 
   const isActive = (links: Array<string>): "selected" | "unselected" =>

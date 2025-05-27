@@ -15,11 +15,15 @@ import { FriendsFilteringSearch } from '#components/friends/components/filtering
 import { FriendsFilteringView } from '#components/friends/components/filtering/components/friends-filtering-view'
 import { friendsCountAction } from '#components/friends/models/friends-count.model'
 
+function generateMetadata() {
+  return { title: 'Друзья' }
+}
+
 export const Route = createLazyFileRoute('/_protected/friends')({
   component: RouteComponent,
   // @ts-ignore
   head: () => {
-    return { meta: [{ title: 'Друзья' }] }
+    return { meta: [generateMetadata()] }
   },
 })
 

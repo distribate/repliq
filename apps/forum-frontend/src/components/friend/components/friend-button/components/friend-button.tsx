@@ -1,5 +1,5 @@
 import { Skeleton } from "@repo/ui/src/components/skeleton.tsx";
-import { getUser } from "@repo/lib/helpers/get-user.ts";
+import { currentUserNicknameAtom } from "@repo/lib/helpers/get-user.ts";
 import { Button } from "@repo/ui/src/components/button.tsx";
 import { Typography } from "@repo/ui/src/components/typography.tsx";
 import { friendStatusAction, getFriendStatusesAtom } from "../models/friend-status.model";
@@ -39,15 +39,15 @@ const FriendButtonInside = reatomComponent<FriendButtonProps>(({ ctx, recipient 
     return <Skeleton className="h-10 border border-white/10 rounded-md w-56" />
   }
 
-  console.log(friendStatus)
-  
   if (!friendStatus) return null;
 
   return BUTTONS({ friend_id: friendStatus.friend_id!, request_id: friendStatus.request_id!, recipient })[friendStatus.status]
 }, "FriendButton")
 
 export const FriendButton = reatomComponent<FriendButtonProps>(({ ctx, recipient }) => {
-  const initiator = getUser(ctx).nickname;
+  const initiator = ctx.spy(currentUserNicknameAtom)
+
+  if (!initiator) return null;
 
   if (initiator === recipient) return (
     <Button state="default" className="px-6">

@@ -5,6 +5,7 @@ import { cva, VariantProps } from "class-variance-authority";
 import { reatomComponent } from "@reatom/npm-react";
 import { skinRotatingAtom, skinAnimationAtom, SKIN_ANIMATIONS } from "../models/skin-animation.model.ts";
 import { ProfileSkinDownloadLink } from "./profile-skin-download.tsx";
+import { isAuthenticatedAtom } from "@repo/lib/queries/global-option-query.ts";
 
 const ProfileSkinHowToChange = lazy(() => import("./profile-skin-change.tsx").then(m => ({ default: m.ProfileSkinHowToChange })))
 
@@ -53,19 +54,23 @@ const ProfileSkinControlsList = reatomComponent(({ ctx }) => {
   )
 })
 
-export const ProfileSkinControls = () => {
+export const ProfileSkinControls = reatomComponent(({ ctx }) => {
+  const isAuthenticated = ctx.spy(isAuthenticatedAtom)
+
   return (
     <div className="flex flex-col items-center w-full justify-center gap-4">
       <div className="flex items-center justify-center gap-4 w-full">
         <ProfileSkinControlsList />
         <ProfileSkinControlRotate />
       </div>
-      <div className="flex flex-col items-center justify-end gap-4 w-full">
-        <Suspense>
-          <ProfileSkinHowToChange />
-        </Suspense>
-        <ProfileSkinDownloadLink />
-      </div>
+      {isAuthenticated && (
+        <div className="flex flex-col items-center justify-end gap-4 w-full">
+          <Suspense>
+            <ProfileSkinHowToChange />
+          </Suspense>
+          <ProfileSkinDownloadLink />
+        </div>
+      )}
     </div >
   );
-}
+}, "ProfileSkinControls")

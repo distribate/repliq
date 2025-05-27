@@ -18,5 +18,4 @@ export const getThreadCommentsRoute = new Hono()
     } catch (e) {
       return ctx.json({ error: throwError(e) }, 500);
     }
-  }
-  )
+  })

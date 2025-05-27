@@ -6,11 +6,35 @@ import { WalletList, WalletsList } from "./shop-list-wallets"
 import { EventsList } from "./shop-list-events"
 import { DonateList, DonatesList } from "./shop-list-donates"
 import { Typography } from "@repo/landing-ui/src/typography"
-import { shopItemQuery } from "@repo/lib/queries/shop-item-query"
 import { Button } from "@repo/landing-ui/src/button"
 import { useQueryClient } from "@tanstack/react-query";
 import { PAYMENT_STATUS_QUERY_KEY, paymentStatusQuery, PaymentStatusQuery } from "./shop-payment-status"
 import { ShopPaymentModal } from "./shop-payment-modal"
+import { useQuery } from '@tanstack/react-query';
+import { PaymentCurrency, PaymentType, PaymentValueType } from '@repo/types/entities/payment-types.ts';
+
+export const SHOP_ITEM_QUERY_KEY = ['shop', 'item']
+
+export type ShopItemQuery = Partial<{
+  paymentType: PaymentType
+  paymentValue: PaymentValueType
+  nickname: string,
+}> & {
+  currency: PaymentCurrency,
+  fiatMethod: "creditCard" | "sbp",
+  category: "donate" | "wallet" | "events"
+}
+
+export const shopItemQuery = () => useQuery<
+  ShopItemQuery, Error
+>({
+  queryKey: SHOP_ITEM_QUERY_KEY,
+  initialData: {
+    currency: "RUB",
+    category: "donate",
+    fiatMethod: "creditCard"
+  }
+});
 
 const ShopItemsList = () => {
   const { data } = shopItemQuery()

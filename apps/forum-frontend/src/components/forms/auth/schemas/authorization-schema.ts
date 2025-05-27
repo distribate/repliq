@@ -1,11 +1,10 @@
-import { isProduction } from "@repo/lib/helpers/is-production";
 import { nicknameSchema, passwordSchema } from "@repo/types/schemas/auth/create-session-schema";
 import { z } from "zod";
 
 export const authorizationSchema = z.object({
   nickname: nicknameSchema,
   password: passwordSchema,
-  token: isProduction ? z.string() : z.string().optional()
+  // token: isProduction ? z.string() : z.string().optional()
 });
 
 export const registrationSchema = authorizationSchema.and(z.object({
@@ -16,6 +15,6 @@ export const registrationSchema = authorizationSchema.and(z.object({
     .string()
     .min(2, { message: "Опишите причину подробнее, пожалуйста", })
     .max(128),
-  referrer: z.string().min(1).optional(),
-  token: isProduction ? z.string() : z.string().optional(),
+  // referrer: z.string().min(1).optional(),
+  // token: isProduction ? z.string() : z.string().optional(),
 }));
