@@ -8,7 +8,7 @@ const LINKS = [
   { label: "Вики", href: "https://fasberry.su/wiki", }
 ]
 
-const SOCIALS = [
+export const SOCIALS = [
   { label: "Телеграм", href: "https://api.fasberry.su/forum/shared/get-media/telegram", },
   { label: "Дискорд", href: "https://api.fasberry.su/forum/shared/get-media/discord", }
 ]

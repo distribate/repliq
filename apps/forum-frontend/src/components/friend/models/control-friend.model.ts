@@ -134,9 +134,12 @@ export const setFriendNoteAction = reatomAsync(async (ctx, { friend_id, recipien
 
     noteDialogIsOpenAtom(ctx, false)
     noteValueAtom.reset(ctx)
-    myFriendsDataAtom(ctx, (state) => state.map(
-      friend => friend.friend_id === variables.friend_id ? { ...friend, note: res.note } : friend)
-    )
+    myFriendsDataAtom(ctx, (state) => {
+      if (!state) state = []
+      return state.map(
+        friend => friend.friend_id === variables.friend_id ? { ...friend, note: res.note } : friend
+      )
+    })
   }
 }).pipe(withStatusesAtom())
 
@@ -156,9 +159,12 @@ export const setFriendUnnoteAction = reatomAsync(async (ctx, { friend_id, recipi
     const variables = ctx.get(setFriendUnnoteActionVariablesAtom)
     if (!variables) return;
 
-    myFriendsDataAtom(ctx, (state) => state.map(friend =>
-      friend.friend_id === variables.friend_id ? { ...friend, note: null } : friend
-    ))
+    myFriendsDataAtom(ctx, (state) => {
+      if (!state) state = []
+      return state.map(friend =>
+        friend.friend_id === variables.friend_id ? { ...friend, note: null } : friend
+      )
+    })
   }
 }).pipe(withStatusesAtom())
 
@@ -186,9 +192,12 @@ export const setFriendPinAction = reatomAsync(async (ctx, { recipient, friend_id
     const variables = ctx.get(setFriendPinActionVariablesAtom)
     if (!variables) return;
 
-    myFriendsDataAtom(ctx, (state) => state.map(friend =>
-      friend.friend_id === variables.friend_id ? { ...friend, is_pinned: true } : friend
-    ))
+    myFriendsDataAtom(ctx, (state) => {
+      if (!state) state = []
+      return state.map(friend =>
+        friend.friend_id === variables.friend_id ? { ...friend, is_pinned: true } : friend
+      )
+    })
   }
 }).pipe(withStatusesAtom())
 
@@ -208,8 +217,11 @@ export const setFriendUnpinAction = reatomAsync(async (ctx, { friend_id, recipie
     const variables = ctx.get(setFriendUnpinActionVariablesAtom)
     if (!variables) return;
 
-    myFriendsDataAtom(ctx, (state) => state.map(friend =>
-      friend.friend_id === variables.friend_id ? { ...friend, is_pinned: false } : friend
-    ))
+    myFriendsDataAtom(ctx, (state) => {
+      if (!state) state = []
+      return state.map(friend =>
+        friend.friend_id === variables.friend_id ? { ...friend, is_pinned: false } : friend
+      )
+    })
   }
 }).pipe(withStatusesAtom())

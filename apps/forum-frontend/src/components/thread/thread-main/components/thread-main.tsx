@@ -11,11 +11,52 @@ import { ThreadShare } from "#components/thread/thread-share/components/thread-s
 import { ThreadSave } from "#components/thread/thread-save/components/thread-save"
 import { reatomComponent } from "@reatom/npm-react"
 import { ThreadContent } from "#components/thread/thread-content/components/thread-content"
+import { userGlobalOptionsAtom } from "@repo/lib/helpers/get-user"
+import { ThreadCommentsHeader } from "#components/thread/thread-comments/components/thread-comments-header"
+import { CreateThreadComment } from "#components/thread/create-thread-comment/components/create-thread-comment"
+import { ThreadComments } from "#components/thread/thread-comments/components/thread-comments"
+import { ThreadCommentsAnchor } from "#components/thread/thread-comments/components/thread-comments-anchor"
+import { isAuthenticatedAtom } from "@repo/lib/queries/global-option-query"
 
+const CommentsDisabled = lazy(() => import("#components/templates/components/comments-disabled").then(m => ({ default: m.CommentsDisabled })))
 const ThreadImages = lazy(() => import("../../thread-images/components/thread-images").then(m => ({ default: m.ThreadImages })))
+
+export const ThreadCommentsSection = reatomComponent(({ ctx }) => {
+  const isAuthenticated = ctx.spy(isAuthenticatedAtom)
+  if (!isAuthenticated) return null;
+  
+  const can_create_comments = ctx.spy(userGlobalOptionsAtom).can_create_comments
+  const thread = ctx.spy(threadAtom)
+
+  if (!thread) return null;
+
+  return (
+    <div className="flex flex-col w-full h-full mt-4 gap-y-4">
+      {thread.properties.is_comments ? (
+        <>
+          <ThreadCommentsHeader non_comments={!thread.properties.is_comments} />
+          {can_create_comments ? (
+            <CreateThreadComment />
+          ) : (
+            <Typography className="text-red-500 text-base">
+              Вы были наказаны и теперь не сможете оставлять комментарии!
+            </Typography>
+          )}
+        </>
+      ) : (
+        <Suspense>
+          <CommentsDisabled />
+        </Suspense>
+      )}
+      <ThreadComments owner={thread.owner} properties={thread.properties} />
+      {thread.comments_count >= 8 && <ThreadCommentsAnchor threadId={thread.id} />}
+    </div>
+  )
+}, "ThreadCommentsSection")
 
 export const Thread = reatomComponent(({ ctx }) => {
   const thread = ctx.spy(threadAtom)
+  const isAuthenticated = ctx.spy(isAuthenticatedAtom)
 
   if (ctx.spy(threadAction.statusesAtom).isPending) {
     return <ThreadMainSkeleton />
@@ -43,7 +84,9 @@ export const Thread = reatomComponent(({ ctx }) => {
             </Suspense>
           )}
           <div className="flex flex-col md:flex-row md:items-center px-4 w-full justify-start gap-1">
-            <ThreadReactions threadId={thread.id} />
+            {isAuthenticated && (
+              <ThreadReactions threadId={thread.id} />
+            )}
             <div className="flex flex-col w-full gap-2">
               <div className="flex w-full gap-1 justify-end">
                 {(is_updated && updated_at) && (
@@ -55,10 +98,12 @@ export const Thread = reatomComponent(({ ctx }) => {
                 )}
               </div>
             </div>
-            <div className="flex justify-end md:justify-end gap-2 items-center">
-              <ThreadShare />
-              <ThreadSave />
-            </div>
+            {isAuthenticated && (
+              <div className="flex justify-end md:justify-end gap-2 items-center">
+                <ThreadShare />
+                <ThreadSave />
+              </div>
+            )}
           </div>
         </div>
       </ContextMenuTrigger>

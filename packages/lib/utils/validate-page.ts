@@ -5,10 +5,21 @@ import { redirect } from '@tanstack/react-router';
 import { AUTH_REDIRECT } from '@repo/shared/constants/routes';
 import { currentUserResource } from '#helpers/get-user.ts';
 import { logger } from './logger';
+import { forumUserClient } from '@repo/shared/api/forum-client';
 
 async function validateSession (): Promise<boolean> {
   const res = await authClient["get-session"].$get();
   const data = await res.json();
+
+  if (!data || "error" in data) return false;
+  if (data.data) return true
+
+  return false
+}
+
+export async function validateAdmin() {
+  const res = await forumUserClient.user["get-is-admin"].$get()
+  const data = await res.json()
 
   if (!data || "error" in data) return false;
   if (data.data) return true

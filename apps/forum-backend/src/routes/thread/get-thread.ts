@@ -23,11 +23,6 @@ export const getThreadRoute = new Hono()
     const { threadId } = ctx.req.param();
     const nickname = getNickname(true)
 
-    if (!nickname) {
-      // todo: implement shorted variant of thread model
-      return ctx.json({ error: "Unauthorized" }, 401)
-    }
-
     try {
       const thread = await getThread({ threadId });
 
@@ -35,7 +30,9 @@ export const getThreadRoute = new Hono()
         return ctx.json({ error: "Thread not found" }, 404)
       }
 
-      createThreadView(nickname, threadId)
+      if (nickname) {
+        createThreadView(nickname, threadId)
+      }
 
       return ctx.json<{ data: ThreadDetailed }>({ data: thread }, 200);
     } catch (e) {

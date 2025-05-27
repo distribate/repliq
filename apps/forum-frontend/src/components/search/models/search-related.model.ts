@@ -2,7 +2,7 @@ import { forumThreadClient } from "@repo/shared/api/forum-client";
 import { reatomAsync, withCache, withDataAtom, withStatusesAtom } from "@reatom/async";
 import { getLatestRegUsers } from "#components/layout/components/stats/latest-reg-users.model";
 import { atom } from "@reatom/core";
-import { Params } from "#routes/_protected/search";
+import { Params } from "#components/shared/_protected/search";
 import { sleep } from "@reatom/framework";
 
 async function getLastThreads(limit: number) {

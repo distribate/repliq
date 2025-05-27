@@ -4,10 +4,25 @@ import { getBlockedUsers } from '#lib/queries/user/get-blocked-users.ts';
 import { z } from 'zod';
 import { zValidator } from '@hono/zod-validator';
 import { getNickname } from '#utils/get-nickname-from-storage.ts';
+import { getUserIsBlocked } from '#lib/queries/user/get-user-is-blocked.ts';
 
 const getBlockedUsersSchema = z.object({
   cursor: z.string().optional()
 })
+
+export const getUserIsBlockedRoute = new Hono()
+  .get("/get-user-is-blocked/:nickname", async (ctx) => {
+    const nickname = getNickname()
+    const recipient = ctx.req.param("nickname")
+
+    try {
+      const blockedUserStatus = await getUserIsBlocked({ initiator: nickname, recipient })
+
+      return ctx.json<{ data: "blocked-by-you" | "blocked-by-user" | null }>({ data: blockedUserStatus }, 200)
+    } catch (e) {
+      return ctx.json({ error: throwError(e) }, 500)
+    }
+  })
 
 export const getBlockedUsersRoute = new Hono()
   .get("/get-blocked-users", zValidator("query", getBlockedUsersSchema), async (ctx) => {

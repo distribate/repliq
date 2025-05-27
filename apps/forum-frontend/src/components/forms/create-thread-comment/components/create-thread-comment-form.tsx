@@ -18,7 +18,7 @@ import { reatomComponent } from "@reatom/npm-react";
 type createThreadForm = z.infer<typeof createThreadCommentSchema>
 
 export const CreateThreadCommentForm = reatomComponent(({ ctx }) => {
-  const { id: paramId } = useParams({ from: "/_protected/thread/$id" });
+  const { id: paramId } = useParams({ from: "/public/thread/$id" });
 
   const nickname = getUser(ctx).nickname;
   const createThreadCommentState = ctx.spy(createThreadCommentAtom)

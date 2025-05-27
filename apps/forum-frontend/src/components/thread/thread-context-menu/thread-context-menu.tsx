@@ -6,6 +6,7 @@ import { Typography } from "@repo/ui/src/components/typography";
 import { ReportCreateModal } from "#components/modals/action-confirmation/components/report/components/report-create-modal.tsx";
 import { reatomComponent } from "@reatom/npm-react";
 import { threadControlAtom } from "../thread-control/models/thread-control.model";
+import { isAuthenticatedAtom } from "@repo/lib/queries/global-option-query";
 
 const ThreadContentEdit = reatomComponent(({ ctx }) => {
   return (
@@ -45,6 +46,9 @@ const ThreadContentReport = ({ threadId }: { threadId: string }) => {
 }
 
 export const ThreadContextMenu = reatomComponent(({ ctx }) => {
+  const isAuthenticated = ctx.spy(isAuthenticatedAtom)
+  if (!isAuthenticated) return null;
+
   const thread = ctx.spy(threadAtom)
   const currentUser = getUser(ctx)
 

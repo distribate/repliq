@@ -16,7 +16,7 @@ export const UserBlocked = ({ blockedType }: UserBlockedProps) => {
     <div className="flex w-full items-center justify-center h-full gap-12 px-12 py-6 relative z-[4]">
       <div className="flex flex-col items-center gap-y-2 p-6">
         <img
-          src={WardenGif.src}
+          src={WardenGif}
           alt=""
           width={144}
           height={144}

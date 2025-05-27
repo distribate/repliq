@@ -7,7 +7,7 @@ import { contextStorage } from 'hono/context-storage'
 import { editUserSettingsRoute } from '#routes/user/edit-user-settings.ts';
 import { editUserDetailsRoute } from '#routes/user/edit-user-details.ts';
 import { getUserSettingsRoute } from '#routes/user/get-user-settings.ts';
-import { getBlockedUsersRoute } from '#routes/user/get-blocked-users.ts';
+import { getBlockedUsersRoute, getUserIsBlockedRoute } from '#routes/user/get-blocked-users.ts';
 import { getUserThreadsRoute } from '#routes/user/get-user-threads.ts';
 import { getUserPostsRoute } from '#routes/user/get-user-posts.ts';
 import { getUserFriendsRoute } from '#routes/user/get-user-friends.ts';
@@ -297,6 +297,7 @@ export const user = new Hono()
   //--------------------------------------
 
   // blocked users routes
+  .route("/", getUserIsBlockedRoute)
   .route('/', getBlockedUsersRoute)
   .route("/", controlUserBlockedRoute)
   //--------------------------------------

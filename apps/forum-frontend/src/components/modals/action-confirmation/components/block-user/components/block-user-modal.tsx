@@ -1,48 +1,28 @@
-
-import { HoverCardItem } from "@repo/ui/src/components/hover-card.tsx";
-import { Ban } from "lucide-react";
-import { Typography } from "@repo/ui/src/components/typography.tsx";
 import { ConfirmationButton } from "#components/modals/confirmation-modal/components/confirmation-action-button";
-import { Dialog, DialogClose, DialogContent, DialogTrigger } from "@repo/ui/src/components/dialog.tsx";
+import { Dialog, DialogClose, DialogContent } from "@repo/ui/src/components/dialog.tsx";
 import { ConfirmationActionModalTemplate } from "#components/modals/confirmation-modal/components/confirmation-action-modal";
-import { blockedUserAtom, blockUserAction, unblockUserAction } from "../models/blocked-user.model";
+import { blockedUserAction, blockedUserDialogIsOpenAtom, controlBlockUserAction } from "../models/blocked-user.model";
 import { reatomComponent } from "@reatom/npm-react";
 
 export const BlockUserModal = reatomComponent<{ recipient: string; }>(({ ctx, recipient }) => {
-  const blocked = ctx.spy(blockedUserAtom)
-
-  const isBlocked = blocked?.recipient === recipient || false;
+  const isBlocked = ctx.spy(blockedUserAction.dataAtom)
 
   const handleBlockUser = () => {
-    if (isBlocked) {
-      return blockUserAction(ctx, recipient);
-    } else {
-      return unblockUserAction(ctx, recipient)
-    }
+    controlBlockUserAction(ctx, recipient)
   };
 
-  const isPending = ctx.spy(blockUserAction.statusesAtom).isPending || ctx.spy(unblockUserAction.statusesAtom).isPending
+  const isDisabled = ctx.spy(controlBlockUserAction.statusesAtom).isPending
 
   return (
-    <Dialog>
-      <DialogTrigger disabled={!isBlocked}>
-        <HoverCardItem className="group gap-2">
-          <Ban size={16} className="text-shark-300" />
-          <Typography>
-            {isBlocked ? `Разблокировать` : `Заблокировать`}
-          </Typography>
-        </HoverCardItem>
-      </DialogTrigger>
+    <Dialog
+      open={ctx.spy(blockedUserDialogIsOpenAtom)}
+      onOpenChange={value => blockedUserDialogIsOpenAtom(ctx, value)}
+    >
       <DialogContent>
         <ConfirmationActionModalTemplate title="Подтверждение действия">
-          <ConfirmationButton
-            title={isBlocked ? "Удалить" : "Добавить"}
-            actionType="continue"
-            onClick={handleBlockUser}
-            disabled={isPending}
-          />
-          <DialogClose>
-            <ConfirmationButton title="Отмена" actionType="cancel" disabled={isPending} />
+          <ConfirmationButton title={isBlocked ? "Разблокировать" : "Заблокировать"} actionType="continue" onClick={handleBlockUser} disabled={isDisabled} />
+          <DialogClose asChild>
+            <ConfirmationButton title="Отмена" actionType="cancel" disabled={isDisabled} />
           </DialogClose>
         </ConfirmationActionModalTemplate>
       </DialogContent>

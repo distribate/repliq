@@ -7,8 +7,12 @@ import { threadAtom } from "#components/thread/thread-main/models/thread.model.t
 import { getUser } from "@repo/lib/helpers/get-user.ts";
 import { Separator } from "@repo/ui/src/components/separator.tsx";
 import { reatomComponent } from "@reatom/npm-react";
+import { isAuthenticatedAtom } from "@repo/lib/queries/global-option-query.ts";
 
 export const ThreadControl = reatomComponent(({ ctx }) => {
+  const isAuthenticated = ctx.spy(isAuthenticatedAtom)
+  if (!isAuthenticated) return null;
+
   const thread= ctx.spy(threadAtom)
   const currentUser = getUser(ctx)
 

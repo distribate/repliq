@@ -317,7 +317,10 @@ export const removeFriendAction = reatomAsync(async (ctx, options: ControFriendS
     const currentPath = router.state.location.pathname;
 
     if (currentPath === '/friends') {
-      myFriendsDataAtom(ctx, (state) => state.filter(target => target.nickname !== variables.recipient))
+      myFriendsDataAtom(ctx, (state) => {
+        if (!state) state = []
+        return state.filter(target => target.nickname !== variables.recipient)
+      })
       friendsCountAction(ctx)
     } else {
       friendStatusesAtom(ctx, (state) => ({

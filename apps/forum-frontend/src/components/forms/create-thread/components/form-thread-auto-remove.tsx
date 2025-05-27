@@ -1,5 +1,4 @@
 import { FormField } from "@repo/ui/src/components/form-field.tsx";
-import { threadFormAtom } from "../models/thread-form.model.ts";
 import { FormChildsProps } from "./form-thread.tsx";
 import { Typography } from "@repo/ui/src/components/typography.tsx";
 import { reatomComponent } from "@reatom/npm-react";
@@ -8,7 +7,7 @@ import { reatomComponent } from "@reatom/npm-react";
 export const FormThreadAutoRemove = reatomComponent<FormChildsProps>(({ 
   ctx, control, errors
 }) => {
-  const threadFormState = ctx.spy(threadFormAtom)
+  const threadFormState = false;
 
   if (!threadFormState) return;
 

@@ -1,9 +1,9 @@
 import { createRoot } from 'react-dom/client'
 import { RouterProvider, createRouter } from '@tanstack/react-router'
-import { routeTree } from './routeTree.gen'
 import { createCtx } from '@reatom/core'
 import { connectLogger as logger } from '@reatom/framework'
 import { reatomContext } from '@reatom/npm-react'
+import { routeTree } from '#routes/__root'
 
 declare module '@tanstack/react-router' {
   interface Register {

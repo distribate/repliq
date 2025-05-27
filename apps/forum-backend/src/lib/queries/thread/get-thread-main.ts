@@ -80,7 +80,5 @@ export async function getThreadMain(threadId: string) {
     ])
     .executeTakeFirst();
 
-  if (!result) return null;
-
   return result
 }

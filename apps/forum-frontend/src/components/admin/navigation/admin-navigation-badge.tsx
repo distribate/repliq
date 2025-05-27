@@ -1,7 +1,7 @@
 import { useNavigate } from "@tanstack/react-router";
 import { NavigationBadge } from "#components/navigation/components/navigation-badge";
 import { reatomComponent } from "@reatom/npm-react";
-import { adminSectionParamAtom } from "#routes/_protected/_admin/admin/index.lazy";
+import { adminSectionParamAtom } from "#components/shared/_protected/_admin/admin/index.lazy";
 
 export type AdminSections = "reports" | "tickets" | "stats"
 
