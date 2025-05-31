@@ -1,10 +1,8 @@
 import { Typography } from "@repo/ui/src/components/typography.tsx";
-import { Controller } from "react-hook-form";
 import { Select, SelectContent, SelectItem, SelectTrigger } from "@repo/ui/src/components/select.tsx";
 import { FormField } from "@repo/ui/src/components/form-field.tsx";
 import { availableCategoriesResource } from "../models/available-categories.model.ts";
 import { useState } from "react";
-import { FormChildsProps } from "./form-thread.tsx";
 import { Skeleton } from "@repo/ui/src/components/skeleton.tsx";
 import { reatomComponent } from "@reatom/npm-react";
 import { threadFormCategoryAtom } from "../models/thread-form.model.ts";
@@ -68,13 +66,12 @@ const AvailableCategories = reatomComponent<AvailableCategoriesProps>(({ ctx }) 
   );
 }, "AvailableCategories")
 
-export const FormThreadCategories = reatomComponent<FormChildsProps>(({ ctx, errors, control }) => {
+export const FormThreadCategories = reatomComponent(({ ctx }) => {
   const [enabled, setEnabled] = useState<boolean>(false);
   const availableCategories = ctx.spy(availableCategoriesResource.dataAtom)
   const threadCategory = ctx.spy(threadFormCategoryAtom)
 
-  const handleValueChange = (value: string, onChange: (v: number) => void) => {
-    onChange(Number(value));
+  const handleValueChange = (value: string) => {
     threadFormCategoryAtom(ctx, Number(value))
   };
 
@@ -87,49 +84,41 @@ export const FormThreadCategories = reatomComponent<FormChildsProps>(({ ctx, err
   const selectedCategory = availableCategories?.find(i => Number(i.id) === threadCategory) || null;
 
   return (
-    <FormField errorMessage={errors?.category_id?.message}>
+    <FormField >
       <div className="flex flex-col">
         <Typography textColor="shark_white" textSize="large">
           Категория <span className="text-red-500">*</span>
         </Typography>
       </div>
-      <Controller
-        control={control}
-        name="category_id"
-        render={({ field: { onChange } }) => {
-          return (
-            <Select
-              onOpenChange={handleOpen}
-              onValueChange={(v) => handleValueChange(v, onChange)}
+      <Select
+        onOpenChange={handleOpen}
+        onValueChange={(v) => handleValueChange(v)}
+      >
+        <SelectTrigger
+          className={`${threadCategory ? "bg-shark-50 border-2" : "bg-shark-800"} flex `}
+          style={{ borderColor: selectedCategory?.color ?? "" }}
+        >
+          {!threadCategory ? (
+            <Typography
+              textSize="medium"
+              textColor={threadCategory ? "shark_black" : "shark_white"}
             >
-              <SelectTrigger
-                className={`${threadCategory ? "bg-shark-50 border-2" : "bg-shark-800"} flex `}
-                style={{ borderColor: selectedCategory?.color ?? "" }}
+              Категория не выбрана
+            </Typography>
+          ) : (
+            <div className="flex items-center gap-2">
+              <img src={selectedCategory?.emoji} draggable={false} alt="" width={24} height={24} />
+              <Typography
+                textSize="medium"
+                textColor={threadCategory ? "shark_black" : "shark_white"}
               >
-                {!threadCategory ? (
-                  <Typography
-                    textSize="medium"
-                    textColor={threadCategory ? "shark_black" : "shark_white"}
-                  >
-                    Категория не выбрана
-                  </Typography>
-                ) : (
-                  <div className="flex items-center gap-2">
-                    <img src={selectedCategory?.emoji} draggable={false} alt="" width={24} height={24} />
-                    <Typography
-                      textSize="medium"
-                      textColor={threadCategory ? "shark_black" : "shark_white"}
-                    >
-                      {selectedCategory?.title}
-                    </Typography>
-                  </div>
-                )}
-              </SelectTrigger>
-              <AvailableCategories enabled={enabled} />
-            </Select>
-          );
-        }}
-      />
+                {selectedCategory?.title}
+              </Typography>
+            </div>
+          )}
+        </SelectTrigger>
+        <AvailableCategories enabled={enabled} />
+      </Select>
     </FormField>
   );
 }, "FormThreadCategories")

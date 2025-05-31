@@ -1,25 +1,11 @@
-import { authPasswordVisibilityAtom, PasswordVisiblity } from "../models/auth.model";
-import EnderPearl from "@repo/assets/images/minecraft/ender_pearl.webp";
-import EyeOfEnder from "@repo/assets/images/minecraft/eye_of_ender.webp";
+import { authPasswordVisibilityAtom } from "../models/auth.model";
 import { reatomComponent } from "@reatom/npm-react";
-
-const PASSWORD_MAP: Record<PasswordVisiblity, string> = {
-  "text": EyeOfEnder,
-  "password": EnderPearl
-}
+import { Eye, EyeOff } from "lucide-react";
 
 export const PasswordVisibilityBadge = reatomComponent(({ ctx }) => {
-  return (
-    <img
-      className="cursor-pointer"
-      src={PASSWORD_MAP[ctx.spy(authPasswordVisibilityAtom)]}
-      alt=""
-      width={36}
-      height={36}
-      loading="lazy"
-      onClick={() => {
-        authPasswordVisibilityAtom(ctx, (state) => state === "password" ? "text" : "password")
-      }}
-    />
+  return ctx.spy(authPasswordVisibilityAtom) === 'text' ? (
+    <EyeOff size={20} className='text-shark-300 cursor-pointer' onClick={() => authPasswordVisibilityAtom(ctx, "password")} />
+  ) : (
+    <Eye size={20} className='text-shark-300 cursor-pointer' onClick={() => authPasswordVisibilityAtom(ctx, "text")} />
   )
 }, "PasswordVisibilityBadge")

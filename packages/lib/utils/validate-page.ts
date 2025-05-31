@@ -7,14 +7,37 @@ import { currentUserResource } from '#helpers/get-user.ts';
 import { logger } from './logger';
 import { forumUserClient } from '@repo/shared/api/forum-client';
 
-async function validateSession (): Promise<boolean> {
-  const res = await authClient["get-session"].$get();
-  const data = await res.json();
+const RESTRICT_PATH = "/restrict"
+const DEVELOPMENT_PATH = "/development"
+const WHITELIST = [DEVELOPMENT_PATH, RESTRICT_PATH]
 
-  if (!data || "error" in data) return false;
-  if (data.data) return true
+async function validateSession(): Promise<boolean> {
+  const res = await authClient["validate-session"].$get();
 
-  return false
+  let data: { data: boolean } | { error: string | null } | null = null;
+
+  try {
+    data = await res.json()
+  } catch (e) {
+    logger.error(e)
+
+    throw redirect({ to: DEVELOPMENT_PATH })
+  }
+
+  if (typeof data !== 'object') {
+    throw redirect({ to: DEVELOPMENT_PATH })
+  }
+
+  if ("error" in data) {
+    // @ts-expect-error
+    if (res.status === 429) {
+      throw redirect({ to: RESTRICT_PATH })
+    }
+
+    return false;
+  }
+
+  return Boolean(data.data)
 }
 
 export async function validateAdmin() {
@@ -22,19 +45,36 @@ export async function validateAdmin() {
   const data = await res.json()
 
   if (!data || "error" in data) return false;
-  if (data.data) return true
 
-  return false
+  return Boolean(data.data)
 }
 
-export async function validatePage(ctx: Ctx, type: "redirect" | undefined = undefined): Promise<boolean> {
-  let isAuthenticated: boolean = false;
+function validateWhitelistPath() {
+  logger.info("validating whitelist path")
+}
+
+/**
+ * @param {"redirect" | undefined} [type=undefined] - Specifies behavior if the user is not authenticated.
+ * If "redirect", performs a redirect. If undefined (default), no redirect occurs.
+ * 
+ * @returns boolean - true if user is authenticated
+ * @throws redirect - if user is not authenticated and type is "redirect"
+ */
+export async function validatePage(
+  ctx: Ctx,
+  type: "redirect" | undefined = undefined
+): Promise<boolean> {
+  if (WHITELIST.includes(window.location.pathname)) {
+    validateWhitelistPath()
+  }
+
+  let isAuthenticated = false;
 
   const cache = ctx.get(isAuthenticatedAtom);
 
-  logger.info(`cache (isAuthenticated): ${cache}`)
-
   if (!cache) {
+    logger.info(`validating authentication status`)
+
     isAuthenticated = await validateSession();
 
     isAuthenticatedAtom(ctx, isAuthenticated)

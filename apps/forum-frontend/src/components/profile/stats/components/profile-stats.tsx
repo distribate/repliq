@@ -3,7 +3,7 @@ import { GeneralStats } from "./general-stats";
 import { LandsStats } from "./lands-stats";
 import { ProfileWrapper } from "#components/wrappers/components/profile-wrapper";
 import { Typography } from "@repo/ui/src/components/typography";
-import { requestedUserSectionIsPrivatedAtom } from "#components/profile/requested-user.model";
+import { requestedUserSectionIsPrivatedAtom } from "#components/profile/main/models/requested-user.model";
 import { reatomComponent } from "@reatom/npm-react";
 
 export const UserProfileGameStats = reatomComponent(({ ctx }) => {
@@ -13,7 +13,7 @@ export const UserProfileGameStats = reatomComponent(({ ctx }) => {
     <ProfileWrapper header={isSectionPrivated && <SectionPrivatedContent />}>
       <div className="flex flex-col gap-6 w-full h-full">
         <div className="flex flex-col gap-4 w-full">
-          <Typography textSize="large" className="font-semibold">
+          <Typography textColor="shark_white" textSize="big" className="font-semibold" >
             Основная статистика
           </Typography>
           <GeneralStats />

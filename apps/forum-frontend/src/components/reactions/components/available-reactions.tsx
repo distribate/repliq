@@ -1,6 +1,7 @@
 import { addReactionAction } from "#components/thread/thread-reactions/models/thread-reactions.model";
 import { reatomComponent } from "@reatom/npm-react";
 import { REACTIONS } from "@repo/shared/constants/emojis";
+import { ContextMenuItem } from "@repo/ui/src/components/context-menu";
 import React, { useRef } from "react";
 
 type AvailableReactionsProps = {
@@ -28,14 +29,14 @@ export const AvailableThreadReactions = reatomComponent<AvailableReactionsProps>
       ref={scrollRef}
     >
       {Object.entries(REACTIONS).map(([key, value]) => (
-        <div
-          key={key}
-          onClick={() => handleAddReaction(key)}
-          className="flex rounded-md hover:scale-[1.2] text-[20px] hover:duration-150
+        <ContextMenuItem key={key} onClick={() => handleAddReaction(key)} className="!p-0">
+          <div
+            className="flex rounded-md hover:scale-[1.2] text-[20px] hover:duration-150
            duration-150 ease-in-out cursor-pointer p-1 items-center justify-center"
-        >
-          {value}
-        </div>
+          >
+            {value}
+          </div>
+        </ContextMenuItem>
       ))}
     </div>
   )

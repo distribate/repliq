@@ -84,7 +84,7 @@ export function ColumnFloatingToolbar({ children }: React.PropsWithChildren) {
           </Button>
 
           <Separator orientation="vertical" className="mx-1 h-6" />
-          <Button size="icon" variant="ghost" {...buttonProps}>
+          <Button size="icon" variant="default" {...buttonProps}>
             <Trash2Icon />
           </Button>
         </div>

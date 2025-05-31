@@ -1,29 +1,32 @@
 import { AvailableThreadReactions } from "#components/reactions/components/available-reactions";
-import { getUser } from "@repo/lib/helpers/get-user";
-import { threadAtom } from "../thread-main/models/thread.model";
+import { threadIsEditableAtom, threadModeAtom, threadParamAtom } from "../thread-main/models/thread.model";
 import { FlagTriangleLeft, PencilLine } from "lucide-react";
 import { Typography } from "@repo/ui/src/components/typography";
 import { ReportCreateModal } from "#components/modals/action-confirmation/components/report/components/report-create-modal.tsx";
 import { reatomComponent } from "@reatom/npm-react";
-import { threadControlAtom } from "../thread-control/models/thread-control.model";
-import { isAuthenticatedAtom } from "@repo/lib/queries/global-option-query";
+import { ContextMenuItem } from "@repo/ui/src/components/context-menu";
 
 const ThreadContentEdit = reatomComponent(({ ctx }) => {
-  return (
+  const threadIsEditable = ctx.spy(threadIsEditableAtom)
+  if (!threadIsEditable) return null;
+  
+  const editMode = ctx.spy(threadModeAtom)
+
+  return editMode === 'read' ? (
     <div
       className="flex items-center rounded-md gap-2"
-      onClick={() => {
-        threadControlAtom(ctx, (prev) => ({
-          state: {
-            ...prev.state,
-            isContenteditable: true
-          },
-          values: { ...prev.values },
-        }))
-      }}
+      onClick={() => threadModeAtom(ctx, "edit")}
     >
       <PencilLine size={20} className="text-shark-300" />
       <Typography>Редактировать</Typography>
+    </div>
+  ) : (
+    <div
+      className="flex items-center rounded-md gap-2"
+      onClick={() => threadModeAtom(ctx, "read")}
+    >
+      <PencilLine size={20} className="text-shark-300" />
+      <Typography>Отменить</Typography>
     </div>
   )
 }, "ThreadContentEdit")
@@ -46,23 +49,22 @@ const ThreadContentReport = ({ threadId }: { threadId: string }) => {
 }
 
 export const ThreadContextMenu = reatomComponent(({ ctx }) => {
-  const isAuthenticated = ctx.spy(isAuthenticatedAtom)
-  if (!isAuthenticated) return null;
-
-  const thread = ctx.spy(threadAtom)
-  const currentUser = getUser(ctx)
-
-  if (!thread) return null;
+  const threadId = ctx.spy(threadParamAtom)
+  if (!threadId) return null;
 
   return (
-    <div className="flex flex-col w-full p-2 rounded-md gap-2">
-      <AvailableThreadReactions threadId={thread.id} />
+    <>
+      <AvailableThreadReactions threadId={threadId} />
       <div className="px-2 w-full">
-        <div className="flex flex-col bg-shark-900 *:px-2 *:py-1 *:cursor-pointer hover:*:bg-shark-700 rounded-md w-full py-2 gap-2">
-          {currentUser.nickname === thread.owner.nickname && <ThreadContentEdit />}
-          <ThreadContentReport threadId={thread.id} />
+        <div className="flex flex-col bg-shark-900 *:cursor-pointer hover:*:bg-shark-700 w-full py-2 gap-2">
+          <ContextMenuItem>
+            <ThreadContentEdit />
+          </ContextMenuItem>
+          <ContextMenuItem>
+            <ThreadContentReport threadId={threadId} />
+          </ContextMenuItem>
         </div>
       </div>
-    </div>
+    </>
   )
 }, "ThreadContextMenu")

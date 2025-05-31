@@ -1,4 +1,4 @@
-import { requestedUserParamAtom } from "#components/profile/requested-user.model";
+import { requestedUserParamAtom } from "#components/profile/main/models/requested-user.model";
 import { reatomComponent } from "@reatom/npm-react";
 import { coverAtom } from "../models/cover.model";
 import { Avatar } from "#components/user/avatar/components/avatar";

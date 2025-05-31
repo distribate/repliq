@@ -1,4 +1,4 @@
-import { AuthorizationButton } from "#components/layout/components/default/navbar"
+import { AuthorizationButton } from "#components/layout/components/default/authorization-button"
 import { Typography } from "@repo/ui/src/components/typography"
 
 export const AuthTemplate = () => {

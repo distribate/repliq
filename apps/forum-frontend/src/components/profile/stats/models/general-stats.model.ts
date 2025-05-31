@@ -1,6 +1,6 @@
 import { playerClient } from "@repo/shared/api/minecraft-client";
 import { reatomResource, withCache, withDataAtom, withStatusesAtom } from "@reatom/async";
-import { requestedUserParamAtom } from "#components/profile/requested-user.model";
+import { requestedUserParamAtom } from "#components/profile/main/models/requested-user.model";
 
 async function getUserStats(nickname: string) {
   const res = await playerClient.player["get-player-stats"][":nickname"].$get({ param: { nickname } })

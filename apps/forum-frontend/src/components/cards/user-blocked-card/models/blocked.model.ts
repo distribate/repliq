@@ -1,7 +1,7 @@
 import { forumUserClient } from "@repo/shared/api/forum-client.ts";
 import { reatomAsync, withStatusesAtom } from "@reatom/async";
 import { atom } from "@reatom/core";
-import { withVariables } from "@repo/lib/utils/with-variables"
+import { withVariables } from "@repo/lib/utils/reatom/with-variables"
 
 type BlockedUsers = Array<{ nickname: string }>
 

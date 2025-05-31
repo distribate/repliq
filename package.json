@@ -11,6 +11,9 @@
     "clean": "turbo clean",
     "format": "prettier --write \"**/*.{ts,tsx,md}\""
   },
+  "dependencies": {
+    "@neodx/log": "^0.4.1"
+  },
   "devDependencies": {
     "concurrently": "9.1.0",
     "eslint": "8.57.1",
@@ -26,10 +29,5 @@
   "workspaces": [
     "apps/*",
     "packages/*"
-  ],
-  "dependencies": {
-    "@neodx/log": "^0.4.1",
-    "consola": "^3.4.2",
-    "react-dnd": "^16.0.1"
-  }
+  ]
 }

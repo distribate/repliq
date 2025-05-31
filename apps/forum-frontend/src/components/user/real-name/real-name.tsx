@@ -9,7 +9,7 @@ export const UserRealName = ({
   real_name, with_annotation = true,
 }: UserRealNameProps) => {
   return (
-    <Typography className="text-shark-300 font-[Minecraft]" textSize="medium">
+    <Typography className="text-shark-300" textSize="medium">
       {with_annotation && "aka"} ({real_name})
     </Typography>
   );

@@ -1,7 +1,7 @@
 import { authClient } from "@repo/shared/api/auth-client";
 import type { InferResponseType } from "hono/client"
 import { atom } from "@reatom/core";
-import { reatomAsync, withStatusesAtom } from "@reatom/async";
+import { reatomAsync, withCache, withDataAtom, withStatusesAtom } from "@reatom/async";
 
 const client = authClient["get-sessions"].$get
 
@@ -16,15 +16,20 @@ const getUserSessions = async () => {
   return data.data
 }
 
-export const userActiveSessionsAtom = atom<GetUserActiveSessionsResponse | null>(null, "userActiveSessions")
+export const currentSessionAtom = atom<GetUserActiveSessionsResponse[0] | null>(null, "currentSession")
 
 export const userActiveSessionsAction = reatomAsync(async (ctx) => {
-  if (ctx.get(userActiveSessionsAtom)) return ctx.get(userActiveSessionsAtom)
-    
   return await ctx.schedule(() => getUserSessions())
-}, {
-  name: "userActiveSessionsAction",
-  onFulfill: (ctx, res) => {
-    userActiveSessionsAtom(ctx, res)
-  }
-}).pipe(withStatusesAtom())
+}, "userActiveSessionsAction").pipe(withDataAtom(), withStatusesAtom(), withCache())
+
+userActiveSessionsAction.dataAtom.onChange((ctx, state) => {
+  if (!state) return;
+
+  const currentSession = state
+    ? state.find((item) => (item ? item.is_current : null))
+    : null;
+
+  if (!currentSession) return;
+
+  currentSessionAtom(ctx, currentSession)
+})

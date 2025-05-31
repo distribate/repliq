@@ -11,9 +11,18 @@ import { updateCommentsAction } from '../models/update-comments.model.ts';
 import { SectionSkeleton } from '#components/templates/components/section-skeleton.tsx';
 import { reatomComponent, useUpdate } from '@reatom/npm-react';
 import { onConnect } from '@reatom/framework';
-import { threadParamAtom } from '#components/thread/thread-main/models/thread.model.ts';
+import { threadAtom, threadOwnerAtom, threadParamAtom } from '#components/thread/thread-main/models/thread.model.ts';
+import { isAuthenticatedAtom } from '@repo/lib/queries/global-option-query.ts';
+import { userGlobalOptionsAtom } from '@repo/lib/helpers/get-user.ts';
+import { ThreadCommentsHeader } from './thread-comments-header.tsx';
+import { Typography } from '@repo/ui/src/components/typography.tsx';
+import { lazy, Suspense } from 'react';
+import { ThreadCommentsAnchor } from './thread-comments-anchor.tsx';
+import { CreateThreadComment } from '#components/thread/create-thread-comment/components/create-thread-comment.tsx';
 
 type ThreadCommentsProps = Pick<ThreadDetailed, "properties" | "owner">
+
+const CommentsDisabled = lazy(() => import("#components/templates/components/comments-disabled").then(m => ({ default: m.CommentsDisabled })))
 
 onConnect(threadCommentsDataAtom, threadCommentsAction)
 
@@ -84,3 +93,37 @@ export const ThreadComments = reatomComponent<ThreadCommentsProps>(({ ctx, owner
     </>
   )
 }, "ThreadComments")
+
+export const ThreadCommentsSection = reatomComponent(({ ctx }) => {
+  const isAuthenticated = ctx.spy(isAuthenticatedAtom)
+  if (!isAuthenticated) return null;
+
+  const can_create_comments = ctx.spy(userGlobalOptionsAtom).can_create_comments
+  const thread = ctx.spy(threadAtom)
+  const threadOwner = ctx.spy(threadOwnerAtom)
+
+  if (!thread || !threadOwner) return null;
+
+  return (
+    <div className="flex flex-col w-full h-full mt-4 gap-y-4">
+      {thread.properties.is_comments ? (
+        <>
+          <ThreadCommentsHeader non_comments={!thread.properties.is_comments} />
+          {can_create_comments ? (
+            <CreateThreadComment />
+          ) : (
+            <Typography className="text-red-500 text-base">
+              Вы были наказаны и теперь не сможете оставлять комментарии!
+            </Typography>
+          )}
+        </>
+      ) : (
+        <Suspense>
+          <CommentsDisabled />
+        </Suspense>
+      )}
+      <ThreadComments owner={threadOwner} properties={thread.properties} />
+      {thread.comments_count >= 8 && <ThreadCommentsAnchor threadId={thread.id} />}
+    </div>
+  )
+}, "ThreadCommentsSection")

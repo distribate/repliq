@@ -13,7 +13,7 @@ import { updateFriendsAction } from "#components/friends/models/update-friends.m
 import { ArrowDownNarrowWide } from "lucide-react";
 import { SelectedWrapper } from "#components/wrappers/components/selected-wrapper";
 import { reatomComponent } from "@reatom/npm-react";
-import { requestedUserParamAtom } from "#components/profile/requested-user.model";
+import { requestedUserParamAtom } from "#components/profile/main/models/requested-user.model";
 
 const ProfileFriendsFilteringSearch = reatomComponent<InputProps>(({ ctx, ...props }) => {
   const [value, setValue] = useState<string>("");
@@ -101,8 +101,8 @@ export const ProfileFriendsFiltering = reatomComponent(({ ctx }) => {
   if (!nickname) return;
 
   return (
-    <div className="flex w-full justify-between h-14 items-center">
-      <div className="flex items-center gap-1 w-fit">
+    <div className="flex w-full justify-between items-center">
+      <div className="flex items-center w-fit">
         <Typography
           textColor="shark_white"
           textSize="big"

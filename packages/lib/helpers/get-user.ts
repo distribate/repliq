@@ -71,7 +71,11 @@ currentUserResource.onFulfill.onCall((ctx, res) => {
       currentUserAtom(ctx, res);
     }
 
-    userGlobalOptionsAction(ctx); 
+    const isInited = ctx.get(userGlobalOptionsAtomIsInitAtom)
+    
+    if (!isInited) {
+      userGlobalOptionsAction(ctx); 
+    }
   }
 })
 
@@ -111,6 +115,7 @@ const initial = {
   has_new_events: false,
 }
 
+const userGlobalOptionsAtomIsInitAtom = atom(false, "userGlobalOptionsAtomIs")
 export const userGlobalOptionsAtom = atom<typeof initial>(initial, "userGlobalOptions")
 
 export const userGlobalOptionsAction = reatomAsync(async (ctx) => {  
@@ -119,6 +124,7 @@ export const userGlobalOptionsAction = reatomAsync(async (ctx) => {
   name: "userGlobalOptionsAction",
   onFulfill: (ctx, res) => {
     if (res) {
+      userGlobalOptionsAtomIsInitAtom(ctx, true)
       userGlobalOptionsAtom(ctx, res)
     }
   }

@@ -1,37 +1,39 @@
-import { ProtectedRouteComponent } from "#components/shared/_protected";
-import { RouteSkeleton } from "#components/templates/components/route-skeleton";
-import { reatomLoader } from "@repo/lib/utils/reatom-loader";
+import { reatomLoader } from "@repo/lib/utils/reatom/reatom-loader";
 import { validateAdmin, validatePage } from "@repo/lib/utils/validate-page";
 import { createRoute, redirect } from "@tanstack/react-router";
-import { AdminRouteComponent } from "../components/shared/_admin.lazy";
 import { AdminSections } from "#components/admin/navigation/admin-navigation-badge";
-import { AdminConfigRouteComponent } from "../components/shared/_protected/_admin/admin/configs.lazy";
-import { AdminIndexRouteComponent } from "../components/shared/_protected/_admin/admin/index.lazy";
-import { AdminDashboardRouteComponent } from "../components/shared/_protected/_admin/admin/dashboard.lazy";
-import { AdminStatsRouteComponent } from "../components/shared/_protected/_admin/admin/stats.lazy";
-import { AdminSupportRouteComponent } from "../components/shared/_protected/_admin/admin/support.lazy";
-import { EventsRouteComponent } from "../components/shared/_protected/events.lazy";
-import { FriendsRouteComponent } from "../components/shared/_protected/friends.lazy";
-import { NotificationsRouteComponent } from "../components/shared/_protected/notifications.lazy";
-import { Params, SearchRouteComponent } from "../components/shared/_protected/search";
 import { DEFAULT_TYPE_PARAM, searchTypeParamAtom } from "#components/search/models/search-related.model";
-import { CollectionRouteComponent } from "../components/shared/_protected/collection";
 import { logger } from "@repo/lib/utils/logger";
 import { CollectionParams } from "#components/collection/components/navigation/components/collection-navigation";
-import { RatingsRouteComponent } from "../components/shared/_protected/ratings/index.lazy";
-import { LandsRouteComponent } from "../components/shared/_protected/lands";
-import { LandRouteComponent } from "../components/shared/_protected/lands/$id";
-import { take } from "@reatom/framework";
-import { landAtom, landParamAtom } from "#components/land/models/land.model";
-import { DashboardProfileRouteComponent } from "../components/shared/_protected/dashboard/_dashboard/profile";
-import { DashboardThreadsRouteComponent } from "../components/shared/_protected/dashboard/_dashboard/threads";
-import { DashboardIndexRouteComponent } from "../components/shared/_protected/dashboard/_dashboard/index";
-import { CategoryRouteComponent } from "../components/shared/_protected/category/$id";
+import { landParamAtom } from "#components/land/models/land.model";
 import { categoryIdAtom } from "#components/categories/components/category-threads/models/category.model";
-import { CreateThreadRouteComponent } from "../components/shared/_protected/(actions)/create-thread.lazy";
-import { CreateTicketRouteComponent } from "../components/shared/_protected/(actions)/create-ticket.lazy";
-import { DashboardRouteComponent } from "#components/shared/_protected/dashboard/_dashboard";
-import { rootRoute } from "./__root";
+import { rootRoute } from "./root";
+import { Params } from "#pages/search.page";
+import { ProtectedRouteComponent } from "#pages/protected.layout";
+import { RouteSkeleton } from "#components/templates/components/route-skeleton";
+import { lazy, Suspense } from "react";
+
+const CreateThreadRouteComponent = lazy(() => import("#pages/create-thread.page").then(m => ({ default: m.CreateThreadRouteComponent })))
+const AdminRouteComponent = lazy(() => import("#pages/admin/admin.layout").then(m => ({ default: m.AdminRouteComponent })))
+const AdminConfigRouteComponent = lazy(() => import("#pages/admin/config.page").then(m => ({ default: m.AdminConfigRouteComponent })))
+const AdminIndexRouteComponent = lazy(() => import("#pages/admin/index.page").then(m => ({ default: m.AdminIndexRouteComponent })))
+const AdminStatsRouteComponent = lazy(() => import("#pages/admin/stats.page").then(m => ({ default: m.AdminStatsRouteComponent })))
+const AdminSupportRouteComponent = lazy(() => import("#pages/admin/support.page").then(m => ({ default: m.AdminSupportRouteComponent })))
+const AdminDashboardRouteComponent = lazy(() => import("#pages/admin/dashboard.page").then(m => ({ default: m.AdminDashboardRouteComponent })))
+const CreateTicketRouteComponent = lazy(() => import("#pages/create-ticket.page").then(m => ({ default: m.CreateTicketRouteComponent })))
+const LandsRouteComponent = lazy(() => import("#pages/lands.page").then(m => ({ default: m.LandsRouteComponent })))
+const RatingsRouteComponent = lazy(() => import("#pages/ratings.page").then(m => ({ default: m.RatingsRouteComponent })))
+const FriendsRouteComponent = lazy(() => import("#pages/friends.page").then(m => ({ default: m.FriendsRouteComponent })))
+const NotificationsRouteComponent = lazy(() => import("#pages/notifications.page").then(m => ({ default: m.NotificationsRouteComponent })))
+const EventsRouteComponent = lazy(() => import("#pages/events.page").then(m => ({ default: m.EventsRouteComponent })))
+const DashboardRouteComponent = lazy(() => import("#pages/dashboard/dashboard.layout").then(m => ({ default: m.DashboardRouteComponent })))
+const DashboardIndexRouteComponent = lazy(() => import("#pages/dashboard/index.page").then(m => ({ default: m.DashboardIndexRouteComponent })))
+const DashboardProfileRouteComponent = lazy(() => import("#pages/dashboard/profile.page").then(m => ({ default: m.DashboardProfileRouteComponent })))
+const DashboardThreadsRouteComponent = lazy(() => import("#pages/dashboard/threads.page").then(m => ({ default: m.DashboardThreadsRouteComponent })))
+const CollectionRouteComponent = lazy(() => import("#pages/collection.page").then(m => ({ default: m.CollectionRouteComponent })))
+const LandRouteComponent = lazy(() => import("#pages/land.page").then(m => ({ default: m.LandRouteComponent })))
+const CategoryRouteComponent = lazy(() => import("#pages/category.page").then(m => ({ default: m.CategoryRouteComponent })))
+const SearchRouteComponent = lazy(() => import("#pages/search.page").then(m => ({ default: m.SearchRouteComponent })))
 
 export const protectedRoute = createRoute({
   getParentRoute: () => rootRoute,
@@ -43,7 +45,12 @@ export const protectedRoute = createRoute({
 
 export const adminRoute = createRoute({
   getParentRoute: () => protectedRoute,
-  component: AdminRouteComponent,
+  path: "/admin",
+})
+
+export const adminLayoutRoute = createRoute({
+  getParentRoute: () => adminRoute,
+  component: () => <Suspense><AdminRouteComponent /></Suspense>,
   beforeLoad: async () => {
     const isValid = await validateAdmin()
     if (!isValid) throw redirect({ to: "/" })
@@ -55,85 +62,57 @@ export const adminRoute = createRoute({
 })
 
 const adminIndexRoute = createRoute({
-  getParentRoute: () => adminRoute,
-  component: AdminIndexRouteComponent,
+  getParentRoute: () => adminLayoutRoute,
+  component: () => <Suspense><AdminIndexRouteComponent /></Suspense>,
   path: "/",
 })
 
 const adminDashboardRoute = createRoute({
-  getParentRoute: () => adminRoute,
-  component: AdminDashboardRouteComponent,
+  getParentRoute: () => adminLayoutRoute,
+  component: () => <Suspense><AdminDashboardRouteComponent /></Suspense>,
   path: "/dashboard",
 })
 
 const adminConfigRoute = createRoute({
-  getParentRoute: () => adminRoute,
-  component: AdminConfigRouteComponent,
+  getParentRoute: () => adminLayoutRoute,
+  component: () => <Suspense><AdminConfigRouteComponent /></Suspense>,
   path: "/configs"
 })
 
 const adminStatsRoute = createRoute({
-  getParentRoute: () => adminRoute,
-  component: AdminStatsRouteComponent,
+  getParentRoute: () => adminLayoutRoute,
+  component: () => <Suspense><AdminStatsRouteComponent /></Suspense>,
   path: "/stats"
 })
 
 const adminSupportRoute = createRoute({
-  getParentRoute: () => adminRoute,
-  component: AdminSupportRouteComponent,
+  getParentRoute: () => adminLayoutRoute,
+  component: () => <Suspense><AdminSupportRouteComponent /></Suspense>,
   path: "/support"
 })
 
-const adminRoutes = adminRoute.addChildren([
-  adminIndexRoute,
-  adminDashboardRoute,
-  adminConfigRoute,
-  adminStatsRoute,
-  adminSupportRoute
-])
-
-function generateEventsMetadata() {
-  return { title: 'Ивенты', }
-}
-
 const eventsRoute = createRoute({
   getParentRoute: () => protectedRoute,
-  component: EventsRouteComponent,
+  component: () => <Suspense><EventsRouteComponent /></Suspense>,
   path: "/events",
-  head: () => ({ meta: [generateEventsMetadata()] }),
 })
-
-function generateFriendsMetadata() {
-  return { title: 'Друзья' }
-}
 
 const friendsRoute = createRoute({
   getParentRoute: () => protectedRoute,
-  component: FriendsRouteComponent,
+  component: () => <Suspense><FriendsRouteComponent /></Suspense>,
   path: "/friends",
-  head: () => ({ meta: [generateFriendsMetadata()] }),
 })
-
-function generateNotificationsMetadata() {
-  return { title: 'Уведомления' }
-}
 
 const notificationsRoute = createRoute({
   getParentRoute: () => protectedRoute,
-  component: NotificationsRouteComponent,
+  component: () => <Suspense><NotificationsRouteComponent /></Suspense>,
   path: "/notifications",
-  head: () => ({ meta: [generateNotificationsMetadata()] }),
 })
-
-function generateSearchMetadata() {
-  return { title: 'Поиск' }
-}
 
 const searchRoute = createRoute({
   getParentRoute: () => protectedRoute,
-  component: SearchRouteComponent,
+  component: () => <Suspense><SearchRouteComponent/></Suspense>,
   path: "/search",
-  head: () => ({ meta: [generateSearchMetadata()] }),
   loader: reatomLoader(async (context, { location }) => {
     const { type } = location.search as { type: Params["type"] }
 
@@ -145,72 +124,37 @@ const searchRoute = createRoute({
   })
 })
 
-function generateCollectionMetadata() {
-  return { title: "Коллекции" }
-}
-
 const DEFAULT_COLLECTION_TYPE = "purchases"
 
 const collectionRoute = createRoute({
   getParentRoute: () => protectedRoute,
-  component: CollectionRouteComponent,
+  component: () => <Suspense><CollectionRouteComponent/></Suspense>,
   path: "/collection",
-  head: () => ({ meta: [generateCollectionMetadata()] }),
   loader: reatomLoader(async (_, { params }) => logger.info(params)),
   validateSearch: (search: Record<string, string>): { type: CollectionParams["type"] } => ({
     type: (search.type as CollectionParams["type"]) || DEFAULT_COLLECTION_TYPE
   })
 })
 
-function generateRatingsMetadata() {
-  return {
-    title: 'Рейтинг игроков',
-    description: "Игровой рейтинг игроков"
-  }
-}
-
 const ratingsRoute = createRoute({
   getParentRoute: () => protectedRoute,
-  component: RatingsRouteComponent,
+  component: () => <Suspense><RatingsRouteComponent /></Suspense>,
   path: "/ratings",
-  head: () => ({ meta: [generateRatingsMetadata()] }),
 })
-
-function generateLandsMetadata() {
-  return { title: 'Территории', description: "Территории сервера" }
-}
 
 const landsRoute = createRoute({
   getParentRoute: () => protectedRoute,
-  component: LandsRouteComponent,
+  component: () => <Suspense><LandsRouteComponent /></Suspense>,
   path: "/lands",
-  head: () => ({ meta: [generateLandsMetadata()] }),
 })
 
 const landRoute = createRoute({
   getParentRoute: () => protectedRoute,
-  component: LandRouteComponent,
+  component: () => <Suspense><LandRouteComponent/></Suspense>,
   path: "/lands/$id",
   loader: reatomLoader(async (context, { params }) => {
     landParamAtom(context, params.id as string)
-
-    let data = context.get(landAtom)
-
-    if (!data) {
-      data = await take(context, landAtom)
-    }
-
-    return {
-      title: data ? data?.name : 'Не найдено...',
-    }
-  }),
-  head: ({ loaderData }) => {
-    const data = loaderData as { title: string | undefined }
-
-    return {
-      meta: [{ title: data?.title ?? "Загрузка..." }],
-    }
-  },
+  })
 })
 
 const dashboardRoute = createRoute({
@@ -221,26 +165,53 @@ const dashboardRoute = createRoute({
 const dashboardLayoutRoute = createRoute({
   getParentRoute: () => dashboardRoute,
   id: "_dashboard",
-  component: DashboardRouteComponent,
+  component: () => <Suspense><DashboardRouteComponent /></Suspense>,
 })
 
 const dashboardIndexRoute = createRoute({
   getParentRoute: () => dashboardLayoutRoute,
   path: "/",
-  component: DashboardIndexRouteComponent,
+  component: () => <Suspense><DashboardIndexRouteComponent /></Suspense>,
 })
 
 const dashboardProfileRoute = createRoute({
   getParentRoute: () => dashboardLayoutRoute,
   path: "/profile",
-  component: DashboardProfileRouteComponent,
+  component: () => <Suspense><DashboardProfileRouteComponent /></Suspense>,
 })
 
 const dashboardThreadsRoute = createRoute({
   getParentRoute: () => dashboardLayoutRoute,
   path: "/threads",
-  component: DashboardThreadsRouteComponent,
+  component: () => <Suspense><DashboardThreadsRouteComponent /></Suspense>,
 })
+
+const categoryRoute = createRoute({
+  getParentRoute: () => protectedRoute,
+  component: () => <Suspense><CategoryRouteComponent/></Suspense>,
+  loader: reatomLoader(async (context, { params }) => categoryIdAtom(context, params.id as string)),
+  path: "/category/$id",
+})
+
+const createThreadRoute = createRoute({
+  getParentRoute: () => protectedRoute,
+  component: () => <Suspense><CreateThreadRouteComponent /></Suspense>,
+  path: "/create-thread",
+})
+
+const createTicketRoute = createRoute({
+  getParentRoute: () => protectedRoute,
+  component: () => <Suspense><CreateTicketRouteComponent /></Suspense>,
+  path: "/create-ticket",
+})
+
+const adminRoutes = adminLayoutRoute.addChildren([
+  adminIndexRoute,
+  adminDashboardRoute,
+  adminConfigRoute,
+  adminStatsRoute,
+  adminSupportRoute
+])
 
 const dashboardRoutes = dashboardLayoutRoute.addChildren([
   dashboardIndexRoute,
@@ -248,30 +219,8 @@ const dashboardRoutes = dashboardLayoutRoute.addChildren([
   dashboardThreadsRoute,
 ])
 
-const categoryRoute = createRoute({
-  getParentRoute: () => protectedRoute,
-  component: CategoryRouteComponent,
-  loader: reatomLoader(async (context, { params }) => {
-    categoryIdAtom(context, params.id as string)
-  }),
-  path: "/category/$id",
-})
-
-const createThreadRoute = createRoute({
-  getParentRoute: () => protectedRoute,
-  component: CreateThreadRouteComponent,
-  path: "/create-thread",
-  head: () => ({ meta: [{ title: 'Создать тред', }] }),
-})
-
-const createTicketRoute = createRoute({
-  getParentRoute: () => protectedRoute,
-  component: CreateTicketRouteComponent,
-  path: "/create-ticket",
-  head: () => ({ meta: [{ title: "Создать тикет" }] }),
-})
-
 export const protectedRoutes = protectedRoute.addChildren([
+  adminRoute,
   adminRoutes,
   eventsRoute,
   friendsRoute,

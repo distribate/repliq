@@ -3,61 +3,163 @@ import { Separator } from "@repo/ui/src/components/separator.tsx";
 import { DescriptionInput } from "./components/description/description-input.tsx";
 import { OutlineCover } from "./components/outline-cover/outline-cover.tsx";
 import Lead from "@repo/assets/images/minecraft/lead.webp";
-import { RealNameChangeModal } from "#components/modals/user-settings/components/real-name-change-modal.tsx";
-import { NicknameColorPickerModal } from "#components/modals/user-settings/components/nickname-color-picker-modal.tsx";
-import { FavoriteItemModal } from "#components/modals/user-settings/components/favorite-item-modal.tsx";
+// import { SyncFavoriteItem } from "#components/modals/user-settings/components/favorite-item-modal.tsx";
 import { ProfileVisibilityChange } from "./components/visibility-profile/components/profile-visibility-change.tsx";
-import { DateBirthdayModal } from "#components/modals/user-settings/components/date-birthday-modal.tsx";
 import { getUser } from "@repo/lib/helpers/get-user.ts";
 import { UserSettingOption } from "#components/cards/user-setting-option-card/components/user-setting-option.tsx";
 import { UserSettingsBack } from "#components/modals/user-settings/components/user-settings-back.tsx";
 import { reatomComponent } from "@reatom/npm-react";
+import { navigateToDialogAction, ProfileDialog, settingsCurrentDialogAtom } from "#components/modals/user-settings/models/user-settings.model.ts";
+import {  ReactNode } from "react";
+import Barrier from "@repo/assets/images/minecraft/barrier.webp";
+import dayjs from "@repo/lib/constants/dayjs-instance";
+import Firework from "@repo/assets/images/minecraft/firework.webp";
+import Nametag from '@repo/assets/images/minecraft/nametag.webp';
+// import DiamondPickaxe from "@repo/assets/images/minecraft/diamond_pickaxe.webp";
+// import { favoriteItemAtom } from "./components/favorite-items/models/favorite-item.model.ts";
+import BlueDye from "@repo/assets/images/minecraft/blue_dye.webp";
+import { hexToRgba } from "@repo/lib/helpers/hex-to-rgba.ts";
+import { RealNameChange } from "./components/real-name-change/components/real-name-change.tsx";
+// import { FavoriteItems } from "./components/favorite-items/components/favorite-items.tsx";
+import { NicknameColorPickerModal } from "#components/modals/user-settings/components/nickname-color-picker-modal.tsx";
+import { DateBirthdayModal } from "#components/modals/user-settings/components/date-birthday-modal.tsx";
+
+const PROFILE_SETTINGS_SECTION: Record<ProfileDialog, ReactNode> = {
+  birthday: (
+    <DateBirthdayModal />
+  ),
+  "real-name": <RealNameChange />,
+  "name-color": (
+    <NicknameColorPickerModal />
+  ),
+  "favorite-item": null,
+  visibility: <ProfileVisibilityChange />,
+}
+
+const ProfileVisibilityOption = reatomComponent(({ ctx }) => {
+  const profile_visibility = getUser(ctx).preferences.profile_visibility
+
+  return (
+    <UserSettingOption onClick={() => navigateToDialogAction(ctx, "visibility")} title="Тип аккаунта:" imageSrc={Barrier}>
+      <Typography className="text-base">
+        {profile_visibility === "all" ? "открытый" : "закрытый"}
+      </Typography>
+    </UserSettingOption>
+  )
+})
+
+const BirthdayOption = reatomComponent(({ ctx }) => {
+  const birthday = getUser(ctx).birthday;
+
+  return (
+    <UserSettingOption onClick={() => navigateToDialogAction(ctx, "birthday")} title="День рождения" imageSrc={Firework}>
+      <div className="flex items-center gap-1">
+        <Typography className="text-base">
+          {birthday ? dayjs(birthday).format("DD MMM YYYY") : `не указано`}
+        </Typography>
+      </div>
+    </UserSettingOption>
+  )
+})
+
+const RealnameOption = reatomComponent(({ ctx }) => {
+  return (
+    <UserSettingOption onClick={() => navigateToDialogAction(ctx, "real-name")} title="Реальное имя" imageSrc={Nametag}>
+      <div className="flex items-center gap-1">
+        <Typography className="text-base">
+          {getUser(ctx).real_name ?? 'нет'}
+        </Typography>
+      </div>
+    </UserSettingOption>
+  )
+})
+
+const NamecolorOption = reatomComponent(({ ctx }) => {
+  return (
+    <UserSettingOption onClick={() => navigateToDialogAction(ctx, "name-color")} title="Цвет никнейма" imageSrc={BlueDye}>
+      <div
+        className={`flex items-center px-4 py-1 backdrop-blur-md rounded-md`}
+        style={{
+          backgroundColor: hexToRgba({ hex: getUser(ctx).name_color, alpha: 0.3 }),
+        }}
+      >
+        <Typography className="text-base font-semibold" style={{ color: getUser(ctx).name_color }}>
+          {getUser(ctx).name_color.toString()}
+        </Typography>
+      </div>
+    </UserSettingOption>
+  )
+})
+
+// const FavoriteItemOption = reatomComponent(({ ctx }) => {
+//   const favoriteItem = ctx.spy(favoriteItemAtom)
+
+//   return (
+//     <>
+//       <SyncFavoriteItem target={getUser(ctx).nickname} />
+//       <UserSettingOption
+//         title="Любимый предмет"
+//         imageSrc={DiamondPickaxe}
+//         onClick={() => navigateToDialogAction(ctx, "favorite-item")}
+//       >
+//         <div className="flex items-center gap-1">
+//           <Typography className="text-base">
+//             {favoriteItem ? favoriteItem.title : "не выбрано"}
+//           </Typography>
+//         </div>
+//       </UserSettingOption>
+//     </>
+//   )
+// })
 
 export const UserProfileSettings = reatomComponent(({ ctx }) => {
-  const { donate } = getUser(ctx);
+  const donate = getUser(ctx).donate;
   const isAccess = donate !== "default";
+  const current = ctx.spy(settingsCurrentDialogAtom)
 
   return (
     <div className="flex flex-col gap-y-4 items-center w-full">
-      <UserSettingsBack to="main" />
-      <Typography variant="dialogTitle">Профиль</Typography>
-      <div className="flex flex-col w-full gap-y-4">
-        <DescriptionInput />
-        <div className="flex flex-col bg-secondary-color w-full py-2 px-4">
-          <Typography className="text-base text-shark-200">
-            Расскажи о своем возрасте или чем занимаешься?
-          </Typography>
-          <Typography className="text-base text-shark-200">
-            Например: 20-ти летний майнкрафтер из Москвы
-          </Typography>
-        </div>
-      </div>
-      <Separator />
-      <div className="flex flex-col w-full gap-y-4">
-        <ProfileVisibilityChange />
-      </div>
-      <Separator />
-      <div className="flex flex-col w-full gap-y-4">
-        <DateBirthdayModal />
-        <RealNameChangeModal />
-        {isAccess && (
-          <>
-            <Separator className="relative bg-authentic-background brightness-150 mb-2">
-              <Typography className="absolute z-2 -top-0 left-0 text-authentic-background font-[Minecraft] text-[14px]">
-                only Authentic+
+      <UserSettingsBack />
+      {current && PROFILE_SETTINGS_SECTION[current as ProfileDialog]}
+      {!current && (
+        <>
+          <Typography variant="dialogTitle">Профиль</Typography>
+          <div className="flex flex-col w-full gap-y-4">
+            <DescriptionInput />
+            <div className="flex flex-col bg-secondary-color w-full py-2 px-4">
+              <Typography className="text-base text-shark-200">
+                Расскажи о своем возрасте или чем занимаешься?
               </Typography>
-            </Separator>
-            <NicknameColorPickerModal />
-            <UserSettingOption
-              title="Обводка вокруг шапки профиля"
-              imageSrc={Lead}
-            >
-              <OutlineCover />
-            </UserSettingOption>
-            <FavoriteItemModal />
-          </>
-        )}
-      </div>
+              <Typography className="text-base text-shark-200">
+                Например: 20-ти летний майнкрафтер из Москвы
+              </Typography>
+            </div>
+          </div>
+          <Separator />
+          <div className="flex flex-col w-full gap-y-4">
+            <ProfileVisibilityOption />
+          </div>
+          <Separator />
+          <div className="flex flex-col w-full gap-y-4">
+            <BirthdayOption />
+            <RealnameOption />
+            {isAccess && (
+              <>
+                <Separator className="relative bg-authentic-background brightness-150 mb-2">
+                  <Typography className="absolute z-2 -top-0 left-0 text-authentic-background text-[14px]">
+                    only Fasberry+
+                  </Typography>
+                </Separator>
+                <NamecolorOption />
+                <UserSettingOption title="Обводка вокруг шапки профиля" imageSrc={Lead}>
+                  <OutlineCover />
+                </UserSettingOption>
+                {/* <FavoriteItemOption /> */}
+              </>
+            )}
+          </div>
+        </>
+      )}
     </div>
   );
 }, "UserProfileSettings")

@@ -1,9 +1,9 @@
 import { getPostsControlAtom } from "#components/post/post-item/models/post-control.model";
 import { toast } from "sonner";
 import { reatomAsync, withStatusesAtom } from "@reatom/async";
-import { postsDataAtom } from "#components/profile/posts/posts/models/posts.model";
 import { atom } from "@reatom/core";
 import { forumCommentClient, forumPostClient } from "@repo/shared/api/forum-client";
+import { postsDataAtom } from "#components/profile/posts/models/posts.model";
 
 type ControlPostActionType = "delete" | "edit" | "pin" | "comments";
 
@@ -13,80 +13,42 @@ type ControlPost = {
   type: ControlPostActionType;
 };
 
-async function pinPost({
-  id,
-  value
-}: {
-  id: string;
-  value: boolean
-}) {
-  const res = await forumPostClient.post["pin-post"].$post({
-    json: { id, value }
-  })
+async function pinPost({ id, value}: { id: string; value: boolean }) {
+  const res = await forumPostClient.post["pin-post"].$post({ json: { id, value } })
 
   const data = await res.json();
 
-  if ("error" in data) {
-    return null
-  }
+  if ("error" in data) return null
 
   return data;
 }
 
-async function editPost({
-  content, id
-}: {
-  id: string,
-  content: string
-}) {
-  const res = await forumPostClient.post["edit-post"].$post({
-    json: {  id, content }
-  })
+async function editPost({ content, id }: { id: string, content: string }) {
+  const res = await forumPostClient.post["edit-post"].$post({  json: {  id, content } })
 
   const data = await res.json();
 
-  if ("error" in data) {
-    return null
-  }
+  if ("error" in data) return null
 
   return data;
 }
 
-async function disablePostComments({
-  id
-}: {
-  id: string
-}) {
-  const res = await forumCommentClient.comment["disable-comments"].$post({
-    json: {
-      id,
-      type: "post"
-    }
-  })
+async function disablePostComments({ id}: { id: string }) {
+  const res = await forumCommentClient.comment["disable-comments"].$post({ json: {  id, type: "post" } })
 
   const data = await res.json();
 
-  if ("error" in data) {
-    return null
-  }
+  if ("error" in data) return null
 
   return data;
 }
 
-async function deletePost({
-  id
-}: {
-  id: string
-}) {
-  const res = await forumPostClient.post["delete-post"].$delete({
-    json: { id  }
-  })
+async function deletePost({ id }: { id: string }) {
+  const res = await forumPostClient.post["delete-post"].$delete({ json: { id  } })
 
   const data = await res.json();
 
-  if ("error" in data) {
-    return null
-  }
+  if ("error" in data) return null
 
   return data;
 }
@@ -131,11 +93,11 @@ export const controlPostAction = reatomAsync(async (ctx, values: ControlPost) =>
     switch (variables.type) {
       case "comments":
         return postsDataAtom(ctx, (state) => {
-          if (!state) return state;
+          if (!state) state = [];
 
           // @ts-ignore
           if ((res.status !== 'Success') || ("is_comments" in res.data)) {
-            return;
+            return state;
           }
 
           const post = state.find((post) => post.id === variables.id);
@@ -150,10 +112,10 @@ export const controlPostAction = reatomAsync(async (ctx, values: ControlPost) =>
         })
       case "delete":
         return postsDataAtom(ctx, (state) => {
-          if (!state) return null;
+          if (!state) state = [];
 
           if (res.status !== 'Success') {
-            return;
+            return state;
           }
 
           const newData = state.filter(
@@ -164,10 +126,10 @@ export const controlPostAction = reatomAsync(async (ctx, values: ControlPost) =>
         })
       case "edit":
         return postsDataAtom(ctx, (state) => {
-          if (!state) return null;
+          if (!state) state = [];
 
           if (res.status !== 'Success') {
-            return;
+            return state;
           }
 
           return state.map((post) =>
@@ -179,10 +141,10 @@ export const controlPostAction = reatomAsync(async (ctx, values: ControlPost) =>
         })
       case "pin":
         return postsDataAtom(ctx, (state) => {
-          if (!state) return null;
+          if (!state) state = [];
 
           if (res.status !== 'Success') {
-            return;
+            return state;
           }
 
           return state.map((post) =>

@@ -11,7 +11,7 @@ export default defineConfig({
     },
   },
   html: {
-    template: './index.html',
+    template: "./index.html"
   },
   plugins: [
     pluginReact(),
@@ -26,15 +26,21 @@ export default defineConfig({
   tools: {
     rspack: {
       plugins: [
-        TanStackRouterRspack(),
+        TanStackRouterRspack({ autoCodeSplitting: true }),
       ],
     }
+  },
+  dev: {
+    lazyCompilation: true
   },
   output: {
     polyfill: 'off',
     distPath: {
       root: process.env.NODE_ENV === 'development' ? "dist" : "build",
-    }
+    },
+    // sourceMap: {
+    //   js: process.env.NODE_ENV === 'development' ? 'eval' : false,
+    // },
   },
   server: {
     port: process.env.NODE_ENV === 'development'

@@ -20,14 +20,12 @@ export type ThreadControlQueryValues = Pick<
 type ThreadControl = {
   state: {
     isValid: boolean;
-    isContenteditable: boolean;
   }
   values: Partial<ThreadControlQueryValues> | null;
 }
 
 export const threadControlAtom = atom<ThreadControl>({
   state: {
-    isContenteditable: false,
     isValid: false,
   },
   values: null,

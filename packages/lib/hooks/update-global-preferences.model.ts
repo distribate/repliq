@@ -1,7 +1,8 @@
-import { action, atom } from '@reatom/core';
+import { action } from '@reatom/core';
 import { reatomAsync, withStatusesAtom } from '@reatom/async';
-import { globalPreferencesAtom } from "#queries/global-preferences-query.ts";
 import { toast } from "sonner";
+import { atom } from '@reatom/core';
+import { globalPreferencesAtom } from '#queries/global-preferences.model.ts';
 
 type KeyType = "intro" | "alerts"
 

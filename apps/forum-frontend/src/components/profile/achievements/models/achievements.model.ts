@@ -1,8 +1,8 @@
-import { consola } from 'consola';
-import { isParamChanged, requestedUserParamAtom } from "#components/profile/requested-user.model"
+import { isParamChanged, requestedUserParamAtom } from "#components/profile/main/models/requested-user.model"
 import { reatomAsync, withErrorAtom, withStatusesAtom } from "@reatom/async"
 import { atom, Ctx } from "@reatom/core"
 import { withReset } from "@reatom/framework"
+import { logger } from "@repo/lib/utils/logger"
 import { achievementsClient } from "@repo/shared/api/minecraft-client"
 
 type AchievementsData = Array<{
@@ -38,7 +38,7 @@ async function getAchievementsMeta() {
 
 requestedUserParamAtom.onChange((ctx, state) => {
   if (!state) {
-    consola.info(`achievements reset`)
+    logger.info(`achievements reset`)
     achievementsAtom.reset(ctx)
     achievementsMetaAtom.reset(ctx)
   }
@@ -51,7 +51,7 @@ function resetAchievements(ctx: Ctx) {
 
 requestedUserParamAtom.onChange((ctx, state) => isParamChanged(ctx, state, () => {
   resetAchievements(ctx)
-  consola.info("achievements reset for", state)
+  logger.info("achievements reset for", state)
 }))
 
 export const achievementsAction = reatomAsync(async (ctx) => {
@@ -63,7 +63,7 @@ export const achievementsAction = reatomAsync(async (ctx) => {
 
   if (cachedData && cachedMeta) {
     const cache = Promise.resolve([cachedData, cachedMeta] as [AchievementsData, AchievementsMeta])
-    consola.info(`returned cached data for ${target}: `, cache)
+    logger.info(`returned cached data for ${target}: `, cache)
     return cache
   }
 

@@ -26,7 +26,7 @@ export const ProfileSkinRender = reatomComponent(({ ctx }) => {
   const isHardwareAccEnabled = hardwareAccelerationIsActive();
 
   return (
-    <div className="flex items-center justify-center py-2 overflow-hidden border-4 border-shark-800 rounded-lg w-full">
+    <div className="flex items-center min-h-[450px] justify-center py-2 overflow-hidden border-4 border-shark-800 rounded-lg w-full">
       {isHardwareAccEnabled ? (
         <Suspense>
           <ReactSkinview3d

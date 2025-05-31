@@ -2,7 +2,6 @@ import { Input } from "@repo/ui/src/components/input.tsx";
 import { Button } from "@repo/ui/src/components/button.tsx";
 import { FieldError, useForm, UseFormRegister, UseFormResetField } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { FormField } from "@repo/ui/src/components/form-field.tsx";
 import { Typography } from "@repo/ui/src/components/typography.tsx";
 import { authorizationSchema } from "../schemas/authorization-schema.ts";
 import { authAction, authPasswordVisibilityAtom, authStatusAtom, authValuesAtom } from "../models/auth.model.ts";
@@ -11,6 +10,9 @@ import { PasswordVisibilityBadge } from "./password-visibility-badge.tsx";
 import { reatomComponent, useUpdate } from "@reatom/npm-react";
 import { CloudflareTurnstile } from "./cloudflare-turnstile.tsx";
 import { AuthStatus } from "./status.tsx";
+import { ArrowRight, Lock, User } from "lucide-react";
+import { PropsWithChildren } from "react";
+import { cn } from "@repo/lib/utils/ui/cn.ts";
 
 export const SyncStatusUpdates = ({ status, resetField }: {
   status: string | null,
@@ -34,29 +36,38 @@ export const SyncStatusUpdates = ({ status, resetField }: {
 
 const PasswordInput = reatomComponent<{
   error: FieldError | undefined,
-  register: UseFormRegister<{
-    password: string;
-    nickname: string;
-  }>
+  register: UseFormRegister<{ password: string; nickname: string }>
 }>(({ ctx, error, register }) => {
   return (
     <Input
       id="password"
       type={ctx.spy(authPasswordVisibilityAtom)}
-      className="!bg-shark-900"
+      backgroundType="transparent"
       placeholder="игровой пароль"
       autoComplete="new-password"
+      className="placeholder:font-semibold !px-3 !text-base placeholder:text-base"
       autoCorrect="off"
       status={error ? "error" : "default"}
-      variant="minecraft"
       {...register("password")}
     />
   )
 })
 
+export const FormField = ({ children, className }: PropsWithChildren & { className?: string }) => {
+  return (
+    <div className={cn(`
+      flex items-center justify-start w-full 
+      focus-within:outline focus-within:outline-4 
+      focus-within:outline-green-600 rounded-xl px-4 py-1 bg-shark-900`, className)}
+    >
+      {children}
+    </div>
+  )
+}
+
 export const SignInForm = reatomComponent(({ ctx }) => {
   const {
-    register, handleSubmit, resetField, formState: { errors, isValid, isDirty }, getValues
+    register, handleSubmit, resetField, formState: { errors, isValid }, getValues
   } = useForm<z.infer<typeof authorizationSchema>>({
     mode: "onChange",
     resolver: zodResolver(authorizationSchema),
@@ -75,34 +86,35 @@ export const SignInForm = reatomComponent(({ ctx }) => {
     <>
       <SyncStatusUpdates status={ctx.spy(authStatusAtom)} resetField={resetField} />
       <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col p-2 gap-y-4 w-full">
-        <FormField label={{ name: "Никнейм", for: "nickname" }} errorMessage={errors?.nickname?.message}>
+        <FormField>
+          <User size={20} className="font-bold text-shark-300" />
           <Input
             id="nickname"
             type="text"
-            placeholder="игровой ник"
+            placeholder="логин"
             autoComplete="new-password"
             autoCorrect="off"
-            className="!bg-shark-900"
+            backgroundType="transparent"
+            className="placeholder:font-semibold !px-3 !text-base placeholder:text-base"
             status={errors.nickname ? "error" : "default"}
-            variant="minecraft"
             {...register("nickname")}
           />
         </FormField>
-        <FormField label={{ name: "Пароль", for: "password" }} errorMessage={errors?.password?.message}>
-          <div className="flex items-center gap-2 justify-center">
+        <FormField className="justify-between">
+          <div className="flex items-center w-full">
+            <Lock size={20} className="font-bold text-shark-300" />
             <PasswordInput error={errors.password} register={register} />
-            <PasswordVisibilityBadge />
           </div>
+          <PasswordVisibilityBadge />
         </FormField>
-        <CloudflareTurnstile isDirty={isDirty} />
-        <div className="flex flex-col sm:flex-row items-center justify-end w-full gap-2">
-          <AuthStatus/>
-          <Button
-            variant="minecraft" rounded="none" className="hover:bg-green-500 bg-green-600" disabled={isDisabled}
-          >
-            <Typography font="minecraft" textSize="medium" textColor="shark_white" className="text-lg">
+        <CloudflareTurnstile />
+        <div className="flex flex-col sm:flex-row justify-between mt-4 items-center w-full gap-2">
+          <AuthStatus />
+          <Button className="hover:bg-green-500 gap-4 items-center bg-green-600" disabled={isDisabled}>
+            <Typography textSize="medium" textColor="shark_white" className="text-lg">
               Войти в аккаунт
             </Typography>
+            <ArrowRight size={20} />
           </Button>
         </div>
       </form>

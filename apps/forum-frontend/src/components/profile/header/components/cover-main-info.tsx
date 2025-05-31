@@ -3,7 +3,7 @@ import { UserDonate } from "#components/user/donate/components/donate.tsx";
 import { Typography } from "@repo/ui/src/components/typography.tsx";
 import { coverAtom } from "#components/profile/header/models/cover.model";
 import dayjs from "@repo/lib/constants/dayjs-instance";
-import { requestedUserAtom } from "#components/profile/requested-user.model";
+import { requestedUserAtom } from "#components/profile/main/models/requested-user.model";
 import { reatomComponent } from "@reatom/npm-react";
 import { UserDetailed } from "@repo/types/entities/user-type";
 import { UserRealName } from "#components/user/real-name/real-name";
@@ -43,7 +43,7 @@ export const UserCoverMainInfo = reatomComponent(({ ctx }) => {
       </div>
       {requestedUser.description && (
         <div className="hidden lg:flex">
-          <Typography textColor="shark_white" className="font-[Minecraft]" textSize="medium">
+          <Typography textColor="shark_white" textSize="medium">
             {requestedUser.description}
           </Typography>
         </div>

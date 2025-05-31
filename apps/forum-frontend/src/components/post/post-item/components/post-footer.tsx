@@ -1,6 +1,6 @@
 import { Typography } from "@repo/ui/src/components/typography.tsx";
 import { currentUserNicknameAtom } from "@repo/lib/helpers/get-user.ts";
-import { lazy } from "react";
+import { lazy, Suspense } from "react";
 import { PostFooterViews } from "#components/post/post-item/components/post-footer-views.tsx";
 import type { UserPostItem } from '@repo/types/routes-types/get-user-posts-types.ts';
 import dayjs from "@repo/lib/constants/dayjs-instance";
@@ -28,7 +28,11 @@ export const PostFooter = reatomComponent<PostFooterProps>(({
           [изменено]
         </Typography>
       )}
-      {isOwner && <PostFooterWithViewsList id={id} views_count={views_count} />}
+      {isOwner && (
+        <Suspense>
+          <PostFooterWithViewsList id={id} views_count={views_count} />
+        </Suspense>
+      )}
       {!isOwner && <PostFooterViews views_count={views_count} />}
       <div className="flex items-center gap-1">
         <Typography textSize="small" textColor="gray">

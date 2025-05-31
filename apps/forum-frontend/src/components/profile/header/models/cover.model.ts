@@ -1,4 +1,4 @@
-import { requestedUserParamAtom, requestedUserPreferencesAtom } from "#components/profile/requested-user.model";
+import { requestedUserParamAtom, requestedUserPreferencesAtom } from "#components/profile/main/models/requested-user.model";
 import { action, atom } from "@reatom/core";
 import { currentUserNicknameAtom } from "@repo/lib/helpers/get-user";
 import { toast } from "sonner";

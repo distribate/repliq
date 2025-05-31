@@ -1,47 +1,46 @@
 import { Input } from '@repo/ui/src/components/input.tsx';
-import { useCallback } from 'react';
-import { useDebounce } from '@repo/lib/hooks/use-debounce.ts';
-import { z } from 'zod';
 import { getUser } from '@repo/lib/helpers/get-user';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useForm } from 'react-hook-form';
 import { reatomComponent } from '@reatom/npm-react';
 import { updateCurrentUserAction } from '../../models/update-current-user.model';
-import { spawn } from '@reatom/framework';
+import { action, atom, sleep, spawn, withConcurrency, withInit } from '@reatom/framework';
 
-const descriptionSchema = z.object({
-  description: z.string().max(32).nullable(),
-});
+const descriptionValueAtom = atom<string | null>(null, "descriptionValue").pipe(withInit((ctx) => {
+  const currentDescription = getUser(ctx)?.description
+  return currentDescription ?? null
+}))
 
-type DescriptionSchemaType = z.infer<typeof descriptionSchema>;
+const onChange = action(async (ctx, e) => {
+  const { value } = e.target;
 
-const DEBOUNCE_DELAY = 800
+  await ctx.schedule(() => sleep(800))
+
+  if (value.length >= 46) {
+    return
+  }
+
+  descriptionValueAtom(ctx, value.length < 1 ? null : value)
+  autoSaveAction(ctx)
+}).pipe(withConcurrency())
+
+const autoSaveAction = action(async (ctx) => {
+  await sleep(50)
+
+  const value = ctx.get(descriptionValueAtom)
+
+  void spawn(ctx, async (spawnCtx) => 
+    updateCurrentUserAction(spawnCtx, { criteria: 'description', value })
+  )
+})
 
 export const DescriptionInput = reatomComponent(({ ctx }) => {
-  const description = getUser(ctx).description;
-  
-  const { register } = useForm<DescriptionSchemaType>({
-    resolver: zodResolver(descriptionSchema),
-    mode: "onChange",
-    defaultValues: { description },
-  });
-
-  const debouncedHandleSearch = useCallback(useDebounce((val: string) => {
-    if (description === val) return;
-    
-    void spawn(ctx, async (spawnCtx) => 
-      updateCurrentUserAction(spawnCtx, { criteria: 'description', value: val.length < 1 ? null : val })
-    );
-  }, DEBOUNCE_DELAY), []);
-  
   return (
     <Input
       placeholder="Описание..."
+      defaultValue={ctx.spy(descriptionValueAtom) ?? ""}
       className="!text-base"
       backgroundType="transparent"
-      {...register("description", {
-        onChange: (e) => debouncedHandleSearch(e.target.value),
-      })}
+      onChange={e => onChange(ctx, e)}
+      maxLength={46}
     />
   );
 }, "DescriptionInput")

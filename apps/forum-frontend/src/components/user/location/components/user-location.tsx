@@ -4,7 +4,7 @@ import { coverAtom } from "#components/profile/header/models/cover.model";
 import { userLocationAction, userLocationContentAtom } from "../models/user-location.model";
 import { reatomComponent } from "@reatom/npm-react";
 import { onConnect } from "@reatom/framework";
-import { requestedUserParamAtom } from "#components/profile/requested-user.model";
+import { requestedUserParamAtom } from "#components/profile/main/models/requested-user.model";
 
 const LocationContent = reatomComponent(({ ctx }) => {
   const locationContent = ctx.spy(userLocationContentAtom)

@@ -1,4 +1,4 @@
-import { requestedUserIsSameAtom } from "#components/profile/requested-user.model";
+import { requestedUserIsSameAtom } from "#components/profile/main/models/requested-user.model";
 import { reatomComponent } from "@reatom/npm-react";
 import { Button } from "@repo/ui/src/components/button";
 import { Dialog, DialogContent, DialogTrigger } from "@repo/ui/src/components/dialog";

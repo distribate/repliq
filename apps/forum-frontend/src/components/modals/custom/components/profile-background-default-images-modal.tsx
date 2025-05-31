@@ -60,7 +60,7 @@ export const ProfileBackgroundDefaultImagesModal = reatomComponent(({ ctx }) => 
       contentClassName="max-w-6xl"
       trigger={
         <HoverCardItem className="w-full gap-2 p-6 group items-center">
-          <Image size={24} className="icon-color" />
+          <Image size={24} className="text-shark-300" />
           <Typography textSize="large" textColor="shark_white">
             Выбрать из библиотеки
           </Typography>

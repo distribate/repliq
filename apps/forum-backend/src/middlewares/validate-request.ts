@@ -14,7 +14,7 @@ export const validateRequest = (type: "prevent" | undefined = undefined) => crea
     }
   }
 
-  const nickname = await getUserNicknameByTokenFromKv(sessionToken!)
+  const nickname = await getUserNicknameByTokenFromKv(sessionToken)
 
   if (type === "prevent") {
     if (!nickname) {

@@ -1,12 +1,13 @@
 import { reatomComponent } from "@reatom/npm-react"
-import { globalPreferencesAtom } from "@repo/lib/queries/global-preferences-query"
+// import { globalPreferencesAtom } from "@repo/lib/queries/global-preferences.model"
 import { Skeleton } from "@repo/ui/src/components/skeleton"
 import { Typography } from "@repo/ui/src/components/typography"
 import { toast } from "sonner"
 import { statusResource } from "./status-widget.model"
 
 export const StatusWidget = reatomComponent(({ ctx }) => {
-  const isEnabled = ctx.spy(globalPreferencesAtom).intro === 'show'
+  const isEnabled = false
+  // ctx.spy(globalPreferencesAtom).intro === 'show'
   const data = ctx.spy(statusResource.dataAtom)
 
   const copyClipboard = async () => {
@@ -19,7 +20,7 @@ export const StatusWidget = reatomComponent(({ ctx }) => {
   return (
     <div className="relative rounded-lg overflow-hidden">
       <img
-        src="https://kong.fasberry.su/storage/v1/object/public/static/widgets/server-status-widget.png"
+        src="https://kong.fasberry.su/storage/v1/object/public/static/widgets/server-status-widget.webp"
         alt=""
         width={1000}
         height={600}

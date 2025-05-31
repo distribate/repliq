@@ -1,6 +1,6 @@
 import { formatIssuedTime } from "@repo/lib/helpers/format-status-time";
 import { reatomAsync, withDataAtom, withStatusesAtom } from "@reatom/async";
-import { isParamChanged, requestedUserParamAtom } from "#components/profile/requested-user.model";
+import { isParamChanged, requestedUserParamAtom } from "#components/profile/main/models/requested-user.model";
 import { forumUserClient } from "@repo/shared/api/forum-client"
 
 async function getUserStatus(nickname: string) {

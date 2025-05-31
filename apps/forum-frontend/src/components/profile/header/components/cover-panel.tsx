@@ -9,7 +9,7 @@ import { Dialog, DialogContent, DialogTrigger } from "@repo/ui/src/components/di
 import { Typography } from "@repo/ui/src/components/typography";
 import { FriendButton } from "#components/friend/components/friend-button/components/friend-button";
 import { reatomComponent, useUpdate } from "@reatom/npm-react";
-import { requestedUserIsSameAtom, requestedUserParamAtom, requestedUserProfileBlockedAtom } from "#components/profile/requested-user.model";
+import { requestedUserIsSameAtom, requestedUserParamAtom, requestedUserProfileBlockedAtom } from "#components/profile/main/models/requested-user.model";
 import { UserProfileSettings } from "#components/cards/user-personal-card/components/profile-settings/user-profile-settings.tsx";
 import { Button } from "@repo/ui/src/components/button.tsx";
 import BookAndQuill from "@repo/assets/images/minecraft/book_quill.webp";

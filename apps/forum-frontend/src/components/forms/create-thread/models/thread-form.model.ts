@@ -3,7 +3,7 @@ import { z } from "zod";
 import { Value } from "@udecode/plate";
 import { atom, Ctx } from "@reatom/core";
 import { withReset } from "@reatom/framework";
-import consola from "consola";
+import { logger } from "@repo/lib/utils/logger";
 
 export type ThreadFormQuery = Omit<z.infer<typeof createThreadSchema>,
   | "content"
@@ -29,7 +29,7 @@ export const threadFormCategoryAtom = atom<ThreadFormQuery["category_id"]>(null,
 export const threadFormPreferencesAtom = atom<{ is_comments: ThreadFormQuery["is_comments"] }>({ is_comments: true }, "threadFormPreferences").pipe(withReset())
 export const threadFormPermissionAtom = atom(false, "threadFormPermission")
 
-threadFormContentAtom.onChange((_, state) => consola.info("threadFormContentAtom", state))
+threadFormContentAtom.onChange((_, state) => logger.info("threadFormContentAtom", state))
 
 export function createThreadFormReset(ctx: Ctx) {
   threadFormTitleAtom.reset(ctx)

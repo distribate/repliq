@@ -1,5 +1,6 @@
-import { threadAtom } from "#components/thread/thread-main/models/thread.model"
+import { threadOwnerAtom, threadParamAtom } from "#components/thread/thread-main/models/thread.model"
 import { reatomResource, withCache, withDataAtom, withStatusesAtom } from "@reatom/async"
+import { sleep } from "@reatom/framework"
 import { forumThreadClient } from "@repo/shared/api/forum-client"
 
 type GetThreadsRecommendations = {
@@ -19,7 +20,11 @@ async function getThreadsRecommendations({
 }
 
 export const threadRecommendationsResource = reatomResource(async (ctx) => {
-  const target = ctx.spy(threadAtom)
-  if (!target) return;
-  return await getThreadsRecommendations({ exclude: target.id, nickname: target.owner.nickname })
+  await sleep(1000)
+
+  const target = ctx.spy(threadOwnerAtom)
+  const threadId = ctx.spy(threadParamAtom)
+  if (!target || !threadId) return;
+
+  return await getThreadsRecommendations({ exclude: threadId, nickname: target.nickname })
 }, "threadRecommendationsResource").pipe(withDataAtom(), withCache(), withStatusesAtom())

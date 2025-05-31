@@ -56,7 +56,7 @@ export const Avatar = reatomComponent<AvatarProps>(({
 }, "Avatar")
 
 const AvatarImage = reatomComponent<Pick<AvatarProps, "rounded" | "propWidth" | "propHeight" | "nickname">>(({
-  ctx, rounded, propWidth, propHeight, nickname
+  ctx, rounded = "default", propWidth, propHeight, nickname
 }) => {
   const { url, isLoading } = ctx.spy(avatarAtom(nickname))
 
@@ -64,14 +64,21 @@ const AvatarImage = reatomComponent<Pick<AvatarProps, "rounded" | "propWidth" | 
     return <Skeleton style={{ height: propHeight, width: propWidth }} />
   }
 
-  return (
+  return url ? (
     <img
       src={url}
+      draggable={false}
       width={propWidth}
       height={propHeight}
       data-rounded={rounded}
-      className="rounded-lg data-[rounded=default]:rounded-sm"
+      className="rounded-lg select-none data-[rounded=default]:rounded-sm"
       alt=""
     />
-  );
+  ) : (
+    <div className={`flex select-none items-center bg-shark-950 justify-center`} style={{ height: `${propHeight}px`, width: `${propWidth}px`}}>
+      <div className={`flex items-center justify-center w-full h-full`}>
+        <span data-state={(propHeight ?? 24) >= 42 ? "big" : "mini"} className="data-[state=mini]:text-base data-[state=big]:text-4xl uppercase font-bold text-shark-50">{nickname[0]}</span>
+      </div>
+    </div>
+  )
 }, "AvatarImage")

@@ -1,9 +1,6 @@
 import { Ellipsis, Pen, Pin, Trash } from "lucide-react";
 import { HoverCardItem } from "@repo/ui/src/components/hover-card.tsx";
 import { Separator } from "@repo/ui/src/components/separator.tsx";
-import {
-  postsDataAtom,
-} from "#components/profile/posts/posts/models/posts.model";
 import { DropdownWrapper } from "#components/wrappers/components/dropdown-wrapper";
 import { PostAdditionalModal } from "#components/modals/custom/components/post-additional-modal";
 import { PostEntity, UserEntity } from "@repo/types/entities/entities-type.ts";
@@ -16,6 +13,7 @@ import {
 import { Typography } from "@repo/ui/src/components/typography.tsx";
 import { Cloud } from "lucide-react";
 import { reatomComponent } from "@reatom/npm-react";
+import { postsDataAtom } from "#components/profile/posts/models/posts.model";
 
 export type PostControlProps = Pick<PostEntity, "id" | "isComments"> & Pick<UserEntity, "nickname">;
 

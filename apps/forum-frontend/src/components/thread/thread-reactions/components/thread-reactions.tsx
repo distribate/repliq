@@ -1,23 +1,13 @@
-import { ThreadEntity } from "@repo/types/entities/entities-type.ts";
 import { REACTIONS } from "@repo/shared/constants/emojis";
 import { ThreadReactionsSkeleton } from "./thread-reactions-skeleton";
 import { ThreadReactionItem } from "./thread-reaction-item";
-import { reatomComponent, useUpdate } from "@reatom/npm-react";
-import { threadReactionsAction, threadReactionsAtom } from "../models/thread-reactions.model";
+import { reatomComponent } from "@reatom/npm-react";
+import { threadReactionsAction } from "../models/thread-reactions.model";
 import { threadParamAtom } from "#components/thread/thread-main/models/thread.model";
-
-type ThreadRatingProps = {
-  threadId: Pick<ThreadEntity, "id">["id"];
-};
-
-const Sync = ({ target }: { target: string }) => {
-  useUpdate((ctx) => threadReactionsAction(ctx, target), [target])
-  return null;
-}
 
 const Reactions = reatomComponent(({ ctx }) => {
   const threadId = ctx.spy(threadParamAtom)
-  const data = ctx.spy(threadReactionsAtom)
+  const data = ctx.spy(threadReactionsAction.dataAtom)
 
   if (!data || !threadId) return null;
 
@@ -51,11 +41,8 @@ const Reactions = reatomComponent(({ ctx }) => {
   )
 })
 
-export const ThreadReactions = ({ threadId }: ThreadRatingProps) => {
+export const ThreadReactions = () => {
   return (
-    <>
-      <Sync target={threadId} />
-      <Reactions/>
-    </>
+    <Reactions />
   )
 }

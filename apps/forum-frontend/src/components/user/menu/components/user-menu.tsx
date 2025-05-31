@@ -5,19 +5,18 @@ import { getUser, userGlobalOptionsAtom } from "@repo/lib/helpers/get-user";
 import { USER_URL } from "@repo/shared/constants/routes";
 import { TicketCheck, ShoppingBasket, Shield, LogOut } from 'lucide-react';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@repo/ui/src/components/dropdown-menu";
-import { toggleGlobalDialogAction } from "#components/modals/user-settings/models/update-user-settings.model";
 import { lazy, ReactNode, Suspense } from "react";
-import { UserBalance } from "../../balance/components/user-balance";
 import { reatomComponent } from "@reatom/npm-react";
 import { logoutModalIsOpenAtom } from "#components/modals/action-confirmation/components/logout/models/logout.model";
 import { CustomLink } from "#components/shared/link";
+import { toggleGlobalDialogAction } from "#components/modals/user-settings/models/user-settings.model";
 
 const SettingsModal = lazy(() => import("#components/modals/user-settings/components/user-settings-modal").then(m => ({ default: m.UserSettingsModal })))
 const LogoutModal = lazy(() => import("#components/modals/action-confirmation/components/logout/components/logout-modal.tsx").then(m => ({ default: m.LogoutModal })))
 
 const COLLECTION_LINKS: { icon: any, name: string, query: "purchases" | "tickets" }[] = [
-  { icon: ShoppingBasket, name: "Мои покупки", query: "purchases" },
-  { icon: TicketCheck, name: "Мои тикеты", query: "tickets" }
+  { icon: ShoppingBasket, name: "Покупки", query: "purchases" },
+  { icon: TicketCheck, name: "Тикеты", query: "tickets" }
 ];
 
 const Admin = reatomComponent(({ ctx }) => {
@@ -46,9 +45,9 @@ const Profile = reatomComponent(({ ctx }) => {
   return (
     <CustomLink to={USER_URL + nickname}>
       <DropdownMenuItem className="gap-2 group cursor-pointer" >
-        <CircleUserRound size={20} className="icon-color" />
+        <CircleUserRound size={20} className="text-shark-300" />
         <Typography textSize="medium">
-          Мой профиль
+          Профиль
         </Typography>
       </DropdownMenuItem>
     </CustomLink>
@@ -79,7 +78,7 @@ const Logout = reatomComponent(({ ctx }) => {
     >
       <LogOut size={20} className="text-red-500" />
       <Typography className="text-red-500" textSize="medium">
-        Выйти из аккаунта
+        Выйти
       </Typography>
     </DropdownMenuItem>
   )
@@ -94,16 +93,12 @@ export const UserMenu = ({ trigger }: { trigger: ReactNode }) => {
       <Suspense>
         <LogoutModal />
       </Suspense>
-      <DropdownMenu modal={true}>
+      <DropdownMenu>
         <DropdownMenuTrigger className="w-full lg:w-fit group focus-visible:outline-none">
           {trigger}
         </DropdownMenuTrigger>
         <DropdownMenuContent side="bottom" align="end" className="min-w-[240px]">
           <div className="flex flex-col gap-y-2 w-full">
-            <div className="flex flex-col gap-2 w-full p-2">
-              <UserBalance />
-            </div>
-            <Separator />
             <Profile />
             {COLLECTION_LINKS.map(({ icon: Icon, name, query }) => (
               <CustomLink key={name} to="/collection" search={{ type: query }}>
@@ -117,7 +112,7 @@ export const UserMenu = ({ trigger }: { trigger: ReactNode }) => {
             ))}
             <CustomLink to="/friends">
               <DropdownMenuItem className="gap-2 group cursor-pointer" >
-                <UsersRound size={20} className="icon-color" />
+                <UsersRound size={20} className="text-shark-300" />
                 <Typography textSize="medium">
                   Друзья
                 </Typography>
@@ -125,7 +120,7 @@ export const UserMenu = ({ trigger }: { trigger: ReactNode }) => {
             </CustomLink>
             <CustomLink to="/notifications">
               <DropdownMenuItem className="gap-2 group cursor-pointer" >
-                <CircleUserRound size={20} className="icon-color" />
+                <CircleUserRound size={20} className="text-shark-300" />
                 <Typography textSize="medium">
                   Уведомления
                 </Typography>

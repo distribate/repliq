@@ -1,6 +1,5 @@
 import { useCallback, useState } from 'react';
 
-import { AIChatPlugin } from '@udecode/plate-ai/react';
 import { BlockquotePlugin } from '@udecode/plate-block-quote/react';
 import { HEADING_KEYS } from '@udecode/plate-heading';
 import { IndentListPlugin } from '@udecode/plate-indent-list/react';
@@ -102,21 +101,10 @@ export function BlockContextMenu({ children }: { children: React.ReactNode }) {
           e.preventDefault();
           editor.getApi(BlockSelectionPlugin).blockSelection.focus();
 
-          if (value === 'askAI') {
-            editor.getApi(AIChatPlugin).aiChat.show();
-          }
-
           setValue(null);
         }}
       >
         <ContextMenuGroup>
-          <ContextMenuItem
-            onClick={() => {
-              setValue('askAI');
-            }}
-          >
-            Ask AI
-          </ContextMenuItem>
           <ContextMenuItem
             onClick={() => {
               editor

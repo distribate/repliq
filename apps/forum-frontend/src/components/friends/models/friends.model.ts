@@ -1,7 +1,6 @@
 import { atom } from "@reatom/core";
 import { reatomAsync, withStatusesAtom } from "@reatom/async";
 import { FriendWithDetails, GetFriendsResponse } from "@repo/types/schemas/friend/friend-types.ts";
-import consola from "consola";
 import { sleep, take, withReset } from "@reatom/framework";
 import { UserEntity } from "@repo/types/entities/entities-type.ts";
 import { forumUserClient } from "@repo/shared/api/forum-client";
@@ -12,6 +11,7 @@ import ky from "ky";
 import { parseBooleanToString } from "@repo/lib/helpers/parse-boolean-to-string.ts"
 import { currentUserNicknameAtom } from "@repo/lib/helpers/get-user";
 import { friendsUpdateOptionsAtom } from "../components/filtering/models/friends-filtering.model";
+import { logger } from "@repo/lib/utils/logger";
 
 export type FriendsQuery = {
   with_details?: boolean
@@ -31,8 +31,8 @@ export const myFriendsMetaAtom = atom<GetFriendsResponse["meta"] | null>(null, "
 export const myFriendsPinnedDataAtom = atom<FriendWithDetails[]>([], "myFriendsPinnedData").pipe(withReset())
 export const myFriendsNotPinnedDataAtom = atom<FriendWithDetails[]>([], "myFriendsNotPinnedData").pipe(withReset())
 
-myFriendsDataAtom.onChange((_, state) => consola.info("myFriendsDataAtom", state))
-myFriendsMetaAtom.onChange((_, state) => consola.info("myFriendsMetaAtom", state))
+myFriendsDataAtom.onChange((_, state) => logger.info("myFriendsDataAtom", state))
+myFriendsMetaAtom.onChange((_, state) => logger.info("myFriendsMetaAtom", state))
 
 myFriendsDataAtom.onChange((ctx, state) => {
   if (state && state.length > 0 && state.every(isFriendDetailed)) {

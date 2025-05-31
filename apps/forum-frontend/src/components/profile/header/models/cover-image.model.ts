@@ -3,7 +3,7 @@ import { reatomAsync, reatomResource, withCache, withDataAtom, withStatusesAtom 
 import { toast } from "sonner";
 import { z } from "zod";
 import { createCoverImageSchema } from "@repo/types/schemas/user/create-cover-image-schema.ts"
-import { requestedUserAtom } from "#components/profile/requested-user.model";
+import { requestedUserAtom } from "#components/profile/main/models/requested-user.model";
 import { forumSharedClient, forumUserClient } from "@repo/shared/api/forum-client"
 import { currentUserAtom } from '@repo/lib/helpers/get-user';
 import type { InferResponseType } from "hono/client"

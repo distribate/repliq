@@ -1,8 +1,8 @@
-import { forwardRef, HTMLAttributes } from "react";
+import { HTMLAttributes } from "react";
 import { cva, VariantProps } from "class-variance-authority";
 
 const userDonateBadgeVariants = cva(
-  "flex items-center border relative justify-center select-none backdrop-filter cursor-pointer overflow-hidden rounded-md",
+  "flex items-center border relative justify-center select-none backdrop-filter cursor-pointer overflow-hidden rounded-sm",
   {
     variants: {
       variant: {
@@ -26,17 +26,13 @@ const userDonateBadgeVariants = cva(
 );
 
 interface UserDonateBadgeProps
-  extends HTMLAttributes<HTMLDivElement>,
-    VariantProps<typeof userDonateBadgeVariants> {}
+  extends HTMLAttributes<HTMLDivElement>, VariantProps<typeof userDonateBadgeVariants> { }
 
-export const UserDonateBadge = forwardRef<HTMLDivElement, UserDonateBadgeProps>(
-  ({ className, variant, size, ...props }, ref) => {
-    return (
-      <div
-        ref={ref}
-        className={userDonateBadgeVariants({ variant, size, className })}
-        {...props}
-      />
-    );
-  },
-);
+export const UserDonateBadge = ({ className, variant, size, ...props }: UserDonateBadgeProps) => {
+  return (
+    <div
+      className={userDonateBadgeVariants({ variant, size, className })}
+      {...props}
+    />
+  );
+}

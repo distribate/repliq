@@ -194,6 +194,7 @@ export const thread = new Hono()
   // public routes
   .use(validateRequest())
   .route("/", getThreadRoute)
+  .route("/", getThreadsByOwnerRoute)
   
   // private routes
   .use(validateRequest("prevent"))
@@ -206,7 +207,6 @@ export const thread = new Hono()
   .route("/", createThreadRoute)
   .route("/", getLatestThreadsRoute)
   .route("/", getThreadImagesRoute)
-  .route("/", getThreadsByOwnerRoute)
 
 export const post = new Hono()
   .basePath('/post')

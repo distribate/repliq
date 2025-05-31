@@ -4,8 +4,6 @@ import { createReactionSchema } from "@repo/types/schemas/reaction/create-reacti
 import { z } from "zod";
 import { atom, reatomAsync, withDataAtom, withStatusesAtom } from "@reatom/framework";
 import { forumThreadClient } from "@repo/shared/api/forum-client";
-import { UnwrapPromise } from "@repo/lib/helpers/unwrap-promise-type";
-import consola from "consola";
 
 type UpdateThreadRating = Omit<z.infer<typeof createReactionSchema>, "type">;
 
@@ -16,16 +14,9 @@ async function getThreadReactions(threadId: string) {
   return data.data;
 }
 
-export const threadReactionsAtom = atom<UnwrapPromise<ReturnType<typeof getThreadReactions>> | null>(null, "threadReactions")
-
-threadReactionsAtom.onChange((_, state) => consola.info("threadReactionsAtom", state))
-
 export const threadReactionsAction = reatomAsync(async (ctx, target: string) => {
   return await ctx.schedule(() => getThreadReactions(target))
-}, {
-  name: "threadReactionsAction",
-  onFulfill: (ctx, res) => threadReactionsAtom(ctx, res),
-}).pipe(withDataAtom(), withStatusesAtom())
+}, "threadReactionsAction").pipe(withDataAtom(), withStatusesAtom())
 
 export async function addReactionToThread({ emoji, id }: UpdateThreadRating) {
   const createReaction = await forumReactionClient.reaction["create-reaction"].$post({
@@ -43,6 +34,8 @@ const THREAD_RATING_MESSAGES: Record<string, string> = {
 }
 
 const addReactionActionVariablesAtom = atom<UpdateThreadRating | null>(null, "addReactionActionVariables")
+
+threadReactionsAction.dataAtom.onChange((ctx, state) => console.log(state))
 
 export const addReactionAction = reatomAsync(async (ctx, values: UpdateThreadRating) => {
   addReactionActionVariablesAtom(ctx, values)
@@ -63,7 +56,8 @@ export const addReactionAction = reatomAsync(async (ctx, values: UpdateThreadRat
     const { emoji } = variables;
 
     if (res.status === 'Created') {
-      threadReactionsAtom(ctx, (state) => {
+      threadReactionsAction.dataAtom(ctx, (state) => {
+        console.log(state)
         const prevUserReactions = state ? state.userReactions.reactions : []
         const prevThreadReactions = state ? state.threadReactions.reactions : {}
 
@@ -80,7 +74,7 @@ export const addReactionAction = reatomAsync(async (ctx, values: UpdateThreadRat
     }
 
     if (res.status === 'Deleted') {
-      threadReactionsAtom(ctx, (state) => {
+      threadReactionsAction.dataAtom(ctx, (state) => {
         const prevUserReactions = state ? state.userReactions.reactions : []
         const prevThreadReactions = state ? state.threadReactions.reactions : {}
 

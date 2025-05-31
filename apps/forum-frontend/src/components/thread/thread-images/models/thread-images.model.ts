@@ -1,10 +1,6 @@
-import { atom } from "@reatom/core";
-import { reatomAsync, withStatusesAtom } from "@reatom/async";
+import { reatomAsync, withDataAtom, withStatusesAtom } from "@reatom/async";
 import { threadParamAtom } from "#components/thread/thread-main/models/thread.model";
-import { UnwrapPromise } from "@repo/lib/helpers/unwrap-promise-type.ts";
 import { forumThreadClient } from "@repo/shared/api/forum-client";
-
-export const threadImagesAtom = atom<UnwrapPromise<ReturnType<typeof getThreadImages>> | null>(null, "threadImages")
 
 export const getThreadImages = async (id: string) => {
   const res = await forumThreadClient.thread["get-thread-images"][":id"].$get({
@@ -25,10 +21,4 @@ export const threadImagesAction = reatomAsync(async (ctx) => {
   if (!target) return;
 
   return await ctx.schedule(() => getThreadImages(target))
-}, {
-  name: "threadImagesAction",
-  onFulfill: (ctx, res) => {
-    if (!res) return
-    threadImagesAtom(ctx, res)
-  }
-}).pipe(withStatusesAtom())
+}, "threadImagesAction").pipe(withDataAtom(), withStatusesAtom())

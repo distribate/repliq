@@ -3,19 +3,19 @@ import { ConfirmationActionModalTemplate } from "#components/modals/confirmation
 import { ConfirmationButton } from "#components/modals/confirmation-modal/components/confirmation-action-button.tsx";
 import { DialogClose } from "@repo/ui/src/components/dialog.tsx";
 import { DeleteButton } from "@repo/ui/src/components/detele-button.tsx";
-import { terminateSessionAction } from "./terminate-all-sessions-modal.tsx";
 import { reatomComponent } from "@reatom/npm-react";
+import { terminateSessionAction } from "../models/terminate-sessions.model.ts";
 
 type TerminateSessionModalProps = {
   session_id: string;
 };
 
-export const TerminateSessionModal = reatomComponent<TerminateSessionModalProps>(({ ctx,
-  session_id,
+export const TerminateSessionModal = reatomComponent<TerminateSessionModalProps>(({ 
+  ctx, session_id,
 }) => {
   return (
     <DynamicModal
-    autoClose
+      autoClose
       withLoader
       isPending={ctx.spy(terminateSessionAction.statusesAtom).isPending}
       trigger={

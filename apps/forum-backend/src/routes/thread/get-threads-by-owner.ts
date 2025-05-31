@@ -4,6 +4,7 @@ import { getNickname } from "#utils/get-nickname-from-storage.ts";
 import { zValidator } from "@hono/zod-validator";
 import { throwError } from "@repo/lib/helpers/throw-error";
 import { Hono } from "hono";
+import { sql } from "kysely";
 import { executeWithCursorPagination } from "kysely-paginate";
 import { z } from "zod";
 
@@ -16,6 +17,36 @@ const getThreadsByOwnerSchema = z.object({
 type GetThreadsByOwnerParams = z.infer<typeof getThreadsByOwnerSchema> & {
   nickname: string,
   initiator: string
+}
+
+export async function getRandomThreads(exclude: string) {
+  const query = await forumDB
+    .selectFrom("threads_users")
+    .innerJoin("threads", "threads_users.thread_id", "threads.id")
+    .innerJoin("threads_images", "threads.id", "threads_images.thread_id")
+    .select([
+      "threads.id",
+      "threads.title",
+      "threads.description",
+      "threads.created_at",
+      "threads.visibility",
+      "threads_images.image_url"
+    ])
+    .groupBy([
+      "threads.id",
+      "threads.title",
+      "threads.description",
+      "threads.created_at",
+      "threads.visibility",
+      "threads_images.image_url"
+    ])
+    .orderBy(sql`random()`)
+    .limit(15)
+    .execute()
+
+  if (!query) return null;
+
+  return query.filter(i => i.id !== exclude)
 }
 
 async function getThreadsByOwner({
@@ -152,7 +183,13 @@ export const getThreadsByOwnerRoute = new Hono()
     const { nickname: recipient } = ctx.req.param();
     const { exclude, limit, cursor } = getThreadsByOwnerSchema.parse(ctx.req.query());
 
-    const initiator = getNickname()
+    const initiator = getNickname(true)
+
+    if (!initiator) {
+      const threads = await getRandomThreads(exclude)
+
+      return ctx.json({ data: threads, meta: null }, 200)
+    }
 
     try {
       const threads = await getThreadsByOwner({

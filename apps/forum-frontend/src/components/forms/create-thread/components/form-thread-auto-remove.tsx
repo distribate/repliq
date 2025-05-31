@@ -1,11 +1,10 @@
 import { FormField } from "@repo/ui/src/components/form-field.tsx";
-import { FormChildsProps } from "./form-thread.tsx";
 import { Typography } from "@repo/ui/src/components/typography.tsx";
 import { reatomComponent } from "@reatom/npm-react";
 
 // @ts-ignore
-export const FormThreadAutoRemove = reatomComponent<FormChildsProps>(({ 
-  ctx, control, errors
+export const FormThreadAutoRemove = reatomComponent(({ 
+  ctx
 }) => {
   const threadFormState = false;
 

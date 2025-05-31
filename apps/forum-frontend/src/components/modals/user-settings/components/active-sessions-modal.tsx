@@ -1,19 +1,10 @@
 import { Typography } from "@repo/ui/src/components/typography.tsx";
-import { Skeleton } from "@repo/ui/src/components/skeleton.tsx";
-import { GetUserActiveSessionsResponse, userActiveSessionsAction, userActiveSessionsAtom } from "#components/modals/user-settings/models/user-sessions.model";
-import YellowCandle from "@repo/assets/images/minecraft/yellow_candle.webp";
-import {
-  Dialog,
-  DialogContent,
-  DialogTrigger,
-} from "@repo/ui/src/components/dialog.tsx";
-import { UserSettingOption } from "#components/cards/user-setting-option-card/components/user-setting-option";
+import { currentSessionAtom, GetUserActiveSessionsResponse, userActiveSessionsAction } from "#components/modals/user-settings/models/user-sessions.model";
 import { TerminateAllSessionsModal } from "./terminate-all-sessions-modal";
 import dayjs from "@repo/lib/constants/dayjs-instance";
 import BlockGold from "@repo/assets/images/minecraft/block_gold.webp";
 import { TerminateSessionModal } from "./terminate-session-modal";
 import { reatomComponent } from "@reatom/npm-react";
-import { onConnect } from "@reatom/framework";
 
 export const UserSessionBlock = ({
   is_current, browser, location, session_id, created_at
@@ -50,17 +41,11 @@ export const UserSessionBlock = ({
   );
 };
 
-onConnect(userActiveSessionsAtom, userActiveSessionsAction)
+export const ActiveSessionsModal = reatomComponent(({ ctx }) => {
+  const activeSessions = ctx.get(userActiveSessionsAction.dataAtom)
+  const currentSession = ctx.get(currentSessionAtom)
 
-const UserActiveSessions = reatomComponent(({ ctx }) => {
-  const activeSessions = ctx.spy(userActiveSessionsAtom)
-  const isError = ctx.spy(userActiveSessionsAction.statusesAtom).isRejected
-
-  const currentSession = activeSessions
-    ? activeSessions.find((item) => (item ? item.is_current : null))
-    : null;
-
-  if (isError || !currentSession || !activeSessions) return;
+  if (!currentSession || !activeSessions) return;
 
   return (
     <div className="flex flex-col items-center gap-y-4 w-full">
@@ -94,29 +79,5 @@ const UserActiveSessions = reatomComponent(({ ctx }) => {
         </>
       )}
     </div>
-  );
-}, "UserActiveSessions")
-
-export const ActiveSessionsModal = reatomComponent(({ ctx }) => {
-  const activeSessions = ctx.spy(userActiveSessionsAtom)
-  const isLoading = ctx.spy(userActiveSessionsAction.statusesAtom).isPending
-
-  return (
-    <Dialog>
-      <DialogTrigger>
-        <UserSettingOption title="Активные сессии" imageSrc={YellowCandle}>
-          {isLoading ? (
-            <Skeleton className="rounded-md h-4 w-4" />
-          ) : (
-            <Typography className="text-base">
-              {activeSessions?.length}
-            </Typography>
-          )}
-        </UserSettingOption>
-      </DialogTrigger>
-      <DialogContent>
-        <UserActiveSessions />
-      </DialogContent>
-    </Dialog>
   );
 }, "ActiveSessionsModal")

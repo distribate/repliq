@@ -112,6 +112,7 @@ export function EmojiPickerContent({
         return (
           <div
             key={categoryId}
+            // @ts-expect-error
             ref={section.root}
             style={{ width: getRowWidth }}
             data-id={categoryId}
@@ -179,6 +180,7 @@ export function EmojiPickerContent({
 
   return (
     <div
+    // @ts-expect-error
       ref={refs.current.contentRoot}
       className={cn(
         'h-full min-h-[50%] overflow-x-hidden overflow-y-auto px-2',
@@ -189,6 +191,7 @@ export function EmojiPickerContent({
       )}
       data-id="scroll"
     >
+      {/* @ts-expect-error */}
       <div ref={refs.current.content} className="h-full">
         {isSearching ? SearchList() : EmojiList()}
       </div>

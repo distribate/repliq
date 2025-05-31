@@ -1,20 +1,20 @@
-import { UserSettingOption } from "#components/cards/user-setting-option-card/components/user-setting-option";
-import BannerPattern from "@repo/assets/images/minecraft/banner_pattern.webp";
-import {
-  Dialog,
-  DialogContent,
-  DialogTrigger,
-} from "@repo/ui/src/components/dialog.tsx";
+import { reatomComponent } from "@reatom/npm-react";
+import { Typography } from "@repo/ui/src/components/typography";
 
-export const EmailChangeModal = () => {
+export const EmailChangeModal = reatomComponent(({ ctx }) => {
   return (
-    <Dialog>
-      <DialogTrigger>
-        <UserSettingOption title="Почта" imageSrc={BannerPattern}>
-          ...
-        </UserSettingOption>
-      </DialogTrigger>
-      <DialogContent>...</DialogContent>
-    </Dialog>
+    <div className="flex flex-col items-center justify-center gap-y-4 w-full">
+      <Typography variant="dialogTitle">
+        Смена почты
+      </Typography>
+      <div className="flex flex-col gap-y-2 w-full p-2">
+        <Typography textSize="medium" textColor="shark_white">
+          Для того чтобы сменить почту
+        </Typography>
+        <Typography textSize="medium">
+
+        </Typography>
+      </div>
+    </div>
   );
-};
+}, "EmailChangeModal")

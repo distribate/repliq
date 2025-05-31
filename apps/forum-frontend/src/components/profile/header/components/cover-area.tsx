@@ -3,7 +3,7 @@ import { HTMLAttributes } from "react";
 
 export const coverAreaVariants = cva(
   `flex gap-y-4 lg:gap-y-0 w-full bg-center rounded-xl lg:mt-[4px] 
-    overflow-hidden bg-cover bg-no-repeat group items-center lg:justify-between px-6 lg:px-12 py-6`,
+    overflow-hidden bg-cover bg-no-repeat group items-center lg:justify-between px-6 lg:px-16 py-6`,
   {
     variants: {
       variant: {

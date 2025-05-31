@@ -41,7 +41,7 @@ const REGISTER_MESSAGES = {
   "Not found": "Пользователь не найден",
   "Error in creating user": "Ошибка при регистрации"
 } as const;
- 
+
 type StatusKeys = keyof typeof REGISTER_MESSAGES | keyof typeof LOGIN_MESSAGES
 
 const STATUS_TYPES: Record<StatusKeys, StatusType> = {
@@ -61,9 +61,10 @@ export const authStatusAtom = atom<string | null>(null, "authStatus").pipe(withR
 export const authStatusMessageAtom = atom<string | null>(null, "authStatusMessage").pipe(withReset())
 export const authTokenAtom = atom<string | undefined>(undefined, "authToken").pipe(withReset())
 export const authReferrerAtom = atom<string | undefined>(undefined, "authReferrer")
-export const authTypeAtom = atom<AuthType>("register", "authType")
+export const authTypeAtom = atom<AuthType>("login", "authType")
 export const authDetailsVisibilityAtom = atom<DetailsVisibility>("visible", "authDetailsVisibility")
 export const authPasswordVisibilityAtom = atom<PasswordVisiblity>("password", "authPasswordVisibility")
+export const turnstileIsOpenAtom = atom(false, "turnstileIsOpen")
 
 authTypeAtom.onChange((ctx) => {
   authValuesAtom.reset(ctx)
@@ -135,8 +136,15 @@ async function loginForum({
 export const authAction = reatomAsync(async (ctx) => {
   const authValues = ctx.get(authValuesAtom)
   const authType = ctx.get(authTypeAtom)
+  const turnstileIsOpen = ctx.get(turnstileIsOpenAtom)
 
   if (!authValues) return;
+
+  if (isProduction && !turnstileIsOpen) {
+    toast.info("Проверка", { description: "Пройдите проверку, чтобы продолжить" })
+    turnstileIsOpenAtom(ctx, true)
+    return;
+  }
 
   const token = ctx.get(authTokenAtom)
   if (!token && isProduction) return
@@ -173,6 +181,7 @@ export const authAction = reatomAsync(async (ctx) => {
 
       authStatusAtom(ctx, res.status)
       authValuesAtom.reset(ctx)
+      turnstileIsOpenAtom(ctx, false)
 
       await ctx.schedule(() => sleep(500))
 
@@ -191,6 +200,7 @@ export const authAction = reatomAsync(async (ctx) => {
       authStatusAtom(ctx, res.status)
       authTypeAtom(ctx, "login")
       authValuesAtom.reset(ctx)
+      turnstileIsOpenAtom(ctx, false)
 
       toast.success("Спасибо за регистрацию!", {
         description: "Теперь вы можете войти в аккаунт.",

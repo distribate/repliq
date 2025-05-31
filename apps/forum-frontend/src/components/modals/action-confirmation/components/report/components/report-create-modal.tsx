@@ -20,8 +20,8 @@ import { FlagTriangleLeft } from "lucide-react";
 import { HoverCardItem } from "@repo/ui/src/components/hover-card.tsx";
 import { reatomComponent } from "@reatom/npm-react";
 import { threadCommentsDataAtom } from "#components/thread/thread-comments/models/thread-comments.model.ts";
-import { postsDataAtom } from "#components/profile/posts/posts/models/posts.model.ts";
 import { ReportReasonEnum } from "@repo/types/entities/entities-type.ts";
+import { postsDataAtom } from "#components/profile/posts/models/posts.model.ts";
 
 type ReportReasons = {
   title: string;

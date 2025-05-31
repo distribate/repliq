@@ -1,7 +1,7 @@
 import { myFriendsDataAtom } from "#components/friends/models/friends.model";
 import { action, atom } from "@reatom/core";
 import { sleep } from "@reatom/framework";
-import consola from "consola";
+import { logger } from "@repo/lib/utils/logger";
 
 type FriendsViewType = "grid" | "list";
 type FriendsSortType = "date" | "abc";
@@ -37,7 +37,7 @@ const friendsUpdateOptionsInitial: FriendsUpdateOptions = {
 
 export const friendsUpdateOptionsAtom = atom<FriendsUpdateOptions>(friendsUpdateOptionsInitial, "friendsUpdateOptions")
 
-friendsUpdateOptionsAtom.onChange((ctx, state) => consola.info("friendsUpdateOptionsAtom", state))
+friendsUpdateOptionsAtom.onChange((ctx, state) => logger.info("friendsUpdateOptionsAtom", state))
 
 export const SEARCH_VALUE_MAX_LENGTH = 32
 const SEARCH_VALUE_MIN_LENGTH = 1
@@ -48,8 +48,8 @@ export const friendsSearchFilterQueryvalueAtom = atom<string>("", "friendsSearch
 const searchIsInitAtom = atom(false, "searchIsInit")
 const beforeSearchFriendsAtom = atom([], "beforeSearchFriends")
 
-searchIsInitAtom.onChange((_, state) => consola.info("searchIsInitAtom", state))
-beforeSearchFriendsAtom.onChange((_, state) => consola.info("beforeSearchFriendsAtom", state))
+searchIsInitAtom.onChange((_, state) => logger.info("searchIsInitAtom", state))
+beforeSearchFriendsAtom.onChange((_, state) => logger.info("beforeSearchFriendsAtom", state))
 
 const setTargetData = action((ctx, target: string) => {  
   myFriendsDataAtom(ctx, (state) => {

@@ -5,7 +5,6 @@ import { Button } from "@repo/ui/src/components/button.tsx";
 import { SendHorizontal } from "lucide-react";
 import { createThreadCommentAtom } from "../queries/create-thread-comment-query.ts";
 import { CreateThreadCommentLayout } from "./create-thread-comment-layout.tsx";
-import { useParams } from "@tanstack/react-router";
 import { getUser } from "@repo/lib/helpers/get-user.ts";
 import { COMMENT_LIMIT } from "@repo/shared/constants/limits.ts";
 import { z } from "zod";
@@ -14,11 +13,12 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import AutogrowingTextarea from "@repo/ui/src/components/autogrowing-textarea.tsx";
 import { createThreadCommentSchema } from "../schemas/create-thread-comment-schema.ts";
 import { reatomComponent } from "@reatom/npm-react";
+import { threadRoute } from "#routes/public-routes.tsx";
 
 type createThreadForm = z.infer<typeof createThreadCommentSchema>
 
 export const CreateThreadCommentForm = reatomComponent(({ ctx }) => {
-  const { id: paramId } = useParams({ from: "/public/thread/$id" });
+  const { id: paramId } = threadRoute.useParams();
 
   const nickname = getUser(ctx).nickname;
   const createThreadCommentState = ctx.spy(createThreadCommentAtom)
@@ -60,7 +60,12 @@ export const CreateThreadCommentForm = reatomComponent(({ ctx }) => {
   return (
     <CreateThreadCommentLayout variant={type} state={isActive ? "active" : "none"}>
       <form onSubmit={handleSubmit(onSubmit)} className="flex items-start h-full w-full justify-between px-4 py-4">
-        <Avatar className="self-start min-h-[36px] min-w-[36px]" variant="page" propWidth={36} propHeight={36} nickname={nickname} />
+        <Avatar 
+          className="self-start min-h-[36px] min-w-[36px]" 
+          propWidth={36} 
+          propHeight={36} 
+          nickname={nickname}
+        />
         <div className="flex w-full items-start *:w-full h-fit">
           <Controller
             render={({ field: { onChange, onBlur, value } }) => (

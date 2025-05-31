@@ -8,8 +8,7 @@ import { Typography } from "@repo/ui/src/components/typography";
 import { UserLands } from "#components/cards/user-personal-card/components/lands/components/user-lands";
 import { UserProfileSettings } from "#components/cards/user-personal-card/components/profile-settings/user-profile-settings";
 import { UserAdvancedSettings } from "#components/modals/user-settings/components/user-advanced-settings";
-import { userSettingsAtom, UserSettingsDialog } from "#components/modals/user-settings/models/user-settings.model";
-import { toggleGlobalDialogAction, updateDialogSectionAction } from "../models/update-user-settings.model";
+import { settingsIsGlobalDialogAtom, settingsSettingsTypeAtom, SettingsType, toggleGlobalDialogAction } from "#components/modals/user-settings/models/user-settings.model";
 import { UserPersonalCardHeader } from "#components/modals/user-settings/components/user-header";
 import { UserSettingOption } from "#components/cards/user-setting-option-card/components/user-setting-option";
 import Campfire from "@repo/assets/images/minecraft/campfire.webp";
@@ -26,7 +25,7 @@ import { reatomComponent } from "@reatom/npm-react";
 import { CustomLink } from "#components/shared/link";
 
 const Main = reatomComponent(({ ctx }) => {
-  const handleUpdate = (to: UserSettingsDialog["current"]) => updateDialogSectionAction(ctx, to)
+  const handleUpdate = (to: SettingsType) => settingsSettingsTypeAtom(ctx, to)
 
   return (
     <div className="flex flex-col gap-y-4 items-center w-full">
@@ -71,7 +70,7 @@ const Main = reatomComponent(({ ctx }) => {
   )
 }, "Main")
 
-const SETTINGS_SECTIONS: Record<UserSettingsDialog["current"], ReactNode> = {
+const SETTINGS_SECTIONS: Record<SettingsType, ReactNode> = {
   main: <Main />,
   lands: <UserLands />,
   account: <UserAccountSettingsCard />,
@@ -80,7 +79,8 @@ const SETTINGS_SECTIONS: Record<UserSettingsDialog["current"], ReactNode> = {
 }
 
 export const UserSettingsModal = reatomComponent(({ ctx }) => {
-  const { current, global } = ctx.spy(userSettingsAtom)
+  const current = ctx.spy(settingsSettingsTypeAtom)
+  const global = ctx.spy(settingsIsGlobalDialogAtom)
 
   const handleEscKeyDown = (e: KeyboardEvent) => {
     if (current !== 'main') {

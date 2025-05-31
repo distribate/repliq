@@ -1,0 +1,1 @@
+export const wrapTitle = (title?: string) => title ? `${title} - Fasberry` : "Загрузка..."

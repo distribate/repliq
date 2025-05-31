@@ -1,6 +1,6 @@
 import { MainCategoriesSkeleton } from "#components/categories/components/categories-list/components/main-categories-list"
 import { reatomComponent } from "@reatom/npm-react"
-import { globalPreferencesAtom } from "@repo/lib/queries/global-preferences-query"
+import { globalPreferencesAtom } from "@repo/lib/queries/global-preferences.model"
 import { Skeleton } from "@repo/ui/src/components/skeleton"
 
 const MainNavigationSkeleton = () => {

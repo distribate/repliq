@@ -46,7 +46,6 @@ export const MinecraftItemsList = reatomComponent(({ ctx }) => {
           />
           <div className="flex justify-start items-end p-2 absolute transition-all ease-in w-full h-full bg-black/50 group-hover:opacity-100 opacity-0 bottom-0 left-0">
             <Typography
-              className="font-[Minecraft]"
               textColor="shark_white"
               textSize="small"
             >

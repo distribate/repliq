@@ -1,7 +1,7 @@
 import { forumUserClient } from "@repo/shared/api/forum-client";
 import { reatomAsync, withCache, withDataAtom } from "@reatom/async";
 import { currentUserNicknameAtom } from "@repo/lib/helpers/get-user";
-import consola from "consola";
+import { logger } from "@repo/lib/utils/logger";
 
 async function getFriendsCount(nickname: string) {
   const res = await forumUserClient.user["get-user-friends-count"][":nickname"].$get({ param: { nickname } })
@@ -19,4 +19,4 @@ export const friendsCountAction = reatomAsync(async (ctx) => {
   return await ctx.schedule(() => getFriendsCount(nickname))
 }, "friendsCountAction").pipe(withDataAtom(), withCache())
 
-friendsCountAction.dataAtom.onChange((_, state) => consola.info("friendsCountAction.dataAtom", state))
+friendsCountAction.dataAtom.onChange((_, state) => logger.info("friendsCountAction.dataAtom", state))

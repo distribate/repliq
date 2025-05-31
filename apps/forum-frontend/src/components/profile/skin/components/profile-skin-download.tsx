@@ -1,6 +1,6 @@
 import { ConfirmationButton } from "#components/modals/confirmation-modal/components/confirmation-action-button";
 import { ConfirmationActionModalTemplate } from "#components/modals/confirmation-modal/components/confirmation-action-modal";
-import { requestedUserParamAtom } from "#components/profile/requested-user.model";
+import { requestedUserParamAtom } from "#components/profile/main/models/requested-user.model";
 import { reatomComponent } from "@reatom/npm-react";
 import { skinClient } from "@repo/shared/api/minecraft-client";
 import { Button } from "@repo/ui/src/components/button";

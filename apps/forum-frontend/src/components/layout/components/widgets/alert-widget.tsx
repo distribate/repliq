@@ -4,9 +4,9 @@ import { USER_URL } from "@repo/shared/constants/routes";
 import { Skeleton } from "@repo/ui/src/components/skeleton";
 import { UserNickname } from "#components/user/name/nickname";
 import { DeleteButton } from "@repo/ui/src/components/detele-button.tsx";
-import { globalPreferencesAtom } from "@repo/lib/queries/global-preferences-query";
+import { globalPreferencesAtom } from "@repo/lib/queries/global-preferences.model";
 import { reatomComponent } from "@reatom/npm-react";
-import { AlertCircle } from "lucide-react";
+import { AlertCircle, Link } from "lucide-react";
 import { updateVisibilityAction } from "@repo/lib/hooks/update-global-preferences.model" 
 import { CustomLink } from "#components/shared/link";
 import { alertsResource } from "./alert-widget.model";
@@ -20,30 +20,28 @@ const AlertCard = ({
 }: AlertEntity) => {
   return (
     <div
-      className="flex flex-col md:flex-row md:gap-4 md:items-center justify-center md:justify-between 
-        w-full relative rounded-lg overflow-hidden gap-1 max-h-18 p-2 md:p-4 bg-primary-color font-[Minecraft]"
+      className="flex flex-col md:flex-row md:gap-4 group md:items-center justify-center md:justify-between 
+        w-full relative rounded-lg overflow-hidden gap-1 max-h-18 p-2 md:p-4 bg-primary-color"
     >
       <div className="flex items-center w-full gap-2">
         <AlertCircle size={20} className="text-shark-300 m-1" />
-        <div className="flex flex-wrap gap-1 text-[14px] md:text-[18px]">
+        <div className="flex flex-wrap items-center gap-2 text-[14px] md:text-[18px]">
           <Typography textColor="shark_white" className="truncate text-[14px] md:text-[18px]" >
             {title}
           </Typography>
           {link && (
-            <a href={link} className="inline" target="_blank" rel="noopener noreferrer">
-              <span className="text-green-500">
-                (ссылка)
-              </span>
+            <a href={link} className="inline" target="_blank" rel="noreferrer">
+              <Link size={18} className="text-green-500"/>
             </a>
           )}
         </div>
       </div>
       <div className="flex self-end md:self-auto items-center gap-2">
-        <span className="text-[14px] text-shark-50">
+        <span className="text-[14px] md:text-[18px] text-shark-50">
           Автор:{' '}
         </span>
         <CustomLink to={USER_URL + creator}>
-          <UserNickname nickname={creator} className="text-[14px]" />
+          <UserNickname nickname={creator} className="text-[14px] md:text-[18px]" />
         </CustomLink>
       </div>
       <AlertClose />

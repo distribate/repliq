@@ -1,17 +1,15 @@
 import { Typography } from "@repo/ui/src/components/typography.tsx";
 import { Input } from "@repo/ui/src/components/input.tsx";
-import { Controller } from "react-hook-form";
 import { ChangeEvent } from "react";
-import { FormChildsProps } from "./form-thread.tsx";
 import { threadFormDescriptionAtom } from "../models/thread-form.model.ts";
 import { reatomComponent } from "@reatom/npm-react";
 
-export const FormThreadDescription = reatomComponent<FormChildsProps>(({ ctx, control, errors }) => {
+export const FormThreadDescription = reatomComponent(({ ctx }) => {
   const handleChange = (
-    e: ChangeEvent<HTMLInputElement>, onChange: (...event: any[]) => void,
+    e: ChangeEvent<HTMLInputElement>,
   ) => {
-    onChange(e);
-    threadFormDescriptionAtom(ctx,  e.target.value)
+
+    threadFormDescriptionAtom(ctx, e.target.value)
   };
 
   return (
@@ -21,27 +19,22 @@ export const FormThreadDescription = reatomComponent<FormChildsProps>(({ ctx, co
           Описание
         </Typography>
       </div>
-      <Controller
-        control={control}
-        name="description"
-        render={({ field: { onChange, name, ref } }) => (
-          <Input
-            name={name}
-            autoComplete="off"
-            ref={ref}
-            variant="form"
-            className="rounded-md"
-            placeholder="Напишите что-нибудь..."
-            status={errors ? "error" : "default"}
-            onChange={e => handleChange(e, onChange)}
-          />
-        )}
+      <Input
+        autoComplete="off"
+        variant="form"
+        className="rounded-md"
+        placeholder="Напишите что-нибудь..."
+        status={
+          // errors ? "error" : 
+          "default"
+        }
+        onChange={e => handleChange(e)}
       />
-      {errors.description && (
+      {/* {errors.description && (
         <span className="text-red-600 text-[16px] font-normal">
           {errors.description.message}
         </span>
-      )}
+      )} */}
     </div>
   );
 }, "FormThreadDescription")

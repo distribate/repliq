@@ -47,7 +47,7 @@ export const ThreadCommentItem = reatomComponent<ThreadCommentProps & { idx: num
               <UserNickname nickname={user_nickname} />
               {isOwner && (
                 <Badge size="small">
-                  <Typography className="font-[Minecraft] leading-4">автор</Typography>
+                  <Typography className="leading-4">автор</Typography>
                 </Badge>
               )}
             </div>

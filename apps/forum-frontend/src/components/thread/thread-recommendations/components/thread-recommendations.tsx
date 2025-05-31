@@ -9,9 +9,8 @@ import { SOCIALS } from "#components/layout/components/default/footer";
 
 const RecommendationsList = reatomComponent(({ ctx }) => {
   const threads = ctx.spy(threadRecommendationsResource.dataAtom)?.data
-  const isLoading = ctx.spy(threadRecommendationsResource.statusesAtom).isPending
 
-  if (isLoading) return (
+  if (ctx.spy(threadRecommendationsResource.statusesAtom).isPending) return (
     <>
       <Skeleton className="h-16 w-full" />
       <Skeleton className="h-16 w-full" />
@@ -41,26 +40,27 @@ export const ThreadsRecommendations = reatomComponent(({ ctx }) => {
   const isAuthenticated = ctx.spy(isAuthenticatedAtom)
 
   return (
-    isAuthenticated ? (
+    <>
       <div className="flex flex-col gap-y-4 bg-shark-950 rounded-lg p-4 w-full h-full">
         <Typography textSize="big" className="font-semibold">
           Другие треды, которые вам могут понравиться
         </Typography>
         <RecommendationsList />
       </div>
-    ) : (
-      <div className="flex flex-col w-full h-full rounded-lg bg-shark-950 p-4">
-        <Typography textSize="big" className="font-semibold">
-          Наши соцсети
-        </Typography>
-        <div className="flex flex-col gap-2 w-full h-full">
-          {SOCIALS.map(item => (
-            <a key={item.label} href={item.href} target="_blank" rel="noreferrer">
-              <span>{item.label}</span>
-            </a>
-          ))}
+      {!isAuthenticated && (
+        <div className="flex flex-col w-full gap-4 h-full rounded-lg bg-shark-950 p-4">
+          <Typography textSize="big" className="font-semibold">
+            Наши соцсети
+          </Typography>
+          <div className="flex flex-col gap-1 w-full h-full">
+            {SOCIALS.map(item => (
+              <a key={item.label} href={item.href} target="_blank" rel="noreferrer">
+                <span>{item.label}</span>
+              </a>
+            ))}
+          </div>
         </div>
-      </div>
-    )
+      )}
+    </>
   )
 }, "ThreadRecommendations")

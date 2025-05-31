@@ -1,0 +1,40 @@
+import { throwError } from "@repo/lib/helpers/throw-error";
+import { Hono } from "hono";
+import { getCookie, setCookie } from "hono/cookie";
+import { validateSessionToken } from "../utils/validate-session-token";
+import type { Env } from "../types/env-type";
+import { getNicknameByTokenFromKv } from "../utils/get-nickname-by-token-from-kv";
+import { isProduction } from "@repo/lib/helpers/is-production";
+import { SESSION_DOMAIN, SESSION_KEY } from "../shared/constants/session-details";
+import { validateUserRequest } from "../middlewares/validate-user-request";
+
+export const getSessionRoute = new Hono<Env>()
+  .use(validateUserRequest)
+  .get("/validate-session", async (ctx) => {
+    const token = ctx.get("sessionToken")
+
+    try {
+      const nickname = await getNicknameByTokenFromKv(token);
+
+      if (!nickname) {
+        const session = await validateSessionToken(token);
+
+        if (!session) {
+          return ctx.json({ error: "Invalid session token" }, 401)
+        }
+
+        setCookie(ctx, SESSION_KEY, token, {
+          httpOnly: true,
+          sameSite: "lax",
+          domain: SESSION_DOMAIN,
+          secure: isProduction,
+          expires: new Date(session.expires_at),
+          path: "/",
+        })
+      }
+
+      return ctx.json({ data: true }, 200)
+    } catch (e) {
+      return ctx.json({ error: throwError(e) }, 500)
+    }
+  })

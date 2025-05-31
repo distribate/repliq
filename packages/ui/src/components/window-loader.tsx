@@ -5,7 +5,7 @@ const windowLoaderVariants = cva("windows-loading-spinner", {
   variants: {
     size: {
       default: "w-[3rem] h-[3rem]",
-      small: "w-[26px] h-[26px]"
+      small: "w-[24px] h-[24px]"
     }
   },
   defaultVariants: {

@@ -10,12 +10,11 @@ import { USER_URL } from "@repo/shared/constants/routes.ts";
 import { Avatar } from "#components/user/avatar/components/avatar.tsx";
 import { UserNickname } from "#components/user/name/nickname";
 import { Button } from "@repo/ui/src/components/button.tsx";
-import { threadAtom } from "#components/thread/thread-main/models/thread.model";
-import { Separator } from "@repo/ui/src/components/separator";
-import { FriendButton } from "#components/friend/components/friend-button/components/friend-button";
+import { threadAtom, threadOwnerAtom } from "#components/thread/thread-main/models/thread.model";
 import { reatomComponent } from "@reatom/npm-react";
 import { atom } from "@reatom/core";
 import { CustomLink } from "#components/shared/link";
+import { ThreadControl } from "#components/thread/thread-control/components/thread-control";
 
 const ThreadTag = ({ tag }: { tag: string; }) => {
   return (
@@ -32,10 +31,9 @@ const threadMoreIsExpandedAtom = atom(true, "threadMoreIsExpanded")
 export const ThreadMore = reatomComponent(({ ctx }) => {
   const isExpanded = ctx.spy(threadMoreIsExpandedAtom)
   const thread = ctx.spy(threadAtom)
+  const threadOwner = ctx.spy(threadOwnerAtom)
 
-  if (!thread) return null;
-
-  const owner = thread.owner;
+  if (!thread || !threadOwner) return null;
 
   return (
     <Accordion value={isExpanded ? "more" : "."} type="single" collapsible className="w-full p-0 m-0">
@@ -75,19 +73,18 @@ export const ThreadMore = reatomComponent(({ ctx }) => {
           </div>
           <div className="flex flex-col mt-2 mb-6 gap-y-4 w-full">
             <div className="flex items-end gap-2 w-fit">
-              <CustomLink to={USER_URL + owner.nickname}>
-                <Avatar nickname={owner.nickname} propWidth={36} propHeight={36} />
+              <CustomLink to={USER_URL + threadOwner.nickname}>
+                <Avatar nickname={threadOwner.nickname} propWidth={36} propHeight={36} />
               </CustomLink>
-              <CustomLink to={USER_URL + owner.nickname}>
-                <UserNickname nickname={owner.nickname} />
+              <CustomLink to={USER_URL + threadOwner.nickname}>
+                <UserNickname nickname={threadOwner.nickname} />
               </CustomLink>
             </div>
             <div className="flex items-center gap-2 w-full">
-              <FriendButton recipient={owner.nickname} />
-              <Separator orientation="vertical" />
-              <CustomLink to={USER_URL + owner.nickname}>
+              <ThreadControl />
+              <CustomLink to={USER_URL + threadOwner.nickname}>
                 <Button className="px-6" state="default">
-                  <Typography className="text-[16px]">Профиль</Typography>
+                  <Typography textSize="medium">Профиль</Typography>
                 </Button>
               </CustomLink>
               <CustomLink
@@ -95,11 +92,11 @@ export const ThreadMore = reatomComponent(({ ctx }) => {
                 search={{
                   type: "threads",
                   // @ts-ignore
-                  user: owner.nickname,
+                  user: threadOwner.nickname,
                 }}
               >
                 <Button state="default" className="px-6">
-                  <Typography className="text-[16px]">Треды</Typography>
+                  <Typography textSize="medium">Треды</Typography>
                 </Button>
               </CustomLink>
             </div>
@@ -108,7 +105,7 @@ export const ThreadMore = reatomComponent(({ ctx }) => {
             className="cursor-pointer"
             onClick={() => threadMoreIsExpandedAtom(ctx, false)}
           >
-            <Typography textSize="medium">Скрыть</Typography>
+            <Typography textSize="medium" className="text-shark-300">Скрыть</Typography>
           </div>
         </AccordionContent>
       </AccordionItem>

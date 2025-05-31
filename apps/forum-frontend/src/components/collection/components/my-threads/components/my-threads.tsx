@@ -4,6 +4,7 @@ import { THREAD_URL } from "@repo/shared/constants/routes";
 import { myThreadsResource } from "../queries/my-threads-query";
 import { reatomComponent } from "@reatom/npm-react";
 import { CustomLink } from "#components/shared/link";
+import { threadPreviewAtom } from "#components/thread/thread-main/models/thread.model";
 
 export const SavedThreads = () => {
   return (
@@ -50,7 +51,11 @@ export const MyThreads = reatomComponent(({ ctx }) => {
                   {t.description}
                 </Typography>
               </div>
-              <CustomLink to={THREAD_URL + t.id} className="bg-shark-50 flex items-center justify-center w-2/4 px-4 py-2 rounded-lg">
+              <CustomLink
+                to={THREAD_URL + t.id}
+                onClick={() => threadPreviewAtom(ctx, { id: t.id, title: t.title })}
+                className="bg-shark-50 flex items-center justify-center w-2/4 px-4 py-2 rounded-lg"
+              >
                 <Typography
                   textColor="shark_black"
                   textSize="medium"

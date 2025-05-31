@@ -73,7 +73,7 @@ function RowDragHandle({ dragRef }: { dragRef: React.Ref<any> }) {
   return (
     <Button
       ref={dragRef}
-      variant="outline"
+      variant="default"
       className={cn(
         'absolute top-1/2 left-0 z-51 h-6 w-4 -translate-y-1/2 p-0 focus-visible:ring-0 focus-visible:ring-offset-0',
         'cursor-grab active:cursor-grabbing',

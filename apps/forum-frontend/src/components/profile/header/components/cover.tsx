@@ -2,7 +2,7 @@ import { UserCoverMainInfo } from "./cover-main-info.tsx";
 import { UserCoverPanel } from "./cover-panel.tsx";
 import { coverAtom } from "#components/profile/header/models/cover.model.ts";
 import { reatomComponent } from "@reatom/npm-react";
-import { requestedUserCoverDetailsAtom } from "#components/profile/requested-user.model.ts";
+import { requestedUserCoverDetailsAtom } from "#components/profile/main/models/requested-user.model.ts";
 import { UserCoverAvatar } from "./cover-avatar.tsx";
 import { UserCoverLocation } from "./cover-location.tsx";
 import { CoverArea } from "./cover-area.tsx";

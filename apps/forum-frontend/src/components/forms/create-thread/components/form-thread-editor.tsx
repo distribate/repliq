@@ -8,17 +8,21 @@ import { FloatingToolbarButtons } from '@repo/plate-editor/src/ui/floating-toolb
 import { threadFormContentAtom } from '../models/thread-form.model';
 import type { Value } from "@udecode/plate"
 import { reatomComponent } from '@reatom/npm-react';
+import { action } from '@reatom/core';
+import { sleep, withConcurrency } from '@reatom/framework';
+
+const onChange = action(async (ctx, value: Value) => {
+  const target = value
+
+  await ctx.schedule(() => sleep(500))
+  threadFormContentAtom(ctx, target)
+}).pipe(withConcurrency())
 
 export const FormThreadEditor = reatomComponent(({ ctx }) => {
-  const content = ctx.spy(threadFormContentAtom)
-  const editor = useCreateEditor({ value: content });
-
-  const onChange = (value: Value) => {
-    threadFormContentAtom(ctx, (state) => ({ ...state, ...value }))
-  }
+  const editor = useCreateEditor();
 
   return (
-    <Plate editor={editor} onChange={({ value }) => onChange(value)}>
+    <Plate editor={editor} onChange={({ value }) => onChange(ctx, value)}>
       <EditorContainer className="bg-shark-900 gap-2">
         <FixedToolbar>
           <FixedToolbarButtons />

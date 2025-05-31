@@ -4,15 +4,15 @@ import { X } from "lucide-react";
 import { Button } from "./button.tsx";
 
 const deleteButtonVariants = cva(
-  "rounded-md items-center duration-150 z-[3] bg-red-600 hover:duration-150 justify-center cursor-pointer overflow-hidden flex",
+  "rounded-sm items-center duration-150 z-[3] hover:bg-red-800 bg-red-700 justify-center cursor-pointer overflow-hidden flex",
   {
     variants: {
       variant: {
         invisible:
-          "md:opacity-0 md:group-hover:opacity-100 absolute top-2 right-1 group-hover:duration-150",
+          "md:opacity-0 md:group-hover:opacity-100 absolute top-1 right-1 group-hover:duration-150",
       },
       size: {
-        default: "h-7 w-7",
+        default: "h-1 w-1 p-2",
         small: "h-5 w-5",
         medium: "h-10 w-10",
       },
@@ -31,7 +31,7 @@ export const DeleteButton = ({
 }: DeleteButtonProps) => {
   return (
     <Button className={deleteButtonVariants({ variant, className, size })} {...props}>
-      <X size={18} className="text-shark-50" />
+      <X size={14} className="text-shark-50" />
     </Button>
   );
 };

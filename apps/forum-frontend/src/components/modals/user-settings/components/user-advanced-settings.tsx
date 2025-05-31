@@ -2,7 +2,7 @@ import { Typography } from "@repo/ui/src/components/typography.tsx";
 import CopperHorn from "@repo/assets/images/minecraft/copper-horn.webp";
 import Paper from "@repo/assets/images/minecraft/paper.webp";
 import { Switch } from "@repo/ui/src/components/switch.tsx";
-import { globalPreferencesAtom } from "@repo/lib/queries/global-preferences-query.ts";
+import { globalPreferencesAtom } from "@repo/lib/queries/global-preferences.model";
 import Bell from "@repo/assets/images/minecraft/bell.webp";
 import { getUser } from "@repo/lib/helpers/get-user.ts";
 import Board from "@repo/assets/images/minecraft/chalkboard_board.webp"
@@ -94,7 +94,7 @@ const ShowLocationSettings = reatomComponent(({ ctx }) => {
 export const UserAdvancedSettings = () => {
   return (
     <div className="flex flex-col gap-y-4 items-center w-full">
-      <UserSettingsBack to="main" />
+      <UserSettingsBack />
       <Typography variant="dialogTitle">
         Дополнительные настройки
       </Typography>

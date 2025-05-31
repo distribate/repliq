@@ -11,7 +11,7 @@ import { originList } from '@repo/shared/constants/origin-list.ts';
 import { loginRoute } from './routes/login.ts';
 import { terminateSessionRoute } from './routes/terminate-session.ts';
 import { getSessionsRoute } from './routes/get-sessions.ts';
-import { getSessionRoute } from './routes/get-session.ts';
+import { getSessionRoute } from './routes/validate-session.ts';
 import { timeoutMiddleware } from './middlewares/timeout-middleware.ts';
 import { corsMiddleware } from './middlewares/cors-middleware.ts';
 import type { Env } from './types/env-type.ts';

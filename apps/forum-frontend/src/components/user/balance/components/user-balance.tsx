@@ -19,7 +19,7 @@ export const UserBalance = reatomComponent(({ ctx }) => {
           {isLoading ? (
             <Skeleton className="w-4 h-4 rounded-none" />
           ) : (
-            <Typography className="text-[15px] font-[Minecraft]">
+            <Typography className="text-[15px]">
             {balance?.charism ?? 0}
           </Typography>
           )}
@@ -29,7 +29,7 @@ export const UserBalance = reatomComponent(({ ctx }) => {
           {isLoading ? (
             <Skeleton className="w-4 h-4 rounded-none" />
           ) : (
-            <Typography className="text-[15px] font-[Minecraft]">
+            <Typography className="text-[15px]">
             {balance?.belkoin ?? 0}
           </Typography>
           )}

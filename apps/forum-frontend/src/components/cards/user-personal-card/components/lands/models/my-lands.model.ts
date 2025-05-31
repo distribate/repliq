@@ -1,4 +1,5 @@
-import { reatomResource, withCache, withDataAtom, withStatusesAtom } from "@reatom/async"
+import { reatomAsync, withCache, withDataAtom, withStatusesAtom } from "@reatom/async"
+import { sleep } from "@reatom/framework"
 import { getUser } from "@repo/lib/helpers/get-user"
 import { playerClient } from "@repo/shared/api/minecraft-client"
 
@@ -15,8 +16,10 @@ const getUserLands = async (nickname: string) => {
   return data.data.length > 0 ? data.data : null
 }
 
-export const myLandsResource = reatomResource(async (ctx) => {
+export const myLandsResource = reatomAsync(async (ctx) => {
   const nickname = getUser(ctx).nickname
 
-  return await getUserLands(nickname)
+  await sleep(156)
+
+  return await ctx.schedule(() => getUserLands(nickname))
 }).pipe(withDataAtom(), withStatusesAtom(), withCache())

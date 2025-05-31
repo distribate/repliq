@@ -5,20 +5,9 @@ import { FormThreadCategories } from "./form-thread-categories.tsx";
 import { FormThreadComments } from "./form-thread-comments.tsx";
 import { FormThreadDescription } from "./form-thread-description.tsx";
 import { FormThreadTitle } from "./form-thread-title.tsx";
-import { Control, FieldErrors, useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import {
-  threadFormDescriptionAtom,
-  threadFormPermissionAtom,
-  threadFormPreferencesAtom,
-  threadFormTagsAtom,
-  threadFormVisibilityAtom
-} from "#components/forms/create-thread/models/thread-form.model.ts";
 import { FormThreadAdditional } from "./form-thread-additional.tsx";
 import { Typography } from "@repo/ui/src/components/typography.tsx";
 import { lazy, Suspense } from "react";
-import { z } from "zod";
-import { createThreadSchema } from "../schemas/create-form-schema.ts";
 import { HelpCircle, ImagePlus, Info } from "lucide-react";
 import { Separator } from "@repo/ui/src/components/separator.tsx";
 import { FormThreadStep } from "./form-thread-stepper.tsx";
@@ -27,13 +16,6 @@ import { reatomComponent } from "@reatom/npm-react";
 import { FormThreadContent } from "./form-thread-content.tsx";
 
 const FormThreadPreviewImages = lazy(() => import("./form-thread-preview-images.tsx").then(m => ({ default: m.FormThreadPreviewImages })));
-
-type createThreadForm = z.infer<typeof createThreadSchema>;
-
-export type FormChildsProps = {
-  control: Control<createThreadForm, any>;
-  errors: FieldErrors<createThreadForm>;
-};
 
 const FormThreadRecommendations = () => {
   return (
@@ -133,32 +115,19 @@ const FormThreadHead = () => {
 }
 
 export const CreateThreadForm = reatomComponent(({ ctx }) => {
-  const { control, handleSubmit, formState: { errors, isValid } } = useForm<createThreadForm>({
-    mode: "onSubmit",
-    resolver: zodResolver(createThreadSchema),
-    defaultValues: {
-      is_comments: ctx.get(threadFormPreferencesAtom).is_comments,
-      permission: ctx.get(threadFormPermissionAtom),
-      tags: ctx.get(threadFormTagsAtom),
-      visibility: ctx.get(threadFormVisibilityAtom),
-      description: ctx.get(threadFormDescriptionAtom),
-      images: null,
-    },
-  });
-
   const isPending = ctx.spy(createThreadAction.statusesAtom).isPending
 
   return (
     <form
-      onSubmit={handleSubmit(() => createThreadAction(ctx))}
+      onSubmit={(e) => { e.preventDefault(); createThreadAction(ctx) }}
       className="flex 2xl:flex-row flex-col items-start gap-4 w-full"
     >
       <div className="flex flex-col gap-y-4 w-full 2xl:w-3/4 2xl:max-w-3/4 overflow-hidden">
         <BlockWrapper className="flex flex-col gap-y-6 w-full !p-4">
           <FormThreadHead />
-          <FormThreadTitle control={control} errors={errors} />
-          <FormThreadDescription control={control} errors={errors} />
-          <FormThreadCategories control={control} errors={errors} />
+          <FormThreadTitle />
+          <FormThreadDescription />
+          <FormThreadCategories />
           <FormThreadContent />
           <CreateImage />
           <Suspense>
@@ -166,11 +135,11 @@ export const CreateThreadForm = reatomComponent(({ ctx }) => {
           </Suspense>
           <Separator />
           <div className="flex flex-col gap-4 items-start h-full *:rounded-md *:w-full">
-            <FormThreadComments control={control} errors={errors} />
+            <FormThreadComments />
           </div>
           <Separator />
           <Button
-            variant="positive" className="self-end w-fit" disabled={isPending || !isValid} pending={isPending}
+            variant="positive" className="self-end w-fit" disabled={isPending} pending={isPending}
           >
             <Typography textSize="medium" className="font-semibold">
               Опубликовать

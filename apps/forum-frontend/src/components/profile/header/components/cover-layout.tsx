@@ -5,7 +5,7 @@ import { lazy, PropsWithChildren, Suspense } from "react";
 import { UserCoverSkeleton } from "#components/skeletons/components/user-cover-skeleton";
 import { Typography } from "@repo/ui/src/components/typography";
 import { reatomComponent } from "@reatom/npm-react";
-import { requestedUserAction, requestedUserAtom, requestedUserProfileStatusAtom } from "#components/profile/requested-user.model";
+import { requestedUserAction, requestedUserAtom, requestedUserProfileStatusAtom } from "#components/profile/main/models/requested-user.model";
 
 const Privated = lazy(() => import("#components/templates/components/profile-privated").then(m => ({ default: m.ProfilePrivated })));
 
@@ -16,7 +16,7 @@ const UserDescription = reatomComponent(({ ctx }) => {
 
   return (
     <div className="flex lg:hidden bg-shark-950 p-2 rounded-md mt-4">
-      <Typography textColor="shark_white" className="font-[Minecraft]" textSize="medium">
+      <Typography textColor="shark_white" textSize="medium">
         О себе: {description}
       </Typography>
     </div>

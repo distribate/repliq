@@ -4,6 +4,7 @@ import { PropsWithChildren } from "react";
 import { ThreadDetailed } from "@repo/types/entities/thread-type.ts";
 import { reatomComponent } from "@reatom/npm-react";
 import { CustomLink } from "#components/shared/link.tsx";
+import { threadPreviewAtom } from "../thread-main/models/thread.model.ts";
 
 type ThreadLayout = PropsWithChildren & Pick<ThreadDetailed, "id" | "owner" | "title">;
 
@@ -11,7 +12,13 @@ export const ThreadLayout = reatomComponent<ThreadLayout>(({ ctx, children, titl
   const thread = { thread: { title, owner: owner.nickname, id } }
 
   return (
-    <CustomLink to={THREAD_URL + id} onClick={() => updateHistoryThreadsAction(ctx, { type: "save", data: thread })}>
+    <CustomLink
+      to={THREAD_URL + id}
+      onClick={() => {
+        threadPreviewAtom(ctx, { title, id })
+        updateHistoryThreadsAction(ctx, { type: "save", data: thread })
+      }}
+    >
       {children}
     </CustomLink>
   );

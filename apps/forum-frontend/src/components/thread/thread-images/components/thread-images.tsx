@@ -17,7 +17,7 @@ import { threadAtom } from "#components/thread/thread-main/models/thread.model";
 import { Typography } from "@repo/ui/src/components/typography.tsx";
 import { WheelGesturesPlugin } from 'embla-carousel-wheel-gestures'
 import { reatomComponent } from "@reatom/npm-react";
-import { threadImagesAction, threadImagesAtom } from "../models/thread-images.model";
+import { threadImagesAction } from "../models/thread-images.model";
 
 export const ThreadImagesSkeleton = ({ images_count }: { images_count: number }) => {
   return (
@@ -59,7 +59,7 @@ const ThreadImagesNavigation = ({ api }: ThreadImagesNavigationProps) => {
 };
 
 export const ThreadImages = reatomComponent(({ ctx }) => {
-  const threadImages = ctx.spy(threadImagesAtom)
+  const threadImages = ctx.spy(threadImagesAction.dataAtom)
   const thread = ctx.spy(threadAtom)
   const [selectedIndex, setSelectedIndex] = useState<number>(0);
   const [api, setApi] = useState<CarouselApi>();
@@ -81,14 +81,14 @@ export const ThreadImages = reatomComponent(({ ctx }) => {
 
   return (
     <Dialog>
-      <div className="grid grid-cols-3 max-h-[200px] grid-rows-1 rounded-lg overflow-hidden gap-2 bg-black/20 px-4 py-2 items-start w-full">
+      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 min-h-[200px] max-h-[200px] lg:grid-rows-1 rounded-lg overflow-hidden gap-2 bg-black/20 px-4 py-2 items-start w-full">
         {threadImages.map((image, idx) => (
-          <DialogTrigger key={idx} onClick={() => setSelectedIndex(idx)}>
+          <DialogTrigger key={idx} onClick={() => setSelectedIndex(idx)} className="flex items-center min-h-max h-full">
             <img
               src={image}
               alt=""
               width={600}
-              className={`object-cover max-h-[calc(200px-16px)] aspect-auto w-full rounded-lg duration-300 hover:brightness-75`}
+              className={`object-cover h-full aspect-auto w-full rounded-lg duration-300 hover:brightness-75`}
               height={400}
               loading="lazy"
             />
@@ -121,7 +121,7 @@ export const ThreadImages = reatomComponent(({ ctx }) => {
                   alt=""
                   width={1920}
                   height={1080}
-                  className={`object-contain w-full h-[700px]`}
+                  className={`object-contain w-full max-h-2/3`}
                   loading="lazy"
                 />
               </CarouselItem>

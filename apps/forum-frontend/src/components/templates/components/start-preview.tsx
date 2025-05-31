@@ -42,7 +42,7 @@ export const StartPreview = reatomComponent(({ ctx }) => {
           />
           <div className="h-1/3 bg-gradient-to-t from-black/90 via-black/80 to-transparent w-full absolute bottom-0 z-[1]" />
           <div className="flex h-full justify-center w-full relative z-[2] items-end">
-            <Typography className="font-[Minecraft] text-2xl text-center">
+            <Typography className="text-2xl text-center">
               К форуму
             </Typography>
           </div>
@@ -60,7 +60,7 @@ export const StartPreview = reatomComponent(({ ctx }) => {
           />
           <div className="h-1/3 bg-gradient-to-t from-black/90 via-black/80 to-transparent w-full absolute bottom-0 z-[1]" />
           <div className="flex h-full justify-center w-full relative z-[2] items-end">
-            <Typography className="font-[Minecraft] text-2xl text-center">
+            <Typography className="text-2xl text-center">
               Как начать играть
             </Typography>
           </div>

@@ -12,7 +12,7 @@ import {
 } from "#components/profile/threads/models/profile-threads-settings.model";
 import { useDebounce } from "@repo/lib/hooks/use-debounce.ts";
 import { reatomComponent } from "@reatom/npm-react";
-import { requestedUserParamAtom } from "#components/profile/requested-user.model";
+import { requestedUserParamAtom } from "#components/profile/main/models/requested-user.model";
 
 const ProfileThreadsFilteringView = reatomComponent(({ ctx }) => {
   const profileThreadsViewState = ctx.spy(profileThreadsSettingsAtom)
@@ -89,9 +89,9 @@ export const ProfileThreadsFiltering = reatomComponent(({ ctx }) => {
   const nickname = ctx.spy(requestedUserParamAtom)!
 
   return (
-    <div className="flex w-full justify-between h-14 items-center">
-      <div className="flex items-center gap-1 w-fit">
-        <Typography textColor="shark_white" textSize="big" className="font-semibold" >
+    <div className="flex w-full justify-between items-center">
+      <div className="flex items-center w-fit">
+        <Typography textColor="shark_white" textSize="big" className="font-semibold">
           Треды {nickname}
         </Typography>
       </div>

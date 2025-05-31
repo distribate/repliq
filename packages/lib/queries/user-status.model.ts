@@ -1,11 +1,10 @@
-import { withHistory } from '@repo/lib/utils/with-history';
+import { logger } from '@repo/lib/utils/logger.ts';
+import { withHistory } from '@repo/lib/utils/reatom/with-history';
 import { withReset } from '@reatom/framework';
-import { isParamChanged, requestedUserParamAtom } from '../../../apps/forum-frontend/src/components/profile/requested-user.model';
-import { reatomAsync, withCache, withDataAtom, withStatusesAtom } from '@reatom/async';
+import { reatomAsync, withStatusesAtom } from '@reatom/async';
 import { atom } from '@reatom/core';
 import { formatIssuedTime } from "#helpers/format-status-time.ts";
 import { forumUserClient } from "@repo/shared/api/forum-client";
-import consola from 'consola';
 
 async function getUserStatus(nickname: string) {
   const res = await forumUserClient.user["get-user-status"][":nickname"].$get({ param: { nickname } })
@@ -27,7 +26,7 @@ userStatusParamAtom.onChange((ctx, state) => {
     return
   }
   userStatusAction(ctx, state)
-  consola.info("userStatusParamAtom", state);
+  logger.info("userStatusParamAtom", state);
 
   const prev = ctx.get(userStatusParamAtom.history)[1]
 

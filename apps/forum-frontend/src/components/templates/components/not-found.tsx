@@ -17,7 +17,7 @@ export const NotFound = () => {
         />
       </div>
       <div className="flex flex-col items-center justify-center gap-y-4">
-        <p className="text-5xl font-[Minecraft] text-white">
+        <p className="text-5xl text-white">
           Ресурс не найден {`;(`}
         </p>
         <div className="flex py-0.5 rounded-xl items-center gap-1 justify-between bg-white/30 backdrop-blur-md overflow-hidden">
@@ -31,7 +31,7 @@ export const NotFound = () => {
                 loading="lazy"
                 className="max-w-[32px] max-h-[32px]"
               />
-              <p className="text-md font-semibold font-[Minecraft] text-shark-200">главная</p>
+              <p className="text-md font-semibold text-shark-200">главная</p>
             </div>
           </CustomLink>
         </div>

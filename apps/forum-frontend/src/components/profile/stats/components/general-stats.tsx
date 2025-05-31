@@ -7,7 +7,7 @@ import { ProfileStatsLayout } from "#components/profile/stats/components/profile
 import { Skeleton } from "@repo/ui/src/components/skeleton.tsx";
 import { SomethingError } from "#components/templates/components/something-error";
 import { reatomComponent } from "@reatom/npm-react";
-import { requestedUserParamAtom } from "#components/profile/requested-user.model";
+import { requestedUserParamAtom } from "#components/profile/main/models/requested-user.model";
 
 const GeneralStatsSkeleton = () => (
   <Skeleton className="flex flex-col gap-y-2 h-[400px] w-full rounded-md px-4 py-2" />

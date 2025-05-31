@@ -1,5 +1,5 @@
 import { currentUserNicknameAtom } from "@repo/lib/helpers/get-user.ts";
-import { globalPreferencesAtom } from "@repo/lib/queries/global-preferences-query.ts";
+import { globalPreferencesAtom } from "@repo/lib/queries/global-preferences.model";
 import { action, atom } from "@reatom/core";
 import { withLocalStorage } from "@reatom/persist-web-storage";
 

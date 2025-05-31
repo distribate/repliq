@@ -9,6 +9,7 @@ import { reatomComponent } from "@reatom/npm-react";
 import { CustomLink } from "#components/shared/link";
 import { FriendButton } from "#components/friend/components/friend-button/components/friend-button";
 import { SearchThreadsCategories } from "./search-threads-categories";
+import { threadPreviewAtom } from "#components/thread/thread-main/models/thread.model";
 
 const SearchPageRelatedSkeleton = () => {
   return (
@@ -40,7 +41,7 @@ const RelatedUser = ({ nickname }: { nickname: string }) => {
   )
 }
 
-const RelatedThread = ({ id, title, description }: { id: string, title: string, description: string | null }) => {
+const RelatedThread = reatomComponent<{ id: string, title: string, description: string | null }>(({ ctx, id, title, description }) => {
   return (
     <div className="flex flex-col group gap-2 justify-between overflow-hidden items-start h-[200px] friend-card">
       <Typography className="text-[18px]">{title}</Typography>
@@ -51,14 +52,18 @@ const RelatedThread = ({ id, title, description }: { id: string, title: string, 
           </Typography>
         </div>
       )}
-      <CustomLink to={THREAD_URL + id} className="flex items-center w-full">
+      <CustomLink
+        to={THREAD_URL + id}
+        onClick={() => threadPreviewAtom(ctx, { id, title })}
+        className="flex items-center w-full"
+      >
         <Button state="default" className="px-6 w-full">
           <Typography>Перейти к треду</Typography>
         </Button>
       </CustomLink>
     </div>
   )
-}
+}, "RelatedThread")
 
 export const SearchRelatedUsers = reatomComponent(({ ctx }) => {
   if (ctx.spy(usersRelatedAction.statusesAtom).isPending) {

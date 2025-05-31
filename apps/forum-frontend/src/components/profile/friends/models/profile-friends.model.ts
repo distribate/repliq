@@ -1,11 +1,10 @@
 import { FriendsQuery, getFriends } from "#components/friends/models/friends.model"
-import { isParamChanged, requestedUserParamAtom } from "#components/profile/requested-user.model"
+import { isParamChanged, requestedUserParamAtom } from "#components/profile/main/models/requested-user.model"
 import { atom, Ctx } from "@reatom/core"
 import { reatomAsync, take, withReset, withStatusesAtom } from "@reatom/framework"
 import { UserEntity } from "@repo/types/entities/entities-type"
 import { FriendWithDetails, GetFriendsResponse } from "@repo/types/schemas/friend/friend-types"
 import { getUserFriendsSchema } from "@repo/types/schemas/user/get-user-friends-schema"
-import consola from "consola"
 import { z } from "zod"
 
 export type GetFriends = Pick<UserEntity, "nickname"> & z.infer<typeof getUserFriendsSchema>

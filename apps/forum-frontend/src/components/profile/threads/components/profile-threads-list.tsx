@@ -6,7 +6,7 @@ import { SomethingError } from '#components/templates/components/something-error
 import { ContentNotFound } from '#components/templates/components/content-not-found.tsx';
 import { SectionSkeleton } from '#components/templates/components/section-skeleton.tsx';
 import { reatomComponent } from '@reatom/npm-react';
-import { requestedUserParamAtom } from '#components/profile/requested-user.model.ts';
+import { requestedUserParamAtom } from '#components/profile/main/models/requested-user.model.ts';
 import { onConnect } from '@reatom/framework';
 
 const ProfileThreadsList = reatomComponent(({ ctx, }) => {

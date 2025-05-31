@@ -1,4 +1,3 @@
-import { FormField } from "@repo/ui/src/components/form-field.tsx";
 import { Input } from "@repo/ui/src/components/input.tsx";
 import { FieldError, useForm, UseFormRegister } from "react-hook-form";
 import { Button } from "@repo/ui/src/components/button.tsx";
@@ -9,9 +8,10 @@ import { authAction, authPasswordVisibilityAtom, authStatusAtom, authValuesAtom 
 import { z } from "zod";
 import { PasswordVisibilityBadge } from "./password-visibility-badge.tsx";
 import { reatomComponent } from "@reatom/npm-react";
-import { SyncStatusUpdates } from "./sign-in.tsx";
+import { FormField, SyncStatusUpdates } from "./sign-in.tsx";
 import { CloudflareTurnstile } from "./cloudflare-turnstile.tsx";
 import { AuthStatus } from "./status.tsx";
+import { ArrowRight, Info, Lock, User } from "lucide-react";
 
 const CheckboxIcon = () => {
   return (
@@ -39,13 +39,7 @@ const CheckboxIcon = () => {
 
 const PasswordInput = reatomComponent<{
   error: FieldError | undefined,
-  register: UseFormRegister<{
-    password: string;
-    nickname: string;
-  } & {
-    acceptRules: boolean;
-    findout: string;
-  }>
+  register: UseFormRegister<{ password: string; nickname: string } & { acceptRules: boolean; findout: string }>
 }>(({ ctx, error, register }) => {
   return (
     <Input
@@ -53,10 +47,10 @@ const PasswordInput = reatomComponent<{
       type={ctx.spy(authPasswordVisibilityAtom)}
       autoComplete="new-password"
       autoCorrect="off"
-      className="!bg-shark-900"
+      className="placeholder:font-semibold !px-3 !text-base placeholder:text-base"
+      backgroundType="transparent"
       placeholder="пароль"
       status={error ? "error" : "default"}
-      variant="minecraft"
       {...register("password")}
     />
   )
@@ -64,7 +58,7 @@ const PasswordInput = reatomComponent<{
 
 export const SignUpForm = reatomComponent(({ ctx }) => {
   const {
-    register, resetField, formState: { errors, isValid, isDirty }, handleSubmit, getValues
+    register, resetField, formState: { errors, isValid }, handleSubmit, getValues
   } = useForm<z.infer<typeof registrationSchema>>({
     mode: "onChange",
     resolver: zodResolver(registrationSchema),
@@ -83,77 +77,75 @@ export const SignUpForm = reatomComponent(({ ctx }) => {
     <>
       {/* @ts-expect-error */}
       <SyncStatusUpdates status={ctx.spy(authStatusAtom)} resetField={resetField} />
-      <form
-        onSubmit={handleSubmit(onSubmit)} className="flex flex-col p-2 gap-y-4 w-full"
-      >
-        <FormField label={{ name: "Никнейм", for: "nickname" }} errorMessage={errors?.nickname?.message}>
+      <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col p-2 gap-y-4 w-full">
+        <FormField>
+          <User size={20} className="font-bold text-shark-300" />
           <Input
             id="nickname"
+            type="text"
+            placeholder="логин"
             autoComplete="new-password"
             autoCorrect="off"
-            type="text"
-            placeholder="игровой никнейм"
-            className="!bg-shark-900"
+            backgroundType="transparent"
+            className="placeholder:font-semibold !px-3 !text-base placeholder:text-base"
             status={errors.nickname ? "error" : "default"}
-            variant="minecraft"
             {...register("nickname")}
           />
         </FormField>
-        <FormField errorMessage={errors?.password?.message} label={{ name: "Пароль", for: "password" }}>
-          <div className="flex items-center gap-2 justify-center">
+        <FormField className="justify-between">
+          <div className="flex items-center w-full">
+            <Lock size={20} className="font-bold text-shark-300" />
             <PasswordInput register={register} error={errors.password} />
-            <PasswordVisibilityBadge />
           </div>
+          <PasswordVisibilityBadge />
         </FormField>
-        <FormField label={{ name: "Откуда узнал(-а) о проекте?", for: "findout" }} errorMessage={errors?.findout?.message} >
+        <FormField>
+          <Info size={20} className="font-bold text-shark-300" />
           <Input
             id="findout"
             type="text"
-            placeholder="узнал от..."
+            placeholder="откуда узнали о проекте"
             autoComplete="new-password"
-            className="!bg-shark-900"
+            backgroundType="transparent"
+            className="placeholder:font-semibold !px-3 !text-base placeholder:text-base"
             status={errors.findout ? "error" : "default"}
-            variant="minecraft"
             {...register("findout")}
           />
         </FormField>
-        <FormField errorMessage={errors?.acceptRules?.message}>
-          <div className="inline-flex gap-2 items-center">
-            <label htmlFor="rules" className="flex items-center cursor-pointer relative">
-              <input
-                id="rules"
-                type="checkbox"
-                className="peer h-5 w-5 lg:h-6 lg:w-6 cursor-pointer transition-all appearance-none
-                  rounded shadow hover:shadow-md border-[2px] border-shark-600 bg-shark-700 checked:bg-shark-900 checked:border-black"
-                {...register("acceptRules")}
-              />
-              <CheckboxIcon />
-            </label>
-            <label className="select-none cursor-pointer " htmlFor="rules">
-              <Typography className="text-[15px] break-words lg:text-[18px]" textColor="shark_black">
-                Согласен с&nbsp;
-                <a
-                  href="https://fasberry.su/rules"
-                  target="_blank"
-                  rel="noreferrer"
-                  className="underline underline-offset-4"
-                >
-                  правилами
-                </a>
-                &nbsp;проекта
-              </Typography>
-            </label>
-          </div>
-        </FormField>
-        <CloudflareTurnstile isDirty={isDirty} />
+        <div className="inline-flex gap-2 items-center">
+          <label htmlFor="rules" className="flex items-center cursor-pointer relative">
+            <input
+              id="rules"
+              type="checkbox"
+              className="peer h-5 w-5 lg:h-6 lg:w-6 cursor-pointer transition-all appearance-none
+                  rounded-lg shadow hover:shadow-md border-[2px] border-shark-600 bg-shark-700 checked:bg-shark-900 checked:border-black"
+              {...register("acceptRules")}
+            />
+            <CheckboxIcon />
+          </label>
+          <label className="select-none cursor-pointer" htmlFor="rules">
+            <Typography className="text-[15px] break-words lg:text-[18px] text-shark-100">
+              Согласен с&nbsp;
+              <a
+                href="https://fasberry.su/rules"
+                target="_blank"
+                rel="noreferrer"
+                className="underline underline-offset-4"
+              >
+                правилами
+              </a>
+              &nbsp;проекта
+            </Typography>
+          </label>
+        </div>
+        <CloudflareTurnstile />
         <div className="flex flex-col sm:flex-row items-center justify-end w-full gap-2">
           <AuthStatus />
-          <Button
-            variant="minecraft" rounded="none" className="hover:bg-green-500 bg-green-600" disabled={isDisabled}
-          >
-            <Typography textSize="medium" font="minecraft" textColor="shark_white" className="text-lg">
-              Зарегистрироваться
+          <Button className="hover:bg-green-500 gap-4 items-center bg-green-600" disabled={isDisabled}>
+            <Typography textSize="medium" textColor="shark_white" className="text-lg">
+              Создать аккаунт
             </Typography>
+            <ArrowRight size={20} />
           </Button>
         </div>
       </form>

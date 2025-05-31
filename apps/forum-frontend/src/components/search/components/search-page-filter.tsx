@@ -28,7 +28,7 @@ export const SearchPageFilter = reatomComponent(({ ctx }) => {
           className="flex cursor-pointer
             disabled:pointer-events-none items-center justify-center disabled:cursor-not-allowed rounded-md w-[40px] h-[80px]"
         >
-          <ChevronDown size={32} className="icon-color disabled:opacity-60" />
+          <ChevronDown size={32} className="text-shark-300 disabled:opacity-60" />
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent side="bottom" align="start" className="min-w-[180px]">

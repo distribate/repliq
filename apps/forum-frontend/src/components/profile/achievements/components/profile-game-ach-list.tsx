@@ -1,7 +1,7 @@
 import { Typography } from "@repo/ui/src/components/typography.tsx";
 import { SectionSkeleton } from "#components/templates/components/section-skeleton";
 import { reatomComponent } from "@reatom/npm-react";
-import { requestedUserParamAtom } from "#components/profile/requested-user.model";
+import { requestedUserParamAtom } from "#components/profile/main/models/requested-user.model";
 import { achievementsAction, achievementsAtom, achievementsMetaAtom } from "../models/achievements.model";
 
 const AchievementsItem = ({ title, image, description }: { title: string, description: string, image: string }) => {
@@ -40,7 +40,7 @@ export const ProfileGameAch = reatomComponent(({ ctx }) => {
     <div className="flex flex-col gap-4 w-full h-full">
       <div className="flex w-full justify-between items-center">
         <div className="flex items-center gap-1 w-fit">
-          <Typography textColor="shark_white" className="text-[22px] font-semibold">
+        <Typography textColor="shark_white" textSize="big" className="font-semibold">
             Достижения {ctx.spy(requestedUserParamAtom)}
           </Typography>
         </div>

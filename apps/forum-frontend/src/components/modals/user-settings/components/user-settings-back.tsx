@@ -1,16 +1,15 @@
 import { useEffect } from "react"
-import { userSettingsAtom, UserSettingsDialog } from "../models/user-settings.model"
+import { navigateToBackAction, settingsIsGlobalDialogAtom } from "../models/user-settings.model"
 import { ArrowLeft } from "lucide-react"
-import { updateDialogSectionAction } from "#components/modals/user-settings/models/update-user-settings.model"
 import { reatomComponent } from "@reatom/npm-react"
 
-export const UserSettingsBack = reatomComponent<{ to: UserSettingsDialog["current"] }>(({ ctx, to }) => {
-  const { global } = ctx.spy(userSettingsAtom)
+export const UserSettingsBack = reatomComponent(({ ctx }) => {
+  const global = ctx.spy(settingsIsGlobalDialogAtom)
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
-        updateDialogSectionAction(ctx, to)
+        navigateToBackAction(ctx)
       }
     };
 
@@ -25,7 +24,7 @@ export const UserSettingsBack = reatomComponent<{ to: UserSettingsDialog["curren
 
   return (
     <div
-      onClick={() => updateDialogSectionAction(ctx, to)}
+      onClick={() => navigateToBackAction(ctx)}
       className="absolute left-2 top-2 cursor-pointer rounded-lg hover:bg-shark-800 p-2"
     >
       <ArrowLeft size={24} className='text-shark-300' />

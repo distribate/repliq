@@ -20,7 +20,7 @@ const ProfileBackgroundUploadCustom = reatomComponent(({ ctx }) => {
 
   return (
     <HoverCardItem className="relative gap-2 p-6 items-center group">
-      <CloudUpload size={24} className="icon-color" />
+      <CloudUpload size={24} className="text-shark-300" />
       <Typography textSize="large" textColor="shark_white">
         Загрузить своё
       </Typography>
@@ -42,7 +42,7 @@ export const ProfileBackgroundUpdateModal = reatomComponent(({ ctx }) => {
       isPending={ctx.spy(uploadBackgroundImageAction.statusesAtom).isPending}
       trigger={
         <div className="flex hover:bg-shark-600 rounded-md p-2 gap-2 items-center group">
-          <ImageUp size={20} className="icon-color group-hover:text-pink-500" />
+          <ImageUp size={20} className="text-shark-300 group-hover:text-pink-500" />
           <Typography>Обновить фон</Typography>
         </div>
       }

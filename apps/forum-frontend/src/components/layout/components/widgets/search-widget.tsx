@@ -8,9 +8,7 @@ type SearchWidgetProps = {
   link: string;
 }
 
-export const SearchWidget = ({
-  imageSrc, link, title
-}: SearchWidgetProps) => {
+export const SearchWidget = ({ imageSrc, link, title }: SearchWidgetProps) => {
   return (
     <CustomLink
       to={link}
@@ -24,7 +22,7 @@ export const SearchWidget = ({
         className="w-full h-full group-hover:scale-[1.04] transition-all duration-300 ease-in-out object-cover absolute brightness-75"
       />
       <div className="flex items-center justify-start relative w-full self-end p-4">
-        <Typography className="font-semibold font-[Minecraft]" textSize="large">
+        <Typography className="font-semibold" textSize="large">
           {title}
         </Typography>
       </div>

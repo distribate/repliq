@@ -1,11 +1,11 @@
 import { reatomAsync, withErrorAtom, withStatusesAtom } from "@reatom/async"
 import { atom, Ctx } from "@reatom/core"
-import consola from "consola";
 import { landsClient } from "@repo/shared/api/minecraft-client"
 import type { UnwrapPromise } from '@repo/lib/helpers/unwrap-promise-type';
 import { playerClient } from "@repo/shared/api/minecraft-client"
 import { sleep, withReset } from "@reatom/framework"
-import { withHistory } from "@repo/lib/utils/with-history";
+import { withHistory } from "@repo/lib/utils/reatom/with-history";
+import { logger } from "@repo/lib/utils/logger";
 
 type AnotherLandsByOwner = UnwrapPromise<ReturnType<typeof getAnotherLandsByOwner>> | null
 type Land = UnwrapPromise<ReturnType<typeof getLandById>> | null
@@ -35,7 +35,7 @@ landAtom.onChange((ctx, state) => {
     anotherLandsByOwnerAction(ctx)
   }
 
-  consola.info("landAtom", state)
+  logger.info("landAtom", state)
 })
 
 landParamAtom.onChange((ctx, state) => {

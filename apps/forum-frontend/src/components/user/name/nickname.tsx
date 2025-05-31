@@ -13,7 +13,7 @@ export const UserNickname = ({
   nickname, nicknameColor = "#ffffff", className, ...props
 }: UserNicknameProps) => {
   return (
-    <Typography className={cn("font-[Minecraft]", className)} style={{ color: nicknameColor }} {...props}>
+    <Typography className={cn("font-semibold", className)} style={{ color: nicknameColor }} {...props}>
       {nickname}
     </Typography>
   );
