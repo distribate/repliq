@@ -1,6 +1,7 @@
 import { updateUserDonateForum } from "#lib/queries/update-user-donate-forum.ts"
 import { createUserActionLog } from "#utils/create-user-action-log.ts"
 import { getNatsConnection } from "@repo/config-nats/nats-client"
+import { natsLogger } from "@repo/lib/utils/logger"
 import { LUCKPERMS_UPDATE_SUBJECT } from "@repo/shared/constants/nats-subjects"
 import type { DonateVariants } from "@repo/types/db/forum-database-types"
 
@@ -33,6 +34,8 @@ type ActionType = "set" | "unset"
 
 export const subscribePlayerGroup = () => {
   const nc = getNatsConnection()
+
+  natsLogger.success("Subscribed to player group")
 
   return nc.subscribe(LUCKPERMS_UPDATE_SUBJECT, {
     callback: async (e, msg) => {

@@ -25,7 +25,7 @@ export const PulsatingButton = React.forwardRef<
       <button
         ref={ref}
         className={cn(
-          "relative flex items-center justify-center rounded-lg bg-gradient-to-tr from-green-400 via-green-500 to-biloba-flower-700 px-4 py-2 text-center text-shark-50",
+          "relative flex items-center justify-center rounded-lg bg-gradient-to-tr from-green-400 via-green-500 to-biloba-flower-300 px-4 py-2 text-center text-shark-50",
           className,
         )}
         style={

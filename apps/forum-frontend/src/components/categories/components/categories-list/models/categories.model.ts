@@ -1,9 +1,6 @@
 import { reatomResource, withCache, withDataAtom, withStatusesAtom } from "@reatom/async";
+import { sleep } from "@reatom/framework";
 import { forumCategoriesClient } from "@repo/shared/api/forum-client";
-
-export const categoriesResource = reatomResource(async (ctx) => {
-  return await ctx.schedule(() => getMainCategoriesWithThreads())
-}, "categoriesResource").pipe(withDataAtom(), withStatusesAtom(), withCache())
 
 async function getMainCategoriesWithThreads() {
   const res = await forumCategoriesClient.categories["get-latest-category-threads"].$get();
@@ -13,3 +10,8 @@ async function getMainCategoriesWithThreads() {
 
   return data.data;
 }
+
+export const categoriesResource = reatomResource(async (ctx) => {
+  await sleep(2000)
+  return await ctx.schedule(() => getMainCategoriesWithThreads())
+}, "categoriesResource").pipe(withDataAtom(), withStatusesAtom(), withCache())

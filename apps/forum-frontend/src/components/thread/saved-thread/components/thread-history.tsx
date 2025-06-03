@@ -6,34 +6,9 @@ import { THREAD_URL } from "@repo/shared/constants/routes.ts";
 import { reatomComponent } from "@reatom/npm-react";
 import { CustomLink } from "#components/shared/link.tsx";
 
-export type ThreadHistoryProps = {
-  index?: number;
-} & ThreadHistoryType;
+type ThreadHistoryProps = { index?: number } & ThreadHistoryType;
 
-const ThreadHistoryCompact = reatomComponent<Omit<ThreadHistoryProps, "index" | "account">>(({
-  ctx, thread: { id, title, owner} 
-}) => {
-  return (
-    <div className="flex flex-col gap-y-1 relative">
-      <div
-        onClick={() => updateHistoryThreadsAction(ctx, { type: "delete", data: id })}
-        className="absolute top-1 right-1 cursor-pointer hover:opacity-50"
-      >
-        <X className="w-3 h-3 hover:text-red-500" />
-      </div>
-      <CustomLink to={THREAD_URL + id}>
-        <Typography textSize="small" textColor="shark_white">
-          {title}
-        </Typography>
-      </CustomLink>
-      <Typography className="text-[12px] text-shark-300">
-        Игрок: {owner}
-      </Typography>
-    </div>
-  );
-}, "ThreadHistoryCompact")
-
-const ThreadHistoryFull = reatomComponent<Omit<ThreadHistoryProps, "index" | "account">>(({
+const ThreadHistoryItem = reatomComponent<Omit<ThreadHistoryProps, "index" | "account">>(({
   ctx, thread: { id, owner, title }
 }) => {
   return (

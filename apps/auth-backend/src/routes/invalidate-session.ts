@@ -7,6 +7,9 @@ import { invalidateSession } from "../lib/queries/invalidate-session";
 import type { Context } from "hono";
 import { isProduction } from "@repo/lib/helpers/is-production";
 import { SESSION_DOMAIN } from "../shared/constants/session-details";
+import { logger } from "@repo/lib/utils/logger";
+import { forumDB } from "../shared/database/forum-db";
+import dayjs from '@repo/lib/constants/dayjs-instance';
 
 export function deleteCookiesToken(ctx: Context) {
   setCookie(ctx, `session`, "", {
@@ -28,6 +31,18 @@ export function deleteCookiesToken(ctx: Context) {
   })
 }
 
+async function getSessionDetails(sessionId: string) {
+  const user = await forumDB
+    .selectFrom("users_session")
+    .select(['nickname', "ip"])
+    .where("session_id", "=", sessionId)
+    .executeTakeFirst()
+
+  if (!user) return null;
+
+  return user;
+}
+
 export const invalidateSessionRoute = new Hono()
   .post("/invalidate-session", async (ctx) => {
     const sessionToken = getCookie(ctx, "session")
@@ -36,12 +51,24 @@ export const invalidateSessionRoute = new Hono()
       return ctx.json({ error: "Session token not found" }, 401)
     }
 
-    try {
-      const sessionId = encodeHexLowerCase(sha256(new TextEncoder().encode(sessionToken)));
-      const res = await invalidateSession(sessionToken, sessionId);
+    let sessionDetails: { nickname: string; ip: string; } | null = null;
 
-      if (!res) {
+    try {
+      const sessionId = encodeHexLowerCase(
+        sha256(new TextEncoder().encode(sessionToken))
+      );
+
+      sessionDetails = await getSessionDetails(sessionId);
+
+      const result = await invalidateSession(sessionToken, sessionId);
+
+      if (!result) {
         return ctx.json({ error: "Internal Server Error" }, 500)
+      }
+
+      if (sessionDetails) {
+        logger.info(`${sessionDetails.nickname} logged. Ip: ${sessionDetails.ip} Time: ${dayjs().format("DD-MM-YYYY HH:mm:ss")}`)
+        sessionDetails = null;
       }
 
       deleteCookiesToken(ctx)

@@ -1,15 +1,9 @@
 import { getSkinDetails } from "@repo/lib/queries/get-skin-details.ts";
-import { reatomAsync, withStatusesAtom } from "@reatom/async";
-import { atom } from "@reatom/core";
+import { reatomAsync, withCache, withDataAtom, withStatusesAtom } from "@reatom/async";
 import { isParamChanged, requestedUserParamAtom } from "#components/profile/main/models/requested-user.model";
-import { withReset } from "@reatom/framework";
-import { logger } from "@repo/lib/utils/logger";
 
-export const skinAtom = atom<string | null>(null, "skin").pipe(withReset())
-
-requestedUserParamAtom.onChange((ctx, state) => isParamChanged(ctx, state, () => {
-  skinAtom.reset(ctx)
-  logger.info("skin reset for", state)
+requestedUserParamAtom.onChange((ctx, state) => isParamChanged(ctx, requestedUserParamAtom, state, () => {
+  skinStateAction.dataAtom.reset(ctx)
 }))
 
 export const skinStateAction = reatomAsync(async (ctx) => {
@@ -17,10 +11,4 @@ export const skinStateAction = reatomAsync(async (ctx) => {
   if (!target) return;
 
   return await ctx.schedule(() => getSkinDetails({ type: "skin", nickname: target }))
-}, {
-  name: "skinStateAction",
-  onFulfill: (ctx, res) => {
-    if (!res) return;
-    skinAtom(ctx, res)
-  }
-}).pipe(withStatusesAtom())
+}, "skinStateAction").pipe(withDataAtom(), withCache(), withStatusesAtom())

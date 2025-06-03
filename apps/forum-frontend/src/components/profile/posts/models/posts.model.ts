@@ -17,7 +17,7 @@ function resetPosts(ctx: Ctx) {
   postsMetaAtom.reset(ctx)
 }
 
-requestedUserParamAtom.onChange((ctx, state) => isParamChanged(ctx, state, () => { 
+requestedUserParamAtom.onChange((ctx, state) => isParamChanged(ctx, requestedUserParamAtom, state, () => { 
   resetPosts(ctx); 
   logger.info("posts reset for", state) 
 }))

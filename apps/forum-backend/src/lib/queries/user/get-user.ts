@@ -13,12 +13,13 @@ async function getUserShortedDetails(recipient: string) {
     .selectFrom("users")
     .innerJoin("users_settings", "users.nickname", "users_settings.nickname")
     .select(eb => [
+      "users.id",
       "users.nickname",
       "users.description",
+      "users.account_status",
       "users.donate",
       "users.name_color",
       "users.cover_image",
-      "users.uuid",
       "users_settings.cover_outline_visible",
       "users_settings.show_game_location",
     ])
@@ -33,14 +34,15 @@ async function getUserFullDetails(recipient: string) {
     .selectFrom("users")
     .innerJoin("users_settings", "users.nickname", "users_settings.nickname")
     .select(eb => [
+      "users.id",
       "users.nickname",
       "users.description",
       "users.donate",
       "users.real_name",
+      "users.account_status",
       "users.name_color",
       "users.favorite_item",
       "users.cover_image",
-      "users.uuid",
       "users_settings.accept_friend_request",
       "users_settings.cover_outline_visible",
       "users_settings.game_stats_visible",
@@ -63,13 +65,15 @@ export async function getUserProfilePreview(recipient: string): Promise<UserShor
 
   const {
     cover_outline_visible, show_game_location, cover_image,
-    nickname, description, name_color, donate
+    nickname, description, name_color, donate, account_status
   } = query;
 
+  // @ts-expect-error
   const userDetails: UserShorted = {
     nickname,
     description,
     name_color,
+    account_status,
     cover_image,
     donate,
     preferences: {
@@ -110,12 +114,13 @@ export async function getUser<T extends GetUserType>({
   };
 
   if (type === "shorted" && !isIdentity) {
-    const { nickname, description, name_color, donate } = userWithoutSensitiveInfo;
+    const { nickname, description, name_color, donate, account_status } = userWithoutSensitiveInfo;
 
     return {
       nickname,
       description,
       name_color,
+      account_status,
       donate,
       preferences: {
         cover_outline_visible, show_game_location

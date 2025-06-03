@@ -1,7 +1,6 @@
 import { UserNickname } from "#components/user/name/nickname";
 import { UserDonate } from "#components/user/donate/components/donate.tsx";
 import { Typography } from "@repo/ui/src/components/typography.tsx";
-import { coverAtom } from "#components/profile/header/models/cover.model";
 import dayjs from "@repo/lib/constants/dayjs-instance";
 import { requestedUserAtom } from "#components/profile/main/models/requested-user.model";
 import { reatomComponent } from "@reatom/npm-react";
@@ -25,8 +24,6 @@ export const UserCoverMainInfo = reatomComponent(({ ctx }) => {
   const requestedUser = ctx.spy(requestedUserAtom) as UserDetailed | null
   if (!requestedUser) return;
 
-  const inView = ctx.spy(coverAtom).inView
-
   return (
     <div className="flex flex-col lg:items-start items-center self-end justify-between h-1/2 gap-y-1">
       <div className="flex flex-col lg:items-start items-center truncate">
@@ -35,7 +32,7 @@ export const UserCoverMainInfo = reatomComponent(({ ctx }) => {
           <UserNickname
             nickname={requestedUser.nickname}
             nicknameColor={requestedUser.name_color}
-            className={inView ? "text-xl lg:text-3xl" : "text-xl"}
+            className="text-xl lg:text-3xl"
           />
           <UserDonate donate={requestedUser.donate} />
         </div>

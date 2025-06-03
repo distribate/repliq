@@ -1,20 +1,8 @@
 import type { DB } from '@repo/types/db/forum-database-types.ts';
-import type { Insertable, Transaction } from "kysely";
+import type { Transaction } from "kysely";
 import { forumDB } from "../../shared/database/forum-db";
-import { authDB } from '../../shared/database/auth-db';
-import type { AUTH } from '@repo/types/db/auth-database-types';
 import { publishRegisterNotify } from '../../publishers/pub-register-notify';
 import { validateRefferalsLength } from '../validators/validate-refferals-length';
-
-type CreateUserServer = Pick<Insertable<AUTH>, | "HASH" | "NICKNAME" | "IP" | "REGDATE" | "UUID">
-
-type CreateUserTransaction = Omit<Insertable<AUTH>,
-  | "TOTPTOKEN" | "LOGINIP" | "LOGINDATE" | "ISSUEDTIME" | "PREMIUMUUID" | "REGDATE" | "LOWERCASENICKNAME"
-> & {
-  nickname: string;
-  findout: string;
-  referrer?: string
-}
 
 type CreateUserOpts = {
   nickname: string,
@@ -33,19 +21,18 @@ type LinkUser = CreateUserOpts & {
   referrer: string
 }
 
-async function createUserSettings({
-  nickname, trx, user_id
-}: CreateUserSettings) {
-  return trx
-    .insertInto('users_settings')
-    .values({ user_id, nickname })
-    .returning("id")
-    .executeTakeFirstOrThrow();
+type CreateCredentials = Omit<CreateUserOpts, "nickname"> & {
+  userId: string, 
+  password: string
 }
 
-async function createInfoFindout({
-  findout, nickname, trx
-}: CreateUserFindout) {
+type CreateUserTrx = Pick<CreateUserOpts, "nickname"> & {
+  referrer?: string | null, 
+  findout: string, 
+  password: string
+}
+
+async function createInfoFindout({ findout, nickname, trx }: CreateUserFindout) {
   return trx
     .insertInto('info_findout')
     .values({ user_nickname: nickname, findout })
@@ -53,19 +40,7 @@ async function createInfoFindout({
     .executeTakeFirstOrThrow();
 }
 
-async function createUserServer(values: CreateUserServer) {
-  return authDB
-    .insertInto("AUTH")
-    .values({ ...values, LOWERCASENICKNAME: values.NICKNAME.toLowerCase() })
-    .returning(
-      ["UUID", "NICKNAME"]
-    )
-    .executeTakeFirstOrThrow()
-}
-
-async function linkUserToReferer({
-  nickname, referrer, trx
-}: LinkUser): Promise<void> {
+async function linkUserToReferer({ nickname, referrer, trx }: LinkUser) {
   const isReffered = await trx
     .selectFrom("refferals")
     .select("id")
@@ -86,44 +61,64 @@ async function linkUserToReferer({
     .execute()
 }
 
+async function createUser(trx: CreateUserOpts["trx"], nickname: string) {
+  return trx
+    .insertInto('users')
+    .values({ nickname })
+    .returning(['nickname', 'id', 'created_at'])
+    .executeTakeFirstOrThrow();
+}
+
+async function createCredentials({ trx, password, userId }: CreateCredentials) {
+  const hash = Bun.password.hashSync(password, {
+    algorithm: "bcrypt", cost: 10
+  })
+
+  return trx
+    .insertInto('users_credentials')
+    .values({ user_id: userId, hash })
+    .returning(['id'])
+    .executeTakeFirstOrThrow();
+}
+
+async function createUserSettings({ nickname, trx, user_id }: CreateUserSettings) {
+  return trx
+    .insertInto('users_settings')
+    .values({ user_id, nickname })
+    .returning("id")
+    .executeTakeFirstOrThrow();
+}
+
+function notify(userId: string, nickname: string, created_at: string | Date) {
+  publishRegisterNotify(nickname)
+}
+
 export const createUserTransaction = async ({
-  nickname, findout, HASH, NICKNAME, IP, UUID, referrer
-}: CreateUserTransaction) => {
-  const REGDATE = new Date().getTime()
-
+  nickname, referrer, findout, password
+}: CreateUserTrx) => {
   const query = await forumDB.transaction().execute(async (trx) => {
-    const userByServer = await createUserServer({ HASH, NICKNAME, IP, REGDATE, UUID })
+    const createdUser = await createUser(trx, nickname)
 
-    if (!userByServer.UUID) return;
+    const [createdCrendetials, createdSettings, createdFindout] = await Promise.all([
+      createCredentials({ trx, userId: createdUser.id, password }),
+      createUserSettings({ trx, user_id: createdUser.id, nickname: createdUser.nickname }),
+      createInfoFindout({ trx, findout, nickname })
+    ])
 
-    const userByForum = await trx
-      .insertInto('users')
-      .values({ nickname, uuid: userByServer.UUID })
-      .returning(
-        ['nickname', 'id']
-      )
-      .executeTakeFirstOrThrow();
-
-    const userSettings = await createUserSettings({
-      user_id: userByForum.id, nickname, trx
-    });
-
-    if (!userSettings.id) return;
-
-    const infoFindout = await createInfoFindout({ nickname, findout, trx });
-
-    if (!infoFindout.id) return;
+    if (!createdCrendetials.id || !createdSettings.id || !createdFindout.id) return;
 
     if (referrer) {
       await linkUserToReferer({ trx, nickname, referrer });
     }
 
-    return infoFindout;
-  });
+    return { id: createdUser.id, nickname, created_at: createdUser.created_at }
+  })
 
-  if (query?.id) {
-    publishRegisterNotify(nickname)
+  if (!query) {
+    return;
   }
 
-  return query
+  notify(query.id, query.nickname, query.created_at)
+
+  return query;
 }

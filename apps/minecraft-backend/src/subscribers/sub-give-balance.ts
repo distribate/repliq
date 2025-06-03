@@ -1,10 +1,13 @@
 import { playerPointsDB } from "#shared/database/playerpoints-db.ts"
 import { getNatsConnection } from "@repo/config-nats/nats-client"
+import { natsLogger } from "@repo/lib/utils/logger"
 import { sql } from "kysely"
 
 export const subscribeGiveBalance = () => {
   const nc = getNatsConnection()
 
+  natsLogger.success("Subscribed to give balance")
+  
   return nc.subscribe("give.balance", {
     callback: async (err, msg) => {
       if (err) {

@@ -1,6 +1,7 @@
 import { bisquiteDB } from "#shared/database/bisquite-db.ts"
 import { reputationDB } from "#shared/database/reputation-db.ts"
 import { getNatsConnection } from "@repo/config-nats/nats-client"
+import { natsLogger } from "@repo/lib/utils/logger"
 import { USER_GET_STATS_SUBJECT } from "@repo/shared/constants/nats-subjects"
 
 type PlayerStats = {
@@ -53,35 +54,42 @@ async function getPlayerStats(nickname: string): Promise<PlayerStats> {
 export const subscribePlayerStats = () => {
   const nc = getNatsConnection()
 
-  return nc.subscribe(USER_GET_STATS_SUBJECT + ".*", {
-    callback: async (err, msg) => {
-      if (err) {
-        console.error(err)
-        return
+  natsLogger.success("Subscribed to player stats")
+
+  try {
+    return nc.subscribe(USER_GET_STATS_SUBJECT + ".*", {
+      callback: async (err, msg) => {
+        if (err) {
+          console.error(err)
+          return
+        }
+
+        const subject = msg.subject
+        const nickname = subject.split(".")[3]
+
+        if (!nickname) {
+          return msg.respond(JSON.stringify({
+            error: "Invalid nickname"
+          }))
+        }
+
+        try {
+          const start = performance.now();
+
+          const stats = await getPlayerStats(nickname)
+
+          const end = performance.now();
+
+          console.log(`Request time: ${end - start}ms`)
+
+          return msg.respond(JSON.stringify(stats))
+        } catch (e) {
+          console.error(e)
+        }
       }
-
-      const subject = msg.subject
-      const nickname = subject.split(".")[3]
-
-      if (!nickname) {
-        return msg.respond(JSON.stringify({
-          error: "Invalid nickname"
-        }))
-      }
-
-      try {
-        const start = performance.now();
-
-        const stats = await getPlayerStats(nickname)
-
-        const end = performance.now();
-
-        console.log(`Request time: ${end - start}ms`)
-
-        return msg.respond(JSON.stringify(stats))
-      } catch (e) {
-        console.error(e)
-      }
-    }
-  })
+    })
+  } catch (e) {
+    // @ts-expect-error
+    natsLogger.error(e.message)
+  }
 }

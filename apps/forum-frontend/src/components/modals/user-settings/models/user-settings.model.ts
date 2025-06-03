@@ -5,11 +5,11 @@ import { logger } from "@repo/lib/utils/logger"
 
 export type SettingsType = "main" | "profile" | "account" | "other" | "lands"
 export type ProfileDialog = "visibility" | "real-name" | "birthday" | "name-color" | "favorite-item"
-export type AccountDialog = "email" | "password" | "sessions" | "black-list"
+export type AccountDialog = "email" | "password" | "sessions" | "black-list" | "delete-account"
 type SettingsDialog = AccountDialog | ProfileDialog
 
 // const SETTINGS_TYPE = ["main", "profile", "account", "other", "lands"]
-const ACCOUNT_DIALOGS = ["black-list", "email", "password", "sessions"]
+const ACCOUNT_DIALOGS = ["black-list", "email", "password", "sessions", "delete-account"]
 const PROFILE_DIALOGS = ["visibility", "real-name", "birthday", "name-color", "favorite-item"]
 
 export const settingsSettingsTypeAtom = atom<SettingsType>("main", "settingsSettingsType").pipe(withReset())
@@ -62,5 +62,6 @@ export const toggleGlobalDialogAction = action((ctx, { value, reset }: { value: 
 
 function settingsReset(ctx: Ctx) {
   settingsIsGlobalDialogAtom.reset(ctx)
+  settingsSettingsTypeAtom.reset(ctx)
   settingsCurrentDialogAtom.reset(ctx)
 }

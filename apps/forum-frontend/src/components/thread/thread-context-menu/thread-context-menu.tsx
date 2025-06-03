@@ -1,35 +1,10 @@
 import { AvailableThreadReactions } from "#components/reactions/components/available-reactions";
-import { threadIsEditableAtom, threadModeAtom, threadParamAtom } from "../thread-main/models/thread.model";
-import { FlagTriangleLeft, PencilLine } from "lucide-react";
+import { threadParamAtom } from "../thread-main/models/thread.model";
+import { FlagTriangleLeft } from "lucide-react";
 import { Typography } from "@repo/ui/src/components/typography";
 import { ReportCreateModal } from "#components/modals/action-confirmation/components/report/components/report-create-modal.tsx";
 import { reatomComponent } from "@reatom/npm-react";
 import { ContextMenuItem } from "@repo/ui/src/components/context-menu";
-
-const ThreadContentEdit = reatomComponent(({ ctx }) => {
-  const threadIsEditable = ctx.spy(threadIsEditableAtom)
-  if (!threadIsEditable) return null;
-  
-  const editMode = ctx.spy(threadModeAtom)
-
-  return editMode === 'read' ? (
-    <div
-      className="flex items-center rounded-md gap-2"
-      onClick={() => threadModeAtom(ctx, "edit")}
-    >
-      <PencilLine size={20} className="text-shark-300" />
-      <Typography>Редактировать</Typography>
-    </div>
-  ) : (
-    <div
-      className="flex items-center rounded-md gap-2"
-      onClick={() => threadModeAtom(ctx, "read")}
-    >
-      <PencilLine size={20} className="text-shark-300" />
-      <Typography>Отменить</Typography>
-    </div>
-  )
-}, "ThreadContentEdit")
 
 const ThreadContentReport = ({ threadId }: { threadId: string }) => {
   return (
@@ -55,11 +30,8 @@ export const ThreadContextMenu = reatomComponent(({ ctx }) => {
   return (
     <>
       <AvailableThreadReactions threadId={threadId} />
-      <div className="px-2 w-full">
-        <div className="flex flex-col bg-shark-900 *:cursor-pointer hover:*:bg-shark-700 w-full py-2 gap-2">
-          <ContextMenuItem>
-            <ThreadContentEdit />
-          </ContextMenuItem>
+      <div className="px-1.5 w-full">
+        <div className="flex flex-col bg-shark-900 rounded-md *:cursor-pointer hover:*:bg-shark-700 w-full p-1.5 gap-2">
           <ContextMenuItem>
             <ThreadContentReport threadId={threadId} />
           </ContextMenuItem>

@@ -53,4 +53,4 @@ export const friendsAction = reatomAsync(async (ctx, options?: FriendsQuery) => 
   }
 }).pipe(withStatusesAtom())
 
-requestedUserParamAtom.onChange((ctx, state) => isParamChanged(ctx, state, () => resetFriends(ctx)))
+requestedUserParamAtom.onChange((ctx, state) => isParamChanged(ctx, requestedUserParamAtom, state, () => resetFriends(ctx)))

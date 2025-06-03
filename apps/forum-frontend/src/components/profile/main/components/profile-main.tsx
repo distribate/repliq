@@ -3,32 +3,42 @@ import { UserContentSkeleton } from "#components/skeletons/components/user-profi
 import { UserProfilePosts as Posts } from "#components/profile/posts/components/profile-posts";
 import { Separator } from "@repo/ui/src/components/separator";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@repo/ui/src/components/tabs";
-// import { ProfileSkinControls } from "#components/profile/skin/components/profile-skin-controls.tsx";
 import { Typography } from "@repo/ui/src/components/typography";
 import { reatomComponent } from '@reatom/npm-react';
 import {
   requestedUserSectionIsPrivatedAtom,
   requestedUserAction,
-  // requestedUserGameStatsVisibleAtom,
+  requestedUserGameStatsVisibleAtom,
   requestedUserIsSameAtom,
   requestedUserParamAtom,
   requestedUserProfileBlockedAtom,
-  requestedUserProfileStatusAtom
+  requestedUserProfileStatusAtom,
+  requestedUserAccountTypeAtom,
+  requestedUserMinecraftProfileIsExistsAtom
 } from '#components/profile/main/models/requested-user.model';
 import { SectionPrivatedTrigger } from '#components/templates/components/section-privated-trigger';
 import { isAuthenticatedAtom } from '@repo/lib/queries/global-option-query';
 import { AuthorizeTemplate } from '#components/templates/components/auth-template';
-// import { ProfileSkinRender } from "../skin/components/profile-skin-render";
 
 const Account = lazy(() => import("#components/profile/account/components/profile-account.tsx").then(m => ({ default: m.UserProfileAccount })))
-// const GameStats = lazy(() => import("#components/profile/stats/components/profile-stats.tsx").then(m => ({ default: m.UserProfileGameStats })))
 const Friends = lazy(() => import("#components/profile/friends/components/profile-friends.tsx").then(m => ({ default: m.UserProfileFriends })))
 const Threads = lazy(() => import("#components/profile/threads/components/profile-threads.tsx").then(m => ({ default: m.UserProfileThreads })))
-// const GameAchievements = lazy(() => import("#components/profile/achievements/components/profile-game-ach.tsx").then(m => ({ default: m.UserProfileGameAchievements })))
 const Blocked = lazy(() => import("#components/templates/components/user-blocked").then(m => ({ default: m.UserBlocked })));
 const Banned = lazy(() => import("#components/templates/components/user-banned").then(m => ({ default: m.UserBanned })));
+const Deleted = lazy(() => import("#components/templates/components/user-deleted").then(m => ({ default: m.UserDeleted })))
+const Minecraft = lazy(() => import("#components/profile/minecraft/minecraft").then(m => ({ default: m.Minecraft })));
 
 export const Page = reatomComponent(({ ctx }) => {
+  switch (ctx.spy(requestedUserAccountTypeAtom)) {
+    case "archived":
+    case "deleted":
+      return (
+        <Suspense>
+          <Deleted />
+        </Suspense>
+      )
+  }
+
   switch (ctx.spy(requestedUserProfileStatusAtom)) {
     case "banned":
       return (
@@ -52,35 +62,30 @@ export const Page = reatomComponent(({ ctx }) => {
 const TabsListContent = reatomComponent(({ ctx }) => {
   return (
     <>
-      <TabsTrigger value="posts" className="rounded-r-none !rounded-l-lg">
+      <TabsTrigger value="posts">
         <Typography className="font-semibold">Посты</Typography>
       </TabsTrigger>
-      <TabsTrigger value="threads" className="rounded-none">
+      <TabsTrigger value="threads">
         <Typography className="font-semibold">Треды</Typography>
       </TabsTrigger>
-      <TabsTrigger value="friends" className="rounded-none">
+      <TabsTrigger value="friends">
         <Typography className="font-semibold">Друзья</Typography>
       </TabsTrigger>
-      <Separator orientation="vertical" className="hidden lg:block" />
-      {/* {ctx.spy(requestedUserGameStatsVisibleAtom) && (
-        <>
-          <TabsTrigger value="game-stats" className="peer rounded-none">
-            <Typography className="font-semibold">Статистика</Typography>
-          </TabsTrigger>
-          {ctx.spy(requestedUserSectionIsPrivatedAtom) && <SectionPrivatedTrigger />}
-        </>
-      )} */}
-      {/* <TabsTrigger
-        data-owner={ctx.spy(requestedUserIsSameAtom)}
-        value="achievements"
-        className="data-[owner=true]:rounded-none data-[owner=false]:rounded-l-none data-[owner=false]:rounded-r-lg"
-      >
-        <Typography className="font-semibold">Достижения</Typography>
-      </TabsTrigger> */}
+      {ctx.spy(requestedUserMinecraftProfileIsExistsAtom) && (
+        ctx.spy(requestedUserGameStatsVisibleAtom) && (
+          <>
+            <Separator orientation="vertical" className="hidden lg:block" />
+            <TabsTrigger value="minecraft">
+              <Typography className="font-semibold">Minecraft</Typography>
+            </TabsTrigger>
+            {ctx.spy(requestedUserSectionIsPrivatedAtom) && <SectionPrivatedTrigger />}
+          </>
+        )
+      )}
       {ctx.spy(requestedUserIsSameAtom) && (
         <>
           <Separator orientation="vertical" className="hidden lg:block" />
-          <TabsTrigger value="account" className="peer rounded-r-lg rounded-l-none">
+          <TabsTrigger value="account">
             <Typography className="font-semibold">Аккаунт</Typography>
           </TabsTrigger>
           {ctx.spy(requestedUserSectionIsPrivatedAtom) && <SectionPrivatedTrigger />}
@@ -103,23 +108,21 @@ export const ProfileContentTabs = reatomComponent(({ ctx }) => {
         <TabsList className="md:hidden flex items-center no-scrollbar justify-start px-2 py-4 overflow-x-auto bg-shark-900 w-full">
           <TabsListContent />
         </TabsList>
-        <TabsList className="hidden md:flex justify-start w-fit bg-shark-900">
+        <TabsList className="hidden md:flex justify-start p-2 gap-2 w-fit bg-shark-900">
           <TabsListContent />
         </TabsList>
         <div className="flex flex-col lg:flex-row items-start grow *:w-full w-full">
           <TabsContent value="posts">
-            {isAuthenticated && (
+            {isAuthenticated ? (
               <Posts />
-            )}
-            {!isAuthenticated && <AuthorizeTemplate />}
+            ) : <AuthorizeTemplate />}
           </TabsContent>
           <TabsContent value="threads">
-            {isAuthenticated && (
+            {isAuthenticated ? (
               <Suspense>
                 <Threads />
               </Suspense>
-            )}
-            {!isAuthenticated && <AuthorizeTemplate />}
+            ) : <AuthorizeTemplate />}
           </TabsContent>
           <TabsContent value="friends">
             {isAuthenticated && (
@@ -129,42 +132,26 @@ export const ProfileContentTabs = reatomComponent(({ ctx }) => {
             )}
             {!isAuthenticated && <AuthorizeTemplate />}
           </TabsContent>
-          {/* <TabsContent value="game-stats">
-            {isAuthenticated && (
-              ctx.spy(requestedUserGameStatsVisibleAtom) && (
+          <TabsContent value="minecraft">
+            {ctx.spy(requestedUserMinecraftProfileIsExistsAtom) && (
+              isAuthenticated ? (
                 <Suspense>
-                  <GameStats />
+                  <Minecraft />
                 </Suspense>
-              )
+              ) : <AuthorizeTemplate />
             )}
-            {!isAuthenticated && <AuthorizeTemplate />}
-          </TabsContent> */}
-          {/* <TabsContent value="achievements">
-            {isAuthenticated && (
-              <Suspense>
-                <GameAchievements />
-              </Suspense>
-            )}
-            {!isAuthenticated && <AuthorizeTemplate />}
-          </TabsContent> */}
+          </TabsContent>
           <TabsContent value="account">
-            {isAuthenticated && (
+            {isAuthenticated ? (
               ctx.spy(requestedUserIsSameAtom) && (
                 <Suspense>
                   <Account />
                 </Suspense>
               )
-            )}
-            {!isAuthenticated && <AuthorizeTemplate />}
+            ) : <AuthorizeTemplate />}
           </TabsContent>
-        </div>
-      </Tabs>
-      {/* <div className="hidden xl:flex h-[600px] flex-col w-1/3">
-        <div className="flex flex-col h-full w-full gap-4">
-          <ProfileSkinRender />
-          <ProfileSkinControls />
-        </div>
-      </div> */}
-    </div>
+        </div >
+      </Tabs >
+    </div >
   );
 }, "ProfileContentTabs")

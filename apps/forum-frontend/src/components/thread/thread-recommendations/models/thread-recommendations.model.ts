@@ -20,7 +20,7 @@ async function getThreadsRecommendations({
 }
 
 export const threadRecommendationsResource = reatomResource(async (ctx) => {
-  await sleep(1000)
+  await sleep(200)
 
   const target = ctx.spy(threadOwnerAtom)
   const threadId = ctx.spy(threadParamAtom)

@@ -9,6 +9,10 @@
     font-display: swap;
   }
 
+  :root {
+    --bprogress-color: theme("colors.shark.400")
+  }
+
   body {
     font-family: "Golos Text", sans-serif;
     font-weight: 400;
@@ -45,7 +49,7 @@
   .responsive-width {
     @apply w-[calc(100%-8px)] sm:w-[calc(100%-32px)] md:w-[calc(100%-64px)] 2xl:w-[76%]
   }
-  
+
   .nickname-color-picker .react-colorful {
     @apply w-auto;
   }

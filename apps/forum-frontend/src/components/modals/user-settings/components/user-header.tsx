@@ -1,8 +1,8 @@
 import { Avatar } from "#components/user/avatar/components/avatar";
+import { userStatusAction, userStatusAtom } from "#components/user/avatar/models/user-status.model";
 import { UserNickname } from "#components/user/name/nickname";
 import { reatomComponent, useUpdate } from "@reatom/npm-react";
 import { getUser } from "@repo/lib/helpers/get-user";
-import { userStatusAction, userStatusAtom } from "@repo/lib/queries/user-status.model";
 import { Button } from "@repo/ui/src/components/button";
 import { Dialog, DialogClose, DialogContent, DialogTrigger } from "@repo/ui/src/components/dialog";
 import { Typography } from "@repo/ui/src/components/typography";

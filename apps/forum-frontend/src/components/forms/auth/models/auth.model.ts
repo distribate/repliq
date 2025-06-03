@@ -7,9 +7,24 @@ import { reatomAsync, withStatusesAtom } from "@reatom/async";
 import { router } from "#main.tsx";
 import { authClient } from "@repo/shared/api/auth-client";
 import { UAParser } from 'ua-parser-js';
-import { z } from "zod";
 import { registerSchema } from '@repo/types/schemas/auth/create-session-schema.ts';
 import { isProduction } from "@repo/lib/helpers/is-production";
+import { nicknameSchema, passwordSchema } from "@repo/types/schemas/auth/create-session-schema";
+import { z } from "zod";
+
+export const authorizationSchema = z.object({
+  nickname: nicknameSchema,
+  password: passwordSchema,
+});
+
+export const registrationSchema = authorizationSchema.and(z.object({
+  acceptRules: z.literal<boolean>(true, {
+    errorMap: () => ({ message: "Вы должны согласиться с правилами, прежде чем авторизовываться", }),
+  }),
+  findout: z.string()
+    .min(2, { message: "Опишите причину подробнее, пожалуйста", })
+    .max(128),
+}));
 
 export type PasswordVisiblity = "password" | "text"
 type DetailsVisibility = "hidden" | "visible"

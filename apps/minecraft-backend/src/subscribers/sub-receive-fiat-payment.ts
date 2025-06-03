@@ -5,11 +5,14 @@ import type { PaymentMeta } from "@repo/types/entities/payment-types"
 import { processCharismPayment } from "#utils/process-charism-payment.ts"
 import { processDonatePayment } from "#utils/process-donate-payment.ts"
 import { processBelkoinPayment } from "#utils/process-belkoin-payment.ts"
+import { natsLogger } from "@repo/lib/utils/logger"
 
 const receiveFiatPayload = paymentMetaSchema.superRefine((data, ctx) => paymentTypeValidator({ data, ctx }))
 
 export const subscribeReceiveFiatPayment = () => {
   const nc = getNatsConnection()
+
+  natsLogger.success("Subscribed to receive fiat payment")
 
   return nc.subscribe(PAYMENT_SUCCESS_SUBJECT, {
     callback: async (err, msg) => {

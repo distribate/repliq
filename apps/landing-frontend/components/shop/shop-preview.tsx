@@ -1,8 +1,7 @@
 import { Typography } from "@repo/landing-ui/src/typography";
 import { walletsMap } from "./shop-list-wallets";
 import { useQueryClient } from "@tanstack/react-query";
-import { Donates } from "@repo/lib/queries/get-donates";
-import { DONATES_QUERY_KEY } from "./shop-list-donates";
+import { Donates, DONATES_QUERY_KEY } from "./shop-list-donates";
 import { shopItemQuery } from "./shop";
 
 const titleMap: Record<string, string> = {

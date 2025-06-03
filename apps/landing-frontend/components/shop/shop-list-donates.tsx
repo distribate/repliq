@@ -1,6 +1,5 @@
 import { Skeleton } from "@repo/landing-ui/src/skeleton"
 import { Typography } from "@repo/landing-ui/src/typography"
-import { Donates } from "@repo/lib/queries/get-donates"
 import { ShopFooter } from "./shop-footer"
 import { useQueryClient } from "@tanstack/react-query";
 import LeatherTunic from "@repo/assets/images/minecraft/leather_tunic.webp"
@@ -8,8 +7,9 @@ import IronChestplate from "@repo/assets/images/minecraft/iron_chestplate.webp"
 import NetheriteChestplate from "@repo/assets/images/minecraft/netherite_chestplate.webp"
 import { ShopNickname } from "./shop-list-wallets"
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
-import { getDonates } from '@repo/lib/queries/get-donates.ts';
 import { SHOP_ITEM_QUERY_KEY, ShopItemQuery, shopItemQuery } from "./shop";
+import { forumSharedClient } from '@repo/shared/api/forum-client';
+import { InferResponseType, InferRequestType } from 'hono/client';
 
 const DonateListNull = () => {
   return (
@@ -17,6 +17,34 @@ const DonateListNull = () => {
       Не удалось получить доступные привилегии. Повторите позже
     </Typography>
   )
+}
+
+const client = forumSharedClient.shared["get-donates"].$get
+
+export type GetDonatesResponse = InferResponseType<typeof client, 200>
+
+type GetDonatesRequest = InferRequestType<typeof client>["query"]
+
+export type Donates = {
+  imageUrl: string;
+  id: string;
+  created_at: string;
+  description: string;
+  title: string;
+  origin: string;
+  price: string;
+  rating: string;
+  commands: string[],
+  forum: string[] | null
+}
+
+export async function getDonates(args: GetDonatesRequest) {
+  const res = await forumSharedClient.shared["get-donates"].$get({ query: args });
+  const data = await res.json();
+
+  if ("error" in data) return null;
+
+  return data.data.length > 0 ? data.data : null
 }
 
 export const DONATES_QUERY_KEY = (type: "donate" | "wallet" | "events") => ["ui", "donates", type]

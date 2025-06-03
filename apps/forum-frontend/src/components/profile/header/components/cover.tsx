@@ -6,51 +6,60 @@ import { requestedUserCoverDetailsAtom } from "#components/profile/main/models/r
 import { UserCoverAvatar } from "./cover-avatar.tsx";
 import { UserCoverLocation } from "./cover-location.tsx";
 import { CoverArea } from "./cover-area.tsx";
-import { lazy, Suspense } from "react";
+import { lazy, PropsWithChildren, Suspense } from "react";
 import { isAuthenticatedAtom } from "@repo/lib/queries/global-option-query.ts";
 
 const UserCoverWatermark = lazy(() => import("./cover-watermark.tsx").then(m => ({ default: m.UserCoverWatermark })))
 
 export const UserCover = reatomComponent(({ ctx }) => {
-  const coverDetails = ctx.spy(requestedUserCoverDetailsAtom)
-  if (!coverDetails) return;
-
   const inView = ctx.spy(coverAtom).inView
-  const { backgroundColor, backgroundImage, outline, coverImage } = coverDetails;
   const variant = inView ? "full" : "compact"
 
   return (
-    <CoverArea data-variant={variant} variant={variant} backgroundColor={backgroundColor} outline={outline} style={{ backgroundImage }}>
-      {!coverImage && (
-        <Suspense>
-          <UserCoverWatermark />
-        </Suspense>
-      )}
+    <UserCoverWrapper>
       <div className="z-[2] absolute w-full h-full right-0 top-0 bottom-0 left-0 bg-black/40" />
       <div
         className="flex gap-x-6 gap-y-2 relative items-center z-[4]
-          group-data-[variant=compact]:flex-row flex-col group-data-[variant=compact]:justify-between
-          group-data-[variant=full]:lg:flex-row group-data-[variant=full]:lg:items-start"
+          flex-col lg:flex-row lg:items-start"
       >
         <UserCoverAvatar variant={variant} />
         <UserCoverMainInfo />
-        <div className="group-data-[variant=compact]:hidden block lg:hidden">
+        <div className="block lg:hidden">
           <UserCoverLocation />
         </div>
       </div>
-      <div className="group-data-[variant=compact]:hidden hidden lg:block absolute top-4 right-4 z-[5]">
+      <div className="hidden lg:block absolute top-4 right-4 z-[5]">
         <UserCoverLocation />
       </div>
       {ctx.spy(isAuthenticatedAtom) && (
         <div
-          className="flex w-1/2 lg:w-fit items-center bg-transparent gap-4 relative z-[3]
-          group-data-[variant=compact]:hidden
-          group-data-[variant=full]:lg:self-end group-data-[variant=full]:justify-center group-data-[variant=full]:lg:justify-end 
-      "
+          className="flex w-1/2 lg:w-fit items-center bg-transparent gap-4 relative z-[3] lg:self-end justify-center lg:justify-end"
         >
           <UserCoverPanel />
         </div>
       )}
+    </UserCoverWrapper>
+  )
+})
+
+export const UserCoverWrapper = reatomComponent<PropsWithChildren>(({ ctx, children }) => {
+  const coverDetails = ctx.spy(requestedUserCoverDetailsAtom)
+  if (!coverDetails) return;
+
+  const { backgroundColor, outline, coverImage } = coverDetails;
+
+  return (
+    <CoverArea variant={"full"} backgroundColor={backgroundColor} outline={outline}>
+      {coverImage ? (
+        <div className="flex justify-center items-center h-full absolute inset-0 z-[1]">
+          <img src={coverImage} className="object-cover object-center w-full h-[414px]" alt="" />
+        </div>
+      ) : (
+        <Suspense>
+          <UserCoverWatermark />
+        </Suspense>
+      )}
+      {children}
     </CoverArea>
   );
-}, "UserCover")
+}, "UserCoverWrapper")

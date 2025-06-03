@@ -1,9 +1,9 @@
 import { reatomComponent, useUpdate } from "@reatom/npm-react";
-import { userStatusAction, userStatusAtom, userStatusParamAtom } from "@repo/lib/queries/user-status.model";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@repo/ui/src/components/tooltip";
 import { Typography } from "@repo/ui/src/components/typography";
 import ExpActive from '@repo/assets/images/minecraft/exp-active.webp';
 import ExpNoActive from '@repo/assets/images/minecraft/exp-noactive.webp';
+import { userStatusAction, userStatusAtom, userStatusParamAtom } from "../models/user-status.model";
 
 const SyncUserStatus = ({ target }: { target: string }) => {
   useUpdate((ctx) => userStatusParamAtom(ctx, target), [target])

@@ -9,4 +9,4 @@ const customTimeoutException = (ctx: Context) => new HTTPException(408, {
   )} seconds. Please try again later.`,
 })
 
-export const timeoutMiddleware = createMiddleware(timeout(5000, customTimeoutException))
+export const timeoutMiddleware = () => createMiddleware(timeout(5000, customTimeoutException))

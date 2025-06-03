@@ -28,11 +28,32 @@ async function createUserProfileView(initiator: string, recipient: string) {
   }
 }
 
+async function validateExistsUser(nickname: string) {
+  const query = await forumDB
+    .selectFrom("users")
+    .select("nickname")
+    .where("nickname", "=", nickname)
+    .executeTakeFirst()
+
+  return Boolean(query?.nickname)
+}
+
+const SHORTED_MAP: Record<Exclude<NonNullable<UserProfileStatus>, "banned">, GetUserType> = {
+  "private": "shorted",
+  "blocked-by-you": "shorted",
+  "blocked-by-user": "shorted",
+}
+
 export const getUserProfileRoute = new Hono()
   .get("/get-user-profile/:nickname", async (ctx) => {
-    const { nickname: recipient } = ctx.req.param()
+    const recipient = ctx.req.param("nickname")
     const initiator = getNickname(true)
-    logger.debug(`Nickname: ${initiator}`);
+
+    const isExists = await validateExistsUser(recipient)
+
+    if (!isExists) {
+      return ctx.json({ error: "Not found" }, 404)
+    }
 
     if (!initiator) {
       const user = await getUserProfilePreview(recipient)
@@ -47,47 +68,63 @@ export const getUserProfileRoute = new Hono()
         cover_image = getPublicUrl(USER_IMAGES_BUCKET, user.cover_image)
       }
 
-      logger.info(`Gived public profile an recipient: ${recipient}`)
+      const { account_status, ...rest } = user
 
-      return ctx.json({
-        data: {
-          ...user,
-          cover_image,
-          details: { status: null }
+      if (account_status === 'archived' || account_status === "deleted") {
+        const data = {
+          nickname: rest.nickname,
+          details: {
+            status: null,
+            account_type: account_status
+          }
         }
-      }, 200);
+
+        return ctx.json({ data }, 200)
+      }
+
+      const data = {
+        ...rest,
+        cover_image,
+        details: {
+          status: null,
+          account_type: account_status
+        },
+        profiles: []
+      }
+
+      logger.info(`Gived full profile an ${recipient} for non-auth user`)
+
+      return ctx.json({ data }, 200);
     }
 
-    let getUserType: GetUserType = "shorted"
+    let userType: GetUserType = "shorted"
     let status: UserProfileStatus = null;
 
-    const [userRelation, friendShip] = await Promise.all([
+    const [relation, friendship] = await Promise.all([
       getUserRelation({ recipient, initiator }),
       getFriendship({ recipient, initiator })
     ])
 
-    if (!friendShip) {
-      if (userRelation === "private"
-        || userRelation === "blocked-by-you"
-        || userRelation === "blocked-by-user"
-      ) {
-        getUserType = "shorted"
-      } else {
-        getUserType = "detailed"
-      }
-
-      status = userRelation
+    if (!friendship) {
+      userType = SHORTED_MAP[relation as Exclude<NonNullable<UserProfileStatus>, "banned">]
+      status = relation
     } else {
-      getUserType = "detailed"
+      userType = "detailed"
       status = null;
     }
 
     try {
-      const user = await getUser({ initiator, recipient, type: getUserType });
+      const user = await getUser({ initiator, recipient, type: userType });
 
       if (!user) {
         return ctx.json({ error: "Not found" }, 404)
       }
+
+      const userExistsProfiles = await forumDB
+        .selectFrom("users_profiles")
+        .select(["user_id", "type"])
+        .where("user_id", "=", user.id)
+        .execute()
 
       if (recipient !== initiator) {
         createUserProfileView(initiator, recipient)
@@ -99,15 +136,30 @@ export const getUserProfileRoute = new Hono()
         cover_image = getPublicUrl(USER_IMAGES_BUCKET, user.cover_image)
       }
 
-      logger.info(`Gived full profile an recipient: ${recipient}`)
+      const { account_status, ...rest } = user;
 
-      return ctx.json({
-        data: {
-          ...user,
-          cover_image,
-          details: { status }
+      if (account_status === 'deleted' || account_status === 'archived') {
+        const data = {
+          nickname: rest.nickname,
+          details: {
+            status: null,
+            account_type: account_status
+          },
         }
-      }, 200);
+
+        return ctx.json({ data }, 200)
+      }
+
+      const data = {
+        ...rest,
+        cover_image,
+        details: { status, account_type: account_status },
+        profiles: userExistsProfiles as { type: "minecraft", user_id: string }[]
+      }
+
+      logger.info(`Gived full profile an ${recipient} for ${initiator}`)
+
+      return ctx.json({ data }, 200);
     } catch (e) {
       return ctx.json({ error: throwError(e) }, 500)
     }

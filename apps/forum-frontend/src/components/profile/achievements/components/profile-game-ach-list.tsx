@@ -6,7 +6,7 @@ import { achievementsAction, achievementsAtom, achievementsMetaAtom } from "../m
 
 const AchievementsItem = ({ title, image, description }: { title: string, description: string, image: string }) => {
   return (
-    <div className="flex flex-col items-center justify-center aspect-video w-full h-full bg-shark-950 rounded-lg p-2">
+    <div className="flex flex-col items-center justify-center aspect-video w-full h-full bg-shark-900 rounded-lg p-2">
       <img
         src={image}
         alt={title}
@@ -40,15 +40,15 @@ export const ProfileGameAch = reatomComponent(({ ctx }) => {
     <div className="flex flex-col gap-4 w-full h-full">
       <div className="flex w-full justify-between items-center">
         <div className="flex items-center gap-1 w-fit">
-        <Typography textColor="shark_white" textSize="big" className="font-semibold">
+          <Typography textColor="shark_white" textSize="big" className="font-semibold">
             Достижения {ctx.spy(requestedUserParamAtom)}
           </Typography>
         </div>
       </div>
       <div className="flex flex-col gap-4 w-full h-full">
         {meta.achievementsTypes.map(ach => (
-          <div key={ach.key} className="flex flex-col gap-2 w-full h-full">
-            <Typography className="text-[18px] font-semibold">
+          <div key={ach.key} className="flex flex-col p-2 rounded-lg bg-primary-color gap-2 w-full h-full">
+            <Typography textSize="large" className="font-semibold">
               {ach.title}
             </Typography>
             {filtered(ach.key).length >= 1 && (

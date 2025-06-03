@@ -1,7 +1,7 @@
 import { publishUserStatus } from "#publishers/pub-user-status.ts"
 import { createMiddleware } from "hono/factory"
 
-export const userStatus = createMiddleware(async (ctx, next) => {
+export const userStatus = () => createMiddleware(async (ctx, next) => {
   const nickname = ctx.get("nickname")
 
   publishUserStatus(nickname)

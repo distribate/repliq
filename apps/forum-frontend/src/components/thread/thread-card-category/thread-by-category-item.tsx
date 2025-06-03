@@ -13,7 +13,7 @@ export const ThreadByCategoryItem = ({
   const createdAt = dayjs(created_at).from(dayjs());
 
   return (
-    <div className="flex grow group bg-shark-900 hover:bg-shark-700 rounded-md justify-between transition-all duration-150 p-3 cursor-pointer">
+    <div className="flex grow group bg-shark-900 hover:bg-shark-800 rounded-lg justify-between duration-300 p-3">
       <div className="flex flex-col gap-y-2 justify-between w-2/3">
         <div className="flex items-center gap-x-2">
           <Avatar nickname={owner.nickname} propWidth={42} propHeight={36} className="min-h-[42px] min-w-[42px]" />
@@ -31,10 +31,10 @@ export const ThreadByCategoryItem = ({
         <div className="flex items-center gap-1 w-full">
           {properties.is_comments ? (
             <>
-              <MessageSquare className="text-shark-300" size={16} />
               <Typography className="text-shark-300 text-sm font-normal">
                 {comments_count}
               </Typography>
+              <MessageSquare className="text-shark-300" size={16} />
             </>
           ) : (
             <MessageSquareOff className="text-red-500" size={16} />

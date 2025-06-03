@@ -1,5 +1,4 @@
 import { Hono } from 'hono';
-import { getAuthUser } from './routes/get-auth-player.ts';
 import { registerRoute } from './routes/register.ts';
 import { invalidateSessionRoute } from './routes/invalidate-session.ts';
 import { showRoutes } from 'hono/dev';
@@ -17,13 +16,12 @@ import { corsMiddleware } from './middlewares/cors-middleware.ts';
 import type { Env } from './types/env-type.ts';
 import { rateLimiterMiddleware } from './middlewares/rate-limiter.ts';
 import { logger } from "@repo/lib/utils/logger.ts"
-import { timing, type TimingVariables } from 'hono/timing'
+import { timing } from 'hono/timing'
 
 await initNats()
 
-export const auth = new Hono<{ Variables: TimingVariables }>()
+export const auth = new Hono()
   .route('/', invalidateSessionRoute)
-  .route('/', getAuthUser)
   .route('/', registerRoute)
   .route("/", loginRoute)
   .route("/", terminateSessionRoute)
@@ -32,16 +30,16 @@ export const auth = new Hono<{ Variables: TimingVariables }>()
 
 const app = new Hono<Env>()
   .basePath('/auth')
-  .use(corsMiddleware)
+  .use(corsMiddleware())
   .use(csrf({ origin: originList }))
-  .use(rateLimiterMiddleware)
+  .use(rateLimiterMiddleware())
   .use(timing())
-  .use(timeoutMiddleware)
+  .use(timeoutMiddleware())
   .use(honoLogger())
   .onError(exceptionHandler)
   .route("/", auth)
 
-// showRoutes(app, { verbose: false });
+showRoutes(app, { verbose: false });
 
 Bun.serve({ port: Bun.env.AUTH_BACKEND_PORT!, fetch: app.fetch });
 

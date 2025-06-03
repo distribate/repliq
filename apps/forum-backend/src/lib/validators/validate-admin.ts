@@ -7,5 +7,5 @@ export async function validateAdmin(nickname: string): Promise<boolean> {
     .where("nickname", "=", nickname)
     .executeTakeFirst()
     
-  return !!exists
+  return Boolean(exists)
 }

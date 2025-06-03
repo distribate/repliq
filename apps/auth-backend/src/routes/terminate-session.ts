@@ -5,10 +5,10 @@ import { deleteSessionToken } from "../utils/delete-session-token";
 import type { Env } from "../types/env-type";
 import { terminateAllSessions } from "../lib/queries/terminate-all-sessions";
 import { terminateSession } from "../lib/queries/terminate-session";
-import { getCurrentSessionCreatedAt } from "../lib/queries/get-current-session-created-at";
 import { DEFAULT_SESSION_EXPIRE } from "../shared/constants/session-expire";
 import { validateUserRequest } from "../middlewares/validate-user-request";
 import { throwError } from "@repo/lib/helpers/throw-error";
+import { forumDB } from "../shared/database/forum-db";
 
 const terminateSessionBodySchema = z.object({
   selectedSessionId: z.string().min(6).optional(),
@@ -20,6 +20,14 @@ const terminateSessionBodySchema = z.object({
     path: ["selectedSessionId"],
   }
 );
+
+export async function getCurrentSessionCreatedAt(currentSessionId: string) {
+  return forumDB
+    .selectFrom("users_session")
+    .select("created_at")
+    .where("session_id", "=", currentSessionId)
+    .executeTakeFirstOrThrow();
+}
 
 export const terminateSessionRoute = new Hono<Env>()
   .use(validateUserRequest)

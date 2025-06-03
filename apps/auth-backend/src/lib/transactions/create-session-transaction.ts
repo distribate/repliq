@@ -39,7 +39,7 @@ export const createSessionTransaction = async ({
     return session;
   });
 
-  await pushLoginNotify({ browser, ip, nickname })
+  pushLoginNotify({ browser, ip, nickname })
 
   return query;
 }

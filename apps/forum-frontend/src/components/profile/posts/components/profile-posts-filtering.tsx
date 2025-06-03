@@ -1,4 +1,3 @@
-import { ChangeEvent, useState } from "react";
 import { Input, InputProps } from "@repo/ui/src/components/input.tsx";
 import { Typography } from "@repo/ui/src/components/typography.tsx";
 import { DropdownWrapper } from "#components/wrappers/components/dropdown-wrapper";
@@ -7,36 +6,31 @@ import {
   postsFilteringAtom,
   PostsFilteringQuery,
 } from "#components/profile/posts/models/filter-posts.model";
-import { useDebounce } from "@repo/lib/hooks/use-debounce.ts";
 import { SelectedWrapper } from "#components/wrappers/components/selected-wrapper";
 import { ArrowDownNarrowWide } from "lucide-react";
 import { reatomComponent } from "@reatom/npm-react";
 import { requestedUserParamAtom } from "#components/profile/main/models/requested-user.model";
 import { updatePostsAction } from "../models/update-posts.model";
+import { action } from "@reatom/core";
+import { sleep, withConcurrency } from "@reatom/framework";
+
+const onChange = action(async (ctx, e) => {
+  const { value } = e.taregt;
+
+  await ctx.schedule(() => sleep(800))
+
+  const filtered = value.replace(/ {3,}/g, "  ")
+
+  postsFilteringAtom(ctx, (state: PostsFilteringQuery) => ({ ...state, searchQuery: filtered }))
+}).pipe(withConcurrency())
 
 const ProfilePostsFilteringSearch = reatomComponent<InputProps>(({ ctx, ...props }) => {
-  const [value, setValue] = useState<string>("");
-
-  const updateQuery = (value: string) => {
-    postsFilteringAtom(ctx, (state: PostsFilteringQuery) => ({ ...state, searchQuery: value }))
-  };
-
-  const debouncedUpdateQuery = useDebounce(updateQuery, 300);
-
-  const handleSearchInput = (e: ChangeEvent<HTMLInputElement>) => {
-    const { value } = e.target;
-    const convertedValue = value.replace(/ {3,}/g, "  ");
-    setValue(convertedValue);
-    debouncedUpdateQuery(convertedValue);
-  };
-
   return (
     <Input
       className="rounded-lg"
-      value={value}
       maxLength={64}
       placeholder="Поиск по содержанию"
-      onChange={handleSearchInput}
+      onChange={e => onChange(ctx, e)}
       {...props}
     />
   );

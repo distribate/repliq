@@ -49,7 +49,7 @@ function resetAchievements(ctx: Ctx) {
   achievementsMetaAtom.reset(ctx)
 }
 
-requestedUserParamAtom.onChange((ctx, state) => isParamChanged(ctx, state, () => {
+requestedUserParamAtom.onChange((ctx, state) => isParamChanged(ctx, requestedUserParamAtom, state, () => {
   resetAchievements(ctx)
   logger.info("achievements reset for", state)
 }))

@@ -12,7 +12,6 @@ export async function getUserInfo(nickname: string) {
       "users.cover_image",
       "users.favorite_item",
       "users.id",
-      "users.uuid",
       "users.real_name",
       "users_settings.accept_friend_request",
       "users_settings.cover_outline_visible",

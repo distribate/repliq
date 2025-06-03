@@ -8,7 +8,7 @@ import { Blob } from "buffer";
 import path from "path";
 import { skinsDB } from "#shared/database/skins-db.ts";
 import { getNatsConnection } from "@repo/config-nats/nats-client";
-import { USERS_SKINS_BUCKET } from "#index.ts";
+import { USERS_SKINS_BUCKET } from "../../utils/init-buckets";
 import { Objm } from "@nats-io/obj";
 import type { NatsConnection } from "@nats-io/transport-node";
 import { readableStreamToBlob } from "bun";

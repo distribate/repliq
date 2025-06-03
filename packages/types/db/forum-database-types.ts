@@ -55,6 +55,8 @@ export type ReportType = "account" | "comment" | "post" | "thread";
 
 export type Timestamp = ColumnType<Date, Date | string, Date | string>;
 
+export type UserAccountStatus = "archived" | "deleted";
+
 export interface _RealtimeExtensions {
   id: string;
   inserted_at: Timestamp;
@@ -525,6 +527,13 @@ export interface Links {
   value: string;
 }
 
+export interface MinecraftProfiles {
+  created_at: Generated<Timestamp>;
+  nickname: string;
+  profile_id: Int8;
+  uuid: string;
+}
+
 export interface Moderators {
   created_at: Generated<Timestamp>;
   id: Generated<Int8>;
@@ -914,6 +923,8 @@ export interface ThreadsViews {
 }
 
 export interface Users {
+  account_status: UserAccountStatus | null;
+  avatar: string | null;
   birthday: Timestamp | null;
   cover_image: string | null;
   created_at: Generated<Timestamp>;
@@ -924,7 +935,6 @@ export interface Users {
   name_color: Generated<string>;
   nickname: string;
   real_name: string | null;
-  uuid: string;
 }
 
 export interface UsersActions {
@@ -953,6 +963,13 @@ export interface UsersBlocked {
   recipient: string;
 }
 
+export interface UsersCredentials {
+  created_at: Generated<Timestamp>;
+  hash: string;
+  id: Generated<Int8>;
+  user_id: string;
+}
+
 export interface UsersFriends {
   created_at: Generated<Timestamp>;
   id: Generated<string>;
@@ -977,8 +994,8 @@ export interface UsersMain {
 
 export interface UsersProfiles {
   id: Int8;
-  profile_id: string | null;
-  user_id: Int8 | null;
+  type: Generated<string>;
+  user_id: string;
 }
 
 export interface UsersPunish {
@@ -1109,6 +1126,7 @@ export interface DB {
   issues: Issues;
   issues_approvals: IssuesApprovals;
   links: Links;
+  minecraft_profiles: MinecraftProfiles;
   moderators: Moderators;
   modpack: Modpack;
   "net._http_response": NetHttpResponse;
@@ -1155,6 +1173,7 @@ export interface DB {
   users_actions: UsersActions;
   users_banned: UsersBanned;
   users_blocked: UsersBlocked;
+  users_credentials: UsersCredentials;
   users_friends: UsersFriends;
   users_game_status: UsersGameStatus;
   users_main: UsersMain;

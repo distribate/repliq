@@ -7,5 +7,5 @@ export async function checkUserExists(nickname: string) {
     .where("nickname", "=", nickname)
     .executeTakeFirst();
 
-  return !!exists
+  return Boolean(exists)
 }

@@ -2,6 +2,7 @@ import { getNatsConnection } from "@repo/config-nats/nats-client"
 import { SERVER_USER_EVENT_SUBJECT, USER_REFERAL_CHECK_SUBJECT } from "@repo/shared/constants/nats-subjects"
 import { z } from "zod"
 import dayjs from "@repo/lib/constants/dayjs-instance"
+import { natsLogger } from "@repo/lib/utils/logger"
 
 const userJoinSchema = z.object({
   date: z.string(),
@@ -12,6 +13,7 @@ const userJoinSchema = z.object({
 export const subscribePlayerJoin = () => {
   const nc = getNatsConnection()
 
+  natsLogger.success("Subscribed to player join")
   return nc.subscribe(SERVER_USER_EVENT_SUBJECT, {
     callback: async (err, msg) => {
       if (err) {

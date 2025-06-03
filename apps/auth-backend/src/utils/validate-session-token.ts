@@ -44,8 +44,7 @@ export async function validateSessionToken(
 
   if (Date.now() >= expiresAt.getTime()) {
     const [res, _] = await Promise.all([
-      deleteSession(session_id),
-      deleteSessionToken(token)
+      deleteSession(session_id), deleteSessionToken(token)
     ]);
 
     if (!res) {

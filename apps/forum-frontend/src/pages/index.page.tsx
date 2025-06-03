@@ -24,9 +24,7 @@ import { isExperimentalDesignAtom } from "#components/layout/components/default/
 import { AuthorizationButton } from "#components/layout/components/default/authorization-button";
 
 const AlertWidget = lazy(() => import('#components/layout/components/widgets/alert-widget').then((m) => ({ default: m.AlertWidget })))
-// const AuthTemplate = lazy(() => import('#components/templates/components/auth-template').then((m) => ({ default: m.AuthTemplate })))
 const Comments = lazy(() => import('#components/layout/components/stats/latest-comments').then((m) => ({ default: m.LatestComments })))
-// const OnlineUsers = lazy(() => import('#components/layout/components/stats/online-users').then((m) => ({ default: m.OnlineUsers })))
 
 const LatestComments = reatomComponent(({ ctx }) => {
   if (!ctx.spy(isAuthenticatedAtom)) return null;
@@ -37,21 +35,6 @@ const LatestComments = reatomComponent(({ ctx }) => {
     </Suspense>
   )
 }, "LatestComments")
-
-// const LatestRegUsers = reatomComponent(({ ctx }) => {
-//   return (
-//     <div className="relative w-full min-h-[140px] rounded-lg overflow-hidden">
-//       <div className="absolute w-full h-full">
-//         <RegUsers />
-//       </div>
-//       {!ctx.spy(isAuthenticatedAtom) && (
-//         <Suspense>
-//           <AuthTemplate />
-//         </Suspense>
-//       )}
-//     </div>
-//   )
-// }, "LastRegUsers")
 
 const LandingIntro = reatomComponent(({ ctx }) => {
   if (ctx.spy(isAuthenticatedAtom)) return null;
@@ -83,16 +66,6 @@ const LandingIntro = reatomComponent(({ ctx }) => {
     </div>
   )
 }, "LandingIntro")
-
-// const Online = reatomComponent(({ ctx }) => {
-//   if (!ctx.spy(isAuthenticatedAtom)) return null;
-
-//   return (
-//     <Suspense fallback={<OnlineUsersSkeleton />}>
-//       <OnlineUsers />
-//     </Suspense>
-//   )
-// }, "Online")
 
 const Alerts = reatomComponent(({ ctx }) => {
   if (!ctx.spy(isAuthenticatedAtom)) return null;
@@ -154,8 +127,6 @@ export const IndexRouteComponent = reatomComponent(({ ctx }) => {
             <div className="flex flex-col gap-2 w-full xl:w-1/4 h-full">
               <LatestComments />
               <LatestNews />
-              {/* <LatestRegUsers /> */}
-              {/* <Online /> */}
             </div>
           )}
         </div>

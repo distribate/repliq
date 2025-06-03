@@ -71,13 +71,21 @@ const AvatarImage = reatomComponent<Pick<AvatarProps, "rounded" | "propWidth" | 
       width={propWidth}
       height={propHeight}
       data-rounded={rounded}
-      className="rounded-lg select-none data-[rounded=default]:rounded-sm"
+      className="rounded-lg aspect-square select-none data-[rounded=default]:rounded-sm"
       alt=""
     />
   ) : (
-    <div className={`flex select-none items-center bg-shark-950 justify-center`} style={{ height: `${propHeight}px`, width: `${propWidth}px`}}>
+    <div
+      className={`flex select-none items-center rounded-lg overflow-hidden bg-shark-950 justify-center`}
+      style={{ maxHeight: `${propHeight}px`, maxWidth: `${propWidth}px`, height: `${propHeight}px`, width: `${propWidth}px`, minHeight: `${propHeight}px`, minWidth: `${propWidth}px` }}
+    >
       <div className={`flex items-center justify-center w-full h-full`}>
-        <span data-state={(propHeight ?? 24) >= 42 ? "big" : "mini"} className="data-[state=mini]:text-base data-[state=big]:text-4xl uppercase font-bold text-shark-50">{nickname[0]}</span>
+        <span
+          data-state={(propHeight ?? 26) >= 56 ? "big" : "mini"}
+          className="data-[state=mini]:text-base data-[state=big]:text-4xl uppercase font-bold text-shark-50"
+        >
+          {nickname[0]}
+        </span>
       </div>
     </div>
   )

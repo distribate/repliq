@@ -2,7 +2,7 @@ import { getCookie } from "hono/cookie";
 import { createMiddleware } from "hono/factory";
 import { getUserNicknameByTokenFromKv } from "../utils/get-user-by-token-from-kv.ts";
 
-export const validateRequest = createMiddleware(async (ctx, next) => {
+export const validateRequest = () => createMiddleware(async (ctx, next) => {
   const sessionToken = getCookie(ctx, "session")
 
   if (!sessionToken) {

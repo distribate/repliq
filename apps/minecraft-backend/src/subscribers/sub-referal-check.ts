@@ -2,10 +2,13 @@ import { forumDB } from "#shared/database/forum-db.ts";
 import { callServerCommand } from "#utils/call-command.ts";
 import { validateReferal } from "#utils/validate-referal.ts";
 import { getNatsConnection } from "@repo/config-nats/nats-client";
+import { natsLogger } from "@repo/lib/utils/logger";
 import { USER_REFERAL_CHECK_SUBJECT } from "@repo/shared/constants/nats-subjects";
 
 export const subscribeRefferalCheck = () => {
   const nc = getNatsConnection()
+
+  natsLogger.success("Subscribed to refferal check")
 
   return nc.subscribe(USER_REFERAL_CHECK_SUBJECT, {
     callback: async (err, msg) => {

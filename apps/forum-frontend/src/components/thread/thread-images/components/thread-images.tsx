@@ -81,9 +81,14 @@ export const ThreadImages = reatomComponent(({ ctx }) => {
 
   return (
     <Dialog>
-      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 min-h-[200px] max-h-[200px] lg:grid-rows-1 rounded-lg overflow-hidden gap-2 bg-black/20 px-4 py-2 items-start w-full">
+      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 min-h-[200px] 
+      max-h-[200px] lg:grid-rows-1 rounded-lg overflow-hidden gap-2 bg-black/20 px-4 py-2 items-start w-full">
         {threadImages.map((image, idx) => (
-          <DialogTrigger key={idx} onClick={() => setSelectedIndex(idx)} className="flex items-center min-h-max h-full">
+          <DialogTrigger
+            key={idx}
+            onClick={() => setSelectedIndex(idx)}
+            className="flex items-center min-h-max h-full"
+          >
             <img
               src={image}
               alt=""
@@ -129,15 +134,14 @@ export const ThreadImages = reatomComponent(({ ctx }) => {
           </CarouselContent>
         </Carousel>
         <div
-          className={`flex absolute transition-all duration-150 ${hover ? "opacity-100" : "opacity-0"} items-center justify-center w-full bottom-2 z-[1000]`}
+          data-state={hover ? "hovered" : "unhovered"}
+          className="flex absolute select-none duration-300 items-center justify-center w-full bottom-2 z-[1000] 
+            data-[state=hovered]:opacity-100 data-[state=unhovered]:opacity-0"
         >
           <div className="flex flex-col gap-1 bg-black/60 backdrop-blur-sm rounded-lg py-1 px-4">
             <Typography textSize="large" className="font-semibold">
               {thread.title}
             </Typography>
-            {/* <Typography textSize="medium" textColor="gray">
-              {dayjs(thread.created_at).format("DD.MM.YYYY HH:mm")}
-            </Typography> */}
           </div>
         </div>
       </DialogContent>

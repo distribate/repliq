@@ -25,8 +25,6 @@ import { reatomComponent } from "@reatom/npm-react";
 import { CustomLink } from "#components/shared/link";
 
 const Main = reatomComponent(({ ctx }) => {
-  const handleUpdate = (to: SettingsType) => settingsSettingsTypeAtom(ctx, to)
-
   return (
     <div className="flex flex-col gap-y-4 items-center w-full">
       <Typography variant="dialogTitle">
@@ -36,17 +34,25 @@ const Main = reatomComponent(({ ctx }) => {
       <Separator />
       <div className="flex flex-col gap-y-2 w-full">
         <UserSettingOption
-          onClick={() => handleUpdate("profile")} title="Профиль" imageSrc={BookAndQuill}
+          onClick={() => settingsSettingsTypeAtom(ctx, "profile")} 
+          title="Профиль" 
+          imageSrc={BookAndQuill}
         />
         <UserSettingOption
-          onClick={() => handleUpdate("account")} title="Аккаунт" imageSrc={MinecartWithChest}
+          onClick={() => settingsSettingsTypeAtom(ctx, "account")} 
+          title="Аккаунт" 
+          imageSrc={MinecartWithChest}
         />
         <UserSettingOption
-          onClick={() => handleUpdate("other")} title="Прочее" imageSrc={Campfire}
+          onClick={() => settingsSettingsTypeAtom(ctx, "other")}
+          title="Прочее" 
+          imageSrc={Campfire}
         />
         <Separator />
         <UserSettingOption
-          onClick={() => handleUpdate("lands")} title="Мои регионы" imageSrc={GrassBlock}
+          onClick={() => settingsSettingsTypeAtom(ctx, "lands")} 
+          title="Мои регионы" 
+          imageSrc={GrassBlock}
         />
         <Separator />
         <BuyDonateModal

@@ -4,7 +4,7 @@ import { createMiddleware } from "hono/factory"
 
 const RESTRICTED_GROUPS = ["default"]
 
-export const validateUserDonateAccess = createMiddleware(async (ctx, next) => {
+export const validateUserDonateAccess = () => createMiddleware(async (ctx, next) => {
   const initiator = getNickname()
   const userDonate = await getUserDonate(initiator)
 

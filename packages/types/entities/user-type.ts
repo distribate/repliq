@@ -8,27 +8,25 @@ export type UserDetailed = Omit<Selectable<Users>,
   | "created_at"
   | "donate"
 > & {
-    birthday: string | null
-    created_at: string,
-    favorite_item: number | string | null
-    donate: DonateVariantsEnum;
-    preferences: {
-      cover_outline_visible: boolean,
-      accept_friend_request: boolean,
-      real_name_visible: boolean,
-      game_stats_visible: boolean,
-      profile_visibility: "all" | "friends",
-      send_notifications: boolean;
-      show_game_location: boolean;
-    },
-  }
+  id: string,
+  birthday: string | null
+  created_at: string,
+  favorite_item: number | string | null
+  donate: DonateVariantsEnum;
+  preferences: {
+    cover_outline_visible: boolean,
+    accept_friend_request: boolean,
+    real_name_visible: boolean,
+    game_stats_visible: boolean,
+    profile_visibility: "all" | "friends",
+    send_notifications: boolean;
+    show_game_location: boolean;
+  },
+}
 
-export type UserShorted = {
-  donate: DonateVariantsEnum,
-  nickname: string,
-  cover_image: string | null,
-  name_color: string,
-  description: string | null,
+export type UserShorted = Pick<UserDetailed,
+  "nickname" | "donate" | "description" | "cover_image" | "account_status" | "name_color" | "id"
+> & {
   preferences: {
     cover_outline_visible: boolean,
     show_game_location: boolean;

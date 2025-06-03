@@ -3,7 +3,6 @@ import AllaySpawnEgg from '@repo/assets/images/minecraft/allay_spawn_egg.webp';
 import WildArmorTrim from '@repo/assets/images/minecraft/wild_armor_trim_ыmithing_еemplate.webp';
 import FancyFeather from '@repo/assets/images/minecraft/fancy_feather.webp';
 import { Typography } from '@repo/ui/src/components/typography.tsx';
-import { HoverCardItem } from '@repo/ui/src/components/hover-card.tsx';
 import { Separator } from '@repo/ui/src/components/separator.tsx';
 import { PasswordChangeModal } from '#components/modals/user-settings/components/password-change-modal.tsx';
 import { ActiveSessionsModal } from '#components/modals/user-settings/components/active-sessions-modal.tsx';
@@ -23,6 +22,8 @@ import GoldIngot from "@repo/assets/images/minecraft/gold_ingot.webp";
 import { Skeleton } from '@repo/ui/src/components/skeleton';
 import { userActiveSessionsAction } from '../models/user-sessions.model';
 import YellowCandle from "@repo/assets/images/minecraft/yellow_candle.webp";
+import ExpNoActive from "@repo/assets/images/minecraft/exp-noactive.webp";
+import { DeleteAccountModal } from './delete-account-modal';
 
 const FriendRequest = reatomComponent(({ ctx }) => {
   const accept_friend_request = getUser(ctx).preferences.accept_friend_request
@@ -108,7 +109,8 @@ const ACCOUNT_SETTINGS_SECTIONS: Record<AccountDialog, ReactNode> = {
   email: <EmailChangeModal />,
   password: <PasswordChangeModal />,
   "black-list": <BlackListModel />,
-  sessions: <ActiveSessionsModal />
+  sessions: <ActiveSessionsModal />,
+  "delete-account": <DeleteAccountModal />
 }
 
 const SyncSessions = () => {
@@ -195,11 +197,11 @@ export const UserAccountSettingsCard = reatomComponent(({ ctx }) => {
             </div>
           </div>
           <div className="w-full">
-            <HoverCardItem className="px-4 cursor-pointer">
-              <Typography className="text-red-500" textSize="medium">
-                Удалить аккаунт
-              </Typography>
-            </HoverCardItem>
+            <UserSettingOption
+              onClick={() => navigateToDialogAction(ctx, "delete-account")}
+              title="Удалить аккаунт"
+              imageSrc={ExpNoActive}
+            />
           </div>
         </>
       )}

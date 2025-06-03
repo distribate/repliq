@@ -1,6 +1,7 @@
 import { getNatsConnection } from "@repo/config-nats/nats-client";
 import { callServerCommand } from "../utils/call-command";
 import { USER_REFERAL_REWARD_SUBJECT } from "@repo/shared/constants/nats-subjects";
+import { natsLogger } from "@repo/lib/utils/logger";
 
 type ReferalRewardPayload = {
   referrer: string,
@@ -9,6 +10,8 @@ type ReferalRewardPayload = {
 
 export const subscribeReferalReward = () => {
   const nc = getNatsConnection()
+
+  natsLogger.success("Subscribed to referal reward")
 
   return nc.subscribe(USER_REFERAL_REWARD_SUBJECT, {
     callback: async (err, msg) => {

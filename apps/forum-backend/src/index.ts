@@ -112,6 +112,11 @@ import { getUserLocationRoute } from '#routes/user/get-user-location.ts';
 import { getHealthRoute } from '#routes/public/get-health.ts';
 import { logger, natsLogger } from "@repo/lib/utils/logger.ts"
 import { timing } from 'hono/timing'
+import { getProfilesRoute } from '#routes/user/get-profiles.ts';
+import { connectProfileRoute } from '#routes/user/connect-profile.ts';
+import { deleteAccountRoute, restoreAccountRoute } from '#routes/user/delete-account.ts';
+import { getUserAvatarRoute } from '#routes/user/get-user-avatar.ts';
+import { uploadAvatarRoute } from '#routes/user/upload-avatar.ts';
 
 async function startNats() {
   await initNats()
@@ -127,7 +132,7 @@ await startNats()
 export const report = new Hono()
   .basePath('/report')
   .use(validateRequest("prevent"))
-  .use(userStatus)
+  .use(userStatus())
   .route("/", getReportRoute)
   .route("/", createReportRoute)
   .route("/", approveReportRoute)
@@ -153,7 +158,7 @@ export const shared = new Hono()
 export const admin = new Hono()
   .basePath('/admin')
   .use(validateRequest("prevent"))
-  .use(adminMiddleware)
+  .use(adminMiddleware())
   .route('/', callServerCommandRoute)
   .route("/", createAuthImageRoute)
   .route("/", getAuthImagesRoute)
@@ -166,14 +171,14 @@ export const admin = new Hono()
 export const moderator = new Hono()
   .basePath("/moderator")
   .use(validateRequest("prevent"))
-  .use(adminMiddleware)
+  .use(adminMiddleware())
   .route("/", createBanRoute)
   .route("/", createUserRestrictRoute)
 
 export const comment = new Hono()
   .basePath('/comment')
   .use(validateRequest("prevent"))
-  .use(userStatus)
+  .use(userStatus())
   .route("/", createCommentRoute)
   .route("/", replyCommentRoute)
   .route("/", disableCommentsRoute)
@@ -182,7 +187,7 @@ export const comment = new Hono()
 export const category = new Hono()
   .basePath('/categories')
   .use(validateRequest("prevent"))
-  .use(userStatus)
+  .use(userStatus())
   .route("/", getCategoriesRoute)
   .route("/", getCategoryThreadsRoute)
   .route("/", getLatestCategoryThreadsRoute)
@@ -198,7 +203,7 @@ export const thread = new Hono()
   
   // private routes
   .use(validateRequest("prevent"))
-  .use(userStatus)
+  .use(userStatus())
   .route("/", getThreadPreviewRoute)
   .route("/", removeThreadRoute)
   .route("/", updateThreadSettingsRoute)
@@ -211,7 +216,7 @@ export const thread = new Hono()
 export const post = new Hono()
   .basePath('/post')
   .use(validateRequest("prevent"))
-  .use(userStatus)
+  .use(userStatus())
   .route("/", createPostRoute)
   .route("/", deletePostRoute)
   .route("/", editPostRoute)
@@ -221,7 +226,7 @@ export const post = new Hono()
 export const reaction = new Hono()
   .basePath('/reaction')
   .use(validateRequest("prevent"))
-  .use(userStatus)
+  .use(userStatus())
   .route("/", createReactionRoute)
 
 export const user = new Hono()
@@ -234,8 +239,10 @@ export const user = new Hono()
 
   // private routes
   .use(validateRequest("prevent"))
-  .use(userStatus)
+  .use(userStatus())
   .route("/", getMeRoute)
+  .route("/", getProfilesRoute)
+  .route("/", connectProfileRoute)
   .route("/", getUserGlobalOptionsRoute)
   //--------------------------------------
 
@@ -244,6 +251,7 @@ export const user = new Hono()
   .route('/', editUserSettingsRoute)
   .route('/', editUserDetailsRoute)
   .route("/", createCoverImageRoute)
+  .route("/", uploadAvatarRoute)
   .route("/", deleteCoverImageRoute)
   //--------------------------------------
 
@@ -263,6 +271,7 @@ export const user = new Hono()
 
   // profile routes
   .route('/', getUserThreadsRoute)
+  .route("/", getUserAvatarRoute)
   .route('/', getUserPostsRoute)
   .route('/', getUserFriendsRoute)
   .route("/", getUserFavoriteItemRoute)
@@ -289,6 +298,8 @@ export const user = new Hono()
 
   // user's actions routes
   .route("/", createIssueRoute)
+  .route("/", deleteAccountRoute)
+  .route("/", restoreAccountRoute)
   //--------------------------------------
 
   // user's notifications
@@ -314,15 +325,15 @@ export const sse = new Hono()
 export const search = new Hono()
   .basePath('/search')
   .use(validateRequest("prevent"))
-  .use(userStatus)
+  .use(userStatus())
   .route("/", getSearchRoute)
 
 const app = new Hono<Env>()
   .basePath('/forum')
-  .use(corsProtectionMiddleware)
-  .use(csrfProtectionMiddleware)
-  .use(rateLimiterMiddleware)
-  .use(timeoutMiddleware)
+  .use(corsProtectionMiddleware())
+  .use(csrfProtectionMiddleware())
+  .use(rateLimiterMiddleware())
+  .use(timeoutMiddleware())
   .use(timing())
   .use(honoLogger())
   .use(contextStorage())
@@ -340,7 +351,7 @@ const app = new Hono<Env>()
   .route("/", post)
   .route("/", report)
 
-// showRoutes(app, { verbose: false });
+showRoutes(app, { verbose: false });
 
 Bun.serve({ port: Bun.env.FORUM_BACKEND_PORT!, fetch: app.fetch })
 

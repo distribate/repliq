@@ -92,6 +92,7 @@ export const controlPostAction = reatomAsync(async (ctx, values: ControlPost) =>
 
     switch (variables.type) {
       case "comments":
+        // @ts-expect-error
         return postsDataAtom(ctx, (state) => {
           if (!state) state = [];
 
