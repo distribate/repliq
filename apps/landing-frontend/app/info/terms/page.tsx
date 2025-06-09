@@ -11,7 +11,7 @@ export default async function InfoTermsPage() {
 				<div className="flex flex-col gap-y-8">
 					<div className="flex flex-col text-white text-md lg:text-lg gap-y-4 border-2 border-[#454545] hover:duration-300 duration-300 rounded-[8px] p-4">
             <Typography text_color="adaptiveWhiteBlack">
-              Настоящее Пользовательское Соглашение (далее соглашение) регулирует отношения между владельцем fasberry.su
+              Настоящее Пользовательское Соглашение (далее соглашение) регулирует отношения между владельцем mc.fasberry.su
               (далее Fasberry) с одной стороны и пользователем сайта с другой.
             </Typography>
 						<Typography text_color="adaptiveWhiteBlack">

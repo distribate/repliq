@@ -2,6 +2,7 @@ import { reatomComponent } from "@reatom/npm-react"
 import { Skeleton } from "@repo/ui/src/components/skeleton"
 import { Typography } from "@repo/ui/src/components/typography"
 import { latestNewsResource } from "./latest-news.model"
+import { MINECRAFT_SITE_DOMAIN } from "@repo/shared/constants/origin-list"
 
 export const LatestNews = reatomComponent(({ ctx }) => {
   const newsList = ctx.spy(latestNewsResource.dataAtom)
@@ -38,7 +39,7 @@ export const LatestNews = reatomComponent(({ ctx }) => {
           </div>
         ))}
       </div>
-      <a href="https://fasberry.su/news">
+      <a href={`${MINECRAFT_SITE_DOMAIN}/news`}>
         <Typography textColor="gray" className="text-[16px]">
           показать больше
         </Typography>

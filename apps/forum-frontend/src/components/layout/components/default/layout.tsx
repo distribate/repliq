@@ -20,7 +20,7 @@ export const MainLayout = reatomComponent<PropsWithChildren>(({ ctx, children })
           </ExperimentalMainLayout>
         </Suspense>
       ) : (
-        <div className="flex w-full relative min-h-screen items-center pt-4 pb-[80px] md:py-4 justify-center overflow-hidden">
+        <div className="flex w-full relative min-h-screen items-center py-2 justify-center overflow-hidden">
           <div className="flex flex-col gap-4 responsive-width h-full items-center justify-start">
             <Navbar />
             {ctx.spy(isAuthenticatedAtom) && (

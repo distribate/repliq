@@ -6,6 +6,6 @@ export default function robots(): MetadataRoute.Robots {
       userAgent: '*',
       allow: '/',
     },
-    sitemap: "https://fasberry.su/sitemap.xml",
+    sitemap: "https://mc.fasberry.su/sitemap.xml",
   }
 }

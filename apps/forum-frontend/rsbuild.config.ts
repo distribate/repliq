@@ -30,6 +30,12 @@ export default defineConfig({
       ],
     }
   },
+  resolve: {
+    alias: {
+      '@tabler/icons-react': '@tabler/icons-react/dist/esm/icons/index.mjs',
+    },
+    dedupe: ['react', 'react-dom'],
+  },
   dev: {
     lazyCompilation: true
   },
@@ -38,9 +44,9 @@ export default defineConfig({
     distPath: {
       root: process.env.NODE_ENV === 'development' ? "dist" : "build",
     },
-    // sourceMap: {
-    //   js: process.env.NODE_ENV === 'development' ? 'eval' : false,
-    // },
+    sourceMap: {
+      js: process.env.NODE_ENV === 'development' ? 'eval' : false,
+    },
   },
   server: {
     port: process.env.NODE_ENV === 'development'

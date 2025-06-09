@@ -3,8 +3,8 @@ import { router } from "#main";
 import { reatomResource, withDataAtom, withErrorAtom, withStatusesAtom } from "@reatom/async";
 import { action, atom } from "@reatom/core";
 import { sleep } from "@reatom/framework";
+import { createIdLink } from "@repo/lib/utils/create-link";
 import { forumUserClient } from "@repo/shared/api/forum-client";
-import { USER_URL } from "@repo/shared/constants/routes";
 
 async function getUserSummary(nickname: string) {
   const res = await forumUserClient.user["get-user-summary"][":nickname"].$get({ param: { nickname } });
@@ -25,7 +25,7 @@ export const controlUserCardAtom = action((ctx, value: boolean, type?: "link") =
       const target = ctx.get(userCardResource.dataAtom)?.data?.nickname
       if (!target) return;
 
-      ctx.schedule(() => router.navigate({ to: USER_URL + target }))
+      ctx.schedule(() => router.navigate({ to: createIdLink("user", target) }))
     }
 
     userCardResource.dataAtom.reset(ctx)

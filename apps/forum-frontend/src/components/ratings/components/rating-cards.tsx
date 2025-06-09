@@ -4,7 +4,7 @@ import { UserNickname } from "#components/user/name/nickname";
 import { reatomComponent } from "@reatom/npm-react";
 import dayjs from "@repo/lib/constants/dayjs-instance";
 import { getUser } from "@repo/lib/helpers/get-user";
-import { LAND_URL, USER_URL } from "@repo/shared/constants/routes";
+import { createIdLink } from "@repo/lib/utils/create-link";
 import { Typography } from "@repo/ui/src/components/typography";
 import { cva, VariantProps } from "class-variance-authority";
 import { forwardRef, HTMLAttributes } from "react";
@@ -93,7 +93,7 @@ export const RatingLandsCard = reatomComponent<RatingLandsCardProps>(({
         </Typography>
       </div>
       <div className="flex items-center gap-2">
-        <CustomLink to={LAND_URL + land}>
+        <CustomLink to={createIdLink("land", land)}>
           <Typography className="text-[18px]">
             {name}
           </Typography>
@@ -128,10 +128,10 @@ export const RatingReputationCard = reatomComponent<RatingReputationCardProps>((
         </Typography>
       </div>
       <div className="flex items-center gap-2">
-        <CustomLink to={USER_URL + nickname}>
+        <CustomLink to={createIdLink("user", nickname!)}>
           <Avatar nickname={nickname || "a"} propHeight={42} propWidth={42} />
         </CustomLink>
-        <CustomLink to={USER_URL + nickname}>
+        <CustomLink to={createIdLink("user", nickname!)}>
           <UserNickname nickname={nickname!} className="text-[18px] truncate" />
         </CustomLink>
       </div>
@@ -159,10 +159,10 @@ export const RatingCharismCard = reatomComponent<RatingCharismCardProps>(({
         </Typography>
       </div>
       <div className="flex items-center gap-2">
-        <CustomLink to={USER_URL + nickname}>
+        <CustomLink to={createIdLink("user", nickname!)}>
           <Avatar nickname={nickname || "a"} propHeight={42} propWidth={42} />
         </CustomLink>
-        <CustomLink to={USER_URL + nickname}>
+        <CustomLink to={createIdLink("user", nickname!)}>
           <UserNickname nickname={nickname!} className="text-[18px] truncate" />
         </CustomLink>
       </div>
@@ -190,10 +190,10 @@ export const RatingBelkoinCard = reatomComponent<RatingBelkoinCardProps>(({
         </Typography>
       </div>
       <div className="flex items-center gap-2">
-        <CustomLink to={USER_URL + nickname}>
+        <CustomLink to={createIdLink("user", nickname!)}>
           <Avatar nickname={nickname || "a"} propHeight={42} propWidth={42} />
         </CustomLink>
-        <CustomLink to={USER_URL + nickname}>
+        <CustomLink to={createIdLink("user", nickname!)}>
           <UserNickname nickname={nickname!} className="text-[18px] truncate" />
         </CustomLink>
       </div>
@@ -221,10 +221,10 @@ export const RatingParkourCard = reatomComponent<RatingParkourCardProps>(({
         </Typography>
       </div>
       <div className="flex items-center gap-2">
-        <CustomLink to={USER_URL + nickname}>
+        <CustomLink to={createIdLink("user", nickname!)}>
           <Avatar nickname={nickname || "a"} propHeight={42} propWidth={42} />
         </CustomLink>
-        <CustomLink to={USER_URL + nickname}>
+        <CustomLink to={createIdLink("user", nickname!)}>
           <UserNickname nickname={nickname!} className="text-[18px] truncate" />
         </CustomLink>
       </div>
@@ -257,10 +257,10 @@ export const RatingPlaytimeCard = reatomComponent<RatingPlaytimeCardProps>(({
         </Typography>
       </div>
       <div className="flex items-center gap-2">
-        <CustomLink to={USER_URL + nickname}>
+        <CustomLink to={createIdLink("user", nickname!)}>
           <Avatar nickname={nickname || "a"} propHeight={42} propWidth={42} />
         </CustomLink>
-        <CustomLink to={USER_URL + nickname}>
+        <CustomLink to={createIdLink("user", nickname!)}>
           <UserNickname nickname={nickname!} className="text-[18px] truncate" />
         </CustomLink>
       </div>

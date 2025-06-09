@@ -1,7 +1,7 @@
 import { supabase } from "#shared/supabase/supabase-client.ts";
 import { STATIC_IMAGES_BUCKET } from "@repo/shared/constants/buckets";
 import type { createMinecraftItemSchema } from "@repo/types/schemas/admin/create-minecraft-item-schema";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 type CreateMinecraftItemSchema = z.infer<typeof createMinecraftItemSchema>;
 

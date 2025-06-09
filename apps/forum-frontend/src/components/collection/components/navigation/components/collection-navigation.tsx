@@ -1,4 +1,4 @@
-import { NavigationBadge } from "#components/navigation/components/navigation-badge"
+import { NavigationBadge } from "#components/shared/navigation/components/navigation-badge"
 import { useNavigate, useSearch } from "@tanstack/react-router"
 
 export type CollectionParams = {

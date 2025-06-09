@@ -1,5 +1,6 @@
 import { requestedUserIsSameAtom } from "#components/profile/main/models/requested-user.model";
 import { reatomComponent } from "@reatom/npm-react";
+import { MINECRAFT_SITE_DOMAIN } from "@repo/shared/constants/origin-list";
 import { Button } from "@repo/ui/src/components/button";
 import { Dialog, DialogContent, DialogTrigger } from "@repo/ui/src/components/dialog";
 import { Typography } from "@repo/ui/src/components/typography";
@@ -33,7 +34,7 @@ export const ProfileSkinHowToChange = reatomComponent(({ ctx }) => {
             </Typography>
           </div>
           <div className="flex items-center w-full p-2">
-            <a href="https://fasberry.su/wiki?tab=skin" rel="noreferrer" target="_blank">
+            <a href={`${MINECRAFT_SITE_DOMAIN}/wiki?tab=skin`} rel="noreferrer" target="_blank">
               <Button state="default">
                 <Typography textSize="medium">
                   Больше о формировании скина

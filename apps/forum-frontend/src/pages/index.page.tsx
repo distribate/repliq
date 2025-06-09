@@ -1,97 +1,245 @@
-import LandingBg from "@repo/assets/images/background.webp"
-import LogotypeImage from "@repo/assets/images/logotype.png";
-import GhZwggQbMAA from '@repo/assets/images/GhZwggQbMAA-cun.webp'
-import GhWLYezW0AA6co3 from '@repo/assets/images/GhWLYezW0AA6co3.webp'
-import statue from '@repo/assets/images/8332de192322939.webp'
-import { LatestNews } from '#components/layout/components/stats/latest-news'
-import { MainCategories } from '#components/categories/components/categories-list/components/main-categories-list'
-import { lazy, Suspense } from 'react'
 import { Footer } from '#components/layout/components/default/footer'
-import { SearchWidget } from '#components/layout/components/widgets/search-widget'
-import { globalPreferencesAtom } from '@repo/lib/queries/global-preferences.model'
 import { isAuthenticatedAtom } from '@repo/lib/queries/global-option-query'
-import { MainLayout } from '#components/layout/components/default/layout'
-import { StatusWidget } from '#components/layout/components/widgets/status-widget'
-import { Skeleton } from '@repo/ui/src/components/skeleton'
 import { reatomComponent } from '@reatom/npm-react'
-import { LatestCommentsSkeleton } from '#components/templates/components/main-page-skeleton'
-import { Typography } from '@repo/ui/src/components/typography'
 import { Button } from '@repo/ui/src/components/button'
 import { useSeoMeta } from "@unhead/react";
 import { wrapTitle } from "@repo/lib/utils/wrap-title";
 import { PATHNAME } from "@repo/shared/constants/meta";
-import { isExperimentalDesignAtom } from "#components/layout/components/default/experimental-layout.model";
-import { AuthorizationButton } from "#components/layout/components/default/authorization-button";
+import { motion } from 'framer-motion'
+import { ArrowRight, Gamepad2, Globe, Heart, Sparkles, Trophy, Users, Zap } from "lucide-react";
+import { CustomLink } from "#components/shared/link";
+import Rays from "@repo/assets/images/rays.png"
+import { lazy, Suspense } from 'react';
+import { RouteSkeleton } from '#components/templates/components/route-skeleton';
 
-const AlertWidget = lazy(() => import('#components/layout/components/widgets/alert-widget').then((m) => ({ default: m.AlertWidget })))
-const Comments = lazy(() => import('#components/layout/components/stats/latest-comments').then((m) => ({ default: m.LatestComments })))
+const PrivateVariant = lazy(() => import("#components/layout/components/default/private-variant").then(m => ({ default: m.PrivateVariant })))
 
-const LatestComments = reatomComponent(({ ctx }) => {
-  if (!ctx.spy(isAuthenticatedAtom)) return null;
+const fadeInUp = {
+  hidden: { opacity: 0, y: 60 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" } }
+}
 
+const staggerContainer = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.1
+    }
+  }
+}
+
+const benefits = [
+  {
+    icon: <Zap className="w-6 h-6" />,
+    title: "Быстрый старт",
+    description: "Присоединяйся за секунды и сразу начинай творить"
+  },
+  {
+    icon: <Heart className="w-6 h-6" />,
+    title: "Бесплатно навсегда",
+    description: "Все основные функции доступны без платы"
+  },
+  {
+    icon: <Trophy className="w-6 h-6" />,
+    title: "Система достижений",
+    description: "Получай награды за активность и творчество"
+  },
+  {
+    icon: <Globe className="w-6 h-6" />,
+    title: "Мировое сообщество",
+    description: "Пользователи из более чем 50 стран"
+  }
+]
+
+const features = [
+  {
+    icon: <Sparkles className="w-8 h-8" />,
+    title: "Создавай",
+    description: "Твори уникальный контент, делись творчеством и вдохновляй других",
+    color: "from-biloba-flower-500 to-pink-500"
+  },
+  {
+    icon: <Gamepad2 className="w-8 h-8" />,
+    title: "Играй",
+    description: "Участвуй в играх, соревнованиях и интерактивных активностях",
+    color: "from-contessa-500 to-shark-500"
+  },
+  {
+    icon: <Users className="w-8 h-8" />,
+    title: "Общайся",
+    description: "Находи единомышленников и строй настоящие связи",
+    color: "from-green-500 to-green-500"
+  }
+]
+
+const PublicVariant = () => {
   return (
-    <Suspense fallback={<LatestCommentsSkeleton />}>
-      <Comments />
-    </Suspense>
-  )
-}, "LatestComments")
-
-const LandingIntro = reatomComponent(({ ctx }) => {
-  if (ctx.spy(isAuthenticatedAtom)) return null;
-
-  return (
-    <div className="flex items-center justify-center h-[500px] relative overflow-hidden w-full">
-      <img src={LandingBg} className="absolute inset-0 w-full rounded-xl object-cover h-full" />
-      <div className="flex flex-col items-center gap-6 z-[4] justify-center w-full h-full">
-        <img src={LogotypeImage} width={168} height={168} alt="" draggable={false} />
-        <div className="flex flex-col gap-2 px-2 w-full lg:w-2/3 justify-center items-center text-center">
-          <Typography className="text-xl md:text-3xl lg:text-4xl font-bold">
-            Создавай <span className="font-[Minecraft]">&nbsp;•&nbsp;</span>Играй<span className="font-[Minecraft]">&nbsp;•&nbsp;</span>Общайся
-          </Typography>
-          <Typography className="text-lg  md:text-xl font-semibold text-shark-300">
-            Обсуждай любимое, делись идеями, находи своих.
-          </Typography>
-        </div>
-        <div className="flex flex-col sm:flex-row items-center gap-2">
-          <a href="https://fasberry.su" rel="noreferrer" target="_blank">
-            <Button className="flex items-center rounded-lg border-2 border-shark-50 h-10 px-6">
-              <Typography textSize="large" className="text-shark-50 font-semibold">
-                О проекте
-              </Typography>
-            </Button>
-          </a>
-          <AuthorizationButton />
-        </div>
-      </div>
+    <div className="min-h-screen landing-background *:px-2">
+      <div className="absolute bg-center min-h-[1400px] h-full w-full !px-0" style={{ backgroundImage: `url(${Rays})` }}></div>
+      <section id="hero" className="container pt-12 mx-auto py-20 sm:py-28 relative">
+        <motion.div
+          variants={staggerContainer}
+          initial="hidden"
+          animate="visible"
+          className="text-center max-w-4xl mx-auto"
+        >
+          <motion.div variants={fadeInUp} className="flex flex-col relative items-center justify-center mb-8">
+            <div className="flex select-none 
+              items-center border w-fit rounded-lg justify-center px-2 py-0.5 mb-4 
+            bg-biloba-flower-500/20 text-biloba-flower-300 border-biloba-flower-500/30"
+            >
+              🎉 Присоединяйся к творческому сообществу
+            </div>
+            <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold text-white mb-4 leading-tight">
+              Создавай • Играй •
+              <span className="bg-gradient-to-r from-biloba-flower-400 to-pink-400 bg-clip-text text-transparent">
+                {" "}Общайся
+              </span>
+            </h1>
+            <p className="text-xl text-shark-200 mb-6 max-w-2xl mx-auto leading-relaxed">
+              Fasberry - это платформа, где творчество встречается с играми, а идеи превращаются в реальность.
+              Делись своими проектами, находи вдохновение и строй связи с единомышленниками.
+            </p>
+          </motion.div>
+          <motion.div
+            variants={fadeInUp}
+            className="flex flex-col sm:flex-row justify-center items-center space-y-4 sm:space-y-0 sm:space-x-6 mb-12"
+          >
+            <CustomLink to="/auth">
+              <Button
+                size="lg"
+                className="rounded-2xl text-shark-950 hover:text-shark-50  hover:bg-pink-600 bg-shark-50 text-lg py-4 h-auto"
+              >
+                Начать творить
+              </Button>
+            </CustomLink>
+          </motion.div>
+          <motion.div
+            variants={fadeInUp} className="grid grid-cols-3 gap-8 max-w-2xl mx-auto"
+          >
+            <div className="text-center">
+              <div className="text-3xl font-bold text-pink-300 mb-1">1К+</div>
+              <div className="text-shark-50">Участников</div>
+            </div>
+            <div className="text-center">
+              <div className="text-3xl font-bold text-pink-300 mb-1">500+</div>
+              <div className="text-shark-50">Тредов</div>
+            </div>
+            <div className="text-center">
+              <div className="text-3xl font-bold text-pink-300 mb-1">2К+</div>
+              <div className="text-shark-50">Лайков</div>
+            </div>
+          </motion.div>
+        </motion.div>
+      </section>
+      <section id="about" className="container mx-auto relative py-20 sm:py-28">
+        <motion.div
+          variants={staggerContainer}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true }}
+        >
+          <motion.div variants={fadeInUp} className="text-center mb-16">
+            <h2 className="text-4xl font-bold text-white mb-4">
+              Безграничные возможности для творчества
+            </h2>
+            <p className="text-xl text-shark-200 max-w-2xl mx-auto">
+              Fasberry предоставляет все инструменты для воплощения твоих идей в жизнь
+            </p>
+          </motion.div>
+          <div className="grid md:grid-cols-3 gap-8">
+            {features.map((feature, index) => (
+              <motion.div key={index} variants={fadeInUp}>
+                <div className="flex flex-col items-center justify-center 
+                rounded-lg px-2 py-6 bg-white/10 border border-white/20 duration-300 h-full">
+                  <div className="text-center pb-4">
+                    <div className={`w-16 h-16 mx-auto mb-4 rounded-2xl bg-gradient-to-br ${feature.color} flex items-center justify-center text-white`}>
+                      {feature.icon}
+                    </div>
+                    <p className="text-white text-xl">{feature.title}</p>
+                  </div>
+                  <div>
+                    <p className="text-biloba-flower-200 text-center leading-relaxed">
+                      {feature.description}
+                    </p>
+                  </div>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </motion.div>
+      </section>
+      <section className="container mx-auto py-20 sm:py-28">
+        <motion.div
+          variants={staggerContainer}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true }}
+        >
+          <motion.div variants={fadeInUp} className="text-center mb-16">
+            <h2 className="text-4xl font-bold text-white mb-4">
+              Почему выбирают Fasberry?
+            </h2>
+            <p className="text-xl text-shark-200 max-w-2xl mx-auto">
+              Мы создали платформу, где каждый может найти свое место и реализовать потенциал
+            </p>
+          </motion.div>
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {benefits.map((benefit, index) => (
+              <motion.div key={index} variants={fadeInUp}>
+                <div className="rounded-lg border bg-white/10 border-white/20 transition-all duration-300 h-full">
+                  <div className="p-6 text-center">
+                    <div className="w-12 h-12 mx-auto mb-4 rounded-xl bg-biloba-flower-500/20 flex items-center justify-center text-biloba-flower-400">
+                      {benefit.icon}
+                    </div>
+                    <h3 className="text-white font-semibold mb-2">{benefit.title}</h3>
+                    <p className="text-biloba-flower-200 text-sm leading-relaxed">{benefit.description}</p>
+                  </div>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </motion.div>
+      </section>
+      <section className="container mx-auto py-20 sm:py-32">
+        <motion.div
+          variants={fadeInUp}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true }}
+          className="text-center"
+        >
+          <div className="bg-gradient-to-r border rounded-lg from-biloba-flower-600/20 to-pink-600/20 border-biloba-flower-500/30 max-w-3xl mx-auto">
+            <div className="p-4 sm:p-12">
+              <h2 className="text-2xl sm:text-4xl font-bold text-white mb-4">
+                Готов присоединиться к Fasberry?
+              </h2>
+              <p className="text-base sm:text-xl text-shark-200 mb-8 leading-relaxed">
+                Начни свое творческое путешествие уже сегодня. Создай аккаунт за минуту и
+                окунись в мир безграничных возможностей.
+              </p>
+              <div className="flex flex-col sm:flex-row justify-center items-center">
+                <CustomLink to="/auth">
+                  <Button
+                    size="lg"
+                    className="bg-gradient-to-br text-wrap from-shark-50 to-shark-100 text-md sm:text-lg text-shark-950 py-2 sm:py-4 h-auto"
+                  >
+                    Создать аккаунт бесплатно
+                    <ArrowRight className="ml-2 w-5 h-5" />
+                  </Button>
+                </CustomLink>
+              </div>
+            </div>
+          </div>
+        </motion.div>
+      </section>
+      <section className="container pb-2 mx-auto">
+        <Footer />
+      </section>
     </div>
   )
-}, "LandingIntro")
-
-const Alerts = reatomComponent(({ ctx }) => {
-  if (!ctx.spy(isAuthenticatedAtom)) return null;
-
-  return (
-    ctx.spy(globalPreferencesAtom).alerts === 'show' && (
-      <Suspense fallback={<Skeleton className="w-full h-28" />}>
-        <div className="flex flex-col gap-2 w-full">
-          <AlertWidget />
-        </div>
-      </Suspense>
-    )
-  )
-}, "Alerts")
-
-const MainNavigation = reatomComponent(({ ctx }) => {
-  if (!ctx.spy(isAuthenticatedAtom)) return null;
-
-  return (
-    <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 *:h-[160px] gap-2 w-full">
-      <SearchWidget title="Найти игрока" imageSrc={statue} link="/search?type=users" />
-      <SearchWidget title="Найти тред" imageSrc={GhZwggQbMAA} link="/search?type=threads" />
-      <SearchWidget title="Найти территорию" imageSrc={GhWLYezW0AA6co3} link="/lands" />
-    </div>
-  )
-}, "MainNavigation")
+}
 
 const IndexHead = () => {
   useSeoMeta({
@@ -111,26 +259,13 @@ const IndexHead = () => {
 
 export const IndexRouteComponent = reatomComponent(({ ctx }) => {
   return (
-    <MainLayout>
+    <>
       <IndexHead />
-      <main className="flex flex-col w-full gap-2 h-full">
-        <LandingIntro />
-        <Alerts />
-        <div className="flex xl:flex-row gap-2 flex-col w-full h-full">
-          <div data-state={ctx.spy(isExperimentalDesignAtom)} className="flex flex-col w-full data-[state=false]:xl:w-3/4 gap-2 h-full">
-            <StatusWidget />
-            <MainNavigation />
-            <MainCategories />
-            <Footer />
-          </div>
-          {!ctx.spy(isExperimentalDesignAtom) && (
-            <div className="flex flex-col gap-2 w-full xl:w-1/4 h-full">
-              <LatestComments />
-              <LatestNews />
-            </div>
-          )}
-        </div>
-      </main>
-    </MainLayout>
+      {ctx.spy(isAuthenticatedAtom) ? (
+        <Suspense fallback={<RouteSkeleton />}>
+          <PrivateVariant />
+        </Suspense>
+      ) : <PublicVariant />}
+    </>
   )
-})
+}, "IndexRouteComponent")

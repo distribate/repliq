@@ -57,7 +57,7 @@ export const StatusWidget = reatomComponent(({ ctx }) => {
           <div className="flex items-center gap-2 w-full">
             <div onClick={copyClipboard} className="flex cursor-pointer bg-shark-50 text-shark-950 w-fit px-4 py-1 rounded-lg">
               <Typography className="font-semibold text-[17px]">
-                mc.fasberry.su
+                play.fasberry.su
               </Typography>
             </div>
             <div className="flex bg-shark-50 text-shark-950 w-fit px-4 py-1 rounded-lg">

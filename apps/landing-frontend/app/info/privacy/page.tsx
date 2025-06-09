@@ -1,5 +1,6 @@
 import { MainLayoutPage } from "#components/layout/default/main-layout";
 import { Typography } from "@repo/landing-ui/src/typography";
+import { MINECRAFT_SITE_DOMAIN } from "@repo/shared/constants/origin-list";
 import { MAIL_FASBERRY_SUPPORT } from "@repo/shared/wiki/data/configs";
 
 export default async function InfoPrivacyPage() {
@@ -26,7 +27,7 @@ export default async function InfoPrivacyPage() {
               </Typography>
               <Typography text_color="adaptiveWhiteBlack">
                 1.2. Настоящая политика Оператора в отношении обработки персональных данных (далее – Политика) применяется ко всей информации,
-                которую Оператор может получить о посетителях веб-сайта https://fasberry.su
+                которую Оператор может получить о посетителях веб-сайта ${MINECRAFT_SITE_DOMAIN}
               </Typography>
             </div>
           </div>
@@ -44,7 +45,7 @@ export default async function InfoPrivacyPage() {
               </Typography>
               <Typography text_color="adaptiveWhiteBlack">
                 2.3. Веб-сайт – совокупность графических и информационных материалов, а также программ для ЭВМ и баз данных,
-                обеспечивающих их доступность в сети интернет по сетевому адресу https://fasberry.su;
+                обеспечивающих их доступность в сети интернет по сетевому адресу ${MINECRAFT_SITE_DOMAIN};
               </Typography>
               <Typography text_color="adaptiveWhiteBlack">
                 2.4. Информационная система персональных данных — совокупность содержащихся в базах данных персональных данных,
@@ -68,10 +69,10 @@ export default async function InfoPrivacyPage() {
               </Typography>
               <Typography text_color="adaptiveWhiteBlack">
                 2.8. Персональные данные – любая информация, относящаяся прямо или косвенно к определенному или определяемому
-                Пользователю веб-сайта https://fasberry.su;
+                Пользователю веб-сайта ${MINECRAFT_SITE_DOMAIN};
               </Typography>
               <Typography text_color="adaptiveWhiteBlack">
-                2.9. Пользователь – любой посетитель веб-сайта https://fasberry.su;
+                2.9. Пользователь – любой посетитель веб-сайта ${MINECRAFT_SITE_DOMAIN};
               </Typography>
               <Typography text_color="adaptiveWhiteBlack">
                 2.10. Предоставление персональных данных – действия, направленные на раскрытие персональных данных определенному лицу или определенному кругу лиц;
@@ -137,7 +138,7 @@ export default async function InfoPrivacyPage() {
             <div className="flex flex-col text-white text-md lg:text-lg gap-y-4">
               <Typography text_color="adaptiveWhiteBlack">
                 5.1. Оператор обрабатывает персональные данные Пользователя только в случае их заполнения и/или отправки Пользователем самостоятельно через специальные формы,
-                расположенные на сайте https://fasberry.su. Заполняя соответствующие формы и/или отправляя свои персональные данные Оператору,
+                расположенные на сайте ${MINECRAFT_SITE_DOMAIN}. Заполняя соответствующие формы и/или отправляя свои персональные данные Оператору,
                 Пользователь выражает свое согласие с данной Политикой.
               </Typography>
               <Typography text_color="adaptiveWhiteBlack">
@@ -203,7 +204,7 @@ export default async function InfoPrivacyPage() {
                 Политика действует бессрочно до замены ее новой версией.
               </Typography>
               <Typography text_color="adaptiveWhiteBlack">
-                8.3. Актуальная версия Политики в свободном доступе расположена в сети Интернет по адресу https://fasberry.su/info/privacy.
+                8.3. Актуальная версия Политики в свободном доступе расположена в сети Интернет по адресу ${MINECRAFT_SITE_DOMAIN}/info/privacy.
               </Typography>
             </div>
           </div>

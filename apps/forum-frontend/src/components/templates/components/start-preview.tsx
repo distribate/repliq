@@ -4,6 +4,7 @@ import { useNavigate } from "@tanstack/react-router"
 import SteveNight from "@repo/assets/images/steve_night.jpg"
 import Looking from "@repo/assets/images/looking.jpg"
 import { reatomComponent } from "@reatom/npm-react"
+import { MINECRAFT_SITE_DOMAIN } from "@repo/shared/constants/origin-list"
 
 export const StartPreview = reatomComponent(({ ctx }) => {
   const isStarted = ctx.spy(isStartedAtom)
@@ -17,7 +18,7 @@ export const StartPreview = reatomComponent(({ ctx }) => {
         return navigate({ to: "/", })
       case "get-start":
         return navigate({
-          href: "https://fasberry.su/start",
+          href: `${MINECRAFT_SITE_DOMAIN}/start`,
           reloadDocument: true
         })
     }

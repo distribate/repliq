@@ -2,7 +2,7 @@ import { Ellipsis, Pen, Pin, Trash } from "lucide-react";
 import { HoverCardItem } from "@repo/ui/src/components/hover-card.tsx";
 import { Separator } from "@repo/ui/src/components/separator.tsx";
 import { DropdownWrapper } from "#components/wrappers/components/dropdown-wrapper";
-import { PostAdditionalModal } from "#components/modals/custom/components/post-additional-modal";
+import { PostAdditionalModal } from "#components/post/post-item/components/post-additional-modal";
 import { PostEntity, UserEntity } from "@repo/types/entities/entities-type.ts";
 import { controlPostAction } from "#components/post/post-item/models/control-post.model";
 import { currentUserNicknameAtom } from "@repo/lib/helpers/get-user.ts";

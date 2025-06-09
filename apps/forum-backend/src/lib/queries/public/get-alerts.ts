@@ -1,7 +1,7 @@
 import type { getAlertsSchema } from "@repo/types/schemas/alerts/get-alerts-schema.ts";
 import { forumDB } from "#shared/database/forum-db.ts"
 import { executeWithCursorPagination } from "kysely-paginate"
-import { z } from "zod"
+import { z } from "zod/v4"
 
 export const getAlerts = async ({
   cursor, limit

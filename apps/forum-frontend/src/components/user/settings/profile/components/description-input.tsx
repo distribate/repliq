@@ -1,0 +1,46 @@
+import { Input } from '@repo/ui/src/components/input.tsx';
+import { getUser } from '@repo/lib/helpers/get-user';
+import { reatomComponent } from '@reatom/npm-react';
+import { action, atom, sleep, spawn, withConcurrency, withInit } from '@reatom/framework';
+import { updateCurrentUserAction } from '../models/update-current-user.model';
+
+const descriptionValueAtom = atom<string | null>(null, "descriptionValue").pipe(withInit((ctx) => {
+  const currentDescription = getUser(ctx)?.description
+  return currentDescription ?? null
+}))
+
+const onChange = action(async (ctx, e) => {
+  const { value } = e.target;
+
+  await ctx.schedule(() => sleep(800))
+
+  if (value.length >= 46) {
+    return
+  }
+
+  descriptionValueAtom(ctx, value.length < 1 ? null : value)
+  autoSaveAction(ctx)
+}).pipe(withConcurrency())
+
+const autoSaveAction = action(async (ctx) => {
+  await sleep(50)
+
+  const value = ctx.get(descriptionValueAtom)
+
+  void spawn(ctx, async (spawnCtx) => 
+    updateCurrentUserAction(spawnCtx, { criteria: 'description', value })
+  )
+})
+
+export const DescriptionInput = reatomComponent(({ ctx }) => {
+  return (
+    <Input
+      placeholder="Описание..."
+      defaultValue={ctx.spy(descriptionValueAtom) ?? ""}
+      className="!text-base"
+      backgroundType="transparent"
+      onChange={e => onChange(ctx, e)}
+      maxLength={46}
+    />
+  );
+}, "DescriptionInput")

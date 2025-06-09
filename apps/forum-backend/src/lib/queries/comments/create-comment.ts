@@ -1,6 +1,6 @@
 import { createCommentSchema } from "@repo/types/schemas/comment/create-comment-schema.ts";
 import { forumDB } from "#shared/database/forum-db.ts"
-import type { z } from "zod"
+import type { z } from "zod/v4"
 
 type CreateComment = z.infer<typeof createCommentSchema> & {
   nickname: string

@@ -14,8 +14,8 @@ import { reatomComponent } from "@reatom/npm-react"
 import { House, Menu, Search, User } from "lucide-react"
 import { HTMLAttributes } from "react"
 import { useLocation } from "@tanstack/react-router"
-import { USER_URL } from "@repo/shared/constants/routes"
 import { Separator } from "@repo/ui/src/components/separator"
+import { createIdLink } from "@repo/lib/utils/create-link"
 
 const sheetMenuIsOpenAtom = atom(false, "sheetMenuIsOpen")
 
@@ -44,8 +44,8 @@ export const BottomBar = reatomComponent(({ ctx }) => {
           <Search size={24} />
         </CustomLink>
         <CustomLink
-          to={USER_URL + ctx.spy(currentUserNicknameAtom)}
-          data-state={path === USER_URL + ctx.spy(currentUserNicknameAtom)}
+          to={createIdLink("user", ctx.spy(currentUserNicknameAtom)!)}
+          data-state={path === createIdLink("user", ctx.spy(currentUserNicknameAtom)!)}
           className="text-shark-300 data-[state=true]:text-biloba-flower-500"
         >
           <User size={24} />
@@ -87,14 +87,6 @@ export const SheetMenu = reatomComponent(({ ctx }) => {
           <SidebarMobileButton
             titleButton="Ивенты"
             func={() => handle(router.navigate({ to: "/events" }))}
-          />
-          <SidebarMobileButton
-            titleButton="Рейтинг"
-            func={() => handle(router.navigate({ to: "/ratings" }))}
-          />
-          <SidebarMobileButton
-            titleButton="Территории"
-            func={() => handle(router.navigate({ to: "/lands" }))}
           />
           <SidebarMobileButton
             titleButton="Коллекции"

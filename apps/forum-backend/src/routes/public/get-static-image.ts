@@ -2,7 +2,7 @@ import { getPublicUrl } from "#utils/get-public-url.ts";
 import { zValidator } from "@hono/zod-validator";
 import { throwError } from "@repo/lib/helpers/throw-error";
 import { Hono } from "hono";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 const getStaticImageSchema = z.object({
   bucket: z.string(),

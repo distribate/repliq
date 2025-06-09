@@ -7,7 +7,7 @@ import { processDonatePayment } from "#utils/process-donate-payment.ts"
 import { processBelkoinPayment } from "#utils/process-belkoin-payment.ts"
 import { natsLogger } from "@repo/lib/utils/logger"
 
-const receiveFiatPayload = paymentMetaSchema.superRefine((data, ctx) => paymentTypeValidator({ data, ctx }))
+const receiveFiatPayload = paymentMetaSchema.check((ctx) => paymentTypeValidator({ data: ctx.value, ctx: ctx }))
 
 export const subscribeReceiveFiatPayment = () => {
   const nc = getNatsConnection()

@@ -1,6 +1,6 @@
 import { forumDB } from "#shared/database/forum-db.ts"
 import type { createIssueSchema } from "@repo/types/schemas/issue/create-issue-schema"
-import type { z } from "zod"
+import type { z } from "zod/v4"
 
 type CreateIssue = z.infer<typeof createIssueSchema> & {
   nickname: string

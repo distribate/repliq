@@ -5,7 +5,7 @@ import { reatomAsync, take, withReset, withStatusesAtom } from "@reatom/framewor
 import { UserEntity } from "@repo/types/entities/entities-type"
 import { FriendWithDetails, GetFriendsResponse } from "@repo/types/schemas/friend/friend-types"
 import { getUserFriendsSchema } from "@repo/types/schemas/user/get-user-friends-schema"
-import { z } from "zod"
+import { z } from "zod/v4"
 
 export type GetFriends = Pick<UserEntity, "nickname"> & z.infer<typeof getUserFriendsSchema>
 

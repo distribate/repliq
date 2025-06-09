@@ -2,7 +2,6 @@ import { Typography } from "@repo/ui/src/components/typography.tsx";
 import { searchTypeParamAtom, threadRelatedAction, usersRelatedAction } from "#components/search/models/search-related.model";
 import { Skeleton } from "@repo/ui/src/components/skeleton.tsx";
 import { Button } from "@repo/ui/src/components/button.tsx";
-import { THREAD_URL, USER_URL } from "@repo/shared/constants/routes.ts";
 import { Avatar } from "#components/user/avatar/components/avatar.tsx";
 import { UserNickname } from "#components/user/name/nickname";
 import { reatomComponent } from "@reatom/npm-react";
@@ -10,6 +9,7 @@ import { CustomLink } from "#components/shared/link";
 import { FriendButton } from "#components/friend/components/friend-button/components/friend-button";
 import { SearchThreadsCategories } from "./search-threads-categories";
 import { threadPreviewAtom } from "#components/thread/thread-main/models/thread.model";
+import { createIdLink } from "@repo/lib/utils/create-link";
 
 const SearchPageRelatedSkeleton = () => {
   return (
@@ -26,11 +26,11 @@ const SearchPageRelatedSkeleton = () => {
 const RelatedUser = ({ nickname }: { nickname: string }) => {
   return (
     <div className="flex flex-col group gap-2 overflow-hidden justify-between items-center lg:h-[280px] friend-card">
-      <CustomLink to={USER_URL + nickname} className="size-16 md:size-20 lg:size-[128px]">
+      <CustomLink to={createIdLink("user", nickname)} className="size-16 md:size-20 lg:size-[128px]">
         <Avatar nickname={nickname} propWidth={128} propHeight={128} />
       </CustomLink>
       <div className="flex flex-col items-start gap-1 w-full justify-start">
-        <CustomLink to={USER_URL + nickname}>
+        <CustomLink to={createIdLink("user", nickname)}>
           <UserNickname nickname={nickname} className="truncate" />
         </CustomLink>
       </div>
@@ -53,7 +53,7 @@ const RelatedThread = reatomComponent<{ id: string, title: string, description: 
         </div>
       )}
       <CustomLink
-        to={THREAD_URL + id}
+        to={createIdLink("thread", id)}
         onClick={() => threadPreviewAtom(ctx, { id, title })}
         className="flex items-center w-full"
       >

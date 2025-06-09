@@ -6,6 +6,7 @@ import { Block } from "@repo/landing-ui/src/block";
 import Image from "next/image";
 import Link from "next/link";
 import { Button } from "@repo/landing-ui/src/button";
+import { MINECRAFT_SITE_DOMAIN } from "@repo/shared/constants/origin-list";
 
 export const metadata = {
 	title: "Поддержка",
@@ -22,17 +23,17 @@ export const metadata = {
 		"разработка Fasberry",
 	],
 	robots: "index, follow",
-	canonical: "https://fasberry.su/support",
+	canonical: `${MINECRAFT_SITE_DOMAIN}/support`,
 	openGraph: {
 		siteName: "Поддержка проекта Fasberry",
 		title: "Поддержка проекта Fasberry",
 		description:
 			"Станьте частью нашего проекта Fasberry, поддержав нас! Ваши пожертвования помогают развивать сервера и создавать новый контент.",
-		url: "https://example.com/support",
+		url: `${MINECRAFT_SITE_DOMAIN}/support`,
 		type: "website",
 		images: [
 			{
-				url: "https://fasberry.su/images/community/dragon_dead.webp",
+				url: "https://mc.fasberry.su/images/community/dragon_dead.webp",
 				alt: "Поддержка Fasberry проекта",
 				width: 1200,
 				height: 630,
@@ -44,7 +45,7 @@ export const metadata = {
 		title: "Поддержка Fasberry проекта",
 		description:
 			"Присоединяйтесь к сообществу Fasberry и помогайте нам развиваться! Ваша поддержка имеет значение.",
-		images: ["https://fasberry.su/images/community/dragon_dead.webp"],
+		images: ["https://mc.fasberry.su/images/community/dragon_dead.webp"],
 	},
 }
 
@@ -178,14 +179,14 @@ export default async function SupportPage() {
 								Я думаю хороший обмен.
 							</Typography>
 							<div className="flex flex-col lg:flex-row justify-start w-full gap-x-4 mt-4 gap-y-2">
-								<Link href="https://telegram.me/share/url?url=https%3A%2F%2Ffasberry.su&text=" target="_blank">
+								<Link href="https://telegram.me/share/url?url=https%3A%2F%2Fmc.fasberry.su&text=" target="_blank">
 									<div className="flex justify-between items-center button px-4 py-1">
 										<Typography text_color="white" size="xl">
 											Поделиться в телеграмме
 										</Typography>
 									</div>
 								</Link>
-								<Link href="https://vk.com/share.php?url=https%3A%2F%2Ffasberry.su&title=" target="_blank">
+								<Link href="https://vk.com/share.php?url=https%3A%2F%2Fmc.fasberry.su&title=" target="_blank">
 									<div className="flex justify-between items-center button px-4 py-1">
 										<Typography text_color="white" size="xl">
 											Поделиться во вконтакте

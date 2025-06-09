@@ -9,11 +9,11 @@ import { Avatar } from "#components/user/avatar/components/avatar";
 import { useNavigate } from "@tanstack/react-router";
 import { HTMLAttributes } from "react";
 import dayjs from "@repo/lib/constants/dayjs-instance"
-import { USER_URL } from "@repo/shared/constants/routes";
 import { Separator } from "@repo/ui/src/components/separator";
 import { reatomComponent } from "@reatom/npm-react";
 import { onConnect } from "@reatom/framework";
 import { CustomLink } from "#components/shared/link";
+import { createIdLink } from "@repo/lib/utils/create-link";
 
 type AccountStatSectionProps = {
   title: string,
@@ -83,11 +83,11 @@ export const ProfileAccountStatsPlayers = ({
               {details.map((item, idx) =>
                 <div key={idx} className="flex bg-shark-800 p-2 rounded-lg w-full items-center justify-between">
                   <div className="flex items-center gap-2">
-                    <CustomLink to={USER_URL + item.initiator}>
+                    <CustomLink to={createIdLink("user", item.initiator)}>
                       <Avatar nickname={item.initiator} propWidth={36} propHeight={36} />
                     </CustomLink>
                     <div className="flex flex-col">
-                      <CustomLink to={USER_URL + item.initiator}>
+                      <CustomLink to={createIdLink("user", item.initiator)}>
                         <Typography className="text-base text-shark-50">
                           {item.initiator}
                         </Typography>

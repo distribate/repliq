@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { z } from "zod/v4";
 import { ISSUE_MAX_DESCRIPTION_LIMIT } from "../../../shared/constants/limits.ts";
 
 export const createIssueSchema = z.object({

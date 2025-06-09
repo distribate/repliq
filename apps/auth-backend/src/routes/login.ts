@@ -16,6 +16,7 @@ import { validateAuthenticationRequest } from "../lib/validators/validate-authen
 import { logger } from "@repo/lib/utils/logger.ts";
 import { validateExistsUser } from "../lib/validators/validate-exists-user.ts";
 import { encodeBase32LowerCaseNoPadding } from "@oslojs/encoding";
+import { UAParser } from "ua-parser-js"
 
 export type SessionValidationResult =
   | { session: Session; user: User }
@@ -58,9 +59,15 @@ function generateSessionToken(): string {
 
 export const loginRoute = new Hono()
   .post("/login", zValidator("json", createSessionBodySchema), async (ctx) => {
+    const { nickname, password, token: cfToken } = createSessionBodySchema.parse(await ctx.req.json())
+
     const { 
-      browser, cpu, device, os, ua, nickname, password, token: cfToken 
-    } = createSessionBodySchema.parse(await ctx.req.json())
+      browser: { name: browserName }, 
+      os: { name: osName }, 
+      cpu: { architecture: cpuArch }, 
+      device: { model: deviceModel },
+      ua 
+    } = UAParser(ctx.req.header("User-Agent"))
 
     await validateAuthenticationRequest({ ctx, token: cfToken })
 
@@ -91,7 +98,13 @@ export const loginRoute = new Hono()
 
     try {
       const createdSession = await createSessionTransaction({
-        token, nickname, browser, cpu, device, os, ua, ip
+        token, nickname, 
+        browser: browserName || "Unknown",
+        cpu: cpuArch || "Unknown",
+        device: deviceModel || "Unknown", 
+        os: osName || "Unknown", 
+        ua, 
+        ip
       })
 
       const expires = new Date(createdSession.expires_at)

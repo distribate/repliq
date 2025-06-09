@@ -1,4 +1,4 @@
-import { NavigationBadge } from "#components/navigation/components/navigation-badge.tsx"
+import { NavigationBadge } from "#components/shared/navigation/components/navigation-badge"
 import { notificationsFilterAtom, NotificationsFilterQuery } from "#components/notifications/models/notifications.model"
 import { reatomComponent } from "@reatom/npm-react"
 import { updateNotificationsAction } from "../models/notifications.model"

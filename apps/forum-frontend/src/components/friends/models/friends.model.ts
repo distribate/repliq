@@ -4,7 +4,7 @@ import { FriendWithDetails, GetFriendsResponse } from "@repo/types/schemas/frien
 import { sleep, take, withReset } from "@reatom/framework";
 import { UserEntity } from "@repo/types/entities/entities-type.ts";
 import { forumUserClient } from "@repo/shared/api/forum-client";
-import { z } from "zod";
+import { z } from "zod/v4";
 import { getUserFriendsSchema } from "@repo/types/schemas/user/get-user-friends-schema";
 import { decode } from "cbor-x"
 import ky from "ky";

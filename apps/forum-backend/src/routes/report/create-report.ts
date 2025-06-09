@@ -5,7 +5,7 @@ import { throwError } from "@repo/lib/helpers/throw-error";
 import type { ReportReason, Reports, ReportType } from "@repo/types/db/forum-database-types";
 import { Hono } from "hono";
 import type { Insertable } from "kysely";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 type CreateReport = Omit<Insertable<Reports>, "id" | "created_at">
 

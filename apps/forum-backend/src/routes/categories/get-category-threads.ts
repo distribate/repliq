@@ -1,7 +1,7 @@
 import { getThreadsCategories } from "#lib/queries/categories/get-category-threads.ts";
 import { zValidator } from "@hono/zod-validator";
 import { Hono } from "hono";
-import { z } from "zod";
+import { z } from "zod/v4";
 import { throwError } from '@repo/lib/helpers/throw-error.ts';
 
 export const getCategoryThreadsSchema = z.object({
@@ -12,7 +12,7 @@ export const getCategoryThreadsSchema = z.object({
 
 export const getCategoryThreadsRoute = new Hono()
   .get("/get-category-threads/:id", zValidator("query", getCategoryThreadsSchema), async (ctx) => {
-    const { id } = ctx.req.param();
+    const id = ctx.req.param("id");
     const { limit, cursor, ascending } = getCategoryThreadsSchema.parse(ctx.req.query());
 
     try {

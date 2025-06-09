@@ -5,6 +5,7 @@ import FutureChickenMini from "@repo/assets/images/minecraft/future_chicken_mini
 import { reatomComponent } from '@reatom/npm-react'
 import { getUser } from '@repo/lib/helpers/get-user'
 import { CustomLink } from '#components/shared/link'
+import { MINECRAFT_SITE_DOMAIN } from '@repo/shared/constants/origin-list'
 
 const Page = reatomComponent(({ ctx }) => {
   const donate = getUser(ctx).donate
@@ -30,7 +31,7 @@ const NoAccessDashboard = () => {
         Приобретите любую привилегию на сервере, чтобы открыть доступ к статистике своего профиля!
       </Typography>
       <a
-        href="https://fasberry.su/shop"
+        href={`${MINECRAFT_SITE_DOMAIN}/shop`}
         target="_blank"
         rel="noreferrer"
         className="flex items-center justify-center w-fit py-2 bg-green-600 px-6 rounded-lg"

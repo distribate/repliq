@@ -3,6 +3,7 @@ import { NewsPageList } from "#components/news/news-page-list";
 import { Typography } from "@repo/landing-ui/src/typography";
 import { NewsPageSearch } from "#components/news/news-page-search";
 import { NewsPageListInView } from "#components/news/news-page-list-scroller";
+import { MINECRAFT_SITE_DOMAIN } from "@repo/shared/constants/origin-list";
 
 export const metadata = {
 	title: "Новости",
@@ -18,17 +19,17 @@ export const metadata = {
 	],
 	author: "Fasberry Server Team",
 	robots: "index, follow",
-	canonical: "https://fasberry.su/news",
+	canonical: `${MINECRAFT_SITE_DOMAIN}/news`,
 	openGraph: {
 		siteName: "Новости сервера Fasberry",
 		title: "Новости сервера Fasberry",
 		description:
 			"Последние новости и обновления с нашего сервера Fasberry. Узнайте о новых возможностях и ивентах!",
-		url: "https://fasberry.su/news",
+		url: `${MINECRAFT_SITE_DOMAIN}/news`,
 		type: "website",
 		images: [
 			{
-				url: "https://fasberry.su/images/backgrounds/bees.jpg",
+				url: "https://mc.fasberry.su/images/backgrounds/bees.jpg",
 				alt: "Новости сервера Fasberry",
 				width: 1200,
 				height: 630,
@@ -40,7 +41,7 @@ export const metadata = {
 		title: "Новости сервера Fasberry | Обновления и события",
 		description:
 			"Следите за всеми важными обновлениями и мероприятиями на нашем сервере Fasberry. Не пропустите интересные события!",
-		images: ["https://fasberry.su/images/backgrounds/bees.jpg"],
+		images: ["https://mc.fasberry.su/images/backgrounds/bees.jpg"],
 	},
 }
 

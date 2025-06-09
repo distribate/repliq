@@ -5,7 +5,13 @@
 @layer base {
   @font-face {
     font-family: "Minecraft";
-    src: url("../public/fonts/Monocraft.woff2");
+    src: url("../../../packages/assets/fonts/Monocraft.woff2");
+    font-display: swap;
+  }
+
+  @font-face {
+    font-family: "Pixy";
+    src: url("../../../packages/assets/fonts/PIXY.woff2");
     font-display: swap;
   }
 
@@ -102,7 +108,7 @@
   }
 
   .biloba-background {
-    @apply bg-gradient-to-r from-biloba-flower-950/40 via-biloba-flower-950/60 to-biloba-flower-950/40;
+    @apply bg-gradient-to-r border border-pink-400/20 from-pink-950/40 via-pink-950/60 to-pink-950/40;
   }
 }
 
@@ -112,5 +118,10 @@
     --tw-gradient-from: theme('colors.biloba-flower.500');
     --tw-gradient-to: transparent;
     --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to);
+  }
+
+  .landing-background {
+    background: #E51951;
+    background: linear-gradient(356deg, rgba(229, 25, 81, 0.15) 10%, rgba(120, 29, 54, 0.18) 27%, rgba(31, 31, 31, 1) 80%);
   }
 }

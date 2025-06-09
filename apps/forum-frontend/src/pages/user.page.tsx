@@ -4,11 +4,12 @@ import { requestedUserAtom } from '#components/profile/main/models/requested-use
 import { reatomComponent } from '@reatom/npm-react'
 import { Head, useSeoMeta } from '@unhead/react'
 import { wrapTitle } from "@repo/lib/utils/wrap-title"
-import { USER_URL } from '@repo/shared/constants/routes'
 import { avatarAtom } from '#components/user/avatar/models/avatar.model'
 import { KEYWORDS, PATHNAME } from '@repo/shared/constants/meta'
+import { createIdLink } from '@repo/lib/utils/create-link'
+import { FORUM_SITE_DOMAIN } from '@repo/shared/constants/origin-list'
 
-const AVATAR_FALLBACK = "https://hub.fasberry.su/images/avatar-steve.png"
+const AVATAR_FALLBACK = `${FORUM_SITE_DOMAIN}/images/avatar-steve.png`
 
 const userDescription = (nickname?: string, description?: string | null) => 
   `Профиль игрока ${nickname}. ${description ? `О себе: ${description}` : null}`
@@ -24,7 +25,7 @@ const UserHead = reatomComponent(({ ctx }) => {
     description: userDescription(user?.nickname, user?.description),
     ogTitle: wrapTitle(user?.nickname),
     ogDescription: userDescription(user?.nickname, user?.description),
-    ogUrl: PATHNAME + USER_URL + user?.nickname,
+    ogUrl: PATHNAME + createIdLink("user", user?.nickname!),
     twitterTitle: wrapTitle(user?.nickname),
     twitterDescription: userDescription(user?.nickname, user?.description),
     ogImage: {

@@ -14,8 +14,8 @@ import { DropdownWrapper } from '#components/wrappers/components/dropdown-wrappe
 import { Ellipsis } from "lucide-react";
 import { HoverCardItem } from "@repo/ui/src/components/hover-card.tsx";
 import { UserCardModal } from '#components/modals/custom/components/user-card-modal.tsx';
-import { USER_URL } from "@repo/shared/constants/routes.ts";
 import { deleteFromBlockedAction } from "../models/blocked.model.ts";
+import { createIdLink } from "@repo/lib/utils/create-link.ts";
 
 type UserBlockedCardProps = Pick<UserEntity, "nickname" | "name_color"> & {
   time: string;
@@ -55,7 +55,7 @@ const UserBlockedCard = reatomComponent<UserBlockedCardProps>(({ ctx, name_color
                 <Typography>Удалить из черного списка</Typography>
               </HoverCardItem>
               <Separator />
-              <HoverCardItem onClick={() => navigate({ to: USER_URL + nickname })}>
+              <HoverCardItem onClick={() => navigate({ to: createIdLink("user", nickname) })}>
                 <Typography>Перейти к профилю</Typography>
               </HoverCardItem>
               <UserCardModal nickname={nickname} />

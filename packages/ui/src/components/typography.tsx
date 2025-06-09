@@ -13,6 +13,7 @@ const typographyVariants = cva("whitespace-wrap", {
     },
     font: {
       default: "",
+      pixy: "font-[Pixy]",
       minecraft: "font-[Minecraft]",
     },
     textSize: {

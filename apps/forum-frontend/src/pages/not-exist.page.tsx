@@ -2,10 +2,10 @@ import { PageWrapper } from '#components/wrappers/components/page-wrapper'
 import AdventureInBlossom from '@repo/assets/images/adventure-in-blossom.jpg'
 import Compass from '@repo/assets/images/minecraft/compass.webp'
 import Spyglass from '@repo/assets/images/minecraft/spyglass.webp'
-import { USER_URL } from '@repo/shared/constants/routes'
 import { UserNotExistCounter } from '#components/templates/components/user-not-exist-counter'
 import { CustomLink } from '#components/shared/link'
 import { notExistRoute } from '#routes/public-routes'
+import { createIdLink } from '@repo/lib/utils/create-link'
 
 export function NotExistRouteComponent() {
   const params = notExistRoute.useSearch() as {
@@ -46,7 +46,7 @@ export function NotExistRouteComponent() {
             </div>
           </CustomLink>
           <span>|</span>
-          <CustomLink to={USER_URL + redirect_nickname}>
+          <CustomLink to={createIdLink("user", redirect_nickname)}>
             <div className="flex px-3 gap-1 cursor-pointer items-center hover:bg-secondary-color transition-all duration-150 ease-in max-h-[42px]">
               <img
                 src={Spyglass}

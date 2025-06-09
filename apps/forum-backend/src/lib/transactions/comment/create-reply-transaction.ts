@@ -1,6 +1,6 @@
 import { forumDB } from "#shared/database/forum-db.ts";
 import type { replyCommentBodySchema } from "@repo/types/routes-types/reply-comment";
-import type { z } from "zod";
+import type { z } from "zod/v4";
 
 type CreateReply = z.infer<typeof replyCommentBodySchema> & {
   nickname: string

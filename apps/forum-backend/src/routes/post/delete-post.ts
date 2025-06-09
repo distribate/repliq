@@ -4,7 +4,7 @@ import { validatePostOwner } from "#lib/validators/validate-post-owner.ts";
 import { zValidator } from "@hono/zod-validator";
 import { throwError } from "@repo/lib/helpers/throw-error";
 import { Hono } from "hono";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 const deletePostSchema = z.object({
   id: z.string()

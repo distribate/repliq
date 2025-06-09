@@ -9,6 +9,7 @@ import { StatusItem } from '#components/intro/status-item';
 import { Button } from '@repo/landing-ui/src/button';
 import { SpawnCarousel } from '#components/intro/spawn-carousel';
 import dynamic from 'next/dynamic';
+import { MINECRAFT_SITE_DOMAIN } from "@repo/shared/constants/origin-list";
 
 const ContactsSection = dynamic(() => import('#components/contacts/contacts-section').then(m => m.ContactsSection));
 
@@ -31,17 +32,17 @@ export const metadata = {
   ],
   author: "Fasberry Server Team",
   robots: "index, follow",
-  canonical: "https://fasberry.su/",
+  canonical: MINECRAFT_SITE_DOMAIN,
   openGraph: {
     siteName: "Fasberry Project",
     title: "Fasberry Project",
     description:
       "На нашем Fasberry-сервере ты найдешь всё: новые вещи, уникальные квесты и ламповую атмосферу. Присоединяйся прямо сейчас!",
-    url: "https://fasberry.su/",
+    url: MINECRAFT_SITE_DOMAIN,
     type: "website",
     images: [
       {
-        url: "https://fasberry.su/images/backgrounds/donate_background.png",
+        url: "https://mc.fasberry.su/images/backgrounds/donate_background.png",
         alt: "Fasberry сервер - лучший выбор",
         width: 1200,
         height: 630,
@@ -53,7 +54,7 @@ export const metadata = {
     title: "Fasberry Сервер | Присоединяйся к лучшим",
     description:
       "Стань частью нашего Minecraft-сервера. Уникальные миры, незабываемые приключения и дружелюбные игроки ждут тебя!",
-    images: ["https://fasberry.su/images/backgrounds/donate_background.png"],
+    images: ["https://mc.fasberry.su/images/backgrounds/donate_background.png"],
   },
 };
 

@@ -1,5 +1,5 @@
 import { Hono } from "hono";
-import { z } from "zod";
+import { z } from "zod/v4";
 import { zValidator } from "@hono/zod-validator";
 import { deleteSessionToken } from "../utils/delete-session-token";
 import type { Env } from "../types/env-type";
@@ -13,10 +13,9 @@ import { forumDB } from "../shared/database/forum-db";
 const terminateSessionBodySchema = z.object({
   selectedSessionId: z.string().min(6).optional(),
   type: z.enum(["single", "all"])
-}).refine(
-  (data) => (data.type === "single" && !!data.selectedSessionId) || (data.type === "all" && !data.selectedSessionId),
+}).refine((data) => (data.type === "single" && !!data.selectedSessionId) || (data.type === "all" && !data.selectedSessionId),
   {
-    message: "selectedSessionId must be provided for 'single' and must be undefined for 'all'",
+    error: "selectedSessionId must be provided for 'single' and must be undefined for 'all'",
     path: ["selectedSessionId"],
   }
 );
@@ -66,11 +65,11 @@ export const terminateSessionRoute = new Hono<Env>()
             return ctx.json({ error: "Session not terminated" }, 500)
           }
 
-          return ctx.json({ 
-            status: "Success", 
-            meta: { 
-              is_current: selectedSessionId === currentSessionId 
-            } 
+          return ctx.json({
+            status: "Success",
+            meta: {
+              is_current: selectedSessionId === currentSessionId
+            }
           }, 200)
         case "all":
           // @ts-ignore

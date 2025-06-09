@@ -1,6 +1,6 @@
 import { REACTIONS } from "@repo/shared/constants/emojis";
 import { ThreadReactionsSkeleton } from "./thread-reactions-skeleton";
-import { ThreadReactionItem } from "./thread-reaction-item";
+import { ReactionItem } from "../../../reactions/components/reaction-item";
 import { reatomComponent } from "@reatom/npm-react";
 import { threadReactionsAction } from "../models/thread-reactions.model";
 import { threadParamAtom } from "#components/thread/thread-main/models/thread.model";
@@ -26,7 +26,7 @@ const Reactions = reatomComponent(({ ctx }) => {
           const Icon = REACTIONS[emojiName];
 
           return (
-            <ThreadReactionItem
+            <ReactionItem
               key={emojiName}
               isLiked={isLiked}
               threadId={threadId}

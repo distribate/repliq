@@ -1,11 +1,14 @@
 import { Typography } from "@repo/ui/src/components/typography"
 import Logotype from "@repo/assets/images/logotype.png"
+import { STATUS_SITE_DOMAIN } from "@repo/shared/constants/origin-list"
+import { CustomLink } from "#components/shared/link"
+import { useNavigate } from "@tanstack/react-router"
 
 const LINKS = [
-  { label: "Статус", href: "https://status.fasberry.su", },
-  { label: "Новости", href: "https://fasberry.su/news", },
-  { label: "Помощь", href: "https://fasberry.su/help", },
-  { label: "Вики", href: "https://fasberry.su/wiki", }
+  { label: "Статус", href: STATUS_SITE_DOMAIN, },
+  // { label: "Новости", href: `${MINECRAFT_SITE_DOMAIN}/news`, },
+  // { label: "Помощь", href: `${MINECRAFT_SITE_DOMAIN}/help`, },
+  // { label: "Вики", href: `${MINECRAFT_SITE_DOMAIN}/wiki`, }
 ]
 
 export const SOCIALS = [
@@ -14,29 +17,39 @@ export const SOCIALS = [
 ]
 
 const FooterItem = ({ href, label }: { href: string, label: string }) => {
+  const navigate = useNavigate()
+
   return (
-    <a id={label} href={href} rel="noreferrer" target="_blank" className="group">
+    <span
+      onClick={() =>
+        navigate({
+          href: href,
+          reloadDocument: true,
+        })
+      }
+      className="group cursor-pointer"
+    >
       <Typography
         className="group-hover:underline group-hover:underline-offset-4 decoration-shark-100 text-base truncate text-shark-100"
       >
         {label}
       </Typography>
-    </a>
+    </span>
   )
 }
 
 export const Footer = () => {
   return (
-    <div id="footer" className="hidden lg:block biloba-background max-h-[180px] w-full rounded-xl overflow-hidden relative">
-      <div className="flex items-start justify-center px-12 py-4 gap-4 bg-white/10 backdrop-blur-md h-full w-full">
-        <a rel="noreferrer" href="https://fasberry.su" className="flex items-end gap-1 w-2/5">
-          <img src={Logotype} alt="" width={36} height={36} loading="lazy" />
-          <Typography className="text-3xl font-[Minecraft]">
+    <div id="footer" className="block biloba-background lg:max-h-[180px] w-full rounded-xl overflow-hidden relative">
+      <div className="flex flex-col lg:flex-row items-start lg:justify-center px-4 lg:px-12 py-4 gap-4 bg-white/10 backdrop-blur-md h-full w-full">
+        <CustomLink to="/" className="flex items-end gap-1 w-full lg:w-2/5">
+          <img src={Logotype} alt="" width={32} height={32} loading="lazy" />
+          <Typography textSize="very_big" font="pixy">
             Fasberry
           </Typography>
-        </a>
-        <div className="flex items-start justify-between w-3/5 *:w-full">
-          <div className="flex flex-col gap-2 items-start justify-start">
+        </CustomLink>
+        <div className="flex flex-col gap-4 lg:gap-0 lg:flex-row items-start justify-between w-full lg:w-3/5 *:w-full">
+          <div className="flex flex-col gap-1 lg:gap-2 items-start justify-start">
             <Typography className="font-semibold text-lg truncate">
               Ресурсы
             </Typography>
@@ -44,7 +57,7 @@ export const Footer = () => {
               {LINKS.map(link => <FooterItem key={link.label} {...link} />)}
             </div>
           </div>
-          <div className="flex flex-col gap-2 items-start justify-start">
+          <div className="flex flex-col gap-1 lg:gap-2 items-start justify-start">
             <Typography className="font-semibold text-lg truncate">
               Социальные сети
             </Typography>

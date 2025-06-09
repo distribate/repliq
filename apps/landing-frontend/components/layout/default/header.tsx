@@ -13,6 +13,7 @@ import { ComponentPropsWithRef } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { Avatar } from '#components/header/avatar/components/avatar';
 import { getCookieByKey } from "@repo/lib/helpers/get-cookie-by-key"
+import { FORUM_SITE_DOMAIN } from '@repo/shared/constants/origin-list';
 
 const ThemeToggle = dynamic(
 	() =>
@@ -63,7 +64,7 @@ export const headerUserQuery = () => useQuery({
 
 const HeaderUser = ({ nickname }: { nickname: string }) => {
 	return (
-		<Link href={`https://hub.fasberry.su/user/${nickname}`} className="w-[38px] h-[38px] overflow-hidden rounded-md border border-neutral-400">
+		<Link href={`${FORUM_SITE_DOMAIN}/user/${nickname}`} className="w-[38px] h-[38px] overflow-hidden rounded-md border border-neutral-400">
 			<Avatar nickname={nickname} propHeight={38} propWidth={38} />
 		</Link>
 	)
@@ -179,7 +180,7 @@ export const Header = () => {
 					<HeaderUser nickname={nickname} />
 				) : (
 					<SuperLink
-						href="https://hub.fasberry.su"
+						href={FORUM_SITE_DOMAIN}
 						className="flex items-center gap-1 cursor-pointer"
 					>
 						<Typography

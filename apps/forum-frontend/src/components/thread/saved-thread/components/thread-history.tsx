@@ -2,9 +2,9 @@ import { X } from "lucide-react";
 import { Avatar } from "#components/user/avatar/components/avatar.tsx";
 import { Typography } from "@repo/ui/src/components/typography.tsx";
 import { ThreadHistoryType, updateHistoryThreadsAction } from "../models/history-threads.model.ts";
-import { THREAD_URL } from "@repo/shared/constants/routes.ts";
 import { reatomComponent } from "@reatom/npm-react";
 import { CustomLink } from "#components/shared/link.tsx";
+import { createIdLink } from "@repo/lib/utils/create-link.ts";
 
 type ThreadHistoryProps = { index?: number } & ThreadHistoryType;
 
@@ -26,7 +26,7 @@ const ThreadHistoryItem = reatomComponent<Omit<ThreadHistoryProps, "index" | "ac
         propWidth={30}
       />
       <div className="flex flex-col w-full truncate overflow-hidden">
-        <CustomLink to={THREAD_URL + id}>
+        <CustomLink to={createIdLink("thread", id)}>
           <Typography
             textSize="small"
             textColor="shark_white"

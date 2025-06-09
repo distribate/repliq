@@ -6,7 +6,6 @@ import {
 } from "@repo/ui/src/components/accordion.tsx";
 import { Typography } from "@repo/ui/src/components/typography.tsx";
 import dayjs from "@repo/lib/constants/dayjs-instance.ts";
-import { USER_URL } from "@repo/shared/constants/routes.ts";
 import { Avatar } from "#components/user/avatar/components/avatar.tsx";
 import { UserNickname } from "#components/user/name/nickname";
 import { Button } from "@repo/ui/src/components/button.tsx";
@@ -15,6 +14,7 @@ import { reatomComponent } from "@reatom/npm-react";
 import { atom } from "@reatom/core";
 import { CustomLink } from "#components/shared/link";
 import { ThreadControl } from "#components/thread/thread-control/components/thread-control";
+import { createIdLink } from "@repo/lib/utils/create-link";
 
 const ThreadTag = ({ tag }: { tag: string; }) => {
   return (
@@ -34,6 +34,8 @@ export const ThreadMore = reatomComponent(({ ctx }) => {
   const threadOwner = ctx.spy(threadOwnerAtom)
 
   if (!thread || !threadOwner) return null;
+
+  const linkToOwner = createIdLink("user", threadOwner.nickname)
 
   return (
     <Accordion value={isExpanded ? "more" : "."} type="single" collapsible className="w-full p-0 m-0">
@@ -73,16 +75,16 @@ export const ThreadMore = reatomComponent(({ ctx }) => {
           </div>
           <div className="flex flex-col mt-2 mb-6 gap-y-4 w-full">
             <div className="flex items-end gap-2 w-fit">
-              <CustomLink to={USER_URL + threadOwner.nickname}>
+              <CustomLink to={linkToOwner}>
                 <Avatar nickname={threadOwner.nickname} propWidth={36} propHeight={36} />
               </CustomLink>
-              <CustomLink to={USER_URL + threadOwner.nickname}>
+              <CustomLink to={linkToOwner}>
                 <UserNickname nickname={threadOwner.nickname} />
               </CustomLink>
             </div>
             <div className="flex items-center gap-2 w-full">
               <ThreadControl />
-              <CustomLink to={USER_URL + threadOwner.nickname}>
+              <CustomLink to={linkToOwner}>
                 <Button className="px-6" state="default">
                   <Typography textSize="medium">Профиль</Typography>
                 </Button>

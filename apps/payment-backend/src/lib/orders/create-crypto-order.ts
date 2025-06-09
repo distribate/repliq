@@ -6,7 +6,7 @@ import { getItemPrice } from "#utils/get-item-price.ts";
 import { getPaymentDetails } from "#utils/get-payment-details.ts";
 import type { PaymentMeta } from "@repo/types/entities/payment-types";
 import { currencyCryptoSchema } from "@repo/types/schemas/entities/currencies-schema";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 export type CreateCryptoOrder = PaymentMeta & {
   currency: z.infer<typeof currencyCryptoSchema>

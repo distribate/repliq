@@ -1,7 +1,7 @@
 import { toast } from "sonner";
 import { forumReactionClient } from "@repo/shared/api/forum-client";
 import { createReactionSchema } from "@repo/types/schemas/reaction/create-reaction";
-import { z } from "zod";
+import { z } from "zod/v4";
 import { atom, reatomAsync, withDataAtom, withStatusesAtom } from "@reatom/framework";
 import { forumThreadClient } from "@repo/shared/api/forum-client";
 

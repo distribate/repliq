@@ -3,7 +3,7 @@ import { zValidator } from "@hono/zod-validator";
 import { throwError } from "@repo/lib/helpers/throw-error";
 import type { PaymentCryptoTonStatus, PaymentStatus } from "@repo/types/db/payments-database-types";
 import { Hono } from "hono";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 const getOrderRouteSchema = z.object({
   type: z.enum(["crypto", "fiat"])

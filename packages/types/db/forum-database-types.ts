@@ -875,6 +875,7 @@ export interface Threads {
   content: Json;
   created_at: Generated<Timestamp>;
   description: string | null;
+  href: string;
   id: Generated<string>;
   is_comments: Generated<boolean>;
   is_updated: Generated<boolean>;

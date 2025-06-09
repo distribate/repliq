@@ -1,6 +1,7 @@
 import { RatingList } from "#components/ratings/components/rating-list"
 import { RatingNavigation } from "#components/ratings/components/rating-navigation"
 import { wrapTitle } from "@repo/lib/utils/wrap-title"
+import { FORUM_SITE_DOMAIN } from "@repo/shared/constants/origin-list"
 import { Head } from "@unhead/react"
 
 const RatingsHead = () => {
@@ -8,9 +9,9 @@ const RatingsHead = () => {
     <Head>
       <title>{wrapTitle("Рейтинг игроков")}</title>
       <meta name="description" content="Рейтинг игроков" />
-      <link rel="canonical" href="https://hub.fasberry.su/ratings" />
+      <link rel="canonical" href={`${FORUM_SITE_DOMAIN}/ratings`} />
       <meta property="og:description" content="Рейтинг игроков" />
-      <meta property="og:url" content="https://hub.fasberry.su/ratings" />
+      <meta property="og:url" content={`${FORUM_SITE_DOMAIN}/ratings`} />
     </Head>
   )
 }

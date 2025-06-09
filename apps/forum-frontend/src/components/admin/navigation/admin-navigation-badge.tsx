@@ -1,5 +1,5 @@
 import { useNavigate } from "@tanstack/react-router";
-import { NavigationBadge } from "#components/navigation/components/navigation-badge";
+import { NavigationBadge } from "#components/shared/navigation/components/navigation-badge";
 import { reatomComponent } from "@reatom/npm-react";
 import { adminSectionParamAtom } from "#pages/admin/index.page";
 

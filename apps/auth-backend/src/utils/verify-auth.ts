@@ -1,20 +1,39 @@
 import { logger } from "@repo/lib/utils/logger";
-import ky from "ky"
+import ky, { HTTPError } from "ky"
 
 const CLOUDFLARE_TURNSTILE_SECRET_KEY = "0x4AAAAAAA-stfzoKM9_11nOW5V0dd54VS0"
 
-export async function verifyAuth(token: string) {
-  const verifyRes = await ky.post("https://challenges.cloudflare.com/turnstile/v0/siteverify", {
-    json: { secret: CLOUDFLARE_TURNSTILE_SECRET_KEY, response: token },
-  });
+type Payload = {
+  success: boolean,
+  messages: Array<unknown>,
+  challenge_ts: Date,
+  action: string,
+  cdata: string,
+  tokenId: string
+}
 
-  if (!verifyRes.ok) {
+export async function verifyAuth(token: string) {
+  try {
+    const verifyRes = await ky.post("https://challenges.cloudflare.com/turnstile/v0/siteverify", {
+      json: { secret: CLOUDFLARE_TURNSTILE_SECRET_KEY, response: token },
+    });
+
+    if (!verifyRes.ok) {
+      return "no-verified"
+    }
+
+    const result = await verifyRes.json<Payload>();
+
+    if (!result.success) return "no-verified"
+
+    logger.debug(result)
+
+    return "verified"
+  } catch (e) {
+    if (e instanceof HTTPError) {
+      logger.error(e.message)
+    }
+    console.error(e)
     return "no-verified"
   }
-
-  const result = await verifyRes.json();
-
-  logger.debug(result)
-
-  return "verified"
 }

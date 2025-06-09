@@ -1,7 +1,7 @@
 
 import { reatomAsync, reatomResource, withCache, withDataAtom, withStatusesAtom } from '@reatom/async';
 import { toast } from "sonner";
-import { z } from "zod";
+import { z } from "zod/v4";
 import { createCoverImageSchema } from "@repo/types/schemas/user/create-cover-image-schema.ts"
 import { requestedUserAtom } from "#components/profile/main/models/requested-user.model";
 import { forumSharedClient, forumUserClient } from "@repo/shared/api/forum-client"

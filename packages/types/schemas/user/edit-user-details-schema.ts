@@ -1,4 +1,4 @@
-import { z } from 'zod';
+import { z } from 'zod/v4';
 
 const realNameSchema = z.string().min(1).nullable()
 
@@ -26,6 +26,6 @@ export const userDetailsSchema = z.object({
       return false;
   }
 }, {
-  message: 'Value does not meet the criteria requirements',
+  error: 'Value does not meet the criteria requirements',
   path: ['value'],
 });

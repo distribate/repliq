@@ -6,8 +6,8 @@ import {
 import { useEffect, useState } from "react";
 import { Plus } from "lucide-react";
 import { DialogLoader } from "#components/templates/components/dialog-loader";
-import { createMinecraftItemAction } from "#components/forms/create-minecraft-items/hooks/use-minecraft-items.tsx";
-import { MinecraftItemCreateForm } from "#components/forms/create-minecraft-items/components/minecraft-item-create-form.tsx";
+import { createMinecraftItemAction } from "#components/admin/configs/minecraft-items/components/create-minecraft-item/models/create-minecraft-item.model";
+import { MinecraftItemCreateForm } from "#components/admin/configs/minecraft-items/components/create-minecraft-item/components/minecraft-item-create-form";
 import { Typography } from "@repo/ui/src/components/typography.tsx";
 import { reatomComponent } from "@reatom/npm-react";
 

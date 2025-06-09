@@ -2,7 +2,7 @@ import { throwError } from '@repo/lib/helpers/throw-error.ts';
 import { zValidator } from "@hono/zod-validator";
 import { Hono } from "hono";
 import { getNickname } from "#utils/get-nickname-from-storage.ts";
-import { z } from "zod";
+import { z } from "zod/v4";
 import { acceptFriendRequestTransaction } from "#lib/transactions/friend/accept-friend-request-transaction.ts";
 import { publishAcceptFriendRequest } from '#publishers/pub-accept-friend-request.ts';
 import { validateFriendsLength } from '#lib/validators/validate-friends-length.ts';

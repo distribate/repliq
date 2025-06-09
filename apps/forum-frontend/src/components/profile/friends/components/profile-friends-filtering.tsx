@@ -55,8 +55,6 @@ const ProfileFriendsFilteringView = reatomComponent(({ ctx }) => {
 
   const handleSort = (e: React.MouseEvent<HTMLDivElement, MouseEvent>, sort_type: FriendsSortType) => {
     e.preventDefault();
-    // friendsFilteringAtom(ctx, (state) => ({ ...state, sort_type }))
-    // updateFriendsAction(ctx, "update-filter");
   };
 
   return (

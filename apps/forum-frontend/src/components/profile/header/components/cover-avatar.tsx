@@ -117,7 +117,7 @@ const UpdateAvatar = reatomComponent(({ ctx }) => {
   return (
     <>
       <div className="absolute inset-0 duration-300 rounded-sm bg-black/50 backdrop-blur-md z-[1] group-hover:opacity-100 opacity-0">
-        <div onClick={() => ref?.current?.click()} className="flex justify-center items-center w-full h-full">
+        <div onClick={() => ref?.current?.click()} className="flex cursor-pointer justify-center items-center w-full h-full">
           <Upload size={26} />
           <input type="file" multiple={false} ref={ref} className="hidden" onChange={e => onChange(ctx, e)} />
         </div>
@@ -135,9 +135,10 @@ const UpdateAvatar = reatomComponent(({ ctx }) => {
 
 export const UserCoverAvatar = reatomComponent<UserCoverAvatarProps>(({ ctx, className, variant }) => {
   const nickname = ctx.spy(requestedUserParamAtom)
-  const isOwner = ctx.spy(requestedUserIsSameAtom)
   if (!nickname) return null;
-
+  
+  const isOwner = ctx.spy(requestedUserIsSameAtom)
+  
   return (
     <UserCoverAvatarWrapper variant={variant} className={className}>
       {isOwner && <UpdateAvatar />}

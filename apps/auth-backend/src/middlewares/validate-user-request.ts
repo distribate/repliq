@@ -13,6 +13,9 @@ export async function getUserSession(sessionId: string) {
 }
 
 export const validateUserRequest = createMiddleware(async (ctx, next) => {
+  console.log(ctx.req.header('User-Agent'))
+
+  
   const sessionToken = getCookie(ctx, "session")
   const sessionId = encodeHexLowerCase(sha256(new TextEncoder().encode(sessionToken)));
   

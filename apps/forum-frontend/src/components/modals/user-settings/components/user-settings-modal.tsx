@@ -1,85 +1,20 @@
-import {
-  Dialog,
-  DialogClose,
-  DialogContent,
-} from "@repo/ui/src/components/dialog.tsx";
+import { Dialog, DialogContent } from "@repo/ui/src/components/dialog.tsx";
 import { ReactNode } from "react";
-import { Typography } from "@repo/ui/src/components/typography";
-import { UserLands } from "#components/cards/user-personal-card/components/lands/components/user-lands";
-import { UserProfileSettings } from "#components/cards/user-personal-card/components/profile-settings/user-profile-settings";
-import { UserAdvancedSettings } from "#components/modals/user-settings/components/user-advanced-settings";
-import { settingsIsGlobalDialogAtom, settingsSettingsTypeAtom, SettingsType, toggleGlobalDialogAction } from "#components/modals/user-settings/models/user-settings.model";
-import { UserPersonalCardHeader } from "#components/modals/user-settings/components/user-header";
-import { UserSettingOption } from "#components/cards/user-setting-option-card/components/user-setting-option";
-import Campfire from "@repo/assets/images/minecraft/campfire.webp";
-import BookAndQuill from "@repo/assets/images/minecraft/book_quill.webp";
-import DragonBreath from "@repo/assets/images/minecraft/dragon_breath.webp";
-import GrassBlock from "@repo/assets/images/minecraft/grass_block.webp";
-import FishingRod from "@repo/assets/images/minecraft/fishing_rod.webp";
-import { BuyDonateModal } from "../../custom/components/buy-donate-modal";
-import Portfolio from "@repo/assets/images/minecraft/portfolio.webp";
-import MinecartWithChest from "@repo/assets/images/minecraft/minecart_chest.webp";
-import { UserAccountSettingsCard } from "./user-account-settings";
-import { Separator } from "@repo/ui/src/components/separator.tsx"
+import { UserAdvancedSettings } from "#components/user/settings/advanced/components/user-advanced-settings";
+import { 
+  settingsIsGlobalDialogAtom, 
+  settingsSettingsTypeAtom, 
+  SettingsType, 
+  toggleGlobalDialogAction 
+} from "#components/modals/user-settings/models/user-settings.model";
+import { UserAccountSettings } from "../../../user/settings/account/components/user-account-settings";
 import { reatomComponent } from "@reatom/npm-react";
-import { CustomLink } from "#components/shared/link";
-
-const Main = reatomComponent(({ ctx }) => {
-  return (
-    <div className="flex flex-col gap-y-4 items-center w-full">
-      <Typography variant="dialogTitle">
-        Настройки
-      </Typography>
-      <UserPersonalCardHeader />
-      <Separator />
-      <div className="flex flex-col gap-y-2 w-full">
-        <UserSettingOption
-          onClick={() => settingsSettingsTypeAtom(ctx, "profile")} 
-          title="Профиль" 
-          imageSrc={BookAndQuill}
-        />
-        <UserSettingOption
-          onClick={() => settingsSettingsTypeAtom(ctx, "account")} 
-          title="Аккаунт" 
-          imageSrc={MinecartWithChest}
-        />
-        <UserSettingOption
-          onClick={() => settingsSettingsTypeAtom(ctx, "other")}
-          title="Прочее" 
-          imageSrc={Campfire}
-        />
-        <Separator />
-        <UserSettingOption
-          onClick={() => settingsSettingsTypeAtom(ctx, "lands")} 
-          title="Мои регионы" 
-          imageSrc={GrassBlock}
-        />
-        <Separator />
-        <BuyDonateModal
-          trigger={
-            <UserSettingOption title="Донат" imageSrc={DragonBreath} />
-          }
-        />
-        <Separator />
-        <a href="https://fasberry.su/wiki" rel="noreferrer" target="_blank">
-          <DialogClose className="w-full">
-            <UserSettingOption title="Вики" imageSrc={Portfolio} />
-          </DialogClose>
-        </a>
-        <CustomLink to="/create-ticket">
-          <DialogClose className="w-full">
-            <UserSettingOption title="Задать вопрос" imageSrc={FishingRod} />
-          </DialogClose>
-        </CustomLink>
-      </div>
-    </div>
-  )
-}, "Main")
+import { UserProfileSettings } from "#components/user/settings/profile/components/user-profile-settings";
+import { UserMainSettings } from "#components/user/settings/main/components/user-main-settings";
 
 const SETTINGS_SECTIONS: Record<SettingsType, ReactNode> = {
-  main: <Main />,
-  lands: <UserLands />,
-  account: <UserAccountSettingsCard />,
+  main: <UserMainSettings />,
+  account: <UserAccountSettings />,
   profile: <UserProfileSettings />,
   other: <UserAdvancedSettings />
 }

@@ -12,6 +12,7 @@ import { QueryProvider } from '#components/providers/query-provider.tsx';
 import "./globals.css";
 import "./minecraft-weather.css"
 import "./minecraft-theme.css"
+import { MINECRAFT_SITE_DOMAIN } from "@repo/shared/constants/origin-list";
 
 const font = localFont({
 	src: "../public/fonts/Monocraft.woff2",
@@ -23,7 +24,7 @@ export const metadata: Metadata = {
 		default: "Fasberry"
 	},
 	description: "Официальная страница майнкрафт-проекта Fasberry. Жанр: RP, RPG, полу-ванила. 1.20.1+. Играть: play.fasberry.su.",
-	metadataBase: new URL('https://fasberry.su/'),
+	metadataBase: new URL(MINECRAFT_SITE_DOMAIN),
 	category: 'videogame',
 	robots: {
 		index: true,
@@ -55,7 +56,7 @@ export const metadata: Metadata = {
 	openGraph: {
 		title: "Fasberry Project",
 		description: "Сколько хороших и комфортных для вас майнкрафт-серверов вы знаете/знали? Теперь знаете на один больше.",
-		url: "https://fasberry.su/",
+		url: MINECRAFT_SITE_DOMAIN,
 		locale: "ru_RU",
 		type: 'website',
 		siteName: "Официальный сайт майнкрафт сервера Fasberry.",
@@ -63,7 +64,7 @@ export const metadata: Metadata = {
 	twitter: {
 		title: "Fasberry Project",
 		description: "Сколько хороших и комфортных для вас майнкрафт-серверов вы знаете/знали? Теперь знаете на один больше.",
-		images: "https://fasberry.su/favicon.ico"
+		images: "https://mc.fasberry.su/favicon.ico"
 	}
 };
 

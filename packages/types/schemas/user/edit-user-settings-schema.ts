@@ -1,4 +1,4 @@
-import { z } from 'zod';
+import { z } from 'zod/v4';
 import type { UsersSettings } from '../../db/forum-database-types.ts';
 
 export type UserSettingsKeys = keyof Omit<UsersSettings, 'id' | 'user_id'>
@@ -30,6 +30,6 @@ export const editUserSettingsBodySchema = z.object({
 
   return typeof data.value === 'boolean';
 }, {
-  message: 'Invalid value for the setting.',
+  error: 'Invalid value for the setting.',
   path: ['value'],
 });

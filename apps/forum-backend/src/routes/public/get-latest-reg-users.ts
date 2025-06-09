@@ -3,7 +3,7 @@ import { zValidator } from "@hono/zod-validator";
 import { throwError } from "@repo/lib/helpers/throw-error";
 import { Encoder } from "cbor-x";
 import { Hono } from "hono";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 const DEFAULT_LIMIT = 7
 

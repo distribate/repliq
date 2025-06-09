@@ -3,7 +3,8 @@ import { withReset } from "@reatom/framework"
 import { action } from "@reatom/core"
 import { logger } from "@repo/lib/utils/logger"
 
-export type SettingsType = "main" | "profile" | "account" | "other" | "lands"
+export type SettingsType = "main" | "profile" | "account" | "other" 
+// | "lands"
 export type ProfileDialog = "visibility" | "real-name" | "birthday" | "name-color" | "favorite-item"
 export type AccountDialog = "email" | "password" | "sessions" | "black-list" | "delete-account"
 type SettingsDialog = AccountDialog | ProfileDialog

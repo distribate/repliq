@@ -2,10 +2,10 @@ import { CustomLink } from "#components/shared/link"
 import { Avatar } from "#components/user/avatar/components/avatar"
 import { UserNickname } from "#components/user/name/nickname"
 import { reatomComponent } from "@reatom/npm-react"
-import { USER_URL } from "@repo/shared/constants/routes"
 import { Skeleton } from "@repo/ui/src/components/skeleton"
 import { Typography } from "@repo/ui/src/components/typography"
 import { latestCommentsResource } from "./latest-comments.model"
+import { createIdLink } from "@repo/lib/utils/create-link"
 
 export const LatestComments = reatomComponent(({ ctx }) => {
   const comments = ctx.spy(latestCommentsResource.dataAtom)
@@ -26,10 +26,10 @@ export const LatestComments = reatomComponent(({ ctx }) => {
         {comments && comments.map(({ content, parent_id, parent_type, title, user_nickname }, idx) => (
           <div key={idx} className="flex flex-col bg-shark-700/60 rounded-md p-2 gap-1">
             <div className="flex items-center gap-2">
-              <CustomLink to={USER_URL + user_nickname}>
+              <CustomLink to={createIdLink("user", user_nickname)}>
                 <Avatar nickname={user_nickname} propWidth={24} propHeight={24} />
               </CustomLink>
-              <CustomLink to={USER_URL + user_nickname}>
+              <CustomLink to={createIdLink("user", user_nickname)}>
                 <UserNickname nickname={user_nickname} />
               </CustomLink>
             </div>

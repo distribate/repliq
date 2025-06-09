@@ -1,7 +1,7 @@
 import type { createProfileViewSchema } from "#routes/user/create-profile-view.ts";
 import { forumDB } from "#shared/database/forum-db.ts";
 import type { InitiatorRecipientType } from "#types/initiator-recipient-type.ts";
-import type { z } from "zod";
+import type { z } from "zod/v4";
 
 type CreateProfileView = z.infer<typeof createProfileViewSchema> & Pick<InitiatorRecipientType, "initiator">
 

@@ -1,5 +1,6 @@
 import { MainLayoutPage } from "#components/layout/default/main-layout";
 import { WikiContent } from "#components/wiki/content/wiki-content";
+import { MINECRAFT_SITE_DOMAIN } from "@repo/shared/constants/origin-list";
 import { Suspense } from "react";
 
 export const metadata = {
@@ -16,17 +17,17 @@ export const metadata = {
 	],
 	author: "Fasberry Team",
 	robots: "index, follow",
-	canonical: "https://fasberry.su/wiki",
+	canonical: `${MINECRAFT_SITE_DOMAIN}/wiki`,
 	openGraph: {
 		siteName: "Википедия Fasberry",
 		title: "Википедия Fasberry",
 		description:
 			"Исследуй нашу википедию проекта и узнай всё: от правил и гайдов до уникальных функций сервера. Твое приключение начинается здесь!",
-		url: "https://fasberry.su/wiki",
+		url: `${MINECRAFT_SITE_DOMAIN}/wiki`,
 		type: "website",
 		images: [
 			{
-				url: "https://fasberry.su/images/backgrounds/rules_background.png",
+				url: "https://mc.fasberry.su/images/backgrounds/rules_background.png",
 				alt: "Википедия Fasberry проекта",
 				width: 1200,
 				height: 630,
@@ -38,7 +39,7 @@ export const metadata = {
 		title: "Википедия Fasberry Проекта | Узнай всё о сервере",
 		description:
 			"Гайды, правила, команды и многое другое на нашей википедии Fasberry проекта. Присоединяйся и стань экспертом!",
-		images: ["https://fasberry.su/images/backgrounds/rules_background.png"],
+		images: ["https://mc.fasberry.su/images/backgrounds/rules_background.png"],
 	},
 }
 

@@ -1,6 +1,5 @@
 import { AlertEntity } from "@repo/types/entities/entities-type.ts";
 import { Typography } from "@repo/ui/src/components/typography.tsx";
-import { USER_URL } from "@repo/shared/constants/routes";
 import { Skeleton } from "@repo/ui/src/components/skeleton";
 import { UserNickname } from "#components/user/name/nickname";
 import { DeleteButton } from "@repo/ui/src/components/detele-button.tsx";
@@ -10,6 +9,7 @@ import { AlertCircle, Link } from "lucide-react";
 import { updateVisibilityAction } from "@repo/lib/hooks/update-global-preferences.model" 
 import { CustomLink } from "#components/shared/link";
 import { alertsResource } from "./alert-widget.model";
+import { createIdLink } from "@repo/lib/utils/create-link";
 
 const AlertClose = reatomComponent(({ ctx }) => {
   return <DeleteButton variant="invisible" onClick={() => updateVisibilityAction(ctx, "alerts")} />;
@@ -40,7 +40,7 @@ const AlertCard = ({
         <span className="text-[14px] md:text-[18px] text-shark-50">
           Автор:{' '}
         </span>
-        <CustomLink to={USER_URL + creator}>
+        <CustomLink to={createIdLink("user", creator)}>
           <UserNickname nickname={creator} className="text-[14px] md:text-[18px]" />
         </CustomLink>
       </div>

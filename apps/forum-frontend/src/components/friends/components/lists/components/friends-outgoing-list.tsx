@@ -3,7 +3,6 @@ import { FriendsListLayout } from "./friends-list-layout.tsx";
 import { controlOutgoingRequestAction } from "#components/friend/models/control-friend-requests.model.ts";
 import { FriendCardLayout } from "#components/friend/components/friend-card/friend-card-layout.tsx";
 import { Avatar } from "#components/user/avatar/components/avatar.tsx";
-import { USER_URL } from "@repo/shared/constants/routes.ts";
 import { Typography } from "@repo/ui/src/components/typography.tsx";
 import { Button } from "@repo/ui/src/components/button.tsx";
 import { UserNickname } from "#components/user/name/nickname.tsx";
@@ -12,6 +11,7 @@ import { ControlFriendRequests } from "#components/friend/models/control-friend.
 import { outgoingRequestsAtom } from "#components/friends/models/friends-requests.model.ts";
 import { spawn } from "@reatom/framework";
 import { CustomLink } from "#components/shared/link.tsx";
+import { createIdLink } from "@repo/lib/utils/create-link.ts";
 
 const FriendOutgoingCard = reatomComponent<ControlFriendRequests>(({
   ctx, recipient, request_id
@@ -26,7 +26,7 @@ const FriendOutgoingCard = reatomComponent<ControlFriendRequests>(({
       </div>
       <div className="flex flex-col gap-y-1 w-full">
         <div className="flex items-center gap-1 w-fit">
-          <CustomLink to={USER_URL + recipient} className="flex items-center gap-1">
+          <CustomLink to={createIdLink("user", recipient)} className="flex items-center gap-1">
             <UserNickname nickname={recipient} className="text-lg leading-3" />
           </CustomLink>
         </div>

@@ -1,0 +1,136 @@
+import { CloudUpload, ImageUp } from "lucide-react";
+import { Typography } from "@repo/ui/src/components/typography.tsx";
+import { HoverCardItem } from "@repo/ui/src/components/hover-card.tsx";
+import { DynamicModal } from "../../../modals/dynamic-modal/components/dynamic-modal.tsx";
+import { ChangeEvent, Suspense } from "react";
+import { Skeleton } from "@repo/ui/src/components/skeleton.tsx";
+import { reatomComponent } from "@reatom/npm-react";
+import { uploadBackgroundImageAction } from "#components/profile/header/models/cover-image.model.ts";
+import { Image } from 'lucide-react';
+import { imagesLibraryAction } from '#components/profile/header/models/cover-image.model.ts';
+
+const BackgroundImagesSkeleton = () => {
+  return (
+    <>
+      <Skeleton className="w-full h-full" />
+      <Skeleton className="w-full h-full" />
+      <Skeleton className="w-full h-full" />
+      <Skeleton className="w-full h-full" />
+      <Skeleton className="w-full h-full" />
+    </>
+  )
+}
+
+const CoverImagesList = reatomComponent(({ ctx }) => {
+  const defaultImages = ctx.spy(imagesLibraryAction.dataAtom)
+
+  if (ctx.spy(imagesLibraryAction.statusesAtom).isPending) {
+    return <BackgroundImagesSkeleton />
+  }
+
+  return (
+    <>
+      {!defaultImages && <Typography>Изображения не найдены</Typography>}
+      {defaultImages && defaultImages.map(({ name, id, signedUrl }) => (
+        <div
+          key={id}
+          className="flex flex-col rounded-lg overflow-hidden border border-shark-800 
+            relative hover:bg-secondary-color cursor-pointer group transition-all duration-150 w-full"
+          onClick={() => uploadBackgroundImageAction(ctx, { type: "default", fileName: name })}
+        >
+          <img
+            src={signedUrl}
+            alt={name}
+            height={900}
+            width={1200}
+            loading="lazy"
+            className="min-w-[340px] group-hover:brightness-50 transition-all duration-150"
+          />
+        </div>
+      ))}
+    </>
+  );
+}, "BackgroundImagesList")
+
+const CoverImageDefaultImagesModal = reatomComponent(({ ctx }) => {
+  return (
+    <DynamicModal
+      autoClose
+      withLoader
+      isPending={ctx.spy(uploadBackgroundImageAction.statusesAtom).isPending}
+      contentClassName="max-w-6xl"
+      trigger={
+        <HoverCardItem className="w-full gap-2 p-6 group items-center">
+          <Image size={24} className="text-shark-300" />
+          <Typography textSize="large" textColor="shark_white">
+            Выбрать из библиотеки
+          </Typography>
+        </HoverCardItem>
+      }
+      content={
+        <div className="flex flex-col items-center gap-y-4 w-full">
+          <Typography variant="dialogTitle" textColor="shark_white">
+            Библиотека
+          </Typography>
+          <div className="grid grid-cols-3 gap-2 grid-rows-1 w-full">
+            <CoverImagesList />
+          </div>
+        </div>
+      }
+    />
+  );
+}, "CoverImagesListDefaultImagesModal")
+
+const CoverImageUploadCustom = reatomComponent(({ ctx }) => {
+  const handleCoverImageInput = (e: ChangeEvent<HTMLInputElement>) => {
+    const file = e.target?.files ? e.target.files[0] : null;
+
+    if (!file) return;
+
+    uploadBackgroundImageAction(ctx, { file, type: "custom" })
+  };
+
+  return (
+    <HoverCardItem className="relative gap-2 p-6 items-center group">
+      <CloudUpload size={24} className="text-shark-300" />
+      <Typography textSize="large" textColor="shark_white">
+        Загрузить своё
+      </Typography>
+      <input
+        type="file"
+        id="file"
+        className="absolute right-0 top-0 left-0 bottom-0 opacity-0 w-full"
+        onChange={handleCoverImageInput}
+      />
+    </HoverCardItem>
+  );
+}, "CoverImagesListUploadCustom")
+
+export const CoverImageUpdateModal = reatomComponent(({ ctx }) => {
+  return (
+    <DynamicModal
+      autoClose
+      withLoader
+      isPending={ctx.spy(uploadBackgroundImageAction.statusesAtom).isPending}
+      trigger={
+        <div className="flex hover:bg-shark-600 rounded-md p-2 gap-2 items-center group">
+          <ImageUp size={20} className="text-shark-300 group-hover:text-pink-500" />
+          <Typography>Обновить фон</Typography>
+        </div>
+      }
+      content={
+        <div className="flex flex-col items-center gap-4 w-full">
+          <Typography variant="dialogTitle">
+            Обновление фона
+          </Typography>
+          <div className="flex flex-col items-center p-2 justify-center *:w-full w-full">
+            <Suspense fallback={<Skeleton className="h-10 w-full" />}>
+              <CoverImageDefaultImagesModal />
+            </Suspense>
+            <CoverImageUploadCustom />
+          </div>
+        </div>
+      }
+    />
+  );
+}, "CoverImagesListUpdateModal")

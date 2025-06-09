@@ -57,12 +57,12 @@ http:
       tls: true
       service: forum-svc
     hub:
-      rule: "Host(`hub.fasberry.su`)"
+      rule: "Host(`fasberry.su`)"
       entryPoints: [https]
       tls: true
       service: hub-svc
     fasberry:
-      rule: "Host(`fasberry.su`)"
+      rule: "Host(`mc.fasberry.su`)"
       entryPoints: [https]
       tls: true
       service: fasberry-svc

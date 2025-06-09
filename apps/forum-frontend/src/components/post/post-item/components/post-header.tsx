@@ -2,11 +2,11 @@ import { Typography } from "@repo/ui/src/components/typography.tsx";
 import { Avatar } from "#components/user/avatar/components/avatar.tsx";
 import { UserNickname } from "#components/user/name/nickname";
 import dayjs from "@repo/lib/constants/dayjs-instance.ts";
-import { USER_URL } from "@repo/shared/constants/routes.ts";
 import { Pin } from "lucide-react";
 import type { UserPostItem } from '@repo/types/routes-types/get-user-posts-types.ts';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@repo/ui/src/components/tooltip";
 import { CustomLink } from "#components/shared/link";
+import { createIdLink } from "@repo/lib/utils/create-link";
 
 type PostItemHeaderProps = Pick<UserPostItem, "visibility" | "isPinned" | "created_at" | "nickname">;
 
@@ -17,7 +17,7 @@ export const PostItemHeader = ({
 
   return (
     <div className="flex gap-3 items-center">
-      <CustomLink to={USER_URL + nickname}>
+      <CustomLink to={createIdLink("user", nickname)}>
         <Avatar
           propHeight={48}
           propWidth={48}
@@ -26,7 +26,7 @@ export const PostItemHeader = ({
       </CustomLink>
       <div className="flex flex-col">
         <div className="flex items-center gap-2">
-          <CustomLink to={USER_URL + nickname}>
+          <CustomLink to={createIdLink("user", nickname)}>
             <UserNickname nickname={nickname} className="text-base font-medium" />
           </CustomLink>
           {visibility !== "all" && (

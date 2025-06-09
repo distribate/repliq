@@ -1,5 +1,4 @@
 import { Typography } from "@repo/ui/src/components/typography.tsx";
-import { THREAD_URL } from "@repo/shared/constants/routes.ts";
 import { MessageSquare, Text } from "lucide-react";
 import dayjs from "@repo/lib/constants/dayjs-instance.ts";
 import { profileThreadsSettingsAtom, } from "#components/profile/threads/models/profile-threads-settings.model";
@@ -7,6 +6,7 @@ import { Button } from "@repo/ui/src/components/button";
 import { reatomComponent } from "@reatom/npm-react";
 import { CustomLink } from "#components/shared/link";
 import { threadPreviewAtom } from "#components/thread/thread-main/models/thread.model";
+import { createIdLink } from "@repo/lib/utils/create-link";
 
 type ThreadCardProps = {
   id: string;
@@ -54,7 +54,7 @@ export const ProfileThreadsListCard = reatomComponent<ThreadCardProps>(({ id, ti
         </div>
       </div>
       <CustomLink
-        to={THREAD_URL + id}
+        to={createIdLink("thread", id)}
         onClick={() => threadPreviewAtom(ctx, { id, title })}
         className={`w-full justify-end flex items-center h-full`}
       >

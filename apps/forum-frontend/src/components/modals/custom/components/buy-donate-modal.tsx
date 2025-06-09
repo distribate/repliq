@@ -11,6 +11,7 @@ import FutureChicken from "@repo/assets/images/minecraft/future_chicken_mini.png
 import SeekingDolphin from "@repo/assets/images/minecraft/seeking_dolphin.png"
 import Salt from "@repo/assets/images/minecraft/salt.webp"
 import PlayerTable from "@repo/assets/images/minecraft/player_table.png"
+import { MINECRAFT_MAP_SITE_DOMAIN } from "@repo/shared/constants/origin-list"
 
 type BuyDonateModalProps = {
   trigger: ReactNode | string
@@ -91,7 +92,7 @@ const DonateDialog = () => {
         ))}
       </div>
       <div className="bg-[#191919] sticky bottom-0 py-4 px-6 flex items-center justify-center w-full">
-        <a href="https://fasberry.su/shop#shop-list" target="_blank" rel="noreferrer" className="w-full">
+        <a href={`${MINECRAFT_MAP_SITE_DOMAIN}/shop#shop-list`} target="_blank" rel="noreferrer" className="w-full">
           <PulsatingButton className="w-full py-3">
             <Typography className="text-[18px] font-semibold">
               Приобрести

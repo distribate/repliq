@@ -9,7 +9,7 @@ import { useQueryClient, useMutation } from '@tanstack/react-query';
 import { PAYMENT_STATUS_QUERY_KEY } from './shop-payment-status.tsx';
 import { paymentsClient } from '@repo/shared/api/payments-client';
 import { HTTPError } from 'ky';
-import { z, ZodError } from 'zod';
+import { z, ZodError } from 'zod/v4';
 import { parseZodErrorMessages } from '@repo/lib/helpers/parse-zod-errors.ts';
 import { shopItemQuery } from './shop.tsx';
 

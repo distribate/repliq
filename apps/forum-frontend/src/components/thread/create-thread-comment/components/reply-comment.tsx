@@ -1,8 +1,8 @@
 import { Reply } from "lucide-react";
 import { Typography } from "@repo/ui/src/components/typography.tsx";
-import { createThreadCommentAtom } from "#components/forms/create-thread-comment/queries/create-thread-comment-query.ts";
+import { createThreadCommentAtom } from "#components/thread/create-thread-comment/models/thread-comment.model";
 import { CloseButton } from "@repo/ui/src/components/close-button.tsx";
-import { updateCreateThreadCommentAction } from "#components/forms/create-thread-comment/models/create-thread-comment.model";
+import { updateCreateThreadCommentAction } from "#components/thread/create-thread-comment/models/create-thread-comment.model";
 import { reatomComponent } from "@reatom/npm-react";
 
 export const ReplyComment = reatomComponent(({ ctx }) => {

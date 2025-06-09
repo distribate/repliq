@@ -1,6 +1,7 @@
 import { HowToConnectOnServer } from "#components/intro/how-to-connect-on-server";
 import { MainLayoutPage } from "#components/layout/default/main-layout";
 import { Typography } from "@repo/landing-ui/src/typography";
+import { FORUM_SITE_DOMAIN, MINECRAFT_SITE_DOMAIN } from "@repo/shared/constants/origin-list";
 import Link from "next/link";
 
 export const metadata = {
@@ -15,17 +16,17 @@ export const metadata = {
   ],
   author: "Fasberry Wiki Team",
   robots: "index, follow",
-  canonical: "https://fasberry.su/start",
+  canonical: `${MINECRAFT_SITE_DOMAIN}/start`,
   openGraph: {
     siteName: "Начать играть на Fasberry",
     title: "Начать играть",
     description:
       "Начать играть на Fasberry.",
-    url: "https://fasberry.su/start",
+    url: `${MINECRAFT_SITE_DOMAIN}/start`,
     type: "website",
     images: [
       {
-        url: "https://fasberry.su/images/backgrounds/rules_background.png",
+        url: "https://mc.fasberry.su/images/backgrounds/rules_background.png",
         alt: "Начать играть на Fasberry",
         width: 1200,
         height: 630,
@@ -37,7 +38,7 @@ export const metadata = {
     title: "Начать играть",
     description:
       "Начать играть на Fasberry сервере.",
-    images: ["https://fasberry.su/images/backgrounds/rules_background.png"],
+    images: ["https://mc.fasberry.su/images/backgrounds/rules_background.png"],
   },
 }
 
@@ -63,7 +64,7 @@ export default async function StartPage() {
             <NumericItem index={1} />
             <Typography className="text-black dark:text-white text-md md:text-xl lg:text-2xl">
               <Link
-                href="https://hub.fasberry.su/auth?type=register"
+                href={`${FORUM_SITE_DOMAIN}/auth`}
                 target="_blank"
                 className="text-green text-shadow-lg hover:underline-offset-8 hover:underline"
               >

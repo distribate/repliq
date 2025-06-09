@@ -1,6 +1,6 @@
 import { Plus } from "lucide-react";
 import { Typography } from "@repo/ui/src/components/typography.tsx";
-import { AlertCreateForm } from "#components/forms/create-alert/components/create-alert-form.tsx";
+import { AlertCreateForm } from "#components/admin/configs/alerts/components/create-alert/components/create-alert-form";
 import { DynamicModal } from "#components/modals/dynamic-modal/components/dynamic-modal";
 
 export const AlertsAddButton = () => {

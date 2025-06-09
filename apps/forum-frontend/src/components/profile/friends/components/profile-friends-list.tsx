@@ -13,10 +13,10 @@ import { UserDonate } from "#components/user/donate/components/donate";
 import { UserCardModal } from "#components/modals/custom/components/user-card-modal";
 import { Button } from "@repo/ui/src/components/button";
 import { Typography } from "@repo/ui/src/components/typography";
-import { USER_URL } from "@repo/shared/constants/routes";
 import { reatomComponent } from "@reatom/npm-react";
 import { friendsAction, friendsDataAtom } from "../models/profile-friends.model";
 import { CustomLink } from "#components/shared/link";
+import { createIdLink } from "@repo/lib/utils/create-link";
 
 const filterFriendsByNickname = (data: FriendWithDetails[], querySearch: string) =>
   data.filter(item => item.nickname.startsWith(querySearch));
@@ -30,7 +30,7 @@ const FriendProfileCard = ({ nickname, name_color, donate }: FriendWithDetails) 
             <Avatar propHeight={56} propWidth={56} nickname={nickname} />
           </Suspense>
           <div className="flex flex-col gap-1">
-            <CustomLink to={USER_URL + nickname}>
+            <CustomLink to={createIdLink("user", nickname)}>
               <UserNickname
                 nickname={nickname}
                 nicknameColor={name_color}

@@ -1,10 +1,10 @@
 import { Typography } from "@repo/ui/src/components/typography";
 import FancyFeather from "@repo/assets/images/minecraft/fancy_feather.webp"
-import { THREAD_URL } from "@repo/shared/constants/routes";
 import { myThreadsResource } from "../queries/my-threads-query";
 import { reatomComponent } from "@reatom/npm-react";
 import { CustomLink } from "#components/shared/link";
 import { threadPreviewAtom } from "#components/thread/thread-main/models/thread.model";
+import { createIdLink } from "@repo/lib/utils/create-link";
 
 export const SavedThreads = () => {
   return (
@@ -52,7 +52,7 @@ export const MyThreads = reatomComponent(({ ctx }) => {
                 </Typography>
               </div>
               <CustomLink
-                to={THREAD_URL + t.id}
+                to={createIdLink("thread", t.id)}
                 onClick={() => threadPreviewAtom(ctx, { id: t.id, title: t.title })}
                 className="bg-shark-50 flex items-center justify-center w-2/4 px-4 py-2 rounded-lg"
               >

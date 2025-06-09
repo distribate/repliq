@@ -4,15 +4,14 @@ import { zValidator } from "@hono/zod-validator";
 import { throwError } from "@repo/lib/helpers/throw-error";
 import { STATIC_IMAGES_BUCKET } from "@repo/shared/constants/buckets";
 import { Hono } from "hono";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 const getAuthImageSchema = z.object({
   id: z.string().transform(Number).optional(),
   random: z.string().transform((val) => val === "true").optional(),
-}).refine(
-  (data) => data.id !== undefined || data.random !== undefined,
+}).refine((data) => data.id !== undefined || data.random !== undefined,
   {
-    message: "Either 'id' or 'random' must be provided",
+    error: "Either 'id' or 'random' must be provided",
   }
 );
 

@@ -1,5 +1,5 @@
 import { toast } from "sonner";
-import { categoriesResource } from "#components/categories/components/categories-list/models/categories.model.ts";
+import { mainCategoriesResource } from "#components/categories/components/main/models/categories.model";
 import { reatomAsync, withStatusesAtom } from "@reatom/async";
 import { router } from "#main.tsx";
 import { forumThreadClient } from "@repo/shared/api/forum-client";
@@ -86,7 +86,7 @@ export const removeThreadAction = reatomAsync(async (ctx, threadId: string) => {
       // qc.resetQueries({ queryKey: THREAD_REACTIONS_QUERY_KEY(variables) }),
     // ]);
 
-    categoriesResource(ctx)
+    mainCategoriesResource(ctx)
     return ctx.schedule(() => router.navigate({ to: "/" }));
   }
 }).pipe(withStatusesAtom())

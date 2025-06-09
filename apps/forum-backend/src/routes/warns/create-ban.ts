@@ -4,7 +4,7 @@ import { getNickname } from "#utils/get-nickname-from-storage.ts";
 import { zValidator } from "@hono/zod-validator";
 import { throwError } from "@repo/lib/helpers/throw-error";
 import { Hono } from "hono";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 const createBanSchema = z.object({
   recipient: z.string(),

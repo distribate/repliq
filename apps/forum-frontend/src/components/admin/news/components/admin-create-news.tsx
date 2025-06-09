@@ -10,7 +10,7 @@ import { Typography } from "@repo/ui/src/components/typography";
 import { encode } from "@tanstack/react-router";
 import ky from "ky"
 import { toast } from "sonner";
-import { z } from "zod";
+import { z } from "zod/v4";
 import { atom } from "@reatom/core";
 import { reatomComponent } from "@reatom/npm-react";
 import { reatomAsync, withStatusesAtom } from "@reatom/async";

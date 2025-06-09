@@ -1,7 +1,7 @@
 import type { getCategoryThreadsSchema } from "#routes/categories/get-category-threads.ts";
 import { forumDB } from "#shared/database/forum-db.ts";
 import { executeWithCursorPagination } from "kysely-paginate";
-import type { z } from "zod";
+import type { z } from "zod/v4";
 import { sql } from "kysely";
 
 type ThreadsFromCategories = z.infer<typeof getCategoryThreadsSchema> & {

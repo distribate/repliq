@@ -1,6 +1,6 @@
 import { getNatsConnection } from "@repo/config-nats/nats-client"
 import { SERVER_USER_EVENT_SUBJECT, USER_REFERAL_CHECK_SUBJECT } from "@repo/shared/constants/nats-subjects"
-import { z } from "zod"
+import { z } from "zod/v4"
 import dayjs from "@repo/lib/constants/dayjs-instance"
 import { natsLogger } from "@repo/lib/utils/logger"
 

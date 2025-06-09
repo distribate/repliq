@@ -1,4 +1,4 @@
-import { Avatar } from "../user/components/avatar/components/avatar.tsx";
+import { Avatar } from "#components/user/avatar/components/avatar";
 import { Typography } from "@repo/ui/src/components/typography.tsx";
 
 type FriendRequestResponse = {

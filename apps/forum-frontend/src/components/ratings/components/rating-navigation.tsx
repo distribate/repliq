@@ -1,4 +1,4 @@
-import { NavigationBadge } from "#components/navigation/components/navigation-badge.tsx"
+import { NavigationBadge } from "#components/shared/navigation/components/navigation-badge"
 import { updateRatingAction } from "#components/ratings/models/update-ratings.model"
 import { ratingFilterAtom, RatingFilterQuery } from "#components/ratings/models/rating-filter.model"
 import { reatomComponent } from "@reatom/npm-react"

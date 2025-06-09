@@ -1,7 +1,7 @@
 import { throwError } from "@repo/lib/helpers/throw-error";
 import { Hono } from "hono";
 import { createMinecraftItem } from "#lib/queries/admin/create-minecraft-item.ts";
-import type { z } from "zod";
+import type { z } from "zod/v4";
 import { createMinecraftItemSchema } from "@repo/types/schemas/admin/create-minecraft-item-schema";
 
 export const createMinecraftItemRoute = new Hono()

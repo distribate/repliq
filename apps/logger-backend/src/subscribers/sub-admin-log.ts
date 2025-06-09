@@ -1,7 +1,7 @@
 import { getNatsConnection } from "@repo/config-nats/nats-client"
 import { LOGS_ADMIN_SUBJECT } from "@repo/shared/constants/nats-subjects"
 import { sendInLoggerBot } from "../utils/send-logs"
-import { z } from "zod"
+import { z } from "zod/v4"
 import { format, FormattableString } from "gramio"
 import dayjs from "@repo/lib/constants/dayjs-instance"
 
@@ -10,9 +10,10 @@ const payloadSchema = z.object({
   data: z.object({
     nickname: z.string()
   })
-}).superRefine((data, ctx) => {
-  if (data.type === "register" && !data.data.nickname) {
-    ctx.addIssue({
+}).check((ctx) => {
+  if (ctx.value.type === "register" && !ctx.value.data.nickname) {
+    ctx.issues.push({
+      input: "",
       code: "custom",
       path: ["data", "nickname"],
       message: "Nickname is required",

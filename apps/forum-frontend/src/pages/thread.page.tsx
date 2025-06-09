@@ -7,9 +7,9 @@ import { wrapTitle } from '@repo/lib/utils/wrap-title'
 import { threadAtom, threadContentAtom } from '#components/thread/thread-main/models/thread.model'
 import { serializeNodes } from '@repo/lib/helpers/nodes-serializer'
 import { threadImagesAction } from '#components/thread/thread-images/models/thread-images.model'
-import { THREAD_URL } from '@repo/shared/constants/routes'
 import { KEYWORDS, PATHNAME } from '@repo/shared/constants/meta';
 import { Thread } from '#components/thread/thread-main/components/thread-main'
+import { createIdLink } from '@repo/lib/utils/create-link'
 
 const ThreadHead = reatomComponent(({ ctx }) => {
   const thread = ctx.spy(threadAtom)
@@ -25,7 +25,7 @@ const ThreadHead = reatomComponent(({ ctx }) => {
     description: description,
     ogTitle: wrapTitle(thread?.title),
     ogDescription: description,
-    ogUrl: PATHNAME + THREAD_URL + thread?.id,
+    ogUrl: PATHNAME + createIdLink("thread", thread?.id!),
     twitterTitle: wrapTitle(thread?.title),
     twitterDescription: description,
     ogImage: imagesIsExists ? { url: images[0], width: 1200, height: 600, alt: 'image', type: 'image/png' } : undefined,

@@ -1,17 +1,17 @@
 import { Avatar } from "#components/user/avatar/components/avatar.tsx";
 import { UserNickname } from "#components/user/name/nickname";
-import { THREAD_URL, USER_URL } from "@repo/shared/constants/routes";
 import { CustomLink } from "#components/shared/link";
 import { Text } from "lucide-react";
 import { Typography } from "@repo/ui/src/components/typography";
 import { processSelectEntryAction } from "../models/search-page.model";
 import { reatomComponent } from "@reatom/npm-react";
 import { SearchThread, SearchUser } from "../models/search.model";
+import { createIdLink } from "@repo/lib/utils/create-link"
 
 export const SearchPageThread = reatomComponent<SearchThread>(({ ctx, title, id }) => {
   return (
     <CustomLink
-      to={THREAD_URL + id}
+      to={createIdLink("thread", id)}
       onClick={() => processSelectEntryAction(ctx, { title, id })}
       className="flex p-4 items-center gap-2 bg-shark-700/40 truncate w-full rounded-md"
     >
@@ -26,7 +26,7 @@ export const SearchPageThread = reatomComponent<SearchThread>(({ ctx, title, id 
 export const SearchPageUser = reatomComponent<SearchUser>(({ ctx, nickname, name_color }) => {
   return (
     <CustomLink
-      to={USER_URL + nickname}
+      to={createIdLink("user", nickname)}
       onClick={() => processSelectEntryAction(ctx, { nickname, name_color })}
       className="flex p-2 items-center gap-2 bg-shark-700/40 w-full rounded-md"
     >

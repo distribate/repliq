@@ -1,6 +1,6 @@
 import { Typography } from "@repo/ui/src/components/typography.tsx";
-import { updateCreateThreadCommentAction } from "#components/forms/create-thread-comment/models/create-thread-comment.model";
-import { RepliedValuesType } from "#components/forms/create-thread-comment/queries/create-thread-comment-query.ts";
+import { updateCreateThreadCommentAction } from "#components/thread/create-thread-comment/models/create-thread-comment.model";
+import { RepliedValuesType } from "#components/thread/create-thread-comment/models/thread-comment.model";
 import { ThreadDetailed } from "@repo/types/entities/thread-type.ts";
 import { lazy, Suspense } from "react";
 import { reatomComponent } from "@reatom/npm-react";

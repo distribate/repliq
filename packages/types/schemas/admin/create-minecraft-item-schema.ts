@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { z } from "zod/v4";
 
 export const createMinecraftItemSchema = z.object({
   file: z.custom<File>(),

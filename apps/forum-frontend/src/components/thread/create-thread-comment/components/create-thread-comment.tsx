@@ -1,8 +1,8 @@
 import {
   createThreadCommentAtom,
-} from "#components/forms/create-thread-comment/queries/create-thread-comment-query.ts";
+} from "#components/thread/create-thread-comment/models/thread-comment.model.ts";
 import { ReplyComment } from "./reply-comment.tsx";
-import { CreateThreadCommentForm } from "#components/forms/create-thread-comment/components/create-thread-comment-form.tsx";
+import { CreateThreadCommentForm } from "#components/thread/create-thread-comment/components/create-thread-comment-form.tsx";
 import { useEffect } from "react";
 import { reatomComponent } from "@reatom/npm-react";
 

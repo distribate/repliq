@@ -2,23 +2,20 @@ import { reatomComponent } from "@reatom/npm-react"
 import { currentUserNicknameAtom } from "@repo/lib/helpers/get-user"
 import { useLocation } from "@tanstack/react-router"
 import { lazy, PropsWithChildren, Suspense } from "react"
-import { Axe, Home, User2, UsersRound } from "lucide-react"
-import { USER_URL } from "@repo/shared/constants/routes"
+import { Home, User2, UsersRound } from "lucide-react"
 import { CustomLink } from "#components/shared/link"
 import { Typography } from "@repo/ui/src/components/typography"
 import { Separator } from "@repo/ui/src/components/separator"
 import { Navbar } from "./navbar"
+import { createIdLink } from "@repo/lib/utils/create-link"
 
 const BottomBar = lazy(() => import("./mobile-sheet").then(m => ({ default: m.BottomBar })))
 const SheetMenu = lazy(() => import("./mobile-sheet").then(m => ({ default: m.SheetMenu })))
 
 const _SIDE = (nickname: string) => [
   { title: "Главная", icon: Home, href: "/", },
-  { title: "Профиль", icon: User2, href: USER_URL + nickname },
+  { title: "Профиль", icon: User2, href: createIdLink("user", nickname) },
   { title: "Друзья", icon: UsersRound, href: "/friends", },
-  { title: "Треды", icon: Axe, href: "/search?type=threads", },
-  { title: "Рейтинг", icon: Axe, href: "/ratings", },
-  { title: "Ивенты", icon: Axe, href: "/events" }
 ]
 
 const Side = reatomComponent(({ ctx }) => {

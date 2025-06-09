@@ -11,7 +11,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
 import { forumSharedClient } from '@repo/shared/api/forum-client';
 import { getNewsSchema } from "@repo/types/schemas/news/get-news-schema.ts";
-import { z } from 'zod';
+import { z } from 'zod/v4';
 
 const NewsPageItem = ({
   imageUrl, created_at, description, title

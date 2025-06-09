@@ -1,6 +1,6 @@
 import { BlockWrapper } from '#components/wrappers/components/block-wrapper'
 import { Typography } from '@repo/ui/src/components/typography'
-import { CreateIssueForm } from '#components/forms/create-issue/components/create-issue-form'
+import { CreateIssueForm } from '#components/issue/create-issue/components/create-issue-form'
 import { Head } from '@unhead/react'
 
 export function CreateTicketRouteComponent() {

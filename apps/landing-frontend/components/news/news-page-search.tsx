@@ -4,7 +4,7 @@ import React from "react";
 import { Input } from "@repo/landing-ui/src/input";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { ArrowDown, ArrowUp } from "lucide-react";
-import { z } from "zod";
+import { z } from "zod/v4";
 import { getNewsSchema } from "@repo/types/schemas/news/get-news-schema";
 import { NewsType } from "./news-item-wrapper";
 import { getNews, NEWS_QUERY_KEY } from "./news-page-list";

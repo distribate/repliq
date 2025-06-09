@@ -1,7 +1,7 @@
 import { forumDB } from "#shared/database/forum-db.ts";
 import { throwError } from "@repo/lib/helpers/throw-error";
 import { Hono } from "hono";
-import { z } from "zod";
+import { z } from "zod/v4";
 import { zValidator } from "@hono/zod-validator";
 import { getLandsByNickname } from "#lib/queries/get-lands-by-nickname.ts";
 

@@ -4,7 +4,7 @@ import { forumAdminClient } from "@repo/shared/api/forum-client";
 import { createAuthImageSchema } from "@repo/types/schemas/admin/create-auth-image-schema";
 import ky from "ky";
 import { toast } from "sonner";
-import { z } from "zod";
+import { z } from "zod/v4";
 import { useRouter } from "@tanstack/react-router";
 import { sleep } from "@reatom/framework";
 

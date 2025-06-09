@@ -1,13 +1,13 @@
-import { PostTextForm } from "#components/forms/create-post/components/post-text-form.tsx";
+import { PostTextForm } from "#components/post/create-post/components/post-text-form";
 import { getUser } from "@repo/lib/helpers/get-user.ts";
 import { Button } from "@repo/ui/src/components/button.tsx";
 import { Typography } from "@repo/ui/src/components/typography.tsx";
 import { Avatar } from "#components/user/avatar/components/avatar";
 import { reatomComponent } from "@reatom/npm-react";
 import { Separator } from "@repo/ui/src/components/separator.tsx";
-import { PostAdditionalForm } from "#components/forms/create-post/components/post-additional-form.tsx";
-import { PostPublishButton } from "#components/forms/create-post/components/post-publish-button.tsx";
-import { postFormIsActiveAtom, postFormResetAction } from "#components/forms/create-post/models/post-form.model";
+import { PostAdditionalForm } from "#components/post/create-post/components/post-additional-form";
+import { PostPublishButton } from "#components/post/create-post/components/post-publish-button";
+import { postFormIsActiveAtom, postFormResetAction } from "#components/post/create-post/models/post-form.model";
 
 const PostCancelButton = reatomComponent(({ ctx }) => {
   return (

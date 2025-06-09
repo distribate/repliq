@@ -2,7 +2,7 @@ import { type GetFriendsResponse } from '@repo/types/schemas/friend/friend-types
 import { getUserFriendsSchema } from '@repo/types/schemas/user/get-user-friends-schema.ts';
 import { forumDB } from "#shared/database/forum-db.ts"
 import { sql } from "kysely"
-import type { z } from "zod"
+import type { z } from "zod/v4"
 import { executeWithCursorPagination } from 'kysely-paginate';
 import type { DonateVariants } from '@repo/types/db/forum-database-types';
 

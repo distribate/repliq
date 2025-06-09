@@ -1,51 +1,53 @@
-import { useEffect, useRef, useState } from "react";
 import { Typography } from "@repo/ui/src/components/typography";
-import { useNavigate } from "@tanstack/react-router"
+import { reatomComponent, useUpdate } from "@reatom/npm-react";
+import { TimerAtom, reatomTimer } from '@reatom/timer'
+import { atom } from "@reatom/core";
+import { onDisconnect } from "@reatom/framework";
+import { router } from "#main";
+import { createIdLink } from "@repo/lib/utils/create-link";
 
-type UserNotExistCounterProps = {
-  redirectTimeout: string;
-  redirectUser: string;
-};
+const redirectDestinationAtom = atom<string | null>(null, "redirectDestination")
 
-export const UserNotExistCounter = ({
-  redirectTimeout,
-  redirectUser,
-}: UserNotExistCounterProps) => {
-  const [seconds, setSeconds] = useState<number>(parseInt(redirectTimeout));
-  const navigate = useNavigate();
-  const timerIdRef = useRef<NodeJS.Timeout | null>(null);
+const redirectTimer = reatomTimer({
+  name: 'redirectAtom',
+  interval: 1000, 
+  delayMultiplier: 1,
+  progressPrecision: 2, 
+  resetProgress: true
+})
 
-  useEffect(() => {
-    if (!seconds) {
-      navigate({ to: `/user/${redirectUser}` });
-      return;
-    }
+const remainsAtom = (timer: TimerAtom) => atom((ctx) => (1 - ctx.spy(timer.progressAtom)) * 100,`redirectTimer.remains`)
 
-    // @ts-ignore
-    timerIdRef.current = setInterval(() => {
-      setSeconds((prevSeconds) => {
-        if (prevSeconds <= 1) {
-          clearInterval(timerIdRef.current!);
+redirectTimer.endTimer.onCall(async (ctx) => {
+  const destination = ctx.get(redirectDestinationAtom)
 
-          navigate({ to: `/user/${redirectUser}` });
-          return 0;
-        }
-        return prevSeconds - 1;
-      });
-    }, 1000);
+  if (destination) {
+    router.navigate({ to: createIdLink("user", destination) });
+  } else {
+    router.navigate({ to: "/" });
+  }
+})
 
-    return () => {
-      if (timerIdRef.current) {
-        clearInterval(timerIdRef.current);
-      }
-    };
-  }, [seconds, redirectUser]);
+const SyncUpdateRedirect = ({ target }: { target: string | null }) => {
+  useUpdate((ctx) => {
+    redirectDestinationAtom(ctx, target)
+    redirectTimer.startTimer(ctx, 5000)
+  }, [])
 
-  if (!redirectUser || !redirectTimeout) return;
+  return null;
+}
 
+onDisconnect(redirectTimer, redirectTimer.stopTimer)
+
+export const UserNotExistCounter = reatomComponent<{ redirectUser: string }>(({
+  ctx, redirectUser
+}) => {
   return (
     <div className="flex flex-col">
-      <Typography>{seconds} секунд до редиректа на ваш профиль...</Typography>
+      <SyncUpdateRedirect target={redirectUser} />
+      <Typography>
+        {ctx.spy(remainsAtom(redirectTimer))} секунд до редиректа на ваш профиль
+      </Typography>
     </div>
   );
-};
+}, "UserNotExistCounter")

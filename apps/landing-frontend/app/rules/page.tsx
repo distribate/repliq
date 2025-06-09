@@ -5,6 +5,7 @@ import { Typography } from '@repo/landing-ui/src/typography';
 import { Rules as RulesList } from '#components/rules/rules.tsx';
 import { Button } from '@repo/landing-ui/src/button';
 import Link from 'next/link';
+import { MINECRAFT_SITE_DOMAIN } from "@repo/shared/constants/origin-list";
 
 export const metadata = {
   title: 'Правила',
@@ -19,17 +20,17 @@ export const metadata = {
   ],
   author: "Fasberry Server Team",
   robots: "index, follow",
-  canonical: "https://fasberry.su/rules",
+  canonical: `${MINECRAFT_SITE_DOMAIN}/rules`,
   openGraph: {
     siteName: "Правила сервера Fasberry",
     title: "Правила сервера Fasberry",
     description:
       "Правила нашего Fasberry-сервера для комфортной игры. Соблюдайте установленные нормы и поддерживайте дружелюбную атмосферу!",
-    url: "https://fasberry.su/rules",
+    url: `${MINECRAFT_SITE_DOMAIN}/rules`,
     type: "website",
     images: [
       {
-        url: "https://fasberry.su/images/backgrounds/main_background.png",
+        url: "https://mc.fasberry.su/images/backgrounds/main_background.png",
         alt: "Правила сервера Fasberry",
         width: 1200,
         height: 630,
@@ -41,7 +42,7 @@ export const metadata = {
     title: "Правила сервера Fasberry | Соблюдайте порядок",
     description:
       "Изучите правила нашего сервера Fasberry, чтобы играть комфортно и честно. Уважение к игрокам — наш приоритет.",
-    images: ["https://fasberry.su/images/backgrounds/main_background.png"],
+    images: ["https://mc.fasberry.su/images/backgrounds/main_background.png"],
   },
 };
 

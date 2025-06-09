@@ -1,5 +1,5 @@
 import { S3Client, ListBucketsCommand, CreateBucketCommand } from "@aws-sdk/client-s3";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 const s3 = new S3Client({
   region: "us-east-1",

@@ -2,7 +2,7 @@ import { getNatsConnection } from "@repo/config-nats/nats-client";
 import { forumDB } from "../shared/database/forum-db";
 import { UsersGameStatus } from "@repo/types/db/forum-database-types";
 import { Selectable } from "kysely";
-import { z } from "zod"
+import { z } from "zod/v4"
 import { SERVER_USER_EVENT_SUBJECT } from "@repo/shared/constants/nats-subjects";
 
 type UpdateUserStatus = Omit<Selectable<UsersGameStatus>, "id" | "joined" | "quited"> & {

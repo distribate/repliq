@@ -3,6 +3,7 @@
 import { Typography } from "@repo/landing-ui/src/typography";
 import { useState } from "react";
 import Link from "next/link";
+import { MINECRAFT_MAP_SITE_DOMAIN } from "@repo/shared/constants/origin-list";
 
 type Idea = {
 	title: string,
@@ -27,7 +28,7 @@ const IDEAS: Idea[] = [
 		image: "https://kong.fasberry.su/storage/v1/object/public/static/minecraft/wild-west.webp",
 		link: {
 			title: "Узнать больше",
-			href: "https://fasberry.su/wiki?tab=profile"
+			href: "https://mc.fasberry.su/wiki?tab=profile"
 		},
 		description: "Создайте себе свой стиль: новые эмоции, частицы и питомцы",
 		type: "full"
@@ -37,7 +38,7 @@ const IDEAS: Idea[] = [
 		image: "https://kong.fasberry.su/storage/v1/object/public/static/minecraft/map-preview.png",
 		link: {
 			title: "Перейти к карте",
-			href: "https://map.fasberry.su"
+			href: MINECRAFT_MAP_SITE_DOMAIN
 		},
 		description: "На сервере имеется кастомная генерация мира с данжами и замками, поэтому вы не соскучитесь",
 		type: "module"
@@ -47,7 +48,7 @@ const IDEAS: Idea[] = [
 		image: "https://kong.fasberry.su/storage/v1/object/public/static/minecraft/casino-barebones.webp",
 		link: {
 			title: "Узнать больше",
-			href: "https://fasberry.su/wiki?tab=quests"
+			href: "https://mc.fasberry.su/wiki?tab=quests"
 		},
 		description: "Квесты - неотъемлемая часть геймплея, если вы хотите быстро заработать",
 		type: "full"
@@ -57,7 +58,7 @@ const IDEAS: Idea[] = [
 		image: "https://kong.fasberry.su/storage/v1/object/public/static/minecraft/custom-armor.png",
 		link: {
 			title: "Узнать больше",
-			href: "https://fasberry.su/wiki?tab=resourcepack"
+			href: "https://mc.fasberry.su/wiki?tab=resourcepack"
 		},
 		description: "Ресурспак добавляет новые предметы: броню, инструменты, оружие и мебель.",
 		type: "module"
@@ -67,7 +68,7 @@ const IDEAS: Idea[] = [
 		image: "https://kong.fasberry.su/storage/v1/object/public/static/minecraft/emotes-preview.webp",
 		link: {
 			title: "Узнать больше",
-			href: "https://fasberry.su/wiki?tab=emotes"
+			href: "https://mc.fasberry.su/wiki?tab=emotes"
 		},
 		description: "Сервер поддерживает кастомные движения игрока",
 		type: "module"

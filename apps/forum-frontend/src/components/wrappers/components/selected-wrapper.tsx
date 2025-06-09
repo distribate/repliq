@@ -1,5 +1,5 @@
 import { cva, VariantProps } from "class-variance-authority";
-import { forwardRef, HTMLAttributes } from "react";
+import { HTMLAttributes } from "react";
 
 const selectedWrapperVariants = cva(
   "flex hover:bg-shark-800/60 duration-150 transition-all overflow-hidden rounded-lg",
@@ -20,17 +20,10 @@ const selectedWrapperVariants = cva(
 );
 
 interface SelectedWrapper
-  extends HTMLAttributes<HTMLDivElement>,
-    VariantProps<typeof selectedWrapperVariants> {}
+  extends HTMLAttributes<HTMLDivElement>, VariantProps<typeof selectedWrapperVariants> { }
 
-export const SelectedWrapper = forwardRef<HTMLDivElement, SelectedWrapper>(
-  ({ className, variant, wrapperType, ...props }, ref) => {
-    return (
-      <div
-        ref={ref}
-        className={selectedWrapperVariants({ variant, className, wrapperType })}
-        {...props}
-      />
-    );
-  },
-);
+export const SelectedWrapper = ({ className, variant, wrapperType, ...props }: SelectedWrapper) => {
+  return (
+    <div className={selectedWrapperVariants({ variant, className, wrapperType })} {...props} />
+  );
+}

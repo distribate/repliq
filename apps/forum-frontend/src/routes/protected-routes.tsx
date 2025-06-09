@@ -5,8 +5,7 @@ import { AdminSections } from "#components/admin/navigation/admin-navigation-bad
 import { DEFAULT_TYPE_PARAM, searchTypeParamAtom } from "#components/search/models/search-related.model";
 import { logger } from "@repo/lib/utils/logger";
 import { CollectionParams } from "#components/collection/components/navigation/components/collection-navigation";
-import { landParamAtom } from "#components/land/models/land.model";
-import { categoryIdAtom } from "#components/categories/components/category-threads/models/category.model";
+import { categoryIdAtom } from "#components/categories/components/threads/models/category.model";
 import { rootRoute } from "./root";
 import { Params } from "#pages/search.page";
 import { ProtectedRouteComponent } from "#pages/protected.layout";
@@ -21,8 +20,6 @@ const AdminStatsRouteComponent = lazy(() => import("#pages/admin/stats.page").th
 const AdminSupportRouteComponent = lazy(() => import("#pages/admin/support.page").then(m => ({ default: m.AdminSupportRouteComponent })))
 const AdminDashboardRouteComponent = lazy(() => import("#pages/admin/dashboard.page").then(m => ({ default: m.AdminDashboardRouteComponent })))
 const CreateTicketRouteComponent = lazy(() => import("#pages/create-ticket.page").then(m => ({ default: m.CreateTicketRouteComponent })))
-const LandsRouteComponent = lazy(() => import("#pages/lands.page").then(m => ({ default: m.LandsRouteComponent })))
-const RatingsRouteComponent = lazy(() => import("#pages/ratings.page").then(m => ({ default: m.RatingsRouteComponent })))
 const FriendsRouteComponent = lazy(() => import("#pages/friends.page").then(m => ({ default: m.FriendsRouteComponent })))
 const NotificationsRouteComponent = lazy(() => import("#pages/notifications.page").then(m => ({ default: m.NotificationsRouteComponent })))
 const EventsRouteComponent = lazy(() => import("#pages/events.page").then(m => ({ default: m.EventsRouteComponent })))
@@ -31,7 +28,6 @@ const DashboardIndexRouteComponent = lazy(() => import("#pages/dashboard/index.p
 const DashboardProfileRouteComponent = lazy(() => import("#pages/dashboard/profile.page").then(m => ({ default: m.DashboardProfileRouteComponent })))
 const DashboardThreadsRouteComponent = lazy(() => import("#pages/dashboard/threads.page").then(m => ({ default: m.DashboardThreadsRouteComponent })))
 const CollectionRouteComponent = lazy(() => import("#pages/collection.page").then(m => ({ default: m.CollectionRouteComponent })))
-const LandRouteComponent = lazy(() => import("#pages/land.page").then(m => ({ default: m.LandRouteComponent })))
 const CategoryRouteComponent = lazy(() => import("#pages/category.page").then(m => ({ default: m.CategoryRouteComponent })))
 const SearchRouteComponent = lazy(() => import("#pages/search.page").then(m => ({ default: m.SearchRouteComponent })))
 
@@ -136,29 +132,8 @@ const collectionRoute = createRoute({
   })
 })
 
-const ratingsRoute = createRoute({
-  getParentRoute: () => protectedRoute,
-  component: () => <Suspense><RatingsRouteComponent /></Suspense>,
-  path: "/ratings",
-})
-
-const landsRoute = createRoute({
-  getParentRoute: () => protectedRoute,
-  component: () => <Suspense><LandsRouteComponent /></Suspense>,
-  path: "/lands",
-})
-
-const landRoute = createRoute({
-  getParentRoute: () => protectedRoute,
-  component: () => <Suspense><LandRouteComponent/></Suspense>,
-  path: "/lands/$id",
-  loader: reatomLoader(async (context, { params }) => {
-    landParamAtom(context, params.id as string)
-  })
-})
-
 const dashboardRoute = createRoute({
-  getParentRoute: () => protectedRoute,
+  getParentRoute: () => protectedRoute, 
   path: "/dashboard",
 })
 
@@ -227,12 +202,37 @@ export const protectedRoutes = protectedRoute.addChildren([
   notificationsRoute,
   searchRoute,
   collectionRoute,
-  ratingsRoute,
-  landsRoute,
-  landRoute,
+  // ratingsRoute,
+  // landsRoute,
+  // landRoute,
   dashboardRoute,
   dashboardRoutes,
   categoryRoute,
   createThreadRoute,
   createTicketRoute
 ])
+
+// const ratingsRoute = createRoute({
+//   getParentRoute: () => protectedRoute,
+//   component: () => <Suspense><RatingsRouteComponent /></Suspense>,
+//   path: "/ratings",
+// })
+
+// const landsRoute = createRoute({
+//   getParentRoute: () => protectedRoute,
+//   component: () => <Suspense><LandsRouteComponent /></Suspense>,
+//   path: "/lands",
+// })
+
+// const landRoute = createRoute({
+//   getParentRoute: () => protectedRoute,
+//   component: () => <Suspense><LandRouteComponent/></Suspense>,
+//   path: "/lands/$id",
+//   loader: reatomLoader(async (context, { params }) => {
+//     landParamAtom(context, params.id as string)
+//   })
+// })
+
+// const LandsRouteComponent = lazy(() => import("#pages/lands.page").then(m => ({ default: m.LandsRouteComponent })))
+// const RatingsRouteComponent = lazy(() => import("#pages/ratings.page").then(m => ({ default: m.RatingsRouteComponent })))
+// const LandRouteComponent = lazy(() => import("#pages/land.page").then(m => ({ default: m.LandRouteComponent })))

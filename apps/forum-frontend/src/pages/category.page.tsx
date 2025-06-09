@@ -1,10 +1,10 @@
 import { BlockWrapper } from '#components/wrappers/components/block-wrapper'
 import { Typography } from '@repo/ui/src/components/typography'
-import { CategoryThreadsList } from "#components/categories/components/category-threads/components/category-threads"
+import { CategoryThreadsList } from "#components/categories/components/threads/components/category-threads"
 import { reatomComponent } from '@reatom/npm-react'
-import { categoryIdAtom, categoryResource } from '#components/categories/components/category-threads/models/category.model'
-import { CategoryThreadsSearch } from '#components/categories/components/category-threads/components/category-threads-search'
-import { CategoryThreadsFilter } from '#components/categories/components/category-threads/components/category-threads-filter'
+import { categoryIdAtom, categoryResource } from '#components/categories/components/threads/models/category.model'
+import { CategoryThreadsSearch } from '#components/categories/components/threads/components/category-threads-search'
+import { CategoryThreadsFilter } from '#components/categories/components/threads/components/category-threads-filter'
 
 const CaregoryInfo = reatomComponent(({ ctx }) => {
   const category = ctx.spy(categoryResource.dataAtom)?.data

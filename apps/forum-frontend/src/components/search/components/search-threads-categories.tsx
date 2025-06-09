@@ -1,4 +1,4 @@
-import { availableCategoriesResource } from "#components/forms/create-thread/models/available-categories.model"
+import { availableCategoriesResource } from "#components/thread/create-thread/models/available-categories.model"
 import { CustomLink } from "#components/shared/link"
 import { reatomComponent } from "@reatom/npm-react"
 import { CATEGORY_URL } from "@repo/shared/constants/routes"

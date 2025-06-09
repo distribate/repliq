@@ -3,7 +3,7 @@ import {
   HoverCardContent,
   HoverCardTrigger,
 } from "@repo/ui/src/components/hover-card.tsx";
-import { forwardRef, ReactNode } from "react";
+import { ReactNode } from "react";
 
 interface HoverCardWrapperProps {
   trigger: ReactNode;
@@ -18,25 +18,22 @@ interface HoverCardWrapperProps {
   }>;
 }
 
-const HoverCardWrapper = forwardRef<HTMLAnchorElement, HoverCardWrapperProps>(
-  ({ content, trigger, properties = { delay: 200 } }, ref) => {
-    return (
-      <HoverCard openDelay={properties?.delay} closeDelay={properties?.delay}>
-        <HoverCardTrigger ref={ref} asChild={properties?.asChild}>
-          {trigger}
-        </HoverCardTrigger>
-        <HoverCardContent
-          side={properties?.sideAlign}
-          align={properties?.contentAlign}
-          className={properties?.contentClassname}
-          alignOffset={properties?.contentAlignOffset}
-        >
-          {content}
-        </HoverCardContent>
-      </HoverCard>
-    );
-  },
-);
-HoverCardWrapper.displayName = "HoverCardWrapper";
-
-export { HoverCardWrapper };
+export const HoverCardWrapper = ({
+  content, trigger, properties = { delay: 200 }
+}: HoverCardWrapperProps) => {
+  return (
+    <HoverCard openDelay={properties?.delay} closeDelay={properties?.delay}>
+      <HoverCardTrigger asChild={properties?.asChild}>
+        {trigger}
+      </HoverCardTrigger>
+      <HoverCardContent
+        side={properties?.sideAlign}
+        align={properties?.contentAlign}
+        className={properties?.contentClassname}
+        alignOffset={properties?.contentAlignOffset}
+      >
+        {content}
+      </HoverCardContent>
+    </HoverCard>
+  );
+}

@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { z } from "zod/v4";
 
 export const replyCommentBodySchema = z.object({
   recipient_comment_id: z.string(),

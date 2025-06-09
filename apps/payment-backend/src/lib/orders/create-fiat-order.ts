@@ -2,7 +2,7 @@ import { getNatsConnection } from "@repo/config-nats/nats-client"
 import { PAYMENT_FIAT_START_SUBJECT } from "@repo/shared/constants/nats-subjects"
 import type { PaymentMeta } from "@repo/types/entities/payment-types"
 import type { paymentFiatMethodSchema } from "@repo/types/schemas/payment/payment-schema"
-import type { z } from "zod"
+import type { z } from "zod/v4"
 
 type CreateFiatOrder = PaymentMeta & {
   type: z.infer<typeof paymentFiatMethodSchema>

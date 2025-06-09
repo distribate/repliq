@@ -3,7 +3,7 @@ import { createProfileView } from "#lib/queries/user/create-profile-view.ts";
 import { getNickname } from "#utils/get-nickname-from-storage.ts";
 import { zValidator } from "@hono/zod-validator";
 import { Hono } from "hono";
-import { z } from "zod";
+import { z } from "zod/v4";
 import { validateProfileViewCoolDown } from '#lib/queries/user/validate-profile-view-cooldown.ts';
 
 export const createProfileViewSchema = z.object({

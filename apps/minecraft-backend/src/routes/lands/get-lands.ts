@@ -1,7 +1,7 @@
 import { throwError } from "@repo/lib/helpers/throw-error";
 import { Hono } from "hono";
 import { executeWithCursorPagination } from "kysely-paginate";
-import { z } from "zod";
+import { z } from "zod/v4";
 import { zValidator } from "@hono/zod-validator";
 import { bisquiteDB } from "#shared/database/bisquite-db.ts";
 

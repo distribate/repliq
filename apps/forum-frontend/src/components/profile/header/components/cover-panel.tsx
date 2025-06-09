@@ -3,19 +3,62 @@ import { MoreWrapper } from "#components/wrappers/components/more-wrapper";
 import { Separator } from "@repo/ui/src/components/separator.tsx";
 import { ReportCreateModal } from "#components/modals/action-confirmation/components/report/components/report-create-modal.tsx";
 import { BlockUserModal } from "#components/modals/action-confirmation/components/block-user/components/block-user-modal.tsx";
-import { ProfileBackgroundUpdateModal } from "#components/modals/custom/components/profile-background-update-modal";
-import { DeleteCoverModal } from "#components/modals/action-confirmation/components/delete-cover/delete-cover/delete-cover-modal";
+import { CoverImageUpdateModal } from "#components/profile/header/components/cover-image-update-modal";
 import { Dialog, DialogContent, DialogTrigger } from "@repo/ui/src/components/dialog";
 import { Typography } from "@repo/ui/src/components/typography";
 import { FriendButton } from "#components/friend/components/friend-button/components/friend-button";
 import { reatomComponent, useUpdate } from "@reatom/npm-react";
 import { requestedUserIsSameAtom, requestedUserParamAtom, requestedUserProfileBlockedAtom } from "#components/profile/main/models/requested-user.model";
-import { UserProfileSettings } from "#components/cards/user-personal-card/components/profile-settings/user-profile-settings.tsx";
+import { UserProfileSettings } from "#components/user/settings/profile/components/user-profile-settings";
 import { Button } from "@repo/ui/src/components/button.tsx";
 import BookAndQuill from "@repo/assets/images/minecraft/book_quill.webp";
 import { Ban } from "lucide-react";
 import { DropdownMenuItem } from "@repo/ui/src/components/dropdown-menu";
 import { blockedUserAction, blockedUserDialogIsOpenAtom } from "#components/modals/action-confirmation/components/block-user/models/blocked-user.model";
+import { X } from "lucide-react";
+import { ConfirmationButton } from "#components/modals/confirmation-modal/components/confirmation-action-button.tsx";
+import { ConfirmationActionModalTemplate } from "#components/modals/confirmation-modal/components/confirmation-action-modal.tsx";
+import { DialogClose } from "@repo/ui/src/components/dialog.tsx";
+import { getUser } from "@repo/lib/helpers/get-user.ts";
+import { deleteBackgroundImageAction } from "#components/profile/header/models/cover-image.model.ts";
+import { DynamicModal } from "#components/modals/dynamic-modal/components/dynamic-modal.tsx";
+
+const DeleteCoverModal = reatomComponent(({ ctx }) => {
+  const cover_image = getUser(ctx).cover_image;
+  if (!cover_image) return null;
+
+  return (
+    <DynamicModal
+      autoClose
+      isPending={ctx.spy(deleteBackgroundImageAction.statusesAtom).isPending}
+      withLoader
+      trigger={
+        <div className="flex hover:bg-shark-600 rounded-md p-2 gap-2 items-center group">
+          <X size={20} className="text-shark-300 group-hover:text-pink-500" />
+          <Typography>Удалить фон</Typography>
+        </div>
+      }
+      content={
+        <ConfirmationActionModalTemplate title="Подтверждение действия">
+          <ConfirmationButton
+            title="Удалить"
+            actionType="continue"
+            onClick={() => deleteBackgroundImageAction(ctx)}
+            disabled={ctx.spy(deleteBackgroundImageAction.statusesAtom).isPending}
+            pending={ctx.spy(deleteBackgroundImageAction.statusesAtom).isPending}
+          />
+          <DialogClose>
+            <ConfirmationButton
+              title="Отмена"
+              actionType="cancel"
+              disabled={ctx.spy(deleteBackgroundImageAction.statusesAtom).isPending}
+            />
+          </DialogClose>
+        </ConfirmationActionModalTemplate>
+      }
+    />
+  );
+}, "DeleteCoverModal")
 
 const ProfileProfileSettingsModal = () => {
   return (
@@ -46,7 +89,7 @@ const ProfileBackgroundChangeModal = () => {
             Фон профиля
           </Typography>
           <div className="flex flex-col gap-2 p-2 w-full gap-y-1">
-            <ProfileBackgroundUpdateModal />
+            <CoverImageUpdateModal />
             <DeleteCoverModal />
           </div>
         </div>

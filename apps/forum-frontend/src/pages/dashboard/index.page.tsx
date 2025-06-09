@@ -4,7 +4,7 @@ import { Avatar } from '#components/user/avatar/components/avatar'
 import { UserNickname } from '#components/user/name/nickname'
 import { reatomComponent } from '@reatom/npm-react'
 import { getUser } from '@repo/lib/helpers/get-user'
-import { USER_URL } from '@repo/shared/constants/routes'
+import { createIdLink } from '@repo/lib/utils/create-link'
 import { Typography } from '@repo/ui/src/components/typography'
 
 const Page = reatomComponent(({ ctx }) => {
@@ -19,7 +19,7 @@ const Page = reatomComponent(({ ctx }) => {
         <Avatar nickname={nickname} propWidth={96} propHeight={96} />
         <div className="flex flex-col">
           <UserNickname nickname={nickname} className="text-2xl" />
-          <CustomLink to={USER_URL + nickname}>
+          <CustomLink to={createIdLink("user", nickname)}>
             <Typography className="font-semibold text-base text-shark-300">
               к профилю {`>`}
             </Typography>

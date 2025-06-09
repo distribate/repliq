@@ -1,4 +1,4 @@
-import { z } from 'zod';
+import { z } from 'zod/v4';
 import { donateSchema } from '../entities/donate-schema';
 import { currencyCryptoSchema, currencyFiatSchema } from '../entities/currencies-schema';
 
@@ -9,34 +9,41 @@ export const paymentStatusSchema = z.enum(['created', 'received', 'captured', 'c
 export const paymentValueSchema = z.union([donateSchema, z.number(), z.string()]);
 
 export const paymentMetaSchema = z.object({
-  nickname: z.string().min(1, 
-    { message: "Никнейм должен содержать хотя бы 1 символ" }).max(32, { message: "Превышена максимальная длина никнейма" }),
+  nickname: z.string().min(1,
+    { error: "Никнейм должен содержать хотя бы 1 символ" }).max(32, { error: "Превышена максимальная длина никнейма" }),
   paymentType: paymentTypeSchema,
   paymentValue: paymentValueSchema,
 })
 
-export function paymentTypeValidator({ data, ctx }: { data: any, ctx: z.RefinementCtx }) {
-  if (data.paymentType === 'donate' && !donateSchema.safeParse(data.paymentValue, ctx).success) {
-    ctx.addIssue({
+export function paymentTypeValidator({ data, ctx }: {
+  data: any,
+  ctx: any
+}) {
+  if (data.paymentType === 'donate' && !donateSchema.safeParse(data.paymentValue).success) {
+    ctx.issues.push({
+      input: "",
       code: "custom",
       message: `Invalid donate value. Needed: ${donateSchema.options.join(", ")}`
     })
   }
 
-  if (data.currency === 'RUB' && !paymentFiatMethodSchema.safeParse(data.fiatMethod, ctx).success) {
-    ctx.addIssue({
+  if (data.currency === 'RUB' && !paymentFiatMethodSchema.safeParse(data.fiatMethod).success) {
+    ctx.issues.push({
+      input: "",
       code: "custom",
       message: `Invalid fiat method value. Needed: ${paymentFiatMethodSchema.options.join(", ")}`
     })
   }
 }
 
-export const createOrderBodySchema = z.object({
-  // email: z.string().email('Введите корректный адрес электронной почты'),
-  privacy: z.boolean()
-    .refine((value) => value === true, {
-      message: 'Вы должны ознакомиться с правилами!',
-    }),
-  currency: paymentCurrencySchema,
-  fiatMethod: paymentFiatMethodSchema
-}).merge(paymentMetaSchema).superRefine((data, ctx) => paymentTypeValidator({ data, ctx }))
+export const createOrderBodySchema = z.intersection(
+  z.object({
+    // email: z.string().email('Введите корректный адрес электронной почты'),
+    privacy: z
+      .boolean()
+      .refine((value) => value === true, { error: 'Вы должны ознакомиться с правилами!' }),
+    currency: paymentCurrencySchema,
+    fiatMethod: paymentFiatMethodSchema
+  }),
+  paymentMetaSchema.check((ctx) => paymentTypeValidator({ data: ctx.value, ctx: ctx.issues }))
+)

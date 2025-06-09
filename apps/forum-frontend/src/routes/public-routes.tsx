@@ -89,9 +89,8 @@ export const notExistRoute = createRoute({
   getParentRoute: () => rootRoute,
   component: NotExistRouteComponent,
   path: '/not-exist',
-  validateSearch: (search: Record<string, unknown>): { redirect_nickname: string, timeout: string } => ({
+  validateSearch: (search: Record<string, unknown>): { redirect_nickname: string } => ({
     redirect_nickname: search.redirect_nickname as string,
-    timeout: search.timeout as string,
   })
 });
 

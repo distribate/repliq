@@ -2,13 +2,14 @@ import { Avatar } from "#components/user/avatar/components/avatar.tsx"
 import { UserDonate } from "#components/user/donate/components/donate.tsx"
 import { UserNickname } from "#components/user/name/nickname"
 import dayjs from "@repo/lib/constants/dayjs-instance"
-import { USER_URL } from "@repo/shared/constants/routes"
 import { Button } from "@repo/ui/src/components/button"
 import { Skeleton } from "@repo/ui/src/components/skeleton"
 import { Typography } from "@repo/ui/src/components/typography"
 import { myReferalsResource } from "../queries/referals-query"
 import { reatomComponent } from "@reatom/npm-react"
 import { CustomLink } from "#components/shared/link"
+import { createIdLink } from "@repo/lib/utils/create-link"
+import { MINECRAFT_SITE_DOMAIN } from "@repo/shared/constants/origin-list"
 
 export const Referals = reatomComponent(({ ctx }) => {
   const referals = ctx.spy(myReferalsResource.dataAtom)
@@ -40,12 +41,12 @@ export const Referals = reatomComponent(({ ctx }) => {
               className={`flex w-full gap-2 items-center friend-card border-2 
                 ${item.completed ? "border-green-500" : "border-shark-800"}`}
             >
-              <CustomLink to={USER_URL + item.recipient}>
+              <CustomLink to={createIdLink("user", item.recipient)}>
                 <Avatar nickname={item.recipient} propWidth={64} propHeight={64} className="min-h-[64px] min-w-[64px]" />
               </CustomLink>
               <div className="flex flex-col">
                 <div className="flex items-center gap-1">
-                  <CustomLink to={USER_URL + item.recipient}>
+                  <CustomLink to={createIdLink("user", item.recipient)}>
                     <UserNickname nickname={item.recipient} />
                   </CustomLink>
                   <UserDonate donate={item.donate} />
@@ -65,7 +66,7 @@ export const Referals = reatomComponent(({ ctx }) => {
         </div>
       )}
       <div className="flex w-full items-center justify-start">
-        <a href="https://fasberry.su/wiki?tab=referals" target="_blank" rel="noreferrer">
+        <a href={`${MINECRAFT_SITE_DOMAIN}/wiki?tab=referals`} target="_blank" rel="noreferrer">
           <Button state="default">
             <Typography textSize="medium">
               Больше о реферальной системе

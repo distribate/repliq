@@ -16,7 +16,7 @@ export const validateAuthenticationRequest = async ({ ctx, token }: ValidateAuth
 
   const isVerified = await verifyAuth(token!)
 
-  if (isVerified !== "verified") {
+  if (isVerified === "no-verified") {
     return ctx.json({ error: "Invalid token" }, 400)
   }
 

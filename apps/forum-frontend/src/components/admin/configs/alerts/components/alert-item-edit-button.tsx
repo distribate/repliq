@@ -1,7 +1,7 @@
 import { AlertEntity } from "@repo/types/entities/entities-type.ts";
 import { PenLine } from "lucide-react";
 import { Button } from "@repo/ui/src/components/button.tsx";
-import { AlertUpdateForm } from "#components/forms/create-alert/components/update-alert-form.tsx";
+import { AlertUpdateForm } from "#components/admin/configs/alerts/components/create-alert/components/update-alert-form";
 import { Typography } from "@repo/ui/src/components/typography.tsx";
 import { DynamicModal } from "#components/modals/dynamic-modal/components/dynamic-modal";
 import { reatomComponent } from "@reatom/npm-react";

@@ -2,10 +2,8 @@ import { Button } from "@repo/ui/src/components/button.tsx";
 import { Typography } from "@repo/ui/src/components/typography.tsx";
 import { MoreWrapper } from "#components/wrappers/components/more-wrapper";
 import { Pen, Tag, Trash } from "lucide-react";
-import { DeleteFriendModal } from "#components/modals/action-confirmation/components/delete-friend/delete-friend/delete-friend-modal.tsx";
 import { UserCardModal } from "#components/modals/custom/components/user-card-modal.tsx";
 import { useNavigate } from "@tanstack/react-router";
-import { USER_URL } from "@repo/shared/constants/routes.ts";
 import { Separator } from "@repo/ui/src/components/separator.tsx";
 import { FriendWithDetails } from "@repo/types/schemas/friend/friend-types.ts";
 import { FriendControlNoteDialog } from "./friend-control-note";
@@ -16,6 +14,46 @@ import { Pin } from "lucide-react";
 import { setFriendPinAction, setFriendUnpinAction } from "#components/friend/models/control-friend.model";
 import { myFriendsPinnedDataAtom } from "#components/friends/models/friends.model";
 import { removeFriendIsOpenAtom, removeFriendOptionsAtom } from "#components/friend/models/control-friend-requests.model";
+import { createIdLink } from "@repo/lib/utils/create-link";
+import { ConfirmationActionModalTemplate } from "#components/modals/confirmation-modal/components/confirmation-action-modal";
+import { ConfirmationButton } from "#components/modals/confirmation-modal/components/confirmation-action-button";
+import { Dialog, DialogClose, DialogContent } from "@repo/ui/src/components/dialog.tsx";
+import { removeFriendAction } from "#components/friend/models/control-friend-requests.model";
+
+type DeleteFriendModal = Pick<FriendWithDetails, "friend_id" | "nickname">;
+
+const DeleteFriendModal = reatomComponent(({ ctx }) => {
+  const removeFriendOptions = ctx.spy(removeFriendOptionsAtom)
+  if (!removeFriendOptions) return null;
+
+  const handleDelete = () => {
+    removeFriendAction(ctx, { 
+      friend_id: removeFriendOptions.friend_id, recipient: removeFriendOptions.nickname 
+    })
+  }
+
+  return (
+    <Dialog open={ctx.spy(removeFriendIsOpenAtom)} onOpenChange={value => removeFriendIsOpenAtom(ctx, value)}>
+      <DialogContent>
+        <ConfirmationActionModalTemplate title="Подтверждение действия">
+          <ConfirmationButton
+            title="Удалить"
+            actionType="continue"
+            onClick={handleDelete}
+            disabled={ctx.spy(removeFriendAction.statusesAtom).isPending}
+          />
+          <DialogClose>
+            <ConfirmationButton
+              title="Отмена"
+              actionType="cancel"
+              disabled={ctx.spy(removeFriendAction.statusesAtom).isPending}
+            />
+          </DialogClose>
+        </ConfirmationActionModalTemplate>
+      </DialogContent>
+    </Dialog>
+  );
+}, "DeleteFriendModal")
 
 type FriendControlProps = Pick<FriendWithDetails, "friend_id" | "nickname" | "is_pinned">;
 
@@ -65,8 +103,8 @@ const FriendControlPinTrigger = reatomComponent<FriendControlProps>(({
   );
 }, "FriendControlPinTrigger")
 
-const FriendControlDeleteTrigger = reatomComponent<Omit<FriendControlProps, "is_pinned">>(({ 
-  ctx, nickname, friend_id 
+const FriendControlDeleteTrigger = reatomComponent<Omit<FriendControlProps, "is_pinned">>(({
+  ctx, nickname, friend_id
 }) => {
   const handleOpen = () => {
     removeFriendOptionsAtom(ctx, { nickname, friend_id })
@@ -91,14 +129,14 @@ export const FriendControl = ({ nickname, friend_id, is_pinned }: FriendControlP
       <Button
         className="h-8 px-4"
         variant="positive"
-        onClick={() => navigate({ to: USER_URL + nickname })}
+        onClick={() => navigate({ to: createIdLink("user", nickname) })}
       >
         <Typography textSize="small">
           К профилю
         </Typography>
       </Button>
       <FriendControlNoteDialog />
-      <DeleteFriendModal/>
+      <DeleteFriendModal />
       <MoreWrapper>
         <UserCardModal
           nickname={nickname}

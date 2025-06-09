@@ -2,13 +2,15 @@ import { JsonValue } from "#helpers/json-value.ts"
 import { supabase } from "#shared/supabase/supabase-client.ts"
 import type { Transaction } from "kysely"
 import type { DB } from "@repo/types/db/forum-database-types";
-import type { z } from "zod";
+import type { z } from "zod/v4";
 import type { createThreadSchema } from "@repo/types/schemas/thread/create-thread-schema";
 import { forumDB } from "#shared/database/forum-db.ts";
+import { nanoid } from "nanoid";
 
 type CreateThread = Omit<z.infer<typeof createThreadSchema>, "images"> & {
   nickname: string
-  images: File[] | null
+  images: File[] | null,
+  href: string
 }
 
 type CreateThreadTransaction = {
@@ -76,12 +78,12 @@ async function addTagsToThread({
 
 async function createThreadItem({
   title, content, category_id, description,
-  visibility, permission, is_comments, trx
+  visibility, permission, is_comments, trx, href
 }: CreateThreadItem) {
   const query = await trx
     .insertInto("threads")
     .values({
-      title, category_id, description,
+      href, title, category_id, description,
       visibility, permission, is_comments, content
     })
     .returning("id")
@@ -102,15 +104,17 @@ async function addThreadUser({
 export async function createThread({
   title, content: rawContent, category_id, tags, visibility,
   permission, description, is_comments, nickname, images
-}: CreateThread) {
+}: Omit<CreateThread, "href">) {
   const parsedContent = JSON.parse(rawContent);
   const content = new JsonValue(parsedContent)
+
+  const href = nanoid(7)
 
   return forumDB.transaction().execute(async (trx) => {
     const thread_id = await createThreadItem({
       title, content, category_id, description,
       visibility, permission, is_comments, trx,
-      nickname
+      nickname, href
     })
 
     if (tags) {

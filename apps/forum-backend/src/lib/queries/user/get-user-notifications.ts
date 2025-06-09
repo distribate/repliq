@@ -1,7 +1,7 @@
 import type { getUserNotificationsSchema } from "#routes/user/get-user-notifications.ts";
 import { forumDB } from "#shared/database/forum-db.ts";
 import { executeWithCursorPagination } from "kysely-paginate";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 const systemNotificationsSchema = z.enum(["auth", "vote", "issue", "payment"])
 const newsNotificationsSchema = z.enum(["forum", "server"])

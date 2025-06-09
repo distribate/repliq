@@ -3,7 +3,7 @@ import { supabase } from "#shared/supabase/supabase-client.ts";
 import { throwError } from "@repo/lib/helpers/throw-error";
 import { decode } from "cbor-x";
 import { Hono } from "hono";
-import { z } from "zod";
+import { z } from "zod/v4";
 import { nanoid } from "nanoid";
 import { createNewsSchema } from "@repo/types/schemas/admin/create-news-schema";
 import { zValidator } from "@hono/zod-validator";

@@ -6,10 +6,10 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from "@repo/ui
 import { UserNickname } from "#components/user/name/nickname"
 import dayjs from "@repo/lib/constants/dayjs-instance"
 import { Separator } from "@repo/ui/src/components/separator"
-import { USER_URL } from "@repo/shared/constants/routes"
 import { myTicketsResource } from "../queries/my-tickets-query"
 import { reatomComponent } from "@reatom/npm-react"
 import { CustomLink } from "#components/shared/link"
+import { createIdLink } from "@repo/lib/utils/create-link"
 
 export const MyTickets = reatomComponent(({ ctx }) => {
   const data = ctx.spy(myTicketsResource.dataAtom)
@@ -73,10 +73,10 @@ export const MyTickets = reatomComponent(({ ctx }) => {
                         Рассмотрен:
                       </Typography>
                       <div className="flex items-center gap-2">
-                        <CustomLink to={USER_URL + ticket.approved_by}>
+                        <CustomLink to={createIdLink("user", ticket.approved_by)}>
                           <Avatar nickname={ticket.approved_by} propWidth={36} propHeight={36} />
                         </CustomLink>
-                        <CustomLink to={USER_URL + ticket.approved_by}>
+                        <CustomLink to={createIdLink("user", ticket.approved_by)}>
                           <UserNickname nickname={ticket.approved_by} />
                         </CustomLink>
                       </div>

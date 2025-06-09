@@ -1,7 +1,7 @@
 import { lpDB } from "#shared/database/lp-db.ts";
 import { throwError } from "@repo/lib/helpers/throw-error";
 import { Hono } from "hono";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 // example permission's name:
 // lobby = "lobby.*"
