@@ -10,14 +10,8 @@ import { Button } from "@repo/ui/src/components/button";
 import { Dialog, DialogClose, DialogContent, DialogTrigger } from "@repo/ui/src/components/dialog";
 import { CustomLink } from "#components/shared/link";
 import { BuyDonateModal } from "#components/modals/custom/components/buy-donate-modal";
-import Campfire from "@repo/assets/images/minecraft/campfire.webp";
-import BookAndQuill from "@repo/assets/images/minecraft/book_quill.webp";
-import DragonBreath from "@repo/assets/images/minecraft/dragon_breath.webp";
-import FishingRod from "@repo/assets/images/minecraft/fishing_rod.webp";
-import Portfolio from "@repo/assets/images/minecraft/portfolio.webp";
-import MinecartWithChest from "@repo/assets/images/minecraft/minecart_chest.webp";
-import { MINECRAFT_SITE_DOMAIN } from "@repo/shared/constants/origin-list";
 import { settingsSettingsTypeAtom } from "#components/modals/user-settings/models/user-settings.model";
+import { IconAddressBook, IconAdjustments, IconBubblePlus, IconComet, IconUserCircle } from "@tabler/icons-react";
 
 const Sync = ({ target }: { target: string }) => {
   useUpdate((ctx) => userStatusAction(ctx, target), [target])
@@ -74,33 +68,33 @@ export const UserMainSettings = reatomComponent(({ ctx }) => {
         <UserSettingOption
           onClick={() => settingsSettingsTypeAtom(ctx, "profile")} 
           title="Профиль" 
-          imageSrc={BookAndQuill}
+          icon={{ value: IconAddressBook }}
         />
         <UserSettingOption
           onClick={() => settingsSettingsTypeAtom(ctx, "account")} 
           title="Аккаунт" 
-          imageSrc={MinecartWithChest}
+          icon={{ value: IconUserCircle }}
         />
         <UserSettingOption
           onClick={() => settingsSettingsTypeAtom(ctx, "other")}
           title="Прочее" 
-          imageSrc={Campfire}
+          icon={{ value: IconAdjustments }}
         />
         <Separator />
         <BuyDonateModal
           trigger={
-            <UserSettingOption title="Донат" imageSrc={DragonBreath} />
+            <UserSettingOption title="Донат" icon={{ value: IconComet, className: "text-pink-500" }} />
           }
         />
         <Separator />
-        <a href={`${MINECRAFT_SITE_DOMAIN}/wiki`} rel="noreferrer" target="_blank">
+        {/* <a href={`${MINECRAFT_SITE_DOMAIN}/wiki`} rel="noreferrer" target="_blank">
           <DialogClose className="w-full">
             <UserSettingOption title="Вики" imageSrc={Portfolio} />
           </DialogClose>
-        </a>
+        </a> */}
         <CustomLink to="/create-ticket">
           <DialogClose className="w-full">
-            <UserSettingOption title="Задать вопрос" imageSrc={FishingRod} />
+            <UserSettingOption title="Задать вопрос" icon={{ value: IconBubblePlus }} />
           </DialogClose>
         </CustomLink>
       </div>

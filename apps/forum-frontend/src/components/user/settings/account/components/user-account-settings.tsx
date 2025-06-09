@@ -1,7 +1,3 @@
-import IronHelmet from '@repo/assets/images/minecraft/iron_helmet.webp';
-import AllaySpawnEgg from '@repo/assets/images/minecraft/allay_spawn_egg.webp';
-import WildArmorTrim from '@repo/assets/images/minecraft/wild_armor_trim_ыmithing_еemplate.webp';
-import FancyFeather from '@repo/assets/images/minecraft/fancy_feather.webp';
 import { Typography } from '@repo/ui/src/components/typography.tsx';
 import { Separator } from '@repo/ui/src/components/separator.tsx';
 import { PasswordChange } from '#components/user/settings/account/components/password-change';
@@ -17,13 +13,10 @@ import { BlockedList } from '#components/cards/user-blocked-card/components/user
 import { EmailChange } from './email-change';
 import { ReactNode } from '@tanstack/react-router';
 import { AccountDialog, navigateToDialogAction, settingsCurrentDialogAtom } from '../../../../modals/user-settings/models/user-settings.model';
-import BannerPattern from "@repo/assets/images/minecraft/banner_pattern.webp";
-import GoldIngot from "@repo/assets/images/minecraft/gold_ingot.webp";
 import { Skeleton } from '@repo/ui/src/components/skeleton';
 import { userActiveSessionsAction } from '../../../../modals/user-settings/models/user-sessions.model';
-import YellowCandle from "@repo/assets/images/minecraft/yellow_candle.webp";
-import ExpNoActive from "@repo/assets/images/minecraft/exp-noactive.webp";
 import { DeleteAccount } from './delete-account';
+import { IconDeviceDesktopPin, IconFileXFilled, IconHandMiddleFinger, IconHeartHandshake, IconLock, IconMailSpark, IconTag } from '@tabler/icons-react';
 
 const FriendRequest = reatomComponent(({ ctx }) => {
   const accept_friend_request = getUser(ctx).preferences.accept_friend_request
@@ -39,7 +32,7 @@ const FriendRequest = reatomComponent(({ ctx }) => {
   return (
     <UserSettingOption
       title="Заявки в друзья"
-      imageSrc={AllaySpawnEgg}
+      icon={{ value: IconHeartHandshake }}
     >
       <Switch
         checked={accept_friend_request}
@@ -62,7 +55,7 @@ const RealNameVisibility = reatomComponent(({ ctx }) => {
   };
 
   return (
-    <UserSettingOption title="Реальное имя" imageSrc={FancyFeather}>
+    <UserSettingOption title="Реальное имя" icon={{ value: IconTag }}>
       <Switch
         checked={real_name_visible}
         defaultChecked={real_name_visible}
@@ -72,27 +65,27 @@ const RealNameVisibility = reatomComponent(({ ctx }) => {
   );
 }, "RealNameVisibility")
 
-const GameStatsVisibility = reatomComponent(({ ctx }) => {
-  const game_stats_visible = getUser(ctx).preferences.game_stats_visible;
+// const GameStatsVisibility = reatomComponent(({ ctx }) => {
+//   const game_stats_visible = getUser(ctx).preferences.game_stats_visible;
 
-  const handleGameStatsVisibility = (value: boolean) => {
-    if (value === game_stats_visible) return;
+//   const handleGameStatsVisibility = (value: boolean) => {
+//     if (value === game_stats_visible) return;
 
-    void spawn(ctx, async (spawnCtx) =>
-      updateCurrentUserSettingsAction(spawnCtx, { setting: 'game_stats_visible', value })
-    );
-  };
+//     void spawn(ctx, async (spawnCtx) =>
+//       updateCurrentUserSettingsAction(spawnCtx, { setting: 'game_stats_visible', value })
+//     );
+//   };
 
-  return (
-    <UserSettingOption title="Игровая статистика" imageSrc={WildArmorTrim}>
-      <Switch
-        checked={game_stats_visible}
-        defaultChecked={game_stats_visible}
-        onCheckedChange={v => handleGameStatsVisibility(v)}
-      />
-    </UserSettingOption>
-  )
-}, "GameStatsVisibility")
+//   return (
+//     <UserSettingOption title="Игровая статистика" imageSrc={WildArmorTrim}>
+//       <Switch
+//         checked={game_stats_visible}
+//         defaultChecked={game_stats_visible}
+//         onCheckedChange={v => handleGameStatsVisibility(v)}
+//       />
+//     </UserSettingOption>
+//   )
+// }, "GameStatsVisibility")
 
 const BlackListModel = () => {
   return (
@@ -125,7 +118,7 @@ const ActiveSessionsOption = reatomComponent(({ ctx }) => {
       <UserSettingOption
         onClick={() => navigateToDialogAction(ctx, "sessions")}
         title="Активные сессии"
-        imageSrc={YellowCandle}
+        icon={{ value: IconDeviceDesktopPin }}
       >
         {ctx.spy(userActiveSessionsAction.statusesAtom).isPending ? (
           <Skeleton className="rounded-md h-4 w-4" />
@@ -157,12 +150,12 @@ export const UserAccountSettings = reatomComponent(({ ctx }) => {
               <UserSettingOption
                 onClick={() => navigateToDialogAction(ctx, "email")}
                 title="Почта"
-                imageSrc={BannerPattern}
+                icon={{ value: IconMailSpark }}
               />
               <UserSettingOption
                 onClick={() => navigateToDialogAction(ctx, "password")}
                 title="Пароль"
-                imageSrc={GoldIngot}
+                icon={{ value: IconLock }}
               />
               <ActiveSessionsOption />
               <div className="flex flex-col gap-y-2 w-full">
@@ -179,13 +172,13 @@ export const UserAccountSettings = reatomComponent(({ ctx }) => {
                 Приватность
               </Typography>
               <div className="flex flex-col gap-y-2 w-full">
-                <GameStatsVisibility />
+                {/* <GameStatsVisibility /> */}
                 <RealNameVisibility />
                 <FriendRequest />
                 <UserSettingOption
                   onClick={() => navigateToDialogAction(ctx, "black-list")}
                   title="Черный список"
-                  imageSrc={IronHelmet}
+                  icon={{ value: IconHandMiddleFinger }}
                 />
                 <div className="flex flex-col bg-secondary-color w-full py-2 px-4">
                   <Typography className="text-base text-shark-200">
@@ -200,7 +193,7 @@ export const UserAccountSettings = reatomComponent(({ ctx }) => {
             <UserSettingOption
               onClick={() => navigateToDialogAction(ctx, "delete-account")}
               title="Удалить аккаунт"
-              imageSrc={ExpNoActive}
+              icon={{ value: IconFileXFilled }}
             />
           </div>
         </>

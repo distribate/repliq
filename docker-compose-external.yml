@@ -30,6 +30,8 @@ services:
       - "traefik.http.routers.traefik-secure.tls.certresolver=http"
       - "traefik.http.routers.traefik-secure.service=api@internal"
       - "traefik.http.services.traefik.loadbalancer.server.port=9080"
+    networks:
+      - traefik_network
 
   # consul:
   #   image: consul:1.15.4
@@ -111,12 +113,12 @@ services:
       - ./data/fasberry-external/nats/data:/nats
       - ./data/fasberry-external/nats/jetstream:/nats/jetstream
     networks:
-      - cloudflare_network
+      - traefik_network
 
 networks:
   shared-network:
     external: true
   vault_network:
     driver: bridge
-  cloudflare_network:
+  traefik_network:
     external: true

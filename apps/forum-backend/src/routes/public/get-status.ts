@@ -59,7 +59,7 @@ async function getProxyStats() {
   const res = await STATUS_API
     .get(`mc.fasberry.su:25565`, {
       searchParams: {
-        timeout: 5.0
+        timeout: 1.0
       }
     })
     .json<ServerStatus>()

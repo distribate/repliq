@@ -10,9 +10,9 @@ import { Separator } from "@repo/ui/src/components/separator.tsx";
 import { onConnect } from "@reatom/framework";
 import { reatomComponent } from "@reatom/npm-react";
 import { ChangeEvent } from "react";
-import { GearLoader } from "@repo/ui/src/components/gear-loader.tsx";
 import { DeleteButton } from "@repo/ui/src/components/detele-button.tsx";
 import { authImagesAction, authImagesAtom, createAuthImageAction } from "../models/auth-images.model.ts";
+import { WindowLoader } from "@repo/ui/src/components/window-loader.tsx";
 
 onConnect(authImagesAtom, authImagesAction)
 
@@ -49,7 +49,7 @@ const AuthBackgroundImagesAddButton = reatomComponent(({ ctx }) => {
       duration-300 border-shark-700 w-[116px] relative h-[116px] rounded-md"
     >
       {ctx.spy(createAuthImageAction.statusesAtom).isPending ? (
-        <GearLoader />
+        <WindowLoader />
       ) : (
         <Plus size={24} className="text-white" />
       )}

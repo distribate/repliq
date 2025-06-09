@@ -1,8 +1,8 @@
 import { Separator } from "@repo/ui/src/components/separator.tsx";
 import { Typography } from "@repo/ui/src/components/typography.tsx";
-import { CircleUserRound, SlidersVertical, UsersRound } from "lucide-react";
+import { UsersRound } from "lucide-react";
 import { getUser, userGlobalOptionsAtom } from "@repo/lib/helpers/get-user";
-import { TicketCheck, ShoppingBasket, Shield, LogOut } from 'lucide-react';
+import { Shield, LogOut } from 'lucide-react';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@repo/ui/src/components/dropdown-menu";
 import { lazy, ReactNode, Suspense } from "react";
 import { reatomComponent } from "@reatom/npm-react";
@@ -10,13 +10,14 @@ import { logoutModalIsOpenAtom } from "#components/modals/action-confirmation/co
 import { CustomLink } from "#components/shared/link";
 import { toggleGlobalDialogAction } from "#components/modals/user-settings/models/user-settings.model";
 import { createIdLink } from "@repo/lib/utils/create-link";
+import { IconBasketCheck, IconBell, IconLibrary, IconSettings, IconUserSquare } from "@tabler/icons-react";
 
 const SettingsModal = lazy(() => import("#components/modals/user-settings/components/user-settings-modal").then(m => ({ default: m.UserSettingsModal })))
 const LogoutModal = lazy(() => import("#components/modals/action-confirmation/components/logout/components/logout-modal.tsx").then(m => ({ default: m.LogoutModal })))
 
 const COLLECTION_LINKS: { icon: any, name: string, query: "purchases" | "tickets" }[] = [
-  { icon: ShoppingBasket, name: "Покупки", query: "purchases" },
-  { icon: TicketCheck, name: "Тикеты", query: "tickets" }
+  { icon: IconBasketCheck, name: "Покупки", query: "purchases" },
+  { icon: IconLibrary, name: "Тикеты", query: "tickets" }
 ];
 
 const Admin = reatomComponent(({ ctx }) => {
@@ -45,7 +46,7 @@ const Profile = reatomComponent(({ ctx }) => {
   return (
     <CustomLink to={createIdLink("user", nickname)}>
       <DropdownMenuItem className="gap-2 group cursor-pointer" >
-        <CircleUserRound size={20} className="text-shark-300" />
+        <IconUserSquare size={20} className="text-shark-300" />
         <Typography textSize="medium">
           Профиль
         </Typography>
@@ -62,7 +63,7 @@ const Settings = reatomComponent(({ ctx }) => {
       }}
       className="gap-2 group cursor-pointer"
     >
-      <SlidersVertical size={20} className="text-shark-300" />
+      <IconSettings size={20} className="text-shark-300" />
       <Typography textSize="medium">Настройки</Typography>
     </DropdownMenuItem >
   )
@@ -120,7 +121,7 @@ export const UserMenu = ({ trigger }: { trigger: ReactNode }) => {
             </CustomLink>
             <CustomLink to="/notifications">
               <DropdownMenuItem className="gap-2 group cursor-pointer" >
-                <CircleUserRound size={20} className="text-shark-300" />
+                <IconBell size={20} className="text-shark-300" />
                 <Typography textSize="medium">
                   Уведомления
                 </Typography>

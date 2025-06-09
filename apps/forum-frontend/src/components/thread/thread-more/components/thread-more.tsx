@@ -13,7 +13,7 @@ import { threadAtom, threadOwnerAtom } from "#components/thread/thread-main/mode
 import { reatomComponent } from "@reatom/npm-react";
 import { atom } from "@reatom/core";
 import { CustomLink } from "#components/shared/link";
-import { ThreadControl } from "#components/thread/thread-control/components/thread-control";
+// import { ThreadControl } from "#components/thread/thread-control/components/thread-control";
 import { createIdLink } from "@repo/lib/utils/create-link";
 
 const ThreadTag = ({ tag }: { tag: string; }) => {
@@ -83,7 +83,7 @@ export const ThreadMore = reatomComponent(({ ctx }) => {
               </CustomLink>
             </div>
             <div className="flex items-center gap-2 w-full">
-              <ThreadControl />
+              {/* <ThreadControl /> */}
               <CustomLink to={linkToOwner}>
                 <Button className="px-6" state="default">
                   <Typography textSize="medium">Профиль</Typography>

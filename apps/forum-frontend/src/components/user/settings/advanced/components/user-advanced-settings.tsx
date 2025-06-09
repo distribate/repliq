@@ -1,23 +1,19 @@
 import { Typography } from "@repo/ui/src/components/typography.tsx";
-import CopperHorn from "@repo/assets/images/minecraft/copper-horn.webp";
-import Paper from "@repo/assets/images/minecraft/paper.webp";
 import { Switch } from "@repo/ui/src/components/switch.tsx";
 import { globalPreferencesAtom } from "@repo/lib/queries/global-preferences.model";
-import Bell from "@repo/assets/images/minecraft/bell.webp";
 import { getUser } from "@repo/lib/helpers/get-user.ts";
-import Board from "@repo/assets/images/minecraft/chalkboard_board.webp"
 import { UserSettingOption } from "#components/user/settings/user-setting-option";
 import { UserSettingsBack } from "#components/modals/user-settings/components/user-settings-back";
-import FutureChickenMini from "@repo/assets/images/minecraft/future_chicken_mini.png"
 import { reatomComponent } from "@reatom/npm-react";
 import { updateThreadsSettingAction, updateVisibilityAction } from "@repo/lib/hooks/update-global-preferences.model";
 import { updateCurrentUserSettingsAction } from "#components/user/settings/profile/models/update-current-user.model";
+import { IconBellShare, IconFlag2, IconHistory, IconStepInto } from "@tabler/icons-react";
 
 const AlertsSetting = reatomComponent(({ ctx }) => {
   const alerts = ctx.spy(globalPreferencesAtom).alerts
 
   return (
-    <UserSettingOption title="Объявления" imageSrc={CopperHorn}>
+    <UserSettingOption title="Объявления" icon={{ value: IconFlag2 }}>
       <Switch
         checked={alerts === "show"}
         defaultChecked={alerts === "show"}
@@ -31,7 +27,7 @@ const IntroSetting = reatomComponent(({ ctx }) => {
   const intro = ctx.spy(globalPreferencesAtom).intro
 
   return (
-    <UserSettingOption title="Интро" imageSrc={Board}>
+    <UserSettingOption title="Интро" icon={{ value: IconStepInto }}>
       <Switch
         checked={intro === "show"}
         defaultChecked={intro === "show"}
@@ -45,7 +41,7 @@ const HistoryThreadsSetting = reatomComponent(({ ctx }) => {
   const autoSaveThreads = ctx.spy(globalPreferencesAtom).autoSaveThreads
 
   return (
-    <UserSettingOption title="История тредов" imageSrc={Paper}>
+    <UserSettingOption title="История тредов" icon={{ value: IconHistory }}>
       <Switch
         checked={autoSaveThreads}
         defaultChecked={autoSaveThreads}
@@ -59,7 +55,7 @@ const NotificationsSetting = reatomComponent(({ ctx }) => {
   const send_notifications = getUser(ctx).preferences.send_notifications
 
   return (
-    <UserSettingOption title="Уведомления" imageSrc={Bell}>
+    <UserSettingOption title="Уведомления" icon={{ value: IconBellShare }}>
       <Switch
         checked={send_notifications}
         defaultChecked={send_notifications}
@@ -73,23 +69,23 @@ const NotificationsSetting = reatomComponent(({ ctx }) => {
   )
 }, "NotificationsSetting")
 
-const ShowLocationSettings = reatomComponent(({ ctx }) => {
-  const show_game_location = getUser(ctx).preferences.show_game_location
+// const ShowLocationSettings = reatomComponent(({ ctx }) => {
+//   const show_game_location = getUser(ctx).preferences.show_game_location
 
-  return (
-    <UserSettingOption title="Отображение локации" imageSrc={FutureChickenMini}>
-      <Switch
-        checked={show_game_location}
-        defaultChecked={show_game_location}
-        onCheckedChange={_ => {
-          updateCurrentUserSettingsAction(ctx, {
-            setting: "show_game_location", value: !show_game_location
-          })
-        }}
-      />
-    </UserSettingOption>
-  )
-}, "ShowLocationSettings")
+//   return (
+//     <UserSettingOption title="Отображение локации" imageSrc={FutureChickenMini}>
+//       <Switch
+//         checked={show_game_location}
+//         defaultChecked={show_game_location}
+//         onCheckedChange={_ => {
+//           updateCurrentUserSettingsAction(ctx, {
+//             setting: "show_game_location", value: !show_game_location
+//           })
+//         }}
+//       />
+//     </UserSettingOption>
+//   )
+// }, "ShowLocationSettings")
 
 export const UserAdvancedSettings = () => {
   return (
@@ -103,7 +99,7 @@ export const UserAdvancedSettings = () => {
         <IntroSetting />
         <HistoryThreadsSetting />
         <NotificationsSetting />
-        <ShowLocationSettings />
+        {/* <ShowLocationSettings /> */}
       </div>
     </div>
   );

@@ -1,6 +1,6 @@
 import dayjs from '@repo/lib/constants/dayjs-instance'
 import { Typography } from '@repo/ui/src/components/typography'
-import Dirt from '@repo/assets/images/minecraft/dirt.webp'
+// import Dirt from '@repo/assets/images/minecraft/dirt.webp'
 import { Button } from '@repo/ui/src/components/button'
 import { reatomComponent } from '@reatom/npm-react'
 import { atom } from '@reatom/core'
@@ -80,9 +80,9 @@ export function BannedRouteComponent() {
     <div className="flex w-full relative h-screen items-center justify-center">
       <div
         className="absolute w-full h-full brightness-[0.25]"
-        style={{
-          backgroundImage: `url(${Dirt})`,
-        }}
+        // style={{
+        //   backgroundImage: `url(${Dirt})`,
+        // }}
       />
       <Banned />
     </div>

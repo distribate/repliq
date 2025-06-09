@@ -12,7 +12,7 @@ providers:
     filename: /traefik.yml
     watch: true
 
-api: 
+api:
   dashboard: true
   debug: true
 
@@ -30,83 +30,122 @@ accessLog:
   bufferingSize: 100
 
 http:
-  routers:
-    kong:
-      rule: "Host(`kong.fasberry.su`)"
-      entryPoints: [https]
-      tls: true
-      service: kong-svc
-    payment:
-      rule: "Host(`api.fasberry.su`) && PathPrefix(`/payment`)"
-      entryPoints: [https]
-      tls: true
-      service: payment-svc
-    minecraft:
-      rule: "Host(`api.fasberry.su`) && PathPrefix(`/minecraft`)"
-      entryPoints: [https]
-      tls: true
-      service: minecraft-svc
-    auth:
-      rule: "Host(`api.fasberry.su`) && PathPrefix(`/auth`)"
-      entryPoints: [https]
-      tls: true
-      service: auth-svc
-    forum:
-      rule: "Host(`api.fasberry.su`) && PathPrefix(`/forum`)"
-      entryPoints: [https]
-      tls: true
-      service: forum-svc
-    hub:
-      rule: "Host(`fasberry.su`)"
-      entryPoints: [https]
-      tls: true
-      service: hub-svc
-    fasberry:
-      rule: "Host(`mc.fasberry.su`)"
-      entryPoints: [https]
-      tls: true
-      service: fasberry-svc
-    archivio:
-      rule: "Host(`mvp.fasberry.su`)"
-      entryPoints: [https]
-      tls: true
-      service: archivio-svc
-
   middlewares:
     redirect-to-https:
       redirectScheme:
         scheme: https
         permanent: true
 
+    add-storage-prefix-mw:
+      addPrefix:
+        prefix: "/storage/v1" 
+
+  routers:
+    http-catcher:
+      rule: "HostRegexp(`{host:.+}`)"
+      entryPoints:
+        - http
+      middlewares:
+        - redirect-to-https
+      service: noop@internal
+
+    kong:
+      rule: "Host(`kong.fasberry.su`)"
+      entryPoints: [https]
+      tls: true
+      service: kong-svc
+    static:
+      rule: "Host(`static.fasberry.su`)"
+      entryPoints: [https]
+      tls: true
+      middlewares: 
+        - add-storage-prefix-mw
+      service: noop@internal
+
+    payment:
+      rule: "Host(`api.fasberry.su`) && PathPrefix(`/payment`)"
+      entryPoints: [https]
+      tls: true
+      service: api-payment-svc
+    minecraft:
+      rule: "Host(`api.fasberry.su`) && PathPrefix(`/minecraft`)"
+      entryPoints: [https]
+      tls: true
+      service: api-minecraft-svc
+    auth:
+      rule: "Host(`api.fasberry.su`) && PathPrefix(`/auth`)"
+      entryPoints: [https]
+      tls: true
+      service: api-auth-svc
+    forum:
+      rule: "Host(`api.fasberry.su`) && PathPrefix(`/forum`)"
+      entryPoints: [https]
+      tls: true
+      service: api-forum-svc
+
+    hub:
+      rule: "Host(`fasberry.su`)"
+      entryPoints: [https]
+      tls: true
+      priority: 1
+      service: forum-svc
+    minecraft-landing-fasberry:
+      rule: "Host(`mc.fasberry.su`)"
+      entryPoints: [https]
+      tls: true
+      service: minecraft-landing-fasberry-svc
+    minecraft-fasberry:
+      rule: "Host(`mc.fasberry.su`) && PathPrefix(`/player`)"
+      entryPoints: [https]
+      tls: true
+      service: minecraft-fasberry-svc
+
+    archivio:
+      rule: "Host(`mvp.fasberry.su`)"
+      entryPoints: [https]
+      tls: true
+      service: archivio-svc
+
   services:
     kong-svc:
       loadBalancer:
         servers:
           - url: "http://host.docker.internal:8000"
-    payment-svc:
+    kong-storage-service:
+      loadBalancer:
+        servers:
+          - url: "https://kong.fasberry.su"
+
+    api-payment-svc:
       loadBalancer:
         servers:
           - url: "http://host.docker.internal:4103"
-    minecraft-svc:
+    api-minecraft-svc:
       loadBalancer:
         servers:
           - url: "http://host.docker.internal:4102"
-    auth-svc:
+    api-auth-svc:
       loadBalancer:
         servers:
           - url: "http://host.docker.internal:4100"
-    forum-svc:
+    api-forum-svc:
       loadBalancer:
         servers:
           - url: "http://host.docker.internal:4101"
-    hub-svc:
+
+    forum-svc:
       loadBalancer:
         servers:
           - url: "http://host.docker.internal:3000"
-    fasberry-svc:
+    minecraft-landing-fasberry-svc:
       loadBalancer:
         servers:
           - url: "http://host.docker.internal:3001"
+    minecraft-fasberry-svc:
+      loadBalancer:
+        servers:
+          - url: "http://host.docker.internal:3002"
+
     archivio-svc:
       loadBalancer:
         servers:

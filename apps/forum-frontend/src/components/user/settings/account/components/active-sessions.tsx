@@ -2,9 +2,9 @@ import { Typography } from "@repo/ui/src/components/typography.tsx";
 import { currentSessionAtom, GetUserActiveSessionsResponse, userActiveSessionsAction } from "#components/modals/user-settings/models/user-sessions.model";
 import { TerminateAllSessionsModal } from "../../../../modals/user-settings/components/terminate-all-sessions-modal";
 import dayjs from "@repo/lib/constants/dayjs-instance";
-import BlockGold from "@repo/assets/images/minecraft/block_gold.webp";
 import { TerminateSessionModal } from "../../../../modals/user-settings/components/terminate-session-modal";
 import { reatomComponent } from "@reatom/npm-react";
+import { IconDevices } from "@tabler/icons-react";
 
 export const UserSessionBlock = ({
   is_current, browser, location, session_id, created_at
@@ -13,13 +13,7 @@ export const UserSessionBlock = ({
 
   return (
     <div className="flex w-full gap-2 group relative py-2 rounded-md hover:bg-shark-700/20 px-4">
-      <img
-        src={BlockGold}
-        alt=""
-        width={64}
-        className={`w-[64px] h-[64px] ${!is_current ? "grayscale" : "grayscale-0"}`}
-        height={64}
-      />
+      <IconDevices size={64} className={`w-[64px] h-[64px] ${!is_current ? "text-shark-400" : "text-shark-50"}`} />
       <div className="flex w-full justify-between grow items-center">
         <div className="flex flex-col">
           <Typography>{browser}</Typography>

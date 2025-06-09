@@ -1,4 +1,4 @@
-import FancyFeather from "@repo/assets/images/minecraft/fancy_feather.webp"
+// import FancyFeather from "@repo/assets/images/minecraft/fancy_feather.webp"
 import { Typography } from "@repo/ui/src/components/typography"
 import { Skeleton } from "@repo/ui/src/components/skeleton"
 import { Star } from "lucide-react"
@@ -20,7 +20,7 @@ export const Purchases = reatomComponent(({ ctx }) => {
 
   if (!data || !data.length || ctx.spy(myPurchasesResource.statusesAtom).isRejected) return (
     <div className="flex flex-col h-full items-center justify-center gap-4 p-4 w-full">
-      <img src={FancyFeather} alt="" width={96} height={96} />
+      {/* <img src={FancyFeather} alt="" width={96} height={96} /> */}
       <Typography
         textColor="shark_white"
         textSize="very_big"

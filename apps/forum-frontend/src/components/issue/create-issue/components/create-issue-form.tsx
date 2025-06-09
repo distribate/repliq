@@ -7,12 +7,12 @@ import { Input } from "@repo/ui/src/components/input";
 import { Button } from "@repo/ui/src/components/button";
 import { Typography } from "@repo/ui/src/components/typography";
 import { HTMLAttributes } from "react";
-import Mealing from "@repo/assets/images/mealing.jpg";
 import { BlockWrapper } from "#components/wrappers/components/block-wrapper";
 import { MessageSquareWarning } from "lucide-react";
 import AutogrowingTextarea from "@repo/ui/src/components/autogrowing-textarea";
 import { ISSUE_MAX_DESCRIPTION_LIMIT } from "@repo/shared/constants/limits";
 import { reatomComponent } from "@reatom/npm-react";
+import { IconBrandZapier } from "@tabler/icons-react";
 
 type IssueFormType = z.infer<typeof createIssueSchema>;
 
@@ -139,7 +139,7 @@ export const CreateIssueForm = reatomComponent(({ ctx }) => {
           </Button>
         </form>
         <div className="hidden xl:flex items-center w-[500px] h-full rounded-lg overflow-hidden">
-          <img src={Mealing} alt="" width={500} height={500} draggable={false} className="w-full h-full" />
+          <IconBrandZapier size={64} />
         </div>
       </BlockWrapper>
       <BlockWrapper className="flex flex-col gap-2 !p-4 w-full">

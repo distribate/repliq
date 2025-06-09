@@ -1,6 +1,7 @@
 import { reatomComponent, useUpdate } from "@reatom/npm-react";
 import { Skeleton } from "@repo/ui/src/components/skeleton";
 import { minecraftAvatarAction, minecraftAvatarAtom } from "./minecraft-avatar.model";
+import { cn } from "@repo/lib/utils/ui/cn";
 
 const SyncTarget = ({ nickname }: { nickname: string }) => {
   useUpdate((ctx) => minecraftAvatarAction(ctx, nickname), [nickname])
@@ -8,18 +9,18 @@ const SyncTarget = ({ nickname }: { nickname: string }) => {
 }
 
 export const MinecraftAvatar = ({
-  nickname, propWidth, propHeight 
-}: { nickname: string, propHeight?: number, propWidth?: number }) => {
+  nickname, propWidth, className, propHeight 
+}: { nickname: string, propHeight?: number, propWidth?: number, className?: string }) => {
   return (
     <>
       <SyncTarget nickname={nickname} />
-      <MinecraftAvatarImage nickname={nickname} propHeight={propHeight} propWidth={propWidth} />
+      <MinecraftAvatarImage nickname={nickname} propHeight={propHeight} propWidth={propWidth} className={className} />
     </>
   )
 }
 
-const MinecraftAvatarImage = reatomComponent<{ nickname: string, propHeight?: number, propWidth?: number }>(({
-  ctx, nickname, propHeight, propWidth
+const MinecraftAvatarImage = reatomComponent<{ nickname: string, propHeight?: number, propWidth?: number, className?: string }>(({
+  ctx, nickname, propHeight, propWidth, className
 }) => {
   const { url, isLoading } = ctx.spy(minecraftAvatarAtom(nickname))
 
@@ -33,7 +34,7 @@ const MinecraftAvatarImage = reatomComponent<{ nickname: string, propHeight?: nu
       draggable={false}
       width={propWidth}
       height={propHeight}
-      className="select-none rounded-sm"
+      className={cn("select-none rounded-sm", className)}
       alt=""
     />
   )

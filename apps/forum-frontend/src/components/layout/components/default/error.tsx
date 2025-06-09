@@ -1,7 +1,8 @@
 import { PageWrapper } from "#components/wrappers/components/page-wrapper"
 import { isProduction } from "@repo/lib/helpers/is-production"
+import { Button } from "@repo/ui/src/components/button"
 import { Typography } from "@repo/ui/src/components/typography"
-import HardcodeHeart from "@repo/assets/gifs/hardcore-heart-minecraft.gif"
+import { IconMoodWrrr } from "@tabler/icons-react"
 
 type ErrorComponentProps = {
   error: Error
@@ -13,24 +14,24 @@ export const ErrorComponent = ({
 }: ErrorComponentProps) => {
   return (
     <PageWrapper className="flex flex-col gap-12">
-      <img src={HardcodeHeart} alt="" width={144} height={144} className="max-w-1/3 max-h-1/3" />
+      <IconMoodWrrr size={64} className="text-red-500" />
       <div className="flex flex-col items-center justify-center gap-4">
-        <Typography className="text-xl font-[Minecraft] text-white">
+        <Typography className="text-xl font-bold text-red-500">
           Произошла ошибка! Пожалуйста, перезагрузите страницу.
         </Typography>
         {!isProduction && (
-          <pre className="w-fit bg-shark-800 truncate rounded-lg px-2 py-1">
-            <code>{error.message.slice(0, 256)}</code>
+          <pre className="w-fit bg-white/10 truncate rounded-lg px-4 py-1">
+            <code>{error.message.slice(0, 64)}</code>
           </pre>
         )}
-        <div
+        <Button
           onClick={reset}
-          className="flex py-1 px-4 rounded-lg bg-shark-50 cursor-pointer items-center gap-1 justify-between"
+          className="py-1 px-4 rounded-lg bg-shark-50 gap-1"
         >
-          <Typography className="text-[18px] font-semibold font-[Minecraft] text-shark-900">
+          <Typography textSize="big" className="font-semibold text-shark-900">
             Починить
           </Typography>
-        </div>
+        </Button>
       </div>
     </PageWrapper>
   )

@@ -1,6 +1,5 @@
 import { Typography } from "@repo/ui/src/components/typography.tsx";
-// @ts-ignore
-import WardenGif from "@repo/assets/gifs/warden-warden-minecraft.gif";
+import { IconMoodSadSquint } from "@tabler/icons-react";
 
 export type UserBlockedProps = {
   blockedType: "blocked-by-user" | "blocked-by-you"
@@ -15,12 +14,7 @@ export const UserBlocked = ({ blockedType }: UserBlockedProps) => {
   return (
     <div className="flex w-full items-center justify-center h-full gap-12 px-12 py-6 relative z-[4]">
       <div className="flex flex-col items-center gap-y-2 p-6">
-        <img
-          src={WardenGif}
-          alt=""
-          width={144}
-          height={144}
-        />
+        <IconMoodSadSquint size={64} className='text-shark-300' />
         <Typography className="text-xl font-bold text-shark-50">
           {blockedMessages[blockedType]}
         </Typography>

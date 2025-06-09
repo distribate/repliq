@@ -1,5 +1,5 @@
 import { ProfileAccountSocials } from "./profile-account-socials";
-import { ProfileAccountReferals } from "./profile-account-refs";
+// import { ProfileAccountReferals } from "./profile-account-refs";
 import { SectionPrivatedContent } from "#components/templates/components/section-privated-content";
 import { ProfileAccountStats } from "./profile-account-stats-list";
 import { ProfileWrapper } from "#components/wrappers/components/profile-wrapper";
@@ -13,7 +13,6 @@ import { onConnect } from "@reatom/framework";
 import { WindowLoader } from "@repo/ui/src/components/window-loader";
 import { toast } from "sonner";
 import { forumUserClient } from "@repo/shared/api/forum-client";
-import { Avatar } from "#components/user/avatar/components/avatar";
 import dayjs from "@repo/lib/constants/dayjs-instance"
 import { logger } from "@repo/lib/utils/logger";
 import { Skeleton } from "@repo/ui/src/components/skeleton";
@@ -253,7 +252,7 @@ export const UserProfileAccount = () => {
         <ProfileAccountStats />
         <ProfileAccountIntegrations />
         <ProfileAccountSocials />
-        <ProfileAccountReferals />
+        {/* <ProfileAccountReferals /> */}
       </div>
     </ProfileWrapper>
   );

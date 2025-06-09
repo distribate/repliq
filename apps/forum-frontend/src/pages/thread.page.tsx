@@ -57,8 +57,8 @@ export function ThreadRouteComponent() {
           <ThreadCommentsSection />
         </div>
         <div
-          className="flex flex-col order-last gap-y-4 
-        lg:min-w-1/4 xl:w-1/4 w-full xl:max-w-1/4 h-fit relative xl:sticky top-0 overflow-hidden"
+          className="flex flex-col order-last gap-y-4 h-fit relative top-0 overflow-hidden
+            lg:min-w-1/4 xl:w-1/4 w-full xl:max-w-1/4 xl:sticky"
         >
           <ThreadsRecommendations />
         </div>

@@ -44,9 +44,7 @@
     "react-dom": "18.3.1",
     "react-hook-form": "7.53.0",
     "react-intersection-observer": "9.10.2",
-    "react-skinview3d": "5.1.0",
     "react-turnstile": "1.1.4",
-    "skinview3d": "3.1.0",
     "sonner": "2.0.3",
     "zod": "3.25.56"
   },

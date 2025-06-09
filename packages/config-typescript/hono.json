@@ -3,7 +3,9 @@
 	"display": "Hono",
 	"extends": "./base.json",
 	"compilerOptions": {
-		"lib": ["ESNext"],
+		"lib": [
+			"ESNext"
+		],
 		"target": "ES2020",
 		"module": "ESNext",
 		"moduleDetection": "force",
@@ -23,5 +25,7 @@
 		"jsx": "react-jsx",
 		"jsxImportSource": "hono/jsx"
 	},
-	"exclude": ["node_modules"]
+	"exclude": [
+		"node_modules"
+	]
 }

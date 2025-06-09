@@ -1,11 +1,11 @@
 import { Typography } from '@repo/ui/src/components/typography'
 import { useLocation } from '@tanstack/react-router'
 import { Outlet } from '@tanstack/react-router'
-import FutureChickenMini from "@repo/assets/images/minecraft/future_chicken_mini.png"
 import { reatomComponent } from '@reatom/npm-react'
 import { getUser } from '@repo/lib/helpers/get-user'
 import { CustomLink } from '#components/shared/link'
 import { MINECRAFT_SITE_DOMAIN } from '@repo/shared/constants/origin-list'
+import { IconSparkles } from '@tabler/icons-react'
 
 const Page = reatomComponent(({ ctx }) => {
   const donate = getUser(ctx).donate
@@ -26,7 +26,7 @@ const Page = reatomComponent(({ ctx }) => {
 const NoAccessDashboard = () => {
   return (
     <div className="flex flex-col gap-4 items-center justify-center w-full md:h-[80vh]">
-      <img src={FutureChickenMini} alt="" width={256} height={256} className="h-[128px] w-[128px] md:w-[256px] md:h-[256px]" />
+      <IconSparkles size={128} className="text-green-500" />
       <Typography className="text-2xl text-center font-semibold w-full lg:w-[60%]">
         Приобретите любую привилегию на сервере, чтобы открыть доступ к статистике своего профиля!
       </Typography>

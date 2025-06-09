@@ -1,4 +1,3 @@
-import Photo from "@repo/assets/images/minecraft/photo.webp";
 import { MoreWrapper } from "#components/wrappers/components/more-wrapper";
 import { Separator } from "@repo/ui/src/components/separator.tsx";
 import { ReportCreateModal } from "#components/modals/action-confirmation/components/report/components/report-create-modal.tsx";
@@ -11,7 +10,6 @@ import { reatomComponent, useUpdate } from "@reatom/npm-react";
 import { requestedUserIsSameAtom, requestedUserParamAtom, requestedUserProfileBlockedAtom } from "#components/profile/main/models/requested-user.model";
 import { UserProfileSettings } from "#components/user/settings/profile/components/user-profile-settings";
 import { Button } from "@repo/ui/src/components/button.tsx";
-import BookAndQuill from "@repo/assets/images/minecraft/book_quill.webp";
 import { Ban } from "lucide-react";
 import { DropdownMenuItem } from "@repo/ui/src/components/dropdown-menu";
 import { blockedUserAction, blockedUserDialogIsOpenAtom } from "#components/modals/action-confirmation/components/block-user/models/blocked-user.model";
@@ -22,6 +20,7 @@ import { DialogClose } from "@repo/ui/src/components/dialog.tsx";
 import { getUser } from "@repo/lib/helpers/get-user.ts";
 import { deleteBackgroundImageAction } from "#components/profile/header/models/cover-image.model.ts";
 import { DynamicModal } from "#components/modals/dynamic-modal/components/dynamic-modal.tsx";
+import { IconPhotoFilled, IconSettings } from "@tabler/icons-react";
 
 const DeleteCoverModal = reatomComponent(({ ctx }) => {
   const cover_image = getUser(ctx).cover_image;
@@ -64,8 +63,8 @@ const ProfileProfileSettingsModal = () => {
   return (
     <Dialog>
       <DialogTrigger asChild className="w-1/2">
-        <Button title="Настройка профиля" type="button" className="rounded-l-none px-4 hover:bg-shark-800/40">
-          <img src={BookAndQuill} width={24} className="w-[24px] h-[24px]" height={24} alt="" />
+        <Button title="Настройка профиля" type="button" className="rounded-l-none px-4 hover:bg-shark-800/50">
+          <IconSettings size={24} className="text-shark-200" />
         </Button>
       </DialogTrigger>
       <DialogContent>
@@ -79,8 +78,8 @@ const ProfileBackgroundChangeModal = () => {
   return (
     <Dialog>
       <DialogTrigger className="w-1/2 h-full">
-        <div className="flex items-center justify-center w-full h-full rounded-r-none px-4 hover:bg-shark-800/40">
-          <img src={Photo} width={24} height={24} alt="" />
+        <div className="flex items-center justify-center w-full h-full rounded-r-none px-4 hover:bg-shark-800/50">
+          <IconPhotoFilled size={24} className="text-shark-200" />
         </div>
       </DialogTrigger>
       <DialogContent>

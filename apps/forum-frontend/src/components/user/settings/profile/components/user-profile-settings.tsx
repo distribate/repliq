@@ -2,27 +2,23 @@ import { Typography } from "@repo/ui/src/components/typography.tsx";
 import { Separator } from "@repo/ui/src/components/separator.tsx";
 import { DescriptionInput } from "./description-input.tsx";
 import { OutlineCover } from "./outline-cover.tsx";
-import Lead from "@repo/assets/images/minecraft/lead.webp";
 import { ProfileVisibilityChange } from "./profile-visibility-change.tsx";
 import { getUser } from "@repo/lib/helpers/get-user.ts";
 import { UserSettingOption } from "#components/user/settings/user-setting-option.tsx";
 import { UserSettingsBack } from "#components/modals/user-settings/components/user-settings-back.tsx";
 import { reatomComponent } from "@reatom/npm-react";
-import { 
-  navigateToDialogAction, 
-  ProfileDialog, 
-  settingsCurrentDialogAtom 
+import {
+  navigateToDialogAction,
+  ProfileDialog,
+  settingsCurrentDialogAtom
 } from "#components/modals/user-settings/models/user-settings.model.ts";
-import Barrier from "@repo/assets/images/minecraft/barrier.webp";
 import dayjs from "@repo/lib/constants/dayjs-instance";
-import Firework from "@repo/assets/images/minecraft/firework.webp";
-import Nametag from '@repo/assets/images/minecraft/nametag.webp';
-import BlueDye from "@repo/assets/images/minecraft/blue_dye.webp";
 import { hexToRgba } from "@repo/lib/helpers/hex-to-rgba.ts";
 import { RealNameChange } from "./real-name-change.tsx";
 import { lazy, ReactNode, Suspense } from "react";
 import { Skeleton } from "@repo/ui/src/components/skeleton";
 import { parseDateOrTimestamp } from "#components/user/settings/profile/components/birthday-picker/helpers/birthday-picker";
+import { IconBorderCorners, IconGiftFilled, IconKeyframeFilled, IconLabel, IconUserSquare } from "@tabler/icons-react";
 
 const ColorPicker = lazy(() =>
   import("#components/user/settings/profile/components/nickname-color-picker")
@@ -47,7 +43,11 @@ const ProfileVisibilityOption = reatomComponent(({ ctx }) => {
   const profile_visibility = getUser(ctx).preferences.profile_visibility
 
   return (
-    <UserSettingOption onClick={() => navigateToDialogAction(ctx, "visibility")} title="Тип аккаунта:" imageSrc={Barrier}>
+    <UserSettingOption
+      onClick={() => navigateToDialogAction(ctx, "visibility")}
+      title="Тип аккаунта:"
+      icon={{ value: IconUserSquare }}
+    >
       <Typography className="text-base">
         {profile_visibility === "all" ? "открытый" : "закрытый"}
       </Typography>
@@ -59,7 +59,7 @@ const BirthdayOption = reatomComponent(({ ctx }) => {
   const birthday = getUser(ctx).birthday;
 
   return (
-    <UserSettingOption onClick={() => navigateToDialogAction(ctx, "birthday")} title="День рождения" imageSrc={Firework}>
+    <UserSettingOption onClick={() => navigateToDialogAction(ctx, "birthday")} title="День рождения" icon={{ value: IconGiftFilled }}>
       <div className="flex items-center gap-1">
         <Typography className="text-base">
           {birthday ? dayjs(birthday).format("DD MMM YYYY") : `не указано`}
@@ -71,7 +71,7 @@ const BirthdayOption = reatomComponent(({ ctx }) => {
 
 const RealnameOption = reatomComponent(({ ctx }) => {
   return (
-    <UserSettingOption onClick={() => navigateToDialogAction(ctx, "real-name")} title="Реальное имя" imageSrc={Nametag}>
+    <UserSettingOption onClick={() => navigateToDialogAction(ctx, "real-name")} title="Реальное имя" icon={{ value: IconLabel }}>
       <div className="flex items-center gap-1">
         <Typography className="text-base">
           {getUser(ctx).real_name ?? 'нет'}
@@ -83,7 +83,7 @@ const RealnameOption = reatomComponent(({ ctx }) => {
 
 const NamecolorOption = reatomComponent(({ ctx }) => {
   return (
-    <UserSettingOption onClick={() => navigateToDialogAction(ctx, "name-color")} title="Цвет никнейма" imageSrc={BlueDye}>
+    <UserSettingOption onClick={() => navigateToDialogAction(ctx, "name-color")} title="Цвет никнейма" icon={{ value: IconKeyframeFilled }}>
       <div
         className={`flex items-center px-4 py-1 backdrop-blur-md rounded-md`}
         style={{
@@ -177,7 +177,7 @@ export const UserProfileSettings = reatomComponent(({ ctx }) => {
                   </Typography>
                 </Separator>
                 <NamecolorOption />
-                <UserSettingOption title="Обводка вокруг шапки профиля" imageSrc={Lead}>
+                <UserSettingOption title="Обводка вокруг шапки профиля" icon={{ value: IconBorderCorners }}>
                   <OutlineCover />
                 </UserSettingOption>
                 {/* <FavoriteItemOption /> */}

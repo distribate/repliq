@@ -1,6 +1,6 @@
 import { Avatar } from "#components/user/avatar/components/avatar";
 import { Typography } from "@repo/ui/src/components/typography";
-import { Plus, Pencil, NotebookPen } from "lucide-react"
+import { Plus } from "lucide-react"
 import { isAuthenticatedAtom } from "@repo/lib/queries/global-option-query";
 import { MenuArrow } from "@repo/ui/src/components/menu-arrow.tsx"
 import { reatomComponent } from "@reatom/npm-react";
@@ -11,12 +11,12 @@ import { isExperimentalDesignAtom } from "./experimental-layout.model";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@repo/ui/src/components/dropdown-menu";
 import LogotypeImage from "@repo/assets/images/logotype.png"
 import { AuthorizationButton } from "./authorization-button";
-import { IconSearch } from "@tabler/icons-react";
+import { IconBrandThreads, IconLibrary, IconSearch } from "@tabler/icons-react";
 import { Input } from "@repo/ui/src/components/input";
 
 const CREATE = [
-  { icon: Pencil, title: "Создать тред", link: "/create-thread" },
-  { icon: NotebookPen, title: "Открыть тикет", link: "/create-ticket" }
+  { icon: IconBrandThreads, title: "Создать тред", link: "/create-thread" },
+  { icon: IconLibrary, title: "Открыть тикет", link: "/create-ticket" }
 ]
 
 const ProfileBadge = reatomComponent(({ ctx }) => {

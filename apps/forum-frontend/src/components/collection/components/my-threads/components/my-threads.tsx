@@ -1,5 +1,5 @@
 import { Typography } from "@repo/ui/src/components/typography";
-import FancyFeather from "@repo/assets/images/minecraft/fancy_feather.webp"
+// import FancyFeather from "@repo/assets/images/minecraft/fancy_feather.webp"
 import { myThreadsResource } from "../queries/my-threads-query";
 import { reatomComponent } from "@reatom/npm-react";
 import { CustomLink } from "#components/shared/link";
@@ -9,7 +9,7 @@ import { createIdLink } from "@repo/lib/utils/create-link";
 export const SavedThreads = () => {
   return (
     <div className="flex flex-col h-full items-center justify-center gap-4 p-4 w-full">
-      <img src={FancyFeather} alt="" width={96} height={96} />
+      {/* <img src={FancyFeather} alt="" width={96} height={96} /> */}
       <Typography
         textColor="shark_white"
         textSize="very_big"
@@ -70,7 +70,7 @@ export const MyThreads = reatomComponent(({ ctx }) => {
       )}
       {!threads && !isLoading && (
         <div className="flex flex-col h-full items-center justify-center gap-4 p-4 w-full">
-          <img src={FancyFeather} alt="" width={96} height={96} />
+          {/* <img src={FancyFeather} alt="" width={96} height={96} /> */}
           <Typography
             textColor="shark_white"
             textSize="very_big"

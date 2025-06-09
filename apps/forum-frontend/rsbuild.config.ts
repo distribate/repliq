@@ -11,7 +11,8 @@ export default defineConfig({
     },
   },
   html: {
-    template: "./index.html"
+    template: "./index.html",
+    inject: 'body',
   },
   plugins: [
     pluginReact(),
@@ -47,6 +48,7 @@ export default defineConfig({
     sourceMap: {
       js: process.env.NODE_ENV === 'development' ? 'eval' : false,
     },
+    inlineScripts: true,
   },
   server: {
     port: process.env.NODE_ENV === 'development'

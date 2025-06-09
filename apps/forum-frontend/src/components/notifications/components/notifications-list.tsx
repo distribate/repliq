@@ -1,7 +1,6 @@
 import { notificationsAction, notificationsDataAtom, notificationsMetaAtom } from "#components/notifications/models/notifications.model";
 import { Typography } from "@repo/ui/src/components/typography";
 import dayjs from "@repo/lib/constants/dayjs-instance";
-import Bell from "@repo/assets/images/minecraft/bell.webp";
 import { checkNotificationAction } from "#components/notifications/models/notifications.model";
 import { Separator } from "@repo/ui/src/components/separator";
 import { Skeleton } from "@repo/ui/src/components/skeleton";
@@ -14,6 +13,7 @@ import { useEffect } from "react";
 import { ContentNotFound } from "#components/templates/components/content-not-found";
 import { onConnect } from "@reatom/framework";
 import { reatomComponent } from "@reatom/npm-react";
+import { IconInfoSquareRounded } from "@tabler/icons-react";
 
 const client = forumUserClient.user["get-user-notifications"].$get
 
@@ -29,9 +29,7 @@ const NotificationCard = reatomComponent<NotificationCardProps>(({
       className="flex justify-center items-center p-4 bg-shark-700/40 select-none hover:bg-shark-700 relative rounded-md gap-4 w-full"
       onMouseEnter={() => { !read && checkNotificationAction(ctx, id) }}
     >
-      <div className="w-[64px]">
-        <img src={Bell} alt="" width={64} height={64} />
-      </div>
+      <IconInfoSquareRounded size={48} className="text-shark-300" />
       <div className="flex flex-col justify-start w-full">
         <Typography className="truncate text-[18px]">
           {message}

@@ -41,7 +41,7 @@ services:
       # Uncomment to use Big Query backend for analytics
       # NEXT_ANALYTICS_BACKEND_PROVIDER: bigquery
     networks:
-      - cloudflare_network
+      - traefik_network
 
   kong:
     container_name: supabase-kong
@@ -56,7 +56,7 @@ services:
     #   analytics:
     #     condition: service_healthy
     networks:
-      - cloudflare_network
+      - traefik_network
     environment:
       KONG_DATABASE: "off"
       KONG_DECLARATIVE_CONFIG: /home/kong/kong.yml
@@ -152,7 +152,7 @@ services:
       # GOTRUE_HOOK_SEND_EMAIL_URI: "http://host.docker.internal:54321/functions/v1/email_sender"
       # GOTRUE_HOOK_SEND_EMAIL_SECRETS: "v1,whsec_VGhpcyBpcyBhbiBleGFtcGxlIG9mIGEgc2hvcnRlciBCYXNlNjQgc3RyaW5n"
     networks:
-      - cloudflare_network
+      - traefik_network
 
   rest:
     container_name: supabase-rest
@@ -174,7 +174,7 @@ services:
       PGRST_APP_SETTINGS_JWT_EXP: ${JWT_EXPIRY}
     command: "postgrest"
     networks:
-      - cloudflare_network
+      - traefik_network
 
   realtime:
     # This container name looks inconsistent but is correct because realtime constructs tenant id by parsing the subdomain
@@ -220,7 +220,7 @@ services:
       APP_NAME: realtime
       SEED_SELF_HOST: true
     networks:
-      - cloudflare_network
+      - traefik_network
 
   # To use S3 backed storage: docker compose -f docker-compose-supabase.yml -f docker-compose.s3.yml up
   storage:
@@ -267,7 +267,7 @@ services:
     volumes:
       - ./data/fasberry-supabase/volumes/storage:/var/lib/storage:z
     networks:
-      - cloudflare_network
+      - traefik_network
 
   imgproxy:
     container_name: supabase-imgproxy
@@ -285,7 +285,7 @@ services:
     volumes:
       - ./data/fasberry-supabase/volumes/storage:/var/lib/storage:z
     networks:
-      - cloudflare_network
+      - traefik_network
 
   meta:
     container_name: supabase-meta
@@ -305,7 +305,7 @@ services:
       PG_META_DB_USER: supabase_admin
       PG_META_DB_PASSWORD: ${POSTGRES_PASSWORD}
     networks:
-      - cloudflare_network
+      - traefik_network
 
   # functions:
   #   container_name: supabase-edge-functions
@@ -419,7 +419,7 @@ services:
       # Use named volume to persist pgsodium decryption key between restarts
       - db-config:/etc/postgresql-custom
     networks:
-      - cloudflare_network
+      - traefik_network
 
   vector:
     container_name: supabase-vector
@@ -445,7 +445,7 @@ services:
       LOGFLARE_API_KEY: ${LOGFLARE_API_KEY}
     command: [ "--config", "etc/vector/vector.yml" ]
     networks:
-      - cloudflare_network
+      - traefik_network
 
   # Update the DATABASE_URL if you are using an external Postgres database
   supavisor:
@@ -489,12 +489,12 @@ services:
     volumes:
       - ./data/fasberry-supabase/volumes/pooler/pooler.exs:/etc/pooler/pooler.exs:ro
     networks:
-      - cloudflare_network
+      - traefik_network
 
 networks:
   shared-network:
     external: true
-  cloudflare_network:
+  traefik_network:
     external: true
 
 volumes:

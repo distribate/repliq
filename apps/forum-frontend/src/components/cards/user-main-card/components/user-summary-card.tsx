@@ -3,7 +3,7 @@ import { Typography } from "@repo/ui/src/components/typography.tsx";
 import { Avatar } from '#components/user/avatar/components/avatar.tsx';
 import { UserNickname } from "#components/user/name/nickname.tsx";
 import { UserDonate } from "#components/user/donate/components/donate.tsx";
-import Glass from "@repo/assets/images/minecraft/glass.webp";
+// import Glass from "@repo/assets/images/minecraft/glass.webp";
 import dayjs from "@repo/lib/constants/dayjs-instance.ts";
 import { lazy, Suspense } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@repo/ui/src/components/tabs.tsx";
@@ -83,9 +83,9 @@ const UserHead = reatomComponent(({ ctx }) => {
   return (
     <div className="flex items-center gap-4 p-4 w-full">
       <div className="flex relative justify-center p-2 items-center">
-        <div className="z-1 absolute w-full h-full right-0 left-0 bottom-0 top-0">
+        {/* <div className="z-1 absolute w-full h-full right-0 left-0 bottom-0 top-0">
           <img src={Glass} alt="" width={104} height={104} />
-        </div>
+        </div> */}
         <Avatar
           nickname={nickname}
           propWidth={88}
