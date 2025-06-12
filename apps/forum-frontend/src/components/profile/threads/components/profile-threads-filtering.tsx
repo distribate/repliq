@@ -4,15 +4,15 @@ import { SelectedWrapper } from "#components/wrappers/components/selected-wrappe
 import { LayoutGrid } from "lucide-react";
 import { VIEW_COMPONENTS_TYPE } from "#components/friends/components/filtering/constants/view-components-type";
 import { DropdownMenuItem } from "@repo/ui/src/components/dropdown-menu.tsx";
-import { ChangeEvent, useState } from "react";
+import { ChangeEvent } from "react";
 import { Input, InputProps } from "@repo/ui/src/components/input.tsx";
 import { FilteringSearchWrapper } from "#components/wrappers/components/filtering-search-wrapper";
 import {
   profileThreadsSettingsAtom,
 } from "#components/profile/threads/models/profile-threads-settings.model";
-import { useDebounce } from "@repo/lib/hooks/use-debounce.ts";
 import { reatomComponent } from "@reatom/npm-react";
 import { requestedUserParamAtom } from "#components/profile/main/models/requested-user.model";
+import { action, sleep, withConcurrency } from "@reatom/framework";
 
 const ProfileThreadsFilteringView = reatomComponent(({ ctx }) => {
   const profileThreadsViewState = ctx.spy(profileThreadsSettingsAtom)
@@ -60,26 +60,21 @@ const ProfileThreadsFilteringView = reatomComponent(({ ctx }) => {
   );
 }, "ProfileThreadsFilteringView")
 
+const onChange = action(async (ctx, e: ChangeEvent<HTMLInputElement>) => {
+  const { value } = e.target;
+
+  await ctx.schedule(() => sleep(300))
+
+  profileThreadsSettingsAtom(ctx, (state) => ({ ...state, querySearch: value }))
+}).pipe(withConcurrency())
+
 const ProfileThreadsFilteringSearch = reatomComponent<InputProps>(({ ctx, ...props }) => {
-  const [value, setValue] = useState<string>("");
-
-  const debouncedUpdateQuery = useDebounce((value: string) =>
-    profileThreadsSettingsAtom(ctx, (state) => ({ ...state, querySearch: value })
-    ), 300);
-
-  const handleSearchInput = (e: ChangeEvent<HTMLInputElement>) => {
-    const { value } = e.target;
-    setValue(value);
-    debouncedUpdateQuery(value);
-  };
-
   return (
     <Input
       className="rounded-lg"
-      value={value}
       maxLength={96}
       placeholder="Поиск по названию"
-      onChange={handleSearchInput}
+      onChange={e => onChange(ctx, e)}
       {...props}
     />
   );

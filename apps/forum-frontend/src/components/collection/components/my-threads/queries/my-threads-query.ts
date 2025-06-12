@@ -1,6 +1,6 @@
 import { getThreadsUser } from "#components/profile/threads/models/profile-threads.model";
+import { currentUserAtom } from "#components/user/models/current-user.model";
 import { reatomResource, withDataAtom, withStatusesAtom } from "@reatom/async";
-import { currentUserAtom } from "@repo/lib/helpers/get-user";
 
 export const myThreadsResource = reatomResource(async (ctx) => {
   const nickname = ctx.spy(currentUserAtom)?.nickname

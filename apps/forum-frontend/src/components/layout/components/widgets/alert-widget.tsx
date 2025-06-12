@@ -3,10 +3,9 @@ import { Typography } from "@repo/ui/src/components/typography.tsx";
 import { Skeleton } from "@repo/ui/src/components/skeleton";
 import { UserNickname } from "#components/user/name/nickname";
 import { DeleteButton } from "@repo/ui/src/components/detele-button.tsx";
-import { globalPreferencesAtom } from "@repo/lib/queries/global-preferences.model";
 import { reatomComponent } from "@reatom/npm-react";
 import { AlertCircle, Link } from "lucide-react";
-import { updateVisibilityAction } from "@repo/lib/hooks/update-global-preferences.model" 
+import { globalPreferencesAtom, updateVisibilityAction } from "#components/user/settings/main/models/update-global-preferences.model" 
 import { CustomLink } from "#components/shared/link";
 import { alertsResource } from "./alert-widget.model";
 import { createIdLink } from "@repo/lib/utils/create-link";

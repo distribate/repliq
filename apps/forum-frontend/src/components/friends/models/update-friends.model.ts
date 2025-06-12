@@ -2,7 +2,7 @@ import { reatomAsync, withStatusesAtom } from "@reatom/async";
 import { atom } from "@reatom/core";
 import { getFriends, myFriendsDataAtom, myFriendsMetaAtom } from "./friends.model";
 import { friendsUpdateOptionsAtom } from "../components/filtering/models/friends-filtering.model";
-import { currentUserNicknameAtom } from "@repo/lib/helpers/get-user";
+import { currentUserNicknameAtom } from "#components/user/models/current-user.model";
 import { FriendWithDetails } from "@repo/types/schemas/friend/friend-types";
 
 const updateFriendsActionVariablesAtom = atom<"update-filter" | "update-cursor">("update-filter", "updateFriendsActionVariables")

@@ -2,10 +2,10 @@ import { Typography } from '@repo/ui/src/components/typography'
 import { useLocation } from '@tanstack/react-router'
 import { Outlet } from '@tanstack/react-router'
 import { reatomComponent } from '@reatom/npm-react'
-import { getUser } from '@repo/lib/helpers/get-user'
 import { CustomLink } from '#components/shared/link'
 import { MINECRAFT_SITE_DOMAIN } from '@repo/shared/constants/origin-list'
 import { IconSparkles } from '@tabler/icons-react'
+import { getUser } from '#components/user/models/current-user.model'
 
 const Page = reatomComponent(({ ctx }) => {
   const donate = getUser(ctx).donate

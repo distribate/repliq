@@ -38,7 +38,7 @@ export const LandsStats = reatomComponent(({ ctx }) => {
     <Accordion
       defaultValue={[lands[0].ulid]}
       type="multiple"
-      className="font-[Minecraft] w-full"
+      className=" w-full"
     >
       {lands.map((land) => (
         <AccordionItem key={land.ulid} value={land.ulid} className="mb-2">

@@ -1,19 +1,16 @@
-import { isStartedAtom } from "@repo/lib/queries/global-option-query"
 import { Typography } from "@repo/ui/src/components/typography"
 import { useNavigate } from "@tanstack/react-router"
-// import SteveNight from "@repo/assets/images/steve_night.jpg"
-// import Looking from "@repo/assets/images/looking.jpg"
 import { reatomComponent } from "@reatom/npm-react"
 import { MINECRAFT_SITE_DOMAIN } from "@repo/shared/constants/origin-list"
 
 export const StartPreview = reatomComponent(({ ctx }) => {
-  const isStarted = ctx.spy(isStartedAtom)
+  const isStarted = false
   const navigate = useNavigate()
 
   const toggleChoise = (variant: "forum" | "get-start") => {
     switch (variant) {
       case "forum":
-        isStartedAtom(ctx, false)
+        
 
         return navigate({ to: "/", })
       case "get-start":

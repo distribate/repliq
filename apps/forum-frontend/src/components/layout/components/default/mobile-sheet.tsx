@@ -1,4 +1,4 @@
-import { currentUserAtom, currentUserNicknameAtom } from "@repo/lib/helpers/get-user"
+import { currentUserAtom, currentUserNicknameAtom } from "#components/user/models/current-user.model"
 import { Sheet, SheetContent } from "@repo/ui/src/components/sheet.tsx"
 import { atom } from "@reatom/core"
 import { cva, VariantProps } from "class-variance-authority"
@@ -83,10 +83,6 @@ export const SheetMenu = reatomComponent(({ ctx }) => {
           <SidebarMobileButton
             titleButton="Друзья"
             func={() => handle(router.navigate({ to: "/friends" }))}
-          />
-          <SidebarMobileButton
-            titleButton="Ивенты"
-            func={() => handle(router.navigate({ to: "/events" }))}
           />
           <SidebarMobileButton
             titleButton="Коллекции"

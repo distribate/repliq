@@ -5,7 +5,6 @@ import { ActiveSessions } from '#components/user/settings/account/components/act
 import { UserSettingOption } from '#components/user/settings/user-setting-option';
 import { UserSettingsBack } from '#components/modals/user-settings/components/user-settings-back.tsx';
 import { Switch } from '@repo/ui/src/components/switch.tsx';
-import { getUser } from '@repo/lib/helpers/get-user';
 import { reatomComponent, useUpdate } from '@reatom/npm-react';
 import { updateCurrentUserSettingsAction } from '#components/user/settings/profile/models/update-current-user.model';
 import { spawn } from '@reatom/framework';
@@ -17,6 +16,7 @@ import { Skeleton } from '@repo/ui/src/components/skeleton';
 import { userActiveSessionsAction } from '../../../../modals/user-settings/models/user-sessions.model';
 import { DeleteAccount } from './delete-account';
 import { IconDeviceDesktopPin, IconFileXFilled, IconHandMiddleFinger, IconHeartHandshake, IconLock, IconMailSpark, IconTag } from '@tabler/icons-react';
+import { getUser } from '#components/user/models/current-user.model';
 
 const FriendRequest = reatomComponent(({ ctx }) => {
   const accept_friend_request = getUser(ctx).preferences.accept_friend_request

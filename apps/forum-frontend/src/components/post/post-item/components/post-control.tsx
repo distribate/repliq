@@ -5,7 +5,7 @@ import { DropdownWrapper } from "#components/wrappers/components/dropdown-wrappe
 import { PostAdditionalModal } from "#components/post/post-item/components/post-additional-modal";
 import { PostEntity, UserEntity } from "@repo/types/entities/entities-type.ts";
 import { controlPostAction } from "#components/post/post-item/models/control-post.model";
-import { currentUserNicknameAtom } from "@repo/lib/helpers/get-user.ts";
+import { currentUserNicknameAtom } from "#components/user/models/current-user.model.ts";
 import { ReportCreateModal } from "#components/modals/action-confirmation/components/report/components/report-create-modal.tsx";
 import {
   editPostsControlAtom,

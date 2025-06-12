@@ -5,7 +5,7 @@ import { Typography } from "@repo/ui/src/components/typography.tsx";
 import { ThreadCommentActions } from "./thread-comment-actions.tsx";
 import { ThreadCommentProps } from "../types/thread-comment-types.ts";
 import { Badge } from "@repo/ui/src/components/badge.tsx";
-import { currentUserAtom } from "@repo/lib/helpers/get-user.ts";
+import { currentUserAtom } from "#components/user/models/current-user.model.ts";
 import { lazy, Suspense } from "react";
 import { ThreadCommentItemContent } from "./thread-comment-item-content.tsx";
 import { reatomComponent } from "@reatom/npm-react";

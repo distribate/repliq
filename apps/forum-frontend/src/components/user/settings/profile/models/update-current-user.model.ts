@@ -1,11 +1,11 @@
 import { requestedUserAtom } from "#components/profile/main/models/requested-user.model";
 import { reatomAsync, withStatusesAtom } from "@reatom/async";
-import { currentUserAtom, currentUserNicknameAtom } from "@repo/lib/helpers/get-user";
 import { forumUserClient } from "@repo/shared/api/forum-client";
 import { editUserSettingsBodySchema } from "@repo/types/schemas/user/edit-user-settings-schema";
 import { toast } from "sonner";
 import { z } from "zod/v4";
 import { userDetailsSchema } from '@repo/types/schemas/user/edit-user-details-schema';
+import { currentUserAtom, currentUserNicknameAtom } from "#components/user/models/current-user.model";
 
 export type UpdateUserSettings = Omit<z.infer<typeof editUserSettingsBodySchema>, "userId">
 

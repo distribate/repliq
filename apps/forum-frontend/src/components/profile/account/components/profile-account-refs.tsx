@@ -1,10 +1,10 @@
 import { Button } from "@repo/ui/src/components/button";
 import { Typography } from "@repo/ui/src/components/typography";
 import Minecart from "@repo/assets/images/minecraft/minecart_chest.webp"
-import { getUser } from "@repo/lib/helpers/get-user";
 import { toast } from "sonner";
 import { useNavigate } from "@tanstack/react-router";
 import { reatomComponent } from "@reatom/npm-react";
+import { getUser } from "#components/user/models/current-user.model";
 
 export const ProfileAccountReferals = reatomComponent(({ ctx }) => {
   const nickname = getUser(ctx).nickname

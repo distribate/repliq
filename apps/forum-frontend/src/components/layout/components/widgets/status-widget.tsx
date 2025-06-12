@@ -1,5 +1,4 @@
 import { reatomComponent } from "@reatom/npm-react"
-// import { globalPreferencesAtom } from "@repo/lib/queries/global-preferences.model"
 import { Skeleton } from "@repo/ui/src/components/skeleton"
 import { Typography } from "@repo/ui/src/components/typography"
 import { toast } from "sonner"
@@ -7,7 +6,6 @@ import { statusResource } from "./status-widget.model"
 
 export const StatusWidget = reatomComponent(({ ctx }) => {
   const isEnabled = false
-  // ctx.spy(globalPreferencesAtom).intro === 'show'
   const data = ctx.spy(statusResource.dataAtom)
 
   const copyClipboard = async () => {

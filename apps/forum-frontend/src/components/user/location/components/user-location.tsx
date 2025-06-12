@@ -41,7 +41,7 @@ export const UserLocation = reatomComponent(({ ctx }) => {
       open={opened}
       onOpenChange={(opened) => coverAtom(ctx, (state) => ({ ...state, location: { opened } }))}
     >
-      <DialogContent className="font-[Minecraft]">
+      <DialogContent>
         <LocationContent />
       </DialogContent>
     </Dialog>

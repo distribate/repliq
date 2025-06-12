@@ -1,8 +1,8 @@
 import { Input } from '@repo/ui/src/components/input.tsx';
-import { getUser } from '@repo/lib/helpers/get-user';
 import { reatomComponent } from '@reatom/npm-react';
 import { action, atom, sleep, spawn, withConcurrency, withInit } from '@reatom/framework';
 import { updateCurrentUserAction } from '../models/update-current-user.model';
+import { getUser } from '#components/user/models/current-user.model';
 
 const descriptionValueAtom = atom<string | null>(null, "descriptionValue").pipe(withInit((ctx) => {
   const currentDescription = getUser(ctx)?.description

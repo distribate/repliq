@@ -8,9 +8,9 @@ import { Suspense, lazy } from "react"
 import { ThreadShare } from "#components/thread/thread-share/components/thread-share"
 import { ThreadSave } from "#components/thread/thread-save/components/thread-save"
 import { reatomComponent } from "@reatom/npm-react"
-import { isAuthenticatedAtom } from "@repo/lib/queries/global-option-query"
 import { PageLoader } from "@repo/ui/src/components/page-loader"
 import { Skeleton } from "@repo/ui/src/components/skeleton"
+import { isAuthenticatedAtom } from "#components/auth/models/auth.model"
 
 const Content = lazy(() => import("#components/thread/thread-content/components/thread-content").then(m => ({ default: m.ThreadContent })))
 const ThreadImages = lazy(() => import("../../thread-images/components/thread-images").then(m => ({ default: m.ThreadImages })))

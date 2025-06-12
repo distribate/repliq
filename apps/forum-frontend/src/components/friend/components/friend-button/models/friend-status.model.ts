@@ -1,6 +1,6 @@
 import { reatomAsync, withStatusesAtom } from "@reatom/async";
 import { atom, CtxSpy } from "@reatom/core";
-import { currentUserNicknameAtom } from "@repo/lib/helpers/get-user";
+import { currentUserNicknameAtom } from "#components/user/models/current-user.model";
 import { forumUserClient } from "@repo/shared/api/forum-client";
 
 type FriendStatus = {

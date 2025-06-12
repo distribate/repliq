@@ -3,7 +3,6 @@ import { Separator } from "@repo/ui/src/components/separator.tsx";
 import { DescriptionInput } from "./description-input.tsx";
 import { OutlineCover } from "./outline-cover.tsx";
 import { ProfileVisibilityChange } from "./profile-visibility-change.tsx";
-import { getUser } from "@repo/lib/helpers/get-user.ts";
 import { UserSettingOption } from "#components/user/settings/user-setting-option.tsx";
 import { UserSettingsBack } from "#components/modals/user-settings/components/user-settings-back.tsx";
 import { reatomComponent } from "@reatom/npm-react";
@@ -13,17 +12,29 @@ import {
   settingsCurrentDialogAtom
 } from "#components/modals/user-settings/models/user-settings.model.ts";
 import dayjs from "@repo/lib/constants/dayjs-instance";
-import { hexToRgba } from "@repo/lib/helpers/hex-to-rgba.ts";
 import { RealNameChange } from "./real-name-change.tsx";
 import { lazy, ReactNode, Suspense } from "react";
 import { Skeleton } from "@repo/ui/src/components/skeleton";
 import { parseDateOrTimestamp } from "#components/user/settings/profile/components/birthday-picker/helpers/birthday-picker";
 import { IconBorderCorners, IconGiftFilled, IconKeyframeFilled, IconLabel, IconUserSquare } from "@tabler/icons-react";
+import { getUser } from "#components/user/models/current-user.model.ts";
 
 const ColorPicker = lazy(() =>
   import("#components/user/settings/profile/components/nickname-color-picker")
     .then(m => ({ default: m.NicknameColorPicker }))
 )
+
+type HexToRgbaProps = {
+  hex: string
+  alpha: number
+}
+
+const hexToRgba = ({ hex, alpha }: HexToRgbaProps) => {
+  const match = hex.match(/\w\w/g)!;
+  const [r, g, b] = match.map((x) => parseInt(x, 16));
+  
+  return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+};
 
 const DatePicker = lazy(() =>
   import("#components/user/settings/profile/components/birthday-picker/components/date-birthday-picker")

@@ -1,5 +1,5 @@
 import { reatomResource, withCache, withDataAtom, withStatusesAtom } from "@reatom/async"
-import { currentUserAtom } from "@repo/lib/helpers/get-user"
+import { currentUserAtom } from "#components/user/models/current-user.model"
 import { forumSharedClient } from "@repo/shared/api/forum-client"
 
 const getOnlineUsers = async () => {

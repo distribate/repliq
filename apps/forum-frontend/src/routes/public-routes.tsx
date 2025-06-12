@@ -3,23 +3,21 @@ import { NotFound } from '#components/templates/components/not-found';
 import { requestedUserParamAtom } from '#components/profile/main/models/requested-user.model';
 import { threadParamAtom } from '#components/thread/thread-main/models/thread.model';
 import { reatomLoader } from '@repo/lib/utils/reatom/reatom-loader';
-import { validatePage } from '@repo/lib/utils/validate-page';
 import { createRoute } from '@tanstack/react-router';
-import { getUserInformation } from '@repo/lib/helpers/get-user';
-import { redirect } from '@tanstack/react-router';
 import { rootRoute } from './root';
 import { IndexRouteComponent } from '#pages/index.page';
 import { PublicRouteComponent } from '#pages/public.layout';
-import { BannedRouteComponent } from '#pages/banned.page';
-import { NotExistRouteComponent } from '#pages/not-exist.page';
-import { NotOnlineRouteComponent } from '#pages/not-online.page';
-import { RestrictRouteComponent } from '#pages/restrict.page';
-import { DevelopmentRouteComponent } from '#pages/development.page';
 import { RouteSkeleton } from '#components/templates/components/route-skeleton';
 import { lazy, Suspense } from 'react';
+import { validatePage } from './validation.model';
 
 const ThreadRouteComponent = lazy(() => import("#pages/thread.page").then(m => ({ default: m.ThreadRouteComponent })))
 const UserRouteComponent = lazy(() => import("#pages/user.page").then(m => ({ default: m.UserRouteComponent })))
+const DevelopmentRouteComponent = lazy(() => import("#pages/development.page").then(m => ({ default: m.DevelopmentRouteComponent })))
+const RestrictRouteComponent = lazy(() => import("#pages/restrict.page").then(m => ({ default: m.RestrictRouteComponent })))
+const NotOnlineRouteComponent = lazy(() => import("#pages/not-online.page").then(m => ({ default: m.NotOnlineRouteComponent })))
+const NotExistRouteComponent = lazy(() => import("#pages/not-exist.page").then(m => ({ default: m.NotExistRouteComponent })))
+const StoreRouteComponent = lazy(() => import("#pages/store.page").then(m => ({ default: m.StoreRouteComponent })))
 
 const publicRoute = createRoute({
   getParentRoute: () => rootRoute,
@@ -53,41 +51,19 @@ const indexRoute = createRoute({
 
 const developmentRoute = createRoute({
   getParentRoute: () => rootRoute,
-  component: DevelopmentRouteComponent,
+  component: () => <Suspense><DevelopmentRouteComponent/></Suspense>,
   path: '/development',
 });
 
 const restrictRoute = createRoute({
   getParentRoute: () => rootRoute,
-  component: RestrictRouteComponent,
+  component: () => <Suspense><RestrictRouteComponent/></Suspense>,
   path: '/restrict',
-});
-
-const bannedRoute = createRoute({
-  getParentRoute: () => rootRoute,
-  component: BannedRouteComponent,
-  path: '/banned',
-  loaderDeps: ({ search: { reason, time, created_at } }) => ({ reason, time, created_at }),
-  loader: reatomLoader(async (context, routerCtx) => {
-    const isCurrent = await getUserInformation();
-
-    if (isCurrent) {
-      throw redirect({ to: '/' });
-    }
-
-    // @ts-expect-error
-    bannedAtom(context, routerCtx.deps);
-  }),
-  validateSearch: (search: Record<string, unknown>): { reason: string, time: string, created_at: string } => ({
-    reason: search.reason as string ?? 'нет',
-    time: search.time as string ?? '',
-    created_at: search.created_at as string ?? '',
-  }),
 });
 
 export const notExistRoute = createRoute({
   getParentRoute: () => rootRoute,
-  component: NotExistRouteComponent,
+  component: () => <Suspense><NotExistRouteComponent/></Suspense>,
   path: '/not-exist',
   validateSearch: (search: Record<string, unknown>): { redirect_nickname: string } => ({
     redirect_nickname: search.redirect_nickname as string,
@@ -97,15 +73,21 @@ export const notExistRoute = createRoute({
 const notOnlineRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: '/not-online',
-  component: NotOnlineRouteComponent,
+  component: () => <Suspense><NotOnlineRouteComponent/></Suspense>,
+});
+
+const storeRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/store',
+  component: () => <Suspense><StoreRouteComponent /></Suspense>,
 });
 
 export const publicRoutes = publicRoute.addChildren([
   indexRoute,
   userRoute,
   threadRoute,
-  bannedRoute,
   notExistRoute,
+  storeRoute,
   notOnlineRoute,
   developmentRoute,
   restrictRoute

@@ -1,13 +1,12 @@
 import { Typography } from "@repo/ui/src/components/typography.tsx";
 import { Switch } from "@repo/ui/src/components/switch.tsx";
-import { globalPreferencesAtom } from "@repo/lib/queries/global-preferences.model";
-import { getUser } from "@repo/lib/helpers/get-user.ts";
 import { UserSettingOption } from "#components/user/settings/user-setting-option";
 import { UserSettingsBack } from "#components/modals/user-settings/components/user-settings-back";
 import { reatomComponent } from "@reatom/npm-react";
-import { updateThreadsSettingAction, updateVisibilityAction } from "@repo/lib/hooks/update-global-preferences.model";
+import { globalPreferencesAtom, updateThreadsSettingAction, updateVisibilityAction } from "#components/user/settings/main/models/update-global-preferences.model";
 import { updateCurrentUserSettingsAction } from "#components/user/settings/profile/models/update-current-user.model";
 import { IconBellShare, IconFlag2, IconHistory, IconStepInto } from "@tabler/icons-react";
+import { getUser } from "#components/user/models/current-user.model";
 
 const AlertsSetting = reatomComponent(({ ctx }) => {
   const alerts = ctx.spy(globalPreferencesAtom).alerts

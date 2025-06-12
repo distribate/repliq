@@ -1,6 +1,4 @@
 import { reatomComponent } from "@reatom/npm-react";
-import { isAuthenticatedAtom } from "@repo/lib/queries/global-option-query";
-import { SearchWidget } from "../widgets/search-widget";
 
 export const MainNavigation = reatomComponent(({ ctx }) => {
   // if (!ctx.spy(isAuthenticatedAtom)) return null;

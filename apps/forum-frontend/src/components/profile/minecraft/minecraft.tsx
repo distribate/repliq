@@ -1,6 +1,3 @@
-// import { GeneralStats } from "#components/profile/stats/components/general-stats";
-// import { LandsStats } from "#components/profile/stats/components/lands-stats";
-import { Separator } from "@repo/ui/src/components/separator";
 import { Typography } from "@repo/ui/src/components/typography";
 import { UserProfileGameAchievements } from "../achievements/components/profile-game-ach";
 import { MinecraftAvatar } from "#components/user/minecraft-avatar/minecraft-avatar";
@@ -10,7 +7,6 @@ import { Button } from "@repo/ui/src/components/button";
 
 const MinecraftProfileAvatar = reatomComponent(({ ctx }) => {
   const nickname = ctx.get(requestedUserParamAtom)
-
   if (!nickname) return
 
   return (
@@ -31,31 +27,14 @@ const MinecraftProfileAvatar = reatomComponent(({ ctx }) => {
 
 export const Minecraft = () => {
   return (
-    <div className="flex flex-col w-full gap-4">
-      <Separator />
-      <div className="flex flex-row w-full gap-4">
-        <div className="flex flex-col gap-6 w-full xl:w-4/5 h-full">
-          <div className="flex xl:hidden items-center justify-center gap-4 flex-col w-fit self-center h-1/3">
-            <MinecraftProfileAvatar />
-          </div>
-          {/* <div className="flex flex-col gap-4 w-full">
-            <Typography textColor="shark_white" textSize="big" className="font-semibold" >
-              Основная статистика
-            </Typography>
-            <GeneralStats />
-          </div>
-          <div className="flex flex-col gap-4 w-full">
-            <Typography textSize="large" className="font-semibold">
-              Территории
-            </Typography>
-            <LandsStats />
-          </div> */}
-        </div>
-        <div className="hidden xl:flex items-center justify-center h-full gap-4 flex-col w-1/5">
-          <MinecraftProfileAvatar />
-        </div>
-      </div>
+    <div className="flex flex-col first:order-first first:xl:order-last xl:flex-row w-full gap-4">
       <UserProfileGameAchievements />
+      <div className="flex xl:hidden order-first xl:order-last items-center justify-center gap-4 flex-col w-fit self-center h-1/3">
+        <MinecraftProfileAvatar />
+      </div>
+      <div className="hidden xl:flex items-center justify-center h-full gap-4 flex-col w-1/5">
+        <MinecraftProfileAvatar />
+      </div>
     </div>
   )
 }

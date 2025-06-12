@@ -5,11 +5,11 @@ import { z } from "zod/v4";
 import { createCoverImageSchema } from "@repo/types/schemas/user/create-cover-image-schema.ts"
 import { requestedUserAtom } from "#components/profile/main/models/requested-user.model";
 import { forumSharedClient, forumUserClient } from "@repo/shared/api/forum-client"
-import { currentUserAtom } from '@repo/lib/helpers/get-user';
 import type { InferResponseType } from "hono/client"
 import { encode } from "cbor-x"
 import ky from "ky"
 import { fileArrayToUint8Array } from "@repo/lib/helpers/file-array-to-uint8-array";
+import { currentUserAtom } from '#components/user/models/current-user.model';
 
 const client = forumUserClient.user["create-cover-image"].$post
 

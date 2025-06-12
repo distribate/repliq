@@ -7,9 +7,9 @@ import TelegramLogo from "@repo/assets/images/telegram-logo.png"
 import { Button } from "@repo/ui/src/components/button";
 import { Dialog, DialogContent, DialogTrigger } from "@repo/ui/src/components/dialog";
 import { toast } from "sonner";
-import { getUser } from "@repo/lib/helpers/get-user";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@repo/ui/src/components/tooltip";
 import { PropsWithChildren } from "react";
+import { getUser } from "#components/user/models/current-user.model"
 
 type SocialsCardProps = {
   title: string,

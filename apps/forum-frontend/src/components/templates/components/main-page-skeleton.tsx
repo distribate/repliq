@@ -1,5 +1,5 @@
+import { globalPreferencesAtom } from "#components/user/settings/main/models/update-global-preferences.model"
 import { reatomComponent } from "@reatom/npm-react"
-import { globalPreferencesAtom } from "@repo/lib/queries/global-preferences.model"
 import { Separator } from "@repo/ui/src/components/separator"
 import { Skeleton } from "@repo/ui/src/components/skeleton"
 

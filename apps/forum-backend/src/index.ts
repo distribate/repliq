@@ -26,7 +26,6 @@ import { createIssueRoute } from '#routes/issue/create-issue.ts';
 import { getUserNotificationsRoute } from '#routes/user/get-user-notifications.ts';
 import { checkNotificationRoute } from '#routes/notification/check-notification.ts';
 import { getUserGameStatusRoute } from '#routes/user/get-user-game-status.ts';
-import { callServerCommandRoute } from '#routes/admin/call-server-command.ts';
 import { getMeRoute } from '#routes/user/get-me.ts';
 import { getFriendStatusRoute } from '#routes/friend/get-friend-status.ts';
 import { getFriendRequestsRoute } from '#routes/friend/get-friend-requests.ts';
@@ -65,10 +64,7 @@ import { corsProtectionMiddleware } from '#middlewares/cors-protection.ts';
 import { getSearchRoute } from '#routes/search/get-search.ts';
 import { getUserGlobalOptionsRoute } from '#routes/user/get-user-global-options.ts';
 import { getAlertsRoute } from '#routes/public/get-alerts.ts';
-import { createAuthImageRoute } from '#routes/admin/create-auth-image.ts';
-import { getAuthImagesRoute } from '#routes/admin/get-auth-images.ts';
 import { getMinecraftItemsRoute } from '#routes/public/get-minecraft-items.ts';
-import { createMinecraftItemRoute } from '#routes/admin/create-minecraft-item.ts';
 import { createCoverImageRoute } from '#routes/user/create-cover-image.ts';
 import { createPostRoute } from '#routes/post/create-post.ts';
 import { deletePostRoute } from '#routes/post/delete-post.ts';
@@ -94,12 +90,10 @@ import { watcher } from '#utils/kv-watcher.ts';
 import { userStatus } from '#middlewares/user-status.ts';
 import { getUserPublicSocialsRoute } from '#routes/user/get-user-public-socials.ts';
 import { getThreadsByOwnerRoute } from '#routes/thread/get-threads-by-owner.ts';
-import { deleteNewsRoute, createNewsRoute } from '#routes/admin/create-news.ts';
 import { adminMiddleware } from '#middlewares/admin-access.ts';
 import { getTicketsRoute } from '#routes/admin/get-tickets.ts';
 import { getReportsRoute } from '#routes/admin/get-reports.ts';
 import { getStatusRoute } from '#routes/public/get-status.ts';
-import { subscribePlayerGroup } from '#subscribers/sub-player-group.ts';
 import { getUserTicketsRoute } from '#routes/user/get-user-tickets.ts';
 import { getRulesRoute } from '#routes/public/get-rules.ts';
 import { getModpacksRoute } from '#routes/public/get-modpacks.ts';
@@ -123,8 +117,10 @@ async function startNats() {
   await watcher()
   subscribeUserStatus()
   natsLogger.success("Users status subscribed")
-  subscribePlayerGroup()
-  natsLogger.success("Player group subscribed")
+
+  // impl this to minecraft backend
+  // subscribePlayerGroup()
+  // natsLogger.success("Player group subscribed")
 }
 
 await startNats()
@@ -159,12 +155,14 @@ export const admin = new Hono()
   .basePath('/admin')
   .use(validateRequest("prevent"))
   .use(adminMiddleware())
-  .route('/', callServerCommandRoute)
-  .route("/", createAuthImageRoute)
-  .route("/", getAuthImagesRoute)
-  .route("/", createMinecraftItemRoute)
-  .route("/", deleteNewsRoute)
-  .route("/", createNewsRoute)
+  // todo: impl minecraft routes in minecraft backend
+  // .route('/', callServerCommandRoute)
+  // .route("/", createAuthImageRoute)
+  // .route("/", getAuthImagesRoute)
+  // .route("/", createMinecraftItemRoute)
+  // todo: impl news sub-routes in different route
+  // .route("/", deleteNewsRoute)
+  // .route("/", createNewsRoute)
   .route("/", getTicketsRoute)
   .route("/", getReportsRoute)
 
@@ -196,12 +194,12 @@ export const category = new Hono()
 
 export const thread = new Hono()
   .basePath('/thread')
-  // public routes
+  // #public routes
   .use(validateRequest())
   .route("/", getThreadRoute)
   .route("/", getThreadsByOwnerRoute)
   
-  // private routes
+  // #private routes
   .use(validateRequest("prevent"))
   .use(userStatus())
   .route("/", getThreadPreviewRoute)
@@ -232,12 +230,12 @@ export const reaction = new Hono()
 export const user = new Hono()
   .basePath('/user')
 
-  // public routes
+  // #public routes
   .use(validateRequest())
   .route("/", getUserProfileRoute)
   //--------------------------------------
 
-  // private routes
+  // #private routes
   .use(validateRequest("prevent"))
   .use(userStatus())
   .route("/", getMeRoute)
@@ -246,7 +244,7 @@ export const user = new Hono()
   .route("/", getUserGlobalOptionsRoute)
   //--------------------------------------
 
-  // current user preferences and details routes
+  // #current user preferences and details routes
   .route('/', getUserSettingsRoute)
   .route('/', editUserSettingsRoute)
   .route('/', editUserDetailsRoute)
@@ -255,11 +253,11 @@ export const user = new Hono()
   .route("/", deleteCoverImageRoute)
   //--------------------------------------
 
-  // user info routes
+  // #user info routes
   .route("/", getUserSummaryRoute)
   //--------------------------------------
 
-  // current user info routes
+  // #current user info routes
   .route("/", getUserStatusRoute)
   .route("/", getUserBanDetailsRoute)
   .route("/", getUserReferalsRoute)
@@ -269,7 +267,7 @@ export const user = new Hono()
   .route("/", getUserProfileStatsRoute)
   //--------------------------------------
 
-  // profile routes
+  // #profile routes
   .route('/', getUserThreadsRoute)
   .route("/", getUserAvatarRoute)
   .route('/', getUserPostsRoute)
@@ -281,7 +279,7 @@ export const user = new Hono()
   .route("/", createProfileViewRoute)
   //--------------------------------------
 
-  // user friends routes
+  // #user friends routes
   .route("/", getUserFriendsCountRoute)
   .route("/", createFriendRequestRoute)
   .route("/", deleteFriendRequestRoute)
@@ -296,29 +294,29 @@ export const user = new Hono()
   .route("/", getFriendRequestsRoute)
   //--------------------------------------
 
-  // user's actions routes
+  // #user's actions routes
   .route("/", createIssueRoute)
   .route("/", deleteAccountRoute)
   .route("/", restoreAccountRoute)
   //--------------------------------------
 
-  // user's notifications
+  // #user's notifications
   .route("/", getUserNotificationsRoute)
   .route("/", checkNotificationRoute)
   //--------------------------------------
 
-  // blocked users routes
+  // #blocked users routes
   .route("/", getUserIsBlockedRoute)
   .route('/', getBlockedUsersRoute)
   .route("/", controlUserBlockedRoute)
   //--------------------------------------
 
-  // validation routes
+  // #validation routes
   .route("/", getIsAdminRoute)
 //--------------------------------------
 
 export const sse = new Hono()
-  // http-only cookies accepted for only production mode
+  // #http-only cookies accepted for only production mode
   .use(validateRequest("prevent"))
   .route("/", notificationsSSERoute)
 

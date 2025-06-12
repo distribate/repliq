@@ -8,8 +8,6 @@ const inputVariants = cva(
     variants: {
       variant: {
         default: "border-none text-sm text-shark-50 placeholder:text-shark-300",
-        minecraft:
-          "border-[2px] text-shark-100 rounded-none bg-shark-800 text-sm dark:bg-shark-800 font-[Minecraft] placeholder:text-shark-200",
         form: "h-12 border border-transparent focus-visible:border-caribbean-green-200/40 text-[16px] placeholder:text-shark-300",
       },
       status: {

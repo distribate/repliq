@@ -1,6 +1,5 @@
 import { Typography } from "@repo/ui/src/components/typography.tsx";
 import { userProfileStatsResource } from "../models/user-stats.model";
-import { getUser } from "@repo/lib/helpers/get-user";
 import { Dialog, DialogContent, DialogTrigger } from "@repo/ui/src/components/dialog";
 import { Button } from "@repo/ui/src/components/button";
 import { ProfileStatsMeta, ProfileViewsDetails } from "@repo/types/routes-types/get-user-profile-stats-types";
@@ -14,6 +13,7 @@ import { reatomComponent } from "@reatom/npm-react";
 import { onConnect } from "@reatom/framework";
 import { CustomLink } from "#components/shared/link";
 import { createIdLink } from "@repo/lib/utils/create-link";
+import { getUser } from "#components/user/models/current-user.model";
 
 type AccountStatSectionProps = {
   title: string,

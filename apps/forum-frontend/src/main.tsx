@@ -1,3 +1,6 @@
+// @ts-expect-error
+import "./global.css"
+
 import { createRoot } from 'react-dom/client'
 import { RouterProvider, createRouter } from '@tanstack/react-router'
 import { createCtx } from '@reatom/core'

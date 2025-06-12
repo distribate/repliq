@@ -1,8 +1,8 @@
 import { Switch } from '@repo/ui/src/components/switch';
 import { reatomComponent } from '@reatom/npm-react';
-import { getUser } from '@repo/lib/helpers/get-user';
 import { spawn } from '@reatom/framework';
 import { updateCurrentUserSettingsAction } from '../models/update-current-user.model';
+import { getUser } from '#components/user/models/current-user.model';
 
 {/* <div className="flex flex-col gap-y-2 w-full p-2">
 <Typography textSize="small" textColor="shark_white">

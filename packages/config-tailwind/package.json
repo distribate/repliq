@@ -4,8 +4,7 @@
   "license": "MIT",
   "private": true,
   "exports": {
-    "./tailwind.config": "./tailwind.config.ts",
-    "./tailwind-landing.config": "./tailwind-landing.config.ts"
+    "./tailwind.config": "./tailwind.config.ts"
   },
   "devDependencies": {
     "@repo/config-typescript": "*",

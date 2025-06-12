@@ -1,8 +1,8 @@
 import { reatomComponent } from "@reatom/npm-react";
-import { isAuthenticatedAtom } from "@repo/lib/queries/global-option-query";
 import { lazy, Suspense } from "react";
 import { Skeleton } from "@repo/ui/src/components/skeleton";
-import { globalPreferencesAtom } from "@repo/lib/queries/global-preferences.model";
+import { globalPreferencesAtom } from "#components/user/settings/main/models/update-global-preferences.model";
+import { isAuthenticatedAtom } from "#components/auth/models/auth.model";
 
 const AlertWidget = lazy(() => import('#components/layout/components/widgets/alert-widget').then((m) => ({ default: m.AlertWidget })))
 

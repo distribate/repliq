@@ -4,6 +4,11 @@ import { TanStackRouterRspack } from '@tanstack/router-plugin/rspack'
 import { pluginImageCompress } from '@rsbuild/plugin-image-compress';
 import { pluginCssMinimizer } from "@rsbuild/plugin-css-minimizer";
 
+const host = "0.0.0.0"
+
+const port = process.env.NODE_ENV === 'development'
+  ? Number(process.env.DEV_PORT) : Number(process.env.PROD_PORT)
+
 export default defineConfig({
   source: {
     entry: {
@@ -34,8 +39,7 @@ export default defineConfig({
   resolve: {
     alias: {
       '@tabler/icons-react': '@tabler/icons-react/dist/esm/icons/index.mjs',
-    },
-    dedupe: ['react', 'react-dom'],
+    }
   },
   dev: {
     lazyCompilation: true
@@ -45,15 +49,8 @@ export default defineConfig({
     distPath: {
       root: process.env.NODE_ENV === 'development' ? "dist" : "build",
     },
-    sourceMap: {
-      js: process.env.NODE_ENV === 'development' ? 'eval' : false,
-    },
+    injectStyles: true,
     inlineScripts: true,
   },
-  server: {
-    port: process.env.NODE_ENV === 'development'
-      ? Number(process.env.DEV_PORT)
-      : Number(process.env.PROD_PORT),
-    host: '0.0.0.0',
-  },
+  server: { port, host },
 })

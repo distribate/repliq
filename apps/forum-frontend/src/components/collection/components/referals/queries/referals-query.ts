@@ -1,6 +1,6 @@
 import { forumUserClient } from "@repo/shared/api/forum-client";
 import { reatomResource, withDataAtom, withStatusesAtom } from "@reatom/async";
-import { currentUserAtom } from "@repo/lib/helpers/get-user";
+import { currentUserAtom } from "#components/user/models/current-user.model";
 
 const getReferals = async (nickname: string) => {
   const res = await forumUserClient.user["get-user-referals"][":nickname"].$get({  param: { nickname }})

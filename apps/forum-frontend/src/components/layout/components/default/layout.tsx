@@ -1,9 +1,9 @@
 import { lazy, Suspense, PropsWithChildren } from "react"
 import { reatomComponent } from "@reatom/npm-react"
-import { userGlobalOptionsAtom } from "@repo/lib/helpers/get-user"
+import { userGlobalOptionsAtom } from "#components/user/models/current-user.model"
 import { isExperimentalDesignAtom } from "./experimental-layout.model"
 import { Navbar } from "./navbar"
-import { isAuthenticatedAtom } from "@repo/lib/queries/global-option-query"
+import { isAuthenticatedAtom } from "#components/auth/models/auth.model"
 
 const SheetMenu = lazy(() => import("./mobile-sheet").then(m => ({ default: m.SheetMenu })))
 const BottomBar = lazy(() => import("./mobile-sheet").then(m => ({ default: m.BottomBar })))
@@ -21,7 +21,7 @@ export const MainLayout = reatomComponent<PropsWithChildren>(({ ctx, children })
         </Suspense>
       ) : (
         <div className="flex w-full relative min-h-screen items-center py-2 justify-center overflow-hidden">
-          <div className="flex flex-col gap-4 responsive-width h-full items-center justify-start">
+          <div className="flex flex-col gap-4 responsive-width pb-[74px] h-full items-center justify-start">
             <Navbar />
             {ctx.spy(isAuthenticatedAtom) && (
               <>

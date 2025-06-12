@@ -9,7 +9,7 @@ import { getUserFriendsSchema } from "@repo/types/schemas/user/get-user-friends-
 import { decode } from "cbor-x"
 import ky from "ky";
 import { parseBooleanToString } from "@repo/lib/helpers/parse-boolean-to-string.ts"
-import { currentUserNicknameAtom } from "@repo/lib/helpers/get-user";
+import { currentUserNicknameAtom } from "#components/user/models/current-user.model";
 import { friendsUpdateOptionsAtom } from "../components/filtering/models/friends-filtering.model";
 import { logger } from "@repo/lib/utils/logger";
 

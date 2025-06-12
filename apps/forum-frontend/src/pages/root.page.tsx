@@ -1,12 +1,3 @@
-// @ts-expect-error
-import '@bprogress/core/css';
-// @ts-expect-error
-import '../global.css'
-// @ts-expect-error
-import "@repo/ui/ui.css"
-// @ts-expect-error
-import "@repo/plate-editor/src/editor.css"
-
 import { Outlet } from '@tanstack/react-router'
 import { lazy, Suspense } from 'react';
 import { NotificationsWrapper } from '#components/notifications/components/notifications-wrapper';

@@ -2,7 +2,6 @@ import { Dialog, DialogContent, DialogTrigger } from "@repo/ui/src/components/di
 import { Typography } from "@repo/ui/src/components/typography"
 import { ReactNode } from "react"
 import { PulsatingButton } from "@repo/ui/src/components/shiny-button.tsx"
-import { MINECRAFT_MAP_SITE_DOMAIN } from "@repo/shared/constants/origin-list"
 import { IconBrandThreads, IconDeviceDesktopAnalytics, IconMoodSpark, IconPalette, IconSparkles, TablerIcon } from "@tabler/icons-react"
 
 type BuyDonateModalProps = {
@@ -72,7 +71,7 @@ const DonateDialog = () => {
         <div className="biloba-gradient opacity-30 w-full h-full z-[1] absolute left-0 right-0 top-0" />
         <IconSparkles size={112} className="text-biloba-flower-400" />
         <div className="flex flex-col">
-          <span className="font-[Minecraft] text-xl text-center font-semibold">Fasberry+</span>
+          <span className="text-xl text-center font-semibold">Fasberry+</span>
           <Typography className="text-lg text-center break-words">
             Откройте для себя больше возможностей на форуме и в игре!
           </Typography>
@@ -84,7 +83,7 @@ const DonateDialog = () => {
         ))}
       </div>
       <div className="bg-[#191919] sticky bottom-0 py-4 px-6 flex items-center justify-center w-full">
-        <a href={`${MINECRAFT_MAP_SITE_DOMAIN}/shop#shop-list`} target="_blank" rel="noreferrer" className="w-full">
+        <a href={`/store`} target="_blank" rel="noreferrer" className="w-full">
           <PulsatingButton className="w-full py-3">
             <Typography className="text-[18px] font-semibold">
               Приобрести

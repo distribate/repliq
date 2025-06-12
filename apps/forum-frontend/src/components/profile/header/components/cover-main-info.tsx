@@ -17,7 +17,7 @@ const BirthdayEvent = reatomComponent(({ ctx }) => {
 
   if (!isBirthday) return null;
 
-  return <Typography className="font-[Minecraft] text-xl lg:text-3xl select-none">🎉</Typography>
+  return <Typography className="text-xl lg:text-3xl select-none">🎉</Typography>
 }, "BirthdayEvent")
 
 export const UserCoverMainInfo = reatomComponent(({ ctx }) => {

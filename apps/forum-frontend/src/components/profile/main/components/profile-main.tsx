@@ -10,54 +10,16 @@ import {
   requestedUserAction,
   requestedUserGameStatsVisibleAtom,
   requestedUserIsSameAtom,
-  requestedUserParamAtom,
-  requestedUserProfileBlockedAtom,
-  requestedUserProfileStatusAtom,
-  requestedUserAccountTypeAtom,
   requestedUserMinecraftProfileIsExistsAtom
 } from '#components/profile/main/models/requested-user.model';
 import { SectionPrivatedTrigger } from '#components/templates/components/section-privated-trigger';
-import { isAuthenticatedAtom } from '@repo/lib/queries/global-option-query';
 import { AuthorizeTemplate } from '#components/templates/components/auth-template';
+import { isAuthenticatedAtom } from "#components/auth/models/auth.model";
 
 const Account = lazy(() => import("#components/profile/account/components/profile-account.tsx").then(m => ({ default: m.UserProfileAccount })))
 const Friends = lazy(() => import("#components/profile/friends/components/profile-friends.tsx").then(m => ({ default: m.UserProfileFriends })))
 const Threads = lazy(() => import("#components/profile/threads/components/profile-threads.tsx").then(m => ({ default: m.UserProfileThreads })))
-const Blocked = lazy(() => import("#components/templates/components/user-blocked").then(m => ({ default: m.UserBlocked })));
-const Banned = lazy(() => import("#components/templates/components/user-banned").then(m => ({ default: m.UserBanned })));
-const Deleted = lazy(() => import("#components/templates/components/user-deleted").then(m => ({ default: m.UserDeleted })))
 const Minecraft = lazy(() => import("#components/profile/minecraft/minecraft").then(m => ({ default: m.Minecraft })));
-
-export const Page = reatomComponent(({ ctx }) => {
-  switch (ctx.spy(requestedUserAccountTypeAtom)) {
-    case "archived":
-    case "deleted":
-      return (
-        <Suspense>
-          <Deleted />
-        </Suspense>
-      )
-  }
-
-  switch (ctx.spy(requestedUserProfileStatusAtom)) {
-    case "banned":
-      return (
-        <Suspense>
-          <Banned requestedUserNickname={ctx.spy(requestedUserParamAtom)!} />
-        </Suspense>
-      );
-    case "blocked":
-      return (
-        <Suspense>
-          <Blocked blockedType={ctx.spy(requestedUserProfileBlockedAtom)!} />
-        </Suspense>
-      )
-    default:
-      return (
-        <ProfileContentTabs />
-      )
-  }
-}, "RouteComponent")
 
 const TabsListContent = reatomComponent(({ ctx }) => {
   return (

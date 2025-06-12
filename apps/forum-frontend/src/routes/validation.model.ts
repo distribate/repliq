@@ -1,11 +1,11 @@
 import { Ctx } from '@reatom/core';
-import { isAuthenticatedAtom } from "#queries/global-option-query.ts";
 import { authClient } from "@repo/shared/api/auth-client";
 import { redirect } from '@tanstack/react-router';
 import { AUTH_REDIRECT } from '@repo/shared/constants/routes';
-import { currentUserResource } from '#helpers/get-user.ts';
-import { logger } from './logger';
 import { forumUserClient } from '@repo/shared/api/forum-client';
+import { isAuthenticatedAtom } from '#components/auth/models/auth.model';
+import { logger } from '@repo/lib/utils/logger';
+import { currentUserResource } from '#components/user/models/current-user.model';
 
 const RESTRICT_PATH = "/restrict"
 const DEVELOPMENT_PATH = "/development"

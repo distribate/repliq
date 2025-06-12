@@ -1,10 +1,10 @@
 import { Input } from "@repo/ui/src/components/input.tsx";
 import { Typography } from "@repo/ui/src/components/typography.tsx";
 import { Separator } from "@repo/ui/src/components/separator.tsx";
-import { getUser } from "@repo/lib/helpers/get-user.ts";
 import { reatomComponent } from "@reatom/npm-react";
 import { action, atom, sleep, spawn, withConcurrency, withInit } from "@reatom/framework";
 import { updateCurrentUserAction } from "../models/update-current-user.model";
+import { getUser } from "#components/user/models/current-user.model";
 
 const realNameAtom = atom<string | null>(null, "descriptionValue").pipe(withInit((ctx) => {
   const currentRealname = getUser(ctx)?.real_name

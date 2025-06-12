@@ -12,13 +12,13 @@ import { SectionSkeleton } from '#components/templates/components/section-skelet
 import { reatomComponent, useUpdate } from '@reatom/npm-react';
 import { onConnect } from '@reatom/framework';
 import { threadAtom, threadOwnerAtom, threadParamAtom } from '#components/thread/thread-main/models/thread.model.ts';
-import { isAuthenticatedAtom } from '@repo/lib/queries/global-option-query.ts';
-import { userGlobalOptionsAtom } from '@repo/lib/helpers/get-user.ts';
+import { userGlobalOptionsAtom } from '#components/user/models/current-user.model.ts';
 import { ThreadCommentsHeader } from './thread-comments-header.tsx';
 import { Typography } from '@repo/ui/src/components/typography.tsx';
 import { lazy, Suspense } from 'react';
 import { ThreadCommentsAnchor } from './thread-comments-anchor.tsx';
 import { CreateThreadComment } from '#components/thread/create-thread-comment/components/create-thread-comment.tsx';
+import { isAuthenticatedAtom } from '#components/auth/models/auth.model.ts';
 
 type ThreadCommentsProps = Pick<ThreadDetailed, "properties" | "owner">
 

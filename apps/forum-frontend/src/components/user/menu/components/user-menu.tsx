@@ -1,7 +1,6 @@
 import { Separator } from "@repo/ui/src/components/separator.tsx";
 import { Typography } from "@repo/ui/src/components/typography.tsx";
 import { UsersRound } from "lucide-react";
-import { getUser, userGlobalOptionsAtom } from "@repo/lib/helpers/get-user";
 import { Shield, LogOut } from 'lucide-react';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@repo/ui/src/components/dropdown-menu";
 import { lazy, ReactNode, Suspense } from "react";
@@ -11,6 +10,7 @@ import { CustomLink } from "#components/shared/link";
 import { toggleGlobalDialogAction } from "#components/modals/user-settings/models/user-settings.model";
 import { createIdLink } from "@repo/lib/utils/create-link";
 import { IconBasketCheck, IconBell, IconLibrary, IconSettings, IconUserSquare } from "@tabler/icons-react";
+import { getUser, userGlobalOptionsAtom } from "#components/user/models/current-user.model";
 
 const SettingsModal = lazy(() => import("#components/modals/user-settings/components/user-settings-modal").then(m => ({ default: m.UserSettingsModal })))
 const LogoutModal = lazy(() => import("#components/modals/action-confirmation/components/logout/components/logout-modal.tsx").then(m => ({ default: m.LogoutModal })))

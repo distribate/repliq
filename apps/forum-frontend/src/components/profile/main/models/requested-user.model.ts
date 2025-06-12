@@ -1,7 +1,6 @@
 import { reatomAsync, withErrorAtom, withStatusesAtom } from '@reatom/async';
 import { Atom, atom, Ctx } from '@reatom/core';
 import { forumUserClient } from "@repo/shared/api/forum-client";
-import { currentUserNicknameAtom } from "@repo/lib/helpers/get-user";
 import { UserDetailed, UserShorted } from '@repo/types/entities/user-type';
 import { take, withReset } from '@reatom/framework';
 import { router } from '#main';
@@ -11,6 +10,7 @@ import { VariantProps } from 'class-variance-authority';
 import { coverAreaVariants } from '../../header/components/cover-area';
 import { logger } from '@repo/lib/utils/logger';
 import { toast } from 'sonner';
+import { currentUserNicknameAtom } from '#components/user/models/current-user.model';
 
 type RequestedUserDetails = Pick<UserDetailed["preferences"],
   "game_stats_visible" | "real_name_visible" | "accept_friend_request" | "show_game_location" | "cover_outline_visible"
@@ -121,7 +121,7 @@ export const requestedUserAction = reatomAsync(async (ctx, target: string) => {
       if (nickname) destination = nickname
 
       return ctx.schedule(() => router.navigate({
-        to: "/not-exist", search: { redirect_nickname: destination, timeout: "5" }
+        to: "/not-exist", search: { redirect_nickname: destination }
       }))
     }
 

@@ -25,7 +25,6 @@
     "@repo/config-nats": "*",
     "@repo/lib": "*",
     "@repo/shared": "*",
-    "base-64": "1.0.0",
     "hono": "4.7.4",
     "hono-rate-limiter": "0.4.2",
     "ky": "1.7.2",
@@ -42,7 +41,6 @@
     "@repo/config-tailwind": "*",
     "@repo/config-typescript": "*",
     "@repo/types": "*",
-    "@types/base-64": "1",
     "@types/bun": "1.1.13",
     "typescript": "^5.4.5"
   }

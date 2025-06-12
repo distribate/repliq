@@ -3,9 +3,9 @@ import { Skeleton } from "@repo/ui/src/components/skeleton";
 import { Typography } from "@repo/ui/src/components/typography";
 import { threadRecommendationsResource } from "../models/thread-recommendations.model";
 import { CustomLink } from "#components/shared/link";
-import { isAuthenticatedAtom } from "@repo/lib/queries/global-option-query";
 import { SOCIALS } from "#components/layout/components/default/footer";
 import { createIdLink } from "@repo/lib/utils/create-link";
+import { isAuthenticatedAtom } from "#components/auth/models/auth.model";
 
 const RecommendationsList = reatomComponent(({ ctx }) => {
   const threads = ctx.spy(threadRecommendationsResource.dataAtom)?.data

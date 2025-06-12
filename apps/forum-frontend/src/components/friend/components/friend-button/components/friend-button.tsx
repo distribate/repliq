@@ -1,5 +1,5 @@
 import { Skeleton } from "@repo/ui/src/components/skeleton.tsx";
-import { currentUserNicknameAtom } from "@repo/lib/helpers/get-user.ts";
+import { currentUserNicknameAtom } from "#components/user/models/current-user.model.ts";
 import { Button } from "@repo/ui/src/components/button.tsx";
 import { Typography } from "@repo/ui/src/components/typography.tsx";
 import { friendStatusAction, getFriendStatusesAtom } from "../models/friend-status.model";

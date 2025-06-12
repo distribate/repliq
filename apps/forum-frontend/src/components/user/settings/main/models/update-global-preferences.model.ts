@@ -2,9 +2,25 @@ import { action } from '@reatom/core';
 import { reatomAsync, withStatusesAtom } from '@reatom/async';
 import { toast } from "sonner";
 import { atom } from '@reatom/core';
-import { globalPreferencesAtom } from '#queries/global-preferences.model.ts';
+import { withCookie } from "@reatom/persist-web-storage"
 
 type KeyType = "intro" | "alerts"
+
+type GlobalPreferences = {
+  alerts: "show" | "hide",
+  autoSaveThreads: boolean,
+  intro: "show" | "hide"
+}
+
+const initial: GlobalPreferences = {
+  alerts: "show",
+  intro: "show", 
+  autoSaveThreads: true
+}
+
+export const globalPreferencesAtom = atom<GlobalPreferences>(initial, "globalPreferences").pipe(
+  withCookie({ maxAge: 999999999 })("preferences")
+)
 
 const visibilityMessages: Record<KeyType, {
   msg: Record<"show" | "hide", {

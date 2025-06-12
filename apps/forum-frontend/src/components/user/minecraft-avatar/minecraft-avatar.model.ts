@@ -1,9 +1,25 @@
 import { reatomAsync } from '@reatom/async';
 import { atom } from '@reatom/framework';
-import { getSkinDetails } from '@repo/lib/queries/get-skin-details';
+import { skinClient } from '@repo/shared/api/minecraft-client.ts';
+import ky from 'ky';
 
 export const minecraftAvatarsUrlsAtom = atom<Record<string, string>>({}, "avatarsUrlsAtom");
 export const minecraftAvatarsStatusesAtom = atom<Record<string, boolean>>({}, "avatarsStatusesAtom");
+
+type GetSkinDetails = {
+  type: "head" | "skin"
+  nickname: string
+}
+
+export async function getSkinDetails({ type, nickname }: GetSkinDetails) {
+  const url = skinClient.skin[`get-${type}`][":nickname"].$url({
+    param: { nickname }
+  })
+
+  const blob = await ky.get(url).blob()
+
+  return URL.createObjectURL(blob)
+}
 
 export const minecraftAvatarAtom = (nickname: string) => atom((ctx) => {
   return {

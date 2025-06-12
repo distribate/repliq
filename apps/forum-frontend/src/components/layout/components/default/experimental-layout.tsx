@@ -1,5 +1,5 @@
 import { reatomComponent } from "@reatom/npm-react"
-import { currentUserNicknameAtom } from "@repo/lib/helpers/get-user"
+import { currentUserNicknameAtom } from "#components/user/models/current-user.model"
 import { useLocation } from "@tanstack/react-router"
 import { lazy, PropsWithChildren, Suspense } from "react"
 import { Home, User2, UsersRound } from "lucide-react"

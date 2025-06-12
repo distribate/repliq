@@ -4,9 +4,9 @@ import { reatomComponent } from '@reatom/npm-react';
 import { requestedUserIsSameAtom } from '#components/profile/main/models/requested-user.model';
 import { UserPostsSkeleton } from '#components/skeletons/components/user-posts-skeleton';
 import { onConnect } from '@reatom/framework';
-import { userGlobalOptionsAtom } from '@repo/lib/helpers/get-user';
 import { postsAction } from '../models/posts.model';
 import { ProfilePosts } from './profile-posts-list';
+import { userGlobalOptionsAtom } from '#components/user/models/current-user.model';
 
 onConnect(postsAction, postsAction)
 

@@ -1,5 +1,4 @@
 import { reatomLoader } from "@repo/lib/utils/reatom/reatom-loader";
-import { validateAdmin, validatePage } from "@repo/lib/utils/validate-page";
 import { createRoute, redirect } from "@tanstack/react-router";
 import { AdminSections } from "#components/admin/navigation/admin-navigation-badge";
 import { DEFAULT_TYPE_PARAM, searchTypeParamAtom } from "#components/search/models/search-related.model";
@@ -11,6 +10,7 @@ import { Params } from "#pages/search.page";
 import { ProtectedRouteComponent } from "#pages/protected.layout";
 import { RouteSkeleton } from "#components/templates/components/route-skeleton";
 import { lazy, Suspense } from "react";
+import { validateAdmin, validatePage } from "./validation.model";
 
 const CreateThreadRouteComponent = lazy(() => import("#pages/create-thread.page").then(m => ({ default: m.CreateThreadRouteComponent })))
 const AdminRouteComponent = lazy(() => import("#pages/admin/admin.layout").then(m => ({ default: m.AdminRouteComponent })))
@@ -22,7 +22,6 @@ const AdminDashboardRouteComponent = lazy(() => import("#pages/admin/dashboard.p
 const CreateTicketRouteComponent = lazy(() => import("#pages/create-ticket.page").then(m => ({ default: m.CreateTicketRouteComponent })))
 const FriendsRouteComponent = lazy(() => import("#pages/friends.page").then(m => ({ default: m.FriendsRouteComponent })))
 const NotificationsRouteComponent = lazy(() => import("#pages/notifications.page").then(m => ({ default: m.NotificationsRouteComponent })))
-const EventsRouteComponent = lazy(() => import("#pages/events.page").then(m => ({ default: m.EventsRouteComponent })))
 const DashboardRouteComponent = lazy(() => import("#pages/dashboard/dashboard.layout").then(m => ({ default: m.DashboardRouteComponent })))
 const DashboardIndexRouteComponent = lazy(() => import("#pages/dashboard/index.page").then(m => ({ default: m.DashboardIndexRouteComponent })))
 const DashboardProfileRouteComponent = lazy(() => import("#pages/dashboard/profile.page").then(m => ({ default: m.DashboardProfileRouteComponent })))
@@ -85,12 +84,6 @@ const adminSupportRoute = createRoute({
   getParentRoute: () => adminLayoutRoute,
   component: () => <Suspense><AdminSupportRouteComponent /></Suspense>,
   path: "/support"
-})
-
-const eventsRoute = createRoute({
-  getParentRoute: () => protectedRoute,
-  component: () => <Suspense><EventsRouteComponent /></Suspense>,
-  path: "/events",
 })
 
 const friendsRoute = createRoute({
@@ -197,42 +190,13 @@ const dashboardRoutes = dashboardLayoutRoute.addChildren([
 export const protectedRoutes = protectedRoute.addChildren([
   adminRoute,
   adminRoutes,
-  eventsRoute,
   friendsRoute,
   notificationsRoute,
   searchRoute,
   collectionRoute,
-  // ratingsRoute,
-  // landsRoute,
-  // landRoute,
   dashboardRoute,
   dashboardRoutes,
   categoryRoute,
   createThreadRoute,
   createTicketRoute
 ])
-
-// const ratingsRoute = createRoute({
-//   getParentRoute: () => protectedRoute,
-//   component: () => <Suspense><RatingsRouteComponent /></Suspense>,
-//   path: "/ratings",
-// })
-
-// const landsRoute = createRoute({
-//   getParentRoute: () => protectedRoute,
-//   component: () => <Suspense><LandsRouteComponent /></Suspense>,
-//   path: "/lands",
-// })
-
-// const landRoute = createRoute({
-//   getParentRoute: () => protectedRoute,
-//   component: () => <Suspense><LandRouteComponent/></Suspense>,
-//   path: "/lands/$id",
-//   loader: reatomLoader(async (context, { params }) => {
-//     landParamAtom(context, params.id as string)
-//   })
-// })
-
-// const LandsRouteComponent = lazy(() => import("#pages/lands.page").then(m => ({ default: m.LandsRouteComponent })))
-// const RatingsRouteComponent = lazy(() => import("#pages/ratings.page").then(m => ({ default: m.RatingsRouteComponent })))
-// const LandRouteComponent = lazy(() => import("#pages/land.page").then(m => ({ default: m.LandRouteComponent })))

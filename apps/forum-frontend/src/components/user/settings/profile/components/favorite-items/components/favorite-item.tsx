@@ -2,9 +2,9 @@ import { Typography } from "@repo/ui/src/components/typography.tsx";
 import { cva, VariantProps } from "class-variance-authority";
 import { forwardRef, HTMLAttributes } from "react";
 import { MinecraftItemEntity } from "@repo/types/entities/entities-type.ts";
-import { getUser } from "@repo/lib/helpers/get-user.ts";
 import { reatomComponent } from "@reatom/npm-react";
 import { updateCurrentUserAction } from "../../../models/update-current-user.model";
+import { getUser } from "#components/user/models/current-user.model";
 
 type FavoriteItem = MinecraftItemEntity;
 
@@ -54,20 +54,19 @@ export const FavoriteItem = reatomComponent<FavoriteItem>(({ id, title, image, c
           transition-all ease-in w-full h-full bg-black/50 group-hover:opacity-100 opacity-0 bottom-0 left-0"
       >
         <Typography
-          className="font-[Minecraft]"
           textColor="shark_white"
           textSize="small"
         >
           {title}
         </Typography>
         {currentFavoriteItem ? (
-          <Typography className="text-gold-500 font-[Minecraft]" textSize="small">
+          <Typography className="text-gold-500" textSize="small">
             выбрано
           </Typography>
         ) : (
           <Typography
             onClick={() => updateCurrentUserAction(ctx, { value: id, criteria: "favorite_item" })}
-            className="text-shark-300 hover:text-shark-50 cursor-pointer font-[Minecraft]"
+            className="text-shark-300 hover:text-shark-50 cursor-pointer"
             textSize="small"
           >
             выбрать

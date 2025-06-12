@@ -6,11 +6,11 @@ import {
   DialogTrigger,
 } from "@repo/ui/src/components/dialog.tsx";
 import { DeleteButton } from "@repo/ui/src/components/detele-button";
-import { getUser } from "@repo/lib/helpers/get-user.ts";
 import { Plus } from "lucide-react";
 import { BuyDonateModal } from "#components/modals/custom/components/buy-donate-modal";
 import { reatomComponent } from "@reatom/npm-react";
 import { handleAddImagesAction, handleDeleteImageAction } from "../models/edit-thread.model.ts";
+import { getUser } from "#components/user/models/current-user.model.ts";
 
 export const FormThreadPreviewImages = reatomComponent(({ ctx }) => {
   const donate = getUser(ctx).donate

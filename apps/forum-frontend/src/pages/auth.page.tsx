@@ -12,7 +12,6 @@ import { Head } from '@unhead/react'
 import { wrapTitle } from '@repo/lib/utils/wrap-title'
 import { FORUM_SITE_DOMAIN } from '@repo/shared/constants/origin-list'
 import { CustomLink } from '#components/shared/link'
-import LogotypeImage from "@repo/assets/images/logotype.png"
 
 export type AuthSearch = Partial<{
   from: string
@@ -57,7 +56,7 @@ const Forms = reatomComponent(({ ctx }) => {
             <Typography className="cursor-pointer">
               Забыли пароль?
             </Typography>
-            <span className="hidden sm:inline font-[Minecraft] relative top-0.5 select-none text-shark-300">⏹</span>
+            <span className="hidden sm:inline font-[Pixy] relative top-0.5 select-none text-shark-300">⏹</span>
           </>
         )}
         <Typography onClick={toggleAuthType} className="cursor-pointer">
@@ -75,7 +74,7 @@ const Logotype = reatomComponent(({ ctx }) => {
       data-variant={ctx.spy(detailsVisibilityAtom)}
       className={`overflow-hidden data-[variant=hidden]:opacity-0 select-none data-[variant=visible]:opacity-100`}
     >
-      <img src={LogotypeImage} alt="Fasberry" width={128} height={128} draggable={false} className="" />
+      <img src="/images/logotype.png" alt="Fasberry" width={128} height={128} draggable={false} className="" />
     </CustomLink>
   )
 }, "Logotype")

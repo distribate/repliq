@@ -17,10 +17,10 @@ import { X } from "lucide-react";
 import { ConfirmationButton } from "#components/modals/confirmation-modal/components/confirmation-action-button.tsx";
 import { ConfirmationActionModalTemplate } from "#components/modals/confirmation-modal/components/confirmation-action-modal.tsx";
 import { DialogClose } from "@repo/ui/src/components/dialog.tsx";
-import { getUser } from "@repo/lib/helpers/get-user.ts";
 import { deleteBackgroundImageAction } from "#components/profile/header/models/cover-image.model.ts";
 import { DynamicModal } from "#components/modals/dynamic-modal/components/dynamic-modal.tsx";
 import { IconPhotoFilled, IconSettings } from "@tabler/icons-react";
+import { getUser } from "#components/user/models/current-user.model";
 
 const DeleteCoverModal = reatomComponent(({ ctx }) => {
   const cover_image = getUser(ctx).cover_image;

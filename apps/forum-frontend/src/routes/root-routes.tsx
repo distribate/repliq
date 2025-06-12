@@ -1,11 +1,11 @@
 import { reatomLoader, reatomOnVoid } from "@repo/lib/utils/reatom/reatom-loader"
-import { validatePage } from "@repo/lib/utils/validate-page"
 import { createRoute } from "@tanstack/react-router"
 import { redirect } from "@tanstack/react-router"
 import { rootRoute } from "./root"
 import { lazy, Suspense } from "react"
 import { resetAuth } from "#components/auth/models/auth.model"
 import { RouteSkeleton } from "#components/templates/components/route-skeleton"
+import { validatePage } from "./validation.model"
 
 const AuthRouteComponent = lazy(() => import("#pages/auth.page").then(m => ({ default: m.AuthRouteComponent })))
 

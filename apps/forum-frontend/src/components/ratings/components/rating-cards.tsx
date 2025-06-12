@@ -1,9 +1,9 @@
 import { CustomLink } from "#components/shared/link";
 import { Avatar } from "#components/user/avatar/components/avatar.tsx";
+import { getUser } from "#components/user/models/current-user.model";
 import { UserNickname } from "#components/user/name/nickname";
 import { reatomComponent } from "@reatom/npm-react";
 import dayjs from "@repo/lib/constants/dayjs-instance";
-import { getUser } from "@repo/lib/helpers/get-user";
 import { createIdLink } from "@repo/lib/utils/create-link";
 import { Typography } from "@repo/ui/src/components/typography";
 import { cva, VariantProps } from "class-variance-authority";

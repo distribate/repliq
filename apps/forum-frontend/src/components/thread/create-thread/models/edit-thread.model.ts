@@ -1,6 +1,6 @@
 import { threadFormImagesAtom } from "./thread-form.model";
 import { THREAD_IMAGES_LIMIT_DEFAULT } from "@repo/shared/constants/limits";
-import { currentUserAtom } from "@repo/lib/helpers/get-user";
+import { currentUserAtom } from "#components/user/models/current-user.model";
 import { action } from "@reatom/core";
 
 type CreateThreadImageControl =

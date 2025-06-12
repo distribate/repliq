@@ -23,7 +23,7 @@ export const GeneralStats = reatomComponent(({ ctx }) => {
 
   return (
     <div className="flex flex-col gap-y-2">
-      <div className="grid font-[Minecraft] grid-cols-2 grid-rows-2 gap-2 w-full h-fit">
+      <div className="grid grid-cols-2 grid-rows-2 gap-2 w-full h-fit">
         <ProfileStatsLayout>
           <Typography textSize="large" className="text-gold-500">
             Ник

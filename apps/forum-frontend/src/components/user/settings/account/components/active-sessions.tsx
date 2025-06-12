@@ -21,7 +21,7 @@ export const UserSessionBlock = ({
             <Typography textColor="gray">
               {location}
             </Typography>
-            <span className="hidden lg:inline text-shark-300 font-[Minecraft] text-[14px]">
+            <span className="hidden lg:inline text-shark-300 text-[14px]">
               ⏺
             </span>
             <Typography textColor="gray">

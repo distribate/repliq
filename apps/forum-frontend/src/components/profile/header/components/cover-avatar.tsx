@@ -10,7 +10,7 @@ import { forumUserClient } from "@repo/shared/api/forum-client";
 import { Button } from "@repo/ui/src/components/button";
 import { Typography } from "@repo/ui/src/components/typography";
 import { avatarsUrlsAtom } from "#components/user/avatar/models/avatar.model";
-import { currentUserNicknameAtom } from "@repo/lib/helpers/get-user";
+import { currentUserNicknameAtom } from "#components/user/models/current-user.model";
 import ky from "ky";
 import { toast } from "sonner";
 import { withReset } from "@reatom/framework";

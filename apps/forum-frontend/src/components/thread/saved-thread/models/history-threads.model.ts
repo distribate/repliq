@@ -1,7 +1,7 @@
-import { currentUserNicknameAtom } from "@repo/lib/helpers/get-user.ts";
-import { globalPreferencesAtom } from "@repo/lib/queries/global-preferences.model";
 import { action, atom } from "@reatom/core";
 import { withLocalStorage } from "@reatom/persist-web-storage";
+import { globalPreferencesAtom } from "#components/user/settings/main/models/update-global-preferences.model";
+import { currentUserNicknameAtom } from "#components/user/models/current-user.model";
 
 export type ThreadHistoryType = {
   thread: {

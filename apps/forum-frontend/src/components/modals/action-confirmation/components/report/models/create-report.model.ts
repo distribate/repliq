@@ -1,6 +1,6 @@
 import { reportAtom } from "#components/modals/action-confirmation/components/report/models/report.model";
 import { toast } from "sonner";
-import { currentUserNicknameAtom } from "@repo/lib/helpers/get-user.ts";
+import { currentUserNicknameAtom } from "#components/user/models/current-user.model.ts";
 import { ReportType } from "@repo/types/db/forum-database-types";
 import { ReportReasonEnum } from "@repo/types/entities/entities-type";
 import { forumReportClient } from "@repo/shared/api/forum-client";

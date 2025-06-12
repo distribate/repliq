@@ -9,7 +9,7 @@ import { forumUserClient } from '@repo/shared/api/forum-client.ts';
 import { friendStatusesAtom } from "../components/friend-button/models/friend-status.model";
 import { myFriendsAction, myFriendsDataAtom } from "#components/friends/models/friends.model";
 import { withReset } from "@reatom/framework";
-import { currentUserNicknameAtom } from "@repo/lib/helpers/get-user";
+import { currentUserNicknameAtom } from "#components/user/models/current-user.model";
 import dayjs from "dayjs";
 
 type ControlIncomingRequest = ControlFriendRequests & { type: "reject" | "accept" }

@@ -7,7 +7,7 @@ import { UserCoverAvatar } from "./cover-avatar.tsx";
 import { UserCoverLocation } from "./cover-location.tsx";
 import { CoverArea } from "./cover-area.tsx";
 import { lazy, PropsWithChildren, Suspense } from "react";
-import { isAuthenticatedAtom } from "@repo/lib/queries/global-option-query.ts";
+import { isAuthenticatedAtom } from "#components/auth/models/auth.model.ts";
 
 const UserCoverWatermark = lazy(() => import("./cover-watermark.tsx").then(m => ({ default: m.UserCoverWatermark })))
 

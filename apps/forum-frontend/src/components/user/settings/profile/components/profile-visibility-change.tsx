@@ -2,9 +2,9 @@ import { Typography } from "@repo/ui/src/components/typography.tsx";
 import { ProfileVisibilityEnum } from '@repo/types/entities/entities-type.ts';
 import { LockKeyhole, LockOpen } from "lucide-react";
 import { reatomComponent } from "@reatom/npm-react";
-import { getUser } from "@repo/lib/helpers/get-user";
 import { spawn } from "@reatom/framework";
 import { updateCurrentUserSettingsAction } from "../models/update-current-user.model";
+import { getUser } from "#components/user/models/current-user.model";
 
 export const ProfileVisibilityChange = reatomComponent(({ ctx }) => {
   const profile_visibility = getUser(ctx).preferences.profile_visibility

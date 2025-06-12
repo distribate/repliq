@@ -14,7 +14,6 @@ const typographyVariants = cva("whitespace-wrap", {
     font: {
       default: "",
       pixy: "font-[Pixy]",
-      minecraft: "font-[Minecraft]",
     },
     textSize: {
       small: "text-sm",
@@ -49,14 +48,7 @@ export interface TypographyProps
     VariantProps<typeof typographyVariants> {}
 
 export const Typography = ({
-  variant,
-  className,
-  font,
-  state,
-  textSize,
-  textShadow,
-  textColor,
-  ...props
+  variant, className, font, state, textSize, textShadow, textColor, ...props
 }: TypographyProps) => {
   return (
     <p

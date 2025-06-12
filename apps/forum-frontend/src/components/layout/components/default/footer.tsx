@@ -1,5 +1,4 @@
 import { Typography } from "@repo/ui/src/components/typography"
-import Logotype from "@repo/assets/images/logotype.png"
 import { STATUS_SITE_DOMAIN } from "@repo/shared/constants/origin-list"
 import { CustomLink } from "#components/shared/link"
 import { useNavigate } from "@tanstack/react-router"
@@ -43,7 +42,7 @@ export const Footer = () => {
     <div id="footer" className="block biloba-background lg:max-h-[180px] w-full rounded-xl overflow-hidden relative">
       <div className="flex flex-col lg:flex-row items-start lg:justify-center px-4 lg:px-12 py-4 gap-4 bg-white/10 backdrop-blur-md h-full w-full">
         <CustomLink to="/" className="flex items-end gap-1 w-full lg:w-2/5">
-          <img src={Logotype} alt="" width={32} height={32} loading="lazy" />
+          <img src="/images/logotype.png" alt="" width={32} height={32} loading="lazy" />
           <Typography textSize="very_big" font="pixy">
             Fasberry
           </Typography>

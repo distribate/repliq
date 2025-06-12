@@ -3,9 +3,9 @@ import { PencilLine } from "lucide-react";
 import { Typography } from "@repo/ui/src/components/typography.tsx";
 import { threadIsEditableAtom, threadParamAtom } from "#components/thread/thread-main/models/thread.model.ts";
 import { reatomComponent } from "@reatom/npm-react";
-import { isAuthenticatedAtom } from "@repo/lib/queries/global-option-query.ts";
 import { CustomLink } from "#components/shared/link.tsx";
 import { Separator } from "@repo/ui/src/components/separator.tsx";
+import { isAuthenticatedAtom } from "#components/auth/models/auth.model";
 
 export const ThreadControl = reatomComponent(({ ctx }) => {
   const isAuthenticated = ctx.spy(isAuthenticatedAtom)

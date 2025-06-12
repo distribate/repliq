@@ -1,18 +1,17 @@
 import { Avatar } from "#components/user/avatar/components/avatar";
 import { Typography } from "@repo/ui/src/components/typography";
 import { Plus } from "lucide-react"
-import { isAuthenticatedAtom } from "@repo/lib/queries/global-option-query";
 import { MenuArrow } from "@repo/ui/src/components/menu-arrow.tsx"
 import { reatomComponent } from "@reatom/npm-react";
-import { getUser } from "@repo/lib/helpers/get-user";
 import { UserMenu } from "#components/user/menu/components/user-menu";
 import { CustomLink } from "#components/shared/link";
 import { isExperimentalDesignAtom } from "./experimental-layout.model";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@repo/ui/src/components/dropdown-menu";
-import LogotypeImage from "@repo/assets/images/logotype.png"
 import { AuthorizationButton } from "./authorization-button";
 import { IconBrandThreads, IconLibrary, IconSearch } from "@tabler/icons-react";
 import { Input } from "@repo/ui/src/components/input";
+import { isAuthenticatedAtom } from "#components/auth/models/auth.model";
+import { getUser } from "#components/user/models/current-user.model";
 
 const CREATE = [
   { icon: IconBrandThreads, title: "Создать тред", link: "/create-thread" },
@@ -64,7 +63,7 @@ const NavbarUserMenu = reatomComponent(({ ctx }) => {
 export const Logotype = () => {
   return (
     <CustomLink to="/" className="flex items-center justify-center w-full select-none">
-      <img src={LogotypeImage} width={26} height={26} alt="" draggable={false} />
+      <img src="/images/logotype.png" width={26} height={26} alt="" draggable={false} />
       <div className="w-fit ml-1">
         <Typography textSize="very_big" font="pixy" textColor="shark_white" className="leading-7 truncate">
           Fasberry

@@ -145,7 +145,7 @@ const MinecraftDetails = reatomComponent(({ ctx }) => {
     <div className="flex items-center gap-2 w-fit">
       <MinecraftAvatar nickname={data.nickname} propHeight={36} propWidth={36} />
       <div className="flex flex-col">
-        <span className="font-[Minecraft] text-base">{data.nickname}</span>
+        <span className="text-base">{data.nickname}</span>
         <Typography textColor="gray">
           {dayjs(data.created_at).format("Привязан DD.MM.YYYY")}
         </Typography>

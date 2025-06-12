@@ -12,7 +12,9 @@
     "format": "prettier --write \"**/*.{ts,tsx,md}\""
   },
   "dependencies": {
-    "@neodx/log": "^0.4.1"
+    "@neodx/log": "^0.4.1",
+    "drizzle-kit": "^0.31.1",
+    "drizzle-orm": "^0.44.2"
   },
   "devDependencies": {
     "concurrently": "9.1.0",

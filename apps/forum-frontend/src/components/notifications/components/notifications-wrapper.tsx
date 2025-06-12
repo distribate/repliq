@@ -1,6 +1,6 @@
+import { isAuthenticatedAtom } from "#components/auth/models/auth.model";
 import { reatomComponent } from "@reatom/npm-react";
 import { isProduction } from "@repo/lib/helpers/is-production";
-import { isAuthenticatedAtom } from "@repo/lib/queries/global-option-query";
 import { config, ping, updateEvent } from "@repo/shared/constants/sse-events";
 import { ConfigEventsData, NotificationsEventsPayload } from "@repo/types/entities/notifications-events-type";
 import { useEffect } from "react";

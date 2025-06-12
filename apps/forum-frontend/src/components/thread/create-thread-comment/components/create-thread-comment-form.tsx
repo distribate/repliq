@@ -5,7 +5,6 @@ import { Button } from "@repo/ui/src/components/button.tsx";
 import { SendHorizontal } from "lucide-react";
 import { createThreadCommentAtom } from "../models/thread-comment.model.ts";
 import { CreateThreadCommentLayout } from "./create-thread-comment-layout.tsx";
-import { getUser } from "@repo/lib/helpers/get-user.ts";
 import { COMMENT_LIMIT } from "@repo/shared/constants/limits.ts";
 import { z } from "zod/v4";
 import { Controller, useForm } from "react-hook-form";
@@ -14,6 +13,7 @@ import AutogrowingTextarea from "@repo/ui/src/components/autogrowing-textarea.ts
 import { createThreadCommentSchema } from "../schemas/create-thread-comment-schema.ts";
 import { reatomComponent } from "@reatom/npm-react";
 import { threadRoute } from "#routes/public-routes.tsx";
+import { getUser } from "#components/user/models/current-user.model.ts";
 
 type createThreadForm = z.infer<typeof createThreadCommentSchema>
 

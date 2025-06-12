@@ -1,5 +1,5 @@
 import { reatomResource, withCache, withDataAtom, withStatusesAtom } from "@reatom/async";
-import { currentUserNicknameAtom } from "@repo/lib/helpers/get-user";
+import { currentUserNicknameAtom } from "#components/user/models/current-user.model";
 import { playerClient } from "@repo/shared/api/minecraft-client";
 
 async function getUserSkills(nickname: string) {

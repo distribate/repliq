@@ -1,40 +1,35 @@
 import { Typography } from "@repo/ui/src/components/typography.tsx";
 import { DropdownMenuItem } from "@repo/ui/src/components/dropdown-menu.tsx";
 import { DropdownWrapper } from "#components/wrappers/components/dropdown-wrapper";
-import React, { ChangeEvent, useState } from "react";
+import React, { ChangeEvent } from "react";
 import {
   friendsSortAtom,
   FriendsSortType,
 } from "#components/profile/friends/models/friends-sort.model";
 import { FilteringSearchWrapper } from "#components/wrappers/components/filtering-search-wrapper";
-import { useDebounce } from "@repo/lib/hooks/use-debounce.ts";
 import { Input, InputProps } from "@repo/ui/src/components/input.tsx";
 import { updateFriendsAction } from "#components/friends/models/update-friends.model";
 import { ArrowDownNarrowWide } from "lucide-react";
 import { SelectedWrapper } from "#components/wrappers/components/selected-wrapper";
 import { reatomComponent } from "@reatom/npm-react";
 import { requestedUserParamAtom } from "#components/profile/main/models/requested-user.model";
+import { action, sleep, withConcurrency } from "@reatom/framework";
+
+const onChange = action(async (ctx, e: ChangeEvent<HTMLInputElement>) => {
+  const { value } = e.target;
+
+  await ctx.schedule(() => sleep(300))
+  const convertedValue = value.replace(/ {3,}/g, "  ");
+  friendsSortAtom(ctx, (state) => ({ ...state, searchQuery: convertedValue }))
+}).pipe(withConcurrency())
 
 const ProfileFriendsFilteringSearch = reatomComponent<InputProps>(({ ctx, ...props }) => {
-  const [value, setValue] = useState<string>("");
-
-  const debouncedUpdateQuery = useDebounce((value: string) =>
-    friendsSortAtom(ctx, (state) => ({ ...state, searchQuery: value })
-  ), 300);
-
-  const handleSearchInput = (e: ChangeEvent<HTMLInputElement>) => {
-    const convertedValue = e.target.value.replace(/ {3,}/g, "  ");
-    setValue(convertedValue);
-    debouncedUpdateQuery(convertedValue);
-  };
-
   return (
     <Input
       className="rounded-lg"
-      value={value}
       maxLength={64}
       placeholder="Поиск по никнейму"
-      onChange={handleSearchInput}
+      onChange={e => onChange(ctx, e)}
       {...props}
     />
   );

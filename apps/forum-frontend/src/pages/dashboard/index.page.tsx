@@ -3,9 +3,9 @@ import { CustomLink } from '#components/shared/link'
 import { Avatar } from '#components/user/avatar/components/avatar'
 import { UserNickname } from '#components/user/name/nickname'
 import { reatomComponent } from '@reatom/npm-react'
-import { getUser } from '@repo/lib/helpers/get-user'
 import { createIdLink } from '@repo/lib/utils/create-link'
 import { Typography } from '@repo/ui/src/components/typography'
+import { getUser } from '../../components/user/models/current-user.model'
 
 const Page = reatomComponent(({ ctx }) => {
   const nickname = getUser(ctx).nickname

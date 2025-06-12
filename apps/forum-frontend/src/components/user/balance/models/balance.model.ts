@@ -1,6 +1,6 @@
 import { reatomAsync, withStatusesAtom } from "@reatom/async";
 import { atom } from "@reatom/core";
-import { currentUserNicknameAtom } from "@repo/lib/helpers/get-user";
+import { currentUserNicknameAtom } from "#components/user/models/current-user.model";
 import { playerClient } from "@repo/shared/api/minecraft-client";
 
 async function getUserBalance(nickname: string) {

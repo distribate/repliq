@@ -9,9 +9,9 @@ import { Skeleton } from '@repo/ui/src/components/skeleton';
 import { onConnect } from '@reatom/framework';
 import { reatomComponent } from '@reatom/npm-react';
 import { mainCategoriesResource } from '../models/categories.model';
-import { isAuthenticatedAtom } from "@repo/lib/queries/global-option-query";
 import { AuthTemplate } from "#components/templates/components/auth-template";
 import { CustomLink } from "#components/shared/link";
+import { isAuthenticatedAtom } from '#components/auth/models/auth.model';
 
 const ThreadNotFound = lazy(() => import("#components/templates/components/threads-not-found").then(m => ({ default: m.ThreadNotFound })));
 

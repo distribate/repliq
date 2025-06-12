@@ -1,9 +1,9 @@
 import { threadImagesAction } from "#components/thread/thread-images/models/thread-images.model";
 import { threadReactionsAction } from "#components/thread/thread-reactions/models/thread-reactions.model";
+import { currentUserNicknameAtom } from "#components/user/models/current-user.model";
 import { reatomAsync, withStatusesAtom } from "@reatom/async";
 import { atom, Ctx } from "@reatom/core";
 import { withReset } from "@reatom/framework";
-import { currentUserNicknameAtom } from "@repo/lib/helpers/get-user";
 import { withHistory } from "@repo/lib/utils/reatom/with-history";
 import { forumThreadClient } from "@repo/shared/api/forum-client";
 import { ThreadDetailed, ThreadOwner } from "@repo/types/entities/thread-type";

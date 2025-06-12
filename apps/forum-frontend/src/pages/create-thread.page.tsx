@@ -1,7 +1,7 @@
 import { BlockWrapper } from '#components/wrappers/components/block-wrapper'
 import { Typography } from '@repo/ui/src/components/typography.tsx'
 import { reatomComponent } from '@reatom/npm-react'
-import { userGlobalOptionsAtom } from '@repo/lib/helpers/get-user'
+import { userGlobalOptionsAtom } from '#components/user/models/current-user.model'
 import { Head } from '@unhead/react'
 import { lazy, Suspense } from 'react'
 

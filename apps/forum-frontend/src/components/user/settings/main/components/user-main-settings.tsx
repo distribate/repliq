@@ -5,13 +5,13 @@ import { Avatar } from "#components/user/avatar/components/avatar";
 import { userStatusAction, userStatusAtom } from "#components/user/avatar/models/user-status.model";
 import { UserNickname } from "#components/user/name/nickname";
 import { reatomComponent, useUpdate } from "@reatom/npm-react";
-import { getUser } from "@repo/lib/helpers/get-user";
 import { Button } from "@repo/ui/src/components/button";
 import { Dialog, DialogClose, DialogContent, DialogTrigger } from "@repo/ui/src/components/dialog";
 import { CustomLink } from "#components/shared/link";
 import { BuyDonateModal } from "#components/modals/custom/components/buy-donate-modal";
 import { settingsSettingsTypeAtom } from "#components/modals/user-settings/models/user-settings.model";
 import { IconAddressBook, IconAdjustments, IconBubblePlus, IconComet, IconUserCircle } from "@tabler/icons-react";
+import { getUser } from "#components/user/models/current-user.model";
 
 const Sync = ({ target }: { target: string }) => {
   useUpdate((ctx) => userStatusAction(ctx, target), [target])

@@ -1,5 +1,5 @@
 import { toast } from "sonner";
-import { currentUserNicknameAtom } from "@repo/lib/helpers/get-user.ts";
+import { currentUserNicknameAtom } from "#components/user/models/current-user.model.ts";
 import type { GetUserPostsResponse } from '@repo/types/routes-types/get-user-posts-types.ts';
 import { reatomAsync, withErrorAtom, withStatusesAtom } from "@reatom/async";
 import { forumPostClient } from "@repo/shared/api/forum-client";

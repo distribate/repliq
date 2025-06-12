@@ -1,6 +1,5 @@
 import { UserCoverLayout } from '#components/profile/header/components/cover-layout.tsx'
-import { Page } from '#components/profile/main/components/profile-main'
-import { requestedUserAtom } from '#components/profile/main/models/requested-user.model'
+import { requestedUserAccountTypeAtom, requestedUserAtom, requestedUserParamAtom, requestedUserProfileBlockedAtom, requestedUserProfileStatusAtom } from '#components/profile/main/models/requested-user.model'
 import { reatomComponent } from '@reatom/npm-react'
 import { Head, useSeoMeta } from '@unhead/react'
 import { wrapTitle } from "@repo/lib/utils/wrap-title"
@@ -8,8 +7,14 @@ import { avatarAtom } from '#components/user/avatar/models/avatar.model'
 import { KEYWORDS, PATHNAME } from '@repo/shared/constants/meta'
 import { createIdLink } from '@repo/lib/utils/create-link'
 import { FORUM_SITE_DOMAIN } from '@repo/shared/constants/origin-list'
+import { lazy, Suspense } from 'react'
+import { ProfileContentTabs } from '#components/profile/main/components/profile-main'
 
-const AVATAR_FALLBACK = `${FORUM_SITE_DOMAIN}/images/avatar-steve.png`
+const Blocked = lazy(() => import("#components/templates/components/user-blocked").then(m => ({ default: m.UserBlocked })));
+const Banned = lazy(() => import("#components/templates/components/user-banned").then(m => ({ default: m.UserBanned })));
+const Deleted = lazy(() => import("#components/templates/components/user-deleted").then(m => ({ default: m.UserDeleted })))
+
+const AVATAR_FALLBACK = `${FORUM_SITE_DOMAIN}/images/fasberry_logo.png`
 
 const userDescription = (nickname?: string, description?: string | null) => 
   `Профиль игрока ${nickname}. ${description ? `О себе: ${description}` : null}`
@@ -52,6 +57,37 @@ const UserHead = reatomComponent(({ ctx }) => {
     </Head>
   )
 })
+
+const Page = reatomComponent(({ ctx }) => {
+  switch (ctx.spy(requestedUserAccountTypeAtom)) {
+    case "archived":
+    case "deleted":
+      return (
+        <Suspense>
+          <Deleted />
+        </Suspense>
+      )
+  }
+
+  switch (ctx.spy(requestedUserProfileStatusAtom)) {
+    case "banned":
+      return (
+        <Suspense>
+          <Banned requestedUserNickname={ctx.spy(requestedUserParamAtom)!} />
+        </Suspense>
+      );
+    case "blocked":
+      return (
+        <Suspense>
+          <Blocked blockedType={ctx.spy(requestedUserProfileBlockedAtom)!} />
+        </Suspense>
+      )
+    default:
+      return (
+        <ProfileContentTabs />
+      )
+  }
+}, "RouteComponent")
 
 export function UserRouteComponent() {
   return (

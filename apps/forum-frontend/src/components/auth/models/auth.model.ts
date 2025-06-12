@@ -1,5 +1,5 @@
 import { action, atom, Ctx } from "@reatom/core";
-import { sleep, withComputed, withReset } from "@reatom/framework";
+import { withComputed, withReset } from "@reatom/framework";
 import { toast } from "sonner";
 import { reatomAsync, withStatusesAtom } from "@reatom/async";
 import { router } from "#main.tsx";
@@ -29,6 +29,7 @@ type AuthValues = {
 type SignInValues = Omit<AuthValues, "acceptRules" | "findout">
 type SignUpValues = AuthValues
 
+export const isAuthenticatedAtom = atom(false, "isAuthenticated")
 export const nicknameAtom = atom<string>("", "authNickname").pipe(withReset())
 export const passwordAtom = atom<string>("", "authPassword").pipe(withReset())
 export const findoutAtom = atom<string>("", "authFindout").pipe(withReset())
@@ -179,8 +180,6 @@ export const authAction = reatomAsync(async (ctx) => {
 
     if (type === 'login') {
       const nickname = ctx.get(nicknameAtom)
-
-      await ctx.schedule(() => sleep(500))
 
       ctx.schedule(() => router.navigate({ to: createIdLink("user", nickname) }))
     }

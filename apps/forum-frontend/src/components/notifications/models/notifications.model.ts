@@ -2,7 +2,7 @@ import { atom } from "@reatom/core"
 import { reatomAsync, withStatusesAtom } from "@reatom/async"
 import { forumUserClient } from "@repo/shared/api/forum-client"
 import type { InferResponseType } from "hono/client"
-import { userGlobalOptionsAtom } from "@repo/lib/helpers/get-user"
+import { userGlobalOptionsAtom } from "#components/user/models/current-user.model"
 
 export const notificationsDataAtom = atom<GetNotificationsResponse["data"] | null>(null, "notificationsData")
 export const notificationsMetaAtom = atom<GetNotificationsResponse["meta"] | null>(null, "notificationsMeta")

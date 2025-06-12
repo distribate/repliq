@@ -27,15 +27,15 @@ export async function getUserInformation(): Promise<UserDetailed> {
 
     return data.data
   } catch (e) {
-    if (e instanceof HTTPError) {
-      const body = await e.response.json()
+    // if (e instanceof HTTPError) {
+    //   const body = await e.response.json()
 
-      if (body.status === "You are banned") {
-        throw redirect({
-          to: `/banned?reason=${body.data.reason}&time=${body.data.time}&created_at=${body.data.created_at}`
-        })
-      }
-    }
+    //   if (body.status === "You are banned") {
+    //     throw redirect({
+    //       to: `/banned?reason=${body.data.reason}&time=${body.data.time}&created_at=${body.data.created_at}`
+    //     })
+    //   }
+    // }
 
     throw e
   }

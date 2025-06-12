@@ -1,6 +1,6 @@
 import { requestedUserParamAtom, requestedUserPreferencesAtom } from "#components/profile/main/models/requested-user.model";
+import { currentUserNicknameAtom } from "#components/user/models/current-user.model";
 import { action, atom } from "@reatom/core";
-import { currentUserNicknameAtom } from "@repo/lib/helpers/get-user";
 import { toast } from "sonner";
 
 type Cover = {
