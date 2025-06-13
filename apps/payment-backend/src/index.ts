@@ -40,7 +40,7 @@ const app = new Hono()
   .route('/currencies', currencies)
   .route("/", order)
 
-showRoutes(app, { verbose: false });
+// showRoutes(app, { verbose: false });
 
 Bun.serve({ port: Bun.env.PAYMENT_BACKEND_PORT!, fetch: app.fetch });
 

@@ -8,8 +8,8 @@ type GetUserRelation = InitiatorRecipientType
 export async function getUserRelation({
   initiator, recipient
 }: GetUserRelation) {
-  const isBanned = await getUserIsBanned(recipient)
-  if (isBanned) return "banned";
+  // const isBanned = await getUserIsBanned(recipient)
+  // if (isBanned) return "banned";
 
   const isBlocked = await getUserIsBlocked({ initiator, recipient })
   if (isBlocked) return isBlocked

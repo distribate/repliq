@@ -49,6 +49,21 @@ http:
         - redirect-to-https
       service: noop@internal
 
+    traefik:
+      rule: "Host(`traefik.${DOMAIN_NAME}`)"
+      entrypoints: [http]
+      middlewares:
+        - traefik-https-redirect
+
+    traefik-secure: 
+      rule: "Host(`traefik.${DOMAIN_NAME}`)"
+      entrypoints: [https]
+      middlewares: 
+        - traefik-auth
+      tls: true 
+      certresolver: [http]
+      service: api@internal
+
     kong:
       rule: "Host(`kong.fasberry.su`)"
       entryPoints: [https]
@@ -115,6 +130,11 @@ http:
       loadBalancer:
         servers:
           - url: "https://kong.fasberry.su"
+
+    traefik:
+      loadbalancer:
+        server:
+          - port: 9080
 
     api-payment-svc:
       loadBalancer:

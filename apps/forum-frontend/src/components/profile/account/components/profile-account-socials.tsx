@@ -1,5 +1,5 @@
 import { Skeleton } from "@repo/ui/src/components/skeleton"
-import { userSocialsResource } from "../models/user-socials.model"
+import { discordAtom, telegramAtom, userSocialsResource } from "../models/user-socials.model"
 import { Typography } from "@repo/ui/src/components/typography"
 import { reatomComponent } from "@reatom/npm-react"
 import DiscordLogo from "@repo/assets/images/discord-logo.jpg"
@@ -132,6 +132,9 @@ export const ProfileAccountSocials = reatomComponent(({ ctx }) => {
   const userSocials = ctx.spy(userSocialsResource.dataAtom)
   const isLoading = ctx.spy(userSocialsResource.statusesAtom).isPending
 
+  const discord = ctx.spy(discordAtom)
+  const tg = ctx.spy(telegramAtom)
+
   return (
     <div className="flex flex-col gap-4 w-full h-full">
       <div className="flex w-full justify-between items-center">
@@ -156,11 +159,11 @@ export const ProfileAccountSocials = reatomComponent(({ ctx }) => {
           <>
             <SocialsCard
               title="Discord"
-              value={userSocials?.DISCORD_ID ?? null}
+              value={discord?.value ?? null}
             />
             <SocialsCard
               title="Telegram"
-              value={userSocials?.TELEGRAM_ID ?? null}
+              value={tg?.value ?? null}
             />
           </>
         )}

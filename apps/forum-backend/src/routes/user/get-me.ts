@@ -9,21 +9,21 @@ import { Encoder } from 'cbor-x';
 import { createMiddleware } from 'hono/factory';
 import { USER_IMAGES_BUCKET } from '@repo/shared/constants/buckets';
 
-export const validateBanStatus = createMiddleware(async (ctx, next) => {
-  const nickname = getNickname()
-  const isBanned = await getUserIsBanned(nickname);
+// export const validateBanStatus = createMiddleware(async (ctx, next) => {
+//   const nickname = getNickname()
+//   const isBanned = await getUserIsBanned(nickname);
 
-  if (isBanned) {
-    return ctx.json({ data: isBanned, status: "You are banned" }, 400);
-  }
+//   if (isBanned) {
+//     return ctx.json({ data: isBanned, status: "You are banned" }, 400);
+//   }
 
-  ctx.header('Cache-Control', 'public, max-age=20')
+//   ctx.header('Cache-Control', 'public, max-age=20')
 
-  await next()
-})
+//   await next()
+// })
 
 export const getMeRoute = new Hono()
-  .use(validateBanStatus)
+  // .use(validateBanStatus)
   .get("/get-me", async (ctx) => {
     const nickname = getNickname()
 

@@ -17,6 +17,8 @@ export type AuthOneTimeTokenType = "confirmation_token" | "email_change_token_cu
 
 export type CommentsParentType = "post" | "thread";
 
+export type ConnectionsType = "discord" | "telegram";
+
 export type DonateVariants = "arkhont" | "authentic" | "default" | "dev" | "helper" | "loyal" | "moder";
 
 export type Generated<T> = T extends ColumnType<infer S, infer I, infer U>
@@ -948,20 +950,20 @@ export interface UsersActions {
   uuid: string;
 }
 
-export interface UsersBanned {
-  created_at: Generated<Timestamp | null>;
-  id: Generated<Int8>;
-  nickname: string;
-  reason: string | null;
-  time: Timestamp;
-}
-
 export interface UsersBlocked {
   created_at: Generated<Timestamp | null>;
   id: Generated<Int8>;
   initiator: string;
   message: string | null;
   recipient: string;
+}
+
+export interface UsersConnections {
+  created_at: Generated<Timestamp>;
+  id: Generated<string>;
+  nickname: string;
+  type: ConnectionsType;
+  value: string;
 }
 
 export interface UsersCredentials {
@@ -984,13 +986,6 @@ export interface UsersGameStatus {
   nickname: string;
   quited: Timestamp | null;
   status: string;
-}
-
-export interface UsersMain {
-  created_at: Generated<Timestamp>;
-  hash: string;
-  id: Generated<Int8>;
-  name: string;
 }
 
 export interface UsersProfiles {
@@ -1021,8 +1016,8 @@ export interface UsersSecurity {
 }
 
 export interface UsersSession {
-  browser: string | null;
-  cpu: string | null;
+  browser: string;
+  cpu: string;
   created_at: Generated<Timestamp>;
   device: string | null;
   expires_at: Timestamp;
@@ -1032,7 +1027,7 @@ export interface UsersSession {
   os: string | null;
   session_id: string;
   token: string;
-  ua: string | null;
+  ua: string;
 }
 
 export interface UsersSettings {
@@ -1041,6 +1036,7 @@ export interface UsersSettings {
   game_stats_visible: Generated<boolean>;
   id: Generated<Int8>;
   nickname: string;
+  notify_in_telegram: Generated<boolean>;
   profile_visibility: Generated<ProfileVisibility>;
   real_name_visible: Generated<boolean>;
   send_notifications: Generated<boolean>;
@@ -1172,12 +1168,11 @@ export interface DB {
   threads_views: ThreadsViews;
   users: Users;
   users_actions: UsersActions;
-  users_banned: UsersBanned;
   users_blocked: UsersBlocked;
+  users_connections: UsersConnections;
   users_credentials: UsersCredentials;
   users_friends: UsersFriends;
   users_game_status: UsersGameStatus;
-  users_main: UsersMain;
   users_profiles: UsersProfiles;
   users_punish: UsersPunish;
   users_saved_threads: UsersSavedThreads;
