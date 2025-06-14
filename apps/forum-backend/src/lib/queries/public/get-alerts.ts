@@ -1,41 +1,33 @@
 import type { getAlertsSchema } from "@repo/types/schemas/alerts/get-alerts-schema.ts";
-import { forumDB } from "#shared/database/forum-db.ts"
-import { executeWithCursorPagination } from "kysely-paginate"
 import { z } from "zod/v4"
+import { sqliteDB } from "#shared/database/sqlite-db.ts";
 
-export const getAlerts = async ({
-  cursor, limit
-}: z.infer<typeof getAlertsSchema>) => {
-  const query = forumDB
-    .selectFrom("config_alerts")
+const DEFAULT_LIMIT = 1
+
+type Alert = {
+  id: number,
+  link: string | null,
+  creator: string,
+  created_at: string | Date,
+  title: string,
+  description: string
+}
+
+export const getAlerts = async ({ cursor, limit = DEFAULT_LIMIT }: z.infer<typeof getAlertsSchema>) => {
+  const query = await sqliteDB
+    .selectFrom("alerts")
     .selectAll()
-    .$castTo<{ id: number, link: string | null, creator: string, created_at: string | Date, title: string, description: string }>()
-    .limit(limit ?? 1)
-
-  const res = await executeWithCursorPagination(query, {
-    perPage: limit ?? 1,
-    after: cursor,
-    fields: [
-      {
-        key: "created_at",
-        direction: "desc",
-        expression: "created_at",
-      }
-    ],
-    parseCursor: (cursor) => {
-      return {
-        created_at: new Date(cursor.created_at),
-      }
-    },
-  })
+    .$castTo<Alert>()
+    .limit(limit)
+    .execute()
 
   return {
-    data: res.rows,
+    data: query,
     meta: {
-      hasNextPage: res.hasNextPage,
-      endCursor: res.endCursor,
-      startCursor: res.startCursor,
-      hasPrevPage: res.hasPrevPage
+      hasNextPage: false,
+      endCursor: undefined,
+      startCursor: undefined,
+      hasPrevPage: false
     }
   }
 }

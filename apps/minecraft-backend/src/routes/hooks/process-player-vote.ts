@@ -3,9 +3,10 @@ import { forumDB } from "#shared/database/forum-db.ts";
 import { sql } from "kysely";
 import { publishVoteNotify } from "#publishers/pub-vote-notify.ts";
 import { bisquiteDB } from "#shared/database/bisquite-db.ts";
+import { sqliteDB } from "#shared/database/sqlite-db.ts";
 
 async function postVoted(nickname: string) {
-  const result = await forumDB
+  const result = await sqliteDB
     .insertInto("voted_users")
     .values({ nickname })
     .onConflict((ob) => ob.column("nickname").doNothing())
@@ -15,7 +16,7 @@ async function postVoted(nickname: string) {
     return
   }
 
-  const { reward } = await forumDB
+  const { reward } = await sqliteDB
     .selectFrom("events")
     .select("reward")
     .where("origin", "=", "vote-for-server")

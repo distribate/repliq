@@ -1,4 +1,4 @@
-import { forumDB } from "#shared/database/forum-db.ts";
+import { sqliteDB } from "#shared/database/sqlite-db.ts";
 import { throwError } from "@repo/lib/helpers/throw-error";
 import { Hono } from "hono";
 
@@ -10,12 +10,12 @@ const ruleTypes: Record<"chat" | "game" | "based", string> = {
 
 async function getRules() {
   const [rules, terms] = await Promise.all([
-    forumDB
+    sqliteDB
       .selectFrom("rules_rule_content")
       .selectAll()
       .where("rule_list_id", "in", ["chat", "game", "based"])
       .execute(),
-    forumDB
+    sqliteDB
       .selectFrom("rules_termin_content")
       .selectAll()
       .execute()

@@ -28,6 +28,12 @@ export const auth = new Hono()
   .route("/", getSessionsRoute)
   .route("/", getSessionRoute)
 
+export const getHealthRoute = new Hono()
+  .get("/health", async (ctx) => ctx.body(null, 200))
+
+export const root = new Hono()
+  .route("/", getHealthRoute)
+
 const app = new Hono<Env>()
   .basePath('/auth')
   .use(corsMiddleware())
@@ -37,9 +43,10 @@ const app = new Hono<Env>()
   .use(timeoutMiddleware())
   .use(honoLogger())
   .onError(exceptionHandler)
+  .route("/", root)
   .route("/", auth)
 
-// showRoutes(app, { verbose: false });
+showRoutes(app, { verbose: false });
 
 Bun.serve({ port: Bun.env.AUTH_BACKEND_PORT!, fetch: app.fetch });
 

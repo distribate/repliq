@@ -5,15 +5,19 @@ import { reatomComponent } from "@reatom/npm-react"
 import DiscordLogo from "@repo/assets/images/discord-logo.jpg"
 import TelegramLogo from "@repo/assets/images/telegram-logo.png"
 import { Button } from "@repo/ui/src/components/button";
-import { Dialog, DialogContent, DialogTrigger } from "@repo/ui/src/components/dialog";
+import { Dialog, DialogContent } from "@repo/ui/src/components/dialog";
 import { toast } from "sonner";
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@repo/ui/src/components/tooltip";
-import { PropsWithChildren } from "react";
-import { getUser } from "#components/user/models/current-user.model"
+import { reatomAsync, withStatusesAtom } from "@reatom/async"
+import { forumRootClient } from "@repo/shared/api/forum-client"
+import { atom } from "@reatom/core"
+import { WindowLoader } from "@repo/ui/src/components/window-loader"
+import { reatomTimer } from "@reatom/timer"
+import { withReset } from "@reatom/framework"
 
 type SocialsCardProps = {
   title: string,
   value: string | null
+  service: Connect["service"]
 }
 
 const socialsImages: Record<string, string> = {
@@ -21,90 +25,161 @@ const socialsImages: Record<string, string> = {
   "Discord": DiscordLogo,
 }
 
-const SocialsSupport = reatomComponent<PropsWithChildren>(({
-  ctx, children
-}) => {
-  const { nickname } = getUser(ctx)
+const connectDialogIsOpenAtom = atom(false, "connectDialogIsOpen")
+const connectUrlAtom = atom<string | null>(null, "connectUrlAtom").pipe(withReset())
 
-  const handleCopyLink = async (text: string) => {
-    await navigator.clipboard.writeText(text)
+type Connect = {
+  type: "connect" | "cancel" | "disconnect"
+  service: "telegram" | "discord",
+  signal: AbortSignal,
+}
+
+const connectTimer = reatomTimer({
+  interval: 1000,
+  delayMultiplier: 1000,
+  progressPrecision: 2,
+  resetProgress: true,
+})
+
+const remainsAtom = atom((ctx) => (ctx.spy(connectTimer) / 1000).toFixed(1))
+
+const request = async ({ type, signal, service }: Connect) => {
+  const res = await forumRootClient.connect.$post({ query: { service, type } }, { init: { signal } })
+  const data = await res.json()
+  return data
+}
+
+const CONNECT_ERROR_MAP: Record<string, string> = {
+  "Exists token": "Подождите до этого действия"
+}
+
+const connectActionVariablesAtom = atom<Omit<Connect, "signal"> | null>(null, "connectActionVariables")
+const connectAction = reatomAsync(async (ctx, type: Connect["type"], service: Connect["service"]) => {
+  connectDialogIsOpenAtom(ctx, true)
+
+  const isProccessed = ctx.get(connectActionVariablesAtom)
+
+  if (isProccessed) {
+    return;
+  }
+
+  connectActionVariablesAtom(ctx, { type, service })
+
+  return await ctx.schedule(() => request({ service, type, signal: ctx.controller.signal }))
+}, {
+  name: "connectAction",
+  onFulfill: (ctx, res) => {
+    if (!res) return;
+
+    if ("error" in res) {
+      toast.error(CONNECT_ERROR_MAP[res.error] ?? res.error)
+      connectDialogIsOpenAtom(ctx, false)
+      return
+    }
+
+    const variables = ctx.get(connectActionVariablesAtom)
+    if (!variables) return;
+
+    const { type, service } = variables
+
+    if (type === 'connect') {
+      connectUrlAtom(ctx, res.data)
+      connectTimer.startTimer(ctx, 5 * 60)
+    }
+
+    if (type === 'cancel') {
+      connectUrlAtom.reset(ctx)
+      connectDialogIsOpenAtom(ctx, false)
+    }
+
+    if (type === 'disconnect' && service === 'telegram') {
+      telegramAtom.reset(ctx)
+      connectDialogIsOpenAtom(ctx, false)
+      toast.success("Телеграм отвязан")
+    }
+  }
+}).pipe(withStatusesAtom())
+
+const Remains = reatomComponent(({ ctx }) => {
+  return (
+    <Typography>
+      Ссылка будет активна в течении {ctx.spy(remainsAtom)}
+    </Typography>
+  )
+}, "Remains")
+
+const SocialsSupportDialog = reatomComponent<{ service: Connect["service"] }>(({ ctx, service }) => {
+  const url = ctx.spy(connectUrlAtom)
+
+  const handleCopyLink = async () => {
+    if (!url) return;
+    await navigator.clipboard.writeText(url)
     toast.info("Ссылка скопирована в буфер обмена")
   }
 
   return (
-    <Dialog>
-      <DialogTrigger className="flex justify-start w-full">
-        {children}
-      </DialogTrigger>
+    <Dialog open={ctx.spy(connectDialogIsOpenAtom)} onOpenChange={(v) => connectDialogIsOpenAtom(ctx, v)}>
       <DialogContent>
         <div className="flex flex-col items-center gap-4 w-full h-full">
           <Typography variant="dialogTitle">
-            Привязка соцсетей к аккаунту
+            Привязка Telegram к аккаунту
           </Typography>
-          <div className="flex w-full justify-between p-2 items-center">
-            <div className="flex flex-col gap-2 *:text-[17px] items-start w-full">
-              <Typography textColor="shark_white">
-                Чтобы привязать соцсеть к аккаунту, нужно:
-              </Typography>
-              <div className="flex flex-col gap-2 w-full h-full">
-                <div className="flex flex-col gap-1 w-full h-full">
-                  <Typography textColor="shark_white">
-                    1. Написать сообщение ниже следующим ботам:
+          {url ? (
+            <div className="flex justify-center w-full p-2 items-center">
+              <div className="flex items-center justify-center w-full flex-col gap-4">
+                <div className="flex flex-col">
+                  <Typography textSize="large">
+                    Перейдите к боту и введите токен
                   </Typography>
-                  <Typography textColor="shark_white">
-                    Telegram: <a href="https://t.me/fasberry_bot" className="text-shark-300" rel="noreferrer" target="_blank">@fasberry_bot</a>
-                  </Typography>
-                  <Typography textColor="shark_white">
-                    Discord: <span className="text-shark-300">FasberryBot#7635</span>
-                  </Typography>
+                  <Remains />
                 </div>
-                <div className="flex items-center gap-2 w-full">
-                  <Typography textColor="shark_white">
-                    Сообщение:
-                  </Typography>
-                  <TooltipProvider>
-                    <Tooltip delayDuration={0}>
-                      <TooltipTrigger className="w-fit">
-                        <div
-                          onClick={() => handleCopyLink(`!аккаунт привязать ${nickname}`)}
-                          className="flex bg-shark-900 w-fit cursor-pointer rounded-md px-2 py-0.5 items-center justify-start"
-                        >
-                          <Typography className="italic font-bold text-shark-200" >
-                            !аккаунт привязать {nickname}
-                          </Typography>
-                        </div>
-                      </TooltipTrigger>
-                      <TooltipContent side="right">
-                        <Typography className="font-semibold text-shark-200">
-                          Скопировать текст
-                        </Typography>
-                      </TooltipContent>
-                    </Tooltip>
-                  </TooltipProvider>
+                <pre
+                  onClick={() => handleCopyLink()}
+                  className="cursor-pointer bg-shark-800 rounded-lg px-3 py-0.5"
+                >
+                  <code>{url}</code>
+                </pre>
+                <div className="flex flex-col sm:flex-row items-center gap-2 w-full justify-center">
+                  <a href={url} target="_blank" rel="noreferrer">
+                    <Button
+                      variant="positive"
+                      onClick={() => connectAction(ctx, "connect", service)}
+                    >
+                      <Typography textSize="medium">
+                        Перейти к боту
+                      </Typography>
+                    </Button>
+                  </a>
+                  <Button
+                    variant="negative"
+                    onClick={() => connectAction(ctx, "cancel", service)}
+                  >
+                    <Typography textSize="medium">
+                      Отменить
+                    </Typography>
+                  </Button>
                 </div>
-                <Typography textColor="shark_white">
-                  2. Зайти в игру и ввести команду, которую предложит бот
-                </Typography>
-                <Typography textColor="shark_white">
-                  3. Аккаунт привязан! 🎉
-                </Typography>
               </div>
             </div>
-          </div>
+          ) : (
+            <div className="flex flex-col gap-4 p-2 items-center justify-center">
+              <WindowLoader />
+              <Typography textSize="large">Инициализируем...</Typography>
+            </div>
+          )}
         </div>
       </DialogContent>
     </Dialog>
   )
-}, "SocialsSupport")
+}, "SocialsSupportDialog")
 
-export const SocialsCard = ({
-  title, value
-}: SocialsCardProps) => {
+export const SocialsCard = reatomComponent<SocialsCardProps>(({ ctx, title, value, service }) => {
   return (
     <div className="flex flex-col gap-2 group p-4 w-full bg-shark-950 rounded-lg relative overflow-hidden">
       <div
-        className={`absolute transition-all -bottom-1 -right-1 rounded-lg overflow-hidden ease-in-out
-        ${!value && "group-hover:duration-300 duration-300 group-hover:-bottom-32 group-hover:-right-32"}`}
+        data-state={value ? "active" : "inactive"}
+        className={`absolute transition-all -bottom-1 -right-1 rounded-lg overflow-hidden ease-in-out duration-300
+          data-[state=inactive]:group-hover:-bottom-32 data-[state=inactive]:group-hover:-right-32`}
       >
         <img src={socialsImages[title]} alt="" width={64} height={64} />
       </div>
@@ -112,21 +187,46 @@ export const SocialsCard = ({
         {title}
       </Typography>
       {value ? (
-        <Typography textColor="gray" className="text-[18px] font-medium">
-          ID: {value}
-        </Typography>
+        <div className="flex flex-col w-full gap-2">
+          <Typography textColor="gray" className="text-[18px]">
+            ID: {value}
+          </Typography>
+          <div className="flex items-center w-4/5 justify-start gap-2">
+            <Button
+              className="bg-shark-50 w-1/2"
+            >
+              <Typography textSize="medium" className="text-shark-950">
+                Настроить
+              </Typography>
+            </Button>
+            <Button
+              variant="negative"
+              className="w-1/2"
+              onClick={() => connectAction(ctx, "disconnect", service)}
+            >
+              <Typography textSize="medium" >
+                Отвязать
+              </Typography>
+            </Button>
+          </div>
+        </div>
       ) : (
-        <SocialsSupport>
-          <Button state="default" className="w-4/5 group-hover:w-full">
+        <>
+          <SocialsSupportDialog service={service} />
+          <Button
+            state="default"
+            onClick={() => connectAction(ctx, "connect", service)}
+            className="w-4/5 group-hover:w-full"
+          >
             <Typography textSize="medium" >
               Привязать
             </Typography>
           </Button>
-        </SocialsSupport>
+        </>
       )}
     </div>
   )
-};
+}, "SocialsCard")
 
 export const ProfileAccountSocials = reatomComponent(({ ctx }) => {
   const userSocials = ctx.spy(userSocialsResource.dataAtom)
@@ -159,9 +259,11 @@ export const ProfileAccountSocials = reatomComponent(({ ctx }) => {
           <>
             <SocialsCard
               title="Discord"
+              service="discord"
               value={discord?.value ?? null}
             />
             <SocialsCard
+              service="telegram"
               title="Telegram"
               value={tg?.value ?? null}
             />

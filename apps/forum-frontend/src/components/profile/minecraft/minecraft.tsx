@@ -15,11 +15,13 @@ const MinecraftProfileAvatar = reatomComponent(({ ctx }) => {
         <MinecraftAvatar nickname={nickname} propHeight={512} propWidth={512} className="h-full w-full" />
       </div>
       <div className="flex flex-col gap-2 w-full h-full">
-        <Button className="py-2 bg-shark-50" size="lg">
-          <Typography textSize="medium" className="text-shark-950">
-            Игровой профиль
-          </Typography>
-        </Button>
+        <a href={`https://mc.fasberry.su/player/${nickname}`} target="_blank" rel="noreferrer">
+          <Button className="py-2 bg-shark-50" size="lg">
+            <Typography textSize="medium" className="text-shark-950">
+              Игровой профиль
+            </Typography>
+          </Button>
+        </a>
       </div>
     </>
   )

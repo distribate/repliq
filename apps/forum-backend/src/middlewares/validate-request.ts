@@ -6,7 +6,7 @@ import { logger } from "@repo/lib/utils/logger";
 export const validateRequest = (type: "prevent" | undefined = undefined) => createMiddleware(async (ctx, next) => {
   const sessionToken = getCookie(ctx, "session")
 
-  logger.info(`type: ${type}`)
+  logger.info(`middleware validate request for ${type}`)
   
   if (type === "prevent") {
     if (!sessionToken) {

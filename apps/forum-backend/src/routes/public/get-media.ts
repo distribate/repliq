@@ -1,10 +1,10 @@
-import { forumDB } from "#shared/database/forum-db.ts";
+import { sqliteDB } from "#shared/database/sqlite-db.ts";
 import { throwError } from "@repo/lib/helpers/throw-error";
 import { Hono } from "hono";
 
 async function getLink(type: string) {
-  const query = await forumDB
-    .selectFrom("links")
+  const query = await sqliteDB
+    .selectFrom("media_links")
     .select("link")
     .where("value", "=", type)
     .executeTakeFirst()

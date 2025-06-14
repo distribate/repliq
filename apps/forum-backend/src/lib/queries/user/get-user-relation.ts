@@ -1,5 +1,5 @@
 import type { InitiatorRecipientType } from "#types/initiator-recipient-type.ts";
-import { getUserIsBanned } from "./get-user-is-banned";
+// import { getUserIsBanned } from "./get-user-is-banned";
 import { getUserIsBlocked } from "./get-user-is-blocked";
 import { getUserIsPrivate } from "./get-user-is-private";
 

@@ -326,36 +326,6 @@ export interface CommentsReplies {
   recipient_comment_id: Int8;
 }
 
-export interface ConfigAdvertisement {
-  created_at: Generated<Timestamp>;
-  description: string;
-  id: Generated<Int8>;
-  link: string | null;
-  owner: string;
-  title: string;
-}
-
-export interface ConfigAlerts {
-  created_at: Generated<Timestamp>;
-  creator: string;
-  description: string | null;
-  id: Generated<Int8>;
-  link: string | null;
-  title: string;
-}
-
-export interface ConfigMinecraftFacts {
-  fact: string | null;
-  id: Generated<Int8>;
-}
-
-export interface ConfigMinecraftItems {
-  description: string | null;
-  id: Generated<Int8>;
-  image: string;
-  title: string;
-}
-
 export interface CronJob {
   active: Generated<boolean>;
   command: string;
@@ -379,43 +349,6 @@ export interface CronJobRunDetails {
   start_time: Timestamp | null;
   status: string | null;
   username: string | null;
-}
-
-export interface Currencies {
-  created_at: Generated<Timestamp>;
-  id: Int8;
-  imageUrl: string;
-  isAvailable: Generated<boolean>;
-  public: Generated<boolean>;
-  title: string;
-  value: string;
-}
-
-export interface ErrorsLog {
-  created_at: Generated<Timestamp>;
-  description: string;
-  id: Generated<Int8>;
-  initiator: string;
-  recipient: string;
-  type: string;
-}
-
-export interface Events {
-  created_at: Generated<Timestamp>;
-  description: string | null;
-  id: Generated<Int8>;
-  imageUrl: string | null;
-  origin: string;
-  reward: string;
-  title: string;
-}
-
-export interface EventsPlayers {
-  created_at: Generated<Timestamp>;
-  event_id: Int8;
-  id: Int8;
-  nickname: string;
-  status: string;
 }
 
 export interface ExtensionsPgStatStatements {
@@ -499,12 +432,6 @@ export interface InfoFindout {
   user_nickname: string;
 }
 
-export interface IpList {
-  id: Generated<Int8>;
-  ip: string;
-  name: string;
-}
-
 export interface Issues {
   created_at: Generated<Timestamp>;
   description: string;
@@ -522,13 +449,6 @@ export interface IssuesApprovals {
   responser: Generated<string | null>;
 }
 
-export interface Links {
-  created_at: Generated<Timestamp>;
-  id: Generated<Int8>;
-  link: string;
-  value: string;
-}
-
 export interface MinecraftProfiles {
   created_at: Generated<Timestamp>;
   nickname: string;
@@ -540,18 +460,6 @@ export interface Moderators {
   created_at: Generated<Timestamp>;
   id: Generated<Int8>;
   user_id: string | null;
-}
-
-export interface Modpack {
-  client: string | null;
-  created_at: Generated<Timestamp>;
-  downloadLink: string | null;
-  id: Int8;
-  imageUrl: Generated<string>;
-  mods: string[] | null;
-  name: string | null;
-  shaders: string[] | null;
-  version: string | null;
 }
 
 export interface NetHttpRequestQueue {
@@ -572,16 +480,6 @@ export interface NetHttpResponse {
   id: Int8 | null;
   status_code: number | null;
   timed_out: boolean | null;
-}
-
-export interface News {
-  created_at: Generated<Timestamp>;
-  description: string;
-  id: Generated<string>;
-  imageUrl: Generated<string>;
-  media_links: Json | null;
-  tags: string[] | null;
-  title: string;
 }
 
 export interface Notifications {
@@ -760,21 +658,6 @@ export interface ReportsApprovals {
   message: string | null;
   report_id: Int8;
   status: string;
-}
-
-export interface RulesRuleContent {
-  description: string | null;
-  id: Generated<number>;
-  punishment: string | null;
-  rule_list_id: string | null;
-  subtitle: string | null;
-  title: string;
-}
-
-export interface RulesTerminContent {
-  article_desc: string;
-  article_title: string;
-  id: Generated<number>;
 }
 
 export interface Status {
@@ -1073,12 +956,6 @@ export interface VaultSecrets {
   updated_at: Generated<Timestamp>;
 }
 
-export interface VotedUsers {
-  created_at: Generated<Timestamp>;
-  id: Generated<Int8>;
-  nickname: string;
-}
-
 export interface DB {
   "_realtime.extensions": _RealtimeExtensions;
   "_realtime.schema_migrations": _RealtimeSchemaMigrations;
@@ -1103,32 +980,20 @@ export interface DB {
   category: Category;
   comments: Comments;
   comments_replies: CommentsReplies;
-  config_advertisement: ConfigAdvertisement;
-  config_alerts: ConfigAlerts;
-  config_minecraft_facts: ConfigMinecraftFacts;
-  config_minecraft_items: ConfigMinecraftItems;
   "cron.job": CronJob;
   "cron.job_run_details": CronJobRunDetails;
-  currencies: Currencies;
-  errors_log: ErrorsLog;
-  events: Events;
-  events_players: EventsPlayers;
   "extensions.pg_stat_statements": ExtensionsPgStatStatements;
   "extensions.pg_stat_statements_info": ExtensionsPgStatStatementsInfo;
   friends_notes: FriendsNotes;
   friends_pinned: FriendsPinned;
   friends_requests: FriendsRequests;
   info_findout: InfoFindout;
-  ip_list: IpList;
   issues: Issues;
   issues_approvals: IssuesApprovals;
-  links: Links;
   minecraft_profiles: MinecraftProfiles;
   moderators: Moderators;
-  modpack: Modpack;
   "net._http_response": NetHttpResponse;
   "net.http_request_queue": NetHttpRequestQueue;
-  news: News;
   notifications: Notifications;
   permissions: Permissions;
   "pgsodium.decrypted_key": PgsodiumDecryptedKey;
@@ -1147,8 +1012,6 @@ export interface DB {
   refferals: Refferals;
   reports: Reports;
   reports_approvals: ReportsApprovals;
-  rules_rule_content: RulesRuleContent;
-  rules_termin_content: RulesTerminContent;
   status: Status;
   "storage.buckets": StorageBuckets;
   "storage.migrations": StorageMigrations;
@@ -1182,5 +1045,4 @@ export interface DB {
   users_status: UsersStatus;
   "vault.decrypted_secrets": VaultDecryptedSecrets;
   "vault.secrets": VaultSecrets;
-  voted_users: VotedUsers;
 }

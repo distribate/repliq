@@ -18,7 +18,15 @@ export type PostVisibilityEnum = Database["public"]["Enums"]["post_visibility"];
 export type ThreadEntity = Tables<"threads">;
 export type ThreadRatingEnum = Database["public"]["Enums"]["thread_rating_type"];
 
-export type AlertEntity = Tables<"config_alerts">;
+export type AlertEntity = {
+  id: number,
+  link: string | null,
+  creator: string,
+  created_at: string | Date,
+  title: string,
+  description: string
+}
+
 export type MinecraftItemEntity = Tables<"config_minecraft_items">;
 export type BanEntity = Tables<"users_banned">;
 

@@ -42,3 +42,5 @@ declare module "bun" {
     SUPABASE_SERVICE_ROLE_KEY: string;
   }
 }
+
+declare module "*.db"

@@ -1,6 +1,6 @@
 import { throwError } from '@repo/lib/helpers/throw-error.ts';
 import { getUserInfo } from "#lib/queries/user/get-user-info.ts";
-import { getUserIsBanned } from "#lib/queries/user/get-user-is-banned.ts";
+// import { getUserIsBanned } from "#lib/queries/user/get-user-is-banned.ts";
 import { getNickname } from "#utils/get-nickname-from-storage.ts";
 import type { UserDonateVariant } from "@repo/types/entities/entities-type";
 import { Hono } from "hono";

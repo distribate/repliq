@@ -5,9 +5,7 @@ import { bold, format } from "gramio";
 import { validateRequest } from "../../utils/validate-request";
 
 loggerBot.command("check", async (ctx) => {
-  if (!ctx.from) {
-    return
-  }
+  if (!ctx.from) return
 
   const userId = ctx.from.id
   const isAdmin = await validateRequest(userId);

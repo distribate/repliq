@@ -1,9 +1,9 @@
-import { forumDB } from "#shared/database/forum-db.ts";
+import { sqliteDB } from "#shared/database/sqlite-db.ts";
 import { throwError } from "@repo/lib/helpers/throw-error";
 import { Hono } from "hono";
 
 async function getServerIp() {
-  const query = await forumDB
+  const query = await sqliteDB
     .selectFrom("ip_list")
     .select("ip")
     .where("name", "=", "server_proxy")

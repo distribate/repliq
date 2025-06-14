@@ -1,16 +1,16 @@
-import { authSubscriber } from "../../shared/events/listener.ts"
-import { sendLogs } from "../../utils/send-logs.ts"
+// import { authSubscriber } from "../../shared/events/listener.ts"
+// import { sendLogs } from "../../utils/send-logs.ts"
 
-type LoginDatePayload = {
-  nickname: string,
-  uuid: string,
-  logindate: number
-}
+// type LoginDatePayload = {
+//   nickname: string,
+//   uuid: string,
+//   logindate: number
+// }
 
-export async function notifyByAuthLoginDateChannel() {
-  return authSubscriber.notifications.on('auth_logindate_channel', async (payload: LoginDatePayload) => {
-    if (payload) {
-      return sendLogs({ data: payload })
-    }
-  });
-}
+// export async function notifyByAuthLoginDateChannel() {
+//   return authSubscriber.notifications.on('auth_logindate_channel', async (payload: LoginDatePayload) => {
+//     if (payload) {
+//       return sendLogs({ data: payload })
+//     }
+//   });
+// }

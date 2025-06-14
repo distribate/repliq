@@ -31,10 +31,17 @@ export const currencies = new Hono()
   .use(cors({ origin: "*" }))
   .route("/", getCurrenciesRoute)
 
+export const getHealthRoute = new Hono()
+  .get("/health", async (ctx) => ctx.body(null, 200))
+
+export const root = new Hono()
+  .route("/", getHealthRoute)
+
 const app = new Hono()
   .basePath('/payment')
   .use(timeout(5000))
   .use(honoLogger())
+  .route("/", root)
   .route('/proccessing', payments)
   .route('/hooks', hooks)
   .route('/currencies', currencies)

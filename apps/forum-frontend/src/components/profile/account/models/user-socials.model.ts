@@ -2,6 +2,7 @@ import { reatomResource, withCache, withDataAtom, withStatusesAtom } from '@reat
 import { currentUserAtom } from '#components/user/models/current-user.model'
 import { forumUserClient } from '@repo/shared/api/forum-client'
 import { atom } from '@reatom/core'
+import { withReset } from '@reatom/framework'
 
 const getUserSocials = async (nickname: string) => {
   const res = await forumUserClient.user["get-user-socials"].$get({ param: { nickname } })
@@ -12,8 +13,8 @@ const getUserSocials = async (nickname: string) => {
   return data.data
 }
 
-export const telegramAtom = atom<{ created_at: string, value: string } | null>(null, "telegram")
-export const discordAtom = atom<{ created_at: string, value: string } | null>(null, "discord")
+export const telegramAtom = atom<{ created_at: string, value: string } | null>(null, "telegram").pipe(withReset())
+export const discordAtom = atom<{ created_at: string, value: string } | null>(null, "discord").pipe(withReset())
 
 export const userSocialsResource = reatomResource(async (ctx) => {
   const nickname = ctx.spy(currentUserAtom)?.nickname

@@ -1,4 +1,4 @@
-import { forumDB } from "#shared/database/forum-db.ts";
+import { sqliteDB } from "#shared/database/sqlite-db.ts";
 import { getPublicUrl } from "#utils/get-public-url.ts";
 import { throwError } from "@repo/lib/helpers/throw-error";
 import { STATIC_IMAGES_BUCKET } from "@repo/shared/constants/buckets";
@@ -6,8 +6,8 @@ import { Hono } from "hono";
 import { sql } from "kysely";
 
 async function getMinecraftItems() {
-  const query = await forumDB
-    .selectFrom("config_minecraft_items")
+  const query = await sqliteDB
+    .selectFrom("minecraft_items")
     .select([
       "description",
       "title",

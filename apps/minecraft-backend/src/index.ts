@@ -78,9 +78,16 @@ export const lands = new Hono()
   .route("/", getLandsRoute)
   .route("/", getLandRoute)
 
+export const getHealthRoute = new Hono()
+  .get("/health", async (ctx) => ctx.body(null, 200))
+
+export const root = new Hono()
+  .route("/", getHealthRoute)
+
 export const minecraft = new Hono()
   .basePath('/minecraft')
   .route("/", skin)
+  .route("/", root)
   .use(validateRequest())
   .route("/", achievements)
   .route("/", lands)
@@ -102,10 +109,11 @@ const app = new Hono<Env>()
   .use(rateLimiterMiddleware())
   .use(honoLogger())
   .use(contextStorage())
+  .route("/", root)
   .route("/", minecraft)
   .route("/", hooks)
 
-// showRoutes(app, { verbose: false });
+showRoutes(app, { verbose: false });
 
 Bun.serve({ port: Bun.env.MINECRAFT_BACKEND_PORT!, fetch: app.fetch });
 

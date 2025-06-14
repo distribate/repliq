@@ -1,4 +1,4 @@
-import { forumDB } from "#shared/database/forum-db.ts";
+import { sqliteDB } from "#shared/database/sqlite-db.ts";
 import { getPublicUrl } from "#utils/get-public-url.ts";
 import { STATIC_IMAGES_BUCKET } from "@repo/shared/constants/buckets";
 import type { getNewsSchema } from "@repo/types/schemas/news/get-news-schema";
@@ -8,19 +8,20 @@ import type { z } from "zod/v4";
 type GetNews = z.infer<typeof getNewsSchema>;
 
 export async function getNews({
-  ascending, cursor, limit, searchQuery
+  ascending, cursor, limit = 2, searchQuery
 }: GetNews) {
-  let query = forumDB
-    .selectFrom("news")
+  let query = sqliteDB
+    .selectFrom("minecraft_news")
     .select(["id", "title", "description", "imageUrl", "created_at"])
-    .limit(limit ?? 2)
+    .$castTo<{ id: string, title: string, description: string, created_at: Date | string, imageUrl: string }>()
+    .limit(limit)
 
   if (searchQuery) {
     query = query.where("title", "like", `%${searchQuery}%`)
   }
 
   const res = await executeWithCursorPagination(query, {
-    perPage: limit ?? 2,
+    perPage: limit,
     after: cursor,
     fields: [
       {

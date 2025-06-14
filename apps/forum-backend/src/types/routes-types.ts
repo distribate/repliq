@@ -1,6 +1,7 @@
 import type { 
   admin, category, search, thread, post, 
-  report, user, comment, reaction, shared 
+  report, user, comment, reaction, shared, 
+  root
 } from "../index.ts"
 
 export type ForumUserAppType = typeof user
@@ -13,3 +14,4 @@ export type ForumSharedAppType = typeof shared
 export type ForumSearchAppType = typeof search
 export type ForumPostAppType = typeof post
 export type ForumReportAppType = typeof report
+export type ForumRootAppType = typeof root

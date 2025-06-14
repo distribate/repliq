@@ -81,8 +81,8 @@ export const getUserSummaryRoute = new Hono()
             return ctx.json({ status: "blocked", data: null }, 200);
           case "private":
             return ctx.json({ status: "private", data: null }, 200)
-          case "banned":
-            return ctx.json({ status: "banned", data: null }, 200)
+          // case "banned":
+          //   return ctx.json({ status: "banned", data: null }, 200)
         }
       }
       

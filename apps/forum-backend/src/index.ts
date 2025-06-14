@@ -44,7 +44,6 @@ import { createCommentRoute } from '#routes/comments/create-comment.ts';
 import { replyCommentRoute } from '#routes/comments/reply-comment.ts';
 import { getThreadCommentsRoute } from '#routes/comments/get-thread-comments.ts';
 import { createReactionRoute } from '#routes/reaction/create-reaction.ts';
-import { getUserBanDetailsRoute } from '#routes/user/get-user-ban-details.ts';
 import { createThreadRoute } from '#routes/thread/create-thread.ts';
 import { getUserFriendsCountRoute } from '#routes/user/get-user-friends-count.ts';
 import { getFactRoute } from '#routes/public/get-fact-route.ts';
@@ -98,7 +97,6 @@ import { getUserTicketsRoute } from '#routes/user/get-user-tickets.ts';
 import { getRulesRoute } from '#routes/public/get-rules.ts';
 import { getModpacksRoute } from '#routes/public/get-modpacks.ts';
 import { getServerIpRoute } from '#routes/public/get-server-ip.ts';
-import { createBanRoute } from '#routes/warns/create-ban.ts';
 import { createUserRestrictRoute } from '#routes/warns/create-user-restrict.ts';
 import { notificationsSSERoute } from '#routes/notifications/notifications-sse.ts';
 import { getMediaRoute } from '#routes/public/get-media.ts';
@@ -111,6 +109,7 @@ import { connectProfileRoute } from '#routes/user/connect-profile.ts';
 import { deleteAccountRoute, restoreAccountRoute } from '#routes/user/delete-account.ts';
 import { getUserAvatarRoute } from '#routes/user/get-user-avatar.ts';
 import { uploadAvatarRoute } from '#routes/user/upload-avatar.ts';
+import { connectServiceRoute } from '#routes/user/connect-service.ts';
 
 async function startNats() {
   await initNats()
@@ -170,7 +169,6 @@ export const moderator = new Hono()
   .basePath("/moderator")
   .use(validateRequest("prevent"))
   .use(adminMiddleware())
-  .route("/", createBanRoute)
   .route("/", createUserRestrictRoute)
 
 export const comment = new Hono()
@@ -198,7 +196,7 @@ export const thread = new Hono()
   .use(validateRequest())
   .route("/", getThreadRoute)
   .route("/", getThreadsByOwnerRoute)
-  
+
   // #private routes
   .use(validateRequest("prevent"))
   .use(userStatus())
@@ -259,7 +257,7 @@ export const user = new Hono()
 
   // #current user info routes
   .route("/", getUserStatusRoute)
-  .route("/", getUserBanDetailsRoute)
+  // .route("/", getUserBanDetailsRoute)
   .route("/", getUserReferalsRoute)
   .route("/", getUserPurchasesRoute)
   .route("/", getUserTicketsRoute)
@@ -326,6 +324,17 @@ export const search = new Hono()
   .use(userStatus())
   .route("/", getSearchRoute)
 
+export const root = new Hono()
+  .basePath("/")
+  // #public routes
+  .route("/", getHealthRoute)
+  //--------------------------------------
+
+  // #private routes
+  .use(validateRequest("prevent"))
+  .route("/", connectServiceRoute)
+  //--------------------------------------
+
 const app = new Hono<Env>()
   .basePath('/forum')
   .use(corsProtectionMiddleware())
@@ -335,7 +344,7 @@ const app = new Hono<Env>()
   .use(timing())
   .use(honoLogger())
   .use(contextStorage())
-  .route("/", getHealthRoute)
+  .route("/", root)
   .route("/", shared)
   .route('/', admin)
   .route("/", moderator)
@@ -349,7 +358,7 @@ const app = new Hono<Env>()
   .route("/", post)
   .route("/", report)
 
-// showRoutes(app, { verbose: false });
+showRoutes(app, { verbose: false });
 
 Bun.serve({ port: Bun.env.FORUM_BACKEND_PORT!, fetch: app.fetch })
 

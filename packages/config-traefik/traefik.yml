@@ -61,7 +61,6 @@ http:
       middlewares: 
         - traefik-auth
       tls: true 
-      certresolver: [http]
       service: api@internal
 
     kong:
@@ -131,10 +130,10 @@ http:
         servers:
           - url: "https://kong.fasberry.su"
 
-    traefik:
-      loadbalancer:
-        server:
-          - port: 9080
+    # traefik:
+    #   loadbalancer:
+    #     server:
+    #       - port: 9080
 
     api-payment-svc:
       loadBalancer:

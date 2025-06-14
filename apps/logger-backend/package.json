@@ -16,9 +16,7 @@
     "@repo/shared": "*",
     "dayjs": "1.11.11",
     "gramio": "0.1.2",
-    "ky": "1.7.2",
-    "pg": "8.13.1",
-    "pg-listen": "1.7.0"
+    "ky": "1.7.2"
   },
   "devDependencies": {
     "@antfu/eslint-config": "3.8.0",

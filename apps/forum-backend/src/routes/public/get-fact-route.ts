@@ -1,4 +1,4 @@
-import { forumDB } from "#shared/database/forum-db.ts";
+import { sqliteDB } from "#shared/database/sqlite-db.ts";
 import { throwError } from "@repo/lib/helpers/throw-error";
 import { Hono } from "hono";
 
@@ -9,10 +9,9 @@ export const getFactRoute = new Hono()
     const randomId = Math.floor(getRandomArbitrary(1, 97));
 
     try {
-      const fact = await forumDB
-        .selectFrom("config_minecraft_facts")
+      const fact = await sqliteDB
+        .selectFrom("minecraft_facts")
         .select("fact")
-        // @ts-ignore
         .where("id", "=", randomId)
         .executeTakeFirst();
 

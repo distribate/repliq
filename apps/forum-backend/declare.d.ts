@@ -34,3 +34,5 @@ declare module "bun" {
     NEXT_PUBLIC_SUPABASE_URL: string
   }
 }
+
+declare module "*.db"

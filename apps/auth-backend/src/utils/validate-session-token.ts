@@ -26,7 +26,7 @@ const getSession = async (session_id: string) => {
 
 export async function validateSessionToken(
   token: string,
-): Promise<SessionResult | null> {
+): Promise<Pick<SessionResult, "session_id" | "nickname" | "expires_at"> | null> {
   const sessionId = encodeHexLowerCase(
     sha256(new TextEncoder().encode(token))
   );
@@ -36,7 +36,7 @@ export async function validateSessionToken(
 
   const { session_id, expires_at, nickname } = res;
 
-  const session: SessionResult = {
+  const session: Pick<SessionResult, "session_id" | "nickname" | "expires_at"> = {
     session_id, nickname, expires_at
   };
 
