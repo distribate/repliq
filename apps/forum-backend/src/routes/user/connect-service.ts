@@ -21,12 +21,8 @@ const BOT_URL = "https://t.me/fasberry_bot"
 
 export const connectServiceRoute = new Hono()
   .post("/connect", zValidator("query", connectServiceRouteSchema), async (ctx) => {
-    const { data, success } = connectServiceRouteSchema.safeParse(ctx.req.query())
+    const data = connectServiceRouteSchema.parse(ctx.req.query())
     const nickname = getNickname()
-
-    if (!success) {
-      return ctx.json({ error: "Invalid data" }, 401)
-    }
 
     const { type, service } = data
 

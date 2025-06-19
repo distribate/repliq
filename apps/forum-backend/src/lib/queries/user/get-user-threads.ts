@@ -2,7 +2,7 @@ import type { getUserThreadsSchema } from '#routes/user/get-user-threads.ts';
 import { forumDB } from '#shared/database/forum-db.ts';
 import { sql, type Expression, type SqlBool } from 'kysely';
 import { executeWithCursorPagination } from 'kysely-paginate';
-import { z } from 'zod';
+import { z } from 'zod/v4';
 
 type GetUserThreads = {
   nickname: string

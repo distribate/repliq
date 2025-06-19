@@ -4,12 +4,12 @@ export type ProfileThreadsViewType = "grid" | "list";
 
 export type ProfileThreadsSettingsQuery = {
   viewType: ProfileThreadsViewType;
-  querySearch: string | null;
+  query: string | null;
 };
 
 const initial: ProfileThreadsSettingsQuery = {
   viewType: "list",
-  querySearch: null,
+  query: null,
 };
 
 export const profileThreadsSettingsAtom = atom<ProfileThreadsSettingsQuery>(initial, "profileThreadsSettings")

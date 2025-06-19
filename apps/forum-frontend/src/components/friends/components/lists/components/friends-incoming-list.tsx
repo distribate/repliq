@@ -11,14 +11,14 @@ import { incomingRequestsAtom } from "#components/friends/models/friends-request
 import { CustomLink } from "#components/shared/link.tsx";
 import { createIdLink } from "@repo/lib/utils/create-link.ts";
 
-const FriendIncomingCard = reatomComponent<{ request_id: string; initiator: string; }>(({ ctx, initiator, request_id, }) => {
+const FriendIncomingCard = reatomComponent<{ avatar: string | null, request_id: string; initiator: string; }>(({ ctx, avatar, initiator, request_id, }) => {
   return (
     <FriendCardLayout>
       <div
         className="flex min-w-[60px] min-h-[60px] w-[60px] h-[60px] max-h-[60px] max-w-[60px] 
         md:w-[112px] md:h-[112px] md:min-h-[112px] md:min-w-[112px] md:max-w-[112px] md:max-h-[112px]"
       >
-        <Avatar nickname={initiator} propHeight={112} propWidth={112} className="rounded-lg" />
+        <Avatar url={avatar} nickname={initiator} propHeight={112} propWidth={112} className="rounded-lg" />
       </div>
       <div className="flex flex-col gap-y-1 w-fit">
         <div className="flex items-center gap-1 w-fit">
@@ -59,8 +59,8 @@ export const FriendsIncomingList = reatomComponent(({ ctx }) => {
 
   return (
     <FriendsListLayout>
-      {incomingFriends.map(({ initiator, id }) => (
-        <FriendIncomingCard key={initiator} request_id={id} initiator={initiator} />
+      {incomingFriends.map(({ initiator, id, avatar }) => (
+        <FriendIncomingCard avatar={avatar} key={initiator} request_id={id} initiator={initiator} />
       ))}
     </FriendsListLayout>
   )

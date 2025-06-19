@@ -25,5 +25,5 @@ export const updateUserDetails = async ({
   .set({ [criteria]: value })
   .where("nickname", "=", nickname)
   
-  return await query.returning(criteria).executeTakeFirstOrThrow()
+  return query.returning(criteria).executeTakeFirstOrThrow()
 }

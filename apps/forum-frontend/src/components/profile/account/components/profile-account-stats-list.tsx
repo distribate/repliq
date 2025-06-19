@@ -84,7 +84,7 @@ export const ProfileAccountStatsPlayers = ({
                 <div key={idx} className="flex bg-shark-800 p-2 rounded-lg w-full items-center justify-between">
                   <div className="flex items-center gap-2">
                     <CustomLink to={createIdLink("user", item.initiator)}>
-                      <Avatar nickname={item.initiator} propWidth={36} propHeight={36} />
+                      <Avatar url={item.avatar} nickname={item.initiator} propWidth={36} propHeight={36} />
                     </CustomLink>
                     <div className="flex flex-col">
                       <CustomLink to={createIdLink("user", item.initiator)}>

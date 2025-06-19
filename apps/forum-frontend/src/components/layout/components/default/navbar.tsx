@@ -19,11 +19,11 @@ const CREATE = [
 ]
 
 const ProfileBadge = reatomComponent(({ ctx }) => {
-  const nickname = getUser(ctx).nickname
+  const { nickname, avatar } = getUser(ctx)
 
   return (
     <div className="flex items-center justify-between h-10 px-2 py-1 gap-3 bg-shark-950 rounded-lg">
-      <Avatar rounded="medium" propHeight={32} propWidth={32} nickname={nickname} />
+      <Avatar url={avatar} rounded="medium" propHeight={32} propWidth={32} nickname={nickname} />
       <MenuArrow />
     </div>
   )

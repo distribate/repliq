@@ -8,7 +8,7 @@ import { Typography } from '@repo/ui/src/components/typography'
 import { getUser } from '../../components/user/models/current-user.model'
 
 const Page = reatomComponent(({ ctx }) => {
-  const nickname = getUser(ctx).nickname
+  const { avatar, nickname } = getUser(ctx)
   const profileStats = ctx.spy(userProfileStatsResource.dataAtom)
 
   const meta = profileStats?.meta
@@ -16,7 +16,7 @@ const Page = reatomComponent(({ ctx }) => {
   return (
     <div className="flex flex-col gap-4 w-full h-full">
       <div className="flex flex-col md:flex-row items-center gap-4 w-full md:h-36 bg-primary-color p-4 rounded-lg">
-        <Avatar nickname={nickname} propWidth={96} propHeight={96} />
+        <Avatar url={avatar} nickname={nickname} propWidth={96} propHeight={96} />
         <div className="flex flex-col">
           <UserNickname nickname={nickname} className="text-2xl" />
           <CustomLink to={createIdLink("user", nickname)}>

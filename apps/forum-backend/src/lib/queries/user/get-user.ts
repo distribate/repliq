@@ -18,6 +18,7 @@ async function getUserShortedDetails(recipient: string) {
       "users.nickname",
       "users.description",
       "users.account_status",
+      "users.avatar",
       "users.name_color",
       "users.cover_image",
       "users_settings.cover_outline_visible",
@@ -53,6 +54,7 @@ async function getUserFullDetails(recipient: string) {
       "users.real_name",
       "users.account_status",
       "users.name_color",
+      "users.avatar",
       "users.favorite_item",
       "users.cover_image",
       "users_settings.accept_friend_request",
@@ -77,13 +79,14 @@ export async function getUserProfilePreview(recipient: string): Promise<UserShor
 
   const {
     cover_outline_visible, show_game_location, cover_image,
-    nickname, description, name_color, is_donate, account_status
+    nickname, description, name_color, is_donate, account_status, avatar
   } = query;
 
   // @ts-expect-error
   const userDetails: UserShorted = {
     nickname,
     description,
+    avatar,
     name_color,
     account_status,
     cover_image,
@@ -126,12 +129,13 @@ export async function getUser<T extends GetUserType>({
   };
 
   if (type === "shorted" && !isIdentity) {
-    const { nickname, description, name_color, is_donate, account_status } = userWithoutSensitiveInfo;
+    const { nickname, description, avatar, name_color, is_donate, account_status } = userWithoutSensitiveInfo;
 
     return {
       nickname,
       description,
       name_color,
+      avatar,
       account_status,
       is_donate,
       preferences: {

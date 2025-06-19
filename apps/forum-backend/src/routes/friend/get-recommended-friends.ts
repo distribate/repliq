@@ -5,7 +5,7 @@ import { Hono } from "hono";
 import { getNatsConnection } from '@repo/config-nats/nats-client';
 import { forumDB } from '#shared/database/forum-db.ts';
 import { sql } from 'kysely';
-import { getUserFriendsCount } from '#routes/user/get-user-friends-count.ts';
+import { getUserFriendsCount } from '#routes/user/get-user-friends.ts';
 
 type UserLands = {
   nickname: string,

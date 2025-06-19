@@ -37,7 +37,6 @@ const LatestNewsSkeleton = () => {
 
 export const LatestNews = reatomComponent(({ ctx }) => {
   const newsList = ctx.spy(latestNewsResource.dataAtom)
-
   const isExist = newsList && newsList.length > 0
 
   return (

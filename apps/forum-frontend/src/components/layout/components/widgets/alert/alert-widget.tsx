@@ -39,8 +39,8 @@ const AlertCard = ({
         <span className="text-[14px] md:text-[18px] text-shark-50">
           Автор:{' '}
         </span>
-        <CustomLink to={createIdLink("user", creator)}>
-          <UserNickname nickname={creator} className="text-[14px] md:text-[18px]" />
+        <CustomLink to={createIdLink("user", creator.nickname)}>
+          <UserNickname nickname={creator.nickname} className="text-[14px] md:text-[18px]" />
         </CustomLink>
       </div>
       <AlertClose />

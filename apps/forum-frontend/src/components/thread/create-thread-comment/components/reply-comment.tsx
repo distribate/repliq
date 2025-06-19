@@ -12,7 +12,14 @@ export const ReplyComment = reatomComponent(({ ctx }) => {
   if (createThreadCommentState?.type === "single" || !values) return null;
 
   const { commentNickname, commentContent } = values;
-  
+
+  const handle = () => {
+    updateCreateThreadCommentAction(ctx, {
+      type: "single",
+      replied: null,
+    });
+  }
+
   return (
     <div className="flex relative items-center gap-4 rounded-t-md bg-secondary-color px-4 py-2 w-full">
       <Reply size={26} />
@@ -24,15 +31,7 @@ export const ReplyComment = reatomComponent(({ ctx }) => {
           </Typography>
         </div>
       </div>
-      <CloseButton
-        variant="center"
-        onClick={() => {
-          updateCreateThreadCommentAction(ctx, {
-            type: "single",
-            replied: null,
-          });
-        }}
-      />
+      <CloseButton variant="center" onClick={handle} />
     </div>
   );
 }, "ReplyComment")

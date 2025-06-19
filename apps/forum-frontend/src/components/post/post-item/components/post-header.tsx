@@ -8,10 +8,12 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@repo/
 import { CustomLink } from "#components/shared/link";
 import { createIdLink } from "@repo/lib/utils/create-link";
 
-type PostItemHeaderProps = Pick<UserPostItem, "visibility" | "isPinned" | "created_at" | "nickname">;
+type PostItemHeaderProps = Pick<UserPostItem, "visibility" | "isPinned" | "created_at" | "nickname"> & {
+  avatar: string | null
+};
 
 export const PostItemHeader = ({
-  nickname, created_at: postCreatedAt, visibility, isPinned,
+  nickname, created_at: postCreatedAt, visibility, isPinned, avatar
 }: PostItemHeaderProps) => {
   const visibilityStatus = visibility === "only" ? "видно только вам" : "видно только друзьям";
 
@@ -19,6 +21,7 @@ export const PostItemHeader = ({
     <div className="flex gap-3 items-center">
       <CustomLink to={createIdLink("user", nickname)}>
         <Avatar
+          url={avatar}
           propHeight={48}
           propWidth={48}
           nickname={nickname}

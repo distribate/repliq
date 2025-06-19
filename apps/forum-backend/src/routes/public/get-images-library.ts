@@ -13,11 +13,11 @@ async function getImagesLibrary() {
     throw new Error(error.message)
   }
 
-  return await Promise.all(data.map(async (image) => ({
+  return data.map((image) => ({
     name: image.name,
     id: image.id,
-    signedUrl: getPublicUrl(USER_IMAGES_BUCKET, `default/${image.name}`)
-  })))
+    url: getPublicUrl(USER_IMAGES_BUCKET, `default/${image.name}`)
+  }))
 }
 
 export const getImagesLibraryRoute = new Hono()

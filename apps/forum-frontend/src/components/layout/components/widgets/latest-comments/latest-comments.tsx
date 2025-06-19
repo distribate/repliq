@@ -16,13 +16,13 @@ export type ExtractAtomData<T extends Atom<any>> =
 type CommentItemProps = NonNullable<ExtractAtomData<typeof latestCommentsResource.dataAtom>>[0]
 
 const CommentItem = ({
-  user_nickname, content, parent_type, title, parent_id
+  user_nickname, avatar, content, parent_type, title, parent_id
 }: CommentItemProps) => {
   return (
     <div className="flex flex-col bg-shark-700/60 rounded-md p-2 gap-1">
       <div className="flex items-center gap-2">
         <CustomLink to={createIdLink("user", user_nickname)}>
-          <Avatar nickname={user_nickname} propWidth={24} propHeight={24} />
+          <Avatar url={avatar} nickname={user_nickname} propWidth={24} propHeight={24} />
         </CustomLink>
         <CustomLink to={createIdLink("user", user_nickname)}>
           <UserNickname nickname={user_nickname} />

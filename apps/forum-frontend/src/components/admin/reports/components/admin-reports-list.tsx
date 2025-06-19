@@ -23,12 +23,12 @@ const SelectReportButton = reatomComponent<{ id: GetReportsResponse[number]["id"
 }, "SelectReportButton")
 
 const ReportItem = ({
-  id, user_nickname, target_user_nickname, created_at, description, reason, report_type
+  id, user_nickname, target_user_nickname, created_at, user_avatar, description, reason, report_type
 }: GetReportsResponse[number]) => {
   return (
     <div className="flex items-center w-full p-2 bg-shark-900 hover:bg-shark-800 rounded-lg">
       <div className="flex items-center gap-2">
-        <Avatar nickname={user_nickname} propWidth={54} propHeight={54} />
+        <Avatar url={user_avatar} nickname={user_nickname} propWidth={54} propHeight={54} />
         <div className="flex flex-col">
           <Typography>{user_nickname}</Typography>
           <div className="flex items-center gap-2">

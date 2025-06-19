@@ -1,6 +1,7 @@
 export type ThreadOwner = {
   nickname: string;
   name_color: string | null;
+  avatar: string | null
 }
 
 export type ThreadDetailed = {

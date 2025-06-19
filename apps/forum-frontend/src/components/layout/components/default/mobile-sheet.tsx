@@ -68,7 +68,7 @@ export const SheetMenu = reatomComponent(({ ctx }) => {
     <Sheet open={ctx.spy(sheetMenuIsOpenAtom)} onOpenChange={v => sheetMenuIsOpenAtom(ctx, v)}>
       <SheetContent side="right" className="overflow-y-auto h-full w-3/5">
         <div className="flex bg-shark-950 gap-4 p-4 flex-col">
-          <Avatar nickname={currentUser.nickname} propHeight={64} propWidth={64} />
+          <Avatar url={currentUser.avatar} nickname={currentUser.nickname} propHeight={64} propWidth={64} />
           <div className="flex flex-col gap-1">
             <UserNickname nickname={currentUser.nickname} className="text-[18px] font-medium text-shark-50" />
             <UserDonate is_donate={currentUser.is_donate} />

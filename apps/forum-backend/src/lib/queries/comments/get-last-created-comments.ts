@@ -13,13 +13,15 @@ export async function getLastCreatedComments() {
           sql`threads.id`
         )
     )
+    .innerJoin("users", "users.nickname", "comments.user_nickname")
     .select([
       "comments.user_nickname",
       "comments.parent_id",
       "comments.parent_type",
       "comments.content",
       "comments.created_at",
-      "threads.title"
+      "threads.title",
+      "users.avatar"
     ])
     .where("comments.parent_type", "=", "thread")
     .orderBy("comments.created_at", "desc")

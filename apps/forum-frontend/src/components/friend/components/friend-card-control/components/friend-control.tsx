@@ -5,7 +5,7 @@ import { Pen, Tag, Trash } from "lucide-react";
 import { UserCardModal } from "#components/modals/custom/components/user-card-modal.tsx";
 import { useNavigate } from "@tanstack/react-router";
 import { Separator } from "@repo/ui/src/components/separator.tsx";
-import { FriendWithDetails } from "@repo/types/schemas/friend/friend-types.ts";
+import { Friend } from "@repo/types/schemas/friend/friend-types.ts";
 import { FriendControlNoteDialog } from "./friend-control-note";
 import { DropdownMenuItem } from "@repo/ui/src/components/dropdown-menu";
 import { reatomComponent } from "@reatom/npm-react";
@@ -20,7 +20,7 @@ import { ConfirmationButton } from "#components/modals/confirmation-modal/compon
 import { Dialog, DialogClose, DialogContent } from "@repo/ui/src/components/dialog.tsx";
 import { removeFriendAction } from "#components/friend/models/control-friend-requests.model";
 
-type DeleteFriendModal = Pick<FriendWithDetails, "friend_id" | "nickname">;
+type DeleteFriendModal = Pick<Friend, "friend_id" | "nickname">;
 
 const DeleteFriendModal = reatomComponent(({ ctx }) => {
   const removeFriendOptions = ctx.spy(removeFriendOptionsAtom)
@@ -55,7 +55,7 @@ const DeleteFriendModal = reatomComponent(({ ctx }) => {
   );
 }, "DeleteFriendModal")
 
-type FriendControlProps = Pick<FriendWithDetails, "friend_id" | "nickname" | "is_pinned">;
+type FriendControlProps = Pick<Friend, "friend_id" | "nickname" | "is_pinned">;
 
 const FriendControlNoteTrigger = reatomComponent<Omit<FriendControlProps, "is_pinned">>(({ ctx, friend_id, nickname }) => {
   const handleOpen = () => {

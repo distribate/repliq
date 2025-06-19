@@ -6,7 +6,7 @@ import { sleep, withConcurrency } from "@reatom/framework";
 
 const onChange = action(async (ctx, event) => {
   const { value } = event.target
-  await ctx.schedule(() => sleep(500))
+  await ctx.schedule(() => sleep(300))
   searchPageQueryAtom(ctx, value)
 }).pipe(withConcurrency())
 

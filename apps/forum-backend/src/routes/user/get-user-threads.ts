@@ -1,5 +1,5 @@
 import { Hono } from 'hono';
-import { z } from 'zod';
+import { z } from 'zod/v4';
 import { zValidator } from '@hono/zod-validator';
 import { throwError } from '@repo/lib/helpers/throw-error.ts';
 import { getUserThreads } from '#lib/queries/user/get-user-threads.ts';

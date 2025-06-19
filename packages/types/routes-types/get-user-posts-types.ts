@@ -7,6 +7,7 @@ export type UserPostItem = Omit<Selectable<Posts>, "created_at"> & {
   views_count: number;
   isViewed: boolean;
   nickname: string
+  avatar: string | null,
 }
 
 export type GetUserPostsResponse = {

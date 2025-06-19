@@ -16,7 +16,9 @@
     "@repo/shared": "*",
     "dayjs": "1.11.11",
     "gramio": "0.1.2",
-    "ky": "1.8.1"
+    "ky": "1.8.1",
+    "kysely-bun-sqlite": "^0.4.0",
+    "kysely": "0.27.4"
   },
   "devDependencies": {
     "@antfu/eslint-config": "3.8.0",

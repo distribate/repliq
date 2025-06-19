@@ -5,7 +5,18 @@ import { Hono } from "hono";
 async function getReports() {
   const query = await forumDB
     .selectFrom("reports")
-    .selectAll()
+    .innerJoin("users", "users.nickname", "reports.user_nickname")
+    .select([
+      "reports.id",
+      "reports.created_at",
+      "reports.reason",
+      "reports.report_type",
+      "reports.reported_item",
+      "reports.description",
+      "reports.target_user_nickname",
+      "reports.user_nickname",
+      "users.avatar as user_avatar"
+    ])
     .execute()
 
   return query;

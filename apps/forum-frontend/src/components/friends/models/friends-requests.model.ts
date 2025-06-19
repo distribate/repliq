@@ -1,9 +1,10 @@
 import { atom } from "@reatom/core";
 import { reatomAsync } from "@reatom/async";
-import { FriendRequestEntity } from "@repo/types/entities/entities-type";
 import { withReset } from "@reatom/framework";
 import { forumUserClient } from "@repo/shared/api/forum-client";
 import { logger } from "@repo/lib/utils/logger";
+
+type FriendRequestEntity = { initiator: string, recipient: string, created_at: string, id: string, avatar: string | null }
 
 export const incomingRequestsAtom = atom<FriendRequestEntity[] | null>(null, "incomingRequests").pipe(withReset())
 export const outgoingRequestsAtom = atom<FriendRequestEntity[] | null>(null, "outgoingRequests")

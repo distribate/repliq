@@ -6,9 +6,10 @@ import { AlertsAddButton } from "./alerts-add-button.tsx";
 import { reatomComponent } from "@reatom/npm-react";
 import { DeleteButton } from "@repo/ui/src/components/detele-button.tsx";
 import { AlertEntity } from "@repo/types/entities/entities-type.ts";
-import { alertsResource } from "#components/layout/components/widgets/alert-widget.model.ts";
+import { alertsResource } from "#components/layout/components/widgets/alert/alert-widget.model.ts";
 
 const AlertItemDeleteButton = ({ id }: Pick<AlertEntity, "id">) => {
+  console.log(id)
   return <DeleteButton title="Удалить" disabled={false} onClick={() => {}} />;
 };
 
@@ -22,7 +23,7 @@ export const Alerts = reatomComponent(({ ctx }) => {
       <div className="flex flex-col gap-2">
         <div className="flex h-14 bg-shark-900 rounded-md p-2 justify-between items-center">
           <div className="flex items-center gap-2">
-            <Avatar nickname={alert.creator} propWidth={36} propHeight={36} />
+            <Avatar nickname={alert.creator.nickname} url={alert.creator.avatar} propWidth={36} propHeight={36} />
             <div className="flex flex-col">
               <Typography>{alert.title.slice(0, 64)}</Typography>
               <Typography textSize="small" className="text-shark-300">

@@ -8,7 +8,9 @@ export const getUserIsBlocked = async ({
 }: GetUserIsBlocked) => {
   const query = await forumDB
   .selectFrom("users_blocked")
-  .select(["initiator", "recipient"])
+  .select([
+    "initiator", "recipient"
+  ])
   .where((eb) => eb.or([
     eb('initiator', '=', initiator),
     eb('recipient', '=', initiator),

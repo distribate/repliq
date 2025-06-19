@@ -14,9 +14,7 @@ type RatingActionItemProps = {
 export const ReactionItem = reatomComponent<RatingActionItemProps>(({
   ctx, emoji, count, targetId, isPressed, icon: Icon
 }) => {
-  const handle = () => {
-    addReactionAction(ctx, { emoji, id: targetId })
-  }
+  const handle = () => addReactionAction(ctx, { emoji, id: targetId })
 
   return (
     <div

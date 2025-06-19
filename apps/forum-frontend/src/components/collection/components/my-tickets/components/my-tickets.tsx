@@ -27,12 +27,7 @@ export const MyTickets = reatomComponent(({ ctx }) => {
   if (!data || !data.length) {
     return (
       <div className="flex flex-col h-full items-center justify-center gap-4 p-4 w-full">
-        {/* <img src={FancyFeather} alt="" width={96} height={96} /> */}
-        <Typography
-          textColor="shark_white"
-          textSize="very_big"
-          className="font-semibold"
-        >
+        <Typography textColor="shark_white" textSize="very_big" className="font-semibold">
           У вас нет тикетов
         </Typography>
       </div>
@@ -44,7 +39,7 @@ export const MyTickets = reatomComponent(({ ctx }) => {
       {data?.map(ticket => (
         <div key={ticket.id} className="flex items-center justify-between gap-4 bg-shark-950 py-2 lg:py-4 px-4 lg:px-6 rounded-lg w-full h-20">
           <div className="flex items-center gap-2 lg:gap-4">
-            <Avatar nickname={ticket.user_nickname} className="min-h-[56px] min-w-[56px]" propWidth={56} propHeight={56} />
+            <Avatar url={ticket.user_avatar} nickname={ticket.user_nickname} className="min-h-[56px] min-w-[56px]" propWidth={56} propHeight={56} />
             <Typography>
               {ticket.title}
             </Typography>
@@ -74,7 +69,7 @@ export const MyTickets = reatomComponent(({ ctx }) => {
                       </Typography>
                       <div className="flex items-center gap-2">
                         <CustomLink to={createIdLink("user", ticket.approved_by)}>
-                          <Avatar nickname={ticket.approved_by} propWidth={36} propHeight={36} />
+                          <Avatar url={ticket.user_avatar} nickname={ticket.approved_by} propWidth={36} propHeight={36} />
                         </CustomLink>
                         <CustomLink to={createIdLink("user", ticket.approved_by)}>
                           <UserNickname nickname={ticket.approved_by} />

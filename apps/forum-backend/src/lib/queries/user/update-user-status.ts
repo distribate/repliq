@@ -18,7 +18,7 @@ function getCurrentTimestamp(): string {
 export async function updateUserStatus(nickname: string) {
   const created_at = getCurrentTimestamp()
 
-  return await forumDB
+  return forumDB
     .insertInto("users_status")
     .values({ nickname, created_at })
     .onConflict((oc) =>

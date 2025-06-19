@@ -12,6 +12,7 @@ export type UserDetailed = Omit<Selectable<Users>,
   birthday: string | null
   created_at: string,
   favorite_item: number | string | null
+  avatar: string | null,
   is_donate: boolean;
   preferences: {
     cover_outline_visible: boolean,
@@ -25,7 +26,7 @@ export type UserDetailed = Omit<Selectable<Users>,
 }
 
 export type UserShorted = Pick<UserDetailed,
-  "nickname" | "is_donate" | "description" | "cover_image" | "account_status" | "name_color" | "id"
+  "nickname" | "is_donate" | "description" | "cover_image" | "account_status" | "name_color" | "id" | "avatar"
 > & {
   preferences: {
     cover_outline_visible: boolean,

@@ -1,7 +1,16 @@
 import { Hono } from 'hono';
-import { getUserSettings } from '#lib/queries/user/get-user-setting.ts';
 import { throwError } from '@repo/lib/helpers/throw-error.ts';
 import { getNickname } from '#utils/get-nickname-from-storage.ts';
+import { forumDB } from '#shared/database/forum-db.ts';
+import { userSettings } from '#shared/constants/user-settings.ts';
+
+async function getUserSettings(nickname: string) {
+  return forumDB
+    .selectFrom("users_settings")
+    .select(userSettings)
+    .where("nickname", "=", nickname)
+    .executeTakeFirstOrThrow()
+}
 
 export const getUserSettingsRoute = new Hono()
   .get("/get-user-settings", async (ctx) => {

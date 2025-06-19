@@ -26,7 +26,7 @@ async function getSearchThreads({ queryValue, limit }: GetSearch) {
 async function getSearchUsers({ queryValue, limit }: GetSearch) {
   const query = await forumDB
     .selectFrom("users")
-    .select(["nickname", "name_color"])
+    .select(["nickname", "name_color", "avatar"])
     .where("nickname", "like", `%${queryValue}%`)
     .limit(limit ?? 10)
     .execute()

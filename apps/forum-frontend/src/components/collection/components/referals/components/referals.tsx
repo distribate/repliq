@@ -25,11 +25,7 @@ export const Referals = reatomComponent(({ ctx }) => {
         </>
       )}
       {(!referals && !isLoading) && (
-        <Typography
-          textColor="shark_white"
-          textSize="very_big"
-          className="font-semibold"
-        >
+        <Typography textColor="shark_white" textSize="very_big" className="font-semibold" >
           У вас ещё нет рефералов
         </Typography>
       )}
@@ -42,7 +38,7 @@ export const Referals = reatomComponent(({ ctx }) => {
                 ${item.completed ? "border-green-500" : "border-shark-800"}`}
             >
               <CustomLink to={createIdLink("user", item.recipient)}>
-                <Avatar nickname={item.recipient} propWidth={64} propHeight={64} className="min-h-[64px] min-w-[64px]" />
+                <Avatar url={null} nickname={item.recipient} propWidth={64} propHeight={64} className="min-h-[64px] min-w-[64px]" />
               </CustomLink>
               <div className="flex flex-col">
                 <div className="flex items-center gap-1">

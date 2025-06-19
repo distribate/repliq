@@ -1,6 +1,6 @@
 import { searchPageQueryAtom, searchPageResultsAtom } from "#components/search/models/search-page.model";
 import { ContentNotFound } from "#components/templates/components/content-not-found";
-import { SearchPageThread, SearchPageUser } from "./search-page-user";
+import { SearchPageThread, SearchPageUser } from "./search-page-childs";
 import { reatomComponent } from "@reatom/npm-react";
 
 export const SearchPageAll = reatomComponent(({ ctx }) => {

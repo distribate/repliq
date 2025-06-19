@@ -9,9 +9,9 @@ type CreateIssue = z.infer<typeof createIssueSchema> & {
 export async function createIssue({
   title, description, nickname: user_nickname, type
 }: CreateIssue) {
-  return await forumDB
+  return forumDB
     .insertInto("issues")
-    // @ts-ignore
+    // @ts-expect-error
     .values({
       title,
       description,

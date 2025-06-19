@@ -2,16 +2,14 @@ import { updateCommentsAction } from "../models/update-comments.model";
 import { threadAtom } from "#components/thread/thread-main/models/thread.model";
 import { threadCommentsDataAtom, threadCommentsMetaAtom } from "../models/thread-comments.model";
 import { ArrowDown } from "lucide-react";
-import { reatomComponent, useAtom } from "@reatom/npm-react";
+import { reatomComponent } from "@reatom/npm-react";
 
 const THREAD_COMMENTS_LENGTH_FOR_PAGE = 16;
 
-export const ThreadCommentsAnchor = reatomComponent<{ threadId: string }>(({
-  ctx, threadId
-}) => {
-  const [currentThread] = useAtom(threadAtom)
-  const [threadComments] = useAtom(threadCommentsDataAtom)
-  const [threadCommentsMeta] = useAtom(threadCommentsMetaAtom)
+export const ThreadCommentsAnchor = reatomComponent(({ ctx }) => {
+  const currentThread = ctx.spy(threadAtom)
+  const threadComments = ctx.spy(threadCommentsDataAtom)
+  const threadCommentsMeta = ctx.spy(threadCommentsMetaAtom)
 
   if (!currentThread) return null
 
@@ -28,7 +26,7 @@ export const ThreadCommentsAnchor = reatomComponent<{ threadId: string }>(({
         const cursor = threadCommentsMeta?.endCursor
 
         if (cursor) {
-          updateCommentsAction(ctx, { threadId, cursor })
+          updateCommentsAction(ctx, { threadId: currentThread.id, cursor })
 
           updatedCommentsCount += THREAD_COMMENTS_LENGTH_FOR_PAGE;
         } else {

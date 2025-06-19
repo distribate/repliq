@@ -2,7 +2,7 @@ import { forumDB } from "#shared/database/forum-db.ts";
 import { sql } from "kysely";
 
 export async function getThreadShorted(threadId: string) {
-  return await forumDB
+  return forumDB
     .selectFrom("threads")
     .leftJoin("threads_views", "threads.id", "threads_views.thread_id")
     .innerJoin("threads_users", "threads.id", "threads_users.thread_id")
@@ -27,6 +27,7 @@ export async function getThreadShorted(threadId: string) {
       'threads.is_comments',
       "threads_users.user_nickname",
       "users.name_color",
+      "users.avatar",
       sql<string>`threads.created_at::text`.as('created_at'),
       sql<number>`COUNT(threads_views.id)`.as('thread_views_count'),
       sql<number>`COALESCE(comments_count.comment_count, 0)`.as("thread_comments_count")
@@ -39,6 +40,7 @@ export async function getThreadShorted(threadId: string) {
       "threads.is_comments",
       "threads_users.user_nickname",
       "users.name_color",
+      "users.avatar",
       "threads.created_at"
     ])
     .executeTakeFirst()

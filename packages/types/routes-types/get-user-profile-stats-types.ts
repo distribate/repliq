@@ -8,6 +8,7 @@ export type ProfileStatsMeta = {
 export type ProfileViewsDetails = {
   initiator: string;
   recipient: string;
+  avatar: string | null;
   created_at: string;
 };
 

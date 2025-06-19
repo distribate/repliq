@@ -3,7 +3,6 @@ import { ContentNotFound } from "#components/templates/components/content-not-fo
 import { onConnect } from "@reatom/framework";
 import { reatomComponent } from "@reatom/npm-react";
 import { Skeleton } from "@repo/ui/src/components/skeleton";
-import { UserEntity } from "@repo/types/entities/entities-type.ts";
 import { useNavigate } from "@tanstack/react-router";
 import { Avatar } from '#components/user/avatar/components/avatar.tsx';
 import { UserNickname } from '#components/user/name/nickname.tsx';
@@ -17,11 +16,14 @@ import { UserCardModal } from '#components/modals/custom/components/user-card-mo
 import { deleteFromBlockedAction } from "../models/blocked.model.ts";
 import { createIdLink } from "@repo/lib/utils/create-link.ts";
 
-type UserBlockedCardProps = Pick<UserEntity, "nickname" | "name_color"> & {
+type UserBlockedCardProps = {
+  nickname: string,
+  avatar: string | null,
+  name_color: string
   time: string;
 };
 
-const UserBlockedCard = reatomComponent<UserBlockedCardProps>(({ ctx, name_color, nickname, time, }) => {
+const UserBlockedCard = reatomComponent<UserBlockedCardProps>(({ ctx, avatar, name_color, nickname, time, }) => {
   const navigate = useNavigate();
 
   const handleDeleteFromBlocked = (e: React.MouseEvent<HTMLDivElement>, nickname: string) => {
@@ -33,7 +35,7 @@ const UserBlockedCard = reatomComponent<UserBlockedCardProps>(({ ctx, name_color
   return (
     <div className="flex items-start justify-between w-full bg-shark-900 rounded-lg border border-white/10 p-2">
       <div className="flex items-center gap-2 w-fit">
-        <Avatar nickname={nickname} propWidth={48} propHeight={48} />
+        <Avatar url={avatar} nickname={nickname} propWidth={48} propHeight={48} />
         <UserNickname nickname={nickname} nicknameColor={name_color} />
         <Separator orientation="vertical" />
         <Typography textSize="small" className="text-shark-300">
@@ -86,6 +88,7 @@ export const BlockedList = reatomComponent(({ ctx }) => {
           usersBlocked.map((user) => (
             <UserBlockedCard
               key={user.id}
+              avatar={user.avatar}
               name_color={user.name_color!}
               nickname={user.nickname!}
               time={user.created_at!}

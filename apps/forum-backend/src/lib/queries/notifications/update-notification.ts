@@ -8,7 +8,7 @@ type UpdateNotification = {
 export async function updateNotification({
   nickname, notificationId
 }: UpdateNotification) {
-  return await forumDB
+  return forumDB
     .updateTable("notifications")
     .set({ read: true })
     .where("id", "=", notificationId)

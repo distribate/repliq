@@ -1,7 +1,6 @@
 import { z } from "zod/v4";
 
 export const getUserFriendsSchema = z.object({
-  with_details: z.enum(["true", "false"]).transform((value) => value === "true"),
   ascending: z.enum(["true", "false"]).transform((value) => value === "true"),
   cursor: z.string().optional(),
   limit: z.string().transform(Number).optional(),

@@ -3,13 +3,18 @@ import { throwError } from "@repo/lib/helpers/throw-error";
 import { Hono } from "hono";
 
 const ONLINE_USERS_TIME = 5 * 60 * 1000
+const DEFAULT_LIMIT = 7
 
-async function getOnlineUsers() {
+async function getOnlineUsers(limit: number = DEFAULT_LIMIT) {
   const query = await forumDB
     .selectFrom("users_status")
-    .select(["nickname"])
+    .innerJoin("users", "users.nickname", "users_status.nickname")
+    .select([
+      "users_status.nickname",
+      "users.avatar"
+    ])
     .where("created_at", ">", new Date(Date.now() - ONLINE_USERS_TIME))
-    .limit(7)
+    .limit(limit)
     .execute();
 
   return query;

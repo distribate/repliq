@@ -23,11 +23,11 @@ const SearchPageRelatedSkeleton = () => {
   );
 };
 
-const RelatedUser = ({ nickname }: { nickname: string }) => {
+const RelatedUser = ({ nickname, avatar }: { nickname: string, avatar: string | null }) => {
   return (
     <div className="flex flex-col group gap-2 overflow-hidden justify-between items-center lg:h-[280px] friend-card">
       <CustomLink to={createIdLink("user", nickname)} className="size-16 md:size-20 lg:size-[128px]">
-        <Avatar nickname={nickname} propWidth={128} propHeight={128} />
+        <Avatar url={avatar} nickname={nickname} propWidth={128} propHeight={128} />
       </CustomLink>
       <div className="flex flex-col items-start gap-1 w-full justify-start">
         <CustomLink to={createIdLink("user", nickname)}>
@@ -41,7 +41,7 @@ const RelatedUser = ({ nickname }: { nickname: string }) => {
   )
 }
 
-const RelatedThread = reatomComponent<{ id: string, title: string, description: string | null }>(({ ctx, id, title, description }) => {
+const RelatedThread = ({ id, title, description }: { id: string, title: string, description: string | null }) => {
   return (
     <div className="flex flex-col group gap-2 justify-between overflow-hidden items-start h-[200px] friend-card">
       <Typography className="text-[18px]">{title}</Typography>
@@ -62,7 +62,7 @@ const RelatedThread = reatomComponent<{ id: string, title: string, description: 
       </CustomLink>
     </div>
   )
-}, "RelatedThread")
+}
 
 export const SearchRelatedUsers = reatomComponent(({ ctx }) => {
   if (ctx.spy(usersRelatedAction.statusesAtom).isPending) {
@@ -74,8 +74,8 @@ export const SearchRelatedUsers = reatomComponent(({ ctx }) => {
 
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 grid-rows-1 gap-4 w-full h-fit">
-      {relatedState.map(({ nickname }) => (
-        <RelatedUser key={nickname} nickname={nickname} />
+      {relatedState.map(({ nickname, avatar }) => (
+        <RelatedUser avatar={avatar} key={nickname} nickname={nickname} />
       ))}
     </div>
   )

@@ -72,9 +72,9 @@ export const ThreadComments = reatomComponent<ThreadCommentsProps>(({ ctx, owner
                 id={comment.id}
                 replied={comment.replied}
                 is_updated={comment.is_updated}
+                user={comment.user}
                 content={comment.content}
-                user_nickname={comment.user_nickname}
-                isOwner={comment.user_nickname === owner.nickname}
+                isOwner={comment.user.nickname === owner.nickname}
                 created_at={comment.created_at}
                 updated_at={comment.updated_at}
               />
@@ -93,6 +93,8 @@ export const ThreadComments = reatomComponent<ThreadCommentsProps>(({ ctx, owner
     </>
   )
 }, "ThreadComments")
+
+const ANCHOR_MIN_COMMENTS_LENGTH = 8
 
 export const ThreadCommentsSection = reatomComponent(({ ctx }) => {
   const isAuthenticated = ctx.spy(isAuthenticatedAtom)
@@ -123,7 +125,7 @@ export const ThreadCommentsSection = reatomComponent(({ ctx }) => {
         </Suspense>
       )}
       <ThreadComments owner={threadOwner} properties={thread.properties} />
-      {thread.comments_count >= 8 && <ThreadCommentsAnchor threadId={thread.id} />}
+      {thread.comments_count >= ANCHOR_MIN_COMMENTS_LENGTH && <ThreadCommentsAnchor />}
     </div>
   )
 }, "ThreadCommentsSection")

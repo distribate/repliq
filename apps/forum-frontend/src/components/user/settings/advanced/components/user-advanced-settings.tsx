@@ -98,7 +98,6 @@ export const UserAdvancedSettings = () => {
         <IntroSetting />
         <HistoryThreadsSetting />
         <NotificationsSetting />
-        {/* <ShowLocationSettings /> */}
       </div>
     </div>
   );

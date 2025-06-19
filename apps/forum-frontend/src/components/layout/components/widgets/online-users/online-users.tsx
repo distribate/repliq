@@ -27,7 +27,7 @@ export const OnlineUsers = reatomComponent(({ ctx }) => {
       </Typography>
       <div className="grid grid-cols-6 2xl:grid-cols-7 gap-2">
         {ctx.spy(onlineUsersResource.statusesAtom).isPending && <OnlineUsersSkeleton/>}
-        {onlineUsers && onlineUsers.map(({ nickname }) => <UserPreviewCard key={nickname} nickname={nickname} />)}
+        {onlineUsers && onlineUsers.map(({ nickname, avatar }) => <UserPreviewCard avatar={avatar} key={nickname} nickname={nickname} />)}
       </div>
     </div>
   )

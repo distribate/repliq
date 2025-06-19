@@ -21,7 +21,6 @@ export const ThreadCommentMoreActions = reatomComponent<{ id: number }>(({
           </DropdownMenuItem>
           <DropdownMenuItem
             className="items-center gap-2"
-            // onClick={}
           >
             <Trash size={16} className="text-shark-300" />
             <Typography>Удалить комментарий</Typography>

@@ -22,3 +22,5 @@ declare module "bun" {
     SECRET_TOKEN: string
   }
 }
+
+declare module "*.db"

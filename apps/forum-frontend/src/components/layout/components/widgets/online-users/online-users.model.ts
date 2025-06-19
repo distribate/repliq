@@ -12,24 +12,26 @@ const getOnlineUsers = async () => {
 }
 
 export const onlineUsersResource = reatomResource(async (ctx) => {
-  const currentUserNickname = ctx.spy(currentUserAtom)?.nickname
-  if (!currentUserNickname) return;
+  const currentUser = ctx.spy(currentUserAtom)
+  if (!currentUser) return;
 
   const res = await ctx.schedule(() => getOnlineUsers())
 
-  if (!res) return [{ nickname: currentUserNickname }]
+  const CURRENT_USER = { nickname: currentUser.nickname, avatar: currentUser.avatar }
+
+  if (!res) return [CURRENT_USER]
 
   if ("error" in res) return null
 
   const converted = res
-  .reduce<{ nickname: string }[]>((uniqueUsers, user) => {
-    if (!uniqueUsers.some(existingUser => existingUser.nickname === user.nickname)) {
-      uniqueUsers.push(user);
-    }
+    .reduce<typeof CURRENT_USER[]>((uniqueUsers, user) => {
+      if (!uniqueUsers.some(existingUser => existingUser.nickname === user.nickname)) {
+        uniqueUsers.push(user);
+      }
 
-    return uniqueUsers;
-  }, [])
-  .concat(res.some(user => user.nickname === currentUserNickname) ? [] : [{ nickname: currentUserNickname }])
+      return uniqueUsers
+    }, [])
+    .concat(res.some(target => target.nickname === currentUser.nickname) ? [] : [CURRENT_USER])
 
   return converted
 }, "onlineUsersResource").pipe(withDataAtom(), withCache(), withStatusesAtom())

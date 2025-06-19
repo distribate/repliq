@@ -6,6 +6,7 @@ async function getTickets(nickname: string) {
   const query = await forumDB
     .selectFrom("issues")
     .leftJoin("issues_approvals", "issues_approvals.issue_id", "issues.id")
+    .innerJoin("users", "users.nickname", "issues.user_nickname")
     .select([
       "issues.id",
       "issues.title",
@@ -14,7 +15,8 @@ async function getTickets(nickname: string) {
       "issues.user_nickname",
       "issues_approvals.responser as approved_by",
       "issues_approvals.message as approved_message",
-      "issues_approvals.created_at as approved_at"
+      "issues_approvals.created_at as approved_at",
+      "users.avatar as user_avatar",
     ])
     .where("issues.user_nickname", "=", nickname)
     .execute()

@@ -6,7 +6,7 @@ import { z } from "zod/v4";
 type CreateMinecraftItemSchema = z.infer<typeof createMinecraftItemSchema>;
 
 async function uploadImages({ file, meta }: CreateMinecraftItemSchema) {
-  return await supabase.storage
+  return supabase.storage
     .from(STATIC_IMAGES_BUCKET)
     .upload(`items/${meta.name}.png`, file, {
       contentType: "image/png",

@@ -1,7 +1,10 @@
 export type Comment = {
   id: number;
   created_at: string;
-  user_nickname: string;
+  user: {
+    nickname: string,
+    avatar: string | null
+  },
   content: string;
   updated_at: string | null;
   is_updated: boolean;

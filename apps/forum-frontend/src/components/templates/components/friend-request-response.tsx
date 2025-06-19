@@ -10,7 +10,7 @@ export const FriendRequestResponseAccept = ({
 }: FriendRequestResponse) => {
   return (
     <div className="flex gap-1 items-center">
-      <Avatar propHeight={20} propWidth={20} nickname={payload.new.user_2} />
+      <Avatar url={null}  propHeight={20} propWidth={20} nickname={payload.new.user_2} />
       <Typography>принял вашу заявку в друзья</Typography>
     </div>
   );
@@ -19,7 +19,7 @@ export const FriendRequestResponseAccept = ({
 export const FriendRequestResponseDefault = ({ payload }: FriendRequestResponse) => {
   return (
     <div className="flex gap-1 items-center">
-      <Avatar nickname={payload.new.initiator} propHeight={20} propWidth={20} />
+      <Avatar url={null} nickname={payload.new.initiator} propHeight={20} propWidth={20} />
       <Typography className="text-base text-shark-50 font-medium">
         хочет добавить вас в друзья
       </Typography>

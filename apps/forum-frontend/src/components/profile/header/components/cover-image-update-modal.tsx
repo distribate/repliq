@@ -36,7 +36,7 @@ const CoverImagesList = reatomComponent(({ ctx }) => {
   return (
     <>
       {!defaultImages && <Typography>Изображения не найдены</Typography>}
-      {defaultImages && defaultImages.map(({ name, id, signedUrl }) => (
+      {defaultImages && defaultImages.map(({ name, id, url }) => (
         <div
           key={id}
           className="flex flex-col rounded-lg overflow-hidden border border-shark-800 
@@ -44,7 +44,7 @@ const CoverImagesList = reatomComponent(({ ctx }) => {
           onClick={() => handle(name)}
         >
           <img
-            src={signedUrl}
+            src={url}
             alt={name}
             height={900}
             width={1200}

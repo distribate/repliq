@@ -10,7 +10,7 @@ import { getUserSettingsRoute } from '#routes/user/get-user-settings.ts';
 import { getBlockedUsersRoute, getUserIsBlockedRoute } from '#routes/user/get-blocked-users.ts';
 import { getUserThreadsRoute } from '#routes/user/get-user-threads.ts';
 import { getUserPostsRoute } from '#routes/user/get-user-posts.ts';
-import { getUserFriendsRoute } from '#routes/user/get-user-friends.ts';
+import { getUserFriendsMetaRoute, getUserFriendsRoute } from '#routes/user/get-user-friends.ts';
 import { createFriendRequestRoute } from '#routes/friend/create-friend-request.ts';
 import { deleteFriendRequestRoute } from '#routes/friend/delete-friend-request.ts';
 import { acceptFriendRequestRoute } from '#routes/friend/accept-friend-request.ts';
@@ -25,7 +25,6 @@ import { createProfileViewRoute } from '#routes/user/create-profile-view.ts';
 import { createIssueRoute } from '#routes/issue/create-issue.ts';
 import { getUserNotificationsRoute } from '#routes/user/get-user-notifications.ts';
 import { checkNotificationRoute } from '#routes/notification/check-notification.ts';
-import { getUserGameStatusRoute } from '#routes/user/get-user-game-status.ts';
 import { getMeRoute } from '#routes/user/get-me.ts';
 import { getFriendStatusRoute } from '#routes/friend/get-friend-status.ts';
 import { getFriendRequestsRoute } from '#routes/friend/get-friend-requests.ts';
@@ -45,7 +44,6 @@ import { replyCommentRoute } from '#routes/comments/reply-comment.ts';
 import { getThreadCommentsRoute } from '#routes/comments/get-thread-comments.ts';
 import { createReactionRoute } from '#routes/reaction/create-reaction.ts';
 import { createThreadRoute } from '#routes/thread/create-thread.ts';
-import { getUserFriendsCountRoute } from '#routes/user/get-user-friends-count.ts';
 import { getFactRoute } from '#routes/public/get-fact-route.ts';
 import { getUserStatusRoute } from '#routes/user/get-user-status.ts';
 import { getNewsRoute } from '#routes/public/get-news.ts';
@@ -63,7 +61,6 @@ import { corsProtectionMiddleware } from '#middlewares/cors-protection.ts';
 import { getSearchRoute } from '#routes/search/get-search.ts';
 import { getUserGlobalOptionsRoute } from '#routes/user/get-user-global-options.ts';
 import { getAlertsRoute } from '#routes/public/get-alerts.ts';
-import { getMinecraftItemsRoute } from '#routes/public/get-minecraft-items.ts';
 import { createCoverImageRoute } from '#routes/user/create-cover-image.ts';
 import { createPostRoute } from '#routes/post/create-post.ts';
 import { deletePostRoute } from '#routes/post/delete-post.ts';
@@ -82,7 +79,6 @@ import { getCategoryRoute } from '#routes/categories/get-category.ts';
 import { getIsAdminRoute } from '#routes/admin/get-is-admin.ts';
 import { getUserProfileRoute } from "#routes/user/get-user-profile.ts"
 import { getPostViewersRoute } from '#routes/post/get-post-viewers.ts';
-import { getUserFavoriteItemRoute } from '#routes/user/get-user-favorite-item.ts';
 import { getUserPurchasesRoute } from '#routes/user/get-user-purchases.ts';
 import { subscribeUserStatus } from '#subscribers/sub-user-status.ts';
 import { watcher } from '#utils/kv-watcher.ts';
@@ -100,14 +96,12 @@ import { getServerIpRoute } from '#routes/public/get-server-ip.ts';
 import { createUserRestrictRoute } from '#routes/warns/create-user-restrict.ts';
 import { notificationsSSERoute } from '#routes/notifications/notifications-sse.ts';
 import { getMediaRoute } from '#routes/public/get-media.ts';
-import { getUserLocationRoute } from '#routes/user/get-user-location.ts';
 import { getHealthRoute } from '#routes/public/get-health.ts';
 import { logger, natsLogger } from "@repo/lib/utils/logger.ts"
 import { timing } from 'hono/timing'
 import { getProfilesRoute } from '#routes/user/get-profiles.ts';
 import { connectProfileRoute } from '#routes/user/connect-profile.ts';
 import { deleteAccountRoute, restoreAccountRoute } from '#routes/user/delete-account.ts';
-import { getUserAvatarRoute } from '#routes/user/get-user-avatar.ts';
 import { uploadAvatarRoute } from '#routes/user/upload-avatar.ts';
 import { connectServiceRoute } from '#routes/user/connect-service.ts';
 import { collectStats } from '#middlewares/collect-stats.ts';
@@ -147,7 +141,6 @@ export const shared = new Hono()
   .route("/", getLatestRegUsersRoute)
   .route("/", getDonatesRoute)
   .route("/", getAlertsRoute)
-  .route("/", getMinecraftItemsRoute)
   .route("/", getImagesLibraryRoute)
   .route("/", getStatusRoute)
   .route("/", getRulesRoute)
@@ -256,18 +249,14 @@ export const user = new Hono()
 
   // #profile routes
   .route('/', getUserThreadsRoute)
-  .route("/", getUserAvatarRoute)
   .route('/', getUserPostsRoute)
   .route('/', getUserFriendsRoute)
-  .route("/", getUserFavoriteItemRoute)
   .route("/", getUserPublicSocialsRoute)
-  .route("/", getUserGameStatusRoute)
-  .route("/", getUserLocationRoute)
   .route("/", createProfileViewRoute)
   //--------------------------------------
 
   // #user friends routes
-  .route("/", getUserFriendsCountRoute)
+  .route("/", getUserFriendsMetaRoute)
   .route("/", createFriendRequestRoute)
   .route("/", deleteFriendRequestRoute)
   .route("/", acceptFriendRequestRoute)

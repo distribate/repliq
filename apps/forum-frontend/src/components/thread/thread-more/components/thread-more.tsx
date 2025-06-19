@@ -76,7 +76,7 @@ export const ThreadMore = reatomComponent(({ ctx }) => {
           <div className="flex flex-col mt-2 mb-6 gap-y-4 w-full">
             <div className="flex items-end gap-2 w-fit">
               <CustomLink to={linkToOwner}>
-                <Avatar nickname={threadOwner.nickname} propWidth={36} propHeight={36} />
+                <Avatar url={threadOwner.avatar} nickname={threadOwner.nickname} propWidth={36} propHeight={36} />
               </CustomLink>
               <CustomLink to={linkToOwner}>
                 <UserNickname nickname={threadOwner.nickname} />

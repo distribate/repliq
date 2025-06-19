@@ -23,15 +23,15 @@ export const SearchPageThread = reatomComponent<SearchThread>(({ ctx, title, id 
   );
 }, "SearchPageThread")
 
-export const SearchPageUser = reatomComponent<SearchUser>(({ ctx, nickname, name_color }) => {
+export const SearchPageUser = reatomComponent<SearchUser>(({ ctx, avatar, nickname, name_color }) => {
   return (
     <CustomLink
       to={createIdLink("user", nickname)}
-      onClick={() => processSelectEntryAction(ctx, { nickname, name_color })}
+      onClick={() => processSelectEntryAction(ctx, { nickname, avatar, name_color })}
       className="flex p-2 items-center gap-2 bg-shark-700/40 w-full rounded-md"
     >
       <div className="flex items-center justify-center size-8 md:size-16">
-        <Avatar rounded="default" nickname={nickname} propWidth={40} propHeight={40} />
+        <Avatar url={avatar} rounded="default" nickname={nickname} propWidth={40} propHeight={40} />
       </div>
       <UserNickname nickname={nickname} nicknameColor={name_color} className="text-[18px]" />
     </CustomLink>

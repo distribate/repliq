@@ -16,12 +16,6 @@ export const ThreadCommentItemContent = reatomComponent<ThreadCommentItemContent
   const commentState = getCommentActionsAtom(ctx, id)
   const [content, setContent] = useState<string>(currentContent || "");
 
-  const handleSave = () => {
-    if (content === currentContent) return;
-    
-    // return editCommentContentMutation.mutate({ thread_id, id, content });
-  };
-
   return (
     <div className="flex flex-col gap-y-2 h-fit w-full">
       {replied && <ThreadRepliedCommentItem replied={replied} threadId={threadId} />}

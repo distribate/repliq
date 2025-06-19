@@ -12,7 +12,7 @@ type CreateReport = Omit<Insertable<Reports>, "id" | "created_at">
 async function createReport({
   target_user_nickname, user_nickname, description, reason, report_type, reported_item
 }: CreateReport) {
-  return await forumDB
+  return forumDB
     .insertInto("reports")
     .values({
       target_user_nickname,

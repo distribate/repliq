@@ -1,7 +1,7 @@
 import { forumDB } from "#shared/database/forum-db.ts"
 
 export const getAvailableCategories = async () => {
-  return await forumDB
+  return forumDB
     .selectFrom("category")
     .select(eb => [
       "title",

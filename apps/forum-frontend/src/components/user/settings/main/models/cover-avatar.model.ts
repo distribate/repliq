@@ -1,6 +1,6 @@
 import { avatarsUrlsAtom } from "#components/user/avatar/models/avatar.model";
 import { currentUserNicknameAtom } from "#components/user/models/current-user.model";
-import { reatomAsync } from "@reatom/async";
+import { reatomAsync, withStatusesAtom } from "@reatom/async";
 import { action, atom } from "@reatom/core";
 import { withReset } from "@reatom/framework";
 import { forumUserClient } from "@repo/shared/api/forum-client";
@@ -9,17 +9,10 @@ import { toast } from "sonner";
 
 export const updateAvatarAtom = atom<string | null>(null, "updateAvatar").pipe(withReset())
 
-async function uploadAvatar(t: FormData) {
+async function uploadAvatar(body: FormData) {
   const url = forumUserClient.user["upload-avatar"].$url()
-
-  const res = await ky.post<{ data: string, status: string } | { error: string }>(url, { 
-    body: t,
-    credentials: "include", 
-    retry: 1
-  })
-
+  const res = await ky.post<{ data: string, status: string } | { error: string }>(url, { body, credentials: "include", retry: 1  })
   const data = await res.json()
-
   return data;
 }
 
@@ -64,18 +57,9 @@ export const updateAvatarAction = reatomAsync(async (ctx) => {
       toast.error(e.message)
     }
   }
-})
+}).pipe(withStatusesAtom())
 
-updateAvatarAtom.onChange((ctx, target) => {
-  if (!target) return;
-
-  const currentUser = ctx.get(currentUserNicknameAtom)
-  if (!currentUser) return;
-
-  avatarsUrlsAtom(ctx, (state) => ({ ...state, [currentUser]: target }))
-})
-
-export const onChange = action((ctx, e: React.ChangeEvent<HTMLInputElement>) => {
+export const avatarOnChange = action((ctx, e: React.ChangeEvent<HTMLInputElement>) => {
   const file = e.target.files ? e.target.files ? e.target.files[0] : null : null
 
   if (!file) return;

@@ -3,7 +3,7 @@ import { isParamChanged, requestedUserParamAtom } from "#components/profile/main
 import { atom, Ctx } from "@reatom/core"
 import { reatomAsync, take, withReset, withStatusesAtom } from "@reatom/framework"
 import { UserEntity } from "@repo/types/entities/entities-type"
-import { FriendWithDetails, GetFriendsResponse } from "@repo/types/schemas/friend/friend-types"
+import { Friend, GetFriendsResponse } from "@repo/types/schemas/friend/friend-types"
 import { getUserFriendsSchema } from "@repo/types/schemas/user/get-user-friends-schema"
 import { z } from "zod/v4"
 
@@ -11,8 +11,8 @@ export type GetFriends = Pick<UserEntity, "nickname"> & z.infer<typeof getUserFr
 
 export const friendsDataAtom = atom<GetFriendsResponse["data"] | null>(null, "friendsData").pipe(withReset())
 export const friendsMetaAtom = atom<GetFriendsResponse["meta"] | null>(null, "friendsMeta").pipe(withReset())
-export const friendsPinnedDataAtom = atom<FriendWithDetails[]>([], "friendsPinnedData").pipe(withReset())
-export const friendsNotPinnedDataAtom = atom<FriendWithDetails[]>([], "friendsNotPinnedData").pipe(withReset())
+export const friendsPinnedDataAtom = atom<Friend[]>([], "friendsPinnedData").pipe(withReset())
+export const friendsNotPinnedDataAtom = atom<Friend[]>([], "friendsNotPinnedData").pipe(withReset())
 
 function resetFriends(ctx: Ctx) {
   friendsDataAtom.reset(ctx)
@@ -37,7 +37,6 @@ export const friendsAction = reatomAsync(async (ctx, options?: FriendsQuery) => 
 
   return await ctx.schedule(() => getFriends({
     nickname,
-    with_details: options?.with_details ?? true,
     limit: options?.limit,
     sort_type: options?.sort_type ?? "created_at",
     ascending: options?.ascending ?? true

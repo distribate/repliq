@@ -31,7 +31,8 @@ export async function getThread({
     },
     owner: {
       nickname: thread.nickname!,
-      name_color: thread.name_color
+      name_color: thread.name_color,
+      avatar: thread.avatar
     }
   };
 }

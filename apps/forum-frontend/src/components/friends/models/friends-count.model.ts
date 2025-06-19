@@ -4,7 +4,10 @@ import { currentUserNicknameAtom } from "#components/user/models/current-user.mo
 import { logger } from "@repo/lib/utils/logger";
 
 async function getFriendsCount(nickname: string) {
-  const res = await forumUserClient.user["get-user-friends-count"][":nickname"].$get({ param: { nickname } })
+  const res = await forumUserClient.user["get-friends-meta"].$get({ 
+    param: { nickname },
+  })
+
   const data = await res.json()
 
   if (!data || "error" in data) return null;

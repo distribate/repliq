@@ -1,6 +1,6 @@
 import { forumThreadClient } from "@repo/shared/api/forum-client";
 import { reatomAsync, withCache, withDataAtom, withStatusesAtom } from "@reatom/async";
-import { getLatestRegUsers } from "#components/layout/components/stats/latest-reg-users.model";
+import { getLatestRegUsers } from "#components/layout/components/widgets/latest-users/latest-reg-users.model";
 import { sleep } from "@reatom/framework";
 import { searchPageTypeAtom } from "./search-page.model";
 
@@ -29,11 +29,11 @@ export const defineSearchSectionAction = reatomAsync(async (ctx) => {
 }, "defineSearchSectionAction")
 
 export const threadRelatedAction = reatomAsync(async (ctx) => {
-  await sleep(200)
+  await sleep(100)
   return await ctx.schedule(() => getLastThreads(DEFAULT_RELATED_LENGTH))
 }, "threadRelatedAction").pipe(withStatusesAtom(), withDataAtom(), withCache())
 
 export const usersRelatedAction = reatomAsync(async (ctx) => {
-  await sleep(200)
+  await sleep(100)
   return await ctx.schedule(() => getLatestRegUsers(DEFAULT_RELATED_LENGTH))
 }, "usersRelatedAction").pipe(withStatusesAtom(), withDataAtom(), withCache())

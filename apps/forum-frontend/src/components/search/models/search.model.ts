@@ -20,6 +20,7 @@ type GetSearchResults = {
 export type SearchUser = {
   nickname: string,
   name_color: string
+  avatar: string | null
 }
 
 export type SearchThread = {
@@ -37,7 +38,7 @@ async function getSearchThreads({
 
   if ("error" in data) return null
 
-  return data.data as { id: string, title: string }[]
+  return data.data as SearchThread[]
 }
 
 async function getSearchUsers({
@@ -50,7 +51,7 @@ async function getSearchUsers({
 
   if ("error" in data) return null
 
-  return data.data as { nickname: string, name_color: string }[]
+  return data.data as SearchUser[]
 }
 
 export async function getSearchResults({
@@ -64,8 +65,6 @@ export async function getSearchResults({
       ]) 
 
       const data = [...threads ?? [], ...users ?? []]
-
-      console.log(data)
       
       return data;
     case "threads":

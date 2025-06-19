@@ -110,9 +110,11 @@ export const subscribeReceiveNotify = () => {
               type: "issue"
             })
 
+            const configIssueMessage = `Заявка ${message.payload.title} создана пользователем ${message.payload.nickname}`
+
             return await notifyIssueReceived({
               user_nickname: notification.nickname,
-              title: notification.message,
+              title: configIssueMessage,
               description: notification.message,
               created_at: notification.created_at,
               id: notification.id,

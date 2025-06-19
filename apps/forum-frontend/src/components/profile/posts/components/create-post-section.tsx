@@ -39,10 +39,11 @@ const CreatePostActiveSection = () => {
 };
 
 const PostSectionAvatar = reatomComponent(({ ctx }) => {
-  const nickname = getUser(ctx).nickname;
+  const { nickname, avatar } = getUser(ctx);
 
   return (
     <Avatar
+      url={avatar}
       propWidth={48}
       propHeight={48}
       className="min-w-[34px] min-h-[34px] size-[34px] lg:size-[48px] lg:min-h-[48px] lg:min-w-[48px]"

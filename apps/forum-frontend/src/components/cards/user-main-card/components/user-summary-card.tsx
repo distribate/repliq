@@ -77,7 +77,7 @@ const UserHead = reatomComponent(({ ctx }) => {
   const userCard = ctx.spy(userCardResource.dataAtom)?.data
   if (!userCard) return null;
 
-  const { nickname, real_name, is_donate } = userCard
+  const { nickname, avatar, real_name, is_donate } = userCard
 
   return (
     <div className="flex items-center gap-4 p-4 w-full">
@@ -85,6 +85,7 @@ const UserHead = reatomComponent(({ ctx }) => {
         <Avatar
           nickname={nickname}
           propWidth={106}
+          url={avatar}
           propHeight={106}
           className="cursor-pointer"
           onClick={() => controlUserCardAtom(ctx, false, "link")}

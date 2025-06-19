@@ -3,7 +3,7 @@ import { getPublicUrl } from "#utils/get-public-url.ts";
 import { STATIC_IMAGES_BUCKET } from "@repo/shared/constants/buckets";
 import type { getNewsSchema } from "@repo/types/schemas/news/get-news-schema";
 import { executeWithCursorPagination } from "kysely-paginate";
-import type { z } from "zod/v4";
+import { z } from "zod/v4";
 
 type GetNews = z.infer<typeof getNewsSchema>;
 
@@ -37,19 +37,15 @@ export async function getNews({
     },
   })
 
-  const news = await Promise.all(
-    res.rows.map(async (news) => {
-      if (!news.imageUrl) return news;
+  const news = res.rows.map((news) => {
+    if (!news.imageUrl) return news;
 
-      const publicUrl = getPublicUrl(STATIC_IMAGES_BUCKET, news.imageUrl);
-
-      return {
-        ...news,
-        created_at: news.created_at.toString(),
-        imageUrl: publicUrl
-      };
-    })
-  );
+    return {
+      ...news,
+      created_at: news.created_at.toString(),
+      imageUrl: getPublicUrl(STATIC_IMAGES_BUCKET, news.imageUrl)
+    };
+  })
 
   return {
     data: news,

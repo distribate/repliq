@@ -22,7 +22,7 @@ export async function getThreadComments({
     .select([
       'comments.id as comment_id',
       'comments.created_at as comment_created_at',
-      'comments.user_nickname as comment_user_nickname',
+      'comments.user_nickname as comment_nickname',
       'comments.content as comment_content',
       'comments.updated_at as comment_updated_at',
       'comments.is_updated as comment_is_updated',
@@ -30,14 +30,14 @@ export async function getThreadComments({
       'comments_replies.recipient_comment_id as reply_recipient_comment_id',
       'replied_comment.id as replied_comment_id',
       'replied_comment.created_at as replied_comment_created_at',
-      'replied_comment.user_nickname as replied_comment_user_nickname',
+      'replied_comment.user_nickname as replied_comment_nickname',
       'replied_comment.content as replied_comment_content',
       'replied_comment.updated_at as replied_comment_updated_at',
       'replied_comment.is_updated as replied_comment_is_updated',
     ])
     .where('comments.parent_id', '=', threadId)
     .orderBy('comments.created_at', 'desc')
-    
+
   const result = await executeWithCursorPagination(query, {
     perPage: 16,
     after: cursor,
@@ -59,7 +59,7 @@ export async function getThreadComments({
 
   const commentsMap = new Map<number, CommentWithReplies>();
 
-  result.rows.forEach(row => {
+  result.rows.forEach(async (row) => {
     const commentId = Number(row.comment_id);
     const createdAt = row.comment_created_at.toString();
     const initialCommentUpdatedAt = row.comment_updated_at ? row.comment_updated_at.toString() : null;
@@ -68,7 +68,10 @@ export async function getThreadComments({
       commentsMap.set(commentId, {
         id: commentId,
         created_at: createdAt,
-        user_nickname: row.comment_user_nickname,
+        user: {
+          nickname: row.comment_nickname,
+          avatar: null
+        },
         content: row.comment_content,
         updated_at: initialCommentUpdatedAt,
         is_updated: row.comment_is_updated,
@@ -80,7 +83,10 @@ export async function getThreadComments({
       const repliedComment = {
         id: Number(row.replied_comment_id),
         created_at: row.replied_comment_created_at!.toString(),
-        user_nickname: row.replied_comment_user_nickname!,
+        user: {
+          nickname: row.replied_comment_nickname!,
+          avatar: null,
+        },
         content: row.replied_comment_content!,
         updated_at: row.replied_comment_updated_at ? row.replied_comment_updated_at.toString() : null,
         is_updated: row.replied_comment_is_updated ?? false,
@@ -94,8 +100,30 @@ export async function getThreadComments({
     }
   });
 
+  let data = Array.from(commentsMap.values())
+
+  let creatorNicknames: string[] = []
+
+  if (result) {
+    creatorNicknames = [...new Set(data.map(a => a.user.nickname!))];
+  }
+
+  const users = await forumDB
+    .selectFrom("users")
+    .select(["nickname", "avatar"])
+    .where("users.nickname", "in", creatorNicknames)
+    .execute();
+
+  const usersByNickname = new Map(users.map(user => [user.nickname, user]));
+
+  data = data.map(comment => {
+    const user = usersByNickname.get(comment.user.nickname)!;
+    
+    return { ...comment, user};
+  });
+
   return {
-    data: Array.from(commentsMap.values()),
+    data,
     meta: {
       hasNextPage: result.hasNextPage ?? false,
       hasNextPrev: result.hasPrevPage ?? false,

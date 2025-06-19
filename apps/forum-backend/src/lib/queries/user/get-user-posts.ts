@@ -24,6 +24,7 @@ export async function getUserPosts({
     .selectFrom("posts_users")
     .innerJoin("posts", "posts.id", "posts_users.post_id")
     .leftJoin("posts_views", "posts_views.post_id", "posts.id")
+    .innerJoin("users", "users.nickname", "posts_users.nickname")
     .select([
       "posts.id",
       "posts.content",
@@ -31,6 +32,7 @@ export async function getUserPosts({
       "posts.visibility",
       "posts.isComments",
       "posts.isPinned",
+      "users.avatar",
       "posts.isUpdated",
       "posts_users.nickname",
       sql`COUNT(DISTINCT posts_views.id)`.as("views_count"),
@@ -40,6 +42,7 @@ export async function getUserPosts({
       comments_count: number;
       views_count: number;
       isViewed: boolean;
+      avatar: string | null,
       nickname: string;
       id: string;
       content: string;
@@ -73,6 +76,7 @@ export async function getUserPosts({
       "posts.visibility",
       "posts.isComments",
       "posts.isPinned",
+      "users.avatar",
       "posts.isUpdated",
       "posts_users.nickname",
     ])

@@ -21,10 +21,13 @@ export type ThreadRatingEnum = Database["public"]["Enums"]["thread_rating_type"]
 export type AlertEntity = {
   id: number,
   link: string | null,
-  creator: string,
+  creator: {
+    nickname: string,
+    avatar: string | null
+  }
   created_at: string | Date,
   title: string,
-  description: string
+  description: string | null
 }
 
 export type MinecraftItemEntity = Tables<"config_minecraft_items">;

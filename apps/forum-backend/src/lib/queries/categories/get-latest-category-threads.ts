@@ -29,9 +29,15 @@ export async function getLatestCategoryThreads(): Promise<CategoryThreads[] | nu
           sql<number>`(SELECT COUNT(*) FROM comments WHERE parent_type = 'thread' AND CAST(parent_id AS uuid) = threads.id)`.as('comments_count'),
           sql`ROW_NUMBER() OVER (PARTITION BY threads.category_id ORDER BY threads.created_at DESC)`.as('row_num'),
           sql<string>`users.nickname`.as('owner_nickname'),
-          sql<string>`users.name_color`.as('owner_name_color')
+          sql<string>`users.name_color`.as('owner_name_color'),
+          sql<string>`users.avatar`.as('owner_avatar')
         ])
-        .groupBy(['threads.id', 'users.nickname', 'users.name_color'])
+        .groupBy([
+          'threads.id', 
+          'users.nickname', 
+          'users.name_color',
+          "users.avatar"
+        ])
         .as('top_threads'),
       'category.id',
       'top_threads.category_id'
@@ -47,9 +53,10 @@ export async function getLatestCategoryThreads(): Promise<CategoryThreads[] | nu
       'top_threads.created_at',
       'top_threads.views_count',
       'top_threads.comments_count',
-      'top_threads.owner_nickname',
-      'top_threads.owner_name_color',
       'top_threads.row_num',
+      'top_threads.owner_nickname',
+      "top_threads.owner_avatar",
+      'top_threads.owner_name_color',
     ])
     .where('top_threads.row_num', '<=', 5)
     .execute();
@@ -58,7 +65,7 @@ export async function getLatestCategoryThreads(): Promise<CategoryThreads[] | nu
     const {
       category_id, category_title, id, title, created_at, views_count,
       comments_count, description, is_comments, category_description,
-      owner_nickname, owner_name_color
+      owner_nickname, owner_name_color, owner_avatar
     } = thread;
 
     const categoryKey = Number(category_id)
@@ -80,6 +87,7 @@ export async function getLatestCategoryThreads(): Promise<CategoryThreads[] | nu
       owner: {
         nickname: owner_nickname!,
         name_color: owner_name_color!,
+        avatar: owner_avatar,
       }
     });
 

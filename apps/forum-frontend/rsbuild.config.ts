@@ -25,17 +25,9 @@ export default defineConfig({
     pluginCssMinimizer()
   ],
   performance: {
-    buildCache: process.env.NODE_ENV === 'development',
     chunkSplit: {
       strategy: 'split-by-experience',
-    },
-    preload: {
-      type: 'initial',
-    },
-    prefetch: {
-      type: 'async-chunks',
-    },
-    removeConsole: ['log', 'warn'],
+    }
   },
   tools: {
     rspack: {

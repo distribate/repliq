@@ -16,14 +16,14 @@ import { action, atom, sleep, withComputed, withConcurrency } from "@reatom/fram
 const onChange = action(async (ctx, e: React.ChangeEvent<HTMLTextAreaElement>) => {
   const { value } = e.target;
 
-  await ctx.schedule(() => sleep(200))  
+  await ctx.schedule(() => sleep(200))
 
   updateCreateThreadCommentAction(ctx, { content: value })
 }).pipe(withConcurrency())
 
 const textareaIsActiveAtom = atom(false, "textareaIsActive")
 const isValidAtom = atom(false, "isValid").pipe(
-  withComputed((ctx, state) => {
+  withComputed((_, state) => {
     const result = createThreadCommentSchema.safeParse(state)
 
     return result.success
@@ -33,7 +33,7 @@ const isValidAtom = atom(false, "isValid").pipe(
 export const CreateThreadCommentForm = reatomComponent(({ ctx }) => {
   const { id: paramId } = threadRoute.useParams();
 
-  const nickname = getUser(ctx).nickname;
+  const { nickname, avatar } = getUser(ctx);
   const createThreadCommentState = ctx.spy(createThreadCommentAtom)
 
   if (!paramId) return null;
@@ -63,6 +63,7 @@ export const CreateThreadCommentForm = reatomComponent(({ ctx }) => {
     <CreateThreadCommentLayout variant={type} state={ctx.spy(textareaIsActiveAtom) ? "active" : "none"}>
       <form onSubmit={onSubmit} className="flex items-start h-full w-full justify-between px-4 py-4">
         <Avatar
+          url={avatar}
           className="self-start min-h-[36px] min-w-[36px]"
           propWidth={36}
           propHeight={36}

@@ -6,7 +6,7 @@ import type { z } from "zod/v4";
 type CreateProfileView = z.infer<typeof createProfileViewSchema> & Pick<InitiatorRecipientType, "initiator">
 
 export async function createProfileView({ initiator, recipient }: CreateProfileView) {
-  return await forumDB
+  return forumDB
     .insertInto('profile_views')
     .values({ initiator, recipient })
     .returningAll()

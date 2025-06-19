@@ -10,7 +10,8 @@ export const userSettings = [
   'game_stats_visible',
   "profile_visibility",
   "send_notifications",
-  "show_game_location"
+  "show_game_location",
+  "notify_in_telegram",
 ] satisfies readonly [ UserSettingsKeys, ...UserSettingsKeys[] ];
 
 export const editUserSettingsBodySchema = z.object({

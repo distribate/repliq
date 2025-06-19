@@ -18,10 +18,11 @@ const ThreadCommentMoreActions = lazy(() =>
 );
 
 export const ThreadCommentItem = reatomComponent<ThreadCommentProps & { idx: number }>(({
-  user_nickname, isOwner, ctx, created_at, content, id, replied, threadId, is_updated, idx
+  user, isOwner, ctx, created_at, content, id, replied, threadId, is_updated, idx
 }) => {
   const currentUser = ctx.spy(currentUserAtom)
-  const isCommentOwner = currentUser?.nickname === user_nickname;
+  const { nickname, avatar } = user
+  const isCommentOwner = currentUser?.nickname === nickname;
 
   const isActive = ctx.spy(highlightActiveAtom) && ctx.spy(selectedCommentAtom) === id
 
@@ -38,13 +39,13 @@ export const ThreadCommentItem = reatomComponent<ThreadCommentProps & { idx: num
         </Suspense>
       )}
       <div className="flex items-center gap-2">
-        <CustomLink to={createIdLink("user", user_nickname)}>
-          <Avatar nickname={user_nickname} propWidth={42} propHeight={42} className="min-h-[42px] min-w-[42px]" />
+        <CustomLink to={createIdLink("user", nickname)}>
+          <Avatar url={avatar} nickname={nickname} propWidth={42} propHeight={42} className="min-h-[42px] min-w-[42px]" />
         </CustomLink>
         <div className="flex justify-between w-full">
           <div className="flex flex-col">
             <div className="flex items-center gap-1">
-              <UserNickname nickname={user_nickname} />
+              <UserNickname nickname={nickname} />
               {isOwner && (
                 <Badge size="small">
                   <Typography className="leading-4">автор</Typography>
@@ -61,9 +62,7 @@ export const ThreadCommentItem = reatomComponent<ThreadCommentProps & { idx: num
         content={content} replied={replied} isOwner={isCommentOwner} id={id} threadId={threadId}
       />
       <div className="flex items-center justify-between w-full">
-        <ThreadCommentActions
-          id={threadId} isCommentOwner={isCommentOwner} commentId={id} commentNickname={user_nickname} commentContent={content}
-        />
+        <ThreadCommentActions isCommentOwner={isCommentOwner} commentId={id} commentNickname={nickname} commentContent={content} />
         {is_updated && (
           <Typography textColor="gray" textSize="small">
             [изменено]

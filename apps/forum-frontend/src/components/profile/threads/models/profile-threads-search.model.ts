@@ -8,11 +8,11 @@ export type UserThreads = Pick<ThreadEntity, "id" | "title" | "created_at"> & {
 };
 
 export const profileThreadsSearchAction = reatomAsync(async (ctx, nickname: string) => {
-  const { querySearch } = ctx.get(profileThreadsSettingsAtom);
+  const { query } = ctx.get(profileThreadsSettingsAtom);
 
-  if (!querySearch) return;
+  if (!query) return;
 
-  return await ctx.schedule(() => getThreadsUser({ nickname, querySearch }));
+  return await ctx.schedule(() => getThreadsUser({ nickname, query }));
 }, {
   name: "profileThreadsSearchAction",
   onFulfill: (ctx, res) => {

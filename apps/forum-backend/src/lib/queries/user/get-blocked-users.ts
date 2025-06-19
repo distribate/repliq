@@ -17,6 +17,7 @@ export const getBlockedUsers = async ({
       "users.id",
       "users.nickname",
       "users.name_color",
+      "users.avatar",
       "users_blocked.created_at",
       eb.case()
         .when('users_subs.id', 'is not', null)

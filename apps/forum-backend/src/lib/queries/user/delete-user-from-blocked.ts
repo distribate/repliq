@@ -6,7 +6,7 @@ type DeleteUserFromBlocked = InitiatorRecipientType
 export async function deleteUserFromBlocked({
   initiator, recipient
 }: DeleteUserFromBlocked) {
-  return await forumDB
+  return forumDB
     .deleteFrom('users_blocked')
     .where("initiator", "=", initiator)
     .where("recipient", "=", recipient)

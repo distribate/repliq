@@ -9,9 +9,7 @@ type ThreadRepliedCommentItemProps = {
   threadId: string
 };
 
-export const ThreadRepliedCommentItem = ({
-  replied, threadId
-}: ThreadRepliedCommentItemProps) => {
+export const ThreadRepliedCommentItem = ({ replied, threadId }: ThreadRepliedCommentItemProps) => {
   const scrollToComment = useAction((ctx) => scrollToCommentAction(ctx, { threadId, repliedId: replied.id }))
 
   const repliedMessage = replied.content.length >= 28
@@ -29,7 +27,7 @@ export const ThreadRepliedCommentItem = ({
             overflow-hidden w-fit max-w-[300px] py-1 px-2 border border-shark-900"
         >
           <Typography>
-            {replied.user_nickname}
+            {replied.user.nickname}
           </Typography>
           <Typography textColor="gray">
             {repliedMessage}

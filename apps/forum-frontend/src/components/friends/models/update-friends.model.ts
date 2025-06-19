@@ -3,7 +3,7 @@ import { atom } from "@reatom/core";
 import { getFriends, myFriendsDataAtom, myFriendsMetaAtom } from "./friends.model";
 import { friendsUpdateOptionsAtom } from "../components/filtering/models/friends-filtering.model";
 import { currentUserNicknameAtom } from "#components/user/models/current-user.model";
-import { FriendWithDetails } from "@repo/types/schemas/friend/friend-types";
+import { Friend } from "@repo/types/schemas/friend/friend-types";
 
 const updateFriendsActionVariablesAtom = atom<"update-filter" | "update-cursor">("update-filter", "updateFriendsActionVariables")
 
@@ -21,7 +21,7 @@ export const updateFriendsAction = reatomAsync(async (ctx, type: "update-filter"
 
   const { cursor, sort_type, ascending, limit } = filtering;
 
-  return await getFriends({ with_details: true, nickname, ascending, sort_type, cursor, limit })
+  return await getFriends({ nickname, ascending, sort_type, cursor, limit })
 }, {
   name: "updateFriendsAction",
   onFulfill: (ctx, res) => {
@@ -31,14 +31,18 @@ export const updateFriendsAction = reatomAsync(async (ctx, type: "update-filter"
     if (!variables) return;
 
     if (variables === "update-filter") {
-      myFriendsDataAtom(ctx, res.data as FriendWithDetails[])
+      myFriendsDataAtom(ctx, res.data as Friend[])
       myFriendsMetaAtom(ctx, res.meta)
       friendsUpdateOptionsAtom(ctx, (state) => ({ ...state, cursor: undefined }))
       return
     }
 
     if (variables === 'update-cursor') {
-      myFriendsDataAtom(ctx, (state) => [...state, ...res.data as FriendWithDetails[]])
+      myFriendsDataAtom(ctx, (state) => {
+        if (!state) state = []
+
+        return [...state, ...res.data as Friend[]]
+      })
       myFriendsMetaAtom(ctx, res.meta)
       friendsUpdateOptionsAtom(ctx, (state) => ({ ...state, cursor: res.meta.endCursor }))
       return

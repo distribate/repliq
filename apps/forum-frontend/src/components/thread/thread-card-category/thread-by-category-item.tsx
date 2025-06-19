@@ -8,13 +8,13 @@ import {
 import type { ThreadPreview } from "@repo/types/entities/thread-type.ts"
 
 export const ThreadByCategoryItem = ({
-  created_at, properties, title, comments_count, owner: { nickname },
+  created_at, properties, title, comments_count, owner: { nickname, avatar },
 }: ThreadPreview) => {
   return (
     <div className="flex grow group bg-shark-900 hover:bg-shark-800 rounded-lg justify-between duration-300 p-3">
       <div className="flex flex-col gap-y-2 justify-between w-2/3">
         <div className="flex items-center gap-x-2">
-          <Avatar nickname={nickname} propWidth={42} propHeight={36} className="min-h-[42px] min-w-[42px]" />
+          <Avatar url={avatar} nickname={nickname} propWidth={42} propHeight={36} className="min-h-[42px] min-w-[42px]" />
           <div className="flex flex-col truncate">
             <Typography textColor="shark_white" className="text-[17px] truncate font-medium">
               {title}

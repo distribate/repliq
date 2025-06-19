@@ -1,6 +1,6 @@
 import { Fragment } from "react/jsx-runtime";
 import { Typography } from "@repo/ui/src/components/typography";
-import { SearchPageThread, SearchPageUser } from "./search-page-user";
+import { SearchPageThread, SearchPageUser } from "./search-page-childs";
 import { deleteEntryFromHistoryAction, searchPageHistoryAtom } from "../models/search-page.model";
 import { reatomComponent } from "@reatom/npm-react";
 import { X } from "lucide-react";
@@ -25,7 +25,7 @@ export const SearchPageHistory = reatomComponent(({ ctx }) => {
                   className="absolute group-hover:opacity-100 opacity-0 duration-150 -translate-y-1/2 top-1/2 right-8 z-[3] cursor-pointer" 
                   size={24}
                 />
-                <SearchPageUser nickname={item.nickname} name_color={item.name_color} />
+                <SearchPageUser avatar={item.avatar} nickname={item.nickname} name_color={item.name_color} />
               </div>
             )}
             {"title" in item && (

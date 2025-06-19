@@ -4,7 +4,7 @@ import { Skeleton } from "@repo/ui/src/components/skeleton";
 import { globalPreferencesAtom } from "#components/user/settings/main/models/update-global-preferences.model";
 import { isAuthenticatedAtom } from "#components/auth/models/auth.model";
 
-const AlertWidget = lazy(() => import('#components/layout/components/widgets/alert-widget').then((m) => ({ default: m.AlertWidget })))
+const AlertWidget = lazy(() => import('#components/layout/components/widgets/alert/alert-widget').then((m) => ({ default: m.AlertWidget })))
 
 export const Alerts = reatomComponent(({ ctx }) => {
   if (!ctx.spy(isAuthenticatedAtom)) return null;

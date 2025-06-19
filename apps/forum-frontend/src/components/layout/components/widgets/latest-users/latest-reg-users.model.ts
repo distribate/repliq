@@ -8,6 +8,7 @@ type LatestRegUser = {
   description: string | null;
   name_color: string;
   nickname: string;
+  avatar: string | null
 }
 
 export const getLatestRegUsers = async (limit?: number) => {

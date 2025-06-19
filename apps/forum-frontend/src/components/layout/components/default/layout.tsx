@@ -4,6 +4,7 @@ import { userGlobalOptionsAtom } from "#components/user/models/current-user.mode
 import { isExperimentalDesignAtom } from "./experimental-layout.model"
 import { Navbar } from "./navbar"
 import { isAuthenticatedAtom } from "#components/auth/models/auth.model"
+import { Footer } from "./footer"
 
 const SheetMenu = lazy(() => import("./mobile-sheet").then(m => ({ default: m.SheetMenu })))
 const BottomBar = lazy(() => import("./mobile-sheet").then(m => ({ default: m.BottomBar })))
@@ -36,6 +37,7 @@ export const MainLayout = reatomComponent<PropsWithChildren>(({ ctx, children })
             <div id="main" className="flex gap-y-4 w-full h-full min-h-screen main-section">
               {children}
             </div>
+            <Footer />
           </div>
         </div>
       )}

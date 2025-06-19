@@ -9,7 +9,7 @@ import { SEARCH_PAGE_LIMIT } from "@repo/shared/constants/limits.ts";
 import { reatomComponent, useUpdate } from "@reatom/npm-react";
 import { ContentNotFound } from "#components/templates/components/content-not-found";
 import { searchPageResultsAtom } from "#components/search/models/search-page.model";
-import { SearchPageThread, SearchPageUser } from "./search-page-user";
+import { SearchPageThread, SearchPageUser } from "./search-page-childs";
 import { SearchResult, SearchResultsAll } from "../models/search-page.model";
 
 function filterSearchResults<T extends SearchResult>(
@@ -34,8 +34,8 @@ const SearchPageUsers = reatomComponent(({ ctx }) => {
 
   return (
     <div className="flex flex-col gap-y-2 w-full h-full">
-      {users.map(({ name_color, nickname }) => (
-        <SearchPageUser key={nickname} name_color={name_color} nickname={nickname} />)
+      {users.map(({ name_color, nickname, avatar }) => (
+        <SearchPageUser avatar={avatar} key={nickname} name_color={name_color} nickname={nickname} />)
       )}
     </div>
   );
@@ -44,13 +44,11 @@ const SearchPageUsers = reatomComponent(({ ctx }) => {
 const SearchPageThreads = reatomComponent(({ ctx }) => {
   const results = ctx.spy(searchPageResultsAtom)
 
-  if (!results)
-    return <ContentNotFound title="Ничего не найдено" />;
+  if (!results) {
+    return <ContentNotFound title="Ничего не найдено" />
+  }
 
-  const threads = filterSearchResults<SearchThread>(
-    results,
-    "threads",
-  );
+  const threads = filterSearchResults<SearchThread>(results, "threads");
 
   return (
     <div className="flex flex-col gap-y-2 w-full h-full">
@@ -84,7 +82,9 @@ const SyncInView = ({ inView }: { inView: boolean }) => {
   useUpdate((ctx) => {
     if (!inView) return;
 
-    searchPageAtom(ctx, (state) => ({ ...state, limit: state.limit + SEARCH_PAGE_LIMIT }))
+    searchPageAtom(ctx, 
+      (state) => ({ ...state, limit: state.limit + SEARCH_PAGE_LIMIT })
+    )
   }, [inView])
 
   return null;

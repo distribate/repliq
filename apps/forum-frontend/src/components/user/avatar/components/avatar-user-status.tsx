@@ -20,11 +20,11 @@ export const AvatarUserStatus = reatomComponent<{ nickname: string }>(({ ctx, ni
         <TooltipProvider>
           <Tooltip delayDuration={1}>
             <TooltipTrigger 
-              className="min-w-[18px] min-h-[18px] z-[2] absolute -bottom-2 -right-2 max-h-[26px] max-w-[22px] md:max-h-[22px] md:max-w-[22px]"
+              className="min-w-[18px] min-h-[18px] z-[2] absolute -bottom-2 -right-2 max-h-[24px] max-w-[20px] md:max-h-[20px] md:max-w-[20px]"
             >
               <div
                 data-state={isOnline}
-                className="flex rounded-full *:rounded-full bg-shark-900 p-1 size-[22px] items-center justify-center group"
+                className="flex rounded-full *:rounded-full bg-shark-900 p-0.5 size-[20px] items-center justify-center group"
               >
                 <div className="h-full w-full group-data-[state=online]:bg-green-500 group-data-[state=offline]:bg-shark-600" />
               </div>

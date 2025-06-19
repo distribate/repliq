@@ -7,14 +7,14 @@ export const threadsAtom = atom<UserThreads[] | null>(null, "threads")
 
 type GetThreadsUser = {
   nickname: string;
-  querySearch?: string;
+  query?: string;
 };
 
 export async function getThreadsUser({
-  nickname, querySearch,
+  nickname, query,
 }: GetThreadsUser) {
   const res = await forumUserClient.user["get-user-threads"][":nickname"].$get({
-    param: { nickname }, query: { querySearch }
+    param: { nickname }, query: { querySearch: query }
   })
 
   const data = await res.json()

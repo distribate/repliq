@@ -11,7 +11,9 @@ export async function getUserIsViewed({
     .select(forumDB.fn.countAll().as('count'))
     .where("initiator", "=", initiator)
     .where("recipient", "=", recipient)
-    .where("created_at", '>=', new Date(new Date().setDate(new Date().getDate() - 1)))
+    .where("created_at", '>=', new Date(
+      new Date().setDate(new Date().getDate() - 1))
+    )
     .$castTo<{ count: number }>()
     .executeTakeFirst();
 

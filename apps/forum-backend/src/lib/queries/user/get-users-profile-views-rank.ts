@@ -4,7 +4,7 @@ import { sql } from "kysely";
 const RATING_LIMIT = 200;
 
 export const getUsersProfileViewsRank = async () => {
-  return await forumDB
+  return forumDB
   .selectFrom('profile_views')
   .select([
     'recipient',

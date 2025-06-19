@@ -4,7 +4,7 @@ import { atom } from '@reatom/core';
 
 export type FriendsSortType = "created_at" | "donate_weight";
 
-export type FriendsSortQuery = Omit<z.infer<typeof getUserFriendsSchema>, "with_details"> & {
+export type FriendsSortQuery = z.infer<typeof getUserFriendsSchema> & {
   searchQuery: string;
   type: "first" | "other",
   cursor?: string

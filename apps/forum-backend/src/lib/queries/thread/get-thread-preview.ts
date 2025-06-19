@@ -15,7 +15,8 @@ export async function getThreadPreview(threadId: string): Promise<ThreadPreview 
     views_count: thread.thread_views_count,
     owner: {
       nickname: thread.user_nickname,
-      name_color: thread.name_color
+      name_color: thread.name_color,
+      avatar: thread.avatar
     }
   }
 }

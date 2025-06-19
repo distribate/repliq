@@ -6,14 +6,79 @@ import { Hono } from "hono";
 import { getNickname } from "#utils/get-nickname-from-storage.ts";
 import { Encoder } from "cbor-x";
 import { userPreferenceAndPrivateValidation } from "#utils/validate-user-preference-private.ts";
+import { z } from "zod/v4";
+import { forumDB } from "#shared/database/forum-db.ts";
+
+export async function getUserFriendsCount(nickname: string) {
+  const query = await forumDB
+    .selectFrom("users_friends")
+    .select(forumDB.fn.countAll().as("count"))
+    .where((eb) =>
+      eb.or([
+        eb("user_1", "=", nickname),
+        eb("user_2", "=", nickname),
+      ])
+    )
+    .$narrowType<{ count: number }>()
+    .executeTakeFirst();
+
+  return Number(query?.count) ?? 0
+}
+
+async function getUserRequestsCount(nickname: string) {
+  const queryOutgoing = forumDB
+    .selectFrom("friends_requests")
+    .select(forumDB.fn.countAll().as("count"))
+    .where((eb) =>
+      eb.or([
+        eb("initiator", "=", nickname),
+      ])
+    )
+    .$narrowType<{ count: number }>()
+    .executeTakeFirst()
+
+  const queryIncoming = forumDB
+    .selectFrom("friends_requests")
+    .select(forumDB.fn.countAll().as("count"))
+    .where((eb) =>
+      eb.or([
+        eb("recipient", "=", nickname),
+      ])
+    )
+    .$narrowType<{ count: number }>()
+    .executeTakeFirst()
+
+  const [outgoing, incoming] = await Promise.all([queryOutgoing, queryIncoming])
+
+  return {
+    outgoing: Number(outgoing?.count) ?? 0,
+    incoming: Number(incoming?.count) ?? 0,
+  }
+}
 
 const encoder = new Encoder({ useRecords: false, structures: [], pack: true });
 
-export const getUserFriendsRoute = new Hono()
-  .get("/get-user-friends/:nickname", zValidator("query", getUserFriendsSchema), async (ctx) => {
-    const { nickname: recipient } = ctx.req.param()
-    const result = getUserFriendsSchema.parse(ctx.req.query());
+export const getUserFriendsMetaRoute = new Hono()
+  .get("/get-friends-meta", async (ctx) => {
     const initiator = getNickname()
+
+    try {
+      const [requestsCount, friendsCount] = await Promise.all([
+        getUserRequestsCount(initiator),
+        getUserFriendsCount(initiator),
+      ])
+
+      return ctx.json({ data: { friendsCount, requestsCount } }, 200)
+    } catch (e) {
+      return ctx.json({ error: throwError(e) }, 500);
+    }
+  })
+
+export const getUserFriendsRoute = new Hono()
+  .get("/get-friends/:nickname", zValidator("query", getUserFriendsSchema), async (ctx) => {
+    const { nickname: recipient } = ctx.req.param()
+    const initiator = getNickname()
+    const result = getUserFriendsSchema.parse(ctx.req.query());
 
     const isValid = await userPreferenceAndPrivateValidation({
       initiator, recipient

@@ -8,7 +8,9 @@ export async function getUserIsFriend({
 }: ValidateFriendship): Promise<boolean> {
   const friendships = await forumDB
   .selectFrom('users_friends')
-  .select(forumDB.fn.count('id').as('count'))
+  .select(
+    forumDB.fn.count('id').as('count')
+  )
   .where((eb) =>
     eb.or([
       eb('user_1', '=', initiator),

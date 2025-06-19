@@ -11,7 +11,7 @@ export type CategoryModel = {
 };
 
 export async function getCategories(): Promise<CategoryModel[]> {
-  return await forumDB
+  return forumDB
     .selectFrom("category")
     .innerJoin("threads", "category.id", "threads.category_id")
     .select(eb => [

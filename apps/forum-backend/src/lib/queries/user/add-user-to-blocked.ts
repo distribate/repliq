@@ -6,7 +6,7 @@ type AddUserToBlocked = InitiatorRecipientType
 export async function addUserToBlocked({
   initiator, recipient
 }: AddUserToBlocked) {
-  return await forumDB
+  return forumDB
     .insertInto('users_blocked')
     .values({ initiator, recipient })
     .returningAll()
