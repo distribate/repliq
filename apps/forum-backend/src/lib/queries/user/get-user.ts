@@ -12,16 +12,22 @@ async function getUserShortedDetails(recipient: string) {
   const query = await forumDB
     .selectFrom("users")
     .innerJoin("users_settings", "users.nickname", "users_settings.nickname")
+    .leftJoin("users_subs", "users.nickname", "users_subs.nickname")
     .select(eb => [
       "users.id",
       "users.nickname",
       "users.description",
       "users.account_status",
-      "users.donate",
       "users.name_color",
       "users.cover_image",
       "users_settings.cover_outline_visible",
       "users_settings.show_game_location",
+      eb.case()
+        .when('users_subs.id', 'is not', null)
+        .then(true)
+        .else(false)
+        .end()
+        .as('is_donate'),
     ])
     .where("users.nickname", "=", recipient)
     .executeTakeFirst();
@@ -33,11 +39,17 @@ async function getUserFullDetails(recipient: string) {
   const query = await forumDB
     .selectFrom("users")
     .innerJoin("users_settings", "users.nickname", "users_settings.nickname")
+    .leftJoin("users_subs", "users.nickname", "users_subs.nickname")
     .select(eb => [
       "users.id",
       "users.nickname",
       "users.description",
-      "users.donate",
+      eb.case()
+        .when('users_subs.id', 'is not', null)
+        .then(true)
+        .else(false)
+        .end()
+        .as('is_donate'),
       "users.real_name",
       "users.account_status",
       "users.name_color",
@@ -65,7 +77,7 @@ export async function getUserProfilePreview(recipient: string): Promise<UserShor
 
   const {
     cover_outline_visible, show_game_location, cover_image,
-    nickname, description, name_color, donate, account_status
+    nickname, description, name_color, is_donate, account_status
   } = query;
 
   // @ts-expect-error
@@ -75,7 +87,7 @@ export async function getUserProfilePreview(recipient: string): Promise<UserShor
     name_color,
     account_status,
     cover_image,
-    donate,
+    is_donate,
     preferences: {
       cover_outline_visible, show_game_location
     },
@@ -114,14 +126,14 @@ export async function getUser<T extends GetUserType>({
   };
 
   if (type === "shorted" && !isIdentity) {
-    const { nickname, description, name_color, donate, account_status } = userWithoutSensitiveInfo;
+    const { nickname, description, name_color, is_donate, account_status } = userWithoutSensitiveInfo;
 
     return {
       nickname,
       description,
       name_color,
       account_status,
-      donate,
+      is_donate,
       preferences: {
         cover_outline_visible, show_game_location
       },

@@ -26,32 +26,45 @@ export async function getUserFriendsCount(nickname: string) {
   if (!query) {
     return 0
   }
-  
+
   return query.count
 }
 
-function sortFriendsByDonate<T extends { donate: DonateVariants }>(rows: T[]) {
-  const weights: Record<DonateVariants, number> = {
-    'default': 1,
-    'authentic': 2,
-    'loyal': 3,
-    'arkhont': 4,
-    'dev': 5,
-    'moder': 5,
-    "helper": 5
-  };
+// function sortFriendsByDonate<T extends { donate: DonateVariants }>(rows: T[]) {
+//   const weights: Record<DonateVariants, number> = {
+//     'default': 1,
+//     'authentic': 2,
+//     'loyal': 3,
+//     'arkhont': 4,
+//     'dev': 5,
+//     'moder': 5,
+//     "helper": 5
+//   };
 
-  return rows.sort((a, b) => {
-    return weights[b.donate] - weights[a.donate];
-  });
-}
+//   return rows.sort((a, b) => {
+//     return weights[b.donate] - weights[a.donate];
+//   });
+// }
 
-export const SORT_TYPES: Record<string, "donate" | "created_at"> = {
-  "users.donate": "donate",
-  "users_friends.created_at": "created_at"
-}
+// export const SORT_TYPES: Record<string, "created_at"> = {
+//   "users_friends.created_at": "created_at"
+// }
 
 export const DEFAULT_LIMIT_PER_PAGE = 6
+
+// const donateWeightCase = sql`
+//   CASE
+//     WHEN users.donate = 'default' THEN 1
+//     WHEN users.donate = 'authentic' THEN 2
+//     WHEN users.donate = 'loyal' THEN 3
+//     WHEN users.donate = 'arkhont' THEN 4
+//     WHEN users.donate = 'dev' THEN 5
+//     WHEN users.donate = 'moder' THEN 5
+//     ELSE 0
+//   END
+// `
+
+// const sortField = SORT_TYPES[sortType]
 
 export const getUserFriends = async ({
   nickname, with_details, ascending, sort_type, cursor, limit
@@ -67,24 +80,6 @@ export const getUserFriends = async ({
 
   const orderBy = ascending ? "asc" : "desc";
 
-  const sortType = sort_type === "donate_weight"
-    ? "users.donate"
-    : "users_friends.created_at"
-
-  const donateWeightCase = sql`
-    CASE
-      WHEN users.donate = 'default' THEN 1
-      WHEN users.donate = 'authentic' THEN 2
-      WHEN users.donate = 'loyal' THEN 3
-      WHEN users.donate = 'arkhont' THEN 4
-      WHEN users.donate = 'dev' THEN 5
-      WHEN users.donate = 'moder' THEN 5
-      ELSE 0
-    END
-  `
-
-  const sortField = SORT_TYPES[sortType]
-
   if (with_details) {
     const withDetailsQuery = baseQuery
       .innerJoin(
@@ -98,6 +93,7 @@ export const getUserFriends = async ({
             )
             .on("users.nickname", "!=", nickname)
       )
+      .leftJoin("users_subs", "users.nickname", "users_subs.nickname")
       .leftJoin("friends_pinned", (join) =>
         join.on(
           sql`friends_pinned.recipient = users.nickname AND friends_pinned.initiator = ${nickname}`
@@ -108,7 +104,7 @@ export const getUserFriends = async ({
           sql`friends_notes.recipient = users.nickname AND friends_notes.initiator = ${nickname}`
         )
       )
-      .select([
+      .select(eb => [
         "users_friends.id as friend_id",
         "users_friends.created_at",
         "users.nickname",
@@ -116,7 +112,12 @@ export const getUserFriends = async ({
         "users.real_name",
         "users.name_color",
         "users.favorite_item",
-        "users.donate",
+        eb.case()
+          .when('users_subs.id', 'is not', null)
+          .then(true)
+          .else(false)
+          .end()
+          .as('is_donate'),
         "friends_notes.note",
         sql<boolean>`COALESCE(friends_pinned.id IS NOT NULL, false)`.as("is_pinned"),
       ])
@@ -134,11 +135,10 @@ export const getUserFriends = async ({
 
     let data;
 
-    if (sort_type === "donate_weight") {
-      data = sortFriendsByDonate(rows)
-    } else {
-      data = rows;
-    }
+    data = rows;
+
+    console.log(data)
+
     return { data, meta: { hasNextPage: hasNextPage ?? false, hasPrevPage: hasPrevPage ?? false, endCursor, startCursor } }
   } else {
     const withoutDetailsQuery = baseQuery
@@ -153,7 +153,7 @@ export const getUserFriends = async ({
         "users.name_color",
         "users_friends.id as friend_id"
       ])
-      .orderBy(sortType, orderBy)
+      .orderBy("users_friends.created_at", orderBy)
 
     const result = await executeWithCursorPagination(withoutDetailsQuery, {
       perPage: DEFAULT_LIMIT_PER_PAGE,

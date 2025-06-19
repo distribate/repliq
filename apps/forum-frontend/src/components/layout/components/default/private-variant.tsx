@@ -19,10 +19,16 @@ export const PrivateVariant = reatomComponent(({ ctx }) => {
             <StatusWidget />
             <MainNavigation />
             <MainCategories />
+            {!ctx.spy(isExperimentalDesignAtom) && (
+              <div className="xl:hidden flex flex-col gap-2 w-full xl:w-1/4 h-full">
+                <LatestComments />
+                <LatestNews />
+              </div>
+            )}
             <Footer />
           </div>
           {!ctx.spy(isExperimentalDesignAtom) && (
-            <div className="flex flex-col gap-2 w-full xl:w-1/4 h-full">
+            <div className="hidden xl:flex flex-col gap-2 w-full xl:w-1/4 h-full">
               <LatestComments />
               <LatestNews />
             </div>

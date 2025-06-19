@@ -3,10 +3,10 @@ import { Typography } from "@repo/ui/src/components/typography"
 import { ReactNode } from "react"
 import { PulsatingButton } from "@repo/ui/src/components/shiny-button.tsx"
 import { IconBrandThreads, IconDeviceDesktopAnalytics, IconMoodSpark, IconPalette, IconSparkles, TablerIcon } from "@tabler/icons-react"
+import { atom } from "@reatom/core"
+import { reatomComponent } from "@reatom/npm-react"
 
-type BuyDonateModalProps = {
-  trigger: ReactNode | string
-}
+type BuyDonateModalProps = { trigger?: ReactNode | string }
 
 type DonateDialogFeatureItemProps = {
   title: string, description: string, icon: TablerIcon
@@ -95,15 +95,19 @@ const DonateDialog = () => {
   )
 }
 
-export const BuyDonateModal = ({ trigger }: BuyDonateModalProps) => {
+export const buyDonateModalIsOpenAtom = atom(false, "buyDonateModalIsOpen")
+
+export const BuyDonateModal = reatomComponent<BuyDonateModalProps>(({ ctx, trigger }) => {
   return (
-    <Dialog>
-      <DialogTrigger>
-        {trigger}
-      </DialogTrigger>
+    <Dialog open={ctx.spy(buyDonateModalIsOpenAtom)} onOpenChange={v => buyDonateModalIsOpenAtom(ctx, v)}>
+      {trigger && (
+        <DialogTrigger>
+          {trigger}
+        </DialogTrigger>
+      )}
       <DialogContent className="p-0 max-w-xl">
         <DonateDialog />
       </DialogContent>
     </Dialog>
   )
-}
+}, "BuyDonateModal")

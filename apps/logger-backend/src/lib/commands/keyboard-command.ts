@@ -1,20 +1,22 @@
-import { loggerBot } from "../../shared/bot/bot.ts"
+import { Bot } from "gramio"
 import { stateToKeyboard } from "../../shared/bot/keyboards.ts"
 import { validateRequest } from "../../utils/validate-request.ts"
 
-loggerBot.command("keyboard", async (ctx) => {
-  if (!ctx.from) {
-    return
-  }
+export function keyboardCommand(bot: Bot) {
+  bot.command("keyboard", async (ctx) => {
+    if (!ctx.from) {
+      return
+    }
 
-  const userId = ctx.from.id
-  const isAdmin = await validateRequest(userId);
+    const userId = ctx.from.id
+    const isAdmin = await validateRequest(userId);
 
-  if (!isAdmin) {
-    return ctx.reply('У вас нет доступа к этой команде');
-  }
+    if (!isAdmin) {
+      return ctx.reply('У вас нет доступа к этой команде');
+    }
 
-  return ctx.reply("Выберите действие", {
-    reply_markup: stateToKeyboard["main"]
-  });
-})
+    return ctx.reply("Выберите действие", {
+      reply_markup: stateToKeyboard["main"]
+    });
+  })
+}

@@ -110,12 +110,17 @@ import { deleteAccountRoute, restoreAccountRoute } from '#routes/user/delete-acc
 import { getUserAvatarRoute } from '#routes/user/get-user-avatar.ts';
 import { uploadAvatarRoute } from '#routes/user/upload-avatar.ts';
 import { connectServiceRoute } from '#routes/user/connect-service.ts';
+import { collectStats } from '#middlewares/collect-stats.ts';
+import { subscribeCollectStats } from '#subscribers/sub-collect-stats.ts';
+import { getPublicStatsRoute } from '#routes/public/get-public-stats.ts';
 
 async function startNats() {
   await initNats()
   await watcher()
   subscribeUserStatus()
   natsLogger.success("Users status subscribed")
+  subscribeCollectStats()
+  natsLogger.success("Collect stats subscribed")
 
   // impl this to minecraft backend
   // subscribePlayerGroup()
@@ -149,26 +154,14 @@ export const shared = new Hono()
   .route("/", getModpacksRoute)
   .route("/", getServerIpRoute)
   .route("/", getMediaRoute)
+  .route("/", getPublicStatsRoute)
 
 export const admin = new Hono()
-  .basePath('/admin')
+  .basePath('/private')
   .use(validateRequest("prevent"))
   .use(adminMiddleware())
-  // todo: impl minecraft routes in minecraft backend
-  // .route('/', callServerCommandRoute)
-  // .route("/", createAuthImageRoute)
-  // .route("/", getAuthImagesRoute)
-  // .route("/", createMinecraftItemRoute)
-  // todo: impl news sub-routes in different route
-  // .route("/", deleteNewsRoute)
-  // .route("/", createNewsRoute)
   .route("/", getTicketsRoute)
   .route("/", getReportsRoute)
-
-export const moderator = new Hono()
-  .basePath("/moderator")
-  .use(validateRequest("prevent"))
-  .use(adminMiddleware())
   .route("/", createUserRestrictRoute)
 
 export const comment = new Hono()
@@ -192,12 +185,10 @@ export const category = new Hono()
 
 export const thread = new Hono()
   .basePath('/thread')
-  // #public routes
   .use(validateRequest())
   .route("/", getThreadRoute)
   .route("/", getThreadsByOwnerRoute)
 
-  // #private routes
   .use(validateRequest("prevent"))
   .use(userStatus())
   .route("/", getThreadPreviewRoute)
@@ -228,12 +219,10 @@ export const reaction = new Hono()
 export const user = new Hono()
   .basePath('/user')
 
-  // #public routes
   .use(validateRequest())
   .route("/", getUserProfileRoute)
   //--------------------------------------
 
-  // #private routes
   .use(validateRequest("prevent"))
   .use(userStatus())
   .route("/", getMeRoute)
@@ -326,11 +315,9 @@ export const search = new Hono()
 
 export const root = new Hono()
   .basePath("/")
-  // #public routes
   .route("/", getHealthRoute)
   //--------------------------------------
 
-  // #private routes
   .use(validateRequest("prevent"))
   .route("/", connectServiceRoute)
   //--------------------------------------
@@ -342,12 +329,12 @@ const app = new Hono<Env>()
   .use(rateLimiterMiddleware())
   .use(timeoutMiddleware())
   .use(timing())
+  .use(collectStats())
   .use(honoLogger())
   .use(contextStorage())
-  .route("/", root)
   .route("/", shared)
+  .route("/", root)
   .route('/', admin)
-  .route("/", moderator)
   .route('/', user)
   .route("/", thread)
   .route("/", category)
@@ -358,7 +345,7 @@ const app = new Hono<Env>()
   .route("/", post)
   .route("/", report)
 
-showRoutes(app, { verbose: false });
+// showRoutes(app, { verbose: false });
 
 Bun.serve({ port: Bun.env.FORUM_BACKEND_PORT!, fetch: app.fetch })
 

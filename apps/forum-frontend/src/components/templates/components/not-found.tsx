@@ -1,11 +1,10 @@
 import { CustomLink } from '#components/shared/link'
-import { PageWrapper } from '#components/wrappers/components/page-wrapper'
 import { Typography } from '@repo/ui/src/components/typography'
 import { IconSquareRoundedX } from '@tabler/icons-react'
 
 export const NotFound = () => {
   return (
-    <PageWrapper className="flex flex-col gap-y-6">
+    <div className="h-screen w-full items-center justify-center flex overflow-hidden px-4 flex-col gap-y-6">
       <div className="flex flex-col items-center justify-center gap-y-4">
         <div className="flex items-center justify-center rounded-2xl p-4 bg-shark-50">
           <IconSquareRoundedX size={64} className="text-shark-950" />
@@ -21,6 +20,6 @@ export const NotFound = () => {
           </CustomLink>
         </div>
       </div>
-    </PageWrapper>
+    </div>
   )
 }

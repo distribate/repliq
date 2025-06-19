@@ -8,11 +8,17 @@ async function getPostViewers(id: string) {
   const query = await forumDB
     .selectFrom("posts_views")
     .innerJoin("users", "users.nickname", "posts_views.nickname")
-    .select([
+    .leftJoin("users_subs", "users.nickname", "users_subs.nickname")
+    .select(eb => [
       "posts_views.created_at",
       "users.nickname",
       "users.name_color",
-      "users.donate"
+      eb.case()
+        .when('users_subs.id', 'is not', null)
+        .then(true)
+        .else(false)
+        .end()
+        .as('is_donate'),
     ])
     .where("post_id", "=", id)
     .execute()

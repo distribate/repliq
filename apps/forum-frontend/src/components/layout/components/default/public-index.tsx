@@ -3,6 +3,10 @@ import { motion } from 'framer-motion'
 import { CustomLink } from "#components/shared/link"
 import { Button } from "@repo/ui/src/components/button"
 import { Footer } from "./footer"
+import { reatomResource, withCache, withDataAtom, withStatusesAtom } from "@reatom/async"
+import { forumSharedClient } from "@repo/shared/api/forum-client"
+import { reatomComponent } from "@reatom/npm-react"
+import { AnimatedNumber } from "./animated-number"
 
 const fadeInUp = {
   hidden: { opacity: 0, y: 60 },
@@ -63,6 +67,67 @@ const features = [
   }
 ]
 
+const publicStatsResource = reatomResource(async (ctx) => {
+  const res = await forumSharedClient.shared["get-public-stats"].$get()
+  const data = await res.json()
+
+  if ("error" in data) {
+    return null;
+  }
+
+  return {
+    threads: Number(data.data.threads_count),
+    users: Number(data.data.users_count),
+    posts: Number(data.data.posts_count)
+  }
+}).pipe(withStatusesAtom(), withCache(), withDataAtom({
+  users: 0,
+  threads: 0,
+  posts: 0
+}))
+
+const ForumStats = reatomComponent(({ ctx }) => {
+  const data = ctx.spy(publicStatsResource.dataAtom)
+
+  return (
+    <>
+      <div className="text-center">
+        <AnimatedNumber
+          className='text-3xl font-bold text-pink-300 mb-1'
+          springOptions={{
+            bounce: 0,
+            duration: 2000,
+          }}
+          value={data?.users ?? 50}
+        />
+        <div className="text-shark-50">Участников</div>
+      </div>
+      <div className="text-center">
+        <AnimatedNumber
+          className='text-3xl font-bold text-pink-300 mb-1'
+          springOptions={{
+            bounce: 0,
+            duration: 2000,
+          }}
+          value={data?.threads ?? 50}
+        />
+        <div className="text-shark-50">Тредов</div>
+      </div>
+      <div className="text-center">
+        <AnimatedNumber
+          className='text-3xl font-bold text-pink-300 mb-1'
+          springOptions={{
+            bounce: 0,
+            duration: 2000,
+          }}
+          value={data?.posts ?? 50}
+        />
+        <div className="text-shark-50">Постов</div>
+      </div>
+    </>
+  )
+}, "ForumStats")
+
 export const PublicVariant = () => {
   return (
     <div className="min-h-screen landing-background *:px-2">
@@ -108,18 +173,7 @@ export const PublicVariant = () => {
           <motion.div
             variants={fadeInUp} className="grid grid-cols-3 gap-8 max-w-2xl mx-auto"
           >
-            <div className="text-center">
-              <div className="text-3xl font-bold text-pink-300 mb-1">1К+</div>
-              <div className="text-shark-50">Участников</div>
-            </div>
-            <div className="text-center">
-              <div className="text-3xl font-bold text-pink-300 mb-1">500+</div>
-              <div className="text-shark-50">Тредов</div>
-            </div>
-            <div className="text-center">
-              <div className="text-3xl font-bold text-pink-300 mb-1">2К+</div>
-              <div className="text-shark-50">Лайков</div>
-            </div>
+            <ForumStats />
           </motion.div>
         </motion.div>
       </section>

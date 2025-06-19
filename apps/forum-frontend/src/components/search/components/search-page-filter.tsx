@@ -2,9 +2,8 @@ import { ChevronDown } from "lucide-react";
 import { Button } from "@repo/ui/src/components/button.tsx";
 import { Typography } from "@repo/ui/src/components/typography.tsx";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@repo/ui/src/components/dropdown-menu.tsx";
-import { searchPageAtom, SearchPageQuery } from "#components/search/models/search-page.model";
+import { searchPageAtom, SearchPageQuery, searchPageTypeAtom } from "#components/search/models/search-page.model";
 import { reatomComponent } from "@reatom/npm-react";
-import { searchTypeParamAtom } from "../models/search-related.model";
 
 type SearchPageFilter = {
   title: string;
@@ -18,7 +17,7 @@ const SEARCH_PAGE_FILTER: SearchPageFilter[] = [
 
 export const SearchPageFilter = reatomComponent(({ ctx }) => {
   const searchState = ctx.spy(searchPageAtom)
-  const type = ctx.spy(searchTypeParamAtom)
+  const type = ctx.spy(searchPageTypeAtom)
 
   return (
     <DropdownMenu>

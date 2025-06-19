@@ -1,11 +1,24 @@
 import { Typography } from "@repo/ui/src/components/typography.tsx";
 import { Skeleton } from "@repo/ui/src/components/skeleton";
-import { UserPreviewCard } from "#components/cards/user-preview-card/components/user-preview-card";
 import { reatomComponent } from "@reatom/npm-react";
 import { onConnect } from "@reatom/framework";
 import { latestUsersAction } from "./latest-reg-users.model";
+import { UserPreviewCard } from "#components/cards/user-preview-card/user-preview-card";
 
 onConnect(latestUsersAction.dataAtom, (ctx) => latestUsersAction(ctx, { limit: 6 }))
+
+const LatestRegUsersSkeleton = () => {
+  return (
+    <>
+      <Skeleton className="h-full w-full" />
+      <Skeleton className="h-full w-full" />
+      <Skeleton className="h-full w-full" />
+      <Skeleton className="h-full w-full" />
+      <Skeleton className="h-full w-full" />
+      <Skeleton className="h-full w-full" />
+    </>
+  )
+}
 
 export const LatestRegUsers = reatomComponent(({ ctx }) => {
   const data = ctx.spy(latestUsersAction.dataAtom)
@@ -16,16 +29,7 @@ export const LatestRegUsers = reatomComponent(({ ctx }) => {
         Новые пользователи
       </Typography>
       <div className="grid grid-cols-6 2xl:grid-cols-7 gap-2 w-full">
-        {ctx.spy(latestUsersAction.statusesAtom).isPending && (
-          <>
-            <Skeleton className="h-full w-full" />
-            <Skeleton className="h-full w-full" />
-            <Skeleton className="h-full w-full" />
-            <Skeleton className="h-full w-full" />
-            <Skeleton className="h-full w-full" />
-            <Skeleton className="h-full w-full" />
-          </>
-        )}
+        {ctx.spy(latestUsersAction.statusesAtom).isPending && <LatestRegUsersSkeleton/>}
         {data && data.map(user => <UserPreviewCard key={user.nickname} {...user} />)}
       </div>
     </div>

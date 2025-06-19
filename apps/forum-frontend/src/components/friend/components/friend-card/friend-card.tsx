@@ -38,10 +38,10 @@ const FriendNote = reatomComponent<FriendCardNoteProps>(({
   );
 }, "FriendCardNote")
 
-type FriendCardProps = Pick<UserDetailed, "nickname" | "real_name" | "description" | "donate"> & FriendWithDetails
+type FriendCardProps = Pick<UserDetailed, "nickname" | "real_name" | "description" | "is_donate"> & FriendWithDetails
 
 export const FriendCard = reatomComponent<FriendCardProps>(({
-  ctx, real_name, description, donate, friend_id, is_pinned, note, nickname, name_color
+  ctx, real_name, description, is_donate, friend_id, is_pinned, note, nickname, name_color
 }) => {
   return (
     <FriendCardLayout data-view={ctx.spy(friendsViewAtom).viewType}>
@@ -54,10 +54,10 @@ export const FriendCard = reatomComponent<FriendCardProps>(({
       <div className="flex flex-col group-data-[view=grid]:justify-between h-full sm:gap-y-1 w-full">
         <div className="flex items-start lg:items-center gap-1 w-full">
           <CustomLink to={createIdLink("user", nickname)} className="flex truncate lg:flex-row flex-col lg:items-center gap-1">
-            <UserNickname nickname={nickname} className="text-lg leading-3" nicknameColor={name_color} />
+            <UserNickname nickname={nickname} className="text-lg leading-6" nicknameColor={name_color} />
             {real_name && <UserRealName real_name={real_name} with_annotation={false} />}
           </CustomLink>
-          <UserDonate donate={donate} />
+          <UserDonate is_donate={is_donate} />
         </div>
         {description && (
           <div

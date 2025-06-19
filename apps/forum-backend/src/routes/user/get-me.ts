@@ -54,7 +54,7 @@ export const getMeRoute = new Hono()
         data: {
           ...user,
           cover_image,
-          donate: user.donate satisfies UserDonateVariant,
+          is_donate: user.is_donate,
           preferences
         }
       }

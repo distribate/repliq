@@ -1,19 +1,20 @@
 import {
   SearchPageQuery,
   searchPageResultsAtom,
+  searchPageTypeAtom,
   SearchResultsAll,
 } from "#components/search/models/search-page.model";
 import { SEARCH_PAGE_LIMIT } from "@repo/shared/constants/limits.ts";
 import { reatomAsync, withStatusesAtom } from "@reatom/async";
-import { searchTypeParamAtom } from "./search-related.model";
 import { forumSearchClient } from "@repo/shared/api/forum-client";
 
 type GetSearchResults = {
-  queryValue: string;
+  query: string;
   limit: number;
 } & (
   | { type: "threads"; threadsType: Pick<SearchPageQuery, "type">["type"] }
   | { type: "users" }
+  | { type: "all" }
 )
 
 export type SearchUser = {
@@ -27,10 +28,10 @@ export type SearchThread = {
 }
 
 async function getSearchThreads({
-  queryValue, limit
+  query, limit
 }: Omit<GetSearchResults, "type">) {
   const res = await forumSearchClient.search["get-search"].$get({
-    query: { type: "thread", queryValue, limit: `${limit}` }
+    query: { type: "thread", queryValue: query, limit: `${limit}` }
   })
   const data = await res.json()
 
@@ -40,10 +41,10 @@ async function getSearchThreads({
 }
 
 async function getSearchUsers({
-  queryValue, limit
+  query, limit
 }: Omit<GetSearchResults, "type">) {
   const res = await forumSearchClient.search["get-search"].$get({
-    query: { type: "user", queryValue, limit: `${limit}` }
+    query: { type: "user", queryValue: query, limit: `${limit}` }
   })
   const data = await res.json()
 
@@ -53,30 +54,40 @@ async function getSearchUsers({
 }
 
 export async function getSearchResults({
-  type, queryValue, limit
+  type, query, limit
 }: GetSearchResults & { limit: number }): Promise<SearchResultsAll | null> {
   switch (type) {
+    case "all":
+      const [threads, users] = await Promise.all([
+        getSearchThreads({ query, limit }),
+        getSearchUsers({ query, limit })
+      ]) 
+
+      const data = [...threads ?? [], ...users ?? []]
+
+      console.log(data)
+      
+      return data;
     case "threads":
-      return getSearchThreads({ queryValue, limit });
+      return getSearchThreads({ query, limit });
     case "users":
-      return queryValue ? getSearchUsers({ queryValue, limit }) : null;
+      return getSearchUsers({ query, limit })
     default:
       return null;
   }
 }
 
 export const handleSearchAction = reatomAsync(async (ctx, query: string) => {
-  const type = ctx.get(searchTypeParamAtom)
-  if (!type) return;
+  const type = ctx.get(searchPageTypeAtom)
 
   return await ctx.schedule(() =>
-    getSearchResults({ type, queryValue: query, limit: SEARCH_PAGE_LIMIT, threadsType: "user" })
+    getSearchResults({ type, query, limit: SEARCH_PAGE_LIMIT, threadsType: "user" })
   )
 }, {
   name: "handleSearchAction",
   onFulfill: (ctx, res) => {
     if (!res) return;
 
-    searchPageResultsAtom(ctx, res.length ? res : null)
+    searchPageResultsAtom(ctx, res.length > 0 ? res : null)
   }
 }).pipe(withStatusesAtom())

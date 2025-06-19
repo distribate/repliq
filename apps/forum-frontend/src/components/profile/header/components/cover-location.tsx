@@ -8,7 +8,6 @@ const Location = lazy(() => import("#components/user/location/components/user-lo
 
 export const UserCoverLocation = reatomComponent(({ ctx }) => {
   const isOnlineInGame = ctx.spy(userGameStatusResource.dataAtom)?.type === 'online'
-
   if (!isOnlineInGame) return null;
 
   return (

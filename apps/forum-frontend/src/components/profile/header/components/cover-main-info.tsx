@@ -34,7 +34,7 @@ export const UserCoverMainInfo = reatomComponent(({ ctx }) => {
             nicknameColor={requestedUser.name_color}
             className="text-xl lg:text-3xl"
           />
-          <UserDonate donate={requestedUser.donate} />
+          <UserDonate is_donate={requestedUser.is_donate} />
         </div>
         {requestedUser.real_name && <UserRealName real_name={requestedUser.real_name} />}
       </div>

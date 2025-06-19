@@ -1,12 +1,12 @@
 import { Skeleton } from "@repo/ui/src/components/skeleton.tsx";
 import {
   searchPageAtom,
+  searchPageTypeAtom,
 } from "#components/search/models/search-page.model";
 import { handleSearchAction, SearchThread, SearchUser } from "#components/search/models/search.model";
 import { useInView } from "react-intersection-observer";
 import { SEARCH_PAGE_LIMIT } from "@repo/shared/constants/limits.ts";
 import { reatomComponent, useUpdate } from "@reatom/npm-react";
-import { searchTypeParamAtom } from "../models/search-related.model";
 import { ContentNotFound } from "#components/templates/components/content-not-found";
 import { searchPageResultsAtom } from "#components/search/models/search-page.model";
 import { SearchPageThread, SearchPageUser } from "./search-page-user";
@@ -108,8 +108,14 @@ export const SearchPageResults = reatomComponent(({ ctx }) => {
 
   return (
     <>
-      {ctx.spy(searchTypeParamAtom) === "users" && <SearchPageUsers />}
-      {ctx.spy(searchTypeParamAtom) === "threads" && <SearchPageThreads />}
+      {ctx.spy(searchPageTypeAtom) === "users" && <SearchPageUsers />}
+      {ctx.spy(searchPageTypeAtom) === "threads" && <SearchPageThreads />}
+      {ctx.spy(searchPageTypeAtom) === 'all' && (
+        <>
+          <SearchPageUsers />
+          <SearchPageThreads />
+        </>
+      )}
       <InViewer />
     </>
   );

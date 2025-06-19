@@ -2,7 +2,7 @@ import { reatomResource, withCache, withDataAtom, withStatusesAtom } from "@reat
 import { forumAdminClient } from "@repo/shared/api/forum-client"
 
 async function getTickets() {
-	const res = await forumAdminClient.admin["get-tickets"].$get()
+	const res = await forumAdminClient.private["get-tickets"].$get()
 	const data = await res.json()
 
 	if ("error" in data) return null

@@ -8,7 +8,7 @@ const inputVariants = cva(
     variants: {
       variant: {
         default: "border-none text-sm text-shark-50 placeholder:text-shark-300",
-        form: "h-12 border border-transparent focus-visible:border-caribbean-green-200/40 text-[16px] placeholder:text-shark-300",
+        form: "h-12 border-2 border-transparent focus-visible:border-green-500 text-[16px] placeholder:text-shark-300",
       },
       status: {
         default: "border-black/80",

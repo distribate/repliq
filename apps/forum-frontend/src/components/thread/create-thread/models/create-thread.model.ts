@@ -10,11 +10,22 @@ import ky from "ky";
 import { encode } from "cbor-x";
 import { CreateThreadResponse } from "@repo/types/routes-types/create-thread-types";
 import { fileArrayToUint8Array } from "@repo/lib/helpers/file-array-to-uint8-array.ts";
-import { createThreadFormReset, threadFormCategoryAtom, threadFormContentAtom, threadFormDescriptionAtom, threadFormImagesAtom, threadFormPermissionAtom, threadFormPreferencesAtom, threadFormTagsAtom, threadFormTitleAtom, threadFormVisibilityAtom } from "./thread-form.model";
-import { createIdLink } from "@repo/lib/utils/create-link";
 import { 
-  threadCategorySchema, threadContentSchema, threadDescriptionSchema, 
-  threadTitleSchema, threadVisibilitySchema 
+  createThreadFormReset, 
+  threadFormCategoryAtom, 
+  threadFormContentAtom, 
+  threadFormDescriptionAtom,
+  threadFormImagesAtom, 
+  threadFormPermissionAtom, 
+  threadFormIsCommentAtom, 
+  threadFormTagsAtom, 
+  threadFormTitleAtom, 
+  threadFormVisibilityAtom
+} from "./thread-form.model";
+import { createIdLink } from "@repo/lib/utils/create-link";
+import {
+  threadCategorySchema, threadContentSchema, threadDescriptionSchema,
+  threadTitleSchema, threadVisibilitySchema
 } from "@repo/types/schemas/thread/create-thread-schema";
 
 const createThreadSchemaV2 = z
@@ -42,10 +53,6 @@ const createThreadSchemaV2 = z
     }
   });
 
-export function getContentLimit(images: Array<File> | string[] | null): number {
-  return images && images.length > 0 ? THREAD_CONTENT_LIMIT_DEFAULT[1] : THREAD_CONTENT_LIMIT_DEFAULT[2];
-}
-
 const createThreadSchemaRequest = initial.omit({
   images: true
 }).extend({
@@ -56,37 +63,12 @@ const createThreadSchema = createThreadSchemaRequest.extend({
   images: z.array(z.instanceof(File)).nullable(),
 })
 
-type CreateThread = z.infer<typeof createThreadSchema>;
-
-export async function createThread({
-  category_id, title, visibility, content, description,
-  images: rawImages, is_comments, permission, tags
-}: CreateThread) {
-  const url = forumThreadClient.thread["create-thread"].$url()
-  const images = await fileArrayToUint8Array(rawImages)
-
-  let structure: z.infer<typeof createThreadSchemaRequest> = {
-    category_id, title, visibility, content, description, tags, permission, is_comments, images
-  };
-
-  const encodedData = encode(structure);
-  const res = await ky.post(url, {
-    body: encodedData,
-    headers: { 'Content-Type': 'application/cbor' },
-    credentials: "include"
-  })
-
-  const data = await res.json<CreateThreadResponse>();
-  if (!data || "error" in data) return null;
-  return data;
-}
-
 export const createThreadAction = reatomAsync(async (ctx) => {
   const title = ctx.get(threadFormTitleAtom)
   const description = ctx.get(threadFormDescriptionAtom)
   const visibility = ctx.get(threadFormVisibilityAtom)
   const permission = ctx.get(threadFormPermissionAtom)
-  const is_comments = ctx.get(threadFormPreferencesAtom).is_comments
+  const is_comments = ctx.get(threadFormIsCommentAtom)
   const tags = ctx.get(threadFormTagsAtom)
   const category_id = ctx.get(threadFormCategoryAtom)
   const nodesContent = ctx.get(threadFormContentAtom)
@@ -113,15 +95,7 @@ export const createThreadAction = reatomAsync(async (ctx) => {
   }
 
   return await createThread({
-    images: imagesFiles, 
-    content: stringContent,
-    category_id, 
-    title, 
-    visibility, 
-    tags, 
-    description,
-    is_comments,
-    permission,
+    images: imagesFiles, content: stringContent, category_id, title, visibility, tags, description, is_comments, permission,
   });
 }, {
   name: "createThreadAction",
@@ -151,3 +125,30 @@ export const createThreadAction = reatomAsync(async (ctx) => {
     }
   }
 }).pipe(withStatusesAtom())
+
+export function getContentLimit(images: Array<File> | string[] | null): number {
+  return images && images.length > 0 ? THREAD_CONTENT_LIMIT_DEFAULT[1] : THREAD_CONTENT_LIMIT_DEFAULT[2];
+}
+
+export async function createThread({
+  category_id, title, visibility, content, description,
+  images: rawImages, is_comments, permission, tags
+}: z.infer<typeof createThreadSchema>) {
+  const url = forumThreadClient.thread["create-thread"].$url()
+  const images = await fileArrayToUint8Array(rawImages)
+
+  let structure: z.infer<typeof createThreadSchemaRequest> = {
+    category_id, title, visibility, content, description, tags, permission, is_comments, images
+  };
+
+  const encodedData = encode(structure);
+  const res = await ky.post(url, {
+    body: encodedData,
+    headers: { 'Content-Type': 'application/cbor' },
+    credentials: "include"
+  })
+
+  const data = await res.json<CreateThreadResponse>();
+  if (!data || "error" in data) return null;
+  return data;
+}

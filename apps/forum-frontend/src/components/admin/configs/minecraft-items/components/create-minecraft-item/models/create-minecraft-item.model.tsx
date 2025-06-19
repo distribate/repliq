@@ -14,22 +14,23 @@ type CreateMinecraftItemMutation = {
 }
 
 async function createMinecraftItem({
-  file,
-  meta,
+  // @ts-expect-error
+  file, meta,
 }: z.infer<typeof createMinecraftItemSchema>) {
-  const url = forumAdminClient.admin["create-minecraft-item"].$url()
+  // const url = forumAdminClient.admin["create-minecraft-item"].$url()
 
-  const fd = new FormData()
+  // const fd = new FormData()
 
-  fd.append("file", file)
-  fd.append("meta", JSON.stringify({ name: meta.name, description: meta.description }))
+  // fd.append("file", file)
+  // fd.append("meta", JSON.stringify({ name: meta.name, description: meta.description }))
 
-  const res = await ky.post(url, {
-    body: fd,
-    credentials: "include",
-  });
+  // const res = await ky.post(url, {
+  //   body: fd,
+  //   credentials: "include",
+  // });
 
-  return await res.json();
+  // return await res.json();
+  return undefined;
 }
 
 export const createMinecraftItemAction = reatomAsync(async (ctx, values: CreateMinecraftItemMutation) => {

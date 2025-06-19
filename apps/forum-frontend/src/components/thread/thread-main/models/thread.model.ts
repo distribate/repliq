@@ -11,9 +11,7 @@ import { ThreadDetailed, ThreadOwner } from "@repo/types/entities/thread-type";
 export async function getThreadModel(threadId: string) {
   const res = await forumThreadClient.thread['get-thread'][':threadId'].$get({ param: { threadId }, });
   const data = await res.json();
-
   if (!data || 'error' in data) return null;
-
   return data.data;
 }
 
@@ -22,7 +20,6 @@ export const threadContentfallback = [
 ];
 
 export const threadParamAtom = atom<string | null>(null, "threadParam").pipe(withHistory(1))
-export const threadPreviewAtom = atom<{ title: string, id: string } | null>(null, "threadPreview")
 export const threadAtom = atom<Omit<ThreadDetailed, "content" | "owner"> | null>(null, "thread").pipe(withReset())
 export const threadOwnerAtom = atom<ThreadOwner | null>(null, "threadOwner").pipe(withReset())
 export const threadContentAtom = atom<ThreadDetailed["content"] | null>(null, "threadContent").pipe(withReset())
@@ -30,19 +27,11 @@ export const threadContentAtom = atom<ThreadDetailed["content"] | null>(null, "t
 export const threadModeAtom = atom<"read" | "edit">("read", "threadMode")
 export const threadIsEditableAtom = atom(false, "threadIsEditable")
 
-function resetThread(ctx: Ctx) {
+export function resetThread(ctx: Ctx) {
   threadAtom.reset(ctx)
   threadOwnerAtom.reset(ctx)
   threadContentAtom.reset(ctx)
 }
-
-threadParamAtom.onChange((ctx, state) => {
-  const prev = ctx.get(threadParamAtom.history)[1];
-
-  if (prev !== undefined && prev !== state) {
-    threadPreviewAtom(ctx, null);
-  }
-});
 
 threadOwnerAtom.onChange((ctx, state) => {
   if (!state) return;

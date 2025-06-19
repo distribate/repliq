@@ -48,16 +48,17 @@ export const updateCurrentUserAction = reatomAsync(async (ctx, values: any) => {
     const currentUserNickname = ctx.get(currentUserNicknameAtom)
     if (!currentUserNickname) return;
 
-    currentUserAtom(ctx, (state) => {
-      if (!state) return null;
-      return { ...state, ...res }
-    })
+    currentUserAtom(ctx,
+      (state) => state ? ({ ...state, ...res }) : null
+    )
 
     const requestedUser = ctx.get(requestedUserAtom)
     if (!requestedUser) return;
 
     if (currentUserNickname === requestedUser.nickname) {
-      requestedUserAtom(ctx, (state) => state ? ({ ...state, ...res, }) : null)
+      requestedUserAtom(ctx, 
+        (state) => state ? ({ ...state, ...res, }) : null
+      )
     }
   },
   onReject: (_, error) => {
@@ -78,18 +79,18 @@ export const updateCurrentUserSettingsAction = reatomAsync(async (_, values: Upd
     });
 
     const currentUserNickname = ctx.get(currentUserNicknameAtom)
-    const requestedUser = ctx.get(requestedUserAtom)
-    if (!currentUserNickname || !requestedUser) return;
+    if (!currentUserNickname) return;
 
-    currentUserAtom(ctx, (state) => state
-      ? ({ ...state, preferences: { ...state.preferences, ...res }, })
-      : null
+    currentUserAtom(ctx, 
+      (state) => state ? ({ ...state, preferences: { ...state.preferences, ...res } }) : null
     )
 
+    const requestedUser = ctx.get(requestedUserAtom)
+    if (!requestedUser) return;
+    
     if (currentUserNickname === requestedUser.nickname) {
-      requestedUserAtom(ctx, (state) => state
-        ? ({ ...state, preferences: { ...state.preferences, ...res }, })
-        : null
+      requestedUserAtom(ctx, 
+        (state) => state ? ({ ...state, preferences: { ...state.preferences, ...res } }): null
       )
     }
   },

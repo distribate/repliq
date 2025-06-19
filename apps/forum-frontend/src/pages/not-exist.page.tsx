@@ -1,4 +1,3 @@
-import { PageWrapper } from '#components/wrappers/components/page-wrapper'
 import { UserNotExistCounter } from '#components/templates/components/user-not-exist-counter'
 import { CustomLink } from '#components/shared/link'
 import { notExistRoute } from '#routes/public-routes'
@@ -12,7 +11,7 @@ export function NotExistRouteComponent() {
   const { redirect_nickname } = params
 
   return (
-    <PageWrapper className="flex flex-col gap-y-6">
+    <div className="flex overflow-hidden px-4 flex-col gap-y-6 h-screen w-full items-center justify-center">
       <div className="flex flex-col items-center justify-center gap-y-4">
         <p className="text-5xl text-white">Юзер не найден {`;(`}</p>
         <div className="flex py-0.5 rounded-xl items-center gap-1 justify-between bg-white/30 backdrop-blur-md overflow-hidden">
@@ -30,6 +29,6 @@ export function NotExistRouteComponent() {
         </div>
         <UserNotExistCounter redirectUser={redirect_nickname as string} />
       </div>
-    </PageWrapper>
+    </div>
   )
 }

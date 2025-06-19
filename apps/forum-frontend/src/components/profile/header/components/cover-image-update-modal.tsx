@@ -2,12 +2,13 @@ import { CloudUpload, ImageUp } from "lucide-react";
 import { Typography } from "@repo/ui/src/components/typography.tsx";
 import { HoverCardItem } from "@repo/ui/src/components/hover-card.tsx";
 import { DynamicModal } from "../../../modals/dynamic-modal/components/dynamic-modal.tsx";
-import { ChangeEvent, Suspense } from "react";
+import { ChangeEvent, Suspense, useRef } from "react";
 import { Skeleton } from "@repo/ui/src/components/skeleton.tsx";
 import { reatomComponent } from "@reatom/npm-react";
 import { uploadBackgroundImageAction } from "#components/profile/header/models/cover-image.model.ts";
 import { Image } from 'lucide-react';
 import { imagesLibraryAction } from '#components/profile/header/models/cover-image.model.ts';
+import { spawn } from "@reatom/framework";
 
 const BackgroundImagesSkeleton = () => {
   return (
@@ -28,6 +29,10 @@ const CoverImagesList = reatomComponent(({ ctx }) => {
     return <BackgroundImagesSkeleton />
   }
 
+  const handle = (name: string) => {
+    void spawn(ctx, async (spawnCtx) => uploadBackgroundImageAction(spawnCtx, { fileName: name, type: "default" }))
+  }
+
   return (
     <>
       {!defaultImages && <Typography>Изображения не найдены</Typography>}
@@ -36,7 +41,7 @@ const CoverImagesList = reatomComponent(({ ctx }) => {
           key={id}
           className="flex flex-col rounded-lg overflow-hidden border border-shark-800 
             relative hover:bg-secondary-color cursor-pointer group transition-all duration-150 w-full"
-          onClick={() => uploadBackgroundImageAction(ctx, { type: "default", fileName: name })}
+          onClick={() => handle(name)}
         >
           <img
             src={signedUrl}
@@ -82,25 +87,27 @@ const CoverImageDefaultImagesModal = reatomComponent(({ ctx }) => {
 }, "CoverImagesListDefaultImagesModal")
 
 const CoverImageUploadCustom = reatomComponent(({ ctx }) => {
-  const handleCoverImageInput = (e: ChangeEvent<HTMLInputElement>) => {
-    const file = e.target?.files ? e.target.files[0] : null;
+  const ref = useRef<HTMLInputElement | null>(null)
 
+  const handle = (e: ChangeEvent<HTMLInputElement>) => {
+    const file = e.target?.files ? e.target.files[0] : null;
     if (!file) return;
 
-    uploadBackgroundImageAction(ctx, { file, type: "custom" })
+    void spawn(ctx, async (spawnCtx) => uploadBackgroundImageAction(spawnCtx, { file, type: "custom" }))
   };
 
   return (
-    <HoverCardItem className="relative gap-2 p-6 items-center group">
+    <HoverCardItem onClick={() => ref.current?.click()} className="relative gap-2 p-6 items-center group">
       <CloudUpload size={24} className="text-shark-300" />
       <Typography textSize="large" textColor="shark_white">
         Загрузить своё
       </Typography>
       <input
+        ref={ref}
         type="file"
         id="file"
-        className="absolute right-0 top-0 left-0 bottom-0 opacity-0 w-full"
-        onChange={handleCoverImageInput}
+        className="absolute right-0 top-0 left-0 bottom-0 hidden w-full"
+        onChange={handle}
       />
     </HoverCardItem>
   );

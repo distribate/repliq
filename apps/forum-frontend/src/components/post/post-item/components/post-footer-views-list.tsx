@@ -3,7 +3,6 @@ import {
   postViewsAction,
   PostViewsQuery,
 } from "#components/post/post-item/models/post-views.model";
-import { HoverCardWrapper } from "#components/wrappers/components/hover-card-wrapper";
 import { Skeleton } from "@repo/ui/src/components/skeleton.tsx";
 import { UserNickname } from "#components/user/name/nickname";
 import { Typography } from "@repo/ui/src/components/typography.tsx";
@@ -14,6 +13,7 @@ import { UserPostItem } from '@repo/types/routes-types/get-user-posts-types.ts';
 import { reatomComponent, useUpdate } from "@reatom/npm-react";
 import { CustomLink } from "#components/shared/link";
 import { createIdLink } from "@repo/lib/utils/create-link";
+import { HoverCard, HoverCardContent, HoverCardTrigger } from "@repo/ui/src/components/hover-card";
 
 type PostFooterWithViewsListProps = Pick<PostViewsQuery, "id"> &
   Pick<UserPostItem, "views_count">;
@@ -53,8 +53,8 @@ const Sync = ({ target, enabled }: { target: string, enabled: boolean }) => {
   return null;
 }
 
-const ViewsList = reatomComponent<PostFooterWithViewsListProps & { enabled: boolean }>(({ 
-  ctx, enabled, id, views_count 
+const ViewsList = reatomComponent<PostFooterWithViewsListProps & { enabled: boolean }>(({
+  ctx, enabled, id, views_count
 }) => {
   const postViews = ctx.spy(postViewsAction.dataAtom);
   const isLoading = ctx.spy(postViewsAction.statusesAtom).isPending
@@ -88,17 +88,17 @@ export const PostFooterWithViewsList = ({ id, views_count }: PostFooterWithViews
   const [enabled, setEnabled] = useState<boolean>(false);
 
   return (
-    <HoverCardWrapper
-      trigger={
+    <HoverCard openDelay={1}>
+      <HoverCardTrigger>
         <div onMouseEnter={() => setEnabled(true)}>
           <PostFooterViews views_count={views_count} />
         </div>
-      }
-      content={
-        enabled && (
+      </HoverCardTrigger>
+      <HoverCardContent>
+        {enabled && (
           <ViewsList id={id} enabled={enabled} views_count={views_count} />
-        )
-      }
-    />
+        )}
+      </HoverCardContent>
+    </HoverCard>
   );
 };

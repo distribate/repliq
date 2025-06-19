@@ -8,8 +8,8 @@ import { createReactionSchema } from "@repo/types/schemas/reaction/create-reacti
 import { REACTIONS_LIMIT_DEFAULT, REACTIONS_LIMIT_PREMIUM } from "@repo/shared/constants/routes";
 
 async function validateReactionLimit(nickname: string) {
-  const userDonate = await getUserDonate(nickname)
-  const hasAccess = userDonate.donate !== 'default'
+  const isDonate = await getUserDonate(nickname)
+  const hasAccess = isDonate === true;
   const limit = hasAccess ? REACTIONS_LIMIT_PREMIUM : REACTIONS_LIMIT_DEFAULT
 
   return limit

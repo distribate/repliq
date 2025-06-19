@@ -13,7 +13,7 @@ import { handleAddImagesAction, handleDeleteImageAction } from "../models/edit-t
 import { getUser } from "#components/user/models/current-user.model.ts";
 
 export const FormThreadPreviewImages = reatomComponent(({ ctx }) => {
-  const donate = getUser(ctx).donate
+  const is_donate = getUser(ctx).is_donate
   const threadFormImages = ctx.spy(threadFormImagesAtom)
 
   if (!threadFormImages) return null;
@@ -61,7 +61,7 @@ export const FormThreadPreviewImages = reatomComponent(({ ctx }) => {
             </div>
           )}
           {(threadFormImages.length === 2 && threadFormImages.length < 3) && (
-            donate === "default" ? (
+            !is_donate ? (
               <BuyDonateModal
                 trigger={
                   <div className="flex items-center justify-center rounded-lg bg-shark-900 hover:bg-shark-800 cursor-pointer w-full h-full">

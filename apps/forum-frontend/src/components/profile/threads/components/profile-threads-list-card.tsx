@@ -5,7 +5,6 @@ import { profileThreadsSettingsAtom, } from "#components/profile/threads/models/
 import { Button } from "@repo/ui/src/components/button";
 import { reatomComponent } from "@reatom/npm-react";
 import { CustomLink } from "#components/shared/link";
-import { threadPreviewAtom } from "#components/thread/thread-main/models/thread.model";
 import { createIdLink } from "@repo/lib/utils/create-link";
 
 type ThreadCardProps = {
@@ -55,7 +54,6 @@ export const ProfileThreadsListCard = reatomComponent<ThreadCardProps>(({ id, ti
       </div>
       <CustomLink
         to={createIdLink("thread", id)}
-        onClick={() => threadPreviewAtom(ctx, { id, title })}
         className={`w-full justify-end flex items-center h-full`}
       >
         <Button state="default" className="px-2 hover:bg-shark-700 lg:px-6 py-2">

@@ -5,7 +5,6 @@ import {
   DialogTrigger,
 } from "@repo/ui/src/components/dialog.tsx";
 import { OctagonAlert, Plus } from "lucide-react";
-import { HoverCardWrapper } from "#components/wrappers/components/hover-card-wrapper.tsx";
 import { Separator } from "@repo/ui/src/components/separator.tsx";
 import { onConnect } from "@reatom/framework";
 import { reatomComponent } from "@reatom/npm-react";
@@ -13,10 +12,11 @@ import { ChangeEvent } from "react";
 import { DeleteButton } from "@repo/ui/src/components/detele-button.tsx";
 import { authImagesAction, authImagesAtom, createAuthImageAction } from "../models/auth-images.model.ts";
 import { WindowLoader } from "@repo/ui/src/components/window-loader.tsx";
+import { HoverCard, HoverCardContent, HoverCardTrigger } from "@repo/ui/src/components/hover-card.tsx";
 
 onConnect(authImagesAtom, authImagesAction)
 
-const AuthBackgroundImagesDeleteButton = reatomComponent<{ imageName: string }>(({ 
+const AuthBackgroundImagesDeleteButton = reatomComponent<{ imageName: string }>(({
   imageName
 }) => {
 
@@ -73,9 +73,11 @@ export const AuthBackgroundImages = reatomComponent(({ ctx }) => {
   return (
     <>
       <div className="flex absolute top-6 right-4 w-fit">
-        <HoverCardWrapper
-          trigger={<OctagonAlert size={20} className="text-shark-300" />}
-          content={
+        <HoverCard>
+          <HoverCardTrigger>
+            <OctagonAlert size={20} className="text-shark-300" />
+          </HoverCardTrigger>
+          <HoverCardContent>
             <div className="flex flex-col gap-2 p-2 w-full h-fit">
               <Typography textSize="medium">Ограничения</Typography>
               <Separator />
@@ -84,8 +86,8 @@ export const AuthBackgroundImages = reatomComponent(({ ctx }) => {
                 {50 - authImages.length})
               </Typography>
             </div>
-          }
-        />
+          </HoverCardContent>
+        </HoverCard>
       </div>
       <div className="grid grid-cols-5 auto-rows-auto gap-2 w-fit">
         {authImages.slice(0, 50).map((image, i) => (

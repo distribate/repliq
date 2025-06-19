@@ -8,8 +8,8 @@ import { IconSparkles } from '@tabler/icons-react'
 import { getUser } from '#components/user/models/current-user.model'
 
 const Page = reatomComponent(({ ctx }) => {
-  const donate = getUser(ctx).donate
-  const isValid = donate !== 'default'
+  const is_donate = getUser(ctx).is_donate
+  const isValid = is_donate === true
 
   if (!isValid) return <NoAccessDashboard />
 

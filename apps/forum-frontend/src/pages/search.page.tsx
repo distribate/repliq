@@ -1,23 +1,22 @@
 import { SearchPageInput } from '#components/search/components/search-page-input'
 import { SearchPageResults as Results } from '#components/search/components/search-page-results'
 import { Typography } from '@repo/ui/src/components/typography'
-import { searchPageQueryAtom } from '#components/search/models/search-page.model'
+import { searchPageQueryAtom, searchPageQueryParamsAtom, SearchPageType, searchPageTypeAtom } from '#components/search/models/search-page.model'
 import { SearchPageRelated } from '#components/search/components/search-page-related'
 import { Select, SelectContent, SelectItem, SelectTrigger } from '@repo/ui/src/components/select'
 import { Search } from "lucide-react"
-import { reatomComponent } from '@reatom/npm-react'
-import { DEFAULT_TYPE_PARAM, searchTypeParamAtom } from '#components/search/models/search-related.model'
+import { reatomComponent, useUpdate } from '@reatom/npm-react'
 import { SearchPageHistory } from '#components/search/components/search-history'
 import { Head } from '@unhead/react'
 import { wrapTitle } from '@repo/lib/utils/wrap-title'
+import { searchRoute } from '#routes/protected-routes'
 
 export type Params = {
   query?: string,
-  type?: 'users' | 'threads'
 }
 
 const SearchPageFiltration = reatomComponent(({ ctx }) => {
-  const type = ctx.spy(searchTypeParamAtom)
+  const type = ctx.spy(searchPageTypeAtom)
 
   return (
     <div className="flex flex-col gap-4 w-1/4 h-full p-4 bg-shark-950 rounded-lg border border-shark-800">
@@ -31,8 +30,8 @@ const SearchPageFiltration = reatomComponent(({ ctx }) => {
           </Typography>
           <Select
             defaultValue='users'
-            value={type ?? DEFAULT_TYPE_PARAM}
-            onValueChange={value => searchTypeParamAtom(ctx, value as Params["type"])}
+            value={type}
+            onValueChange={value => searchPageTypeAtom(ctx, value as SearchPageType)}
           >
             <SelectTrigger className="p-0">
               <Typography textSize="medium">
@@ -82,7 +81,8 @@ const SearchPageSection = reatomComponent(({ ctx }) => {
 }, "SearchPageSection")
 
 const SearchHead = reatomComponent(({ ctx }) => {
-  const type = ctx.spy(searchTypeParamAtom) === 'threads' ? "тредов" : "игроков"
+  const target = ctx.spy(searchPageTypeAtom)
+  const type = target === 'threads' ? "тредов" : target === 'users' ? "игроков" : ""
 
   return (
     <Head>
@@ -95,9 +95,16 @@ const SearchHead = reatomComponent(({ ctx }) => {
   )
 }, "SearchHead")
 
+const SyncSearchParams = () => {
+  const {query } = searchRoute.useSearch()
+  useUpdate((ctx) => searchPageQueryParamsAtom(ctx, { query }), [])
+  return null;
+}
+
 export function SearchRouteComponent() {
   return (
     <div className="flex flex-col gap-6 w-full min-h-dvh h-full p-1">
+      <SyncSearchParams/>
       <SearchHead />
       <div
         className="flex justify-between items-center duration-300 ease-in-out transtion-all bg-shark-950 outline-none 

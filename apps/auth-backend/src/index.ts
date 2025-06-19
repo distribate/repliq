@@ -46,7 +46,7 @@ const app = new Hono<Env>()
   .route("/", root)
   .route("/", auth)
 
-showRoutes(app, { verbose: false });
+// showRoutes(app, { verbose: false });
 
 Bun.serve({ port: Bun.env.AUTH_BACKEND_PORT!, fetch: app.fetch });
 

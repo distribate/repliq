@@ -10,6 +10,7 @@ type DynamicModalProps = {
   trigger: ReactNode;
   content: ReactNode;
   contentClassName?: string;
+  triggerClassName?: string,
   autoClose?: boolean
 } & (
     {
@@ -19,7 +20,7 @@ type DynamicModalProps = {
   )
 
 export const DynamicModal = ({
-  content, trigger, contentClassName, withLoader, isPending, autoClose = false,
+  content, trigger, contentClassName, triggerClassName, withLoader, isPending, autoClose = false,
 }: DynamicModalProps) => {
   const [open, setOpen] = useState(false)
   const [operationWasPending, setOperationWasPending] = useState(false);
@@ -48,7 +49,7 @@ export const DynamicModal = ({
 
   return (
     <Dialog open={open} onOpenChange={value => setOpen(value)}>
-      <DialogTrigger>{trigger}</DialogTrigger>
+      <DialogTrigger className={triggerClassName}>{trigger}</DialogTrigger>
       <DialogContent forceMount className={contentClassName}>
         {withLoader ? isPending ? <DialogLoader /> : content : content}
       </DialogContent>

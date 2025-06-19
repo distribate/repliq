@@ -1,6 +1,8 @@
+import { sqliteDB } from "#shared/database/sqlite-db.ts";
 import { zValidator } from "@hono/zod-validator";
 import { getNatsConnection } from "@repo/config-nats/nats-client";
 import { throwError } from "@repo/lib/helpers/throw-error";
+import { logger } from "@repo/lib/utils/logger";
 import { SERVER_USER_EVENT_SUBJECT } from "@repo/shared/constants/nats-subjects";
 import { Hono } from "hono";
 import ky from "ky";
@@ -56,12 +58,14 @@ const STATUS_API = ky.extend({
 })
 
 async function getProxyStats() {
+  const { ip } = await sqliteDB
+    .selectFrom("ip_list")
+    .select("ip")
+    .where("name", "=", "server_proxy")
+    .executeTakeFirstOrThrow()
+
   const res = await STATUS_API
-    .get(`mc.fasberry.su:25565`, {
-      searchParams: {
-        timeout: 1.0
-      }
-    })
+    .get(`${ip}:25565`, { searchParams: { timeout: 1.0 } })
     .json<ServerStatus>()
 
   return res
@@ -86,14 +90,23 @@ type StatusPayload = {
   mspt: number
 }
 
-async function getBisquiteStats() {
+export async function getBisquiteStats() {
   const nc = getNatsConnection()
 
-  const res = await nc.request(SERVER_USER_EVENT_SUBJECT, JSON.stringify({
-    event: "getServerStats"
-  }), { timeout: 2000 })
+  let data: StatusPayload | null = null;
 
-  return res.json<StatusPayload>()
+  try {
+    const res = await nc.request(SERVER_USER_EVENT_SUBJECT, JSON.stringify({ event: "getServerStats" }), { timeout: 1000 })
+    if (res && "mspt" in res) {
+      data = res.json()
+    }
+  } catch (e) {
+    if (e instanceof Error) {
+      logger.error(`${e.message}, getBisquiteStats()`)
+    }
+  }
+
+  return data
 }
 
 export const getStatusRoute = new Hono()
@@ -117,7 +130,7 @@ export const getStatusRoute = new Hono()
           const rawBisquite = await getBisquiteStats()
           const proxy = rawProxy as ServerStatus
 
-          const bisquite = "players" in rawBisquite ? {
+          const bisquite = (rawBisquite && "players" in rawBisquite) ? {
             online: rawBisquite.currentOnline,
             max: rawBisquite.maxPlayers,
             players: rawBisquite.players,

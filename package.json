@@ -12,21 +12,20 @@
     "format": "prettier --write \"**/*.{ts,tsx,md}\""
   },
   "dependencies": {
-    "@neodx/log": "^0.4.1",
-    "drizzle-kit": "^0.31.1",
-    "drizzle-orm": "^0.44.2"
+    "drizzle-kit": "0.31.1",
+    "drizzle-orm": "0.44.2"
   },
   "devDependencies": {
     "concurrently": "9.1.0",
     "eslint": "8.57.1",
     "prettier": "3.4.2",
     "prettier-plugin-tailwindcss": "0.5.14",
-    "turbo": "^2.5.3"
+    "turbo": "2.5.3"
   },
   "engines": {
     "node": ">=18"
   },
-  "name": "fasberry-web",
+  "name": "fasberry-turbo",
   "packageManager": "yarn@4.3.0",
   "workspaces": [
     "apps/*",

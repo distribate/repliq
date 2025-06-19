@@ -3,7 +3,7 @@ import dayjs from "@repo/lib/constants/dayjs-instance.ts";
 import { forumUserClient } from "@repo/shared/api/forum-client";
 import { CoverArea } from "#components/profile/header/components/cover-area";
 import { reatomAsync, withDataAtom, withStatusesAtom } from "@reatom/async";
-import { useAtom, useUpdate } from "@reatom/npm-react";
+import { reatomComponent, useUpdate } from "@reatom/npm-react";
 
 async function getUserBanDetails(nickname: string) {
   const res = await forumUserClient.user["get-user-ban-details"][":nickname"].$get({ param: { nickname } });
@@ -25,8 +25,8 @@ const Sync = ({ target }: { target: string }) => {
   return null;
 }
 
-export const UserBanned = ({ requestedUserNickname }: { requestedUserNickname: string }) => {
-  const [banDetails] = useAtom(userBannedAction.dataAtom)
+export const UserBanned = reatomComponent<{ requestedUserNickname: string }>(({ ctx, requestedUserNickname }) => {
+  const banDetails = ctx.spy(userBannedAction.dataAtom)
 
   return (
     <>
@@ -60,4 +60,4 @@ export const UserBanned = ({ requestedUserNickname }: { requestedUserNickname: s
       )}
     </>
   );
-};
+}, "UserBanned")

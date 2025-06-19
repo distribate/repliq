@@ -1,7 +1,7 @@
 import { getNatsConnection } from "@repo/config-nats/nats-client.ts"
-import { loggerBot } from "../../shared/bot/bot.ts"
 import { SERVER_USER_EVENT_SUBJECT } from "@repo/shared/constants/nats-subjects.ts"
 import { validateRequest } from "../../utils/validate-request.ts"
+import { Bot } from "gramio"
 
 const weatherTitle: Record<WeatherType, string> = {
   rain: 'дождливая',
@@ -17,49 +17,51 @@ const weatherEmojis: Record<WeatherType, string> = {
 
 type WeatherType = 'rain' | 'sun' | 'storm'
 
-loggerBot.command('weather', async (ctx) => {
-  if (!ctx.from) {
-    return
-  }
-
-  if (ctx.chat.id !== -1002049549066) {
-    const userId = ctx.from.id
-    const isAdmin = await validateRequest(userId);
-
-    if (!isAdmin) {
-      return ctx.reply('У вас нет доступа к этой команде');
+export function weatherCommand(bot: Bot) {
+  bot.command('weather', async (ctx) => {
+    if (!ctx.from) {
+      return
     }
-  }
-  
-  if (!ctx.args) {
-    return ctx.send('Укажите тип погоды: rain, sun, storm')
-  }
 
-  const username = `${ctx.from?.firstName} ${ctx.from?.lastName ?? ''}`
+    if (ctx.chat.id !== -1002049549066) {
+      const userId = ctx.from.id
+      const isAdmin = await validateRequest(userId);
 
-  const arg = ctx.args as WeatherType
+      if (!isAdmin) {
+        return ctx.reply('У вас нет доступа к этой команде');
+      }
+    }
 
-  if (arg !== 'rain' && arg !== 'sun' && arg !== 'storm') {
-    return ctx.send('Такого типа погоды не найдено!')
-  }
+    if (!ctx.args) {
+      return ctx.send('Укажите тип погоды: rain, sun, storm')
+    }
 
-  const value = `weather ${arg} BisquiteWorld`
+    const username = `${ctx.from?.firstName} ${ctx.from?.lastName ?? ''}`
 
-  const broadcastMsg = `Юзер {#FABBFB}${username} {#FFFFFF}(tg) установил погоду ${weatherTitle[arg]}`
-  const serverCommandCallbackMsg = `Установлена погода ${weatherTitle[arg]}! ${weatherEmojis[arg]}`
+    const arg = ctx.args as WeatherType
 
-  const nc = getNatsConnection()
+    if (arg !== 'rain' && arg !== 'sun' && arg !== 'storm') {
+      return ctx.send('Такого типа погоды не найдено!')
+    }
 
-  const res = await nc.request(SERVER_USER_EVENT_SUBJECT, JSON.stringify({
-    event: "executeCommand",
-    command: `cmi ${value}`
-  }))
+    const value = `weather ${arg} BisquiteWorld`
 
-  const data = res.json<{ result: string } | { error: string }>()
+    const broadcastMsg = `Юзер {#FABBFB}${username} {#FFFFFF}(tg) установил погоду ${weatherTitle[arg]}`
+    const serverCommandCallbackMsg = `Установлена погода ${weatherTitle[arg]}! ${weatherEmojis[arg]}`
 
-  if ("error" in data) {
-    return ctx.reply(data.error)
-  }
+    const nc = getNatsConnection()
 
-  ctx.reply(serverCommandCallbackMsg)
-})
+    const res = await nc.request(SERVER_USER_EVENT_SUBJECT, JSON.stringify({
+      event: "executeCommand",
+      command: `cmi ${value}`
+    }))
+
+    const data = res.json<{ result: string } | { error: string }>()
+
+    if ("error" in data) {
+      return ctx.reply(data.error)
+    }
+
+    ctx.reply(serverCommandCallbackMsg)
+  })
+}

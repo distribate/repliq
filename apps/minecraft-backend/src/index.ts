@@ -113,7 +113,7 @@ const app = new Hono<Env>()
   .route("/", minecraft)
   .route("/", hooks)
 
-showRoutes(app, { verbose: false });
+// showRoutes(app, { verbose: false });
 
 Bun.serve({ port: Bun.env.MINECRAFT_BACKEND_PORT!, fetch: app.fetch });
 

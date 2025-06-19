@@ -10,6 +10,7 @@ import { PublicRouteComponent } from '#pages/public.layout';
 import { RouteSkeleton } from '#components/templates/components/route-skeleton';
 import { lazy, Suspense } from 'react';
 import { validatePage } from './validation.model';
+import { NewsRouteComponent } from '#pages/news.page';
 
 const ThreadRouteComponent = lazy(() => import("#pages/thread.page").then(m => ({ default: m.ThreadRouteComponent })))
 const UserRouteComponent = lazy(() => import("#pages/user.page").then(m => ({ default: m.UserRouteComponent })))
@@ -31,6 +32,18 @@ export const threadRoute = createRoute({
   component: () => <Suspense><ThreadRouteComponent/></Suspense>,
   loader: reatomLoader(async (ctx, { params }) => threadParamAtom(ctx, params.id as string)),
   path: '/thread/$id',
+});
+
+export const newsRoute = createRoute({
+  getParentRoute: () => publicRoute,
+  component: () => <Suspense><NewsRouteComponent/></Suspense>,
+  path: '/news',
+});
+
+export const changeLogRoute = createRoute({
+  getParentRoute: () => publicRoute,
+  component: () => <Suspense></Suspense>,
+  path: '/news/changelog',
 });
 
 const userRoute = createRoute({
@@ -90,5 +103,7 @@ export const publicRoutes = publicRoute.addChildren([
   storeRoute,
   notOnlineRoute,
   developmentRoute,
-  restrictRoute
+  restrictRoute,
+  newsRoute,
+  changeLogRoute
 ]);

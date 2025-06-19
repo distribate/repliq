@@ -1,23 +1,29 @@
 import { Typography } from "@repo/ui/src/components/typography.tsx";
 import { addReactionAction } from "../../thread/thread-reactions/models/thread-reactions.model";
 import { reatomComponent } from "@reatom/npm-react";
+import { JSX } from "react";
 
 type RatingActionItemProps = {
+  targetId: string;
   emoji: string;
-  reactionCount: number;
-  threadId: string;
-  isLiked: boolean
-  Icon: JSX.Element | string;
+  isPressed: boolean
+  count: number;
+  icon: JSX.Element | string;
 };
 
 export const ReactionItem = reatomComponent<RatingActionItemProps>(({
-  ctx, emoji, reactionCount, threadId, isLiked, Icon
+  ctx, emoji, count, targetId, isPressed, icon: Icon
 }) => {
+  const handle = () => {
+    addReactionAction(ctx, { emoji, id: targetId })
+  }
+
   return (
     <div
-      onClick={() => addReactionAction(ctx, { emoji, id: threadId })}
-      className={`flex ${isLiked ? "bg-shark-400/50" : "bg-shark-700/50"} 
-        rounded-md py-1 cursor-pointer items-center gap-1 px-2 group *:transition-all *:duration-150 group`}
+      data-pressed={isPressed}
+      onClick={handle}
+      className="flex data-[pressed=true]:bg-shark-400/50 data-[pressed=false]:bg-shark-700/50 
+        rounded-md py-1 cursor-pointer items-center gap-1 px-2 group *:transition-all *:duration-150 group"
     >
       {typeof Icon === "string" ? (
         <span className="text-shark-50">
@@ -29,7 +35,7 @@ export const ReactionItem = reatomComponent<RatingActionItemProps>(({
         </span>
       )}
       <Typography className="text-shark-50">
-        {reactionCount}
+        {count}
       </Typography>
     </div>
   );

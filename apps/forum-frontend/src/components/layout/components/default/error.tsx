@@ -1,4 +1,3 @@
-import { PageWrapper } from "#components/wrappers/components/page-wrapper"
 import { isProduction } from "@repo/lib/helpers/is-production"
 import { Button } from "@repo/ui/src/components/button"
 import { Typography } from "@repo/ui/src/components/typography"
@@ -13,7 +12,7 @@ export const ErrorComponent = ({
   error, reset
 }: ErrorComponentProps) => {
   return (
-    <PageWrapper className="flex flex-col gap-12">
+    <div className="flex overflow-hidden px-4 h-screen w-full items-center justify-center flex-col gap-12">
       <IconMoodWrrr size={64} className="text-red-500" />
       <div className="flex flex-col items-center justify-center gap-4">
         <Typography className="text-xl font-bold text-red-500">
@@ -33,6 +32,6 @@ export const ErrorComponent = ({
           </Typography>
         </Button>
       </div>
-    </PageWrapper>
+    </div>
   )
 }

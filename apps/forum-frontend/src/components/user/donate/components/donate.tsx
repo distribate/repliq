@@ -1,36 +1,32 @@
-import { Typography } from "@repo/ui/src/components/typography.tsx";
-import { UserDonateBadge } from "./donate-badge.tsx";
-import { DonateVariantsEnum } from '@repo/types/entities/entities-type.ts';
-import { DONATE_GROUPS } from '@repo/shared/constants/donate-aliases.ts';
 import { reatomComponent } from "@reatom/npm-react";
-import { donateTipIsCheckedAtom, validateDonateTipCheckedAction } from "../models/donate-badge.model.ts";
+import { donateTipTypeAtom, validateDonateTipCheckedAction } from "../models/donate-badge.model.ts";
 import { lazy, Suspense } from "react";
+import { IconSparkles } from "@tabler/icons-react";
 
-const getDonateTitle = (donate: DonateVariantsEnum) => DONATE_GROUPS[donate];
-
-const DonateTipPopover = lazy(() => import("./donate-tip-popover.tsx").then(m => ({ default: m.DonateTipPopover })))
+const BuyDonateDialog = lazy(() => import("#components/modals/custom/components/buy-donate-modal.tsx").then(m => ({ default: m.BuyDonateModal })))
 
 const DonateTip = reatomComponent(({ ctx }) => {
-  if (ctx.spy(donateTipIsCheckedAtom)) return null;
+  const type = ctx.spy(donateTipTypeAtom)
 
   return (
     <Suspense>
-      <DonateTipPopover />
+      {type === 'not-buyed' ? <BuyDonateDialog /> : null}
     </Suspense>
   )
 })
 
-export const UserDonate = reatomComponent<{ donate: DonateVariantsEnum }>(({ ctx, donate }) => {
-  const title = getDonateTitle(donate);
+export const UserDonate = reatomComponent<{ is_donate: boolean }>(({ ctx, is_donate }) => {
+  if (!is_donate) return null;
 
   return (
     <>
       <DonateTip />
-      <UserDonateBadge variant={donate} className="w-fit" onClick={() => validateDonateTipCheckedAction(ctx)}>
-        <Typography textColor="shark_white" className="leading-3 font-semibold sm:leading-5 text-[12px] sm:text-[14px]">
-          {title}
-        </Typography>
-      </UserDonateBadge>
+      <div
+        className="w-fit cursor-pointer mx-1 items-center flex justify-center"
+        onClick={() => validateDonateTipCheckedAction(ctx)}
+      >
+        <IconSparkles size={24} className="fill-gold-500 text-gold-500" />
+      </div>
     </>
   )
 }, "UserDonate")

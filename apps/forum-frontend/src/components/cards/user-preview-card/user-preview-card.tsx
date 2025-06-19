@@ -1,10 +1,10 @@
 import { Avatar } from "#components/user/avatar/components/avatar.tsx";
 import type { UserDetailed } from "@repo/types/entities/user-type.ts";
 import { Dialog, DialogContent, DialogTrigger } from "@repo/ui/src/components/dialog.tsx";
-import { UserSummaryCard } from "../../user-main-card/components/user-summary-card";
 import { useState } from "react";
 import { reatomComponent } from "@reatom/npm-react";
-import { selectedUserCardAtom } from "../../user-main-card/models/user-main-card.model";
+import { UserSummaryCard } from "../user-main-card/components/user-summary-card";
+import { selectedUserCardAtom } from "../user-main-card/models/user-main-card.model";
 
 export type UserCardProps = Pick<UserDetailed, "nickname">;
 

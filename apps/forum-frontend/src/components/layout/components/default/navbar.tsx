@@ -8,10 +8,10 @@ import { CustomLink } from "#components/shared/link";
 import { isExperimentalDesignAtom } from "./experimental-layout.model";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@repo/ui/src/components/dropdown-menu";
 import { AuthorizationButton } from "./authorization-button";
-import { IconBrandThreads, IconLibrary, IconSearch } from "@tabler/icons-react";
-import { Input } from "@repo/ui/src/components/input";
+import { IconBrandThreads, IconLibrary } from "@tabler/icons-react";
 import { isAuthenticatedAtom } from "#components/auth/models/auth.model";
 import { getUser } from "#components/user/models/current-user.model";
+import { NavbarSearch } from "./navbar-search";
 
 const CREATE = [
   { icon: IconBrandThreads, title: "Создать тред", link: "/create-thread" },
@@ -23,7 +23,7 @@ const ProfileBadge = reatomComponent(({ ctx }) => {
 
   return (
     <div className="flex items-center justify-between h-10 px-2 py-1 gap-3 bg-shark-950 rounded-lg">
-      <Avatar propHeight={32} propWidth={32} nickname={nickname} />
+      <Avatar rounded="medium" propHeight={32} propWidth={32} nickname={nickname} />
       <MenuArrow />
     </div>
   )
@@ -72,15 +72,6 @@ export const Logotype = () => {
     </CustomLink>
   );
 };
-
-const NavbarSearch = reatomComponent(({ ctx }) => {
-  return (
-    <div className="flex justify-start gap-3 items-center bg-shark-950 h-10 rounded-lg px-4">
-      <IconSearch size={20} className="text-biloba-flower-300" />
-      <Input placeholder="Поиск..." backgroundType="transparent" className="!p-0" />
-    </div>
-  )
-}, "NavbarSearch")
 
 export const Navbar = () => {
   return (

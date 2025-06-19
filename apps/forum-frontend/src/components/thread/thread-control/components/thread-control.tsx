@@ -19,7 +19,7 @@ export const ThreadControl = reatomComponent(({ ctx }) => {
 
   return (
     <>
-      <CustomLink to="/dashboard/threads">
+      <CustomLink to="/studio">
         <Button className="w-full bg-white">
           <div className="flex items-center gap-2 invert">
             <PencilLine size={16} />

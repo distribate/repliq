@@ -132,7 +132,7 @@ onConnect(userProfileStatsResource.dataAtom, userProfileStatsResource)
 
 export const ProfileAccountStats = reatomComponent(({ ctx }) => {
   const profileStats = ctx.spy(userProfileStatsResource.dataAtom)
-  const donate = getUser(ctx).donate
+  const is_donate = getUser(ctx).is_donate
 
   return (
     <div className="flex flex-col gap-4 w-full h-full">
@@ -152,7 +152,7 @@ export const ProfileAccountStats = reatomComponent(({ ctx }) => {
                 +{profileStats?.meta.views_by_day} за сегодня
               </span>
             </Typography>
-            {donate === 'default' && (
+            {!is_donate && (
               <BuyDonateModal
                 trigger={
                   <div
@@ -174,7 +174,7 @@ export const ProfileAccountStats = reatomComponent(({ ctx }) => {
             {profileStats?.meta.rank} место
           </Typography>
         </AccountStatSection>
-        {donate !== 'default' && <ProfileAccountStatsDetails />}
+        {is_donate && <ProfileAccountStatsDetails />}
       </div>
     </div>
   );

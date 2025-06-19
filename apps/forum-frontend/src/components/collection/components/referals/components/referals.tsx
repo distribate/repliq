@@ -49,7 +49,7 @@ export const Referals = reatomComponent(({ ctx }) => {
                   <CustomLink to={createIdLink("user", item.recipient)}>
                     <UserNickname nickname={item.recipient} />
                   </CustomLink>
-                  <UserDonate donate={item.donate} />
+                  <UserDonate is_donate={item.is_donate} />
                 </div>
                 <Typography textColor="gray" textSize="medium">
                   Присоединился {dayjs(item.created_at).format("DD.MM.YYYY HH:mm")}

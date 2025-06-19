@@ -3,9 +3,12 @@ import { action, atom } from "@reatom/core";
 import { handleSearchAction, SearchThread, SearchUser } from "./search.model";
 import { withLocalStorage } from "@reatom/persist-web-storage";
 import { reatomArray, sleep, withReset } from "@reatom/framework";
+import { defineSearchSectionAction } from "./search-related.model";
 
 export type SearchResultsAll = Array<SearchUser | SearchThread>;
 export type SearchResult = SearchUser | SearchThread;
+
+export type SearchPageType = "users" | "threads" | "all"
 
 export type SearchPageQuery = {
   limit: number;
@@ -70,13 +73,26 @@ export const updateSearchHistoryAction = action((ctx, target: SearchUser | Searc
   });
 })
 
+export const searchPageAtom = atom<SearchPageQuery>(initial, "searchPage")
+export const searchPageResultsAtom = atom<Array<SearchThread | SearchUser> | null>(null, "searchPageResults")
+
+export const searchPageQueryAtom = atom<string | null>(null, "searchPageQuery")
+export const searchPageTypeAtom = atom<SearchPageType>("all", "searchPage")
+export const searchPageQueryParamsAtom = atom<{ query?: string } | null>(null, "searchPageQueryParams")
+
 export const searchPageHistoryAtom = reatomArray<SearchUser | SearchThread>([], "searchPageHistory").pipe(
   withLocalStorage("search-history"), withReset()
 )
 
-export const searchPageResultsAtom = atom<Array<SearchThread | SearchUser> | null>(null, "searchPageResults")
-export const searchPageQueryAtom = atom<string | null>(null, "searchPageQuery")
-export const searchPageAtom = atom<SearchPageQuery>(initial, "searchPage")
+searchPageQueryParamsAtom.onChange((ctx, target) => {
+  if (!target) return;
+
+  if (target.query) {
+    searchPageQueryAtom(ctx, target.query)
+  }
+
+  defineSearchSectionAction(ctx)
+})
 
 searchPageQueryAtom.onChange((async (ctx, state) => {
   if (state && state.length >= 1) {

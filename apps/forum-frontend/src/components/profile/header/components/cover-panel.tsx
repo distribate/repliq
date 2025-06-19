@@ -17,20 +17,25 @@ import { X } from "lucide-react";
 import { ConfirmationButton } from "#components/modals/confirmation-modal/components/confirmation-action-button.tsx";
 import { ConfirmationActionModalTemplate } from "#components/modals/confirmation-modal/components/confirmation-action-modal.tsx";
 import { DialogClose } from "@repo/ui/src/components/dialog.tsx";
-import { deleteBackgroundImageAction } from "#components/profile/header/models/cover-image.model.ts";
+import { deleteBackgroundImageAction, uploadBackgroundImageAction } from "#components/profile/header/models/cover-image.model.ts";
 import { DynamicModal } from "#components/modals/dynamic-modal/components/dynamic-modal.tsx";
 import { IconPhotoFilled, IconSettings } from "@tabler/icons-react";
 import { getUser } from "#components/user/models/current-user.model";
+import { spawn } from "@reatom/framework";
 
 const DeleteCoverModal = reatomComponent(({ ctx }) => {
   const cover_image = getUser(ctx).cover_image;
   if (!cover_image) return null;
 
+  const handle = () => {
+    void spawn(ctx, async (spawnCtx) => deleteBackgroundImageAction(spawnCtx))
+  }
+
   return (
     <DynamicModal
       autoClose
-      isPending={ctx.spy(deleteBackgroundImageAction.statusesAtom).isPending}
       withLoader
+      isPending={ctx.spy(deleteBackgroundImageAction.statusesAtom).isPending}
       trigger={
         <div className="flex hover:bg-shark-600 rounded-md p-2 gap-2 items-center group">
           <X size={20} className="text-shark-300 group-hover:text-pink-500" />
@@ -42,7 +47,7 @@ const DeleteCoverModal = reatomComponent(({ ctx }) => {
           <ConfirmationButton
             title="Удалить"
             actionType="continue"
-            onClick={() => deleteBackgroundImageAction(ctx)}
+            onClick={handle}
             disabled={ctx.spy(deleteBackgroundImageAction.statusesAtom).isPending}
             pending={ctx.spy(deleteBackgroundImageAction.statusesAtom).isPending}
           />
@@ -74,28 +79,34 @@ const ProfileProfileSettingsModal = () => {
   );
 };
 
-const ProfileBackgroundChangeModal = () => {
+const ProfileBackgroundChangeModal = reatomComponent(({ ctx }) => {
   return (
-    <Dialog>
-      <DialogTrigger className="w-1/2 h-full">
-        <div className="flex items-center justify-center w-full h-full rounded-r-none px-4 hover:bg-shark-800/50">
-          <IconPhotoFilled size={24} className="text-shark-200" />
-        </div>
-      </DialogTrigger>
-      <DialogContent>
-        <div className="flex flex-col gap-4 items-center justify-center w-full h-full">
-          <Typography variant="dialogTitle">
-            Фон профиля
-          </Typography>
-          <div className="flex flex-col gap-2 p-2 w-full gap-y-1">
-            <CoverImageUpdateModal />
-            <DeleteCoverModal />
+    <>
+      <DynamicModal
+        autoClose
+        withLoader
+        isPending={ctx.spy(uploadBackgroundImageAction.statusesAtom).isPending || ctx.spy(deleteBackgroundImageAction.statusesAtom).isPending}
+        triggerClassName="w-1/2 h-full"
+        trigger={
+          <div className="flex items-center justify-center w-full h-full rounded-r-none px-4 hover:bg-shark-800/50">
+            <IconPhotoFilled size={24} className="text-shark-200" />
           </div>
-        </div>
-      </DialogContent>
-    </Dialog>
+        }
+        content={
+          <div className="flex flex-col gap-4 items-center justify-center w-full h-full">
+            <Typography variant="dialogTitle">
+              Фон профиля
+            </Typography>
+            <div className="flex flex-col gap-2 p-2 w-full gap-y-1">
+              <CoverImageUpdateModal />
+              <DeleteCoverModal />
+            </div>
+          </div>
+        }
+      />
+    </>
   )
-}
+}, "ProfileBackgroundChangeModal")
 
 const SyncTarget = ({ target }: { target: string }) => {
   useUpdate((ctx) => blockedUserAction(ctx, target), [target])
@@ -137,7 +148,7 @@ export const UserCoverPanel = reatomComponent(({ ctx }) => {
           <div className="flex flex-col gap-y-1 *:w-full w-full items-start">
             <UserBlockedTrigger />
             <Separator />
-            <ReportCreateModal reportType="account" targetNickname={requestedNickname} />
+            <ReportCreateModal type="account" targetId={requestedNickname} />
           </div>
         </MoreWrapper>
       </div>

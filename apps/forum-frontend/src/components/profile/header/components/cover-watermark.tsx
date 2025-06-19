@@ -1,81 +1,27 @@
 import { Typography } from "@repo/ui/src/components/typography.tsx";
 
-export const UserCoverWatermark = () => {
-  const WatermarkItem = () => {
-    return (
-      <div className="flex space-x-4 justify-between *:opacity-20">
-        <Typography
-          font="minecraft"
-          className="text-[26px] whitespace-nowrap"
-          textColor="gray"
-        >
-          Fasberry
-        </Typography>
-        <Typography
-          font="minecraft"
-          className="text-[26px] whitespace-nowrap"
-          textColor="gray"
-        >
-          Fasberry
-        </Typography>
-        <Typography
-          font="minecraft"
-          className="text-[26px] whitespace-nowrap"
-          textColor="gray"
-        >
-          Fasberry
-        </Typography>
-        <Typography
-          font="minecraft"
-          className="text-[26px] whitespace-nowrap"
-          textColor="gray"
-        >
-          Fasberry
-        </Typography>
-        <Typography
-          font="minecraft"
-          className="text-[26px] whitespace-nowrap"
-          textColor="gray"
-        >
-          Fasberry
-        </Typography>
-        <Typography
-          font="minecraft"
-          className="text-[26px] whitespace-nowrap"
-          textColor="gray"
-        >
-          Fasberry
-        </Typography>
-        <Typography
-          font="minecraft"
-          className="text-[26px] whitespace-nowrap"
-          textColor="gray"
-        >
-          Fasberry
-        </Typography>
-        <Typography
-          font="minecraft"
-          className="text-[26px] whitespace-nowrap"
-          textColor="gray"
-        >
-          Fasberry
-        </Typography>
-        <Typography
-          font="minecraft"
-          className="text-[26px] whitespace-nowrap"
-          textColor="gray"
-        >
-          Fasberry
-        </Typography>
-      </div>
-    );
-  };
+const WatermarkItem = () => {
+  return (
+    <div className="flex space-x-4 justify-between *:opacity-20 *:text-[26px] *:whitespace-nowrap">
+      <Typography textColor="gray">Fasberry</Typography>
+      <Typography textColor="gray">Fasberry </Typography>
+      <Typography textColor="gray">Fasberry</Typography>
+      <Typography textColor="gray">Fasberry </Typography>
+      <Typography textColor="gray">Fasberry</Typography>
+      <Typography textColor="gray">Fasberry </Typography>
+      <Typography textColor="gray">Fasberry </Typography>
+      <Typography textColor="gray">Fasberry</Typography>
+      <Typography textColor="gray">Fasberry </Typography>
+    </div >
+  );
+};
 
+export const UserCoverWatermark = () => {
   return (
     <div
       className="z-[3] space-y-16 opacity-60 select-none pointer-events-none
-      -translate-y-[64px] absolute justify-between -translate-x-[64px]
-       -rotate-[6deg] w-full h-full top-0 *:w-full bottom-0"
+        -translate-y-[64px] absolute justify-between -translate-x-[64px]
+        -rotate-[6deg] w-full h-full top-0 *:w-full bottom-0"
     >
       <WatermarkItem />
       <WatermarkItem />

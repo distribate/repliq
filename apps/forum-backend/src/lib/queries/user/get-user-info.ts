@@ -4,10 +4,10 @@ export async function getUserInfo(nickname: string) {
   return forumDB
     .selectFrom('users')
     .innerJoin("users_settings", "users.nickname", "users_settings.nickname")
+    .leftJoin("users_subs", "users.nickname", "users_subs.nickname")
     .select(eb => [
       "users.nickname",
       "users.name_color",
-      "users.donate",
       "users.description",
       "users.cover_image",
       "users.favorite_item",
@@ -22,6 +22,12 @@ export async function getUserInfo(nickname: string) {
       "users_settings.show_game_location",
       eb.cast<string>("users.created_at", "text").as("created_at"),
       eb.cast<string>("users.birthday", "text").as("birthday"),
+      eb.case()
+        .when('users_subs.id', 'is not', null)
+        .then(true)
+        .else(false) 
+        .end()
+        .as('is_donate')
     ])
     .where("users.nickname", "=", nickname)
     .executeTakeFirstOrThrow();

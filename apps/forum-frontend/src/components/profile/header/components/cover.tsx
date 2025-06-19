@@ -2,7 +2,7 @@ import { UserCoverMainInfo } from "./cover-main-info.tsx";
 import { UserCoverPanel } from "./cover-panel.tsx";
 import { coverAtom } from "#components/profile/header/models/cover.model.ts";
 import { reatomComponent } from "@reatom/npm-react";
-import { requestedUserCoverDetailsAtom } from "#components/profile/main/models/requested-user.model.ts";
+import { requestedUserCoverDetailsAtom, requestedUserCoverImageAtom } from "#components/profile/main/models/requested-user.model.ts";
 import { UserCoverAvatar } from "./cover-avatar.tsx";
 import { UserCoverLocation } from "./cover-location.tsx";
 import { CoverArea } from "./cover-area.tsx";
@@ -44,15 +44,16 @@ export const UserCover = reatomComponent(({ ctx }) => {
 
 export const UserCoverWrapper = reatomComponent<PropsWithChildren>(({ ctx, children }) => {
   const coverDetails = ctx.spy(requestedUserCoverDetailsAtom)
+  const coverImage = ctx.spy(requestedUserCoverImageAtom)
   if (!coverDetails) return;
 
-  const { backgroundColor, outline, coverImage } = coverDetails;
+  const { backgroundColor, outline } = coverDetails;
 
   return (
     <CoverArea variant={"full"} backgroundColor={backgroundColor} outline={outline}>
       {coverImage ? (
         <div className="flex justify-center items-center h-full absolute inset-0 z-[1]">
-          <img src={coverImage} className="object-cover object-center w-full h-[414px]" alt="" />
+          <img src={coverImage} className="object-cover object-center w-full  h-[414px]" alt="" />
         </div>
       ) : (
         <Suspense>

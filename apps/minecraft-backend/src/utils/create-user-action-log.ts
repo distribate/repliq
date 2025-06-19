@@ -6,7 +6,7 @@ export async function createUserActionLog({
   source: { name: source_nickname },
   description
 }: LuckpermsLogContent) {
-  return await forumDB
+  return forumDB
     .insertInto("users_actions")
     .values({ target_nickname, source_nickname, uuid, type, description })
     .executeTakeFirst();

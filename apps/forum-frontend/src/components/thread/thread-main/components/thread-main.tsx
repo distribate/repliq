@@ -65,6 +65,19 @@ const ThreadDetails = reatomComponent(({ ctx }) => {
   )
 })
 
+const ThreadTitle = reatomComponent(({ ctx}) => {
+  const thread = ctx.spy(threadAtom)
+  if (!thread) return null;
+
+  return (
+    <div className="flex flex-col w-fit">
+      <Typography textSize="very_big" className="font-semibold" textColor="shark_white">
+        {thread.title}
+      </Typography>
+    </div>
+  )
+}, "ThreadTitle")
+
 export const Thread = reatomComponent(({ ctx }) => {
   const thread = ctx.spy(threadAtom)
 
@@ -82,11 +95,7 @@ export const Thread = reatomComponent(({ ctx }) => {
     <ContextMenu>
       <ContextMenuTrigger className="w-full">
         <div className="flex flex-col gap-6 rounded-lg w-full px-4 py-6 bg-shark-950">
-          <div className="flex flex-col w-fit">
-            <Typography textSize="very_big" className="font-semibold" textColor="shark_white">
-              {thread.title}
-            </Typography>
-          </div>
+          <ThreadTitle/>
           <ThreadContent/>
           <ThreadDetails />
         </div>

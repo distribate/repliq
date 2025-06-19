@@ -1,9 +1,11 @@
 import { forumDB } from "#shared/database/forum-db.ts";
 
 export const getUserDonate = async (nickname: string) => {
-  return await forumDB
-    .selectFrom('users')
-    .select('donate')
+  const query = await forumDB
+    .selectFrom('users_subs')
+    .select('id')
     .where('nickname', '=', nickname)
-    .executeTakeFirstOrThrow();
+    .executeTakeFirst();
+
+  return Boolean(query?.id)
 }

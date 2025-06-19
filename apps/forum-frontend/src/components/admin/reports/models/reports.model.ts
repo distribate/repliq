@@ -4,7 +4,7 @@ import { withReset } from "@reatom/framework"
 import { forumAdminClient } from "@repo/shared/api/forum-client"
 import type { InferResponseType } from "hono/client"
 
-const client = forumAdminClient.admin["get-reports"].$get
+const client = forumAdminClient.private["get-reports"].$get
 
 export type GetReportsResponse = InferResponseType<typeof client, 200>["data"]
 type SelectedReport = GetReportsResponse[number] | null
@@ -12,7 +12,7 @@ type SelectedReport = GetReportsResponse[number] | null
 export const reportsAtom = atom<GetReportsResponse | null>(null, 'reports')
 
 async function getReports() {
-  const res = await forumAdminClient.admin["get-reports"].$get()
+  const res = await forumAdminClient.private["get-reports"].$get()
   const data = await res.json()
 
   if ("error" in data) return null

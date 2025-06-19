@@ -16,9 +16,7 @@ export const FriendRequestResponseAccept = ({
   );
 };
 
-export const FriendRequestResponseDefault = ({
-  payload,
-}: FriendRequestResponse) => {
+export const FriendRequestResponseDefault = ({ payload }: FriendRequestResponse) => {
   return (
     <div className="flex gap-1 items-center">
       <Avatar nickname={payload.new.initiator} propHeight={20} propWidth={20} />

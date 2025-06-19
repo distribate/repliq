@@ -47,7 +47,6 @@ export const FilteringSearchWrapper = ({ children }: FilteringSearch) => {
         <div ref={inputRef}>{children}</div>
       </div>
       <SelectedWrapper
-        ref={buttonRef}
         onClick={handleToggle}
         className={isInputVisible ? "z-[2]" : ""}
       >

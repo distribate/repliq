@@ -1,3 +1,4 @@
+import { getBisquiteStats } from "#routes/public/get-status.ts";
 import { forumDB } from "#shared/database/forum-db.ts";
 import { getNickname } from "#utils/get-nickname-from-storage.ts";
 import { zValidator } from "@hono/zod-validator";
@@ -63,6 +64,14 @@ export const connectProfileRoute = new Hono()
     }
 
     try {
+      if (data.type === 'minecraft') {
+        const isOnline = await getBisquiteStats()
+
+        if (!isOnline) {
+          return ctx.json({ error: "Minecraft Service is offline" }, 200);
+        }
+      }
+
       const result = await connectProfile({ nickname, type: data.type })
 
       if (!result) {

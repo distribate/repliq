@@ -150,8 +150,8 @@ const PROFILE_SETTINGS_SECTION: Record<ProfileDialog, ReactNode> = {
 }
 
 export const UserProfileSettings = reatomComponent(({ ctx }) => {
-  const donate = getUser(ctx).donate;
-  const isAccess = donate !== "default";
+  const is_donate = getUser(ctx).is_donate;
+  const isAccess = is_donate === true;
   const current = ctx.spy(settingsCurrentDialogAtom)
 
   return (

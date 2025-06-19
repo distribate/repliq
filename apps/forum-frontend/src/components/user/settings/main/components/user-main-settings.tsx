@@ -10,7 +10,7 @@ import { Dialog, DialogClose, DialogContent, DialogTrigger } from "@repo/ui/src/
 import { CustomLink } from "#components/shared/link";
 import { BuyDonateModal } from "#components/modals/custom/components/buy-donate-modal";
 import { settingsSettingsTypeAtom } from "#components/modals/user-settings/models/user-settings.model";
-import { IconAddressBook, IconAdjustments, IconBubblePlus, IconComet, IconUserCircle } from "@tabler/icons-react";
+import { IconAddressBook, IconAdjustments, IconBubblePlus, IconComet, IconStatusChange, IconUserCircle } from "@tabler/icons-react";
 import { getUser } from "#components/user/models/current-user.model";
 
 const Sync = ({ target }: { target: string }) => {
@@ -66,35 +66,39 @@ export const UserMainSettings = reatomComponent(({ ctx }) => {
       <Separator />
       <div className="flex flex-col gap-y-2 w-full">
         <UserSettingOption
-          onClick={() => settingsSettingsTypeAtom(ctx, "profile")} 
-          title="Профиль" 
+          onClick={() => settingsSettingsTypeAtom(ctx, "profile")}
+          title="Профиль"
           icon={{ value: IconAddressBook }}
         />
         <UserSettingOption
-          onClick={() => settingsSettingsTypeAtom(ctx, "account")} 
-          title="Аккаунт" 
+          onClick={() => settingsSettingsTypeAtom(ctx, "account")}
+          title="Аккаунт"
           icon={{ value: IconUserCircle }}
         />
         <UserSettingOption
           onClick={() => settingsSettingsTypeAtom(ctx, "other")}
-          title="Прочее" 
+          title="Прочее"
           icon={{ value: IconAdjustments }}
         />
+        {!getUser(ctx).is_donate && (
+          <>
+            <Separator />
+            <BuyDonateModal
+              trigger={
+                <UserSettingOption title="Донат" icon={{ value: IconComet, className: "text-pink-500" }} />
+              }
+            />
+          </>
+        )}
         <Separator />
-        <BuyDonateModal
-          trigger={
-            <UserSettingOption title="Донат" icon={{ value: IconComet, className: "text-pink-500" }} />
-          }
-        />
-        <Separator />
-        {/* <a href={`${MINECRAFT_SITE_DOMAIN}/wiki`} rel="noreferrer" target="_blank">
-          <DialogClose className="w-full">
-            <UserSettingOption title="Вики" imageSrc={Portfolio} />
-          </DialogClose>
-        </a> */}
         <CustomLink to="/create-ticket">
           <DialogClose className="w-full">
             <UserSettingOption title="Задать вопрос" icon={{ value: IconBubblePlus }} />
+          </DialogClose>
+        </CustomLink>
+        <CustomLink to="/news/changelog">
+          <DialogClose className="w-full">
+            <UserSettingOption title="Обновления" icon={{ value: IconStatusChange }} />
           </DialogClose>
         </CustomLink>
       </div>

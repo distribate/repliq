@@ -6,14 +6,20 @@ async function getUserReferals(nickname: string) {
   const query = await forumDB
     .selectFrom("refferals")
     .innerJoin("users", "users.nickname", "refferals.recipient")
-    .select([
+    .leftJoin("users_subs", "users.nickname", "users_subs.nickname")
+    .select(eb => [
       "refferals.id",
       "refferals.recipient",
-      "users.donate",
       "users.name_color",
       "users.description",
       "refferals.created_at",
-      "refferals.completed"
+      "refferals.completed",
+      eb.case()
+        .when('users_subs.id', 'is not', null)
+        .then(true)
+        .else(false)
+        .end()
+        .as('is_donate'),
     ])
     .where("initiator", "=", nickname)
     .limit(5)

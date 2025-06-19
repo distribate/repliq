@@ -109,12 +109,11 @@ export const getUserProfileStatsRoute = new Hono()
   .get("/get-user-profile-stats", async (ctx) => {
     const nickname = getNickname()
 
-    const userDonate = await getUserDonate(nickname)
-    const with_details = userDonate.donate !== 'default'
+    const isDonate = await getUserDonate(nickname)
 
     try {
       const userProfileStats = await getUserProfileStats({
-        nickname, with_details
+        nickname, with_details: isDonate
       });
 
       return ctx.json({ data: userProfileStats }, 200);

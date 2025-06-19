@@ -12,6 +12,8 @@ export const originList = [
   // local
   "http://localhost:3009", // development of landing-frontend
   "http://localhost:3001", // production of landing-frontend
+  "http://localhost:3005", // development of minecraft-frontend
+  "http://localhost:3002", // production of minecraft-frontend
   "http://localhost:3008", // development of forum-frontend
   "http://localhost:3000", // production of forum-frontend
 ]

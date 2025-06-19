@@ -1,36 +1,38 @@
 import { getNatsConnection } from "@repo/config-nats/nats-client.ts"
-import { loggerBot } from "../../shared/bot/bot.ts"
 import { SERVER_USER_EVENT_SUBJECT } from "@repo/shared/constants/nats-subjects.js"
 import { validateRequest } from "../../utils/validate-request.ts";
+import { Bot } from "gramio";
 
-loggerBot.command('broadcast', async (ctx) => {
-  if (!ctx.from) {
-    return
-  }
-
-  const userId = ctx.from.id
-  const isAdmin = await validateRequest(userId);
-
-  if (!isAdmin) {
-    return ctx.reply('У вас нет доступа к этой команде');
-  }
-
-  if (!ctx.args) {
-    return ctx.send('Укажите текст объявления')
-  }
-
-  const nc = getNatsConnection()
-
-  const res = await nc.request(SERVER_USER_EVENT_SUBJECT, JSON.stringify({
-    event: "executeCommand",
-    command: `cmi broadcast ${ctx.args}`
-  }))
-
-  const data = res.json<{ result: string } | { error: string }>()
-
-  if ("error" in data) {
-    return ctx.reply(data.error)
-  }
-
-  ctx.reply(`Объявление отправлено!, ${data.result}`)
-})
+export function broadcastCommand(bot: Bot) {
+  bot.command('broadcast', async (ctx) => {
+    if (!ctx.from) {
+      return
+    }
+  
+    const userId = ctx.from.id
+    const isAdmin = await validateRequest(userId);
+  
+    if (!isAdmin) {
+      return ctx.reply('У вас нет доступа к этой команде');
+    }
+  
+    if (!ctx.args) {
+      return ctx.send('Укажите текст объявления')
+    }
+  
+    const nc = getNatsConnection()
+  
+    const res = await nc.request(SERVER_USER_EVENT_SUBJECT, JSON.stringify({
+      event: "executeCommand",
+      command: `cmi broadcast ${ctx.args}`
+    }))
+  
+    const data = res.json<{ result: string } | { error: string }>()
+  
+    if ("error" in data) {
+      return ctx.reply(data.error)
+    }
+  
+    ctx.reply(`Объявление отправлено!, ${data.result}`)
+  })
+}

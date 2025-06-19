@@ -13,7 +13,7 @@ import { FormThreadStep } from "./form-thread-stepper.tsx";
 import { handleAddImagesAction } from "../models/edit-thread.model.ts";
 import { reatomComponent } from "@reatom/npm-react";
 import { FormThreadContent } from "./form-thread-content.tsx";
-import { threadFormPreferencesAtom } from "../models/thread-form.model.ts";
+import { threadFormIsCommentAtom, threadFormIsValidAtom } from "../models/thread-form.model.ts";
 import { Switch } from "@repo/ui/src/components/switch.tsx";
 import { FormField } from "@repo/ui/src/components/form-field.tsx";
 
@@ -117,7 +117,7 @@ const FormThreadHead = () => {
 }
 
 const FormThreadComments = reatomComponent(({ ctx }) => {
-  const is_comments = ctx.spy(threadFormPreferencesAtom).is_comments
+  const is_comments = ctx.spy(threadFormIsCommentAtom)
 
   return (
     <FormField>
@@ -134,7 +134,7 @@ const FormThreadComments = reatomComponent(({ ctx }) => {
           defaultChecked={is_comments}
           checked={is_comments}
           onCheckedChange={(checked) => {
-            threadFormPreferencesAtom(ctx, (state) => ({ ...state, is_comments: checked }))
+            threadFormIsCommentAtom(ctx, checked)
           }}
         />
       </div>
@@ -142,9 +142,22 @@ const FormThreadComments = reatomComponent(({ ctx }) => {
   );
 }, "FormThreadComments")
 
-export const CreateThreadForm = reatomComponent(({ ctx }) => {
+const CreateThreadButton = reatomComponent(({ ctx }) => {
+  const isDisabled = !ctx.spy(threadFormIsValidAtom)
   const isPending = ctx.spy(createThreadAction.statusesAtom).isPending
 
+  return (
+    <Button
+      variant="positive" className="self-end w-fit" disabled={isDisabled || isPending} pending={isPending}
+    >
+      <Typography textSize="medium" className="font-semibold">
+        Опубликовать
+      </Typography>
+    </Button>
+  )
+}, "CreateThreadButton")
+
+export const CreateThreadForm = reatomComponent(({ ctx }) => {
   return (
     <form
       onSubmit={(e) => { e.preventDefault(); createThreadAction(ctx) }}
@@ -166,13 +179,7 @@ export const CreateThreadForm = reatomComponent(({ ctx }) => {
             <FormThreadComments />
           </div>
           <Separator />
-          <Button
-            variant="positive" className="self-end w-fit" disabled={isPending} pending={isPending}
-          >
-            <Typography textSize="medium" className="font-semibold">
-              Опубликовать
-            </Typography>
-          </Button>
+          <CreateThreadButton/>
         </BlockWrapper>
         <FormThreadAdditional />
       </div>

@@ -1,7 +1,6 @@
 import { reatomLoader } from "@repo/lib/utils/reatom/reatom-loader";
 import { createRoute, redirect } from "@tanstack/react-router";
 import { AdminSections } from "#components/admin/navigation/admin-navigation-badge";
-import { DEFAULT_TYPE_PARAM, searchTypeParamAtom } from "#components/search/models/search-related.model";
 import { logger } from "@repo/lib/utils/logger";
 import { CollectionParams } from "#components/collection/components/navigation/components/collection-navigation";
 import { categoryIdAtom } from "#components/categories/components/threads/models/category.model";
@@ -11,6 +10,7 @@ import { ProtectedRouteComponent } from "#pages/protected.layout";
 import { RouteSkeleton } from "#components/templates/components/route-skeleton";
 import { lazy, Suspense } from "react";
 import { validateAdmin, validatePage } from "./validation.model";
+import { StudioRouteComponent } from "#pages/studio.page";
 
 const CreateThreadRouteComponent = lazy(() => import("#pages/create-thread.page").then(m => ({ default: m.CreateThreadRouteComponent })))
 const AdminRouteComponent = lazy(() => import("#pages/admin/admin.layout").then(m => ({ default: m.AdminRouteComponent })))
@@ -98,19 +98,19 @@ const notificationsRoute = createRoute({
   path: "/notifications",
 })
 
-const searchRoute = createRoute({
+export const searchRoute = createRoute({
   getParentRoute: () => protectedRoute,
   component: () => <Suspense><SearchRouteComponent/></Suspense>,
   path: "/search",
-  loader: reatomLoader(async (context, { location }) => {
-    const { type } = location.search as { type: Params["type"] }
-
-    searchTypeParamAtom(context, type)
-  }),
   validateSearch: (search: Record<string, unknown>): Params => ({
-    type: search.type as Params["type"] ?? DEFAULT_TYPE_PARAM,
-    query: search.query as string | undefined ?? undefined
+    query: search.query as Params["query"] ?? undefined
   })
+})
+
+export const studioRoute = createRoute({
+  getParentRoute: () => protectedRoute,
+  component: () => <Suspense><StudioRouteComponent /></Suspense>,
+  path: "/studio"
 })
 
 const DEFAULT_COLLECTION_TYPE = "purchases"
@@ -198,5 +198,6 @@ export const protectedRoutes = protectedRoute.addChildren([
   dashboardRoutes,
   categoryRoute,
   createThreadRoute,
+  studioRoute,
   createTicketRoute
 ])

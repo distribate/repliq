@@ -25,14 +25,22 @@ export default defineConfig({
     pluginCssMinimizer()
   ],
   performance: {
+    buildCache: process.env.NODE_ENV === 'development',
     chunkSplit: {
-      strategy: 'split-by-experience'
+      strategy: 'split-by-experience',
     },
+    preload: {
+      type: 'initial',
+    },
+    prefetch: {
+      type: 'async-chunks',
+    },
+    removeConsole: ['log', 'warn'],
   },
   tools: {
     rspack: {
       plugins: [
-        TanStackRouterRspack({ autoCodeSplitting: true }),
+        TanStackRouterRspack({ autoCodeSplitting: true, enableRouteGeneration: false, }),
       ],
     }
   },
@@ -49,8 +57,16 @@ export default defineConfig({
     distPath: {
       root: process.env.NODE_ENV === 'development' ? "dist" : "build",
     },
+    sourceMap: {
+      js: false,
+      css: false,
+    },
     injectStyles: true,
     inlineScripts: true,
+    minify: {
+      js: 'always',
+      css: "always"
+    }
   },
   server: { port, host },
 })

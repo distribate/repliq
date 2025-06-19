@@ -22,7 +22,7 @@
     "@repo/shared": "*",
     "bcryptjs": "2.4.3",
     "figlet": "1.8.0",
-    "hono": "4.7.4",
+    "hono": "4.8.0",
     "hono-rate-limiter": "0.4.2",
     "kysely": "0.27.4",
     "pg": "8.13.1",

@@ -660,6 +660,18 @@ export interface ReportsApprovals {
   status: string;
 }
 
+export interface StatsGuests {
+  created_at: Generated<Timestamp>;
+  id: Generated<Int8>;
+  nickname: string;
+}
+
+export interface StatsVisits {
+  created_at: Generated<Timestamp>;
+  id: Generated<Int8>;
+  ip: string;
+}
+
 export interface Status {
   user_id: string;
   value: Generated<boolean>;
@@ -933,6 +945,13 @@ export interface UsersStatus {
   nickname: string;
 }
 
+export interface UsersSubs {
+  id: Generated<Int8>;
+  nickname: string;
+  payment_id: Int8;
+  started_at: Generated<Timestamp>;
+}
+
 export interface VaultDecryptedSecrets {
   created_at: Timestamp | null;
   decrypted_secret: string | null;
@@ -1012,6 +1031,8 @@ export interface DB {
   refferals: Refferals;
   reports: Reports;
   reports_approvals: ReportsApprovals;
+  stats_guests: StatsGuests;
+  stats_visits: StatsVisits;
   status: Status;
   "storage.buckets": StorageBuckets;
   "storage.migrations": StorageMigrations;
@@ -1043,6 +1064,7 @@ export interface DB {
   users_session: UsersSession;
   users_settings: UsersSettings;
   users_status: UsersStatus;
+  users_subs: UsersSubs;
   "vault.decrypted_secrets": VaultDecryptedSecrets;
   "vault.secrets": VaultSecrets;
 }

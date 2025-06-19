@@ -22,7 +22,7 @@ import { isAuthenticatedAtom } from '#components/auth/models/auth.model.ts';
 
 type ThreadCommentsProps = Pick<ThreadDetailed, "properties" | "owner">
 
-const CommentsDisabled = lazy(() => import("#components/templates/components/comments-disabled").then(m => ({ default: m.CommentsDisabled })))
+const CommentsDisabled = lazy(() => import("#components/thread/thread-comments/components/comments-disabled.tsx").then(m => ({ default: m.CommentsDisabled })))
 
 onConnect(threadCommentsDataAtom, threadCommentsAction)
 

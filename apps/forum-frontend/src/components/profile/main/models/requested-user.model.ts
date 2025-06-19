@@ -20,9 +20,8 @@ type RequestedUserProfileStatus = "banned" | "blocked" | "privated"
 type RequestedUserBlocked = "blocked-by-you" | "blocked-by-user"
 
 type RequestedUserCoverDetails = {
-  coverImage: string | undefined | null,
   backgroundColor: Pick<VariantProps<typeof coverAreaVariants>, "backgroundColor">["backgroundColor"]
-  outline: Pick<VariantProps<typeof coverAreaVariants>, "outline">["outline"]
+  outline: string
 }
 
 type Details = {
@@ -30,13 +29,19 @@ type Details = {
     status: "banned" | "private" | "blocked-by-you" | "blocked-by-user" | null,
     account_type: null
   },
-  profiles: { type: "minecraft", user_id: string }[]
+  profiles: Array<{
+    type: "minecraft" | string,
+    user_id: string
+  }>
 }
 
-type R = (UserDetailed & Details) | (UserShorted & Details)
+type RequestedUserFull = (UserDetailed & Details) | (UserShorted & Details)
+type RequestedUser =
+  | Omit<UserShorted, "id" | "cover_image" | "preferences">
+  | Omit<UserDetailed, "id" | "cover_image" | "preferences">
 
 export const requestedUserParamAtom = atom<string | null>(null, "requestedUserParam").pipe(withHistory(1), withReset())
-export const requestedUserAtom = atom<Omit<UserShorted, "id"> | Omit<UserDetailed, "id"> | null>(null, "requestedUser").pipe(withReset())
+export const requestedUserAtom = atom<RequestedUser | null>(null, "requestedUser").pipe(withReset())
 export const requestedUserIsSameAtom = atom(false, "requestedUserIsSame").pipe(withReset())
 export const requestedUserPreferencesAtom = atom<RequestedUserDetails | null>(null, "requestedUserDetails").pipe(withReset())
 export const requestedUserGameStatsVisibleAtom = atom(false, "requestedUserGameStatsVisible").pipe(withReset())
@@ -46,28 +51,30 @@ export const requestedUserProfileBlockedAtom = atom<RequestedUserBlocked | null>
 export const requestedUserCoverImageAtom = atom<string | null>(null, "requestedUserCoverImage").pipe(withReset())
 export const requestedUserCoverDetailsAtom = atom<RequestedUserCoverDetails | null>(null, "requestedUserCoverDetails").pipe(withReset())
 export const requestedUserAccountTypeAtom = atom<Pick<UserDetailed, "account_status">["account_status"]>(null, "requestedUserAccountType").pipe(withReset())
-export const requestedUserMinecraftProfileIsExistsAtom = atom(false, "requestedUserMinecraftProfileIsExists")
+export const requestedUserMinecraftProfileIsExistsAtom = atom(false, "requestedUserMinecraftProfileIsExists").pipe(withReset())
 
-requestedUserAtom.onChange((_, v) => logger.info("requestedUserAtom", v))
-requestedUserIsSameAtom.onChange((_, v) => logger.info("requestedUserIsSameAtom", v))
-requestedUserPreferencesAtom.onChange((_, v) => logger.info("requestedUserPreferencesAtom", v))
-requestedUserGameStatsVisibleAtom.onChange((_, v) => logger.info("requestedUserGameStatsVisibleAtom", v))
-requestedUserSectionIsPrivatedAtom.onChange((_, v) => logger.info("requestedUsersectionIsPrivatedAtom", v))
-requestedUserProfileStatusAtom.onChange((_, v) => logger.info("requestedUserProfileStatusAtom", v))
-requestedUserProfileBlockedAtom.onChange((_, v) => logger.info("requestedUserProfileBlockedAtom", v))
-requestedUserCoverImageAtom.onChange((_, v) => logger.info("requestedUserCoverImageAtom", v))
-requestedUserCoverDetailsAtom.onChange((_, v) => logger.info("requestedUserCoverDetailsAtom", v))
-requestedUserAccountTypeAtom.onChange((_, v) => logger.info("requestedUserAccountTypeAtom", v))
+function resetRequestedUser(ctx: Ctx) {
+  requestedUserAtom.reset(ctx)
+  requestedUserIsSameAtom.reset(ctx)
+  requestedUserPreferencesAtom.reset(ctx)
+  requestedUserGameStatsVisibleAtom.reset(ctx)
+  requestedUserSectionIsPrivatedAtom.reset(ctx)
+  requestedUserProfileStatusAtom.reset(ctx)
+  requestedUserProfileBlockedAtom.reset(ctx)
+  requestedUserCoverImageAtom.reset(ctx)
+  requestedUserCoverDetailsAtom.reset(ctx)
+  requestedUserAccountTypeAtom.reset(ctx)
+  requestedUserMinecraftProfileIsExistsAtom.reset(ctx)
+}
 
-requestedUserPreferencesAtom.onChange((ctx, state) => {
-  if (!state) return;
+requestedUserPreferencesAtom.onChange((ctx, target) => {
+  if (!target) return;
 
-  const donate = ctx.get(requestedUserAtom)?.donate
-  const coverImage = ctx.get(requestedUserAtom)?.cover_image ?? null
-  const backgroundColor = coverImage ? "transparent" : "gray"
-  const outline = (donate !== 'default' && state.cover_outline_visible) ? donate : "default"
+  const backgroundColor = ctx.get(requestedUserCoverImageAtom) ? "transparent" : "gray"
+  const is_donate = ctx.get(requestedUserAtom)?.is_donate
+  const outline = (is_donate && target.cover_outline_visible) ? "#FFFFFF" : "default"
 
-  requestedUserCoverDetailsAtom(ctx, { coverImage, backgroundColor, outline })
+  requestedUserCoverDetailsAtom(ctx, { outline, backgroundColor })
 })
 
 requestedUserParamAtom.onChange((ctx, target) => {
@@ -76,7 +83,6 @@ requestedUserParamAtom.onChange((ctx, target) => {
   const prev = ctx.get(requestedUserParamAtom.history)[1]
 
   if (prev !== undefined && target !== prev) {
-    logger.info("requestedUser reset", target)
     resetRequestedUser(ctx)
   }
 
@@ -97,60 +103,49 @@ const defineUserAction = reatomAsync(async (ctx, target: string) => {
   requestedUserIsSameAtom(ctx, nickname === target)
 }, "defineUserAction")
 
-async function getUserProfile(nickname: string) {
-  const res = await forumUserClient.user["get-user-profile"][":nickname"].$get({ param: { nickname } })
-  const data = await res.json()
-  if (!data || "error" in data) return "not-exist"
-  return data.data
-}
-
-export const requestedUserAction = reatomAsync(async (ctx, target: string) => {
-  return await ctx.schedule(() => getUserProfile(target))
-}, {
+export const requestedUserAction = reatomAsync(async (ctx, target: string) => ctx.schedule(() => getUserProfile(target)), {
   name: "requestedUserAction",
   onFulfill: (ctx, payload) => {
-    if (payload === null) {
-      return ctx.schedule(() => router.navigate({ to: "." }))
-    }
+    if (payload === null) return ctx.schedule(() => router.navigate({ to: "/" }))
 
     if (payload === 'not-exist') {
-      let destination = "."
-
-      const nickname = ctx.get(currentUserNicknameAtom);
-
-      if (nickname) destination = nickname
-
       return ctx.schedule(() => router.navigate({
-        to: "/not-exist", search: { redirect_nickname: destination }
+        to: "/not-exist",
+        search: { redirect_nickname: ctx.get(currentUserNicknameAtom) ?? "/" }
       }))
     }
 
     if (typeof payload === 'object') {
-      const accountType = payload.details.account_type;
+      const account_status = payload.details.account_type;
 
-      if (accountType === 'deleted' || accountType === 'archived') {
+      const isNonExists = account_status === 'deleted' || account_status === 'archived'
+
+      // #privated or archived account status of req user
+      if (isNonExists) {
         requestedUserAtom(ctx, {
           nickname: payload.nickname,
           description: null,
-          cover_image: null,
-          donate: "default",
+          is_donate: false,
           name_color: "#FFFFFF",
-          account_status: accountType,
-          preferences: {
-            show_game_location: false,
-            cover_outline_visible: false
-          }
+          account_status
         })
 
-        requestedUserAccountTypeAtom(ctx, accountType)
+        requestedUserPreferencesAtom(ctx, {
+          accept_friend_request: false,
+          game_stats_visible: false,
+          real_name_visible: false,
+          cover_outline_visible: false,
+          show_game_location: false
+        })
+
+        requestedUserAccountTypeAtom(ctx, account_status)
         requestedUserProfileStatusAtom(ctx, null)
         requestedUserCoverImageAtom(ctx, null)
-        // @ts-expect-error
-        requestedUserPreferencesAtom(ctx, { cover_outline_visible: false, show_game_location: false })
+
         return
       }
 
-      const user = payload as R
+      const user = payload as RequestedUserFull
 
       requestedUserAtom(ctx, user)
 
@@ -163,18 +158,19 @@ export const requestedUserAction = reatomAsync(async (ctx, target: string) => {
       if (isBlocked) {
         requestedUserProfileBlockedAtom(ctx, payload.details.status as 'blocked-by-you' | 'blocked-by-user')
       }
-
+      
       requestedUserMinecraftProfileIsExistsAtom(ctx, user.profiles.some(target => target.type === 'minecraft'))
       requestedUserProfileStatusAtom(ctx, status)
       requestedUserCoverImageAtom(ctx, user.cover_image)
 
+      // #full variant of user
       if (isUserDetailed(user)) {
-        const nickname = ctx.get(currentUserNicknameAtom);
+        const currentUser = ctx.get(currentUserNicknameAtom);
 
-        if (nickname) {
-          requestedUserSectionIsPrivatedAtom(ctx,
-            (!user.preferences.game_stats_visible && nickname === user.nickname)
-          )
+        const isIdentity = currentUser === user.nickname
+
+        if (currentUser) {
+          requestedUserSectionIsPrivatedAtom(ctx, !user.preferences.game_stats_visible && isIdentity)
         }
 
         requestedUserPreferencesAtom(ctx, {
@@ -186,33 +182,32 @@ export const requestedUserAction = reatomAsync(async (ctx, target: string) => {
         })
 
         requestedUserGameStatsVisibleAtom(ctx, user.preferences.game_stats_visible)
+      } else {
+        requestedUserPreferencesAtom(ctx, {
+          cover_outline_visible: user.preferences.cover_outline_visible,
+          show_game_location: user.preferences.show_game_location,
+          game_stats_visible: false,
+          real_name_visible: false,
+          accept_friend_request: false
+        })
       }
-      // @ts-ignore
-      requestedUserPreferencesAtom(ctx, user.preferences)
     } else {
       logger.error("Unexpected payload type", payload);
-    }
+    } 
   },
   onReject: (ctx, error) => {
     if (error instanceof Error) {
       toast.error(error.message)
-
       return ctx.schedule(() => router.navigate({ to: "/" }))
     }
   }
 }).pipe(withStatusesAtom(), withErrorAtom())
 
-function resetRequestedUser(ctx: Ctx) {
-  requestedUserAtom.reset(ctx)
-  requestedUserIsSameAtom.reset(ctx)
-  requestedUserPreferencesAtom.reset(ctx)
-  requestedUserGameStatsVisibleAtom.reset(ctx)
-  requestedUserSectionIsPrivatedAtom.reset(ctx)
-  requestedUserProfileStatusAtom.reset(ctx)
-  requestedUserProfileBlockedAtom.reset(ctx)
-  requestedUserCoverImageAtom.reset(ctx)
-  requestedUserAccountTypeAtom.reset(ctx)
-  requestedUserCoverDetailsAtom.reset(ctx)
+async function getUserProfile(nickname: string) {
+  const res = await forumUserClient.user["get-user-profile"][":nickname"].$get({ param: { nickname } })
+  const data = await res.json()
+  if (!data || "error" in data) return "not-exist"
+  return data.data
 }
 
 export const isParamChanged = (
@@ -229,3 +224,14 @@ export const isParamChanged = (
     callback()
   }
 }
+
+requestedUserAtom.onChange((_, v) => logger.info("requestedUserAtom", v))
+requestedUserIsSameAtom.onChange((_, v) => logger.info("requestedUserIsSameAtom", v))
+requestedUserPreferencesAtom.onChange((_, v) => logger.info("requestedUserPreferencesAtom", v))
+requestedUserGameStatsVisibleAtom.onChange((_, v) => logger.info("requestedUserGameStatsVisibleAtom", v))
+requestedUserSectionIsPrivatedAtom.onChange((_, v) => logger.info("requestedUsersectionIsPrivatedAtom", v))
+requestedUserProfileStatusAtom.onChange((_, v) => logger.info("requestedUserProfileStatusAtom", v))
+requestedUserProfileBlockedAtom.onChange((_, v) => logger.info("requestedUserProfileBlockedAtom", v))
+requestedUserCoverImageAtom.onChange((_, v) => logger.info("requestedUserCoverImageAtom", v))
+requestedUserCoverDetailsAtom.onChange((_, v) => logger.info("requestedUserCoverDetailsAtom", v))
+requestedUserAccountTypeAtom.onChange((_, v) => logger.info("requestedUserAccountTypeAtom", v))

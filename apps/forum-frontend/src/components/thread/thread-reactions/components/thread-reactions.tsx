@@ -1,11 +1,11 @@
 import { REACTIONS } from "@repo/shared/constants/emojis";
 import { ThreadReactionsSkeleton } from "./thread-reactions-skeleton";
-import { ReactionItem } from "../../../reactions/components/reaction-item";
+import { ReactionItem } from "#components/reactions/components/reaction-item";
 import { reatomComponent } from "@reatom/npm-react";
 import { threadReactionsAction } from "../models/thread-reactions.model";
 import { threadParamAtom } from "#components/thread/thread-main/models/thread.model";
 
-const Reactions = reatomComponent(({ ctx }) => {
+export const ThreadReactions = reatomComponent(({ ctx }) => {
   const threadId = ctx.spy(threadParamAtom)
   const data = ctx.spy(threadReactionsAction.dataAtom)
 
@@ -14,35 +14,28 @@ const Reactions = reatomComponent(({ ctx }) => {
   const userReactions = data.userReactions ?? { reactions: [] };
   const threadReactions = data.threadReactions.reactions ?? {};
 
+  if (ctx.spy(threadReactionsAction.statusesAtom).isPending) {
+    return <ThreadReactionsSkeleton />
+  }
+
   return (
-    ctx.spy(threadReactionsAction.statusesAtom).isPending ? (
-      <ThreadReactionsSkeleton />
-    ) : (
-      <div className="flex items-center w-fit gap-2">
-        {Object.keys(threadReactions).map((emojiName) => {
-          const count = threadReactions[emojiName];
-          const isLiked = userReactions.reactions.includes(emojiName) ? true : false;
+    <div className="flex items-center w-fit gap-2">
+      {Object.keys(threadReactions).map((emoji) => {
+        const count = threadReactions[emoji];
+        const isPressed = userReactions.reactions.includes(emoji) ? true : false;
+        const icon = REACTIONS[emoji];
 
-          const Icon = REACTIONS[emojiName];
-
-          return (
-            <ReactionItem
-              key={emojiName}
-              isLiked={isLiked}
-              threadId={threadId}
-              emoji={emojiName}
-              reactionCount={count}
-              Icon={Icon}
-            />
-          );
-        })}
-      </div>
-    )
+        return (
+          <ReactionItem
+            key={emoji}
+            targetId={threadId}
+            isPressed={isPressed}
+            emoji={emoji}
+            count={count}
+            icon={icon}
+          />
+        );
+      })}
+    </div>
   )
 })
-
-export const ThreadReactions = () => {
-  return (
-    <Reactions />
-  )
-}

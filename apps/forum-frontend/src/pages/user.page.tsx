@@ -79,7 +79,7 @@ const Page = reatomComponent(({ ctx }) => {
     case "blocked":
       return (
         <Suspense>
-          <Blocked blockedType={ctx.spy(requestedUserProfileBlockedAtom)!} />
+          <Blocked type={ctx.spy(requestedUserProfileBlockedAtom)!} />
         </Suspense>
       )
     default:

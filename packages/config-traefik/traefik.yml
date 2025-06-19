@@ -109,7 +109,7 @@ http:
       tls: true
       service: minecraft-landing-fasberry-svc
     minecraft-fasberry:
-      rule: "Host(`mc.fasberry.su`) && PathPrefix(`/player`)"
+      rule: "Host(`mc.fasberry.su`) && (PathPrefix(`/player`) || PathPrefix(`/assets`) || PathPrefix(`/lands`))"
       entryPoints: [https]
       tls: true
       service: minecraft-fasberry-svc

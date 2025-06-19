@@ -14,12 +14,13 @@ type AuthImages = {
 };
 
 async function getAuthBackgroundImages() {
-  const res = await forumAdminClient.admin["get-auth-images"].$get();
-  const data = await res.json();
+  // const res = await forumAdminClient.private["get-auth-images"].$get();
+  // const data = await res.json();
 
-  if ("error" in data) return null;
+  // if ("error" in data) return null;
 
-  return data.data;
+  // return data.data;
+  return null
 }
 
 export const authImagesAtom = atom<AuthImages[] | null>(null, "authImagesAtom")
@@ -31,7 +32,9 @@ export const authImagesAction = reatomAsync(async (ctx) => {
 
   let images: Array<AuthImages> = [];
 
+  // @ts-expect-error
   for (let i = 0; i < authBackgroundImages.length; i++) {
+    // @ts-expect-error
     const name = authBackgroundImages[i]?.name;
 
     const image = {
@@ -51,19 +54,20 @@ export const authImagesAction = reatomAsync(async (ctx) => {
 async function createAuthImage({
   files
 }: z.infer<typeof createAuthImageSchema>) {
-  const url = forumAdminClient.admin["create-auth-image"].$url()
+  // const url = forumAdminClient.private["create-auth-image"].$url()
 
-  const res = await ky.post(url, {
-    json: {
-      files
-    }
-  })
+  // const res = await ky.post(url, {
+  //   json: {
+  //     files
+  //   }
+  // })
 
-  if (!res.ok) {
-    return "no-data"
-  }
+  // if (!res.ok) {
+  //   return "no-data"
+  // }
 
-  return await res.json()
+  // return await res.json()
+  return undefined
 }
 
 export const createAuthImageAction = reatomAsync(async (_, files: FileList) => {

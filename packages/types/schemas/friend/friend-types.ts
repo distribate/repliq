@@ -18,7 +18,7 @@ export type FriendWithDetails = {
   real_name: string | null;
   name_color: string;
   favorite_item: number | null;
-  donate: DonateVariantsEnum
+  is_donate: boolean
   note: string | null;
   is_pinned: boolean;
   donate_weight: number | null;

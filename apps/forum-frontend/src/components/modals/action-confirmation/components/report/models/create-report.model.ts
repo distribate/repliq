@@ -1,4 +1,4 @@
-import { reportAtom } from "#components/modals/action-confirmation/components/report/models/report.model";
+import { reportAtom, reportDescriptionAtom, reportDialogIsOpenAtom } from "#components/modals/action-confirmation/components/report/models/report.model";
 import { toast } from "sonner";
 import { currentUserNicknameAtom } from "#components/user/models/current-user.model.ts";
 import { ReportType } from "@repo/types/db/forum-database-types";
@@ -7,7 +7,7 @@ import { forumReportClient } from "@repo/shared/api/forum-client";
 import { reatomAsync, withStatusesAtom } from "@reatom/async";
 
 export type CreateReport = {
-  report_type: ReportType;
+  type: ReportType;
   reason: ReportReasonEnum;
   description?: string
 } & {
@@ -17,21 +17,17 @@ export type CreateReport = {
 };
 
 async function createReport({
-  reason, report_type, targetContent, targetId, targetNickname, description,
+  reason, type, targetContent, targetId, targetNickname, description,
 }: CreateReport) {
-  const reported_item = {
-    targetId,
-    targetContent,
-    targetNickname,
-  };
+  const reported_item = { targetId, targetContent, targetNickname };
 
   const res = await forumReportClient.report["create-report"].$post({
     json: {
       reason,
-      report_type,
+      report_type: type,
       reported_item: JSON.stringify(reported_item),
       target_user_nickname: targetNickname,
-      description,
+      description
     }
   });
 
@@ -52,13 +48,14 @@ export const createReportAction = reatomAsync(async (ctx) => {
     return "self-reported";
   }
 
-  const { reportedItem, type: report_type, reason, description } = reportState;
+  const { reportedItem, type, reason } = reportState;
+  const description = ctx.get(reportDescriptionAtom)
 
-  if (!report_type || !reportedItem || !reason) return;
+  if (!type || !reportedItem || !reason) return;
 
   const { targetNickname, targetId, targetContent } = reportedItem;
 
-  return await createReport({ report_type, targetContent, targetId, targetNickname, reason, description: description ?? undefined });
+  return await createReport({ type, targetContent, targetId, targetNickname, reason, description: description ?? undefined });
 }, {
   name: "createReportAction",
   onFulfill: (ctx, res) => {
@@ -71,7 +68,9 @@ export const createReportAction = reatomAsync(async (ctx) => {
     }
 
     toast.success("Заявка создана");
-
     reportAtom.reset(ctx)
+  },
+  onSettle: (ctx) => {
+    reportDialogIsOpenAtom(ctx, false)
   }
 }).pipe(withStatusesAtom())

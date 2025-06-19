@@ -4,16 +4,16 @@ import { REACTIONS } from "@repo/shared/constants/emojis";
 import { ContextMenuItem } from "@repo/ui/src/components/context-menu";
 import React, { useRef } from "react";
 
-type AvailableReactionsProps = {
-  threadId: string
+type ThreadReactionsAvailable = {
+  id: string
 }
 
-export const AvailableThreadReactions = reatomComponent<AvailableReactionsProps>(({
-  ctx, threadId
+export const ThreadReactionsAvailable = reatomComponent<ThreadReactionsAvailable>(({
+  ctx, id
 }) => {
   const scrollRef = useRef<HTMLDivElement | null>(null);
 
-  const handleAddReaction = (emoji: string) => addReactionAction(ctx, { emoji, id: threadId });
+  const handleAddReaction = (emoji: string) => addReactionAction(ctx, { emoji, id });
 
   const handleWheel = (e: React.WheelEvent) => {
     if (scrollRef.current) {

@@ -1,5 +1,5 @@
 import { Typography } from "@repo/ui/src/components/typography.tsx";
-import { searchTypeParamAtom, threadRelatedAction, usersRelatedAction } from "#components/search/models/search-related.model";
+import { threadRelatedAction, usersRelatedAction } from "#components/search/models/search-related.model";
 import { Skeleton } from "@repo/ui/src/components/skeleton.tsx";
 import { Button } from "@repo/ui/src/components/button.tsx";
 import { Avatar } from "#components/user/avatar/components/avatar.tsx";
@@ -8,8 +8,8 @@ import { reatomComponent } from "@reatom/npm-react";
 import { CustomLink } from "#components/shared/link";
 import { FriendButton } from "#components/friend/components/friend-button/components/friend-button";
 import { SearchThreadsCategories } from "./search-threads-categories";
-import { threadPreviewAtom } from "#components/thread/thread-main/models/thread.model";
 import { createIdLink } from "@repo/lib/utils/create-link";
+import { searchPageTypeAtom } from "../models/search-page.model";
 
 const SearchPageRelatedSkeleton = () => {
   return (
@@ -54,7 +54,6 @@ const RelatedThread = reatomComponent<{ id: string, title: string, description: 
       )}
       <CustomLink
         to={createIdLink("thread", id)}
-        onClick={() => threadPreviewAtom(ctx, { id, title })}
         className="flex items-center w-full"
       >
         <Button state="default" className="px-6 w-full">
@@ -100,11 +99,32 @@ export const SearchRelatedThreads = reatomComponent(({ ctx }) => {
 }, "SearchRelatedThreads")
 
 export const SearchPageRelated = reatomComponent(({ ctx }) => {
+  const type = ctx.spy(searchPageTypeAtom)
+
   return (
     <>
-      {ctx.spy(searchTypeParamAtom) === 'threads' && <SearchThreadsCategories />}
+      {type === 'all' && (
+        <>
+          <SearchThreadsCategories />
+          <div className="flex flex-col gap-y-8 w-full h-full">
+            <div className="flex flex-col gap-y-4 w-full h-full">
+              <Typography className="font-semibold" textSize="very_big">
+                Последние зарегистрированные игроки
+              </Typography>
+              <SearchRelatedUsers />
+            </div>
+            <div className="flex flex-col gap-y-4 w-full h-full">
+              <Typography className="font-semibold" textSize="very_big">
+                Последние треды
+              </Typography>
+              <SearchRelatedThreads />
+            </div>
+          </div>
+        </>
+      )}
+      {type === 'threads' && <SearchThreadsCategories />}
       <div className="flex flex-col gap-y-8 w-full h-full">
-        {ctx.spy(searchTypeParamAtom) === 'users' && (
+        {type === 'users' && (
           <div className="flex flex-col gap-y-4 w-full h-full">
             <Typography className="font-semibold" textSize="very_big">
               Последние зарегистрированные игроки
@@ -112,7 +132,7 @@ export const SearchPageRelated = reatomComponent(({ ctx }) => {
             <SearchRelatedUsers />
           </div>
         )}
-        {ctx.spy(searchTypeParamAtom) === 'threads' && (
+        {type === 'threads' && (
           <div className="flex flex-col gap-y-4 w-full h-full">
             <Typography className="font-semibold" textSize="very_big">
               Последние треды

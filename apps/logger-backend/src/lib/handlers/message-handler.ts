@@ -16,7 +16,11 @@ export const restrictedCommands = [
 
 export type Context = MessageContext<Bot<{}, DeriveDefinitions>>
 
-export const messageHandler = async (ctx: Context, next: () => void) => {
+export function messageHandler(bot: Bot) {
+  bot.on("message", handler);
+}
+
+export const handler = async (ctx: Context, next: () => void) => {
   if (!ctx.text || !ctx.from) return;
 
   const userId = ctx.from.id

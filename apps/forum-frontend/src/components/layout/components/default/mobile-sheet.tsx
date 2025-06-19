@@ -37,7 +37,6 @@ export const BottomBar = reatomComponent(({ ctx }) => {
         </CustomLink>
         <CustomLink
           to="/search"
-          search={{ type: "users" }}
           data-state={path === "/search?type=users"}
           className="text-shark-300 data-[state=true]:text-biloba-flower-500"
         >
@@ -72,7 +71,7 @@ export const SheetMenu = reatomComponent(({ ctx }) => {
           <Avatar nickname={currentUser.nickname} propHeight={64} propWidth={64} />
           <div className="flex flex-col gap-1">
             <UserNickname nickname={currentUser.nickname} className="text-[18px] font-medium text-shark-50" />
-            <UserDonate donate={currentUser.donate} />
+            <UserDonate is_donate={currentUser.is_donate} />
           </div>
         </div>
         <div className="flex flex-col p-4 gap-y-4">

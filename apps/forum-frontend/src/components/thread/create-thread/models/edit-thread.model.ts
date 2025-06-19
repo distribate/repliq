@@ -47,7 +47,7 @@ export const handleAddImagesAction = action((
   const currentUser = ctx.get(currentUserAtom)
   if (!currentUser) return;
 
-  const MAX_IMAGES = currentUser?.donate === "default" ? THREAD_IMAGES_LIMIT_DEFAULT[1] : 3;
+  const MAX_IMAGES = !currentUser.is_donate ? THREAD_IMAGES_LIMIT_DEFAULT[1] : 3;
 
   const images = e.target.files
     ? (Array.from(e.target.files).slice(THREAD_IMAGES_LIMIT_DEFAULT[0], MAX_IMAGES) as Array<File>)
