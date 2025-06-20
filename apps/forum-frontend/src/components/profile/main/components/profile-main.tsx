@@ -67,10 +67,10 @@ export const ProfileContentTabs = reatomComponent(({ ctx }) => {
   return (
     <div className="flex flex-col lg:flex-row w-full gap-12 h-full lg:px-16 relative z-[4]">
       <Tabs defaultValue="posts" className="flex flex-col gap-6 w-full h-full">
-        <TabsList className="md:hidden flex items-center no-scrollbar justify-start px-2 py-4 overflow-x-auto bg-shark-900 w-full">
+        <TabsList className="md:hidden flex *:rounded-xl rounded-xl items-center no-scrollbar gap-1 justify-start px-2 py-4 overflow-x-auto bg-shark-950 w-full">
           <TabsListContent />
         </TabsList>
-        <TabsList className="hidden md:flex justify-start p-2 gap-2 w-fit bg-shark-900">
+        <TabsList className="hidden *:rounded-xl rounded-xl md:flex justify-start p-2 gap-2 w-fit bg-shark-950">
           <TabsListContent />
         </TabsList>
         <div className="flex flex-col lg:flex-row items-start grow *:w-full w-full">

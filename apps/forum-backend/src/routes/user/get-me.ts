@@ -13,7 +13,7 @@ export const getMeRoute = new Hono()
     try {
       const {
         accept_friend_request, cover_outline_visible, game_stats_visible,
-        profile_visibility, real_name_visible, send_notifications, show_game_location,
+        profile_visibility, real_name_visible, send_notifications, show_game_location, notify_in_telegram,
         ...user
       } = await getUserInfo(nickname)
 
@@ -27,6 +27,7 @@ export const getMeRoute = new Hono()
         real_name_visible,
         send_notifications,
         show_game_location,
+        notify_in_telegram
       }
 
       if (user.cover_image) {

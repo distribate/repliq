@@ -2,51 +2,49 @@ import { Typography } from "@repo/ui/src/components/typography";
 import { reatomComponent, useUpdate } from "@reatom/npm-react";
 import { TimerAtom, reatomTimer } from '@reatom/timer'
 import { atom } from "@reatom/core";
-import { onDisconnect } from "@reatom/framework";
 import { router } from "#main";
 import { createIdLink } from "@repo/lib/utils/create-link";
 
-const redirectDestinationAtom = atom<string | null>(null, "redirectDestination")
-
 const redirectTimer = reatomTimer({
   name: 'redirectAtom',
-  interval: 1000, 
+  interval: 1000,
   delayMultiplier: 1,
-  progressPrecision: 2, 
+  progressPrecision: 2,
   resetProgress: true
 })
 
-const remainsAtom = (timer: TimerAtom) => atom((ctx) => (1 - ctx.spy(timer.progressAtom)) * 100,`redirectTimer.remains`)
+const remainsAtom = (timer: TimerAtom) => atom((ctx) => {
+  const progress = ctx.spy(timer.progressAtom);
 
-redirectTimer.endTimer.onCall(async (ctx) => {
-  const destination = ctx.get(redirectDestinationAtom)
-
-  if (destination) {
-    router.navigate({ to: createIdLink("user", destination) });
-  } else {
-    router.navigate({ to: "/" });
-  }
-})
-
-const SyncUpdateRedirect = ({ target }: { target: string | null }) => {
-  useUpdate((ctx) => {
-    redirectDestinationAtom(ctx, target)
-    redirectTimer.startTimer(ctx, 5000)
-  }, [])
-
-  return null;
-}
-
-onDisconnect(redirectTimer, redirectTimer.stopTimer)
+  return Math.round((1 - progress) * 5);
+}, `redirectTimer.remains`)
 
 export const UserNotExistCounter = reatomComponent<{ redirectUser: string }>(({
   ctx, redirectUser
 }) => {
+  const remains = ctx.spy(remainsAtom(redirectTimer));
+
+  useUpdate((ctx) => {
+    redirectTimer.startTimer(ctx, 5000);
+
+    const unsubscribe = redirectTimer.endTimer.onCall((ctx) => {
+      const to = redirectUser ? createIdLink("user", redirectUser) : "/";
+      router.navigate({ to });
+    });
+
+    return () => {
+      redirectTimer.stopTimer(ctx);
+      unsubscribe();
+    };
+  }, [redirectUser]); 
+
   return (
     <div className="flex flex-col">
-      <SyncUpdateRedirect target={redirectUser} />
       <Typography>
-        {ctx.spy(remainsAtom(redirectTimer))} секунд до редиректа на ваш профиль
+        {remains > 0
+          ? `${remains} секунд до редиректа на ваш профиль`
+          : 'Выполняется редирект...'
+        }
       </Typography>
     </div>
   );

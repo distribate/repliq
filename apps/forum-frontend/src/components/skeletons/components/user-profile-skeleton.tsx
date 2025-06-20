@@ -5,8 +5,8 @@ import { UserPostsSkeleton } from "#components/skeletons/components/user-posts-s
 
 export const UserContentSkeleton = () => {
   return (
-    <div className="flex w-full h-full gap-12 px-12  relative z-[4]">
-      <div className="flex flex-col grow w-fit">
+    <div className="flex flex-col lg:flex-row w-full gap-12 h-full lg:px-16 relative z-[4]">
+      <div className="flex flex-col gap-6 w-full h-full">
         <div className="flex flex-col min-w-[400px] w-full">
           <div className="flex flex-row items-center justify-start gap-2">
             <Skeleton className="w-20 h-12" />
@@ -19,12 +19,6 @@ export const UserContentSkeleton = () => {
             <Skeleton className="w-32 h-12" />
           </div>
           <UserPostsSkeleton />
-        </div>
-      </div>
-      <div className="flex flex-col w-1/3 h-full">
-        <div className="flex w-[500px] h-[500px] gap-2">
-          <Skeleton className="w-[100px] h-1/2" />
-          <Skeleton className="w-full h-[500px]" />
         </div>
       </div>
     </div>

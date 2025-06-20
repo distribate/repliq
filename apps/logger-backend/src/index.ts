@@ -15,6 +15,7 @@ import { checkOnlineCommand } from "./lib/commands/check-online-command.ts"
 import { alertCommand } from "./lib/commands/alert-command.ts"
 import { connectUserCommand } from "./lib/commands/connect-command.ts"
 import { messageHandler } from "./lib/handlers/message-handler.ts";
+import { subscribeDisconnectService } from './subscribers/sub-disconnect-service.ts';
 
 export const commandRegistry = [
   {
@@ -75,6 +76,9 @@ async function startNats() {
 
   subscribeAdminLog()
   natsLogger.success("Subscribed to admin log")
+
+  subscribeDisconnectService()
+  natsLogger.success("Subscribed to disconnect service")
 }
 
 await startBots()

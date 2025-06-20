@@ -10,9 +10,7 @@ type GetThreadsUser = {
   query?: string;
 };
 
-export async function getThreadsUser({
-  nickname, query,
-}: GetThreadsUser) {
+export async function getThreadsUser({ nickname, query }: GetThreadsUser) {
   const res = await forumUserClient.user["get-user-threads"][":nickname"].$get({
     param: { nickname }, query: { querySearch: query }
   })

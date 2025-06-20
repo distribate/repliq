@@ -7,12 +7,13 @@ const forumDialect = ({
   host, database, user, password, port, tenantId
 }: DatabaseConnection & { tenantId: string }) => {
   return new PostgresDialect({
-    pool: async () => new Pool({
+    pool: new Pool({
       database, host, port, password, 
       user: `${user}.${tenantId}`,
       max: 16,
       idleTimeoutMillis: 30000,
-      keepAlive: true
+      keepAlive: true,
+      connectionTimeoutMillis: 5000,
     })
   });
 };

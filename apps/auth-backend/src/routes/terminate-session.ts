@@ -3,8 +3,6 @@ import { z } from "zod/v4";
 import { zValidator } from "@hono/zod-validator";
 import { deleteSessionToken } from "../utils/delete-session-token";
 import type { Env } from "../types/env-type";
-import { terminateAllSessions } from "../lib/queries/terminate-all-sessions";
-import { terminateSession } from "../lib/queries/terminate-session";
 import { DEFAULT_SESSION_EXPIRE } from "../shared/constants/session-expire";
 import { validateUserRequest } from "../middlewares/validate-user-request";
 import { throwError } from "@repo/lib/helpers/throw-error";
@@ -26,6 +24,22 @@ export async function getCurrentSessionCreatedAt(currentSessionId: string) {
     .select("created_at")
     .where("session_id", "=", currentSessionId)
     .executeTakeFirstOrThrow();
+}
+
+async function terminateSession(sessionId: string) {
+  return forumDB
+    .deleteFrom("users_session")
+    .where("session_id", "=", sessionId)
+    .executeTakeFirstOrThrow();
+}
+
+async function terminateAllSessions(nickname: string, currentSessionId: string) {
+  return forumDB
+    .deleteFrom("users_session")
+    .where("nickname", "=", nickname)
+    .where("session_id", "!=", currentSessionId)
+    .returning("token")
+    .execute();
 }
 
 export const terminateSessionRoute = new Hono<Env>()

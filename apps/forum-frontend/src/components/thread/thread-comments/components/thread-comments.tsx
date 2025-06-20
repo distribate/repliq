@@ -11,7 +11,7 @@ import { updateCommentsAction } from '../models/update-comments.model.ts';
 import { SectionSkeleton } from '#components/templates/components/section-skeleton.tsx';
 import { reatomComponent, useUpdate } from '@reatom/npm-react';
 import { onConnect } from '@reatom/framework';
-import { threadAtom, threadOwnerAtom, threadParamAtom } from '#components/thread/thread-main/models/thread.model.ts';
+import { threadAtom, threadOwnerAtom, threadParamAtom, threadPropertiesAtom } from '#components/thread/thread-main/models/thread.model.ts';
 import { userGlobalOptionsAtom } from '#components/user/models/current-user.model.ts';
 import { ThreadCommentsHeader } from './thread-comments-header.tsx';
 import { Typography } from '@repo/ui/src/components/typography.tsx';
@@ -103,14 +103,15 @@ export const ThreadCommentsSection = reatomComponent(({ ctx }) => {
   const can_create_comments = ctx.spy(userGlobalOptionsAtom).can_create_comments
   const thread = ctx.spy(threadAtom)
   const threadOwner = ctx.spy(threadOwnerAtom)
+  const properties = ctx.spy(threadPropertiesAtom)
 
-  if (!thread || !threadOwner) return null;
+  if (!thread || !threadOwner || !properties) return null;
 
   return (
     <div className="flex flex-col w-full h-full mt-4 gap-y-4">
-      {thread.properties.is_comments ? (
+      {properties.is_comments ? (
         <>
-          <ThreadCommentsHeader non_comments={!thread.properties.is_comments} />
+          <ThreadCommentsHeader non_comments={!properties.is_comments} />
           {can_create_comments ? (
             <CreateThreadComment />
           ) : (
@@ -124,7 +125,7 @@ export const ThreadCommentsSection = reatomComponent(({ ctx }) => {
           <CommentsDisabled />
         </Suspense>
       )}
-      <ThreadComments owner={threadOwner} properties={thread.properties} />
+      <ThreadComments owner={threadOwner} properties={properties} />
       {thread.comments_count >= ANCHOR_MIN_COMMENTS_LENGTH && <ThreadCommentsAnchor />}
     </div>
   )

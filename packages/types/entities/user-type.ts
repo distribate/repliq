@@ -22,6 +22,7 @@ export type UserDetailed = Omit<Selectable<Users>,
     profile_visibility: "all" | "friends",
     send_notifications: boolean;
     show_game_location: boolean;
+    notify_in_telegram: boolean
   },
 }
 

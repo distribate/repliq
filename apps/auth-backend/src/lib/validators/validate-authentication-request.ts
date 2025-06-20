@@ -1,7 +1,7 @@
 import { isProduction } from "@repo/lib/helpers/is-production"
 import type { Context } from "hono"
 import { verifyAuth } from "../../utils/verify-auth"
-import { getClientIp } from "../../utils/gen-client-ip"
+import { getClientIp } from "../../utils/get-client-ip"
 import { validateIpRestricts } from "../../utils/validate-ip-restricts"
 
 type ValidateAuthenticationRequest = {

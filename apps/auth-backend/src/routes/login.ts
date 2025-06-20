@@ -6,7 +6,7 @@ import { createSessionBodySchema } from "@repo/types/schemas/auth/create-session
 import { createSessionTransaction } from "../lib/transactions/create-session-transaction.ts";
 import { setCookie } from "hono/cookie";
 import bcrypt from 'bcryptjs';
-import { getClientIp } from "../utils/gen-client-ip.ts";
+import { getClientIp } from "../utils/get-client-ip.ts";
 import type { Context } from "hono";
 import type { Session } from "../types/session-type";
 import type { User } from "../types/session-type.ts"

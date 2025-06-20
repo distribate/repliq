@@ -42,23 +42,23 @@ export async function getUserInformation(): Promise<UserDetailed> {
 }
 
 export const currentUserResource = reatomResource(async (ctx) => {
-  const existingUser = ctx.get(currentUserAtom); 
+  const existingUser = ctx.get(currentUserAtom);
 
   if (existingUser) {
-    return existingUser; 
+    return existingUser;
   }
 
   const freshUser = await ctx.schedule(() => getUserInformation());
-  
-  return freshUser; 
+
+  return freshUser;
 }, "currentUserResource").pipe(
   withStatusesAtom(),
   withErrorAtom((ctx, error) => {
     if (error) {
-      return redirect({ to: AUTH_REDIRECT }); 
+      return redirect({ to: AUTH_REDIRECT });
     }
 
-    return error; 
+    return error;
   }),
 )
 
@@ -71,11 +71,7 @@ currentUserResource.onFulfill.onCall((ctx, res) => {
       currentUserAtom(ctx, res);
     }
 
-    const isInited = ctx.get(userGlobalOptionsAtomIsInitAtom)
-    
-    if (!isInited) {
-      userGlobalOptionsAction(ctx); 
-    }
+    userGlobalOptionsAction(ctx);
   }
 })
 
@@ -96,12 +92,10 @@ export const getUser = (ctx: CtxSpy | Ctx) => {
   return user;
 }
 
-async function getUserGlobalOptions() {
-  const res = await forumUserClient.user["get-user-global-options"].$get()
+async function getUserGlobalOptions(signal: AbortSignal) {
+  const res = await forumUserClient.user["get-user-global-options"].$get({}, { init: { signal } })
   const data = await res.json()
-
   if (!data || "error" in data) return null;
-
   return data.data;
 }
 
@@ -110,22 +104,28 @@ const initial = {
   can_create_threads: false,
   can_create_comments: false,
   can_create_posts: false,
+  can_create_issue: false,
   has_new_notifications: false,
   has_new_friends: false,
-  has_new_events: false,
 }
 
 const userGlobalOptionsAtomIsInitAtom = atom(false, "userGlobalOptionsAtomIs")
 export const userGlobalOptionsAtom = atom<typeof initial>(initial, "userGlobalOptions")
 
-export const userGlobalOptionsAction = reatomAsync(async (ctx) => {  
-  return await ctx.schedule(() => getUserGlobalOptions())
+export const userGlobalOptionsAction = reatomAsync(async (ctx) => {
+  const isInited = ctx.get(userGlobalOptionsAtomIsInitAtom)
+
+  if (isInited) {
+    return ctx.get(userGlobalOptionsAtom)
+  }
+
+  return await ctx.schedule(() => getUserGlobalOptions(ctx.controller.signal))
 }, {
   name: "userGlobalOptionsAction",
   onFulfill: (ctx, res) => {
-    if (res) {
-      userGlobalOptionsAtomIsInitAtom(ctx, true)
-      userGlobalOptionsAtom(ctx, res)
-    }
+    if (!res) return;
+
+    userGlobalOptionsAtomIsInitAtom(ctx, true)
+    userGlobalOptionsAtom(ctx, res)
   }
 })

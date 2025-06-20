@@ -20,6 +20,8 @@ export type ThreadDetailed = {
   properties: {
     is_comments: boolean;
     is_updated: boolean;
+    //
+    is_saved?: boolean
   }
 }
 

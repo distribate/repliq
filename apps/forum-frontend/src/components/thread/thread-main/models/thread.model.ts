@@ -20,9 +20,10 @@ export const threadContentfallback = [
 ];
 
 export const threadParamAtom = atom<string | null>(null, "threadParam").pipe(withHistory(1))
-export const threadAtom = atom<Omit<ThreadDetailed, "content" | "owner"> | null>(null, "thread").pipe(withReset())
+export const threadAtom = atom<Omit<ThreadDetailed, "content" | "owner" | "properties"> | null>(null, "thread").pipe(withReset())
 export const threadOwnerAtom = atom<ThreadOwner | null>(null, "threadOwner").pipe(withReset())
 export const threadContentAtom = atom<ThreadDetailed["content"] | null>(null, "threadContent").pipe(withReset())
+export const threadPropertiesAtom = atom<ThreadDetailed["properties"] | null>(null, "threadProperties")
 
 export const threadModeAtom = atom<"read" | "edit">("read", "threadMode")
 export const threadIsEditableAtom = atom(false, "threadIsEditable")
@@ -66,7 +67,7 @@ export const defineThreadAction = reatomAsync(async (ctx, threadId: string) => {
       return;
     }
 
-    const { owner, content, ...rest } = res;
+    const { owner, content, properties, ...rest } = res;
 
     threadReactionsAction(ctx, res.id)
 
@@ -76,6 +77,7 @@ export const defineThreadAction = reatomAsync(async (ctx, threadId: string) => {
 
     threadOwnerAtom(ctx, owner)
     threadContentAtom(ctx, content)
+    threadPropertiesAtom(ctx, properties)
     threadAtom(ctx, rest)
   }
 }).pipe(withStatusesAtom())

@@ -15,41 +15,29 @@ type ControlPost = {
 
 async function pinPost({ id, value}: { id: string; value: boolean }) {
   const res = await forumPostClient.post["pin-post"].$post({ json: { id, value } })
-
   const data = await res.json();
-
   if ("error" in data) return null
-
   return data;
 }
 
 async function editPost({ content, id }: { id: string, content: string }) {
   const res = await forumPostClient.post["edit-post"].$post({  json: {  id, content } })
-
   const data = await res.json();
-
   if ("error" in data) return null
-
   return data;
 }
 
 async function disablePostComments({ id}: { id: string }) {
   const res = await forumCommentClient.comment["disable-comments"].$post({ json: {  id, type: "post" } })
-
   const data = await res.json();
-
   if ("error" in data) return null
-
   return data;
 }
 
 async function deletePost({ id }: { id: string }) {
   const res = await forumPostClient.post["delete-post"].$delete({ json: { id  } })
-
   const data = await res.json();
-
   if ("error" in data) return null
-
   return data;
 }
 

@@ -14,7 +14,9 @@ export async function getUserSession(sessionId: string) {
 
 export const validateUserRequest = createMiddleware(async (ctx, next) => {
   const sessionToken = getCookie(ctx, "session")
-  const sessionId = encodeHexLowerCase(sha256(new TextEncoder().encode(sessionToken)));
+  const sessionId = encodeHexLowerCase(
+    sha256(new TextEncoder().encode(sessionToken))
+  );
   
   const session = await getUserSession(sessionId)
 

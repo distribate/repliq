@@ -3,95 +3,54 @@ import { getNickname } from "#utils/get-nickname-from-storage.ts";
 import { validateAdmin } from "#lib/validators/validate-admin.ts";
 import { throwError } from "@repo/lib/helpers/throw-error";
 import { Hono } from "hono";
+import { sql } from "kysely";
 
-async function hasNewNotifications(nickname: string) {
-  const exists = await forumDB
-    .selectFrom("notifications")
-    .select("nickname")
-    .where("nickname", "=", nickname)
-    .where("read", "=", false)
-    .executeTakeFirst();
+const MAX_POSTS_BY_DAY = 10
+const MAX_COMMENTS_BY_DAY = 40;
+const MAX_THREADS_BY_DAY = 10;
 
-  return !!exists;
-}
+async function getUserStatusAndPermissions(nickname: string) {
+  const result = await forumDB
+    .selectFrom('users')
+    .where('users.nickname', '=', nickname)
+    .select([
+      // #has new unread notifications?
+      sql<boolean>`(
+      SELECT count(*) FROM notifications 
+      WHERE notifications.nickname = ${nickname} AND notifications.read = false
+    ) > 0`.as('has_new_notifications'),
+      // #has new incoming friends requests?
+      sql<boolean>`(
+      SELECT count(*) FROM friends_requests 
+      WHERE friends_requests.recipient = ${nickname}
+    ) > 0`.as('has_new_friends'),
+      // #can create a issue (ticket)? (1 ticket in day)
+      sql<boolean>`(
+      SELECT count(*) FROM issues 
+      WHERE issues.user_nickname = ${nickname} AND issues.created_at > NOW() - INTERVAL '1 day'
+    ) = 0`.as('can_create_issue'),
+      // #can create a posts?
+      sql<boolean>`(
+      (SELECT count(*) FROM users_punish WHERE users_punish.nickname = ${nickname} AND users_punish.type = 'posts') = 0
+      AND
+      (SELECT count(*) FROM posts_users WHERE posts_users.nickname = ${nickname} AND posts_users.created_at > NOW() - INTERVAL '1 day') < ${MAX_POSTS_BY_DAY}
+    )`.as('can_create_posts'),
+      // #can create comments?
+      sql<boolean>`(
+      (SELECT count(*) FROM users_punish WHERE users_punish.nickname = ${nickname} AND users_punish.type = 'comments') = 0
+      AND
+      (SELECT count(*) FROM comments WHERE comments.user_nickname = ${nickname} AND comments.created_at > NOW() - INTERVAL '1 day') < ${MAX_COMMENTS_BY_DAY}
+    )`.as('can_create_comments'),
+      // #can create threads?
+      sql<boolean>`(
+      (SELECT count(*) FROM users_punish WHERE users_punish.nickname = ${nickname} AND users_punish.type = 'threads') = 0
+      AND
+      (SELECT count(*) FROM threads_users WHERE threads_users.user_nickname = ${nickname} AND threads_users.created_at > NOW() - INTERVAL '1 day') < ${MAX_THREADS_BY_DAY}
+    )`.as('can_create_threads'),
+    ])
+    .executeTakeFirst(); 
 
-async function hasNewFriends(nickname: string) {
-  const exists = await forumDB
-    .selectFrom("friends_requests")
-    .select("id")
-    .where("recipient", "=", nickname)
-    .executeTakeFirst();
-
-  return !!exists
-}
-
-async function hasCreatePosts(nickname: string) {
-  const [countByDay, isPunish] = await Promise.all([
-    forumDB
-      .selectFrom("posts_users")
-      .select("post_id")
-      .where("nickname", "=", nickname)
-      .where("posts_users.created_at", ">", new Date(Date.now() - 24 * 60 * 60 * 1000))
-      .execute(),
-    forumDB
-      .selectFrom("users_punish")
-      .select("id")
-      .where("nickname", "=", nickname)
-      .where("type", "=", "posts")
-      .execute()
-  ])
-
-  if (isPunish.length >= 1) return false;
-
-  if (countByDay.length >= 10) return false;
-
-  return true
-}
-
-async function hasCreateComments(nickname: string) {
-  const [countByDay, isPunish] = await Promise.all([
-    forumDB
-      .selectFrom("comments")
-      .select("comments.id")
-      .where("user_nickname", "=", nickname)
-      .where("comments.created_at", ">", new Date(Date.now() - 24 * 60 * 60 * 1000))
-      .execute(),
-    forumDB
-      .selectFrom("users_punish")
-      .select("id")
-      .where("nickname", "=", nickname)
-      .where("type", "=", "comments")
-      .execute()
-  ])
-
-  if (isPunish.length >= 1) return false;
-
-  if (countByDay.length >= 40) return false;
-
-  return true
-}
-
-async function hasCreateThreads(nickname: string) {
-  const [countByDay, isPunish] = await Promise.all([
-    forumDB
-      .selectFrom("threads_users")
-      .select("thread_id")
-      .where("threads_users.user_nickname", "=", nickname)
-      .where("threads_users.created_at", ">", new Date(Date.now() - 24 * 60 * 60 * 1000))
-      .execute(),
-    forumDB
-      .selectFrom("users_punish")
-      .select("id")
-      .where("nickname", "=", nickname)
-      .where("type", "=", "threads")
-      .execute()
-  ])
-
-  if (isPunish.length >= 1) return false;
-
-  if (countByDay.length >= 10) return false;
-
-  return true
+  return result;
 }
 
 export const getUserGlobalOptionsRoute = new Hono()
@@ -99,33 +58,26 @@ export const getUserGlobalOptionsRoute = new Hono()
     const nickname = getNickname();
 
     try {
-      const [
-        is_admin,
-        has_new_notifications,
-        has_new_friends,
-        can_create_posts,
-        can_create_comments,
-        can_create_threads
-      ] = await Promise.all([
-        validateAdmin(nickname),
-        hasNewNotifications(nickname),
-        hasNewFriends(nickname),
-        hasCreatePosts(nickname),
-        hasCreateComments(nickname),
-        hasCreateThreads(nickname)
+      const [perms, isAdmin] = await Promise.all([
+        getUserStatusAndPermissions(nickname),
+        validateAdmin(nickname)
       ]);
 
-      return ctx.json({
-        data: {
-          is_admin,
-          can_create_threads,
-          can_create_comments,
-          can_create_posts,
-          has_new_notifications,
-          has_new_friends,
-          has_new_events: false
-        }
-      }, 200)
+      if (!perms) {
+        return ctx.json({ error: "User not found" }, 404);
+      }
+
+      const data = {
+        is_admin: isAdmin, 
+        has_new_notifications: Boolean(perms.has_new_notifications),
+        has_new_friends: Boolean(perms.has_new_friends),
+        can_create_issue: Boolean(perms.can_create_issue),
+        can_create_posts: Boolean(perms.can_create_posts),
+        can_create_comments: Boolean(perms.can_create_comments),
+        can_create_threads: Boolean(perms.can_create_threads),
+      };
+
+      return ctx.json({ data }, 200)
     } catch (e) {
       return ctx.json({ error: throwError(e) }, 500);
     }

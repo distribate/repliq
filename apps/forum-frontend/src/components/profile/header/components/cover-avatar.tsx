@@ -7,11 +7,11 @@ import { Dialog, DialogClose, DialogContent, DialogTrigger } from "@repo/ui/src/
 import { Button } from "@repo/ui/src/components/button";
 import { Typography } from "@repo/ui/src/components/typography";
 
-const userCoverAvatarVariants = cva(`flex items-center group relative justify-center md:size-[160px] size-[80px]`, {
+const userCoverAvatarVariants = cva(`flex items-center group relative justify-center md:size-[160px] size-[112px]`, {
   variants: {
     variant: {
       full: "size-[160px]",
-      compact: "size-[80px]"
+      compact: "size-[112px]"
     }
   }
 })

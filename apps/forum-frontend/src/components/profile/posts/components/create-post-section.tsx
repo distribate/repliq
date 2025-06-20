@@ -8,13 +8,15 @@ import { PostAdditionalForm } from "#components/post/create-post/components/post
 import { PostPublishButton } from "#components/post/create-post/components/post-publish-button";
 import { postFormIsActiveAtom, postFormResetAction } from "#components/post/create-post/models/post-form.model";
 import { getUser } from "#components/user/models/current-user.model";
+import { IconX } from "@tabler/icons-react";
 
 const PostCancelButton = reatomComponent(({ ctx }) => {
   return (
-    <Button onClick={() => postFormResetAction(ctx)} variant="negative">
-      <Typography className="text-shark-50 text-base">
+    <Button className="px-2 sm:px-4" state="default" onClick={() => postFormResetAction(ctx)}>
+      <Typography className="hidden sm:inline text-shark-50 text-base">
         Отмена
       </Typography>
+      <IconX size={22} className="text-red-500 sm:hidden" />
     </Button>
   );
 }, "PostCancelButton")
@@ -24,13 +26,13 @@ const CreatePostActiveSection = () => {
     <div className="flex flex-col py-2 w-full">
       <div className="flex flex-col">
         <Separator orientation="horizontal" />
-        <div className="flex items-center pt-2 justify-between w-full">
+        <div className="flex items-center pt-2 gap-2 justify-between w-full">
           <div className="flex items-center gap-2">
             <PostAdditionalForm />
           </div>
-          <div className="flex items-center gap-2">
-            <PostPublishButton />
+          <div className="flex items-center gap-1 sm:gap-2">
             <PostCancelButton />
+            <PostPublishButton />
           </div>
         </div>
       </div>
@@ -55,10 +57,10 @@ const PostSectionAvatar = reatomComponent(({ ctx }) => {
 const PostInactiveForm = () => {
   return (
     <div
-      className="flex flex-col px-4 py-2 bg-shark-950 border border-shark-800 w-full rounded-lg overflow-hidden h-full"
+      className="flex flex-col px-2 sm:px-4 py-2 bg-shark-950 border border-shark-800 w-full rounded-lg overflow-hidden h-full"
     >
       <div className="flex items-start h-full w-full gap-2 justify-between">
-        <div className="flex gap-2 items-start w-full h-full">
+        <div className="flex gap-2 lg:gap-4 items-start w-full h-full">
           <PostSectionAvatar />
           <div className="flex w-full overflow-hidden *:w-full relative h-full">
             <PostTextForm />

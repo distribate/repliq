@@ -31,7 +31,7 @@ export const registerRoute = new Hono()
     try {
       const result = await createUserTransaction({ findout, nickname, referrer, password })
 
-      if (!result || !result.id) {
+      if (!result || !result.nickname) {
         return ctx.json({ error: 'Error in creating user' }, 400);
       }
 

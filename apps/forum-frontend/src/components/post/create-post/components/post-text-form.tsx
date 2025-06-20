@@ -17,7 +17,7 @@ export const PostTextForm = reatomComponent(({ ctx }) => {
       id="post-content"
       placeholder="Напишите что-нибудь"
       maxLength={POST_CONTENT_LIMIT[1]}
-      className="text-[18px] !resize-none !px-2 mb-2 h-full"
+      className="text-base lg:text-lg !resize-none !px-0 mb-2 h-full"
       onClick={() => postFormIsActiveAtom(ctx, true)}
       onChange={e => onChange(ctx, e)}
     />

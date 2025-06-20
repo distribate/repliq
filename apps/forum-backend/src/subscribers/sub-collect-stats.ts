@@ -1,6 +1,7 @@
 import { COLLECT_STATS_SUBJECT, type StatsPayload } from "#publishers/pub-collect-stats.ts";
 import { forumDB } from "#shared/database/forum-db.ts";
 import { getNatsConnection } from "@repo/config-nats/nats-client"
+import { isProduction } from "@repo/lib/helpers/is-production";
 import { logger } from "@repo/lib/utils/logger";
 import { sql } from "kysely";
 
@@ -45,8 +46,7 @@ export const subscribeCollectStats = () => {
         `.execute(forumDB);
           if (s.rows.length > 0) isStatsUpdated = true;
         }
-        
-        logger.info(`isStatsUpdated: ${isStatsUpdated} for ${payload.initiator ?? payload.ip}`)
+      
       } catch (e) {
         if (e instanceof Error) {
           logger.error(e.message)

@@ -1,7 +1,6 @@
 import { encodeHexLowerCase } from "@oslojs/encoding";
 import { HTTPException } from "hono/http-exception";
 import { sha256 } from "@oslojs/crypto/sha2";
-import { updateSessionExpires } from "../lib/queries/update-session.ts";
 import { deleteSession } from "../lib/queries/delete-session.ts";
 import type { Session } from "../types/session-type.ts";
 import { MIN_SESSION_EXPIRE } from "../shared/constants/session-expire.ts";
@@ -24,8 +23,21 @@ const getSession = async (session_id: string) => {
     .executeTakeFirst();
 }
 
+type UpdateSessionExpire = {
+  expires_at: Date,
+  session_id: string
+}
+
+const updateSessionExpires = async ({ expires_at, session_id }: UpdateSessionExpire) => {
+  return forumDB
+    .updateTable("users_session")
+    .set({ expires_at: expires_at })
+    .where("session_id", "=", session_id)
+    .execute();
+}
+
 export async function validateSessionToken(
-  token: string,
+  token: string
 ): Promise<Pick<SessionResult, "session_id" | "nickname" | "expires_at"> | null> {
   const sessionId = encodeHexLowerCase(
     sha256(new TextEncoder().encode(token))

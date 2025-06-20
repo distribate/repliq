@@ -17,13 +17,9 @@ async function connectProfile({ nickname, type }: { nickname: string, type: "min
     .where("nickname", "=", nickname)
     .executeTakeFirstOrThrow()
 
-  // todo: implement validation of request to connect profile (totp???)
-
   const isValid = false;
 
-  if (!isValid) {
-    return;
-  }
+  if (!isValid) return;
 
   const query = await forumDB.transaction().execute(async (trx) => {
     const profile = await trx

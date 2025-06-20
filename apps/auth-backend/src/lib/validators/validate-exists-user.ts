@@ -1,4 +1,3 @@
-import { logger } from "@repo/lib/utils/logger";
 import { forumDB } from "../../shared/database/forum-db";
 import { authDB } from "../../shared/database/auth-db";
 

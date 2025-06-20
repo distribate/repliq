@@ -3,8 +3,7 @@ import { ThreadControlTitle } from "./thread-control-title.tsx";
 import { ThreadControlDescription } from "./thread-control-description.tsx";
 import { ThreadControlComments } from "./thread-control-comments.tsx";
 import { ThreadControlSave } from "#components/thread/thread-control/components/thread-control-save.tsx";
-import { threadAtom } from "#components/thread/thread-main/models/thread.model.ts";
-import { useAtom } from "@reatom/npm-react";
+import { threadAtom, threadPropertiesAtom } from "#components/thread/thread-main/models/thread.model.ts";
 import { Button } from "@repo/ui/src/components/button.tsx";
 import { ConfirmationActionModalTemplate } from "#components/modals/confirmation-modal/components/confirmation-action-modal.tsx";
 import { ConfirmationButton } from "#components/modals/confirmation-modal/components/confirmation-action-button.tsx";
@@ -47,32 +46,29 @@ const ThreadRemoveModal = reatomComponent<Pick<ThreadPreview, "id">>(({ ctx, id 
   );
 }, "ThreadRemoveModal")
 
-type ThreadControlMainProps = {
-  threadId: string;
-};
+export const ThreadControlMain = reatomComponent(({ 
+  ctx
+}) => {
+  const thread = ctx.spy(threadAtom)
+  const properties = ctx.spy(threadPropertiesAtom)
 
-export const ThreadControlMain = ({
-  threadId
-}: ThreadControlMainProps) => {
-  const [currentThread] = useAtom(threadAtom)
-
-  if (!currentThread) return null;
+  if (!thread || !properties) return null;
 
   return (
     <div className="flex flex-col gap-y-4 px-4 w-full">
       <Typography variant="dialogTitle">
-        {currentThread.title}&nbsp;
+        {thread.title}&nbsp;
         <span className="text-shark-400 text-sm">ред.</span>
       </Typography>
       <div className="flex flex-col gap-y-4 justify-between">
-        <ThreadControlTitle title={currentThread.title} />
-        <ThreadControlDescription description={currentThread.description} />
-        <ThreadControlComments is_comments={currentThread.properties.is_comments} />
+        <ThreadControlTitle title={thread.title} />
+        <ThreadControlDescription description={thread.description} />
+        <ThreadControlComments is_comments={properties.is_comments} />
         <div className="flex items-center gap-2 justify-end w-full">
-          <ThreadControlSave threadId={threadId} />
-          <ThreadRemoveModal id={currentThread.id} />
+          <ThreadControlSave threadId={thread.id} />
+          <ThreadRemoveModal id={thread.id} />
         </div>
       </div>
     </div>
   );
-};
+}, "ThreadControlMain")

@@ -801,6 +801,13 @@ export interface ThreadsReactions {
   user_nickname: string;
 }
 
+export interface ThreadsSaved {
+  created_at: Generated<Timestamp>;
+  id: Generated<Int8>;
+  nickname: string;
+  thread_id: string;
+}
+
 export interface ThreadsTags {
   id: Generated<Int8>;
   tags: string[];
@@ -1047,6 +1054,7 @@ export interface DB {
   threads_images: ThreadsImages;
   threads_pinned: ThreadsPinned;
   threads_reactions: ThreadsReactions;
+  threads_saved: ThreadsSaved;
   threads_tags: ThreadsTags;
   threads_users: ThreadsUsers;
   threads_views: ThreadsViews;

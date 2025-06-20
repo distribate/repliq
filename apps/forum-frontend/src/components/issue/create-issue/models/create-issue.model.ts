@@ -5,6 +5,8 @@ import { createIssueSchema } from "@repo/types/schemas/issue/create-issue-schema
 import { z } from "zod/v4"
 import { action, atom } from "@reatom/core";
 import { sleep, withComputed, withConcurrency } from "@reatom/framework";
+import { globalPreferencesAtom } from "#components/user/settings/main/models/update-global-preferences.model";
+import { userGlobalOptionsAtom } from "#components/user/models/current-user.model";
 
 export const CREATE_ISSUE_LIMITATIONS: Record<string, string> = {
   "daily_limit": "Сообщение можно создать только раз в сутки"
@@ -36,17 +38,13 @@ export const isValidAtom = atom(false, "isValid").pipe(withComputed((ctx) => {
   const type = ctx.spy(issueTypeAtom)
 
   const result = createIssueSchema.safeParse({ title, description: desc, type })
-  
+
   return result.success
 }))
 
 async function createIssue(values: CreateIssue) {
-  const res = await forumUserClient.user["create-issue"].$post({
-    json: values
-  })
-
+  const res = await forumUserClient.user["create-issue"].$post({ json: values })
   const data = await res.json()
-  
   return data
 }
 
@@ -58,13 +56,16 @@ export const createIssueAction = reatomAsync(async (ctx) => {
   return await ctx.schedule(() => createIssue({ title, description: desc, type }))
 }, {
   name: "createIssueAction",
-  onFulfill: (_, res) => {
+  onFulfill: (ctx, res) => {
     if (!res) return
 
     if ("error" in res) {
       return toast.error(CREATE_ISSUE_LIMITATIONS[res.error])
     }
 
-    toast.success(`Заявка создана!`)
+    if (res.status) {
+      toast.success(`Заявка создана!`)
+      userGlobalOptionsAtom(ctx, (state) => ({ ...state, can_create_issue: false }))
+    }
   }
 }).pipe(withStatusesAtom())

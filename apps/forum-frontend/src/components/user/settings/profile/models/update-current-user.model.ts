@@ -7,32 +7,21 @@ import { z } from "zod/v4";
 import { userDetailsSchema } from '@repo/types/schemas/user/edit-user-details-schema';
 import { currentUserAtom, currentUserNicknameAtom } from "#components/user/models/current-user.model";
 
-export type UpdateUserSettings = Omit<z.infer<typeof editUserSettingsBodySchema>, "userId">
+type UpdateUserSettings = Omit<z.infer<typeof editUserSettingsBodySchema>, "userId">
 
-async function updateUserSettings(values: UpdateUserSettings) {
-  const res = await forumUserClient.user['edit-user-settings'].$post({
-    json: values
-  });
+async function updateUserSettings(json: UpdateUserSettings) {
+  const res = await forumUserClient.user['edit-user-settings'].$post({ json });
   const data = await res.json();
   if (!data || "error" in data) return null;
   return data.data
 }
 
-type UpdateUserFields = z.infer<typeof userDetailsSchema>
-
 async function updateUserFields({
   criteria, value, signal
-}: UpdateUserFields & { signal: AbortSignal }) {
-  const res = await forumUserClient.user["edit-user-details"].$post({
-    json: { criteria, value }
-  }, {
-    init: { signal }
-  })
-
+}: z.infer<typeof userDetailsSchema> & { signal: AbortSignal }) {
+  const res = await forumUserClient.user["edit-user-details"].$post({ json: { criteria, value } }, { init: { signal } })
   const data = await res.json()
-
   if (!data || "error" in data) return null;
-
   return data.data;
 }
 
@@ -56,7 +45,7 @@ export const updateCurrentUserAction = reatomAsync(async (ctx, values: any) => {
     if (!requestedUser) return;
 
     if (currentUserNickname === requestedUser.nickname) {
-      requestedUserAtom(ctx, 
+      requestedUserAtom(ctx,
         (state) => state ? ({ ...state, ...res, }) : null
       )
     }
@@ -81,22 +70,24 @@ export const updateCurrentUserSettingsAction = reatomAsync(async (_, values: Upd
     const currentUserNickname = ctx.get(currentUserNicknameAtom)
     if (!currentUserNickname) return;
 
-    currentUserAtom(ctx, 
+    currentUserAtom(ctx,
       (state) => state ? ({ ...state, preferences: { ...state.preferences, ...res } }) : null
     )
 
     const requestedUser = ctx.get(requestedUserAtom)
     if (!requestedUser) return;
-    
+
     if (currentUserNickname === requestedUser.nickname) {
-      requestedUserAtom(ctx, 
-        (state) => state ? ({ ...state, preferences: { ...state.preferences, ...res } }): null
+      requestedUserAtom(ctx,
+        // @ts-expect-error
+        (state) => state ? ({ ...state, preferences: { ...state.preferences, ...res } }) : null
       )
     }
   },
-  onReject: (_, error) => {
-    if (error instanceof Error) {
-      throw new Error(error.message);
+  onReject: (_, e) => {
+    if (e instanceof Error) {
+      toast.error(e.message)
+      throw new Error(e.message);
     }
   }
 }).pipe(withStatusesAtom())

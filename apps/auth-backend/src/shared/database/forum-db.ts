@@ -6,7 +6,15 @@ import { Pool } from "pg";
 const forumDialect = ({
   host, database, user, password, port, tenantId
 }: DatabaseConnection & { tenantId: string }) => {
-  return new PostgresDialect({ pool: new Pool({ database, host, port, password, user: `${user}.${tenantId}`, max: 40, idleTimeoutMillis: 2000 }) });
+  return new PostgresDialect({
+    pool: new Pool({
+      database, host, port, password,
+      user: `${user}.${tenantId}`,
+      max: 16,
+      idleTimeoutMillis: 30000,
+      keepAlive: true
+    })
+  });
 };
 
 export const forumDB = new Kysely<forumDBType>({

@@ -10,18 +10,14 @@ import { PostItemBody } from '#components/post/post-item/components/post-body.ts
 import { Square } from 'lucide-react';
 import { PostItemHeader } from '#components/post/post-item/components/post-header.tsx';
 import type { UserPostItem } from '@repo/types/routes-types/get-user-posts-types.ts';
+import { UserDetailed } from '@repo/types/entities/user-type';
 
 type PostAdditionalModalProps = Pick<UserPostItem,
-  | "id"
-  | "nickname"
-  | "created_at"
-  | "visibility"
-  | "isPinned"
-  | "content"
->
+  | "id" | "nickname" | "created_at" | "visibility" | "isPinned" | "content"
+> & Pick<UserDetailed, "avatar">
 
 export const PostAdditionalModal = ({
-  isPinned, content, nickname, created_at, visibility, id
+  isPinned, content, nickname, created_at, visibility, id, avatar
 }: PostAdditionalModalProps) => {
   return (
     <Dialog>
@@ -35,6 +31,7 @@ export const PostAdditionalModal = ({
         <BlockWrapper className="flex flex-col gap-y-4">
           <div className="flex justify-between w-full items-center">
             <PostItemHeader
+              avatar={avatar}
               nickname={nickname}
               created_at={created_at}
               visibility={visibility}

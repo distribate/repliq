@@ -3,10 +3,9 @@ import { currentUserNicknameAtom } from "#components/user/models/current-user.mo
 import { lazy, Suspense } from "react";
 import { PostFooterViews } from "#components/post/post-item/components/post-footer-views.tsx";
 import type { UserPostItem } from '@repo/types/routes-types/get-user-posts-types.ts';
-import dayjs from "@repo/lib/constants/dayjs-instance";
 import { reatomComponent } from "@reatom/npm-react";
 
-type PostFooterProps = Pick<UserPostItem, "views_count" | "isUpdated" | "id" | "isViewed" | "nickname" | "created_at">
+type PostFooterProps = Pick<UserPostItem, "views_count" | "isUpdated" | "id" | "isViewed" | "nickname">
 
 const PostFooterWithViewsList = lazy(() =>
   import("#components/post/post-item/components/post-footer-views-list.tsx").then((m) => ({
@@ -15,14 +14,13 @@ const PostFooterWithViewsList = lazy(() =>
 );
 
 export const PostFooter = reatomComponent<PostFooterProps>(({
-  ctx, views_count, isUpdated, id, nickname, created_at
+  ctx, views_count, isUpdated, id, nickname
 }) => {
   const currentUserNickname = ctx.spy(currentUserNicknameAtom)
-
   const isOwner = nickname === currentUserNickname;
 
   return (
-    <div className="flex w-full select-none gap-4 group-hover:opacity-100 opacity-0 justify-end items-center">
+    <div className="flex w-full select-none gap-4 justify-end items-center">
       {isUpdated && (
         <Typography textSize="small" textColor="gray" className="self-end">
           [изменено]
@@ -34,11 +32,6 @@ export const PostFooter = reatomComponent<PostFooterProps>(({
         </Suspense>
       )}
       {!isOwner && <PostFooterViews views_count={views_count} />}
-      <div className="flex items-center gap-1">
-        <Typography textSize="small" textColor="gray">
-          {dayjs(created_at).format("HH:MM")}
-        </Typography>
-      </div>
     </div>
   );
 }, "PostFooter")

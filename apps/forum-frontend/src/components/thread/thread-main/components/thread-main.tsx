@@ -1,11 +1,10 @@
 import { Typography } from "@repo/ui/src/components/typography"
-import { defineThreadAction, threadAtom } from "../models/thread.model"
+import { defineThreadAction, threadAtom, threadPropertiesAtom } from "../models/thread.model"
 import { ContextMenu, ContextMenuContent, ContextMenuTrigger } from "@repo/ui/src/components/context-menu"
 import { ThreadReactions } from "#components/thread/thread-reactions/components/thread-reactions"
 import { ContentNotFound } from "#components/templates/components/content-not-found"
 import { ThreadImagesSkeleton } from "#components/thread/thread-images/components/thread-images"
 import { Suspense, lazy } from "react"
-import { ThreadShare } from "#components/thread/thread-share/components/thread-share"
 import { ThreadSave } from "#components/thread/thread-save/components/thread-save"
 import { reatomComponent } from "@reatom/npm-react"
 import { PageLoader } from "@repo/ui/src/components/page-loader"
@@ -36,10 +35,13 @@ const ThreadContent = reatomComponent(({ ctx }) => {
 
 const ThreadDetails = reatomComponent(({ ctx }) => {
   const thread = ctx.spy(threadAtom)
-  if (!thread) return null
+  const properties = ctx.spy(threadPropertiesAtom)
+  if (!thread || !properties) return null
 
   const isAuthenticated = ctx.spy(isAuthenticatedAtom)
-  const { updated_at, properties: { is_updated } } = thread
+
+  const { updated_at } = thread
+  const { is_updated, is_saved } = properties
 
   return (
     <div className="flex flex-col md:flex-row md:items-center w-full justify-start gap-1">
@@ -55,17 +57,16 @@ const ThreadDetails = reatomComponent(({ ctx }) => {
           )}
         </div>
       </div>
-      {isAuthenticated && (
+      {(isAuthenticated && typeof is_saved !== 'undefined') && (
         <div className="flex justify-end md:justify-end gap-2 items-center">
-          <ThreadShare />
-          <ThreadSave />
+          <ThreadSave isMarked={is_saved} />
         </div>
       )}
     </div>
   )
 })
 
-const ThreadTitle = reatomComponent(({ ctx}) => {
+const ThreadTitle = reatomComponent(({ ctx }) => {
   const thread = ctx.spy(threadAtom)
   if (!thread) return null;
 
@@ -95,8 +96,8 @@ export const Thread = reatomComponent(({ ctx }) => {
     <ContextMenu>
       <ContextMenuTrigger className="w-full">
         <div className="flex flex-col gap-6 rounded-lg w-full px-4 py-6 bg-shark-950">
-          <ThreadTitle/>
-          <ThreadContent/>
+          <ThreadTitle />
+          <ThreadContent />
           <ThreadDetails />
         </div>
       </ContextMenuTrigger>

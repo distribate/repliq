@@ -24,7 +24,7 @@ export const getThreadRoute = new Hono()
     const nickname = getNickname(true)
 
     try {
-      const thread = await getThread({ threadId });
+      const thread = await getThread({ id: threadId, nickname });
 
       if (!thread) {
         return ctx.json({ error: "Thread not found" }, 404)

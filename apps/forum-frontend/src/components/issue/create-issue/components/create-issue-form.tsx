@@ -10,7 +10,8 @@ import { MessageSquareWarning } from "lucide-react";
 import AutogrowingTextarea from "@repo/ui/src/components/autogrowing-textarea";
 import { ISSUE_MAX_DESCRIPTION_LIMIT } from "@repo/shared/constants/limits";
 import { reatomComponent } from "@reatom/npm-react";
-import { IconBrandZapier } from "@tabler/icons-react";
+import { IconBrandZapier, IconX } from "@tabler/icons-react";
+import { userGlobalOptionsAtom } from "#components/user/models/current-user.model";
 
 type IssueFormType = z.infer<typeof createIssueSchema>;
 
@@ -110,6 +111,14 @@ const IssueSubmit = reatomComponent(({ ctx }) => {
 }, "IssueSubmit")
 
 export const CreateIssueForm = reatomComponent(({ ctx }) => {
+  const can_create_issue = ctx.spy(userGlobalOptionsAtom).can_create_issue
+
+  if (!can_create_issue) {
+    return (
+      <IconX size={20} className="text-red-500" />
+    )
+  }
+
   const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     createIssueAction(ctx)

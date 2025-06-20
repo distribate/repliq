@@ -121,7 +121,7 @@ export const ProfileAccountStatsDetails = reatomComponent(({ ctx }) => {
 
   return (
     <AccountStatSection title="Детали">
-      <Typography textColor="gray" textSize="small" onClick={handleRedirect} className="cursor-pointer">
+      <Typography textColor="gray" textSize="big" onClick={handleRedirect} className="cursor-pointer">
         детальная информация о профиле
       </Typography>
     </AccountStatSection>

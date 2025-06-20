@@ -1,7 +1,8 @@
 import { Kvm } from '@nats-io/kv';
 import { getNatsConnection } from '@repo/config-nats/nats-client';
 import { forumDB } from '../../shared/database/forum-db';
-import { Bot } from 'gramio';
+import { bold, Bot, format } from 'gramio';
+import { CONNECT_SOCIAL_SUBJECT } from "@repo/shared/constants/nats-subjects"
 
 async function connectUser(userId: number, nickname: string) {
   const query = await forumDB
@@ -12,18 +13,21 @@ async function connectUser(userId: number, nickname: string) {
   return query.numInsertedOrUpdatedRows ? query.numInsertedOrUpdatedRows > 0 : false
 }
 
+type ConnectServicePayload = {
+  service: string,
+  nickname: string,
+  status: "success" | "error"
+}
+
 export function connectUserCommand(bot: Bot) {
   bot.command("connect", async (ctx) => {
     if (!ctx.from) return
 
     const userId = ctx.from.id
-
-    if (!ctx.args) {
-      return ctx.reply('Укажите токен')
-    }
-
     const token = ctx.args
 
+    if (!token) return ctx.reply('Укажите токен')
+  
     const nc = getNatsConnection()
     const kvm = new Kvm(nc)
     const kv = await kvm.open("connect_tokens")
@@ -31,14 +35,25 @@ export function connectUserCommand(bot: Bot) {
     const existsToken = await kv.get(`token-${token}`);
 
     if (!existsToken) {
-      return await ctx.reply("not ok")
+      return await ctx.reply("Токен недействителен")
     }
 
-    const payload = existsToken.json<{ type: string, nickname: string }>()
+    const payload = existsToken.json<Omit<ConnectServicePayload, "status">>()
 
-    await connectUser(userId, payload.nickname)
+    const result = await connectUser(userId, payload.nickname)
 
-    const text = `Ваш аккаунт теперь привязан к ${payload.nickname}!`
+    if (!result) {
+      const data = JSON.stringify({ ...payload, status: "error" })
+
+      nc.publish(CONNECT_SOCIAL_SUBJECT, data)
+      return ctx.reply("Error")
+    }
+
+    const data = JSON.stringify({ ...payload, status: "success" })
+
+    nc.publish(CONNECT_SOCIAL_SUBJECT, data)
+
+    const text = format`🐈‍⬛ ྀི Ваш аккаунт теперь привязан к пользователю ${bold(payload.nickname)}!`
 
     await ctx.reply(text)
   })

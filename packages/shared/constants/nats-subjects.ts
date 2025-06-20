@@ -28,3 +28,6 @@ export const SERVER_STATUS_SUBJECT = "server.status"
 // LOGS
 export const LOGS_PAYMENT_SUBJECT = "logs.payment"
 export const LOGS_ADMIN_SUBJECT = "logs.admin"
+
+export const CONNECT_SOCIAL_SUBJECT = "connect.social"
+export const DISCONNECT_SOCIAL_SUBJECT = "disconnect.social"

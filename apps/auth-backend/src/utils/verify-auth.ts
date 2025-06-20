@@ -26,13 +26,12 @@ export async function verifyAuth(token: string) {
 
     if (!result.success) return "no-verified"
 
-    logger.debug(result)
-
     return "verified"
   } catch (e) {
-    if (e instanceof HTTPError) {
+    if (e instanceof Error) {
       logger.error(e.message)
     }
+
     console.error(e)
     return "no-verified"
   }

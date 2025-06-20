@@ -6,7 +6,15 @@ import { Pool } from 'pg';
 const paymentsDialect = ({
   host, database, user, password, port
 }: DatabaseConnection) => {
-  return new PostgresDialect({ pool: new Pool({ database, host, port, password, user, max: 40, idleTimeoutMillis: 2000 }) });
+  return new PostgresDialect({
+    pool: new Pool({
+      database, host, port, password,
+      user,
+      max: 16,
+      idleTimeoutMillis: 30000,
+      connectionTimeoutMillis: 5000
+    })
+  });
 };
 
 export const paymentsDB = new Kysely<paymentsDBType>({

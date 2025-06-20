@@ -22,13 +22,13 @@ type LinkUser = CreateUserOpts & {
 }
 
 type CreateCredentials = Omit<CreateUserOpts, "nickname"> & {
-  userId: string, 
+  userId: string,
   password: string
 }
 
 type CreateUserTrx = Pick<CreateUserOpts, "nickname"> & {
-  referrer?: string | null, 
-  findout: string, 
+  referrer?: string | null,
+  findout: string,
   password: string
 }
 
@@ -47,12 +47,9 @@ async function linkUserToReferer({ nickname, referrer, trx }: LinkUser) {
     .where("recipient", "=", nickname)
     .execute()
 
-  if (isReffered.length > 0) {
-    return;
-  }
+  if (isReffered.length > 0) return;
 
   const isValid = await validateRefferalsLength({ trx, referrer });
-
   if (!isValid) return;
 
   await trx
@@ -61,7 +58,12 @@ async function linkUserToReferer({ nickname, referrer, trx }: LinkUser) {
     .execute()
 }
 
-async function createUser(trx: CreateUserOpts["trx"], nickname: string) {
+type CreateUser = {
+  trx: CreateUserOpts["trx"],
+  nickname: string
+}
+
+async function createUser({ trx, nickname }: CreateUser) {
   return trx
     .insertInto('users')
     .values({ nickname })
@@ -89,7 +91,7 @@ async function createUserSettings({ nickname, trx, user_id }: CreateUserSettings
     .executeTakeFirstOrThrow();
 }
 
-function notify(userId: string, nickname: string, created_at: string | Date) {
+function notifyAboutRegister({ nickname, created_at }: { nickname: string, created_at: Date }) {
   publishRegisterNotify(nickname)
 }
 
@@ -97,7 +99,7 @@ export const createUserTransaction = async ({
   nickname, referrer, findout, password
 }: CreateUserTrx) => {
   const query = await forumDB.transaction().execute(async (trx) => {
-    const createdUser = await createUser(trx, nickname)
+    const createdUser = await createUser({ trx, nickname })
 
     const [createdCrendetials, createdSettings, createdFindout] = await Promise.all([
       createCredentials({ trx, userId: createdUser.id, password }),
@@ -111,14 +113,12 @@ export const createUserTransaction = async ({
       await linkUserToReferer({ trx, nickname, referrer });
     }
 
-    return { id: createdUser.id, nickname, created_at: createdUser.created_at }
+    return { nickname, created_at: createdUser.created_at }
   })
 
-  if (!query) {
-    return;
-  }
+  if (!query) return;
 
-  notify(query.id, query.nickname, query.created_at)
+  notifyAboutRegister(query)
 
   return query;
 }

@@ -10,7 +10,8 @@ import { PublicRouteComponent } from '#pages/public.layout';
 import { RouteSkeleton } from '#components/templates/components/route-skeleton';
 import { lazy, Suspense } from 'react';
 import { validatePage } from './validation.model';
-import { NewsRouteComponent } from '#pages/news.page';
+import { NewsLayoutRouteComponent, NewsRouteComponent } from '#pages/news.page';
+import { ChangelogRouteComponent } from '#pages/changelog.page';
 
 const ThreadRouteComponent = lazy(() => import("#pages/thread.page").then(m => ({ default: m.ThreadRouteComponent })))
 const UserRouteComponent = lazy(() => import("#pages/user.page").then(m => ({ default: m.UserRouteComponent })))
@@ -29,26 +30,32 @@ const publicRoute = createRoute({
 
 export const threadRoute = createRoute({
   getParentRoute: () => publicRoute,
-  component: () => <Suspense><ThreadRouteComponent/></Suspense>,
+  component: () => <Suspense fallback={<RouteSkeleton />}><ThreadRouteComponent/></Suspense>,
   loader: reatomLoader(async (ctx, { params }) => threadParamAtom(ctx, params.id as string)),
   path: '/thread/$id',
 });
 
-export const newsRoute = createRoute({
+export const newsLayout = createRoute({
   getParentRoute: () => publicRoute,
-  component: () => <Suspense><NewsRouteComponent/></Suspense>,
+  component: () => <NewsLayoutRouteComponent />,
+  id: "news"
+})
+
+export const newsRoute = createRoute({
+  getParentRoute: () => newsLayout,
+  component: () => <Suspense fallback={<RouteSkeleton />}><NewsRouteComponent/></Suspense>,
   path: '/news',
 });
 
 export const changeLogRoute = createRoute({
-  getParentRoute: () => publicRoute,
-  component: () => <Suspense></Suspense>,
+  getParentRoute: () => newsLayout,
+  component: () => <Suspense fallback={<RouteSkeleton />}><ChangelogRouteComponent/></Suspense>,
   path: '/news/changelog',
 });
 
 const userRoute = createRoute({
   getParentRoute: () => publicRoute,
-  component: () => <Suspense><UserRouteComponent/></Suspense>,
+  component: () => <Suspense fallback={<RouteSkeleton />}><UserRouteComponent/></Suspense>,
   loader: reatomLoader(async (ctx, { params }) => requestedUserParamAtom(ctx, params.nickname as string)),
   path: '/user/$nickname',
 });
@@ -64,19 +71,19 @@ const indexRoute = createRoute({
 
 const developmentRoute = createRoute({
   getParentRoute: () => rootRoute,
-  component: () => <Suspense><DevelopmentRouteComponent/></Suspense>,
+  component: () => <Suspense fallback={<RouteSkeleton />}><DevelopmentRouteComponent/></Suspense>,
   path: '/development',
 });
 
 const restrictRoute = createRoute({
   getParentRoute: () => rootRoute,
-  component: () => <Suspense><RestrictRouteComponent/></Suspense>,
+  component: () => <Suspense fallback={<RouteSkeleton />}><RestrictRouteComponent/></Suspense>,
   path: '/restrict',
 });
 
 export const notExistRoute = createRoute({
   getParentRoute: () => rootRoute,
-  component: () => <Suspense><NotExistRouteComponent/></Suspense>,
+  component: () => <Suspense fallback={<RouteSkeleton />}><NotExistRouteComponent/></Suspense>,
   path: '/not-exist',
   validateSearch: (search: Record<string, unknown>): { redirect_nickname: string } => ({
     redirect_nickname: search.redirect_nickname as string,
@@ -86,13 +93,13 @@ export const notExistRoute = createRoute({
 const notOnlineRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: '/not-online',
-  component: () => <Suspense><NotOnlineRouteComponent/></Suspense>,
+  component: () => <Suspense fallback={<RouteSkeleton />}><NotOnlineRouteComponent/></Suspense>,
 });
 
 const storeRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: '/store',
-  component: () => <Suspense><StoreRouteComponent /></Suspense>,
+  component: () => <Suspense fallback={<RouteSkeleton />}><StoreRouteComponent /></Suspense>,
 });
 
 export const publicRoutes = publicRoute.addChildren([
@@ -104,6 +111,7 @@ export const publicRoutes = publicRoute.addChildren([
   notOnlineRoute,
   developmentRoute,
   restrictRoute,
+  newsLayout,
   newsRoute,
   changeLogRoute
 ]);

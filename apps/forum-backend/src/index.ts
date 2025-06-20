@@ -103,10 +103,12 @@ import { getProfilesRoute } from '#routes/user/get-profiles.ts';
 import { connectProfileRoute } from '#routes/user/connect-profile.ts';
 import { deleteAccountRoute, restoreAccountRoute } from '#routes/user/delete-account.ts';
 import { uploadAvatarRoute } from '#routes/user/upload-avatar.ts';
-import { connectServiceRoute } from '#routes/user/connect-service.ts';
+import { connectServiceRoute, connectServiceSSE } from '#routes/user/connect-service.ts';
 import { collectStats } from '#middlewares/collect-stats.ts';
 import { subscribeCollectStats } from '#subscribers/sub-collect-stats.ts';
 import { getPublicStatsRoute } from '#routes/public/get-public-stats.ts';
+import { saveThreadRoute, unsaveThreadRoute } from '#routes/thread/save-thread.ts';
+import { getSavedThreadsRoute } from '#routes/user/get-saved-threads.ts';
 
 async function startNats() {
   await initNats()
@@ -192,6 +194,8 @@ export const thread = new Hono()
   .route("/", createThreadRoute)
   .route("/", getLatestThreadsRoute)
   .route("/", getThreadImagesRoute)
+  .route("/", saveThreadRoute)
+  .route("/", unsaveThreadRoute)
 
 export const post = new Hono()
   .basePath('/post')
@@ -239,10 +243,10 @@ export const user = new Hono()
 
   // #current user info routes
   .route("/", getUserStatusRoute)
-  // .route("/", getUserBanDetailsRoute)
   .route("/", getUserReferalsRoute)
   .route("/", getUserPurchasesRoute)
   .route("/", getUserTicketsRoute)
+  .route("/", getSavedThreadsRoute)
   .route("/", getUserSocialsRoute)
   .route("/", getUserProfileStatsRoute)
   //--------------------------------------
@@ -309,6 +313,7 @@ export const root = new Hono()
 
   .use(validateRequest("prevent"))
   .route("/", connectServiceRoute)
+  .route("/", connectServiceSSE)
   //--------------------------------------
 
 const app = new Hono<Env>()

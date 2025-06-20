@@ -14,8 +14,6 @@ export function getNickname(): string;
 export function getNickname(isOptional?: boolean): string | undefined {
   const nickname = getContext<Env>().var.nickname;
 
-  logger.debug(`Nickname: ${nickname}`);
-
   if (isOptional) {
     return nickname
   } else {

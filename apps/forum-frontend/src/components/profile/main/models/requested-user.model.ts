@@ -126,6 +126,7 @@ export const requestedUserAction = reatomAsync(async (ctx, target: string) => ct
           nickname: payload.nickname,
           description: null,
           is_donate: false,
+          avatar: null,
           name_color: "#FFFFFF",
           account_status
         })

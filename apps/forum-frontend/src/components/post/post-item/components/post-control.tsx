@@ -3,7 +3,6 @@ import { HoverCardItem } from "@repo/ui/src/components/hover-card.tsx";
 import { Separator } from "@repo/ui/src/components/separator.tsx";
 import { DropdownWrapper } from "#components/wrappers/components/dropdown-wrapper";
 import { PostAdditionalModal } from "#components/post/post-item/components/post-additional-modal";
-import { PostEntity, UserEntity } from "@repo/types/entities/entities-type.ts";
 import { controlPostAction } from "#components/post/post-item/models/control-post.model";
 import { currentUserNicknameAtom } from "#components/user/models/current-user.model.ts";
 import { ReportCreateModal } from "#components/modals/action-confirmation/components/report/components/report-create-modal.tsx";
@@ -15,7 +14,11 @@ import { Cloud } from "lucide-react";
 import { reatomComponent } from "@reatom/npm-react";
 import { postsDataAtom } from "#components/profile/posts/models/posts.model";
 
-export type PostControlProps = Pick<PostEntity, "id" | "isComments"> & Pick<UserEntity, "nickname">;
+export type PostControlProps = {
+  id: string,
+  isComments: boolean,
+  nickname: string
+}
 
 export const PostControl = reatomComponent<PostControlProps>(({ ctx, id, nickname, isComments }) => {
   const currentUserNickname = ctx.spy(currentUserNicknameAtom)
@@ -26,7 +29,7 @@ export const PostControl = reatomComponent<PostControlProps>(({ ctx, id, nicknam
   let post = posts.find(target => target.id === id);
   if (!post) return null;
 
-  const { isPinned } = post;
+  const isPinned = post.isPinned;
 
   const handleRemovePost = () => controlPostAction(ctx, { type: "delete", id, nickname });
   const handlePin = () => controlPostAction(ctx, { type: "pin", id, nickname });
@@ -50,6 +53,7 @@ export const PostControl = reatomComponent<PostControlProps>(({ ctx, id, nicknam
           <div className="flex flex-col gap-y-2">
             <PostAdditionalModal
               id={post.id}
+              avatar={post.avatar}
               content={post.content}
               created_at={post.created_at}
               visibility={post.visibility}
@@ -87,11 +91,7 @@ export const PostControl = reatomComponent<PostControlProps>(({ ctx, id, nicknam
             {!isOwner && (
               <>
                 <Separator />
-                <ReportCreateModal
-                  targetId={id}
-                  reportType="post"
-                  targetNickname={nickname}
-                />
+                <ReportCreateModal targetId={id} type="post" />
               </>
             )}
           </div>

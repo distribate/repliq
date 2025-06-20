@@ -6,7 +6,15 @@ import { Pool } from 'pg';
 const authDialect = ({
   host, database, user, password, port
 }: DatabaseConnection) => {
-  return new PostgresDialect({ pool: new Pool({ database, host, user, port, max: 10, password }) });
+  return new PostgresDialect({
+    pool: new Pool({
+      database, host, user, port, password,
+      max: 16,
+      keepAlive: true,
+      idleTimeoutMillis: 30000,
+      connectionTimeoutMillis: 5000
+    })
+  });
 };
 
 export const authDB = new Kysely<AuthDB>({

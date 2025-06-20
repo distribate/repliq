@@ -6,34 +6,38 @@ import { ConfigEventsData, NotificationsEventsPayload } from "@repo/types/entiti
 import { useEffect } from "react";
 import { toast } from "sonner";
 
-const URL = isProduction ? "https://api.fasberry.su/forum/sse" : "http://localhost:4101/forum/sse"
+const NOTIFICATIONS_SSE_URL = isProduction ? "https://api.fasberry.su/forum/sse" : "http://localhost:4101/forum/sse"
+
+export const es = (url: string) => new EventSource(url, {
+  withCredentials: true
+});
 
 export const NotificationsWrapper = reatomComponent(({ ctx }) => {
   const isAuthenticated = ctx.spy(isAuthenticatedAtom)
 
   useEffect(() => {
-    if (isAuthenticated) {
-      const es = new EventSource(URL, { withCredentials: true });
+    if (!isAuthenticated) return;
 
-      // es.onopen = () => console.log(">>> Connection opened!");
+    const eventSource = es(NOTIFICATIONS_SSE_URL)
 
-      es.addEventListener(config, (event) => {
-        const data: ConfigEventsData = event.data;
+    eventSource.addEventListener(config, (event) => {
+      const data: ConfigEventsData = event.data;
 
-        if (data === 'Exit') es.close();
-      })
+      if (data === 'Exit') {
+        eventSource.close();
+      }
+    })
 
-      es.addEventListener(ping, () => { });
+    eventSource.addEventListener(ping, () => { });
 
-      es.addEventListener(updateEvent, (event) => {
-        const data: NotificationsEventsPayload = JSON.parse(event.data);
+    eventSource.addEventListener(updateEvent, (event) => {
+      const data: NotificationsEventsPayload = JSON.parse(event.data);
 
-        toast[data.data.status](data.data.message)
-      });
+      toast[data.data.status](data.data.message)
+    });
 
-      return () => es.close();
-    }
+    return () => eventSource.close();
   }, [isAuthenticated])
 
-  return <></>
+  return null;
 }, "NotificationsWrapper")

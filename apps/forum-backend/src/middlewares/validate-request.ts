@@ -1,3 +1,4 @@
+import { isProduction } from './../../../../packages/lib/helpers/is-production';
 import { getCookie } from "hono/cookie";
 import { createMiddleware } from "hono/factory";
 import { getUserNicknameByTokenFromKv } from "#utils/get-user-by-token-from-kv.ts";
@@ -5,8 +6,6 @@ import { logger } from "@repo/lib/utils/logger";
 
 export const validateRequest = (type: "prevent" | undefined = undefined) => createMiddleware(async (ctx, next) => {
   const sessionToken = getCookie(ctx, "session")
-
-  logger.info(`middleware validate request for ${type}`)
   
   if (type === "prevent") {
     if (!sessionToken) {

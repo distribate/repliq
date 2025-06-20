@@ -1,5 +1,5 @@
 import { updateCommentsAction } from "../models/update-comments.model";
-import { threadAtom } from "#components/thread/thread-main/models/thread.model";
+import { threadAtom, threadPropertiesAtom } from "#components/thread/thread-main/models/thread.model";
 import { threadCommentsDataAtom, threadCommentsMetaAtom } from "../models/thread-comments.model";
 import { ArrowDown } from "lucide-react";
 import { reatomComponent } from "@reatom/npm-react";
@@ -49,7 +49,8 @@ export const ThreadCommentsAnchor = reatomComponent(({ ctx }) => {
     }
   }
 
-  const nonComments = !currentThread.properties.is_comments;
+  const properties = ctx.spy(threadPropertiesAtom)
+  const nonComments = !properties?.is_comments;
 
   return (
     !nonComments && (

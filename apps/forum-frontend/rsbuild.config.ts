@@ -45,19 +45,8 @@ export default defineConfig({
     lazyCompilation: true
   },
   output: {
-    polyfill: 'off',
     distPath: {
       root: process.env.NODE_ENV === 'development' ? "dist" : "build",
-    },
-    sourceMap: {
-      js: false,
-      css: false,
-    },
-    injectStyles: true,
-    inlineScripts: true,
-    minify: {
-      js: 'always',
-      css: "always"
     }
   },
   server: { port, host },

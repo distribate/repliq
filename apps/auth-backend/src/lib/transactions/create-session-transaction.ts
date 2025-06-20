@@ -1,15 +1,19 @@
-import type { IBrowser, ICPU, IDevice, IEngine, IOS } from "ua-parser-js";
 import { publishLoginNotify } from "../../publishers/pub-login-notify";
 import { forumDB } from "../../shared/database/forum-db";
 import { putSessionToken } from "../../utils/put-session-token";
-import { createSession } from "../queries/create-session";
-import type { createSessionBodySchema } from "@repo/types/schemas/auth/create-session-schema";
-import type { z } from "zod/v4";
+import { encodeHexLowerCase } from "@oslojs/encoding";
+import { sha256 } from "@oslojs/crypto/sha2";
+import { Transaction } from "kysely";
+import type { DB } from "@repo/types/db/forum-database-types.ts";
+import type { Session } from "../../types/session-type.ts";
+import { DEFAULT_SESSION_EXPIRE } from "../../shared/constants/session-expire";
+import { getIpLocation } from "../queries/get-ip-location.ts";
 
-type CreateSessionTransaction = Omit<z.infer<typeof createSessionBodySchema>, "token" | "password"> & {
+type CreateSessionTransaction = {
+  nickname: string,
   token: string,
-  ip: string;
 } & {
+  ip: string;
   ua: string;
   browser: string;
   cpu: string;
@@ -17,11 +21,9 @@ type CreateSessionTransaction = Omit<z.infer<typeof createSessionBodySchema>, "t
   os: string;
 }
 
-type PushLoginNotify = Pick<CreateSessionTransaction, "nickname" | "browser" | "ip">
+type NotifyAboutLogin = Pick<CreateSessionTransaction, "nickname" | "browser" | "ip">
 
-async function pushLoginNotify({
-  browser, ip, nickname
-}: PushLoginNotify) {
+async function notifyAboutLogin({ browser, ip, nickname }: NotifyAboutLogin) {
   const check = await forumDB
     .selectFrom("users_session")
     .select(forumDB.fn.countAll().as("count"))
@@ -31,6 +33,43 @@ async function pushLoginNotify({
   if (check && Number(check.count) > 1) {
     publishLoginNotify({ browser, ip, nickname })
   }
+}
+
+type CreateSession = CreateSessionTransaction & {
+  trx: Transaction<DB>;
+};
+
+async function createSession({
+  trx, browser, cpu, device, ip, nickname, os, token, ua
+}: CreateSession) {
+  const session_id = encodeHexLowerCase(
+    sha256(new TextEncoder().encode(token))
+  );
+
+  let city: string = "Unknown";
+  let country: string = "Unknown";
+
+  const location = await getIpLocation(ip)
+
+  if (location) {
+    city = location.city.names["en"]
+    country = location.country.names["en"]
+  }
+
+  const expires_at = new Date(Date.now() + DEFAULT_SESSION_EXPIRE);
+
+  const session: Session = {
+    browser, ip, cpu, device, os, ua, session_id, nickname, token, expires_at,
+    location: `${city}, ${country}`,
+  };
+
+  const query = await trx
+    .insertInto("users_session")
+    .values(session)
+    .returning(["nickname", "session_id", "expires_at", "browser", "ip"])
+    .executeTakeFirstOrThrow();
+
+  return query;
 }
 
 export const createSessionTransaction = async ({
@@ -46,7 +85,7 @@ export const createSessionTransaction = async ({
     return session;
   });
 
-  pushLoginNotify({ browser, ip, nickname })
+  notifyAboutLogin({ browser, ip, nickname })
 
   return query;
 }

@@ -1,5 +1,18 @@
 import { Skeleton } from "@repo/ui/src/components/skeleton"
-import { discordAtom, telegramAtom, userSocialsResource } from "../models/user-socials.model"
+import { 
+  Connect, 
+  connectAction, 
+  connectDialogIsOpenAtom, 
+  connectRemainsAtom,
+  connectUrlAtom, 
+  discordAtom, 
+  integrationSettingsDialogIsOpenAtom,
+  integrationTypeAtom, 
+  connectIsSuccessAtom, 
+  openIntegrationSettingsAction,
+  telegramAtom, 
+  userSocialsResource 
+} from "../models/user-socials.model"
 import { Typography } from "@repo/ui/src/components/typography"
 import { reatomComponent } from "@reatom/npm-react"
 import DiscordLogo from "@repo/assets/images/discord-logo.jpg"
@@ -7,12 +20,18 @@ import TelegramLogo from "@repo/assets/images/telegram-logo.png"
 import { Button } from "@repo/ui/src/components/button";
 import { Dialog, DialogContent } from "@repo/ui/src/components/dialog";
 import { toast } from "sonner";
-import { reatomAsync, withStatusesAtom } from "@reatom/async"
-import { forumRootClient } from "@repo/shared/api/forum-client"
-import { atom } from "@reatom/core"
 import { WindowLoader } from "@repo/ui/src/components/window-loader"
-import { reatomTimer } from "@reatom/timer"
-import { withReset } from "@reatom/framework"
+import { IconBrandTelegram, IconCheck } from "@tabler/icons-react"
+import { spawn } from "@reatom/framework"
+import { UserSettingOption } from "#components/user/settings/user-setting-option"
+import { Switch } from "@repo/ui/src/components/switch"
+import { getUser } from "#components/user/models/current-user.model"
+import { updateCurrentUserSettingsAction } from "#components/user/settings/profile/models/update-current-user.model"
+
+const socialsImages: Record<string, string> = {
+  "Telegram": TelegramLogo,
+  "Discord": DiscordLogo,
+}
 
 type SocialsCardProps = {
   title: string,
@@ -20,160 +39,136 @@ type SocialsCardProps = {
   service: Connect["service"]
 }
 
-const socialsImages: Record<string, string> = {
-  "Telegram": TelegramLogo,
-  "Discord": DiscordLogo,
-}
-
-const connectDialogIsOpenAtom = atom(false, "connectDialogIsOpen")
-const connectUrlAtom = atom<string | null>(null, "connectUrlAtom").pipe(withReset())
-
-type Connect = {
-  type: "connect" | "cancel" | "disconnect"
-  service: "telegram" | "discord",
-  signal: AbortSignal,
-}
-
-const connectTimer = reatomTimer({
-  interval: 1000,
-  delayMultiplier: 1000,
-  progressPrecision: 2,
-  resetProgress: true,
-})
-
-const remainsAtom = atom((ctx) => (ctx.spy(connectTimer) / 1000).toFixed(1))
-
-const request = async ({ type, signal, service }: Connect) => {
-  const res = await forumRootClient.connect.$post({ query: { service, type } }, { init: { signal } })
-  const data = await res.json()
-  return data
-}
-
-const CONNECT_ERROR_MAP: Record<string, string> = {
-  "Exists token": "Подождите до этого действия"
-}
-
-const connectActionVariablesAtom = atom<Omit<Connect, "signal"> | null>(null, "connectActionVariables")
-const connectAction = reatomAsync(async (ctx, type: Connect["type"], service: Connect["service"]) => {
-  connectDialogIsOpenAtom(ctx, true)
-
-  const isProccessed = ctx.get(connectActionVariablesAtom)
-
-  if (isProccessed) {
-    return;
-  }
-
-  connectActionVariablesAtom(ctx, { type, service })
-
-  return await ctx.schedule(() => request({ service, type, signal: ctx.controller.signal }))
-}, {
-  name: "connectAction",
-  onFulfill: (ctx, res) => {
-    if (!res) return;
-
-    if ("error" in res) {
-      toast.error(CONNECT_ERROR_MAP[res.error] ?? res.error)
-      connectDialogIsOpenAtom(ctx, false)
-      return
-    }
-
-    const variables = ctx.get(connectActionVariablesAtom)
-    if (!variables) return;
-
-    const { type, service } = variables
-
-    if (type === 'connect') {
-      connectUrlAtom(ctx, res.data)
-      connectTimer.startTimer(ctx, 5 * 60)
-    }
-
-    if (type === 'cancel') {
-      connectUrlAtom.reset(ctx)
-      connectDialogIsOpenAtom(ctx, false)
-    }
-
-    if (type === 'disconnect' && service === 'telegram') {
-      telegramAtom.reset(ctx)
-      connectDialogIsOpenAtom(ctx, false)
-      toast.success("Телеграм отвязан")
-    }
-  }
-}).pipe(withStatusesAtom())
-
 const Remains = reatomComponent(({ ctx }) => {
   return (
-    <Typography>
-      Ссылка будет активна в течении {ctx.spy(remainsAtom)}
-    </Typography>
+    <Typography>Ссылка будет активна в течении {ctx.spy(connectRemainsAtom)}</Typography>
   )
 }, "Remains")
 
-const SocialsSupportDialog = reatomComponent<{ service: Connect["service"] }>(({ ctx, service }) => {
+const ConnectSocialIsSuccess = () => {
+  return (
+    <div className="flex flex-col justify-center items-center p-2 gap-4 w-full">
+      <IconCheck size={20} className="text-green-500" />
+      <Typography textSize="big" className='font-semibold'>
+        Готово!
+      </Typography>
+    </div>
+  )
+}
+
+const ConnectSocialIsPending = reatomComponent<Pick<Connect, "service">>(({ ctx, service }) => {
   const url = ctx.spy(connectUrlAtom)
 
+  if (!url) {
+    return (
+      <div className="flex flex-col gap-4 p-2 items-center justify-center">
+        <WindowLoader />
+        <Typography textSize="large">Инициализируем...</Typography>
+      </div>
+    )
+  }
+
   const handleCopyLink = async () => {
-    if (!url) return;
     await navigator.clipboard.writeText(url)
     toast.info("Ссылка скопирована в буфер обмена")
   }
 
   return (
-    <Dialog open={ctx.spy(connectDialogIsOpenAtom)} onOpenChange={(v) => connectDialogIsOpenAtom(ctx, v)}>
+    <div className="flex justify-center w-full p-2 items-center">
+      <div className="flex items-center justify-center w-full flex-col gap-4">
+        <div className="flex flex-col">
+          <Typography textSize="large">
+            Перейдите к боту и введите токен
+          </Typography>
+          <Remains />
+        </div>
+        <pre
+          onClick={() => handleCopyLink()}
+          className="cursor-pointer bg-shark-800 rounded-lg px-3 py-0.5"
+        >
+          <code>{url}</code>
+        </pre>
+        <div className="flex flex-col sm:flex-row items-center gap-2 w-full justify-center">
+          <a href={url} target="_blank" rel="noreferrer">
+            <Button
+              variant="positive"
+              onClick={() => connectAction(ctx, "connect", service)}
+            >
+              <Typography textSize="medium">
+                Перейти к боту
+              </Typography>
+            </Button>
+          </a>
+          <Button
+            variant="negative"
+            onClick={() => connectAction(ctx, "cancel", service)}
+          >
+            <Typography textSize="medium">
+              Отменить
+            </Typography>
+          </Button>
+        </div>
+      </div>
+    </div >
+  )
+})
+
+const ConnectSocialDialog = reatomComponent<Pick<Connect, "service">>(({ ctx, service }) => {
+  return (
+    <Dialog
+      open={ctx.spy(connectDialogIsOpenAtom)}
+      onOpenChange={(v) => connectDialogIsOpenAtom(ctx, v)}
+    >
       <DialogContent>
         <div className="flex flex-col items-center gap-4 w-full h-full">
           <Typography variant="dialogTitle">
             Привязка Telegram к аккаунту
           </Typography>
-          {url ? (
-            <div className="flex justify-center w-full p-2 items-center">
-              <div className="flex items-center justify-center w-full flex-col gap-4">
-                <div className="flex flex-col">
-                  <Typography textSize="large">
-                    Перейдите к боту и введите токен
-                  </Typography>
-                  <Remains />
-                </div>
-                <pre
-                  onClick={() => handleCopyLink()}
-                  className="cursor-pointer bg-shark-800 rounded-lg px-3 py-0.5"
-                >
-                  <code>{url}</code>
-                </pre>
-                <div className="flex flex-col sm:flex-row items-center gap-2 w-full justify-center">
-                  <a href={url} target="_blank" rel="noreferrer">
-                    <Button
-                      variant="positive"
-                      onClick={() => connectAction(ctx, "connect", service)}
-                    >
-                      <Typography textSize="medium">
-                        Перейти к боту
-                      </Typography>
-                    </Button>
-                  </a>
-                  <Button
-                    variant="negative"
-                    onClick={() => connectAction(ctx, "cancel", service)}
-                  >
-                    <Typography textSize="medium">
-                      Отменить
-                    </Typography>
-                  </Button>
-                </div>
-              </div>
-            </div>
-          ) : (
-            <div className="flex flex-col gap-4 p-2 items-center justify-center">
-              <WindowLoader />
-              <Typography textSize="large">Инициализируем...</Typography>
-            </div>
-          )}
+          {ctx.spy(connectIsSuccessAtom)
+            ? <ConnectSocialIsSuccess />
+            : <ConnectSocialIsPending service={service} />
+          }
+        </div >
+      </DialogContent >
+    </Dialog >
+  )
+}, "ConnectSocialDialog")
+
+const IntegrationSettingsDialog = reatomComponent(({ ctx }) => {
+  const notify_in_telegram = getUser(ctx).preferences.notify_in_telegram
+
+  const handle = () => {
+    void spawn(ctx, async (spawnCtx) => updateCurrentUserSettingsAction(spawnCtx, {
+      setting: "notify_in_telegram", value: !notify_in_telegram
+    }))
+  }
+
+  return (
+    <Dialog
+      open={ctx.spy(integrationSettingsDialogIsOpenAtom)}
+      onOpenChange={v => integrationSettingsDialogIsOpenAtom(ctx, v)}
+    >
+      <DialogContent>
+        <div className="flex flex-col items-center gap-4 w-full h-full">
+          <Typography variant="dialogTitle">
+            Настройки {ctx.spy(integrationTypeAtom)?.title}
+          </Typography>
+          <UserSettingOption title="Объявления" icon={{ value: IconBrandTelegram }}>
+            <Switch
+              checked={notify_in_telegram}
+              defaultChecked={notify_in_telegram}
+              onCheckedChange={handle}
+            />
+          </UserSettingOption>
         </div>
       </DialogContent>
     </Dialog>
   )
-}, "SocialsSupportDialog")
+}, "IntegrationSettingsDialog")
 
-export const SocialsCard = reatomComponent<SocialsCardProps>(({ ctx, title, value, service }) => {
+export const SocialCard = reatomComponent<SocialsCardProps>(({
+  ctx, title, value, service
+}) => {
   return (
     <div className="flex flex-col gap-2 group p-4 w-full bg-shark-950 rounded-lg relative overflow-hidden">
       <div
@@ -192,8 +187,10 @@ export const SocialsCard = reatomComponent<SocialsCardProps>(({ ctx, title, valu
             ID: {value}
           </Typography>
           <div className="flex items-center w-4/5 justify-start gap-2">
+            <IntegrationSettingsDialog />
             <Button
               className="bg-shark-50 w-1/2"
+              onClick={() => openIntegrationSettingsAction(ctx, true, { title, service })}
             >
               <Typography textSize="medium" className="text-shark-950">
                 Настроить
@@ -212,7 +209,7 @@ export const SocialsCard = reatomComponent<SocialsCardProps>(({ ctx, title, valu
         </div>
       ) : (
         <>
-          <SocialsSupportDialog service={service} />
+          <ConnectSocialDialog service={service} />
           <Button
             state="default"
             onClick={() => connectAction(ctx, "connect", service)}
@@ -226,7 +223,16 @@ export const SocialsCard = reatomComponent<SocialsCardProps>(({ ctx, title, valu
       )}
     </div>
   )
-}, "SocialsCard")
+}, "SocialCard")
+
+const ProfileAccountSocialsSkeleton = () => {
+  return (
+    <>
+      <Skeleton className="h-24 w-full" />
+      <Skeleton className="h-24 w-full" />
+    </>
+  )
+}
 
 export const ProfileAccountSocials = reatomComponent(({ ctx }) => {
   const userSocials = ctx.spy(userSocialsResource.dataAtom)
@@ -239,34 +245,16 @@ export const ProfileAccountSocials = reatomComponent(({ ctx }) => {
     <div className="flex flex-col gap-4 w-full h-full">
       <div className="flex w-full justify-between items-center">
         <div className="flex items-center gap-1 w-fit">
-          <Typography
-            textColor="shark_white"
-            textSize="big"
-            className="font-semibold"
-          >
+          <Typography textColor="shark_white" textSize="big" className="font-semibold">
             Привязанные соцсети
           </Typography>
         </div>
       </div>
       <div className="grid grid-cols-1 lg:grid-cols-3 auto-rows-auto gap-4 w-full h-full">
-        {isLoading && (
+        {isLoading ? <ProfileAccountSocialsSkeleton /> : (
           <>
-            <Skeleton className="h-24 w-full" />
-            <Skeleton className="h-24 w-full" />
-          </>
-        )}
-        {!isLoading && (
-          <>
-            <SocialsCard
-              title="Discord"
-              service="discord"
-              value={discord?.value ?? null}
-            />
-            <SocialsCard
-              service="telegram"
-              title="Telegram"
-              value={tg?.value ?? null}
-            />
+            <SocialCard title="Discord" service="discord" value={discord?.value ?? null} />
+            <SocialCard service="telegram" title="Telegram" value={tg?.value ?? null} />
           </>
         )}
       </div>

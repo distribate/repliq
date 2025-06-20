@@ -1,15 +1,31 @@
 import type { ThreadDetailed } from "@repo/types/entities/thread-type";
 import { getThreadMain } from "./get-thread-main";
+import { forumDB } from "#shared/database/forum-db.ts";
 
-type GetThread = {
-  threadId: string;
-  nickname: string
+async function getThreadByUser(id: string, nickname: string) {
+  const query = await forumDB
+    .selectFrom("threads_saved")
+    .select('id')
+    .where("nickname", "=", nickname)
+    .where("thread_id", "=", id)
+    .executeTakeFirst()
+
+  return {
+    is_saved: Boolean(query?.id)
+  }
 }
 
-export async function getThread({
-  threadId
-}: Omit<GetThread, "nickname">): Promise<ThreadDetailed | null> {
-  const thread = await getThreadMain(threadId)
+export async function getThread({ id, nickname }: { id: string, nickname?: string }): Promise<ThreadDetailed | null> {
+  const [thread, threadByUser] = await Promise.all([
+    getThreadMain(id),
+    (async () => {
+      if (!nickname) { 
+        return null 
+      }
+
+      return await getThreadByUser(id, nickname)
+    })()
+  ])
 
   if (!thread) return null;
 
@@ -27,7 +43,8 @@ export async function getThread({
     views_count: Number(thread.views_count),
     properties: {
       is_updated: thread.is_updated,
-      is_comments: thread.is_comments
+      is_comments: thread.is_comments,
+      is_saved: threadByUser?.is_saved
     },
     owner: {
       nickname: thread.nickname!,
