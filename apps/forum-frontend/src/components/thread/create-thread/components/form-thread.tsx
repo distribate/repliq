@@ -1,21 +1,20 @@
 import { createThreadAction } from "../models/create-thread.model.ts";
 import { Button } from "@repo/ui/src/components/button.tsx";
-import { BlockWrapper } from "#components/wrappers/components/block-wrapper.tsx";
 import { FormThreadCategories } from "./form-thread-categories.tsx";
 import { FormThreadDescription } from "./form-thread-description.tsx";
 import { FormThreadTitle } from "./form-thread-title.tsx";
 import { FormThreadAdditional } from "./form-thread-additional.tsx";
 import { Typography } from "@repo/ui/src/components/typography.tsx";
-import { lazy, Suspense } from "react";
-import { HelpCircle, ImagePlus, Info } from "lucide-react";
+import React, { lazy, Suspense, useRef } from "react";
+import { Info } from "lucide-react";
 import { Separator } from "@repo/ui/src/components/separator.tsx";
 import { FormThreadStep } from "./form-thread-stepper.tsx";
-import { handleAddImagesAction } from "../models/edit-thread.model.ts";
 import { reatomComponent } from "@reatom/npm-react";
 import { FormThreadContent } from "./form-thread-content.tsx";
-import { threadFormIsCommentAtom, threadFormIsValidAtom } from "../models/thread-form.model.ts";
+import { handleAddImagesAction, threadFormIsCommentAtom, threadFormIsValidAtom } from "../models/thread-form.model.ts";
 import { Switch } from "@repo/ui/src/components/switch.tsx";
 import { FormField } from "@repo/ui/src/components/form-field.tsx";
+import { IconHelpCircle, IconImageInPicture } from "@tabler/icons-react";
 
 const FormThreadPreviewImages = lazy(() => import("./form-thread-preview-images.tsx").then(m => ({ default: m.FormThreadPreviewImages })));
 
@@ -31,18 +30,18 @@ const FormThreadRecommendations = () => {
         </Typography>
       </div>
       <div className="space-y-4 text-sm">
-        <p>При создании темы следуйте нашим правилам сообщества:</p>
+        <p>При создании темы следуйте правилам сообщества:</p>
         <ul className="space-y-2">
           {[
-            "Будьте уважительны к другим членам",
+            "Будьте уважительны",
             "Используйте описательные заголовки",
-            "Опубликовать в соответствующей категории",
+            "Опубликуйте в соответствующей категории",
             "Избегайте дублирования тем",
-            "Отформатируйте свой контент для удобства чтения",
+            "Отформатируйте контент для удобства чтения",
           ].map((item, i) => (
             <li key={i} className="flex items-start gap-2">
-              <span className="bg-shark-300/10 text-shark-50 rounded-full p-1 mt-0.5">
-                <HelpCircle className="h-3 w-3" />
+              <span className="flex items-center justify-center bg-shark-300/10 w-6 text-shark-50 rounded-sm aspect-square p-1">
+                {i + 1}
               </span>
               <span>{item}</span>
             </li>
@@ -78,22 +77,23 @@ const FormThreadFormatHelp = () => {
 }
 
 const CreateImage = reatomComponent(({ ctx }) => {
+  const ref = useRef<HTMLInputElement | null>(null)
+
   return (
     <Button
       type="button"
-      onMouseDown={e => e.preventDefault()}
+      onClick={() => ref.current?.click()}
       className="group hover:bg-shark-700 h-10 relative w-fit overflow-hidden"
     >
-      <ImagePlus size={20} className="text-shark-300" />
-      <Typography textSize="medium">
-        Прикрепить изображение
-      </Typography>
+      <IconImageInPicture size={20} className="text-shark-300" />
+      <Typography textSize="medium">Прикрепить изображение</Typography>
       <input
+        ref={ref}
         type="file"
         title="Загрузить изображения"
         accept="image/*"
         multiple
-        className="absolute cursor-pointer right-0 top-0 left-0 bottom-0 opacity-0 w-full"
+        className="absolute hidden"
         onChange={e => handleAddImagesAction(ctx, e)}
       />
     </Button>
@@ -133,9 +133,7 @@ const FormThreadComments = reatomComponent(({ ctx }) => {
         <Switch
           defaultChecked={is_comments}
           checked={is_comments}
-          onCheckedChange={(checked) => {
-            threadFormIsCommentAtom(ctx, checked)
-          }}
+          onCheckedChange={checked => threadFormIsCommentAtom(ctx, checked)}
         />
       </div>
     </FormField>
@@ -148,9 +146,9 @@ const CreateThreadButton = reatomComponent(({ ctx }) => {
 
   return (
     <Button
-      variant="positive" className="self-end w-fit" disabled={isDisabled || isPending} pending={isPending}
+      className="bg-shark-50 self-end w-fit" disabled={isDisabled || isPending} pending={isPending}
     >
-      <Typography textSize="medium" className="font-semibold">
+      <Typography textSize="medium" className="text-shark-950 font-semibold">
         Опубликовать
       </Typography>
     </Button>
@@ -158,13 +156,15 @@ const CreateThreadButton = reatomComponent(({ ctx }) => {
 }, "CreateThreadButton")
 
 export const CreateThreadForm = reatomComponent(({ ctx }) => {
+  const handle = (e: React.FormEvent) => {
+    e.preventDefault(); 
+    createThreadAction(ctx)
+  }
+
   return (
-    <form
-      onSubmit={(e) => { e.preventDefault(); createThreadAction(ctx) }}
-      className="flex 2xl:flex-row flex-col items-start gap-4 w-full"
-    >
+    <form onSubmit={handle} className="flex 2xl:flex-row flex-col items-start gap-4 w-full">
       <div className="flex flex-col gap-y-4 w-full 2xl:w-3/4 2xl:max-w-3/4 overflow-hidden">
-        <BlockWrapper className="flex flex-col gap-y-6 w-full !p-4">
+        <div className="flex flex-col rounded-lg bg-primary-color p-4 gap-6 w-full">
           <FormThreadHead />
           <FormThreadTitle />
           <FormThreadDescription />
@@ -180,16 +180,16 @@ export const CreateThreadForm = reatomComponent(({ ctx }) => {
           </div>
           <Separator />
           <CreateThreadButton/>
-        </BlockWrapper>
+        </div>
         <FormThreadAdditional />
       </div>
       <div className="flex flex-col gap-4 flex-grow-0 relative 2xl:sticky w-full 2xl:w-1/4 2xl:max-w-1/4 top-0 h-fit">
-        <BlockWrapper className="flex flex-col gap-y-4 w-full !p-4">
+        <div className="flex flex-col rounded-lg bg-primary-color p-4 gap-y-4 w-full">
           <FormThreadRecommendations />
-        </BlockWrapper>
-        <BlockWrapper className="flex flex-col gap-y-4 w-full !p-4">
+        </div>
+        <div className="flex flex-col rounded-lg bg-primary-color p-4 gap-y-4 w-full">
           <FormThreadFormatHelp />
-        </BlockWrapper>
+      </div>
       </div>
     </form>
   );

@@ -6,26 +6,17 @@ import { sha256 } from "@oslojs/crypto/sha2";
 import { invalidateSession } from "../lib/queries/invalidate-session";
 import type { Context } from "hono";
 import { isProduction } from "@repo/lib/helpers/is-production";
-import { SESSION_DOMAIN } from "../shared/constants/session-details";
+import { SESSION_DOMAIN, SESSION_KEY } from "../shared/constants/session-details";
 import { logger } from "@repo/lib/utils/logger";
 import { forumDB } from "../shared/database/forum-db";
 import dayjs from '@repo/lib/constants/dayjs-instance';
 
 export function deleteCookiesToken(ctx: Context) {
-  setCookie(ctx, `session`, "", {
+  setCookie(ctx, SESSION_KEY, "", {
     httpOnly: true,
     sameSite: "None",
     secure: isProduction,
     domain: SESSION_DOMAIN,
-    maxAge: 0,
-    path: "/",
-  })
-
-  setCookie(ctx, `user`, "", {
-    httpOnly: true,
-    sameSite: "None",
-    domain: SESSION_DOMAIN,
-    secure: isProduction,
     maxAge: 0,
     path: "/",
   })
@@ -67,7 +58,7 @@ export const invalidateSessionRoute = new Hono()
       }
 
       if (sessionDetails) {
-        logger.info(`${sessionDetails.nickname} logged. Ip: ${sessionDetails.ip} Time: ${dayjs().format("DD-MM-YYYY HH:mm:ss")}`)
+        logger.info(`${sessionDetails.nickname} unlogged. Ip: ${sessionDetails.ip} Time: ${dayjs().format("DD-MM-YYYY HH:mm:ss")}`)
         sessionDetails = null;
       }
 

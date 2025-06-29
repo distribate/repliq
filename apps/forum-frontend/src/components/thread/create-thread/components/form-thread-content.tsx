@@ -14,19 +14,20 @@ export const FormThreadContent = () => {
       </Typography>
       <Tabs defaultValue="edit" className="flex flex-col w-full gap-4">
         <TabsList className="flex flex-col sm:flex-row items-center justify-between w-full gap-2 *:w-full">
-          <TabsTrigger value="edit" className="flex group items-center justify-center gap-2">
-            <Edit
-              size={20}
-              className="group-data-[state=active]:text-shark-900 text-shark-50"
-            />
-            <span>Редактирование</span>
+          <TabsTrigger
+            value="edit"
+            className="flex group items-center justify-center gap-2 data-[state=active]:!bg-shark-900 data-[state=active]:border-2 data-[state=active]:border-shark-50/60"
+          >
+            <Edit size={20} className="text-shark-300" />
+            <span className="text-shark-50">Редактирование</span>
           </TabsTrigger>
-          <TabsTrigger disabled value="preview" className="flex group items-center justify-center gap-2">
-            <Eye
-              size={20}
-              className="group-data-[state=active]:text-shark-900 text-shark-50"
-            />
-            <span>Предварительный просмотр</span>
+          <TabsTrigger
+            disabled
+            value="preview"
+            className="flex group items-center justify-center gap-2 data-[state=active]:!bg-shark-900 data-[state=active]:border-2 data-[state=active]:border-shark-50/60"
+          >
+            <Eye size={20} className="text-shark-300" />
+            <span className="text-shark-50">Предварительный просмотр</span>
           </TabsTrigger>
         </TabsList>
         <TabsContent value="edit">
@@ -35,7 +36,7 @@ export const FormThreadContent = () => {
           </Suspense>
         </TabsContent>
         <TabsContent value="preview">
-          Preview built...
+          Превью в разработке...
         </TabsContent>
       </Tabs>
     </div>

@@ -2,6 +2,7 @@ import { publishStats } from "#publishers/pub-collect-stats.ts";
 import { getUserNicknameByTokenFromKv } from "#utils/get-user-by-token-from-kv.ts";
 import { getCookie } from "hono/cookie";
 import { createMiddleware } from "hono/factory";
+import { SESSION_KEY } from "./validate-request";
 
 export const collectStats = () => createMiddleware(async (ctx, next) => {
   const userAgent = ctx.req.header("User-Agent")
@@ -11,7 +12,7 @@ export const collectStats = () => createMiddleware(async (ctx, next) => {
     return ctx.json({ error: "Ignoring request from suspicious" }, 401)
   }
 
-  const sessionToken = getCookie(ctx, "session")
+  const sessionToken = getCookie(ctx, SESSION_KEY)
   const nickname = await getUserNicknameByTokenFromKv(sessionToken)
 
   if (nickname) {

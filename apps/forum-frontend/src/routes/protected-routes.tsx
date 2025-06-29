@@ -10,7 +10,6 @@ import { ProtectedRouteComponent } from "#pages/protected.layout";
 import { RouteSkeleton } from "#components/templates/components/route-skeleton";
 import { lazy, Suspense } from "react";
 import { validateAdmin, validatePage } from "./validation.model";
-import { StudioRouteComponent } from "#pages/studio.page";
 
 const CreateThreadRouteComponent = lazy(() => import("#pages/create-thread.page").then(m => ({ default: m.CreateThreadRouteComponent })))
 const AdminRouteComponent = lazy(() => import("#pages/admin/admin.layout").then(m => ({ default: m.AdminRouteComponent })))
@@ -29,6 +28,7 @@ const DashboardThreadsRouteComponent = lazy(() => import("#pages/dashboard/threa
 const CollectionRouteComponent = lazy(() => import("#pages/collection.page").then(m => ({ default: m.CollectionRouteComponent })))
 const CategoryRouteComponent = lazy(() => import("#pages/category.page").then(m => ({ default: m.CategoryRouteComponent })))
 const SearchRouteComponent = lazy(() => import("#pages/search.page").then(m => ({ default: m.SearchRouteComponent })))
+const StudioRouteComponent = lazy(() => import("#pages/studio.page").then(m => ({ default: m.StudioRouteComponent })))
 
 export const protectedRoute = createRoute({
   getParentRoute: () => rootRoute,

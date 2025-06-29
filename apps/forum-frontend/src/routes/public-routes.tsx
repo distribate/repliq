@@ -10,16 +10,26 @@ import { PublicRouteComponent } from '#pages/public.layout';
 import { RouteSkeleton } from '#components/templates/components/route-skeleton';
 import { lazy, Suspense } from 'react';
 import { validatePage } from './validation.model';
-import { NewsLayoutRouteComponent, NewsRouteComponent } from '#pages/news.page';
-import { ChangelogRouteComponent } from '#pages/changelog.page';
 
-const ThreadRouteComponent = lazy(() => import("#pages/thread.page").then(m => ({ default: m.ThreadRouteComponent })))
-const UserRouteComponent = lazy(() => import("#pages/user.page").then(m => ({ default: m.UserRouteComponent })))
-const DevelopmentRouteComponent = lazy(() => import("#pages/development.page").then(m => ({ default: m.DevelopmentRouteComponent })))
-const RestrictRouteComponent = lazy(() => import("#pages/restrict.page").then(m => ({ default: m.RestrictRouteComponent })))
-const NotOnlineRouteComponent = lazy(() => import("#pages/not-online.page").then(m => ({ default: m.NotOnlineRouteComponent })))
-const NotExistRouteComponent = lazy(() => import("#pages/not-exist.page").then(m => ({ default: m.NotExistRouteComponent })))
-const StoreRouteComponent = lazy(() => import("#pages/store.page").then(m => ({ default: m.StoreRouteComponent })))
+function lazyNamed<T extends React.ComponentType>(
+  importFn: () => Promise<{ [key: string]: T }>,
+  exportName: string
+) {
+  return lazy(() =>
+    importFn().then((mod) => ({ default: mod[exportName] }))
+  );
+}
+
+const ThreadRouteComponent = lazyNamed(() => import("#pages/thread.page"), "ThreadRouteComponent")
+const UserRouteComponent = lazyNamed(() => import("#pages/user.page"), "UserRouteComponent")
+const DevelopmentRouteComponent = lazyNamed(() => import("#pages/development.page"), "DevelopmentRouteComponent")
+const RestrictRouteComponent = lazyNamed(() => import("#pages/restrict.page"), "RestrictRouteComponent")
+const NotOnlineRouteComponent = lazyNamed(() => import("#pages/not-online.page"), "NotOnlineRouteComponent")
+const NotExistRouteComponent = lazyNamed(() => import("#pages/not-exist.page"), "NotExistRouteComponent")
+const StoreRouteComponent = lazyNamed(() => import("#pages/store.page"), "StoreRouteComponent")
+const ChangelogRouteComponent = lazyNamed(() => import("#pages/changelog.page"), "ChangelogRouteComponent")
+const NewsRouteComponent = lazyNamed(() => import("#pages/news.page"), "NewsRouteComponent")
+const NewsLayoutRouteComponent = lazyNamed(() => import("#pages/news.page"), "NewsLayoutRouteComponent")
 
 const publicRoute = createRoute({
   getParentRoute: () => rootRoute,
@@ -37,7 +47,7 @@ export const threadRoute = createRoute({
 
 export const newsLayout = createRoute({
   getParentRoute: () => publicRoute,
-  component: () => <NewsLayoutRouteComponent />,
+  component: () => <Suspense fallback={<RouteSkeleton />}><NewsLayoutRouteComponent /></Suspense>,
   id: "news"
 })
 

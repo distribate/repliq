@@ -7,7 +7,6 @@ import { createSessionTransaction } from "../lib/transactions/create-session-tra
 import { setCookie } from "hono/cookie";
 import bcrypt from 'bcryptjs';
 import { getClientIp } from "../utils/get-client-ip.ts";
-import type { Context } from "hono";
 import type { Session } from "../types/session-type";
 import type { User } from "../types/session-type.ts"
 import { isProduction } from "@repo/lib/helpers/is-production.ts";
@@ -21,35 +20,6 @@ import { UAParser } from "ua-parser-js"
 export type SessionValidationResult =
   | { session: Session; user: User }
   | { session: null; user: null };
-
-type SetCookieOpts = {
-  token: string,
-  ctx: Context,
-  expires: Date,
-  nickname: string
-}
-
-function setSessionCookies({
-  ctx, expires, nickname, token
-}: SetCookieOpts) {
-  setCookie(ctx, SESSION_KEY, token, {
-    httpOnly: true,
-    sameSite: isProduction ? "None" : "Lax",
-    secure: isProduction,
-    expires,
-    path: "/",
-    domain: isProduction ? SESSION_DOMAIN : undefined
-  })
-
-  setCookie(ctx, `user`, nickname, {
-    httpOnly: true,
-    sameSite: isProduction ? "None" : "Lax",
-    secure: isProduction,
-    expires,
-    path: "/",
-    domain: isProduction ? SESSION_DOMAIN : undefined
-  })
-}
 
 function generateSessionToken(): string {
   const bytes = new Uint8Array(20);
@@ -69,7 +39,11 @@ export const loginRoute = new Hono()
       ua 
     } = UAParser(ctx.req.header("User-Agent"))
 
-    await validateAuthenticationRequest({ ctx, token: cfToken })
+    try {
+      await validateAuthenticationRequest({ ctx, token: cfToken })
+    } catch (e) {
+      console.error(e)
+    }
 
     const existsUser = await validateExistsUser({ nickname, withCredentials: true })
 
@@ -107,14 +81,26 @@ export const loginRoute = new Hono()
         ip
       })
 
-      const expires = new Date(createdSession.expires_at)
+      if (createdSession) {
+        const expires = new Date(createdSession.expires_at)
+  
+        logger.info(`${nickname} logged. Ip: ${ip} Time: ${dayjs().format("DD-MM-YYYY HH:mm:ss")}`)
+  
+        setCookie(ctx, SESSION_KEY, token, {
+          httpOnly: true,
+          sameSite: isProduction ? "None" : "Lax",
+          secure: isProduction,
+          expires,
+          path: "/",
+          domain: isProduction ? SESSION_DOMAIN : "localhost"
+        })
+  
+        return ctx.json({ status: "Success" }, 200)
+      }
 
-      logger.info(`${nickname} logged. Ip: ${ip} Time: ${dayjs().format("DD-MM-YYYY HH:mm:ss")}`)
-
-      setSessionCookies({ ctx, expires, nickname, token })
-
-      return ctx.json({ status: "Success" }, 200)
+      return ctx.json({ error: "Session not created" }, 500)
     } catch (e) {
+      console.error(e)
       return ctx.json({ error: throwError(e) }, 500)
     }
   })

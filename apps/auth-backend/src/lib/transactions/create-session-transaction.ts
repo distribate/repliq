@@ -75,17 +75,15 @@ async function createSession({
 export const createSessionTransaction = async ({
   token, nickname, browser, cpu, ip, os, ua, device
 }: CreateSessionTransaction) => {
-  const query = await forumDB.transaction().execute(async (trx) => {
+  return forumDB.transaction().execute(async (trx) => {
     const session = await createSession({
       trx, token, nickname, browser, cpu, ip, os, ua, device
     });
 
     await putSessionToken(nickname, token)
 
+    notifyAboutLogin({ browser, ip, nickname })
+    
     return session;
   });
-
-  notifyAboutLogin({ browser, ip, nickname })
-
-  return query;
 }

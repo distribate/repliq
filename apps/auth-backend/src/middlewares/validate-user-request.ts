@@ -3,6 +3,7 @@ import { createMiddleware } from "hono/factory";
 import { sha256 } from "@oslojs/crypto/sha2";
 import { encodeHexLowerCase } from "@oslojs/encoding";
 import { forumDB } from "../shared/database/forum-db";
+import { SESSION_KEY } from "../shared/constants/session-details";
 
 export async function getUserSession(sessionId: string) {
   return forumDB
@@ -13,7 +14,7 @@ export async function getUserSession(sessionId: string) {
 }
 
 export const validateUserRequest = createMiddleware(async (ctx, next) => {
-  const sessionToken = getCookie(ctx, "session")
+  const sessionToken = getCookie(ctx, SESSION_KEY)
   const sessionId = encodeHexLowerCase(
     sha256(new TextEncoder().encode(sessionToken))
   );

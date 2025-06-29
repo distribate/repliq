@@ -1,7 +1,6 @@
 import { reatomComponent } from "@reatom/npm-react";
 import { donateTipTypeAtom, validateDonateTipCheckedAction } from "../models/donate-badge.model.ts";
 import { lazy, Suspense } from "react";
-import { IconSparkles } from "@tabler/icons-react";
 
 const BuyDonateDialog = lazy(() => import("#components/modals/custom/components/buy-donate-modal.tsx").then(m => ({ default: m.BuyDonateModal })))
 
@@ -15,6 +14,27 @@ const DonateTip = reatomComponent(({ ctx }) => {
   )
 })
 
+export const IconFasberryPlus = ({ size = 24, color = "currentColor", ...props }) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width={size}
+    height={size}
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke={color}
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    {...props}
+  >
+    {/* Гранёная малина или драгоценный камень */}
+    <path d="M12 2L16 8l-4 10L8 8z" />
+    {/* Плюс на фоне */}
+    <path d="M12 9v6" />
+    <path d="M9 12h6" />
+  </svg>
+);
+
 export const UserDonate = reatomComponent<{ is_donate: boolean }>(({ ctx, is_donate }) => {
   if (!is_donate) return null;
 
@@ -25,7 +45,7 @@ export const UserDonate = reatomComponent<{ is_donate: boolean }>(({ ctx, is_don
         className="w-fit cursor-pointer mx-1 items-center flex justify-center"
         onClick={() => validateDonateTipCheckedAction(ctx)}
       >
-        <IconSparkles size={24} className="fill-gold-500 text-gold-500" />
+        <IconFasberryPlus size={24} className="" />
       </div>
     </>
   )

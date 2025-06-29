@@ -1,11 +1,10 @@
 import { Typography } from "@repo/ui/src/components/typography.tsx";
 import { Select, SelectContent, SelectItem, SelectTrigger } from "@repo/ui/src/components/select.tsx";
 import { FormField } from "@repo/ui/src/components/form-field.tsx";
-import { availableCategoriesResource } from "../models/available-categories.model.ts";
 import { useState } from "react";
 import { Skeleton } from "@repo/ui/src/components/skeleton.tsx";
 import { reatomComponent } from "@reatom/npm-react";
-import { threadFormCategoryAtom } from "../models/thread-form.model.ts";
+import { availableCategoriesResource, threadFormCategoryAtom } from "../models/thread-form.model.ts";
 
 type AvailableCategoriesProps = {
   enabled: boolean;

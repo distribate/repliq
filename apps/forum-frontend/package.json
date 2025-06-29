@@ -33,6 +33,7 @@
     "@unhead/react": "2.0.10",
     "embla-carousel": "8.6.0",
     "embla-carousel-wheel-gestures": "8.0.1",
+    "fast-average-color": "^9.5.0",
     "framer-motion": "12.16.0",
     "ky": "1.8.1",
     "lucide-react": "0.518.0",

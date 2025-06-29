@@ -1,6 +1,72 @@
-name: fasberry-supabase
+name: forum
 
 services:
+  # consul:
+  #   image: consul:1.15.4
+  #   container_name: consul
+  #   ports:
+  #     - "8500:8500" # Web UI
+  #     - "8600:8600/udp"
+  #   command: "agent -server -client=0.0.0.0 -bootstrap-expect=1 -data-dir=/consul/data"
+  #   environment:
+  #     - CONSUL_BIND_INTERFACE=eth0
+  #   networks:
+  #     - vault_network
+  #   restart: always
+  #   volumes:
+  #     - ./data/fasberry-external/consul/data:/consul/data
+  #     - ./packages/config-vault/consul.hcl:/consul/config/consul.hcl
+
+  # vault:
+  #   image: hashicorp/vault:latest
+  #   container_name: vault
+  #   ports:
+  #     - "8200:8200"
+  #   restart: always
+  #   depends_on:
+  #     - consul
+  #   networks:
+  #     - vault_network
+  #   volumes:
+  #     - ./packages/config-vault/vault.hcl:/vault/config/vault.hcl
+  #   cap_add:
+  #     - IPC_LOCK
+  #   entrypoint: [ "vault", "server", "-config=/vault/config/vault.hcl" ]
+
+  # minio:
+  #   image: minio/minio:latest
+  #   container_name: minio
+  #   ports:
+  #     - "${MINIO_PORT}:${MINIO_PORT}"
+  #     - "${MINIO_CLIENT_PORT}:${MINIO_CLIENT_PORT}"
+  #   environment:
+  #     MINIO_ROOT_USER: ${MINIO_ROOT_USER}
+  #     MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD}
+  #   volumes:
+  #     - ./data/fasberry-external/minio/data:/data
+  #   command: server /data --console-address ":${MINIO_CLIENT_PORT}"
+
+  nats:
+    container_name: nats
+    image: nats:latest
+    restart: unless-stopped
+    ports:
+      - "4222:4222"
+      - "8222:8222"
+    command:
+      - "-js"
+      - "-sd=2G"
+      - "--sd=/nats/jetstream"
+      - "--T"
+      - "-VV"
+      - "--auth=${NATS_AUTH_TOKEN}"
+      - "--addr=0.0.0.0"
+    environment:
+      - NATS_TOKEN=${NATS_AUTH_TOKEN}
+    volumes:
+      - ./data/fasberry-external/nats/data:/nats
+      - ./data/fasberry-external/nats/jetstream:/nats/jetstream
+
   studio:
     container_name: supabase-studio
     image: supabase/studio:20241014-c083b3b
@@ -40,8 +106,6 @@ services:
       NEXT_ANALYTICS_BACKEND_PROVIDER: postgres
       # Uncomment to use Big Query backend for analytics
       # NEXT_ANALYTICS_BACKEND_PROVIDER: bigquery
-    networks:
-      - traefik_network
 
   kong:
     container_name: supabase-kong
@@ -55,8 +119,6 @@ services:
     # depends_on:
     #   analytics:
     #     condition: service_healthy
-    networks:
-      - traefik_network
     environment:
       KONG_DATABASE: "off"
       KONG_DECLARATIVE_CONFIG: /home/kong/kong.yml
@@ -151,8 +213,6 @@ services:
       # GOTRUE_HOOK_SEND_EMAIL_ENABLED: "false"
       # GOTRUE_HOOK_SEND_EMAIL_URI: "http://host.docker.internal:54321/functions/v1/email_sender"
       # GOTRUE_HOOK_SEND_EMAIL_SECRETS: "v1,whsec_VGhpcyBpcyBhbiBleGFtcGxlIG9mIGEgc2hvcnRlciBCYXNlNjQgc3RyaW5n"
-    networks:
-      - traefik_network
 
   rest:
     container_name: supabase-rest
@@ -173,8 +233,6 @@ services:
       PGRST_APP_SETTINGS_JWT_SECRET: ${JWT_SECRET}
       PGRST_APP_SETTINGS_JWT_EXP: ${JWT_EXPIRY}
     command: "postgrest"
-    networks:
-      - traefik_network
 
   realtime:
     # This container name looks inconsistent but is correct because realtime constructs tenant id by parsing the subdomain
@@ -219,8 +277,6 @@ services:
       RLIMIT_NOFILE: "10000"
       APP_NAME: realtime
       SEED_SELF_HOST: true
-    networks:
-      - traefik_network
 
   # To use S3 backed storage: docker compose -f docker-compose-supabase.yml -f docker-compose.s3.yml up
   storage:
@@ -266,8 +322,6 @@ services:
       IMGPROXY_URL: http://imgproxy:5001
     volumes:
       - ./data/fasberry-supabase/volumes/storage:/var/lib/storage:z
-    networks:
-      - traefik_network
 
   imgproxy:
     container_name: supabase-imgproxy
@@ -284,8 +338,6 @@ services:
       IMGPROXY_ENABLE_WEBP_DETECTION: ${IMGPROXY_ENABLE_WEBP_DETECTION}
     volumes:
       - ./data/fasberry-supabase/volumes/storage:/var/lib/storage:z
-    networks:
-      - traefik_network
 
   meta:
     container_name: supabase-meta
@@ -304,8 +356,6 @@ services:
       PG_META_DB_NAME: ${POSTGRES_DB}
       PG_META_DB_USER: supabase_admin
       PG_META_DB_PASSWORD: ${POSTGRES_PASSWORD}
-    networks:
-      - traefik_network
 
   # functions:
   #   container_name: supabase-edge-functions
@@ -418,8 +468,6 @@ services:
       - ./data/fasberry-supabase/volumes/db/pooler.sql:/docker-entrypoint-initdb.d/migrations/99-pooler.sql:Z
       # Use named volume to persist pgsodium decryption key between restarts
       - db-config:/etc/postgresql-custom
-    networks:
-      - traefik_network
 
   vector:
     container_name: supabase-vector
@@ -444,8 +492,6 @@ services:
     environment:
       LOGFLARE_API_KEY: ${LOGFLARE_API_KEY}
     command: [ "--config", "etc/vector/vector.yml" ]
-    networks:
-      - traefik_network
 
   # Update the DATABASE_URL if you are using an external Postgres database
   supavisor:
@@ -488,13 +534,9 @@ services:
       - POOLER_POOL_MODE=transaction
     volumes:
       - ./data/fasberry-supabase/volumes/pooler/pooler.exs:/etc/pooler/pooler.exs:ro
-    networks:
-      - traefik_network
 
 networks:
   shared-network:
-    external: true
-  traefik_network:
     external: true
 
 volumes:

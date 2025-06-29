@@ -13,8 +13,7 @@ import { sleep, withConcurrency } from '@reatom/framework';
 
 const onChange = action(async (ctx, value: Value) => {
   const target = value
-
-  await ctx.schedule(() => sleep(500))
+  await ctx.schedule(() => sleep(200))
   threadFormContentAtom(ctx, target)
 }).pipe(withConcurrency())
 

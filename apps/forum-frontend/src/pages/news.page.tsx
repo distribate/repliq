@@ -6,7 +6,13 @@ import { CustomLink } from "#components/shared/link"
 
 export const newsSelectedFilterAtom = atom<string>("all")
 
-export const NewsLayoutRouteComponent = reatomComponent(({ ctx }) => {
+export const NewsLayoutRouteComponent = () => {
+  return (
+    <Layout />
+  )
+}
+
+const Layout = () => {
   const pathname = useLocation().pathname
 
   return (
@@ -42,7 +48,7 @@ export const NewsLayoutRouteComponent = reatomComponent(({ ctx }) => {
       <Outlet />
     </div>
   )
-}, "NewsLayoutRouteComponent")
+}
 
 const mockNews: NewsItem[] = [
   {
@@ -174,7 +180,13 @@ const NewsCard = ({ item }: { item: NewsItem }) => {
   );
 };
 
-export const NewsRouteComponent = reatomComponent(({ ctx }) => {
+export const NewsRouteComponent = () => {
+  return (
+    <News />
+  )
+}
+
+const News = reatomComponent(({ ctx }) => {
   const selectedFilter = ctx.spy(newsSelectedFilterAtom)
 
   const filteredNews = selectedFilter === 'all'
@@ -207,4 +219,4 @@ export const NewsRouteComponent = reatomComponent(({ ctx }) => {
       </div>
     </div>
   )
-}, "NewsRouteComponent")
+}, "News")

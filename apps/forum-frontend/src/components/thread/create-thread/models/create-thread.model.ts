@@ -23,45 +23,26 @@ import {
   threadFormVisibilityAtom
 } from "./thread-form.model";
 import { createIdLink } from "@repo/lib/utils/create-link";
-import {
-  threadCategorySchema, threadContentSchema, threadDescriptionSchema,
-  threadTitleSchema, threadVisibilitySchema
-} from "@repo/types/schemas/thread/create-thread-schema";
+import { atom } from "@reatom/core";
 
-const createThreadSchemaV2 = z
-  .object({
-    title: threadTitleSchema,
-    content: threadContentSchema,
-    description: threadDescriptionSchema,
-    category_id: threadCategorySchema,
-    images: z.custom<File[] | null>(),
-    is_comments: z.boolean(),
-    tags: z.array(z.string()).nullable(),
-    permission: z.boolean(),
-    visibility: threadVisibilitySchema,
-  })
-  .check((ctx) => {
-    const contentLimit = getContentLimit(ctx.value.images);
-
-    if (ctx.value.content.length > contentLimit) {
-      ctx.issues.push({
-        input: "",
-        code: "custom",
-        path: ["content"],
-        message: `Превышено максимальное количество символов (${contentLimit})`,
-      });
-    }
-  });
-
-const createThreadSchemaRequest = initial.omit({
-  images: true
-}).extend({
-  images: z.array(z.instanceof(Uint8Array)).nullable(),
+const createThreadSchemaRequest = initial.omit({ images: true }).extend({
+  images: z.array(
+    z.instanceof(Uint8Array)
+  ).nullable(),
 })
 
 const createThreadSchema = createThreadSchemaRequest.extend({
-  images: z.array(z.instanceof(File)).nullable(),
+  images: z.array(
+    z.instanceof(File)
+  ).nullable(),
 })
+
+export const contentLimitAtom = atom((ctx) => {
+  const images = ctx.spy(threadFormImagesAtom)
+  return images && images.length > 0 ? THREAD_CONTENT_LIMIT_DEFAULT[1] : THREAD_CONTENT_LIMIT_DEFAULT[2]
+}, "contentLimit")
+
+contentLimitAtom.onChange((_, state) => console.log("contentLimitAtom", state))
 
 export const createThreadAction = reatomAsync(async (ctx) => {
   const title = ctx.get(threadFormTitleAtom)
@@ -71,42 +52,34 @@ export const createThreadAction = reatomAsync(async (ctx) => {
   const is_comments = ctx.get(threadFormIsCommentAtom)
   const tags = ctx.get(threadFormTagsAtom)
   const category_id = ctx.get(threadFormCategoryAtom)
-  const nodesContent = ctx.get(threadFormContentAtom)
-  const images = ctx.get(threadFormImagesAtom)
+  const nodes = ctx.get(threadFormContentAtom)
+  const files = ctx.get(threadFormImagesAtom)
 
-  if (!title || !category_id) return "form-error";
+  if (!title || !category_id) {
+    throw new Error("form-error")
+  }
 
-  const stringContent = JSON.stringify(nodesContent)
+  const content = JSON.stringify(nodes)
 
-  if (!title || !stringContent || !category_id || !visibility) return;
+  let images: File[] | null = null;
 
-  let imagesFiles: File[] | null;
-
-  if (images) {
-    imagesFiles = [];
+  if (files && files.length > 0) {
+    images = [];
 
     for (let i = 0; i < images.length; i++) {
-      const rawImageItem = await blobUrlToFile(images[i]);
+      const rawImageItem = await blobUrlToFile(files[i]);
 
-      imagesFiles.push(rawImageItem);
+      images.push(rawImageItem);
     }
-  } else {
-    imagesFiles = null
   }
 
   return await createThread({
-    images: imagesFiles, content: stringContent, category_id, title, visibility, tags, description, is_comments, permission,
+    images, content, category_id, title, visibility, tags, description, is_comments, permission,
   });
 }, {
   name: "createThreadAction",
   onFulfill: (ctx, res) => {
-    if (!res) {
-      return toast.error("Произошла ошибка при создании треда")
-    }
-
-    if (res === "form-error") {
-      return toast.error("Форма должна быть заполнена")
-    }
+    if (!res) return
 
     const images = ctx.get(threadFormImagesAtom)
 
@@ -123,16 +96,18 @@ export const createThreadAction = reatomAsync(async (ctx) => {
 
       ctx.schedule(() => router.navigate({ to: createIdLink("thread", res.data.id) }))
     }
+  },
+  onReject: (_, e) => {
+    if (e instanceof Error) {
+      if (e.message === 'form-error') {
+        toast.error("Форма должна быть заполнена")
+      }
+    }
   }
 }).pipe(withStatusesAtom())
 
-export function getContentLimit(images: Array<File> | string[] | null): number {
-  return images && images.length > 0 ? THREAD_CONTENT_LIMIT_DEFAULT[1] : THREAD_CONTENT_LIMIT_DEFAULT[2];
-}
-
-export async function createThread({
-  category_id, title, visibility, content, description,
-  images: rawImages, is_comments, permission, tags
+async function createThread({
+  category_id, title, visibility, content, description, images: rawImages, is_comments, permission, tags
 }: z.infer<typeof createThreadSchema>) {
   const url = forumThreadClient.thread["create-thread"].$url()
   const images = await fileArrayToUint8Array(rawImages)
@@ -141,9 +116,8 @@ export async function createThread({
     category_id, title, visibility, content, description, tags, permission, is_comments, images
   };
 
-  const encodedData = encode(structure);
   const res = await ky.post(url, {
-    body: encodedData,
+    body: encode(structure),
     headers: { 'Content-Type': 'application/cbor' },
     credentials: "include"
   })

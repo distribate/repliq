@@ -1,41 +1,10 @@
 import { Typography } from "@repo/ui/src/components/typography.tsx";
-import { threadFormTagsAtom } from "../models/thread-form.model.ts";
+import { addTagAction, deleteTagAction, tagValueAtom, threadFormTagsAtom } from "../models/thread-form.model.ts";
 import { Input } from "@repo/ui/src/components/input.tsx";
-import { X } from "lucide-react";
 import { THREAD_TAGS_LIMIT } from "@repo/shared/constants/limits.ts";
 import { reatomComponent } from "@reatom/npm-react";
-import { action, atom } from "@reatom/core";
-import { sleep, withConcurrency } from "@reatom/framework";
-
-const tagValueAtom = atom<string>("", "tagValue")
-
-const onChange = action(async (ctx, e) => {
-  const { value } = e.target
-  await ctx.schedule(() => sleep(200))
-  tagValueAtom(ctx, value)
-}).pipe(withConcurrency())
-
-const deleteTagAction = action((ctx, idx: number) => {
-  const tags = ctx.get(threadFormTagsAtom)
-  if (!tags) return;
-
-  const updatedTags = tags.filter((_, i) => i !== idx);
-
-  threadFormTagsAtom(ctx, updatedTags.length >= 1 ? updatedTags : null)
-})
-
-const addTagAction = action((ctx) => {
-  const tags = ctx.get(threadFormTagsAtom)
-
-  if (tags && tags.length >= THREAD_TAGS_LIMIT[1]) return;
-
-  const value = ctx.get(tagValueAtom)
-
-  threadFormTagsAtom(ctx, (state) => {
-    if (!state) state = []
-    return [...state, value]
-  })
-})
+import { useEffect } from "react";
+import { IconX } from "@tabler/icons-react";
 
 const SelectedTagsList = reatomComponent(({ ctx }) => {
   const tags = ctx.spy(threadFormTagsAtom)
@@ -46,33 +15,47 @@ const SelectedTagsList = reatomComponent(({ ctx }) => {
       {tags.map((tag, i) => (
         <div
           key={i}
-          className="flex items-center justify-between bg-shark-500 rounded-sm px-2 py-3 h-3 overflow-hidden"
+          className="flex items-center gap-2 justify-between bg-shark-300/20 backdrop-blur-xl rounded-sm px-2 py-3 h-3 overflow-hidden"
         >
           <Typography className="text-[15px] font-medium">
-            {tag.toString()}
+            {tag}
           </Typography>
-          <X
+          <IconX
             onClick={() => deleteTagAction(ctx, i)}
-            size={15}
-            className="text-shark-50 cursor-pointer"
+            size={18}
+            className="text-shark-300 cursor-pointer"
           />
         </div>
       ))}
     </div>
   )
-})
+}, "SelectedTagsList")
 
 const SelectedTags = reatomComponent(({ ctx }) => {
   const tags = ctx.spy(threadFormTagsAtom)
 
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Enter") addTagAction(ctx)
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, []);
+
   return (
-    <div className="flex flex-col gap-2 min-h-[100px] max-h-[200px] rounded-md p-2 bg-shark-900">
+    <div className="flex flex-col gap-2 min-h-[100px] rounded-md p-2 bg-shark-900">
       <SelectedTagsList />
       {!tags || (tags && tags.length < THREAD_TAGS_LIMIT[1]) ? (
         <Input
           placeholder={!tags ? "тег" : ""}
           className="!p-0 !m-0 !min-h-3 w-fit !text-[15px]"
-          onChange={e => onChange(ctx, e)}
+          value={ctx.spy(tagValueAtom)}
+          onChange={e => tagValueAtom(ctx, e.target.value)}
+          maxLength={512}
         />
       ) : (
         <Typography className="text-red-500 text-[15px]">
@@ -81,7 +64,7 @@ const SelectedTags = reatomComponent(({ ctx }) => {
       )}
     </div>
   )
-})
+}, "SelectedTags")
 
 export const FormThreadAdditional = reatomComponent(({ ctx }) => {
   return (
@@ -96,11 +79,6 @@ export const FormThreadAdditional = reatomComponent(({ ctx }) => {
           </Typography>
         </div>
         <SelectedTags />
-        <div onClick={() => addTagAction(ctx)}>
-          <Typography>
-            Добавить
-          </Typography>
-        </div>
       </div>
     </div>
   );

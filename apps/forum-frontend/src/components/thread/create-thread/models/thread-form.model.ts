@@ -1,10 +1,16 @@
 import { createThreadSchema, threadCategorySchema, threadContentSchema, threadTitleSchema } from "@repo/types/schemas/thread/create-thread-schema.ts";
 import { z } from "zod/v4";
 import { Value } from "@udecode/plate";
-import { atom, Ctx } from "@reatom/core";
-import { withReset } from "@reatom/framework";
+import { action, atom, Ctx } from "@reatom/core";
+import { reatomAsync, reatomMap, reatomResource, sleep, withCache, withConcurrency, withDataAtom, withReset, withStatusesAtom } from "@reatom/framework";
 import { logger } from "@repo/lib/utils/logger";
 import { serializeNodes } from "@repo/lib/helpers/nodes-serializer";
+import { THREAD_TAGS_LIMIT } from "@repo/shared/constants/limits";
+import { ChangeEvent } from "react";
+import { THREAD_IMAGES_LIMIT_DEFAULT } from "@repo/shared/constants/limits";
+import { currentUserAtom } from "#components/user/models/current-user.model";
+import { forumCategoriesClient } from "@repo/shared/api/forum-client";
+import { FastAverageColor } from 'fast-average-color';
 
 type ThreadForm = Omit<z.infer<typeof createThreadSchema>,
   | "content" | "images" | "category_id" | "tags" | "visibility"
@@ -107,3 +113,131 @@ export function createThreadFormReset(ctx: Ctx) {
   threadFormContentIsValidAtom.reset(ctx)
   threadFormIsValidAtom.reset(ctx)
 }
+
+export const tagValueAtom = atom<string>("", "tagValue").pipe(withReset())
+
+export const deleteTagAction = action((ctx, idx: number) => {
+  const tags = ctx.get(threadFormTagsAtom)
+  if (!tags) return;
+
+  const updatedTags = tags.filter((_, i) => i !== idx);
+
+  threadFormTagsAtom(ctx, updatedTags.length >= 1 ? updatedTags : null)
+}, "deleteTagAction")
+
+export const addTagAction = action((ctx) => {
+  const tags = ctx.get(threadFormTagsAtom)
+
+  if (tags && tags.length >= THREAD_TAGS_LIMIT[1]) return;
+
+  const value = ctx.get(tagValueAtom)
+
+  threadFormTagsAtom(ctx, (state) => {
+    if (!state) state = []
+    return [...state, value]
+  })
+
+  tagValueAtom.reset(ctx)
+}, "addTagAction")
+
+export const editThreadDescriptionOnChange = action(async (ctx, e: ChangeEvent<HTMLInputElement>) => {
+  const { value } = e.target;
+  await ctx.schedule(() => sleep(100))
+  threadFormDescriptionAtom(ctx, value)
+}, "editThreadDescriptionOnChange").pipe(withConcurrency())
+
+export const editThreadTitleOnChange = action(async (ctx, e: ChangeEvent<HTMLInputElement>) => {
+  const { value } = e.target;
+  await ctx.schedule(() => sleep(100))
+  threadFormTitleAtom(ctx, value)
+}, "editThreadTitleOnChange").pipe(withConcurrency())
+
+type CreateThreadImageControl =
+  | { type: "add", images: Array<File> | null }
+  | { type: "delete", index: number }
+
+const fac = new FastAverageColor();
+
+export const bgColorAtom = reatomMap<number, string>([]).pipe(withReset())
+
+export const handleControlImagesAction = reatomAsync(async (ctx, values: CreateThreadImageControl) => {
+  const images = ctx.get(threadFormImagesAtom)
+  const type = values.type
+
+  if (type === 'add') {
+    if (!values.images) return;
+
+    const newImageUrls = values.images.map(f => URL.createObjectURL(f));
+    const updatedImages = images ? [...images, ...newImageUrls] : newImageUrls;
+
+    for (let i = 0; i < newImageUrls.length; i++) {
+      const absoluteIndex = images?.length ? images.length + i : i;
+      const color = (await fac.getColorAsync(newImageUrls[i])).hex;
+      bgColorAtom.set(ctx, absoluteIndex, color);
+    }
+
+    return threadFormImagesAtom(ctx, updatedImages)
+  }
+
+  if (type === 'delete') {
+    const { index } = values;
+    if (!images) return;
+
+    const updatedImages = images.length <= 1
+      ? null
+      : images.filter((_, i) => i !== index);
+
+    bgColorAtom.delete(ctx, index);
+
+    const total = images.length;
+
+    for (let i = index + 1; i < total; i++) {
+      const color = bgColorAtom.get(ctx, i);
+      
+      if (color !== undefined) {
+        bgColorAtom.set(ctx, i - 1, color);
+        bgColorAtom.delete(ctx, i);
+      }
+    }
+
+    return threadFormImagesAtom(ctx, updatedImages);
+  }
+}, "handleControlImagesAction")
+
+export const handleAddImagesAction = action((
+  ctx,
+  e: React.ChangeEvent<HTMLInputElement>
+) => {
+  const currentUser = ctx.get(currentUserAtom)
+  if (!currentUser) return;
+
+  const MAX_IMAGES = !currentUser.is_donate ? THREAD_IMAGES_LIMIT_DEFAULT[1] : 3;
+
+  const images = e.target.files
+    ? (Array.from(e.target.files).slice(THREAD_IMAGES_LIMIT_DEFAULT[0], MAX_IMAGES) as Array<File>)
+    : null;
+
+  e.preventDefault();
+
+  return handleControlImagesAction(ctx, { type: "add", images });
+}, "handleAddImagesAction")
+
+export const handleDeleteImageAction = action((
+  ctx,
+  e: React.MouseEvent<HTMLButtonElement, MouseEvent> | React.ChangeEvent<HTMLInputElement>,
+  idx: number
+) => {
+  e.preventDefault();
+  return handleControlImagesAction(ctx, { index: idx, type: "delete" });
+}, "handleDeleteImageAction")
+
+async function getAvailableCategories() {
+  const res = await forumCategoriesClient.categories["get-available-categories"].$get()
+  const data = await res.json()
+  if (!data || 'error' in data) return null
+  return data.data
+}
+
+export const availableCategoriesResource = reatomResource(async (ctx) => {
+  return await ctx.schedule(() => getAvailableCategories())
+}, "availableCategoriesResource").pipe(withDataAtom(), withStatusesAtom(), withCache())

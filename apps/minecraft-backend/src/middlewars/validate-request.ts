@@ -3,7 +3,7 @@ import { createMiddleware } from "hono/factory";
 import { getUserNicknameByTokenFromKv } from "../utils/get-user-by-token-from-kv.ts";
 
 export const validateRequest = () => createMiddleware(async (ctx, next) => {
-  const sessionToken = getCookie(ctx, "session")
+  const sessionToken = getCookie(ctx, "forum_session")
 
   if (!sessionToken) {
     return ctx.json({ error: "Unauthorized" }, 401)

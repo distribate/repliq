@@ -5,6 +5,7 @@ import { PulsatingButton } from "@repo/ui/src/components/shiny-button.tsx"
 import { IconBrandThreads, IconDeviceDesktopAnalytics, IconMoodSpark, IconPalette, IconSparkles, TablerIcon } from "@tabler/icons-react"
 import { atom } from "@reatom/core"
 import { reatomComponent } from "@reatom/npm-react"
+import { IconFasberryPlus } from "#components/user/donate/components/donate"
 
 type BuyDonateModalProps = { trigger?: ReactNode | string }
 
@@ -69,7 +70,7 @@ const DonateDialog = () => {
     <div className="flex flex-col items-center w-full h-full">
       <div className="flex flex-col relative px-4 py-4 items-center gap-y-4 w-full">
         <div className="biloba-gradient opacity-30 w-full h-full z-[1] absolute left-0 right-0 top-0" />
-        <IconSparkles size={112} className="text-biloba-flower-400" />
+        <IconFasberryPlus size={112} className="text-pink-400" />
         <div className="flex flex-col">
           <span className="text-xl text-center font-semibold">Fasberry+</span>
           <Typography className="text-lg text-center break-words">

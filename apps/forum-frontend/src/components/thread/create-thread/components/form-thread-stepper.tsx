@@ -10,7 +10,6 @@ const STEPS: Record<string, string> = {
 
 export const FormThreadStep = reatomComponent(({ ctx }) => {
   const data = ctx.spy(threadFormStepAtom)
-
   const currentStep = STEPS[data]
 
   return (

@@ -1,5 +1,5 @@
-import { availableCategoriesResource } from "#components/thread/create-thread/models/available-categories.model"
 import { CustomLink } from "#components/shared/link"
+import { availableCategoriesResource } from "#components/thread/create-thread/models/thread-form.model"
 import { reatomComponent } from "@reatom/npm-react"
 import { CATEGORY_URL } from "@repo/shared/constants/routes"
 import { Typography } from "@repo/ui/src/components/typography"
