@@ -23,8 +23,8 @@ import { getUserSocialsRoute } from '#routes/user/get-user-socials.ts';
 import { getUserProfileStatsRoute } from '#routes/user/get-user-profile-stats.ts';
 import { createProfileViewRoute } from '#routes/user/create-profile-view.ts';
 import { createIssueRoute } from '#routes/issue/create-issue.ts';
-import { getUserNotificationsRoute } from '#routes/user/get-user-notifications.ts';
-import { checkNotificationRoute } from '#routes/notification/check-notification.ts';
+import { getUserNotificationsRoute } from '#routes/notifications/get-user-notifications.ts';
+import { checkNotificationRoute } from '#routes/notifications/check-notification.ts';
 import { getMeRoute } from '#routes/user/get-me.ts';
 import { getFriendStatusRoute } from '#routes/friend/get-friend-status.ts';
 import { getFriendRequestsRoute } from '#routes/friend/get-friend-requests.ts';
@@ -44,14 +44,11 @@ import { replyCommentRoute } from '#routes/comments/reply-comment.ts';
 import { getThreadCommentsRoute } from '#routes/comments/get-thread-comments.ts';
 import { createReactionRoute } from '#routes/reaction/create-reaction.ts';
 import { createThreadRoute } from '#routes/thread/create-thread.ts';
-import { getFactRoute } from '#routes/public/get-fact-route.ts';
 import { getUserStatusRoute } from '#routes/user/get-user-status.ts';
 import { getNewsRoute } from '#routes/public/get-news.ts';
 import { getOnlineUsersRoute } from '#routes/public/get-online-users.ts';
 import { getLatestRegUsersRoute } from '#routes/public/get-latest-reg-users.ts';
 import { getLastCommentsRoute } from '#routes/comments/get-last-comments.ts';
-import { getAuthImageRoute } from '#routes/public/get-auth-image.ts';
-import { getDonatesRoute } from '#routes/public/get-donates.ts';
 import { getThreadImagesRoute } from './routes/thread/get-thread-images';
 import { getStaticImageRoute } from '#routes/public/get-static-image.ts';
 import { timeoutMiddleware } from '#middlewares/timeout.ts';
@@ -90,9 +87,6 @@ import { getTicketsRoute } from '#routes/admin/get-tickets.ts';
 import { getReportsRoute } from '#routes/admin/get-reports.ts';
 import { getStatusRoute } from '#routes/public/get-status.ts';
 import { getUserTicketsRoute } from '#routes/user/get-user-tickets.ts';
-import { getRulesRoute } from '#routes/public/get-rules.ts';
-import { getModpacksRoute } from '#routes/public/get-modpacks.ts';
-import { getServerIpRoute } from '#routes/public/get-server-ip.ts';
 import { createUserRestrictRoute } from '#routes/warns/create-user-restrict.ts';
 import { notificationsSSERoute } from '#routes/notifications/notifications-sse.ts';
 import { getMediaRoute } from '#routes/public/get-media.ts';
@@ -135,19 +129,13 @@ export const report = new Hono()
 
 export const shared = new Hono()
   .basePath("/shared")
-  .route('/', getFactRoute)
-  .route("/", getAuthImageRoute)
   .route("/", getStaticImageRoute)
   .route("/", getNewsRoute)
   .route("/", getOnlineUsersRoute)
   .route("/", getLatestRegUsersRoute)
-  .route("/", getDonatesRoute)
   .route("/", getAlertsRoute)
   .route("/", getImagesLibraryRoute)
   .route("/", getStatusRoute)
-  .route("/", getRulesRoute)
-  .route("/", getModpacksRoute)
-  .route("/", getServerIpRoute)
   .route("/", getMediaRoute)
   .route("/", getPublicStatsRoute)
 
@@ -339,7 +327,7 @@ const app = new Hono<Env>()
   .route("/", post)
   .route("/", report)
 
-// showRoutes(app, { verbose: false });
+showRoutes(app, { verbose: false });
 
 Bun.serve({ port: Bun.env.FORUM_BACKEND_PORT!, fetch: app.fetch })
 

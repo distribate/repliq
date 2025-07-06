@@ -1,10 +1,11 @@
 import { throwError } from '@repo/lib/helpers/throw-error.ts';
-import { addUserToBlocked } from "#lib/queries/user/add-user-to-blocked.ts";
 import { deleteUserFromBlocked } from "#lib/queries/user/delete-user-from-blocked.ts";
 import { getNickname } from "#utils/get-nickname-from-storage.ts";
 import { zValidator } from "@hono/zod-validator";
 import { Hono } from "hono";
 import { z } from "zod/v4";
+import { forumDB } from "#shared/database/forum-db.ts";
+import type { InitiatorRecipientType } from "#types/initiator-recipient-type.ts";
 
 export const deleteUserFromBlockedSchema = z.object({
   recipient: z.string(),
@@ -13,6 +14,18 @@ export const deleteUserFromBlockedSchema = z.object({
 
 export type UserFromBlocked = Omit<z.infer<typeof deleteUserFromBlockedSchema>, "type"> & {
   initiator: string
+}
+
+type AddUserToBlocked = InitiatorRecipientType
+
+async function addUserToBlocked({
+  initiator, recipient
+}: AddUserToBlocked) {
+  return forumDB
+    .insertInto('users_blocked')
+    .values({ initiator, recipient })
+    .returningAll()
+    .executeTakeFirstOrThrow();
 }
 
 export const controlUserBlockedRoute = new Hono()

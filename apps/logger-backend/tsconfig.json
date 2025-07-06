@@ -10,8 +10,10 @@
     "skipLibCheck": true,
     "strict": true,
     "composite": true,
+    "importHelpers": false,
     "noEmit": true,
     "emitDeclarationOnly": true,
+    "experimentalDecorators": true,
     "noFallthroughCasesInSwitch": true,
     "forceConsistentCasingInFileNames": true
   },

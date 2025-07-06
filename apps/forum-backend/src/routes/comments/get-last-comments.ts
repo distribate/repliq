@@ -1,6 +1,35 @@
-import { getLastCreatedComments } from "#lib/queries/comments/get-last-created-comments.ts";
 import { throwError } from "@repo/lib/helpers/throw-error";
 import { Hono } from "hono";
+import { forumDB } from "#shared/database/forum-db.ts";
+import { sql } from "kysely";
+
+async function getLastCreatedComments() {
+  return forumDB
+    .selectFrom("comments")
+    .innerJoin(
+      "threads",
+      (join) =>
+        join.on(
+          sql`CAST(comments.parent_id AS UUID)`,
+          "=",
+          sql`threads.id`
+        )
+    )
+    .innerJoin("users", "users.nickname", "comments.user_nickname")
+    .select([
+      "comments.user_nickname",
+      "comments.parent_id",
+      "comments.parent_type",
+      "comments.content",
+      "comments.created_at",
+      "threads.title",
+      "users.avatar"
+    ])
+    .where("comments.parent_type", "=", "thread")
+    .orderBy("comments.created_at", "desc")
+    .limit(6)
+    .execute()
+}
 
 export const getLastCommentsRoute = new Hono()
   .get("/get-last-comments", async (ctx) => {

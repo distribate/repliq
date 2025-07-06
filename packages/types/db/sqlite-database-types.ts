@@ -87,16 +87,6 @@ export interface MinecraftItems {
   title: string;
 }
 
-export interface MinecraftNews {
-  created_at: Generated<string>;
-  description: string;
-  id: number | null;
-  imageUrl: string;
-  media_links: string | null;
-  tags: string | null;
-  title: string;
-}
-
 export interface Modpack {
   client: string;
   created_at: Generated<string>;
@@ -107,6 +97,16 @@ export interface Modpack {
   name: string;
   shaders: string | null;
   version: string;
+}
+
+export interface News {
+  created_at: Generated<string>;
+  description: string;
+  id: number | null;
+  imageUrl: string;
+  media_links: string | null;
+  tags: string | null;
+  title: string;
 }
 
 export interface RulesRuleContent {
@@ -141,8 +141,8 @@ export interface DB {
   media_links: MediaLinks;
   minecraft_facts: MinecraftFacts;
   minecraft_items: MinecraftItems;
-  minecraft_news: MinecraftNews;
   modpack: Modpack;
+  news: News;
   rules_rule_content: RulesRuleContent;
   rules_termin_content: RulesTerminContent;
   voted_users: VotedUsers;

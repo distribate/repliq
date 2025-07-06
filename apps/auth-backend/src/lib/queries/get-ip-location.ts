@@ -90,7 +90,8 @@ export async function getIpLocation(ip: string) {
       throwHttpErrors: false,
       searchParams: {
         token
-      }
+      },
+      timeout: 2000
     });
 
     console.log(res)

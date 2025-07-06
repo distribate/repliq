@@ -5,8 +5,9 @@
   "type": "module",
   "license": "MIT",
   "scripts": {
-    "start": "NODE_ENV=production bun run src/index.ts",
+    "start": "NODE_ENV=production bun run dist/index.js",
     "dev": "NODE_ENV=development bun run --hot src/index.ts",
+    "build": "NODE_ENV=production bun build src/index.ts --target bun --outdir ./dist --sourcemap --minify",
     "lint": "bun x eslint \"src/**/*.ts\"",
     "lint:fix": "bun eslint \"src/**/*.ts\" --fix",
     "type-check": "tsc --noEmit"
@@ -27,7 +28,7 @@
     "@supabase/supabase-js": "2.45.6",
     "cbor-x": "1.6.0",
     "dayjs": "1.11.11",
-    "hono": "4.8.0",
+    "hono": "4.8.2",
     "hono-rate-limiter": "0.4.2",
     "ky": "1.8.1",
     "kysely": "0.27.4",

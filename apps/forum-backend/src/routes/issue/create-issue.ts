@@ -1,10 +1,31 @@
 import { throwError } from '@repo/lib/helpers/throw-error.ts';
-import { createIssue } from "#lib/queries/issue/create-issue.ts";
 import { publishIssuePayload } from "#publishers/pub-issue-payload.ts";
 import { zValidator } from "@hono/zod-validator";
 import { Hono } from "hono";
 import { createIssueSchema } from "@repo/types/schemas/issue/create-issue-schema.ts";
 import { getNickname } from "#utils/get-nickname-from-storage.ts";
+import { forumDB } from "#shared/database/forum-db.ts"
+import { z } from "zod/v4"
+
+type CreateIssue = z.infer<typeof createIssueSchema> & {
+  nickname: string
+}
+
+async function createIssue({
+  title, description, nickname: user_nickname, type
+}: CreateIssue) {
+  return forumDB
+    .insertInto("issues")
+    // @ts-expect-error
+    .values({
+      title,
+      description,
+      user_nickname,
+      type
+    })
+    .returningAll()
+    .executeTakeFirstOrThrow()
+}
 
 export const createIssueRoute = new Hono()
   .post("/create-issue", zValidator("json", createIssueSchema), async (ctx) => {

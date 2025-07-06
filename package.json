@@ -4,15 +4,16 @@
     "start": "turbo start",
     "build": "turbo build",
     "dev": "turbo dev",
-    "docker-start": "concurrently \"docker compose up -d\" \"docker compose -f docker-compose-external.yml up -d\"",
-    "docker-down": "concurrently \"docker compose down\" \"docker compose -f docker-compose-external.yml down\"",
+    "docker-start": "concurrently \"docker compose up -d\"",
+    "docker-down": "concurrently \"docker compose down\"",
     "lint": "turbo lint",
     "type-check": "turbo type-check",
     "clean": "turbo clean",
     "format": "prettier --write \"**/*.{ts,tsx,md}\""
   },
   "dependencies": {
-    "drizzle-kit": "0.31.1",
+    "better-sqlite3": "^12.2.0",
+    "drizzle-kit": "latest",
     "drizzle-orm": "0.44.2"
   },
   "devDependencies": {
