@@ -1,7 +1,5 @@
 import { logger } from "@repo/lib/utils/logger";
-import ky, { HTTPError } from "ky"
-
-const CLOUDFLARE_TURNSTILE_SECRET_KEY = "0x4AAAAAAA-stfzoKM9_11nOW5V0dd54VS0"
+import ky from "ky"
 
 type Payload = {
   success: boolean,
@@ -15,7 +13,7 @@ type Payload = {
 export async function verifyAuth(token: string) {
   try {
     const verifyRes = await ky.post("https://challenges.cloudflare.com/turnstile/v0/siteverify", {
-      json: { secret: CLOUDFLARE_TURNSTILE_SECRET_KEY, response: token },
+      json: { secret: Bun.env.CF_TURNSTILE_TOKEN, response: token },
     });
 
     if (!verifyRes.ok) {
@@ -32,7 +30,6 @@ export async function verifyAuth(token: string) {
       logger.error(e.message)
     }
 
-    console.error(e)
     return "no-verified"
   }
 }

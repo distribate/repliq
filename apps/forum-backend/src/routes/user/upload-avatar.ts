@@ -33,7 +33,7 @@ async function createAvatar({ nickname, file }: { nickname: string, file: global
 
     const update = await trx
       .updateTable("users")
-      .set({ avatar: uploaded.path })
+      .set({ avatar: `https://kong.fasberry.su/storage/v1/object/public/${uploaded.fullPath}` })
       .where("nickname", "=", nickname)
       .returning("avatar")
       .executeTakeFirst()

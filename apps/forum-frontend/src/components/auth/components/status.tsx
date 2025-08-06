@@ -10,4 +10,4 @@ export const AuthStatus = reatomComponent(({ ctx }) => {
       {ctx.spy(statusMessageAtom)}
     </span>
   )
-})
+}, "AuthStatus")

@@ -1,15 +1,24 @@
 import { reatomResource, withCache, withStatusesAtom } from "@reatom/async"
-import { action, atom } from "@reatom/core"
+import { action, atom, AtomState } from "@reatom/core"
 import { withReset } from "@reatom/framework"
 import { forumAdminClient } from "@repo/shared/api/forum-client"
-import type { InferResponseType } from "hono/client"
+import { ReportType } from "@repo/types/db/forum-database-types"
 
-const client = forumAdminClient.private["get-reports"].$get
+type SelectedReport = {
+  user_avatar: string | null;
+  user_nickname: string;
+  created_at: string;
+  description: string | null;
+  id: string;
+  reason: "dont-like" | "offensive" | "spam";
+  report_type: ReportType | null;
+  reported_item: any;
+  target_user_nickname: string;
+}
 
-export type GetReportsResponse = InferResponseType<typeof client, 200>["data"]
-type SelectedReport = GetReportsResponse[number] | null
+export type GetReportsResponse = SelectedReport[]
 
-export const reportsAtom = atom<GetReportsResponse | null>(null, 'reports')
+export const reportsAtom = atom<SelectedReport[] | null>(null, 'reports')
 
 async function getReports() {
   const res = await forumAdminClient.private["get-reports"].$get()
@@ -28,8 +37,19 @@ export const reportsAction = reatomResource(async (ctx) => {
   })
 }).pipe(withStatusesAtom(), withCache())
 
-export const selectReportAction = action((ctx, id: GetReportsResponse[number]["id"]) => {
-  const target = ctx.get(reportsAtom)?.find(report => report.id === id)
+export const selectReportAction = action((ctx, id: SelectedReport["id"]) => {
+  const reports = ctx.get(reportsAtom)
+  if (!reports) return;
+
+  let target: SelectedReport | null = null;
+
+  if (reports.length >= 1) {
+    const finded = reports.find(report => report.id === id)
+
+    if (finded) {
+      target = finded
+    }
+  }
 
   if (!target) return;
 
@@ -37,9 +57,9 @@ export const selectReportAction = action((ctx, id: GetReportsResponse[number]["i
   selectedReportAtom(ctx, target)
 })
 
-export const selectedReportAtom = atom<SelectedReport>(null, "selectedReport").pipe(withReset())
+export const selectedReportAtom = atom<SelectedReport | null>(null, "selectedReport").pipe(withReset())
 export const selectedReportDialogIsOpenAtom = atom(false, "selectedReportDialogIsOpen")
 
-selectedReportDialogIsOpenAtom.onChange((ctx, value) => 
+selectedReportDialogIsOpenAtom.onChange((ctx, value) =>
   !value && selectedReportAtom.reset(ctx)
 )

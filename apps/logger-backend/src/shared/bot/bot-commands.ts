@@ -1,13 +1,13 @@
 import { TelegramBotCommand } from "gramio";
 
-export const fasberryBotCommands: TelegramBotCommand[] = [
+export const repliqBotCmds: TelegramBotCommand[] = [
   {
     command: "/connect",
     description: "Привязать аккаунт"
   },
 ]
 
-export const botCommands: TelegramBotCommand[] = [
+export const loggerBotCmds: TelegramBotCommand[] = [
   {
     command: "/keyboard",
     description: "Open the keyboard"

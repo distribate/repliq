@@ -37,7 +37,7 @@ import {
 import {
   insertBlock,
   insertInlineElement,
-} from '#lib/transforms.ts';
+} from '#plate/lib/transforms.ts';
 
 import {
   InlineCombobox,

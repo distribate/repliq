@@ -1,16 +1,18 @@
-import { router } from "#main"
 import { action, atom } from "@reatom/core"
 import { reatomComponent } from "@reatom/npm-react"
 import { Input } from "@repo/ui/src/components/input"
 import { IconSearch } from "@tabler/icons-react"
 import { useEffect } from "react"
+import { navigate } from "vike/client/router"
 
 const searchValueAtom = atom<string>("", "searchValue")
 
 const redirectToSearch = action((ctx) => {
-  const query = ctx.get(searchValueAtom)
-  if (query.length < 1) return
-  ctx.schedule(() => router.navigate({ to: "/search", search: { query } }))
+  const query = ctx.get(searchValueAtom);
+  
+  if (query.length < 1) return;
+
+  ctx.schedule(() => navigate(`/search?query=${query}`))
 })
 
 export const NavbarSearch = reatomComponent(({ ctx }) => {

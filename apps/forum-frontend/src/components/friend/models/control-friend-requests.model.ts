@@ -2,14 +2,13 @@ import { toast } from "sonner";
 import { ControFriendShip, ControlFriendRequests } from "#components/friend/models/control-friend.model";
 import { friendsCountAction } from "#components/friends/models/friends-count.model.ts";
 import { reatomAsync, withStatusesAtom } from "@reatom/async";
-import { router } from "#main.tsx";
 import { atom } from "@reatom/core";
 import { incomingRequestsAtom, outgoingRequestsAtom } from "#components/friends/models/friends-requests.model.ts";
 import { forumUserClient } from '@repo/shared/api/forum-client.ts';
 import { friendStatusesAtom } from "../components/friend-button/models/friend-status.model";
 import { myFriendsAction, myFriendsDataAtom } from "#components/friends/models/friends.model";
 import { withReset } from "@reatom/framework";
-import { currentUserNicknameAtom } from "#components/user/models/current-user.model";
+import { currentUserAtom, currentUserNicknameAtom } from "#components/user/models/current-user.model";
 import dayjs from "dayjs";
 
 type ControlIncomingRequest = ControlFriendRequests & { type: "reject" | "accept" }
@@ -118,8 +117,10 @@ export const controlOutgoingRequestAction = reatomAsync(async (ctx, options: Con
 
     const { data, error } = res;
     if (!data) return;
+    
+    const currentPath = window.location.href
+    // router.state.location.pathname;
 
-    const currentPath = router.state.location.pathname;
 
     toast.success(friendRequestStatus[data.status]);
 
@@ -150,7 +151,7 @@ export const controlOutgoingRequestAction = reatomAsync(async (ctx, options: Con
           [variables.recipient]: { request_id: null, status: "not-friend", friend_id: null }
         }))
 
-        ctx.schedule(() => router.invalidate())
+        // ctx.schedule(() => router.invalidate())
       }
     }
 
@@ -169,7 +170,8 @@ export const controlOutgoingRequestAction = reatomAsync(async (ctx, options: Con
             id: data.request_id!,
             initiator: ctx.get(currentUserNicknameAtom)!,
             recipient: variables.recipient,
-            created_at: dayjs().toString()
+            created_at: dayjs().toString(),
+            avatar: ctx.get(currentUserAtom)?.avatar ?? null
           }
 
           return [...state, newRequest]
@@ -191,7 +193,7 @@ export const controlOutgoingRequestAction = reatomAsync(async (ctx, options: Con
           [variables.recipient]: { request_id: data.request_id, status: "reject-request", friend_id: null }
         }))
 
-        ctx.schedule(() => router.invalidate())
+        // ctx.schedule(() => router.invalidate())
       }
     }
   }
@@ -223,7 +225,8 @@ export const controlIncomingRequestAction = reatomAsync(async (ctx, options: Con
 
     toast.success(friendRequestStatus[data.status]);
 
-    const currentPath = router.state.location.pathname;
+    const currentPath = window.location.href 
+    // router.state.location.pathname;
 
     if (variables.type === 'accept') {
       if (currentPath === '/friends') {
@@ -251,7 +254,7 @@ export const controlIncomingRequestAction = reatomAsync(async (ctx, options: Con
           }))
         }
 
-        ctx.schedule(() => router.invalidate())
+        // ctx.schedule(() => router.invalidate())
       }
     }
 
@@ -277,7 +280,7 @@ export const controlIncomingRequestAction = reatomAsync(async (ctx, options: Con
           [variables.recipient]: { friend_id: null, status: "not-friend", request_id: null }
         }))
 
-        ctx.schedule(() => router.invalidate())
+        // ctx.schedule(() => router.invalidate())
       }
     }
   }
@@ -314,7 +317,8 @@ export const removeFriendAction = reatomAsync(async (ctx, options: ControFriendS
 
     toast.success(friendRequestStatus[status]);
 
-    const currentPath = router.state.location.pathname;
+    const currentPath = window.location.href
+    // router.state.location.pathname;
 
     if (currentPath === '/friends') {
       myFriendsDataAtom(ctx, (state) => {
@@ -328,7 +332,7 @@ export const removeFriendAction = reatomAsync(async (ctx, options: ControFriendS
         [variables.recipient]: { friend_id: null, status: "not-friend", request_id: null }
       }))
 
-      ctx.schedule(() => router.invalidate())
+      // ctx.schedule(() => router.invalidate())
     }
   }
 }).pipe(withStatusesAtom())

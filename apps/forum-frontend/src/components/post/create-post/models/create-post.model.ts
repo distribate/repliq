@@ -1,5 +1,5 @@
 import { toast } from "sonner";
-import { currentUserNicknameAtom } from "#components/user/models/current-user.model.ts";
+import { currentUserAtom, currentUserNicknameAtom } from "#components/user/models/current-user.model.ts";
 import type { GetUserPostsResponse } from '@repo/types/routes-types/get-user-posts-types.ts';
 import { reatomAsync, withErrorAtom, withStatusesAtom } from "@reatom/async";
 import { forumPostClient } from "@repo/shared/api/forum-client";
@@ -64,7 +64,7 @@ export const createPostAction = reatomAsync(async (ctx) => {
   const visibility = ctx.get(postFormVisibilityAtom);
 
   if (!content) return;
-  
+
   const fixedContent = sanitizeInput(content);
 
   const result = postSchema.safeParse({ content: fixedContent, visibility });
@@ -84,12 +84,13 @@ export const createPostAction = reatomAsync(async (ctx) => {
       });
     }
 
-    const nickname = ctx.get(currentUserNicknameAtom)
-    if (!nickname) return;
+    const user = ctx.get(currentUserAtom)
+    if (!user) return;
 
     const newPost: Pick<GetUserPostsResponse, "data">["data"][0] = {
       ...res.data,
-      nickname,
+      avatar: user.avatar,
+      nickname: user.nickname,
       views_count: 0,
       isViewed: true,
       comments_count: 0,

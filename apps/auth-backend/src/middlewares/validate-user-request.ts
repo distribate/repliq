@@ -13,21 +13,28 @@ export async function getUserSession(sessionId: string) {
     .executeTakeFirst();
 }
 
-export const validateUserRequest = createMiddleware(async (ctx, next) => {
-  const sessionToken = getCookie(ctx, SESSION_KEY)
+type ValidateUserRequest = {
+  withValidation?: boolean
+}
+
+export const validateUserRequest = ({
+  withValidation = true,
+}: ValidateUserRequest = {}) => createMiddleware(async (ctx, next) => {
+  const sessionToken = getCookie(ctx, SESSION_KEY);
+
   const sessionId = encodeHexLowerCase(
     sha256(new TextEncoder().encode(sessionToken))
   );
-  
+
   const session = await getUserSession(sessionId)
 
-  if (!session) {
+  if (withValidation && !session) {
     return ctx.json({ error: "Unauthorized" }, 200)
   }
 
   ctx.set('sessionToken', sessionToken)
   ctx.set('currentSessionId', sessionId)
-  ctx.set('nickname', session.nickname)
+  ctx.set('nickname', session?.nickname)
 
   await next()
 })

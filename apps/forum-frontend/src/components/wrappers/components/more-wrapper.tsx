@@ -1,4 +1,3 @@
-import { DropdownWrapperProps } from "./dropdown-wrapper.tsx";
 import { MoreVertical } from "lucide-react";
 import { HTMLAttributes } from "react";
 import { cva, VariantProps } from "class-variance-authority";
@@ -25,9 +24,10 @@ const moreWrapperVariants = cva(
   },
 );
 
-type MoreWrapperProps = Omit<DropdownWrapperProps, "trigger" | "content">
-  & HTMLAttributes<HTMLDivElement>
-  & VariantProps<typeof moreWrapperVariants>
+type MoreWrapperProps = {
+  trigger?: React.ReactNode,
+  content?: React.ReactNode,
+} & HTMLAttributes<HTMLDivElement> & VariantProps<typeof moreWrapperVariants>
 
 export const MoreWrapper = ({ className, variant, background, ...props }: MoreWrapperProps) => {
   return (

@@ -7,7 +7,7 @@ import { Typography } from "@repo/ui/src/components/typography";
 import { reatomComponent } from '@reatom/npm-react';
 import {
   requestedUserSectionIsPrivatedAtom,
-  requestedUserAction,
+  defineUserAction,
   requestedUserGameStatsVisibleAtom,
   requestedUserIsSameAtom,
   requestedUserMinecraftProfileIsExistsAtom
@@ -60,7 +60,7 @@ const TabsListContent = reatomComponent(({ ctx }) => {
 export const ProfileContentTabs = reatomComponent(({ ctx }) => {
   const isAuthenticated = ctx.spy(isAuthenticatedAtom)
 
-  if (ctx.spy(requestedUserAction.statusesAtom).isPending) {
+  if (ctx.spy(defineUserAction.statusesAtom).isPending) {
     return <UserContentSkeleton />
   }
 

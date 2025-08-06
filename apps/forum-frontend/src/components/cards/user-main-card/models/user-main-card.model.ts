@@ -1,5 +1,4 @@
 import { userCardDialogIsOpenAtom } from "#components/modals/custom/components/user-card-modal";
-import { router } from "#main";
 import { reatomResource, withDataAtom, withErrorAtom, withStatusesAtom } from "@reatom/async";
 import { action, atom } from "@reatom/core";
 import { sleep } from "@reatom/framework";
@@ -25,7 +24,7 @@ export const controlUserCardAtom = action((ctx, value: boolean, type?: "link") =
       const target = ctx.get(userCardResource.dataAtom)?.data?.nickname
       if (!target) return;
 
-      ctx.schedule(() => router.navigate({ to: createIdLink("user", target) }))
+      ctx.schedule(() => window.location.replace(createIdLink("user", target)))
     }
 
     userCardResource.dataAtom.reset(ctx)

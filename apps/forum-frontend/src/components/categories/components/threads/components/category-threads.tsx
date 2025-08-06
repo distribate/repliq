@@ -55,7 +55,7 @@ export const CategoryThreads = reatomComponent<{ category_id: string }>(({ ctx, 
   const meta = ctx.spy(categoryThreadsAction.dataAtom)?.meta
   const isLoading = ctx.spy(categoryThreadsAction.statusesAtom).isPending
   const isError = ctx.spy(categoryThreadsAction.statusesAtom).isRejected;
-  
+
   const hasMore = meta?.hasNextPage
 
   return (
@@ -66,11 +66,24 @@ export const CategoryThreads = reatomComponent<{ category_id: string }>(({ ctx, 
       {!isLoading && (
         threads && (
           threads.map((thread) => (
-            <ThreadLayout key={thread.id} id={thread.id} title={thread.title} owner={{ nickname: thread.nickname, name_color: thread.name_color }}>
+            <ThreadLayout
+              key={thread.id}
+              id={thread.id}
+              title={thread.title}
+              owner={{
+                nickname: thread.nickname,
+                name_color: thread.name_color,
+                avatar: thread.avatar
+              }}
+            >
               <ThreadByCategoryItem
                 title={thread.title}
                 id={thread.id}
-                owner={{ nickname: thread.nickname, name_color: thread.name_color }}
+                owner={{
+                  nickname: thread.nickname,
+                  name_color: thread.name_color,
+                  avatar: thread.avatar
+                }}
                 created_at={thread.created_at}
                 comments_count={thread.comments_count}
                 views_count={thread.views_count}

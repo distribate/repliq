@@ -1,6 +1,5 @@
 import { reatomComponent } from "@reatom/npm-react"
 import { currentUserNicknameAtom } from "#components/user/models/current-user.model"
-import { useLocation } from "@tanstack/react-router"
 import { lazy, PropsWithChildren, Suspense } from "react"
 import { Home, User2, UsersRound } from "lucide-react"
 import { CustomLink } from "#components/shared/link"
@@ -8,9 +7,13 @@ import { Typography } from "@repo/ui/src/components/typography"
 import { Separator } from "@repo/ui/src/components/separator"
 import { Navbar } from "./navbar"
 import { createIdLink } from "@repo/lib/utils/create-link"
+import { usePageContext } from "vike-react/usePageContext"
+import { atom } from "@reatom/core"
 
 const BottomBar = lazy(() => import("./mobile-sheet").then(m => ({ default: m.BottomBar })))
 const SheetMenu = lazy(() => import("./mobile-sheet").then(m => ({ default: m.SheetMenu })))
+
+export const isExperimentalDesignAtom = atom(false, "isExperimentalDesign")
 
 const _SIDE = (nickname: string) => [
   { title: "Главная", icon: Home, href: "/", },
@@ -19,8 +22,10 @@ const _SIDE = (nickname: string) => [
 ]
 
 const Side = reatomComponent(({ ctx }) => {
-  const loc = useLocation()
-  const path = loc.pathname + loc.searchStr
+  const pathname = usePageContext().urlPathname
+  const search = usePageContext().urlParsed.search;
+
+  const path = pathname + search
 
   return (
     _SIDE(ctx.spy(currentUserNicknameAtom)!).map((i, idx) => (

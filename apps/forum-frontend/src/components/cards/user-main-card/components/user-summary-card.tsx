@@ -61,7 +61,7 @@ const UserMain = reatomComponent(({ ctx }) => {
       )}
       <div className="flex flex-col gap-y-1 w-full">
         <Typography className="text-[18px]" textColor="gray">
-          Участник Fasberry:
+          Участник Repliq:
         </Typography>
         <div className="flex items-center gap-2">
           <Typography textSize="small">

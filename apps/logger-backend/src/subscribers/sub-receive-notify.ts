@@ -12,7 +12,7 @@ import type {
 import { createNotification } from "../lib/queries/create-notification";
 import { issueMessage, loginMessage, paymentMessage, registerMessage, voteMessage } from "../messages/notifications";
 import { forumDB } from "../shared/database/forum-db";
-import { fasberryBot } from "../shared/bot/bot";
+import { repliqBot } from "../shared/bot/bot";
 import { format } from "gramio";
 import { logger } from "@repo/lib/utils/logger";
 
@@ -64,9 +64,9 @@ const notifyInTelegram = async (values: NotifyLoginReceived) => {
     Browser: ${values.browser}
   `
 
-  const chat = await fasberryBot.api.getChat({ chat_id: id })
+  const chat = await repliqBot.api.getChat({ chat_id: id })
 
-  await fasberryBot.api.sendMessage({ text, chat_id: id })
+  await repliqBot.api.sendMessage({ text, chat_id: id })
 }
 
 export const subscribeReceiveNotify = () => {

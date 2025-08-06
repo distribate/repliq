@@ -199,7 +199,7 @@
 @layer utilities {
   .biloba-gradient {
     background: radial-gradient(ellipse at top, var(--tw-gradient-stops));
-    --tw-gradient-from: theme('colors.biloba-flower.500');
+    --tw-gradient-from: theme('colors.green.600');
     --tw-gradient-to: transparent;
     --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to);
   }

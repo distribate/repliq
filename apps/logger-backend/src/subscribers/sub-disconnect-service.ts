@@ -2,7 +2,7 @@ import { getNatsConnection } from "@repo/config-nats/nats-client"
 import { bold, format } from "gramio"
 import { logger } from "@repo/lib/utils/logger"
 import { DISCONNECT_SOCIAL_SUBJECT } from "@repo/shared/constants/nats-subjects"
-import { fasberryBot } from "../shared/bot/bot"
+import { repliqBot } from "../shared/bot/bot"
 
 type DisconnectServicePayload = { 
   serviceId: string, 
@@ -26,7 +26,7 @@ export const subscribeDisconnectService = () => {
       const text = format`Телеграм-аккаунт был отвязан от пользователя ${bold(payload.nickname)}.`
 
       try {
-        await fasberryBot.api.sendMessage({ chat_id: Number(payload.serviceId), text })
+        await repliqBot.api.sendMessage({ chat_id: Number(payload.serviceId), text })
       } catch (e) {
         if (e instanceof Error) {
           logger.error(e.message)

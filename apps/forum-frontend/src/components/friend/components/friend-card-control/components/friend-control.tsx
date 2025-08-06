@@ -3,7 +3,6 @@ import { Typography } from "@repo/ui/src/components/typography.tsx";
 import { MoreWrapper } from "#components/wrappers/components/more-wrapper";
 import { Pen, Tag, Trash } from "lucide-react";
 import { UserCardModal } from "#components/modals/custom/components/user-card-modal.tsx";
-import { useNavigate } from "@tanstack/react-router";
 import { Separator } from "@repo/ui/src/components/separator.tsx";
 import { Friend } from "@repo/types/schemas/friend/friend-types.ts";
 import { FriendControlNoteDialog } from "./friend-control-note";
@@ -19,6 +18,7 @@ import { ConfirmationActionModalTemplate } from "#components/modals/confirmation
 import { ConfirmationButton } from "#components/modals/confirmation-modal/components/confirmation-action-button";
 import { Dialog, DialogClose, DialogContent } from "@repo/ui/src/components/dialog.tsx";
 import { removeFriendAction } from "#components/friend/models/control-friend-requests.model";
+import { navigate } from "vike/client/router";
 
 type DeleteFriendModal = Pick<Friend, "friend_id" | "nickname">;
 
@@ -122,14 +122,12 @@ const FriendControlDeleteTrigger = reatomComponent<Omit<FriendControlProps, "is_
 }, "FriendControlDeleteTrigger")
 
 export const FriendControl = ({ nickname, friend_id, is_pinned }: FriendControlProps) => {
-  const navigate = useNavigate();
-
   return (
     <div className="flex items-center gap-1 w-fit">
       <Button
         className="h-8 px-4"
         variant="positive"
-        onClick={() => navigate({ to: createIdLink("user", nickname) })}
+        onClick={() => navigate(createIdLink("user", nickname))}
       >
         <Typography textSize="small">
           К профилю

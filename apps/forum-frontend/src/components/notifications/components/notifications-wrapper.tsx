@@ -1,43 +1,49 @@
 import { isAuthenticatedAtom } from "#components/auth/models/auth.model";
-import { reatomComponent } from "@reatom/npm-react";
-import { isProduction } from "@repo/lib/helpers/is-production";
+import { action, atom } from "@reatom/core";
+import { reatomComponent, useUpdate } from "@reatom/npm-react";
 import { config, ping, updateEvent } from "@repo/shared/constants/sse-events";
 import { ConfigEventsData, NotificationsEventsPayload } from "@repo/types/entities/notifications-events-type";
-import { useEffect } from "react";
 import { toast } from "sonner";
 
-const NOTIFICATIONS_SSE_URL = isProduction ? "https://api.fasberry.su/forum/sse" : "http://localhost:4101/forum/sse"
+const URL = `${import.meta.env.PUBLIC_ENV__API_PREFIX_URL}/notifications/connect`
 
-export const es = (url: string) => new EventSource(url, {
-  withCredentials: true
-});
+export const es = (url: string) => new EventSource(url, { withCredentials: true });
 
-export const NotificationsWrapper = reatomComponent(({ ctx }) => {
-  const isAuthenticated = ctx.spy(isAuthenticatedAtom)
+const notificationsEsAtom = atom<EventSource | null>(null, "notificationsEs")
 
-  useEffect(() => {
-    if (!isAuthenticated) return;
+notificationsEsAtom.onChange((_, state) => {
+  if (!state) return;
 
-    const eventSource = es(NOTIFICATIONS_SSE_URL)
+  state.addEventListener(config, (event) => {
+    const data: ConfigEventsData = event.data;
 
-    eventSource.addEventListener(config, (event) => {
-      const data: ConfigEventsData = event.data;
+    if (data === 'Exit') {
+      state.close();
+    }
+  })
 
-      if (data === 'Exit') {
-        eventSource.close();
-      }
-    })
+  state.addEventListener(ping, () => { });
 
-    eventSource.addEventListener(ping, () => { });
+  state.addEventListener(updateEvent, (event) => {
+    const data: NotificationsEventsPayload = JSON.parse(event.data);
 
-    eventSource.addEventListener(updateEvent, (event) => {
-      const data: NotificationsEventsPayload = JSON.parse(event.data);
+    toast[data.data.status](data.data.message)
+  });
+})
 
-      toast[data.data.status](data.data.message)
-    });
+export const disconnectNotificationsSSE = action((ctx) => {
+  const current = ctx.get(notificationsEsAtom)
+  if (!current) return;
+  current.close()
+}, "disconnectNotificationsSSE")
 
-    return () => eventSource.close();
-  }, [isAuthenticated])
+export const initNotificationsSSE = action((ctx) => {
+  const isAuthenticated = ctx.get(isAuthenticatedAtom)
+  if (!isAuthenticated) return;
+  notificationsEsAtom(ctx, es(URL))
+}, "initNotificationsSSE")
 
+export const Notifications = reatomComponent(({ ctx }) => {
+  useUpdate(initNotificationsSSE, [])
   return null;
-}, "NotificationsWrapper")
+}, "Notifications")

@@ -53,7 +53,7 @@ beforeSearchFriendsAtom.onChange((_, state) => logger.info("beforeSearchFriendsA
 
 const setTargetData = action((ctx, target: string) => {  
   myFriendsDataAtom(ctx, (state) => {
-    if (!state.length) return state;
+    if (!state || !state.length) return state;
     
     return state.filter(exist => exist.nickname.includes(target))
   })

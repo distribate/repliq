@@ -54,7 +54,7 @@ export const updateCreateThreadCommentAction = reatomAsync(async (ctx, values: P
     threadId: threadId ?? state.threadId,
     type: type ?? state.type,
     content: validateContent(content) ?? state.content,
-    replied: { 
+    replied: {
       ...state.replied,
       commentContent: replied?.commentContent!,
       commentId: replied?.commentId!,
@@ -125,7 +125,11 @@ export const createThreadCommentAction = reatomAsync(async (ctx) => {
             is_updated: repliedComment.is_updated,
             replied: repliedInitComment ?? null,
             updated_at: repliedComment.updated_at,
-            user_nickname: repliedComment.user_nickname
+            user: {
+              nickname: repliedComment.user_nickname,
+              // @ts-expect-error
+              avatar: repliedComment?.avatar ?? null
+            }
           }
 
           break;
@@ -143,7 +147,11 @@ export const createThreadCommentAction = reatomAsync(async (ctx) => {
             is_updated: singleComment.is_updated,
             replied: null,
             updated_at: singleComment.updated_at,
-            user_nickname: singleComment.user_nickname
+            user: {
+              nickname: singleComment.user_nickname,
+              // @ts-expect-error
+              avatar: repliedComment?.avatar ?? null
+            }
           }
 
           break;
@@ -156,7 +164,7 @@ export const createThreadCommentAction = reatomAsync(async (ctx) => {
           if (!state) {
             state = []
           }
-          
+
           return [newComment, ...state]
         })
       } else {

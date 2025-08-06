@@ -122,8 +122,8 @@ export const ProfileAccountIntegrations = reatomComponent(({ ctx }) => {
         ) : (
           <>
             <IntegrationItem
-              title="Майнкрафт сервер Fasberry"
-              description="Подключите профиль с сервера Fasberry для отображения вашей активности и достижений."
+              title="Майнкрафт сервер Repliq"
+              description="Подключите профиль с сервера Repliq для отображения вашей активности и достижений."
               serviceAtom={minecraftServiceIsConnectedAtom}
               type="minecraft"
             />

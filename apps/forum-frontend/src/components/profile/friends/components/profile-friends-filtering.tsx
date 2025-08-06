@@ -1,6 +1,5 @@
 import { Typography } from "@repo/ui/src/components/typography.tsx";
-import { DropdownMenuItem } from "@repo/ui/src/components/dropdown-menu.tsx";
-import { DropdownWrapper } from "#components/wrappers/components/dropdown-wrapper";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@repo/ui/src/components/dropdown-menu.tsx";
 import React, { ChangeEvent } from "react";
 import {
   friendsSortAtom,
@@ -46,25 +45,20 @@ const FRIENDS_SORT: FriendsSort[] = [
 ];
 
 const ProfileFriendsFilteringView = reatomComponent(({ ctx }) => {
-  const currentSortType = "default" 
+  const currentSortType = "default"
 
   const handleSort = (e: React.MouseEvent<HTMLDivElement, MouseEvent>, sort_type: FriendsSortType) => {
     e.preventDefault();
   };
 
   return (
-    <DropdownWrapper
-      properties={{
-        sideAlign: "bottom",
-        contentAlign: "end",
-        contentClassname: "w-[200px]",
-      }}
-      trigger={
+    <DropdownMenu>
+      <DropdownMenuTrigger>
         <SelectedWrapper>
           <ArrowDownNarrowWide size={20} className="text-shark-300" />
         </SelectedWrapper>
-      }
-      content={
+      </DropdownMenuTrigger>
+      <DropdownMenuContent side="bottom" align="end" className="min-w-[200px]">
         <div className="flex flex-col gap-y-4">
           <Typography className="text-shark-300 text-sm px-2 pt-2">
             Фильтровать по
@@ -84,8 +78,8 @@ const ProfileFriendsFilteringView = reatomComponent(({ ctx }) => {
             ))}
           </div>
         </div>
-      }
-    />
+      </DropdownMenuContent>
+    </DropdownMenu>
   );
 }, "ProfileFriendsFilteringView")
 

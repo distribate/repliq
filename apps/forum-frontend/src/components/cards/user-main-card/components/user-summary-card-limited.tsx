@@ -8,10 +8,8 @@ export const UserSummaryCardLimited = ({
   title
 }: UserSummaryCardLimitedProps) => {
   return (
-    <div>
-      <Typography className="text-center">
-        {title}
-      </Typography>
-    </div>
+    <Typography className="text-center">
+      {title}
+    </Typography>
   )
 }

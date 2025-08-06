@@ -1,9 +1,10 @@
 import { Typography } from "@repo/ui/src/components/typography"
 import { STATUS_SITE_DOMAIN } from "@repo/shared/constants/origin-list"
 import { CustomLink } from "#components/shared/link"
-import { useLocation, useNavigate } from "@tanstack/react-router"
 import { toast } from "sonner"
 import { IconBrandDiscord, IconBrandGithub, IconBrandTelegram } from "@tabler/icons-react"
+import { navigate } from "vike/client/router"
+import { usePageContext } from "vike-react/usePageContext"
 
 const LINKS = [
   { label: "Статус", href: STATUS_SITE_DOMAIN, },
@@ -27,17 +28,13 @@ export const SOCIALS = [
 ]
 
 const FooterItem = ({ href, label }: { href: string | null, label: string }) => {
-  const navigate = useNavigate()
-
   const handle = () => {
     if (!href) {
       toast.info("Ресурс не доступен")
       return
     }
 
-    navigate({
-      href: href, reloadDocument: true,
-    })
+    navigate(href)
   }
 
   return (
@@ -102,9 +99,9 @@ const CompactFooter = () => {
 const Logotype = () => {
   return (
     <CustomLink to="/" className="flex items-end gap-1">
-      <img src="/images/logotype.png" alt="" width={32} height={32} loading="lazy" />
+      <img src="/logotype.png" alt="" width={32} height={32} loading="lazy" />
       <Typography textSize="very_big" font="pixy">
-        Fasberry
+        Repliq
       </Typography>
     </CustomLink>
   )
@@ -130,7 +127,7 @@ const Socials = () => {
 }
 
 export const Footer = () => {
-  const pathname = useLocation().pathname
+  const pathname = usePageContext().urlPathname
 
   if (pathname !== '/') {
     return <CompactFooter />
@@ -147,7 +144,7 @@ export const Footer = () => {
           <Logotype/>
           <Socials/>
           <span className="mt-4 font-semibold text-sm text-shark-300">
-            © {new Date().getFullYear()} Fasberry.
+            © {new Date().getFullYear()} Repliq.
           </span>
         </div>
         <Links />

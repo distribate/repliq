@@ -7,6 +7,7 @@ import { DEFAULT_SESSION_EXPIRE } from "../shared/constants/session-expire";
 import { validateUserRequest } from "../middlewares/validate-user-request";
 import { throwError } from "@repo/lib/helpers/throw-error";
 import { forumDB } from "../shared/database/forum-db";
+import { logger } from "@repo/lib/utils/logger";
 
 const terminateSessionBodySchema = z.object({
   selectedSessionId: z.string().min(6).optional(),
@@ -43,7 +44,7 @@ async function terminateAllSessions(nickname: string, currentSessionId: string) 
 }
 
 export const terminateSessionRoute = new Hono<Env>()
-  .use(validateUserRequest)
+  .use(validateUserRequest())
   .post("/terminate-session", zValidator("json", terminateSessionBodySchema), async (ctx) => {
     const { selectedSessionId, type } = terminateSessionBodySchema.parse(await ctx.req.json());
 
@@ -100,6 +101,9 @@ export const terminateSessionRoute = new Hono<Env>()
           return ctx.json({ status: "Success", meta: { is_current: false } }, 200)
       }
     } catch (e) {
+      if (e instanceof Error) {
+        logger.error(e.message)
+      }
       return ctx.json({ error: throwError(e) }, 500)
     }
   });

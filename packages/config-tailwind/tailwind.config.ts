@@ -34,7 +34,7 @@ module.exports = {
           "radial-gradient(90% 115% at 100% 0%, var(--tw-gradient-stops))",
       },
       colors: {
-        // Custom UI-colors of Project Fasberry
+        // Custom UI-colors of Project Repliq
         "biloba-flower": {
           "50": "#f6f4fe",
           "100": "#efebfc",

@@ -1,15 +1,75 @@
+import dayjs from "dayjs";
 import { Avatar } from "#components/user/avatar/components/avatar.tsx";
 import { Typography } from "@repo/ui/src/components/typography.tsx";
-import dayjs from "dayjs";
-import { AlertItemEditButton } from "./alert-item-edit-button.tsx";
-import { AlertsAddButton } from "./alerts-add-button.tsx";
 import { reatomComponent } from "@reatom/npm-react";
 import { DeleteButton } from "@repo/ui/src/components/detele-button.tsx";
-import { AlertEntity } from "@repo/types/entities/entities-type.ts";
 import { alertsResource } from "#components/layout/components/widgets/alert/alert-widget.model.ts";
+import { Plus } from "lucide-react";
+import { AlertCreateForm } from "#components/admin/configs/alerts/components/create-alert/components/create-alert-form";
+import { DynamicModal } from "#components/modals/dynamic-modal/components/dynamic-modal";
+import { AlertEntity } from "@repo/types/entities/entities-type.ts";
+import { PenLine } from "lucide-react";
+import { Button } from "@repo/ui/src/components/button.tsx";
+import { AlertUpdateForm } from "#components/admin/configs/alerts/components/create-alert/components/update-alert-form";
+
+const AlertItemEditButton = reatomComponent<Omit<AlertEntity, "created_at" | "creator">>(({ ...currentAlert }) => {
+  return (
+    <DynamicModal
+      autoClose
+      withLoader
+      isPending={false}
+      trigger={
+        <Button
+          title="Редактировать"
+          className="h-7 w-7 hover:bg-shark-600 bg-shark-700/70 rounded-md duration-300"
+        >
+          <PenLine size={18} className="text-shark-300" />
+        </Button>
+      }
+      content={
+        <div className="flex flex-col gap-y-6 px-2 items-center w-full">
+        <Typography variant="dialogTitle">Обновление объявления</Typography>
+        <AlertUpdateForm {...currentAlert} />
+      </div>
+      }
+    />
+  );
+}, "AlertItemEditButton")
+
+const AlertsAddButton = () => {
+  return (
+    <DynamicModal
+      isPending={false}
+      withLoader
+      trigger={
+        < div className="flex items-center justify-center hover-select-effect w-full h-14 rounded-md" >
+          <Plus size={24} className="text-white" />
+        </div >
+      }
+      content={
+        < div className="flex flex-col gap-y-6 px-2 items-center w-full" >
+          <Typography variant="dialogTitle">Создание объявления</Typography>
+          <div className="flex flex-col gap-1 w-full">
+            <Typography textSize="large">Ограничения:</Typography>
+            <Typography textColor="gray" textSize="medium">
+              - название может содержать максимум 100 символов
+            </Typography>
+            <Typography textColor="gray" textSize="medium">
+              - описание опционально и может содержать максимум 256 символов
+            </Typography>
+            <Typography textColor="gray" textSize="medium">
+              - ссылка опциональна
+            </Typography>
+          </div>
+          <AlertCreateForm />
+        </div >
+      }
+    />
+  );
+};
+
 
 const AlertItemDeleteButton = ({ id }: Pick<AlertEntity, "id">) => {
-  console.log(id)
   return <DeleteButton title="Удалить" disabled={false} onClick={() => {}} />;
 };
 

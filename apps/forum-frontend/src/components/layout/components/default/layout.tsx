@@ -1,10 +1,10 @@
 import { lazy, Suspense, PropsWithChildren } from "react"
 import { reatomComponent } from "@reatom/npm-react"
 import { userGlobalOptionsAtom } from "#components/user/models/current-user.model"
-import { isExperimentalDesignAtom } from "./experimental-layout.model"
 import { Navbar } from "./navbar"
 import { isAuthenticatedAtom } from "#components/auth/models/auth.model"
 import { Footer } from "./footer"
+import { isExperimentalDesignAtom } from "./experimental-layout"
 
 const SheetMenu = lazy(() => import("./mobile-sheet").then(m => ({ default: m.SheetMenu })))
 const BottomBar = lazy(() => import("./mobile-sheet").then(m => ({ default: m.BottomBar })))

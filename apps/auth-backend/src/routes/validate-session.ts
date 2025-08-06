@@ -8,10 +8,14 @@ import { isProduction } from "@repo/lib/helpers/is-production";
 import { SESSION_DOMAIN, SESSION_KEY } from "../shared/constants/session-details";
 import { validateUserRequest } from "../middlewares/validate-user-request";
 
-export const getSessionRoute = new Hono<Env>()
-  .use(validateUserRequest)
+export const validateSessionRoute = new Hono<Env>()
+  .use(validateUserRequest({ withValidation: false }))
   .get("/validate-session", async (ctx) => {
     const token = ctx.get("sessionToken")
+
+    if (!token) {
+      return ctx.json({ data: false }, 200)
+    }
 
     try {
       const nickname = await getNicknameByTokenFromKv(token);
@@ -26,7 +30,7 @@ export const getSessionRoute = new Hono<Env>()
         setCookie(ctx, SESSION_KEY, token, {
           httpOnly: true,
           sameSite: "lax",
-          domain: SESSION_DOMAIN,
+          domain: isProduction ? SESSION_DOMAIN : "localhost",
           secure: isProduction,
           expires: new Date(session.expires_at),
           path: "/",

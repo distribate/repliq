@@ -1,8 +1,7 @@
 import { action, atom, Ctx } from "@reatom/core";
-import { withComputed, withReset } from "@reatom/framework";
+import { withComputed, withInit, withReset } from "@reatom/framework";
 import { toast } from "sonner";
 import { reatomAsync, withStatusesAtom } from "@reatom/async";
-import { router } from "#main.tsx";
 import { authClient } from "@repo/shared/api/auth-client";
 import { findoutSchema, registerSchema, nicknameSchema, passwordSchema } from '@repo/types/schemas/auth/create-session-schema.ts';
 import { isProduction } from "@repo/lib/helpers/is-production";
@@ -17,6 +16,7 @@ import {
   SUCCESS_REGISTER_MESSAGES
 } from "./messages";
 import { logger } from "@repo/lib/utils/logger";
+import { withSsr } from "#lib/ssr";
 
 type AuthValues = {
   nickname: string;
@@ -29,7 +29,12 @@ type AuthValues = {
 type SignInValues = Omit<AuthValues, "acceptRules" | "findout">
 type SignUpValues = AuthValues
 
-export const isAuthenticatedAtom = atom(false, "isAuthenticated")
+export const IS_AUTHENTICATED_ATOM_KEY = "isAuthenticatedAtom"
+
+export const isAuthenticatedAtom = atom(false, "isAuthenticated").pipe(
+  withSsr(IS_AUTHENTICATED_ATOM_KEY)
+)
+
 export const nicknameAtom = atom<string>("", "authNickname").pipe(withReset())
 export const passwordAtom = atom<string>("", "authPassword").pipe(withReset())
 export const findoutAtom = atom<string>("", "authFindout").pipe(withReset())
@@ -46,7 +51,9 @@ export const authTypeAtom = atom<"register" | "login">("login", "authType")
 export const detailsVisibilityAtom = atom<"hidden" | "visible">("visible", "authDetailsVisibility")
 export const passwordVisibilityAtom = atom<"password" | "text">("password", "authPasswordVisibility")
 
-export const turnstileIsOpenAtom = atom(false, "turnstileIsOpen")
+export const turnstileIsOpenAtom = atom(false, "turnstileIsOpen").pipe(
+  withInit((_) => isProduction ? false : true)
+)
 
 const loginIsValidAtom = atom(false, "authLoginIsValid").pipe(withReset())
 const passwordIsValidAtom = atom(false, "authPasswordIsValid").pipe(withReset())
@@ -181,7 +188,7 @@ export const authAction = reatomAsync(async (ctx) => {
     if (type === 'login') {
       const nickname = ctx.get(nicknameAtom)
 
-      ctx.schedule(() => router.navigate({ to: createIdLink("user", nickname) }))
+      ctx.schedule(() => window.location.replace(createIdLink("user", nickname)))
     }
 
     if (type === 'register') {
@@ -195,7 +202,7 @@ export const authAction = reatomAsync(async (ctx) => {
 }).pipe(withStatusesAtom())
 
 export const changeAuthTypeAction = action(async (ctx) => {
-  ctx.schedule(() => router.navigate({ to: createIdLink("auth") }))
+  ctx.schedule(() => window.location.replace(createIdLink("auth")))
 })
 
 export function resetAuth(ctx: Ctx) {

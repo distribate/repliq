@@ -2,6 +2,7 @@ declare module "bun" {
   interface Env {
     LOGGER_BOT_TOKEN: string
     FASBERRY_BOT_TOKEN: string
+    REPLIQ_BOT_TOKEN: string;
 
     AUTHORIZATION_POSTGRES_DB_URL: string
 

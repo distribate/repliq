@@ -68,35 +68,35 @@ import { useEditorRef } from '@udecode/plate/react';
 import { all, createLowlight } from 'lowlight';
 import { ArrowDownToLineIcon } from 'lucide-react';
 
-import { BlockquoteElementStatic } from '#ui/blockquote-element-static.tsx';
-import { CodeBlockElementStatic } from '#ui/code-block-element-static.tsx';
-import { CodeLeafStatic } from '#ui/code-leaf-static.tsx';
-import { CodeLineElementStatic } from '#ui/code-line-element-static.tsx';
-import { CodeSyntaxLeafStatic } from '#ui/code-syntax-leaf-static.tsx';
-import { ColumnElementStatic } from '#ui/column-element-static.tsx';
-import { ColumnGroupElementStatic } from '#ui/column-group-element-static.tsx';
-import { DateElementStatic } from '#ui/date-element-static.tsx';
-import { HeadingElementStatic } from '#ui/heading-element-static.tsx';
-import { HighlightLeafStatic } from '#ui/highlight-leaf-static.tsx';
-import { HrElementStatic } from '#ui/hr-element-static.tsx';
+import { BlockquoteElementStatic } from '#plate/ui/blockquote-element-static.tsx';
+import { CodeBlockElementStatic } from '#plate/ui/code-block-element-static.tsx';
+import { CodeLeafStatic } from '#plate/ui/code-leaf-static.tsx';
+import { CodeLineElementStatic } from '#plate/ui/code-line-element-static.tsx';
+import { CodeSyntaxLeafStatic } from '#plate/ui/code-syntax-leaf-static.tsx';
+import { ColumnElementStatic } from '#plate/ui/column-element-static.tsx';
+import { ColumnGroupElementStatic } from '#plate/ui/column-group-element-static.tsx';
+import { DateElementStatic } from '#plate/ui/date-element-static.tsx';
+import { HeadingElementStatic } from '#plate/ui/heading-element-static.tsx';
+import { HighlightLeafStatic } from '#plate/ui/highlight-leaf-static.tsx';
+import { HrElementStatic } from '#plate/ui/hr-element-static.tsx';
 import {
   FireLiComponent,
   FireMarker,
-} from '#ui/indent-fire-marker.tsx';
+} from '#plate/ui/indent-fire-marker.tsx';
 import {
   TodoLiStatic,
   TodoMarkerStatic,
-} from '#ui/indent-todo-marker-static.tsx';
-import { LinkElementStatic } from '#ui/link-element-static.tsx';
-import { ParagraphElementStatic } from '#ui/paragraph-element-static.tsx';
+} from '#plate/ui/indent-todo-marker-static.tsx';
+import { LinkElementStatic } from '#plate/ui/link-element-static.tsx';
+import { ParagraphElementStatic } from '#plate/ui/paragraph-element-static.tsx';
 import {
   TableCellElementStatic,
   TableCellHeaderStaticElement,
-} from '#ui/table-cell-element-static.tsx';
-import { TableElementStatic } from '#ui/table-element-static.tsx';
-import { TableRowElementStatic } from '#ui/table-row-element-static.tsx';
-import { TocElementStatic } from '#ui/toc-element-static.tsx';
-import { ToggleElementStatic } from '#ui/toggle-element-static.tsx';
+} from '#plate/ui/table-cell-element-static.tsx';
+import { TableElementStatic } from '#plate/ui/table-element-static.tsx';
+import { TableRowElementStatic } from '#plate/ui/table-row-element-static.tsx';
+import { TocElementStatic } from '#plate/ui/toc-element-static.tsx';
+import { ToggleElementStatic } from '#plate/ui/toggle-element-static.tsx';
 
 import {
   DropdownMenu,

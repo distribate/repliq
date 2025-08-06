@@ -3,9 +3,10 @@ import { Hono } from "hono";
 import type { Env } from "../types/env-type";
 import { validateUserRequest } from "../middlewares/validate-user-request";
 import { getSessions } from "../lib/queries/get-sessions";
+import { logger } from "@repo/lib/utils/logger";
 
 export const getSessionsRoute = new Hono<Env>()
-  .use(validateUserRequest)
+  .use(validateUserRequest())
   .get('/get-sessions', async (ctx) => {
     const nickname = ctx.get("nickname")
     const currentSessionId = ctx.get('currentSessionId')
@@ -30,6 +31,9 @@ export const getSessionsRoute = new Hono<Env>()
 
       return ctx.json({ data: sessions }, 200)
     } catch (e) {
+      if (e instanceof Error) {
+        logger.error(e.message)
+      }
       return ctx.json({ error: throwError(e) }, 500);
     }
   })

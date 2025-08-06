@@ -1,7 +1,6 @@
 import { toast } from "sonner";
 import { mainCategoriesResource } from "#components/categories/components/main/models/categories.model";
 import { reatomAsync, withStatusesAtom } from "@reatom/async";
-import { router } from "#main.tsx";
 import { forumThreadClient } from "@repo/shared/api/forum-client";
 import { Descendant } from "slate";
 import { ThreadDetailed } from "@repo/types/entities/thread-type";
@@ -21,7 +20,9 @@ type ThreadControl = {
   state: {
     isValid: boolean;
   }
-  values: Partial<ThreadControlQueryValues> | null;
+  values: {
+    is_comments: boolean
+  } & Pick<ThreadControlQueryValues, "title" | "description"> | null
 }
 
 export const threadControlAtom = atom<ThreadControl>({
@@ -80,14 +81,17 @@ export const removeThreadAction = reatomAsync(async (ctx, threadId: string) => {
     if (!res) return toast.error("Произошла ошибка при удалении треда");
 
     // await Promise.all([
-      // replace to threadAtom
-      // qc.resetQueries({ queryKey: THREAD_QUERY_KEY(variables) }),
-      // replace to threadReactionsAtom
-      // qc.resetQueries({ queryKey: THREAD_REACTIONS_QUERY_KEY(variables) }),
+    // replace to threadAtom
+    // qc.resetQueries({ queryKey: THREAD_QUERY_KEY(variables) }),
+    // replace to threadReactionsAtom
+    // qc.resetQueries({ queryKey: THREAD_REACTIONS_QUERY_KEY(variables) }),
     // ]);
 
     mainCategoriesResource(ctx)
-    return ctx.schedule(() => router.navigate({ to: "/" }));
+    return ctx.schedule(() =>
+      window.location.replace("/")
+      // router.navigate({ to: "/" })
+    );
   }
 }).pipe(withStatusesAtom())
 
@@ -111,7 +115,7 @@ export const updateThreadAction = reatomAsync(async (ctx, threadId: string) => {
     if (res === "no-update-fields")
       return toast.info("Ничего не было обновлено");
 
-    router.invalidate()
+    // router.invalidate()
     // await Promise.all([
     // replace to threadAtom
     // qc.invalidateQueries({ queryKey: THREAD_QUERY_KEY(variables) }),

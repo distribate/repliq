@@ -2,10 +2,10 @@ import { Dialog, DialogContent, DialogTrigger } from "@repo/ui/src/components/di
 import { Typography } from "@repo/ui/src/components/typography"
 import { ReactNode } from "react"
 import { PulsatingButton } from "@repo/ui/src/components/shiny-button.tsx"
-import { IconBrandThreads, IconDeviceDesktopAnalytics, IconMoodSpark, IconPalette, IconSparkles, TablerIcon } from "@tabler/icons-react"
+import { IconBrandThreads, IconDeviceDesktopAnalytics, IconMoodSpark, IconPalette, TablerIcon } from "@tabler/icons-react"
 import { atom } from "@reatom/core"
 import { reatomComponent } from "@reatom/npm-react"
-import { IconFasberryPlus } from "#components/user/donate/components/donate"
+import { DonateIcon } from "#components/user/donate/components/donate"
 
 type BuyDonateModalProps = { trigger?: ReactNode | string }
 
@@ -28,21 +28,6 @@ const DonateDialogFeatureItem = ({ description, icon: Icon, title }: DonateDialo
 }
 
 const DONATE_FEATURES = [
-  // {
-  //   title: "Кастомный тег",
-  //   description: "Выделите себя среди других – получите уникальный тег рядом с ником.",
-  //   image: WildArmor
-  // },
-  // {
-  //   title: "Расширенные возможности регионов",
-  //   description: "Меньше ограничений на владение территориями, участников и флаги – больше свободы в управлении регионами.",
-  //   image: DragonBreath
-  // },
-  // {
-  //   title: "Бесконечный множитель опыта",
-  //   description: "Ускоряйте прокачку скиллов и профессий на сервере с вечным бонусом к опыту.",
-  //   image: BustPainting
-  // },
   {
     title: "Кастомизация профиля",
     description: "Настройте свой профиль на форуме так, как хотите – сделайте его уникальным.",
@@ -70,9 +55,9 @@ const DonateDialog = () => {
     <div className="flex flex-col items-center w-full h-full">
       <div className="flex flex-col relative px-4 py-4 items-center gap-y-4 w-full">
         <div className="biloba-gradient opacity-30 w-full h-full z-[1] absolute left-0 right-0 top-0" />
-        <IconFasberryPlus size={112} className="text-pink-400" />
+        <DonateIcon />
         <div className="flex flex-col">
-          <span className="text-xl text-center font-semibold">Fasberry+</span>
+          <span className="text-xl text-center font-semibold">Repliq+</span>
           <Typography className="text-lg text-center break-words">
             Откройте для себя больше возможностей на форуме и в игре!
           </Typography>
@@ -84,7 +69,7 @@ const DonateDialog = () => {
         ))}
       </div>
       <div className="bg-[#191919] sticky bottom-0 py-4 px-6 flex items-center justify-center w-full">
-        <a href={`/store`} target="_blank" rel="noreferrer" className="w-full">
+        <a href="/store" target="_blank" rel="noreferrer" className="w-full">
           <PulsatingButton className="w-full py-3">
             <Typography className="text-[18px] font-semibold">
               Приобрести
@@ -100,12 +85,11 @@ export const buyDonateModalIsOpenAtom = atom(false, "buyDonateModalIsOpen")
 
 export const BuyDonateModal = reatomComponent<BuyDonateModalProps>(({ ctx, trigger }) => {
   return (
-    <Dialog open={ctx.spy(buyDonateModalIsOpenAtom)} onOpenChange={v => buyDonateModalIsOpenAtom(ctx, v)}>
-      {trigger && (
-        <DialogTrigger>
-          {trigger}
-        </DialogTrigger>
-      )}
+    <Dialog
+      open={ctx.spy(buyDonateModalIsOpenAtom)}
+      onOpenChange={v => buyDonateModalIsOpenAtom(ctx, v)}
+    >
+      {trigger && <DialogTrigger>{trigger}</DialogTrigger>}
       <DialogContent className="p-0 max-w-xl">
         <DonateDialog />
       </DialogContent>

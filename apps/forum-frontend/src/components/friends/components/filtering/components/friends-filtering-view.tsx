@@ -1,7 +1,6 @@
 import { LayoutGrid } from "lucide-react";
 import { Typography } from "@repo/ui/src/components/typography.tsx";
-import { DropdownMenuItem } from "@repo/ui/src/components/dropdown-menu.tsx";
-import { DropdownWrapper } from "#components/wrappers/components/dropdown-wrapper.tsx";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@repo/ui/src/components/dropdown-menu.tsx";
 import { SelectedWrapper } from "#components/wrappers/components/selected-wrapper.tsx";
 import {
   friendsViewAtom,
@@ -14,18 +13,13 @@ export const FriendsFilteringView = reatomComponent(({ ctx }) => {
 
   return (
     <div className="w-fit">
-      <DropdownWrapper
-        properties={{
-          sideAlign: "bottom",
-          contentAlign: "end",
-          contentClassname: "w-[200px]",
-        }}
-        trigger={
+      <DropdownMenu>
+        <DropdownMenuTrigger>
           <SelectedWrapper>
             <LayoutGrid size={20} className="text-shark-300" />
           </SelectedWrapper>
-        }
-        content={
+        </DropdownMenuTrigger>
+        <DropdownMenuContent side="bottom" align="end" className="min-w-[200px]">
           <div className="flex flex-col gap-y-2">
             <Typography textSize="small" className="text-shark-300 px-2 pt-2">
               Вид
@@ -45,8 +39,8 @@ export const FriendsFilteringView = reatomComponent(({ ctx }) => {
               ))}
             </div>
           </div>
-        }
-      />
+        </DropdownMenuContent>
+      </DropdownMenu>
     </div>
   );
 }, "FriendsFilteringView")

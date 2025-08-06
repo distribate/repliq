@@ -1,19 +1,19 @@
 import { Typography } from "@repo/ui/src/components/typography"
-import { defineThreadAction, threadAtom, threadPropertiesAtom } from "../models/thread.model"
+import { defineThread, threadAtom, threadPropertiesAtom } from "../models/thread.model"
 import { ContextMenu, ContextMenuContent, ContextMenuTrigger } from "@repo/ui/src/components/context-menu"
 import { ThreadReactions } from "#components/thread/thread-reactions/components/thread-reactions"
 import { ContentNotFound } from "#components/templates/components/content-not-found"
 import { ThreadImagesSkeleton } from "#components/thread/thread-images/components/thread-images"
-import { Suspense, lazy } from "react"
 import { ThreadSave } from "#components/thread/thread-save/components/thread-save"
 import { reatomComponent } from "@reatom/npm-react"
 import { PageLoader } from "@repo/ui/src/components/page-loader"
 import { Skeleton } from "@repo/ui/src/components/skeleton"
 import { isAuthenticatedAtom } from "#components/auth/models/auth.model"
+import { clientOnly } from "vike-react/clientOnly"
 
-const Content = lazy(() => import("#components/thread/thread-content/components/thread-content").then(m => ({ default: m.ThreadContent })))
-const ThreadImages = lazy(() => import("../../thread-images/components/thread-images").then(m => ({ default: m.ThreadImages })))
-const ThreadContextMenu = lazy(() => import("#components/thread/thread-context-menu/thread-context-menu").then(m => ({ default: m.ThreadContextMenu })))
+const Content = clientOnly(() => import("#components/thread/thread-content/components/thread-content").then(m => ({ default: m.ThreadContent })))
+const ThreadImages = clientOnly(() => import("../../thread-images/components/thread-images").then(m => ({ default: m.ThreadImages })))
+const ThreadContextMenu = clientOnly(() => import("#components/thread/thread-context-menu/thread-context-menu").then(m => ({ default: m.ThreadContextMenu })))
 
 const ThreadContent = reatomComponent(({ ctx }) => {
   const thread = ctx.spy(threadAtom)
@@ -21,13 +21,9 @@ const ThreadContent = reatomComponent(({ ctx }) => {
 
   return (
     <>
-      <Suspense fallback={<Skeleton className="h-[60px] sm:min-h-[200px] w-full" />}>
-        <Content />
-      </Suspense>
+      <Content fallback={<Skeleton className="h-[60px] sm:min-h-[200px] w-full" />} />
       {thread.images_count > 0 && (
-        <Suspense fallback={<ThreadImagesSkeleton images_count={thread.images_count} />}>
-          <ThreadImages />
-        </Suspense>
+        <ThreadImages fallback={<ThreadImagesSkeleton images_count={thread.images_count} />} />
       )}
     </>
   )
@@ -82,7 +78,7 @@ const ThreadTitle = reatomComponent(({ ctx }) => {
 export const Thread = reatomComponent(({ ctx }) => {
   const thread = ctx.spy(threadAtom)
 
-  if (ctx.spy(defineThreadAction.statusesAtom).isPending) {
+  if (ctx.spy(defineThread.statusesAtom).isPending) {
     return <PageLoader />
   }
 
@@ -103,9 +99,7 @@ export const Thread = reatomComponent(({ ctx }) => {
       </ContextMenuTrigger>
       <ContextMenuContent className="flex flex-col bg-transparent gap-y-2 w-full rounded-md gap-2">
         {isAuthenticated && (
-          <Suspense>
-            <ThreadContextMenu />
-          </Suspense>
+          <ThreadContextMenu />
         )}
       </ContextMenuContent>
     </ContextMenu>

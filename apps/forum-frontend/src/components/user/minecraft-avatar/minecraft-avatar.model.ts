@@ -1,6 +1,5 @@
 import { reatomAsync } from '@reatom/async';
 import { atom } from '@reatom/framework';
-import { skinClient } from '@repo/shared/api/minecraft-client.ts';
 import ky from 'ky';
 
 export const minecraftAvatarsUrlsAtom = atom<Record<string, string>>({}, "avatarsUrlsAtom");
@@ -12,13 +11,13 @@ type GetSkinDetails = {
 }
 
 export async function getSkinDetails({ type, nickname }: GetSkinDetails) {
-  const url = skinClient.skin[`get-${type}`][":nickname"].$url({
-    param: { nickname }
+  const res = ky.get(`https://api.fasberry.su/minecraft/server/skin/${nickname}`, { 
+    searchParams: { type: type === 'head' ? "head" : "full" }
   })
+  
+  const text = await res.text()
 
-  const blob = await ky.get(url).blob()
-
-  return URL.createObjectURL(blob)
+  return text
 }
 
 export const minecraftAvatarAtom = (nickname: string) => atom((ctx) => {

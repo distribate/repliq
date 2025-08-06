@@ -1,13 +1,6 @@
 User-agent: *
 
-Disallow: /auth
-Disallow: /register
 Disallow: /not-exist/
 Disallow: /not-online/
-Disallow: /restrict/
-Disallow: /studio/
-Disallow: /friends/
-Disallow: /development/
-Disallow: /search/
 
 Sitemap: https://fasberry.su/sitemap.xml

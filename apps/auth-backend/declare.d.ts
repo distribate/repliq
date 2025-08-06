@@ -19,6 +19,9 @@ declare module "bun" {
     POSTGRES_PASSWORD: string;
     POSTGRES_DB: string;
     POSTGRES_TENANT_ID: string;
+
+    LOCATION_TOKEN: string;
+    CF_TURNSTILE_TOKEN: string;
   }
 }
 

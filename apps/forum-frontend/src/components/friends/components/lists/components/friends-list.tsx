@@ -2,7 +2,7 @@ import { friendsViewAtom } from "#components/friends/components/filtering/models
 import { FriendsAllList } from "#components/friends/components/lists/components/friends-all-list";
 import { Typography } from "@repo/ui/src/components/typography";
 import { reatomComponent } from "@reatom/npm-react";
-import { ReactNode } from "@tanstack/react-router";
+import { ReactNode } from "react";
 import { lazy, Suspense } from "react";
 
 const FriendsOutgoingList = lazy(() => import("./friends-outgoing-list").then(m => ({ default: m.FriendsOutgoingList })))

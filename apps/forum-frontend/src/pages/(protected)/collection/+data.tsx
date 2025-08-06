@@ -1,0 +1,27 @@
+import { logRouting } from "#lib/helpers"
+import { validatePage } from "#lib/validation"
+import { wrapTitle } from "@repo/lib/utils/wrap-title"
+import { useConfig } from "vike-react/useConfig"
+import { PageContextServer } from "vike/types"
+
+function metadata() {
+  return {
+    title: wrapTitle("Коллекции"),
+    Head: (
+      <>
+        <link rel="canonical" href={`https://fasberry.su/collection`} />
+        <meta property="og:url" content={`https://fasberry.su/collection`} />
+      </>
+    )
+  }
+}
+
+export const data = async (pageContext: PageContextServer) => {
+  logRouting("(protected) (collection)", "data")
+
+  const config = useConfig()
+
+  config(metadata())
+
+  validatePage(pageContext)
+}

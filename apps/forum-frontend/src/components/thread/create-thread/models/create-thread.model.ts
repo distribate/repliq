@@ -2,7 +2,6 @@ import { toast } from "sonner";
 import { THREAD_CONTENT_LIMIT_DEFAULT } from "@repo/shared/constants/limits.ts";
 import { blobUrlToFile } from "@repo/lib/helpers/blobUrlToFile.ts";
 import { reatomAsync, withStatusesAtom } from "@reatom/async";
-import { router } from "#main.tsx";
 import { forumThreadClient } from "@repo/shared/api/forum-client";
 import { createThreadSchema as initial } from "@repo/types/schemas/thread/create-thread-schema.ts";
 import { z } from "zod/v4";
@@ -94,7 +93,10 @@ export const createThreadAction = reatomAsync(async (ctx) => {
 
       createThreadFormReset(ctx)
 
-      ctx.schedule(() => router.navigate({ to: createIdLink("thread", res.data.id) }))
+      ctx.schedule(() => 
+        window.location.replace(createIdLink("thread", res.data.id))
+        // router.navigate({ to: createIdLink("thread", res.data.id) })
+      )
     }
   },
   onReject: (_, e) => {

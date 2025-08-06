@@ -3,15 +3,15 @@ import { zValidator } from '@hono/zod-validator';
 import { createUserTransaction } from '../lib/transactions/create-user-transaction.ts';
 import { throwError } from '@repo/lib/helpers/throw-error.ts';
 import { validatePasswordSafe } from '../utils/validate-password-safe.ts';
-import { checkUserExists } from "../utils/check-user-exists.ts";
 import { registerSchema } from '@repo/types/schemas/auth/create-session-schema.ts';
 import { validateAuthenticationRequest } from '../lib/validators/validate-authentication-request.ts';
 import { validateExistsUser } from '../lib/validators/validate-exists-user.ts';
+import { logger } from '@repo/lib/utils/logger.ts';
 
 export const registerRoute = new Hono()
   .post('/register', zValidator('json', registerSchema), async (ctx) => {
-    const { 
-      password, findout, referrer, nickname, token 
+    const {
+      password, findout, referrer, nickname, token
     } = registerSchema.parse(await ctx.req.json());
 
     await validateAuthenticationRequest({ ctx, token })
@@ -37,6 +37,10 @@ export const registerRoute = new Hono()
 
       return ctx.json({ status: "Success" }, 201);
     } catch (e) {
+      if (e instanceof Error) {
+        logger.error(e.message)
+      }
+
       return ctx.json({ error: throwError(e) }, 500);
     }
   });

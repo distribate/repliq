@@ -1,99 +1,61 @@
-import { reatomAsync, reatomResource, withErrorAtom, withStatusesAtom } from '@reatom/async';
-import { atom, Ctx, CtxSpy } from '@reatom/core';
-import { redirect } from "@tanstack/react-router";
-import { AUTH_REDIRECT } from "@repo/shared/constants/routes";
-import { forumUserClient } from '@repo/shared/api/forum-client.ts';
+import ky from 'ky';
 import type { UserDetailed } from '@repo/types/entities/user-type.ts';
-import ky, { HTTPError } from 'ky';
+import { atom, Ctx, CtxSpy } from '@reatom/core';
+import { forumUserClient } from '@repo/shared/api/forum-client.ts';
 import { decode } from 'cbor-x';
+import { withSsr } from '#lib/ssr';
+import { withInit } from '@reatom/framework';
 
-export const currentUserNicknameAtom = atom<string | null>(null, "currentUserNickname")
-export const currentUserAtom = atom<UserDetailed | null>(null, "currentUser")
-
-export async function getUserInformation(): Promise<UserDetailed> {
-  const url = forumUserClient.user["get-me"].$url()
-
-  try {
-    const res = await ky.get(url, { credentials: "include" })
-
-    const encodedData = await res.arrayBuffer()
-    const uint8Data = new Uint8Array(encodedData);
-
-    const data: { data: UserDetailed } | { error: string } = decode(uint8Data);
-
-    if ("error" in data) {
-      throw new Error("Failed user information")
-    }
-
-    return data.data
-  } catch (e) {
-    // if (e instanceof HTTPError) {
-    //   const body = await e.response.json()
-
-    //   if (body.status === "You are banned") {
-    //     throw redirect({
-    //       to: `/banned?reason=${body.data.reason}&time=${body.data.time}&created_at=${body.data.created_at}`
-    //     })
-    //   }
-    // }
-
-    throw e
-  }
-}
-
-export const currentUserResource = reatomResource(async (ctx) => {
-  const existingUser = ctx.get(currentUserAtom);
-
-  if (existingUser) {
-    return existingUser;
-  }
-
-  const freshUser = await ctx.schedule(() => getUserInformation());
-
-  return freshUser;
-}, "currentUserResource").pipe(
-  withStatusesAtom(),
-  withErrorAtom((ctx, error) => {
-    if (error) {
-      return redirect({ to: AUTH_REDIRECT });
-    }
-
-    return error;
-  }),
+export const currentUserNicknameAtom = atom<string | null>(null, "currentUserNickname").pipe(
+  withInit((ctx, _) => ctx.get(currentUserAtom)?.nickname ?? null)
 )
 
-currentUserResource.onFulfill.onCall((ctx, res) => {
-  if (res) {
-    const currentUser = ctx.get(currentUserAtom);
+export const CURRENT_USER_ATOM_KEY = "currentUserAtom"
 
-    if (!currentUser || currentUser.id !== res.id) {
-      currentUserNicknameAtom(ctx, res.nickname);
-      currentUserAtom(ctx, res);
-    }
+export const currentUserAtom = atom<UserDetailed | null>(null, "currentUser").pipe(
+  withSsr(CURRENT_USER_ATOM_KEY)
+)
 
-    userGlobalOptionsAction(ctx);
-  }
+const client = ky.create({
+  credentials: "include"
 })
 
-export const getUser = (ctx: CtxSpy | Ctx) => {
+const url = forumUserClient.user["get-me"].$url()
+
+export async function getUserInformation(
+  args?: RequestInit
+): Promise<UserDetailed> {
+  const res = await client(url, { ...args })
+  const encoded = await res.arrayBuffer()
+
+  const data: WrappedResponse<UserDetailed> = decode(new Uint8Array(encoded));
+
+  if ("error" in data) {
+    console.error(data.error)
+    throw new Error("Failed user information")
+  }
+
+  return data.data;
+}
+
+export const getUser = (ctx: CtxSpy | Ctx): UserDetailed => {
   let user: UserDetailed | null = null;
 
-  if (ctx.spy) {
+  if (typeof ctx.spy !== 'undefined') {
     user = ctx.spy(currentUserAtom)
   } else {
     user = ctx.get(currentUserAtom)
   }
 
   if (!user) {
-    // todo: implement redirect
     throw new Error("User not defined")
   }
 
   return user;
 }
 
-async function getUserGlobalOptions(signal: AbortSignal) {
-  const res = await forumUserClient.user["get-user-global-options"].$get({}, { init: { signal } })
+export async function getUserGlobalOptions(args?: RequestInit) {
+  const res = await forumUserClient.user["get-user-global-options"].$get({}, { init: { ...args } })
   const data = await res.json()
   if (!data || "error" in data) return null;
   return data.data;
@@ -109,23 +71,6 @@ const initial = {
   has_new_friends: false,
 }
 
-const userGlobalOptionsAtomIsInitAtom = atom(false, "userGlobalOptionsAtomIs")
-export const userGlobalOptionsAtom = atom<typeof initial>(initial, "userGlobalOptions")
-
-export const userGlobalOptionsAction = reatomAsync(async (ctx) => {
-  const isInited = ctx.get(userGlobalOptionsAtomIsInitAtom)
-
-  if (isInited) {
-    return ctx.get(userGlobalOptionsAtom)
-  }
-
-  return await ctx.schedule(() => getUserGlobalOptions(ctx.controller.signal))
-}, {
-  name: "userGlobalOptionsAction",
-  onFulfill: (ctx, res) => {
-    if (!res) return;
-
-    userGlobalOptionsAtomIsInitAtom(ctx, true)
-    userGlobalOptionsAtom(ctx, res)
-  }
-})
+export const userGlobalOptionsAtom = atom<typeof initial>(initial, "userGlobalOptions").pipe(
+  withSsr("userGlobalOptionsAtom")
+)

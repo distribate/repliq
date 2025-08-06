@@ -8,10 +8,19 @@ import { withHistory } from "@repo/lib/utils/reatom/with-history";
 import { forumThreadClient } from "@repo/shared/api/forum-client";
 import { ThreadDetailed, ThreadOwner } from "@repo/types/entities/thread-type";
 
-export async function getThreadModel(threadId: string) {
-  const res = await forumThreadClient.thread['get-thread'][':threadId'].$get({ param: { threadId }, });
+export async function getThreadModel(
+  threadId: string,
+  { headers }: RequestInit
+) {
+  const res = await forumThreadClient.thread['get-thread'][':threadId'].$get(
+    { param: { threadId }}, 
+    { init: { headers } }
+  );
+
   const data = await res.json();
+
   if (!data || 'error' in data) return null;
+
   return data.data;
 }
 
@@ -46,27 +55,11 @@ threadOwnerAtom.onChange((ctx, state) => {
   threadIsEditableAtom(ctx, isAllowed)
 })
 
-threadParamAtom.onChange((ctx, target) => {
-  if (!target) return;
-
-  const prev = ctx.get(threadParamAtom.history)[1]
-
-  if (prev !== undefined && prev !== target) {
-    resetThread(ctx)
-  }
-
-  defineThreadAction(ctx, target)
-})
-
-export const defineThreadAction = reatomAsync(async (ctx, threadId: string) => {
-  return await ctx.schedule(() => getThreadModel(threadId))
+export const defineThread = reatomAsync(async (ctx, target: ThreadDetailed) => {
+  return target;
 }, {
   name: "defineThreadAction",
   onFulfill: (ctx, res) => {
-    if (!res) {
-      return;
-    }
-
     const { owner, content, properties, ...rest } = res;
 
     threadReactionsAction(ctx, res.id)
@@ -75,6 +68,7 @@ export const defineThreadAction = reatomAsync(async (ctx, threadId: string) => {
       threadImagesAction(ctx)
     }
 
+    threadParamAtom(ctx, rest.id)
     threadOwnerAtom(ctx, owner)
     threadContentAtom(ctx, content)
     threadPropertiesAtom(ctx, properties)

@@ -41,7 +41,6 @@ export const ProfilePostsListCard = ({
         views_count={views_count}
         isUpdated={isUpdated}
         nickname={nickname}
-        created_at={created_at}
       />
     </div>
   );

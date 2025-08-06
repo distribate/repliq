@@ -19,40 +19,51 @@ async function validateUserNotificationsPreference(nickname: string) {
 }
 
 export const notificationsSSERoute = new Hono()
-  .get("/sse", async (ctx) => {
+  .get("/notifications/connect", async (ctx) => {
     const nickname = getNickname()
     
     const isValid = await validateUserNotificationsPreference(nickname)
 
     const nc = getNatsConnection()
+    
     const sub = nc.subscribe(updateEvent)
 
     return streamSSE(ctx, async (stream) => {
       while (true) {
+        // const controller = new AbortController()
+
+        // ctx.req.raw.signal.addEventListener('abort', () => {
+        //   console.log('aborted by client');
+        //   controller.abort()
+        //   sub.unsubscribe()
+        //   stream.close()
+        // })
+
         const id = String(Date.now())
 
         if (!isValid) {
-          await stream.writeSSE({
-            event: config, data: "Exit" as ConfigEventsData, id,
-          });
-
-          stream.close();
-
+          await stream.writeSSE({ event: config, data: "Exit" as ConfigEventsData, id });
+          // stream.close();
           return;
         }
 
-        await stream.writeSSE({
-          event: config, data: "Established" as ConfigEventsData, id,
-        });
+        await stream.writeSSE({ event: config, data: "Established" as ConfigEventsData, id });
 
         const keepAlive = setInterval(async () => {
+          // if (stream.closed || stream.aborted) {
+          //   clearInterval(keepAlive)
+          //   sub.unsubscribe()
+          //   return
+          // }
+
           await stream.writeSSE({ event: ping, data: "keep-alive" });
         }, KEEPALIVE_TIME);
 
         try {
           for await (const msg of sub) {
-            const payload: NotificationsEventsPayload = JSON.parse(new TextDecoder().decode(msg.data))
-
+            const payload: NotificationsEventsPayload = JSON.parse(
+              new TextDecoder().decode(msg.data)
+            )
             if (!payload) return;
 
             if (payload.event === 'global') {
@@ -70,6 +81,7 @@ export const notificationsSSERoute = new Hono()
         } finally {
           clearInterval(keepAlive);
           sub.unsubscribe()
+          // stream.close()
         }
       }
     })

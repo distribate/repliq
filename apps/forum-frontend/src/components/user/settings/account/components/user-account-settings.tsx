@@ -10,13 +10,13 @@ import { updateCurrentUserSettingsAction } from '#components/user/settings/profi
 import { spawn } from '@reatom/framework';
 import { BlockedList } from '#components/cards/user-blocked-card/components/user-blocked-list';
 import { EmailChange } from './email-change';
-import { ReactNode } from '@tanstack/react-router';
 import { AccountDialog, navigateToDialogAction, settingsCurrentDialogAtom } from '../../../../modals/user-settings/models/user-settings.model';
 import { Skeleton } from '@repo/ui/src/components/skeleton';
 import { userActiveSessionsAction } from '../../../../modals/user-settings/models/user-sessions.model';
 import { DeleteAccount } from './delete-account';
 import { IconDeviceDesktopPin, IconFileXFilled, IconHandMiddleFinger, IconHeartHandshake, IconLock, IconMailSpark, IconTag } from '@tabler/icons-react';
 import { getUser } from '#components/user/models/current-user.model';
+import { ReactNode } from 'react';
 
 const FriendRequest = reatomComponent(({ ctx }) => {
   const accept_friend_request = getUser(ctx).preferences.accept_friend_request

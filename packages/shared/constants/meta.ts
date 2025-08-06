@@ -1,4 +1,3 @@
-export const KEYWORDS = `fasberry, форум, forum, minecraft, 
-  майнкрафт, фасберри, майнкрафт сервер, майнкрафт сервер играть, minecraft server, play minecraft, minecraft rp server, minecraft rpg server`
-export const PREVIEW_IMAGE = "https://fasberry.su/images/preview.jpg"
+export const KEYWORDS = `форум, обсуждения, треды, социальная платформа, Repliq, онлайн-сообщество, русский форум, общение, дискуссии, комментарии, платформа для общения`
+export const PREVIEW_IMAGE = "/preview.jpg"
 export const PATHNAME = "https://fasberry.su"

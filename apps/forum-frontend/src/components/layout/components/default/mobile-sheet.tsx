@@ -3,7 +3,6 @@ import { Sheet, SheetContent } from "@repo/ui/src/components/sheet.tsx"
 import { atom } from "@reatom/core"
 import { cva, VariantProps } from "class-variance-authority"
 import { Typography } from "@repo/ui/src/components/typography"
-import { router } from "#main"
 import { UserDonate } from "#components/user/donate/components/donate"
 import { UserNickname } from "#components/user/name/nickname"
 import { Avatar } from "#components/user/avatar/components/avatar"
@@ -13,15 +12,16 @@ import { logoutModalIsOpenAtom } from "#components/modals/action-confirmation/co
 import { reatomComponent } from "@reatom/npm-react"
 import { House, Menu, Search, User } from "lucide-react"
 import { HTMLAttributes } from "react"
-import { useLocation } from "@tanstack/react-router"
 import { Separator } from "@repo/ui/src/components/separator"
 import { createIdLink } from "@repo/lib/utils/create-link"
+import { usePageContext } from "vike-react/usePageContext"
+import { navigate } from "vike/client/router"
 
 const sheetMenuIsOpenAtom = atom(false, "sheetMenuIsOpen")
 
 export const BottomBar = reatomComponent(({ ctx }) => {
-  const pathname = useLocation({ select: p => p.pathname })
-  const str = useLocation({ select: p => p.searchStr })
+  const pathname = usePageContext().urlPathname
+  const str = usePageContext().urlParsed.search
 
   const path = pathname + str;
 
@@ -77,17 +77,19 @@ export const SheetMenu = reatomComponent(({ ctx }) => {
         <div className="flex flex-col p-4 gap-y-4">
           <SidebarMobileButton
             titleButton="Профиль"
-            func={() => handle(router.navigate({ to: `/user/` + currentUser.nickname }))}
+            func={() => handle(navigate(`/user/${currentUser.nickname}`))}
           />
           <SidebarMobileButton
             titleButton="Друзья"
-            func={() => handle(router.navigate({ to: "/friends" }))}
+            func={() => handle(
+              navigate("/friends"))
+            }
           />
           <SidebarMobileButton
             titleButton="Коллекции"
             func={() => {
               handle(
-                router.navigate({ to: "/collection", search: { type: "all" } })
+                navigate(`/collection?type=all`)
               )
             }}
           />

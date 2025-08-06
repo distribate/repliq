@@ -9,9 +9,9 @@ import { COMMENT_LIMIT } from "@repo/shared/constants/limits.ts";
 import AutogrowingTextarea from "@repo/ui/src/components/autogrowing-textarea.tsx";
 import { createThreadCommentSchema } from "../schemas/create-thread-comment-schema.ts";
 import { reatomComponent } from "@reatom/npm-react";
-import { threadRoute } from "#routes/public-routes.tsx";
 import { getUser } from "#components/user/models/current-user.model.ts";
 import { action, atom, sleep, withComputed, withConcurrency } from "@reatom/framework";
+import { usePageContext } from "vike-react/usePageContext"
 
 const onChange = action(async (ctx, e: React.ChangeEvent<HTMLTextAreaElement>) => {
   const { value } = e.target;
@@ -31,7 +31,7 @@ const isValidAtom = atom(false, "isValid").pipe(
 )
 
 export const CreateThreadCommentForm = reatomComponent(({ ctx }) => {
-  const { id: paramId } = threadRoute.useParams();
+  const paramId = usePageContext().routeParams.id
 
   const { nickname, avatar } = getUser(ctx);
   const createThreadCommentState = ctx.spy(createThreadCommentAtom)

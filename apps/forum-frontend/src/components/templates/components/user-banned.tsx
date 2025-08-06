@@ -5,17 +5,18 @@ import { CoverArea } from "#components/profile/header/components/cover-area";
 import { reatomAsync, withDataAtom, withStatusesAtom } from "@reatom/async";
 import { reatomComponent, useUpdate } from "@reatom/npm-react";
 
-async function getUserBanDetails(nickname: string) {
-  const res = await forumUserClient.user["get-user-ban-details"][":nickname"].$get({ param: { nickname } });
-  const data = await res.json();
+// async function getUserBanDetails(nickname: string) {
+//   const res = await forumUserClient.user["get-user-ban-details"][":nickname"].$get({ param: { nickname } });
+//   const data = await res.json();
 
-  if (!data || "error" in data) return null;
+//   if (!data || "error" in data) return null;
 
-  return data.data;
-}
+//   return data.data;
+// }
 
 export const userBannedAction = reatomAsync(async (ctx, target: string) => {
-  return await ctx.schedule(() => getUserBanDetails(target))
+  return null;
+  // return await ctx.schedule(() => getUserBanDetails(target))
 }, {
   name: "userBannedAction",
 }).pipe(withStatusesAtom(), withDataAtom())

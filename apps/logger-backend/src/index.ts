@@ -1,4 +1,4 @@
-import { fasberryBot, loggerBot } from './shared/bot/bot.ts'
+import { repliqBot, loggerBot } from './shared/bot/bot.ts'
 import { initNats } from '@repo/config-nats/nats-client.ts';
 import { subscribeReceivePayment } from './subscribers/sub-receive-payment.ts';
 import { subscribeServerEvents } from './subscribers/sub-server-events.ts';
@@ -19,7 +19,7 @@ import { subscribeDisconnectService } from './subscribers/sub-disconnect-service
 
 export const commandRegistry = [
   {
-    bot: fasberryBot,
+    bot: repliqBot,
     commands: [
       connectUserCommand,
     ],
@@ -44,7 +44,7 @@ export const commandRegistry = [
 
 async function startBots() {
   await loggerBot.start()
-  await fasberryBot.start()
+  await repliqBot.start()
 
   for (const entry of commandRegistry) {
     for (const registerCommand of entry.commands) {

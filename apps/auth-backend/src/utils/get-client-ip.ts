@@ -1,5 +1,9 @@
 import type { Context } from "hono";
-import { convertIPv6ToIPv4 } from "../helpers/ipv6-to-ipv4";
+
+function convertIPv6ToIPv4(ipv6: string): string | null {
+  const match = ipv6.match(/^::ffff:(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})$/);
+  return match ? match[1] : null;
+}
 
 export function getClientIp(ctx: Context): string | null {
   let ip: string | null = null;

@@ -5,7 +5,7 @@ import { lazy, PropsWithChildren, Suspense } from "react";
 import { UserCoverSkeleton } from "#components/skeletons/components/user-cover-skeleton";
 import { Typography } from "@repo/ui/src/components/typography";
 import { reatomComponent } from "@reatom/npm-react";
-import { requestedUserAccountTypeAtom, requestedUserAction, requestedUserAtom, requestedUserProfileStatusAtom } from "#components/profile/main/models/requested-user.model";
+import { requestedUserAccountTypeAtom, defineUserAction, requestedUserAtom, requestedUserProfileStatusAtom } from "#components/profile/main/models/requested-user.model";
 import { UserCoverAvatarWrapper } from "./cover-avatar";
 import { UserNickname } from "#components/user/name/nickname";
 
@@ -79,7 +79,7 @@ export const UserCoverLayout = reatomComponent<PropsWithChildren>(({ ctx, childr
 
   return (
     <>
-      {ctx.spy(requestedUserAction.statusesAtom).isPending ? <UserCoverSkeleton /> : (
+      {ctx.spy(defineUserAction.statusesAtom).isPending ? <UserCoverSkeleton /> : (
         <>
           <InView
             as="div"

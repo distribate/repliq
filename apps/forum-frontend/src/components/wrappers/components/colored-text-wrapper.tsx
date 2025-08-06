@@ -1,4 +1,4 @@
-import { HTMLAttributes } from "react";
+import { HTMLAttributes, JSX } from "react";
 
 const colorMap: Record<string, string> = {
   "0": "#000000",

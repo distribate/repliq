@@ -30,7 +30,7 @@ import {
   getBlockType,
   setBlockType,
   STRUCTURAL_TYPES,
-} from '#lib/transforms.ts';
+} from '#plate/lib/transforms.ts';
 
 import {
   DropdownMenu,

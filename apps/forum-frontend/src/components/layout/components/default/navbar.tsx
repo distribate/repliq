@@ -5,13 +5,13 @@ import { MenuArrow } from "@repo/ui/src/components/menu-arrow.tsx"
 import { reatomComponent } from "@reatom/npm-react";
 import { UserMenu } from "#components/user/menu/components/user-menu";
 import { CustomLink } from "#components/shared/link";
-import { isExperimentalDesignAtom } from "./experimental-layout.model";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@repo/ui/src/components/dropdown-menu";
 import { AuthorizationButton } from "./authorization-button";
 import { IconBrandThreads, IconLibrary } from "@tabler/icons-react";
 import { isAuthenticatedAtom } from "#components/auth/models/auth.model";
 import { getUser } from "#components/user/models/current-user.model";
 import { NavbarSearch } from "./navbar-search";
+import { isExperimentalDesignAtom } from "./experimental-layout";
 
 const CREATE = [
   { icon: IconBrandThreads, title: "Создать тред", link: "/create-thread" },
@@ -62,11 +62,11 @@ const NavbarUserMenu = reatomComponent(({ ctx }) => {
 
 export const Logotype = () => {
   return (
-    <CustomLink to="/" className="flex items-center justify-center w-full select-none">
-      <img src="/images/logotype.png" width={26} height={26} alt="" draggable={false} />
+    <CustomLink to="/" className="flex items-center gap-1 justify-center w-full select-none">
+      <img src="/logotype.png" width={26} height={26} alt="" draggable={false} />
       <div className="w-fit ml-1">
         <Typography textSize="very_big" font="pixy" textColor="shark_white" className="leading-7 truncate">
-          Fasberry
+          Repliq
         </Typography>
       </div>
     </CustomLink>

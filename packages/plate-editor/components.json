@@ -12,16 +12,16 @@
   },
   "aliases": {
     "components": "#",
-    "hooks": "#hooks",
-    "lib": "#lib",
-    "ui": "#ui",
-    "utils": "#lib/utils/ui"
+    "hooks": "#plate/hooks",
+    "lib": "#plate/lib",
+    "ui": "#plate/ui",
+    "utils": "#plate/lib/utils/ui"
   },
   "iconLibrary": "lucide",
   "registries": {
     "plate": {
       "aliases": {
-        "ui": "#ui"
+        "ui": "#plate/ui"
       },
       "url": "https://platejs.org/r"
     }

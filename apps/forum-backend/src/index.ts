@@ -331,4 +331,4 @@ showRoutes(app, { verbose: false });
 
 Bun.serve({ port: Bun.env.FORUM_BACKEND_PORT!, fetch: app.fetch })
 
-logger.success(`Fasberry Forum Backend started on ${Bun.env.FORUM_BACKEND_PORT!}`)
+logger.success(`Repliq Forum Backend started on ${Bun.env.FORUM_BACKEND_PORT!}`)

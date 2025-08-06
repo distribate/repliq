@@ -3,15 +3,15 @@ import { Typography } from "@repo/ui/src/components/typography.tsx";
 const WatermarkItem = () => {
   return (
     <div className="flex space-x-4 justify-between *:opacity-20 *:text-[26px] *:whitespace-nowrap">
-      <Typography textColor="gray">Fasberry</Typography>
-      <Typography textColor="gray">Fasberry </Typography>
-      <Typography textColor="gray">Fasberry</Typography>
-      <Typography textColor="gray">Fasberry </Typography>
-      <Typography textColor="gray">Fasberry</Typography>
-      <Typography textColor="gray">Fasberry </Typography>
-      <Typography textColor="gray">Fasberry </Typography>
-      <Typography textColor="gray">Fasberry</Typography>
-      <Typography textColor="gray">Fasberry </Typography>
+      <Typography textColor="gray">Repliq</Typography>
+      <Typography textColor="gray">Repliq </Typography>
+      <Typography textColor="gray">Repliq</Typography>
+      <Typography textColor="gray">Repliq </Typography>
+      <Typography textColor="gray">Repliq</Typography>
+      <Typography textColor="gray">Repliq </Typography>
+      <Typography textColor="gray">Repliq </Typography>
+      <Typography textColor="gray">Repliq</Typography>
+      <Typography textColor="gray">Repliq </Typography>
     </div >
   );
 };

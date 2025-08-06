@@ -1,15 +1,14 @@
-// import FancyFeather from "@repo/assets/images/minecraft/fancy_feather.webp"
+import dayjs from "@repo/lib/constants/dayjs-instance"
 import { Typography } from "@repo/ui/src/components/typography"
 import { Skeleton } from "@repo/ui/src/components/skeleton"
 import { Avatar } from "#components/user/avatar/components/avatar"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from "@repo/ui/src/components/dropdown-menu"
 import { UserNickname } from "#components/user/name/nickname"
-import dayjs from "@repo/lib/constants/dayjs-instance"
 import { Separator } from "@repo/ui/src/components/separator"
-import { myTicketsResource } from "../queries/my-tickets-query"
-import { reatomComponent } from "@reatom/npm-react"
+import { myTicketsResource } from "../models/my-tickets.model"
 import { CustomLink } from "#components/shared/link"
 import { createIdLink } from "@repo/lib/utils/create-link"
+import { reatomComponent } from "@reatom/npm-react"
 
 export const MyTickets = reatomComponent(({ ctx }) => {
   const data = ctx.spy(myTicketsResource.dataAtom)

@@ -1,10 +1,10 @@
 import { controlIncomingRequestAction } from "#components/friend/models/control-friend-requests.model";
 import { Button } from "@repo/ui/src/components/button";
 import { Typography } from "@repo/ui/src/components/typography";
-import { DropdownWrapper } from "#components/wrappers/components/dropdown-wrapper";
 import { Minus, Plus } from "lucide-react";
 import { reatomComponent } from "@reatom/npm-react";
 import { spawn } from "@reatom/framework";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from "@repo/ui/src/components/dropdown-menu";
 
 type IncomingFriendButtonProps = {
   request_id: string
@@ -13,14 +13,13 @@ type IncomingFriendButtonProps = {
 
 export const IncomingFriendButton = reatomComponent<IncomingFriendButtonProps>(({ ctx, recipient, request_id, }) => {
   return (
-    <DropdownWrapper
-      properties={{ sideAlign: "right", contentAlign: "start" }}
-      trigger={
+    <DropdownMenu>
+      <DropdownMenuTrigger>
         <Button variant="pending">
           <Typography>Хочет добавить вас в друзья</Typography>
         </Button>
-      }
-      content={
+      </DropdownMenuTrigger>
+      <DropdownMenuContent side="right" align="start">
         <div className="flex flex-col gap-y-1 *:w-full w-full">
           <Button
             onClick={() => {
@@ -43,7 +42,7 @@ export const IncomingFriendButton = reatomComponent<IncomingFriendButtonProps>((
             <Typography>Отклонить заявку</Typography>
           </Button>
         </div>
-      }
-    />
+      </DropdownMenuContent>
+    </DropdownMenu>
   );
 }, "IncomingFriendButton")

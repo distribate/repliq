@@ -25,27 +25,27 @@ import { SlashInputPlugin } from '@udecode/plate-slash-command/react';
 import { TogglePlugin } from '@udecode/plate-toggle/react';
 import { type CreatePlateEditorOptions, ParagraphPlugin, PlateLeaf, usePlateEditor } from '@udecode/plate/react';
 
-import { editorPlugins } from '#plugins/editor-plugins.tsx';
-import { BlockquoteElement } from '#ui/blockquote-element.tsx';
-import { CodeBlockElement } from '#ui/code-block-element.tsx';
-import { CodeLeaf } from '#ui/code-leaf.tsx';
-import { CodeLineElement } from '#ui/code-line-element.tsx';
-import { CodeSyntaxLeaf } from '#ui/code-syntax-leaf.tsx';
-import { ColumnElement } from '#ui/column-element.tsx';
-import { ColumnGroupElement } from '#ui/column-group-element.tsx';
-import { DateElement } from '#ui/date-element.tsx';
-import { EmojiInputElement } from '#ui/emoji-input-element.tsx';
-import { EquationElement } from '#ui/equation-element.tsx';
-import { ExcalidrawElement } from '#ui/excalidraw-element.tsx';
-import { HeadingElement } from '#ui/heading-element.tsx';
-import { HighlightLeaf } from '#ui/highlight-leaf.tsx';
-import { HrElement } from '#ui/hr-element.tsx';
-import { InlineEquationElement } from '#ui/inline-equation-element.tsx';
-import { LinkElement } from '#ui/link-element.tsx';
-import { ParagraphElement } from '#ui/paragraph-element.tsx';
-import { withPlaceholders } from '#ui/placeholder.tsx';
-import { SlashInputElement } from '#ui/slash-input-element.tsx';
-import { ToggleElement } from '#ui/toggle-element.tsx';
+import { editorPlugins } from '#plate/plugins/editor-plugins.tsx';
+import { BlockquoteElement } from '#plate/ui/blockquote-element.tsx';
+import { CodeBlockElement } from '#plate/ui/code-block-element.tsx';
+import { CodeLeaf } from '#plate/ui/code-leaf.tsx';
+import { CodeLineElement } from '#plate/ui/code-line-element.tsx';
+import { CodeSyntaxLeaf } from '#plate/ui/code-syntax-leaf.tsx';
+import { ColumnElement } from '#plate/ui/column-element.tsx';
+import { ColumnGroupElement } from '#plate/ui/column-group-element.tsx';
+import { DateElement } from '#plate/ui/date-element.tsx';
+import { EmojiInputElement } from '#plate/ui/emoji-input-element.tsx';
+import { EquationElement } from '#plate/ui/equation-element.tsx';
+import { ExcalidrawElement } from '#plate/ui/excalidraw-element.tsx';
+import { HeadingElement } from '#plate/ui/heading-element.tsx';
+import { HighlightLeaf } from '#plate/ui/highlight-leaf.tsx';
+import { HrElement } from '#plate/ui/hr-element.tsx';
+import { InlineEquationElement } from '#plate/ui/inline-equation-element.tsx';
+import { LinkElement } from '#plate/ui/link-element.tsx';
+import { ParagraphElement } from '#plate/ui/paragraph-element.tsx';
+import { withPlaceholders } from '#plate/ui/placeholder.tsx';
+import { SlashInputElement } from '#plate/ui/slash-input-element.tsx';
+import { ToggleElement } from '#plate/ui/toggle-element.tsx';
 
 export const viewComponents = {
   [BlockquotePlugin.key]: BlockquoteElement,

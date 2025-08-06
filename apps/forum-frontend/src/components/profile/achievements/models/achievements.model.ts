@@ -3,7 +3,7 @@ import { reatomAsync, withErrorAtom, withStatusesAtom } from "@reatom/async"
 import { atom, Ctx } from "@reatom/core"
 import { withReset } from "@reatom/framework"
 import { logger } from "@repo/lib/utils/logger"
-import { achievementsClient } from "@repo/shared/api/minecraft-client"
+import ky from "ky"
 
 type AchievementsData = Array<{
   type: "lobby" | "bisquite" | "main";
@@ -12,15 +12,15 @@ type AchievementsData = Array<{
 
 type AchievementsMeta = {
   total: number;
-  achievementsTypes: Array<{  key: string; title: string }>
+  achievementsTypes: Array<{ key: string; title: string }>
 } | null
 
 export const achievementsAtom = atom<AchievementsData>(null, "achievements").pipe(withReset())
 export const achievementsMetaAtom = atom<AchievementsMeta>(null, "achievementsMeta").pipe(withReset())
 
 async function getAchievements(nickname: string) {
-  const res = await achievementsClient.achievements["get-achievements"][":nickname"].$get({ param: { nickname } })
-  const data = await res.json()
+  const res = await ky.get(`https://api.fasberry.su/minecraft/server/achievements/${nickname}`)
+  const data = await res.json<{ data: AchievementsData } | { error: string }>()
 
   if (!data || "error" in data) return null
 
@@ -28,8 +28,8 @@ async function getAchievements(nickname: string) {
 }
 
 async function getAchievementsMeta() {
-  const res = await achievementsClient.achievements["get-achievements-meta"].$get()
-  const data = await res.json()
+  const res = await ky.get(`https://api.fasberry.su/minecraft/server/achievements-meta`)
+  const data = await res.json<{ data: AchievementsMeta } | { error: string }>()
 
   if (!data || "error" in data) return null
 
@@ -51,7 +51,6 @@ function resetAchievements(ctx: Ctx) {
 
 requestedUserParamAtom.onChange((ctx, state) => isParamChanged(ctx, requestedUserParamAtom, state, () => {
   resetAchievements(ctx)
-  logger.info("achievements reset for", state)
 }))
 
 export const achievementsAction = reatomAsync(async (ctx) => {
@@ -63,7 +62,6 @@ export const achievementsAction = reatomAsync(async (ctx) => {
 
   if (cachedData && cachedMeta) {
     const cache = Promise.resolve([cachedData, cachedMeta] as [AchievementsData, AchievementsMeta])
-    logger.info(`returned cached data for ${target}: `, cache)
     return cache
   }
 

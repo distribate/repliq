@@ -2,8 +2,8 @@
 
 import { createPlatePlugin } from '@udecode/plate/react';
 
-import { FixedToolbar } from '#ui/fixed-toolbar.tsx';
-import { FixedToolbarButtons } from '#ui/fixed-toolbar-buttons.tsx';
+import { FixedToolbar } from '#plate/ui/fixed-toolbar.tsx';
+import { FixedToolbarButtons } from '#plate/ui/fixed-toolbar-buttons.tsx';
 
 export const FixedToolbarPlugin = createPlatePlugin({
   key: 'fixed-toolbar',

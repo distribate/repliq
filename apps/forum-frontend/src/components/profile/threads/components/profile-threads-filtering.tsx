@@ -1,9 +1,8 @@
 import { Typography } from "@repo/ui/src/components/typography.tsx";
-import { DropdownWrapper } from "#components/wrappers/components/dropdown-wrapper";
 import { SelectedWrapper } from "#components/wrappers/components/selected-wrapper";
 import { LayoutGrid } from "lucide-react";
 import { VIEW_COMPONENTS_TYPE } from "#components/friends/components/filtering/constants/view-components-type";
-import { DropdownMenuItem } from "@repo/ui/src/components/dropdown-menu.tsx";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@repo/ui/src/components/dropdown-menu.tsx";
 import { ChangeEvent } from "react";
 import { Input, InputProps } from "@repo/ui/src/components/input.tsx";
 import { FilteringSearchWrapper } from "#components/wrappers/components/filtering-search-wrapper";
@@ -18,18 +17,13 @@ const ProfileThreadsFilteringView = reatomComponent(({ ctx }) => {
   const profileThreadsViewState = ctx.spy(profileThreadsSettingsAtom)
 
   return (
-    <DropdownWrapper
-      properties={{
-        sideAlign: "bottom",
-        contentAlign: "end",
-        contentClassname: "w-[200px]",
-      }}
-      trigger={
+    <DropdownMenu>
+      <DropdownMenuTrigger>
         <SelectedWrapper>
           <LayoutGrid size={20} className="text-shark-300" />
         </SelectedWrapper>
-      }
-      content={
+      </DropdownMenuTrigger>
+      <DropdownMenuContent side="bottom" align="end" className="min-w-[200px]">
         <div className="flex flex-col gap-y-2">
           <Typography textSize="small" className="text-shark-300 px-2 pt-2">
             Вид
@@ -55,8 +49,8 @@ const ProfileThreadsFilteringView = reatomComponent(({ ctx }) => {
             ))}
           </div>
         </div>
-      }
-    />
+      </DropdownMenuContent>
+    </DropdownMenu>
   );
 }, "ProfileThreadsFilteringView")
 

@@ -184,7 +184,7 @@ export const UserProfileSettings = reatomComponent(({ ctx }) => {
               <>
                 <Separator className="relative bg-authentic-background brightness-150 mb-2">
                   <Typography className="absolute z-2 -top-0 left-0 text-authentic-background text-[14px]">
-                    only Fasberry+
+                    only Repliq+
                   </Typography>
                 </Separator>
                 <NamecolorOption />

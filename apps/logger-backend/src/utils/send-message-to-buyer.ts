@@ -1,5 +1,5 @@
 import { paymentReceivedMessage } from "../messages/payment-received.ts"
-import { fasberryBot } from "../shared/bot/bot.ts"
+import { repliqBot } from "../shared/bot/bot.ts"
 
 type SendTelegramMessageToBuyer = {
   item: string,
@@ -17,13 +17,13 @@ export async function sendTelegramMessageToBuyer({
     item, orderId, nickname,
   })
 
-  const sendedMessage = await fasberryBot.api.sendMessage({
+  const sendedMessage = await repliqBot.api.sendMessage({
     chat_id: telegramId, text,
   });
 
   const { chat, message_id } = sendedMessage;
 
-  return await fasberryBot.api.setMessageReaction({
+  return await repliqBot.api.setMessageReaction({
     chat_id: chat.id,
     message_id,
     is_big: false,

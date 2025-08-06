@@ -33,7 +33,7 @@ export const UserCoverAvatar = reatomComponent<UserCoverAvatarProps>(({ ctx, cla
   return (
     <UserCoverAvatarWrapper variant={variant} className={className}>
       <Dialog>
-        <DialogTrigger>
+        <DialogTrigger asChild>
           <Avatar url={user.avatar} propHeight={160} propWidth={160} withStatus={true} nickname={nickname} />
         </DialogTrigger>
         <DialogContent withClose={false} className="flex overflow-visible flex-col gap-4 !p-0 lg:!min-w-fit bg-transparent items-center justify-center">

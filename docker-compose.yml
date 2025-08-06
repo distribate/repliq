@@ -33,19 +33,6 @@ services:
   #     - IPC_LOCK
   #   entrypoint: [ "vault", "server", "-config=/vault/config/vault.hcl" ]
 
-  # minio:
-  #   image: minio/minio:latest
-  #   container_name: minio
-  #   ports:
-  #     - "${MINIO_PORT}:${MINIO_PORT}"
-  #     - "${MINIO_CLIENT_PORT}:${MINIO_CLIENT_PORT}"
-  #   environment:
-  #     MINIO_ROOT_USER: ${MINIO_ROOT_USER}
-  #     MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD}
-  #   volumes:
-  #     - ./data/fasberry-external/minio/data:/data
-  #   command: server /data --console-address ":${MINIO_CLIENT_PORT}"
-
   nats:
     container_name: nats
     image: nats:latest

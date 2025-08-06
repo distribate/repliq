@@ -16,7 +16,7 @@ export function deleteCookiesToken(ctx: Context) {
     httpOnly: true,
     sameSite: "None",
     secure: isProduction,
-    domain: SESSION_DOMAIN,
+    domain: isProduction ? SESSION_DOMAIN : "localhost",
     maxAge: 0,
     path: "/",
   })
@@ -36,7 +36,7 @@ async function getSessionDetails(sessionId: string) {
 
 export const invalidateSessionRoute = new Hono()
   .post("/invalidate-session", async (ctx) => {
-    const sessionToken = getCookie(ctx, "session")
+    const sessionToken = getCookie(ctx, SESSION_KEY)
 
     if (!sessionToken) {
       return ctx.json({ error: "Session token not found" }, 401)
@@ -51,7 +51,7 @@ export const invalidateSessionRoute = new Hono()
 
       sessionDetails = await getSessionDetails(sessionId);
 
-      const result = await invalidateSession(sessionToken, sessionId);
+      const result = await invalidateSession({ token: sessionToken, sessionId });
 
       if (!result) {
         return ctx.json({ error: "Internal Server Error" }, 500)

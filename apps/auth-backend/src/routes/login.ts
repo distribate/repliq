@@ -8,7 +8,6 @@ import { setCookie } from "hono/cookie";
 import bcrypt from 'bcryptjs';
 import { getClientIp } from "../utils/get-client-ip.ts";
 import type { Session } from "../types/session-type";
-import type { User } from "../types/session-type.ts"
 import { isProduction } from "@repo/lib/helpers/is-production.ts";
 import { SESSION_DOMAIN, SESSION_KEY } from "../shared/constants/session-details.ts";
 import { validateAuthenticationRequest } from "../lib/validators/validate-authentication-request.ts";
@@ -16,9 +15,11 @@ import { logger } from "@repo/lib/utils/logger.ts";
 import { validateExistsUser } from "../lib/validators/validate-exists-user.ts";
 import { encodeBase32LowerCaseNoPadding } from "@oslojs/encoding";
 import { UAParser } from "ua-parser-js"
+import type { Selectable } from 'kysely';
+import type { Users } from '@repo/types/db/forum-database-types.ts';
 
 export type SessionValidationResult =
-  | { session: Session; user: User }
+  | { session: Session; user: Selectable<Pick<Users, "id" | "nickname">> }
   | { session: null; user: null };
 
 function generateSessionToken(): string {
@@ -100,7 +101,10 @@ export const loginRoute = new Hono()
 
       return ctx.json({ error: "Session not created" }, 500)
     } catch (e) {
-      console.error(e)
+      if (e instanceof Error) {
+        logger.error(e.message)
+      }
+      
       return ctx.json({ error: throwError(e) }, 500)
     }
   })

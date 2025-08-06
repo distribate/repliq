@@ -1,3 +1,4 @@
+import AutogrowingTextarea from "@repo/ui/src/components/autogrowing-textarea";
 import { createIssueSchema } from "@repo/types/schemas/issue/create-issue-schema";
 import { z } from "zod/v4"
 import { createIssueAction, issueTypeAtom, isValidAtom, onChange } from "../models/create-issue.model";
@@ -7,10 +8,9 @@ import { Typography } from "@repo/ui/src/components/typography";
 import { HTMLAttributes } from "react";
 import { BlockWrapper } from "#components/wrappers/components/block-wrapper";
 import { MessageSquareWarning } from "lucide-react";
-import AutogrowingTextarea from "@repo/ui/src/components/autogrowing-textarea";
 import { ISSUE_MAX_DESCRIPTION_LIMIT } from "@repo/shared/constants/limits";
 import { reatomComponent } from "@reatom/npm-react";
-import { IconBrandZapier, IconX } from "@tabler/icons-react";
+import { IconX } from "@tabler/icons-react";
 import { userGlobalOptionsAtom } from "#components/user/models/current-user.model";
 
 type IssueFormType = z.infer<typeof createIssueSchema>;
@@ -146,9 +146,6 @@ export const CreateIssueForm = reatomComponent(({ ctx }) => {
           <IssueType />
           <IssueSubmit />
         </form>
-        <div className="hidden xl:flex items-center w-[500px] h-full rounded-lg overflow-hidden">
-          <IconBrandZapier size={64} />
-        </div>
       </BlockWrapper>
       <BlockWrapper className="flex flex-col gap-2 !p-4 w-full">
         <div className="flex items-center select-none gap-2 w-fit">

@@ -14,7 +14,7 @@ import {
   usePlateState,
 } from '@udecode/plate/react';
 
-import { useIsTouchDevice } from '#hooks/use-is-touch-device';
+import { useIsTouchDevice } from '#plate/hooks/use-is-touch-device';
 
 import {
   ContextMenu,

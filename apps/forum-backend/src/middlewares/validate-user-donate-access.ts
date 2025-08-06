@@ -7,7 +7,7 @@ export const validateUserDonateAccess = () => createMiddleware(async (ctx, next)
   const isValid = await getUserDonate(initiator)
 
   if (!isValid) {
-    return ctx.json({ error: "You must Fasberry+ to access this route" }, 401)  
+    return ctx.json({ error: "You must Repliq+ to access this route" }, 401)  
   }
 
   await next()

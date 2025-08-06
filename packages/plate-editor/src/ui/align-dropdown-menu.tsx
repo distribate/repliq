@@ -11,7 +11,7 @@ import {
   AlignRightIcon,
 } from 'lucide-react';
 
-import { STRUCTURAL_TYPES } from '#lib/transforms.ts';
+import { STRUCTURAL_TYPES } from '#plate/lib/transforms.ts';
 
 import {
   DropdownMenu,

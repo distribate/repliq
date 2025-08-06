@@ -10,7 +10,7 @@ import { originList } from '@repo/shared/constants/origin-list.ts';
 import { loginRoute } from './routes/login.ts';
 import { terminateSessionRoute } from './routes/terminate-session.ts';
 import { getSessionsRoute } from './routes/get-sessions.ts';
-import { getSessionRoute } from './routes/validate-session.ts';
+import { validateSessionRoute } from './routes/validate-session.ts';
 import { timeoutMiddleware } from './middlewares/timeout-middleware.ts';
 import { corsMiddleware } from './middlewares/cors-middleware.ts';
 import type { Env } from './types/env-type.ts';
@@ -21,12 +21,12 @@ import { timing } from 'hono/timing'
 await initNats()
 
 export const auth = new Hono()
+  .route("/", validateSessionRoute)
   .route('/', invalidateSessionRoute)
   .route('/', registerRoute)
   .route("/", loginRoute)
   .route("/", terminateSessionRoute)
   .route("/", getSessionsRoute)
-  .route("/", getSessionRoute)
 
 export const getHealthRoute = new Hono()
   .get("/health", async (ctx) => ctx.body(null, 200))
@@ -50,4 +50,4 @@ const app = new Hono<Env>()
 
 Bun.serve({ port: Bun.env.AUTH_BACKEND_PORT!, fetch: app.fetch });
 
-logger.success(`Fasberry Auth Backend started on ${Bun.env.AUTH_BACKEND_PORT!}`)
+logger.success(`Repliq Auth Backend started on ${Bun.env.AUTH_BACKEND_PORT!}`)

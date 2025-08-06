@@ -5,7 +5,6 @@ import { Button } from "@repo/ui/src/components/button";
 import { ProfileStatsMeta, ProfileViewsDetails } from "@repo/types/routes-types/get-user-profile-stats-types";
 import { BuyDonateModal } from "#components/modals/custom/components/buy-donate-modal";
 import { Avatar } from "#components/user/avatar/components/avatar";
-import { useNavigate } from "@tanstack/react-router";
 import { HTMLAttributes } from "react";
 import dayjs from "@repo/lib/constants/dayjs-instance"
 import { Separator } from "@repo/ui/src/components/separator";
@@ -14,6 +13,7 @@ import { onConnect } from "@reatom/framework";
 import { CustomLink } from "#components/shared/link";
 import { createIdLink } from "@repo/lib/utils/create-link";
 import { getUser } from "#components/user/models/current-user.model";
+import { navigate } from "vike/client/router";
 
 type AccountStatSectionProps = {
   title: string,
@@ -109,14 +109,13 @@ export const ProfileAccountStatsPlayers = ({
 
 export const ProfileAccountStatsDetails = reatomComponent(({ ctx }) => {
   const profileStats = ctx.spy(userProfileStatsResource.dataAtom)
-  const navigate = useNavigate()
 
   const handleRedirect = () => {
     if (!profileStats?.details) {
       return;
     }
 
-    navigate({ to: "/dashboard/profile" })
+    navigate("/dashboard/profile")
   }
 
   return (

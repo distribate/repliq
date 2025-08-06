@@ -1,7 +1,6 @@
 import { Ellipsis, Pen, Pin, Trash } from "lucide-react";
 import { HoverCardItem } from "@repo/ui/src/components/hover-card.tsx";
 import { Separator } from "@repo/ui/src/components/separator.tsx";
-import { DropdownWrapper } from "#components/wrappers/components/dropdown-wrapper";
 import { PostAdditionalModal } from "#components/post/post-item/components/post-additional-modal";
 import { controlPostAction } from "#components/post/post-item/models/control-post.model";
 import { currentUserNicknameAtom } from "#components/user/models/current-user.model.ts";
@@ -13,6 +12,7 @@ import { Typography } from "@repo/ui/src/components/typography.tsx";
 import { Cloud } from "lucide-react";
 import { reatomComponent } from "@reatom/npm-react";
 import { postsDataAtom } from "#components/profile/posts/models/posts.model";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from "@repo/ui/src/components/dropdown-menu";
 
 export type PostControlProps = {
   id: string,
@@ -44,12 +44,12 @@ export const PostControl = reatomComponent<PostControlProps>(({ ctx, id, nicknam
 
   return (
     <div className="w-fit">
-      <DropdownWrapper
-        properties={{ contentAlign: "end", sideAlign: "bottom" }}
-        trigger={
+      <DropdownMenu>
+        <DropdownMenuTrigger>
           <Ellipsis size={22} className="text-shark-200 cursor-pointer" />
-        }
-        content={
+
+        </DropdownMenuTrigger>
+        <DropdownMenuContent side="bottom" align="end">
           <div className="flex flex-col gap-y-2">
             <PostAdditionalModal
               id={post.id}
@@ -95,8 +95,8 @@ export const PostControl = reatomComponent<PostControlProps>(({ ctx, id, nicknam
               </>
             )}
           </div>
-        }
-      />
+        </DropdownMenuContent>
+      </DropdownMenu>
     </div>
   );
 }, "PostControl")

@@ -1,5 +1,5 @@
 import { Typography } from "@repo/ui/src/components/typography";
-import { myThreadsResource, savedThreadsResource } from "../queries/my-threads-query";
+import { myThreadsResource, savedThreadsResource } from "../models/my-threads.model";
 import { reatomComponent } from "@reatom/npm-react";
 import { CustomLink } from "#components/shared/link";
 import { createIdLink } from "@repo/lib/utils/create-link";

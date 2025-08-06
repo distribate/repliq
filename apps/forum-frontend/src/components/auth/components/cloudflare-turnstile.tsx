@@ -1,13 +1,11 @@
-import { reatomComponent } from "@reatom/npm-react"
-import { isProduction } from "@repo/lib/helpers/is-production"
 import Turnstile from "react-turnstile"
+import { reatomComponent } from "@reatom/npm-react"
 import { tokenAtom, turnstileIsOpenAtom } from "../models/auth.model"
 
-const SITE_KEY = "0x4AAAAAAA-stfNqE6yrheDS"
+const SITE_KEY = import.meta.env.PUBLIC_ENV__TURNSTILE_KEY
 
 export const CloudflareTurnstile = reatomComponent(({ ctx }) => {
-  const state = ctx.spy(turnstileIsOpenAtom) && isProduction
-
+  const state = ctx.spy(turnstileIsOpenAtom)
   if (!state) return null;
 
   return (
@@ -17,4 +15,4 @@ export const CloudflareTurnstile = reatomComponent(({ ctx }) => {
       className="self-end"
     />
   )
-})
+}, "CloudflareTurnstile")

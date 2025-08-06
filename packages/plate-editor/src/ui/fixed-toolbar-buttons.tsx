@@ -23,7 +23,7 @@ import {
   UnderlineIcon,
 } from 'lucide-react';
 
-import { MoreDropdownMenu } from '#ui/more-dropdown-menu.tsx';
+import { MoreDropdownMenu } from '#plate/ui/more-dropdown-menu.tsx';
 
 import { AlignDropdownMenu } from './align-dropdown-menu';
 import { ColorDropdownMenu } from './color-dropdown-menu';

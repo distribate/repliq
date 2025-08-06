@@ -3,18 +3,18 @@ import { ContentNotFound } from "#components/templates/components/content-not-fo
 import { onConnect } from "@reatom/framework";
 import { reatomComponent } from "@reatom/npm-react";
 import { Skeleton } from "@repo/ui/src/components/skeleton";
-import { useNavigate } from "@tanstack/react-router";
 import { Avatar } from '#components/user/avatar/components/avatar.tsx';
 import { UserNickname } from '#components/user/name/nickname.tsx';
 import { Separator } from "@repo/ui/src/components/separator.tsx";
 import { Typography } from "@repo/ui/src/components/typography.tsx";
 import dayjs from "dayjs";
-import { DropdownWrapper } from '#components/wrappers/components/dropdown-wrapper.tsx';
 import { Ellipsis } from "lucide-react";
 import { HoverCardItem } from "@repo/ui/src/components/hover-card.tsx";
 import { UserCardModal } from '#components/modals/custom/components/user-card-modal.tsx';
 import { deleteFromBlockedAction } from "../models/blocked.model.ts";
 import { createIdLink } from "@repo/lib/utils/create-link.ts";
+import { navigate } from "vike/client/router";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from "@repo/ui/src/components/dropdown-menu.tsx";
 
 type UserBlockedCardProps = {
   nickname: string,
@@ -24,8 +24,6 @@ type UserBlockedCardProps = {
 };
 
 const UserBlockedCard = reatomComponent<UserBlockedCardProps>(({ ctx, avatar, name_color, nickname, time, }) => {
-  const navigate = useNavigate();
-
   const handleDeleteFromBlocked = (e: React.MouseEvent<HTMLDivElement>, nickname: string) => {
     e.preventDefault();
 
@@ -43,13 +41,13 @@ const UserBlockedCard = reatomComponent<UserBlockedCardProps>(({ ctx, avatar, na
         </Typography>
       </div>
       <div className="w-fit">
-        <DropdownWrapper
-          trigger={
+        <DropdownMenu>
+          <DropdownMenuTrigger>
             <Typography>
               <Ellipsis size={18} className="text-shark-300" />
             </Typography>
-          }
-          content={
+          </DropdownMenuTrigger>
+          <DropdownMenuContent>
             <div className="flex flex-col gap-y-1 w-full *:w-full items-center">
               <HoverCardItem
                 onClick={e => handleDeleteFromBlocked(e, nickname)}
@@ -57,13 +55,13 @@ const UserBlockedCard = reatomComponent<UserBlockedCardProps>(({ ctx, avatar, na
                 <Typography>Удалить из черного списка</Typography>
               </HoverCardItem>
               <Separator />
-              <HoverCardItem onClick={() => navigate({ to: createIdLink("user", nickname) })}>
+              <HoverCardItem onClick={() => navigate(createIdLink("user", nickname))}>
                 <Typography>Перейти к профилю</Typography>
               </HoverCardItem>
               <UserCardModal nickname={nickname} />
             </div>
-          }
-        />
+          </DropdownMenuContent>
+        </DropdownMenu>
       </div>
     </div>
   );

@@ -2,7 +2,7 @@ import { atom } from "@reatom/core";
 import { reatomComponent } from "@reatom/npm-react";
 import { Separator } from "@repo/ui/src/components/separator";
 import { ArrowLeft, ArrowRight, RegexIcon } from "lucide-react";
-import { isExperimentalDesignAtom } from "../default/experimental-layout.model";
+import { isExperimentalDesignAtom } from "../default/experimental-layout";
 
 const devPanelIsOpenAtom = atom(false, "devPanelIsOpen")
 

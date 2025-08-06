@@ -11,7 +11,7 @@
   },
   "license": "MIT",
   "imports": {
-    "#*": "./src/*"
+    "#plate/*": "./src/*"
   },
   "dependencies": {
     "@ariakit/react": "0.4.17",

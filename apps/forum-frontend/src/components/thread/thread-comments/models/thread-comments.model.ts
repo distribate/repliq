@@ -4,7 +4,7 @@ import { reatomAsync, withErrorAtom, withStatusesAtom } from '@reatom/async';
 import { threadParamAtom } from '#components/thread/thread-main/models/thread.model';
 import { forumThreadClient } from '@repo/shared/api/forum-client.ts';
 import { getCommentsSchema } from "@repo/types/schemas/comment/get-comments-schema.ts";
-import { z } from 'zod';
+import { z } from 'zod/v4';
 
 export const threadCommentsDataAtom = atom<Pick<GetThreadCommentsResponse, "data">["data"] | null>(null, "threadCommentsData")
 export const threadCommentsMetaAtom = atom<Pick<GetThreadCommentsResponse, "meta">["meta"] | null>(null, "threadCommentsMeta")

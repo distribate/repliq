@@ -22,7 +22,7 @@ export const ThreadControlTitle = reatomComponent<ThreadControlTitleProps>(({
         ...prev.state,
         isValid: value.length > 2,
       },
-      values: { ...prev.values },
+      values: prev.values,
     }))
   };
 

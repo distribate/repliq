@@ -3,12 +3,12 @@ import { currentUserNicknameAtom } from "#components/user/models/current-user.mo
 import { Button } from "@repo/ui/src/components/button.tsx";
 import { Typography } from "@repo/ui/src/components/typography.tsx";
 import { friendStatusAction, getFriendStatusesAtom } from "../models/friend-status.model";
-import { DeleteFriendButton } from "./detele-friend-button";
+import { DeleteFriendButton } from "./delete-friend-button";
 import { FriendNotAcceptedButton } from "./not-accepted-friend-button";
 import { AddFriendButton } from "./add-friend-button";
 import { IncomingFriendButton } from "./incoming-friend-button";
-import { OutgoingFriendButton } from "./outgoin-friend-button";
-import { ReactNode } from "@tanstack/react-router";
+import { OutgoingFriendButton } from "./outgoing-friend-button";
+import { ReactNode } from "react";
 import { reatomComponent, useUpdate } from "@reatom/npm-react";
 
 type FriendButtonProps = {

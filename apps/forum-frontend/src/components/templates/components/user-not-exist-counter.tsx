@@ -2,7 +2,6 @@ import { Typography } from "@repo/ui/src/components/typography";
 import { reatomComponent, useUpdate } from "@reatom/npm-react";
 import { TimerAtom, reatomTimer } from '@reatom/timer'
 import { atom } from "@reatom/core";
-import { router } from "#main";
 import { createIdLink } from "@repo/lib/utils/create-link";
 
 const redirectTimer = reatomTimer({
@@ -29,7 +28,8 @@ export const UserNotExistCounter = reatomComponent<{ redirectUser: string }>(({
 
     const unsubscribe = redirectTimer.endTimer.onCall((ctx) => {
       const to = redirectUser ? createIdLink("user", redirectUser) : "/";
-      router.navigate({ to });
+      window.location.replace(to)
+      // router.navigate({ to });
     });
 
     return () => {

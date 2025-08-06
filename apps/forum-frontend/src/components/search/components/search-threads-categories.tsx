@@ -9,7 +9,6 @@ const SearchThreadsCategory = ({ id, title, color, emoji }: { id: number, color:
     <CustomLink
       to={CATEGORY_URL + id}
       key={id}
-      // @ts-expect-error
       style={{ backgroundColor: color ?? undefined }}
       className="flex flex-col relative cursor-pointer h-[80px] md:aspect-video hover:bg-shark-700 w-full md:h-full p-3 lg:p-4 rounded-lg bg-shark-950"
     >

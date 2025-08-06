@@ -22,7 +22,7 @@ const FriendOutgoingCard = reatomComponent<ControlFriendRequests>(({
         className="flex min-w-[48px] min-h-[48px] max-h-[48px] max-w-[48px] w-[48px] h-[48px] 
           md:max-w-[112px] md:max-h-[112px] md:min-w-[112px] md:min-h-[112px] md:w-[112px] md:h-[112px]"
       >
-        <Avatar nickname={recipient} propHeight={112} propWidth={112} className="rounded-lg" />
+        <Avatar url={null} nickname={recipient} propHeight={112} propWidth={112} className="rounded-lg" />
       </div>
       <div className="flex flex-col gap-y-1 w-full">
         <div className="flex items-center gap-1 w-fit">

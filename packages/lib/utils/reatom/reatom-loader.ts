@@ -1,6 +1,5 @@
 import { action, Ctx, isAction } from '@reatom/core';
 import { abortCauseContext } from '@reatom/framework';
-import { LoaderFnContext, ParsedLocation } from '@tanstack/react-router';
 
 export interface RouterContext {
   reatomCtx: Ctx;
@@ -9,8 +8,8 @@ export interface RouterContext {
 type Loader = {
   abortController: AbortController;
   context: RouterContext,
-  params: LoaderFnContext['params'];
-  location: ParsedLocation;
+  params: any
+  location: any;
 }
 
 type BaseRouterContext = Pick<Loader, 'abortController' | 'context'>;

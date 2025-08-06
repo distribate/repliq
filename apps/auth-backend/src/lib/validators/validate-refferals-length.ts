@@ -1,6 +1,7 @@
 import type { DB } from "@repo/types/db/forum-database-types";
 import type { Transaction } from "kysely";
-import { REFFERALS_LIMIT } from "../../shared/constants/limits";
+
+export const REFFERALS_LIMIT = 5
 
 type ValidateRefsLength = {
   trx: Transaction<DB>,

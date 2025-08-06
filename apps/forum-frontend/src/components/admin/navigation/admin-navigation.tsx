@@ -1,4 +1,35 @@
-import { AdminNavigationBadge } from "./admin-navigation-badge.tsx";
+import { NavigationBadge } from "#components/shared/navigation/components/navigation-badge";
+import { atom } from "@reatom/core";
+import { reatomComponent } from "@reatom/npm-react";
+import { navigate } from "vike/client/router"
+
+export type AdminSections = "reports" | "tickets" | "stats"
+
+type AdminNavigationBadgeProps = {
+  title: string;
+  paramValue: AdminSections | null;
+};
+
+const adminSectionParamAtom = atom("")
+
+const AdminNavigationBadge = reatomComponent<AdminNavigationBadgeProps>(({ ctx, title, paramValue }) => {
+  const section = ctx.spy(adminSectionParamAtom)
+
+  const handleSection = () => {
+    if (!paramValue) {
+      return navigate(`/admin`);
+    }
+
+    navigate(`/admin?section=${paramValue}`)
+  };
+
+  const isActive = (): "active" | "inactive" => {
+    if (!paramValue && !section) return "active"
+    return paramValue === section ? "active" : "inactive"
+  };
+
+  return <NavigationBadge onClick={handleSection} data-state={isActive()} title={title} />
+}, "AdminNavigationBadge")
 
 export const AdminNavigation = () => {
   return (
