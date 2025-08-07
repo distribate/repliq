@@ -3,7 +3,7 @@ import { createFriendRequest } from "#lib/queries/friend/create-friend-request.t
 import { getUserFriendPreference } from "#lib/queries/user/get-user-friend-preference.ts";
 import { zValidator } from "@hono/zod-validator";
 import { Hono } from "hono";
-import { z } from "zod/v4";
+import * as z from "zod";
 
 const addFriendSchema = z.object({
   recipient: z.string(),

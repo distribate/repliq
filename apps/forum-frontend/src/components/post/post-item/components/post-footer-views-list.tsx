@@ -8,7 +8,6 @@ import { UserNickname } from "#components/user/name/nickname";
 import { Typography } from "@repo/ui/src/components/typography.tsx";
 import dayjs from "@repo/lib/constants/dayjs-instance.ts";
 import { PostFooterViews } from "#components/post/post-item/components/post-footer-views.tsx";
-import { UserEntity } from "@repo/types/entities/entities-type.ts";
 import { UserPostItem } from '@repo/types/routes-types/get-user-posts-types.ts';
 import { reatomComponent, useUpdate } from "@reatom/npm-react";
 import { CustomLink } from "#components/shared/link";
@@ -30,7 +29,7 @@ const PostFooterViewsListSkeleton = () => {
 const PostViewCard = ({
   nickname,
   created_at: viewCreatedAt,
-}: Pick<UserEntity, "nickname" | "created_at">) => {
+}: { nickname: string, created_at: string | Date }) => {
   return (
     <div
       key={nickname}

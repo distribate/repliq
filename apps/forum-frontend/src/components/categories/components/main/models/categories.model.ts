@@ -1,5 +1,5 @@
 import { reatomResource, withCache, withDataAtom, withStatusesAtom } from "@reatom/async";
-import { forumCategoriesClient } from "@repo/shared/api/forum-client";
+import { forumCategoriesClient } from "#shared/forum-client";
 
 async function getMainCategoriesWithThreads() {
   const res = await forumCategoriesClient.categories["get-latest-category-threads"].$get();

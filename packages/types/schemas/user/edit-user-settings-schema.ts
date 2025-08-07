@@ -1,4 +1,4 @@
-import { z } from 'zod/v4';
+import * as z from "zod";
 import type { UsersSettings } from '../../db/forum-database-types.ts';
 
 export type UserSettingsKeys = keyof Omit<UsersSettings, 'id' | 'user_id'>

@@ -1,4 +1,3 @@
-import { AlertEntity } from "@repo/types/entities/entities-type.ts";
 import { Typography } from "@repo/ui/src/components/typography.tsx";
 import { Skeleton } from "@repo/ui/src/components/skeleton";
 import { UserNickname } from "#components/user/name/nickname";
@@ -13,6 +12,18 @@ import { createIdLink } from "@repo/lib/utils/create-link";
 const AlertClose = reatomComponent(({ ctx }) => {
   return <DeleteButton variant="invisible" onClick={() => updateVisibilityAction(ctx, "alerts")} />;
 }, "AlertClose")
+
+type AlertEntity = {
+  id: number,
+  link: string | null,
+  creator: {
+    nickname: string,
+    avatar: string | null
+  }
+  created_at: string | Date,
+  title: string,
+  description: string | null
+}
 
 const AlertCard = ({
   title, creator, link

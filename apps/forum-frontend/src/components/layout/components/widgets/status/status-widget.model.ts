@@ -1,6 +1,6 @@
 import { globalPreferencesAtom } from "#components/user/settings/main/models/update-global-preferences.model"
 import { reatomResource, withCache, withDataAtom, withStatusesAtom } from "@reatom/async"
-import { forumSharedClient } from "@repo/shared/api/forum-client"
+import { forumSharedClient } from "#shared/forum-client"
 
 async function getServerStatus() {
   const res = await forumSharedClient.shared["get-status"].$get({ query: { type: "servers" }})

@@ -1,8 +1,12 @@
 {
   "extends": "@repo/config-typescript/base.json",
-  "include": ["**/*.ts", "*.ts"],
-  "files": ["../../packages/types/global.d.ts"],
-  "exclude": ["node_modules"],
+  "include": [
+    "."
+  ],
+  "exclude": [
+    "node_modules",
+    "dist"
+  ],
   "compilerOptions": {
     "jsx": "preserve",
     "module": "ESNext",

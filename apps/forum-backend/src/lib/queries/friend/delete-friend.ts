@@ -1,6 +1,6 @@
 import { forumDB } from "#shared/database/forum-db.ts";
 import type { deleteFriendSchema } from "@repo/types/schemas/friend/delete-friend-schema";
-import type { z } from "zod/v4";
+import * as z from "zod";
 
 type DeleteFriend = z.infer<typeof deleteFriendSchema> & {
   nickname: string

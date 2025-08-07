@@ -1,4 +1,4 @@
-import { z } from "zod/v4";
+import * as z from "zod";
 
 export const createCommentSchema = z.object({
   parent_type: z.enum(["thread", "post"]),

@@ -1,5 +1,5 @@
 import { createThreadSchema, threadCategorySchema, threadContentSchema, threadTitleSchema } from "@repo/types/schemas/thread/create-thread-schema.ts";
-import { z } from "zod/v4";
+import * as z from "zod";
 import { Value } from "@udecode/plate";
 import { action, atom, Ctx } from "@reatom/core";
 import { reatomAsync, reatomMap, reatomResource, sleep, withCache, withConcurrency, withDataAtom, withReset, withStatusesAtom } from "@reatom/framework";
@@ -9,7 +9,7 @@ import { THREAD_TAGS_LIMIT } from "@repo/shared/constants/limits";
 import { ChangeEvent } from "react";
 import { THREAD_IMAGES_LIMIT_DEFAULT } from "@repo/shared/constants/limits";
 import { currentUserAtom } from "#components/user/models/current-user.model";
-import { forumCategoriesClient } from "@repo/shared/api/forum-client";
+import { forumCategoriesClient } from "#shared/forum-client";
 import { FastAverageColor } from 'fast-average-color';
 
 type ThreadForm = Omit<z.infer<typeof createThreadSchema>,

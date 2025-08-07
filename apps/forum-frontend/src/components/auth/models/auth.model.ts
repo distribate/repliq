@@ -2,10 +2,10 @@ import { action, atom, Ctx } from "@reatom/core";
 import { withComputed, withInit, withReset } from "@reatom/framework";
 import { toast } from "sonner";
 import { reatomAsync, withStatusesAtom } from "@reatom/async";
-import { authClient } from "@repo/shared/api/auth-client";
+import { authClient } from "#shared/auth-client";
 import { findoutSchema, registerSchema, nicknameSchema, passwordSchema } from '@repo/types/schemas/auth/create-session-schema.ts';
 import { isProduction } from "@repo/lib/helpers/is-production";
-import { z } from "zod/v4";
+import * as z from "zod";
 import { createIdLink } from "@repo/lib/utils/create-link";
 import {
   LOGIN_MESSAGES,

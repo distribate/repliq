@@ -2,7 +2,7 @@ import { getPostsControlAtom } from "#components/post/post-item/models/post-cont
 import { toast } from "sonner";
 import { reatomAsync, withStatusesAtom } from "@reatom/async";
 import { atom } from "@reatom/core";
-import { forumCommentClient, forumPostClient } from "@repo/shared/api/forum-client";
+import { forumCommentClient, forumPostClient } from "#shared/forum-client";
 import { postsDataAtom } from "#components/profile/posts/models/posts.model";
 
 type ControlPostActionType = "delete" | "edit" | "pin" | "comments";

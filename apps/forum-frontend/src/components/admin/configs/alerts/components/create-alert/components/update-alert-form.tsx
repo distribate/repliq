@@ -1,4 +1,3 @@
-import { AlertEntity } from "@repo/types/entities/entities-type.ts";
 import { Input } from "@repo/ui/src/components/input.tsx";
 import { Button } from "@repo/ui/src/components/button.tsx";
 import { Typography } from "@repo/ui/src/components/typography.tsx";
@@ -8,6 +7,18 @@ import { reatomAsync, sleep, withConcurrency, withStatusesAtom } from "@reatom/f
 import { reatomComponent, useUpdate } from "@reatom/npm-react";
 import { AlertValues } from "./create-alert-form";
 import { toast } from "sonner";
+
+type AlertEntity = {
+  id: number,
+  link: string | null,
+  creator: {
+    nickname: string,
+    avatar: string | null
+  }
+  created_at: string | Date,
+  title: string,
+  description: string | null
+}
 
 const alertFormTitle = atom("", "alertFormTitle")
 const alertFormDescAtom = atom("", "alertFormDesc")

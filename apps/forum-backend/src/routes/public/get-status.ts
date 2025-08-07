@@ -6,7 +6,7 @@ import { logger } from "@repo/lib/utils/logger";
 import { SERVER_USER_EVENT_SUBJECT } from "@repo/shared/constants/nats-subjects";
 import { Hono } from "hono";
 import ky from "ky";
-import { z } from "zod/v4";
+import * as z from "zod";
 
 type ServerStatus = {
   online: boolean;

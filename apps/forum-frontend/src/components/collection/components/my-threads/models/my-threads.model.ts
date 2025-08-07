@@ -1,22 +1,24 @@
-import { getThreadsUser } from "#components/profile/threads/models/profile-threads.model";
-import { currentUserAtom } from "#components/user/models/current-user.model";
-import { reatomResource, withDataAtom, withStatusesAtom } from "@reatom/async";
-import { forumUserClient } from "@repo/shared/api/forum-client";
+import { reatomAsync, withDataAtom, withStatusesAtom } from "@reatom/async";
+import { forumUserClient } from "#shared/forum-client";
 
-export const myThreadsResource = reatomResource(async (ctx) => {
-  const nickname = ctx.spy(currentUserAtom)?.nickname
-  if (!nickname) return;
-
-  return await ctx.schedule(() => getThreadsUser({ nickname }))
-}, "myThreadsResource").pipe(withDataAtom(), withStatusesAtom())
+async function getMyThreads() {
+  const res = await forumUserClient.user["get-my-threads"].$get();
+  const data = await res.json()
+  if ("error" in data) throw new Error(data.error)
+  return data.data;
+}
 
 async function getSavedThreads() {
   const res = await forumUserClient.user["get-saved-threads"].$get()
   const data = await res.json()
-  if ("error" in data) return null
+  if ("error" in data) throw new Error(data.error)
   return data.data;
 }
 
-export const savedThreadsResource = reatomResource(async (ctx) => {
+export const myThreadsAction = reatomAsync(async (ctx) => {
+  return await ctx.schedule(() => getMyThreads())
+}, "myThreadsAction").pipe(withDataAtom(), withStatusesAtom())
+
+export const savedThreadsAction = reatomAsync(async (ctx) => {
   return await ctx.schedule(() => getSavedThreads())
-}, "savedThreadsResource").pipe(withDataAtom(), withStatusesAtom())
+}, "savedThreadsAction").pipe(withDataAtom(), withStatusesAtom())

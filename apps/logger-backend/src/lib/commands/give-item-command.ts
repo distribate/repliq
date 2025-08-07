@@ -1,4 +1,4 @@
-import { z } from "zod/v4"
+import * as z from "zod"
 import { getNatsConnection } from "@repo/config-nats/nats-client";
 import { SERVER_USER_EVENT_SUBJECT } from "@repo/shared/constants/nats-subjects";
 import { validateRequest } from "../../utils/validate-request";

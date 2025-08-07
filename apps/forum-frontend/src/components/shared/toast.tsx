@@ -10,12 +10,12 @@ const TOAST_ICONS = {
 
 const toastOptions = {
   classNames: {
-    error: "bg-black/80 !text-base !gap-4 !font-semibold text-shark-50 border-2 border-shark-700 rounded-lg",
+    error: "!bg-shark-50 !text-md !gap-2 !font-semibold !text-shark-950 !border-2 !border-shark-200 !rounded-lg",
     success:
-      "bg-black/80 !text-base !gap-4 !font-semibold text-shark-50 border-2 border-shark-700 rounded-lg",
+      "!bg-shark-50 !text-md !gap-2 !font-semibold !text-shark-950 !border-2 !border-shark-200 !rounded-lg",
     warning:
-      "bg-black/80 !text-base !gap-4 !font-semibold text-shark-50 border-2 border-shark-700 rounded-lg",
-    info: "bg-black/80 !text-base !gap-4 !font-semibold text-shark-50 border-2 border-shark-700 rounded-lg",
+      "!bg-shark-50 !text-md !gap-2 !font-semibold !text-shark-950 !border-2 !border-shark-200 !rounded-lg",
+    info: "!bg-shark-50 !text-md !gap-2 !font-semibold !text-shark-950 !border-2 !border-shark-200 !rounded-lg",
   },
 }
 

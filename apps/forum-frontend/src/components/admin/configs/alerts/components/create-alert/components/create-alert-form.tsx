@@ -3,7 +3,18 @@ import { Input } from "@repo/ui/src/components/input.tsx";
 import { Button } from "@repo/ui/src/components/button.tsx";
 import { Typography } from "@repo/ui/src/components/typography.tsx";
 import { DialogClose } from "@repo/ui/src/components/dialog.tsx";
-import { AlertEntity } from "@repo/types/entities/entities-type.ts";
+
+type AlertEntity = {
+  id: number,
+  link: string | null,
+  creator: {
+    nickname: string,
+    avatar: string | null
+  }
+  created_at: string | Date,
+  title: string,
+  description: string | null
+}
 
 export type AlertValues = Pick<AlertEntity, "title" | "description" | "link">;
 

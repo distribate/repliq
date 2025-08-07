@@ -1,6 +1,6 @@
 import { reatomResource, withCache, withDataAtom, withStatusesAtom } from "@reatom/async"
 import { atom } from "@reatom/core"
-import { forumCategoriesClient } from "@repo/shared/api/forum-client"
+import { forumCategoriesClient } from "#shared/forum-client"
 
 async function getCategory(id: string) {
   const res = await forumCategoriesClient.categories["get-category"][":id"].$get({ param: { id } })

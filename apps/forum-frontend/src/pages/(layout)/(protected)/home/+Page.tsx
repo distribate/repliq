@@ -47,7 +47,7 @@ const About = () => {
   )
 }
 
-const Home = reatomComponent(({ ctx }) => {
+export default function HomePage() {
   return (
     <main className="flex flex-col w-full gap-2 h-full">
       <Alerts />
@@ -79,8 +79,4 @@ const Home = reatomComponent(({ ctx }) => {
       </div>
     </main>
   )
-}, "Home")
-
-export default function HomePage() {
-  return <Home />
 }

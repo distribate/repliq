@@ -1,7 +1,6 @@
 import { Typography } from "@repo/ui/src/components/typography.tsx";
-import { UserEntity } from "@repo/types/entities/entities-type.ts";
 
-type UserRealNameProps = Pick<UserEntity, "real_name"> & {
+type UserRealNameProps = { real_name: string } & {
   with_annotation?: boolean;
 };
 

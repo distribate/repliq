@@ -1,7 +1,5 @@
 import { myFriendsDataAtom, myFriendsPinnedDataAtom } from "#components/friends/models/friends.model";
-import { FriendNotesEntity } from "@repo/types/entities/entities-type.ts";
-import { FriendPinnedEntity } from "@repo/types/entities/entities-type.ts";
-import { forumUserClient } from "@repo/shared/api/forum-client";
+import { forumUserClient } from "#shared/forum-client";
 import { reatomAsync, withStatusesAtom } from "@reatom/async";
 import { atom } from "@reatom/core";
 import { toast } from "sonner";
@@ -22,6 +20,12 @@ type ControlFriendProperties = ControFriendShip
 type SetFriendNote = ControlFriendProperties & {
   note: string;
 };
+
+type FriendNotesEntity = {
+  friend_id: string,
+  note: string | null,
+  recipient: string
+}
 
 type SetPinFriend = Pick<FriendPinnedEntity, "friend_id" | "recipient">;
 

@@ -10,12 +10,11 @@ import {
 import { Typography } from "@repo/ui/src/components/typography.tsx";
 import { Separator } from "@repo/ui/src/components/separator.tsx";
 import { Button } from "@repo/ui/src/components/button.tsx";
-import { UserEntity } from "@repo/types/entities/entities-type.ts";
 import { reatomComponent } from "@reatom/npm-react";
 import { spawn } from "@reatom/framework";
 import { updateCurrentUserAction } from "../models/update-current-user.model";
 
-type NicknameColorPickerProps = Pick<UserEntity, "nickname" | "name_color">;
+type NicknameColorPickerProps = { nickname: string, name_color: string }
 
 const parseHexToHSL = (H: string): string => {
   let r: number, g: number, b: number;

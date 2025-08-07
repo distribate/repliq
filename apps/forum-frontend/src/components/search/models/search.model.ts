@@ -6,7 +6,7 @@ import {
 } from "#components/search/models/search-page.model";
 import { SEARCH_PAGE_LIMIT } from "@repo/shared/constants/limits.ts";
 import { reatomAsync, withStatusesAtom } from "@reatom/async";
-import { forumSearchClient } from "@repo/shared/api/forum-client";
+import { forumSearchClient } from "#shared/forum-client";
 
 type GetSearchResults = {
   query: string;

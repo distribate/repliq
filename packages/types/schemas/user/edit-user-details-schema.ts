@@ -1,4 +1,4 @@
-import { z } from 'zod/v4';
+import * as z from "zod";
 
 const realNameSchema = z.string().min(1).nullable()
 

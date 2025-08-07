@@ -1,4 +1,4 @@
-import { z } from 'zod/v4';
+import * as z from "zod";
 import { isProduction } from "../../../lib/helpers/is-production";
 
 export const tokenSchema = isProduction ? z.string() : z.nullable(z.string())

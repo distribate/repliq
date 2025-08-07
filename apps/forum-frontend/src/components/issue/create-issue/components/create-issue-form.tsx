@@ -1,6 +1,6 @@
 import AutogrowingTextarea from "@repo/ui/src/components/autogrowing-textarea";
 import { createIssueSchema } from "@repo/types/schemas/issue/create-issue-schema";
-import { z } from "zod/v4"
+import * as z from "zod"
 import { createIssueAction, issueTypeAtom, isValidAtom, onChange } from "../models/create-issue.model";
 import { Input } from "@repo/ui/src/components/input";
 import { Button } from "@repo/ui/src/components/button";

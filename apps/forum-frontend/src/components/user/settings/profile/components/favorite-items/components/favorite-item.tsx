@@ -1,12 +1,11 @@
 import { Typography } from "@repo/ui/src/components/typography.tsx";
 import { cva, VariantProps } from "class-variance-authority";
 import { forwardRef, HTMLAttributes } from "react";
-import { MinecraftItemEntity } from "@repo/types/entities/entities-type.ts";
 import { reatomComponent } from "@reatom/npm-react";
 import { updateCurrentUserAction } from "../../../models/update-current-user.model";
 import { getUser } from "#components/user/models/current-user.model";
 
-type FavoriteItem = MinecraftItemEntity;
+type FavoriteItem = any;
 
 const minecraftItemVariants = cva(
   "flex group relative max-w-[256px] max-h-[112px] overflow-hidden items-center justify-center",

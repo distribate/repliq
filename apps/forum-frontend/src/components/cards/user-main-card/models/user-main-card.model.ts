@@ -3,7 +3,7 @@ import { reatomResource, withDataAtom, withErrorAtom, withStatusesAtom } from "@
 import { action, atom } from "@reatom/core";
 import { sleep } from "@reatom/framework";
 import { createIdLink } from "@repo/lib/utils/create-link";
-import { forumUserClient } from "@repo/shared/api/forum-client";
+import { forumUserClient } from "#shared/forum-client";
 
 async function getUserSummary(nickname: string) {
   const res = await forumUserClient.user["get-user-summary"][":nickname"].$get({ param: { nickname } });

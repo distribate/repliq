@@ -1,7 +1,7 @@
 import { getNatsConnection } from "@repo/config-nats/nats-client"
 import { LOGS_ADMIN_SUBJECT } from "@repo/shared/constants/nats-subjects"
 import { sendInLoggerBot } from "../utils/send-logs"
-import { z } from "zod/v4"
+import * as z from "zod"
 import { format, FormattableString } from "gramio"
 import dayjs from "@repo/lib/constants/dayjs-instance"
 import { logger } from "@repo/lib/utils/logger"

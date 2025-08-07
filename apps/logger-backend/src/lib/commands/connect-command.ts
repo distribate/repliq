@@ -1,7 +1,7 @@
 import { Kvm } from '@nats-io/kv';
 import { getNatsConnection } from '@repo/config-nats/nats-client';
 import { forumDB } from '../../shared/database/forum-db';
-import { bold, Bot, format } from 'gramio';
+import { bold, Bot, DeriveDefinitions, format, MessageContext } from 'gramio';
 import { CONNECT_SOCIAL_SUBJECT } from "@repo/shared/constants/nats-subjects"
 
 async function connectUser(userId: number, nickname: string) {
@@ -20,14 +20,13 @@ type ConnectServicePayload = {
 }
 
 export function connectUserCommand(bot: Bot) {
-  bot.command("connect", async (ctx) => {
-    if (!ctx.from) return
+  async function handleConnect(ctx: MessageContext<Bot<{}, DeriveDefinitions>>, token: string) {
+    if (!ctx.from) return;
 
     const userId = ctx.from.id
-    const token = ctx.args
-
+    
     if (!token) return ctx.reply('Укажите токен')
-  
+
     const nc = getNatsConnection()
     const kvm = new Kvm(nc)
     const kv = await kvm.open("connect_tokens")
@@ -56,5 +55,27 @@ export function connectUserCommand(bot: Bot) {
     const text = format`🐈‍⬛ ྀི Ваш аккаунт теперь привязан к пользователю ${bold(payload.nickname)}!`
 
     await ctx.reply(text)
+  }
+
+  bot.command("connect", async (ctx) => {
+    const token = ctx.args
+    if (!token) return ctx.reply('Укажите токен')
+  
+    await handleConnect(ctx, token)
   })
+
+  bot.command("start", async (ctx) => {
+    const startPayload = ctx.startPayload;
+    if (!startPayload) return;
+
+    const payload = startPayload.toString()
+
+    if (!payload.startsWith("connect_")) {
+      return;
+    }
+
+    const token = payload.slice("connect_".length);
+
+    await handleConnect(ctx, token);
+  });
 }

@@ -1,12 +1,10 @@
 import { reatomAsync, withDataAtom, withStatusesAtom } from "@reatom/async";
 import { threadParamAtom } from "#components/thread/thread-main/models/thread.model";
-import { forumThreadClient } from "@repo/shared/api/forum-client";
+import { forumThreadClient } from "#shared/forum-client";
+import { toast } from "sonner";
 
 export const getThreadImages = async (id: string) => {
-  const res = await forumThreadClient.thread["get-thread-images"][":id"].$get({
-    param: { id },
-  });
-
+  const res = await forumThreadClient.thread["get-thread-images"][":id"].$get({ param: { id }});
   const data = await res.json();
 
   if (!data || "error" in data) {
@@ -21,4 +19,11 @@ export const threadImagesAction = reatomAsync(async (ctx) => {
   if (!target) return;
 
   return await ctx.schedule(() => getThreadImages(target))
-}, "threadImagesAction").pipe(withDataAtom(), withStatusesAtom())
+}, {
+  name: "threadImagesAction",
+  onReject: (_, e) => {
+    if (import.meta.env.DEV) {
+      e instanceof Error && toast.error(e.message)
+    }
+  }
+}).pipe(withDataAtom(), withStatusesAtom())

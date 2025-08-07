@@ -142,12 +142,7 @@ async function getRandomUsers(nickname: string) {
   return randomUsers
 }
 
-type RecommendedFriendsGlobal = {
-  byLands: UnwrapPromise<ReturnType<typeof getSimilarUsersByLand>>,
-  byFriends: UnwrapPromise<ReturnType<typeof getSimilarUsersByFriends>>
-}
-
-type RecommendedFriendsIndividual = Array<{ nickname: string; name_color: string }>
+type RecommendedFriends = Array<{ nickname: string; name_color: string }>
 
 export const getRecommendedFriendsRoute = new Hono()
   .get("/get-recommended-friends", async (ctx) => {
@@ -156,7 +151,7 @@ export const getRecommendedFriendsRoute = new Hono()
     try {
       const currentFriendsCount = await getUserFriendsCount(nickname)
 
-      let data: RecommendedFriendsIndividual | RecommendedFriendsGlobal | null = null
+      let data: RecommendedFriends | null = null
 
       if (currentFriendsCount <= 1) {
         const randomUsers = await getRandomUsers(nickname)
@@ -164,12 +159,12 @@ export const getRecommendedFriendsRoute = new Hono()
         data = randomUsers
       } else {
         try {
-          const [usersByLands, friendsOfFriends] = await Promise.all([
-            getSimilarUsersByLand(nickname),
-            getSimilarUsersByFriends(nickname),
-          ])
+          // const [usersByLands, friendsOfFriends] = await Promise.all([
+          //   getSimilarUsersByLand(nickname),
+          //   getSimilarUsersByFriends(nickname),
+          // ])
 
-          data = { byLands: usersByLands, byFriends: friendsOfFriends }
+          // data = { byLands: usersByLands, byFriends: friendsOfFriends }
         } catch (e) {
           console.error(e)
           const randomUsers = await getRandomUsers(nickname)

@@ -1,9 +1,11 @@
 import { profileThreadsSettingsAtom } from "#components/profile/threads/models/profile-threads-settings.model";
 import { getThreadsUser, threadsAtom } from "#components/profile/threads/models/profile-threads.model";
 import { reatomAsync } from "@reatom/async";
-import { ThreadEntity } from "@repo/types/entities/entities-type.ts";
 
-export type UserThreads = Pick<ThreadEntity, "id" | "title" | "created_at"> & {
+export type UserThreads = {
+  id: string,
+  title: string,
+  created_at: string | Date,
   comments_count: number;
 };
 

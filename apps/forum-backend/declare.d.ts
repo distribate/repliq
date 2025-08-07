@@ -32,6 +32,8 @@ declare module "bun" {
 
     SUPABASE_SERVICE_ROLE_KEY: string;
     NEXT_PUBLIC_SUPABASE_URL: string
+
+    REPLIQ_BOT_USERNAME: string;
   }
 }
 

@@ -1,5 +1,4 @@
 import { Typography } from "@repo/ui/src/components/typography.tsx";
-import { ProfileVisibilityEnum } from '@repo/types/entities/entities-type.ts';
 import { LockKeyhole, LockOpen } from "lucide-react";
 import { reatomComponent } from "@reatom/npm-react";
 import { spawn } from "@reatom/framework";
@@ -9,7 +8,7 @@ import { getUser } from "#components/user/models/current-user.model";
 export const ProfileVisibilityChange = reatomComponent(({ ctx }) => {
   const profile_visibility = getUser(ctx).preferences.profile_visibility
 
-  const handleProfileVisibility = (value: ProfileVisibilityEnum) => {
+  const handleProfileVisibility = (value: "all" | "friends") => {
     if (profile_visibility === value) return;
 
     void spawn(ctx, async (spawnCtx) => updateCurrentUserSettingsAction(spawnCtx, {

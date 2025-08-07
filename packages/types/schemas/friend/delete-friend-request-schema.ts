@@ -1,4 +1,4 @@
-import { z } from "zod/v4";
+import * as z from "zod";
 
 export const deleteFriendRequestSchema = z.object({
   request_id: z.string(),

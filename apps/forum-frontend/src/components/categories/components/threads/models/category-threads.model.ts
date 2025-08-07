@@ -1,4 +1,4 @@
-import { forumCategoriesClient } from '@repo/shared/api/forum-client.ts';
+import { forumCategoriesClient } from '#shared/forum-client.ts';
 import { reatomAsync, withDataAtom, withStatusesAtom } from '@reatom/async';
 import { atom } from '@reatom/core';
 

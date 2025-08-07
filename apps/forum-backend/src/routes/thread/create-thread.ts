@@ -1,7 +1,7 @@
 import { throwError } from '@repo/lib/helpers/throw-error.ts';
 import { getNickname } from "#utils/get-nickname-from-storage.ts";
 import { Hono } from "hono";
-import { z } from "zod/v4";
+import * as z from "zod";
 import { createThreadSchema } from "@repo/types/schemas/thread/create-thread-schema";
 import { decode } from "cbor-x";
 import type { CreateThreadResponse } from "@repo/types/routes-types/create-thread-types";

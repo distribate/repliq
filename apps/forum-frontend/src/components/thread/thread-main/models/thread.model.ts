@@ -1,25 +1,22 @@
 import { threadImagesAction } from "#components/thread/thread-images/models/thread-images.model";
 import { threadReactionsAction } from "#components/thread/thread-reactions/models/thread-reactions.model";
 import { currentUserNicknameAtom } from "#components/user/models/current-user.model";
-import { reatomAsync, withStatusesAtom } from "@reatom/async";
-import { atom, Ctx } from "@reatom/core";
+import { action, atom, batch } from "@reatom/core";
 import { withReset } from "@reatom/framework";
-import { withHistory } from "@repo/lib/utils/reatom/with-history";
-import { forumThreadClient } from "@repo/shared/api/forum-client";
+import { withHistory } from '#lib/with-history';
+import { forumThreadClient } from "#shared/forum-client";
 import { ThreadDetailed, ThreadOwner } from "@repo/types/entities/thread-type";
 
 export async function getThreadModel(
   threadId: string,
   { headers }: RequestInit
 ) {
-  const res = await forumThreadClient.thread['get-thread'][':threadId'].$get(
-    { param: { threadId }}, 
-    { init: { headers } }
-  );
-
+  const res = await forumThreadClient.thread['get-thread'][':threadId'].$get({ param: { threadId } }, { init: { headers } });
   const data = await res.json();
 
-  if (!data || 'error' in data) return null;
+  if ('error' in data) {
+    throw new Error(data.error)
+  }
 
   return data.data;
 }
@@ -37,12 +34,6 @@ export const threadPropertiesAtom = atom<ThreadDetailed["properties"] | null>(nu
 export const threadModeAtom = atom<"read" | "edit">("read", "threadMode")
 export const threadIsEditableAtom = atom(false, "threadIsEditable")
 
-export function resetThread(ctx: Ctx) {
-  threadAtom.reset(ctx)
-  threadOwnerAtom.reset(ctx)
-  threadContentAtom.reset(ctx)
-}
-
 threadOwnerAtom.onChange((ctx, state) => {
   if (!state) return;
 
@@ -55,23 +46,19 @@ threadOwnerAtom.onChange((ctx, state) => {
   threadIsEditableAtom(ctx, isAllowed)
 })
 
-export const defineThread = reatomAsync(async (ctx, target: ThreadDetailed) => {
-  return target;
-}, {
-  name: "defineThreadAction",
-  onFulfill: (ctx, res) => {
-    const { owner, content, properties, ...rest } = res;
+export const defineThread = action((ctx, target: ThreadDetailed) => {
+  const { owner, content, properties, ...rest } = target;
 
-    threadReactionsAction(ctx, res.id)
+  if (target.images_count >= 1) {
+    threadImagesAction(ctx)
+  }
 
-    if (res.images_count >= 1) {
-      threadImagesAction(ctx)
-    }
-
+  batch(ctx, () => {
+    threadReactionsAction(ctx, target.id)
     threadParamAtom(ctx, rest.id)
     threadOwnerAtom(ctx, owner)
     threadContentAtom(ctx, content)
     threadPropertiesAtom(ctx, properties)
     threadAtom(ctx, rest)
-  }
-}).pipe(withStatusesAtom())
+  })
+}, "defineThread")

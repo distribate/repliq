@@ -1,4 +1,4 @@
-import { z } from 'zod/v4';
+import * as z from "zod";
 import { donateSchema } from '../entities/donate-schema';
 import { currencyCryptoSchema, currencyFiatSchema } from '../entities/currencies-schema';
 

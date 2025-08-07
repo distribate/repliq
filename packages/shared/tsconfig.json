@@ -1,8 +1,11 @@
 {
 	"extends": "@repo/config-typescript/base.json",
 	"include": [
-		".", 
-		"../lib/constants/dayjs-instance.ts",
+		".", "../../apps/forum-frontend/src/shared/auth-client.ts", "../../apps/forum-frontend/src/shared/init.ts",
+	],
+	"exclude": [
+		"node_modules",
+		"dist"
 	],
 	"compilerOptions": {
 		"jsx": "react-jsx",

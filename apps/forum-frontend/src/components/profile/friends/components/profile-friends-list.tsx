@@ -1,6 +1,6 @@
 import { ContentNotFound } from "#components/templates/components/content-not-found";
 import { friendsSortAtom } from "#components/profile/friends/models/friends-sort.model";
-import { ProfileFriendsFiltering } from "#components/profile/friends/components/profile-friends-filtering.tsx";
+// import { ProfileFriendsFiltering } from "#components/profile/friends/components/profile-friends-filtering.tsx";
 import { type Friend } from '@repo/types/schemas/friend/friend-types';
 import { SomethingError } from "#components/templates/components/something-error";
 import { SectionSkeleton } from "#components/templates/components/section-skeleton";
@@ -88,7 +88,7 @@ const ProfileFriendsList = reatomComponent(({ ctx }) => {
 export const ProfileFriends = () => {
   return (
     <div className="flex flex-col gap-4 w-full h-full">
-      <ProfileFriendsFiltering />
+      {/* <ProfileFriendsFiltering /> */}
       <ProfileFriendsList />
     </div>
   );

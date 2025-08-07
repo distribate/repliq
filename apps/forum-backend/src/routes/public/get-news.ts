@@ -6,7 +6,7 @@ import { getPublicUrl } from "#utils/get-public-url.ts";
 import { STATIC_IMAGES_BUCKET } from "@repo/shared/constants/buckets";
 import { getNewsSchema } from "@repo/types/schemas/news/get-news-schema";
 import { executeWithCursorPagination } from "kysely-paginate";
-import { z } from "zod/v4";
+import * as z from "zod";
 
 type GetNews = z.infer<typeof getNewsSchema>;
 

@@ -1,7 +1,7 @@
 import ky from 'ky';
 import type { UserDetailed } from '@repo/types/entities/user-type.ts';
 import { atom, Ctx, CtxSpy } from '@reatom/core';
-import { forumUserClient } from '@repo/shared/api/forum-client.ts';
+import { forumUserClient } from '#shared/forum-client.ts';
 import { decode } from 'cbor-x';
 import { withSsr } from '#lib/ssr';
 import { withInit } from '@reatom/framework';

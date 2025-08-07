@@ -1,4 +1,4 @@
-import { authClient } from "@repo/shared/api/auth-client.ts";
+import { authClient } from "#shared/auth-client";
 import { toast } from "sonner";
 import { userActiveSessionsAction } from "#components/modals/user-settings/models/user-sessions.model.ts";
 import { reatomAsync, withStatusesAtom } from "@reatom/async";

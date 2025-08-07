@@ -7,10 +7,21 @@ import { alertsResource } from "#components/layout/components/widgets/alert/aler
 import { Plus } from "lucide-react";
 import { AlertCreateForm } from "#components/admin/configs/alerts/components/create-alert/components/create-alert-form";
 import { DynamicModal } from "#components/modals/dynamic-modal/components/dynamic-modal";
-import { AlertEntity } from "@repo/types/entities/entities-type.ts";
 import { PenLine } from "lucide-react";
 import { Button } from "@repo/ui/src/components/button.tsx";
 import { AlertUpdateForm } from "#components/admin/configs/alerts/components/create-alert/components/update-alert-form";
+
+type AlertEntity = {
+  id: number,
+  link: string | null,
+  creator: {
+    nickname: string,
+    avatar: string | null
+  }
+  created_at: string | Date,
+  title: string,
+  description: string | null
+}
 
 const AlertItemEditButton = reatomComponent<Omit<AlertEntity, "created_at" | "creator">>(({ ...currentAlert }) => {
   return (

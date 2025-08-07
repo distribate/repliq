@@ -1,4 +1,4 @@
-import { z } from "zod/v4";
+import * as z from "zod";
 
 export const getFriendsRequestSchema = z.object({
   type: z.enum(["incoming", "outgoing"]),

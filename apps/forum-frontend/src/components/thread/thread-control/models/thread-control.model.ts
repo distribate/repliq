@@ -1,57 +1,37 @@
 import { toast } from "sonner";
 import { mainCategoriesResource } from "#components/categories/components/main/models/categories.model";
 import { reatomAsync, withStatusesAtom } from "@reatom/async";
-import { forumThreadClient } from "@repo/shared/api/forum-client";
+import { forumThreadClient } from "#shared/forum-client";
 import { Descendant } from "slate";
 import { ThreadDetailed } from "@repo/types/entities/thread-type";
 import { atom } from "@reatom/core";
 import { withReset } from "@reatom/framework";
+import { navigate } from "vike/client/router";
 
-export type ThreadControlQueryValues = Pick<
-  ThreadDetailed,
-  | "title"
-  | "description"
-  | "properties"
-> & {
+type ThreadControlValues = Pick<ThreadDetailed, | "title" | "description" | "properties"> & {
   content: Descendant[];
 };
 
 type ThreadControl = {
-  state: {
-    isValid: boolean;
-  }
-  values: {
-    is_comments: boolean
-  } & Pick<ThreadControlQueryValues, "title" | "description"> | null
+  isValid: boolean
 }
 
-export const threadControlAtom = atom<ThreadControl>({
-  state: {
-    isValid: false,
-  },
-  values: null,
-}, "threadControl").pipe(withReset())
+export const threadControlValuesAtom = atom<ThreadControlValues | null>(null, "threadControlValues")
+export const threadControlAtom = atom<ThreadControl>({ isValid: false }, "threadControl").pipe(withReset())
 
 async function removeThread(threadId: string) {
-  const res = await forumThreadClient.thread["remove-thread"][":threadId"].$delete({
-    param: { threadId },
-  });
-
+  const res = await forumThreadClient.thread["remove-thread"][":threadId"].$delete({ param: { threadId } });
   const data = await res.json();
-
-  if (!data || "error" in data) {
-    return null;
-  }
-
-  return data;
+  if ("error" in data) throw new Error(data.error)
+  return data.status;
 }
 
-type UpdateThread = {
+async function updateThread({ 
+  threadId, values 
+}: {
   threadId: string;
-  values: ThreadControlQueryValues;
-};
-
-async function updateThread({ threadId, values }: UpdateThread) {
+  values: ThreadControlValues;
+}) {
   const { description, title, content, properties } = values;
 
   const res = await forumThreadClient.thread["update-thread-settings"].$post({
@@ -65,63 +45,52 @@ async function updateThread({ threadId, values }: UpdateThread) {
   });
 
   const data = await res.json();
+  if ("error" in data) throw new Error(data.error)
 
-  if (!data || "error" in data) {
-    return null
-  }
-
-  return data;
+  return data.status;
 }
 
 export const removeThreadAction = reatomAsync(async (ctx, threadId: string) => {
   return await ctx.schedule(() => removeThread(threadId))
 }, {
   name: "removeThreadAction",
+  onReject: (_, e) => {
+    if (e instanceof Error) {
+      toast.error("Произошла ошибка при удалении треда", { description: e.message });
+    }
+  },
   onFulfill: (ctx, res) => {
-    if (!res) return toast.error("Произошла ошибка при удалении треда");
-
-    // await Promise.all([
-    // replace to threadAtom
-    // qc.resetQueries({ queryKey: THREAD_QUERY_KEY(variables) }),
-    // replace to threadReactionsAtom
-    // qc.resetQueries({ queryKey: THREAD_REACTIONS_QUERY_KEY(variables) }),
-    // ]);
-
     mainCategoriesResource(ctx)
-    return ctx.schedule(() =>
-      window.location.replace("/")
-      // router.navigate({ to: "/" })
-    );
+
+    return ctx.schedule(() => navigate("/"));
   }
 }).pipe(withStatusesAtom())
 
 export const updateThreadAction = reatomAsync(async (ctx, threadId: string) => {
-  const newData = ctx.get(threadControlAtom)
+  const newData = ctx.get(threadControlValuesAtom)
 
-  if (!newData) return "no-update-fields";
+  if (!newData) {
+    throw new Error("no-update-fields")
+  }
 
-  const values: ThreadControlQueryValues = Object.fromEntries(
-    Object.entries(newData).filter(
-      ([_, value]) => value !== undefined && value !== null,
-    ),
-  ) as ThreadControlQueryValues;
+  const values = Object.fromEntries(
+    Object.entries(newData).filter(([_, value]) => value !== undefined && value !== null),
+  ) as ThreadControlValues;
 
   return await updateThread({ threadId, values });
 }, {
   name: "updateThreadAction",
-  onFulfill: (_, res) => {
-    if (!res) return toast.error("Произошла ошибка при обновлении");
+  onReject: (_, e) => {
+    if (e instanceof Error) {
+      if (e.message === 'no-update-fields') {
+        return toast.info("Ничего не было обновлено");
+      }
 
-    if (res === "no-update-fields")
-      return toast.info("Ничего не было обновлено");
+      toast.error("Произошла ошибка при обновлении", { description: e.message });
+    }
+  },
+  onFulfill: (ctx, res) => {
 
-    // router.invalidate()
-    // await Promise.all([
-    // replace to threadAtom
-    // qc.invalidateQueries({ queryKey: THREAD_QUERY_KEY(variables) }),
-    // replace to threadReactionsAtom
-    // qc.invalidateQueries({ queryKey: THREAD_REACTIONS_QUERY_KEY(variables) }),
-    // qc.resetQueries({ queryKey: THREAD_CONTROL_QUERY_KEY })
-    // ])
+
   }
-})
+}).pipe(withStatusesAtom())

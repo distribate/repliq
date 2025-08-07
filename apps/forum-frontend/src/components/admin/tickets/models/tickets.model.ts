@@ -1,5 +1,5 @@
 import { reatomResource, withCache, withDataAtom, withStatusesAtom } from "@reatom/async"
-import { forumAdminClient } from "@repo/shared/api/forum-client"
+import { forumAdminClient } from "#shared/forum-client"
 
 async function getTickets() {
 	const res = await forumAdminClient.private["get-tickets"].$get()

@@ -1,4 +1,4 @@
-import { forumUserClient } from "@repo/shared/api/forum-client";
+import { forumUserClient } from "#shared/forum-client";
 import { reatomAsync, withCache, withDataAtom } from "@reatom/async";
 import { currentUserNicknameAtom } from "#components/user/models/current-user.model";
 import { logger } from "@repo/lib/utils/logger";

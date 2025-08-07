@@ -15,12 +15,10 @@
     "@repo/assets": "*",
     "@repo/shared": "*",
     "dayjs": "1.11.11",
-    "ky": "1.8.1",
-    "nanoid": "5.0.7",
-    "zod": "3.25.56"
+    "ky": "1.8.1"
   },
   "devDependencies": {
-    "@neodx/log": "^0.4.1",
+    "@neodx/log": "0.4.1",
     "@repo/config-typescript": "*",
     "@repo/types": "*",
     "clsx": "2.1.1",

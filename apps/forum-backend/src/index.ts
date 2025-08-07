@@ -103,6 +103,8 @@ import { subscribeCollectStats } from '#subscribers/sub-collect-stats.ts';
 import { getPublicStatsRoute } from '#routes/public/get-public-stats.ts';
 import { saveThreadRoute, unsaveThreadRoute } from '#routes/thread/save-thread.ts';
 import { getSavedThreadsRoute } from '#routes/user/get-saved-threads.ts';
+import { isProduction } from '@repo/lib/helpers/is-production';
+import { getMyThreadsRoute } from '#routes/user/get-my-threads.ts';
 
 async function startNats() {
   await initNats()
@@ -235,6 +237,7 @@ export const user = new Hono()
   .route("/", getUserPurchasesRoute)
   .route("/", getUserTicketsRoute)
   .route("/", getSavedThreadsRoute)
+  .route("/", getMyThreadsRoute)
   .route("/", getUserSocialsRoute)
   .route("/", getUserProfileStatsRoute)
   //--------------------------------------
@@ -327,7 +330,7 @@ const app = new Hono<Env>()
   .route("/", post)
   .route("/", report)
 
-showRoutes(app, { verbose: false });
+isProduction && showRoutes(app, { verbose: false });
 
 Bun.serve({ port: Bun.env.FORUM_BACKEND_PORT!, fetch: app.fetch })
 

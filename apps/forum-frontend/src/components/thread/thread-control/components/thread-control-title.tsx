@@ -17,13 +17,9 @@ export const ThreadControlTitle = reatomComponent<ThreadControlTitleProps>(({
     const { value } = e.target;
     setTitleValue(value);
 
-    threadControlAtom(ctx, (prev) => ({
-      state: {
-        ...prev.state,
-        isValid: value.length > 2,
-      },
-      values: prev.values,
-    }))
+    const isValid = value.length > 2
+
+    threadControlAtom(ctx, (state) => ({ ...state, isValid }))
   };
 
   return (

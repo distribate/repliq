@@ -1,6 +1,6 @@
 import { reatomAsync, withCache, withDataAtom, withStatusesAtom } from "@reatom/async";
 import { ProfileStatsDetailed } from "@repo/types/routes-types/get-user-profile-stats-types";
-import { forumUserClient } from "@repo/shared/api/forum-client"
+import { forumUserClient } from "#shared/forum-client"
 
 const getUserProfileStats = async () => {
   const res = await forumUserClient.user["get-user-profile-stats"].$get();

@@ -13,7 +13,7 @@
     "type-check": "tsc --noEmit"
   },
   "dependencies": {
-    "@hono/zod-validator": "0.7.0",
+    "@hono/zod-validator": "0.7.2",
     "@nats-io/jetstream": "3.0.0-35",
     "@nats-io/kv": "3.0.0-30",
     "@nats-io/transport-node": "3.0.0-32",
@@ -29,7 +29,7 @@
     "pg": "8.13.1",
     "ua-parser-js": "2.0.3",
     "uuid": "11.0.5",
-    "zod": "3.25.56"
+    "zod": "4.0.15"
   },
   "devDependencies": {
     "@repo/config-eslint": "*",

@@ -1,6 +1,6 @@
 import { createCtx, Ctx } from '@reatom/core';
-import { authClient } from "@repo/shared/api/auth-client";
-import { forumUserClient } from '@repo/shared/api/forum-client';
+import { authClient } from "#shared/auth-client";
+import { forumUserClient } from '#shared/forum-client';
 import { IS_AUTHENTICATED_ATOM_KEY, isAuthenticatedAtom } from '#components/auth/models/auth.model';
 import { logger } from '@repo/lib/utils/logger';
 import { currentUserAtom, getUserGlobalOptions, getUserInformation, userGlobalOptionsAtom } from '#components/user/models/current-user.model';

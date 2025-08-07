@@ -3,7 +3,7 @@ import { deleteUserFromBlocked } from "#lib/queries/user/delete-user-from-blocke
 import { getNickname } from "#utils/get-nickname-from-storage.ts";
 import { zValidator } from "@hono/zod-validator";
 import { Hono } from "hono";
-import { z } from "zod/v4";
+import * as z from "zod";
 import { forumDB } from "#shared/database/forum-db.ts";
 import type { InitiatorRecipientType } from "#types/initiator-recipient-type.ts";
 

@@ -7,7 +7,7 @@ import { Button } from "@repo/ui/src/components/button"
 import { SelectedReport } from "./admin-reports-selected-report"
 import { reatomComponent } from "@reatom/npm-react"
 import { onConnect } from "@reatom/framework"
-import { GetReportsResponse, reportsAction, reportsAtom, selectReportAction } from "../models/reports.model"
+import { GetReportsResponse, reportsAction, selectReportAction } from "../models/reports.model"
 
 const SelectReportButton = reatomComponent<{ id: GetReportsResponse[number]["id"] }>(({ ctx, id }) => {
   return (
@@ -61,10 +61,10 @@ const ReportItem = ({
   )
 }
 
-onConnect(reportsAtom, reportsAction)
+onConnect(reportsAction.dataAtom, reportsAction)
 
 export const AdminReportsList = reatomComponent(({ ctx }) => {
-  const reports = ctx.spy(reportsAtom)
+  const reports = ctx.spy(reportsAction.dataAtom)
 
   if (ctx.spy(reportsAction.statusesAtom).isPending) return (
     <div className="flex flex-col gap-4 w-full h-full">

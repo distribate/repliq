@@ -25,9 +25,9 @@ async function getReports() {
 export const getReportsRoute = new Hono()
   .get("/get-reports", async (ctx) => {
     try {
-      const reports = await getReports();
+      const data = await getReports();
 
-      return ctx.json({ data: reports }, 200);
+      return ctx.json({ data }, 200);
     } catch (e) {
       return ctx.json({ error: throwError(e) }, 500);
     }

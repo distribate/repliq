@@ -1,8 +1,8 @@
 import { toast } from "sonner";
 import { reatomAsync, withStatusesAtom } from "@reatom/async";
-import { forumUserClient } from "@repo/shared/api/forum-client"
+import { forumUserClient } from "#shared/forum-client"
 import { createIssueSchema } from "@repo/types/schemas/issue/create-issue-schema"
-import { z } from "zod/v4"
+import * as z from "zod"
 import { action, atom } from "@reatom/core";
 import { sleep, withComputed, withConcurrency } from "@reatom/framework";
 import { globalPreferencesAtom } from "#components/user/settings/main/models/update-global-preferences.model";

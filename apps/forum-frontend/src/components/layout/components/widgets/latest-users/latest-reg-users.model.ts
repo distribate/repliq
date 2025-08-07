@@ -1,5 +1,5 @@
 import { reatomAsync, withDataAtom, withStatusesAtom } from '@reatom/async';
-import { forumSharedClient } from "@repo/shared/api/forum-client.ts";
+import { forumSharedClient } from "#shared/forum-client.ts";
 import ky from "ky";
 import { decode } from "cbor-x"
 

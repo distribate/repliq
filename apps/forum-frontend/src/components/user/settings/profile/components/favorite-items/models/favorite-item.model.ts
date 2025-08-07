@@ -1,5 +1,5 @@
 
-// import { forumUserClient } from "@repo/shared/api/forum-client";
+// import { forumUserClient } from "#shared/forum-client";
 // import { reatomAsync, withStatusesAtom } from "@reatom/async";
 // import { atom } from "@reatom/core";
 // import { UnwrapPromise } from "@repo/lib/helpers/unwrap-promise-type";

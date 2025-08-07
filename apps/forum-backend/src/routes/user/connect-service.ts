@@ -11,7 +11,7 @@ import type { ConfigEventsData } from "@repo/types/entities/notifications-events
 import { Hono } from "hono"
 import { streamSSE } from "hono/streaming"
 import { nanoid } from "nanoid"
-import { z } from "zod/v4"
+import * as z from "zod"
 
 const connectServiceRouteSchema = z.object({
   type: z.enum(["connect", "disconnect", "cancel"]),
@@ -21,7 +21,7 @@ const connectServiceRouteSchema = z.object({
 const getToken = (i: string) => `token-${i}`
 const getRateToken = (i: string) => `ratelimit-${i}`
 
-const BOT_URL = "https://t.me/fasberry_bot"
+const BOT_URL = `https://t.me/${process.env.REPLIQ_BOT_USERNAME}`
 
 type ConnectServicePayload = {
   service: string,
@@ -150,7 +150,7 @@ export const connectServiceRoute = new Hono()
           kv.put(getRateToken(nickname), ratePayload)
         ])
 
-        const botStartConnectUrl = `${BOT_URL}?connect=${token}`
+        const botStartConnectUrl = `${BOT_URL}?start=connect_${token}`
 
         logger.info(`Created request for connection (${nickname}, ${token}, ${service})`)
 

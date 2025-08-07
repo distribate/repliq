@@ -1,5 +1,5 @@
 import { toast } from "sonner";
-import { authClient } from "@repo/shared/api/auth-client";
+import { authClient } from "#shared/auth-client";
 import { reatomAsync, withStatusesAtom } from "@reatom/async";
 import { atom } from "@reatom/core";
 

@@ -4,7 +4,7 @@ import { getNickname } from "#utils/get-nickname-from-storage.ts";
 import { zValidator } from "@hono/zod-validator";
 import { throwError } from "@repo/lib/helpers/throw-error";
 import { Hono } from "hono";
-import { z } from "zod/v4";
+import * as z from "zod";
 
 const connectProfileSchema = z.object({
   type: z.enum(["minecraft"])

@@ -3,7 +3,7 @@ import { Typography } from "@repo/ui/src/components/typography.tsx";
 import { Toggle } from "@repo/ui/src/components/toggle.tsx";
 import { useState } from "react";
 import { reatomComponent } from "@reatom/npm-react";
-import { threadControlAtom } from "../models/thread-control.model";
+import { threadControlValuesAtom } from "../models/thread-control.model";
 
 export const ThreadControlComments = reatomComponent<{ is_comments: boolean }>(({
   ctx, is_comments: currentIsComments,
@@ -12,7 +12,7 @@ export const ThreadControlComments = reatomComponent<{ is_comments: boolean }>((
 
   const handleToggleThreadComments = () => {
     setCommentsValue((prev) => !prev);
-    threadControlAtom(ctx, (state) => ({ ...state, values: { is_comments: !commentsValue } }))
+    threadControlValuesAtom(ctx, (state) => state ? ({ ...state, isComments: !commentsValue }) : null)
   };
 
   return (

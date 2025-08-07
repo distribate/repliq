@@ -1,4 +1,4 @@
-import { z } from 'zod/v4';
+import * as z from "zod";
 import { forumDB } from '#shared/database/forum-db.ts';
 import type { editUserSettingsBodySchema } from '@repo/types/schemas/user/edit-user-settings-schema.ts';
 

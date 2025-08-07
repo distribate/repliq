@@ -1,6 +1,6 @@
 import { action, atom } from "@reatom/core";
 import { withReset } from "@reatom/framework";
-import { z } from "zod/v4";
+import * as z from "zod";
 import { POST_CONTENT_LIMIT } from "@repo/shared/constants/limits.ts";
 
 export type VisibilityPost = "only" | "all" | "friends";

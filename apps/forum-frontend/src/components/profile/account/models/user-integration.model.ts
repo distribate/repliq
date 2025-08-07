@@ -1,7 +1,7 @@
 import { reatomAsync, withDataAtom, withStatusesAtom } from "@reatom/async"
 import { atom } from "@reatom/core"
 import { logger } from "@repo/lib/utils/logger"
-import { forumUserClient } from "@repo/shared/api/forum-client"
+import { forumUserClient } from "#shared/forum-client"
 import { toast } from "sonner"
 
 export type Integration =

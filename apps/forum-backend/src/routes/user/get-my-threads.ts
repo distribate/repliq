@@ -5,23 +5,23 @@ import { throwError } from "@repo/lib/helpers/throw-error";
 import { Hono } from "hono";
 import { sql } from "kysely";
 
-export const getSavedThreadsRoute = new Hono()
-  .get("/get-saved-threads", async (ctx) => {
+export const getMyThreadsRoute = new Hono()
+  .get("/get-my-threads", async (ctx) => {
     const nickname = getNickname()
 
     try {
       const threadsSubquery = forumDB
-        .selectFrom("threads_saved")
-        .innerJoin("threads", "threads.id", "threads_saved.thread_id")
+        .selectFrom("threads_users")
+        .innerJoin("threads", "threads.id", "threads_users.thread_id")
         .select([
           "threads.id",
           "threads.title",
           "threads.description",
-          "threads_saved.created_at",
-          "threads_saved.nickname as owner",
+          "threads_users.created_at",
+          "threads_users.user_nickname as owner",
         ])
-        .where("threads_saved.nickname", "=", nickname)
-        .orderBy("threads_saved.created_at", "desc")
+        .where("threads_users.user_nickname", "=", nickname)
+        .orderBy("threads.created_at", "desc")
         .limit(32)
         .as("base_threads")
 

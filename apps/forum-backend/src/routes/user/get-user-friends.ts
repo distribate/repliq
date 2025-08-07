@@ -6,7 +6,7 @@ import { Hono } from "hono";
 import { getNickname } from "#utils/get-nickname-from-storage.ts";
 import { Encoder } from "cbor-x";
 import { userPreferenceAndPrivateValidation } from "#utils/validate-user-preference-private.ts";
-import { z } from "zod/v4";
+import * as z from "zod";
 import { forumDB } from "#shared/database/forum-db.ts";
 
 export async function getUserFriendsCount(nickname: string) {

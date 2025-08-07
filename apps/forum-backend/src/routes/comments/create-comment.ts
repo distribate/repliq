@@ -4,7 +4,7 @@ import { zValidator } from "@hono/zod-validator";
 import { Hono } from "hono";
 import { createCommentSchema } from "@repo/types/schemas/comment/create-comment-schema.ts";
 import { forumDB } from "#shared/database/forum-db.ts"
-import { z } from "zod/v4"
+import * as z from "zod"
 
 type CreateComment = z.infer<typeof createCommentSchema> & {
   nickname: string

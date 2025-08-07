@@ -16,7 +16,7 @@
   },
   "dependencies": {
     "supabase": "1.219.2",
-    "zod": "3.25.56"
+    "zod": "4.0.15"
   },
   "devDependencies": {
     "dotenv-cli": "7.4.4",

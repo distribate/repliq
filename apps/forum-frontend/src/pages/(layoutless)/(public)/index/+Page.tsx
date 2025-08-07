@@ -2,7 +2,7 @@ import { ArrowRight, Gamepad2, Globe, Heart, Sparkles, Trophy, Users, Zap } from
 import { CustomLink } from "#components/shared/link"
 import { Button } from "@repo/ui/src/components/button"
 import { reatomResource, withCache, withDataAtom, withStatusesAtom } from "@reatom/async"
-import { forumSharedClient } from "@repo/shared/api/forum-client"
+import { forumSharedClient } from "#shared/forum-client"
 import { reatomComponent } from "@reatom/npm-react"
 import { Footer } from "#components/layout/components/default/footer"
 import { AnimatedNumber } from "#ui/animated-number"

@@ -2,7 +2,7 @@ import { requestedUserProfileBlockedAtom, requestedUserProfileStatusAtom } from 
 import { reatomAsync, withCache, withDataAtom, withStatusesAtom } from "@reatom/async";
 import { atom } from "@reatom/core";
 import { withReset } from "@reatom/framework";
-import { forumUserClient } from "@repo/shared/api/forum-client";
+import { forumUserClient } from "#shared/forum-client";
 import { toast } from "sonner";
 
 type ControlBlockUserActionVariables = { 

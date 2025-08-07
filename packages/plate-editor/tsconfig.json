@@ -5,15 +5,12 @@
   ],
   "exclude": [
     "dist",
-    "build",
     "node_modules"
   ],
   "compilerOptions": {
-    "baseUrl": "./src",
+    "baseUrl": ".",
     "paths": {
-      "#plate/*": [
-        "./*"
-      ]
+      "#plate/*": ["./src/*"]
     }
   }
 }

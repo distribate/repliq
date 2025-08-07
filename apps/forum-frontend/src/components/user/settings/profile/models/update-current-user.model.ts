@@ -1,9 +1,9 @@
 import { requestedUserAtom } from "#components/profile/main/models/requested-user.model";
 import { reatomAsync, withStatusesAtom } from "@reatom/async";
-import { forumUserClient } from "@repo/shared/api/forum-client";
+import { forumUserClient } from "#shared/forum-client";
 import { editUserSettingsBodySchema } from "@repo/types/schemas/user/edit-user-settings-schema";
 import { toast } from "sonner";
-import { z } from "zod/v4";
+import * as z from "zod";
 import { userDetailsSchema } from '@repo/types/schemas/user/edit-user-details-schema';
 import { currentUserAtom, currentUserNicknameAtom } from "#components/user/models/current-user.model";
 

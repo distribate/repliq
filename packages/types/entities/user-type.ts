@@ -1,5 +1,4 @@
 import type { Users } from "../db/forum-database-types";
-import type { DonateVariantsEnum } from "./entities-type";
 import type { Selectable } from "kysely";
 
 export type UserDetailed = Omit<Selectable<Users>,

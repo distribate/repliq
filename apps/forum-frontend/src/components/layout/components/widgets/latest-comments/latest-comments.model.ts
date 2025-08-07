@@ -1,5 +1,5 @@
 import { reatomResource, withCache, withDataAtom, withStatusesAtom } from "@reatom/async"
-import { forumCommentClient } from "@repo/shared/api/forum-client"
+import { forumCommentClient } from "#shared/forum-client"
 
 const getLatestComments = async () => {
   const res = await forumCommentClient.comment["get-last-comments"].$get()

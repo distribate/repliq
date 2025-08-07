@@ -41,7 +41,7 @@
     "sonner": "2.0.3",
     "vike": "0.4.236",
     "vike-react": "0.6.5",
-    "zod": "3.25.56"
+    "zod": "4.0.15"
   },
   "devDependencies": {
     "@eslint/js": "9.13.0",

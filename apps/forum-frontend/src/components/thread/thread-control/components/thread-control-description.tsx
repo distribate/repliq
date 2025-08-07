@@ -4,7 +4,7 @@ import { ThreadControlFields } from "../types/thread-control-types.ts";
 import { Typography } from "@repo/ui/src/components/typography.tsx";
 import { Info } from "lucide-react";
 import { reatomComponent } from "@reatom/npm-react";
-import { threadControlAtom } from "../models/thread-control.model.ts";
+import { threadControlValuesAtom } from "../models/thread-control.model.ts";
 
 export const ThreadControlDescription = reatomComponent<Pick<ThreadControlFields, "description">>(({
   ctx, description: currentDescription,
@@ -15,8 +15,13 @@ export const ThreadControlDescription = reatomComponent<Pick<ThreadControlFields
 
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = e.target;
+
     setDescriptionValue(value);
-    threadControlAtom(ctx, (state) => ({ ...state, values: { description: value.length < 1 ? null : value } }))
+
+    threadControlValuesAtom(ctx, (state) => state
+      ? ({ ...state, description: value.length < 1 ? null : value })
+      : null
+    )
   };
 
   return (

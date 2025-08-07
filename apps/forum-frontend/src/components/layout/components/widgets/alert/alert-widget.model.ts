@@ -1,6 +1,6 @@
 import { reatomResource, withCache, withDataAtom, withErrorAtom, withStatusesAtom } from '@reatom/async';
 import { atom } from '@reatom/core';
-import { forumSharedClient } from "@repo/shared/api/forum-client"
+import { forumSharedClient } from "#shared/forum-client"
 
 export const alertsCursorAtom = atom<string | undefined>(undefined, "alertsCursorAtom")
 export const alertsLimitAtom = atom(1, "alertsLimitAtom")

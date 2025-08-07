@@ -1,16 +1,15 @@
-import { reatomAsync, withErrorAtom, withStatusesAtom } from '@reatom/async';
-import { Atom, atom, Ctx } from '@reatom/core';
-import { forumUserClient } from "@repo/shared/api/forum-client";
+import { action, Atom, atom, batch, Ctx } from '@reatom/core';
+import { forumUserClient } from "#shared/forum-client";
 import { UserDetailed, UserShorted } from '@repo/types/entities/user-type';
 import { withReset } from '@reatom/framework';
 import { isUserDetailed } from '@repo/lib/helpers/is-user-detailed';
-import { withHistory } from "@repo/lib/utils/reatom/with-history"
 import { VariantProps } from 'class-variance-authority';
 import { coverAreaVariants } from '../../header/components/cover-area';
 import { logger } from '@repo/lib/utils/logger';
 import { toast } from 'sonner';
 import { currentUserNicknameAtom } from '#components/user/models/current-user.model';
 import { render } from 'vike/abort';
+import { withHistory } from '#lib/with-history';
 
 type RequestedUserDetails = Pick<UserDetailed["preferences"],
   "game_stats_visible" | "real_name_visible" | "accept_friend_request" | "show_game_location" | "cover_outline_visible"
@@ -64,21 +63,20 @@ requestedUserPreferencesAtom.onChange((ctx, target) => {
   requestedUserCoverDetailsAtom(ctx, { outline, backgroundColor })
 })
 
-export const defineUserAction = reatomAsync(async (ctx, target: RequestedUserFull) => {
-  return target
-}, {
-  name: "defineUserAction",
-  onFulfill: (ctx, payload) => {
-    if (typeof payload === 'object') {
-      const account_status = payload.details.account_type;
+export const defineUser = action((ctx, target: RequestedUserFull) => {
+  const payload = target;
 
-      const isNonExists = account_status === 'deleted' || account_status === 'archived'
+  if (typeof payload === 'object') {
+    const account_status = payload.details.account_type;
 
-      requestedUserParamAtom(ctx, payload.nickname)
-      requestedUserIsSameAtom(ctx, ctx.get(currentUserNicknameAtom) === payload.nickname)
+    const isNonExists = account_status === 'deleted' || account_status === 'archived'
 
-      // #privated or archived account status of req user
-      if (isNonExists) {
+    requestedUserParamAtom(ctx, payload.nickname)
+    requestedUserIsSameAtom(ctx, ctx.get(currentUserNicknameAtom) === payload.nickname)
+
+    // #privated or archived account status of req user
+    if (isNonExists) {
+      batch(ctx, () => {
         requestedUserAtom(ctx, {
           nickname: payload.nickname,
           description: null,
@@ -99,38 +97,42 @@ export const defineUserAction = reatomAsync(async (ctx, target: RequestedUserFul
         requestedUserAccountTypeAtom(ctx, account_status)
         requestedUserProfileStatusAtom(ctx, null)
         requestedUserCoverImageAtom(ctx, null)
+      })
 
-        return
-      }
+      return
+    }
 
-      const user = payload as RequestedUserFull
+    const user = payload as RequestedUserFull
 
-      requestedUserAtom(ctx, user)
+    requestedUserAtom(ctx, user)
 
-      const isBanned = user.details.status === 'banned'
-      const isBlocked = user.details.status === 'blocked-by-you' || user.details.status === 'blocked-by-user'
-      const isPrivate = user.details.status === 'private'
+    const isBanned = user.details.status === 'banned'
+    const isBlocked = user.details.status === 'blocked-by-you' || user.details.status === 'blocked-by-user'
+    const isPrivate = user.details.status === 'private'
 
-      const status = isBanned ? "banned" : isBlocked ? "blocked" : isPrivate ? "privated" : null;
+    const status = isBanned ? "banned" : isBlocked ? "blocked" : isPrivate ? "privated" : null;
 
-      if (isBlocked) {
-        requestedUserProfileBlockedAtom(ctx, payload.details.status as 'blocked-by-you' | 'blocked-by-user')
-      }
+    if (isBlocked) {
+      requestedUserProfileBlockedAtom(ctx, payload.details.status as 'blocked-by-you' | 'blocked-by-user')
+    }
 
+    batch(ctx, () => {
       requestedUserMinecraftProfileIsExistsAtom(ctx, user.profiles.some(target => target.type === 'minecraft'))
       requestedUserProfileStatusAtom(ctx, status)
       requestedUserCoverImageAtom(ctx, user.cover_image)
+    })
 
-      // #full variant of user
-      if (isUserDetailed(user)) {
-        const currentUser = ctx.get(currentUserNicknameAtom);
+    // #full variant of user
+    if (isUserDetailed(user)) {
+      const currentUser = ctx.get(currentUserNicknameAtom);
 
-        const isIdentity = currentUser === user.nickname
+      const isIdentity = currentUser === user.nickname
 
-        if (currentUser) {
-          requestedUserSectionIsPrivatedAtom(ctx, !user.preferences.game_stats_visible && isIdentity)
-        }
+      if (currentUser) {
+        requestedUserSectionIsPrivatedAtom(ctx, !user.preferences.game_stats_visible && isIdentity)
+      }
 
+      batch(ctx, () => {
         requestedUserPreferencesAtom(ctx, {
           cover_outline_visible: user.preferences.cover_outline_visible,
           accept_friend_request: user.preferences.accept_friend_request,
@@ -138,23 +140,22 @@ export const defineUserAction = reatomAsync(async (ctx, target: RequestedUserFul
           show_game_location: user.preferences.show_game_location,
           real_name_visible: user.preferences.real_name_visible
         })
-
+  
         requestedUserGameStatsVisibleAtom(ctx, user.preferences.game_stats_visible)
-      } else {
-        requestedUserPreferencesAtom(ctx, {
-          cover_outline_visible: user.preferences.cover_outline_visible,
-          show_game_location: user.preferences.show_game_location,
-          game_stats_visible: false,
-          real_name_visible: false,
-          accept_friend_request: false
-        })
-      }
+      })
     } else {
-      logger.error("Unexpected payload type", payload);
+      requestedUserPreferencesAtom(ctx, {
+        cover_outline_visible: user.preferences.cover_outline_visible,
+        show_game_location: user.preferences.show_game_location,
+        game_stats_visible: false,
+        real_name_visible: false,
+        accept_friend_request: false
+      })
     }
-  },
-  onReject: (_, e) => e instanceof Error && toast.error(e.message)
-}).pipe(withStatusesAtom(), withErrorAtom())
+  } else {
+    logger.error("Unexpected payload type", payload);
+  }
+}, "defineUser")
 
 export async function getUserProfile(nickname: string, init?: RequestInit) {
   const res = await forumUserClient.user["get-user-profile"][":nickname"].$get({ param: { nickname } }, { init })

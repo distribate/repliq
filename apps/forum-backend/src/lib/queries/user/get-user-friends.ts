@@ -2,7 +2,7 @@ import { type GetFriendsResponse } from '@repo/types/schemas/friend/friend-types
 import { getUserFriendsSchema } from '@repo/types/schemas/user/get-user-friends-schema.ts';
 import { forumDB } from "#shared/database/forum-db.ts"
 import { sql } from "kysely"
-import type { z } from "zod/v4"
+import * as z from "zod"
 import { executeWithCursorPagination } from 'kysely-paginate';
 
 type GetUserFriends = z.infer<typeof getUserFriendsSchema> & {

@@ -1,10 +1,10 @@
 
 import { reatomAsync, reatomResource, withCache, withDataAtom, withStatusesAtom } from '@reatom/async';
 import { toast } from "sonner";
-import { z } from "zod/v4";
+import * as z from "zod";
 import { createCoverImageSchema } from "@repo/types/schemas/user/create-cover-image-schema.ts"
 import { requestedUserCoverImageAtom } from "#components/profile/main/models/requested-user.model";
-import { forumSharedClient, forumUserClient } from "@repo/shared/api/forum-client"
+import { forumSharedClient, forumUserClient } from "#shared/forum-client"
 import type { InferResponseType } from "hono/client"
 import { encode } from "cbor-x"
 import ky from "ky"

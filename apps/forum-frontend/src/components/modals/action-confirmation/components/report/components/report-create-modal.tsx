@@ -20,12 +20,11 @@ import { Textarea } from "@repo/ui/src/components/textarea.tsx";
 import { FlagTriangleLeft } from "lucide-react";
 import { HoverCardItem } from "@repo/ui/src/components/hover-card.tsx";
 import { reatomComponent, useUpdate } from "@reatom/npm-react";
-import { ReportReasonEnum } from "@repo/types/entities/entities-type.ts";
 import { ReactNode } from "react";
 
 type ReportReasons = {
   title: string;
-  type: ReportReasonEnum;
+  type: "spam" | "offensive" | "dont-like";
 };
 
 export const REPORT_REASONS: ReportReasons[] = [
@@ -35,7 +34,7 @@ export const REPORT_REASONS: ReportReasons[] = [
 ];
 
 const ReportReasonStage = reatomComponent(({ ctx }) => {
-  const handleReason = (reason: ReportReasonEnum) => {
+  const handleReason = (reason: "spam" | "offensive" | "dont-like") => {
     reportStageAtom(ctx, "description");
     reportAtom(ctx, (state) => ({ ...state, reason }))
   };

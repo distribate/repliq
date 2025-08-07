@@ -2,7 +2,7 @@ import { getNickname } from "#utils/get-nickname-from-storage.ts"
 import { zValidator } from "@hono/zod-validator"
 import { throwError } from "@repo/lib/helpers/throw-error"
 import { Hono } from "hono"
-import { z } from "zod/v4"
+import * as z from "zod"
 import { forumDB } from "#shared/database/forum-db.ts"
 import { validatePostOwner } from "#lib/validators/validate-post-owner.ts"
 

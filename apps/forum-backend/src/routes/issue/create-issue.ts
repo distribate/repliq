@@ -5,7 +5,7 @@ import { Hono } from "hono";
 import { createIssueSchema } from "@repo/types/schemas/issue/create-issue-schema.ts";
 import { getNickname } from "#utils/get-nickname-from-storage.ts";
 import { forumDB } from "#shared/database/forum-db.ts"
-import { z } from "zod/v4"
+import * as z from "zod"
 
 type CreateIssue = z.infer<typeof createIssueSchema> & {
   nickname: string

@@ -1,7 +1,7 @@
 import { threadOwnerAtom, threadParamAtom } from "#components/thread/thread-main/models/thread.model"
 import { reatomResource, withCache, withDataAtom, withStatusesAtom } from "@reatom/async"
 import { sleep } from "@reatom/framework"
-import { forumThreadClient } from "@repo/shared/api/forum-client"
+import { forumThreadClient } from "#shared/forum-client"
 
 type GetThreadsRecommendations = {
   exclude: string,

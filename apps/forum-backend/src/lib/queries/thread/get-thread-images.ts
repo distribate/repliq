@@ -12,11 +12,7 @@ export async function getThreadImages(id: string) {
     return []
   }
 
-  const publicUrls = await Promise.all(
-    images.map(image =>
-      getPublicUrl("threads", image.image_url)
-    )
-  );
+  const publicUrls = images.map(image => getPublicUrl("threads", image.image_url))
 
   return publicUrls.filter(Boolean);
 }

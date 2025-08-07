@@ -3,7 +3,7 @@ import { currentUserNicknameAtom } from "#components/user/models/current-user.mo
 import { reatomAsync, withStatusesAtom } from "@reatom/async";
 import { action, atom } from "@reatom/core";
 import { withReset } from "@reatom/framework";
-import { forumUserClient } from "@repo/shared/api/forum-client";
+import { forumUserClient } from "#shared/forum-client";
 import ky from "ky";
 import { toast } from "sonner";
 

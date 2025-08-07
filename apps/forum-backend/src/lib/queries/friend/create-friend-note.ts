@@ -1,7 +1,7 @@
 import { forumDB } from "#shared/database/forum-db.ts";
 import type { InitiatorRecipientType } from "#types/initiator-recipient-type.ts";
 import type { addFriendNoteSchema } from "@repo/types/schemas/friend/create-friend-note-schema";
-import type { z } from "zod/v4";
+import * as z from "zod";
 
 type CreateFriendNote = z.infer<typeof addFriendNoteSchema> & Pick<InitiatorRecipientType, "initiator">
 

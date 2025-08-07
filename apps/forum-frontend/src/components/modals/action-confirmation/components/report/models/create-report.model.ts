@@ -2,13 +2,12 @@ import { reportAtom, reportDescriptionAtom, reportDialogIsOpenAtom } from "#comp
 import { toast } from "sonner";
 import { currentUserNicknameAtom } from "#components/user/models/current-user.model.ts";
 import { ReportType } from "@repo/types/db/forum-database-types";
-import { ReportReasonEnum } from "@repo/types/entities/entities-type";
-import { forumReportClient } from "@repo/shared/api/forum-client";
+import { forumReportClient } from "#shared/forum-client";
 import { reatomAsync, withStatusesAtom } from "@reatom/async";
 
 export type CreateReport = {
   type: ReportType;
-  reason: ReportReasonEnum;
+  reason: "spam" | "offensive" | "dont-like";
   description?: string
 } & {
   targetId: string | number;

@@ -2,9 +2,8 @@ import { atom } from "@reatom/core";
 import { reatomAsync, withStatusesAtom } from "@reatom/async";
 import { Friend, GetFriendsResponse } from "@repo/types/schemas/friend/friend-types.ts";
 import { sleep, take, withReset } from "@reatom/framework";
-import { UserEntity } from "@repo/types/entities/entities-type.ts";
-import { forumUserClient } from "@repo/shared/api/forum-client";
-import { z } from "zod/v4";
+import { forumUserClient } from "#shared/forum-client";
+import * as z from "zod";
 import { getUserFriendsSchema } from "@repo/types/schemas/user/get-user-friends-schema";
 import { decode } from "cbor-x"
 import ky from "ky";
@@ -19,7 +18,7 @@ export type FriendsQuery = {
   limit?: number;
 };
 
-export type GetFriends = Pick<UserEntity, "nickname"> & z.infer<typeof getUserFriendsSchema>
+export type GetFriends = { nickname: string } & z.infer<typeof getUserFriendsSchema>
 
 function isFriendDetailed(input: GetFriendsResponse["data"][number]): input is Friend {
   return "is_pinned" in input && input.is_pinned !== undefined;
@@ -49,7 +48,7 @@ export async function getFriends({
 }: GetFriends): Promise<GetFriendsResponse | null> {
   const url = forumUserClient.user["get-friends"][":nickname"].$url({
     param: { nickname },
-    query: { 
+    query: {
       sort_type,
       ascending: parseBooleanToString(ascending),
       cursor,
@@ -74,14 +73,14 @@ export const myFriendsAction = reatomAsync(async (ctx) => {
   const cache = ctx.get(myFriendsDataAtom)
 
   if (cache) {
-    return { 
-      data: ctx.get(myFriendsDataAtom), 
-      meta: ctx.get(myFriendsMetaAtom) 
+    return {
+      data: ctx.get(myFriendsDataAtom),
+      meta: ctx.get(myFriendsMetaAtom)
     }
   }
 
   await sleep(200)
-  
+
   const nickname = ctx.get(currentUserNicknameAtom)
   if (!nickname) return;
 
@@ -92,7 +91,7 @@ export const myFriendsAction = reatomAsync(async (ctx) => {
   name: "myFriendsAction",
   onFulfill: (ctx, res) => {
     if (!res) return;
-    
+
     myFriendsDataAtom(ctx, res.data)
     myFriendsMetaAtom(ctx, res.meta)
     friendsUpdateOptionsAtom(ctx, (state) => ({ ...state, cursor: res.meta?.endCursor }))

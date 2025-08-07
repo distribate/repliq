@@ -6,9 +6,9 @@ import { toast } from "sonner";
 import { GetThreadCommentsResponse } from "@repo/types/entities/thread-comments-types.ts";
 import { threadCommentsAction, threadCommentsDataAtom } from "#components/thread/thread-comments/models/thread-comments.model.ts";
 import { reatomAsync, withStatusesAtom } from "@reatom/async";
-import { forumCommentClient } from "@repo/shared/api/forum-client";
+import { forumCommentClient } from "#shared/forum-client";
 import type { replyCommentBodySchema } from "@repo/types/routes-types/reply-comment.ts"
-import { z } from "zod/v4";
+import * as z from "zod";
 
 function validateContent(input?: string): string | null {
   return input ? input.trim().split(/\s+/).length > 0 ? input : null : null

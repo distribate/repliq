@@ -13,7 +13,7 @@ async function getOnlineUsers(limit: number = DEFAULT_LIMIT) {
       "users_status.nickname",
       "users.avatar"
     ])
-    .where("created_at", ">", new Date(Date.now() - ONLINE_USERS_TIME))
+    .where("users_status.created_at", ">", new Date(Date.now() - ONLINE_USERS_TIME))
     .limit(limit)
     .execute();
 

@@ -2,12 +2,11 @@ import { FriendsQuery, getFriends } from "#components/friends/models/friends.mod
 import { isParamChanged, requestedUserParamAtom } from "#components/profile/main/models/requested-user.model"
 import { atom, Ctx } from "@reatom/core"
 import { reatomAsync, take, withReset, withStatusesAtom } from "@reatom/framework"
-import { UserEntity } from "@repo/types/entities/entities-type"
 import { Friend, GetFriendsResponse } from "@repo/types/schemas/friend/friend-types"
 import { getUserFriendsSchema } from "@repo/types/schemas/user/get-user-friends-schema"
-import { z } from "zod/v4"
+import * as z from "zod"
 
-export type GetFriends = Pick<UserEntity, "nickname"> & z.infer<typeof getUserFriendsSchema>
+export type GetFriends = { nickname: string } & z.infer<typeof getUserFriendsSchema>
 
 export const friendsDataAtom = atom<GetFriendsResponse["data"] | null>(null, "friendsData").pipe(withReset())
 export const friendsMetaAtom = atom<GetFriendsResponse["meta"] | null>(null, "friendsMeta").pipe(withReset())

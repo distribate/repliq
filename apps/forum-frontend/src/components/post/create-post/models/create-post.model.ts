@@ -2,9 +2,9 @@ import { toast } from "sonner";
 import { currentUserAtom, currentUserNicknameAtom } from "#components/user/models/current-user.model.ts";
 import type { GetUserPostsResponse } from '@repo/types/routes-types/get-user-posts-types.ts';
 import { reatomAsync, withErrorAtom, withStatusesAtom } from "@reatom/async";
-import { forumPostClient } from "@repo/shared/api/forum-client";
+import { forumPostClient } from "#shared/forum-client";
 import { postContentSchema, postFormContentAtom, postFormResetAction, postFormVisibilityAtom, VisibilityPost } from "./post-form.model.ts";
-import { z } from "zod/v4";
+import * as z from "zod";
 import { postsDataAtom } from "#components/profile/posts/models/posts.model.ts";
 
 type VisibilityOption = {

@@ -2,7 +2,7 @@ import { zValidator } from "@hono/zod-validator";
 import { throwError } from "@repo/lib/helpers/throw-error";
 import { Hono } from "hono";
 import { getAlertsSchema } from "@repo/types/schemas/alerts/get-alerts-schema.ts";
-import { z } from "zod/v4"
+import * as z from "zod"
 import { sqliteDB } from "#shared/database/sqlite-db.ts";
 import { forumDB } from "#shared/database/forum-db.ts";
 

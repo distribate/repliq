@@ -1,6 +1,6 @@
 import { atom } from '@reatom/core';
 import { reatomAsync, withErrorAtom, withStatusesAtom } from '@reatom/async';
-import { forumUserClient } from '@repo/shared/api/forum-client';
+import { forumUserClient } from '#shared/forum-client';
 import { UserThreads } from './profile-threads-search.model';
 
 export const threadsAtom = atom<UserThreads[] | null>(null, "threads")

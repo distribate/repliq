@@ -1,6 +1,6 @@
 import { reatomAsync, reatomResource, withCache, withDataAtom, withStatusesAtom } from '@reatom/async'
 import { currentUserAtom } from '#components/user/models/current-user.model'
-import { forumRootClient, forumUserClient } from '@repo/shared/api/forum-client'
+import { forumRootClient, forumUserClient } from '#shared/forum-client'
 import { action, atom } from '@reatom/core'
 import { sleep, withReset } from '@reatom/framework'
 import { reatomTimer } from '@reatom/timer'

@@ -6,7 +6,7 @@ import { throwError } from "@repo/lib/helpers/throw-error";
 import type { Posts } from "@repo/types/db/forum-database-types";
 import { Hono } from "hono";
 import type { Insertable } from "kysely";
-import { z } from "zod/v4";
+import * as z from "zod";
 
 type CreatePost = Omit<Insertable<Posts>, "isUpdated" | "created_at" | "id"> & {
   nickname: string

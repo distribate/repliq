@@ -1,7 +1,7 @@
 import { atom } from "@reatom/core";
 import { reatomAsync } from "@reatom/async";
 import { withReset } from "@reatom/framework";
-import { forumUserClient } from "@repo/shared/api/forum-client";
+import { forumUserClient } from "#shared/forum-client";
 import { logger } from "@repo/lib/utils/logger";
 
 type FriendRequestEntity = {

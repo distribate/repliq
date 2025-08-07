@@ -1,7 +1,7 @@
 import { reatomAsync, withStatusesAtom } from "@reatom/async";
 import { atom, CtxSpy } from "@reatom/core";
 import { currentUserNicknameAtom } from "#components/user/models/current-user.model";
-import { forumUserClient } from "@repo/shared/api/forum-client";
+import { forumUserClient } from "#shared/forum-client";
 
 type FriendStatus = {
   status: "friend" | "not-accepted-friend" | "not-friend" | "reject-request" | "accept-request";

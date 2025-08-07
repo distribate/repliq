@@ -2,7 +2,7 @@ import { supabase } from "#shared/supabase/supabase-client.ts";
 import { getNickname } from "#utils/get-nickname-from-storage.ts";
 import { throwError } from "@repo/lib/helpers/throw-error";
 import { Hono } from "hono";
-import { z } from "zod/v4";
+import * as z from "zod";
 import { nanoid } from "nanoid";
 import { decode } from "cbor-x";
 import { forumDB } from "#shared/database/forum-db.ts";

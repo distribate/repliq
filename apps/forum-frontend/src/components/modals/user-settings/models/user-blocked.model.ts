@@ -1,4 +1,4 @@
-import { forumUserClient } from '@repo/shared/api/forum-client.ts';
+import { forumUserClient } from '#shared/forum-client.ts';
 import { reatomAsync, withDataAtom, withStatusesAtom } from '@reatom/async';
 
 async function getUserBlocked() {

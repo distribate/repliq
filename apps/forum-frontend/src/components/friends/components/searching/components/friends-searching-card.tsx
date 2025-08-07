@@ -2,12 +2,11 @@ import { Avatar } from "#components/user/avatar/components/avatar.tsx";
 import { Typography } from "@repo/ui/src/components/typography.tsx";
 import { UserNickname } from "#components/user/name/nickname";
 import { Button } from "@repo/ui/src/components/button.tsx";
-import { UserEntity } from "@repo/types/entities/entities-type";
 import { CustomLink } from "#components/shared/link";
 import { createIdLink } from "@repo/lib/utils/create-link";
 import { navigate } from "vike/client/router";
 
-export type FriendsSearchingCardProps = Pick<UserEntity, "nickname"> & (
+export type FriendsSearchingCardProps = { nickname: string } & (
   { type: "byLands"; land: string, friend?: never } |
   { type: "byFriends"; friend: string, land?: never } |
   { type: "default"; friend?: never, land?: never }

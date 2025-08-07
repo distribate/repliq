@@ -10,13 +10,11 @@ type ThreadControlSaveProps = {
 export const ThreadControlSave = reatomComponent<ThreadControlSaveProps>(({ ctx, threadId }) => {
   const threadControlValues = ctx.spy(threadControlAtom)
 
-  if (!threadControlValues || !threadControlValues.state) return;
-
   return (
     <Button
       variant="positive"
       className="px-4"
-      disabled={!threadControlValues.state.isValid}
+      disabled={!threadControlValues.isValid}
       onClick={() => updateThreadAction(ctx, threadId)}
     >
       <Typography>Сохранить</Typography>

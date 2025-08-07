@@ -1,4 +1,4 @@
-import { z } from "zod/v4"
+import * as z from "zod"
 
 export const getAlertsSchema = z.object({
   limit: z.string().transform(Number).optional(),

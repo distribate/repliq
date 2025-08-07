@@ -1,5 +1,5 @@
 import { getUserFriendsSchema } from '@repo/types/schemas/user/get-user-friends-schema';
-import { z } from "zod/v4";
+import * as z from "zod";
 import { atom } from '@reatom/core';
 
 export type FriendsSortType = "created_at" | "donate_weight";

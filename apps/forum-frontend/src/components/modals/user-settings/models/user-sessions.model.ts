@@ -1,4 +1,4 @@
-import { authClient } from "@repo/shared/api/auth-client";
+import { authClient } from "#shared/auth-client";
 import type { InferResponseType } from "hono/client"
 import { atom } from "@reatom/core";
 import { reatomAsync, withCache, withDataAtom, withStatusesAtom } from "@reatom/async";

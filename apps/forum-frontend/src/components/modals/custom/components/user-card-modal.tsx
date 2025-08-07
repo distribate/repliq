@@ -1,5 +1,4 @@
 import { Typography } from "@repo/ui/src/components/typography.tsx";
-import { UserEntity } from "@repo/types/entities/entities-type.ts";
 import { ReactNode } from "react";
 import {
   Dialog,
@@ -21,7 +20,7 @@ type UserCardModalProperties =
     trigger: ReactNode;
   };
 
-type UserCardModal = Pick<UserEntity, "nickname"> & UserCardModalProperties;
+type UserCardModal = { nickname: string } & UserCardModalProperties;
 
 export const userCardDialogIsOpenAtom = atom(false, "userCardDialogIsOpen")
 

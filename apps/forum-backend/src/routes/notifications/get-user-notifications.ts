@@ -2,7 +2,7 @@ import { throwError } from '@repo/lib/helpers/throw-error.ts';
 import { getUserNotifications } from "#lib/queries/user/get-user-notifications.ts";
 import { Hono } from "hono";
 import { getNickname } from '#utils/get-nickname-from-storage.ts';
-import { z } from 'zod/v4';
+import * as z from "zod";
 import { zValidator } from '@hono/zod-validator';
 
 export const getUserNotificationsSchema = z.object({

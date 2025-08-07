@@ -1,7 +1,7 @@
 import { reatomAsync, withStatusesAtom } from "@reatom/async"
 import { atom } from "@reatom/core"
 import { sleep } from "@reatom/framework"
-import { forumUserClient } from "@repo/shared/api/forum-client"
+import { forumUserClient } from "#shared/forum-client"
 import { toast } from "sonner"
 import { toggleGlobalDialogAction } from "./user-settings.model"
 

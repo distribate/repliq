@@ -1,4 +1,4 @@
-import { Hono } from 'hono';
+import { Hono, type Context } from 'hono';
 import { zValidator } from '@hono/zod-validator';
 import { createUserTransaction } from '../lib/transactions/create-user-transaction.ts';
 import { throwError } from '@repo/lib/helpers/throw-error.ts';
@@ -8,8 +8,16 @@ import { validateAuthenticationRequest } from '../lib/validators/validate-authen
 import { validateExistsUser } from '../lib/validators/validate-exists-user.ts';
 import { logger } from '@repo/lib/utils/logger.ts';
 
+function check(ctx: Context) {
+  const isallowed = ctx.req.header()["private-key"] === 'A7K9Q2Z'
+
+  if (!isallowed) return ctx.json({ error: "Private key is not defined" }, 400);
+}
+
 export const registerRoute = new Hono()
   .post('/register', zValidator('json', registerSchema), async (ctx) => {
+    check(ctx);
+    
     const {
       password, findout, referrer, nickname, token
     } = registerSchema.parse(await ctx.req.json());

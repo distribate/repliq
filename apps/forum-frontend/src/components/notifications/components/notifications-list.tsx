@@ -4,7 +4,7 @@ import dayjs from "@repo/lib/constants/dayjs-instance";
 import { checkNotificationAction } from "#components/notifications/models/notifications.model";
 import { Separator } from "@repo/ui/src/components/separator";
 import { Skeleton } from "@repo/ui/src/components/skeleton";
-import { forumUserClient } from "@repo/shared/api/forum-client";
+import { forumUserClient } from "#shared/forum-client";
 import type { InferResponseType } from "hono/client";
 import { Fragment } from "react/jsx-runtime";
 import { updateNotificationsAction } from "#components/notifications/models/notifications.model";

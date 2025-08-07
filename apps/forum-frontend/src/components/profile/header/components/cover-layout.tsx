@@ -2,10 +2,9 @@ import { InView } from "react-intersection-observer";
 import { coverAtom } from "#components/profile/header/models/cover.model";
 import { UserCover, UserCoverWrapper } from "./cover";
 import { lazy, PropsWithChildren, Suspense } from "react";
-import { UserCoverSkeleton } from "#components/skeletons/components/user-cover-skeleton";
 import { Typography } from "@repo/ui/src/components/typography";
 import { reatomComponent } from "@reatom/npm-react";
-import { requestedUserAccountTypeAtom, defineUserAction, requestedUserAtom, requestedUserProfileStatusAtom } from "#components/profile/main/models/requested-user.model";
+import { requestedUserAccountTypeAtom, requestedUserAtom, requestedUserProfileStatusAtom } from "#components/profile/main/models/requested-user.model";
 import { UserCoverAvatarWrapper } from "./cover-avatar";
 import { UserNickname } from "#components/user/name/nickname";
 
@@ -79,19 +78,15 @@ export const UserCoverLayout = reatomComponent<PropsWithChildren>(({ ctx, childr
 
   return (
     <>
-      {ctx.spy(defineUserAction.statusesAtom).isPending ? <UserCoverSkeleton /> : (
-        <>
-          <InView
-            as="div"
-            className={inView ? `h-svh absolute left-0 top-0 right-0` : "h-[20px] absolute left-0 top-0 right-0"}
-            onChange={(inView, _) => coverAtom(ctx, (state) => ({ ...state, inView }))}
-          />
-          <div className="w-full h-full relative">
-            <UserCover />
-            <UserDescription />
-          </div>
-        </>
-      )}
+      <InView
+        as="div"
+        className={inView ? `h-svh absolute left-0 top-0 right-0` : "h-[20px] absolute left-0 top-0 right-0"}
+        onChange={(inView, _) => coverAtom(ctx, (state) => ({ ...state, inView }))}
+      />
+      <div className="w-full h-full relative">
+        <UserCover />
+        <UserDescription />
+      </div>
       {status === 'privated' ? (
         <Suspense>
           <Privated />

@@ -1,7 +1,7 @@
 import { getThreadsCategories } from "#lib/queries/categories/get-category-threads.ts";
 import { zValidator } from "@hono/zod-validator";
 import { Hono } from "hono";
-import { z } from "zod/v4";
+import * as z from "zod";
 import { throwError } from '@repo/lib/helpers/throw-error.ts';
 
 export const getCategoryThreadsSchema = z.object({

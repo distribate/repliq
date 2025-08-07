@@ -1,5 +1,5 @@
 import { THREAD_CONTENT_LIMIT_DEFAULT, THREAD_DESCRIPTION_LIMIT, THREAD_TITLE_LIMIT } from "../../../shared/constants/limits";
-import { z } from "zod/v4";
+import * as z from "zod";
 
 export const threadTitleSchema = z
   .string()

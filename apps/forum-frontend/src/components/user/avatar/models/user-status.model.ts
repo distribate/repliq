@@ -1,9 +1,9 @@
 import { logger } from '@repo/lib/utils/logger.ts';
-import { withHistory } from '@repo/lib/utils/reatom/with-history';
+import { withHistory } from '#lib/with-history';
 import { withReset } from '@reatom/framework';
 import { reatomAsync, withStatusesAtom } from '@reatom/async';
 import { atom } from '@reatom/core';
-import { forumUserClient } from "@repo/shared/api/forum-client";
+import { forumUserClient } from "#shared/forum-client";
 import dayjs from "@repo/lib/constants/dayjs-instance";
 
 export const formatIssuedTime = (issuedDate: string | null) => {

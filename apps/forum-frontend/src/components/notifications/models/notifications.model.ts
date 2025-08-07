@@ -1,6 +1,6 @@
 import { atom } from "@reatom/core"
 import { reatomAsync, withStatusesAtom } from "@reatom/async"
-import { forumUserClient } from "@repo/shared/api/forum-client"
+import { forumUserClient } from "#shared/forum-client"
 import type { InferResponseType } from "hono/client"
 import { userGlobalOptionsAtom } from "#components/user/models/current-user.model"
 

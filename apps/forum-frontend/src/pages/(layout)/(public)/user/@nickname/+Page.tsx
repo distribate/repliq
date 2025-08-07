@@ -1,6 +1,6 @@
 import { UserCoverLayout } from '#components/profile/header/components/cover-layout.tsx'
 import {
-  defineUserAction,
+  defineUser,
   requestedUserAccountTypeAtom,
   requestedUserParamAtom,
   requestedUserProfileBlockedAtom,
@@ -18,7 +18,7 @@ const Deleted = clientOnly(() => import("#components/templates/components/user-d
 
 const DefineUser = () => {
   const { data, nickname: target } = useData<Data>();
-  useUpdate((ctx) => defineUserAction(ctx, data), [target])
+  useUpdate((ctx) => defineUser(ctx, data), [target])
   return null
 }
 
@@ -44,7 +44,7 @@ const Page = reatomComponent(({ ctx }) => {
 
   switch (ctx.spy(requestedUserProfileStatusAtom)) {
     case "banned":
-      return <Banned requestedUserNickname={ctx.spy(requestedUserParamAtom)} />;
+      return <Banned nickname={ctx.spy(requestedUserParamAtom)} />;
     case "blocked":
       return <Blocked type={ctx.spy(requestedUserProfileBlockedAtom)!} />
     default:

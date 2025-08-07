@@ -2,7 +2,7 @@ import { JsonValue } from "#helpers/json-value.ts"
 import { supabase } from "#shared/supabase/supabase-client.ts"
 import type { Transaction } from "kysely"
 import type { DB } from "@repo/types/db/forum-database-types";
-import type { z } from "zod/v4";
+import * as z from "zod";
 import type { createThreadSchema } from "@repo/types/schemas/thread/create-thread-schema";
 import { forumDB } from "#shared/database/forum-db.ts";
 import { nanoid } from "nanoid";

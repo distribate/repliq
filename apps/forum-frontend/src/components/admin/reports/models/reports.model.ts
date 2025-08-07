@@ -1,8 +1,9 @@
-import { reatomResource, withCache, withStatusesAtom } from "@reatom/async"
-import { action, atom, AtomState } from "@reatom/core"
+import { reatomAsync, withDataAtom, withStatusesAtom } from "@reatom/async"
+import { action, atom } from "@reatom/core"
 import { withReset } from "@reatom/framework"
-import { forumAdminClient } from "@repo/shared/api/forum-client"
+import { forumAdminClient } from "#shared/forum-client"
 import { ReportType } from "@repo/types/db/forum-database-types"
+import { toast } from "sonner"
 
 type SelectedReport = {
   user_avatar: string | null;
@@ -18,27 +19,26 @@ type SelectedReport = {
 
 export type GetReportsResponse = SelectedReport[]
 
-export const reportsAtom = atom<SelectedReport[] | null>(null, 'reports')
-
-async function getReports() {
-  const res = await forumAdminClient.private["get-reports"].$get()
+async function getReports(init?: RequestInit) {
+  const res = await forumAdminClient.private["get-reports"].$get({}, { init })
   const data = await res.json()
-
-  if ("error" in data) return null
+  if ("error" in data) throw new Error(data.error)
 
   return data.data
 }
 
-export const reportsAction = reatomResource(async (ctx) => {
-  return await ctx.schedule(async () => {
-    const res = await getReports()
-
-    reportsAtom(ctx, res)
-  })
-}).pipe(withStatusesAtom(), withCache())
+export const reportsAction = reatomAsync(async (ctx) => {
+  // @ts-expect-error
+  return await ctx.schedule(() => getReports({ signal: ctx.controller.signal }))
+}, {
+  name: "reportsAction",
+  onReject: (_, e) => {
+    if (e instanceof Error) toast.error(e.message)
+  },
+}).pipe(withStatusesAtom(), withDataAtom())
 
 export const selectReportAction = action((ctx, id: SelectedReport["id"]) => {
-  const reports = ctx.get(reportsAtom)
+  const reports = ctx.get(reportsAction.dataAtom)
   if (!reports) return;
 
   let target: SelectedReport | null = null;

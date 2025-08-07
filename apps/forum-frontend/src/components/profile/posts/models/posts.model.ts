@@ -3,7 +3,7 @@ import { atom, Ctx } from '@reatom/core';
 import { reatomAsync, withStatusesAtom } from '@reatom/async';
 import { withReset } from '@reatom/framework';
 import { isParamChanged, requestedUserParamAtom } from '#components/profile/main/models/requested-user.model.ts';
-import { forumUserClient } from '@repo/shared/api/forum-client.ts';
+import { forumUserClient } from '#shared/forum-client.ts';
 import { z } from 'zod';
 import { getUserPostsSchema } from '@repo/types/schemas/posts/user-posts-schema.ts';
 import { logger } from '@repo/lib/utils/logger.ts';

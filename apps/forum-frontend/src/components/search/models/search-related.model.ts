@@ -1,4 +1,4 @@
-import { forumThreadClient } from "@repo/shared/api/forum-client";
+import { forumThreadClient } from "#shared/forum-client";
 import { reatomAsync, withCache, withDataAtom, withStatusesAtom } from "@reatom/async";
 import { getLatestRegUsers } from "#components/layout/components/widgets/latest-users/latest-reg-users.model";
 import { sleep } from "@reatom/framework";

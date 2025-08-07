@@ -1,4 +1,4 @@
-// import { forumSharedClient } from "@repo/shared/api/forum-client";
+// import { forumSharedClient } from "#shared/forum-client";
 // import { reatomResource, withCache, withDataAtom, withStatusesAtom } from "@reatom/async";
 
 // async function getFavoriteItems() {

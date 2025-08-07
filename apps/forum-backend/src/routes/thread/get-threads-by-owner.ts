@@ -6,7 +6,7 @@ import { throwError } from "@repo/lib/helpers/throw-error";
 import { Hono } from "hono";
 import { sql } from "kysely";
 import { executeWithCursorPagination } from "kysely-paginate";
-import { z } from "zod/v4";
+import * as z from "zod";
 
 const getThreadsByOwnerSchema = z.object({
   exclude: z.string(),
