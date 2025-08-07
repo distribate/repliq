@@ -21,8 +21,8 @@ export const OnlineUsers = reatomComponent(({ ctx }) => {
   const onlineUsers = ctx.spy(onlineUsersResource.dataAtom)
 
   return (
-    <div className="flex flex-col gap-4 w-full py-6 px-4 rounded-lg overflow-hidden bg-primary-color">
-      <Typography textSize="big" textColor="shark_white" className="font-semibold select-none">
+    <div className="flex flex-col gap-4 w-full p-4 rounded-lg overflow-hidden bg-primary-color">
+      <Typography textSize="big" textColor="shark_white" className="font-semibold">
         Сейчас онлайн
       </Typography>
       <div className="grid grid-cols-6 2xl:grid-cols-7 gap-2">

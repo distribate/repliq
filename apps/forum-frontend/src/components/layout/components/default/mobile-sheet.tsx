@@ -1,5 +1,5 @@
-import { currentUserAtom, currentUserNicknameAtom } from "#components/user/models/current-user.model"
-import { Sheet, SheetContent } from "@repo/ui/src/components/sheet.tsx"
+import { currentUserNicknameAtom, getUser } from "#components/user/models/current-user.model"
+import { Sheet, SheetContent, SheetTitle } from "@repo/ui/src/components/sheet.tsx"
 import { atom } from "@reatom/core"
 import { cva, VariantProps } from "class-variance-authority"
 import { Typography } from "@repo/ui/src/components/typography"
@@ -29,7 +29,7 @@ export const BottomBar = reatomComponent(({ ctx }) => {
     <div id="bottom-bar" style={{ height: '74px' }} className="md:hidden fixed bottom-0 w-full px-6 z-[45] bg-[#151515]">
       <div className="flex items-center gap-2 justify-between h-full w-full">
         <CustomLink
-          to="/"
+          to="/home"
           data-state={path === "/"}
           className="text-shark-300 data-[state=true]:text-biloba-flower-500"
         >
@@ -56,58 +56,71 @@ export const BottomBar = reatomComponent(({ ctx }) => {
 }, "BottomBar")
 
 export const SheetMenu = reatomComponent(({ ctx }) => {
-  const currentUser = ctx.spy(currentUserAtom)
-  if (!currentUser) return null;
+  const { nickname, avatar, is_donate } = getUser(ctx)
 
-  const handle = async (callback: void | Promise<void>) => {
+  const handle = async (fn: void | Promise<void>) => {
     sheetMenuIsOpenAtom(ctx, false)
-    return callback
+    return fn
   }
 
   return (
     <Sheet open={ctx.spy(sheetMenuIsOpenAtom)} onOpenChange={v => sheetMenuIsOpenAtom(ctx, v)}>
-      <SheetContent side="right" className="overflow-y-auto h-full w-3/5">
+      <SheetContent side="right" className="overflow-y-auto rounded-md h-full w-3/5">
+        <SheetTitle className="hidden"></SheetTitle>
         <div className="flex bg-shark-950 gap-4 p-4 flex-col">
-          <Avatar url={currentUser.avatar} nickname={currentUser.nickname} propHeight={64} propWidth={64} />
+          {/* <div className="max-w-[64px] max-h-[64px]"> */}
+            <Avatar
+              url={avatar}
+              nickname={nickname}
+              propHeight={64}
+              propWidth={64}
+              className="max-w-[64px] max-h-[64px]"
+            />
+          {/* </div> */}
           <div className="flex flex-col gap-1">
-            <UserNickname nickname={currentUser.nickname} className="text-[18px] font-medium text-shark-50" />
-            <UserDonate is_donate={currentUser.is_donate} />
+            <UserNickname nickname={nickname} className="text-[18px] font-medium text-shark-50" />
+            <UserDonate is_donate={is_donate} />
           </div>
         </div>
-        <div className="flex flex-col p-4 gap-y-4">
-          <SidebarMobileButton
-            titleButton="Профиль"
-            func={() => handle(navigate(`/user/${currentUser.nickname}`))}
-          />
-          <SidebarMobileButton
-            titleButton="Друзья"
-            func={() => handle(
-              navigate("/friends"))
-            }
-          />
-          <SidebarMobileButton
-            titleButton="Коллекции"
-            func={() => {
-              handle(
-                navigate(`/collection?type=all`)
-              )
-            }}
-          />
-          <SidebarMobileButton
-            titleButton="Настройки"
-            func={() => {
-              handle(toggleGlobalDialogAction(ctx, { reset: true, value: true }))
-            }}
-          />
+        <div className="flex flex-col p-4 gap-2">
+          <div className="flex flex-col gap-4 w-full h-full">
+            <SidebarMobileButton
+              titleButton="Профиль"
+              onClick={() => handle(navigate(createIdLink("user", nickname)))}
+            />
+            <SidebarMobileButton
+              titleButton="Друзья"
+              onClick={() => handle(navigate("/friends"))}
+            />
+            <SidebarMobileButton
+              titleButton="Создать тред"
+              onClick={() => handle(navigate("/create-thread"))}
+            />
+            <SidebarMobileButton
+              titleButton="Коллекции"
+              onClick={() => handle(navigate(`/collection?type=all`))}
+            />
+            <SidebarMobileButton
+              titleButton="Настройки"
+              onClick={() => handle(toggleGlobalDialogAction(ctx, { reset: true, value: true }))}
+            />
+          </div>
           <Separator />
-          <SidebarMobileButton
-            titleButton="Выйти"
-            variant="negative"
-            func={() => {
-              // @ts-expect-error
-              handle(logoutModalIsOpenAtom(ctx, true))
-            }}
-          />
+          <div className="flex flex-col gap-4 w-full h-full">
+            <SidebarMobileButton
+              titleButton="Создать тикет"
+              onClick={() => handle(navigate("/create-ticket"))}
+            />
+            <SidebarMobileButton
+              titleButton="Новости проекта"
+              onClick={() => handle(navigate("/news"))}
+            />
+            <SidebarMobileButton
+              titleButton="Выйти"
+              variant="negative"
+              onClick={() => handle(void logoutModalIsOpenAtom(ctx, true))}
+            />
+          </div>
         </div>
       </SheetContent>
     </Sheet>
@@ -131,13 +144,13 @@ const sidebarButtonVariants = cva(`
 
 type SidebarButtonProps = HTMLAttributes<HTMLDivElement>
   & VariantProps<typeof sidebarButtonVariants> & {
-    func: () => void,
+    onClick: () => void,
     titleButton: string,
   }
 
-export const SidebarMobileButton = ({ variant, className, func, titleButton, ...props }: SidebarButtonProps) => {
+export const SidebarMobileButton = ({ variant, className, onClick, titleButton, ...props }: SidebarButtonProps) => {
   return (
-    <div className={sidebarButtonVariants({ variant, className })} onClick={func} {...props}>
+    <div className={sidebarButtonVariants({ variant, className })} onClick={onClick} {...props}>
       <Typography>
         {titleButton}
       </Typography>

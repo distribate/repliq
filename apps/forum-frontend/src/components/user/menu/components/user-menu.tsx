@@ -1,11 +1,10 @@
 import { Separator } from "@repo/ui/src/components/separator.tsx";
 import { Typography } from "@repo/ui/src/components/typography.tsx";
 import { UsersRound } from "lucide-react";
-import { Shield, LogOut } from 'lucide-react';
+import { Shield } from 'lucide-react';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@repo/ui/src/components/dropdown-menu";
 import { ReactNode } from "react";
 import { reatomComponent } from "@reatom/npm-react";
-import { logoutModalIsOpenAtom } from "#components/modals/action-confirmation/components/logout/models/logout.model";
 import { CustomLink } from "#components/shared/link";
 import { toggleGlobalDialogAction } from "#components/modals/user-settings/models/user-settings.model";
 import { createIdLink } from "@repo/lib/utils/create-link";
@@ -67,21 +66,6 @@ const Settings = reatomComponent(({ ctx }) => {
   )
 }, "UserMenu.Settings")
 
-const Logout = reatomComponent(({ ctx }) => {
-  const handle = () => {
-    requestAnimationFrame(() => logoutModalIsOpenAtom(ctx, true));
-  }
-
-  return (
-    <DropdownMenuItem onSelect={handle} className="gap-2 group cursor-pointer">
-      <LogOut size={20} className="text-red-500" />
-      <Typography className="text-red-500" textSize="medium">
-        Выйти
-      </Typography>
-    </DropdownMenuItem>
-  )
-}, "UserMenu.Logout")
-
 const COLLECTION_LINKS = [
   { icon: IconLibrary, name: "Тикеты", val: "tickets" }
 ];
@@ -119,19 +103,17 @@ export const UserMenu = ({ trigger }: { trigger: ReactNode }) => {
                 </Typography>
               </DropdownMenuItem>
             </CustomLink>
-            <CustomLink to="/notifications">
+            <CustomLink to="/dashboard">
               <DropdownMenuItem className="gap-2 group cursor-pointer" >
                 <IconBell size={20} className="text-shark-300" />
                 <Typography textSize="medium">
-                  Уведомления
+                  Статистика
                 </Typography>
               </DropdownMenuItem>
             </CustomLink>
             <Separator />
             <Admin />
             <Settings />
-            <Separator />
-            <Logout />
           </div>
         </DropdownMenuContent>
       </DropdownMenu>

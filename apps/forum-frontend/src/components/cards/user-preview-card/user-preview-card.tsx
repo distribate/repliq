@@ -5,6 +5,8 @@ import { useState } from "react";
 import { reatomComponent } from "@reatom/npm-react";
 import { UserSummaryCard } from "../user-main-card/components/user-summary-card";
 import { selectedUserCardAtom } from "../user-main-card/models/user-main-card.model";
+import { CustomLink } from "#components/shared/link";
+import { createIdLink } from "@repo/lib/utils/create-link";
 
 export type UserCardProps = Pick<UserDetailed, "nickname" | "avatar">;
 
@@ -17,18 +19,23 @@ export const UserPreviewCard = reatomComponent<UserCardProps>(({ ctx, avatar, ni
   }
 
   return (
-    <Dialog open={open} onOpenChange={handleOpenChange}>
-      <DialogTrigger title={nickname}>
-        <div className="flex cursor-pointer rounded-sm relative group overflow-hidden">
+    <div className="flex items-center w-full gap-2">
+      <Dialog open={open} onOpenChange={handleOpenChange}>
+        <DialogTrigger className="min-w-[50px] min-h-[50px]">
           <Avatar url={avatar} nickname={nickname} propHeight={50} propWidth={50} />
-        </div>
-      </DialogTrigger>
-      <DialogContent
-        withClose={false}
-        className="!p-0 !w-[424px] !overflow-visible !border-none !bg-transparent"
-      >
-        <UserSummaryCard />
-      </DialogContent>
-    </Dialog>
+        </DialogTrigger>
+        <DialogContent
+          withClose={false}
+          className="!p-0 !w-[424px] !overflow-visible !border-none !bg-transparent"
+        >
+          <UserSummaryCard />
+        </DialogContent>
+      </Dialog>
+      <div className="flex flex-col">
+        <CustomLink to={createIdLink("user", nickname)}>
+          <p>{nickname}</p>
+        </CustomLink>
+      </div>
+    </div>
   );
 }, "UserPreviewCard")

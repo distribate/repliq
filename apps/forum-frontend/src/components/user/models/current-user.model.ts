@@ -16,6 +16,22 @@ export const currentUserAtom = atom<UserDetailed | null>(null, "currentUser").pi
   withSsr(CURRENT_USER_ATOM_KEY)
 )
 
+export const userGlobalOptionsInitial = {
+  is_admin: false,
+  can_create_threads: false,
+  can_create_comments: false,
+  can_create_posts: false,
+  can_create_issue: false,
+  has_new_notifications: false,
+  has_new_friends: false,
+}
+
+export const USER_GLOBAL_OPTIONS_KEY = "userGlobalOptionsAtom"
+
+export const userGlobalOptionsAtom = atom<typeof userGlobalOptionsInitial>(userGlobalOptionsInitial, "userGlobalOptions").pipe(
+  withSsr(USER_GLOBAL_OPTIONS_KEY)
+)
+
 const client = ky.create({
   credentials: "include"
 })
@@ -60,17 +76,3 @@ export async function getUserGlobalOptions(args?: RequestInit) {
   if (!data || "error" in data) return null;
   return data.data;
 }
-
-const initial = {
-  is_admin: false,
-  can_create_threads: false,
-  can_create_comments: false,
-  can_create_posts: false,
-  can_create_issue: false,
-  has_new_notifications: false,
-  has_new_friends: false,
-}
-
-export const userGlobalOptionsAtom = atom<typeof initial>(initial, "userGlobalOptions").pipe(
-  withSsr("userGlobalOptionsAtom")
-)

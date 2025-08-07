@@ -9,6 +9,7 @@ import { friendStatusesAtom } from "../components/friend-button/models/friend-st
 import { myFriendsAction, myFriendsDataAtom } from "#components/friends/models/friends.model";
 import { withReset } from "@reatom/framework";
 import { currentUserAtom, currentUserNicknameAtom } from "#components/user/models/current-user.model";
+import { pageContextAtom } from "#lib/sync";
 import dayjs from "dayjs";
 
 type ControlIncomingRequest = ControlFriendRequests & { type: "reject" | "accept" }
@@ -39,62 +40,41 @@ const removeFriendActionVariablesAtom = atom<ControFriendShip | null>(null, "rem
 export async function deleteFriend({ friend_id }: Pick<ControlFriendRequest, "friend_id">) {
   const res = await forumUserClient.user["delete-friend"].$delete({ json: { friend_id } })
   const data = await res.json();
+  if ("error" in data) throw new Error(data.error)
 
-  if ("error" in data) {
-    return { error: data.error }
-  }
-
-  return { status: data.status, error: null }
+  return data.status
 }
 
 export async function deleteFriendRequest({ request_id }: Pick<ControlFriendRequest, "request_id">) {
   const res = await forumUserClient.user["delete-friend-request"].$post({ json: { request_id } })
   const data = await res.json();
-
-  if ("error" in data) {
-    return { error: data.error }
-  }
+  if ("error" in data) throw new Error(data.error)
 
   return {
-    data: {
-      request_id: null,
-      status: data.status
-    },
-    error: null
+    request_id: null,
+    status: data.status
   }
 }
 
 export async function createFriendRequest({ recipient }: Pick<ControlFriendRequest, "recipient">) {
   const res = await forumUserClient.user["create-friend-request"].$post({ json: { recipient } })
   const data = await res.json();
-
-  if ("error" in data) {
-    return { error: data.error }
-  }
-
+  if ("error" in data) throw new Error(data.error)
+  
   return {
-    data: {
-      request_id: data.request_id,
-      status: data.status
-    },
-    error: null
+    request_id: data.request_id,
+    status: data.status
   }
 }
 
 export async function acceptFriendRequest({ request_id }: Pick<ControlFriendRequest, "request_id">) {
   const res = await forumUserClient.user["accept-friend-request"].$post({ json: { request_id } })
   const data = await res.json();
-
-  if ("error" in data) {
-    return { error: data.error }
-  }
+  if ("error" in data) throw new Error(data.error)
 
   return {
-    data: {
-      status: data.status,
-      friend_id: data.friend_id
-    },
-    error: null
+    status: data.status,
+    friend_id: data.friend_id
   }
 }
 
@@ -109,29 +89,22 @@ export const controlOutgoingRequestAction = reatomAsync(async (ctx, options: Con
   }
 }, {
   name: "controlOutgoingRequestAction",
-  onFulfill: async (ctx, res) => {
-    if (!res) return;
-
+  onReject: (_, e) => {
+    if (e instanceof Error) {
+      const description = friendRequestStatus[e.message] ?? e.message;
+      toast.error("Произошла ошибка", { description });
+    }
+  },
+  onFulfill: async (ctx, data) => {
+    const pageContext = ctx.get(pageContextAtom)
     const variables = ctx.get(controlOutgoingRequestVariablesAtom)
-    if (!variables) return;
 
-    const { data, error } = res;
-    if (!data) return;
-    
-    const currentPath = window.location.href
-    // router.state.location.pathname;
-
+    if (!variables || !pageContext) return;
 
     toast.success(friendRequestStatus[data.status]);
 
     if (variables.type === 'reject') {
-      if (error) {
-        return toast.error("Произошла ошибка", {
-          description: friendRequestStatus[error] ?? error
-        });
-      }
-
-      if (currentPath === '/friends') {
+      if (pageContext.urlPathname === '/friends') {
         outgoingRequestsAtom(ctx, (state) => {
           if (!state) state = []
           return state.filter(target => target.recipient !== variables.recipient)
@@ -142,27 +115,26 @@ export const controlOutgoingRequestAction = reatomAsync(async (ctx, options: Con
 
           return {
             ...state,
-            requestsCount: { ...state.requestsCount, outgoing: state.requestsCount.outgoing - 1 }
+            requestsCount: {
+              ...state.requestsCount,
+              outgoing: state.requestsCount.outgoing - 1
+            }
           }
         })
       } else {
         friendStatusesAtom(ctx, (state) => ({
           ...state,
-          [variables.recipient]: { request_id: null, status: "not-friend", friend_id: null }
+          [variables.recipient]: {
+            request_id: null,
+            status: "not-friend",
+            friend_id: null
+          }
         }))
-
-        // ctx.schedule(() => router.invalidate())
       }
     }
 
     if (variables.type === 'create') {
-      if (error) {
-        return toast.error("Невозможно добавить этого игрока в друзья", {
-          description: friendRequestStatus[error] ?? error
-        });
-      }
-
-      if (currentPath === '/friends') {
+      if (pageContext.urlPathname === '/friends') {
         outgoingRequestsAtom(ctx, (state) => {
           if (!state) state = []
 
@@ -182,7 +154,10 @@ export const controlOutgoingRequestAction = reatomAsync(async (ctx, options: Con
 
           return {
             ...state,
-            requestsCount: { ...state.requestsCount, outgoing: state.requestsCount.outgoing + 1 }
+            requestsCount: {
+              ...state.requestsCount,
+              outgoing: state.requestsCount.outgoing + 1
+            }
           }
         })
 
@@ -190,10 +165,12 @@ export const controlOutgoingRequestAction = reatomAsync(async (ctx, options: Con
       } else {
         friendStatusesAtom(ctx, (state) => ({
           ...state,
-          [variables.recipient]: { request_id: data.request_id, status: "reject-request", friend_id: null }
+          [variables.recipient]: {
+            request_id: data.request_id,
+            status: "reject-request",
+            friend_id: null
+          }
         }))
-
-        // ctx.schedule(() => router.invalidate())
       }
     }
   }
@@ -210,26 +187,22 @@ export const controlIncomingRequestAction = reatomAsync(async (ctx, options: Con
   }
 }, {
   name: "controlIncomingRequestAction",
-  onFulfill: (ctx, res) => {
-    if (!res) return;
-
-    const { data, error } = res;
-    const variables = ctx.get(controlIncomingRequestVariablesAtom)
-    if (!variables || !data) return;
-
-    if (error) {
-      return toast.error("Произошла ошибка", {
-        description: friendRequestStatus[error] ?? error
-      });
+  onReject: (_, e) => {
+    if (e instanceof Error) {
+      const description = friendRequestStatus[e.message] ?? e.message;
+      toast.error("Произошла ошибка", { description });
     }
+  },
+  onFulfill: (ctx, data) => {
+    const pageContext = ctx.get(pageContextAtom)
+    const variables = ctx.get(controlIncomingRequestVariablesAtom);
+
+    if (!variables || !pageContext) return;
 
     toast.success(friendRequestStatus[data.status]);
 
-    const currentPath = window.location.href 
-    // router.state.location.pathname;
-
     if (variables.type === 'accept') {
-      if (currentPath === '/friends') {
+      if (pageContext.urlPathname === '/friends') {
         incomingRequestsAtom(ctx, (state) => {
           if (!state) state = []
 
@@ -242,7 +215,10 @@ export const controlIncomingRequestAction = reatomAsync(async (ctx, options: Con
           return {
             ...state,
             friendsCount: state.friendsCount + 1,
-            requestsCount: { ...state.requestsCount, incoming: state.requestsCount.incoming - 1 }
+            requestsCount: {
+              ...state.requestsCount,
+              incoming: state.requestsCount.incoming - 1
+            }
           }
         })
         myFriendsAction(ctx)
@@ -250,16 +226,18 @@ export const controlIncomingRequestAction = reatomAsync(async (ctx, options: Con
         if ("friend_id" in data) {
           friendStatusesAtom(ctx, (state) => ({
             ...state,
-            [variables.recipient]: { friend_id: data.friend_id!, status: "friend", request_id: null }
+            [variables.recipient]: {
+              friend_id: data.friend_id!,
+              status: "friend",
+              request_id: null
+            }
           }))
         }
-
-        // ctx.schedule(() => router.invalidate())
       }
     }
 
     if (variables.type === 'reject') {
-      if (currentPath === '/friends') {
+      if (pageContext.urlPathname === '/friends') {
         incomingRequestsAtom(ctx, (state) => {
           if (!state) state = []
 
@@ -271,21 +249,25 @@ export const controlIncomingRequestAction = reatomAsync(async (ctx, options: Con
 
           return {
             ...state,
-            requestsCount: { ...state.requestsCount, incoming: state.requestsCount.incoming - 1 }
+            requestsCount: {
+              ...state.requestsCount,
+              incoming: state.requestsCount.incoming - 1
+            }
           }
         })
       } else {
         friendStatusesAtom(ctx, (state) => ({
           ...state,
-          [variables.recipient]: { friend_id: null, status: "not-friend", request_id: null }
+          [variables.recipient]: {
+            friend_id: null,
+            status: "not-friend",
+            request_id: null
+          }
         }))
-
-        // ctx.schedule(() => router.invalidate())
       }
     }
   }
 }).pipe(withStatusesAtom())
-
 
 export const removeFriendIsOpenAtom = atom(false, "removeFriendIsOpen")
 export const removeFriendOptionsAtom = atom<{ nickname: string, friend_id: string } | null>(null, "removeFriendOptions").pipe(withReset())
@@ -301,26 +283,21 @@ export const removeFriendAction = reatomAsync(async (ctx, options: ControFriendS
   return await ctx.schedule(() => deleteFriend({ friend_id: options.friend_id }))
 }, {
   name: "removeFriendAction",
-  onFulfill: (ctx, res) => {
-    if (!res) return
-
-    const { status, error } = res;
+  onReject: (_, e) => {
+    if (e instanceof Error) {
+      const description = friendRequestStatus[e.message] ?? e.message;
+      toast.error("Произошла ошибка", { description });
+    }
+  },
+  onFulfill: (ctx, status) => {
+    const pageContext = ctx.get(pageContextAtom)
     const variables = ctx.get(removeFriendActionVariablesAtom)
 
-    if (!status || !variables) return;
-
-    if (error) {
-      return toast.error("Произошла ошибка", {
-        description: friendRequestStatus[error] ?? error
-      });
-    }
+    if (!variables || !pageContext) return;
 
     toast.success(friendRequestStatus[status]);
 
-    const currentPath = window.location.href
-    // router.state.location.pathname;
-
-    if (currentPath === '/friends') {
+    if (pageContext.urlPathname === '/friends') {
       myFriendsDataAtom(ctx, (state) => {
         if (!state) state = []
         return state.filter(target => target.nickname !== variables.recipient)
@@ -329,10 +306,12 @@ export const removeFriendAction = reatomAsync(async (ctx, options: ControFriendS
     } else {
       friendStatusesAtom(ctx, (state) => ({
         ...state,
-        [variables.recipient]: { friend_id: null, status: "not-friend", request_id: null }
+        [variables.recipient]: {
+          friend_id: null,
+          status: "not-friend",
+          request_id: null
+        }
       }))
-
-      // ctx.schedule(() => router.invalidate())
     }
   }
 }).pipe(withStatusesAtom())

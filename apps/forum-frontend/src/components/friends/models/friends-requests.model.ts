@@ -4,16 +4,22 @@ import { withReset } from "@reatom/framework";
 import { forumUserClient } from "@repo/shared/api/forum-client";
 import { logger } from "@repo/lib/utils/logger";
 
-type FriendRequestEntity = { initiator: string, recipient: string, created_at: string, id: string, avatar: string | null }
+type FriendRequestEntity = {
+  id: string,
+  initiator: string,
+  recipient: string,
+  created_at: string,
+  avatar: string | null
+}
 
 export const incomingRequestsAtom = atom<FriendRequestEntity[] | null>(null, "incomingRequests").pipe(withReset())
-export const outgoingRequestsAtom = atom<FriendRequestEntity[] | null>(null, "outgoingRequests")
+export const outgoingRequestsAtom = atom<FriendRequestEntity[] | null>(null, "outgoingRequests").pipe(withReset())
 
-incomingRequestsAtom.onChange((_, value) => logger.info("incomingRequestsAtom", value))
-outgoingRequestsAtom.onChange((_, value) => logger.info("outgoingRequestsAtom", value))
-
-async function getRequestsByType(type: "incoming" | "outgoing"): Promise<FriendRequestEntity[] | null> {
-  const res = await forumUserClient.user["get-friends-requests"].$get({ query: { type } });
+async function getRequestsByType(
+  type: "incoming" | "outgoing",
+  init?: RequestInit
+): Promise<FriendRequestEntity[] | null> {
+  const res = await forumUserClient.user["get-friends-requests"].$get({ query: { type } }, { init });
   const data = await res.json();
 
   if (!data || "error" in data) return null;
@@ -22,8 +28,13 @@ async function getRequestsByType(type: "incoming" | "outgoing"): Promise<FriendR
 }
 
 export const incomingRequestsAction = reatomAsync(async (ctx) => {
-  if (ctx.get(incomingRequestsAtom)) return ctx.get(incomingRequestsAtom)
-  return await ctx.schedule(() => getRequestsByType("incoming"))
+  const cache = ctx.get(incomingRequestsAtom)
+
+  if (cache) {
+    return cache
+  }
+
+  return await ctx.schedule(() => getRequestsByType("incoming", { signal: ctx.controller.signal }))
 }, {
   name: "incomingRequestsAction",
   onFulfill: (ctx, res) => {
@@ -33,8 +44,13 @@ export const incomingRequestsAction = reatomAsync(async (ctx) => {
 })
 
 export const outgoingRequestsAction = reatomAsync(async (ctx) => {
-  if (ctx.get(outgoingRequestsAtom)) return ctx.get(outgoingRequestsAtom)
-  return await ctx.schedule(() => getRequestsByType("outgoing"))
+  const cache = ctx.get(outgoingRequestsAtom)
+
+  if (cache) {
+    return cache
+  }
+
+  return await ctx.schedule(() => getRequestsByType("outgoing", { signal: ctx.controller.signal }))
 }, {
   name: "outgoingRequestsAction",
   onFulfill: (ctx, res) => {
@@ -42,3 +58,6 @@ export const outgoingRequestsAction = reatomAsync(async (ctx) => {
     outgoingRequestsAtom(ctx, res)
   }
 })
+
+incomingRequestsAtom.onChange((_, v) => import.meta.env.DEV && logger.info("incomingRequestsAtom", v))
+outgoingRequestsAtom.onChange((_, v) => import.meta.env.DEV && logger.info("outgoingRequestsAtom", v))

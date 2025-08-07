@@ -10,6 +10,7 @@ import { coverAreaVariants } from '../../header/components/cover-area';
 import { logger } from '@repo/lib/utils/logger';
 import { toast } from 'sonner';
 import { currentUserNicknameAtom } from '#components/user/models/current-user.model';
+import { render } from 'vike/abort';
 
 type RequestedUserDetails = Pick<UserDetailed["preferences"],
   "game_stats_visible" | "real_name_visible" | "accept_friend_request" | "show_game_location" | "cover_outline_visible"
@@ -64,7 +65,6 @@ requestedUserPreferencesAtom.onChange((ctx, target) => {
 })
 
 export const defineUserAction = reatomAsync(async (ctx, target: RequestedUserFull) => {
-  console.log("executed defineUserAction")
   return target
 }, {
   name: "defineUserAction",
@@ -165,7 +165,7 @@ export async function getUserProfile(nickname: string, init?: RequestInit) {
   }
 
   if (!data) {
-    throw new Error("not-exist")
+    throw render(404)
   }
 
   return data.data

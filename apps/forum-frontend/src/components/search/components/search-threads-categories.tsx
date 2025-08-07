@@ -1,13 +1,12 @@
 import { CustomLink } from "#components/shared/link"
 import { availableCategoriesResource } from "#components/thread/create-thread/models/thread-form.model"
 import { reatomComponent } from "@reatom/npm-react"
-import { CATEGORY_URL } from "@repo/shared/constants/routes"
 import { Typography } from "@repo/ui/src/components/typography"
 
 const SearchThreadsCategory = ({ id, title, color, emoji }: { id: number, color: string | null, title: string, emoji: string }) => {
   return (
     <CustomLink
-      to={CATEGORY_URL + id}
+      to={`/category/` + id}
       key={id}
       style={{ backgroundColor: color ?? undefined }}
       className="flex flex-col relative cursor-pointer h-[80px] md:aspect-video hover:bg-shark-700 w-full md:h-full p-3 lg:p-4 rounded-lg bg-shark-950"

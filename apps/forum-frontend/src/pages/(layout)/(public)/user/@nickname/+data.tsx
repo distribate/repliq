@@ -1,7 +1,5 @@
 import { getUserProfile, RequestedUserFull } from "#components/profile/main/models/requested-user.model"
-import { CURRENT_USER_ATOM_KEY } from "#components/user/models/current-user.model"
 import { logRouting } from "#lib/helpers"
-import { PersistRecord } from "@reatom/persist"
 import { createIdLink } from "@repo/lib/utils/create-link"
 import { logger } from "@repo/lib/utils/logger"
 import { wrapTitle } from "@repo/lib/utils/wrap-title"
@@ -18,8 +16,6 @@ function metadata({ nickname, ...user }: RequestedUserFull) {
   const description = `Профиль ${nickname}. ${user.description ? `О себе: ${user.description}` : null}`
   const keywords = `Repliq profile, ${nickname} profile, ${nickname}, пользователь ${nickname}`
   const url = `https://fasberry.su${createIdLink("user", nickname)}`
-
-  console.log(url);
 
   return {
     title: wrapTitle(nickname),
@@ -61,24 +57,11 @@ export const data = async (
     const res = await getUserProfile(param, { headers });
 
     if (!res) {
-      throw new Error("Result is null")
+      throw render(404)
     }
 
-    data = res;
+    data = res as RequestedUserFull;;
   } catch (e) {
-    if (e instanceof Error) {
-      if (e.message === 'not-exist') {
-        const currentUser = (
-          pageContext.snapshot[CURRENT_USER_ATOM_KEY] as PersistRecord<{ nickname: string }> | undefined
-        )?.data ?? null;
-
-        if (currentUser) {
-          throw render(`/not-exist?redirect_nickname=${currentUser.nickname}`)
-        }
-
-        throw render(`/`)
-      }
-    }
     logger.error(e)
   }
 

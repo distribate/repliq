@@ -1,4 +1,3 @@
-import { lazy, Suspense } from "react"
 import { UserContentSkeleton } from "#components/skeletons/components/user-profile-skeleton";
 import { UserProfilePosts as Posts } from "#components/profile/posts/components/profile-posts";
 import { Separator } from "@repo/ui/src/components/separator";
@@ -15,11 +14,12 @@ import {
 import { SectionPrivatedTrigger } from '#components/templates/components/section-privated-trigger';
 import { AuthorizeTemplate } from '#components/templates/components/auth-template';
 import { isAuthenticatedAtom } from "#components/auth/models/auth.model";
+import { clientOnly } from "vike-react/clientOnly";
 
-const Account = lazy(() => import("#components/profile/account/components/profile-account.tsx").then(m => ({ default: m.UserProfileAccount })))
-const Friends = lazy(() => import("#components/profile/friends/components/profile-friends.tsx").then(m => ({ default: m.UserProfileFriends })))
-const Threads = lazy(() => import("#components/profile/threads/components/profile-threads.tsx").then(m => ({ default: m.UserProfileThreads })))
-const Minecraft = lazy(() => import("#components/profile/minecraft/minecraft").then(m => ({ default: m.Minecraft })));
+const Account = clientOnly(() => import("#components/profile/account/components/profile-account.tsx").then(m => m.UserProfileAccount))
+const Friends = clientOnly(() => import("#components/profile/friends/components/profile-friends.tsx").then(m => m.UserProfileFriends))
+const Threads = clientOnly(() => import("#components/profile/threads/components/profile-threads.tsx").then(m => m.UserProfileThreads))
+const Minecraft = clientOnly(() => import("#components/profile/minecraft/minecraft").then(m => m.Minecraft));
 
 const TabsListContent = reatomComponent(({ ctx }) => {
   return (
@@ -67,7 +67,10 @@ export const ProfileContentTabs = reatomComponent(({ ctx }) => {
   return (
     <div className="flex flex-col lg:flex-row w-full gap-12 h-full lg:px-16 relative z-[4]">
       <Tabs defaultValue="posts" className="flex flex-col gap-6 w-full h-full">
-        <TabsList className="md:hidden flex *:rounded-xl rounded-xl items-center no-scrollbar gap-1 justify-start px-2 py-4 overflow-x-auto bg-shark-950 w-full">
+        <TabsList
+          className="md:hidden flex *:rounded-xl rounded-xl 
+            items-center no-scrollbar gap-1 justify-start px-2 py-4 overflow-x-auto bg-shark-950 w-full"
+        >
           <TabsListContent />
         </TabsList>
         <TabsList className="hidden *:rounded-xl rounded-xl md:flex justify-start p-2 gap-2 w-fit bg-shark-950">
@@ -75,42 +78,21 @@ export const ProfileContentTabs = reatomComponent(({ ctx }) => {
         </TabsList>
         <div className="flex flex-col lg:flex-row items-start grow *:w-full w-full">
           <TabsContent value="posts">
-            {isAuthenticated ? (
-              <Posts />
-            ) : <AuthorizeTemplate />}
+            {isAuthenticated ? <Posts /> : <AuthorizeTemplate />}
           </TabsContent>
           <TabsContent value="threads">
-            {isAuthenticated ? (
-              <Suspense>
-                <Threads />
-              </Suspense>
-            ) : <AuthorizeTemplate />}
+            {isAuthenticated ? <Threads /> : <AuthorizeTemplate />}
           </TabsContent>
           <TabsContent value="friends">
-            {isAuthenticated && (
-              <Suspense>
-                <Friends />
-              </Suspense>
-            )}
-            {!isAuthenticated && <AuthorizeTemplate />}
+            {isAuthenticated ? <Friends /> : <AuthorizeTemplate />}
           </TabsContent>
           <TabsContent value="minecraft">
             {ctx.spy(requestedUserMinecraftProfileIsExistsAtom) && (
-              isAuthenticated ? (
-                <Suspense>
-                  <Minecraft />
-                </Suspense>
-              ) : <AuthorizeTemplate />
+              isAuthenticated ? <Minecraft /> : <AuthorizeTemplate />
             )}
           </TabsContent>
           <TabsContent value="account">
-            {isAuthenticated ? (
-              ctx.spy(requestedUserIsSameAtom) && (
-                <Suspense>
-                  <Account />
-                </Suspense>
-              )
-            ) : <AuthorizeTemplate />}
+            {isAuthenticated ? (ctx.spy(requestedUserIsSameAtom) && <Account />) : <AuthorizeTemplate />}
           </TabsContent>
         </div >
       </Tabs >

@@ -65,7 +65,7 @@ export const updateSearchHistoryAction = action((ctx, target: SearchUser | Searc
 
     if (isDuplicate) return state;
 
-    const nextState = [...state, newEntry];
+    const nextState = [...state, newEntry as SearchUser | SearchThread];
 
     return nextState.length > SEARCH_HISTORY_LIMIT
       ? nextState.slice(1)

@@ -1,7 +1,6 @@
 import { authClient } from "@repo/shared/api/auth-client.ts";
 import { toast } from "sonner";
 import { userActiveSessionsAction } from "#components/modals/user-settings/models/user-sessions.model.ts";
-import { AUTH_REDIRECT } from "@repo/shared/constants/routes.ts";
 import { reatomAsync, withStatusesAtom } from "@reatom/async";
 
 type TerminateSession =
@@ -36,7 +35,7 @@ export const terminateSessionAction = reatomAsync(async (ctx, values: TerminateS
 
     if (res.status) {
       if (res.meta.is_current) {
-        ctx.schedule(() => window.location.replace(AUTH_REDIRECT))
+        ctx.schedule(() => window.location.replace("/auth"))
       }
 
       userActiveSessionsAction(ctx)

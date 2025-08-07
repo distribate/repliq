@@ -7,8 +7,8 @@ import { connectLogger as logger } from '@reatom/framework'
 import { reatomContext, useUpdate } from '@reatom/npm-react'
 import { isSsr, useCreateCtx } from "#lib/reatom";
 import { usePageContext } from "vike-react/usePageContext";
-import { pageContextAtom, snapshotAtom } from "#lib/ssr";
-import { IS_AUTHENTICATED_ATOM_KEY, } from "#components/auth/models/auth.model";
+import { snapshotAtom } from "#lib/ssr";
+import { pageContextAtom } from "#lib/sync";
 
 const SyncPageContext = () => {
   const pageContext = usePageContext();
@@ -21,7 +21,7 @@ const ReatomProvider = ({ children }: { children: ReactNode }) => {
 
   const ctx = useCreateCtx((ctx) => {
     snapshotAtom(ctx, snapshot);
-    console.log("ReatomProvider", snapshot[IS_AUTHENTICATED_ATOM_KEY])
+
     if (isSsr && import.meta.env.DEV) logger(ctx)
   })
 

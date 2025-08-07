@@ -1,21 +1,18 @@
 import { reatomComponent } from "@reatom/npm-react";
-import { lazy, Suspense } from "react";
-import { Skeleton } from "@repo/ui/src/components/skeleton";
 import { globalPreferencesAtom } from "#components/user/settings/main/models/update-global-preferences.model";
 import { isAuthenticatedAtom } from "#components/auth/models/auth.model";
+import { clientOnly } from "vike-react/clientOnly";
 
-const AlertWidget = lazy(() => import('#components/layout/components/widgets/alert/alert-widget').then((m) => ({ default: m.AlertWidget })))
+const AlertWidget = clientOnly(() => import('#components/layout/components/widgets/alert/alert-widget').then((m) => m.AlertWidget))
 
 export const Alerts = reatomComponent(({ ctx }) => {
   if (!ctx.spy(isAuthenticatedAtom)) return null;
 
   return (
     ctx.spy(globalPreferencesAtom).alerts === 'show' && (
-      <Suspense fallback={<Skeleton className="w-full h-28" />}>
-        <div className="flex flex-col gap-2 w-full">
-          <AlertWidget />
-        </div>
-      </Suspense>
+      <div className="flex flex-col gap-2 w-full">
+        <AlertWidget />
+      </div>
     )
   )
 }, "Alerts")

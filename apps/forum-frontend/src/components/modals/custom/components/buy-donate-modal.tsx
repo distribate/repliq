@@ -1,13 +1,12 @@
-import { Dialog, DialogContent, DialogTrigger } from "@repo/ui/src/components/dialog"
+import { Dialog, DialogClose, DialogContent, DialogTrigger } from "@repo/ui/src/components/dialog"
 import { Typography } from "@repo/ui/src/components/typography"
 import { ReactNode } from "react"
 import { PulsatingButton } from "@repo/ui/src/components/shiny-button.tsx"
-import { IconBrandThreads, IconDeviceDesktopAnalytics, IconMoodSpark, IconPalette, TablerIcon } from "@tabler/icons-react"
+import { IconBrandThreads, IconDeviceDesktopAnalytics, IconEyeClosed, IconMoodSpark, IconPalette, IconStar, TablerIcon } from "@tabler/icons-react"
 import { atom } from "@reatom/core"
 import { reatomComponent } from "@reatom/npm-react"
-import { DonateIcon } from "#components/user/donate/components/donate"
-
-type BuyDonateModalProps = { trigger?: ReactNode | string }
+import { DONATE_ICON } from "#components/user/donate/components/donate"
+import { CustomLink } from "#components/shared/link"
 
 type DonateDialogFeatureItemProps = {
   title: string, description: string, icon: TablerIcon
@@ -30,36 +29,46 @@ const DonateDialogFeatureItem = ({ description, icon: Icon, title }: DonateDialo
 const DONATE_FEATURES = [
   {
     title: "Кастомизация профиля",
-    description: "Настройте свой профиль на форуме так, как хотите – сделайте его уникальным.",
+    description: "Настройте свой профиль так, как хотите – сделайте его уникальным.",
     icon: IconPalette
   },
   {
     title: "Расширенная статистика",
-    description: "Отслеживайте подробную статистику своего профиля и анализируйте свой прогресс.",
+    description: "Отслеживайте подробную статистику своего профиля и тредов.",
     icon: IconDeviceDesktopAnalytics
   },
   {
     title: "Контроль над тредами",
-    description: "Настройте видимость своих тредов – только для друзей или эксклюзивно для донатеров.",
+    description: "Настройте видимость своих тредов – только для друзей или выделенных персон.",
     icon: IconBrandThreads
   },
   {
-    title: "Дополнительные реакции",
-    description: "Выражайте больше эмоций! Возможность ставить до 3 реакций вместо 1 на посты и треды.",
+    title: "Повышенный лимит на реакции",
+    description: "Выражайте больше эмоций! Возможность ставить до 3 реакций вместо 1 на треды.",
     icon: IconMoodSpark
   },
+  {
+    title: "Скрывать последнее время посещения",
+    description: "Возможность скрывать отображение своей активности.",
+    icon: IconEyeClosed
+  },
+  {
+    title: "Значок у имени",
+    description: "Эксклюзивный значок у имени показывает что вы владелец Repliq+.",
+    icon: IconStar
+  }
 ]
 
 const DonateDialog = () => {
   return (
     <div className="flex flex-col items-center w-full h-full">
-      <div className="flex flex-col relative px-4 py-4 items-center gap-y-4 w-full">
+      <div className="flex flex-col relative px-4 py-6 items-center gap-4 w-full">
         <div className="biloba-gradient opacity-30 w-full h-full z-[1] absolute left-0 right-0 top-0" />
-        <DonateIcon />
+        <span className="text-6xl">{DONATE_ICON}</span>
         <div className="flex flex-col">
           <span className="text-xl text-center font-semibold">Repliq+</span>
           <Typography className="text-lg text-center break-words">
-            Откройте для себя больше возможностей на форуме и в игре!
+            Получите доступ к расширенным функциям и возможностям с Repliq+
           </Typography>
         </div>
       </div>
@@ -69,13 +78,16 @@ const DonateDialog = () => {
         ))}
       </div>
       <div className="bg-[#191919] sticky bottom-0 py-4 px-6 flex items-center justify-center w-full">
-        <a href="/store" target="_blank" rel="noreferrer" className="w-full">
-          <PulsatingButton className="w-full py-3">
-            <Typography className="text-[18px] font-semibold">
+        <DialogClose className="w-full">
+          <CustomLink
+            to="/store?target=repliq+"
+            className="flex items-center justify-center w-full py-2 bg-green-600 px-6 rounded-lg"
+          >
+            <Typography className="text-xl font-semibold">
               Приобрести
             </Typography>
-          </PulsatingButton>
-        </a>
+          </CustomLink>
+        </DialogClose>
       </div>
     </div>
   )
@@ -83,7 +95,7 @@ const DonateDialog = () => {
 
 export const buyDonateModalIsOpenAtom = atom(false, "buyDonateModalIsOpen")
 
-export const BuyDonateModal = reatomComponent<BuyDonateModalProps>(({ ctx, trigger }) => {
+export const BuyDonateModal = reatomComponent<{ trigger?: ReactNode | string }>(({ ctx, trigger }) => {
   return (
     <Dialog
       open={ctx.spy(buyDonateModalIsOpenAtom)}

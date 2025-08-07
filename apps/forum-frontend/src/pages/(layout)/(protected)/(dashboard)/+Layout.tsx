@@ -1,10 +1,9 @@
 import { Typography } from '@repo/ui/src/components/typography'
 import { reatomComponent } from '@reatom/npm-react'
 import { CustomLink } from '#components/shared/link'
-import { MINECRAFT_SITE_DOMAIN } from '@repo/shared/constants/origin-list'
 import { IconSparkles } from '@tabler/icons-react'
 import { getUser } from '#components/user/models/current-user.model'
-import { PropsWithChildren, Suspense } from 'react'
+import { PropsWithChildren } from 'react'
 import { usePageContext } from 'vike-react/usePageContext'
 
 const Page = reatomComponent<PropsWithChildren>(({ ctx, children }) => {
@@ -28,18 +27,16 @@ const NoAccessDashboard = () => {
     <div className="flex flex-col gap-4 items-center justify-center w-full md:h-[80vh]">
       <IconSparkles size={128} className="text-green-500" />
       <Typography className="text-2xl text-center font-semibold w-full lg:w-[60%]">
-        Приобретите любую привилегию на сервере, чтобы открыть доступ к статистике своего профиля!
+        Приобретите Repliq+, чтобы открыть доступ к полной статистике профиля и тредов!
       </Typography>
-      <a
-        href={`${MINECRAFT_SITE_DOMAIN}/shop`}
-        target="_blank"
-        rel="noreferrer"
+      <CustomLink
+        to="/store?target=repliq+"
         className="flex items-center justify-center w-fit py-2 bg-green-600 px-6 rounded-lg"
       >
         <Typography className="text-xl font-semibold">
           Приобрести
         </Typography>
-      </a>
+      </CustomLink>
     </div>
   )
 }

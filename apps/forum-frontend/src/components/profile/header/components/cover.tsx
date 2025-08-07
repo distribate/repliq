@@ -4,7 +4,6 @@ import { coverAtom } from "#components/profile/header/models/cover.model.ts";
 import { reatomComponent } from "@reatom/npm-react";
 import { requestedUserCoverDetailsAtom, requestedUserCoverImageAtom } from "#components/profile/main/models/requested-user.model.ts";
 import { UserCoverAvatar } from "./cover-avatar.tsx";
-// import { UserCoverLocation } from "./cover-location.tsx";
 import { CoverArea } from "./cover-area.tsx";
 import { lazy, PropsWithChildren, Suspense } from "react";
 import { isAuthenticatedAtom } from "#components/auth/models/auth.model.ts";
@@ -24,13 +23,7 @@ export const UserCover = reatomComponent(({ ctx }) => {
       >
         <UserCoverAvatar variant={variant} />
         <UserCoverMainInfo />
-        {/* <div className="block lg:hidden">
-          <UserCoverLocation />
-        </div> */}
       </div>
-      {/* <div className="hidden lg:block absolute top-4 right-4 z-[5]">
-        <UserCoverLocation />
-      </div> */}
       {ctx.spy(isAuthenticatedAtom) && (
         <div
           className="flex w-1/2 lg:w-fit items-center bg-transparent gap-4 relative z-[3] lg:self-end justify-center lg:justify-end"
@@ -40,7 +33,7 @@ export const UserCover = reatomComponent(({ ctx }) => {
       )}
     </UserCoverWrapper>
   )
-})
+}, "UserCover")
 
 export const UserCoverWrapper = reatomComponent<PropsWithChildren>(({ ctx, children }) => {
   const coverDetails = ctx.spy(requestedUserCoverDetailsAtom)

@@ -30,9 +30,6 @@ export const myFriendsMetaAtom = atom<GetFriendsResponse["meta"] | null>(null, "
 export const myFriendsPinnedDataAtom = atom<Friend[]>([], "myFriendsPinnedData").pipe(withReset())
 export const myFriendsNotPinnedDataAtom = atom<Friend[]>([], "myFriendsNotPinnedData").pipe(withReset())
 
-myFriendsDataAtom.onChange((_, state) => logger.info("myFriendsDataAtom", state))
-myFriendsMetaAtom.onChange((_, state) => logger.info("myFriendsMetaAtom", state))
-
 myFriendsDataAtom.onChange((ctx, state) => {
   if (state && state.length > 0 && state.every(isFriendDetailed)) {
     myFriendsPinnedDataAtom(ctx,
@@ -74,21 +71,18 @@ export async function getFriends({
 }
 
 export const myFriendsAction = reatomAsync(async (ctx) => {
-  console.log(ctx.get(myFriendsDataAtom))
-  if (ctx.get(myFriendsDataAtom)) {
-    const cache = { data: ctx.get(myFriendsDataAtom), meta: ctx.get(myFriendsMetaAtom) }
-    console.log('cache', cache)
-    return cache
+  const cache = ctx.get(myFriendsDataAtom)
+
+  if (cache) {
+    return { 
+      data: ctx.get(myFriendsDataAtom), 
+      meta: ctx.get(myFriendsMetaAtom) 
+    }
   }
 
   await sleep(200)
   
-  let nickname = ctx.get(currentUserNicknameAtom)
-
-  if (!nickname) {
-    nickname = await take(ctx, currentUserNicknameAtom)
-  }
-
+  const nickname = ctx.get(currentUserNicknameAtom)
   if (!nickname) return;
 
   const { sort_type, ascending, limit } = ctx.get(friendsUpdateOptionsAtom)
@@ -99,8 +93,11 @@ export const myFriendsAction = reatomAsync(async (ctx) => {
   onFulfill: (ctx, res) => {
     if (!res) return;
     
-    myFriendsDataAtom(ctx, res.data as Friend[])
+    myFriendsDataAtom(ctx, res.data)
     myFriendsMetaAtom(ctx, res.meta)
     friendsUpdateOptionsAtom(ctx, (state) => ({ ...state, cursor: res.meta?.endCursor }))
   }
 }).pipe(withStatusesAtom())
+
+myFriendsDataAtom.onChange((_, v) => import.meta.env.DEV && logger.info("myFriendsDataAtom", v))
+myFriendsMetaAtom.onChange((_, v) => import.meta.env.DEV && logger.info("myFriendsMetaAtom", v))

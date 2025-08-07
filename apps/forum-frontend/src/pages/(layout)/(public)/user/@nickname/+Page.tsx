@@ -1,20 +1,20 @@
 import { UserCoverLayout } from '#components/profile/header/components/cover-layout.tsx'
-import { 
-  defineUserAction, 
-  requestedUserAccountTypeAtom, 
-  requestedUserParamAtom, 
-  requestedUserProfileBlockedAtom, 
-  requestedUserProfileStatusAtom 
+import {
+  defineUserAction,
+  requestedUserAccountTypeAtom,
+  requestedUserParamAtom,
+  requestedUserProfileBlockedAtom,
+  requestedUserProfileStatusAtom
 } from '#components/profile/main/models/requested-user.model'
 import { reatomComponent, useUpdate } from '@reatom/npm-react'
-import { lazy, Suspense } from 'react'
 import { ProfileContentTabs } from '#components/profile/main/components/profile-main'
 import { useData } from "vike-react/useData"
 import { Data } from './+data'
+import { clientOnly } from 'vike-react/clientOnly'
 
-const Blocked = lazy(() => import("#components/templates/components/user-blocked").then(m => ({ default: m.UserBlocked })));
-const Banned = lazy(() => import("#components/templates/components/user-banned").then(m => ({ default: m.UserBanned })));
-const Deleted = lazy(() => import("#components/templates/components/user-deleted").then(m => ({ default: m.UserDeleted })))
+const Blocked = clientOnly(() => import("#components/templates/components/user-blocked").then(m => m.UserBlocked));
+const Banned = clientOnly(() => import("#components/templates/components/user-banned").then(m => m.UserBanned));
+const Deleted = clientOnly(() => import("#components/templates/components/user-deleted").then(m => m.UserDeleted))
 
 const DefineUser = () => {
   const { data, nickname: target } = useData<Data>();
@@ -39,29 +39,15 @@ const Page = reatomComponent(({ ctx }) => {
   switch (ctx.spy(requestedUserAccountTypeAtom)) {
     case "archived":
     case "deleted":
-      return (
-        <Suspense>
-          <Deleted />
-        </Suspense>
-      )
+      return <Deleted />;
   }
 
   switch (ctx.spy(requestedUserProfileStatusAtom)) {
     case "banned":
-      return (
-        <Suspense>
-          <Banned requestedUserNickname={ctx.spy(requestedUserParamAtom)!} />
-        </Suspense>
-      );
+      return <Banned requestedUserNickname={ctx.spy(requestedUserParamAtom)} />;
     case "blocked":
-      return (
-        <Suspense>
-          <Blocked type={ctx.spy(requestedUserProfileBlockedAtom)!} />
-        </Suspense>
-      )
+      return <Blocked type={ctx.spy(requestedUserProfileBlockedAtom)!} />
     default:
-      return (
-        <ProfileContentTabs />
-      )
+      return <ProfileContentTabs />
   }
 }, "RouteComponent")

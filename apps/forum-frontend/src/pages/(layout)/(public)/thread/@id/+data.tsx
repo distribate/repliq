@@ -74,7 +74,7 @@ export const data = async (pageContext: PageContextServer) => {
   }
 
   if (!data) {
-    throw render("/not-exist")
+    throw render(404)
   }
 
   config(metadata(data))

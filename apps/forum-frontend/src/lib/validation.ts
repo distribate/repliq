@@ -55,9 +55,9 @@ export async function defineGlobalState(pageContext: PageContext): Promise<void>
 
     console.log(`[Prerender] ${pathname} - exec prerenderState`);
     prerenderState()
+
     const newSnap = updateSnapshot(ctx, pageContext)
-    console.log(`[Prerender] ${pathname} snapshot`, newSnap)
-    return;
+    console.log(`[Prerender] ${pathname} snapshot`, newSnap);
   }
 
   // when pageContext.isPrerendering = true -> headers === null

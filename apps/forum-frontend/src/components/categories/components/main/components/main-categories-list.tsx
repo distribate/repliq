@@ -1,5 +1,4 @@
 import { Typography } from '@repo/ui/src/components/typography.tsx';
-import { CATEGORY_URL } from '@repo/shared/constants/routes';
 import { lazy, Suspense } from 'react';
 import { Dialog, DialogContent, DialogTrigger } from '@repo/ui/src/components/dialog';
 import { ThreadByCategoryItem } from '#components/thread/thread-card-category/thread-by-category-item';
@@ -77,7 +76,7 @@ const CategoryDescription = ({ id, title, description }: { id: number, title: st
   return (
     <div className="flex items-center mt-2 justify-end gap-2 w-full h-full">
       <CustomLink
-        to={CATEGORY_URL + id}
+        to={`/category/` + id}
         className="flex gap-2 items-center justify-start hover:bg-shark-700
                 duration-300 bg-shark-900 px-2 py-1 rounded-md"
       >
@@ -122,7 +121,7 @@ const MainCategoriesList = reatomComponent(({ ctx }) => {
       {data.map(category => (
         <div
           key={category.category_id}
-          className="flex flex-col gap-4 w-full py-6 rounded-lg px-4 bg-primary-color"
+          className="flex flex-col gap-4 w-full rounded-lg p-4 bg-primary-color"
         >
           <Typography textSize="very_big" textColor="shark_white" className="font-bold">
             {category.category_title}

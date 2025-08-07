@@ -1,4 +1,4 @@
-import { HTMLAttributes, lazy, Suspense } from 'react';
+import { HTMLAttributes, lazy, Suspense, useState } from 'react';
 import { reatomComponent } from '@reatom/npm-react';
 
 const AvatarUserStatus = lazy(() => import("./avatar-user-status.tsx").then(m => ({ default: m.AvatarUserStatus })))
@@ -41,7 +41,7 @@ const EmptyAvatar = ({
 }: Pick<AvatarImage, "propHeight" | "propWidth" | "nickname">) => {
   return (
     <div
-      className={`flex select-none items-center rounded-lg overflow-hidden bg-shark-950 justify-center`}
+      className={`flex select-none items-center rounded-lg overflow-hidden bg-shark-700 justify-center`}
       style={{
         maxHeight: `${propHeight}px`,
         maxWidth: `${propWidth}px`,
@@ -64,7 +64,9 @@ const EmptyAvatar = ({
 }
 
 const AvatarImage = ({ propHeight, url, propWidth, nickname, rounded }: AvatarImage) => {
-  if (!url) {
+  const [isError, setIsError] = useState(false);
+
+  if (!url || isError) {
     return <EmptyAvatar nickname={nickname} propHeight={propHeight} propWidth={propWidth} />
   }
 
@@ -75,6 +77,7 @@ const AvatarImage = ({ propHeight, url, propWidth, nickname, rounded }: AvatarIm
       width={propWidth}
       height={propHeight}
       data-rounded={rounded}
+      onError={e => setIsError(true)}
       className="rounded-lg object-cover aspect-square select-none data-[rounded=default]:rounded-sm"
       alt={nickname}
       title={nickname}

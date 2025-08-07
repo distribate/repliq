@@ -1,3 +1,15 @@
+import {
+  IconAddressBook,
+  IconAdjustments,
+  IconBubblePlus,
+  IconCheck,
+  IconComet,
+  IconLogout,
+  IconStatusChange,
+  IconUpload,
+  IconUserCircle,
+  IconX
+} from "@tabler/icons-react";
 import { UserSettingOption } from "#components/user/settings/user-setting-option"
 import { Separator } from "@repo/ui/src/components/separator"
 import { Typography } from "@repo/ui/src/components/typography"
@@ -8,11 +20,11 @@ import { DialogClose } from "@repo/ui/src/components/dialog";
 import { CustomLink } from "#components/shared/link";
 import { BuyDonateModal } from "#components/modals/custom/components/buy-donate-modal";
 import { settingsSettingsTypeAtom } from "#components/modals/user-settings/models/user-settings.model";
-import { IconAddressBook, IconAdjustments, IconBubblePlus, IconCheck, IconComet, IconStatusChange, IconUpload, IconUserCircle, IconX } from "@tabler/icons-react";
 import { getUser } from "#components/user/models/current-user.model";
 import { avatarOnChange, updateAvatarAction, updateAvatarAtom } from "#components/user/settings/main/models/cover-avatar.model";
 import { useRef } from "react";
 import { WindowLoader } from "@repo/ui/src/components/window-loader";
+import { logoutModalIsOpenAtom } from "#components/modals/action-confirmation/components/logout/models/logout.model";
 
 const Sync = ({ target }: { target: string }) => {
   useUpdate((ctx) => userStatusAction(ctx, target), [target])
@@ -21,7 +33,6 @@ const Sync = ({ target }: { target: string }) => {
 
 const UpdateAvatar = reatomComponent(({ ctx }) => {
   const ref = useRef<HTMLInputElement | null>(null)
-
   const isPending = ctx.spy(updateAvatarAction.statusesAtom).isPending
 
   if (isPending) {
@@ -78,29 +89,45 @@ const MainAvatar = reatomComponent(({ ctx }) => {
   return (
     <>
       <Sync target={nickname} />
-      <div className="flex items-center gap-4 justify-start w-full px-2">
-        <div className="relative group">
+      <div className="flex flex-col items-center gap-4 justify-center w-full">
+        <div className="relative group max-h-[104px] max-w-[104px]">
           <UpdateAvatar />
           {avatarUrl ? (
-            <img src={avatarUrl} className="rounded-md" height={104} width={104} />
+            <img src={avatarUrl} className="object-cover rounded-lg max-h-[104px] max-w-[104px]" height={104} width={104} />
           ) : (
-            <div className="flex items-center justify-center h-[104px] w-[104px] rounded-md">
+            <div className="flex items-center bg-shark-700 justify-center h-[104px] w-[104px] rounded-lg">
               <span className="text-xl">{nickname[0].toUpperCase()}</span>
             </div>
           )}
         </div>
-        <div className="flex flex-col items-start">
+        <div className="flex flex-col items-center">
           <UserNickname nickname={nickname} nicknameColor={name_color} className="text-xl font-semibold" />
-          <Typography>
-            {isOnline ? "онлайн" : "оффлайн"}
-          </Typography>
+          <Typography>{isOnline ? "онлайн" : "оффлайн"}</Typography>
         </div>
       </div>
     </>
   );
 }, "UserPersonalCardHeader")
 
+const Logout = reatomComponent(({ ctx }) => {
+  const handle = () => {
+    requestAnimationFrame(() => logoutModalIsOpenAtom(ctx, true));
+  }
+
+  return (
+    <DialogClose className="w-full">
+      <UserSettingOption
+        onClick={handle}
+        title="Выйти"
+        icon={{ value: IconLogout, className: "text-red-600" }}
+      />
+    </DialogClose>
+  )
+}, "Logout")
+
 const Options = reatomComponent(({ ctx }) => {
+  const { is_donate } = getUser(ctx)
+
   return (
     <div className="flex flex-col gap-y-2 w-full">
       <UserSettingOption
@@ -118,14 +145,16 @@ const Options = reatomComponent(({ ctx }) => {
         title="Прочее"
         icon={{ value: IconAdjustments }}
       />
-      {!getUser(ctx).is_donate && (
+      {!is_donate && (
         <>
           <Separator />
-          <BuyDonateModal
-            trigger={
-              <UserSettingOption title="Донат" icon={{ value: IconComet, className: "text-pink-500" }} />
-            }
-          />
+          <DialogClose asChild className="w-full">
+            <BuyDonateModal
+              trigger={
+                <UserSettingOption title="Донат" icon={{ value: IconComet, className: "text-green-600" }} />
+              }
+            />
+          </DialogClose>
         </>
       )}
       <Separator />
@@ -134,14 +163,15 @@ const Options = reatomComponent(({ ctx }) => {
           <UserSettingOption title="Задать вопрос" icon={{ value: IconBubblePlus }} />
         </DialogClose>
       </CustomLink>
-      <CustomLink to="/news/changelog">
+      <CustomLink to="/changelog">
         <DialogClose className="w-full">
           <UserSettingOption title="Обновления" icon={{ value: IconStatusChange }} />
         </DialogClose>
       </CustomLink>
+      <Logout />
     </div>
   )
-}, "")
+}, "Options")
 
 export const UserMainSettings = () => {
   return (

@@ -1,4 +1,4 @@
-import { CloudUpload, ImageUp } from "lucide-react";
+import { ImageUp } from "lucide-react";
 import { Typography } from "@repo/ui/src/components/typography.tsx";
 import { HoverCardItem } from "@repo/ui/src/components/hover-card.tsx";
 import { DynamicModal } from "../../../modals/dynamic-modal/components/dynamic-modal.tsx";
@@ -9,6 +9,7 @@ import { uploadBackgroundImageAction } from "#components/profile/header/models/c
 import { Image } from 'lucide-react';
 import { imagesLibraryAction } from '#components/profile/header/models/cover-image.model.ts';
 import { spawn } from "@reatom/framework";
+import { IconCloud } from "@tabler/icons-react";
 
 const BackgroundImagesSkeleton = () => {
   return (
@@ -55,7 +56,7 @@ const CoverImagesList = reatomComponent(({ ctx }) => {
       ))}
     </>
   );
-}, "BackgroundImagesList")
+}, "CoverImagesList")
 
 const CoverImageDefaultImagesModal = reatomComponent(({ ctx }) => {
   return (
@@ -84,7 +85,7 @@ const CoverImageDefaultImagesModal = reatomComponent(({ ctx }) => {
       }
     />
   );
-}, "CoverImagesListDefaultImagesModal")
+}, "CoverImageDefaultImagesModal")
 
 const CoverImageUploadCustom = reatomComponent(({ ctx }) => {
   const ref = useRef<HTMLInputElement | null>(null)
@@ -98,7 +99,7 @@ const CoverImageUploadCustom = reatomComponent(({ ctx }) => {
 
   return (
     <HoverCardItem onClick={() => ref.current?.click()} className="relative gap-2 p-6 items-center group">
-      <CloudUpload size={24} className="text-shark-300" />
+      <IconCloud size={24} className="text-shark-300" />
       <Typography textSize="large" textColor="shark_white">
         Загрузить своё
       </Typography>
@@ -111,7 +112,7 @@ const CoverImageUploadCustom = reatomComponent(({ ctx }) => {
       />
     </HoverCardItem>
   );
-}, "CoverImagesListUploadCustom")
+}, "CoverImageUploadCustom")
 
 export const CoverImageUpdateModal = reatomComponent(({ ctx }) => {
   return (
@@ -140,4 +141,4 @@ export const CoverImageUpdateModal = reatomComponent(({ ctx }) => {
       }
     />
   );
-}, "CoverImagesListUpdateModal")
+}, "CoverImageUpdateModal")

@@ -1,4 +1,4 @@
-import { Dialog, DialogContent } from "@repo/ui/src/components/dialog.tsx";
+import { Dialog, DialogContent, DialogTitle } from "@repo/ui/src/components/dialog.tsx";
 import { ReactNode } from "react";
 import { UserAdvancedSettings } from "#components/user/settings/advanced/components/user-advanced-settings";
 import { 
@@ -32,6 +32,7 @@ export const UserSettingsModal = reatomComponent(({ ctx }) => {
   return (
     <Dialog open={global} onOpenChange={value => toggleGlobalDialogAction(ctx, { reset: true, value })}>
       <DialogContent onEscapeKeyDown={handleEscKeyDown}>
+        <DialogTitle className="hidden"></DialogTitle>
         {SETTINGS_SECTIONS[current]}
       </DialogContent>
     </Dialog>

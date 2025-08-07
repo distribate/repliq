@@ -2,18 +2,13 @@ import { Typography } from "@repo/ui/src/components/typography"
 import { STATUS_SITE_DOMAIN } from "@repo/shared/constants/origin-list"
 import { CustomLink } from "#components/shared/link"
 import { toast } from "sonner"
-import { IconBrandDiscord, IconBrandGithub, IconBrandTelegram } from "@tabler/icons-react"
+import { IconBrandDiscord, IconBrandTelegram } from "@tabler/icons-react"
 import { navigate } from "vike/client/router"
 import { usePageContext } from "vike-react/usePageContext"
 
 const LINKS = [
   { label: "Статус", href: STATUS_SITE_DOMAIN, },
-  { label: "Обновления", href: `/news/changelog`, },
-]
-
-const PRODUCTS = [
-  { label: "Minecraft", href: "https://mc.fasberry.su" },
-  { label: "Archivio", href: "https://mvp.fasberry.su" },
+  { label: "Обновления", href: `/changelog`, },
 ]
 
 const TERMS = [
@@ -24,7 +19,6 @@ const TERMS = [
 export const SOCIALS = [
   { label: "Телеграм", icon: IconBrandTelegram, href: "https://api.fasberry.su/forum/shared/get-media/telegram", },
   { label: "Дискорд", icon: IconBrandDiscord, href: "https://api.fasberry.su/forum/shared/get-media/discord", },
-  { label: "Github", icon: IconBrandGithub, href: "https://github.com/ProjectFasberry" }
 ]
 
 const FooterItem = ({ href, label }: { href: string | null, label: string }) => {
@@ -57,14 +51,6 @@ const Links = () => {
         </Typography>
         <div className="flex flex-col gap-1">
           {LINKS.map(link => <FooterItem key={link.label} {...link} />)}
-        </div>
-      </div>
-      <div className="flex flex-col gap-1 lg:gap-2 items-start justify-start">
-        <Typography className="font-semibold text-lg truncate">
-          Продукты
-        </Typography>
-        <div className="flex flex-col items-start w-full gap-1">
-          {PRODUCTS.map(link => <FooterItem key={link.label} {...link} />)}
         </div>
       </div>
       <div className="flex flex-col gap-1 lg:gap-2 items-start justify-start">

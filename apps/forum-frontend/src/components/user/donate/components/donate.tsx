@@ -7,7 +7,7 @@ const DonateTip = reatomComponent(({ ctx }) => {
   return type === 'not-buyed' ? <BuyDonateModal /> : null
 }, "DonateTip")
 
-export const DonateIcon = () => <span>🌟</span>
+export const DONATE_ICON = "🌟"
 
 export const UserDonate = reatomComponent<{ is_donate: boolean }>(({ ctx, is_donate }) => {
   if (!is_donate) return null;
@@ -19,7 +19,7 @@ export const UserDonate = reatomComponent<{ is_donate: boolean }>(({ ctx, is_don
         className="w-fit cursor-pointer mx-1 items-center flex justify-center"
         onClick={() => validateDonateTipCheckedAction(ctx)}
       >
-        <DonateIcon/>
+        <span>{DONATE_ICON}</span>
       </div>
     </>
   )

@@ -60,7 +60,7 @@ export const LatestComments = reatomComponent(({ ctx }) => {
   const comments = ctx.spy(latestCommentsResource.dataAtom)
 
   return (
-    <div className="flex flex-col gap-4 w-full py-6 px-4 rounded-lg overflow-hidden bg-primary-color">
+    <div className="flex flex-col gap-4 w-full rounded-lg ">
       <Typography textSize="big" textColor="shark_white" className="font-semibold">
         Последние комментарии
       </Typography>
