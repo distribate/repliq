@@ -4,11 +4,11 @@ import type { ThreadPreview } from "@repo/types/entities/thread-type.ts";
 import { getThreadPreview } from '#lib/queries/thread/get-thread-preview.ts';
 
 export const getThreadPreviewRoute = new Hono()
-  .get("/get-thread-preview/:threadId", async (ctx) => {
-    const { threadId } = ctx.req.param();
+  .get("/get-thread-preview/:id", async (ctx) => {
+    const { id } = ctx.req.param();
 
     try {
-      const thread = await getThreadPreview(threadId);
+      const thread = await getThreadPreview(id);
 
       if (!thread) {
         return ctx.json({ error: "Thread not found" }, 404);

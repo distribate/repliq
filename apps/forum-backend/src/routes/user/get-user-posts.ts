@@ -7,23 +7,20 @@ import { getNickname } from '#utils/get-nickname-from-storage.ts';
 import { userPreferenceAndPrivateValidation } from '#utils/validate-user-preference-private.ts';
 import { forumDB } from '#shared/database/forum-db.ts';
 
-async function createPostsView(v: { nickname: string, post_id: string }[]) {
-  const query = await forumDB
+async function createPostsView(
+  v: { nickname: string, post_id: string }[]
+) {
+  return forumDB
     .insertInto("posts_views")
     .values(v)
-    .onConflict((oc) =>
-      oc.columns(["nickname", "post_id"]).doNothing()
-    )
+    .onConflict((oc) => oc.columns(["nickname", "post_id"]).doNothing())
     .execute()
-
-  return query;
 }
 
 export const getUserPostsRoute = new Hono()
   .get('/get-user-posts/:nickname', zValidator('query', getUserPostsSchema), async (ctx) => {
     const { nickname: requestedUserNickname } = ctx.req.param();
     const { filteringType, ascending, cursor, searchQuery } = getUserPostsSchema.parse(ctx.req.query());
-
     const initiator = getNickname()
 
     const isValid = await userPreferenceAndPrivateValidation({
@@ -39,7 +36,7 @@ export const getUserPostsRoute = new Hono()
         filteringType, ascending, cursor, currentUserNickname: initiator, requestedUserNickname, searchQuery
       });
 
-      if (posts && posts.data.length) {
+      if (posts && posts.data.length >= 1) {
         createPostsView(posts.data.map(v => ({ nickname: initiator, post_id: v.id })))
       }
 

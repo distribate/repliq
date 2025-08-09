@@ -49,7 +49,6 @@ import { getNewsRoute } from '#routes/public/get-news.ts';
 import { getOnlineUsersRoute } from '#routes/public/get-online-users.ts';
 import { getLatestRegUsersRoute } from '#routes/public/get-latest-reg-users.ts';
 import { getLastCommentsRoute } from '#routes/comments/get-last-comments.ts';
-import { getThreadImagesRoute } from './routes/thread/get-thread-images';
 import { getStaticImageRoute } from '#routes/public/get-static-image.ts';
 import { timeoutMiddleware } from '#middlewares/timeout.ts';
 import { rateLimiterMiddleware } from '#middlewares/rate-limiter.ts';
@@ -76,7 +75,6 @@ import { getCategoryRoute } from '#routes/categories/get-category.ts';
 import { getIsAdminRoute } from '#routes/admin/get-is-admin.ts';
 import { getUserProfileRoute } from "#routes/user/get-user-profile.ts"
 import { getPostViewersRoute } from '#routes/post/get-post-viewers.ts';
-import { getUserPurchasesRoute } from '#routes/user/get-user-purchases.ts';
 import { subscribeUserStatus } from '#subscribers/sub-user-status.ts';
 import { watcher } from '#utils/kv-watcher.ts';
 import { userStatus } from '#middlewares/user-status.ts';
@@ -105,6 +103,8 @@ import { saveThreadRoute, unsaveThreadRoute } from '#routes/thread/save-thread.t
 import { getSavedThreadsRoute } from '#routes/user/get-saved-threads.ts';
 import { isProduction } from '@repo/lib/helpers/is-production';
 import { getMyThreadsRoute } from '#routes/user/get-my-threads.ts';
+import { getUserAvatarsRoute } from '#routes/user/get-user-avatars.ts';
+import { removeAvatarRoute } from '#routes/user/remove-avatar.ts';
 
 async function startNats() {
   await initNats()
@@ -183,7 +183,6 @@ export const thread = new Hono()
   .route("/", getThreadUserReactionsRoute)
   .route("/", createThreadRoute)
   .route("/", getLatestThreadsRoute)
-  .route("/", getThreadImagesRoute)
   .route("/", saveThreadRoute)
   .route("/", unsaveThreadRoute)
 
@@ -223,6 +222,7 @@ export const user = new Hono()
   .route('/', editUserSettingsRoute)
   .route('/', editUserDetailsRoute)
   .route("/", createCoverImageRoute)
+  .route("/", removeAvatarRoute)
   .route("/", uploadAvatarRoute)
   .route("/", deleteCoverImageRoute)
   //--------------------------------------
@@ -233,8 +233,8 @@ export const user = new Hono()
 
   // #current user info routes
   .route("/", getUserStatusRoute)
+  .route("/", getUserAvatarsRoute)
   .route("/", getUserReferalsRoute)
-  .route("/", getUserPurchasesRoute)
   .route("/", getUserTicketsRoute)
   .route("/", getSavedThreadsRoute)
   .route("/", getMyThreadsRoute)
@@ -305,7 +305,7 @@ export const root = new Hono()
   .use(validateRequest("prevent"))
   .route("/", connectServiceRoute)
   .route("/", connectServiceSSE)
-  //--------------------------------------
+//--------------------------------------
 
 const app = new Hono<Env>()
   .basePath('/forum')
@@ -318,10 +318,10 @@ const app = new Hono<Env>()
   .use(honoLogger())
   .use(contextStorage())
   .route("/", shared)
-  .route("/", root)
   .route('/', user)
-  .route('/', admin)
   .route("/", thread)
+  .route("/", root)
+  .route('/', admin)
   .route("/", category)
   .route("/", comment)
   .route("/", reaction)

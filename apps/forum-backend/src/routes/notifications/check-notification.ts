@@ -21,7 +21,6 @@ export async function updateNotification({
     .executeTakeFirstOrThrow();
 }
 
-
 export const checkNotificationRoute = new Hono()
   .post("/check-notification", zValidator("json", checkNotificationSchema), async (ctx) => {
     const nickname = getNickname()

@@ -1,7 +1,7 @@
 import { Slot } from "@radix-ui/react-slot";
 import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@repo/lib/utils/ui/cn.ts";
-import { ButtonHTMLAttributes, forwardRef } from "react";
+import { ButtonHTMLAttributes } from "react";
 import { WindowLoader } from "./window-loader.tsx";
 
 const buttonVariants = cva(
@@ -13,18 +13,14 @@ const buttonVariants = cva(
     variants: {
       variant: {
         default: "",
-        link: "underline-offset-4 hover:underline",
-        action: "hover:bg-pink-700 bg-pink-800 border border-pink-700",
-        positive: "hover:bg-green-700 bg-green-800 border border-green-700",
-        negative: "hover:bg-red-700 bg-red-800 border border-red-700",
-        pending: "hover:bg-contessa-700 bg-contessa-800 border border-contessa-700",
-        minecraft:
-          "border-[2px] text-shark-50 border-black/80 rounded-none shadow-[inset_0px_-2px_1px_rgba(0,0,0,0.4),inset_-0px_2px_1px_rgba(255,255,255,0.4)]",
+        action: "hover:bg-pink-700 bg-pink-800",
+        positive: "hover:bg-green-700 bg-green-800",
+        negative: "hover:bg-red-700 bg-red-800",
+        pending: "hover:bg-contessa-700 bg-contessa-800",
       },
       effect: {
         none: "",
-        pressed:
-          "shadow-[2px_2px_0px_2px_#000000] hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-none",
+        pressed: "shadow-[2px_2px_0px_2px_#000000] hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-none",
       },
       rounded: {
         none: "",
@@ -39,8 +35,7 @@ const buttonVariants = cva(
         icon: "w-10",
       },
       state: {
-        default: "bg-shark-800",
-        active: "hover:bg-caribbean-green-800 bg-caribbean-green-700",
+        default: "bg-shark-800"
       },
     },
     defaultVariants: {
@@ -58,24 +53,23 @@ export interface ButtonProps
   pending?: boolean;
 }
 
-const Button = forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ className, effect, variant, rounded, size, pending, state, asChild = false, ...props }, ref) => {
-    const Comp = asChild ? Slot : "button";
+const Button = ({ 
+  className, effect, variant, rounded, size, pending, state, asChild = false, ...props 
+}: ButtonProps) => {
+  const Comp = asChild ? Slot : "button";
 
-    return (
-      <Comp
-        className={cn(buttonVariants({ variant, state, effect, rounded, size, className }))}
-        ref={ref}
-        {...props}
-      >
-        <div className="flex items-center gap-2">
-          {pending && <WindowLoader size="small"/>}
-          {props.children}
-        </div>
-      </Comp>
-    );
-  },
-);
+  return (
+    <Comp
+      className={cn(buttonVariants({ variant, state, effect, rounded, size, className }))}
+      {...props}
+    >
+      <div className="flex items-center gap-2">
+        {pending && <WindowLoader size="small" />}
+        {props.children}
+      </div>
+    </Comp>
+  );
+}
 
 Button.displayName = "Button";
 

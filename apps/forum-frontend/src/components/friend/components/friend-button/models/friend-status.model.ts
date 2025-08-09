@@ -9,8 +9,11 @@ type FriendStatus = {
   request_id: string | null
 }
 
-const getUserFriendStatus = async (recipient: string) => {
-  const res = await forumUserClient.user["get-friend-status"][":nickname"].$get({ param: { nickname: recipient } })
+const getUserFriendStatus = async (
+  recipient: string,
+  init?: RequestInit
+) => {
+  const res = await forumUserClient.user["get-friend-status"][":nickname"].$get({ param: { nickname: recipient } }, { init })
   const data = await res.json();
   if (!data || "error" in data) return null;
   return data.data
@@ -25,17 +28,22 @@ export const friendStatusAction = reatomAsync(async (ctx, target: string) => {
   const initiator = ctx.get(currentUserNicknameAtom)
   if (initiator === target) return;
 
-  const data = await getUserFriendStatus(target)
+  const data = await ctx.schedule(() => getUserFriendStatus(target, { signal: ctx.controller.signal }))
 
   return { target, data }
 }, {
   name: "friendStatusAction",
+  onReject: (_, e) => {
+    if (e instanceof Error) {
+      console.error(e.message)
+    }
+  },
   onFulfill: (ctx, res) => {
     if (!res) return;
 
-    const newData = res.data
-    if (!newData) return;
+    const data = res.data
+    if (!data) return;
 
-    friendStatusesAtom(ctx, (state) => ({ ...state, [res.target]: newData }))
+    friendStatusesAtom(ctx, (state) => ({ ...state, [res.target]: data }))
   }
 }).pipe(withStatusesAtom())

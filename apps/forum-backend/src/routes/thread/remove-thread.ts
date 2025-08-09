@@ -5,20 +5,20 @@ import { Hono } from "hono";
 import { validateThreadOwner } from "#lib/validators/validate-thread-owner.ts";
 
 export const removeThreadRoute = new Hono()
-  .delete("/remove-thread/:threadId", async (ctx) => {
-    const { threadId } = ctx.req.param()
+  .delete("/remove-thread/:id", async (ctx) => {
+    const { id } = ctx.req.param()
     const nickname = getNickname()
 
-    const isValid = await validateThreadOwner(nickname, threadId)
+    const isValid = await validateThreadOwner(nickname, id)
 
     if (!isValid) {
       return ctx.json({ error: "You are not the owner of this thread" }, 400)
     }
 
     try {
-      const deletedThread = await removeThread(threadId)
+      const deletedThread = await removeThread(id)
 
-      if (!deletedThread || !deletedThread.id) {
+      if (!deletedThread?.numDeletedRows) {
         return ctx.json({ error: "Error deleting thread" }, 404)
       }
 

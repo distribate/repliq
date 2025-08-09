@@ -1,0 +1,20 @@
+import { forumDB } from "#shared/database/forum-db.ts";
+import { throwError } from "@repo/lib/helpers/throw-error";
+import { Hono } from "hono";
+
+export const getUserAvatarsRoute = new Hono()
+  .get("/get-user-avatars/:nickname", async (ctx) => {
+    const { nickname } = ctx.req.param();
+
+    try {
+      const data = await forumDB
+        .selectFrom("users")
+        .select(["avatars", 'avatar'])
+        .where("nickname", "=", nickname)
+        .executeTakeFirstOrThrow()
+
+      return ctx.json({ data }, 200)
+    } catch (e) {
+      return ctx.json({ error: throwError(e) }, 500)
+    }
+  })

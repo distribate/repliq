@@ -24,12 +24,12 @@ export async function getThreadMain(threadId: string) {
         .selectFrom("threads_images")
         .select([
           "thread_id",
-          sql<number>`COUNT(*)`.as("images_count")
+          sql<string[]>`array_agg(DISTINCT image_url)`.as("images")
         ])
-        .groupBy('thread_id')
-        .as('images_count'),
-      'images_count.thread_id',
-      'threads.id'
+        .groupBy("thread_id")
+        .as("images_agg"),
+      "images_agg.thread_id",
+      "threads.id"
     )
     .leftJoin(
       forumDB
@@ -59,8 +59,8 @@ export async function getThreadMain(threadId: string) {
       eb.cast<string>('threads.created_at', 'text').as('created_at'),
       sql<string[]>`COALESCE(thread_tags.tags_array, '{}')`.as('tags'),
       sql<number>`COUNT(threads_views.id)`.as('views_count'),
+      sql<string[]>`COALESCE(images_agg.images, '{}')`.as("images"),
       sql<number>`COALESCE(comments_count.comments_count, 0)`.as('comments_count'),
-      sql<number>`COALESCE(images_count.images_count, 0)`.as('images_count'),
     ])
     .where('threads.id', '=', threadId)
     .groupBy([
@@ -78,7 +78,7 @@ export async function getThreadMain(threadId: string) {
       "users.name_color",
       'thread_tags.tags_array',
       'comments_count.comments_count',
-      'images_count.images_count',
+      "images_agg.images"
     ])
     .executeTakeFirst();
 

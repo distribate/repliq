@@ -17,9 +17,9 @@ export const getUserSettingsRoute = new Hono()
     const nickname = getNickname();
 
     try {
-      const settingValue = await getUserSettings(nickname)
+      const data = await getUserSettings(nickname)
 
-      return ctx.json({ data: settingValue }, 200)
+      return ctx.json({ data }, 200)
     } catch (e) {
       return ctx.json({ error: throwError(e) }, 500);
     }

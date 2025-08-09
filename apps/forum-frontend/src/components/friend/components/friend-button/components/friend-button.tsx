@@ -34,7 +34,7 @@ const SyncRecipient = ({ recipient }: FriendButtonProps) => {
 
 const FriendButtonInside = reatomComponent<FriendButtonProps>(({ ctx, recipient }) => {
   const friendStatus = getFriendStatusesAtom(ctx, recipient)
- 
+
   if (ctx.spy(friendStatusAction.statusesAtom).isPending) {
     return <Skeleton className="h-10 border border-white/10 rounded-md w-56" />
   }
@@ -44,16 +44,19 @@ const FriendButtonInside = reatomComponent<FriendButtonProps>(({ ctx, recipient 
   return BUTTONS({ friend_id: friendStatus.friend_id!, request_id: friendStatus.request_id!, recipient })[friendStatus.status]
 }, "FriendButton")
 
-export const FriendButton = reatomComponent<FriendButtonProps>(({ ctx, recipient }) => {
-  const initiator = ctx.spy(currentUserNicknameAtom)
-
-  if (!initiator) return null;
-
-  if (initiator === recipient) return (
+const FriendButtonSelf = () => {
+  return (
     <Button state="default" className="px-6">
       <Typography>Это вы</Typography>
     </Button>
   )
+}
+
+export const FriendButton = reatomComponent<FriendButtonProps>(({ ctx, recipient }) => {
+  const initiator = ctx.spy(currentUserNicknameAtom)
+  if (!initiator) return null;
+
+  if (initiator === recipient) return <FriendButtonSelf />
 
   return (
     <>
@@ -61,4 +64,4 @@ export const FriendButton = reatomComponent<FriendButtonProps>(({ ctx, recipient
       <FriendButtonInside recipient={recipient} />
     </>
   )
-})
+}, "FriendButton")

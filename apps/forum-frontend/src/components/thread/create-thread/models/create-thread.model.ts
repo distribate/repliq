@@ -9,20 +9,21 @@ import ky from "ky";
 import { encode } from "cbor-x";
 import { CreateThreadResponse } from "@repo/types/routes-types/create-thread-types";
 import { fileArrayToUint8Array } from "@repo/lib/helpers/file-array-to-uint8-array.ts";
-import { 
-  createThreadFormReset, 
-  threadFormCategoryAtom, 
-  threadFormContentAtom, 
+import {
+  createThreadFormReset,
+  threadFormCategoryAtom,
+  threadFormContentAtom,
   threadFormDescriptionAtom,
-  threadFormImagesAtom, 
-  threadFormPermissionAtom, 
-  threadFormIsCommentAtom, 
-  threadFormTagsAtom, 
-  threadFormTitleAtom, 
+  threadFormImagesAtom,
+  threadFormPermissionAtom,
+  threadFormIsCommentAtom,
+  threadFormTagsAtom,
+  threadFormTitleAtom,
   threadFormVisibilityAtom
 } from "./thread-form.model";
 import { createIdLink } from "@repo/lib/utils/create-link";
 import { atom } from "@reatom/core";
+import { navigate } from "vike/client/router";
 
 const createThreadSchemaRequest = initial.omit({ images: true }).extend({
   images: z.array(
@@ -54,29 +55,52 @@ export const createThreadAction = reatomAsync(async (ctx) => {
   const nodes = ctx.get(threadFormContentAtom)
   const files = ctx.get(threadFormImagesAtom)
 
-  if (!title || !category_id) {
-    throw new Error("form-error")
-  }
+  if (!title || !category_id) throw new Error("form-error")
 
   const content = JSON.stringify(nodes)
 
-  let images: File[] | null = null;
+  let rawImages: File[] = [];
 
   if (files && files.length > 0) {
-    images = [];
+    rawImages = [];
 
-    for (let i = 0; i < images.length; i++) {
+    for (let i = 0; i < rawImages.length; i++) {
       const rawImageItem = await blobUrlToFile(files[i]);
 
-      images.push(rawImageItem);
+      rawImages.push(rawImageItem);
     }
   }
 
-  return await createThread({
-    images, content, category_id, title, visibility, tags, description, is_comments, permission,
-  });
+  return await ctx.schedule(async () => {
+    const url = forumThreadClient.thread["create-thread"].$url()
+    const images = await fileArrayToUint8Array(rawImages)
+
+    const structure: z.infer<typeof createThreadSchemaRequest> = {
+      category_id, title, visibility, content, description, tags, permission, is_comments, images
+    };
+
+    const res = await ky.post(url, {
+      // @ts-expect-error
+      body: encode(structure),
+      headers: { 'Content-Type': 'application/cbor' },
+      credentials: "include"
+    })
+
+    const data = await res.json<CreateThreadResponse>();
+
+    if ("error" in data) throw new Error(data.error)
+
+    return data;
+  })
 }, {
   name: "createThreadAction",
+  onReject: (_, e) => {
+    if (e instanceof Error) {
+      if (e.message === 'form-error') {
+        toast.error("Форма должна быть заполнена")
+      }
+    }
+  },
   onFulfill: (ctx, res) => {
     if (!res) return
 
@@ -93,38 +117,7 @@ export const createThreadAction = reatomAsync(async (ctx) => {
 
       createThreadFormReset(ctx)
 
-      ctx.schedule(() => 
-        window.location.replace(createIdLink("thread", res.data.id))
-        // router.navigate({ to: createIdLink("thread", res.data.id) })
-      )
-    }
-  },
-  onReject: (_, e) => {
-    if (e instanceof Error) {
-      if (e.message === 'form-error') {
-        toast.error("Форма должна быть заполнена")
-      }
+      ctx.schedule(() => navigate(createIdLink("thread", res.data.id)))
     }
   }
 }).pipe(withStatusesAtom())
-
-async function createThread({
-  category_id, title, visibility, content, description, images: rawImages, is_comments, permission, tags
-}: z.infer<typeof createThreadSchema>) {
-  const url = forumThreadClient.thread["create-thread"].$url()
-  const images = await fileArrayToUint8Array(rawImages)
-
-  let structure: z.infer<typeof createThreadSchemaRequest> = {
-    category_id, title, visibility, content, description, tags, permission, is_comments, images
-  };
-
-  const res = await ky.post(url, {
-    body: encode(structure),
-    headers: { 'Content-Type': 'application/cbor' },
-    credentials: "include"
-  })
-
-  const data = await res.json<CreateThreadResponse>();
-  if (!data || "error" in data) return null;
-  return data;
-}

@@ -13,5 +13,9 @@ export const recommendedFriendsAction = reatomAsync(async (ctx) => {
   return await ctx.schedule(() => getRecommendedFriends({ signal: ctx.controller.signal }))
 }, {
   name: "recommendedFriendsAction",
-  onReject: (_, e) => e instanceof Error && console.error(e.message)
+  onReject: (_, e) => {
+    if (e instanceof Error) {
+      console.error(e.message)
+    }
+  }
 }).pipe(withDataAtom(), withStatusesAtom())

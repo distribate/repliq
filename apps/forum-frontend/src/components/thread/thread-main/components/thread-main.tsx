@@ -20,8 +20,8 @@ const ThreadContentWrapper = reatomComponent(({ ctx }) => {
   return (
     <>
       <ThreadContent />
-      {thread.images_count > 0 && (
-        <ThreadImages fallback={<ThreadImagesSkeleton images_count={thread.images_count} />} />
+      {thread.images && (
+        <ThreadImages fallback={<ThreadImagesSkeleton images_count={thread.images.length} />} />
       )}
     </>
   )

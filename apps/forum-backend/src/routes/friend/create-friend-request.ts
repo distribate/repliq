@@ -13,19 +13,21 @@ import { pushNotificationOnClient } from '@repo/lib/utils/push-notifications-on-
 export const createFriendRequestRoute = new Hono()
   .post("/create-friend-request", zValidator("json", createFriendRequestSchema), async (ctx) => {
     const { recipient } = createFriendRequestSchema.parse(await ctx.req.json());
-    const initiator = getNickname()
+    const nickname = getNickname()
 
-    if (initiator === recipient) {
+    if (nickname === recipient) {
       return ctx.json({ error: "You cannot add yourself" }, 400);
     }
-    
+
     const isValid = await getUserFriendPreference(recipient);
 
     if (!isValid) {
       return ctx.json({ error: "User does not have accept to send friend request" }, 400);
     }
 
-    const blockStatus = await getUserBlockStatus({ initiator, recipient });
+    const blockStatus = await getUserBlockStatus({
+      initiator: nickname, recipient
+    });
 
     switch (blockStatus) {
       case "blocked-by-user":
@@ -34,24 +36,30 @@ export const createFriendRequestRoute = new Hono()
         return ctx.json({ error: "User blocked you" }, 400);
     }
 
-    const existingFriendShip = await getFriendship({ initiator, recipient });
+    const existingFriendShip = await getFriendship({
+      initiator: nickname, recipient
+    });
 
     if (existingFriendShip) {
       return ctx.json({ error: "You are already friends" }, 400);
     }
 
     try {
-      const res = await createFriendRequest({ initiator, recipient });
+      const res = await createFriendRequest({
+        initiator: nickname, recipient
+      });
 
       if (!res.id) {
         return ctx.json({ error: "Error creating friend request" }, 404);
       }
 
-      publishCreateFriendRequest({ initiator, recipient })
+      publishCreateFriendRequest({
+        initiator: nickname, recipient
+      })
 
       pushNotificationOnClient({
         event: "create-friend-request",
-        data: { initiator, recipient }
+        data: { initiator: nickname, recipient }
       })
 
       return ctx.json({ request_id: res.id, status: "Friend request sent" }, 200);

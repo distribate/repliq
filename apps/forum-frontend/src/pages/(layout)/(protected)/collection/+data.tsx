@@ -9,8 +9,8 @@ function metadata() {
     title: wrapTitle("Коллекции"),
     Head: (
       <>
-        <link rel="canonical" href={`https://fasberry.su/collection`} />
-        <meta property="og:url" content={`https://fasberry.su/collection`} />
+        <link rel="canonical" href={`https://repliq.fasberry.su/collection`} />
+        <meta property="og:url" content={`https://repliq.fasberry.su/collection`} />
       </>
     )
   }

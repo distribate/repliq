@@ -9,12 +9,12 @@ type DeleteFriend = z.infer<typeof deleteFriendSchema> & {
 export async function deleteFriend({
   friend_id, nickname,
 }: DeleteFriend) {
-  return await forumDB
+  return forumDB
     .deleteFrom('users_friends')
     .where("id", "=", friend_id)
     .where((eb) => eb.or([
       eb('user_1', '=', nickname),
       eb('user_2', '=', nickname),
     ]))
-    .execute();
+    .executeTakeFirst();
 }

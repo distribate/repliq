@@ -1,11 +1,22 @@
 import { throwError } from '@repo/lib/helpers/throw-error.ts';
-import { deleteUserFromBlocked } from "#lib/queries/user/delete-user-from-blocked.ts";
 import { getNickname } from "#utils/get-nickname-from-storage.ts";
 import { zValidator } from "@hono/zod-validator";
 import { Hono } from "hono";
 import * as z from "zod";
 import { forumDB } from "#shared/database/forum-db.ts";
 import type { InitiatorRecipientType } from "#types/initiator-recipient-type.ts";
+
+type DeleteUserFromBlocked = InitiatorRecipientType
+
+async function deleteUserFromBlocked({
+  initiator, recipient
+}: DeleteUserFromBlocked) {
+  return forumDB
+    .deleteFrom('users_blocked')
+    .where("initiator", "=", initiator)
+    .where("recipient", "=", recipient)
+    .execute();
+}
 
 export const deleteUserFromBlockedSchema = z.object({
   recipient: z.string(),

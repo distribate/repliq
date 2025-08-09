@@ -12,12 +12,12 @@ export const DeleteFriendButton = reatomComponent<DeleteFriendButton>(({ ctx, fr
   const handle = () => {
     spawn(ctx, async (spawnCtx) => removeFriendAction(spawnCtx, { friend_id, recipient }))
   };
-  
+
   return (
     <Button
-      onClick={handle}
-      disabled={ctx.spy(removeFriendAction.statusesAtom).isPending}
       variant="negative"
+      disabled={ctx.spy(removeFriendAction.statusesAtom).isPending}
+      onClick={handle}
     >
       Удалить из друзей
     </Button>

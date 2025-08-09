@@ -17,8 +17,6 @@ export const getMeRoute = new Hono()
         ...user
       } = await getUserInfo(nickname)
 
-      let cover_image: string | null = null
-
       const preferences = {
         accept_friend_request,
         cover_outline_visible,
@@ -30,14 +28,9 @@ export const getMeRoute = new Hono()
         notify_in_telegram
       }
 
-      if (user.cover_image) {
-        cover_image = getPublicUrl(USER_IMAGES_BUCKET, user.cover_image)
-      }
-
       const res = {
         data: {
           ...user,
-          cover_image,
           is_donate: user.is_donate,
           preferences
         }

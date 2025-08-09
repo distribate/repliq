@@ -42,6 +42,7 @@ export async function createCoverImage({ file, type, fileName }: CreateCoverImag
 
       const customEncodedData = encode(customFileStructure);
 
+      // @ts-expect-error
       const customRes = await API.post(url, { body: customEncodedData })
       const customData = await customRes.json<InferResponseType<typeof client>>()
 
@@ -59,6 +60,7 @@ export async function createCoverImage({ file, type, fileName }: CreateCoverImag
 
       const defaultEncodedData = encode(defaultStructure);
 
+      // @ts-expect-error
       const defaultRes = await API.post(url, { body: defaultEncodedData })
       const defaultData = await defaultRes.json<InferResponseType<typeof client>>()
 

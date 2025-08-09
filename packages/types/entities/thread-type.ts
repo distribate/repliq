@@ -12,10 +12,10 @@ export type ThreadDetailed = {
   category_id: number,
   description: string | null;
   updated_at: string | null;
-  images_count: number;
   tags: Array<string>;
   views_count: number;
   comments_count: number;
+  images: string[],
   owner: ThreadOwner,
   properties: {
     is_comments: boolean;

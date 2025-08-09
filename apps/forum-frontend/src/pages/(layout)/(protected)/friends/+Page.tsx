@@ -8,15 +8,19 @@ import {
 import { FriendsListContent, FriendsListTitle } from '#components/friends/components/lists/components/friends-list'
 import { FriendsTab } from '#components/friends/components/control/components/friends-tab'
 import { incomingRequestsAction, incomingRequestsAtom, outgoingRequestsAction, outgoingRequestsAtom } from '#components/friends/models/friends-requests.model'
-import { onConnect } from '@reatom/framework'
+import { onConnect, onDisconnect } from '@reatom/framework'
 import { FilteringSearchWrapper } from '#components/wrappers/components/filtering-search-wrapper'
 import { FriendsFilteringSearch } from '#components/friends/components/filtering/components/friends-filtering-search'
 import { FriendsFilteringView } from '#components/friends/components/filtering/components/friends-filtering-view'
 import { friendsCountAction } from '#components/friends/models/friends-count.model'
 
 onConnect(friendsCountAction.dataAtom, friendsCountAction)
-onConnect(incomingRequestsAtom, incomingRequestsAction)
-onConnect(outgoingRequestsAtom, outgoingRequestsAction)
+onConnect(incomingRequestsAtom, incomingRequestsAction);
+onConnect(outgoingRequestsAtom, outgoingRequestsAction);
+
+onDisconnect(friendsCountAction.dataAtom, (ctx) => friendsCountAction.dataAtom.reset(ctx))
+onDisconnect(incomingRequestsAtom, (ctx) => incomingRequestsAtom.reset(ctx))
+onDisconnect(incomingRequestsAtom, (ctx) => incomingRequestsAtom.reset(ctx))
 
 export default function FriendsRouteComponent() {
   return (

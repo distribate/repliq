@@ -8,7 +8,7 @@ type GetFriendId = InitiatorRecipientType & {
 export const getFriendId = async ({
   friend_id, initiator, recipient
 }: GetFriendId) => {
-  return await forumDB
+  return forumDB
     .selectFrom("friends_notes")
     .select("id")
     .where("recipient", "=", recipient)

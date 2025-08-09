@@ -13,16 +13,15 @@ import { PageContextServer } from "vike/types"
 export type Data = Awaited<ReturnType<typeof data>>
 
 function metadata(thread: ThreadDetailed) {
-  const image = "/preview.jpg"
-
   const title = thread.title.length >= 128 ? thread.title.slice(0, 128) + '...' : thread.title
   const threadContent = thread.content;
-  const description = thread?.description ?? threadContent ? `${serializeNodes(threadContent).slice(0, 160)}...` : "..."
-  // const images = []
-  // const imagesIsExists = images && images.length >= 1
+  const description = thread.description ?? threadContent ? `${serializeNodes(threadContent).slice(0, 160)}...` : "..."
+  const images = thread.images
+  const imagesIsExists = images && images.length >= 1
+  const image = imagesIsExists ? images[0] : "/preview.jpg"
 
   const keywords = `Repliq thread, ${title} thread, ${title}, ${thread.owner.nickname}`
-  const url = `https://fasberry.su${createIdLink("thread", thread.id)}`
+  const url = `https://repliq.fasberry.su${createIdLink("thread", thread.id)}`
 
   return {
     title: wrapTitle(title),

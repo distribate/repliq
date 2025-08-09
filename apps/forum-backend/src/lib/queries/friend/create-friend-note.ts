@@ -8,7 +8,7 @@ type CreateFriendNote = z.infer<typeof addFriendNoteSchema> & Pick<InitiatorReci
 export async function createFriendNote({
   friend_id, recipient, initiator, message,
 }: CreateFriendNote) {
-  return await forumDB
+  return forumDB
     .insertInto('friends_notes')
     .values({
       friend_id: friend_id,

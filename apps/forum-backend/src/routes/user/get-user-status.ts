@@ -24,9 +24,9 @@ export const getUserStatusRoute = new Hono()
     const { nickname } = ctx.req.param()
 
     try {
-      const result = await getUserStatus(nickname)
+      const data = await getUserStatus(nickname)
 
-      return ctx.json({ data: result }, 200)
+      return ctx.json({ data }, 200)
     } catch (e) {
       return ctx.json({ error: throwError(e) }, 500)
     }

@@ -1,8 +1,8 @@
+import * as z from "zod";
 import { throwError } from '@repo/lib/helpers/throw-error.ts';
 import { zValidator } from "@hono/zod-validator";
 import { Hono } from "hono";
 import { getNickname } from "#utils/get-nickname-from-storage.ts";
-import * as z from "zod";
 import { acceptFriendRequestTransaction } from "#lib/transactions/friend/accept-friend-request-transaction.ts";
 import { publishAcceptFriendRequest } from '#publishers/pub-accept-friend-request.ts';
 import { validateFriendsLength } from '#lib/validators/validate-friends-length.ts';
@@ -15,18 +15,22 @@ const acceptFriendRequestSchema = z.object({
 export const acceptFriendRequestRoute = new Hono()
   .post("/accept-friend-request", zValidator("json", acceptFriendRequestSchema), async (ctx) => {
     const { request_id } = acceptFriendRequestSchema.parse(await ctx.req.json());
-    const initiator = getNickname()
+    const nickname = getNickname()
 
     try {
-      const isValid = await validateFriendsLength(initiator)
+      const isValid = await validateFriendsLength(nickname)
 
       if (!isValid) {
         return ctx.json({ error: "Max number of friends reached" }, 400)
       }
 
-      const { user_1, user_2, id } = await acceptFriendRequestTransaction({ initiator, request_id })
+      const { user_1, user_2, id } = await acceptFriendRequestTransaction({ 
+        initiator: nickname, request_id 
+      })
 
-      publishAcceptFriendRequest({ user_1, user_2 })
+      publishAcceptFriendRequest({ 
+        user_1, user_2 
+      })
 
       pushNotificationOnClient({
         event: "accept-friend-request",

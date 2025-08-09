@@ -5,33 +5,32 @@ import type { ThreadDetailed } from "@repo/types/entities/thread-type";
 import { getThread } from '#lib/queries/thread/get-thread.ts';
 import { forumDB } from '#shared/database/forum-db.ts';
 
-async function createThreadView(nickname: string, threadId: string) {
+async function createThreadView(user_nickname: string, thread_id: string) {
   const query = await forumDB
     .insertInto("threads_views")
     .values({
-      thread_id: threadId,
-      user_nickname: nickname
+      thread_id, user_nickname
     })
-    .onConflict((c) => c.doNothing())
+    .onConflict((cb) => cb.doNothing())
     .execute()
 
   return query;
 }
 
 export const getThreadRoute = new Hono()
-  .get("/get-thread/:threadId", async (ctx) => {
-    const { threadId } = ctx.req.param();
+  .get("/get-thread/:id", async (ctx) => {
+    const { id } = ctx.req.param();
     const nickname = getNickname(true)
 
     try {
-      const thread = await getThread({ id: threadId, nickname });
+      const thread = await getThread({ id, nickname });
 
       if (!thread) {
         return ctx.json({ error: "Thread not found" }, 404)
       }
 
       if (nickname) {
-        createThreadView(nickname, threadId)
+        createThreadView(nickname, id)
       }
 
       return ctx.json<{ data: ThreadDetailed }>({ data: thread }, 200);

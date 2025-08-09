@@ -597,7 +597,7 @@ export interface PostsUsers {
 export interface PostsViews {
   created_at: Generated<Timestamp>;
   id: Generated<Int8>;
-  nickname: string;
+  nickname: string | null;
   post_id: string;
 }
 
@@ -824,12 +824,13 @@ export interface ThreadsViews {
   created_at: Generated<Timestamp>;
   id: Generated<Int8>;
   thread_id: string;
-  user_nickname: string;
+  user_nickname: string | null;
 }
 
 export interface Users {
   account_status: UserAccountStatus | null;
   avatar: string | null;
+  avatars: Generated<string[]>;
   birthday: Timestamp | null;
   cover_image: string | null;
   created_at: Generated<Timestamp>;

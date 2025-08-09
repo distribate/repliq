@@ -1,41 +1,7 @@
-import { forumDB } from "#shared/database/forum-db.ts"
-import { supabase } from "#shared/supabase/supabase-client.ts"
 import { getNickname } from "#utils/get-nickname-from-storage.ts"
 import { throwError } from "@repo/lib/helpers/throw-error"
-import { USER_IMAGES_BUCKET } from "@repo/shared/constants/buckets"
 import { Hono } from "hono"
-
-async function deleteCoverImage(nickname: string) {
-  const query = await forumDB.transaction().execute(async (trx) => {
-    const selected = await trx
-      .selectFrom("users")
-      .select("cover_image")
-      .where("nickname", "=", nickname)
-      .executeTakeFirst()
-
-    if (!selected || !selected.cover_image) {
-      return;
-    }
-
-    if (selected.cover_image.startsWith("cover")) {
-      await supabase.storage.from(USER_IMAGES_BUCKET).remove([selected.cover_image])
-    }
-
-    const updated = await trx
-      .updateTable("users")
-      .set({ cover_image: null })
-      .where("nickname", "=", nickname)
-      .executeTakeFirst()
-
-    if (!updated.numUpdatedRows) {
-      return;
-    }
-
-    return null
-  })
-
-  return query;
-}
+import { deleteCoverImage } from "./create-cover-image"
 
 export const deleteCoverImageRoute = new Hono()
   .delete("/delete-cover-image", async (ctx) => {
@@ -44,7 +10,7 @@ export const deleteCoverImageRoute = new Hono()
     try {
       const res = await deleteCoverImage(nickname)
 
-      if (res === undefined) {
+      if (!res) {
         return ctx.json({ error: "Error deleting cover image" }, 404)
       }
 

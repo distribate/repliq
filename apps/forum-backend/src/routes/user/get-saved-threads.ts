@@ -76,8 +76,6 @@ export const getSavedThreadsRoute = new Hono()
         ])
         .execute()
 
-      console.log(query)
-
       const data = query.map((item) => {
         const images = item.images.map(image => getPublicUrl("threads", image))
         return { ...item, images }

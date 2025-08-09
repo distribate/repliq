@@ -1,12 +1,12 @@
 import { atom } from "@reatom/core";
 import { reatomAsync, withStatusesAtom } from "@reatom/async";
 import { Friend, GetFriendsResponse } from "@repo/types/schemas/friend/friend-types.ts";
-import { sleep, take, withReset } from "@reatom/framework";
+import { withReset } from "@reatom/framework";
 import { forumUserClient } from "#shared/forum-client";
 import * as z from "zod";
+import ky from "ky";
 import { getUserFriendsSchema } from "@repo/types/schemas/user/get-user-friends-schema";
 import { decode } from "cbor-x"
-import ky from "ky";
 import { parseBooleanToString } from "@repo/lib/helpers/parse-boolean-to-string.ts"
 import { currentUserNicknameAtom } from "#components/user/models/current-user.model";
 import { friendsUpdateOptionsAtom } from "../components/filtering/models/friends-filtering.model";
@@ -79,8 +79,6 @@ export const myFriendsAction = reatomAsync(async (ctx) => {
     }
   }
 
-  await sleep(200)
-
   const nickname = ctx.get(currentUserNicknameAtom)
   if (!nickname) return;
 
@@ -89,6 +87,11 @@ export const myFriendsAction = reatomAsync(async (ctx) => {
   return await ctx.schedule(() => getFriends({ nickname, limit, sort_type, ascending }))
 }, {
   name: "myFriendsAction",
+  onReject: (_, e) => {
+    if (e instanceof Error) {
+      console.error(e.message)
+    }
+  },
   onFulfill: (ctx, res) => {
     if (!res) return;
 

@@ -11,7 +11,7 @@ export const MainLayout = reatomComponent<PropsWithChildren>(({ ctx, children })
   return (
     <>
       <div className="flex w-full relative min-h-screen items-center py-2 justify-center overflow-hidden">
-        <div className="flex flex-col gap-4 responsive-width pb-[74px] md:pb-0 h-full items-center justify-start">
+        <div className="flex flex-col gap-4 responsive-width h-full items-center justify-start">
           <Navbar />
           <div id="main" className="flex gap-y-4 w-full h-full min-h-screen main-section">
             {children}

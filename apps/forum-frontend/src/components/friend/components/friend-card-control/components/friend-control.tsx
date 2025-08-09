@@ -73,15 +73,14 @@ const FriendControlNoteTrigger = reatomComponent<Omit<FriendControlProps, "is_pi
   )
 }, "FriendControlNoteTrigger")
 
-
 const FriendControlPinTrigger = reatomComponent<FriendControlProps>(({
   ctx, is_pinned, nickname: recipient, friend_id
 }) => {
   const handlePin = () => {
     if (is_pinned) {
-      return setFriendUnpinAction(ctx, { recipient, friend_id });
+      setFriendUnpinAction(ctx, { recipient, friend_id });
     } else {
-      return setFriendPinAction(ctx, { recipient, friend_id });
+      setFriendPinAction(ctx, { recipient, friend_id });
     }
   };
 

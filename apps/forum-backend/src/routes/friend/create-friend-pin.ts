@@ -10,18 +10,18 @@ import { validatePinnedFriendsLength } from '#lib/validators/validate-pinned-fri
 export const createFriendPinRoute = new Hono()
   .post("/create-friend-pin", zValidator("json", friendPinSchema), async (ctx) => {
     const result = friendPinSchema.parse(await ctx.req.json());
-    const initiator = getNickname()
+    const nickname = getNickname()
 
     try {
       switch (result.type) {
         case "pin":
-          const isValid = await validatePinnedFriendsLength(initiator)
+          const isValid = await validatePinnedFriendsLength(nickname)
 
           if (!isValid) {
             return ctx.json({ error: "Error creating friend pin" }, 404)
           }
 
-          const createPin = await createFriendPin({ ...result, initiator })
+          const createPin = await createFriendPin({ ...result, initiator: nickname })
 
           if (!createPin.id) {
             return ctx.json({ error: "Error creating friend pin" }, 404)
@@ -29,7 +29,7 @@ export const createFriendPinRoute = new Hono()
 
           return ctx.json({ status: "Friend pinned" }, 200)
         case "unpin":
-          const deletePin = await deleteFriendPin({ ...result, initiator })
+          const deletePin = await deleteFriendPin({ ...result, initiator: nickname })
 
           if (!deletePin[0].numDeletedRows) {
             return ctx.json({ error: "Error deleting friend pin" }, 404)

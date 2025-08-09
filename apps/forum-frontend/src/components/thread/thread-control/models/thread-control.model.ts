@@ -19,8 +19,8 @@ type ThreadControl = {
 export const threadControlValuesAtom = atom<ThreadControlValues | null>(null, "threadControlValues")
 export const threadControlAtom = atom<ThreadControl>({ isValid: false }, "threadControl").pipe(withReset())
 
-async function removeThread(threadId: string) {
-  const res = await forumThreadClient.thread["remove-thread"][":threadId"].$delete({ param: { threadId } });
+async function removeThread(id: string) {
+  const res = await forumThreadClient.thread["remove-thread"][":id"].$delete({ param: { id } });
   const data = await res.json();
   if ("error" in data) throw new Error(data.error)
   return data.status;

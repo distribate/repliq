@@ -9,13 +9,6 @@ import { toast } from "sonner";
 
 export const updateAvatarAtom = atom<string | null>(null, "updateAvatar").pipe(withReset())
 
-async function uploadAvatar(body: FormData) {
-  const url = forumUserClient.user["upload-avatar"].$url()
-  const res = await ky.post<{ data: string, status: string } | { error: string }>(url, { body, credentials: "include", retry: 1  })
-  const data = await res.json()
-  return data;
-}
-
 export const updateAvatarAction = reatomAsync(async (ctx) => {
   const target = ctx.get(updateAvatarAtom)
   if (!target) return;
@@ -27,16 +20,24 @@ export const updateAvatarAction = reatomAsync(async (ctx) => {
 
   formData.append("file", blob)
 
-  return await ctx.schedule(() => uploadAvatar(formData))
+  return await ctx.schedule(async () => {
+    const url = forumUserClient.user["upload-avatar"].$url()
+
+    const res = await ky.post<{ data: string, status: string } | { error: string }>(
+      url, { body: formData, credentials: "include", retry: 1, throwHttpErrors: false }
+    )
+
+    const data = await res.json();
+
+    if ("error" in data) throw new Error(data.error)
+
+    return data;
+  })
 }, {
   name: "updateAvatarAction",
   onFulfill: (ctx, res) => {
     if (!res) return;
 
-    if ("error" in res) {
-      return toast.error(res.error);
-    }
-    
     toast.success("Аватар обновлен")
 
     const current = ctx.get(updateAvatarAtom)

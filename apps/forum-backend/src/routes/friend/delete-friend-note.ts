@@ -9,16 +9,16 @@ import { deleteFriendNoteSchema } from "@repo/types/schemas/friend/delete-friend
 export const deleteFriendNoteRoute = new Hono()
   .delete("/delete-friend-note", zValidator("json", deleteFriendNoteSchema), async (ctx) => {
     const { friend_id, recipient } = deleteFriendNoteSchema.parse(await ctx.req.json());
-    const initiator = getNickname()
+    const nickname = getNickname()
 
     try {
       const { id } = await getFriendId({
-        friend_id, initiator, recipient
+        friend_id, initiator: nickname, recipient
       })
 
       const res = await deleteFriendNote(id)
 
-      if (!res[0].numDeletedRows) {
+      if (!res.numDeletedRows) {
         return ctx.json({ error: "Error deleting friend note" }, 404)
       }
 

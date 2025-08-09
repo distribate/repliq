@@ -20,9 +20,9 @@ export const getUserPublicSocialsRoute = new Hono()
     }
 
     try {
-      const socials = await getUserPublicSocials(recipient);
+      const data = await getUserPublicSocials(recipient);
 
-      return ctx.json({ data: socials }, 200)
+      return ctx.json({ data }, 200)
     } catch (e) {
       return ctx.json({ error: throwError(e) }, 500)
     }

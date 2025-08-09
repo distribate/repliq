@@ -1,49 +1,152 @@
+import type { DB } from "@repo/types/db/forum-database-types";
 import { forumDB } from "#shared/database/forum-db.ts";
 import { supabase } from "#shared/supabase/supabase-client.ts";
 import { getNickname } from "#utils/get-nickname-from-storage.ts";
-import { getPublicUrl } from "#utils/get-public-url.ts";
 import { throwError } from "@repo/lib/helpers/throw-error";
 import { logger } from "@repo/lib/utils/logger";
-import { decode } from "cbor-x";
 import { Hono } from "hono";
+import { sql, Transaction } from "kysely";
 import { nanoid } from "nanoid";
 
-const AVATAR_FILE_SIZE_LIMIT = 8 // in MB
+const AVATAR_FILE_SIZE_LIMIT = 2 // MB
+const AVATARS_PER_USER = 5
 
-async function uploadFile(target: string, file: globalThis.File) {
+function getAvatarFilename(target: string, file: globalThis.File) {
   const id = nanoid(3)
-  const fileExtension = file.name.includes('.') ? `.${file.name.split('.').pop()}` : '';
-  const fileName = `${target}-${id}${fileExtension}`
+  const extension = file.name.includes('.') ? `.${file.name.split('.').pop()}` : '';
+  const fileName = `${target}-${id}${extension}`
+  return { fileName, extension }
+}
 
-  const res = await supabase.storage.from("users_avatar").upload(fileName, file, { contentType: fileExtension, upsert: true })
+async function uploadFile(
+  bucket: string,
+  meta: { fileName: string, extension: string },
+  file: globalThis.File
+) {
+  const res = await supabase
+    .storage
+    .from(bucket)
+    .upload(meta.fileName, file, { contentType: meta.extension, upsert: true })
 
   if (res.error) {
-    logger.error(res.error.message)
-    throw res.error
+    logger.error(res.error)
+    throw new Error(res.error.message)
   }
 
   return res.data
 }
 
-async function createAvatar({ nickname, file }: { nickname: string, file: globalThis.File }) {
-  const query = await forumDB.transaction().execute(async (trx) => {
-    const uploaded = await uploadFile(nickname, file)
+async function validateAvatarsLength(nickname: string, trx: Transaction<DB>) {
+  const existsLength = await trx
+    .selectFrom("users")
+    .select("avatars")
+    .where('nickname', "=", nickname)
+    .executeTakeFirstOrThrow()
 
-    logger.info(uploaded)
+  if (existsLength.avatars.length >= AVATARS_PER_USER) {
+    throw new Error("Avatars limit")
+  }
+}
+
+export async function deleteAvatar(
+  nickname: string,
+  id: number
+) {
+  const { avatar, avatars } = await forumDB
+    .selectFrom("users")
+    .select(["avatar", "avatars"])
+    .where("nickname", "=", nickname)
+    .executeTakeFirstOrThrow();
+
+  // Проверяем, что id валидный индекс
+  if (id < 0 || id >= avatars.length) {
+    throw new Error("Invalid avatar id");
+  }
+
+  const target = avatars[id];
+
+  const updatedAvatars = avatars.filter((ex, i) => i !== id);
+
+  const updatedLastAvatar = updatedAvatars.length > 0 ? updatedAvatars[updatedAvatars.length - 1] : null;
+
+  console.log(`target`, target);
+  console.log("updatedLastAvatar:", updatedLastAvatar);
+
+  if (updatedLastAvatar) {
+    const url = target;
+    const prefix = '/public/';
+    const index = url.indexOf(prefix);
+
+    if (index === -1) {
+      throw new Error("Url format unexpected");
+    }
+
+    const path = url.slice(index + prefix.length);
+
+    const filename = path.split('/').pop();
+
+    if (!filename) throw new Error("Filename extraction failed");
+
+    console.log("Storage path to delete:", path, filename);
+
+    const result = await supabase.storage.from("users_avatar").remove([filename]);
+
+    if (result.error) {
+      throw new Error(result.error.message);
+    }
+
+    console.log("Delete result:", result.data);
+  }
+
+  const update = await forumDB
+    .updateTable("users")
+    .set({
+      avatars: updatedAvatars,
+      avatar: updatedLastAvatar
+    })
+    .where("nickname", "=", nickname)
+    .returning(["avatar", "avatars"])
+    .executeTakeFirst()
+
+  if (!update) {
+    throw new Error()
+  }
+
+  return update;
+}
+
+export const KONG_PREFIX_URL = `https://kong.fasberry.su/storage/v1/object`
+
+async function createAvatar(
+  nickname: string,
+  file: globalThis.File
+): Promise<string> {
+  return forumDB.transaction().execute(async (trx) => {
+    await validateAvatarsLength(nickname, trx);
+
+    const { extension, fileName } = getAvatarFilename(nickname, file);
+
+    const result = await uploadFile("users_avatar", { fileName, extension }, file)
+    console.log(`Uploaded for ${nickname}`, result)
+
+    const newUrl = `${KONG_PREFIX_URL}/public/${result.fullPath}`
 
     const update = await trx
       .updateTable("users")
-      .set({ avatar: `https://kong.fasberry.su/storage/v1/object/public/${uploaded.fullPath}` })
+      .set({
+        avatar: newUrl,
+        avatars: sql`array_append(avatars, ${newUrl})`
+      })
       .where("nickname", "=", nickname)
-      .returning("avatar")
+      .where(sql<boolean>`array_length(avatars, 1) < 5`)
       .executeTakeFirst()
 
-    if (!update || !update?.avatar) return;
+    if (!update) {
+      throw new Error('Нельзя добавить больше 5 аватаров');
+    }
 
-    return { data: update.avatar }
+    return newUrl
   })
-
-  return query;
 }
 
 export const uploadAvatarRoute = new Hono()
@@ -81,15 +184,9 @@ export const uploadAvatarRoute = new Hono()
     }
 
     try {
-      const createdAvatar = await createAvatar({ nickname: initiator, file: inputFile })
+      const data = await createAvatar(initiator, inputFile)
 
-      if (!createdAvatar?.data) {
-        return ctx.json({ error: "Uploading avatar error" }, 401)
-      }
-
-      const fullUrl = getPublicUrl("users_avatar", createdAvatar.data)
-
-      return ctx.json({ data: fullUrl, status: "Success" }, 200)
+      return ctx.json({ data, status: "Success" }, 200)
     } catch (e) {
       return ctx.json({ error: throwError(e) }, 500)
     }

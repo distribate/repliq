@@ -21,8 +21,7 @@ async function getRequestsByType(
 ): Promise<FriendRequestEntity[] | null> {
   const res = await forumUserClient.user["get-friends-requests"].$get({ query: { type } }, { init });
   const data = await res.json();
-
-  if (!data || "error" in data) return null;
+  if ("error" in data) throw new Error(data.error)
 
   return data.data.length ? data.data : null;
 }

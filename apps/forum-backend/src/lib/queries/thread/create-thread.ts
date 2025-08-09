@@ -63,13 +63,13 @@ async function uploadThreadImages({
     });
   });
 
-  return await Promise.all(uploadPromises);
+  return Promise.all(uploadPromises);
 }
 
 async function addTagsToThread({
   tags, thread_id, trx
 }: AddTagsToThread) {
-  return await trx
+  return trx
     .insertInto("threads_tags")
     .values({ thread_id, tags })
     .returning("id")
@@ -95,7 +95,7 @@ async function createThreadItem({
 async function addThreadUser({
   thread_id, trx, user_nickname
 }: AddThreadUser) {
-  return await trx
+  return trx
     .insertInto("threads_users")
     .values({ thread_id, user_nickname })
     .executeTakeFirstOrThrow()

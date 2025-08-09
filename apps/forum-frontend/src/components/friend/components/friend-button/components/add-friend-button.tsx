@@ -10,10 +10,10 @@ type AddFriendButtonProps = {
 export const AddFriendButton = reatomComponent<AddFriendButtonProps>(({ ctx, recipient }) => {
   return (
     <Button
-      // @ts-expect-error
-      onClick={() => spawn(ctx, async (spawnCtx) => controlOutgoingRequestAction(spawnCtx, { type: "create", recipient }))}
       variant="positive"
       disabled={ctx.spy(controlOutgoingRequestAction.statusesAtom).isPending}
+      // @ts-expect-error
+      onClick={() => spawn(ctx, async (spawnCtx) => controlOutgoingRequestAction(spawnCtx, { type: "create", recipient }))}
     >
       Добавить в друзья
     </Button>

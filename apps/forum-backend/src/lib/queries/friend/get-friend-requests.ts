@@ -10,7 +10,7 @@ type GetFriendRequests = {
 export const getFriendRequests = async ({
   nickname, type, cursor
 }: GetFriendRequests) => {
-  const q = forumDB
+  const query = forumDB
     .selectFrom('friends_requests')
     .innerJoin("users", "users.nickname", type === "incoming" ? "friends_requests.recipient" : "friends_requests.initiator")
     .select([
@@ -22,7 +22,7 @@ export const getFriendRequests = async ({
     ])
     .where(type === "incoming" ? "recipient" : "initiator", '=', nickname)
 
-  const res = await executeWithCursorPagination(q, { 
+  const res = await executeWithCursorPagination(query, { 
     perPage: 16,
     after: cursor,
     fields: [

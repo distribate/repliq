@@ -1,4 +1,3 @@
-import { threadImagesAction } from "#components/thread/thread-images/models/thread-images.model";
 import { threadReactionsAction } from "#components/thread/thread-reactions/models/thread-reactions.model";
 import { currentUserNicknameAtom } from "#components/user/models/current-user.model";
 import { action, atom, batch } from "@reatom/core";
@@ -8,15 +7,12 @@ import { forumThreadClient } from "#shared/forum-client";
 import { ThreadDetailed, ThreadOwner } from "@repo/types/entities/thread-type";
 
 export async function getThreadModel(
-  threadId: string,
+  id: string,
   { headers }: RequestInit
 ) {
-  const res = await forumThreadClient.thread['get-thread'][':threadId'].$get({ param: { threadId } }, { init: { headers } });
+  const res = await forumThreadClient.thread['get-thread'][':id'].$get({ param: { id } }, { init: { headers } });
   const data = await res.json();
-
-  if ('error' in data) {
-    throw new Error(data.error)
-  }
+  if ('error' in data) throw new Error(data.error)
 
   return data.data;
 }
@@ -30,6 +26,7 @@ export const threadAtom = atom<Omit<ThreadDetailed, "content" | "owner" | "prope
 export const threadOwnerAtom = atom<ThreadOwner | null>(null, "threadOwner").pipe(withReset())
 export const threadContentAtom = atom<ThreadDetailed["content"] | null>(null, "threadContent").pipe(withReset())
 export const threadPropertiesAtom = atom<ThreadDetailed["properties"] | null>(null, "threadProperties")
+export const threadImagesAtom = atom<string[] | null>(null, "threadImages")
 
 export const threadModeAtom = atom<"read" | "edit">("read", "threadMode")
 export const threadIsEditableAtom = atom(false, "threadIsEditable")
@@ -49,16 +46,13 @@ threadOwnerAtom.onChange((ctx, state) => {
 export const defineThread = action((ctx, target: ThreadDetailed) => {
   const { owner, content, properties, ...rest } = target;
 
-  if (target.images_count >= 1) {
-    threadImagesAction(ctx)
-  }
-
   batch(ctx, () => {
     threadReactionsAction(ctx, target.id)
     threadParamAtom(ctx, rest.id)
     threadOwnerAtom(ctx, owner)
     threadContentAtom(ctx, content)
     threadPropertiesAtom(ctx, properties)
-    threadAtom(ctx, rest)
+    threadAtom(ctx, rest);
+    threadImagesAtom(ctx, rest.images.length >= 1 ? rest.images : null)
   })
 }, "defineThread")

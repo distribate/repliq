@@ -61,7 +61,6 @@ export const removeThread = async (id: string) => {
     return trx
       .deleteFrom('threads')
       .where('id', '=', id)
-      .returning("id")
       .executeTakeFirstOrThrow();
   });
 

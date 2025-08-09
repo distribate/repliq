@@ -1,32 +1,40 @@
+import { atom } from "@reatom/core"
+import { reatomComponent } from "@reatom/npm-react"
 import { Typography } from "@repo/ui/src/components/typography"
-import { CollectionParams } from "../navigation/components/collection-navigation"
-import { lazy, Suspense } from "react"
-import { usePageContext } from "vike-react/usePageContext"
+import { ReactNode } from "react"
+import { clientOnly } from "vike-react/clientOnly"
 
-const MyTickets = lazy(() => import("../my-tickets/components/my-tickets").then(m => ({ default: m.MyTickets })))
-const SavedThreads = lazy(() => import("../my-threads/components/my-threads").then(m => ({ default: m.SavedThreads })))
-const MyThreads = lazy(() => import("../my-threads/components/my-threads").then(m => ({ default: m.MyThreads })))
+const MyTickets = clientOnly(() => import("../my-tickets/components/my-tickets").then(m => m.MyTickets))
+const SavedThreads = clientOnly(() => import("../my-threads/components/my-threads").then(m => m.SavedThreads))
+const MyThreads = clientOnly(() => import("../my-threads/components/my-threads").then(m => m.MyThreads))
+
+export type CollectionParams = {
+  type: 'threads' | 'saved_threads' | "tickets"
+}
+
+export const collectionQueryAtom = atom<CollectionParams>({ type: "threads" }, "collectionQuery")
 
 const ALIASES: Record<CollectionParams["type"], string> = {
   threads: "треды",
   saved_threads: "сохраненные треды",
   tickets: "тикеты",
-  all: "коллекции"
 } as const;
 
-export const CollectionWrapper = () => {
-  const type = usePageContext().urlParsed.search.type as CollectionParams["type"]
+const COMPONENTS: Record<CollectionParams["type"], ReactNode> = {
+  threads: <MyThreads />,
+  saved_threads: <SavedThreads />,
+  tickets: <MyTickets />
+}
+
+export const CollectionWrapper = reatomComponent(({ ctx }) => {
+  const { type } = ctx.spy(collectionQueryAtom);
 
   return (
     <div className="flex flex-col bg-primary-color rounded-lg overflow-hidden gap-6 w-full h-full p-4">
       <Typography textSize="very_big" textColor="shark_white" className="font-semibold">
         Ваши {ALIASES[type]}
       </Typography>
-      <Suspense>
-        {type === 'threads' && <MyThreads />}
-        {type === 'tickets' && <MyTickets />}
-        {type === 'saved_threads' && <SavedThreads />}
-      </Suspense>
+      {COMPONENTS[type]}
     </div>
   )
-}
+}, "CollectionWrapper")

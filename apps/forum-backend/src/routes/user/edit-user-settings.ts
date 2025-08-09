@@ -11,9 +11,9 @@ export const editUserSettingsRoute = new Hono()
     const nickname = getNickname()
 
     try {
-      const updatedValue = await updateSetting({ ...result, nickname });
+      const data = await updateSetting({ ...result, nickname });
       
-      return ctx.json({ data: updatedValue }, 200);
+      return ctx.json({ data }, 200);
     } catch (e) {
       return ctx.json({ error: throwError(e) }, 500);
     }

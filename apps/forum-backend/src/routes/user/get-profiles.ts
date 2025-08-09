@@ -33,9 +33,9 @@ export const getProfilesRoute = new Hono()
     const nickname = getNickname()
 
     try {
-      const profiles = await getProfiles(nickname)
+      const data = await getProfiles(nickname)
 
-      return ctx.json({ data: profiles }, 200)
+      return ctx.json({ data }, 200)
     } catch (e) {
       return ctx.json({ error: throwError(e) }, 500)
     }

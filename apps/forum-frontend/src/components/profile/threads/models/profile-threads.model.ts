@@ -1,34 +1,29 @@
 import { atom } from '@reatom/core';
-import { reatomAsync, withErrorAtom, withStatusesAtom } from '@reatom/async';
+import { reatomAsync, withDataAtom, withErrorAtom, withStatusesAtom } from '@reatom/async';
 import { forumUserClient } from '#shared/forum-client';
-import { UserThreads } from './profile-threads-search.model';
-
-export const threadsAtom = atom<UserThreads[] | null>(null, "threads")
 
 type GetThreadsUser = {
-  nickname: string;
   query?: string;
 };
 
-export async function getThreadsUser({ nickname, query }: GetThreadsUser) {
-  const res = await forumUserClient.user["get-user-threads"][":nickname"].$get({
-    param: { nickname }, query: { querySearch: query }
-  })
-
+export async function getThreadsUser(
+  nickname: string,
+  { query }: GetThreadsUser = { }
+) {
+  const res = await forumUserClient.user["get-user-threads"][":nickname"].$get({ param: { nickname }, query: { querySearch: query } })
   const data = await res.json()
+  if ("error" in data) throw new Error(data.error)
 
-  if (!data || "error" in data) return null;
-
-  return data.data.length ? data.data : null
+  return data.data
 }
 
 export const threadsAction = reatomAsync(async (ctx, target: string) => {
-  return await ctx.schedule(() => getThreadsUser({ nickname: target }))
+  return await ctx.schedule(() => getThreadsUser(target))
 }, {
   name: "threadsAction",
-  onFulfill: (ctx, res) => {
-    if (res) {
-      threadsAtom(ctx, res)
+  onReject: (_, e) => {
+    if (e instanceof Error) {
+      console.error(e.message)
     }
   }
-}).pipe(withStatusesAtom(), withErrorAtom())
+}).pipe(withStatusesAtom(), withErrorAtom(), withDataAtom(null))

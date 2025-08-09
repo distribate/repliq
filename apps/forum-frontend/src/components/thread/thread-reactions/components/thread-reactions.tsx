@@ -11,8 +11,8 @@ export const ThreadReactions = reatomComponent(({ ctx }) => {
 
   if (!data || !threadId) return null;
 
-  const userReactions = data.userReactions ?? { reactions: [] };
-  const threadReactions = data.threadReactions.reactions ?? {};
+  const userReactions = data.byUser ?? { reactions: [] };
+  const threadReactions = data.byThread.reactions ?? {};
 
   if (ctx.spy(threadReactionsAction.statusesAtom).isPending) {
     return <ThreadReactionsSkeleton />
@@ -38,4 +38,4 @@ export const ThreadReactions = reatomComponent(({ ctx }) => {
       })}
     </div>
   )
-})
+}, "ThreadReactions")

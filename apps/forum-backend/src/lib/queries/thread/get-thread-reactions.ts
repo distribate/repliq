@@ -12,8 +12,10 @@ export async function getThreadReactions(threadId: string) {
     .groupBy('emoji')
     .execute();
     
-  if (!results.length) return { reactions: {} };
-
+  if (!results.length) {
+    return { reactions: {} };
+  }
+  
   const reactions = results.reduce((acc, row) => {
     acc[row.emoji] = row.count;
     return acc;

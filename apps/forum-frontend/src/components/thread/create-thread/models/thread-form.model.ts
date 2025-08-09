@@ -78,23 +78,6 @@ threadFormContentAtom.onChange((ctx, target) => {
   threadFormContentIsValidAtom(ctx, threadContentSchema.safeParse(serializeNodes(target)).success)
 })
 
-threadFormTitleAtom.onChange((_, state) => logger.info("threadFormTitleAtom", state))
-threadFormContentAtom.onChange((_, state) => logger.info("threadFormContentAtom", state))
-threadFormDescriptionAtom.onChange((_, state) => logger.info("threadFormDescriptionAtom", state))
-threadFormImagesAtom.onChange((_, state) => logger.info("threadFormImagesAtom", state))
-threadFormVisibilityAtom.onChange((_, state) => logger.info("threadFormVisibilityAtom", state))
-threadFormTagsAtom.onChange((_, state) => logger.info("threadFormTagsAtom", state))
-threadFormCategoryAtom.onChange((_, state) => logger.info("threadFormCategoryAtom", state))
-threadFormIsCommentAtom.onChange((_, state) => logger.info("threadFormIsCommentAtom", state))
-threadFormPermissionAtom.onChange((_, state) => logger.info("threadFormPermissionAtom", state))
-
-threadFormStepAtom.onChange((_, state) => logger.info("threadFormStepAtom", state))
-
-threadFormTitleIsValidAtom.onChange((_, state) => logger.info("threadFormTitleIsValidAtom", state))
-threadFormCategoryIsValidAtom.onChange((_, state) => logger.info("threadFormCategoryIsValidAtom", state))
-threadFormContentIsValidAtom.onChange((_, state) => logger.info("threadFormContentIsValidAtom", state))
-threadFormIsValidAtom.onChange((_, state) => logger.info("threadFormIsValidAtom", state))
-
 export function createThreadFormReset(ctx: Ctx) {
   threadFormTitleAtom.reset(ctx)
   threadFormContentAtom.reset(ctx)
@@ -193,7 +176,7 @@ export const handleControlImagesAction = reatomAsync(async (ctx, values: CreateT
 
     for (let i = index + 1; i < total; i++) {
       const color = bgColorAtom.get(ctx, i);
-      
+
       if (color !== undefined) {
         bgColorAtom.set(ctx, i - 1, color);
         bgColorAtom.delete(ctx, i);
@@ -204,10 +187,7 @@ export const handleControlImagesAction = reatomAsync(async (ctx, values: CreateT
   }
 }, "handleControlImagesAction")
 
-export const handleAddImagesAction = action((
-  ctx,
-  e: React.ChangeEvent<HTMLInputElement>
-) => {
+export const handleAddImagesAction = action((ctx, e: React.ChangeEvent<HTMLInputElement>) => {
   const currentUser = ctx.get(currentUserAtom)
   if (!currentUser) return;
 
@@ -231,13 +211,31 @@ export const handleDeleteImageAction = action((
   return handleControlImagesAction(ctx, { index: idx, type: "delete" });
 }, "handleDeleteImageAction")
 
-async function getAvailableCategories() {
-  const res = await forumCategoriesClient.categories["get-available-categories"].$get()
-  const data = await res.json()
-  if (!data || 'error' in data) return null
-  return data.data
-}
-
 export const availableCategoriesResource = reatomResource(async (ctx) => {
-  return await ctx.schedule(() => getAvailableCategories())
+  return await ctx.schedule(async () => {
+    const res = await forumCategoriesClient.categories["get-available-categories"].$get(
+      {}, { init: { signal: ctx.controller.signal }}
+    )
+
+    const data = await res.json()
+    
+    if ('error' in data) throw new Error(data.error)
+      
+    return data.data
+  })
 }, "availableCategoriesResource").pipe(withDataAtom(), withStatusesAtom(), withCache())
+
+threadFormTitleAtom.onChange((_, state) => import.meta.env.DEV && logger.info("threadFormTitleAtom", state))
+threadFormContentAtom.onChange((_, state) => import.meta.env.DEV && logger.info("threadFormContentAtom", state))
+threadFormDescriptionAtom.onChange((_, state) => import.meta.env.DEV && logger.info("threadFormDescriptionAtom", state))
+threadFormImagesAtom.onChange((_, state) => import.meta.env.DEV && logger.info("threadFormImagesAtom", state))
+threadFormVisibilityAtom.onChange((_, state) => import.meta.env.DEV && logger.info("threadFormVisibilityAtom", state))
+threadFormTagsAtom.onChange((_, state) => import.meta.env.DEV && logger.info("threadFormTagsAtom", state))
+threadFormCategoryAtom.onChange((_, state) => import.meta.env.DEV && logger.info("threadFormCategoryAtom", state))
+threadFormIsCommentAtom.onChange((_, state) => import.meta.env.DEV && logger.info("threadFormIsCommentAtom", state))
+threadFormPermissionAtom.onChange((_, state) => import.meta.env.DEV && logger.info("threadFormPermissionAtom", state))
+threadFormStepAtom.onChange((_, state) => import.meta.env.DEV && logger.info("threadFormStepAtom", state))
+threadFormTitleIsValidAtom.onChange((_, state) => import.meta.env.DEV && logger.info("threadFormTitleIsValidAtom", state))
+threadFormCategoryIsValidAtom.onChange((_, state) => import.meta.env.DEV && logger.info("threadFormCategoryIsValidAtom", state))
+threadFormContentIsValidAtom.onChange((_, state) => import.meta.env.DEV && logger.info("threadFormContentIsValidAtom", state))
+threadFormIsValidAtom.onChange((_, state) => import.meta.env.DEV && logger.info("threadFormIsValidAtom", state))

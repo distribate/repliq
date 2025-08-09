@@ -13,11 +13,10 @@ import {
 import { useEffect, useState } from "react";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import type { EmblaCarouselType } from "embla-carousel";
-import { threadAtom } from "#components/thread/thread-main/models/thread.model";
+import { threadAtom, threadImagesAtom } from "#components/thread/thread-main/models/thread.model";
 import { Typography } from "@repo/ui/src/components/typography.tsx";
 import { WheelGesturesPlugin } from 'embla-carousel-wheel-gestures'
 import { reatomComponent } from "@reatom/npm-react";
-import { threadImagesAction } from "../models/thread-images.model";
 
 export const ThreadImagesSkeleton = ({ images_count }: { images_count: number }) => {
   return (
@@ -59,7 +58,7 @@ const ThreadImagesNavigation = ({ api }: ThreadImagesNavigationProps) => {
 };
 
 export const ThreadImages = reatomComponent(({ ctx }) => {
-  const threadImages = ctx.spy(threadImagesAction.dataAtom)
+  const threadImages = ctx.spy(threadImagesAtom)
   const thread = ctx.spy(threadAtom)
   const [selectedIndex, setSelectedIndex] = useState<number>(0);
   const [api, setApi] = useState<CarouselApi>();
@@ -70,10 +69,6 @@ export const ThreadImages = reatomComponent(({ ctx }) => {
       api.scrollTo(selectedIndex, true);
     }
   }, [api, selectedIndex]);
-
-  if (ctx.spy(threadImagesAction.statusesAtom).isPending) {
-    return <ThreadImagesSkeleton images_count={thread?.images_count ?? 2} />
-  }
 
   if (!threadImages || !thread) return null;
 

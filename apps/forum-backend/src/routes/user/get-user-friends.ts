@@ -6,10 +6,9 @@ import { Hono } from "hono";
 import { getNickname } from "#utils/get-nickname-from-storage.ts";
 import { Encoder } from "cbor-x";
 import { userPreferenceAndPrivateValidation } from "#utils/validate-user-preference-private.ts";
-import * as z from "zod";
 import { forumDB } from "#shared/database/forum-db.ts";
 
-export async function getUserFriendsCount(nickname: string) {
+export async function getUserFriendsCount(nickname: string): Promise<number> {
   const query = await forumDB
     .selectFrom("users_friends")
     .select(forumDB.fn.countAll().as("count"))
@@ -19,10 +18,11 @@ export async function getUserFriendsCount(nickname: string) {
         eb("user_2", "=", nickname),
       ])
     )
-    .$narrowType<{ count: number }>()
     .executeTakeFirst();
 
-  return Number(query?.count) ?? 0
+  if (!query) return 0;
+
+  return Number(query.count) ?? 0
 }
 
 async function getUserRequestsCount(nickname: string) {
@@ -34,8 +34,6 @@ async function getUserRequestsCount(nickname: string) {
         eb("initiator", "=", nickname),
       ])
     )
-    .$narrowType<{ count: number }>()
-    .executeTakeFirst()
 
   const queryIncoming = forumDB
     .selectFrom("friends_requests")
@@ -45,10 +43,11 @@ async function getUserRequestsCount(nickname: string) {
         eb("recipient", "=", nickname),
       ])
     )
-    .$narrowType<{ count: number }>()
-    .executeTakeFirst()
 
-  const [outgoing, incoming] = await Promise.all([queryOutgoing, queryIncoming])
+  const [outgoing, incoming] = await Promise.all([
+    queryOutgoing.executeTakeFirst(), 
+    queryIncoming.executeTakeFirst()
+  ])
 
   return {
     outgoing: Number(outgoing?.count) ?? 0,

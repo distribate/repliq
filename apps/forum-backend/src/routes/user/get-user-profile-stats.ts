@@ -112,11 +112,11 @@ export const getUserProfileStatsRoute = new Hono()
     const isDonate = await getUserDonate(nickname)
 
     try {
-      const userProfileStats = await getUserProfileStats({
+      const data = await getUserProfileStats({
         nickname, with_details: isDonate
       });
 
-      return ctx.json({ data: userProfileStats }, 200);
+      return ctx.json({ data }, 200);
     } catch (e) {
       return ctx.json({ error: throwError(e) }, 500);
     }

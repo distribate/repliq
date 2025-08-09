@@ -11,9 +11,13 @@ type OutgoingRequestButtonProps = {
 export const OutgoingFriendButton = reatomComponent<OutgoingRequestButtonProps>(({ 
   ctx, recipient, request_id 
 }) => {
+  const handle = () => {
+    void spawn(ctx, async (spawnCtx) => controlOutgoingRequestAction(spawnCtx, { type: "reject", request_id, recipient }))
+  };
+  
   return (
     <Button
-      onClick={() => spawn(ctx, async (spawnCtx) => controlOutgoingRequestAction(spawnCtx, { type: "reject", request_id, recipient }))}
+      onClick={handle}
       variant="pending"
       disabled={ctx.spy(controlOutgoingRequestAction.statusesAtom).isPending}
     >

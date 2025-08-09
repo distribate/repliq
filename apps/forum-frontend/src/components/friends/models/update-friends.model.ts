@@ -24,6 +24,11 @@ export const updateFriendsAction = reatomAsync(async (ctx, type: "update-filter"
   return await getFriends({ nickname, ascending, sort_type, cursor, limit })
 }, {
   name: "updateFriendsAction",
+  onReject: (_, e) => {
+    if (e instanceof Error) {
+      console.error(e.message)
+    }
+  },
   onFulfill: (ctx, res) => {
     if (!res) return
 

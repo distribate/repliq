@@ -29,9 +29,9 @@ export const getUserTicketsRoute = new Hono()
     const { nickname } = ctx.req.param()
 
     try {
-      const tickets = await getTickets(nickname)
+      const data = await getTickets(nickname)
 
-      return ctx.json({ data: tickets }, 200)
+      return ctx.json({ data }, 200)
     } catch (e) {
       return ctx.json({ error: throwError(e) }, 500)
     }

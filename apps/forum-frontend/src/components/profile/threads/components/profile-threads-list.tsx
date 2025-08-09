@@ -1,4 +1,4 @@
-import { threadsAction, threadsAtom } from '../models/profile-threads.model.ts';
+import { threadsAction } from '../models/profile-threads.model.ts';
 import { ProfileThreadsFiltering } from '#components/profile/threads/components/profile-threads-filtering.tsx';
 import { ProfileThreadsListCard } from '#components/profile/threads/components/profile-threads-list-card.tsx';
 import { profileThreadsSettingsAtom } from '#components/profile/threads/models/profile-threads-settings.model.ts';
@@ -10,7 +10,7 @@ import { requestedUserParamAtom } from '#components/profile/main/models/requeste
 import { onConnect } from '@reatom/framework';
 
 const ProfileThreadsList = reatomComponent(({ ctx, }) => {
-  const threads = ctx.spy(threadsAtom)
+  const threads = ctx.spy(threadsAction.dataAtom)
   const isLoading = ctx.spy(threadsAction.statusesAtom).isPending;
   const isError = ctx.spy(threadsAction.statusesAtom).isRejected
   const profileThreadsViewState = ctx.spy(profileThreadsSettingsAtom)

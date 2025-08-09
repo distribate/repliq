@@ -1,7 +1,3 @@
-import {
-  ReportEntity,
-  ReportReasonEnum,
-} from "@repo/types/entities/entities-type.ts";
 import { CreateReport } from "./create-report.model";
 import { action, atom } from "@reatom/core";
 import { withReset } from "@reatom/framework";
@@ -9,12 +5,12 @@ import { postsDataAtom } from "#components/profile/posts/models/posts.model";
 import { threadCommentsDataAtom } from "#components/thread/thread-comments/models/thread-comments.model";
 import { toast } from "sonner";
 
-type ReportType = Pick<ReportEntity, "report_type">["report_type"]
+type ReportType = Pick<any, "report_type">["report_type"]
 
 type Report = {
   type: ReportType;
   reportedItem: Pick<CreateReport, "targetId" | "targetContent" | "targetNickname"> | null;
-  reason: ReportReasonEnum | null;
+  reason: any | null;
 };
 
 export type ReportItemProps = {

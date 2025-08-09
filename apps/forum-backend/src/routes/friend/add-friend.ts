@@ -33,7 +33,9 @@ export const addFriendRoute = new Hono()
         return ctx.json({ error: "Error sending friend request" }, 404)
       }
 
-      return ctx.json({ data: createRequest.id }, 200)
+      const data = createRequest.id
+
+      return ctx.json({ data }, 200)
     } catch (e) {
       return ctx.json({ error: throwError(e) }, 400)
     }

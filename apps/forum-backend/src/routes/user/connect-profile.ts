@@ -10,7 +10,10 @@ const connectProfileSchema = z.object({
   type: z.enum(["minecraft"])
 })
 
-async function connectProfile({ nickname, type }: { nickname: string, type: "minecraft" }) {
+async function connectProfile(
+  nickname: string, 
+  { type }: { type: "minecraft" }
+) {
   const { id } = await forumDB
     .selectFrom("users")
     .select("id")
@@ -53,14 +56,10 @@ async function connectProfile({ nickname, type }: { nickname: string, type: "min
 export const connectProfileRoute = new Hono()
   .post("/connect-profile", zValidator('json', connectProfileSchema), async (ctx) => {
     const nickname = getNickname()
-    const { success, data } = connectProfileSchema.safeParse(await ctx.req.json())
-
-    if (!success) {
-      return ctx.json({ error: "Invalid request" }, 400)
-    }
+    const { type } = connectProfileSchema.parse(await ctx.req.json())
 
     try {
-      if (data.type === 'minecraft') {
+      if (type === 'minecraft') {
         const isOnline = await getBisquiteStats()
 
         if (!isOnline) {
@@ -68,7 +67,7 @@ export const connectProfileRoute = new Hono()
         }
       }
 
-      const result = await connectProfile({ nickname, type: data.type })
+      const result = await connectProfile(nickname, { type })
 
       if (!result) {
         return ctx.json({ error: "Failed to connect profile" }, 500)

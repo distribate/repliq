@@ -1,5 +1,5 @@
 import { toast } from "sonner";
-import { ControFriendShip, ControlFriendRequests } from "#components/friend/models/control-friend.model";
+import { ControlFriendProperties, ControlFriendRequests } from "#components/friend/models/control-friend.model";
 import { friendsCountAction } from "#components/friends/models/friends-count.model.ts";
 import { reatomAsync, withStatusesAtom } from "@reatom/async";
 import { atom } from "@reatom/core";
@@ -35,17 +35,9 @@ const friendRequestStatus: Record<string, string> = {
 
 const controlIncomingRequestVariablesAtom = atom<ControlIncomingRequest | null>(null, "acceptIncomingRequestVariables")
 const controlOutgoingRequestVariablesAtom = atom<ControlOutgoingRequest | null>(null, "controlOutgoingRequestVariables")
-const removeFriendActionVariablesAtom = atom<ControFriendShip | null>(null, "removeFriendActionVariables")
+const removeFriendActionVariablesAtom = atom<ControlFriendProperties | null>(null, "removeFriendActionVariables")
 
-export async function deleteFriend({ friend_id }: Pick<ControlFriendRequest, "friend_id">) {
-  const res = await forumUserClient.user["delete-friend"].$delete({ json: { friend_id } })
-  const data = await res.json();
-  if ("error" in data) throw new Error(data.error)
-
-  return data.status
-}
-
-export async function deleteFriendRequest({ request_id }: Pick<ControlFriendRequest, "request_id">) {
+async function deleteFriendRequest({ request_id }: Pick<ControlFriendRequest, "request_id">) {
   const res = await forumUserClient.user["delete-friend-request"].$post({ json: { request_id } })
   const data = await res.json();
   if ("error" in data) throw new Error(data.error)
@@ -56,7 +48,7 @@ export async function deleteFriendRequest({ request_id }: Pick<ControlFriendRequ
   }
 }
 
-export async function createFriendRequest({ recipient }: Pick<ControlFriendRequest, "recipient">) {
+async function createFriendRequest({ recipient }: Pick<ControlFriendRequest, "recipient">) {
   const res = await forumUserClient.user["create-friend-request"].$post({ json: { recipient } })
   const data = await res.json();
   if ("error" in data) throw new Error(data.error)
@@ -67,7 +59,7 @@ export async function createFriendRequest({ recipient }: Pick<ControlFriendReque
   }
 }
 
-export async function acceptFriendRequest({ request_id }: Pick<ControlFriendRequest, "request_id">) {
+async function acceptFriendRequest({ request_id }: Pick<ControlFriendRequest, "request_id">) {
   const res = await forumUserClient.user["accept-friend-request"].$post({ json: { request_id } })
   const data = await res.json();
   if ("error" in data) throw new Error(data.error)
@@ -278,9 +270,19 @@ removeFriendOptionsAtom.onChange((ctx, state) => {
   }
 })
 
-export const removeFriendAction = reatomAsync(async (ctx, options: ControFriendShip) => {
+export const removeFriendAction = reatomAsync(async (ctx, options: ControlFriendProperties) => {
   removeFriendActionVariablesAtom(ctx, options)
-  return await ctx.schedule(() => deleteFriend({ friend_id: options.friend_id }))
+  return await ctx.schedule(async () => {
+    const res = await forumUserClient.user["delete-friend"].$delete({ 
+      json: { friend_id: options.friend_id } 
+    })
+
+    const data = await res.json();
+
+    if ("error" in data) throw new Error(data.error)
+
+    return data.status
+  })
 }, {
   name: "removeFriendAction",
   onReject: (_, e) => {

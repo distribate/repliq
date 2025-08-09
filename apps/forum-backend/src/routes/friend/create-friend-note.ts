@@ -8,12 +8,14 @@ import { addFriendNoteSchema } from "@repo/types/schemas/friend/create-friend-no
 export const createFriendNoteRoute = new Hono()
   .post("/create-friend-note", zValidator("json", addFriendNoteSchema), async (ctx) => {
     const result = addFriendNoteSchema.parse(await ctx.req.json());
-    const initiator = getNickname()
+    const nickname = getNickname()
 
     try {
-      const { note } = await createFriendNote({ ...result, initiator });
+      const { note } = await createFriendNote({ ...result, initiator: nickname });
 
-      return ctx.json({ data: note, status: "Friend note added" }, 200);
+      const data = note;
+
+      return ctx.json({ data, status: "Friend note added" }, 200);
     } catch (e) {
       return ctx.json({ error: throwError(e) }, 400);
     }

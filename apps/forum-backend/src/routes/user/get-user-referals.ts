@@ -34,9 +34,9 @@ export const getUserReferalsRoute = new Hono()
     const { nickname: recipient } = ctx.req.param();
 
     try {
-      const referals = await getUserReferals(recipient);
+      const data = await getUserReferals(recipient);
 
-      return ctx.json({ data: referals }, 200);
+      return ctx.json({ data }, 200);
     } catch (e) {
       return ctx.json({ error: throwError(e) }, 500);
     }

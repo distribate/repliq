@@ -15,7 +15,7 @@ export const deleteFriendRequestRoute = new Hono()
         request_id, recipient: nickname
       });
 
-      if (!res[0].numDeletedRows) {
+      if (!res.numDeletedRows) {
         return ctx.json({ error: "Error deleting friend request" }, 404);
       }
 
