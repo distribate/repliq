@@ -6,11 +6,8 @@ import { getUser } from '#components/user/models/current-user.model';
 
 {/* <div className="flex flex-col gap-y-2 w-full p-2">
 <Typography textSize="small" textColor="shark_white">
-  Обводка вокруг профиля - уникальная фича, чтобы выделиться
-  среди других игроков.
-</Typography>
-<Typography textSize="small" textColor="shark_white">
-  Цвет обводки зависит от типа привилегии.
+  Обводка вокруг профиля - уникальная возможность выделиться
+  среди других пользователей.
 </Typography>
 </div> */}
 

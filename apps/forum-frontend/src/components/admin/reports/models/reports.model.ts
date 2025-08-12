@@ -28,7 +28,7 @@ async function getReports(init?: RequestInit) {
 }
 
 export const reportsAction = reatomAsync(async (ctx) => {
-  // @ts-expect-error
+  // @ts-ignore
   return await ctx.schedule(() => getReports({ signal: ctx.controller.signal }))
 }, {
   name: "reportsAction",

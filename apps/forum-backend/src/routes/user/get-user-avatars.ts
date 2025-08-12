@@ -11,6 +11,7 @@ export const getUserAvatarsRoute = new Hono()
         .selectFrom("users")
         .select(["avatars", 'avatar'])
         .where("nickname", "=", nickname)
+        .orderBy("created_at", "desc")
         .executeTakeFirstOrThrow()
 
       return ctx.json({ data }, 200)

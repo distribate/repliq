@@ -1,4 +1,4 @@
-import { requestedUserAtom } from "#components/profile/main/models/requested-user.model";
+import { requestedUserAtom, requestedUserIsSameAtom } from "#components/profile/main/models/requested-user.model";
 import { reatomComponent } from "@reatom/npm-react";
 import { Avatar } from "#components/user/avatar/components/avatar";
 import { cva, VariantProps } from "class-variance-authority";
@@ -7,9 +7,9 @@ import { Dialog, DialogClose, DialogContent, DialogTitle, DialogTrigger } from "
 import { Button } from "@repo/ui/src/components/button";
 import { Typography } from "@repo/ui/src/components/typography";
 import { AvatarsList } from "#components/user/avatar/components/avatars-list";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from "@repo/ui/src/components/dropdown-menu";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@repo/ui/src/components/dropdown-menu";
 import { deleteAvatar, openUserCoverAvatarDialog, userCoverAvatarDialogIsOpenAtom, userCoverSelectedAvatarAtom } from "../models/avatar.model";
-import { IconDotsVertical } from "@tabler/icons-react";
+import { IconDotsVertical, IconTrash, IconUser } from "@tabler/icons-react";
 
 const userCoverAvatarVariants = cva(
   `flex items-center group relative justify-center md:size-[160px] size-[112px]`, {
@@ -39,6 +39,8 @@ function preloadImage(url: string): Promise<void> {
 }
 
 const SelectedAvatar = reatomComponent(({ ctx }) => {
+  const isOwner = ctx.spy(requestedUserIsSameAtom)
+
   const data = ctx.spy(userCoverSelectedAvatarAtom);
 
   return (
@@ -49,9 +51,11 @@ const SelectedAvatar = reatomComponent(({ ctx }) => {
         className="*:w-full *:h-full"
         nickname={""}
       />
-      <div className="absolute right-2 top-2">
-        <AvatarOptions target={data} />
-      </div>
+      {isOwner && (
+        <div className="absolute right-2 top-2">
+          <AvatarOptions target={data} />
+        </div>
+      )}
     </div>
   )
 }, "SelectedAvatar")
@@ -59,17 +63,34 @@ const SelectedAvatar = reatomComponent(({ ctx }) => {
 const AvatarOptions = reatomComponent<{ target: string }>(({ ctx, target }) => {
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger>
+      <DropdownMenuTrigger className="items-center flex justify-center w-8 h-8 bg-shark-950/80 rounded-lg">
         <IconDotsVertical size={24} />
       </DropdownMenuTrigger>
-      <DropdownMenuContent asChild>
-        <Button
-          className="text-lg"
-          onClick={() => deleteAvatar(ctx, target)}
-          disabled={ctx.spy(deleteAvatar.statusesAtom).isPending}
-        >
-          Удалить
-        </Button>
+      <DropdownMenuContent>
+        <DropdownMenuItem asChild>
+          <Button
+            className="flex justify-start gap-2 w-full"
+            onClick={() => deleteAvatar(ctx, target)}
+            disabled={ctx.spy(deleteAvatar.statusesAtom).isPending}
+          >
+            <IconTrash size={24} />
+            <Typography className="text-base font-semibold">
+              Удалить
+            </Typography>
+          </Button>
+        </DropdownMenuItem>
+        <DropdownMenuItem asChild>
+          <Button
+            className="w-full"
+            onClick={() => deleteAvatar(ctx, target)}
+            disabled={ctx.spy(deleteAvatar.statusesAtom).isPending}
+          >
+            <IconUser size={24} />
+            <Typography className="text-base font-semibold">
+              Сделать основной
+            </Typography>
+          </Button>
+        </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
   )
@@ -120,12 +141,12 @@ export const UserCoverAvatar = reatomComponent<UserCoverAvatarProps>(({ ctx, cla
           className="flex flex-col gap-2 overflow-visible !p-0 lg:!min-w-fit bg-transparent items-center justify-center"
         >
           <DialogTitle className="hidden"></DialogTitle>
-          <div className="flex flex-col gap-4 aspect-square w-[clamp(200px,37.5vw,960px)]">
+          <div className="flex flex-col gap-4 aspect-square w-[clamp(290px,37.5vw,960px)]">
             <SelectedAvatar />
             <AvatarsList />
           </div>
-          <DialogClose className="w-2/3 sm:w-1/3">
-            <Button className="w-full bg-shark-50">
+          <DialogClose asChild>
+            <Button className="bg-shark-50 w-2/3 sm:w-1/3">
               <Typography className="text-lg font-semibold text-shark-950">
                 Закрыть
               </Typography>

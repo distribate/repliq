@@ -20,12 +20,10 @@ const closeButtonVariants = cva(
 
 interface CloseButtonProps
   extends HTMLAttributes<HTMLDivElement>,
-    VariantProps<typeof closeButtonVariants> {}
+  VariantProps<typeof closeButtonVariants> { }
 
 export const CloseButton = ({
-  className,
-  variant,
-  ...props
+  className, variant, ...props
 }: CloseButtonProps) => {
   return (
     <div className={closeButtonVariants({ className, variant })} {...props}>

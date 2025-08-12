@@ -3,7 +3,7 @@ import { reatomAsync, withDataAtom } from "@reatom/async";
 import { currentUserNicknameAtom } from "#components/user/models/current-user.model";
 import { logger } from "@repo/lib/utils/logger";
 
-async function getFriendsCount(
+export async function getFriendsCount(
   nickname: string,
   init?: RequestInit
 ) {
@@ -18,6 +18,13 @@ export const friendsCountAction = reatomAsync(async (ctx) => {
   if (!nickname) return;
 
   return await ctx.schedule(() => getFriendsCount(nickname, { signal: ctx.controller.signal }))
-}, "friendsCountAction").pipe(withDataAtom())
+}, {
+  name: "friendsCountAction",
+  onReject: (_, e) => {
+    if (e instanceof Error) {
+      console.error(e.message)
+    }
+  }
+}).pipe(withDataAtom())
 
 friendsCountAction.dataAtom.onChange((_, state) => import.meta.env.DEV && logger.info("friendsCountAction.dataAtom", state))

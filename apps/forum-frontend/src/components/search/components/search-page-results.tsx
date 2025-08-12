@@ -1,6 +1,7 @@
 import { Skeleton } from "@repo/ui/src/components/skeleton.tsx";
 import {
   searchPageAtom,
+  SearchPageType,
   searchPageTypeAtom,
 } from "#components/search/models/search-page.model";
 import { handleSearchAction, SearchThread, SearchUser } from "#components/search/models/search.model";
@@ -11,6 +12,8 @@ import { ContentNotFound } from "#components/templates/components/content-not-fo
 import { searchPageResultsAtom } from "#components/search/models/search-page.model";
 import { SearchPageThread, SearchPageUser } from "./search-page-childs";
 import { SearchResult, SearchResultsAll } from "../models/search-page.model";
+import { atom } from "@reatom/core";
+import { ReactNode } from "react";
 
 function filterSearchResults<T extends SearchResult>(
   results: SearchResultsAll, type: "threads" | "users",
@@ -23,6 +26,12 @@ function filterSearchResults<T extends SearchResult>(
   });
 }
 
+const resultsIsEmptyAtom = atom((ctx) => {
+  const target = ctx.spy(searchPageResultsAtom)
+
+  return !(target && target.length >= 1)
+}, "resultsIsEmptyAtom")
+
 const SearchPageUsers = reatomComponent(({ ctx }) => {
   const results = ctx.spy(searchPageResultsAtom)
 
@@ -33,9 +42,9 @@ const SearchPageUsers = reatomComponent(({ ctx }) => {
   const users = filterSearchResults<SearchUser>(results, "users");
 
   return (
-    <div className="flex flex-col gap-y-2 w-full h-full">
-      {users.map(({ name_color, nickname, avatar }) => (
-        <SearchPageUser avatar={avatar} key={nickname} name_color={name_color} nickname={nickname} />)
+    <div className="flex flex-col gap-2 w-full h-full">
+      {users.map((user) => (
+        <SearchPageUser key={user.nickname} {...user} />)
       )}
     </div>
   );
@@ -101,21 +110,31 @@ const InViewer = () => {
   )
 }
 
+const COMPONENTS: Record<SearchPageType, ReactNode> = {
+  "users": <SearchPageUsers />,
+  "threads": <SearchPageThreads />,
+  "all": (
+    <>
+      <SearchPageUsers />
+      <SearchPageThreads />
+    </>
+  )
+} as const;
+
 export const SearchPageResults = reatomComponent(({ ctx }) => {
   if (ctx.spy(handleSearchAction.statusesAtom).isPending) {
     return <SearchPageResultsSkeleton />;
   }
 
+  const isEmpty = ctx.spy(resultsIsEmptyAtom)
+
+  if (isEmpty) {
+    return <ContentNotFound title="Ничего не найдено" />
+  }
+
   return (
     <>
-      {ctx.spy(searchPageTypeAtom) === "users" && <SearchPageUsers />}
-      {ctx.spy(searchPageTypeAtom) === "threads" && <SearchPageThreads />}
-      {ctx.spy(searchPageTypeAtom) === 'all' && (
-        <>
-          <SearchPageUsers />
-          <SearchPageThreads />
-        </>
-      )}
+      {COMPONENTS[ctx.spy(searchPageTypeAtom)]}
       <InViewer />
     </>
   );

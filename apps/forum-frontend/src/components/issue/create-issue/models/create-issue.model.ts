@@ -3,9 +3,8 @@ import { reatomAsync, withStatusesAtom } from "@reatom/async";
 import { forumUserClient } from "#shared/forum-client"
 import { createIssueSchema } from "@repo/types/schemas/issue/create-issue-schema"
 import * as z from "zod"
-import { action, atom } from "@reatom/core";
-import { sleep, withComputed, withConcurrency } from "@reatom/framework";
-import { globalPreferencesAtom } from "#components/user/settings/main/models/update-global-preferences.model";
+import { action, atom, batch } from "@reatom/core";
+import { sleep, withConcurrency } from "@reatom/framework";
 import { userGlobalOptionsAtom } from "#components/user/models/current-user.model";
 
 export const CREATE_ISSUE_LIMITATIONS: Record<string, string> = {
@@ -30,9 +29,9 @@ export const onChange = action(async (ctx, e, type: "title" | "desc") => {
   if (type === 'desc') {
     issueDescAtom(ctx, value)
   }
-}).pipe(withConcurrency())
+}, "onChange").pipe(withConcurrency())
 
-export const isValidAtom = atom(false, "isValid").pipe(withComputed((ctx) => {
+export const isValidAtom = atom((ctx) => {
   const title = ctx.spy(issueTitleAtom)
   const desc = ctx.spy(issueDescAtom)
   const type = ctx.spy(issueTypeAtom)
@@ -40,32 +39,33 @@ export const isValidAtom = atom(false, "isValid").pipe(withComputed((ctx) => {
   const result = createIssueSchema.safeParse({ title, description: desc, type })
 
   return result.success
-}))
-
-async function createIssue(values: CreateIssue) {
-  const res = await forumUserClient.user["create-issue"].$post({ json: values })
-  const data = await res.json()
-  return data
-}
+}, "isValid")
 
 export const createIssueAction = reatomAsync(async (ctx) => {
   const title = ctx.get(issueTitleAtom)
-  const desc = ctx.get(issueDescAtom)
+  const description = ctx.get(issueDescAtom)
   const type = ctx.get(issueTypeAtom)
 
-  return await ctx.schedule(() => createIssue({ title, description: desc, type }))
+  return await ctx.schedule(async () => {
+    const res = await forumUserClient.user["create-issue"].$post({ json: { title, description, type } })
+    const data = await res.json()
+
+    if ("error" in data) throw new Error(data.error)
+
+    return data
+  })
 }, {
   name: "createIssueAction",
+  onReject: (_, e) => {
+    if (e instanceof Error) {
+      toast.error(CREATE_ISSUE_LIMITATIONS[e.message])
+      console.error(e.message)
+    }
+  },
   onFulfill: (ctx, res) => {
-    if (!res) return
-
-    if ("error" in res) {
-      return toast.error(CREATE_ISSUE_LIMITATIONS[res.error])
-    }
-
-    if (res.status) {
-      toast.success(`Заявка создана!`)
+    batch(ctx, () => {
       userGlobalOptionsAtom(ctx, (state) => ({ ...state, can_create_issue: false }))
-    }
+      toast.success(`Заявка создана!`)
+    })
   }
 }).pipe(withStatusesAtom())

@@ -1,5 +1,5 @@
 import { cva, VariantProps } from "class-variance-authority";
-import { forwardRef, HTMLAttributes } from "react";
+import { HTMLAttributes } from "react";
 
 const badgeVariants = cva(
   `flex rounded-md text-[12px]
@@ -24,16 +24,13 @@ const badgeVariants = cva(
 
 interface BadgeProps
   extends HTMLAttributes<HTMLDivElement>,
-    VariantProps<typeof badgeVariants> {}
+  VariantProps<typeof badgeVariants> { }
 
-export const Badge = forwardRef<HTMLDivElement, BadgeProps>(
-  ({ className, size, state, ...props }, ref) => {
-    return (
-      <div
-        ref={ref}
-        className={badgeVariants({ size, state, className })}
-        {...props}
-      />
-    );
-  },
-);
+export const Badge = ({ className, size, state, ...props }: BadgeProps) => {
+  return (
+    <div
+      className={badgeVariants({ size, state, className })}
+      {...props}
+    />
+  );
+}

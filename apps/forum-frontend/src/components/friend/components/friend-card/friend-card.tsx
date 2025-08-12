@@ -57,7 +57,7 @@ export const FriendCard = reatomComponent<FriendCardProps>(({
             <UserNickname nickname={nickname} className="text-lg leading-6" nicknameColor={name_color} />
             {real_name && <UserRealName real_name={real_name} with_annotation={false} />}
           </CustomLink>
-          <UserDonate is_donate={is_donate} />
+          {is_donate && <UserDonate />}
         </div>
         {description && (
           <div

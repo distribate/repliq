@@ -1,3 +1,4 @@
+import dayjs from "@repo/lib/constants/dayjs-instance.ts";
 import {
   Accordion,
   AccordionContent,
@@ -5,7 +6,6 @@ import {
   AccordionTrigger,
 } from "@repo/ui/src/components/accordion.tsx";
 import { Typography } from "@repo/ui/src/components/typography.tsx";
-import dayjs from "@repo/lib/constants/dayjs-instance.ts";
 import { Avatar } from "#components/user/avatar/components/avatar.tsx";
 import { UserNickname } from "#components/user/name/nickname";
 import { Button } from "@repo/ui/src/components/button.tsx";
@@ -29,12 +29,11 @@ const ThreadTag = ({ tag }: { tag: string; }) => {
 const threadMoreIsExpandedAtom = atom(true, "threadMoreIsExpanded")
 
 export const ThreadMore = reatomComponent(({ ctx }) => {
-  const isExpanded = ctx.spy(threadMoreIsExpandedAtom)
   const thread = ctx.spy(threadAtom)
   const threadOwner = ctx.spy(threadOwnerAtom)
-
   if (!thread || !threadOwner) return null;
 
+  const isExpanded = ctx.spy(threadMoreIsExpandedAtom)
   const linkToOwner = createIdLink("user", threadOwner.nickname)
 
   return (
@@ -47,11 +46,11 @@ export const ThreadMore = reatomComponent(({ ctx }) => {
         >
           <div className="flex items-center gap-3 justify-start">
             <div className="flex items-center w-fit gap-1">
-              <Typography textSize="medium">
-                {thread.views_count} просмотров
+              <Typography textSize="medium" className="text-nowrap">
+                {thread.views_count} <span className="hidden sm:inline">просмотров</span>
               </Typography>
             </div>
-            <Typography textSize="medium">
+            <Typography textSize="medium" className="text-nowrap">
               {dayjs(thread.created_at).fromNow()}
             </Typography>
             {thread.tags && (
@@ -76,7 +75,13 @@ export const ThreadMore = reatomComponent(({ ctx }) => {
           <div className="flex flex-col mt-2 mb-6 gap-y-4 w-full">
             <div className="flex items-end gap-2 w-fit">
               <CustomLink to={linkToOwner}>
-                <Avatar url={threadOwner.avatar} nickname={threadOwner.nickname} propWidth={36} propHeight={36} />
+                <Avatar
+                  className="min-w-[36px] min-h-[36px]"
+                  url={threadOwner.avatar}
+                  nickname={threadOwner.nickname}
+                  propWidth={36}
+                  propHeight={36}
+                />
               </CustomLink>
               <CustomLink to={linkToOwner}>
                 <UserNickname nickname={threadOwner.nickname} />

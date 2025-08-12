@@ -1,43 +1,35 @@
+import { navigationVariant } from "#components/collection/components/navigation/collection-navigation";
 import { NavigationBadge } from "#components/shared/navigation/components/navigation-badge";
-import { atom } from "@reatom/core";
 import { reatomComponent } from "@reatom/npm-react";
+import { usePageContext } from "vike-react/usePageContext";
 import { navigate } from "vike/client/router"
 
-export type AdminSections = "reports" | "tickets" | "stats"
+const NAVIGATION = [
+  { title: "Главная", value: "/admin/" },
+  { title: "Репорты", value: "/admin/reports" },
+  { title: "Тикеты", value: "/admin/tickets" },
+  { title: "Cтатистика", value: "/admin/stats" },
+] as const;
 
-type AdminNavigationBadgeProps = {
-  title: string;
-  paramValue: AdminSections | null;
-};
+const NavigationItem = reatomComponent<{ navigation: typeof NAVIGATION[number] }>(({ navigation, ctx }) => {
+  const pathname = usePageContext().urlPathname;
+  const isActive = pathname === navigation.value ? "active" : "inactive"
 
-const adminSectionParamAtom = atom("")
-
-const AdminNavigationBadge = reatomComponent<AdminNavigationBadgeProps>(({ ctx, title, paramValue }) => {
-  const section = ctx.spy(adminSectionParamAtom)
-
-  const handleSection = () => {
-    if (!paramValue) {
-      return navigate(`/admin`);
-    }
-
-    navigate(`/admin?section=${paramValue}`)
-  };
-
-  const isActive = (): "active" | "inactive" => {
-    if (!paramValue && !section) return "active"
-    return paramValue === section ? "active" : "inactive"
-  };
-
-  return <NavigationBadge onClick={handleSection} data-state={isActive()} title={title} />
-}, "AdminNavigationBadge")
+  return (
+    <NavigationBadge
+      title={navigation.title}
+      data-state={isActive}
+      onClick={() => navigate(navigation.value)}
+    />
+  )
+}, "NavigationItem")
 
 export const AdminNavigation = () => {
   return (
-    <div className="grid grid-cols-2 bg-shark-950 p-2 gap-2 overflow-hidden rounded-xl auto-rows-auto lg:flex lg:flex-nowrap w-full *:w-full">
-      <AdminNavigationBadge title="Главная" paramValue={null} />
-      <AdminNavigationBadge title="Репорты" paramValue="reports" />
-      <AdminNavigationBadge title="Тикеты" paramValue="tickets" />
-      <AdminNavigationBadge title="Cтатистика" paramValue="stats" />
+    <div className={navigationVariant()}>
+      {NAVIGATION.map((navigation) => (
+        <NavigationItem key={navigation.value} navigation={navigation} />
+      ))}
     </div>
   );
 };

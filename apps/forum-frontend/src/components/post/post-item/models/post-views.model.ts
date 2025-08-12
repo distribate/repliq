@@ -20,5 +20,9 @@ export const postViewsAction = reatomAsync(async (ctx, values: PostViewsQuery) =
   return await ctx.schedule(() => getPostViews(values.id))
 }, {
   name: "postViewsAction",
-  onReject: (_, e) => e instanceof Error && toast.error(e.message)
+  onReject: (_, e) => {
+    if (e instanceof Error) {
+      toast.error(e.message)
+    }
+  }
 }).pipe(withDataAtom(), withStatusesAtom(), withCache())

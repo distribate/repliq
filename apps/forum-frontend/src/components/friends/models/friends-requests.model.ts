@@ -36,6 +36,11 @@ export const incomingRequestsAction = reatomAsync(async (ctx) => {
   return await ctx.schedule(() => getRequestsByType("incoming", { signal: ctx.controller.signal }))
 }, {
   name: "incomingRequestsAction",
+  onReject: (_, e) => {
+    if (e instanceof Error) {
+      console.error(e.message)
+    }
+  },
   onFulfill: (ctx, res) => {
     if (!res) return;
     incomingRequestsAtom(ctx, res)

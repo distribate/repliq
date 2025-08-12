@@ -1,7 +1,7 @@
 import { updateCommentsAction } from '#components/thread/thread-comments/models/update-comments.model';
 import { threadAtom } from '#components/thread/thread-main/models/thread.model';
 import { threadCommentsDataAtom, threadCommentsMetaAtom } from '#components/thread/thread-comments/models/thread-comments.model';
-import { action, atom } from '@reatom/core';
+import { action, atom, batch } from '@reatom/core';
 import { sleep } from '@reatom/framework';
 
 interface UseScrollToCommentProps {
@@ -13,13 +13,17 @@ export const selectedCommentAtom = atom<number | null>(null, 'selectedComment');
 export const highlightActiveAtom = atom<boolean>(false, 'highlightActive');
 
 export const selectCommentAction = action(async (ctx, commentId: number) => {
-  highlightActiveAtom(ctx, true)
-  selectedCommentAtom(ctx, commentId)
+  batch(ctx, () => {
+    highlightActiveAtom(ctx, true)
+    selectedCommentAtom(ctx, commentId)
+  })
 
   await sleep(2000)
 
-  highlightActiveAtom(ctx, false)
-  selectedCommentAtom(ctx, null)
+  batch(ctx, () => {
+    highlightActiveAtom(ctx, false)
+    selectedCommentAtom(ctx, null)
+  })
 }, 'selectCommentAction')
 
 export const scrollToCommentAction = action(async (ctx, values: UseScrollToCommentProps) => {

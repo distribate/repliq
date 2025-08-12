@@ -9,9 +9,7 @@ const DonateTip = reatomComponent(({ ctx }) => {
 
 export const DONATE_ICON = "🌟"
 
-export const UserDonate = reatomComponent<{ is_donate: boolean }>(({ ctx, is_donate }) => {
-  if (!is_donate) return null;
-
+export const UserDonate = reatomComponent(({ ctx }) => {
   return (
     <>
       <DonateTip />

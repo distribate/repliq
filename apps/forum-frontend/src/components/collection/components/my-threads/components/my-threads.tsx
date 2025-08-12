@@ -12,20 +12,7 @@ import { cn } from "@repo/lib/utils/ui/cn";
 import { Skeleton } from "@repo/ui/src/components/skeleton";
 
 export const threadCardVariants = cva(
-  "flex flex-col gap-4 rounded-xl shadow-sm p-4 transition hover:shadow-md bg-shark-800/20",
-  {
-    variants: {
-      size: {
-        sm: "max-w-sm",
-        md: "max-w-md",
-        lg: "max-w-lg",
-      },
-    },
-    defaultVariants: {
-      size: "md",
-    },
-  }
-);
+  "flex flex-col gap-4 rounded-xl shadow-sm p-4 w-full transition hover:shadow-md bg-shark-800/20");
 
 export const ThreadCardSkeleton = ({
   imageCount = 1,
@@ -174,7 +161,7 @@ export const MyThreads = reatomComponent(({ ctx }) => {
   }
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-2 2xl:grid-cols-3 auto-rows-auto gap-2 w-full h-fit">
+    <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 auto-rows-auto gap-2 w-full h-fit">
       {threads.map(thread => (
         <ThreadItem key={thread.id} {...thread} />
       ))}

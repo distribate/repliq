@@ -124,7 +124,7 @@ const UserBlockedTrigger = reatomComponent(({ ctx }) => {
       </Typography>
     </DropdownMenuItem>
   )
-})
+}, "UserBlockedTrigger")
 
 export const UserCoverPanel = reatomComponent(({ ctx }) => {
   const requestedNickname = ctx.spy(requestedUserParamAtom)
@@ -133,16 +133,22 @@ export const UserCoverPanel = reatomComponent(({ ctx }) => {
 
   const isOwner = ctx.spy(requestedUserIsSameAtom)
 
-  return (
-    isOwner ? (
+  if (isOwner) {
+    return (
       <div className="flex items-center bg-shark-50/10 w-full backdrop-blur-lg h-10 rounded-md overflow-hidden">
         <ProfileBackgroundChangeModal />
         <ProfileProfileSettingsModal />
       </div>
-    ) : (
+    )
+  }
+
+  return (
+    <>
+      <SyncTarget target={requestedNickname} />
       <div className="flex items-center gap-2 justify-end lg:w-fit">
-        {!isBlocked && <FriendButton recipient={requestedNickname} />}
-        <SyncTarget target={requestedNickname} />
+        {!isBlocked && (
+          <FriendButton recipient={requestedNickname} />
+        )}
         <BlockUserModal recipient={requestedNickname} />
         <MoreWrapper variant="medium">
           <div className="flex flex-col gap-y-1 *:w-full w-full items-start">
@@ -152,6 +158,6 @@ export const UserCoverPanel = reatomComponent(({ ctx }) => {
           </div>
         </MoreWrapper>
       </div>
-    )
+    </>
   )
 }, "UserCoverPanel")

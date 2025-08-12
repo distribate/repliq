@@ -26,12 +26,6 @@ const About = () => {
       </Typography>
       <div className="flex flex-col gap-4">
         <div className="flex flex-col gap-2">
-          <CustomLink to="/misc/stats" className="flex items-center p-2 rounded-lg gap-2 bg-shark-900">
-            <IconChartArrows size={20} />
-            <Typography>
-              Статистика
-            </Typography>
-          </CustomLink>
           <CustomLink to="/misc/contacts" className="flex items-center p-2 rounded-lg gap-2 bg-shark-900">
             <IconPhoneCall size={20} />
             <Typography>

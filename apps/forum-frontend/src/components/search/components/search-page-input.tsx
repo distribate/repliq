@@ -10,7 +10,7 @@ const onChange = action(async (ctx, event) => {
   searchPageQueryAtom(ctx, value)
 }).pipe(withConcurrency())
 
-export const SearchPageInput = reatomComponent(({ ctx }) => {
+export const SearchInput = reatomComponent(({ ctx }) => {
   const initialValue = ctx.spy(searchPageQueryAtom)
   const placeholder = `Введите ${ctx.spy(searchPageTypeAtom) === "users" ? "никнейм" : "название треда"}`
 

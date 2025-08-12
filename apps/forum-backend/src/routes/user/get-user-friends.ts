@@ -55,7 +55,9 @@ async function getUserRequestsCount(nickname: string) {
   }
 }
 
-const encoder = new Encoder({ useRecords: false, structures: [], pack: true });
+const encoder = new Encoder({ 
+  useRecords: false, structures: [], pack: true 
+});
 
 export const getUserFriendsMetaRoute = new Hono()
   .get("/get-friends-meta", async (ctx) => {

@@ -46,7 +46,7 @@ export async function createCoverImage({ file, type, fileName }: CreateCoverImag
       const customRes = await API.post(url, { body: customEncodedData })
       const customData = await customRes.json<InferResponseType<typeof client>>()
 
-      if (!customData || "error" in customData) return null;
+      if ("error" in customData) throw new Error(customData.error)
 
       return customData
     case "default":
@@ -64,7 +64,7 @@ export async function createCoverImage({ file, type, fileName }: CreateCoverImag
       const defaultRes = await API.post(url, { body: defaultEncodedData })
       const defaultData = await defaultRes.json<InferResponseType<typeof client>>()
 
-      if (!defaultData || "error" in defaultData) return null;
+      if ("error" in defaultData) throw new Error(defaultData.error)
 
       return defaultData
     default:
@@ -72,17 +72,20 @@ export async function createCoverImage({ file, type, fileName }: CreateCoverImag
   }
 }
 
-export async function deleteCoverImage() {
-  const res = await forumUserClient.user["delete-cover-image"].$delete()
-  const data = await res.json()
-  if (!data || "error" in data) return null
-  return data
-}
-
 export const deleteBackgroundImageAction = reatomAsync(async (ctx) => {
-  return await ctx.schedule(() => deleteCoverImage())
+  return await ctx.schedule(async () => {
+    const res = await forumUserClient.user["delete-cover-image"].$delete()
+    const data = await res.json()
+    if ("error" in data) throw new Error(data.error)
+    return data
+  })
 }, {
   name: "deleteBackgroundImageAction",
+  onReject: (_, e) => {
+    if (e instanceof Error) {
+      console.error(e.message)
+    }
+  },
   onFulfill: (ctx, res) => {
     if (!res) return toast.error("Произошла ошибка при удалении фона.");
 
@@ -97,6 +100,11 @@ export const uploadBackgroundImageAction = reatomAsync(async (ctx, values: Creat
   return await ctx.schedule(() => createCoverImage(values))
 }, {
   name: "uploadBackgroundImageAction",
+  onReject: (_, e) => {
+    if (e instanceof Error) {
+      console.error(e.message)
+    }
+  },
   onFulfill: (ctx, res) => {
     if (!res || !res.data) return toast.error("Произошла ошибка при обновлении фона.")
 
@@ -107,13 +115,16 @@ export const uploadBackgroundImageAction = reatomAsync(async (ctx, values: Creat
   }
 }).pipe(withStatusesAtom())
 
-async function getLibraryImages() {
-  const res = await forumSharedClient.shared["get-images-library"].$get();
-  const data = await res.json()
-  if ('error' in data) return null
-  return data.data
-}
-
 export const imagesLibraryAction = reatomResource(async (ctx) => {
-  return await ctx.schedule(() => getLibraryImages())
+  return await ctx.schedule(async () => {
+    const res = await forumSharedClient.shared["get-images-library"].$get(
+      {}, { init: { signal: ctx.controller.signal } }
+    );
+
+    const data = await res.json()
+
+    if ('error' in data) throw new Error(data.error)
+      
+    return data.data
+  })
 }, "imagesLibraryAction").pipe(withDataAtom(), withStatusesAtom(), withCache())

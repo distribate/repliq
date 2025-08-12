@@ -15,7 +15,7 @@ type CreatePost = Omit<Insertable<Posts>, "isUpdated" | "created_at" | "id"> & {
 async function createPost({
   content, isComments, isPinned, visibility, nickname
 }: CreatePost) {
-  const query = await forumDB.transaction().execute(async (trx) => {
+  return forumDB.transaction().execute(async (trx) => {
     const createPost = await trx
       .insertInto("posts")
       .values({ content, visibility, isComments, isPinned })
@@ -30,8 +30,6 @@ async function createPost({
 
     return createPost;
   })
-
-  return query;
 }
 
 const createPostSchema = z.object({

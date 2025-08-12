@@ -11,8 +11,8 @@ export const SearchPageAll = reatomComponent(({ ctx }) => {
   }
 
   return (
-    <div className="flex flex-col gap-y-4 w-full">
-      <div className="flex flex-col gap-y-2 w-full">
+    <div className="flex flex-col gap-4 w-full">
+      <div className="flex flex-col gap-2 w-full">
         {results.map((item, i) => {
           if ("nickname" in item) {
             return <SearchPageUser key={i} {...item} />;

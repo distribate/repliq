@@ -7,6 +7,7 @@ import { UserSummaryCard } from "../user-main-card/components/user-summary-card"
 import { selectedUserCardAtom } from "../user-main-card/models/user-main-card.model";
 import { CustomLink } from "#components/shared/link";
 import { createIdLink } from "@repo/lib/utils/create-link";
+import { Typography } from "@repo/ui/src/components/typography";
 
 export type UserCardProps = Pick<UserDetailed, "nickname" | "avatar">;
 
@@ -33,7 +34,9 @@ export const UserPreviewCard = reatomComponent<UserCardProps>(({ ctx, avatar, ni
       </Dialog>
       <div className="flex flex-col">
         <CustomLink to={createIdLink("user", nickname)}>
-          <p>{nickname}</p>
+          <Typography>
+            {nickname}
+          </Typography>
         </CustomLink>
       </div>
     </div>

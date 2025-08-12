@@ -1,12 +1,13 @@
 import { requestedUserProfileBlockedAtom, requestedUserProfileStatusAtom } from "#components/profile/main/models/requested-user.model";
-import { reatomAsync, withCache, withDataAtom, withStatusesAtom } from "@reatom/async";
-import { atom } from "@reatom/core";
+import { reatomAsync, withDataAtom, withStatusesAtom } from "@reatom/async";
+import { atom, batch } from "@reatom/core";
 import { withReset } from "@reatom/framework";
 import { forumUserClient } from "#shared/forum-client";
 import { toast } from "sonner";
 
-type ControlBlockUserActionVariables = { 
-  recipient: string, type: "blocked-by-you" | null 
+type ControlBlockUserActionVariables = {
+  recipient: string, 
+  type: "blocked-by-you" | null
 }
 
 export const blockedUserDialogIsOpenAtom = atom(false, "blockedUserDialogIsOpen")
@@ -15,60 +16,79 @@ const controlBlockUserActionVariablesAtom = atom<ControlBlockUserActionVariables
   withReset()
 )
 
-async function controlBlockUser(recipient: string, type: "block" | "unblock") {
-  const res = await forumUserClient.user["control-user-blocked"].$post({ json: { recipient, type } })
-  const data = await res.json()
-  return data
-}
+export const blockedUserAction = reatomAsync(async (ctx, nickname: string) => {
+  return await ctx.schedule(async () => {
+    const res = await forumUserClient.user["get-user-is-blocked"][":nickname"].$get(
+      { param: { nickname } }, { init: { signal: ctx.controller.signal } }
+    )
 
-async function getUserBlocked(recipient: string) {
-  const res = await forumUserClient.user["get-user-is-blocked"][":nickname"].$get({ param: { nickname: recipient } })
-  const data = await res.json()
-  if ("error" in data) return null;
-  return data.data
-}
+    const data = await res.json()
 
-export const blockedUserAction = reatomAsync(async (ctx, target: string) => {
-  return await ctx.schedule(() => getUserBlocked(target))
-}, "blockedUserAction").pipe(withDataAtom(), withStatusesAtom(), withCache())
+    if ("error" in data) throw new Error(data.error);
+
+    return data.data
+  })
+}, {
+  name: "blockedUserAction",
+  onReject: (_, e) => {
+    if (e instanceof Error) {
+      toast.error(e.message)
+    }
+  }
+}).pipe(withDataAtom(), withStatusesAtom())
 
 export const controlBlockUserAction = reatomAsync(async (ctx, recipient: string) => {
   const isBlocked = ctx.get(blockedUserAction.dataAtom)
 
-  controlBlockUserActionVariablesAtom(ctx, { 
-    recipient, type: isBlocked === 'blocked-by-you' ? 'blocked-by-you' : null 
+  controlBlockUserActionVariablesAtom(ctx, {
+    recipient, type: isBlocked === 'blocked-by-you' ? 'blocked-by-you' : null
   })
 
-  if (!isBlocked) {
-    return await ctx.schedule(() => controlBlockUser(recipient, "block"))
+  const type = !isBlocked ? "block" : isBlocked === 'blocked-by-you' ? "unblock" : null;
+
+  if (!type) {
+    throw new Error(`Type is not corrected ${type}`)
   }
 
-  if (isBlocked === 'blocked-by-you') {
-    return await ctx.schedule(() => controlBlockUser(recipient, "unblock"))
-  }
+  return await ctx.schedule(async () => {
+    const res = await forumUserClient.user["control-user-blocked"].$post({ json: { recipient, type } })
+    const data = await res.json()
+    
+    if ('error' in data) throw new Error(data.error)
+
+    return data.status
+  })
 }, {
   name: "blockUserAction",
+  onReject: (_, e) => {
+    if (e instanceof Error) {
+      toast.error(e.message)
+    }
+  },
   onFulfill: (ctx, res) => {
     if (!res) return;
 
-    if ("error" in res) {
-      return toast.error(res.error)
-    }
-
     const variables = ctx.get(controlBlockUserActionVariablesAtom)
     if (!variables) return;
-    
+
     if (variables.type === 'blocked-by-you') {
       toast.success("Пользователь разблокирован")
-      blockedUserAction.dataAtom(ctx, null)
-      requestedUserProfileBlockedAtom(ctx, null)
-      requestedUserProfileStatusAtom(ctx, null)
+
+      batch(ctx, () => {
+        blockedUserAction.dataAtom(ctx, null)
+        requestedUserProfileBlockedAtom(ctx, null)
+        requestedUserProfileStatusAtom(ctx, null)
+      })
     } else if (!variables.type) {
       toast.success("Пользователь заблокирован")
-      blockedUserAction.dataAtom(ctx, "blocked-by-you")
-      requestedUserProfileBlockedAtom(ctx, "blocked-by-you")
-      requestedUserProfileStatusAtom(ctx, "blocked")
+
+      batch(ctx, () => {
+        blockedUserAction.dataAtom(ctx, "blocked-by-you")
+        requestedUserProfileBlockedAtom(ctx, "blocked-by-you")
+        requestedUserProfileStatusAtom(ctx, "blocked")
+      })
     }
+
     return
   },
   onSettle: (ctx) => {

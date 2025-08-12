@@ -8,21 +8,39 @@ import { SectionSkeleton } from '#components/templates/components/section-skelet
 import { reatomComponent } from '@reatom/npm-react';
 import { requestedUserParamAtom } from '#components/profile/main/models/requested-user.model.ts';
 import { onConnect } from '@reatom/framework';
+import { cva } from 'class-variance-authority';
+
+const wrapperVariants = cva(`gap-4 w-full h-full`, {
+  variants: {
+    variant: {
+      list: "flex flex-col",
+      grid: "grid-cols-2 grid lg:grid-cols-3 auto-rows-auto"
+    }
+  }
+})
 
 const ProfileThreadsList = reatomComponent(({ ctx, }) => {
   const threads = ctx.spy(threadsAction.dataAtom)
-  const isLoading = ctx.spy(threadsAction.statusesAtom).isPending;
-  const isError = ctx.spy(threadsAction.statusesAtom).isRejected
   const profileThreadsViewState = ctx.spy(profileThreadsSettingsAtom)
-  const { viewType } = profileThreadsViewState;
 
-  if (isLoading) return <SectionSkeleton />
-  if (isError) return <SomethingError />;
+  if (ctx.spy(threadsAction.statusesAtom).isPending) {
+    return <SectionSkeleton />
+  }
+  
+  if (ctx.spy(threadsAction.statusesAtom).isRejected) {
+    return <SomethingError />;
+  }
 
-  if (!threads) return <ContentNotFound title="Треды не найдены" />;
+  const isExist = threads && threads.length >= 1
+
+  if (!isExist) {
+    return <ContentNotFound title="Треды не найдены" />;
+  }
+
+  const variant = profileThreadsViewState.viewType;
 
   return (
-    <div className={`${viewType === 'grid' ? 'grid-cols-2 grid lg:grid-cols-3 auto-rows-auto' : 'flex flex-col'} gap-4 w-full h-full`}>
+    <div className={wrapperVariants({ variant })}>
       {threads.map((thread) =>
         <ProfileThreadsListCard
           key={thread.id}

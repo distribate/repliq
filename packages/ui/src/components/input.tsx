@@ -1,9 +1,9 @@
-import { forwardRef, InputHTMLAttributes } from "react";
+import { InputHTMLAttributes } from "react";
 import { cva, VariantProps } from "class-variance-authority";
 
 const inputVariants = cva(
   "flex min-h-10 w-full px-4 py-1 file:border-0 file:bg-transparent file:text-sm font-normal file:font-medium focus-visible:outline-none " +
-    "disabled:cursor-not-allowed disabled:opacity-50",
+  "disabled:cursor-not-allowed disabled:opacity-50",
   {
     variants: {
       variant: {
@@ -33,28 +33,24 @@ const inputVariants = cva(
 
 export interface InputProps
   extends InputHTMLAttributes<HTMLInputElement>,
-    VariantProps<typeof inputVariants> {}
+  VariantProps<typeof inputVariants> { }
 
-export const Input = forwardRef<HTMLInputElement, InputProps>(
-  (
-    { variant, className, status, backgroundType, roundedType, type, ...props },
-    ref,
-  ) => {
-    return (
-      <input
-        type={type}
-        className={inputVariants({
-          variant,
-          status,
-          backgroundType,
-          roundedType,
-          className,
-        })}
-        ref={ref}
-        {...props}
-      />
-    );
-  },
-);
+export const Input = ({
+  variant, className, status, backgroundType, roundedType, type, ...props
+}: InputProps) => {
+  return (
+    <input
+      type={type}
+      className={inputVariants({
+        variant,
+        status,
+        backgroundType,
+        roundedType,
+        className,
+      })}
+      {...props}
+    />
+  );
+};
 
 Input.displayName = "Input";

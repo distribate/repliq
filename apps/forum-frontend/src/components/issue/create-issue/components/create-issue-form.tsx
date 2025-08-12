@@ -10,8 +10,6 @@ import { BlockWrapper } from "#components/wrappers/components/block-wrapper";
 import { MessageSquareWarning } from "lucide-react";
 import { ISSUE_MAX_DESCRIPTION_LIMIT } from "@repo/shared/constants/limits";
 import { reatomComponent } from "@reatom/npm-react";
-import { IconX } from "@tabler/icons-react";
-import { userGlobalOptionsAtom } from "#components/user/models/current-user.model";
 
 type IssueFormType = z.infer<typeof createIssueSchema>;
 
@@ -111,14 +109,6 @@ const IssueSubmit = reatomComponent(({ ctx }) => {
 }, "IssueSubmit")
 
 export const CreateIssueForm = reatomComponent(({ ctx }) => {
-  const can_create_issue = ctx.spy(userGlobalOptionsAtom).can_create_issue
-
-  if (!can_create_issue) {
-    return (
-      <IconX size={20} className="text-red-500" />
-    )
-  }
-
   const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     createIssueAction(ctx)

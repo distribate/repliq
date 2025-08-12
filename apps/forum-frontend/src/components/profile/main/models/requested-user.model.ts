@@ -6,9 +6,7 @@ import { isUserDetailed } from '@repo/lib/helpers/is-user-detailed';
 import { VariantProps } from 'class-variance-authority';
 import { coverAreaVariants } from '../../header/components/cover-area';
 import { logger } from '@repo/lib/utils/logger';
-import { toast } from 'sonner';
 import { currentUserNicknameAtom } from '#components/user/models/current-user.model';
-import { render } from 'vike/abort';
 import { withHistory } from '#lib/with-history';
 
 type RequestedUserDetails = Pick<UserDetailed["preferences"],
@@ -71,8 +69,10 @@ export const defineUser = action((ctx, target: RequestedUserFull) => {
 
     const isNonExists = account_status === 'deleted' || account_status === 'archived'
 
-    requestedUserParamAtom(ctx, payload.nickname)
-    requestedUserIsSameAtom(ctx, ctx.get(currentUserNicknameAtom) === payload.nickname)
+    batch(ctx, () => {
+      requestedUserParamAtom(ctx, payload.nickname)
+      requestedUserIsSameAtom(ctx, ctx.get(currentUserNicknameAtom) === payload.nickname)
+    })
 
     // #privated or archived account status of req user
     if (isNonExists) {
@@ -140,7 +140,7 @@ export const defineUser = action((ctx, target: RequestedUserFull) => {
           show_game_location: user.preferences.show_game_location,
           real_name_visible: user.preferences.real_name_visible
         })
-  
+
         requestedUserGameStatsVisibleAtom(ctx, user.preferences.game_stats_visible)
       })
     } else {
@@ -160,14 +160,7 @@ export const defineUser = action((ctx, target: RequestedUserFull) => {
 export async function getUserProfile(nickname: string, init?: RequestInit) {
   const res = await forumUserClient.user["get-user-profile"][":nickname"].$get({ param: { nickname } }, { init })
   const data = await res.json()
-
-  if ("error" in data) {
-    throw new Error(data.error)
-  }
-
-  if (!data) {
-    throw render(404)
-  }
+  if ("error" in data) throw new Error(data.error)
 
   return data.data
 }

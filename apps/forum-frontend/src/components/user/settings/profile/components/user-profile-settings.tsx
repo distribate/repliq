@@ -13,15 +13,19 @@ import {
 } from "#components/modals/user-settings/models/user-settings.model.ts";
 import dayjs from "@repo/lib/constants/dayjs-instance";
 import { RealNameChange } from "./real-name-change.tsx";
-import { lazy, ReactNode, Suspense } from "react";
+import { ReactNode } from "react";
 import { Skeleton } from "@repo/ui/src/components/skeleton";
 import { parseDateOrTimestamp } from "#components/user/settings/profile/components/birthday-picker/helpers/birthday-picker";
 import { IconBorderCorners, IconGiftFilled, IconKeyframeFilled, IconLabel, IconUserSquare } from "@tabler/icons-react";
 import { getUser } from "#components/user/models/current-user.model.ts";
+import { clientOnly } from "vike-react/clientOnly";
 
-const ColorPicker = lazy(() =>
-  import("#components/user/settings/profile/components/nickname-color-picker")
-    .then(m => ({ default: m.NicknameColorPicker }))
+const ColorPicker = clientOnly(() =>
+  import("#components/user/settings/profile/components/nickname-color-picker").then(m => m.NicknameColorPicker)
+)
+
+const DatePicker = clientOnly(() =>
+  import("#components/user/settings/profile/components/birthday-picker/components/date-birthday-picker").then(m => m.DateBirthdayPicker)
 )
 
 type HexToRgbaProps = {
@@ -32,26 +36,24 @@ type HexToRgbaProps = {
 const hexToRgba = ({ hex, alpha }: HexToRgbaProps) => {
   const match = hex.match(/\w\w/g)!;
   const [r, g, b] = match.map((x) => parseInt(x, 16));
-  
+
   return `rgba(${r}, ${g}, ${b}, ${alpha})`;
 };
-
-const DatePicker = lazy(() =>
-  import("#components/user/settings/profile/components/birthday-picker/components/date-birthday-picker")
-    .then(m => ({ default: m.DateBirthdayPicker })))
 
 const NicknameColorPicker = reatomComponent(({ ctx }) => {
   const { nickname, name_color } = getUser(ctx)
 
   return (
-    <Suspense fallback={<Skeleton className="h-24 w-full" />}>
-      <ColorPicker nickname={nickname} name_color={name_color} />
-    </Suspense>
+    <ColorPicker
+      nickname={nickname}
+      name_color={name_color}
+      fallback={<Skeleton className="h-24 w-full" />}
+    />
   );
 }, "NicknameColorPicker")
 
 const ProfileVisibilityOption = reatomComponent(({ ctx }) => {
-  const profile_visibility = getUser(ctx).preferences.profile_visibility
+  const visibility = getUser(ctx).preferences.profile_visibility
 
   return (
     <UserSettingOption
@@ -60,7 +62,7 @@ const ProfileVisibilityOption = reatomComponent(({ ctx }) => {
       icon={{ value: IconUserSquare }}
     >
       <Typography className="text-base">
-        {profile_visibility === "all" ? "открытый" : "закрытый"}
+        {visibility === "all" ? "открытый" : "закрытый"}
       </Typography>
     </UserSettingOption>
   )
@@ -70,7 +72,11 @@ const BirthdayOption = reatomComponent(({ ctx }) => {
   const birthday = getUser(ctx).birthday;
 
   return (
-    <UserSettingOption onClick={() => navigateToDialogAction(ctx, "birthday")} title="День рождения" icon={{ value: IconGiftFilled }}>
+    <UserSettingOption
+      title="День рождения"
+      icon={{ value: IconGiftFilled }}
+      onClick={() => navigateToDialogAction(ctx, "birthday")}
+    >
       <div className="flex items-center gap-1">
         <Typography className="text-base">
           {birthday ? dayjs(birthday).format("DD MMM YYYY") : `не указано`}
@@ -81,11 +87,17 @@ const BirthdayOption = reatomComponent(({ ctx }) => {
 }, "BirthdayOption")
 
 const RealnameOption = reatomComponent(({ ctx }) => {
+  const realName = getUser(ctx).real_name ?? 'нет';
+
   return (
-    <UserSettingOption onClick={() => navigateToDialogAction(ctx, "real-name")} title="Реальное имя" icon={{ value: IconLabel }}>
+    <UserSettingOption
+      title="Реальное имя"
+      icon={{ value: IconLabel }}
+      onClick={() => navigateToDialogAction(ctx, "real-name")}
+    >
       <div className="flex items-center gap-1">
         <Typography className="text-base">
-          {getUser(ctx).real_name ?? 'нет'}
+          {realName}
         </Typography>
       </div>
     </UserSettingOption>
@@ -93,52 +105,33 @@ const RealnameOption = reatomComponent(({ ctx }) => {
 }, "RealnameOption")
 
 const NamecolorOption = reatomComponent(({ ctx }) => {
+  const nameColor = getUser(ctx).name_color
+
   return (
-    <UserSettingOption onClick={() => navigateToDialogAction(ctx, "name-color")} title="Цвет никнейма" icon={{ value: IconKeyframeFilled }}>
+    <UserSettingOption
+      title="Цвет никнейма"
+      icon={{ value: IconKeyframeFilled }}
+      onClick={() => navigateToDialogAction(ctx, "name-color")}
+    >
       <div
         className={`flex items-center px-4 py-1 backdrop-blur-md rounded-md`}
         style={{
-          backgroundColor: hexToRgba({ hex: getUser(ctx).name_color, alpha: 0.3 }),
+          backgroundColor: hexToRgba({ hex: nameColor, alpha: 0.3 }),
         }}
       >
-        <Typography className="text-base font-semibold" style={{ color: getUser(ctx).name_color }}>
-          {getUser(ctx).name_color.toString()}
+        <Typography className="text-base font-semibold" style={{ color: nameColor }}>
+          {nameColor.toString()}
         </Typography>
       </div>
     </UserSettingOption>
   )
 }, "NamecolorOption")
 
-// const FavoriteItemOption = reatomComponent(({ ctx }) => {
-//   const favoriteItem = ctx.spy(favoriteItemAtom)
-
-//   return (
-//     <>
-//       <SyncFavoriteItem target={getUser(ctx).nickname} />
-//       <UserSettingOption
-//         title="Любимый предмет"
-//         imageSrc={DiamondPickaxe}
-//         onClick={() => navigateToDialogAction(ctx, "favorite-item")}
-//       >
-//         <div className="flex items-center gap-1">
-//           <Typography className="text-base">
-//             {favoriteItem ? favoriteItem.title : "не выбрано"}
-//           </Typography>
-//         </div>
-//       </UserSettingOption>
-//     </>
-//   )
-// })
-
 const DateBirthday = reatomComponent(({ ctx }) => {
   const birthday = getUser(ctx).birthday;
   const initDate = parseDateOrTimestamp(birthday ?? null) as string | null;
 
-  return (
-    <Suspense>
-      <DatePicker init={initDate ?? null} />
-    </Suspense>
-  );
+  return <DatePicker init={initDate ?? null} />
 }, "DateBirthday")
 
 const PROFILE_SETTINGS_SECTION: Record<ProfileDialog, ReactNode> = {
@@ -188,10 +181,12 @@ export const UserProfileSettings = reatomComponent(({ ctx }) => {
                   </Typography>
                 </Separator>
                 <NamecolorOption />
-                <UserSettingOption title="Обводка вокруг шапки профиля" icon={{ value: IconBorderCorners }}>
+                <UserSettingOption
+                  title="Обводка вокруг шапки профиля"
+                  icon={{ value: IconBorderCorners }}
+                >
                   <OutlineCover />
                 </UserSettingOption>
-                {/* <FavoriteItemOption /> */}
               </>
             )}
           </div>

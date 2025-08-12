@@ -1,11 +1,11 @@
 import { Typography } from "@repo/ui/src/components/typography.tsx";
 import { MessageSquare, Text } from "lucide-react";
-import dayjs from "@repo/lib/constants/dayjs-instance.ts";
 import { profileThreadsSettingsAtom, } from "#components/profile/threads/models/profile-threads-settings.model";
 import { Button } from "@repo/ui/src/components/button";
 import { reatomComponent } from "@reatom/npm-react";
 import { CustomLink } from "#components/shared/link";
 import { createIdLink } from "@repo/lib/utils/create-link";
+import dayjs from "@repo/lib/constants/dayjs-instance.ts";
 
 type ThreadCardProps = {
   id: string;
@@ -14,13 +14,16 @@ type ThreadCardProps = {
   comments_count: number;
 }
 
-export const ProfileThreadsListCard = reatomComponent<ThreadCardProps>(({ id, title, comments_count, created_at, ctx }) => {
-  const { viewType } = ctx.spy(profileThreadsSettingsAtom)
+export const ProfileThreadsListCard = reatomComponent<ThreadCardProps>(({ 
+  id, title, comments_count, created_at, ctx 
+}) => {
+  const viewType = ctx.spy(profileThreadsSettingsAtom).viewType
  
   return (
     <div
       data-state={viewType === "grid" ? "grid" : "default"}
-      className="flex data-[state=grid]:flex-col items-center group justify-between bg-shark-950 p-2 lg:p-4 rounded-lg gap-4 w-full"
+      className="flex data-[state=grid]:flex-col items-center 
+        group justify-between bg-shark-950 p-2 lg:p-4 rounded-lg gap-4 w-full"
     >
       <div 
         className="flex flex-col gap-2 

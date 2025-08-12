@@ -7,6 +7,7 @@ import { currentUserAtom, getUserGlobalOptions, getUserInformation, userGlobalOp
 import { redirect } from 'vike/abort'
 import { PageContext } from 'vike/types';
 import { snapshotAtom } from './ssr';
+import ky from 'ky';
 
 const AUTH_PATH = "/auth"
 const RESTRICT_PATH = "/restrict"
@@ -14,12 +15,13 @@ const DEV_MODE_PATH = "/not-online"
 const WHITELIST = [DEV_MODE_PATH, RESTRICT_PATH]
 
 async function validateSession({ headers }: RequestInit): Promise<boolean> {
-  const res = await authClient["validate-session"].$get({}, { init: { headers } })
+  const url = authClient["validate-session"].$url();
+  const res = await ky(url, { headers, retry: 1, credentials: "include" });
 
   let data: WrappedResponse<boolean>
 
   try {
-    data = await res.json()
+    data = await res.json<WrappedResponse<boolean>>()
   } catch (e) {
     throw new Error(DEV_MODE_PATH)
   }

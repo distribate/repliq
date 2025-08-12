@@ -1,5 +1,6 @@
 import { ThreadCommentItem } from '../../thread-comment/components/thread-comment-item.tsx';
 import {
+  resetThreadComments,
   threadCommentsAction,
   threadCommentsDataAtom,
   threadCommentsMetaAtom,
@@ -10,21 +11,25 @@ import { ThreadDetailed } from '@repo/types/entities/thread-type.ts';
 import { updateCommentsAction } from '../models/update-comments.model.ts';
 import { SectionSkeleton } from '#components/templates/components/section-skeleton.tsx';
 import { reatomComponent, useUpdate } from '@reatom/npm-react';
-import { onConnect } from '@reatom/framework';
+import { onConnect, onDisconnect } from '@reatom/framework';
 import { threadAtom, threadOwnerAtom, threadParamAtom, threadPropertiesAtom } from '#components/thread/thread-main/models/thread.model.ts';
 import { userGlobalOptionsAtom } from '#components/user/models/current-user.model.ts';
 import { ThreadCommentsHeader } from './thread-comments-header.tsx';
 import { Typography } from '@repo/ui/src/components/typography.tsx';
-import { lazy, Suspense } from 'react';
 import { ThreadCommentsAnchor } from './thread-comments-anchor.tsx';
 import { CreateThreadComment } from '#components/thread/create-thread-comment/components/create-thread-comment.tsx';
 import { isAuthenticatedAtom } from '#components/auth/models/auth.model.ts';
+import { AuthorizeTemplate } from '#components/templates/components/auth-template.tsx';
+import { clientOnly } from 'vike-react/clientOnly';
 
 type ThreadCommentsProps = Pick<ThreadDetailed, "properties" | "owner">
 
-const CommentsDisabled = lazy(() => import("#components/thread/thread-comments/components/comments-disabled.tsx").then(m => ({ default: m.CommentsDisabled })))
+const CommentsDisabled = clientOnly(() =>
+  import("#components/thread/thread-comments/components/comments-disabled.tsx").then(m => m.CommentsDisabled)
+)
 
 onConnect(threadCommentsDataAtom, threadCommentsAction)
+onDisconnect(threadCommentsDataAtom, (ctx) => resetThreadComments(ctx))
 
 const SyncInView = ({ inView }: { inView: boolean }) => {
   useUpdate((ctx) => {
@@ -46,11 +51,12 @@ const SyncInView = ({ inView }: { inView: boolean }) => {
 }
 
 export const ThreadComments = reatomComponent<ThreadCommentsProps>(({ ctx, owner }) => {
-  const { inView, ref } = useInView({ triggerOnce: false, threshold: 1 });
   const threadId = ctx.spy(threadParamAtom)
   const data = ctx.spy(threadCommentsDataAtom)
   const meta = ctx.spy(threadCommentsMetaAtom)
-  const hasMore = meta?.hasNextPage;
+  const hasMore = meta?.hasNextPage ?? false;
+
+  const { inView, ref } = useInView({ triggerOnce: false, threshold: 1 });
 
   if (ctx.spy(threadCommentsAction.statusesAtom).isPending) {
     return <SectionSkeleton />;
@@ -98,7 +104,12 @@ const ANCHOR_MIN_COMMENTS_LENGTH = 8
 
 export const ThreadCommentsSection = reatomComponent(({ ctx }) => {
   const isAuthenticated = ctx.spy(isAuthenticatedAtom)
-  if (!isAuthenticated) return null;
+
+  if (!isAuthenticated) {
+    const templateTitle = "Для просмотра комментариев необходимо авторизоваться."
+
+    return <AuthorizeTemplate title={templateTitle} />
+  }
 
   const can_create_comments = ctx.spy(userGlobalOptionsAtom).can_create_comments
   const thread = ctx.spy(threadAtom)
@@ -106,6 +117,8 @@ export const ThreadCommentsSection = reatomComponent(({ ctx }) => {
   const properties = ctx.spy(threadPropertiesAtom)
 
   if (!thread || !threadOwner || !properties) return null;
+
+  const showAnchor = thread.comments_count >= ANCHOR_MIN_COMMENTS_LENGTH
 
   return (
     <div className="flex flex-col w-full h-full mt-4 gap-y-4">
@@ -121,12 +134,10 @@ export const ThreadCommentsSection = reatomComponent(({ ctx }) => {
           )}
         </>
       ) : (
-        <Suspense>
-          <CommentsDisabled />
-        </Suspense>
+        <CommentsDisabled />
       )}
       <ThreadComments owner={threadOwner} properties={properties} />
-      {thread.comments_count >= ANCHOR_MIN_COMMENTS_LENGTH && <ThreadCommentsAnchor />}
+      {showAnchor && <ThreadCommentsAnchor />}
     </div>
   )
 }, "ThreadCommentsSection")

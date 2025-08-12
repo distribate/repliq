@@ -1,9 +1,20 @@
 import { REACTIONS } from "@repo/shared/constants/emojis";
-import { ThreadReactionsSkeleton } from "./thread-reactions-skeleton";
 import { ReactionItem } from "#components/reactions/components/reaction-item";
 import { reatomComponent } from "@reatom/npm-react";
 import { threadReactionsAction } from "../models/thread-reactions.model";
 import { threadParamAtom } from "#components/thread/thread-main/models/thread.model";
+import { Skeleton } from "@repo/ui/src/components/skeleton.tsx";
+
+const ThreadReactionsSkeleton = () => {
+  return (
+    <div className="flex items-center w-fit gap-2">
+      <Skeleton className="h-8 w-12" />
+      <Skeleton className="h-8 w-12" />
+      <Skeleton className="h-8 w-12" />
+      <Skeleton className="h-8 w-12" />
+    </div>
+  );
+};
 
 export const ThreadReactions = reatomComponent(({ ctx }) => {
   const threadId = ctx.spy(threadParamAtom)

@@ -1,19 +1,24 @@
 import { forumUserClient } from "#shared/forum-client";
-import { reatomResource, withDataAtom, withStatusesAtom } from "@reatom/async";
+import { reatomAsync, withDataAtom, withStatusesAtom } from "@reatom/async";
 import { currentUserAtom } from "#components/user/models/current-user.model";
 
-const getReferals = async (nickname: string) => {
-  const res = await forumUserClient.user["get-user-referals"][":nickname"].$get({  param: { nickname }})
-  const data = await res.json()
-
-  if ("error" in data) return null
-
-  return data.data.length > 0 ? data.data : null
-}
-
-export const myReferalsResource = reatomResource(async (ctx) => {
-  const nickname = ctx.spy(currentUserAtom)?.nickname
+export const myReferalsAction = reatomAsync(async (ctx) => {
+  const nickname = ctx.get(currentUserAtom)?.nickname
   if (!nickname) return;
 
-  return await ctx.schedule(() => getReferals(nickname))
-}, "myReferalsResource").pipe(withDataAtom(), withStatusesAtom())
+  return await ctx.schedule(async () => {
+    const res = await forumUserClient.user["get-user-referals"][":nickname"].$get({ param: { nickname } })
+    const data = await res.json()
+
+    if ("error" in data) throw new Error(data.error)
+
+    return data.data
+  })
+}, {
+  name: "myReferalsAction",
+  onReject: (_, e) => {
+    if (e instanceof Error) {
+      console.error(e.message)
+    }
+  }
+}).pipe(withDataAtom(), withStatusesAtom())

@@ -1,37 +1,31 @@
-import { toast } from "sonner";
 import { authClient } from "#shared/auth-client";
 import { reatomAsync, withStatusesAtom } from "@reatom/async";
 import { atom } from "@reatom/core";
-
-async function deleteSession() {
-  const res = await authClient["invalidate-session"].$post();
-  const data = await res.json();
-
-  if ("error" in data) {
-    throw new Error(data.error);
-  }
-
-  return data;
-}
+import { toast } from "sonner";
 
 export const logoutModalIsOpenAtom = atom(false, "logoutModalIsOpen")
 
 export const logoutAction = reatomAsync(async (ctx) => {
-  return await ctx.schedule(() => deleteSession());
+  return await ctx.schedule(async () => {
+    const res = await authClient["invalidate-session"].$post();
+    const data = await res.json();
+
+    if ("error" in data) throw new Error(data.error);
+
+    return data.status;
+  });
 }, {
   name: "logoutAction",
-  onFulfill: (ctx, res) => {
-    if (!res.status) {
-      return toast.error("Произошла ошибка");
+  onReject: (e) => {
+    if (e instanceof Error) {
+      toast.error(e.message)
     }
-    
+  },
+  onFulfill: (ctx, res) => {
+    if (!res) return;
+
     logoutModalIsOpenAtom(ctx, false)
 
     return ctx.schedule(() => window.location.reload())
-  },
-  onReject: (e) => {
-    if (e instanceof Error) {
-      throw new Error(e.message);
-    }
   }
 }).pipe(withStatusesAtom())

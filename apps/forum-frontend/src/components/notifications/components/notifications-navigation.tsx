@@ -1,28 +1,32 @@
 import { NavigationBadge } from "#components/shared/navigation/components/navigation-badge"
-import { notificationsFilterAtom, NotificationsFilterQuery } from "#components/notifications/models/notifications.model"
+import { notificationsTypeAtom } from "#components/notifications/models/notifications.model"
 import { reatomComponent } from "@reatom/npm-react"
-import { updateNotificationsAction } from "../models/notifications.model"
+import { navigationVariant } from "#components/collection/components/navigation/collection-navigation";
 
-type NotificationsSections = "system" | "requests" | "news"
+const NAVIGATION = [
+  { title: "Системные", value: "system", },
+  { title: "Приглашения", value: "requests", },
+  { title: "Новости", value: "news" }
+] as const;
 
-export const NotificationsNavigation = reatomComponent(({ ctx }) => {
-  const { type } = ctx.spy(notificationsFilterAtom)
+const NavigationItem = reatomComponent<{ navigation: typeof NAVIGATION[number] }>(({ navigation, ctx }) => {
+  const isActive = navigation.value === ctx.spy(notificationsTypeAtom)
 
-  const handleSection = (section: NotificationsSections) => {
-    notificationsFilterAtom(ctx, (state: NotificationsFilterQuery) => ({
-      ...state, type: section, cursor: undefined
-    }))
-
-    updateNotificationsAction(ctx, { type: "update-filter" })
-  }
-
-  const isActive = (input: NotificationsSections) => input === type ? "active" : "inactive"
+  const handle = () => notificationsTypeAtom(ctx, navigation.value)
 
   return (
-    <div className="grid grid-cols-2 auto-rows-auto lg:flex p-2 rounded-xl gap-2 bg-shark-950 overflow-hidden lg:flex-nowrap w-full *:w-full">
-      <NavigationBadge onClick={() => handleSection("system")} data-state={isActive("system")} title="Системные" />
-      <NavigationBadge onClick={() => handleSection("requests")} data-state={isActive("requests")} title="Приглашения" />
-      <NavigationBadge onClick={() => handleSection("news")} data-state={isActive("news")} title="Новости" />
-    </div>
+    <NavigationBadge
+      title={navigation.title}
+      data-state={isActive ? "active" : "inactive"}
+      onClick={handle}
+    />
   )
-}, "NotificationsNavigation")
+}, "NavigationItem")
+
+export const NotificationsNavigation = () => (
+  <div className={navigationVariant()}>
+    {NAVIGATION.map((navigation) => (
+      <NavigationItem key={navigation.value} navigation={navigation} />
+    ))}
+  </div>
+)

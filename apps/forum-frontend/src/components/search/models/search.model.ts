@@ -20,7 +20,8 @@ type GetSearchResults = {
 export type SearchUser = {
   nickname: string,
   name_color: string
-  avatar: string | null
+  avatar: string | null,
+  description: string | null
 }
 
 export type SearchThread = {
@@ -32,7 +33,7 @@ async function getSearchThreads({
   query, limit
 }: Omit<GetSearchResults, "type">) {
   const res = await forumSearchClient.search["get-search"].$get({
-    query: { type: "thread", queryValue: query, limit: `${limit}` }
+    query: { type: "thread", query, limit: `${limit}` }
   })
   const data = await res.json()
 
@@ -45,7 +46,7 @@ async function getSearchUsers({
   query, limit
 }: Omit<GetSearchResults, "type">) {
   const res = await forumSearchClient.search["get-search"].$get({
-    query: { type: "user", queryValue: query, limit: `${limit}` }
+    query: { type: "user", query, limit: `${limit}` }
   })
   const data = await res.json()
 

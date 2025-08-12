@@ -2,7 +2,7 @@ import { toast } from "sonner";
 import { ControlFriendProperties, ControlFriendRequests } from "#components/friend/models/control-friend.model";
 import { friendsCountAction } from "#components/friends/models/friends-count.model.ts";
 import { reatomAsync, withStatusesAtom } from "@reatom/async";
-import { atom } from "@reatom/core";
+import { atom, batch } from "@reatom/core";
 import { incomingRequestsAtom, outgoingRequestsAtom } from "#components/friends/models/friends-requests.model.ts";
 import { forumUserClient } from '#shared/forum-client.ts';
 import { friendStatusesAtom } from "../components/friend-button/models/friend-status.model";
@@ -52,7 +52,7 @@ async function createFriendRequest({ recipient }: Pick<ControlFriendRequest, "re
   const res = await forumUserClient.user["create-friend-request"].$post({ json: { recipient } })
   const data = await res.json();
   if ("error" in data) throw new Error(data.error)
-  
+
   return {
     request_id: data.request_id,
     status: data.status
@@ -127,33 +127,35 @@ export const controlOutgoingRequestAction = reatomAsync(async (ctx, options: Con
 
     if (variables.type === 'create') {
       if (pageContext.urlPathname === '/friends') {
-        outgoingRequestsAtom(ctx, (state) => {
-          if (!state) state = []
+        batch(ctx, () => {
+          outgoingRequestsAtom(ctx, (state) => {
+            if (!state) state = []
 
-          const newRequest = {
-            id: data.request_id!,
-            initiator: ctx.get(currentUserNicknameAtom)!,
-            recipient: variables.recipient,
-            created_at: dayjs().toString(),
-            avatar: ctx.get(currentUserAtom)?.avatar ?? null
-          }
-
-          return [...state, newRequest]
-        })
-
-        friendsCountAction.dataAtom(ctx, (state) => {
-          if (!state) return null;
-
-          return {
-            ...state,
-            requestsCount: {
-              ...state.requestsCount,
-              outgoing: state.requestsCount.outgoing + 1
+            const newRequest = {
+              id: data.request_id!,
+              initiator: ctx.get(currentUserNicknameAtom)!,
+              recipient: variables.recipient,
+              created_at: dayjs().toString(),
+              avatar: ctx.get(currentUserAtom)?.avatar ?? null
             }
-          }
-        })
 
-        myFriendsAction(ctx)
+            return [...state, newRequest]
+          })
+
+          friendsCountAction.dataAtom(ctx, (state) => {
+            if (!state) return null;
+
+            return {
+              ...state,
+              requestsCount: {
+                ...state.requestsCount,
+                outgoing: state.requestsCount.outgoing + 1
+              }
+            }
+          })
+
+          myFriendsAction(ctx)
+        })
       } else {
         friendStatusesAtom(ctx, (state) => ({
           ...state,
@@ -195,25 +197,28 @@ export const controlIncomingRequestAction = reatomAsync(async (ctx, options: Con
 
     if (variables.type === 'accept') {
       if (pageContext.urlPathname === '/friends') {
-        incomingRequestsAtom(ctx, (state) => {
-          if (!state) state = []
+        batch(ctx, () => {
+          incomingRequestsAtom(ctx, (state) => {
+            if (!state) state = []
 
-          return state.filter(target => target.recipient !== variables.recipient)
-        })
+            return state.filter(target => target.recipient !== variables.recipient)
+          })
 
-        friendsCountAction.dataAtom(ctx, (state) => {
-          if (!state) return null;
+          friendsCountAction.dataAtom(ctx, (state) => {
+            if (!state) return null;
 
-          return {
-            ...state,
-            friendsCount: state.friendsCount + 1,
-            requestsCount: {
-              ...state.requestsCount,
-              incoming: state.requestsCount.incoming - 1
+            return {
+              ...state,
+              friendsCount: state.friendsCount + 1,
+              requestsCount: {
+                ...state.requestsCount,
+                incoming: state.requestsCount.incoming - 1
+              }
             }
-          }
+          })
+          
+          myFriendsAction(ctx)
         })
-        myFriendsAction(ctx)
       } else {
         if ("friend_id" in data) {
           friendStatusesAtom(ctx, (state) => ({
@@ -273,8 +278,8 @@ removeFriendOptionsAtom.onChange((ctx, state) => {
 export const removeFriendAction = reatomAsync(async (ctx, options: ControlFriendProperties) => {
   removeFriendActionVariablesAtom(ctx, options)
   return await ctx.schedule(async () => {
-    const res = await forumUserClient.user["delete-friend"].$delete({ 
-      json: { friend_id: options.friend_id } 
+    const res = await forumUserClient.user["delete-friend"].$delete({
+      json: { friend_id: options.friend_id }
     })
 
     const data = await res.json();

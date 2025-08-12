@@ -2,15 +2,20 @@ import { reatomAsync, withCache, withDataAtom, withStatusesAtom } from "@reatom/
 import { ProfileStatsDetailed } from "@repo/types/routes-types/get-user-profile-stats-types";
 import { forumUserClient } from "#shared/forum-client"
 
-const getUserProfileStats = async () => {
-  const res = await forumUserClient.user["get-user-profile-stats"].$get();
-  const data = await res.json();
+export const userProfileStatsAction = reatomAsync(async (ctx) => {
+  return await ctx.schedule(async () => {
+    const res = await forumUserClient.user["get-user-profile-stats"].$get();
+    const data = await res.json();
 
-  if (!data || "error" in data) return null;
+    if ("error" in data) throw new Error(data.error)
 
-  return data.data as ProfileStatsDetailed;
-}
-
-export const userProfileStatsResource = reatomAsync(async (ctx) => {
-  return await ctx.schedule(() => getUserProfileStats())
-}, "userProfileStatsResource").pipe(withStatusesAtom(), withDataAtom(), withCache())
+    return data.data as ProfileStatsDetailed;
+  })
+}, {
+  name: "userProfileStatsAction",
+  onReject: (_, e) => {
+    if (e instanceof Error) {
+      console.error(e.message)
+    }
+  }
+}).pipe(withStatusesAtom(), withDataAtom(), withCache())

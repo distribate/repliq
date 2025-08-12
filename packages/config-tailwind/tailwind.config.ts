@@ -12,7 +12,6 @@ module.exports = {
       "../../packages/components/src/**/*.{ts,tsx}",
     ],
   },
-  darkMode: ["class"],
   theme: {
     colors: {
       black: colors.black,

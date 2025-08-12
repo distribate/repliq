@@ -1,18 +1,13 @@
 import { Dialog, DialogClose, DialogContent, DialogTrigger } from "@repo/ui/src/components/dialog"
 import { Typography } from "@repo/ui/src/components/typography"
 import { ReactNode } from "react"
-import { PulsatingButton } from "@repo/ui/src/components/shiny-button.tsx"
-import { IconBrandThreads, IconDeviceDesktopAnalytics, IconEyeClosed, IconMoodSpark, IconPalette, IconStar, TablerIcon } from "@tabler/icons-react"
 import { atom } from "@reatom/core"
 import { reatomComponent } from "@reatom/npm-react"
 import { DONATE_ICON } from "#components/user/donate/components/donate"
 import { CustomLink } from "#components/shared/link"
+import { DONATE_FEATURES, URL_FOR_REPLIQ } from "#shared/constants/donate"
 
-type DonateDialogFeatureItemProps = {
-  title: string, description: string, icon: TablerIcon
-}
-
-const DonateDialogFeatureItem = ({ description, icon: Icon, title }: DonateDialogFeatureItemProps) => {
+const DonateDialogFeatureItem = ({ description, icon: Icon, title }: typeof DONATE_FEATURES[number]) => {
   return (
     <div className="flex items-start select-none py-2 px-6 justify-start rounded-md  hover:bg-shark-700 gap-4">
       <div className="flex items-center justify-center rounded-lg p-2 bg-shark-400/40">
@@ -25,39 +20,6 @@ const DonateDialogFeatureItem = ({ description, icon: Icon, title }: DonateDialo
     </div>
   )
 }
-
-const DONATE_FEATURES = [
-  {
-    title: "Кастомизация профиля",
-    description: "Настройте свой профиль так, как хотите – сделайте его уникальным.",
-    icon: IconPalette
-  },
-  {
-    title: "Расширенная статистика",
-    description: "Отслеживайте подробную статистику своего профиля и тредов.",
-    icon: IconDeviceDesktopAnalytics
-  },
-  {
-    title: "Контроль над тредами",
-    description: "Настройте видимость своих тредов – только для друзей или выделенных персон.",
-    icon: IconBrandThreads
-  },
-  {
-    title: "Повышенный лимит на реакции",
-    description: "Выражайте больше эмоций! Возможность ставить до 3 реакций вместо 1 на треды.",
-    icon: IconMoodSpark
-  },
-  {
-    title: "Скрывать последнее время посещения",
-    description: "Возможность скрывать отображение своей активности.",
-    icon: IconEyeClosed
-  },
-  {
-    title: "Значок у имени",
-    description: "Эксклюзивный значок у имени показывает что вы владелец Repliq+.",
-    icon: IconStar
-  }
-]
 
 const DonateDialog = () => {
   return (
@@ -74,13 +36,13 @@ const DonateDialog = () => {
       </div>
       <div className="flex flex-col overflow-auto relative max-h-1/2 pt-4 bg-black/40 rounded-t-md gap-y-2 w-full">
         {DONATE_FEATURES.map((feature, idx) => (
-          <DonateDialogFeatureItem key={idx} title={feature.title} description={feature.description} icon={feature.icon} />
+          <DonateDialogFeatureItem key={idx} {...feature} />
         ))}
       </div>
       <div className="bg-[#191919] sticky bottom-0 py-4 px-6 flex items-center justify-center w-full">
         <DialogClose className="w-full">
           <CustomLink
-            to="/store?target=repliq+"
+            to={URL_FOR_REPLIQ}
             className="flex items-center justify-center w-full py-2 bg-green-600 px-6 rounded-lg"
           >
             <Typography className="text-xl font-semibold">

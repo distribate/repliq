@@ -1,6 +1,6 @@
 import { ProfileAccountStatsCharts } from '#components/dashboard/components/profile-account-stats-charts'
 import { ProfileAccountStatsMeta, ProfileAccountStatsPlayers } from '#components/profile/account/components/profile-account-stats-list'
-import { userProfileStatsResource } from '#components/profile/account/models/user-stats.model'
+import { userProfileStatsAction } from '#components/profile/account/models/user-stats.model'
 import { reatomComponent } from '@reatom/npm-react'
 import { Typography } from '@repo/ui/src/components/typography'
 
@@ -9,7 +9,7 @@ export default function DashboardProfileRouteComponent() {
 }
 
 const Page = reatomComponent(({ ctx }) => {
-  const profileStats = ctx.spy(userProfileStatsResource.dataAtom)
+  const profileStats = ctx.spy(userProfileStatsAction.dataAtom)
 
   const details = profileStats?.details
   const meta = profileStats?.meta

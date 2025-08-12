@@ -6,7 +6,7 @@ export const profileThreadsSearchAction = reatomAsync(async (ctx, nickname: stri
   const { query } = ctx.get(profileThreadsSettingsAtom);
   if (!query) return;
 
-  // @ts-expect-error
+  // @ts-ignore
   return await ctx.schedule(() => getThreadsUser(nickname, { query }));
 }, {
   name: "profileThreadsSearchAction",

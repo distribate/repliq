@@ -1,8 +1,9 @@
 import { FriendsQuery, getFriends } from "#components/friends/models/friends.model"
 import { isParamChanged, requestedUserParamAtom } from "#components/profile/main/models/requested-user.model"
-import { atom, Ctx } from "@reatom/core"
+import { atom, batch, Ctx } from "@reatom/core"
 import { reatomAsync, take, withReset, withStatusesAtom } from "@reatom/framework"
-import { Friend, GetFriendsResponse } from "@repo/types/schemas/friend/friend-types"
+import { logger } from "@repo/lib/utils/logger"
+import { GetFriendsResponse } from "@repo/types/schemas/friend/friend-types"
 import { getUserFriendsSchema } from "@repo/types/schemas/user/get-user-friends-schema"
 import * as z from "zod"
 
@@ -10,20 +11,23 @@ export type GetFriends = { nickname: string } & z.infer<typeof getUserFriendsSch
 
 export const friendsDataAtom = atom<GetFriendsResponse["data"] | null>(null, "friendsData").pipe(withReset())
 export const friendsMetaAtom = atom<GetFriendsResponse["meta"] | null>(null, "friendsMeta").pipe(withReset())
-export const friendsPinnedDataAtom = atom<Friend[]>([], "friendsPinnedData").pipe(withReset())
-export const friendsNotPinnedDataAtom = atom<Friend[]>([], "friendsNotPinnedData").pipe(withReset())
 
 function resetFriends(ctx: Ctx) {
   friendsDataAtom.reset(ctx)
   friendsMetaAtom.reset(ctx)
-  friendsPinnedDataAtom.reset(ctx)
-  friendsNotPinnedDataAtom.reset(ctx)
 }
+
+requestedUserParamAtom.onChange((ctx, state) => isParamChanged(ctx, requestedUserParamAtom, state, () => {
+  resetFriends(ctx)
+  logger.info("friends reset for", state)
+}))
 
 export const friendsAction = reatomAsync(async (ctx, options?: FriendsQuery) => {
   if (ctx.get(friendsDataAtom)) {
-    const cache = { data: ctx.get(friendsDataAtom), meta: ctx.get(friendsMetaAtom) }
-    return cache
+    return {
+      data: ctx.get(friendsDataAtom),
+      meta: ctx.get(friendsMetaAtom)
+    }
   }
 
   let nickname = ctx.get(requestedUserParamAtom)
@@ -45,10 +49,9 @@ export const friendsAction = reatomAsync(async (ctx, options?: FriendsQuery) => 
   onFulfill: (ctx, res) => {
     if (!res) return;
 
-    // friendsFilteringAtom(ctx, (state) => ({ ...state, cursor: res.meta?.endCursor }))
-    friendsDataAtom(ctx, res.data)
-    friendsMetaAtom(ctx, res.meta)
+    batch(ctx, () => {
+      friendsDataAtom(ctx, res.data)
+      friendsMetaAtom(ctx, res.meta)
+    })
   }
 }).pipe(withStatusesAtom())
-
-requestedUserParamAtom.onChange((ctx, state) => isParamChanged(ctx, requestedUserParamAtom, state, () => resetFriends(ctx)))

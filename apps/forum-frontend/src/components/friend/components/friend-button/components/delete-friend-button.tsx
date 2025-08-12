@@ -18,6 +18,7 @@ export const DeleteFriendButton = reatomComponent<DeleteFriendButton>(({ ctx, fr
       variant="negative"
       disabled={ctx.spy(removeFriendAction.statusesAtom).isPending}
       onClick={handle}
+      className="h-10"
     >
       Удалить из друзей
     </Button>

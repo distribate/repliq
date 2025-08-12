@@ -19,7 +19,7 @@ async function getCategoryThreads({
 
   const data = await res.json()
 
-  if ("error" in data) return null;
+  if ("error" in data) throw new Error(data.error)
 
   return data.data;
 }
@@ -33,4 +33,11 @@ export const categoryThreadsAction = reatomAsync(async (ctx, id: string) => {
   const cursor = ctx.get(categoryThreadsCursorAtom)
 
   return await ctx.schedule(() => getCategoryThreads({ id, limit, cursor }))
-}, "categoryThreadsAction").pipe(withDataAtom(), withStatusesAtom())
+}, {
+  name: "categoryThreadsAction",
+  onReject: (_, e) => {
+    if (e instanceof Error) {
+      console.error(e.message)
+    }
+  }
+}).pipe(withDataAtom(), withStatusesAtom())

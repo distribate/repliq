@@ -12,7 +12,7 @@ export const AvatarsList = reatomComponent(({ ctx }) => {
 
   return (
     <div
-      className="flex justify-center items-center gap-2 overflow-x-auto w-[calc(100%-32px)] sm:w-full 
+      className="flex sm:justify-center justify-start items-center gap-2 overflow-x-auto overflow-y-hidden sm:w-full 
         h-24 max-h-24 *:cursor-pointer"
     >
       {avatars.map((avatar, idx) => (
@@ -24,7 +24,8 @@ export const AvatarsList = reatomComponent(({ ctx }) => {
             src={avatar}
             alt={idx.toString()}
             loading="lazy"
-            className="w-24 h-24 min-w-24 min-h-24 aspect-square rounded-lg"
+            draggable={false}
+            className="w-24 h-24 select-none max-h-24 min-w-24 min-h-24 aspect-square rounded-lg"
           />
         </div>
       ))}

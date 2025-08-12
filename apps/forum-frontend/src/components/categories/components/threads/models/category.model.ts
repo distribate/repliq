@@ -2,17 +2,21 @@ import { reatomResource, withCache, withDataAtom, withStatusesAtom } from "@reat
 import { atom } from "@reatom/core"
 import { forumCategoriesClient } from "#shared/forum-client"
 
-async function getCategory(id: string) {
-  const res = await forumCategoriesClient.categories["get-category"][":id"].$get({ param: { id } })
-  const data = await res.json()
-  if (!data || 'error' in data) return null
-  return data
-}
-
 export const categoryIdAtom = atom<string | null>(null, "categoryIdAtom")
 
 export const categoryResource = reatomResource(async (ctx) => {
-  const target = ctx.spy(categoryIdAtom)
-  if (!target) return
-  return await ctx.schedule(() => getCategory(target))
-}).pipe(withDataAtom(), withStatusesAtom(), withCache())
+  const id = ctx.spy(categoryIdAtom)
+  if (!id) return
+
+  return await ctx.schedule(async () => {
+    const res = await forumCategoriesClient.categories["get-category"][":id"].$get(
+      { param: { id } }, { init: { signal: ctx.controller.signal } }
+    )
+    
+    const data = await res.json()
+
+    if ('error' in data) throw new Error(data.error)
+
+    return data
+  })
+}, "categoryResource").pipe(withDataAtom(), withStatusesAtom(), withCache())

@@ -854,7 +854,7 @@ export interface UsersActions {
 }
 
 export interface UsersBlocked {
-  created_at: Generated<Timestamp | null>;
+  created_at: Generated<Timestamp>;
   id: Generated<Int8>;
   initiator: string;
   message: string | null;

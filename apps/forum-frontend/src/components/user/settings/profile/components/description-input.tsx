@@ -1,6 +1,6 @@
 import { Input } from '@repo/ui/src/components/input.tsx';
 import { reatomComponent } from '@reatom/npm-react';
-import { action, atom, sleep, spawn, withConcurrency, withInit } from '@reatom/framework';
+import { action, atom, reatomAsync, sleep, spawn, withConcurrency, withInit } from '@reatom/framework';
 import { updateCurrentUserAction } from '../models/update-current-user.model';
 import { getUser } from '#components/user/models/current-user.model';
 
@@ -20,9 +20,9 @@ const onChange = action(async (ctx, e) => {
 
   descriptionValueAtom(ctx, value.length < 1 ? null : value)
   autoSaveAction(ctx)
-}).pipe(withConcurrency())
+}, "onChange").pipe(withConcurrency())
 
-const autoSaveAction = action(async (ctx) => {
+const autoSaveAction = reatomAsync(async (ctx) => {
   await sleep(50)
 
   const value = ctx.get(descriptionValueAtom)
@@ -30,6 +30,13 @@ const autoSaveAction = action(async (ctx) => {
   void spawn(ctx, async (spawnCtx) => 
     updateCurrentUserAction(spawnCtx, { criteria: 'description', value })
   )
+}, {
+  name: "autoSaveAction",
+  onReject: (_, e) => {
+    if (e instanceof Error) {
+      console.error(e.message)
+    }
+  }
 })
 
 export const DescriptionInput = reatomComponent(({ ctx }) => {

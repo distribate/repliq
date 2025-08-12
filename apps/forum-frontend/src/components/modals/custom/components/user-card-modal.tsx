@@ -27,13 +27,13 @@ export const userCardDialogIsOpenAtom = atom(false, "userCardDialogIsOpen")
 export const UserCardModal = reatomComponent<UserCardModal>(({ 
   ctx, nickname, trigger, withCustomTrigger = false 
 }) => {
-  const handleOpenChange = (value: boolean) => {
+  const handle = (value: boolean) => {
     userCardDialogIsOpenAtom(ctx, value)
     selectedUserCardAtom(ctx, nickname)
   }
 
   return (
-    <Dialog open={ctx.spy(userCardDialogIsOpenAtom)} onOpenChange={handleOpenChange}>
+    <Dialog open={ctx.spy(userCardDialogIsOpenAtom)} onOpenChange={handle}>
       <DialogTrigger asChild={withCustomTrigger} className={withCustomTrigger ? "cursor-default" : ""}>
         {withCustomTrigger ? (
           trigger

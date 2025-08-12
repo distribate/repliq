@@ -17,7 +17,7 @@ import { createIdLink } from "@repo/lib/utils/create-link";
 const filterFriendsByNickname = (data: Friend[], querySearch: string) =>
   data.filter(item => item.nickname.startsWith(querySearch));
 
-const FriendProfileCard = ({ nickname, name_color, avatar,  is_donate, description }: Friend) => {
+const FriendProfileCard = ({ nickname, name_color, avatar, is_donate, description }: Friend) => {
   return (
     <div className="flex gap-2 items-center w-full bg-shark-950 py-4 px-4 rounded-lg">
       <CustomLink to={createIdLink("user", nickname)}>
@@ -36,7 +36,7 @@ const FriendProfileCard = ({ nickname, name_color, avatar,  is_donate, descripti
               />
             }
           />
-          <UserDonate is_donate={is_donate} />
+          {is_donate && <UserDonate />}
         </div>
         {description && <p className="text-shark-300 truncate">{description}</p>}
       </div>

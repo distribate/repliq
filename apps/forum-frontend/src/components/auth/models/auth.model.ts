@@ -1,4 +1,4 @@
-import { action, atom, Ctx } from "@reatom/core";
+import { action, atom, batch, Ctx } from "@reatom/core";
 import { withComputed, withInit, withReset } from "@reatom/framework";
 import { toast } from "sonner";
 import { reatomAsync, withStatusesAtom } from "@reatom/async";
@@ -118,14 +118,20 @@ statusAtom.onChange((ctx, state) => {
   }
 })
 
-async function registerForum({ signal, ...json }: z.infer<typeof registerSchema> & { signal?: AbortSignal }) {
-  const res = await authClient.register.$post({ json }, { init: { signal } });
-  return await res.json()
+async function registerForum(json: z.infer<typeof registerSchema>) {
+  const res = await authClient.register.$post({ json });
+  const data = await res.json();
+  if ("error" in data) throw new Error(data.error);
+
+  return data
 }
 
-async function loginForum({ signal, ...json }: Omit<z.infer<typeof registerSchema>, "findout" | "referrer"> & { signal?: AbortSignal }) {
-  const res = await authClient.login.$post({ json }, { init: { signal } });
-  return await res.json();
+async function loginForum(json: Omit<z.infer<typeof registerSchema>, "findout" | "referrer">) {
+  const res = await authClient.login.$post({ json });
+  const data = await res.json();
+  if ("error" in data) throw new Error(data.error);
+
+  return data
 }
 
 export const authAction = reatomAsync(async (ctx) => {
@@ -149,7 +155,7 @@ export const authAction = reatomAsync(async (ctx) => {
       token
     }
 
-    return await ctx.schedule(() => loginForum({ signal: ctx.controller.signal, ...values }));
+    return await ctx.schedule(() => loginForum(values));
   }
 
   if (type === 'register') {
@@ -168,22 +174,24 @@ export const authAction = reatomAsync(async (ctx) => {
 
     const referrer = ctx.get(referrerAtom)
 
-    return await ctx.schedule(() => registerForum({ signal: ctx.controller.signal, ...values, referrer }));
+    return await ctx.schedule(() => registerForum({ ...values, referrer }));
   }
 }, {
   name: "authAction",
+  onReject: (ctx, e) => {
+    if (e instanceof Error) {
+      statusAtom(ctx, e.message)
+    }
+  },
   onFulfill: async (ctx, res) => {
     if (!res) return;
 
     const type = ctx.get(authTypeAtom)
 
-    if ("error" in res) {
-      statusAtom(ctx, res.error)
-      return;
-    }
-
-    statusAtom(ctx, res.status)
-    turnstileIsOpenAtom(ctx, false)
+    batch(ctx, () => {
+      statusAtom(ctx, res.status)
+      turnstileIsOpenAtom(ctx, false)
+    })
 
     if (type === 'login') {
       const nickname = ctx.get(nicknameAtom)
@@ -208,23 +216,25 @@ export const changeAuthTypeAction = action(async (ctx) => {
 export function resetAuth(ctx: Ctx) {
   logger.info("resetAuth")
 
-  nicknameAtom.reset(ctx)
-  passwordAtom.reset(ctx)
-  findoutAtom.reset(ctx)
-  acceptRulesAtom.reset(ctx)
-  tokenAtom.reset(ctx)
+  batch(ctx, () => {
+    nicknameAtom.reset(ctx)
+    passwordAtom.reset(ctx)
+    findoutAtom.reset(ctx)
+    acceptRulesAtom.reset(ctx)
+    tokenAtom.reset(ctx)
 
-  resetStatus(ctx)
+    resetStatus(ctx)
 
-  authIsValidAtom.reset(ctx)
-  loginIsValidAtom.reset(ctx)
-  passwordIsValidAtom.reset(ctx)
-  tokenIsValidAtom.reset(ctx)
-  findoutIsValidAtom.reset(ctx)
+    authIsValidAtom.reset(ctx)
+    loginIsValidAtom.reset(ctx)
+    passwordIsValidAtom.reset(ctx)
+    tokenIsValidAtom.reset(ctx)
+    findoutIsValidAtom.reset(ctx)
 
-  nicknameErrorAtom.reset(ctx)
-  passwordErrorAtom.reset(ctx)
-  findoutErrorAtom.reset(ctx)
+    nicknameErrorAtom.reset(ctx)
+    passwordErrorAtom.reset(ctx)
+    findoutErrorAtom.reset(ctx)
+  })
 }
 
 export function resetStatus(ctx: Ctx) {
@@ -234,10 +244,12 @@ export function resetStatus(ctx: Ctx) {
 }
 
 export const inputOnClickAction = action((ctx, name: "nickname" | "password") => {
-  resetStatus(ctx)
+  resetStatus(ctx);
+
   if (name === 'nickname') {
     nicknameErrorAtom.reset(ctx)
   }
+
   if (name === 'password') {
     passwordErrorAtom.reset(ctx)
   }

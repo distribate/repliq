@@ -6,15 +6,17 @@ import {
   myFriendsDataAtom,
   myFriendsMetaAtom,
   myFriendsNotPinnedDataAtom,
-  myFriendsPinnedDataAtom
+  myFriendsPinnedDataAtom,
+  resetMyFriends
 } from "#components/friends/models/friends.model.ts";
 import { FriendsAllListSkeleton } from "#components/skeletons/components/friends-all-list-skeleton.tsx";
 import { updateFriendsAction } from "#components/friends/models/update-friends.model.ts";
 import { useInView } from "react-intersection-observer";
 import { reatomComponent, useUpdate } from "@reatom/npm-react";
-import { onConnect } from "@reatom/framework";
+import { onConnect, onDisconnect } from "@reatom/framework";
 
 onConnect(myFriendsAction, myFriendsAction)
+onDisconnect(myFriendsDataAtom, (ctx) => resetMyFriends(ctx))
 
 const SyncInView = ({ inView }: { inView: boolean }) => {
   useUpdate((ctx) => {

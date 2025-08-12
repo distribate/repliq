@@ -100,14 +100,14 @@ const UserHead = reatomComponent(({ ctx }) => {
               className="cursor-pointer text-[18px]"
               onClick={() => controlUserCardAtom(ctx, false, "link")}
             />
-            <UserDonate is_donate={is_donate} />
+            {is_donate && <UserDonate />}
           </div>
           {real_name && <UserRealName real_name={real_name} />}
         </div>
       </div>
     </div>
   )
-})
+}, "UserHead")
 
 const UserSummary = reatomComponent(({ ctx }) => {
   const userCard = ctx.spy(userCardResource.dataAtom)

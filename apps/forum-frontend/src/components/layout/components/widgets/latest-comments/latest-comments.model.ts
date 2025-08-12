@@ -1,15 +1,16 @@
 import { reatomResource, withCache, withDataAtom, withStatusesAtom } from "@reatom/async"
 import { forumCommentClient } from "#shared/forum-client"
 
-const getLatestComments = async () => {
-  const res = await forumCommentClient.comment["get-last-comments"].$get()
-  const data = await res.json()
-
-  if ("error" in data) return null
-
-  return data.data.length >= 1 ? data.data : null;
-}
-
 export const latestCommentsResource = reatomResource(async (ctx) => {
-  return await ctx.schedule(() => getLatestComments())
+  return await ctx.schedule(async () => {
+    const res = await forumCommentClient.comment["get-last-comments"].$get(
+      {}, { init: { signal: ctx.controller.signal } }
+    )
+    
+    const data = await res.json()
+
+    if ("error" in data) throw new Error(data.error)
+
+    return data.data
+  })
 }, "latestCommentsResource").pipe(withDataAtom(), withStatusesAtom(), withCache())

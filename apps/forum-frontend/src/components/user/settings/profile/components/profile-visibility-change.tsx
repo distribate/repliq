@@ -4,6 +4,32 @@ import { reatomComponent } from "@reatom/npm-react";
 import { spawn } from "@reatom/framework";
 import { updateCurrentUserSettingsAction } from "../models/update-current-user.model";
 import { getUser } from "#components/user/models/current-user.model";
+import { cva } from "class-variance-authority";
+
+const sectionVariant = cva(`flex relative w-1/2 group rounded-r-lg border overflow-hidden  duration-300 ease-in-out`, {
+  variants: {
+    variant: {
+      inactive: "border-transparent hover:bg-shark-800",
+      active: "border-green-500 hover:bg-green-600" 
+    }
+  },
+  defaultVariants: {
+    variant: "inactive"
+  }
+})
+
+const PROFILE_VISIBILITY_VARIANTS = [
+  {
+    title: "Приватный 😑",
+    value: "friends",
+    icon: LockKeyhole
+  },
+  {
+    title: "Публичный 😝",
+    value: "all",
+    icon: LockOpen
+  }
+] as const;
 
 export const ProfileVisibilityChange = reatomComponent(({ ctx }) => {
   const profile_visibility = getUser(ctx).preferences.profile_visibility
@@ -22,44 +48,26 @@ export const ProfileVisibilityChange = reatomComponent(({ ctx }) => {
         Выберите тип видимости аккаунта
       </Typography>
       <div className="flex items-center justify-center *:h-[146px] *:cursor-pointer w-full">
-        <div
-          className={`flex relative w-1/2 group rounded-l-lg border overflow-hidden  duration-300 ease-in-out
-                 ${profile_visibility === "friends" ? "border-green-500 hover:bg-green-600" : "border-transparent hover:bg-shark-800"}`}
-          onClick={() => handleProfileVisibility("friends")}
-        >
-          <LockKeyhole
-            size={116}
-            className="group-hover:opacity-100 transition-all 
-                  duration-300 ease-in-out text-shark-50 opacity-10 absolute -rotate-[15deg] -bottom-4 -right-4"
-          />
+        {PROFILE_VISIBILITY_VARIANTS.map((variant) => (
           <div
-            className="relative flex items-end justify-start 
-                  group-hover:opacity-100 p-2 transition-all duration-300 ease-in-out opacity-10"
+            className={sectionVariant({ variant: profile_visibility === variant.value ? "active" : "inactive" })}
+            onClick={() => handleProfileVisibility(variant.value)}
           >
-            <span className="text-[21px] group-hover:animate-pulse">
-              Приватный 😑
-            </span>
+            <variant.icon
+              size={116}
+              className="group-hover:opacity-100 duration-300 ease-in-out 
+                text-shark-50 opacity-10 absolute -rotate-[15deg] -bottom-4 -right-4"
+            />
+            <div
+              className="flex items-end justify-start relative 
+                group-hover:opacity-100 p-2 duration-300 ease-in-out opacity-10"
+            >
+              <span className="text-xl group-hover:animate-pulse">
+                {variant.title}
+              </span>
+            </div>
           </div>
-        </div>
-        <div
-          className={`flex relative w-1/2 group rounded-r-lg border overflow-hidden  duration-300 ease-in-out
-                ${profile_visibility === "all" ? "border-green-500 hover:bg-green-600" : "border-transparent hover:bg-shark-800"}`}
-          onClick={() => handleProfileVisibility("all")}
-        >
-          <LockOpen
-            size={116}
-            className="group-hover:opacity-100 transition-all 
-                  duration-300 ease-in-out text-shark-50 opacity-10 absolute -rotate-[15deg] -bottom-4 -right-4"
-          />
-          <div
-            className="relative flex items-end justify-start 
-                  group-hover:opacity-100 p-2 transition-all duration-300 ease-in-out opacity-10"
-          >
-            <span className="text-[21px] group-hover:animate-pulse">
-              Публичный 😝
-            </span>
-          </div>
-        </div>
+        ))}
       </div>
     </div>
   );

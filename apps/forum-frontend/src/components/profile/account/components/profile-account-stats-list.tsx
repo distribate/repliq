@@ -1,5 +1,5 @@
 import { Typography } from "@repo/ui/src/components/typography.tsx";
-import { userProfileStatsResource } from "../models/user-stats.model";
+import { userProfileStatsAction } from "../models/user-stats.model";
 import { Dialog, DialogContent, DialogTrigger } from "@repo/ui/src/components/dialog";
 import { Button } from "@repo/ui/src/components/button";
 import { ProfileStatsMeta, ProfileViewsDetails } from "@repo/types/routes-types/get-user-profile-stats-types";
@@ -108,7 +108,7 @@ export const ProfileAccountStatsPlayers = ({
 }
 
 export const ProfileAccountStatsDetails = reatomComponent(({ ctx }) => {
-  const profileStats = ctx.spy(userProfileStatsResource.dataAtom)
+  const profileStats = ctx.spy(userProfileStatsAction.dataAtom)
 
   const handleRedirect = () => {
     if (!profileStats?.details) {
@@ -127,10 +127,10 @@ export const ProfileAccountStatsDetails = reatomComponent(({ ctx }) => {
   )
 }, "ProfileAccountStatsDetails")
 
-onConnect(userProfileStatsResource.dataAtom, userProfileStatsResource)
+onConnect(userProfileStatsAction.dataAtom, userProfileStatsAction)
 
 export const ProfileAccountStats = reatomComponent(({ ctx }) => {
-  const profileStats = ctx.spy(userProfileStatsResource.dataAtom)
+  const profileStats = ctx.spy(userProfileStatsAction.dataAtom)
   const is_donate = getUser(ctx).is_donate
 
   return (

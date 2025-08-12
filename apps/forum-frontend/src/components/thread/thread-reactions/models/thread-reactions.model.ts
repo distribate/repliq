@@ -16,7 +16,14 @@ export const threadReactionsAction = reatomAsync(async (ctx, id: string) => {
 
     return data.data;
   })
-}, "threadReactionsAction").pipe(withDataAtom(), withStatusesAtom())
+}, {
+  name: "threadReactionsAction",
+  onReject: (_, e) => {
+    if (e instanceof Error) {
+      console.error(e.message)
+    }
+  }
+}).pipe(withDataAtom(), withStatusesAtom())
 
 const THREAD_RATING_MESSAGES: Record<string, string> = {
   "Reacted": "Вы уже оценивали тред",
@@ -27,33 +34,36 @@ const THREAD_RATING_MESSAGES: Record<string, string> = {
 
 const addReactionActionVariablesAtom = atom<UpdateThreadRating | null>(null, "addReactionActionVariables")
 
-threadReactionsAction.dataAtom.onChange((ctx, state) => console.log(state))
+threadReactionsAction.dataAtom.onChange((_, state) => {
+  import.meta.env.DEV && console.log("threadReactionsAction.dataAtom", state)
+})
 
 export const addReactionAction = reatomAsync(async (ctx, values: UpdateThreadRating) => {
   addReactionActionVariablesAtom(ctx, values)
 
-  return await ctx.schedule(async () => {
-    const { emoji, id } = values;
+  const { emoji, id } = values;
 
-    const createReaction = await forumReactionClient.reaction["create-reaction"].$post({
-      json: { emoji, id, type: "thread", },
+  return await ctx.schedule(async () => {
+    const res = await forumReactionClient.reaction["create-reaction"].$post({
+      json: { emoji, id, type: "thread" },
     });
 
-    return await createReaction.json()
+    const data = await res.json()
+
+    if ("error" in data) throw new Error(data.error)
+
+    return data
   })
 }, {
   name: "addReactionAction",
   onReject: (_, e) => {
     if (e instanceof Error) {
       console.error(e.message)
+      toast.error(THREAD_RATING_MESSAGES[e.message] ?? "Что-то пошло не так")
     }
   },
   onFulfill: (ctx, res) => {
     if (!res) return;
-
-    if ("error" in res) {
-      return toast.error(THREAD_RATING_MESSAGES[res.error] ?? "Что-то пошло не так")
-    }
 
     const variables = ctx.get(addReactionActionVariablesAtom)
     if (!variables) return;

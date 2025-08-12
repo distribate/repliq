@@ -2,9 +2,7 @@ import { throwError } from '@repo/lib/helpers/throw-error.ts';
 import { getUserInfo } from "#lib/queries/user/get-user-info.ts";
 import { getNickname } from "#utils/get-nickname-from-storage.ts";
 import { Hono } from "hono";
-import { getPublicUrl } from '#utils/get-public-url.ts';
-import { Encoder } from 'cbor-x';
-import { USER_IMAGES_BUCKET } from '@repo/shared/constants/buckets';
+import type { UserDetailed } from '@repo/types/entities/user-type';
 
 export const getMeRoute = new Hono()
   .get("/get-me", async (ctx) => {
@@ -28,7 +26,7 @@ export const getMeRoute = new Hono()
         notify_in_telegram
       }
 
-      const res = {
+      const res: { data: UserDetailed } = {
         data: {
           ...user,
           is_donate: user.is_donate,
@@ -36,17 +34,9 @@ export const getMeRoute = new Hono()
         }
       }
 
-      const encoder = new Encoder({
-        useRecords: false, structures: [], pack: true
-      });
+      ctx.res.headers.set("Cache-Control", "public, max-age=2")
 
-      const encodedUser = encoder.encode(res)
-
-      return ctx.body(
-        encodedUser as unknown as ReadableStream, 
-        200, 
-        { 'Content-Type': 'application/cbor' }
-      )
+      return ctx.json(res, 200)
     } catch (e) {
       return ctx.json({ error: throwError(e) }, 500);
     }

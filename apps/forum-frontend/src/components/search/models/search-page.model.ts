@@ -2,8 +2,9 @@ import { SEARCH_PAGE_LIMIT } from "@repo/shared/constants/limits.ts";
 import { action, atom } from "@reatom/core";
 import { handleSearchAction, SearchThread, SearchUser } from "./search.model";
 import { withLocalStorage } from "@reatom/persist-web-storage";
-import { reatomArray, sleep, withReset } from "@reatom/framework";
-import { defineSearchSectionAction } from "./search-related.model";
+import { reatomArray, reatomAsync, sleep, withReset } from "@reatom/framework";
+import { threadRelatedAction, usersRelatedAction } from "./search-related.model";
+import { withHistory } from "#lib/with-history";
 
 export type SearchResultsAll = Array<SearchUser | SearchThread>;
 export type SearchResult = SearchUser | SearchThread;
@@ -41,7 +42,7 @@ export const deleteEntryFromHistoryAction = action((ctx, target: string) => {
 export const processSelectEntryAction = action(async (ctx, target: SearchUser | SearchThread) => {
   updateSearchHistoryAction(ctx, target)
   await sleep(200)
-  searchPageQueryAtom(ctx, null)
+  searchPageQueryAtom.reset(ctx)
 })
 
 export const updateSearchHistoryAction = action((ctx, target: SearchUser | SearchThread) => {
@@ -74,29 +75,45 @@ export const updateSearchHistoryAction = action((ctx, target: SearchUser | Searc
 })
 
 export const searchPageAtom = atom<SearchPageQuery>(initial, "searchPage")
-export const searchPageResultsAtom = atom<Array<SearchThread | SearchUser> | null>(null, "searchPageResults")
-
-export const searchPageQueryAtom = atom<string | null>(null, "searchPageQuery")
-export const searchPageTypeAtom = atom<SearchPageType>("all", "searchPage")
-export const searchPageQueryParamsAtom = atom<{ query?: string } | null>(null, "searchPageQueryParams")
+export const searchPageResultsAtom = atom<Array<SearchThread | SearchUser> | null>(null, "searchPageResults").pipe(withReset())
+export const searchPageQueryAtom = atom<string>("", "searchPageQuery").pipe(withReset())
+export const searchPageTypeAtom = atom<SearchPageType>("all", "searchPage").pipe(withHistory())
 
 export const searchPageHistoryAtom = reatomArray<SearchUser | SearchThread>([], "searchPageHistory").pipe(
   withLocalStorage("search-history"), withReset()
 )
 
-searchPageQueryParamsAtom.onChange((ctx, target) => {
-  if (!target) return;
+export const defineSearchRelatedAction = reatomAsync(async (ctx) => {
+  const type = ctx.get(searchPageTypeAtom)
 
-  if (target.query) {
-    searchPageQueryAtom(ctx, target.query)
+  switch (type) {
+    case "all":
+      usersRelatedAction(ctx)
+      threadRelatedAction(ctx)
+      return;
+    case "users":
+      return usersRelatedAction(ctx)
+    case "threads":
+      return threadRelatedAction(ctx)
   }
+}, "defineSearchSectionAction")
 
-  defineSearchSectionAction(ctx)
+const defineNewResultsAction = action((ctx) => {
+  const query = ctx.get(searchPageQueryAtom);
+
+  searchPageResultsAtom.reset(ctx)
+  handleSearchAction(ctx, query)
+}, "defineNewResultsAction")
+
+searchPageTypeAtom.onChange((ctx, state) => {
+  defineNewResultsAction(ctx)
+  console.log(`${ctx.get(searchPageTypeAtom.history)[1]} -> ${state}`)
 })
 
 searchPageQueryAtom.onChange((async (ctx, state) => {
-  if (state && state.length >= 1) {
-    searchPageResultsAtom(ctx, null)
-    handleSearchAction(ctx, state)
+  if (state.length >= 1) {
+    defineNewResultsAction(ctx)
+  } else {
+    defineSearchRelatedAction(ctx)
   }
 }))

@@ -1,16 +1,13 @@
 import { reatomComponent } from "@reatom/npm-react";
 import { Skeleton } from "@repo/ui/src/components/skeleton";
 import { Typography } from "@repo/ui/src/components/typography";
-import { threadRecommendationsResource } from "../models/thread-recommendations.model";
+import { resetThreadRecommendations, threadRecommendationsAction, threadRecommendationsDataAtom } from "../models/thread-recommendations.model";
 import { CustomLink } from "#components/shared/link";
-import { SOCIALS } from "#components/layout/components/default/footer";
 import { createIdLink } from "@repo/lib/utils/create-link";
-import { isAuthenticatedAtom } from "#components/auth/models/auth.model";
+import { onConnect, onDisconnect } from "@reatom/framework";
 
-const RecommendationsList = reatomComponent(({ ctx }) => {
-  const threads = ctx.spy(threadRecommendationsResource.dataAtom)?.data
-
-  if (ctx.spy(threadRecommendationsResource.statusesAtom).isPending) return (
+const RecommendationsListSkeleton = () => {
+  return (
     <>
       <Skeleton className="h-16 w-full" />
       <Skeleton className="h-16 w-full" />
@@ -18,10 +15,21 @@ const RecommendationsList = reatomComponent(({ ctx }) => {
       <Skeleton className="h-16 w-full" />
     </>
   )
+}
 
-  if (!threads || !threads.length) return (
-    <Typography>Ничего не нашлось :/</Typography>
-  )
+onConnect(threadRecommendationsDataAtom, threadRecommendationsAction)
+onDisconnect(threadRecommendationsDataAtom, (ctx) => resetThreadRecommendations(ctx))
+
+const RecommendationsList = reatomComponent(({ ctx }) => {
+  const threads = ctx.spy(threadRecommendationsDataAtom)
+
+  if (ctx.spy(threadRecommendationsAction.statusesAtom).isPending) {
+    return <RecommendationsListSkeleton />
+  }
+
+  if (!threads || !threads.length) {
+    return <Typography>Ничего не нашлось :/</Typography>
+  }
 
   return (
     threads.map((thread) => (
@@ -37,30 +45,12 @@ const RecommendationsList = reatomComponent(({ ctx }) => {
 })
 
 export const ThreadsRecommendations = reatomComponent(({ ctx }) => {
-  const isAuthenticated = ctx.spy(isAuthenticatedAtom)
-
   return (
-    <>
-      <div className="flex flex-col gap-y-4 bg-shark-950 rounded-lg p-4 w-full h-full">
-        <Typography textSize="big" className="font-semibold">
-          Другие треды, которые вам могут понравиться
-        </Typography>
-        <RecommendationsList />
-      </div>
-      {!isAuthenticated && (
-        <div className="flex flex-col w-full gap-4 h-full rounded-lg bg-shark-950 p-4">
-          <Typography textSize="big" className="font-semibold">
-            Наши соцсети
-          </Typography>
-          <div className="flex flex-col gap-1 w-full h-full">
-            {SOCIALS.map(item => (
-              <a key={item.label} href={item.href} target="_blank" rel="noreferrer">
-                <span>{item.label}</span>
-              </a>
-            ))}
-          </div>
-        </div>
-      )}
-    </>
+    <div className="flex flex-col gap-y-4 bg-shark-950 rounded-lg p-4 w-full h-full">
+      <Typography textSize="big" className="font-semibold">
+        Другие треды, которые вам могут понравиться
+      </Typography>
+      <RecommendationsList />
+    </div>
   )
 }, "ThreadRecommendations")

@@ -17,6 +17,7 @@ export const OutgoingFriendButton = reatomComponent<OutgoingRequestButtonProps>(
   
   return (
     <Button
+      className="h-10"
       onClick={handle}
       variant="pending"
       disabled={ctx.spy(controlOutgoingRequestAction.statusesAtom).isPending}

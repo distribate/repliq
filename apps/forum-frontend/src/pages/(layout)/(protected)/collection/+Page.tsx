@@ -1,38 +1,21 @@
-import { CollectionParams, collectionQueryAtom, CollectionWrapper } from '#components/collection/components/collection-wrapper/collection-wrapper'
-import { NavigationBadge } from "#components/shared/navigation/components/navigation-badge"
+import { collectionTypeAtom, CollectionList } from '#components/collection/components/collection-wrapper/collection-wrapper'
+import { CollectionNavigation } from '#components/collection/components/navigation/collection-navigation'
 import { AtomState } from '@reatom/core'
-import { reatomComponent, useUpdate } from '@reatom/npm-react'
+import { useUpdate } from '@reatom/npm-react'
+import { Typography } from '@repo/ui/src/components/typography'
 import { usePageContext } from "vike-react/usePageContext"
 import { navigate } from "vike/client/router"
-
-const CollectionNavigation = reatomComponent(({ ctx }) => {
-  const changeRoute = (type: CollectionParams["type"]) => {
-    navigate(`/collection?type=${type}`)
-  }
-
-  const isActive = (input: CollectionParams["type"]): "active" | "inactive" => {
-    return input === ctx.spy(collectionQueryAtom).type ? "active" : "inactive"
-  }
-
-  return (
-    <div className="flex overflow-hidden gap-2 w-full *:w-full overflow-x-auto">
-      <NavigationBadge data-state={isActive('threads')} title="Треды" onClick={() => changeRoute('threads')} />
-      <NavigationBadge data-state={isActive('tickets')} title="Тикеты" onClick={() => changeRoute('tickets')} />
-      <NavigationBadge data-state={isActive('saved_threads')} title="Сохраненные треды" onClick={() => changeRoute('saved_threads')} />
-    </div>
-  )
-}, "CollectionNavigation")
 
 const Sync = () => {
   const search = usePageContext().urlParsed.search
 
   useUpdate((ctx) => {
     if (!search.type) {
-      const { type } = ctx.get(collectionQueryAtom);
+      const type = ctx.get(collectionTypeAtom);
       return ctx.schedule(() => navigate(`/collection?type=${type}`))
     }
 
-    collectionQueryAtom(ctx, search as AtomState<typeof collectionQueryAtom>)
+    collectionTypeAtom(ctx, search.type as AtomState<typeof collectionTypeAtom>)
   }, [search])
 
   return null;
@@ -40,10 +23,15 @@ const Sync = () => {
 
 export default function CollectionRouteComponent() {
   return (
-    <div className="flex flex-col gap-4 rounded-lg w-full h-dvh">
+    <div className="flex flex-col items-center justify-center w-full min-h-dvh">
       <Sync />
-      <CollectionNavigation />
-      <CollectionWrapper />
+      <div className="flex flex-col items-start gap-4 h-full w-full">
+        <Typography className="text-3xl font-bold">
+          Коллекции
+        </Typography>
+        <CollectionNavigation />
+        <CollectionList />
+      </div>
     </div>
   )
 }

@@ -47,7 +47,6 @@ function CommandDialog({
       </DialogHeader>
       <DialogContent
         className={cn("overflow-hidden p-0", className)}
-        showCloseButton={showCloseButton}
       >
         <Command className="[&_[cmdk-group-heading]]:text-muted-foreground **:data-[slot=command-input-wrapper]:h-12 [&_[cmdk-group-heading]]:px-2 [&_[cmdk-group-heading]]:font-medium [&_[cmdk-group]]:px-2 [&_[cmdk-group]:not([hidden])_~[cmdk-group]]:pt-0 [&_[cmdk-input-wrapper]_svg]:h-5 [&_[cmdk-input-wrapper]_svg]:w-5 [&_[cmdk-input]]:h-12 [&_[cmdk-item]]:px-2 [&_[cmdk-item]]:py-3 [&_[cmdk-item]_svg]:h-5 [&_[cmdk-item]_svg]:w-5">
           {children}
@@ -58,8 +57,7 @@ function CommandDialog({
 }
 
 function CommandInput({
-  className,
-  ...props
+  className, ...props
 }: React.ComponentProps<typeof CommandPrimitive.Input>) {
   return (
     <div
@@ -80,8 +78,7 @@ function CommandInput({
 }
 
 function CommandList({
-  className,
-  ...props
+  className, ...props
 }: React.ComponentProps<typeof CommandPrimitive.List>) {
   return (
     <CommandPrimitive.List
@@ -108,8 +105,7 @@ function CommandEmpty({
 }
 
 function CommandGroup({
-  className,
-  ...props
+  className, ...props
 }: React.ComponentProps<typeof CommandPrimitive.Group>) {
   return (
     <CommandPrimitive.Group
@@ -124,8 +120,7 @@ function CommandGroup({
 }
 
 function CommandSeparator({
-  className,
-  ...props
+  className, ...props
 }: React.ComponentProps<typeof CommandPrimitive.Separator>) {
   return (
     <CommandPrimitive.Separator
@@ -137,8 +132,7 @@ function CommandSeparator({
 }
 
 function CommandItem({
-  className,
-  ...props
+  className, ...props
 }: React.ComponentProps<typeof CommandPrimitive.Item>) {
   return (
     <CommandPrimitive.Item
@@ -153,8 +147,7 @@ function CommandItem({
 }
 
 function CommandShortcut({
-  className,
-  ...props
+  className, ...props
 }: React.ComponentProps<"span">) {
   return (
     <span

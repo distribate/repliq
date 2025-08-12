@@ -7,13 +7,12 @@ import { navigate } from "vike/client/router"
 import { usePageContext } from "vike-react/usePageContext"
 
 const LINKS = [
-  { label: "Статус", href: STATUS_SITE_DOMAIN, },
   { label: "Обновления", href: `/changelog`, },
 ]
 
 const TERMS = [
-  { label: "Конфиденциальность", href: "/legal/privacy" },
-  { label: "Контакты", href: "/legal/contacts" },
+  { label: "Конфиденциальность", href: "/privacy" },
+  { label: "Контакты", href: "/misc/contacts" },
 ]
 
 export const SOCIALS = [
@@ -75,7 +74,6 @@ const CompactFooter = () => {
       >
         <div className="flex items-center gap-2 w-full justify-between">
           <Logotype />
-          <Socials />
         </div>
       </div>
     </div>
@@ -93,24 +91,24 @@ const Logotype = () => {
   )
 }
 
-const Socials = () => {
-  return (
-    <div className="flex items-center gap-3">
-      {SOCIALS.map(social => (
-        <a
-          key={social.label}
-          title={social.label}
-          href={social.href}
-          rel="noreferrer"
-          target="_blank"
-          className="hover:bg-shark-300/10 rounded-full p-1.5"
-        >
-          <social.icon size={24} className="text-shark-300" />
-        </a>
-      ))}
-    </div>
-  )
-}
+// const Socials = () => {
+//   return (
+//     <div className="flex items-center gap-3">
+//       {SOCIALS.map(social => (
+//         <a
+//           key={social.label}
+//           title={social.label}
+//           href={social.href}
+//           rel="noreferrer"
+//           target="_blank"
+//           className="hover:bg-shark-300/10 rounded-full p-1.5"
+//         >
+//           <social.icon size={24} className="text-shark-300" />
+//         </a>
+//       ))}
+//     </div>
+//   )
+// }
 
 export const Footer = () => {
   const pathname = usePageContext().urlPathname
@@ -128,7 +126,7 @@ export const Footer = () => {
       >
         <div className="flex flex-col gap-2 w-full lg:w-2/6">
           <Logotype/>
-          <Socials/>
+          {/* <Socials/> */}
           <span className="mt-4 font-semibold text-sm text-shark-300">
             © {new Date().getFullYear()} Repliq.
           </span>

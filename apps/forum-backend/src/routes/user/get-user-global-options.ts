@@ -77,6 +77,8 @@ export const getUserGlobalOptionsRoute = new Hono()
         can_create_threads: Boolean(perms.can_create_threads),
       };
 
+      ctx.res.headers.set("Cache-Control", "public, max-age=5")
+
       return ctx.json({ data }, 200)
     } catch (e) {
       return ctx.json({ error: throwError(e) }, 500);

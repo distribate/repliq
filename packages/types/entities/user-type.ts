@@ -1,11 +1,14 @@
 import type { Users } from "../db/forum-database-types";
 import type { Selectable } from "kysely";
 
-export type UserDetailed = Omit<Selectable<Users>,
+type Base = Selectable<Users>
+
+export type UserDetailed = Omit<Base,
   | "favorite_item"
   | "birthday"
   | "created_at"
   | "donate"
+  | "avatars"
 > & {
   id: string,
   birthday: string | null
@@ -25,8 +28,14 @@ export type UserDetailed = Omit<Selectable<Users>,
   },
 }
 
-export type UserShorted = Pick<UserDetailed,
-  "nickname" | "is_donate" | "description" | "cover_image" | "account_status" | "name_color" | "id" | "avatar"
+export type UserShorted = Pick<Base, "account_status"> & Pick<UserDetailed,
+  | "nickname"
+  | "is_donate" 
+  | "description" 
+  | "cover_image" 
+  | "name_color"
+  | "id"
+  | "avatar"
 > & {
   preferences: {
     cover_outline_visible: boolean,

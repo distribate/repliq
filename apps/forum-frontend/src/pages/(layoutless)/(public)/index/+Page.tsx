@@ -1,11 +1,8 @@
 import { ArrowRight, Gamepad2, Globe, Heart, Sparkles, Trophy, Users, Zap } from "lucide-react"
 import { CustomLink } from "#components/shared/link"
 import { Button } from "@repo/ui/src/components/button"
-import { reatomResource, withCache, withDataAtom, withStatusesAtom } from "@reatom/async"
-import { forumSharedClient } from "#shared/forum-client"
-import { reatomComponent } from "@reatom/npm-react"
 import { Footer } from "#components/layout/components/default/footer"
-import { AnimatedNumber } from "#ui/animated-number"
+import { ForumStats } from "#components/layout/components/widgets/forum-stats"
 
 const benefits = [
   {
@@ -51,65 +48,6 @@ const features = [
   }
 ]
 
-const publicStatsResource = reatomResource(async (ctx) => {
-  return await ctx.schedule(async () => {
-    const res = await forumSharedClient.shared["get-public-stats"].$get()
-    const data = await res.json()
-
-    if ("error" in data) {
-      return null;
-    }
-
-    return {
-      threads: Number(data.data.threads_count),
-      users: Number(data.data.users_count),
-      posts: Number(data.data.posts_count)
-    }
-  })
-}).pipe(withStatusesAtom(), withCache(), withDataAtom({ users: 0, threads: 0, posts: 0 }))
-
-const ForumStats = reatomComponent(({ ctx }) => {
-  const data = ctx.spy(publicStatsResource.dataAtom)
-
-  return (
-    <>
-      <div className="text-center">
-        <AnimatedNumber
-          className='text-3xl font-bold text-pink-300 mb-1'
-          springOptions={{
-            bounce: 0,
-            duration: 2000,
-          }}
-          value={data?.users ?? 50}
-        />
-        <div className="text-shark-50">Участников</div>
-      </div>
-      <div className="text-center">
-        <AnimatedNumber
-          className='text-3xl font-bold text-pink-300 mb-1'
-          springOptions={{
-            bounce: 0,
-            duration: 2000,
-          }}
-          value={data?.threads ?? 50}
-        />
-        <div className="text-shark-50">Тредов</div>
-      </div>
-      <div className="text-center">
-        <AnimatedNumber
-          className='text-3xl font-bold text-pink-300 mb-1'
-          springOptions={{
-            bounce: 0,
-            duration: 2000,
-          }}
-          value={data?.posts ?? 50}
-        />
-        <div className="text-shark-50">Постов</div>
-      </div>
-    </>
-  )
-}, "ForumStats")
-
 export default function LandingPage() {
   return (
     <div className="min-h-screen landing-background *:px-2">
@@ -134,8 +72,8 @@ export default function LandingPage() {
               </span>
             </h1>
             <p className="text-xl text-shark-200 mb-6 max-w-2xl mx-auto leading-relaxed">
-              Repliq - это платформа, где творчество встречается с играми, а идеи превращаются в реальность.
-              Делись своими проектами, находи вдохновение и строй связи с единомышленниками.
+              Repliq — это платформа для общения в формате тредов. 
+              Создавай обсуждения, обменивайся мнениями и находи интересных собеседников на форуме нового поколения.
             </p>
           </div>
           <div
@@ -150,8 +88,7 @@ export default function LandingPage() {
               </Button>
             </CustomLink>
           </div>
-          <div className="grid grid-cols-3 gap-8 max-w-2xl mx-auto"
-          >
+          <div className="grid grid-cols-3 gap-8 max-w-2xl mx-auto">
             <ForumStats />
           </div>
         </div>

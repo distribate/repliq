@@ -20,7 +20,7 @@ export default function ErrorPage() {
 
   return (
     <div className="flex flex-col gap-4 h-screen items-center justify-center w-full">
-      <p className="text-2xl text-shark-50 font-semibold">
+      <p className="text-2xl text-shark-50 text-center font-semibold">
         {msg}
       </p>
       <div className="flex rounded-lg bg-shark-700 items-center justify-center p-4">

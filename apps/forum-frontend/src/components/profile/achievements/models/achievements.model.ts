@@ -1,6 +1,6 @@
 import { isParamChanged, requestedUserParamAtom } from "#components/profile/main/models/requested-user.model"
 import { reatomAsync, withErrorAtom, withStatusesAtom } from "@reatom/async"
-import { atom, Ctx } from "@reatom/core"
+import { atom, batch, Ctx } from "@reatom/core"
 import { withReset } from "@reatom/framework"
 import { logger } from "@repo/lib/utils/logger"
 import ky from "ky"
@@ -18,31 +18,7 @@ type AchievementsMeta = {
 export const achievementsAtom = atom<AchievementsData>(null, "achievements").pipe(withReset())
 export const achievementsMetaAtom = atom<AchievementsMeta>(null, "achievementsMeta").pipe(withReset())
 
-async function getAchievements(nickname: string) {
-  const res = await ky.get(`https://api.fasberry.su/minecraft/server/achievements/${nickname}`)
-  const data = await res.json<{ data: AchievementsData } | { error: string }>()
-
-  if (!data || "error" in data) return null
-
-  return data.data
-}
-
-async function getAchievementsMeta() {
-  const res = await ky.get(`https://api.fasberry.su/minecraft/server/achievements-meta`)
-  const data = await res.json<{ data: AchievementsMeta } | { error: string }>()
-
-  if (!data || "error" in data) return null
-
-  return data.data
-}
-
-requestedUserParamAtom.onChange((ctx, state) => {
-  if (!state) {
-    logger.info(`achievements reset`)
-    achievementsAtom.reset(ctx)
-    achievementsMetaAtom.reset(ctx)
-  }
-})
+const PREFIX_URL = `https://api.fasberry.su/minecraft/server/`
 
 function resetAchievements(ctx: Ctx) {
   achievementsAtom.reset(ctx)
@@ -51,6 +27,7 @@ function resetAchievements(ctx: Ctx) {
 
 requestedUserParamAtom.onChange((ctx, state) => isParamChanged(ctx, requestedUserParamAtom, state, () => {
   resetAchievements(ctx)
+  logger.info("achievements reset for", state)
 }))
 
 export const achievementsAction = reatomAsync(async (ctx) => {
@@ -65,6 +42,20 @@ export const achievementsAction = reatomAsync(async (ctx) => {
     return cache
   }
 
+  async function getAchievements(nickname: string) {
+    const res = await ky(`achievements/${nickname}`, { prefixUrl: PREFIX_URL, signal: ctx.controller.signal })
+    const data = await res.json<WrappedResponse<AchievementsData>>()
+    if ("error" in data) throw new Error(data.error)
+    return data.data
+  }
+
+  async function getAchievementsMeta() {
+    const res = await ky(`achievements-meta`, { prefixUrl: PREFIX_URL, signal: ctx.controller.signal })
+    const data = await res.json<WrappedResponse<AchievementsMeta>>()
+    if ("error" in data) throw new Error(data.error)
+    return data.data
+  }
+
   return await ctx.schedule(() => Promise.all([getAchievements(target), getAchievementsMeta()]))
 }, {
   name: "achievementsAction",
@@ -72,10 +63,10 @@ export const achievementsAction = reatomAsync(async (ctx) => {
     if (!res) return;
 
     const [data, meta] = res
-
-    if (res) {
+    
+    batch(ctx, () => {
       achievementsAtom(ctx, data)
       achievementsMetaAtom(ctx, meta)
-    }
+    })
   }
 }).pipe(withStatusesAtom(), withErrorAtom())

@@ -1,5 +1,4 @@
 import { getPostsControlAtom } from "#components/post/post-item/models/post-control.model";
-import { toast } from "sonner";
 import { reatomAsync, withStatusesAtom } from "@reatom/async";
 import { atom } from "@reatom/core";
 import { forumCommentClient, forumPostClient } from "#shared/forum-client";
@@ -13,7 +12,7 @@ type ControlPost = {
   type: ControlPostActionType;
 };
 
-async function pinPost({ id, value}: { id: string; value: boolean }) {
+async function pinPost({ id, value }: { id: string; value: boolean }) {
   const res = await forumPostClient.post["pin-post"].$post({ json: { id, value } })
   const data = await res.json();
   if ("error" in data) return null
@@ -21,21 +20,21 @@ async function pinPost({ id, value}: { id: string; value: boolean }) {
 }
 
 async function editPost({ content, id }: { id: string, content: string }) {
-  const res = await forumPostClient.post["edit-post"].$post({  json: {  id, content } })
+  const res = await forumPostClient.post["edit-post"].$post({ json: { id, content } })
   const data = await res.json();
   if ("error" in data) return null
   return data;
 }
 
-async function disablePostComments({ id}: { id: string }) {
-  const res = await forumCommentClient.comment["disable-comments"].$post({ json: {  id, type: "post" } })
+async function disablePostComments({ id }: { id: string }) {
+  const res = await forumCommentClient.comment["disable-comments"].$post({ json: { id, type: "post" } })
   const data = await res.json();
   if ("error" in data) return null
   return data;
 }
 
 async function deletePost({ id }: { id: string }) {
-  const res = await forumPostClient.post["delete-post"].$delete({ json: { id  } })
+  const res = await forumPostClient.post["delete-post"].$delete({ json: { id } })
   const data = await res.json();
   if ("error" in data) return null
   return data;
@@ -47,11 +46,10 @@ export const controlPostAction = reatomAsync(async (ctx, values: ControlPost) =>
   const { id, type } = values;
 
   const posts = ctx.get(postsDataAtom)
-  if (!posts) return;
+  if (!posts) throw new Error("Posts not found")
 
   let post = posts.find(p => p.id === id);
-
-  if (!post) return;
+  if (!post) throw new Error("Post not found")
 
   const { content: prev } = post;
 
@@ -69,82 +67,102 @@ export const controlPostAction = reatomAsync(async (ctx, values: ControlPost) =>
     case "edit":
       return editPost({ id, content: content ?? prev });
     default:
-      break;
+      throw new Error(`Type is not defined ${type}`)
   }
 }, {
   name: "controlPostAction",
+  onReject: (_, e) => {
+    if (e instanceof Error) {
+      console.error(e.message)
+    }
+  },
   onFulfill: (ctx, res) => {
-    if (!res) return toast.error("Произошла ошибка");
+    if (!res) return;
 
     const variables = ctx.get(controlPostActionVariablesAtom)!
 
-    switch (variables.type) {
-      case "comments":
-        // @ts-expect-error
-        return postsDataAtom(ctx, (state) => {
-          if (!state) state = [];
+    if (variables.type === 'comments') {
+      const data = res.data as {
+        is_comments: boolean;
+      }
 
-          // @ts-ignore
-          if ((res.status !== 'Success') || ("is_comments" in res.data)) {
-            return state;
-          }
+      postsDataAtom(ctx, (state) => {
+        if (!state) state = [];
 
-          const post = state.find((post) => post.id === variables.id);
+        if (res.status !== 'Success') {
+          return state;
+        }
 
-          const updatedPost = {
-            ...post,
-            // @ts-ignore
-            isComments: data.data.isComments,
-          };
+        const post = state.find((post) => post.id === variables.id);
+        if (!post) return [];
 
-          return state.map((post) => post.id === updatedPost.id ? updatedPost : post,)
-        })
-      case "delete":
-        return postsDataAtom(ctx, (state) => {
-          if (!state) state = [];
+        const updatedPost = {
+          ...post,
+          isComments: data.is_comments,
+        };
 
-          if (res.status !== 'Success') {
-            return state;
-          }
+        const newData = state.map(post => post.id === updatedPost.id ? updatedPost : post)
 
-          const newData = state.filter(
-            (post) => post.id !== variables.id,
-          );
+        return newData
+      })
+    }
 
-          return newData
-        })
-      case "edit":
-        return postsDataAtom(ctx, (state) => {
-          if (!state) state = [];
+    if (variables.type === 'delete') {
+      postsDataAtom(ctx, (state) => {
+        if (!state) state = [];
 
-          if (res.status !== 'Success') {
-            return state;
-          }
+        if (res.status !== 'Success') {
+          return state;
+        }
 
-          return state.map((post) =>
-            post.id === variables.id
-              // @ts-ignore
-              ? { ...post, content: data.data.content }
-              : post,
-          )
-        })
-      case "pin":
-        return postsDataAtom(ctx, (state) => {
-          if (!state) state = [];
+        const newData = state.filter(post => post.id !== variables.id);
 
-          if (res.status !== 'Success') {
-            return state;
-          }
+        return newData
+      })
+    }
 
-          return state.map((post) =>
-            post.id === variables.id
-              // @ts-ignore
-              ? { ...post, isPinned: data.data.isPinned }
-              : post,
-          )
-        })
-      default:
-        break;
+    if (variables.type === 'edit') {
+      const data = res.data as {
+        content: string;
+      }
+
+      postsDataAtom(ctx, (state) => {
+        if (!state) state = [];
+
+        if (res.status !== 'Success') {
+          return state;
+        }
+
+        const newData = state.map(post =>
+          post.id === variables.id
+            ? { ...post, content: data.content }
+            : post
+        );
+
+        return newData
+      });
+    }
+
+    if (variables.type === 'pin') {
+      const data = res.data as {
+        isPinned: boolean;
+      }
+
+      postsDataAtom(ctx, (state) => {
+        if (!state) state = [];
+
+        if (res.status !== 'Success') {
+          return state;
+        }
+
+        const newData = state.map((post) =>
+          post.id === variables.id
+            ? { ...post, isPinned: data.isPinned }
+            : post
+        )
+
+        return newData
+      })
     }
   }
 }).pipe(withStatusesAtom())

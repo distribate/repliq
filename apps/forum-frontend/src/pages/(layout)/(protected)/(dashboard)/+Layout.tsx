@@ -5,22 +5,9 @@ import { IconSparkles } from '@tabler/icons-react'
 import { getUser } from '#components/user/models/current-user.model'
 import { PropsWithChildren } from 'react'
 import { usePageContext } from 'vike-react/usePageContext'
-
-const Page = reatomComponent<PropsWithChildren>(({ ctx, children }) => {
-  const is_donate = getUser(ctx).is_donate
-  const isValid = is_donate === true
-
-  if (!isValid) return <NoAccessDashboard />
-
-  return (
-    <div className="flex flex-col md:flex-row items-start w-full gap-6 h-full">
-      <DashboardNavigation />
-      <div className="flex w-full md:w-3/4 h-full">
-        {children}
-      </div>
-    </div>
-  )
-}, "RouteComponent")
+import { URL_FOR_REPLIQ } from '#shared/constants/donate'
+import { onConnect } from '@reatom/framework'
+import { userProfileStatsAction } from '#components/profile/account/models/user-stats.model'
 
 const NoAccessDashboard = () => {
   return (
@@ -30,7 +17,7 @@ const NoAccessDashboard = () => {
         Приобретите Repliq+, чтобы открыть доступ к полной статистике профиля и тредов!
       </Typography>
       <CustomLink
-        to="/store?target=repliq+"
+        to={URL_FOR_REPLIQ}
         className="flex items-center justify-center w-fit py-2 bg-green-600 px-6 rounded-lg"
       >
         <Typography className="text-xl font-semibold">
@@ -85,9 +72,33 @@ const DashboardNavigation = () => {
   )
 }
 
+const Page = reatomComponent<PropsWithChildren>(({ ctx, children }) => {
+  const is_donate = getUser(ctx).is_donate
+  const isValid = is_donate === true
+
+  if (!isValid) return <NoAccessDashboard />
+
+  return (
+    <div className="flex flex-col md:flex-row items-start w-full gap-6 h-full">
+      <DashboardNavigation />
+      <div className="flex w-full md:w-3/4 h-full">
+        {children}
+      </div>
+    </div>
+  )
+}, "RouteComponent")
+
+onConnect(userProfileStatsAction.dataAtom, (ctx) => {
+  const is_donate = getUser(ctx).is_donate
+
+  if (is_donate) {
+    userProfileStatsAction(ctx)
+  }
+})
+
 export default function DashboardRouteComponent({ children }: PropsWithChildren) {
   return (
-    <Page >
+    <Page>
       {children}
     </Page>
   )

@@ -69,17 +69,17 @@ export const SheetMenu = reatomComponent(({ ctx }) => {
         <SheetTitle className="hidden"></SheetTitle>
         <div className="flex bg-shark-950 gap-4 p-4 flex-col">
           {/* <div className="max-w-[64px] max-h-[64px]"> */}
-            <Avatar
-              url={avatar}
-              nickname={nickname}
-              propHeight={64}
-              propWidth={64}
-              className="max-w-[64px] max-h-[64px]"
-            />
+          <Avatar
+            url={avatar}
+            nickname={nickname}
+            propHeight={64}
+            propWidth={64}
+            className="max-w-[64px] max-h-[64px]"
+          />
           {/* </div> */}
           <div className="flex flex-col gap-1">
             <UserNickname nickname={nickname} className="text-[18px] font-medium text-shark-50" />
-            <UserDonate is_donate={is_donate} />
+            {is_donate && <UserDonate />}
           </div>
         </div>
         <div className="flex flex-col p-4 gap-2">

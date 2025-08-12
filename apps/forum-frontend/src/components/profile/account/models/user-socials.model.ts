@@ -1,7 +1,7 @@
 import { reatomAsync, reatomResource, withCache, withDataAtom, withStatusesAtom } from '@reatom/async'
 import { currentUserAtom } from '#components/user/models/current-user.model'
 import { forumRootClient, forumUserClient } from '#shared/forum-client'
-import { action, atom } from '@reatom/core'
+import { action, atom, batch } from '@reatom/core'
 import { sleep, withReset } from '@reatom/framework'
 import { reatomTimer } from '@reatom/timer'
 import { isProduction } from '@repo/lib/helpers/is-production'
@@ -21,14 +21,14 @@ type EventSourceMsg = {
   service: Connect["service"],
 }
 
-type Integration = { 
-  title: string, 
-  service: Connect["service"] 
+type Integration = {
+  title: string,
+  service: Connect["service"]
 }
 
-type Service = { 
-  created_at: string | Date, 
-  value: string 
+type Service = {
+  created_at: string | Date,
+  value: string
 }
 
 const CONNECT_ERROR_MAP: Record<string, string> = {
@@ -65,9 +65,12 @@ msgAtom.onChange((ctx, target) => {
     if (source) {
       source.close()
 
-      connectTimer.stopTimer(ctx)
-      eventSourceAtom(ctx, null)
-      connectIsSuccessAtom(ctx, true)
+      connectTimer.stopTimer(ctx);
+      
+      batch(ctx, () => {
+        eventSourceAtom(ctx, null)
+        connectIsSuccessAtom(ctx, true)
+      })
     }
   }
 })
@@ -102,17 +105,27 @@ export const connectAction = reatomAsync(async (ctx, type: Connect["type"], serv
 
   connectActionVariablesAtom(ctx, { type, service })
 
-  return await ctx.schedule(() => request({ service, type, signal: ctx.controller.signal }))
+  return await ctx.schedule(async () => {
+    const res = await forumRootClient.connect.$post(
+      { query: { service, type } }, { init: { signal: ctx.controller.signal } }
+    )
+
+    const data = await res.json()
+
+    if ("error" in data) throw new Error(data.error)
+
+    return data
+  })
 }, {
   name: "connectAction",
+  onReject: (ctx, e) => {
+    if (e instanceof Error) {
+      toast.error(CONNECT_ERROR_MAP[e.message] ?? e.message)
+      connectDialogIsOpenAtom(ctx, false)
+    }
+  },
   onFulfill: (ctx, res) => {
     if (!res) return;
-
-    if ("error" in res) {
-      toast.error(CONNECT_ERROR_MAP[res.error] ?? res.error)
-      connectDialogIsOpenAtom(ctx, false)
-      return
-    }
 
     const variables = ctx.get(connectActionVariablesAtom)
     if (!variables) return;
@@ -133,7 +146,6 @@ export const connectAction = reatomAsync(async (ctx, type: Connect["type"], serv
 
       if (source) {
         source.close()
-
         eventSourceAtom(ctx, null)
       }
     }
@@ -163,28 +175,27 @@ export const openIntegrationSettingsAction = action((ctx, value: boolean, type: 
 })
 
 export const userSocialsResource = reatomResource(async (ctx) => {
-  const nickname = ctx.spy(currentUserAtom)?.nickname
+  const nickname = ctx.get(currentUserAtom)?.nickname
   if (!nickname) return;
 
-  return await ctx.schedule(() => getUserSocials(nickname))
-}).pipe(withDataAtom(), withStatusesAtom(), withCache())
+  return await ctx.schedule(async () => {
+    const res = await forumUserClient.user["get-user-socials"].$get(
+      { param: { nickname } }, { init: { signal: ctx.controller.signal } }
+    )
+
+    const data = await res.json()
+
+    if ('error' in data) throw new Error(data.error)
+
+    return data.data
+  })
+}, "userSocialsResource").pipe(withDataAtom(), withStatusesAtom(), withCache())
 
 userSocialsResource.dataAtom.onChange((ctx, state) => {
   if (!state) return;
 
-  telegramAtom(ctx, state.find(target => target.type === 'telegram') ?? null)
-  discordAtom(ctx, state.find(target => target.type === 'discord') ?? null)
+  batch(ctx, () => {
+    telegramAtom(ctx, state.find(target => target.type === 'telegram') ?? null)
+    discordAtom(ctx, state.find(target => target.type === 'discord') ?? null)
+  })
 })
-
-async function request({ type, signal, service }: Connect) {
-  const res = await forumRootClient.connect.$post({ query: { service, type } }, { init: { signal } })
-  const data = await res.json()
-  return data
-}
-
-async function getUserSocials(nickname: string) {
-  const res = await forumUserClient.user["get-user-socials"].$get({ param: { nickname } })
-  const data = await res.json()
-  if (!data || 'error' in data) return null
-  return data.data
-}

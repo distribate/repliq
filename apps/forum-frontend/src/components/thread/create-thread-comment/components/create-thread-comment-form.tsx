@@ -4,7 +4,6 @@ import { Avatar } from "#components/user/avatar/components/avatar.tsx";
 import { Button } from "@repo/ui/src/components/button.tsx";
 import { SendHorizontal } from "lucide-react";
 import { createThreadCommentAtom } from "../models/thread-comment.model.ts";
-import { CreateThreadCommentLayout } from "./create-thread-comment-layout.tsx";
 import { COMMENT_LIMIT } from "@repo/shared/constants/limits.ts";
 import AutogrowingTextarea from "@repo/ui/src/components/autogrowing-textarea.tsx";
 import { createThreadCommentSchema } from "../schemas/create-thread-comment-schema.ts";
@@ -12,16 +11,37 @@ import { reatomComponent } from "@reatom/npm-react";
 import { getUser } from "#components/user/models/current-user.model.ts";
 import { action, atom, sleep, withComputed, withConcurrency } from "@reatom/framework";
 import { usePageContext } from "vike-react/usePageContext"
+import { cva } from "class-variance-authority";
+
+const createThreadCommentFormVariants = cva(
+  "flex flex-col border focus-visible:border-caribbean-green-200/40 bg-shark-950 overflow-hidden w-full h-full",
+  {
+    variants: {
+      variant: {
+        single: "rounded-md border-[1px]",
+        reply: "rounded-b-md border-b-[1px]",
+      },
+      state: {
+        none: "border-caribbean-green-200/40",
+        active: "border-shark-700",
+      },
+    },
+    defaultVariants: {
+      variant: "single",
+    },
+  },
+);
 
 const onChange = action(async (ctx, e: React.ChangeEvent<HTMLTextAreaElement>) => {
   const { value } = e.target;
 
-  await ctx.schedule(() => sleep(200))
+  await ctx.schedule(() => sleep(60))
 
   updateCreateThreadCommentAction(ctx, { content: value })
-}).pipe(withConcurrency())
+}, "onChange").pipe(withConcurrency())
 
 const textareaIsActiveAtom = atom(false, "textareaIsActive")
+
 const isValidAtom = atom(false, "isValid").pipe(
   withComputed((_, state) => {
     const result = createThreadCommentSchema.safeParse(state)
@@ -32,15 +52,13 @@ const isValidAtom = atom(false, "isValid").pipe(
 
 export const CreateThreadCommentForm = reatomComponent(({ ctx }) => {
   const paramId = usePageContext().routeParams.id
-
   const { nickname, avatar } = getUser(ctx);
   const createThreadCommentState = ctx.spy(createThreadCommentAtom)
 
   if (!paramId) return null;
 
-  const onSubmit = async () => {
+  const onSubmit = () => {
     if (!createThreadCommentState) return;
-
     createThreadCommentAction(ctx)
   };
 
@@ -58,9 +76,14 @@ export const CreateThreadCommentForm = reatomComponent(({ ctx }) => {
   }, [paramId]);
 
   const type = createThreadCommentState?.type || "single";
+  const isDisabled = !ctx.spy(isValidAtom) || ctx.spy(createThreadCommentAction.statusesAtom).isPending
 
   return (
-    <CreateThreadCommentLayout variant={type} state={ctx.spy(textareaIsActiveAtom) ? "active" : "none"}>
+    <div
+      className={createThreadCommentFormVariants({
+        variant: type, state: ctx.spy(textareaIsActiveAtom) ? "active" : "none"
+      })}
+    >
       <form onSubmit={onSubmit} className="flex items-start h-full w-full justify-between px-4 py-4">
         <Avatar
           url={avatar}
@@ -85,7 +108,7 @@ export const CreateThreadCommentForm = reatomComponent(({ ctx }) => {
           type="submit"
           variant="default"
           className="shadow-none bg-transparent border-none relative top-1 p-0 m-0"
-          disabled={!ctx.spy(isValidAtom) || ctx.spy(createThreadCommentAction.statusesAtom).isPending}
+          disabled={isDisabled}
         >
           <SendHorizontal
             size={26}
@@ -93,6 +116,6 @@ export const CreateThreadCommentForm = reatomComponent(({ ctx }) => {
           />
         </Button>
       </form>
-    </CreateThreadCommentLayout>
+    </div>
   );
 }, "CreateThreadCommentForm")

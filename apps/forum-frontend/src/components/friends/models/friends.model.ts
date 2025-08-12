@@ -1,4 +1,4 @@
-import { atom } from "@reatom/core";
+import { atom, Ctx } from "@reatom/core";
 import { reatomAsync, withStatusesAtom } from "@reatom/async";
 import { Friend, GetFriendsResponse } from "@repo/types/schemas/friend/friend-types.ts";
 import { withReset } from "@reatom/framework";
@@ -28,6 +28,11 @@ export const myFriendsDataAtom = atom<Friend[] | null>(null, "myFriendsData").pi
 export const myFriendsMetaAtom = atom<GetFriendsResponse["meta"] | null>(null, "myFriendsMeta").pipe(withReset())
 export const myFriendsPinnedDataAtom = atom<Friend[]>([], "myFriendsPinnedData").pipe(withReset())
 export const myFriendsNotPinnedDataAtom = atom<Friend[]>([], "myFriendsNotPinnedData").pipe(withReset())
+
+export function resetMyFriends(ctx: Ctx) {
+  myFriendsDataAtom.reset(ctx);
+  myFriendsMetaAtom.reset(ctx);
+}
 
 myFriendsDataAtom.onChange((ctx, state) => {
   if (state && state.length > 0 && state.every(isFriendDetailed)) {

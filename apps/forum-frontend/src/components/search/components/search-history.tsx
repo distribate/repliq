@@ -25,7 +25,7 @@ export const SearchPageHistory = reatomComponent(({ ctx }) => {
                   className="absolute group-hover:opacity-100 opacity-0 duration-150 -translate-y-1/2 top-1/2 right-8 z-[3] cursor-pointer" 
                   size={24}
                 />
-                <SearchPageUser avatar={item.avatar} nickname={item.nickname} name_color={item.name_color} />
+                <SearchPageUser description={item.description} avatar={item.avatar} nickname={item.nickname} name_color={item.name_color} />
               </div>
             )}
             {"title" in item && (

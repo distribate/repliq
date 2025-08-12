@@ -1,11 +1,24 @@
-import { atom } from "@reatom/core"
+import { atom, batch, Ctx } from "@reatom/core"
 import { reatomAsync, withStatusesAtom } from "@reatom/async"
 import { forumUserClient } from "#shared/forum-client"
 import type { InferResponseType } from "hono/client"
 import { userGlobalOptionsAtom } from "#components/user/models/current-user.model"
+import { withReset } from "@reatom/framework"
 
-export const notificationsDataAtom = atom<GetNotificationsResponse["data"] | null>(null, "notificationsData")
-export const notificationsMetaAtom = atom<GetNotificationsResponse["meta"] | null>(null, "notificationsMeta")
+export const notificationsDataAtom = atom<GetNotificationsResponse["data"] | null>(null, "notificationsData").pipe(withReset())
+export const notificationsMetaAtom = atom<GetNotificationsResponse["meta"] | null>(null, "notificationsMeta").pipe(withReset())
+
+export const notificationsTypeAtom = atom<"system" | "requests" | "news">("system", "notificationsType")
+export const notificationsCursorAtom = atom<string | undefined>(undefined, "notificationsCursor")
+
+notificationsTypeAtom.onChange((ctx, state) => {
+  notificationsCursorAtom(ctx, undefined)
+  updateNotificationsAction(ctx, "update-filter")
+})
+
+notificationsMetaAtom.onChange((ctx, target) => {
+  notificationsCursorAtom(ctx, target?.endCursor)
+})
 
 type GetNotifications = {
   type: "system" | "requests" | "news",
@@ -16,128 +29,136 @@ const client = forumUserClient.user["get-user-notifications"].$get
 
 export type GetNotificationsResponse = InferResponseType<typeof client, 200>
 
-export const getNotifications = async ({
-  type, cursor
-}: GetNotifications) => {
-  const res = await forumUserClient.user["get-user-notifications"].$get({
-    query: { type, cursor, }
-  })
+export function resetNotifications(ctx: Ctx) {
+  notificationsDataAtom.reset(ctx);
+  notificationsMetaAtom.reset(ctx);
+}
+
+export const getNotifications = async (
+  { type, cursor }: GetNotifications,
+  init?: RequestInit
+) => {
+  const res = await forumUserClient.user["get-user-notifications"].$get(
+    { query: { type, cursor, } }, { init }
+  )
 
   const data = await res.json()
 
-  if (!data || 'error' in data) {
-    return null
-  }
+  if ('error' in data) throw new Error(data.error)
 
   return data
 }
 
 export const notificationsAction = reatomAsync(async (ctx) => {
-  const res = await getNotifications({ type: "system" })
-
-  if (!res) return null;
-
-  notificationsFilterAtom(ctx, (state: NotificationsFilterQuery) => ({ ...state, cursor: res.meta?.endCursor }))
-
-  return res;
+  return await ctx.schedule(() => getNotifications(
+    { type: "system" }, { signal: ctx.controller.signal })
+  )
 }, {
   name: "notificationsAction",
+  onReject: (_, e) => {
+    if (e instanceof Error) {
+      console.error(e.message)
+    }
+  },
   onFulfill: (ctx, res) => {
-    if (res) {
+    if (!res) return;
+
+    batch(ctx, () => {
       notificationsDataAtom(ctx, res.data)
       notificationsMetaAtom(ctx, res.meta)
-    }
+    })
   }
 }).pipe(withStatusesAtom())
 
-type UpdateNotifications = {
-  type: "update-filter" | "update-cursor"
-}
+type UpdateNotificationsType = "update-filter" | "update-cursor"
 
-const updateNotificationsActionVariablesAtom = atom<UpdateNotifications | null>(null, "updateNotificationsActionVariables")
+const updateNotificationsActionVariablesAtom = atom<UpdateNotificationsType>("update-cursor", "updateNotificationsActionVariables")
 
-export const updateNotificationsAction = reatomAsync(async (ctx, options: UpdateNotifications) => {
-  const filtering = ctx.get(notificationsFilterAtom)
-  if (!filtering) return;
+export const updateNotificationsAction = reatomAsync(async (ctx, option: UpdateNotificationsType) => {
+  updateNotificationsActionVariablesAtom(ctx, option)
 
-  updateNotificationsActionVariablesAtom(ctx, options)
+  const type = ctx.get(notificationsTypeAtom)
 
-  return await getNotifications({ ...filtering })
+  const args = {
+    cursor: ctx.get(notificationsCursorAtom),
+    type
+  }
+
+  return await ctx.schedule(() => getNotifications(args, { signal: ctx.controller.signal }))
 }, {
   name: "updateNotificationsAction",
-  onFulfill: (ctx, res) => {
-    if (!res) {
-      return
+  onReject: (_, e) => {
+    if (e instanceof Error) {
+      console.error(e.message)
     }
+  },
+  onFulfill: (ctx, res) => {
+    if (!res) return
 
     const variables = ctx.get(updateNotificationsActionVariablesAtom)
     if (!variables) return;
 
-    if (variables.type === "update-filter") {
-      notificationsDataAtom(ctx, res.data)
-      notificationsMetaAtom(ctx, res.meta)
-      notificationsFilterAtom(ctx, (state) => ({ ...state, cursor: undefined }))
+    if (variables === "update-filter") {
+      batch(ctx, () => {
+        notificationsDataAtom(ctx, res.data)
+        notificationsMetaAtom(ctx, res.meta)
+        notificationsCursorAtom(ctx, undefined)
+      })
+
       return;
     }
 
-    notificationsFilterAtom(ctx, (state) => ({ ...state, cursor: res.meta?.endCursor, }))
+    batch(ctx, () => {
+      notificationsCursorAtom(ctx, res.meta?.endCursor)
 
-    notificationsDataAtom(ctx, (state) => state ? (
-      [
-        ...state,
-        ...res.data.filter(
+      notificationsDataAtom(ctx, (state) => {
+        if (!state) return null;
+
+        const newData = res.data.filter(
           notification => !state.some(exist => exist.id === notification.id)
         )
-      ]
-    ) : null)
 
-    notificationsMetaAtom(ctx, res.meta)
+        return [...state, ...newData]
+      })
+
+      notificationsMetaAtom(ctx, res.meta)
+    })
   }
-})
-
-export type NotificationsFilterQuery = {
-  type: "system" | "requests" | "news"
-  cursor?: string
-}
-
-export const notificationsFilterAtom = atom<NotificationsFilterQuery>({ type: "system" }, "notificationsFilter")
-
-const checkNotification = async (notification_id: string) => {
-  const res = await forumUserClient.user["check-notification"].$post({
-    json: { notification_id }
-  })
-
-  const data = await res.json()
-
-  if (!data || "error" in data) {
-    return { error: data.error };
-  }
-
-  return data;
-}
+}).pipe(withStatusesAtom())
 
 const checkNotificationActionVariablesAtom = atom<string | null>(null, "checkNotificationActionVariables")
 
 export const checkNotificationAction = reatomAsync(async (ctx, notificationId: string) => {
   const currentNotifications = ctx.get(notificationsDataAtom)
   checkNotificationActionVariablesAtom(ctx, notificationId)
-  
-  const currentNotification = currentNotifications?.find(notification => notification.id === notificationId)
 
+  const currentNotification = currentNotifications?.find(notification => notification.id === notificationId)
   if (currentNotification?.read) return;
 
-  return await checkNotification(notificationId)
+  return await ctx.schedule(async () => {
+    const res = await forumUserClient.user["check-notification"].$post(
+      { json: { notification_id: notificationId } }
+    )
+
+    const data = await res.json()
+    if ("error" in data) throw new Error(data.error)
+
+    return data;
+  })
 }, {
   name: "checkNotificationAction",
+  onReject: (_, e) => {
+    if (e instanceof Error) {
+      console.error(e.message)
+    }
+  },
   onFulfill: (ctx, res) => {
     if (!res) return;
 
     const currentNotifications = ctx.get(notificationsDataAtom)
     const variables = ctx.get(checkNotificationActionVariablesAtom)
 
-    if (!currentNotifications || !variables) {
-      return;
-    }
+    if (!currentNotifications || !variables) return;
 
     const updatedNotifications = [...currentNotifications];
     const indexToUpdate = updatedNotifications.findIndex(notification => notification.id === variables);
@@ -145,7 +166,7 @@ export const checkNotificationAction = reatomAsync(async (ctx, notificationId: s
     if (indexToUpdate !== -1) {
       updatedNotifications[indexToUpdate] = {
         ...updatedNotifications[indexToUpdate],
-        read: true,
+        read: true
       };
     }
 
@@ -158,3 +179,14 @@ export const checkNotificationAction = reatomAsync(async (ctx, notificationId: s
     notificationsDataAtom(ctx, updatedNotifications)
   }
 }).pipe(withStatusesAtom())
+
+export const isViewAtom = atom(false, "isView")
+
+isViewAtom.onChange((ctx, state) => {
+  if (!state) return;
+
+  const hasMore = ctx.get(notificationsMetaAtom)?.hasNextPage ?? false;
+  if (!hasMore) return;
+
+  updateNotificationsAction(ctx, "update-cursor")
+})

@@ -1,30 +1,47 @@
 import { threadOwnerAtom, threadParamAtom } from "#components/thread/thread-main/models/thread.model"
-import { reatomResource, withCache, withDataAtom, withStatusesAtom } from "@reatom/async"
-import { sleep } from "@reatom/framework"
+import { reatomAsync, withStatusesAtom } from "@reatom/async"
+import { atom, AtomState, Ctx, sleep, withReset } from "@reatom/framework"
 import { forumThreadClient } from "#shared/forum-client"
 
-type GetThreadsRecommendations = {
-  exclude: string,
-  nickname: string
+type Response = NonNullable<ReturnType<Awaited<typeof threadRecommendationsAction>["onFulfill"]>>
+
+export const threadRecommendationsDataAtom = atom<Response["data"] | null>(null, "threadRecommendationsData").pipe(withReset())
+export const threadRecommendationsMetaAtom = atom<Response["meta"] | null>(null, "threadRecommendationsMeta").pipe(withReset())
+
+export function resetThreadRecommendations(ctx: Ctx) {
+  threadRecommendationsDataAtom.reset(ctx)
+  threadRecommendationsMetaAtom.reset(ctx)
 }
 
-async function getThreadsRecommendations({
-  exclude, nickname
-}: GetThreadsRecommendations) {
-  const res = await forumThreadClient.thread["get-threads-by-owner"][":nickname"].$get({
-    param: { nickname }, query: { exclude }
-  })
-  const data = await res.json()
-  if (!data || "error" in data) return null
-  return data
-}
-
-export const threadRecommendationsResource = reatomResource(async (ctx) => {
-  await sleep(200)
-
-  const target = ctx.spy(threadOwnerAtom)
-  const threadId = ctx.spy(threadParamAtom)
+export const threadRecommendationsAction = reatomAsync(async (ctx) => {
+  const target = ctx.get(threadOwnerAtom)
+  const threadId = ctx.get(threadParamAtom)
   if (!target || !threadId) return;
 
-  return await getThreadsRecommendations({ exclude: threadId, nickname: target.nickname })
-}, "threadRecommendationsResource").pipe(withDataAtom(), withCache(), withStatusesAtom())
+  await ctx.schedule(() => sleep(100))
+
+  return await ctx.schedule(async () => {
+    const res = await forumThreadClient.thread["get-threads-by-owner"][":nickname"].$get({
+      param: { nickname: target.nickname }, query: { exclude: threadId }
+    })
+
+    const data = await res.json()
+
+    if ("error" in data) throw new Error(data.error)
+
+    return data
+  })
+}, {
+  name: "threadRecommendationsAction",
+  onReject: (_, e) => {
+    if (e instanceof Error) {
+      console.error(e.message)
+    }
+  },
+  onFulfill: (ctx, res) => {
+    if (!res) return;
+
+    threadRecommendationsDataAtom(ctx, res.data)
+    threadRecommendationsMetaAtom(ctx, res.meta)
+  }
+}).pipe(withStatusesAtom())

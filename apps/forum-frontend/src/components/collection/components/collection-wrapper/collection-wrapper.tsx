@@ -1,6 +1,5 @@
 import { atom } from "@reatom/core"
 import { reatomComponent } from "@reatom/npm-react"
-import { Typography } from "@repo/ui/src/components/typography"
 import { ReactNode } from "react"
 import { clientOnly } from "vike-react/clientOnly"
 
@@ -8,33 +7,26 @@ const MyTickets = clientOnly(() => import("../my-tickets/components/my-tickets")
 const SavedThreads = clientOnly(() => import("../my-threads/components/my-threads").then(m => m.SavedThreads))
 const MyThreads = clientOnly(() => import("../my-threads/components/my-threads").then(m => m.MyThreads))
 
+type CollectionType = 'threads' | 'saved_threads' | "tickets"
+
 export type CollectionParams = {
-  type: 'threads' | 'saved_threads' | "tickets"
+  type: CollectionType
 }
 
-export const collectionQueryAtom = atom<CollectionParams>({ type: "threads" }, "collectionQuery")
+export const collectionTypeAtom = atom<CollectionType>("threads", "collectionType")
 
-const ALIASES: Record<CollectionParams["type"], string> = {
-  threads: "треды",
-  saved_threads: "сохраненные треды",
-  tickets: "тикеты",
-} as const;
-
-const COMPONENTS: Record<CollectionParams["type"], ReactNode> = {
+const COMPONENTS: Record<CollectionType, ReactNode> = {
   threads: <MyThreads />,
   saved_threads: <SavedThreads />,
   tickets: <MyTickets />
 }
 
-export const CollectionWrapper = reatomComponent(({ ctx }) => {
-  const { type } = ctx.spy(collectionQueryAtom);
+export const CollectionList = reatomComponent(({ ctx }) => {
+  const type = ctx.spy(collectionTypeAtom);
 
   return (
-    <div className="flex flex-col bg-primary-color rounded-lg overflow-hidden gap-6 w-full h-full p-4">
-      <Typography textSize="very_big" textColor="shark_white" className="font-semibold">
-        Ваши {ALIASES[type]}
-      </Typography>
+    <div className="flex items-start w-full">
       {COMPONENTS[type]}
     </div>
   )
-}, "CollectionWrapper")
+}, "CollectionList")

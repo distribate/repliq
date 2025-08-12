@@ -58,6 +58,7 @@ const LatestCommentsSkeleton = () => {
 
 export const LatestComments = reatomComponent(({ ctx }) => {
   const comments = ctx.spy(latestCommentsResource.dataAtom)
+  const isExist = comments && comments.length >= 1
 
   return (
     <div className="flex flex-col gap-4 w-full rounded-lg ">
@@ -66,7 +67,7 @@ export const LatestComments = reatomComponent(({ ctx }) => {
       </Typography>
       <div className="flex flex-col w-full h-full gap-2">
         {ctx.spy(latestCommentsResource.statusesAtom).isPending && <LatestCommentsSkeleton />}
-        {comments && comments.map((item, idx) => (
+        {isExist && comments.map((item, idx) => (
           <CommentItem key={idx} {...item} />
         ))}
       </div>

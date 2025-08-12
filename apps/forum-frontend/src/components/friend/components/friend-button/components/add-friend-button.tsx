@@ -11,6 +11,7 @@ export const AddFriendButton = reatomComponent<AddFriendButtonProps>(({ ctx, rec
   return (
     <Button
       variant="positive"
+      className="h-10"
       disabled={ctx.spy(controlOutgoingRequestAction.statusesAtom).isPending}
       // @ts-expect-error
       onClick={() => spawn(ctx, async (spawnCtx) => controlOutgoingRequestAction(spawnCtx, { type: "create", recipient }))}

@@ -1,31 +1,45 @@
-import { BlockWrapper } from '#components/wrappers/components/block-wrapper'
 import { Typography } from '@repo/ui/src/components/typography.tsx'
 import { reatomComponent } from '@reatom/npm-react'
 import { userGlobalOptionsAtom } from '#components/user/models/current-user.model'
 import { CreateThreadForm } from '#components/thread/create-thread/components/form-thread'
+import { IconX } from '@tabler/icons-react'
+import { Button } from '@repo/ui/src/components/button'
 
-export default function Page() {
+const Prevent = () => {
   return (
-    <>
-      <CreateThreadRouteComponent />
-    </>
+    <div className="flex flex-col gap-4 items-center justify-center w-full md:h-[80dvh]">
+      <IconX size={128} className="text-red-500" />
+      <Typography className="text-2xl text-center font-semibold w-full lg:w-[60%]">
+        Превышен лимит созданных тредов за сегодня
+      </Typography>
+      <Button
+        onClick={() => window.history.back()}
+        className="inline-flex items-center justify-center w-fit py-0.5 bg-shark-50 px-2 rounded-lg"
+      >
+        <span className="text-base text-shark-950 font-semibold">
+          Вернуться
+        </span>
+      </Button>
+    </div>
   )
 }
 
-const CreateThreadRouteComponent = reatomComponent(({ ctx }) => {
-  const isAllowed = ctx.spy(userGlobalOptionsAtom).can_create_threads
+const Page = reatomComponent(({ ctx }) => {
+  const canCreateThreads = ctx.spy(userGlobalOptionsAtom).can_create_threads
+
+  if (!canCreateThreads) {
+    return <Prevent />
+  }
 
   return (
     <div className="flex flex-col w-full h-full gap-4">
-      {isAllowed ? (
-        <CreateThreadForm />
-      ) : (
-        <BlockWrapper className="flex flex-col gap-y-4 w-full !p-4">
-          <Typography textSize="big" className="text-red-500">
-            Вы не можете создавать треды
-          </Typography>
-        </BlockWrapper>
-      )}
+      <CreateThreadForm />
     </div>
   )
 }, "CreateThreadRouteComponent")
+
+export default function CreateThreadPage() {
+  return (
+    <Page />
+  )
+}

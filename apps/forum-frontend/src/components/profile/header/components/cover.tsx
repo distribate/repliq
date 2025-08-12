@@ -46,7 +46,7 @@ export const UserCoverWrapper = reatomComponent<PropsWithChildren>(({ ctx, child
     <CoverArea variant={"full"} backgroundColor={backgroundColor} outline={outline}>
       {coverImage ? (
         <div className="flex justify-center items-center h-full absolute inset-0 z-[1]">
-          <img src={coverImage} className="object-cover object-center w-full  h-[414px]" alt="" />
+          <img src={coverImage} className="object-cover object-center w-full  h-[414px]" alt="" fetchPriority="high" />
         </div>
       ) : (
         <Suspense>

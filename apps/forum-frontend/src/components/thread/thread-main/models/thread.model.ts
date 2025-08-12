@@ -6,10 +6,7 @@ import { withHistory } from '#lib/with-history';
 import { forumThreadClient } from "#shared/forum-client";
 import { ThreadDetailed, ThreadOwner } from "@repo/types/entities/thread-type";
 
-export async function getThreadModel(
-  id: string,
-  { headers }: RequestInit
-) {
+export async function getThreadModel(id: string, { headers }: RequestInit) {
   const res = await forumThreadClient.thread['get-thread'][':id'].$get({ param: { id } }, { init: { headers } });
   const data = await res.json();
   if ('error' in data) throw new Error(data.error)
@@ -21,7 +18,8 @@ export const threadContentfallback = [
   { type: "paragraph", children: [{ text: "Произошла ошибка при загрузке контента!" }] },
 ];
 
-export const threadParamAtom = atom<string | null>(null, "threadParam").pipe(withHistory(1))
+export const threadParamAtom = atom<string>((ctx) => ctx.spy(threadAtom)?.id ?? "", "threadParam").pipe(withHistory(1))
+
 export const threadAtom = atom<Omit<ThreadDetailed, "content" | "owner" | "properties"> | null>(null, "thread").pipe(withReset())
 export const threadOwnerAtom = atom<ThreadOwner | null>(null, "threadOwner").pipe(withReset())
 export const threadContentAtom = atom<ThreadDetailed["content"] | null>(null, "threadContent").pipe(withReset())
@@ -29,30 +27,30 @@ export const threadPropertiesAtom = atom<ThreadDetailed["properties"] | null>(nu
 export const threadImagesAtom = atom<string[] | null>(null, "threadImages")
 
 export const threadModeAtom = atom<"read" | "edit">("read", "threadMode")
-export const threadIsEditableAtom = atom(false, "threadIsEditable")
 
-threadOwnerAtom.onChange((ctx, state) => {
-  if (!state) return;
-
+export const threadIsEditableAtom = atom((ctx) => {
   const currentUser = ctx.get(currentUserNicknameAtom)
   if (!currentUser) return;
+
+  const state = ctx.spy(threadOwnerAtom);
+  if (!state) return;
 
   const allowed = [state.nickname]
   const isAllowed = allowed.includes(currentUser)
 
-  threadIsEditableAtom(ctx, isAllowed)
-})
+  return isAllowed
+}, "threadIsEditable")
 
 export const defineThread = action((ctx, target: ThreadDetailed) => {
-  const { owner, content, properties, ...rest } = target;
+  const { content, owner, properties, ...rest } = target;
 
   batch(ctx, () => {
-    threadReactionsAction(ctx, target.id)
-    threadParamAtom(ctx, rest.id)
+    threadAtom(ctx, rest);
     threadOwnerAtom(ctx, owner)
     threadContentAtom(ctx, content)
+    threadImagesAtom(ctx, target.images.length >= 1 ? target.images : null)
     threadPropertiesAtom(ctx, properties)
-    threadAtom(ctx, rest);
-    threadImagesAtom(ctx, rest.images.length >= 1 ? rest.images : null)
-  })
+  });
+
+  threadReactionsAction(ctx, rest.id)
 }, "defineThread")

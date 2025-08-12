@@ -1,5 +1,4 @@
 import { logRouting } from "#lib/helpers"
-import { validatePage } from "#lib/validation"
 import { wrapTitle } from "@repo/lib/utils/wrap-title"
 import { useConfig } from 'vike-react/useConfig'
 import { PageContextServer } from "vike/types"
@@ -16,6 +15,4 @@ export const data = async (pageContext: PageContextServer) => {
   const config = useConfig()
 
   config(metadata())
-
-  validatePage(pageContext)
 }

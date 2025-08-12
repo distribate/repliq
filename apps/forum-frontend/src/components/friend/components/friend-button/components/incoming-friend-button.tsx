@@ -20,7 +20,7 @@ export const IncomingFriendButton = reatomComponent<IncomingFriendButtonProps>((
   return (
     <DropdownMenu>
       <DropdownMenuTrigger>
-        <Button variant="pending">
+        <Button variant="pending" className="h-10">
           <Typography>Хочет добавить вас в друзья</Typography>
         </Button>
       </DropdownMenuTrigger>

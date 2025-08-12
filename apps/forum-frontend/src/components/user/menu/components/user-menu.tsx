@@ -8,7 +8,7 @@ import { reatomComponent } from "@reatom/npm-react";
 import { CustomLink } from "#components/shared/link";
 import { toggleGlobalDialogAction } from "#components/modals/user-settings/models/user-settings.model";
 import { createIdLink } from "@repo/lib/utils/create-link";
-import { IconBell, IconLibrary, IconSettings, IconUserSquare } from "@tabler/icons-react";
+import { IconLayoutDashboard, IconLibrary, IconSettings, IconUserSquare } from "@tabler/icons-react";
 import { getUser, userGlobalOptionsAtom } from "#components/user/models/current-user.model";
 import { clientOnly } from "vike-react/clientOnly";
 
@@ -66,10 +66,6 @@ const Settings = reatomComponent(({ ctx }) => {
   )
 }, "UserMenu.Settings")
 
-const COLLECTION_LINKS = [
-  { icon: IconLibrary, name: "Тикеты", val: "tickets" }
-];
-
 export const UserMenu = ({ trigger }: { trigger: ReactNode }) => {
   return (
     <>
@@ -82,19 +78,14 @@ export const UserMenu = ({ trigger }: { trigger: ReactNode }) => {
         <DropdownMenuContent side="bottom" align="end" className="min-w-[240px]">
           <div className="flex flex-col gap-y-2 w-full">
             <Profile />
-            {COLLECTION_LINKS.map((link) => (
-              <a
-                key={link.val}
-                href={`/collection?type=${link.val}`}
-              >
-                <DropdownMenuItem className="gap-2 group cursor-pointer" >
-                  <link.icon size={20} className="text-shark-300" />
-                  <Typography textSize="medium">
-                    {link.name}
-                  </Typography>
-                </DropdownMenuItem>
-              </a>
-            ))}
+            <CustomLink to="/collection?type=tickets">
+              <DropdownMenuItem className="gap-2 group cursor-pointer" >
+                <IconLibrary size={20} className="text-shark-300" />
+                <Typography textSize="medium">
+                  Тикеты
+                </Typography>
+              </DropdownMenuItem>
+            </CustomLink>
             <CustomLink to="/friends">
               <DropdownMenuItem className="gap-2 group cursor-pointer" >
                 <UsersRound size={20} className="text-shark-300" />
@@ -105,7 +96,7 @@ export const UserMenu = ({ trigger }: { trigger: ReactNode }) => {
             </CustomLink>
             <CustomLink to="/dashboard">
               <DropdownMenuItem className="gap-2 group cursor-pointer" >
-                <IconBell size={20} className="text-shark-300" />
+                <IconLayoutDashboard size={20} className="text-shark-300" />
                 <Typography textSize="medium">
                   Статистика
                 </Typography>

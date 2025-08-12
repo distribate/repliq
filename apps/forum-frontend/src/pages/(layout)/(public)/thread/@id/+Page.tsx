@@ -24,25 +24,23 @@ export default function ThreadPage() {
 
 function ThreadRouteComponent() {
   return (
-    <>
-      <div className="flex xl:flex-row flex-col gap-2 items-start h-full w-full relative">
-        <div
-          className="flex flex-col order-first w-full gap-2
+    <div className="flex xl:flex-row flex-col gap-2 items-start h-full w-full relative">
+      <div
+        className="flex flex-col order-first w-full gap-2
             xl:min-w-3/4 xl:w-3/4 relative xl:max-w-3/4 items-start h-full justify-start"
-        >
-          <Thread />
-          <div className="flex w-full bg-shark-950 rounded-lg">
-            <ThreadMore />
-          </div>
-          <ThreadCommentsSection />
+      >
+        <Thread />
+        <div className="flex w-full bg-shark-950 rounded-lg">
+          <ThreadMore />
         </div>
-        <div
-          className="flex flex-col order-last gap-y-4 h-fit relative top-0 overflow-hidden
-            lg:min-w-1/4 xl:w-1/4 w-full xl:max-w-1/4 xl:sticky"
-        >
-          <ThreadsRecommendations />
-        </div>
+        <ThreadCommentsSection />
       </div>
-    </>
+      <div
+        className="flex flex-col order-last gap-y-4 h-fit relative top-0 overflow-hidden
+            lg:min-w-1/4 xl:w-1/4 w-full xl:max-w-1/4 xl:sticky"
+      >
+        <ThreadsRecommendations />
+      </div>
+    </div>
   )
 }

@@ -7,11 +7,11 @@ import { UserMenu } from "#components/user/menu/components/user-menu";
 import { CustomLink } from "#components/shared/link";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@repo/ui/src/components/dropdown-menu";
 import { AuthorizationButton } from "./authorization-button";
-import { IconBell, IconBrandThreads, IconLibrary } from "@tabler/icons-react";
+import { IconBell, IconBrandThreads, IconHome, IconLibrary, IconMenu2, IconPlus, IconSearch } from "@tabler/icons-react";
 import { isAuthenticatedAtom } from "#components/auth/models/auth.model";
 import { getUser, userGlobalOptionsAtom } from "#components/user/models/current-user.model";
 import { NavbarSearch } from "./navbar-search";
-import { isExperimentalDesignAtom } from "./experimental-layout";
+import { usePageContext } from "vike-react/usePageContext";
 
 const CREATE = [
   { icon: IconBrandThreads, title: "Создать тред", link: "/create-thread" },
@@ -29,9 +29,7 @@ const ProfileBadge = reatomComponent(({ ctx }) => {
   )
 }, "ProfileBadge")
 
-const ActionsLinks = reatomComponent(({ ctx }) => {
-  if (!ctx.spy(isAuthenticatedAtom) || ctx.spy(isExperimentalDesignAtom)) return null;
-
+const ActionsLinks = () => {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger className="flex items-center px-2 gap-1 rounded-lg justify-center h-10 bg-shark-950 group">
@@ -52,13 +50,7 @@ const ActionsLinks = reatomComponent(({ ctx }) => {
       </DropdownMenuContent>
     </DropdownMenu>
   )
-})
-
-const NavbarUserMenu = reatomComponent(({ ctx }) => {
-  if (!ctx.spy(isAuthenticatedAtom)) return <AuthorizationButton />
-
-  return <UserMenu trigger={<ProfileBadge />} />
-})
+}
 
 export const Logotype = () => {
   return (
@@ -73,32 +65,76 @@ export const Logotype = () => {
   );
 };
 
-const NavbarNotifications = reatomComponent(({ ctx }) => {
-  const has_new_notifications = ctx.spy(userGlobalOptionsAtom).has_new_notifications;
+const NavbarNotifications = reatomComponent<{ size?: number }>(({ ctx, size }) => {
+  const hasNewNotifications = ctx.spy(userGlobalOptionsAtom).has_new_notifications;
 
   return (
-    <CustomLink
-      to="/notifications"
-      className="flex items-center gap-1 rounded-lg justify-center min-w-10 min-h-10 relative bg-shark-950"
-    >
-      {has_new_notifications && <div className="absolute bottom-2.5 right-2 w-2 h-2 rounded-lg bg-green-400/60" />}
-      <IconBell size={20} className="text-shark-300" />
-    </CustomLink>
+    <>
+      {hasNewNotifications && <div className="absolute bottom-2.5 right-2 w-2 h-2 rounded-lg bg-green-400/60" />}
+      <IconBell size={size ?? 22} className="text-shark-300" />
+    </>
   )
 }, "NavbarNotifications")
 
-export const Navbar = () => {
+const BOTTOM_LINKS = [
+  { title: "Главная", value: "/home", icon: IconHome },
+  { title: "Поиск", value: "/search", icon: IconSearch },
+  { title: "Создать", value: "/create-thread", icon: IconPlus },
+  { title: "Уведомления", value: "/notifications", icon: NavbarNotifications },
+  { title: "Меню", value: "/menu", icon: IconMenu2 },
+]
+
+export const BottomBar = () => {
+  const pathname = usePageContext().urlParsed.pathname;
+  const isActive = (t: string) => pathname === t;
+
   return (
-    <div id="top-bar" className="flex items-center justify-between w-full gap-2">
+    <div id="bottom-bar" className="sm:hidden fixed bottom-0 z-[50] h-14 w-full bg-primary-color rounded-t-md">
+      <div className="flex items-center h-full gap-2 px-4 justify-between w-full">
+        {BOTTOM_LINKS.map((link) => (
+          <CustomLink
+            key={link.value}
+            to={link.value}
+            aria-current={isActive(link.value) ? "page" : undefined}
+            data-state={isActive(link.value) ? "active" : "inactive"}
+            className="flex flex-col items-center relative data-[state=active]:text-shark-50 data-[state=inactive]:text-shark-300"
+          >
+            <link.icon size={26} />
+            <span className="sr-only">{link.title}</span>
+            <Typography
+              aria-label={link.title}
+              className="hidden min-[350px]:block text-xs font-semibold text-nowrap truncate"
+            >
+              {link.title}
+            </Typography>
+          </CustomLink>
+        ))}
+      </div>
+    </div>
+  )
+}
+
+export const Navbar = reatomComponent(({ ctx }) => {
+  const isAuthenticated = ctx.spy(isAuthenticatedAtom)
+
+  return (
+    <div id="top-bar" className="hidden sm:flex items-center justify-between w-full gap-2">
       <div className="flex md:w-fit h-10 rounded-lg py-1">
         <Logotype />
       </div>
       <div className="flex w-fit md:self-end items-center gap-2">
         <NavbarSearch />
-        <ActionsLinks />
-        <NavbarNotifications />
-        <NavbarUserMenu />
+        {isAuthenticated && <ActionsLinks />}
+        {isAuthenticated && (
+          <CustomLink
+            to="/notifications"
+            className="flex items-center gap-1 rounded-lg justify-center min-w-10 min-h-10 relative bg-shark-950"
+          >
+            <NavbarNotifications />
+          </CustomLink>
+        )}
+        {isAuthenticated ? <UserMenu trigger={<ProfileBadge />} /> : <AuthorizationButton />}
       </div>
     </div>
   )
-}
+}, "Navbar")

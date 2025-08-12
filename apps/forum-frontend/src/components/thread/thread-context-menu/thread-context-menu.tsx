@@ -25,7 +25,6 @@ const ThreadContentReport = ({ id }: { id: string }) => {
 
 export const ThreadContextMenu = reatomComponent(({ ctx }) => {
   const threadId = ctx.spy(threadParamAtom)
-  if (!threadId) return null;
 
   return (
     <>

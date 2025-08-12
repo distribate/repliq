@@ -4,20 +4,13 @@ import { NotificationsNavigation } from '#components/notifications/components/no
 
 export default function Page() {
   return (
-    <div className="flex flex-col items-center justify-center w-full overflow-hidden max-h-dvh">
-      <div className="flex flex-col gap-4 h-full w-full lg:w-4/5">
-        <div className="flex flex-col items-center w-full">
-          <Typography className="text-[24px] font-semibold">
-            Уведомления
-          </Typography>
-          <Typography className="text-[16px]" textColor="gray">
-            самое важное к прочтению
-          </Typography>
-        </div>
+    <div className="flex flex-col items-center justify-center w-full min-h-dvh">
+      <div className="flex flex-col items-start gap-4 h-full w-full">
+        <Typography className="text-3xl font-bold">
+          Уведомления
+        </Typography>
         <NotificationsNavigation />
-        <div className="flex h-full overflow-auto">
-          <NotificationsList />
-        </div>
+        <NotificationsList />
       </div>
     </div>
   )

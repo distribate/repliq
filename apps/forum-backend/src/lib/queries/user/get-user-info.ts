@@ -22,6 +22,7 @@ export async function getUserInfo(nickname: string) {
       "users_settings.send_notifications",
       "users_settings.show_game_location",
       "users_settings.notify_in_telegram",
+      "users.account_status",
       eb.cast<string>("users.created_at", "text").as("created_at"),
       eb.cast<string>("users.birthday", "text").as("birthday"),
       eb.case()

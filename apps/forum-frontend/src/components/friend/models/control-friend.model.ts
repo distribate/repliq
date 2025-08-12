@@ -1,7 +1,7 @@
 import { myFriendsDataAtom, myFriendsPinnedDataAtom } from "#components/friends/models/friends.model";
 import { forumUserClient } from "#shared/forum-client";
 import { reatomAsync, withStatusesAtom } from "@reatom/async";
-import { atom } from "@reatom/core";
+import { atom, batch } from "@reatom/core";
 import { toast } from "sonner";
 import { withReset } from "@reatom/framework";
 
@@ -83,15 +83,17 @@ export const setFriendNoteAction = reatomAsync(async (ctx, { friend_id, recipien
     const variables = ctx.get(setFriendNoteActionVariablesAtom)
     if (!variables) return;
 
-    noteDialogIsOpenAtom(ctx, false)
-    noteValueAtom.reset(ctx)
+    batch(ctx, () => {
+      noteDialogIsOpenAtom(ctx, false)
+      noteValueAtom.reset(ctx)
 
-    myFriendsDataAtom(ctx, (state) => {
-      if (!state) state = []
+      myFriendsDataAtom(ctx, (state) => {
+        if (!state) state = []
 
-      return state.map(
-        friend => friend.friend_id === variables.friend_id ? { ...friend, note: res.note } : friend
-      )
+        return state.map(
+          friend => friend.friend_id === variables.friend_id ? { ...friend, note: res.note } : friend
+        )
+      })
     })
   }
 }).pipe(withStatusesAtom())
@@ -138,7 +140,8 @@ export const setFriendPinAction = reatomAsync(async (ctx, { recipient, friend_id
     throw new Error("pin-limit")
   }
 
-  setFriendPinActionVariablesAtom(ctx, { recipient, friend_id })
+  setFriendPinActionVariablesAtom(ctx, { recipient, friend_id });
+  
   return await ctx.schedule(async () => {
     const res = await forumUserClient.user["create-friend-pin"].$post({
       json: { recipient, friend_id, type: "pin" }

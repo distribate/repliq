@@ -6,12 +6,9 @@ import { reatomComponent } from "@reatom/npm-react";
 
 export const BlockUserModal = reatomComponent<{ recipient: string; }>(({ ctx, recipient }) => {
   const isBlocked = ctx.spy(blockedUserAction.dataAtom)
-
-  const handleBlockUser = () => {
-    controlBlockUserAction(ctx, recipient)
-  };
-
   const isDisabled = ctx.spy(controlBlockUserAction.statusesAtom).isPending
+
+  const handle = () => controlBlockUserAction(ctx, recipient)
 
   return (
     <Dialog
@@ -20,7 +17,12 @@ export const BlockUserModal = reatomComponent<{ recipient: string; }>(({ ctx, re
     >
       <DialogContent>
         <ConfirmationActionModalTemplate title="Подтверждение действия">
-          <ConfirmationButton title={isBlocked ? "Разблокировать" : "Заблокировать"} actionType="continue" onClick={handleBlockUser} disabled={isDisabled} />
+          <ConfirmationButton
+            title={isBlocked ? "Разблокировать" : "Заблокировать"}
+            actionType="continue"
+            disabled={isDisabled}
+            onClick={handle}
+          />
           <DialogClose asChild>
             <ConfirmationButton title="Отмена" actionType="cancel" disabled={isDisabled} />
           </DialogClose>

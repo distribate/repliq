@@ -1,8 +1,9 @@
+import { isAuthenticatedAtom } from "#components/auth/models/auth.model"
 import { requestedUserAtom } from "#components/profile/main/models/requested-user.model"
 import { userAvatars } from "#components/user/avatar/models/user-avatars.model"
 import { forumUserClient } from "#shared/forum-client"
 import { reatomAsync, withStatusesAtom } from "@reatom/async"
-import { action, atom } from "@reatom/core"
+import { action, atom, batch } from "@reatom/core"
 import { withInit, withReset } from "@reatom/framework"
 
 export const userCoverSelectedAvatarAtom = atom<string>("", "userCoverSelectedAvatar").pipe(
@@ -14,17 +15,24 @@ export const userCoverAvatarDialogIsOpenAtom = atom(false, "userCoverAvatarDialo
 const userCoverAvatarTargetAtom = atom("", "userCoverAvatarTarget").pipe(withReset())
 
 userCoverAvatarDialogIsOpenAtom.onChange((ctx, state) => {
-  if (state) {
-    const target = ctx.get(userCoverAvatarTargetAtom)
-    userAvatars(ctx, target)
-  } else {
+  if (!state) {
+    userAvatars.dataAtom.reset(ctx)
     userCoverSelectedAvatarAtom.reset(ctx)
     userCoverAvatarTargetAtom.reset(ctx)
   }
 })
 
-export const openUserCoverAvatarDialog = action((ctx, value: boolean, nickname: string) => {
-  userCoverAvatarTargetAtom(ctx, nickname);
+export const openUserCoverAvatarDialog = action(async (ctx, value: boolean, nickname: string) => {
+  const isAuthenticated = ctx.get(isAuthenticatedAtom)
+  if (!isAuthenticated) return;
+
+  batch(ctx, () => {
+    userCoverAvatarTargetAtom(ctx, nickname);
+  
+    const target = ctx.get(userCoverAvatarTargetAtom)
+    userAvatars(ctx, target)
+  })
+
   userCoverAvatarDialogIsOpenAtom(ctx, value)
 })
 

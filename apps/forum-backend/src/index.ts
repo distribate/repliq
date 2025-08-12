@@ -330,7 +330,7 @@ const app = new Hono<Env>()
   .route("/", post)
   .route("/", report)
 
-isProduction && showRoutes(app, { verbose: false });
+!isProduction && showRoutes(app, { verbose: false });
 
 Bun.serve({ port: Bun.env.FORUM_BACKEND_PORT!, fetch: app.fetch })
 

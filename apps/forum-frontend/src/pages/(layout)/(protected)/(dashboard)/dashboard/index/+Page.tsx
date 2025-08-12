@@ -1,4 +1,4 @@
-import { userProfileStatsResource } from '#components/profile/account/models/user-stats.model'
+import { userProfileStatsAction } from '#components/profile/account/models/user-stats.model'
 import { CustomLink } from '#components/shared/link'
 import { Avatar } from '#components/user/avatar/components/avatar'
 import { UserNickname } from '#components/user/name/nickname'
@@ -17,7 +17,7 @@ export default function DashboardPage() {
 
 const Page = reatomComponent(({ ctx }) => {
   const { avatar, nickname } = getUser(ctx)
-  const profileStats = ctx.spy(userProfileStatsResource.dataAtom)
+  const profileStats = ctx.spy(userProfileStatsAction.dataAtom)
 
   const meta = profileStats?.meta
 

@@ -11,11 +11,15 @@ export const AuthTemplate = () => {
   )
 }
 
-export const AuthorizeTemplate = () => {
+export const AuthorizeTemplate = ({
+  title
+}: {
+  title: string
+}) => {
   return (
     <div className="flex flex-col gap-4 items-center justify-center w-full min-h-36 h-full">
       <Typography textSize="big" className='text-center font-semibold'>
-        Для просмотра профиля необходимо авторизоваться.
+        {title}
       </Typography>
       <AuthorizationButton />
     </div>

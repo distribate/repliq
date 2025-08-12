@@ -62,10 +62,7 @@ const ThreadDetails = reatomComponent(({ ctx }) => {
 
 export const Thread = reatomComponent(({ ctx }) => {
   const thread = ctx.spy(threadAtom)
-
-  if (!thread) {
-    return <ContentNotFound title="Тред не найден. Возможно он уже удален" />
-  }
+  if (!thread) return null;
 
   const isAuthenticated = ctx.spy(isAuthenticatedAtom)
 

@@ -2,8 +2,6 @@ import * as HoverCardPrimitive from "@radix-ui/react-hover-card";
 import { cn } from "@repo/lib/utils/ui/cn.ts";
 import {
   ComponentPropsWithoutRef,
-  ElementRef,
-  forwardRef,
   HTMLAttributes,
 } from "react";
 
@@ -14,13 +12,11 @@ type HoverCardItemProps = Partial<{
   isActive: boolean;
 }>;
 
-const HoverCardItem = forwardRef<
-  HTMLDivElement,
-  HTMLAttributes<HTMLDivElement> & HoverCardItemProps
->(({ className, isActive, ...props }, ref) => {
+const HoverCardItem = ({ 
+  className, isActive, ...props 
+}: HTMLAttributes<HTMLDivElement> & HoverCardItemProps) => {
   return (
     <div
-      ref={ref}
       className={cn(
         `${isActive && "text-caribbean-green-500"}
 			    flex hover:bg-shark-600 focus:bg-shark-600 data-[disabled]:opacity-50
@@ -30,14 +26,12 @@ const HoverCardItem = forwardRef<
       {...props}
     />
   );
-});
+}
 
-const HoverCardContent = forwardRef<
-  ElementRef<typeof HoverCardPrimitive.Content>,
-  ComponentPropsWithoutRef<typeof HoverCardPrimitive.Content>
->(({ className, align = "center", sideOffset = 4, ...props }, ref) => (
+const HoverCardContent = ({ 
+  className, align = "center", sideOffset = 4, ...props 
+}: ComponentPropsWithoutRef<typeof HoverCardPrimitive.Content>) => (
   <HoverCardPrimitive.Content
-    ref={ref}
     align={align}
     sideOffset={sideOffset}
     className={cn(
@@ -51,7 +45,7 @@ const HoverCardContent = forwardRef<
     )}
     {...props}
   />
-));
+)
 HoverCardContent.displayName = HoverCardPrimitive.Content.displayName;
 
 export { HoverCard, HoverCardTrigger, HoverCardContent, HoverCardItem };

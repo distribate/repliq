@@ -1,11 +1,12 @@
 import { toast } from "sonner";
-import { currentUserAtom, currentUserNicknameAtom } from "#components/user/models/current-user.model.ts";
+import { currentUserAtom } from "#components/user/models/current-user.model.ts";
 import type { GetUserPostsResponse } from '@repo/types/routes-types/get-user-posts-types.ts';
 import { reatomAsync, withErrorAtom, withStatusesAtom } from "@reatom/async";
 import { forumPostClient } from "#shared/forum-client";
 import { postContentSchema, postFormContentAtom, postFormResetAction, postFormVisibilityAtom, VisibilityPost } from "./post-form.model.ts";
 import * as z from "zod";
 import { postsDataAtom } from "#components/profile/posts/models/posts.model.ts";
+import { batch } from "@reatom/core";
 
 type VisibilityOption = {
   label: string;
@@ -29,7 +30,7 @@ async function createPost({
 
   const data = await res.json();
 
-  if ("error" in data) return null
+  if ("error" in data) throw new Error(data.error)
 
   return data;
 }
@@ -63,27 +64,22 @@ export const createPostAction = reatomAsync(async (ctx) => {
   const content = ctx.get(postFormContentAtom);
   const visibility = ctx.get(postFormVisibilityAtom);
 
-  if (!content) return;
+  if (!content) {
+    throw new Error("Content not found")
+  }
 
   const fixedContent = sanitizeInput(content);
 
   const result = postSchema.safeParse({ content: fixedContent, visibility });
 
   if (!result.success) {
-    toast.error("Validation error");
-    return
+    throw new Error("Validation error")
   }
 
   return await createPost({ isComments: false, isPinned: false, content: fixedContent, visibility });
 }, {
   name: "createPostAction",
   onFulfill: (ctx, res) => {
-    if (!res) {
-      return toast.error("Произошла ошибка при публикации поста. Попробуйте позже!", {
-        description: "Попробуйте попытку позже",
-      });
-    }
-
     const user = ctx.get(currentUserAtom)
     if (!user) return;
 
@@ -91,17 +87,28 @@ export const createPostAction = reatomAsync(async (ctx) => {
       ...res.data,
       avatar: user.avatar,
       nickname: user.nickname,
-      views_count: 0,
+      views_count: 1,
       isViewed: true,
-      comments_count: 0,
+      comments_count: 0
     };
 
-    postFormResetAction(ctx)
-    postsDataAtom(ctx, (state) => state ? [newPost, ...state] : null)
+    batch(ctx, () => {
+      postFormResetAction(ctx);
+
+      postsDataAtom(ctx, (state) => {
+        if (!state) state = [];
+
+        return [newPost, ...state]
+      })
+    })
   },
-  onReject: (_, error) => {
-    if (error instanceof Error) {
-      throw new Error(error.message);
+  onReject: (_, e) => {
+    if (e instanceof Error) {
+      console.error(e.message);
+
+      toast.error("Произошла ошибка при публикации поста. Попробуйте позже!", {
+        description: "Попробуйте попытку позже",
+      });
     }
   }
 }).pipe(withStatusesAtom(), withErrorAtom())

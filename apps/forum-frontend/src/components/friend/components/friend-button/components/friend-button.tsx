@@ -36,12 +36,16 @@ const FriendButtonInside = reatomComponent<FriendButtonProps>(({ ctx, recipient 
   const friendStatus = getFriendStatusesAtom(ctx, recipient)
 
   if (ctx.spy(friendStatusAction.statusesAtom).isPending) {
-    return <Skeleton className="h-10 border border-white/10 rounded-md w-56" />
+    return <Skeleton className="h-10 rounded-md w-56" />
   }
 
   if (!friendStatus) return null;
 
-  return BUTTONS({ friend_id: friendStatus.friend_id!, request_id: friendStatus.request_id!, recipient })[friendStatus.status]
+  return BUTTONS({ 
+    friend_id: friendStatus.friend_id!, 
+    request_id: friendStatus.request_id!, 
+    recipient 
+  })[friendStatus.status]
 }, "FriendButton")
 
 const FriendButtonSelf = () => {

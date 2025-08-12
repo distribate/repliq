@@ -2,7 +2,7 @@ import { ImageUp } from "lucide-react";
 import { Typography } from "@repo/ui/src/components/typography.tsx";
 import { HoverCardItem } from "@repo/ui/src/components/hover-card.tsx";
 import { DynamicModal } from "../../../modals/dynamic-modal/components/dynamic-modal.tsx";
-import { ChangeEvent, Suspense, useRef } from "react";
+import { ChangeEvent, useRef } from "react";
 import { Skeleton } from "@repo/ui/src/components/skeleton.tsx";
 import { reatomComponent } from "@reatom/npm-react";
 import { uploadBackgroundImageAction } from "#components/profile/header/models/cover-image.model.ts";
@@ -14,11 +14,11 @@ import { IconCloud } from "@tabler/icons-react";
 const BackgroundImagesSkeleton = () => {
   return (
     <>
-      <Skeleton className="w-full h-full" />
-      <Skeleton className="w-full h-full" />
-      <Skeleton className="w-full h-full" />
-      <Skeleton className="w-full h-full" />
-      <Skeleton className="w-full h-full" />
+      <Skeleton className="w-full h-80" />
+      <Skeleton className="w-full h-80" />
+      <Skeleton className="w-full h-80" />
+      <Skeleton className="w-full h-80" />
+      <Skeleton className="w-full h-80" />
     </>
   )
 }
@@ -34,27 +34,29 @@ const CoverImagesList = reatomComponent(({ ctx }) => {
     void spawn(ctx, async (spawnCtx) => uploadBackgroundImageAction(spawnCtx, { fileName: name, type: "default" }))
   }
 
+  const isExist = defaultImages && defaultImages.length >= 1
+
+  if (!isExist) {
+    return <Typography>Изображения не найдены</Typography>
+  }
+
   return (
-    <>
-      {!defaultImages && <Typography>Изображения не найдены</Typography>}
-      {defaultImages && defaultImages.map(({ name, id, url }) => (
-        <div
-          key={id}
-          className="flex flex-col rounded-lg overflow-hidden border border-shark-800 
-            relative hover:bg-secondary-color cursor-pointer group transition-all duration-150 w-full"
-          onClick={() => handle(name)}
-        >
-          <img
-            src={url}
-            alt={name}
-            height={900}
-            width={1200}
-            loading="lazy"
-            className="min-w-[340px] group-hover:brightness-50 transition-all duration-150"
-          />
-        </div>
-      ))}
-    </>
+    defaultImages.map(({ name, id, url }) => (
+      <div
+        key={id}
+        className="flex flex-col rounded-lg overflow-hidden relative hover:bg-secondary-color cursor-pointer group w-full"
+        onClick={() => handle(name)}
+      >
+        <img
+          src={url}
+          alt={name}
+          height={900}
+          width={1200}
+          loading="lazy"
+          className="h-80 max-h-80 object-cover group-hover:brightness-50"
+        />
+      </div>
+    ))
   );
 }, "CoverImagesList")
 
@@ -98,7 +100,10 @@ const CoverImageUploadCustom = reatomComponent(({ ctx }) => {
   };
 
   return (
-    <HoverCardItem onClick={() => ref.current?.click()} className="relative gap-2 p-6 items-center group">
+    <HoverCardItem
+      className="relative gap-2 p-6 items-center group"
+      onClick={() => ref.current?.click()}
+    >
       <IconCloud size={24} className="text-shark-300" />
       <Typography textSize="large" textColor="shark_white">
         Загрузить своё
@@ -132,9 +137,7 @@ export const CoverImageUpdateModal = reatomComponent(({ ctx }) => {
             Обновление фона
           </Typography>
           <div className="flex flex-col items-center p-2 justify-center *:w-full w-full">
-            <Suspense fallback={<Skeleton className="h-10 w-full" />}>
-              <CoverImageDefaultImagesModal />
-            </Suspense>
+            <CoverImageDefaultImagesModal />
             <CoverImageUploadCustom />
           </div>
         </div>

@@ -5,15 +5,27 @@ import { forumUserClient } from "#shared/forum-client"
 import { toast } from "sonner"
 
 export type Integration =
- | "minecraft"
- 
+  | "minecraft"
+
 type MinecraftService = { nickname: string, created_at: string, uuid: string }
 
 export const connectionIsPendingAtom = atom(false, "connectionIsPending")
 
 export const usersConnectedServiceAction = reatomAsync(async (ctx) => {
-  return await ctx.schedule(() => getUsersConnectedServices())
-}, "usersConnectedServiceAction").pipe(withDataAtom(), withStatusesAtom())
+  return await ctx.schedule(async () => {
+    const res = await forumUserClient.user["get-profiles"].$get()
+    const data = await res.json()
+    if ("error" in data) throw new Error(data.error);
+    return data.data
+  })
+}, {
+  name: "usersConnectedServiceAction",
+  onReject: (_, e) => {
+    if (e instanceof Error) {
+      toast.error(e.message)
+    }
+  },
+}).pipe(withDataAtom(), withStatusesAtom())
 
 usersConnectedServiceAction.dataAtom.onChange((ctx, state) => {
   if (!state || !state.length) return;
@@ -33,7 +45,13 @@ export const minecraftServiceDetailsAtom = atom<MinecraftService | undefined>(un
 export const disconnectIntegrationAction = reatomAsync(async (ctx, type: Integration) => {
   connectionIsPendingAtom(ctx, true)
 
-  return await ctx.schedule(() => disconnectProfile(type))
+  return await ctx.schedule(async () => {
+    // @ts-expect-error
+    const res = await forumUserClient.user["disconnect-profile"].$post({ json: { type } })
+    const data = await res.json()
+    if ("error" in data) throw new Error(data.error)
+    return data
+  })
 }, {
   name: "disconnectIntegrationAction",
   onFulfill: (_, res) => {
@@ -51,25 +69,34 @@ export const disconnectIntegrationAction = reatomAsync(async (ctx, type: Integra
   onSettle: (ctx) => {
     connectionIsPendingAtom(ctx, false)
   },
-  onReject: (_, error) => {
-    logger.error(error)
-    toast.error("Произошла ошибка при отключении профиля")
+  onReject: (_, e) => {
+    if (e instanceof Error) {
+      console.error(e.message)
+      toast.error("Произошла ошибка при отключении профиля")
+    }
   }
 })
 
 export const connectIntegrationAction = reatomAsync(async (ctx, type: Integration) => {
   connectionIsPendingAtom(ctx, true)
 
-  return await ctx.schedule(() => connectProfile(type))
+  return await ctx.schedule(async () => {
+    const res = await forumUserClient.user["connect-profile"].$post({ json: { type } })
+    const data = await res.json()
+
+    if ("error" in data) throw new Error(data.error)
+
+    return data
+  })
 }, {
   name: "connectIntegrationAction",
+  onReject: (_, e) => {
+    if (e instanceof Error) {
+      toast.error(e.message)
+    }
+  },
   onFulfill: (_, res) => {
     if (!res) return;
-
-    if ("error" in res) {
-      toast.error(res.error)
-      return;
-    }
 
     logger.info(res.data)
 
@@ -79,25 +106,3 @@ export const connectIntegrationAction = reatomAsync(async (ctx, type: Integratio
     connectionIsPendingAtom(ctx, false)
   }
 }).pipe(withStatusesAtom())
-
-async function getUsersConnectedServices() {
-  const res = await forumUserClient.user["get-profiles"].$get()
-  const data = await res.json()
-  if (!data || "error" in data) return null;
-  return data.data
-}
-
-async function connectProfile(type: Integration) {
-  const res = await forumUserClient.user["connect-profile"].$post({ json: { type } })
-  const data = await res.json()
-  if (!data) return null;
-  return data
-}
-
-async function disconnectProfile(type: Integration) {
-  // @ts-expect-error
-  const res = await forumUserClient.user["disconnect-profile"].$post({ json: { type } })
-  const data = await res.json()
-  if (!data) return null;
-  return data
-}

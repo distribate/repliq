@@ -1,18 +1,12 @@
 import { reatomAsync, withStatusesAtom } from "@reatom/async"
 import { atom } from "@reatom/core"
-import { sleep } from "@reatom/framework"
+import { sleep, withReset } from "@reatom/framework"
 import { forumUserClient } from "#shared/forum-client"
 import { toast } from "sonner"
 import { toggleGlobalDialogAction } from "./user-settings.model"
 
 export const deleteAccountIsAcceptedAtom = atom(false, "deleteAccountIsAccepted")
-export const deleteAccountPasswordAtom = atom("", "password")
-
-async function deleteAccount(password: string) {
-  const res = await forumUserClient.user["delete-account"].$post({ json: { password } })
-  const data = await res.json()
-  return data
-}
+export const deleteAccountPasswordAtom = atom("", "password").pipe(withReset())
 
 export const deleteAccountAction = reatomAsync(async (ctx) => {
   const password = ctx.get(deleteAccountPasswordAtom)
@@ -25,23 +19,27 @@ export const deleteAccountAction = reatomAsync(async (ctx) => {
     throw new Error("Пароль должен быть больше 4 символов")
   }
 
-  return await ctx.schedule(() => deleteAccount(password))
+  return await ctx.schedule(async () => {
+    const res = await forumUserClient.user["delete-account"].$post({ json: { password } })
+    const data = await res.json()
+    if ("error" in data) throw new Error(data.error)
+    return data.status
+  })
 }, {
   name: "deleteAccountAction",
+  onReject: (_, e) => {
+    if (e instanceof Error) {
+      if (e.message === 'Invalid password') {
+        return toast.error("Неверный пароль")
+      }
+
+      toast.error(e.message)
+    }
+  },
   onFulfill: async (ctx, res) => {
     if (!res) return;
 
-    if ("error" in res) {
-      if (res.error === 'Invalid password') {
-        toast.error("Неверный пароль")
-        return;
-      }
-
-      throw new Error(res.error)
-    }
-
-    deleteAccountPasswordAtom(ctx, "")
-
+    deleteAccountPasswordAtom.reset(ctx)
     toggleGlobalDialogAction(ctx, { value: false, reset: true })
 
     toast.success("Аккаунт успешно удален", {
@@ -51,10 +49,5 @@ export const deleteAccountAction = reatomAsync(async (ctx) => {
     await sleep(3000)
 
     return ctx.schedule(() => window.location.reload())
-  },
-  onReject: (_, err) => {
-    if (err instanceof Error) {
-      toast.error(err.message)
-    }
   }
 }).pipe(withStatusesAtom())

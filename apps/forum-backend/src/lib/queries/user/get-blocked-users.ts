@@ -11,7 +11,7 @@ export const getBlockedUsers = async ({
 }: GetBlockedUsers) => {
   let query = forumDB
     .selectFrom("users_blocked")
-    .leftJoin('users', 'users_blocked.recipient', 'users.nickname')
+    .innerJoin('users', 'users_blocked.recipient', 'users.nickname')
     .leftJoin("users_subs", "users_blocked.recipient", "users_subs.nickname")
     .select(eb => [
       "users.id",

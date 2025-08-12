@@ -1,13 +1,15 @@
 import { reatomAsync, withStatusesAtom } from "@reatom/async";
-import { atom } from "@reatom/core";
+import { atom, batch } from "@reatom/core";
 import { getFriends, myFriendsDataAtom, myFriendsMetaAtom } from "./friends.model";
 import { friendsUpdateOptionsAtom } from "../components/filtering/models/friends-filtering.model";
 import { currentUserNicknameAtom } from "#components/user/models/current-user.model";
 import { Friend } from "@repo/types/schemas/friend/friend-types";
 
-const updateFriendsActionVariablesAtom = atom<"update-filter" | "update-cursor">("update-filter", "updateFriendsActionVariables")
+type UpdateFriends = "update-filter" | "update-cursor"
 
-export const updateFriendsAction = reatomAsync(async (ctx, type: "update-filter" | "update-cursor") => {
+const updateFriendsActionVariablesAtom = atom<UpdateFriends>("update-filter", "updateFriendsActionVariables")
+
+export const updateFriendsAction = reatomAsync(async (ctx, type: UpdateFriends) => {
   const hasMore = ctx.get(myFriendsMetaAtom)?.hasNextPage
   if (!hasMore) return
 
@@ -36,21 +38,27 @@ export const updateFriendsAction = reatomAsync(async (ctx, type: "update-filter"
     if (!variables) return;
 
     if (variables === "update-filter") {
-      myFriendsDataAtom(ctx, res.data as Friend[])
-      myFriendsMetaAtom(ctx, res.meta)
-      friendsUpdateOptionsAtom(ctx, (state) => ({ ...state, cursor: undefined }))
+      batch(ctx, () => {
+        myFriendsDataAtom(ctx, res.data as Friend[])
+        myFriendsMetaAtom(ctx, res.meta)
+        friendsUpdateOptionsAtom(ctx, (state) => ({ ...state, cursor: undefined }))
+      })
+
       return
     }
 
     if (variables === 'update-cursor') {
-      myFriendsDataAtom(ctx, (state) => {
-        if (!state) state = []
+      batch(ctx, () => {
+        myFriendsDataAtom(ctx, (state) => {
+          if (!state) state = []
 
-        return [...state, ...res.data as Friend[]]
+          return [...state, ...res.data as Friend[]]
+        })
+
+        myFriendsMetaAtom(ctx, res.meta)
+
+        friendsUpdateOptionsAtom(ctx, (state) => ({ ...state, cursor: res.meta.endCursor }))
       })
-      myFriendsMetaAtom(ctx, res.meta)
-      friendsUpdateOptionsAtom(ctx, (state) => ({ ...state, cursor: res.meta.endCursor }))
-      return
     }
   }
 }).pipe(withStatusesAtom())

@@ -1,17 +1,17 @@
 import { Skeleton } from "@repo/ui/src/components/skeleton"
-import { 
-  Connect, 
-  connectAction, 
-  connectDialogIsOpenAtom, 
+import {
+  Connect,
+  connectAction,
+  connectDialogIsOpenAtom,
   connectRemainsAtom,
-  connectUrlAtom, 
-  discordAtom, 
+  connectUrlAtom,
+  discordAtom,
   integrationSettingsDialogIsOpenAtom,
-  integrationTypeAtom, 
-  connectIsSuccessAtom, 
+  integrationTypeAtom,
+  connectIsSuccessAtom,
   openIntegrationSettingsAction,
-  telegramAtom, 
-  userSocialsResource 
+  telegramAtom,
+  userSocialsResource
 } from "../models/user-socials.model"
 import { Typography } from "@repo/ui/src/components/typography"
 import { reatomComponent } from "@reatom/npm-react"
@@ -75,7 +75,7 @@ const ConnectSocialIsPending = reatomComponent<Pick<Connect, "service">>(({ ctx,
 
   return (
     <div className="flex justify-center w-full p-2 items-center">
-      <div className="flex items-center justify-center w-full flex-col gap-4">
+      <div className="flex items-center overflow-hidden justify-center w-full flex-col gap-4">
         <div className="flex flex-col">
           <Typography textSize="large">
             Перейдите к боту и введите токен
@@ -111,7 +111,7 @@ const ConnectSocialIsPending = reatomComponent<Pick<Connect, "service">>(({ ctx,
       </div>
     </div >
   )
-})
+}, "ConnectSocialIsPending")
 
 const ConnectSocialDialog = reatomComponent<Pick<Connect, "service">>(({ ctx, service }) => {
   return (
@@ -134,7 +134,7 @@ const ConnectSocialDialog = reatomComponent<Pick<Connect, "service">>(({ ctx, se
   )
 }, "ConnectSocialDialog")
 
-const IntegrationSettingsDialog = reatomComponent(({ ctx }) => {
+const TelegramSettings = reatomComponent(({ ctx }) => {
   const notify_in_telegram = getUser(ctx).preferences.notify_in_telegram
 
   const handle = () => {
@@ -144,6 +144,20 @@ const IntegrationSettingsDialog = reatomComponent(({ ctx }) => {
   }
 
   return (
+    <UserSettingOption title="Объявления" icon={{ value: IconBrandTelegram }}>
+      <Switch
+        checked={notify_in_telegram}
+        defaultChecked={notify_in_telegram}
+        onCheckedChange={handle}
+      />
+    </UserSettingOption>
+  )
+}, "TelegramSettings")
+
+const IntegrationSettingsDialog = reatomComponent(({ ctx }) => {
+  const target = ctx.spy(integrationTypeAtom)?.title
+
+  return (
     <Dialog
       open={ctx.spy(integrationSettingsDialogIsOpenAtom)}
       onOpenChange={v => integrationSettingsDialogIsOpenAtom(ctx, v)}
@@ -151,15 +165,9 @@ const IntegrationSettingsDialog = reatomComponent(({ ctx }) => {
       <DialogContent>
         <div className="flex flex-col items-center gap-4 w-full h-full">
           <Typography variant="dialogTitle">
-            Настройки {ctx.spy(integrationTypeAtom)?.title}
+            Настройки {target}
           </Typography>
-          <UserSettingOption title="Объявления" icon={{ value: IconBrandTelegram }}>
-            <Switch
-              checked={notify_in_telegram}
-              defaultChecked={notify_in_telegram}
-              onCheckedChange={handle}
-            />
-          </UserSettingOption>
+          <TelegramSettings />
         </div>
       </DialogContent>
     </Dialog>
@@ -234,13 +242,24 @@ const ProfileAccountSocialsSkeleton = () => {
   )
 }
 
-export const ProfileAccountSocials = reatomComponent(({ ctx }) => {
+const AccountSocialsList = reatomComponent(({ ctx }) => {
   const userSocials = ctx.spy(userSocialsResource.dataAtom)
   const isLoading = ctx.spy(userSocialsResource.statusesAtom).isPending
 
   const discord = ctx.spy(discordAtom)
   const tg = ctx.spy(telegramAtom)
 
+  if (isLoading) return <ProfileAccountSocialsSkeleton />
+
+  return (
+    <>
+      <SocialCard title="Discord" service="discord" value={discord?.value ?? null} />
+      <SocialCard service="telegram" title="Telegram" value={tg?.value ?? null} />
+    </>
+  )
+}, "AccountSocialsList")
+
+export const ProfileAccountSocials = () => {
   return (
     <div className="flex flex-col gap-4 w-full h-full">
       <div className="flex w-full justify-between items-center">
@@ -251,13 +270,8 @@ export const ProfileAccountSocials = reatomComponent(({ ctx }) => {
         </div>
       </div>
       <div className="grid grid-cols-1 lg:grid-cols-3 auto-rows-auto gap-4 w-full h-full">
-        {isLoading ? <ProfileAccountSocialsSkeleton /> : (
-          <>
-            <SocialCard title="Discord" service="discord" value={discord?.value ?? null} />
-            <SocialCard service="telegram" title="Telegram" value={tg?.value ?? null} />
-          </>
-        )}
+        <AccountSocialsList />
       </div>
     </div>
   )
-}, "ProfileAccountSocials")
+}

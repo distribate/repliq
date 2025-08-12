@@ -1,4 +1,3 @@
-import { UserContentSkeleton } from "#components/skeletons/components/user-profile-skeleton";
 import { UserProfilePosts as Posts } from "#components/profile/posts/components/profile-posts";
 import { Separator } from "@repo/ui/src/components/separator";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@repo/ui/src/components/tabs";
@@ -8,17 +7,19 @@ import {
   requestedUserSectionIsPrivatedAtom,
   requestedUserGameStatsVisibleAtom,
   requestedUserIsSameAtom,
-  requestedUserMinecraftProfileIsExistsAtom
+  requestedUserMinecraftProfileIsExistsAtom,
+  requestedUserParamAtom,
+  isParamChanged
 } from '#components/profile/main/models/requested-user.model';
 import { SectionPrivatedTrigger } from '#components/templates/components/section-privated-trigger';
-import { AuthorizeTemplate } from '#components/templates/components/auth-template';
-import { isAuthenticatedAtom } from "#components/auth/models/auth.model";
 import { clientOnly } from "vike-react/clientOnly";
+import { atom } from "@reatom/core";
+import { withReset } from "@reatom/framework";
 
 const Account = clientOnly(() => import("#components/profile/account/components/profile-account.tsx").then(m => m.UserProfileAccount))
 const Friends = clientOnly(() => import("#components/profile/friends/components/profile-friends.tsx").then(m => m.UserProfileFriends))
 const Threads = clientOnly(() => import("#components/profile/threads/components/profile-threads.tsx").then(m => m.UserProfileThreads))
-const Minecraft = clientOnly(() => import("#components/profile/minecraft/minecraft").then(m => m.Minecraft));
+const Minecraft = clientOnly(() => import("#components/profile/integrations/minecraft/minecraft").then(m => m.Minecraft));
 
 const TabsListContent = reatomComponent(({ ctx }) => {
   return (
@@ -56,12 +57,21 @@ const TabsListContent = reatomComponent(({ ctx }) => {
   )
 }, "TabsListContent")
 
-export const ProfileContentTabs = reatomComponent(({ ctx }) => {
-  const isAuthenticated = ctx.spy(isAuthenticatedAtom)
+export const profileContentTabValueAtom = atom<string>("posts", "profileContentTabValue").pipe(withReset())
 
+requestedUserParamAtom.onChange((ctx, state) => isParamChanged(ctx, requestedUserParamAtom, state, () => {
+  profileContentTabValueAtom.reset(ctx)
+}))
+
+export const ProfileContentTabs = reatomComponent(({ ctx }) => {
   return (
     <div className="flex flex-col lg:flex-row w-full gap-12 h-full lg:px-16 relative z-[4]">
-      <Tabs defaultValue="posts" className="flex flex-col gap-6 w-full h-full">
+      <Tabs
+        value={ctx.spy(profileContentTabValueAtom)}
+        onValueChange={v => profileContentTabValueAtom(ctx, v)}
+        defaultValue="posts"
+        className="flex flex-col gap-6 w-full h-full"
+      >
         <TabsList
           className="md:hidden flex *:rounded-xl rounded-xl 
             items-center no-scrollbar gap-1 justify-start px-2 py-4 overflow-x-auto bg-shark-950 w-full"
@@ -73,22 +83,24 @@ export const ProfileContentTabs = reatomComponent(({ ctx }) => {
         </TabsList>
         <div className="flex flex-col lg:flex-row items-start grow *:w-full w-full">
           <TabsContent value="posts">
-            {isAuthenticated ? <Posts /> : <AuthorizeTemplate />}
+            <Posts />
           </TabsContent>
           <TabsContent value="threads">
-            {isAuthenticated ? <Threads /> : <AuthorizeTemplate />}
+            <Threads />
           </TabsContent>
           <TabsContent value="friends">
-            {isAuthenticated ? <Friends /> : <AuthorizeTemplate />}
+            <Friends />
           </TabsContent>
-          <TabsContent value="minecraft">
-            {ctx.spy(requestedUserMinecraftProfileIsExistsAtom) && (
-              isAuthenticated ? <Minecraft /> : <AuthorizeTemplate />
-            )}
-          </TabsContent>
-          <TabsContent value="account">
-            {isAuthenticated ? (ctx.spy(requestedUserIsSameAtom) && <Account />) : <AuthorizeTemplate />}
-          </TabsContent>
+          {ctx.spy(requestedUserMinecraftProfileIsExistsAtom) && (
+            <TabsContent value="minecraft">
+              <Minecraft />
+            </TabsContent>
+          )}
+          {ctx.spy(requestedUserIsSameAtom) && (
+            <TabsContent value="account">
+              <Account />
+            </TabsContent>
+          )}
         </div >
       </Tabs >
     </div >

@@ -17,6 +17,7 @@
     "drizzle-orm": "0.44.2"
   },
   "devDependencies": {
+    "@tailwindcss/postcss": "^4.1.11",
     "concurrently": "9.1.0",
     "eslint": "8.57.1",
     "prettier": "3.4.2",

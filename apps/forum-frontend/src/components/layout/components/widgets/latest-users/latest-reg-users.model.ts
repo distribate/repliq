@@ -11,12 +11,15 @@ type LatestRegUser = {
   avatar: string | null
 }
 
-export const getLatestRegUsers = async (limit?: number) => {
+export const getLatestRegUsers = async (
+  limit?: number,
+  init?: RequestInit
+) => {
   const url = forumSharedClient.shared["get-latest-reg-users"].$url({
-    query: { limit: limit ? `${limit}` : undefined }
-  })
+    query: { limit: limit ? `${limit}` : undefined } }
+  )
 
-  const res = await ky.get(url, { credentials: "include" })
+  const res = await ky.get(url, { credentials: "include", ...init })
 
   const encodedData = await res.arrayBuffer()
   if (!encodedData) return null

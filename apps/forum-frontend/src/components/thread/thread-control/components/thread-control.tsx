@@ -15,11 +15,12 @@ export const ThreadControl = reatomComponent(({ ctx }) => {
   if (!threadIsEditable) return null;
 
   const threadId = ctx.spy(threadParamAtom)
-  if (!threadId) return null
+
+  const link = `/studio?type=threads&target=${threadId}`
 
   return (
     <>
-      <CustomLink to="/studio">
+      <CustomLink to={link}>
         <Button className="w-full bg-white">
           <div className="flex items-center gap-2 invert">
             <PencilLine size={16} />

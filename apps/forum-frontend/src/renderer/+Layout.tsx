@@ -1,5 +1,3 @@
-import "../global.css"
-
 import { PropsWithChildren, ReactNode } from 'react';
 import { Notifications } from '#components/notifications/components/notifications-wrapper';
 import { Toaster } from '#components/shared/toast';

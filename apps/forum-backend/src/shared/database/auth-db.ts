@@ -1,28 +1,52 @@
 import { Kysely, PostgresDialect } from 'kysely';
 import type { DB as AuthDB } from "@repo/types/db/auth-database-types";
-import type { DatabaseConnection } from '@repo/types/entities/database-connection-type';
-import { Pool } from 'pg';
+import { Pool, type PoolConfig } from 'pg';
+import { isProduction } from '@repo/lib/helpers/is-production';
+import { LoggingPool } from '#utils/database.ts';
 
-const authDialect = ({
-  host, database, user, password, port
-}: DatabaseConnection) => {
-  return new PostgresDialect({
-    pool: new Pool({
-      database, host, user, port, password,
-      max: 16,
-      keepAlive: true,
-      idleTimeoutMillis: 30000,
-      connectionTimeoutMillis: 5000
-    })
-  });
-};
+interface AppGlobal {
+  pgPool?: Pool;
+  authDB?: Kysely<AuthDB>;
+}
 
-export const authDB = new Kysely<AuthDB>({
-  dialect: authDialect({
-    host: "127.0.0.1",
-    database: process.env.AUTHORIZATION_POSTGRES_DB!,
-    user: process.env.AUTHORIZATION_POSTGRES_USER!,
-    password: process.env.AUTHORIZATION_POSTGRES_PASSWORD!,
-    port: Number(process.env.AUTHORIZATION_POSTGRES_PORT!),
-  })
+const appGlobal = globalThis as unknown as AppGlobal;
+
+const config: PoolConfig = {
+  database: process.env.AUTHORIZATION_POSTGRES_DB,
+  host: Bun.env.AUTHORIZATION_POSTGRES_HOST,
+  port: Number(process.env.AUTHORIZATION_POSTGRES_PORT),
+  user: process.env.AUTHORIZATION_POSTGRES_USER,
+  password: process.env.AUTHORIZATION_POSTGRES_PASSWORD,
+  max: isProduction ? 16 : 8,
+  idleTimeoutMillis: 30000,
+  connectionTimeoutMillis: 10000,
+  keepAlive: true,
+}
+
+const pool = new LoggingPool(config);
+
+pool.on('error', (err, client) => {
+  console.error('[Auth Database]: Error', err);
 });
+
+function getDbInstance(): Kysely<AuthDB> {
+  if (!appGlobal.authDB) {
+    console.log('[Auth Database]: Creating new instance of pool');
+
+    appGlobal.authDB = new Kysely<AuthDB>({
+      dialect: new PostgresDialect({ pool: pool })
+    });
+  }
+
+  return appGlobal.authDB;
+}
+
+if (!appGlobal.authDB) {
+  console.log('[Auth Database]: Creating new instance of pool');
+
+  appGlobal.authDB = new Kysely<AuthDB>({
+    dialect: new PostgresDialect({ pool: pool })
+  });
+}
+
+export const authDB = getDbInstance();

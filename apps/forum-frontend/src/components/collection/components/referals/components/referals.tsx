@@ -5,15 +5,19 @@ import dayjs from "@repo/lib/constants/dayjs-instance"
 import { Button } from "@repo/ui/src/components/button"
 import { Skeleton } from "@repo/ui/src/components/skeleton"
 import { Typography } from "@repo/ui/src/components/typography"
-import { myReferalsResource } from "../models/my-referals.model"
+import { myReferalsAction } from "../models/my-referals.model"
 import { reatomComponent } from "@reatom/npm-react"
 import { CustomLink } from "#components/shared/link"
 import { createIdLink } from "@repo/lib/utils/create-link"
 import { MINECRAFT_SITE_DOMAIN } from "@repo/shared/constants/origin-list"
+import { onConnect, onDisconnect } from "@reatom/framework"
+
+onConnect(myReferalsAction.dataAtom, myReferalsAction)
+onDisconnect(myReferalsAction.dataAtom, (ctx) => myReferalsAction.dataAtom.reset(ctx))
 
 export const Referals = reatomComponent(({ ctx }) => {
-  const referals = ctx.spy(myReferalsResource.dataAtom)
-  const isLoading = ctx.spy(myReferalsResource.statusesAtom).isPending
+  const referals = ctx.spy(myReferalsAction.dataAtom)
+  const isLoading = ctx.spy(myReferalsAction.statusesAtom).isPending
 
   return (
     <div className="flex flex-col gap-4 w-full h-full">
@@ -45,7 +49,7 @@ export const Referals = reatomComponent(({ ctx }) => {
                   <CustomLink to={createIdLink("user", item.recipient)}>
                     <UserNickname nickname={item.recipient} />
                   </CustomLink>
-                  <UserDonate is_donate={item.is_donate} />
+                  {item.is_donate && <UserDonate />}
                 </div>
                 <Typography textColor="gray" textSize="medium">
                   Присоединился {dayjs(item.created_at).format("DD.MM.YYYY HH:mm")}

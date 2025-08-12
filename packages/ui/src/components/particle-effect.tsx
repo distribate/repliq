@@ -228,5 +228,6 @@ export const ParticleEffect = ({ children, options }: CoolModeProps) => {
     }
   }, [options]);
 
+  // @ts-expect-error
   return cloneElement(children as ReactElement, { ref });
 };

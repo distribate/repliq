@@ -17,15 +17,15 @@ function validateContent(input?: string): string | null {
 async function createThreadComment({
   content, threadId
 }: {
-  content: string;
-  threadId: string;
+  content: string;  threadId: string;
 }) {
   const res = await forumCommentClient.comment["create-comment"].$post({
     json: { content, parent_type: "thread", parent_id: threadId }
   });
 
   const data = await res.json();
-  if (!data) return null
+  
+  if ("error" in data) throw new Error(data.error)
 
   return data;
 }
@@ -42,7 +42,7 @@ const replyThreadComment = async ({
   });
 
   const data = await res.json();
-  if (!data) return null
+  if ("error" in data) throw new Error(data.error)
 
   return data;
 }
@@ -66,11 +66,11 @@ export const updateCreateThreadCommentAction = reatomAsync(async (ctx, values: P
 export const createThreadCommentAction = reatomAsync(async (ctx) => {
   const { threadId, content, type, replied } = ctx.get(createThreadCommentAtom);
 
-  if (!content) return;
+  if (!content) throw new Error("Content not found")
 
   switch (type) {
     case "reply":
-      if (!replied?.commentId) return;
+      if (!replied?.commentId) throw new Error("Id is not defined")
 
       const createdRepliedComment = await replyThreadComment({
         content, threadId,
@@ -83,21 +83,17 @@ export const createThreadCommentAction = reatomAsync(async (ctx) => {
 
       return { createdSingleComment, threadId }
     default:
-      break;
+      throw new Error(`Type is not defined ${type}`)
   }
 }, {
   name: "createThreadCommentAction",
+  onReject: (_, e) => {
+    if (e instanceof Error) {
+      console.error(e.message)
+      toast.error("Что-то пошло не так!")
+    }
+  },
   onFulfill: (ctx, res) => {
-    if (!res) return toast.error("Что-то пошло не так!");
-
-    if (res.createdSingleComment && "error" in res.createdSingleComment) {
-      return toast.error("Что-то пошло не так!")
-    }
-
-    if (res.createdRepliedComment && "error" in res.createdRepliedComment) {
-      return toast.error("Что-то пошло не так!")
-    }
-
     const currentThreadComments = ctx.get(threadCommentsDataAtom)
 
     if (!currentThreadComments || !currentThreadComments.length) {
