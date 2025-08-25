@@ -4,7 +4,6 @@ import type { Selectable } from "kysely";
 type Base = Selectable<Users>
 
 export type UserDetailed = Omit<Base,
-  | "favorite_item"
   | "birthday"
   | "created_at"
   | "donate"
@@ -13,7 +12,6 @@ export type UserDetailed = Omit<Base,
   id: string,
   birthday: string | null
   created_at: string,
-  favorite_item: number | string | null
   avatar: string | null,
   is_donate: boolean;
   preferences: {

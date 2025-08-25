@@ -1,0 +1,63 @@
+import { Typography } from "@repo/ui/src/components/typography.tsx";
+import { Skeleton } from "@repo/ui/src/components/skeleton";
+import { reatomComponent } from "@reatom/npm-react";
+import { onConnect } from "@reatom/framework";
+import { latestUsersAction } from "./latest-reg-users.model";
+import { UserCardModal } from "#components/modals/custom/components/user-card-modal";
+import { Avatar } from "#components/user/components/avatar/components/avatar";
+import { CustomLink } from "#shared/components/link";
+import { createIdLink } from "#lib/create-link";
+
+onConnect(latestUsersAction.dataAtom, (ctx) => latestUsersAction(ctx, { limit: 6 }))
+
+const LatestRegUsersSkeleton = () => {
+  return (
+    <>
+      <Skeleton className="h-full w-full" />
+      <Skeleton className="h-full w-full" />
+      <Skeleton className="h-full w-full" />
+      <Skeleton className="h-full w-full" />
+      <Skeleton className="h-full w-full" />
+      <Skeleton className="h-full w-full" />
+    </>
+  )
+}
+
+export const LatestRegUsers = reatomComponent(({ ctx }) => {
+  const data = ctx.spy(latestUsersAction.dataAtom)
+
+  return (
+    <div className="flex flex-col gap-4 w-full py-6 px-4 rounded-lg overflow-hidden bg-primary-color">
+      <Typography textSize="big" textColor="shark_white" className="font-semibold select-none">
+        Новые пользователи
+      </Typography>
+      <div className="grid grid-cols-6 2xl:grid-cols-7 gap-2 w-full">
+        {ctx.spy(latestUsersAction.statusesAtom).isPending && <LatestRegUsersSkeleton />}
+        {data && data.map(user => (
+          <div key={user.nickname} className="flex items-center w-full gap-2">
+            <UserCardModal
+              trigger={
+                <Avatar
+                  url={user.avatar}
+                  nickname={user.nickname}
+                  propHeight={50}
+                  propWidth={50}
+                  className="min-h-12 h-12 max-h-12 aspect-square"
+                />
+              }
+              nickname={user.nickname}
+              withCustomTrigger={true}
+            />
+            <div className="flex flex-col">
+              <CustomLink to={createIdLink("user", user.nickname)}>
+                <Typography>
+                  {user.nickname}
+                </Typography>
+              </CustomLink>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}, "LatestRegUsers")

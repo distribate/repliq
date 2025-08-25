@@ -314,10 +314,10 @@ export interface Comments {
   created_at: Generated<Timestamp>;
   id: Generated<Int8>;
   is_updated: Generated<boolean>;
+  nickname: string;
   parent_id: string;
   parent_type: CommentsParentType;
   updated_at: Timestamp | null;
-  user_nickname: string;
 }
 
 export interface CommentsReplies {
@@ -429,16 +429,16 @@ export interface FriendsRequests {
 export interface InfoFindout {
   findout: string;
   id: Generated<Int8>;
-  user_nickname: string;
+  nickname: string;
 }
 
 export interface Issues {
   created_at: Generated<Timestamp>;
   description: string;
   id: Int8;
+  nickname: string;
   title: string;
   type: IssueType;
-  user_nickname: string;
 }
 
 export interface IssuesApprovals {
@@ -584,8 +584,8 @@ export interface PostsComments {
   content: string;
   created_at: Generated<Timestamp>;
   id: Int8;
+  nickname: string;
   post_id: string;
-  user_nickname: string;
 }
 
 export interface PostsUsers {
@@ -645,11 +645,11 @@ export interface Reports {
   created_at: Generated<Timestamp>;
   description: string | null;
   id: Generated<Int8>;
+  nickname: string;
   reason: Generated<ReportReason>;
   report_type: ReportType | null;
   reported_item: Json | null;
   target_user_nickname: string;
-  user_nickname: string;
 }
 
 export interface ReportsApprovals {
@@ -797,8 +797,8 @@ export interface ThreadsReactions {
   created_at: Generated<Timestamp>;
   emoji: string;
   id: Int8;
+  nickname: string;
   thread_id: string;
-  user_nickname: string;
 }
 
 export interface ThreadsSaved {
@@ -816,15 +816,15 @@ export interface ThreadsTags {
 
 export interface ThreadsUsers {
   created_at: Generated<Timestamp>;
+  nickname: string;
   thread_id: string;
-  user_nickname: string;
 }
 
 export interface ThreadsViews {
   created_at: Generated<Timestamp>;
   id: Generated<Int8>;
+  nickname: string | null;
   thread_id: string;
-  user_nickname: string | null;
 }
 
 export interface Users {
@@ -835,8 +835,6 @@ export interface Users {
   cover_image: string | null;
   created_at: Generated<Timestamp>;
   description: string | null;
-  donate: Generated<DonateVariants>;
-  favorite_item: Int8 | null;
   id: Generated<string>;
   name_color: Generated<string>;
   nickname: string;
@@ -883,14 +881,6 @@ export interface UsersFriends {
   user_2: string;
 }
 
-export interface UsersGameStatus {
-  id: Generated<Int8>;
-  joined: Timestamp | null;
-  nickname: string;
-  quited: Timestamp | null;
-  status: string;
-}
-
 export interface UsersProfiles {
   id: Int8;
   type: Generated<string>;
@@ -914,23 +904,8 @@ export interface UsersSavedThreads {
 
 export interface UsersSecurity {
   email: string;
-  token: string | null;
-  user_nickname: string;
-}
-
-export interface UsersSession {
-  browser: string;
-  cpu: string;
-  created_at: Generated<Timestamp>;
-  device: string | null;
-  expires_at: Timestamp;
-  ip: string;
-  location: Generated<string>;
   nickname: string;
-  os: string | null;
-  session_id: string;
-  token: string;
-  ua: string;
+  token: string | null;
 }
 
 export interface UsersSettings {
@@ -1065,12 +1040,10 @@ export interface DB {
   users_connections: UsersConnections;
   users_credentials: UsersCredentials;
   users_friends: UsersFriends;
-  users_game_status: UsersGameStatus;
   users_profiles: UsersProfiles;
   users_punish: UsersPunish;
   users_saved_threads: UsersSavedThreads;
   users_security: UsersSecurity;
-  users_session: UsersSession;
   users_settings: UsersSettings;
   users_status: UsersStatus;
   users_subs: UsersSubs;

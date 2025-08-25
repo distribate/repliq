@@ -5,17 +5,10 @@
   "private": true,
   "license": "MIT",
   "scripts": {
-    "gen-types": "dotenv -e .env npx supabase gen types --lang typescript --db-url %FORUM_DATABASE_URL% > ./entities/gen-supabase.ts",
-    "auth-gen-types": "kysely-codegen --dialect postgres --url=env\\(AUTH_DATABASE_URL\\) --out-file=./db/auth-database-types.ts",
     "forum-gen-types": "kysely-codegen --dialect postgres --url=env\\(FORUM_DATABASE_URL\\) --out-file=./db/forum-database-types.ts",
-    "sqlite-gen-types": "kysely-codegen --dialect sqlite --url=env\\(SQLITE_DATABASE_URL\\) --out-file=./db/sqlite-database-types.ts",
-    "payments-gen-types": "kysely-codegen --dialect postgres --url=env\\(PAYMENTS_DATABASE_URL\\) --out-file=./db/payments-database-types.ts",
-    "skins-gen-types": "kysely-codegen --dialect mysql --url=env\\(SKINS_DATABASE_URL\\) --out-file=./db/skins-database-types.ts",
-    "bisquite-gen-types": "kysely-codegen --dialect mysql --url=env\\(BISQUITE_DATABASE_URL\\) --out-file=./db/bisquite-database-types.ts",
-    "lobby-gen-types": "kysely-codegen --dialect mysql --url=env\\(LOBBY_DATABASE_URL\\) --out-file=./db/lobby-database-types.ts"
+    "sqlite-gen-types": "kysely-codegen --dialect sqlite --url=env\\(SQLITE_DATABASE_URL\\) --out-file=./db/sqlite-database-types.ts"
   },
   "dependencies": {
-    "supabase": "1.219.2",
     "zod": "4.0.15"
   },
   "devDependencies": {

@@ -1,6 +1,6 @@
 import { Textarea } from "./textarea";
 import { ChangeEvent, TextareaHTMLAttributes, useRef } from "react";
-import { cn } from "@repo/lib/utils/ui/cn.ts";
+import { cn } from "@repo/shared/utils/cn.ts";
 
 interface AutogrowingTextareaProps
   extends TextareaHTMLAttributes<HTMLTextAreaElement> { }
@@ -27,7 +27,7 @@ export default function AutogrowingTextarea({
       ? lineHeight * maxRows + borderHeight + paddingHeight : Infinity;
 
     const newHeight = Math.min(textarea.scrollHeight + borderHeight, maxHeight);
-    
+
     if (textarea.value.endsWith('\n\n')) return;
 
     textarea.style.height = `${newHeight}px`;
@@ -72,15 +72,13 @@ export default function AutogrowingTextarea({
   };
 
   return (
-    <div className="space-y-2">
-      <Textarea
-        ref={textareaRef}
-        onChange={handleInput}
-        onKeyDown={handleKeyDown}
-        rows={defaultRows}
-        className={cn("min-h-[none] resize-none ", props.className)}
-        {...props}
-      />
-    </div>
+    <Textarea
+      ref={textareaRef}
+      onChange={handleInput}
+      onKeyDown={handleKeyDown}
+      rows={defaultRows}
+      className={cn("min-h-[none] resize-none ", props.className)}
+      {...props}
+    />
   );
 }

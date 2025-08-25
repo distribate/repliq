@@ -1,7 +1,6 @@
 import * as z from "zod";
-import { isProduction } from "../../../lib/helpers/is-production";
 
-export const tokenSchema = isProduction ? z.string() : z.nullable(z.string())
+export const tokenSchema = process.env.NODE_ENV === 'production' ? z.string() : z.nullable(z.string())
 
 export const nicknameSchema = z
   .string()

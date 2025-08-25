@@ -1,5 +1,5 @@
 import * as HoverCardPrimitive from "@radix-ui/react-hover-card";
-import { cn } from "@repo/lib/utils/ui/cn.ts";
+import { cn } from "@repo/shared/utils/cn.ts";
 import {
   ComponentPropsWithoutRef,
   HTMLAttributes,

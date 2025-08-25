@@ -1,0 +1,103 @@
+import { useState } from "react";
+import {
+  postViewsAction,
+  PostViewsQuery,
+} from "#components/post/post-item/models/post-views.model";
+import { Skeleton } from "@repo/ui/src/components/skeleton.tsx";
+import { UserNickname } from "#components/user/components/name/nickname";
+import { Typography } from "@repo/ui/src/components/typography.tsx";
+import dayjs from "@repo/shared/constants/dayjs-instance.ts";
+import { PostFooterViews } from "#components/post/post-item/components/post-footer-views.tsx";
+import { UserPostItem } from '@repo/types/routes-types/get-user-posts-types.ts';
+import { reatomComponent, useUpdate } from "@reatom/npm-react";
+import { CustomLink } from "#shared/components/link";
+import { createIdLink } from "#lib/create-link";
+import { HoverCard, HoverCardContent, HoverCardTrigger } from "@repo/ui/src/components/hover-card";
+
+type PostFooterWithViewsListProps = Pick<PostViewsQuery, "id"> &
+  Pick<UserPostItem, "views_count">;
+
+const PostFooterViewsListSkeleton = () => {
+  return (
+    <div className="flex flex-col gap-y-2">
+      <Skeleton className="h-6 w-full" />
+      <Skeleton className="h-6 w-full" />
+    </div>
+  );
+};
+
+const PostViewCard = ({
+  nickname,
+  created_at: viewCreatedAt,
+}: { nickname: string, created_at: string | Date }) => {
+  return (
+    <div
+      key={nickname}
+      className="flex justify-between h-6 items-center gap-2 w-full"
+    >
+      <div className="flex items-center gap-2 w-1/2 justify-between">
+        <CustomLink to={createIdLink("user", nickname)}>
+          <UserNickname nickname={nickname} className="truncate text-[14px]" />
+        </CustomLink>
+      </div>
+      <Typography textSize="small" textColor="gray">
+        {dayjs(viewCreatedAt).fromNow()}
+      </Typography>
+    </div>
+  );
+};
+
+const Sync = ({ target, enabled }: { target: string, enabled: boolean }) => {
+  useUpdate((ctx) => postViewsAction(ctx, { id: target, enabled }), [target, enabled])
+  return null;
+}
+
+const ViewsList = reatomComponent<PostFooterWithViewsListProps & { enabled: boolean }>(({
+  ctx, enabled, id, views_count
+}) => {
+  const postViews = ctx.spy(postViewsAction.dataAtom);
+  const isLoading = ctx.spy(postViewsAction.statusesAtom).isPending
+
+  return (
+    <>
+      <Sync target={id} enabled={enabled && views_count > 0} />
+      {!postViews || !views_count && (
+        <div className="flex flex-col gap-y-2 w-full p-1">
+          <Typography textSize="small" textColor="gray">
+            Пока никто не просмотрел этот пост
+          </Typography>
+        </div>
+      )}
+      {isLoading && <PostFooterViewsListSkeleton />}
+      {(postViews && !isLoading) && (
+        <div className="flex flex-col gap-y-2 w-full p-1">
+          <Typography textSize="small" className="text-shark-300">
+            Просмотрено
+          </Typography>
+          <div className="flex flex-col gap-y-2">
+            {postViews.map(u => <PostViewCard key={u.nickname} {...u} />)}
+          </div>
+        </div>
+      )}
+    </>
+  )
+}, "ViewsList")
+
+export const PostFooterWithViewsList = ({ id, views_count }: PostFooterWithViewsListProps) => {
+  const [enabled, setEnabled] = useState<boolean>(false);
+
+  return (
+    <HoverCard openDelay={1}>
+      <HoverCardTrigger>
+        <div onMouseEnter={() => setEnabled(true)}>
+          <PostFooterViews views_count={views_count} />
+        </div>
+      </HoverCardTrigger>
+      <HoverCardContent>
+        {enabled && (
+          <ViewsList id={id} enabled={enabled} views_count={views_count} />
+        )}
+      </HoverCardContent>
+    </HoverCard>
+  );
+};

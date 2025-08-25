@@ -1,10 +1,10 @@
 import { connect, type NatsConnection, type ConnectionOptions } from "@nats-io/transport-node";
-import { logger } from "@repo/lib/utils/logger.ts"
+import { exit } from 'node:process';
 
 // @ts-ignore
 const token = process.env.NATS_AUTH_TOKEN!
 // @ts-ignore
-const host = process.env.NATS_HOST! ?? "localhost:4222"
+const host = process.env.NATS_HOST! ?? "127.0.0.1:4222"
 
 const NATS_CONFIG: ConnectionOptions = {
   servers: `nats://${host}`,
@@ -16,15 +16,13 @@ const NATS_CONFIG: ConnectionOptions = {
 
 let nc: NatsConnection | null = null;
 
-const natsLogger = logger.child("NATS")
-
 export async function initNats() {
   try {
     nc = await connect(NATS_CONFIG);
-    natsLogger.success(`Connected to ${NATS_CONFIG.servers}`);
-  } catch (err) {
-    natsLogger.error('Failed to connect to NATS:', err);
-    throw new Error('NATS connection failed');
+    console.log(`Connected to ${NATS_CONFIG.servers}`);
+  } catch (e) {
+    console.error('Failed to connect to NATS:', e);
+    exit(1)
   }
 }
 
@@ -40,10 +38,11 @@ export async function closeNatsConnection() {
   if (!nc) return;
 
   try {
-    natsLogger.info('Closing NATS connection...');
+    console.log('Closing NATS connection...');
     await nc.drain();
-    natsLogger.success('NATS connection closed.');
-  } catch (err) {
-    natsLogger.error('Error closing NATS connection:', err);
+    console.log('NATS connection closed.');
+  } catch (e) {
+    console.error('Error closing NATS connection:', e);
+    exit(1)
   }
 }

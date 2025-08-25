@@ -1,5 +1,5 @@
 import { DayPicker } from "react-day-picker";
-import { cn } from "@repo/lib/utils/ui/cn.ts";
+import { cn } from "@repo/shared/utils/cn.ts";
 import { ComponentProps } from "react";
 import { ru } from "react-day-picker/locale";
 

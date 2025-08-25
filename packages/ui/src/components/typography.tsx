@@ -12,8 +12,7 @@ const typographyVariants = cva("whitespace-wrap", {
       link: "underline underline-offset-4 cursor-pointer",
     },
     font: {
-      default: "",
-      pixy: "font-[Pixy]",
+      default: ""
     },
     textSize: {
       small: "text-sm",

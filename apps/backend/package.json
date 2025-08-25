@@ -1,0 +1,56 @@
+{
+  "name": "backend",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "license": "MIT",
+  "scripts": {
+    "start": "NODE_ENV=production bun run dist/index.js",
+    "dev": "NODE_ENV=development bun run --hot src/index.ts",
+    "build": "NODE_ENV=production bun build src/index.ts --target bun --outdir ./dist --sourcemap --minify",
+    "lint": "bun x eslint \"src/**/*.ts\"",
+    "lint:fix": "bun eslint \"src/**/*.ts\" --fix",
+    "type-check": "tsc --noEmit"
+  },
+  "imports": {
+    "#*": "./src/*"
+  },
+  "dependencies": {
+    "@gramio/format": "0.1.5",
+    "@hono/zod-validator": "0.7.2",
+    "@nats-io/jetstream": "3.0.0-35",
+    "@nats-io/kv": "3.0.0-30",
+    "@nats-io/obj": "3.0.0-34",
+    "@nats-io/transport-node": "3.0.0-32",
+    "@repo/assets": "*",
+    "@repo/config-nats": "*",
+    "@repo/shared": "*",
+    "@supabase/supabase-js": "2.45.6",
+    "cbor-x": "1.6.0",
+    "dayjs": "1.11.11",
+    "gramio": "0.1.2",
+    "hono": "4.9.1",
+    "hono-rate-limiter": "0.4.2",
+    "ioredis": "5.6.1",
+    "ky": "1.8.1",
+    "kysely": "0.27.4",
+    "kysely-bun-sqlite": "^0.4.0",
+    "kysely-paginate": "0.3.1",
+    "nanoid": "5.0.7",
+    "nodemailer": "6.10.0",
+    "pg": "8.13.1",
+    "tslib": "2.8.1",
+    "zod": "4.0.15"
+  },
+  "devDependencies": {
+    "@gramio/types": "8.1.0",
+    "@repo/config-eslint": "*",
+    "@repo/config-tailwind": "*",
+    "@repo/config-typescript": "*",
+    "@repo/types": "*",
+    "@types/bun": "1.1.13",
+    "@types/nodemailer": "6",
+    "@types/pg": "8.11.10",
+    "typescript": "^5.4.5"
+  }
+}

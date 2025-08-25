@@ -44,7 +44,3 @@ yarn-error.log*
 # Misc
 .DS_Store
 *.pem
-
-# cf tunnel config
-packages/config-traefik/certs
-packages/config-traefik/logs

@@ -1,0 +1,106 @@
+import { Typography } from "@repo/ui/src/components/typography.tsx";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@repo/ui/src/components/dropdown-menu.tsx";
+import React, { ChangeEvent } from "react";
+import {
+  friendsSortAtom,
+  FriendsSortType,
+} from "#components/profile/friends/models/friends-sort.model";
+import { Input, InputProps } from "@repo/ui/src/components/input.tsx";
+import { ArrowDownNarrowWide } from "lucide-react";
+import { reatomComponent } from "@reatom/npm-react";
+import { requestedUserParamAtom } from "#components/profile/main/models/requested-user.model";
+import { action, sleep, withConcurrency } from "@reatom/framework";
+
+const onChange = action(async (ctx, e: ChangeEvent<HTMLInputElement>) => {
+  const { value } = e.target;
+
+  await ctx.schedule(() => sleep(300))
+  const convertedValue = value.replace(/ {3,}/g, "  ");
+  friendsSortAtom(ctx, (state) => ({ ...state, searchQuery: convertedValue }))
+}).pipe(withConcurrency())
+
+const ProfileFriendsFilteringSearch = reatomComponent<InputProps>(({ ctx, ...props }) => {
+  return (
+    <Input
+      className="rounded-lg"
+      maxLength={64}
+      placeholder="Поиск по никнейму"
+      onChange={e => onChange(ctx, e)}
+      {...props}
+    />
+  );
+}, "ProfileFriendsFilteringSearch")
+
+type FriendsSort = {
+  name: string;
+  value: FriendsSortType;
+};
+
+const FRIENDS_SORT: FriendsSort[] = [
+  { name: "По дате добавления", value: "created_at" },
+  { name: "По привилегии", value: "donate_weight" },
+];
+
+// const ProfileFriendsFilteringView = reatomComponent(({ ctx }) => {
+//   const currentSortType = "default"
+
+//   const handleSort = (e: React.MouseEvent<HTMLDivElement, MouseEvent>, sort_type: FriendsSortType) => {
+//     e.preventDefault();
+//   };
+
+//   return (
+//     <DropdownMenu>
+//       <DropdownMenuTrigger>
+//         <SelectedWrapper>
+//           <ArrowDownNarrowWide size={20} className="text-shark-300" />
+//         </SelectedWrapper>
+//       </DropdownMenuTrigger>
+//       <DropdownMenuContent side="bottom" align="end" className="min-w-[200px]">
+//         <div className="flex flex-col gap-y-4">
+//           <Typography className="text-shark-300 text-sm px-2 pt-2">
+//             Фильтровать по
+//           </Typography>
+//           <div className="flex flex-col gap-y-2">
+//             {FRIENDS_SORT.map(({ name, value }) => (
+//               <DropdownMenuItem
+//                 key={value}
+//                 onClick={(e) => handleSort(e, value)}
+//               >
+//                 <Typography
+//                   state={value === currentSortType ? "active" : "default"}
+//                 >
+//                   {name}
+//                 </Typography>
+//               </DropdownMenuItem>
+//             ))}
+//           </div>
+//         </div>
+//       </DropdownMenuContent>
+//     </DropdownMenu>
+//   );
+// }, "ProfileFriendsFilteringView")
+
+export const ProfileFriendsFiltering = reatomComponent(({ ctx }) => {
+  const nickname = ctx.spy(requestedUserParamAtom)
+  if (!nickname) return;
+
+  return (
+    <div className="flex w-full justify-between items-center">
+      <div className="flex items-center w-fit">
+        <Typography
+          textColor="shark_white"
+          textSize="big"
+          className="font-semibold"
+        >
+          Друзья {nickname}
+        </Typography>
+      </div>
+      <div className="flex items-center gap-4 w-fit">
+          <ProfileFriendsFilteringSearch />
+        <div className="w-fit">
+          {/* <ProfileFriendsFilteringView /> */}
+        </div>
+      </div>
+    </div>
+  );
+}, "ProfileFriendsFiltering")

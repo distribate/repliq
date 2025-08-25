@@ -32,7 +32,20 @@ services:
   #   cap_add:
   #     - IPC_LOCK
   #   entrypoint: [ "vault", "server", "-config=/vault/config/vault.hcl" ]
-
+  redis:
+    image: 'redis:8.0.3'
+    ports:
+      - '6380:6379'
+    volumes:
+      - ./data/fasberry-external/redis/data:/data 
+      - ./config/redis/redis.conf.tpl:/redis.conf.tpl:ro
+      - ./config/redis/entrypoint.sh:/entrypoint.sh:ro
+    environment:
+      - REDIS_USER_NAME=${REDIS_USER_NAME}
+      - REDIS_USER_PASSWORD=${REDIS_USER_PASSWORD}
+    entrypoint: /entrypoint.sh
+    restart: always
+    
   nats:
     container_name: nats
     image: nats:latest
