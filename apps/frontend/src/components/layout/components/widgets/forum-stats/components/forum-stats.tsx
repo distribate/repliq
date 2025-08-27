@@ -1,45 +1,47 @@
 import { AnimatedNumber } from "#ui/animated-number";
 import { reatomComponent } from "@reatom/npm-react";
 import { publicStatsResource } from "../models/forum-stats.model";
+import { AtomState } from "@reatom/core";
+
+type StatsProps = {
+  title: string,
+  value: number | string,
+  defaultValue?: number
+}
+
+export const Stat = ({ title, value, defaultValue = 50 }: StatsProps) => {
+  return (
+    <div className="text-center">
+      <AnimatedNumber
+        className='text-3xl font-bold text-shark-50'
+        springOptions={{
+          bounce: 0,
+          duration: 2000,
+        }}
+        value={Number(value) ?? defaultValue}
+      />
+      <div className="text-shark-300">{title}</div>
+    </div>
+  )
+}
+
+export function transformData(input: AtomState<typeof publicStatsResource.dataAtom>): { title: string, value: number }[] {
+  const data = Object.entries(input).map(([key, value]) => ({
+    title: STAT_TITLE_MAP[key] ?? key,
+    value
+  }))
+
+  return data;
+}
+
+const STAT_TITLE_MAP: Record<string, string> = {
+  "threads": "Тредов",
+  "users": "Пользователей",
+  "posts": "Постов"
+} as const;
 
 export const ForumStats = reatomComponent(({ ctx }) => {
-  const data = ctx.spy(publicStatsResource.dataAtom)
+  const data = transformData(ctx.spy(publicStatsResource.dataAtom))
 
-  return (
-    <>
-      <div className="text-center">
-        <AnimatedNumber
-          className='text-3xl font-bold text-pink-300 mb-1'
-          springOptions={{
-            bounce: 0,
-            duration: 2000,
-          }}
-          value={data?.users ?? 50}
-        />
-        <div className="text-shark-50">Участников</div>
-      </div>
-      <div className="text-center">
-        <AnimatedNumber
-          className='text-3xl font-bold text-pink-300 mb-1'
-          springOptions={{
-            bounce: 0,
-            duration: 2000,
-          }}
-          value={data?.threads ?? 50}
-        />
-        <div className="text-shark-50">Тредов</div>
-      </div>
-      <div className="text-center">
-        <AnimatedNumber
-          className='text-3xl font-bold text-pink-300 mb-1'
-          springOptions={{
-            bounce: 0,
-            duration: 2000,
-          }}
-          value={data?.posts ?? 50}
-        />
-        <div className="text-shark-50">Постов</div>
-      </div>
-    </>
-  )
+  return data.map((stat) => <Stat key={stat.title} {...stat} />)
 }, "ForumStats")

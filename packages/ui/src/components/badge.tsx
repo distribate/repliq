@@ -3,7 +3,7 @@ import { HTMLAttributes } from "react";
 
 const badgeVariants = cva(
   `flex rounded-md text-[12px]
-		text-shark-50 font-normal bg-caribbean-green-600 outline-none border-none`,
+		text-shark-50 font-normal bg-green-600 outline-none border-none`,
   {
     variants: {
       size: {

@@ -13,7 +13,7 @@ async function getTickets() {
       "issues.nickname",
       "issues.type",
       "issues.title",
-      "users.avatar as user_avatar"
+      "users.avatar as avatar"
     ])
     .execute()
 
@@ -23,9 +23,9 @@ async function getTickets() {
 export const getTicketsRoute = new Hono()
   .get("/get-tickets", async (ctx) => {
     try {
-      const tickets = await getTickets();
+      const data = await getTickets();
 
-      return ctx.json({ data: tickets }, 200);
+      return ctx.json({ data }, 200);
     } catch (e) {
       return ctx.json({ error: throwError(e) }, 500);
     }

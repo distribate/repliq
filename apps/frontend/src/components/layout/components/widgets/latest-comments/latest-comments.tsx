@@ -20,28 +20,22 @@ const CommentItem = ({
 }: CommentItemProps) => {
   return (
     <div className="flex flex-col bg-shark-900/40 rounded-lg p-2 gap-1">
-      <div className="flex items-center gap-1">
-        <CustomLink to={createIdLink("user", nickname)} className="h-6 max-h-6 min-h-6 aspect-square">
-          <Avatar
-            url={avatar}
-            nickname={nickname}
-            propWidth={24}
-            propHeight={24}
-            className="h-6 max-h-6 min-h-6 aspect-square"
-          />
-        </CustomLink>
-        <CustomLink to={createIdLink("user", nickname)}>
-          <UserNickname nickname={nickname} />
-        </CustomLink>
-      </div>
-      <Typography className="text-base">
-        {content}
-      </Typography>
-      <div className="flex w-full items-center gap-1">
-        <Typography className="text-sm" textColor="gray">
-          к треду
-        </Typography>
-        <div className="flex overflow-hidden w-2/3 *:px-1 *:py-0.5 *:bg-shark-700 *:rounded-md">
+      <div className="flex items-center gap-2">
+        <div className="flex items-center gap-1">
+          <CustomLink to={createIdLink("user", nickname)} className="h-6 max-h-6 min-h-6 aspect-square">
+            <Avatar
+              url={avatar}
+              nickname={nickname}
+              propWidth={24}
+              propHeight={24}
+              className="h-6 max-h-6 min-h-6 aspect-square"
+            />
+          </CustomLink>
+          <CustomLink to={createIdLink("user", nickname)}>
+            <UserNickname nickname={nickname} />
+          </CustomLink>
+        </div>
+        <div className="flex overflow-hidden w-2/3 *:px-1 *:py-0.5 *:bg-shark-800 *:rounded-sm">
           <Typography textColor="gray" className="text-sm truncate">
             {/* @ts-ignore */}
             <CustomLink to={`/${parent_type}/${parent_id}`} className="text-shark-50">
@@ -50,6 +44,9 @@ const CommentItem = ({
           </Typography>
         </div>
       </div>
+      <Typography className="text-base">
+        {content}
+      </Typography>
     </div>
   )
 }

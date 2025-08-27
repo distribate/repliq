@@ -18,7 +18,7 @@ const HoverCardItem = ({
   return (
     <div
       className={cn(
-        `${isActive && "text-caribbean-green-500"}
+        `${isActive && "text-green-500"}
 			    flex hover:bg-shark-600 focus:bg-shark-600 data-[disabled]:opacity-50
 			     border-none cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm relative`,
         className,

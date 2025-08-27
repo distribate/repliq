@@ -10,7 +10,7 @@ import type {
   ForumPostAppType,
   ForumReportAppType,
   ForumRootAppType
-} from 'forum-backend/src/types/routes-types.ts';
+} from 'backend/src/types/routes-types.ts';
 import { hc } from 'hono/client';
 import { fetchOptions } from './init.ts';
 import { forumBaseUrl } from './api/init.ts';

@@ -40,32 +40,24 @@ export const FriendsSearchingCard = ({
           <UserNickname nickname={nickname} nicknameColor={name_color} />
         </CustomLink>
       </div>
-      <div className="flex flex-col items-center gap-2 *:w-full w-full">
-        <Button
-          className="h-10"
-          variant="positive"
-          onClick={() => navigate(linkToUser)}
-        >
-          <Typography textSize="medium">
-            К профилю
-          </Typography>
-        </Button>
+      <div className="flex flex-col items-center gap-2 w-full">
         {from && (
-          <div className="flex items-center gap-2 ">
-            <Typography textSize="medium">
-              Общий друг с
+          <div className="flex flex-col sm:flex-row sm:items-center gap-2 w-full">
+            <Typography textSize="medium" className="text-nowrap">
+              Общие друзья:
             </Typography>
-            <div className="flex items-center gap-1">
+            <div className="flex items-center gap-1 w-full min-w-0">
               <CustomLink to={createIdLink("user", from.nickname)}>
                 <Avatar
                   url={from.avatar}
                   nickname={from.nickname}
                   propWidth={20}
                   propHeight={20}
+                  className="h-5 min-h-5 max-h-5 aspect-square"
                 />
               </CustomLink>
-              <CustomLink to={createIdLink("user", from.nickname)}>
-                <Typography textSize="medium">
+              <CustomLink to={createIdLink("user", from.nickname)} className="min-w-0">
+                <Typography textSize="medium" className="truncate">
                   {from.nickname}
                 </Typography>
               </CustomLink>

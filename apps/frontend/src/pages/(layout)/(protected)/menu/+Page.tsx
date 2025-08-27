@@ -8,7 +8,7 @@ import { reatomComponent } from "@reatom/npm-react";
 import { createIdLink } from "#lib/create-link";
 import { Separator } from "@repo/ui/src/components/separator";
 import { Typography } from "@repo/ui/src/components/typography";
-import { IconArrowRight, IconBookmark, IconBrandThreads, IconLayoutDashboard, IconLibrary, IconLogout, IconSettings, IconUsersGroup } from "@tabler/icons-react";
+import { IconArrowRight, IconBookmark, IconBrandThreads, IconLayoutDashboard, IconLibrary, IconLogout, IconPlus, IconSettings, IconUsersGroup } from "@tabler/icons-react";
 import { cva } from "class-variance-authority";
 import { Shield } from "lucide-react";
 
@@ -61,6 +61,11 @@ const Logout = reatomComponent(({ ctx }) => {
 }, "Logout")
 
 const LINKS = [
+  {
+    title: "Создать тред",
+    value: "/create-thread",
+    icon: IconPlus
+  },
   {
     title: "Друзья",
     value: "/friends",

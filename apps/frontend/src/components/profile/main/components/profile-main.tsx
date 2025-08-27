@@ -15,6 +15,7 @@ import { SectionPrivatedTrigger } from '#components/templates/components/section
 import { clientOnly } from "vike-react/clientOnly";
 import { atom } from "@reatom/core";
 import { withReset } from "@reatom/framework";
+import { IconApps, IconBrandThreads, IconCardboardsFilled, IconPencilShare, IconUsers } from "@tabler/icons-react";
 
 const Account = clientOnly(() => import("#components/profile/account/components/profile-account.tsx").then(m => m.UserProfileAccount))
 const Friends = clientOnly(() => import("#components/profile/friends/components/profile-friends.tsx").then(m => m.UserProfileFriends))
@@ -24,20 +25,24 @@ const Minecraft = clientOnly(() => import("#components/profile/integrations/mine
 const TabsListContent = reatomComponent(({ ctx }) => {
   return (
     <>
-      <TabsTrigger value="posts">
+      <TabsTrigger value="posts" className="group gap-2">
+        <IconPencilShare size={20} className="group-data-[state=active]:text-shark-950 group-data-[state=inactive]:text-shark-300" />
         <Typography className="font-semibold">Посты</Typography>
       </TabsTrigger>
-      <TabsTrigger value="threads">
+      <TabsTrigger value="threads" className="group gap-2">
+        <IconBrandThreads size={20} className="group-data-[state=active]:text-shark-950 group-data-[state=inactive]:text-shark-300" />
         <Typography className="font-semibold">Треды</Typography>
       </TabsTrigger>
-      <TabsTrigger value="friends">
+      <TabsTrigger value="friends" className="group gap-2">
+        <IconUsers size={20} className="group-data-[state=active]:text-shark-950 group-data-[state=inactive]:text-shark-300" />
         <Typography className="font-semibold">Друзья</Typography>
       </TabsTrigger>
       {ctx.spy(requestedUserMinecraftProfileIsExistsAtom) && (
         ctx.spy(requestedUserGameStatsVisibleAtom) && (
           <>
             <Separator orientation="vertical" className="hidden lg:block" />
-            <TabsTrigger value="minecraft">
+            <TabsTrigger value="minecraft" className="group gap-2">
+              <IconApps size={20} className="group-data-[state=active]:text-shark-950 group-data-[state=inactive]:text-shark-300" />
               <Typography className="font-semibold">Minecraft</Typography>
             </TabsTrigger>
             {ctx.spy(requestedUserSectionIsPrivatedAtom) && <SectionPrivatedTrigger />}
@@ -47,7 +52,8 @@ const TabsListContent = reatomComponent(({ ctx }) => {
       {ctx.spy(requestedUserIsSameAtom) && (
         <>
           <Separator orientation="vertical" className="hidden lg:block" />
-          <TabsTrigger value="account">
+          <TabsTrigger value="account" className="group gap-2">
+            <IconCardboardsFilled size={20} className="group-data-[state=active]:text-shark-950 group-data-[state=inactive]:text-shark-300" />
             <Typography className="font-semibold">Аккаунт</Typography>
           </TabsTrigger>
           {ctx.spy(requestedUserSectionIsPrivatedAtom) && <SectionPrivatedTrigger />}
@@ -74,7 +80,7 @@ export const ProfileContentTabs = reatomComponent(({ ctx }) => {
       >
         <TabsList
           className="md:hidden flex *:rounded-xl rounded-xl 
-            items-center no-scrollbar gap-1 justify-start py-4 overflow-x-auto w-full"
+            items-center no-scrollbar gap-1 justify-start overflow-x-auto w-full"
         >
           <TabsListContent />
         </TabsList>

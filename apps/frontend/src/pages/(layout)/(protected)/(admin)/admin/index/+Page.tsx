@@ -50,7 +50,7 @@ const SECTIONS = [
   {
     title: "Модераторы",
     styles: {
-      color: "bg-helper-background",
+      color: "bg-blue-700",
       height: "h-36"
     },
     value: ""

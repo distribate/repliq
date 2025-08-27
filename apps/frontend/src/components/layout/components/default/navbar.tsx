@@ -22,7 +22,10 @@ const ProfileBadge = reatomComponent(({ ctx }) => {
   const { nickname, avatar } = getUser(ctx)
 
   return (
-    <div className="flex items-center justify-between w-fit h-10 px-2 py-1 gap-3 bg-shark-950 rounded-lg">
+    <div
+      className="flex items-center justify-between w-fit h-10 px-2 py-1 gap-3 
+      hover:bg-shark-900 duration-150 ease-out cursor-pointer bg-shark-950 rounded-lg"
+    >
       <Avatar
         url={avatar}
         propHeight={32}
@@ -38,7 +41,9 @@ const ProfileBadge = reatomComponent(({ ctx }) => {
 const ActionsLinks = () => {
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger className="flex items-center px-2 gap-1 rounded-lg justify-center h-10 bg-shark-950 group">
+      <DropdownMenuTrigger
+        className="flex items-center px-2 gap-1 rounded-lg justify-center h-10 hover:bg-shark-900 duration-150 ease-out cursor-pointer bg-shark-950"
+      >
         <Plus size={24} className="text-shark-300" />
         <MenuArrow />
       </DropdownMenuTrigger>
@@ -60,10 +65,10 @@ const ActionsLinks = () => {
 
 export const Logotype = () => {
   return (
-    <CustomLink to="/home" className="flex items-center gap-1 justify-center w-full select-none">
+    <CustomLink to="/home" className="flex items-center gap-2 justify-center w-full select-none">
       <img src="/logotype.png" width={32} height={32} alt="" className="min-w-10 min-h-10" draggable={false} />
-      <div className="hidden md:block w-fit ml-1">
-        <Typography textSize="very_big" textColor="shark_white" className="leading-7 truncate space-grotesk">
+      <div className="hidden md:block w-fit">
+        <Typography className="tracking-tight text-2xl font-bold truncate space-grotesk">
           Repliq
         </Typography>
       </div>
@@ -92,7 +97,7 @@ const NavbarNotifications = reatomComponent<{ size?: number, orient: "bottom" | 
 const BOTTOM_LINKS = [
   { title: "Главная", value: "/home", icon: IconHome },
   { title: "Поиск", value: "/search", icon: IconSearch },
-  { title: "Создать", value: "/create-thread", icon: IconPlus },
+  // { title: "Создать", value: "/create-thread", icon: IconPlus },
   { title: "Уведомления", value: "/notifications", icon: NavbarNotifications },
   { title: "Меню", value: "/menu", icon: IconMenu2 },
 ]
@@ -141,7 +146,7 @@ export const Navbar = reatomComponent(({ ctx }) => {
         {isAuthenticated && (
           <CustomLink
             to="/notifications"
-            className="flex items-center gap-1 rounded-lg justify-center min-w-10 min-h-10 relative bg-shark-950"
+            className="flex items-center gap-1 rounded-lg justify-center min-w-10 min-h-10 relative hover:bg-shark-900 duration-150 ease-out bg-shark-950"
           >
             <NavbarNotifications orient="top" />
           </CustomLink>

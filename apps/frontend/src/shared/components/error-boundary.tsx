@@ -3,7 +3,7 @@ import { ErrorBoundary as Boundary, FallbackProps } from "react-error-boundary";
 
 function fallbackRender({ error, resetErrorBoundary }: FallbackProps) {
   return (
-    <div className="flex flex-col h-[80dvh] items-center justify-center bg-shark-950 p-4 w-full">
+    <div className="flex flex-col h-[100dvh] items-center justify-center bg-shark-950 p-4 w-full">
       <p className="text-2xl font-semibold">
         Что-то пошло не так...
       </p>

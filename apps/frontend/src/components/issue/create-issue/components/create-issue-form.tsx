@@ -81,7 +81,7 @@ const IssueDesc = reatomComponent(({ ctx }) => {
   return (
     <AutogrowingTextarea
       className="border resize-none min-h-36 max-h-[1250px] border-transparent 
-        focus-visible:border-caribbean-green-200/40 bg-shark-900 rounded-md !p-4 text-[18px]"
+        focus-visible:border-green-500/40 bg-shark-900 rounded-md !p-4 text-[18px]"
       placeholder="Расскажите подробнее о вашей проблеме или предложении"
       autoComplete="off"
       onChange={e => onChange(ctx, e, "desc")}

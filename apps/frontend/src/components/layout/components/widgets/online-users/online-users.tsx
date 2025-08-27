@@ -62,7 +62,7 @@ onDisconnect(onlineUsersAction.dataAtom, (ctx) => onlineUsersAction.dataAtom.res
 
 export const OnlineUsers = reatomComponent(({ ctx }) => {
   return (
-    <div className="flex flex-col gap-4 w-full p-4 rounded-lg overflow-hidden bg-primary-color">
+    <div className="flex flex-col gap-4 w-full p-2 sm:p-4 rounded-lg overflow-hidden bg-primary-color">
       <Typography textSize="big" textColor="shark_white" className="font-semibold">
         Сейчас онлайн
       </Typography>

@@ -37,7 +37,7 @@ const typographyVariants = cva("whitespace-wrap", {
     },
     state: {
       default: "",
-      active: "text-caribbean-green-500",
+      active: "text-green-500",
     },
   },
 });

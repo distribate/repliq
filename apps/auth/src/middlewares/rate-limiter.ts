@@ -1,7 +1,8 @@
 import { createMiddleware } from "hono/factory";
 import { rateLimiter as limiter } from "hono-rate-limiter";
+import { isProduction } from "#helpers/is-production.ts";
 
-const REQUESTS_PER_MINUTE = 200
+const REQUESTS_PER_MINUTE = isProduction ? 400 : 5000;
 
 export const rateLimiterMiddleware = () => createMiddleware(
   limiter({

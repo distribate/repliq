@@ -14,7 +14,7 @@ import {
 } from '@udecode/plate/react';
 import { GripVertical } from 'lucide-react';
 
-import { Button } from '@repo/ui/src/components/button';
+import { Button, ButtonProps } from '@repo/ui/src/components/button';
 
 export const TableRowElement = withRef<typeof PlateElement>(
   ({ children, className, ...props }, ref) => {
@@ -72,6 +72,7 @@ function RowDragHandle({ dragRef }: { dragRef: React.Ref<any> }) {
 
   return (
     <Button
+      // @ts-expect-error
       ref={dragRef}
       variant="default"
       className={cn(

@@ -6,32 +6,33 @@ import {
   userGlobalOptionsAtom,
   userGlobalOptionsInitial
 } from "#components/user/models/current-user.model";
-import { atom, AtomState } from "@reatom/core";
+import { atom, Ctx } from "@reatom/core";
 import { PageContext } from "vike/types";
 import { snapshotAtom } from "./ssr";
 
 export const pageContextAtom = atom<PageContext | null>(null, "pageContext")
+
+const SNAPSHOT_KEYS: Record<
+  string,
+  { atom: (ctx: Ctx, value: any) => void; fallback?: any }
+> = {
+  [IS_AUTHENTICATED_ATOM_KEY]: { atom: isAuthenticatedAtom, fallback: false },
+  [USER_GLOBAL_OPTIONS_KEY]: { atom: userGlobalOptionsAtom, fallback: userGlobalOptionsInitial },
+  [CURRENT_USER_ATOM_KEY]: { atom: currentUserAtom, fallback: null },
+};
 
 pageContextAtom.onChange((ctx, state) => {
   if (!state) return;
 
   const snapshot = state.snapshot ?? {};
 
-  const isAuthenticated = snapshot[IS_AUTHENTICATED_ATOM_KEY]?.data as boolean ?? false
-  const userGlobalOpts = snapshot[USER_GLOBAL_OPTIONS_KEY]?.data as typeof userGlobalOptionsInitial ?? userGlobalOptionsInitial
-  const currentUser = snapshot[CURRENT_USER_ATOM_KEY]?.data as AtomState<typeof currentUserAtom> ?? null
+  Object.entries(SNAPSHOT_KEYS).forEach(([key, { atom, fallback }]) => {
+    const value = snapshot[key]?.data ?? fallback;
 
-  if (isAuthenticated) {
-    isAuthenticatedAtom(ctx, isAuthenticated)
-  }
-
-  if (userGlobalOpts) {
-    userGlobalOptionsAtom(ctx, userGlobalOpts)
-  }
-
-  if (currentUser) {
-    currentUserAtom(ctx, currentUser)
-  }
+    if (value !== undefined && value !== null) {
+      atom(ctx, value);
+    }
+  });
 
   snapshotAtom(ctx, snapshot)
 })

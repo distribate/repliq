@@ -1,7 +1,8 @@
 {
   "extends": "@repo/config-typescript/react-library.json",
   "include": [
-    "."
+    "**/*.ts",
+    "**/*.tsx",
   ],
   "exclude": [
     "dist",
@@ -10,7 +11,9 @@
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
-      "#plate/*": ["./src/*"]
+      "#plate/*": [
+        "./src/*"
+      ]
     }
   }
 }

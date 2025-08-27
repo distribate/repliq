@@ -6,13 +6,7 @@ const userDonateBadgeVariants = cva(
   {
     variants: {
       variant: {
-        default: "border-player-border bg-player-background/80",
-        arkhont: "border-arkhont-border bg-arkhont-background/80",
-        authentic: "border-authentic-border bg-authentic-background/80",
-        helper: "border-helper-border bg-helper-background/80",
-        moder: "border-[] bg-[]",
-        loyal: "border-loyal-border bg-loyal-background/80",
-        dev: "border-none bg-shark-700/80",
+        default: "border-player-border bg-player-background/80"
       },
       size: {
         small: "px-2 py-[2px]",

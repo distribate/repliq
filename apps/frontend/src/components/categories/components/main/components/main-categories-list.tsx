@@ -102,7 +102,7 @@ export const MainCategories = reatomComponent(({ ctx }) => {
       {data.map(category => (
         <div
           key={category.category_id}
-          className="flex flex-col gap-4 w-full rounded-lg p-4 bg-primary-color"
+          className="flex flex-col gap-4 w-full rounded-lg p-2 sm:p-4 bg-primary-color"
         >
           <Typography textSize="very_big" textColor="shark_white" className="font-bold">
             {category.category_title}

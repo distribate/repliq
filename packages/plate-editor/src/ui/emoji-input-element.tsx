@@ -3,7 +3,7 @@ import { withRef } from '@udecode/cn';
 import { EmojiInlineIndexSearch, insertEmoji } from '@udecode/plate-emoji';
 import { EmojiPlugin } from '@udecode/plate-emoji/react';
 import { PlateElement, usePluginOption } from '@udecode/plate/react';
-// @ts-expect-error
+// @ts-ignore
 import { useDebounce } from '#plate/hooks/use-debounce';
 
 import {

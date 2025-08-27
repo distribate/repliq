@@ -27,7 +27,13 @@ export const AdminTicketsList = reatomComponent(({ ctx }) => {
       {data.map(ticket => (
         <div key={ticket.id} className="flex items-center gap-4 w-full bg-shark-900 hover:bg-shark-800 p-2 rounded-lg">
           <div className="flex items-center gap-2">
-            <Avatar url={ticket.user_avatar} nickname={ticket.nickname} propWidth={54} propHeight={54} />
+            <Avatar 
+              url={ticket.avatar} 
+              nickname={ticket.nickname}
+              propWidth={54} 
+              propHeight={54}
+              className="min-h-12 h-12 max-h-12 aspect-square"
+            />
             <Typography>{ticket.nickname}</Typography>
           </div>
           <Typography>Заголовок: {ticket.title}</Typography>

@@ -16,7 +16,7 @@ export const ThreadControl = reatomComponent(({ ctx }) => {
 
   const threadId = ctx.spy(threadParamAtom)
 
-  const link = `/studio?type=threads&target=${threadId}`
+  const link = `/studio/thread/${threadId}/edit`
 
   return (
     <>

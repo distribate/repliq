@@ -2,22 +2,36 @@ import { CustomLink } from "#shared/components/link"
 import { availableCategoriesAction } from "#components/thread/create-thread/models/thread-form.model"
 import { reatomComponent } from "@reatom/npm-react"
 import { Typography } from "@repo/ui/src/components/typography"
+import { onConnect } from "@reatom/framework"
 
-const SearchThreadsCategory = ({ id, title, color, emoji }: { id: number, color: string | null, title: string, emoji: string }) => {
+const SearchThreadsCategory = ({ 
+  id, title, color, emoji 
+}: { 
+  id: number, color: string | null, title: string, emoji: string 
+}) => {
   return (
     <CustomLink
       to={`/category/` + id}
       key={id}
       style={{ backgroundColor: color ?? undefined }}
-      className="flex flex-col relative cursor-pointer h-[80px] md:aspect-video hover:bg-shark-700 w-full md:h-full p-3 lg:p-4 rounded-lg bg-shark-950"
+      className="flex flex-col relative h-[80px] md:aspect-video w-full md:h-full p-3 lg:p-4 rounded-lg"
     >
       <Typography textSize="very_big" textColor="shark_white" className="font-semibold">
         {title}
       </Typography>
-      <img src={emoji} draggable={false} alt="" width={52} height={52} className="absolute bottom-4 right-4 rotate-[15deg]" />
+      <img
+        src={emoji}
+        draggable={false}
+        alt=""
+        width={52}
+        height={52}
+        className="absolute bottom-4 right-4 rotate-[15deg]"
+      />
     </CustomLink>
   )
 }
+
+onConnect(availableCategoriesAction.dataAtom, availableCategoriesAction);
 
 export const SearchThreadsCategories = reatomComponent(({ ctx }) => {
   const categories = ctx.spy(availableCategoriesAction.dataAtom)
