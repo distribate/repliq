@@ -1,27 +1,33 @@
 import { Bot } from 'gramio';
-import { loggerBotCmds, repliqBotCmds } from './cmds';
 import { keyboardCommand } from "../../lib/commands/keyboard-command.ts"
 import { alertCommand } from "../../lib/commands/alert-command.ts"
 import { connectUserCommand } from "../../lib/commands/connect-command.ts"
 import { messageHandler } from "../../lib/handlers/message-handler.ts";
 import { logger } from "@repo/shared/utils/logger.ts";
+import type { TelegramBotCommand } from "gramio";
+
+const repliqBotCmds: TelegramBotCommand[] = [
+  { command: "/connect", description: "Привязать аккаунт" },
+]
+
+const servicedBotCmds: TelegramBotCommand[] = [
+  { command: "/keyboard", description: "Open the keyboard" },
+  { command: "/broadcast", description: "Push a broadcast" },
+  { command: "/notify", description: "Alert for all online users on forum" }
+]
 
 export const repliqBot = new Bot(process.env.REPLIQ_BOT_TOKEN as string)
   .onStart(async () => {
     console.log('\x1B[35m[Telegram bot]\x1B[0m Repliq bot started')
 
-    repliqBot.api.setMyCommands({
-      commands: repliqBotCmds,
-    })
+    repliqBot.api.setMyCommands({ commands: repliqBotCmds })
   })
 
-export const loggerBot = new Bot(process.env.LOGGER_BOT_TOKEN as string)
+export const servicedBot = new Bot(process.env.LOGGER_BOT_TOKEN as string)
   .onStart(async () => {
-    console.log('\x1B[35m[Telegram bot]\x1B[0m Logger bot started')
+    console.log('\x1B[35m[Telegram bot]\x1B[0m Serviced bot started')
 
-    loggerBot.api.setMyCommands({
-      commands: loggerBotCmds,
-    })
+    servicedBot.api.setMyCommands({ commands: servicedBotCmds })
   })
 
 export const commandRegistry = [
@@ -33,7 +39,7 @@ export const commandRegistry = [
     handlers: []
   },
   {
-    bot: loggerBot,
+    bot: servicedBot,
     commands: [
       alertCommand,
       keyboardCommand
@@ -45,7 +51,7 @@ export const commandRegistry = [
 ];
 
 export async function startBots() {
-  await loggerBot.start()
+  await servicedBot.start()
   await repliqBot.start()
 
   for (const entry of commandRegistry) {

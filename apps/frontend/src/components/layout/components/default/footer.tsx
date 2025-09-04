@@ -30,7 +30,10 @@ const FooterItem = ({ href, label }: { href: string | null, label: string }) => 
   }
 
   return (
-    <span onClick={handle} className="group cursor-pointer">
+    <span
+      className="group cursor-pointer"
+      onClick={handle}
+    >
       <Typography
         className="group-hover:underline group-hover:underline-offset-4 decoration-shark-100 text-base truncate text-shark-100"
       >
@@ -118,7 +121,7 @@ export const Footer = () => {
 
   return (
     <div
-      className="block biloba-background lg:max-h-[180px] w-full rounded-xl overflow-hidden relative"
+      className="block biloba-background lg:max-h-48 w-full rounded-xl overflow-hidden relative"
     >
       <div
         className="flex flex-col lg:flex-row items-start lg:justify-center px-4 lg:px-12 py-4 gap-4 bg-white/10 backdrop-blur-md h-full w-full"

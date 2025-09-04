@@ -4,7 +4,9 @@ import { PostFooter } from "#components/post/post-item/components/post-footer.ts
 import type { UserPostItem } from '@repo/types/routes-types/get-user-posts-types.ts';
 import { lazy, Suspense } from "react";
 
-const PostControl = lazy(() => import("#components/post/post-item/components/post-control.tsx").then((m) => ({ default: m.PostControl })));
+const PostControl = lazy(() =>
+  import("#components/post/post-item/components/post-control.tsx").then((m) => ({ default: m.PostControl }))
+);
 
 type ProfilePostsListCardProps = Pick<UserPostItem,
   | "id"
@@ -28,19 +30,32 @@ export const ProfilePostsListCard = ({
     <div className="flex bg-shark-950 group rounded-lg w-full p-2 sm:p-4 flex-col gap-y-2">
       <div className="flex flex-col gap-4">
         <div className="flex justify-between w-full items-center">
-          <PostItemHeader avatar={avatar} nickname={nickname} isPinned={isPinned} visibility={visibility} created_at={created_at} />
+          <PostItemHeader
+            nickname={nickname}
+            created_at={created_at}
+            avatar={avatar}
+            visibility={visibility}
+            isPinned={isPinned}
+          />
           <Suspense>
-            <PostControl id={id} nickname={nickname} isComments={isComments} />
+            <PostControl
+              id={id}
+              nickname={nickname}
+            />
           </Suspense>
         </div>
-        <PostItemBody id={id} content={content} nickname={nickname} />
+        <PostItemBody
+          id={id}
+          nickname={nickname}
+          content={content}
+        />
       </div>
       <PostFooter
-        isViewed={isViewed}
         id={id}
-        views_count={views_count}
-        isUpdated={isUpdated}
         nickname={nickname}
+        views_count={views_count}
+        isViewed={isViewed}
+        isUpdated={isUpdated}
       />
     </div>
   );

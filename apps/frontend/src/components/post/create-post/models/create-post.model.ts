@@ -2,7 +2,7 @@ import { toast } from "sonner";
 import { currentUserAtom } from "#components/user/models/current-user.model.ts";
 import type { GetUserPostsResponse } from '@repo/types/routes-types/get-user-posts-types.ts';
 import { reatomAsync, withErrorAtom, withStatusesAtom } from "@reatom/async";
-import { forumPostClient } from "#shared/forum-client";
+import { postClient } from "#shared/forum-client";
 import { postContentSchema, postFormContentAtom, postFormResetAction, postFormVisibilityAtom, VisibilityPost } from "./post-form.model.ts";
 import * as z from "zod";
 import { postsDataAtom } from "#components/profile/posts/models/posts.model.ts";
@@ -24,7 +24,7 @@ async function createPost({
 }: {
   content: string, isComments: boolean, isPinned: boolean, visibility: "only" | "all" | "friends"
 }) {
-  const res = await forumPostClient.post["create-post"].$post({
+  const res = await postClient.post["create-post"].$post({
     json: { content, isComments, isPinned, visibility }
   })
 

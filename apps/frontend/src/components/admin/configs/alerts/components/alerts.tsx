@@ -3,7 +3,7 @@ import { Avatar } from "#components/user/components/avatar/components/avatar";
 import { Typography } from "@repo/ui/src/components/typography.tsx";
 import { reatomComponent } from "@reatom/npm-react";
 import { DeleteButton } from "@repo/ui/src/components/detele-button.tsx";
-import { alertsResource } from "#components/layout/components/widgets/alert/alert-widget.model.ts";
+import { alertsAction } from "#components/layout/components/widgets/alert/alert-widget.model.ts";
 import { Plus } from "lucide-react";
 import { AlertCreateForm } from "#components/admin/configs/alerts/components/create-alert/components/create-alert-form";
 import { DynamicModal } from "#components/modals/dynamic-modal/components/dynamic-modal";
@@ -85,7 +85,7 @@ const AlertItemDeleteButton = ({ id }: Pick<AlertEntity, "id">) => {
 };
 
 export const Alerts = reatomComponent(({ ctx }) => {
-  const alert = ctx.spy(alertsResource.dataAtom)?.data[0];
+  const alert = ctx.spy(alertsAction.dataAtom)?.data[0];
 
   if (!alert) return null;
 

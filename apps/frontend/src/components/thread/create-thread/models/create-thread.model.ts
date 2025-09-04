@@ -1,7 +1,7 @@
 import { toast } from "sonner";
 import { THREAD_CONTENT_LIMIT_DEFAULT } from "@repo/shared/constants/limits.ts";
 import { reatomAsync, withStatusesAtom } from "@reatom/async";
-import { forumThreadClient } from "#shared/forum-client";
+import { threadClient } from "#shared/forum-client";
 import { createThreadSchema as initial } from "@repo/types/schemas/thread/create-thread-schema.ts";
 import * as z from "zod";
 import ky from "ky";
@@ -94,7 +94,7 @@ export const createThreadAction = reatomAsync(async (ctx) => {
   }
 
   return await ctx.schedule(async () => {
-    const url = forumThreadClient.thread["create-thread"].$url()
+    const url = threadClient.thread["create-thread"].$url()
     const images = await fileArrayToUint8Array(rawImages)
 
     const structure: z.infer<typeof createThreadSchemaRequest> = {

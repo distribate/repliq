@@ -1,7 +1,7 @@
 import { threadOwnerAtom, threadParamAtom } from "#components/thread/models/thread.model"
 import { reatomAsync, withStatusesAtom } from "@reatom/async"
 import { atom, AtomState, Ctx, sleep, withReset } from "@reatom/framework"
-import { forumThreadClient } from "#shared/forum-client"
+import { threadClient } from "#shared/forum-client"
 import { isParamChanged } from "#components/profile/main/models/requested-user.model"
 
 type Response = NonNullable<ReturnType<Awaited<typeof threadRecommendationsAction>["onFulfill"]>>
@@ -26,7 +26,7 @@ export const threadRecommendationsAction = reatomAsync(async (ctx) => {
   await ctx.schedule(() => sleep(100))
 
   return await ctx.schedule(async () => {
-    const res = await forumThreadClient.thread["get-threads-by-owner"][":nickname"].$get({
+    const res = await threadClient.thread["get-threads-by-owner"][":nickname"].$get({
       param: { nickname: target.nickname }, query: { exclude: threadId }
     })
 

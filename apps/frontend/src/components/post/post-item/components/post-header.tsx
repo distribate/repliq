@@ -16,7 +16,7 @@ const VISIBILITY_STATUS: Record<string, string> = {
   only: "видно только вам",
   friends: "видно только друзьям",
   all: ""
-}
+} as const;
 
 export const PostItemHeader = ({
   nickname, created_at, visibility, isPinned, avatar
@@ -51,7 +51,7 @@ export const PostItemHeader = ({
                 {dayjs(created_at).fromNow()}
               </Typography>
             </TooltipTrigger>
-            <TooltipContent side="right">
+            <TooltipContent>
               <Typography className="text-shark-300 text-base">
                 {dayjs(created_at).format("DD.MM.YYYY HH:mm")}
               </Typography>

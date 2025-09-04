@@ -6,9 +6,9 @@ import {
 import { Input } from "@repo/ui/src/components/input.tsx";
 import { Button } from "@repo/ui/src/components/button.tsx";
 import { useState, ChangeEvent } from "react";
-import { controlPostAction } from "#components/post/post-item/models/control-post.model";
 import { UserPostItem } from '@repo/types/routes-types/get-user-posts-types.ts';
 import { reatomComponent } from "@reatom/npm-react";
+import { editPostContentAction } from "../models/control-post.model";
 
 type PostItemBodyProps = Pick<UserPostItem, "content" | "id" | "nickname">
 
@@ -20,9 +20,7 @@ const PostItemBodyEditable = reatomComponent<PostItemBodyProps>(({
   const handleUpdateContent = () => {
     if (!isValid) return;
 
-    editPostsControlAtom(ctx, id, { isEdit: false })
-
-    return controlPostAction(ctx, { type: "edit", id, nickname });
+    return editPostContentAction(ctx, { id, nickname, content: value });
   };
 
   const handleCancelEdit = () => {
@@ -37,14 +35,14 @@ const PostItemBodyEditable = reatomComponent<PostItemBodyProps>(({
     editPostsControlAtom(ctx, id, { content: value.length >= 1 ? value : null })
   };
 
-  const isValid = value !== content && !ctx.spy(controlPostAction.statusesAtom).isPending;
+  const isValid = value !== content && !ctx.spy(editPostContentAction.statusesAtom).isPending;
 
   return (
     <div className="flex flex-col gap-2 w-full">
       <Input
         maxLength={500}
         placeholder="Расскажи о чём нибудь"
-        className="!p-2 !text-[16px] bg-shark-700/10"
+        className="!p-2 !text-[16px] bg-shark-700/10 rounded-lg"
         value={value}
         onChange={onChange}
       />
@@ -96,7 +94,7 @@ const processText = ({ input, truncate }: ProcessText) => {
 
     if (part.match(LINK_REGEX)) {
       return (
-        <a key={index} href={part} rel="noreferrer" className="text-contessa-300 italic cursor-pointer" target="_blank">
+        <a key={index} href={part} rel="noreferrer" className="text-green-300 cursor-pointer" target="_blank">
           {part}
         </a>
       );
@@ -116,14 +114,16 @@ export const PostItemBody = reatomComponent<PostItemBodyProps>(({
   ctx, content, id, nickname
 }) => {
   const [expanded, setExpanded] = useState<boolean>(content.length >= MAX_LENGHT_NON_EXPANDED);
-  const postControlState = getPostsControlAtom(ctx, id)
-
-  const isEdit = postControlState.isEdit;
+  const { isEdit } = getPostsControlAtom(ctx, id)
 
   return (
     <div className="flex w-full">
       {isEdit && (
-        <PostItemBodyEditable content={content} id={id} nickname={nickname} />
+        <PostItemBodyEditable
+          id={id}
+          nickname={nickname}
+          content={content}
+        />
       )}
       {!isEdit && (
         expanded ? (

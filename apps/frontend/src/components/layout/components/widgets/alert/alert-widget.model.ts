@@ -1,25 +1,17 @@
-import { reatomResource, withCache, withDataAtom, withErrorAtom, withStatusesAtom } from '@reatom/async';
+import { reatomAsync, withCache, withDataAtom, withErrorAtom, withStatusesAtom } from '@reatom/async';
 import { atom } from '@reatom/core';
-import { forumSharedClient } from "#shared/forum-client"
+import { sharedClient } from "#shared/forum-client"
 
 export const alertsCursorAtom = atom<string | undefined>(undefined, "alertsCursorAtom")
 export const alertsLimitAtom = atom(1, "alertsLimitAtom")
 
-async function getAlerts({ cursor, limit }: { cursor: string | undefined, limit: number }) {
-  const res = await forumSharedClient.shared["get-alerts"].$get({
-    query: { cursor: cursor, limit: `${limit}` }
-  })
-
+async function getAlert() {
+  const res = await sharedClient.shared["get-alert"].$get()
   const data = await res.json()
-
-  if ("error" in data) return null
-
-  return data
+  if ("error" in data) throw new Error(data.error)
+  return data.data
 }
 
-export const alertsResource = reatomResource(async (ctx) => {
-  const cursor = ctx.spy(alertsCursorAtom)
-  const limit = ctx.spy(alertsLimitAtom)
-
-  return await ctx.schedule(() => getAlerts({ cursor, limit }))
+export const alertsAction = reatomAsync(async (ctx) => {
+  return await ctx.schedule(() => getAlert())
 }).pipe(withDataAtom(), withStatusesAtom(), withCache(), withErrorAtom())

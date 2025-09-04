@@ -1,4 +1,4 @@
-import { loggerBot } from '../shared/bots/init.ts';
+import { servicedBot } from '../shared/bots/init.ts';
 import { type AdminsWithDetails, getAdmins } from '../lib/queries/get-admins.ts';
 
 type SendLoggerBot = {
@@ -20,12 +20,12 @@ export async function sendInLoggerBot({
       for (const { telegram_id } of admins) {
         if (!telegram_id) continue;
 
-        await loggerBot.api.sendMessage({ chat_id: telegram_id, text });
+        await servicedBot.api.sendMessage({ chat_id: telegram_id, text });
       }
 
       break;
     case "log":
-      await loggerBot.api.sendMessage({ chat_id: "-4007811783", text });
+      await servicedBot.api.sendMessage({ chat_id: "-4007811783", text });
 
       break;
     default:

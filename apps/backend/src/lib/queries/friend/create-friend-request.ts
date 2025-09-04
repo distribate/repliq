@@ -1,5 +1,4 @@
 import { forumDB } from "#shared/database/forum-db.ts";
-import type { InitiatorRecipientType } from "#types/initiator-recipient-type.ts";
 
 type CreateFriendRequest = InitiatorRecipientType
 

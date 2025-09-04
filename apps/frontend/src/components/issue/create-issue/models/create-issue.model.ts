@@ -1,6 +1,6 @@
 import { toast } from "sonner";
 import { reatomAsync, withStatusesAtom } from "@reatom/async";
-import { forumUserClient } from "#shared/forum-client"
+import { userClient } from "#shared/forum-client"
 import { createIssueSchema } from "@repo/types/schemas/issue/create-issue-schema"
 import * as z from "zod"
 import { action, atom, batch } from "@reatom/core";
@@ -47,7 +47,7 @@ export const createIssueAction = reatomAsync(async (ctx) => {
   const type = ctx.get(issueTypeAtom)
 
   return await ctx.schedule(async () => {
-    const res = await forumUserClient.user["create-issue"].$post({ json: { title, description, type } })
+    const res = await userClient.user["create-issue"].$post({ json: { title, description, type } })
     const data = await res.json()
 
     if ("error" in data) throw new Error(data.error)

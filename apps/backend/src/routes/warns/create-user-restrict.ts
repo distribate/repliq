@@ -1,4 +1,3 @@
-import type { InitiatorRecipientType } from "#types/initiator-recipient-type.ts"
 import { throwError } from "#utils/throw-error.ts"
 import { Hono } from "hono"
 import * as z from "zod"

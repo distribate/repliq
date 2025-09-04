@@ -2,7 +2,7 @@ import { withHistory } from '#lib/with-history';
 import { withReset } from '@reatom/framework';
 import { reatomAsync, withStatusesAtom } from '@reatom/async';
 import { atom } from '@reatom/core';
-import { forumUserClient } from "#shared/forum-client";
+import { userClient } from "#shared/forum-client";
 import dayjs from "@repo/shared/constants/dayjs-instance";
 
 type UserStatus = {
@@ -53,7 +53,7 @@ userStatusParamAtom.onChange((ctx, state) => {
 
 export const userStatusAction = reatomAsync(async (ctx, nickname: string) => {
   return await ctx.schedule(async () => {
-    const res = await forumUserClient.user["get-user-status"][":nickname"].$get({ param: { nickname } })
+    const res = await userClient.user["get-user-status"][":nickname"].$get({ param: { nickname } })
     const data = await res.json()
 
     if ("error" in data) throw new Error(data.error)

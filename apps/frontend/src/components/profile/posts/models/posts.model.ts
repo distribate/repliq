@@ -3,7 +3,7 @@ import { atom, Ctx } from '@reatom/core';
 import { reatomAsync, withStatusesAtom } from '@reatom/async';
 import { withReset } from '@reatom/framework';
 import { isParamChanged, requestedUserParamAtom } from '#components/profile/main/models/requested-user.model.ts';
-import { forumUserClient } from '#shared/forum-client.ts';
+import { userClient } from '#shared/forum-client.ts';
 import { z } from 'zod';
 import { getUserPostsSchema } from '@repo/types/schemas/posts/user-posts-schema.ts';
 import { logger } from '@repo/shared/utils/logger.ts';
@@ -29,7 +29,7 @@ type GetPosts = Omit<z.infer<typeof getUserPostsSchema>, 'currentUserNickname'> 
 export async function getPosts({
   nickname, ascending = false, filteringType, cursor, searchQuery
 }: GetPosts) {
-  const res = await forumUserClient.user['get-user-posts'][':nickname'].$get({
+  const res = await userClient.user['get-user-posts'][':nickname'].$get({
     query: {
       ascending: ascending.toString(), filteringType, cursor, searchQuery
     },

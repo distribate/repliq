@@ -1,4 +1,3 @@
-import { Separator } from "@repo/ui/src/components/separator"
 import { Skeleton } from "@repo/ui/src/components/skeleton"
 
 export const LatestCommentsSkeleton = () => {
@@ -50,37 +49,5 @@ export const OnlineUsersSkeleton = () => {
         )}
       </div>
     </div>
-  )
-}
-
-const MainCategoriesSkeleton = () => {
-  return (
-    <div className="flex flex-col gap-y-4 w-full">
-      <div className="flex flex-col rounded-lg gap-2 w-full">
-        {Array.from({ length: 3 }).map((_, idx) => (
-          <div
-            key={idx}
-            className="flex flex-col gap-y-4 w-full py-8 rounded-lg px-4 bg-primary-color"
-          >
-            <div className="flex items-center w-fit gap-2">
-              <Skeleton className="h-12 w-36" />
-            </div>
-            <div className="flex flex-col gap-y-2 w-full">
-              <Skeleton className="h-10 w-24" />
-              <div className="flex flex-col gap-y-2 w-full h-full">
-                {Array.from({ length: 3 }).map((_, idx) =>
-                  <Skeleton key={idx} className="h-20 w-full" />
-                )}
-              </div>
-            </div>
-            <Separator />
-            <div className="flex items-center gap-2 w-fit h-full">
-              <Skeleton className="h-10 w-16" />
-              <Skeleton className="h-10 w-16" />
-            </div>
-          </div>
-        ))}
-      </div>
-    </div >
   )
 }

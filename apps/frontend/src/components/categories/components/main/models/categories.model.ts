@@ -1,9 +1,9 @@
 import { reatomResource, withCache, withDataAtom, withStatusesAtom } from "@reatom/async";
-import { forumCategoriesClient } from "#shared/forum-client";
+import { categoriesClient } from "#shared/forum-client";
 
 export const mainCategoriesResource = reatomResource(async (ctx) => {
   return await ctx.schedule(async () => {
-    const res = await forumCategoriesClient.categories["get-latest-category-threads"].$get(
+    const res = await categoriesClient.categories["get-latest-category-threads"].$get(
       {}, { init: { signal: ctx.controller.signal } }
     );
 

@@ -1,6 +1,6 @@
 import { forumDB } from "#shared/database/forum-db.ts";
 import * as z from "zod";
-import type { InitiatorRecipientType } from "#types/initiator-recipient-type.ts";
+
 import type { friendPinSchema } from "@repo/types/schemas/friend/friend-pin-schema";
 
 type DeleteFriendPin = z.infer<typeof friendPinSchema> 

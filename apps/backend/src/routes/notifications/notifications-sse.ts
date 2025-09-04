@@ -19,7 +19,7 @@ async function validateUserNotificationsPreference(nickname: string) {
 }
 
 export const notificationsSSERoute = new Hono()
-  .get("/notifications/connect", async (ctx) => {
+  .get("/connect", async (ctx) => {
     const nickname = getNickname()
     
     const isValid = await validateUserNotificationsPreference(nickname)

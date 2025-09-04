@@ -1,19 +1,19 @@
 import { threadPropertiesAtom } from "#components/thread/models/thread.model"
-import { forumThreadClient } from "#shared/forum-client"
+import { threadClient } from "#shared/forum-client"
 import { reatomAsync, withStatusesAtom } from "@reatom/async"
 import { atom } from "@reatom/core"
 import { sleep } from "@reatom/framework"
 import { toast } from "sonner"
 
 async function saveThread(id: string) {
-  const res = await forumThreadClient.thread["save-thread"][":id"].$post({ param: { id } })
+  const res = await threadClient.thread["save-thread"][":id"].$post({ param: { id } })
   const data = await res.json()
   if ("error" in data) throw new Error(data.error)
   return data.data
 }
 
 async function unsaveThread(id: string) {
-  const res = await forumThreadClient.thread["unsave-thread"][":id"].$post({ param: { id } })
+  const res = await threadClient.thread["unsave-thread"][":id"].$post({ param: { id } })
   const data = await res.json()
   if ("error" in data) throw new Error(data.error)
   return data.data

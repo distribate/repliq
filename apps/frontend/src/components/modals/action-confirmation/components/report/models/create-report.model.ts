@@ -2,7 +2,7 @@ import { reportAtom, reportDescriptionAtom, reportDialogIsOpenAtom } from "#comp
 import { toast } from "sonner";
 import { currentUserNicknameAtom } from "#components/user/models/current-user.model.ts";
 import { ReportType } from "@repo/types/db/forum-database-types";
-import { forumReportClient } from "#shared/forum-client";
+import { reportClient } from "#shared/forum-client";
 import { reatomAsync, withStatusesAtom } from "@reatom/async";
 
 export type CreateReport = {
@@ -20,7 +20,7 @@ async function createReport({
 }: CreateReport) {
   const reported_item = { targetId, targetContent, targetNickname };
 
-  const res = await forumReportClient.report["create-report"].$post({
+  const res = await reportClient.report["create-report"].$post({
     json: {
       reason,
       report_type: type,

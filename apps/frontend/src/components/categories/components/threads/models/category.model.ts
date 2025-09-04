@@ -1,6 +1,6 @@
 import { reatomResource, withCache, withDataAtom, withStatusesAtom } from "@reatom/async"
 import { atom } from "@reatom/core"
-import { forumCategoriesClient } from "#shared/forum-client"
+import { categoriesClient } from "#shared/forum-client"
 
 export const categoryIdAtom = atom<string | null>(null, "categoryIdAtom")
 
@@ -9,7 +9,7 @@ export const categoryResource = reatomResource(async (ctx) => {
   if (!id) return
 
   return await ctx.schedule(async () => {
-    const res = await forumCategoriesClient.categories["get-category"][":id"].$get(
+    const res = await categoriesClient.categories["get-category"][":id"].$get(
       { param: { id } }, { init: { signal: ctx.controller.signal } }
     )
     

@@ -2,7 +2,7 @@ import { atom, batch, Ctx } from "@reatom/core";
 import { reatomAsync, withCache, withStatusesAtom } from "@reatom/async";
 import { Friend, GetFriendsResponse } from "@repo/types/schemas/friend/friend-types.ts";
 import { withReset } from "@reatom/framework";
-import { forumUserClient } from "#shared/forum-client";
+import { userClient } from "#shared/forum-client";
 import * as z from "zod";
 import ky from "ky";
 import { getUserFriendsSchema } from "@repo/types/schemas/user/get-user-friends-schema";
@@ -62,7 +62,7 @@ export async function getFriends(
   { nickname, sort_type, ascending, cursor, limit }: GetFriends,
   init?: RequestInit
 ): Promise<GetFriendsResponse | null> {
-  const url = forumUserClient.user["get-friends"][":nickname"].$url({
+  const url = userClient.user["get-friends"][":nickname"].$url({
     param: { nickname },
     query: {
       sort_type,

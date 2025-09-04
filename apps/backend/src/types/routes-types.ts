@@ -1,17 +1,23 @@
-import type { 
-  admin, category, search, thread, post, 
-  report, user, comment, reaction, shared, 
-  root
-} from "../index.ts"
+import type { admin } from "#routes/admin/index.ts"
+import type { category } from "#routes/categories/index.ts"
+import type { comment } from "#routes/comments/index.ts"
+import type { post } from "#routes/post/index.ts"
+import type { shared } from "#routes/public/index.ts"
+import type { reaction } from "#routes/reaction/index.ts"
+import type { report } from "#routes/report/index.ts"
+import type { root } from "#routes/root/index.ts"
+import type { search } from "#routes/search/index.ts"
+import type { thread } from "#routes/thread/index.ts"
+import type { user } from "#routes/user/index.ts"
 
-export type ForumUserAppType = typeof user
-export type ForumThreadAppType = typeof thread
-export type ForumAdminAppType = typeof admin
-export type ForumCategoriesAppType = typeof category
-export type ForumCommentAppType = typeof comment
-export type ForumReactionAppType = typeof reaction
-export type ForumSharedAppType = typeof shared
-export type ForumSearchAppType = typeof search
-export type ForumPostAppType = typeof post
-export type ForumReportAppType = typeof report
-export type ForumRootAppType = typeof root
+export type UserAppType = typeof user
+export type ThreadAppType = typeof thread
+export type AdminAppType = typeof admin
+export type CategoriesAppType = typeof category
+export type CommentAppType = typeof comment
+export type ReactionAppType = typeof reaction
+export type SharedAppType = typeof shared
+export type SearchAppType = typeof search
+export type PostAppType = typeof post
+export type ReportAppType = typeof report
+export type RootAppType = typeof root

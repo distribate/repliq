@@ -10,7 +10,8 @@
     "build": "NODE_ENV=production bun build src/index.ts --target bun --outdir ./dist --sourcemap --minify",
     "lint": "bun x eslint \"src/**/*.ts\"",
     "lint:fix": "bun eslint \"src/**/*.ts\" --fix",
-    "type-check": "tsc --noEmit"
+    "type-check": "tsc --noEmit",
+    "generate-docs": "bunx @rcmade/hono-docs generate --config ./docs.ts"
   },
   "imports": {
     "#*": "./src/*"
@@ -44,6 +45,7 @@
   },
   "devDependencies": {
     "@gramio/types": "8.1.0",
+    "@rcmade/hono-docs": "^1.0.30",
     "@repo/config-eslint": "*",
     "@repo/config-tailwind": "*",
     "@repo/config-typescript": "*",

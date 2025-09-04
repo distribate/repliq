@@ -1,13 +1,15 @@
-type IdLinks = "thread" | "user" | "category" | "land"
+type IdLinks =
+  | "thread" 
+  | "user" 
+  | "category"
 
 type GlobalLinks = IdLinks | "auth"
 
 const LINKS_MAP: Record<IdLinks, string> = {
   "thread": "thread/",
   "user": "user/",
-  "land": "lands/",
   "category": "category/",
-}
+} as const
 
 function isIdLink(type: string): type is IdLinks {
   return type in LINKS_MAP;
@@ -21,7 +23,7 @@ export const createIdLink = (type: GlobalLinks, value?: string): string => {
   } else {
     if (type.startsWith('/')) {
       basePath = type;
-    } else if (type === "" as string) { 
+    } else if (type === "" as string) {
       basePath = "/";
     }
 

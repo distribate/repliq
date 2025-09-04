@@ -1,4 +1,3 @@
-import type { InitiatorRecipientType } from "#types/initiator-recipient-type.ts"
 import { getNatsConnection } from "@repo/config-nats/nats-client"
 import { USER_NOTIFICATIONS_SUBJECT } from "@repo/shared/constants/nats-subjects"
 

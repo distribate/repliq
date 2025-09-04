@@ -4,7 +4,7 @@ import {
   DialogContent,
   DialogTrigger,
 } from "@repo/ui/src/components/dialog.tsx";
-import { DialogLoader } from "#components/templates/components/dialog-loader";
+import { WindowLoader } from "@repo/ui/src/components/window-loader";
 
 type DynamicModalProps = {
   trigger: ReactNode;
@@ -18,6 +18,14 @@ type DynamicModalProps = {
     }
     | { withLoader?: false, isPending?: never }
   )
+
+const DialogLoader = () => {
+  return (
+    <div className="flex w-full h-full justify-center items-center p-6">
+      <WindowLoader />
+    </div>
+  );
+};
 
 export const DynamicModal = ({
   content, trigger, contentClassName, triggerClassName, withLoader, isPending, autoClose = false,

@@ -1,11 +1,8 @@
-import { Skeleton } from '@repo/ui/src/components/skeleton.tsx'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@repo/ui/src/components/tabs.tsx'
 import { Typography } from '@repo/ui/src/components/typography.tsx'
 import { cva } from 'class-variance-authority'
 import { Edit, Eye } from 'lucide-react'
-import { clientOnly } from 'vike-react/clientOnly'
-
-const FormThreadEditor = clientOnly(() => import('./form-thread-editor.tsx').then(m => m.FormThreadEditor))
+import { FormThreadEditor } from './form-thread-editor'
 
 const tabVariant = cva(`
   flex group items-center justify-center 

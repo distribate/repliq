@@ -1,4 +1,4 @@
-import { forumUserClient } from "#shared/forum-client";
+import { userClient } from "#shared/forum-client";
 import { reatomAsync, withDataAtom } from "@reatom/async";
 import { currentUserNicknameAtom } from "#components/user/models/current-user.model";
 import { logger } from "@repo/shared/utils/logger.ts";
@@ -7,7 +7,7 @@ export async function getFriendsCount(
   nickname: string,
   init?: RequestInit
 ) {
-  const res = await forumUserClient.user["get-friends-meta"].$get({ param: { nickname } }, { init })
+  const res = await userClient.user["get-friends-meta"].$get({ param: { nickname } }, { init })
   const data = await res.json()
   if (!data || "error" in data) return null;
   return data.data

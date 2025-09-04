@@ -13,6 +13,7 @@ async function getPostViewers(id: string) {
       "posts_views.created_at",
       "users.nickname",
       "users.name_color",
+      "users.avatar",
       eb.case()
         .when('users_subs.id', 'is not', null)
         .then(true)
@@ -20,10 +21,17 @@ async function getPostViewers(id: string) {
         .end()
         .as('is_donate'),
     ])
+    .limit(16)
     .where("post_id", "=", id)
+    .orderBy("posts_views.created_at", "desc")
     .execute()
 
-  return query;
+  return {
+    data: query,
+    meta: {
+      count: query.length
+    }
+  };
 }
 
 export const getPostViewersRoute = new Hono()

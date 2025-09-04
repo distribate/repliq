@@ -1,6 +1,8 @@
+import { atom } from "@reatom/core";
 import { reatomComponent } from "@reatom/npm-react";
 import { Bug, Clock, Filter, Heart, MessageCircle, Newspaper, Share2, Shield, Sparkles, Star, Zap } from "lucide-react"
-import { newsSelectedFilterAtom } from "../+Layout";
+
+const newsSelectedFilterAtom = atom<string>("all");
 
 export default function NewsRouteComponent() {
   return <News />
@@ -57,7 +59,8 @@ const NewsCard = ({ item }: { item: NewsItem }) => {
   return (
     <article
       className={`bg-shark-800/50 backdrop-blur-sm 
-    border border-shark-700/50 rounded-xl p-6 hover:bg-shark-800/70 transition-all duration-300 hover:scale-[1.02] hover:shadow-lg hover:shadow-green-500/10
+      border border-shark-700/50 rounded-xl 
+      p-6 hover:bg-shark-800/70 transition-all duration-300 hover:scale-[1.02] hover:shadow-lg hover:shadow-green-500/10
      ${item.featured ? 'ring-2 ring-green-500/30' : ''}`}
     >
       {item.featured && (
@@ -125,36 +128,11 @@ const NewsCard = ({ item }: { item: NewsItem }) => {
 
 
 const News = reatomComponent(({ ctx }) => {
-  const selectedFilter = ctx.spy(newsSelectedFilterAtom)
-
-  const filteredNews = selectedFilter === 'all'
-    ? mockNews
-    : mockNews.filter(item => item.type === selectedFilter);
-
   return (
-    <div className="space-y-6">
-      <div className="flex items-center gap-4 justify-center">
-        <Filter className="w-5 h-5 text-shark-400" />
-        <div className="flex gap-2">
-          {['all', 'announcement', 'feature', 'update', 'bugfix', 'security'].map((filter) => (
-            <button
-              key={filter}
-              onClick={() => newsSelectedFilterAtom(ctx, filter)}
-              className={`px-3 py-1 rounded-lg text-sm font-medium transition-all duration-200 capitalize ${selectedFilter === filter
-                ? 'bg-green-500 text-shark-50 shadow-lg shadow-green-500/25'
-                : 'bg-shark-700/50 text-shark-300 hover:bg-shark-700 hover:text-shark-50'
-                }`}
-            >
-              {filter}
-            </button>
-          ))}
-        </div>
-      </div>
-      <div className="space-y-6">
-        {filteredNews.map((item) => (
-          <NewsCard key={item.id} item={item} />
-        ))}
-      </div>
+    <div className="flex flex-col gap-6 w-full h-fit">
+      {mockNews.map((item) => (
+        <NewsCard key={item.id} item={item} />
+      ))}
     </div>
   )
 }, "News")

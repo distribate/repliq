@@ -1,11 +1,11 @@
 import { reatomAsync, withDataAtom, withStatusesAtom } from '@reatom/async';
-import { forumSharedClient } from "#shared/forum-client.ts";
+import { sharedClient } from "#shared/forum-client.ts";
 
 export const getLatestRegUsers = async (
   limit?: number,
   init?: RequestInit
 ) => {
-  const res = await forumSharedClient.shared["get-latest-reg-users"].$get(
+  const res = await sharedClient.shared["get-latest-reg-users"].$get(
     { query: { limit: limit ? `${limit}` : undefined } }, { init }
   )
 

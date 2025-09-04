@@ -1,5 +1,5 @@
 import { currentUserNicknameAtom } from "#components/user/models/current-user.model"
-import { forumUserClient } from "#shared/forum-client"
+import { userClient } from "#shared/forum-client"
 import { reatomAsync, withCache, withDataAtom, withStatusesAtom } from "@reatom/async"
 import { batch } from "@reatom/core"
 import { requestedUserAtom } from "#components/profile/main/models/requested-user.model"
@@ -7,7 +7,7 @@ import { userCoverSelectedAvatarAtom } from "#components/profile/header/models/a
 
 export const userAvatars = reatomAsync(async (ctx, nickname: string) => {
   return await ctx.schedule(async () => {
-    const res = await forumUserClient.user["get-user-avatars"][":nickname"].$get(
+    const res = await userClient.user["get-user-avatars"][":nickname"].$get(
       { param: { nickname } }, { init: { signal: ctx.controller.signal } }
     )
 

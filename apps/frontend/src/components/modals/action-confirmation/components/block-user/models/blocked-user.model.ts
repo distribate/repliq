@@ -2,7 +2,7 @@ import { requestedUserProfileBlockedAtom, requestedUserProfileStatusAtom } from 
 import { reatomAsync, withDataAtom, withStatusesAtom } from "@reatom/async";
 import { atom, batch } from "@reatom/core";
 import { withReset } from "@reatom/framework";
-import { forumUserClient } from "#shared/forum-client";
+import { userClient } from "#shared/forum-client";
 import { toast } from "sonner";
 
 type ControlBlockUserActionVariables = {
@@ -18,7 +18,7 @@ const controlBlockUserActionVariablesAtom = atom<ControlBlockUserActionVariables
 
 export const blockedUserAction = reatomAsync(async (ctx, nickname: string) => {
   return await ctx.schedule(async () => {
-    const res = await forumUserClient.user["get-user-is-blocked"][":nickname"].$get(
+    const res = await userClient.user["get-user-is-blocked"][":nickname"].$get(
       { param: { nickname } }, { init: { signal: ctx.controller.signal } }
     )
 
@@ -51,7 +51,7 @@ export const controlBlockUserAction = reatomAsync(async (ctx, recipient: string)
   }
 
   return await ctx.schedule(async () => {
-    const res = await forumUserClient.user["control-user-blocked"].$post({ json: { recipient, type } })
+    const res = await userClient.user["control-user-blocked"].$post({ json: { recipient, type } })
     const data = await res.json()
     
     if ('error' in data) throw new Error(data.error)

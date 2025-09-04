@@ -19,16 +19,16 @@ let nc: NatsConnection | null = null;
 export async function initNats() {
   try {
     nc = await connect(NATS_CONFIG);
-    console.log(`Connected to ${NATS_CONFIG.servers}`);
+    console.log(`\x1B[35m[NATS]\x1B[0m Connected to ${NATS_CONFIG.servers}`);
   } catch (e) {
-    console.error('Failed to connect to NATS:', e);
+    console.error('\x1B[35m[NATS]\x1B[0m Failed to connect', e);
     exit(1)
   }
 }
 
 export function getNatsConnection(): NatsConnection {
   if (!nc) {
-    throw new Error('NATS client is not initialized');
+    throw new Error('\x1B[35m[NATS]\x1B[0m Client is not initialized');
   }
   
   return nc;
@@ -38,11 +38,11 @@ export async function closeNatsConnection() {
   if (!nc) return;
 
   try {
-    console.log('Closing NATS connection...');
+    console.log('\x1B[35m[NATS]\x1B[0m Closing connection...');
     await nc.drain();
-    console.log('NATS connection closed.');
+    console.log('\x1B[35m[NATS]\x1B[0m Connection closed.');
   } catch (e) {
-    console.error('Error closing NATS connection:', e);
+    console.error('\x1B[35m[NATS]\x1B[0m Closing connection:', e);
     exit(1)
   }
 }

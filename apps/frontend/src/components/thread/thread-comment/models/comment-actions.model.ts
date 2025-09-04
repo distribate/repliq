@@ -1,5 +1,5 @@
 import { threadCommentsDataAtom } from '#components/thread/thread-comments/models/thread-comments.model';
-import { forumCommentClient } from '#shared/forum-client';
+import { commentClient } from '#shared/forum-client';
 import { atom, Ctx, reatomAsync, reatomMap, withReset, withStatusesAtom } from '@reatom/framework';
 
 type CommentActions = {
@@ -26,7 +26,7 @@ export const removeCommentAction = reatomAsync(async (ctx, id: number) => {
   removeCommentActionVariablesAtom(ctx, id);
 
   return await ctx.schedule(async () => {
-    const res = await forumCommentClient.comment["remove-comment"].$delete({
+    const res = await commentClient.comment["remove-comment"].$delete({
       json: {
         comment_id: id,
         parent_type: "thread"

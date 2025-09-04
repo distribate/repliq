@@ -12,7 +12,7 @@ import { forumDB } from "../shared/database/forum-db";
 import { repliqBot } from "../shared/bots/init.ts";
 import { format } from "gramio";
 import { logger } from "@repo/shared/utils/logger.ts";
-import { loggerBot } from "../shared/bots/init.ts"
+import { servicedBot } from "../shared/bots/init.ts"
 import type { Selectable } from "kysely"
 import { getAdmins } from "../lib/queries/get-admins"
 
@@ -98,7 +98,7 @@ const notifyIssueReceived = async (issue: Selectable<Issues>) => {
   for (const { telegram_id } of admins) {
     if (!telegram_id) continue
 
-    await loggerBot.api.sendMessage({
+    await servicedBot.api.sendMessage({
       chat_id: telegram_id,
       text: message
     })

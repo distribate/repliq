@@ -3,8 +3,12 @@ import { ButtonHTMLAttributes } from "react";
 import { X } from "lucide-react";
 import { Button } from "./button.tsx";
 
+export const actionButtonVariant = cva(`
+  flex items-center justify-center rounded-sm aspect-square cursor-pointer duration-150
+`)
+
 const deleteButtonVariants = cva(
-  "rounded-sm items-center duration-150 z-[3] hover:bg-red-800 bg-red-700 justify-center cursor-pointer overflow-hidden flex",
+  `${actionButtonVariant()} z-[3] hover:bg-red-800 bg-red-700 overflow-hidden`,
   {
     variants: {
       variant: {
@@ -13,7 +17,7 @@ const deleteButtonVariants = cva(
       },
       size: {
         default: "h-1 w-1 p-2",
-        small: "h-5 w-5",
+        small: "h-8 w-8",
         medium: "h-10 w-10",
       },
     },
@@ -31,7 +35,7 @@ export const DeleteButton = ({
 }: DeleteButtonProps) => {
   return (
     <Button className={deleteButtonVariants({ variant, className, size })} {...props}>
-      <X size={14} className="text-shark-50" />
+      <X size={16} className="text-shark-50" />
     </Button>
   );
 };

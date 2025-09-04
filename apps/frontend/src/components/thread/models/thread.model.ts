@@ -3,12 +3,12 @@ import { currentUserNicknameAtom } from "#components/user/models/current-user.mo
 import { action, atom, batch } from "@reatom/core";
 import { withReset } from "@reatom/framework";
 import { withHistory } from '#lib/with-history';
-import { forumThreadClient } from "#shared/forum-client";
+import { threadClient } from "#shared/forum-client";
 import { ThreadDetailed, ThreadOwner } from "@repo/types/entities/thread-type";
 import { Value } from "@udecode/plate";
 
 export async function getThreadModel(id: string, { headers }: RequestInit) {
-  const res = await forumThreadClient.thread['get-thread'][':id'].$get({ param: { id } }, { init: { headers } });
+  const res = await threadClient.thread['get-thread'][':id'].$get({ param: { id } }, { init: { headers } });
   const data = await res.json();
   if ('error' in data) throw new Error(data.error)
 

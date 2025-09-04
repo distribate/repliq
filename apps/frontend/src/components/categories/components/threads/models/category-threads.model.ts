@@ -1,4 +1,4 @@
-import { forumCategoriesClient } from '#shared/forum-client.ts';
+import { categoriesClient } from '#shared/forum-client.ts';
 import { reatomAsync, withDataAtom, withStatusesAtom } from '@reatom/async';
 import { atom } from '@reatom/core';
 
@@ -12,7 +12,7 @@ type GetCategoryThreads = {
 async function getCategoryThreads({
   id, limit, cursor, ascending = true
 }: GetCategoryThreads) {
-  const res = await forumCategoriesClient.categories["get-category-threads"][":id"].$get({
+  const res = await categoriesClient.categories["get-category-threads"][":id"].$get({
     param: { id },
     query: { limit: `${limit}`, ascending: `${ascending}`, cursor }
   })

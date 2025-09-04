@@ -4,7 +4,7 @@ import { friendsCountAction } from "#components/friends/models/friends-count.mod
 import { reatomAsync, withStatusesAtom } from "@reatom/async";
 import { atom, batch } from "@reatom/core";
 import { incomingRequestsAtom, outgoingRequestsAtom } from "#components/friends/models/friends-requests.model.ts";
-import { forumUserClient } from '#shared/forum-client.ts';
+import { userClient } from '#shared/forum-client.ts';
 import { friendStatusesAtom } from "../components/friend-button/models/friend-status.model";
 import { myFriendsAction, myFriendsDataAtom } from "#components/friends/models/friends.model";
 import { withReset } from "@reatom/framework";
@@ -38,7 +38,7 @@ const controlOutgoingRequestVariablesAtom = atom<ControlOutgoingRequest | null>(
 const removeFriendActionVariablesAtom = atom<ControlFriendProperties | null>(null, "removeFriendActionVariables")
 
 async function deleteFriendRequest({ request_id }: Pick<ControlFriendRequest, "request_id">) {
-  const res = await forumUserClient.user["delete-friend-request"].$post({ json: { request_id } })
+  const res = await userClient.user["delete-friend-request"].$post({ json: { request_id } })
   const data = await res.json();
   if ("error" in data) throw new Error(data.error)
 
@@ -49,7 +49,7 @@ async function deleteFriendRequest({ request_id }: Pick<ControlFriendRequest, "r
 }
 
 async function createFriendRequest({ recipient }: Pick<ControlFriendRequest, "recipient">) {
-  const res = await forumUserClient.user["create-friend-request"].$post({ json: { recipient } })
+  const res = await userClient.user["create-friend-request"].$post({ json: { recipient } })
   const data = await res.json();
   if ("error" in data) throw new Error(data.error)
 
@@ -60,7 +60,7 @@ async function createFriendRequest({ recipient }: Pick<ControlFriendRequest, "re
 }
 
 async function acceptFriendRequest({ request_id }: Pick<ControlFriendRequest, "request_id">) {
-  const res = await forumUserClient.user["accept-friend-request"].$post({ json: { request_id } })
+  const res = await userClient.user["accept-friend-request"].$post({ json: { request_id } })
   const data = await res.json();
   if ("error" in data) throw new Error(data.error)
 
@@ -279,7 +279,7 @@ removeFriendOptionsAtom.onChange((ctx, state) => {
 export const removeFriendAction = reatomAsync(async (ctx, options: ControlFriendProperties) => {
   removeFriendActionVariablesAtom(ctx, options)
   return await ctx.schedule(async () => {
-    const res = await forumUserClient.user["delete-friend"].$delete({
+    const res = await userClient.user["delete-friend"].$delete({
       json: { friend_id: options.friend_id }
     })
 

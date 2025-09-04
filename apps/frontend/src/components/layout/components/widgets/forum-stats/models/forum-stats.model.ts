@@ -1,8 +1,8 @@
 import { reatomResource, withCache, withDataAtom, withStatusesAtom } from "@reatom/async";
-import { forumSharedClient } from "#shared/forum-client";
+import { sharedClient } from "#shared/forum-client";
 
 export async function getStats(init?: RequestInit) {
-  const res = await forumSharedClient.shared["get-public-stats"].$get({}, { init })
+  const res = await sharedClient.shared["get-public-stats"].$get({}, { init })
   const data = await res.json()
 
   if ("error" in data) throw new Error(data.error)

@@ -1,7 +1,7 @@
 import { reatomAsync, withCache, withStatusesAtom } from "@reatom/async";
 import { atom, CtxSpy } from "@reatom/core";
 import { currentUserNicknameAtom } from "#components/user/models/current-user.model";
-import { forumUserClient } from "#shared/forum-client";
+import { userClient } from "#shared/forum-client";
 
 type FriendStatus = {
   status: "friend" | "not-accepted-friend" | "not-friend" | "reject-request" | "accept-request";
@@ -13,7 +13,7 @@ const getUserFriendStatus = async (
   recipient: string,
   init?: RequestInit
 ) => {
-  const res = await forumUserClient.user["get-friend-status"][":nickname"].$get({ param: { nickname: recipient } }, { init })
+  const res = await userClient.user["get-friend-status"][":nickname"].$get({ param: { nickname: recipient } }, { init })
   const data = await res.json();
   if ("error" in data) throw new Error(data.error)
   return data.data

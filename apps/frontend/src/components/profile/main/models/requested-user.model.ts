@@ -1,5 +1,5 @@
 import { action, Atom, atom, batch, Ctx } from '@reatom/core';
-import { forumUserClient } from "#shared/forum-client";
+import { userClient } from "#shared/forum-client";
 import { withReset } from '@reatom/framework';
 import { VariantProps } from 'class-variance-authority';
 import { coverAreaVariants } from '../../header/components/cover-area';
@@ -161,7 +161,7 @@ export const defineUser = action((ctx, target: RequestedUserFull) => {
 }, "defineUser")
 
 export async function getUserProfile(nickname: string, init?: RequestInit) {
-  const res = await forumUserClient.user["get-user-profile"][":nickname"].$get({ param: { nickname } }, { init })
+  const res = await userClient.user["get-user-profile"][":nickname"].$get({ param: { nickname } }, { init })
   const data = await res.json()
   if ("error" in data) throw new Error(data.error)
 

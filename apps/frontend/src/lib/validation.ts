@@ -1,6 +1,6 @@
 import { createCtx, Ctx } from '@reatom/core';
 import { authClient } from "#shared/auth-client";
-import { forumUserClient } from '#shared/forum-client';
+import { userClient } from '#shared/forum-client';
 import { IS_AUTHENTICATED_ATOM_KEY, isAuthenticatedAtom } from '#components/auth/models/auth.model';
 import { logger } from '@repo/shared/utils/logger.ts';
 import { currentUserAtom, getUserGlobalOptions, getUserInformation, userGlobalOptionsAtom } from '#components/user/models/current-user.model';
@@ -117,7 +117,7 @@ export function validatePage({ snapshot }: PageContext) {
 }
 
 export async function validateAdmin({ headers }: RequestInit): Promise<boolean> {
-  const res = await forumUserClient.user["get-is-admin"].$get({}, { init: { headers } })
+  const res = await userClient.user["get-is-admin"].$get({}, { init: { headers } })
   const data: WrappedResponse<boolean> = await res.json() 
 
   if ("error" in data) throw new Error(data.error)

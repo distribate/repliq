@@ -1,28 +1,28 @@
-import type {
-  ForumUserAppType,
-  ForumThreadAppType,
-  ForumAdminAppType,
-  ForumCategoriesAppType,
-  ForumCommentAppType,
-  ForumReactionAppType,
-  ForumSharedAppType,
-  ForumSearchAppType,
-  ForumPostAppType,
-  ForumReportAppType,
-  ForumRootAppType
-} from 'backend/src/types/routes-types.ts';
 import { hc } from 'hono/client';
 import { fetchOptions } from './init.ts';
-import { forumBaseUrl } from './api/init.ts';
+import { mainBaseUrl } from './api/init.ts';
+import type {
+  UserAppType,
+  ThreadAppType,
+  AdminAppType,
+  CategoriesAppType,
+  CommentAppType,
+  ReactionAppType,
+  SharedAppType,
+  SearchAppType,
+  PostAppType,
+  ReportAppType,
+  RootAppType
+} from 'backend/src/types/routes-types.ts';
 
-export const forumSearchClient = hc<ForumSearchAppType>(forumBaseUrl, fetchOptions)
-export const forumSharedClient = hc<ForumSharedAppType>(forumBaseUrl, fetchOptions)
-export const forumReactionClient = hc<ForumReactionAppType>(forumBaseUrl, fetchOptions)
-export const forumCommentClient = hc<ForumCommentAppType>(forumBaseUrl, fetchOptions)
-export const forumUserClient = hc<ForumUserAppType>(forumBaseUrl, fetchOptions)
-export const forumThreadClient = hc<ForumThreadAppType>(forumBaseUrl, fetchOptions)
-export const forumCategoriesClient = hc<ForumCategoriesAppType>(forumBaseUrl, fetchOptions)
-export const forumAdminClient = hc<ForumAdminAppType>(forumBaseUrl, fetchOptions)
-export const forumPostClient = hc<ForumPostAppType>(forumBaseUrl, fetchOptions)
-export const forumReportClient = hc<ForumReportAppType>(forumBaseUrl, fetchOptions)
-export const forumRootClient = hc<ForumRootAppType>(forumBaseUrl, fetchOptions)
+export const searchClient = hc<SearchAppType>(mainBaseUrl, fetchOptions)
+export const sharedClient = hc<SharedAppType>(mainBaseUrl, fetchOptions)
+export const reactionClient = hc<ReactionAppType>(mainBaseUrl, fetchOptions)
+export const commentClient = hc<CommentAppType>(mainBaseUrl, fetchOptions)
+export const userClient = hc<UserAppType>(mainBaseUrl, fetchOptions)
+export const threadClient = hc<ThreadAppType>(mainBaseUrl, fetchOptions)
+export const categoriesClient = hc<CategoriesAppType>(mainBaseUrl, fetchOptions)
+export const adminClient = hc<AdminAppType>(mainBaseUrl, fetchOptions)
+export const postClient = hc<PostAppType>(mainBaseUrl, fetchOptions)
+export const reportClient = hc<ReportAppType>(mainBaseUrl, fetchOptions)
+export const rootClient = hc<RootAppType>(mainBaseUrl, fetchOptions)

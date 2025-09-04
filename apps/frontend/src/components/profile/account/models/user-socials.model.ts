@@ -1,6 +1,6 @@
 import { reatomAsync, reatomResource, withCache, withDataAtom, withStatusesAtom } from '@reatom/async'
 import { currentUserAtom } from '#components/user/models/current-user.model'
-import { forumRootClient, forumUserClient } from '#shared/forum-client'
+import { rootClient, userClient } from '#shared/forum-client'
 import { action, atom, batch } from '@reatom/core'
 import { sleep, withReset } from '@reatom/framework'
 import { reatomTimer } from '@reatom/timer'
@@ -105,7 +105,7 @@ export const connectAction = reatomAsync(async (ctx, type: Connect["type"], serv
   connectActionVariablesAtom(ctx, { type, service })
 
   return await ctx.schedule(async () => {
-    const res = await forumRootClient.connect.$post(
+    const res = await rootClient["connect-service"].$post(
       { query: { service, type } }, { init: { signal: ctx.controller.signal } }
     )
 
@@ -178,7 +178,7 @@ export const userSocialsResource = reatomResource(async (ctx) => {
   if (!nickname) return;
 
   return await ctx.schedule(async () => {
-    const res = await forumUserClient.user["get-user-socials"].$get(
+    const res = await userClient.user["get-user-socials"].$get(
       { param: { nickname } }, { init: { signal: ctx.controller.signal } }
     )
 

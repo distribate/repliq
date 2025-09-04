@@ -1,5 +1,5 @@
 import { myFriendsDataAtom, myFriendsPinnedDataAtom } from "#components/friends/models/friends.model";
-import { forumUserClient } from "#shared/forum-client";
+import { userClient } from "#shared/forum-client";
 import { reatomAsync, withStatusesAtom } from "@reatom/async";
 import { atom, batch } from "@reatom/core";
 import { toast } from "sonner";
@@ -60,7 +60,7 @@ export const setFriendNoteAction = reatomAsync(async (ctx, { friend_id, recipien
   setFriendNoteActionVariablesAtom(ctx, { friend_id, note, recipient })
 
   return await ctx.schedule(async () => {
-    const res = await forumUserClient.user["create-friend-note"].$post({
+    const res = await userClient.user["create-friend-note"].$post({
       json: { recipient, friend_id, message: note }
     })
 
@@ -103,7 +103,7 @@ const setFriendUnnoteActionVariablesAtom = atom<ControlFriendProperties | null>(
 export const setFriendUnnoteAction = reatomAsync(async (ctx, { friend_id, recipient }: ControlFriendProperties) => {
   setFriendUnnoteActionVariablesAtom(ctx, { friend_id, recipient })
   return await ctx.schedule(async () => {
-    const res = await forumUserClient.user["delete-friend-note"].$delete({
+    const res = await userClient.user["delete-friend-note"].$delete({
       json: { recipient, friend_id }
     })
 
@@ -143,7 +143,7 @@ export const setFriendPinAction = reatomAsync(async (ctx, { recipient, friend_id
   setFriendPinActionVariablesAtom(ctx, { recipient, friend_id });
   
   return await ctx.schedule(async () => {
-    const res = await forumUserClient.user["create-friend-pin"].$post({
+    const res = await userClient.user["create-friend-pin"].$post({
       json: { recipient, friend_id, type: "pin" }
     })
 
@@ -183,7 +183,7 @@ const setFriendUnpinActionVariablesAtom = atom<ControlFriendProperties | null>(n
 export const setFriendUnpinAction = reatomAsync(async (ctx, { friend_id, recipient }: ControlFriendProperties) => {
   setFriendUnpinActionVariablesAtom(ctx, { friend_id, recipient })
   return await ctx.schedule(async () => {
-    const res = await forumUserClient.user["create-friend-pin"].$post({
+    const res = await userClient.user["create-friend-pin"].$post({
       json: { recipient, friend_id, type: "unpin" }
     })
 

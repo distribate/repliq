@@ -1,6 +1,6 @@
 import { SectionSkeleton } from "#components/templates/components/section-skeleton";
 import { UserNickname } from "#components/user/components/name/nickname";
-import { forumAdminClient } from "#shared/forum-client";
+import { adminClient } from "#shared/forum-client";
 import { reatomAsync, withDataAtom, withStatusesAtom } from "@reatom/async";
 import { onConnect } from "@reatom/framework";
 import { reatomComponent } from "@reatom/npm-react";
@@ -92,7 +92,7 @@ const Sections = () => {
 
 const adminsListAction = reatomAsync(async (ctx) => {
   return await ctx.schedule(async () => {
-    const res = await forumAdminClient.private["get-admins"].$get(
+    const res = await adminClient.private["get-admins"].$get(
       {}, { init: { signal: ctx.controller.signal } }
     )
     const data = await res.json()

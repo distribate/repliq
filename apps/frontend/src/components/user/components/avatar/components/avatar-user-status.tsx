@@ -31,8 +31,8 @@ export const AvatarUserStatus = reatomComponent<{
       {!ctx.spy(userStatusAction.statusesAtom).isPending && (
         <TooltipProvider>
           <Tooltip delayDuration={1}>
-            <TooltipTrigger className="absolute -bottom-2 -right-2 z-[2] h-2 min-h-2 max-h-2 sm:h-4 sm:min-h-4 sm:max-h-4">
-              <div className="flex rounded-full bg-shark-900 p-[1px] size-4 items-center justify-center group">
+            <TooltipTrigger className="absolute -bottom-2 -right-2 z-[2] h-4 min-h-4 max-h-4 sm:h-4 sm:min-h-4 sm:max-h-4">
+              <div className="flex rounded-full bg-shark-800 p-[1px] size-4 items-center justify-center group">
                 <div className={statusBadgeVariant({ variant })} />
               </div>
             </TooltipTrigger>

@@ -1,7 +1,7 @@
 import ky from "ky";
-import { forumBaseUrl } from "./init";
+import { mainBaseUrl } from "./init";
 
 export const client = ky.create({
-  prefixUrl: forumBaseUrl,
+  prefixUrl: mainBaseUrl,
   credentials: "include"
 })

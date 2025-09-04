@@ -1,7 +1,7 @@
 import { reatomAsync, withStatusesAtom } from "@reatom/async";
 import { action, atom } from "@reatom/core";
 import { withReset } from "@reatom/framework";
-import { forumUserClient } from "#shared/forum-client";
+import { userClient } from "#shared/forum-client";
 import ky from "ky";
 import { toast } from "sonner";
 import { currentUserAtom } from "#components/user/models/current-user.model";
@@ -21,7 +21,7 @@ export const updateAvatarAction = reatomAsync(async (ctx) => {
   formData.append("file", blob)
 
   return await ctx.schedule(async () => {
-    const url = forumUserClient.user["upload-avatar"].$url()
+    const url = userClient.user["upload-avatar"].$url()
 
     const res = await ky.post<{ data: string, status: string } | { error: string }>(
       url, { body: formData, credentials: "include", retry: 1, throwHttpErrors: false }

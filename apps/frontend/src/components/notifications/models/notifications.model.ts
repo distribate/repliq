@@ -1,6 +1,6 @@
 import { atom, batch, Ctx } from "@reatom/core"
 import { reatomAsync, withStatusesAtom } from "@reatom/async"
-import { forumUserClient } from "#shared/forum-client"
+import { userClient } from "#shared/forum-client"
 import type { InferResponseType } from "hono/client"
 import { userGlobalOptionsAtom } from "#components/user/models/current-user.model"
 import { withReset } from "@reatom/framework"
@@ -25,7 +25,7 @@ type GetNotifications = {
   cursor?: string
 }
 
-const client = forumUserClient.user["get-user-notifications"].$get
+const client = userClient.user["get-user-notifications"].$get
 
 export type GetNotificationsResponse = InferResponseType<typeof client, 200>
 
@@ -38,7 +38,7 @@ export const getNotifications = async (
   { type, cursor }: GetNotifications,
   init?: RequestInit
 ) => {
-  const res = await forumUserClient.user["get-user-notifications"].$get(
+  const res = await userClient.user["get-user-notifications"].$get(
     { query: { type, cursor, } }, { init }
   )
 
@@ -136,7 +136,7 @@ export const checkNotificationAction = reatomAsync(async (ctx, notificationId: s
   if (currentNotification?.read) return;
 
   return await ctx.schedule(async () => {
-    const res = await forumUserClient.user["check-notification"].$post(
+    const res = await userClient.user["check-notification"].$post(
       { json: { notification_id: notificationId } }
     )
 

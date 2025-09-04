@@ -9,7 +9,7 @@ import { toast } from "sonner";
 import { GetThreadCommentsResponse } from "@repo/types/entities/thread-comments-types.ts";
 import { threadCommentsAction, threadCommentsDataAtom } from "#components/thread/thread-comments/models/thread-comments.model.ts";
 import { reatomAsync, withStatusesAtom } from "@reatom/async";
-import { forumCommentClient } from "#shared/forum-client";
+import { commentClient } from "#shared/forum-client";
 import type { replyCommentBodySchema } from "@repo/types/routes-types/reply-comment.ts"
 import * as z from "zod";
 import { COMMENT_LIMIT } from "@repo/shared/constants/limits";
@@ -35,7 +35,7 @@ async function createThreadComment({
 }: {
   content: string; threadId: string;
 }) {
-  const res = await forumCommentClient.comment["create-comment"].$post({
+  const res = await commentClient.comment["create-comment"].$post({
     json: { content, parent_type: "thread", parent_id: threadId }
   });
 
@@ -57,7 +57,7 @@ type ReplyThreadComment = Omit<z.infer<typeof replyCommentBodySchema>,
 const replyThreadComment = async ({
   content, threadId, recipient_comment_id
 }: ReplyThreadComment) => {
-  const res = await forumCommentClient.comment["reply-comment"].$post({
+  const res = await commentClient.comment["reply-comment"].$post({
     json: { content, parent_id: threadId, parent_type: "thread", recipient_comment_id },
   });
 

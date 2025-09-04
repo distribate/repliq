@@ -1,7 +1,7 @@
 import { atom } from "@reatom/core";
 import { reatomAsync, withStatusesAtom } from "@reatom/async";
 import { withReset } from "@reatom/framework";
-import { forumUserClient } from "#shared/forum-client";
+import { userClient } from "#shared/forum-client";
 import { logger } from "@repo/shared/utils/logger.ts";
 
 type FriendRequestEntity = {
@@ -20,7 +20,7 @@ async function getRequestsByType(
   type: "incoming" | "outgoing",
   init?: RequestInit
 ): Promise<FriendRequestEntity[] | null> {
-  const res = await forumUserClient.user["get-friends-requests"].$get({ query: { type } }, { init });
+  const res = await userClient.user["get-friends-requests"].$get({ query: { type } }, { init });
   const data = await res.json();
   if ("error" in data) throw new Error(data.error)
 

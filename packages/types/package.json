@@ -5,7 +5,7 @@
   "private": true,
   "license": "MIT",
   "scripts": {
-    "forum-gen-types": "kysely-codegen --dialect postgres --url=env\\(FORUM_DATABASE_URL\\) --out-file=./db/forum-database-types.ts",
+    "forum-gen-types": "kysely-codegen --dialect postgres --url=env\\(MAIN_DATABASE_URL\\) --out-file=./db/forum-database-types.ts",
     "sqlite-gen-types": "kysely-codegen --dialect sqlite --url=env\\(SQLITE_DATABASE_URL\\) --out-file=./db/sqlite-database-types.ts"
   },
   "dependencies": {

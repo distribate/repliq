@@ -3,7 +3,7 @@ import { isViewAtom, notificationsAction, notificationsDataAtom, resetNotificati
 import { Typography } from "@repo/ui/src/components/typography";
 import { checkNotificationAction } from "#components/notifications/models/notifications.model";
 import { Skeleton } from "@repo/ui/src/components/skeleton";
-import { forumUserClient } from "#shared/forum-client";
+import { userClient } from "#shared/forum-client";
 import type { InferResponseType } from "hono/client";
 import { updateNotificationsAction } from "#components/notifications/models/notifications.model";
 import { useInView } from "react-intersection-observer";
@@ -13,7 +13,7 @@ import { reatomComponent, useUpdate } from "@reatom/npm-react";
 import { IconInfoSquareRounded } from "@tabler/icons-react";
 import { SectionSkeleton } from "#components/templates/components/section-skeleton";
 
-const client = forumUserClient.user["get-user-notifications"].$get
+const client = userClient.user["get-user-notifications"].$get
 
 type NotificationCardProps = InferResponseType<typeof client, 200>["data"][number]
 

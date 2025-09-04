@@ -25,12 +25,12 @@ const config: PoolConfig = {
 const pool = new Pool(config);
 
 pool.on('error', (err, client) => {
-  console.error('[Forum Database]: Error', err);
+  console.error('[Database]: Error', err);
 });
 
 function getDbInstance(): Kysely<forumDBType> {
   if (!appGlobal.forumDB) {
-    console.log('[Forum Database]: Creating new instance of pool');
+    console.log('[Database]: Creating new instance of pool');
 
     appGlobal.forumDB = new Kysely<forumDBType>({
       dialect: new PostgresDialect({ pool: pool })
@@ -41,7 +41,7 @@ function getDbInstance(): Kysely<forumDBType> {
 }
 
 if (!appGlobal.forumDB) {
-  console.log('[Forum Database]: Creating new instance of pool');
+  console.log('[Database]: Creating new instance of pool');
 
   appGlobal.forumDB = new Kysely<forumDBType>({
     dialect: new PostgresDialect({ pool: pool })

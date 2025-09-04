@@ -1,7 +1,7 @@
 import { reatomAsync, withStatusesAtom } from "@reatom/async"
 import { atom } from "@reatom/core"
 import { sleep, withReset } from "@reatom/framework"
-import { forumUserClient } from "#shared/forum-client"
+import { userClient } from "#shared/forum-client"
 import { toast } from "sonner"
 import { toggleGlobalDialogAction } from "./user-settings.model"
 
@@ -20,7 +20,7 @@ export const deleteAccountAction = reatomAsync(async (ctx) => {
   }
 
   return await ctx.schedule(async () => {
-    const res = await forumUserClient.user["delete-account"].$post({ json: { password } })
+    const res = await userClient.user["delete-account"].$post({ json: { password } })
     const data = await res.json()
     if ("error" in data) throw new Error(data.error)
     return data.status

@@ -25,16 +25,16 @@
     @apply text-white bg-[#121212] antialiased;
   }
 
-  ::-webkit-scrollbar {
+  body::-webkit-scrollbar {
     @apply w-[6px];
   }
 
-  ::-webkit-scrollbar-track {
-    @apply bg-shark-950 rounded-md;
+  body::-webkit-scrollbar-track {
+    @apply bg-[#121212] rounded-md;
   }
 
-  ::-webkit-scrollbar-thumb {
-    @apply bg-shark-900 m-4 rounded-md;
+  body::-webkit-scrollbar-thumb {
+    @apply bg-shark-900 m-4 rounded-sm;
   }
 
   /* Disable autofill highlighting */
@@ -58,18 +58,6 @@
 }
 
 @layer components {
-  .responsive-width {
-    @apply w-[calc(100%-8px)] sm:w-[calc(100%-32px)] md:w-[calc(100%-64px)] 2xl:w-[76%]
-  }
-
-  .nickname-color-picker .react-colorful {
-    @apply w-auto;
-  }
-
-  .nickname-color-picker .react-colorful__saturation-pointer {
-    @apply rounded-none w-4 h-4;
-  }
-
   .icon {
     @apply select-none fill-current inline-block text-inherit box-content;
   }
@@ -82,18 +70,6 @@
     @apply h-[1em];
   }
 
-  .main-section::-webkit-scrollbar {
-    @apply w-[10px];
-  }
-
-  .main-section::-webkit-scrollbar-track {
-    @apply bg-shark-950 rounded-lg;
-  }
-
-  .main-section::-webkit-scrollbar-thumb {
-    @apply bg-shark-800 m-4 rounded-lg;
-  }
-
   .no-scrollbar::-webkit-scrollbar {
     width: 0px;
     height: 0px;
@@ -103,6 +79,30 @@
     background: #e0cbcb;
     border-radius: 100vh;
     border: 3px solid #f6f7ed;
+  }
+
+  .responsive-width {
+    @apply w-[calc(100%-8px)] sm:w-[calc(100%-32px)] md:w-[calc(100%-64px)] 2xl:w-[76%]
+  }
+
+  .nickname-color-picker .react-colorful {
+    @apply w-auto;
+  }
+
+  .nickname-color-picker .react-colorful__saturation-pointer {
+    @apply rounded-none w-4 h-4;
+  }
+
+  .main-section::-webkit-scrollbar {
+    @apply w-[8px];
+  }
+
+  .main-section::-webkit-scrollbar-track {
+    @apply bg-shark-950 rounded-lg;
+  }
+
+  .main-section::-webkit-scrollbar-thumb {
+    @apply bg-shark-800 m-4 rounded-lg;
   }
 
   .hover-select-effect {
@@ -119,7 +119,7 @@
 }
 
 @layer utilities {
-  .biloba-gradient {
+  .green-gradient {
     background: radial-gradient(ellipse at top, var(--tw-gradient-stops));
     --tw-gradient-from: theme('colors.green.600');
     --tw-gradient-to: transparent;

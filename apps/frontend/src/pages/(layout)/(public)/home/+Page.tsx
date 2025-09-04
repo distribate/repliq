@@ -6,22 +6,24 @@ import { Button } from "@repo/ui/src/components/button";
 import { Typography } from "@repo/ui/src/components/typography";
 import { CustomLink } from "#shared/components/link";
 import { OnlineUsers } from "#components/layout/components/widgets/online-users/online-users";
-import { IconPhoneCall, IconPlus } from "@tabler/icons-react";
+import { IconBrandThreads, IconPhoneCall, IconPlus } from "@tabler/icons-react";
 import { clientOnly } from "vike-react/clientOnly";
 import { globalPreferencesAtom } from "#components/user/components/settings/main/models/update-global-preferences.model";
 
 const Comments = clientOnly(() => import('#components/layout/components/widgets/latest-comments/latest-comments').then((m) => m.LatestComments))
-const AlertWidget = clientOnly(() => import('#components/layout/components/widgets/alert/alert-widget').then((m) => m.AlertWidget))
+const Alert = clientOnly(() => import('#components/layout/components/widgets/alert/alert-widget').then((m) => m.Alert))
 
 const Alerts = reatomComponent(({ ctx }) => {
   if (!ctx.spy(isAuthenticatedAtom)) return null;
 
+  const { alerts: alertsShowing } = ctx.spy(globalPreferencesAtom)
+
+  if (alertsShowing === 'hide') return null;
+
   return (
-    ctx.spy(globalPreferencesAtom).alerts === 'show' && (
-      <div className="flex flex-col gap-2 w-full">
-        <AlertWidget />
-      </div>
-    )
+    <div className="flex flex-col gap-2 w-full">
+      <Alert />
+    </div>
   )
 }, "Alerts")
 
@@ -39,6 +41,12 @@ const About = () => {
       </Typography>
       <div className="flex flex-col gap-4">
         <div className="flex flex-col gap-2">
+          <CustomLink to="/misc/about" className="flex items-center p-2 rounded-lg gap-2 bg-shark-900">
+            <IconBrandThreads size={20} />
+            <Typography>
+              О нас
+            </Typography>
+          </CustomLink>
           <CustomLink to="/misc/contacts" className="flex items-center p-2 rounded-lg gap-2 bg-shark-900">
             <IconPhoneCall size={20} />
             <Typography>
@@ -72,7 +80,7 @@ export default function HomePage() {
     <main className="flex flex-col w-full gap-2 h-full">
       <Alerts />
       <div className="flex xl:flex-row gap-2 flex-col w-full h-full">
-        <div className="hidden xl:flex flex-col gap-4 w-full xl:w-1/4 h-full">
+        <div className="hidden xl:flex flex-col gap-2 w-full xl:w-1/4 h-full">
           <div className="flex flex-col gap-4 p-2 sm:p-4 w-full h-full rounded-lg overflow-hidden bg-primary-color">
             <CreateThreadButton />
             <LatestComments />

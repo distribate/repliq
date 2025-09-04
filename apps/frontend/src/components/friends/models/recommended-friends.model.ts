@@ -1,8 +1,8 @@
-import { forumUserClient } from "#shared/forum-client";
+import { userClient } from "#shared/forum-client";
 import { reatomAsync, withDataAtom, withStatusesAtom } from "@reatom/async";
 
 async function getRecommendedFriends(init?: RequestInit) {
-  const res = await forumUserClient.user["get-recommended-friends"].$get({}, { init });
+  const res = await userClient.user["get-recommended-friends"].$get({}, { init });
   const data = await res.json();
   if ("error" in data) throw new Error(data.error)
  

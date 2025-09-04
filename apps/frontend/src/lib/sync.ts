@@ -29,6 +29,8 @@ pageContextAtom.onChange((ctx, state) => {
   Object.entries(SNAPSHOT_KEYS).forEach(([key, { atom, fallback }]) => {
     const value = snapshot[key]?.data ?? fallback;
 
+    console.log(key, ":", value);
+    
     if (value !== undefined && value !== null) {
       atom(ctx, value);
     }

@@ -1,7 +1,7 @@
 import { isAuthenticatedAtom } from "#components/auth/models/auth.model"
 import { requestedUserAtom } from "#components/profile/main/models/requested-user.model"
 import { userAvatars } from "#components/user/components/avatar/models/user-avatars.model"
-import { forumUserClient } from "#shared/forum-client"
+import { userClient } from "#shared/forum-client"
 import { reatomAsync, withStatusesAtom } from "@reatom/async"
 import { action, atom, batch } from "@reatom/core"
 import { sleep, withInit, withReset } from "@reatom/framework"
@@ -49,7 +49,7 @@ export const deleteAvatar = reatomAsync(async (ctx, target: string) => {
   if (id === -1) throw new Error("Index is not corrected")
 
   return await ctx.schedule(async () => {
-    const res = await forumUserClient.user["remove-avatar"][":id"].$delete({ param: { id: id.toString() } });
+    const res = await userClient.user["remove-avatar"][":id"].$delete({ param: { id: id.toString() } });
     const data = await res.json();
 
     if ("error" in data) throw new Error(data.error)

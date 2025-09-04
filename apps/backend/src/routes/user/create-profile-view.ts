@@ -4,7 +4,7 @@ import { zValidator } from "@hono/zod-validator";
 import { Hono } from "hono";
 import * as z from "zod";
 import { forumDB } from "#shared/database/forum-db.ts";
-import type { InitiatorRecipientType } from "#types/initiator-recipient-type.ts";
+
 import dayjs from "dayjs";
 
 async function validateProfileViewCoolDown({

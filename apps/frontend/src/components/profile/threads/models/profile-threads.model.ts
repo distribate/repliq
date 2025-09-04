@@ -1,5 +1,5 @@
 import { reatomAsync, withDataAtom, withErrorAtom, withStatusesAtom } from '@reatom/async';
-import { forumUserClient } from '#shared/forum-client';
+import { userClient } from '#shared/forum-client';
 import { isParamChanged, requestedUserParamAtom } from '#components/profile/main/models/requested-user.model';
 import { logger } from '@repo/shared/utils/logger.ts';
 
@@ -7,7 +7,7 @@ export async function getThreadsUser(
   nickname: string,
   { query }: { query?: string } = { }
 ) {
-  const res = await forumUserClient.user["get-user-threads"][":nickname"].$get(
+  const res = await userClient.user["get-user-threads"][":nickname"].$get(
     { param: { nickname }, query: { querySearch: query } }
   )
 

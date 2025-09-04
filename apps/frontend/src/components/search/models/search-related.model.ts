@@ -1,4 +1,4 @@
-import { forumThreadClient } from "#shared/forum-client";
+import { threadClient } from "#shared/forum-client";
 import { reatomAsync, withCache, withDataAtom, withStatusesAtom } from "@reatom/async";
 import { getLatestRegUsers } from "#components/layout/components/widgets/latest-users/latest-reg-users.model";
 
@@ -6,7 +6,7 @@ const DEFAULT_RELATED_LENGTH = 5
 
 export const threadRelatedAction = reatomAsync(async (ctx) => {
   return await ctx.schedule(async () => {
-    const res = await forumThreadClient.thread["get-latest-threads"].$get(
+    const res = await threadClient.thread["get-latest-threads"].$get(
       { query: { limit: `${DEFAULT_RELATED_LENGTH}` } }, { init: { signal: ctx.controller.signal } }
     )
 

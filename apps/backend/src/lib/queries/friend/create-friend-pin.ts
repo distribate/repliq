@@ -1,5 +1,4 @@
 import { forumDB } from "#shared/database/forum-db.ts";
-import type { InitiatorRecipientType } from "#types/initiator-recipient-type.ts";
 import type { friendPinSchema } from "@repo/types/schemas/friend/friend-pin-schema";
 import * as z from "zod";
 

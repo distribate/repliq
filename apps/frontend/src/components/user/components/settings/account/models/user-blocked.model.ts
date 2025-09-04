@@ -1,4 +1,4 @@
-import { forumUserClient } from "#shared/forum-client.ts";
+import { userClient } from "#shared/forum-client.ts";
 import { reatomAsync, withStatusesAtom } from "@reatom/async";
 import { atom } from "@reatom/core";
 import { withVariables } from "#lib/with-variables"
@@ -13,7 +13,7 @@ const deleteFromBlockedVariablesAtom = atom<string | null>(null, "deleteFromBloc
 
 export const deleteFromBlockedAction = reatomAsync(async (ctx, recipient: string) => {
   return await ctx.schedule(async () => {
-    const res = await forumUserClient.user["control-user-blocked"].$post({
+    const res = await userClient.user["control-user-blocked"].$post({
       json: { recipient, type: "unblock" }
     })
 

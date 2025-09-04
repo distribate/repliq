@@ -1,16 +1,14 @@
+import type { UserPostItem } from '@repo/types/routes-types/get-user-posts-types.ts';
 import { Typography } from "@repo/ui/src/components/typography.tsx";
 import { currentUserNicknameAtom } from "#components/user/models/current-user.model.ts";
-import { lazy, Suspense } from "react";
 import { PostFooterViews } from "#components/post/post-item/components/post-footer-views.tsx";
-import type { UserPostItem } from '@repo/types/routes-types/get-user-posts-types.ts';
 import { reatomComponent } from "@reatom/npm-react";
+import { clientOnly } from "vike-react/clientOnly";
 
 type PostFooterProps = Pick<UserPostItem, "views_count" | "isUpdated" | "id" | "isViewed" | "nickname">
 
-const PostFooterWithViewsList = lazy(() =>
-  import("#components/post/post-item/components/post-footer-views-list.tsx").then((m) => ({
-    default: m.PostFooterWithViewsList,
-  })),
+const PostFooterWithViewsList = clientOnly(() =>
+  import("#components/post/post-item/components/post-footer-views-list.tsx").then((m) => m.PostFooterWithViewsList),
 );
 
 export const PostFooter = reatomComponent<PostFooterProps>(({
@@ -21,16 +19,8 @@ export const PostFooter = reatomComponent<PostFooterProps>(({
 
   return (
     <div className="flex w-full select-none gap-4 justify-end items-center">
-      {isUpdated && (
-        <Typography textSize="small" textColor="gray" className="self-end">
-          [изменено]
-        </Typography>
-      )}
-      {isOwner && (
-        <Suspense>
-          <PostFooterWithViewsList id={id} views_count={views_count} />
-        </Suspense>
-      )}
+      {isUpdated && <Typography className="text-sm text-shark-300 self-end">изм.</Typography>}
+      {isOwner && <PostFooterWithViewsList id={id} views_count={views_count} />}
       {!isOwner && <PostFooterViews views_count={views_count} />}
     </div>
   );

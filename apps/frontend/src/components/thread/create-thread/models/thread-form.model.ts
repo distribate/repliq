@@ -7,7 +7,7 @@ import { THREAD_TAGS_LIMIT } from "@repo/shared/constants/limits";
 import { ChangeEvent } from "react";
 import { THREAD_IMAGES_LIMIT_DEFAULT } from "@repo/shared/constants/limits";
 import { currentUserAtom } from "#components/user/models/current-user.model";
-import { forumCategoriesClient } from "#shared/forum-client";
+import { categoriesClient } from "#shared/forum-client";
 import { FastAverageColor } from 'fast-average-color';
 import { Node } from "slate";
 
@@ -22,7 +22,7 @@ export const serializeNodes = (value: any[]) =>
 
 export const availableCategoriesAction = reatomAsync(async (ctx) => {
   return await ctx.schedule(async () => {
-    const res = await forumCategoriesClient.categories["get-available-categories"].$get(
+    const res = await categoriesClient.categories["get-available-categories"].$get(
       {}, { init: { signal: ctx.controller.signal } }
     )
 

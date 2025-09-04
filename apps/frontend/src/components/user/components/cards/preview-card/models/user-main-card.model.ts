@@ -1,7 +1,7 @@
 import { reatomAsync, withDataAtom, withErrorAtom, withStatusesAtom } from "@reatom/async";
 import { action, atom, batch, Ctx } from "@reatom/core";
 import { createIdLink } from "#lib/create-link";
-import { forumUserClient } from "#shared/forum-client";
+import { userClient } from "#shared/forum-client";
 import { navigate } from "vike/client/router";
 import { withReset } from "@reatom/framework";
 
@@ -37,7 +37,7 @@ export const closeSummaryCardAction = action((ctx, type?: "link") => {
 
 export const userCardAction = reatomAsync(async (ctx, nickname: string) => {
   return await ctx.schedule(async () => {
-    const res = await forumUserClient.user["get-user-summary"][":nickname"].$get(
+    const res = await userClient.user["get-user-summary"][":nickname"].$get(
       { param: { nickname } }, { init: { signal: ctx.controller.signal } }
     );
 

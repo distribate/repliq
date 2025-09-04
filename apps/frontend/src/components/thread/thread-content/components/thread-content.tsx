@@ -2,14 +2,17 @@ import {
   threadContentAtom,
   threadContentfallback
 } from '#components/thread/models/thread.model';
-import { Editor, EditorContainer } from "@repo/plate-editor/src/ui/editor.tsx";
-import { Plate } from "@udecode/plate/react";
-import { useCreateEditor } from "@repo/plate-editor/src/hooks/use-create-editor.ts";
 import { reatomComponent, useUpdate } from "@reatom/npm-react";
+import { Plate, usePlateEditor } from 'platejs/react';
+import { EditorKit } from '@repo/plate-editor/src/components/editor/editor-kit';
+import { Editor, EditorContainer } from '@repo/plate-editor/src/components/ui/editor';
 
 export const ThreadContent = reatomComponent(({ ctx }) => {
   const value = ctx.spy(threadContentAtom) ?? threadContentfallback
-  const editor = useCreateEditor({ value })
+  const editor = usePlateEditor({
+    plugins: EditorKit,
+    value,
+  });
   
   useUpdate(() => editor.tf.setValue(value), [value])
   

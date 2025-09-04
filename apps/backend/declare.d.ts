@@ -1,8 +1,7 @@
 declare module "bun" {
   interface Env {
-    FORUM_BACKEND_PORT: number;
-
-    FORUM_DATABASE_URL: string;
+    PORT: number;
+    MAIN_DATABASE_URL: string;
 
     SECRET_TOKEN: string;
 
@@ -27,9 +26,7 @@ declare module "bun" {
     NATS_AUTH_TOKEN: string
 
     SUPABASE_SERVICE_ROLE_KEY: string;
-    NEXT_PUBLIC_SUPABASE_URL: string
-
-    REPLIQ_BOT_USERNAME: string;
+    SUPABASE_URL: string
 
     REDIS_HOST: string;
     REDIS_USER_PASSWORD: string;
@@ -43,6 +40,15 @@ declare module "bun" {
 
     ADMIN_TELEGRAM_USER_ID: string
   }
+}
+
+export { };
+
+declare global {
+  type InitiatorRecipientType = {
+    initiator: string;
+    recipient: string;
+  };
 }
 
 declare module "*.db"

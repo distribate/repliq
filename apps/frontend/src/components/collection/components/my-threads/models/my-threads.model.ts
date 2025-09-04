@@ -1,9 +1,9 @@
 import { reatomAsync, withDataAtom, withStatusesAtom } from "@reatom/async";
-import { forumUserClient } from "#shared/forum-client";
+import { userClient } from "#shared/forum-client";
 
 export const myThreadsAction = reatomAsync(async (ctx) => {
   return await ctx.schedule(async () => {
-    const res = await forumUserClient.user["get-my-threads"].$get(
+    const res = await userClient.user["get-my-threads"].$get(
       {}, { init: { signal: ctx.controller.signal } }
     );
     
@@ -24,7 +24,7 @@ export const myThreadsAction = reatomAsync(async (ctx) => {
 
 export const savedThreadsAction = reatomAsync(async (ctx) => {
   return await ctx.schedule(async () => {
-    const res = await forumUserClient.user["get-saved-threads"].$get(
+    const res = await userClient.user["get-saved-threads"].$get(
       {}, { init: { signal: ctx.controller.signal } }
     )
 

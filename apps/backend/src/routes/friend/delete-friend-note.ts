@@ -5,7 +5,7 @@ import { zValidator } from "@hono/zod-validator";
 import { Hono } from "hono";
 import { deleteFriendNoteSchema } from "@repo/types/schemas/friend/delete-friend-note-schema.ts";
 import { forumDB } from "#shared/database/forum-db.ts";
-import type { InitiatorRecipientType } from "#types/initiator-recipient-type.ts";
+
 
 type GetFriendId = InitiatorRecipientType & {
   friend_id: string

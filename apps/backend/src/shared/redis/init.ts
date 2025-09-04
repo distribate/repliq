@@ -11,15 +11,15 @@ const redis = new Redis({
 });
 
 export const getRedisClient = (): Redis => {
-  if (!rc) throw new Error('Redis client is not initialized');
+  if (!rc) throw new Error('\x1B[35m[Redis]\x1B[0m Client is not initialized');
   return rc;
 }
 
 export function initRedis() {
   try {
     rc = redis
-    console.log("Redis client is connected")
+    console.log("\x1B[35m[Redis]\x1B[0m Client is connected")
   } catch (e) {
-    console.error(`Redis`, e)
+    console.error(`\x1B[35m[Redis]\x1B[0m`, e)
   }
 }

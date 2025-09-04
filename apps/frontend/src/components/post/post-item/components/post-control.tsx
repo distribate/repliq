@@ -1,27 +1,25 @@
-import { Ellipsis, Pen, Pin, Trash } from "lucide-react";
-import { HoverCardItem } from "@repo/ui/src/components/hover-card.tsx";
+import { MoreVertical, Pen, Pin, Trash } from "lucide-react";
 import { Separator } from "@repo/ui/src/components/separator.tsx";
 import { PostAdditionalModal } from "#components/post/post-item/components/post-additional-modal";
-import { controlPostAction } from "#components/post/post-item/models/control-post.model";
 import { currentUserNicknameAtom } from "#components/user/models/current-user.model.ts";
 import { ReportCreateModal } from "#components/modals/action-confirmation/components/report/components/report-create-modal.tsx";
-import {
-  editPostsControlAtom,
-} from "#components/post/post-item/models/post-control.model";
+import { editPostsControlAtom } from "#components/post/post-item/models/post-control.model";
 import { Typography } from "@repo/ui/src/components/typography.tsx";
 import { Cloud } from "lucide-react";
 import { reatomComponent } from "@reatom/npm-react";
 import { postsDataAtom } from "#components/profile/posts/models/posts.model";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from "@repo/ui/src/components/dropdown-menu";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@repo/ui/src/components/dropdown-menu";
+import { moreVariant } from "#ui/more-wrapper";
+import { deletePostAction, disablePostCommentsAction, pinPostAction } from "../models/control-post.model";
 
-export type PostControlProps = {
+type PostControlProps = {
   id: string,
-  isComments: boolean,
   nickname: string
 }
 
-export const PostControl = reatomComponent<PostControlProps>(({ ctx, id, nickname, isComments }) => {
+export const PostControl = reatomComponent<PostControlProps>(({ ctx, id, nickname }) => {
   const currentUserNickname = ctx.spy(currentUserNicknameAtom)
+  const isOwner = currentUserNickname === nickname;
 
   const posts = ctx.spy(postsDataAtom)
   if (!posts) return null;
@@ -29,27 +27,24 @@ export const PostControl = reatomComponent<PostControlProps>(({ ctx, id, nicknam
   let post = posts.find(target => target.id === id);
   if (!post) return null;
 
-  const isPinned = post.isPinned;
+  const { isPinned, isComments } = post
 
-  const handleRemovePost = () => controlPostAction(ctx, { type: "delete", id, nickname });
-  const handlePin = () => controlPostAction(ctx, { type: "pin", id, nickname });
-  const handleComments = () => controlPostAction(ctx, { type: "comments", id, nickname });
+  const handleRemovePost = () => deletePostAction(ctx, { id, nickname });
+  const handlePin = () => pinPostAction(ctx, { id, nickname, currentState: isPinned });
+  const handleComments = () => disablePostCommentsAction(ctx, { id, nickname });
+  const handleEditContent = () => editPostsControlAtom(ctx, id, { isEdit: true, content: post.content })
 
-  const handleEditContent = () => {
-    editPostsControlAtom(ctx, id, { isEdit: true, content: "" })
-  };
-
-  const isOwner = currentUserNickname === nickname;
   const pinnedPost = posts.find(p => p.isPinned) && !isPinned || false;
 
   return (
     <div className="w-fit">
-      <DropdownMenu>
+      <DropdownMenu modal={false}>
         <DropdownMenuTrigger>
-          <Ellipsis size={22} className="text-shark-200 cursor-pointer" />
-
+          <div className={moreVariant({ size: "med" })}>
+            <MoreVertical size={20} className="text-shark-300" />
+          </div>
         </DropdownMenuTrigger>
-        <DropdownMenuContent side="bottom" align="end">
+        <DropdownMenuContent align="end">
           <div className="flex flex-col gap-y-2">
             <PostAdditionalModal
               id={post.id}
@@ -63,11 +58,11 @@ export const PostControl = reatomComponent<PostControlProps>(({ ctx, id, nicknam
             {isOwner && (
               <>
                 <Separator />
-                <HoverCardItem className="gap-2 items-center" onClick={handleEditContent} >
+                <DropdownMenuItem className="gap-2 items-center" onClick={handleEditContent} >
                   <Pen size={16} className="text-shark-300" />
                   <Typography>Редактировать пост</Typography>
-                </HoverCardItem>
-                <HoverCardItem
+                </DropdownMenuItem>
+                <DropdownMenuItem
                   className={`gap-2 items-center ${pinnedPost ? "select-none opacity-50 cursor-not-allowed pointer-events-none" : ""}`}
                   onClick={handlePin}
                 >
@@ -75,17 +70,17 @@ export const PostControl = reatomComponent<PostControlProps>(({ ctx, id, nicknam
                   <Typography state={isPinned ? "active" : "default"}>
                     {isPinned ? `Открепить пост` : `Закрепить пост`}
                   </Typography>
-                </HoverCardItem>
-                <HoverCardItem className="gap-2 items-center" onClick={handleComments}>
+                </DropdownMenuItem>
+                <DropdownMenuItem className="gap-2 items-center" onClick={handleComments}>
                   <Cloud size={16} className="text-shark-300" />
                   <Typography state={isComments ? 'active' : 'default'}>
                     {isComments ? `Выключить комментарии` : `Включить комментарии`}
                   </Typography>
-                </HoverCardItem>
-                <HoverCardItem className="gap-2 items-center" onClick={handleRemovePost} >
+                </DropdownMenuItem>
+                <DropdownMenuItem className="gap-2 items-center" onClick={handleRemovePost} >
                   <Trash size={16} className="text-shark-300" />
                   <Typography>Удалить пост</Typography>
-                </HoverCardItem>
+                </DropdownMenuItem>
               </>
             )}
             {!isOwner && (

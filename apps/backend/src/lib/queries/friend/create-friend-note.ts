@@ -1,5 +1,4 @@
 import { forumDB } from "#shared/database/forum-db.ts";
-import type { InitiatorRecipientType } from "#types/initiator-recipient-type.ts";
 import type { addFriendNoteSchema } from "@repo/types/schemas/friend/create-friend-note-schema";
 import * as z from "zod";
 

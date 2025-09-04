@@ -1,6 +1,6 @@
 import { requestedUserAtom } from "#components/profile/main/models/requested-user.model";
 import { reatomAsync, withStatusesAtom } from "@reatom/async";
-import { forumUserClient } from "#shared/forum-client";
+import { userClient } from "#shared/forum-client";
 import { editUserSettingsBodySchema } from "@repo/types/schemas/user/edit-user-settings-schema";
 import { toast } from "sonner";
 import * as z from "zod";
@@ -14,7 +14,7 @@ type UpdateUserDetails = z.infer<typeof userDetailsSchema>
 
 export const updateCurrentUserAction = reatomAsync(async (ctx, { criteria, value }: UpdateUserDetails) => {
   return await ctx.schedule(async () => {
-    const res = await forumUserClient.user["edit-user-details"].$post(
+    const res = await userClient.user["edit-user-details"].$post(
       { json: { criteria, value } }
     )
 
@@ -58,7 +58,7 @@ export const updateCurrentUserAction = reatomAsync(async (ctx, { criteria, value
 
 export const updateCurrentUserSettingsAction = reatomAsync(async (ctx, json: UpdateUserSettings) => {
   return await ctx.schedule(async () => {
-    const res = await forumUserClient.user['edit-user-settings'].$post({ json });
+    const res = await userClient.user['edit-user-settings'].$post({ json });
     
     const data = await res.json();
 

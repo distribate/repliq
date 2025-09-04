@@ -1,7 +1,7 @@
 import { reatomAsync, withDataAtom, withStatusesAtom } from "@reatom/async"
 import { action, atom, AtomState } from "@reatom/core"
 import { sleep, withReset } from "@reatom/framework"
-import { forumAdminClient } from "#shared/forum-client"
+import { adminClient } from "#shared/forum-client"
 import { toast } from "sonner"
 
 export type Report = NonNullable<AtomState<typeof reportsAction.dataAtom>>[number]
@@ -11,7 +11,7 @@ export const reportsAction = reatomAsync(async (ctx) => {
 
   // @ts-ignore
   return await ctx.schedule(async () => {
-    const res = await forumAdminClient.private["get-reports"].$get(
+    const res = await adminClient.private["get-reports"].$get(
       {}, { init: { signal: ctx.controller.signal } }
     )
 

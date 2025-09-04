@@ -1,15 +1,15 @@
 import { toast } from "sonner";
-import { forumReactionClient } from "#shared/forum-client";
+import { reactionClient } from "#shared/forum-client";
 import { createReactionSchema } from "@repo/types/schemas/reaction/create-reaction";
 import * as z from "zod";
 import { atom, reatomAsync, withDataAtom, withStatusesAtom } from "@reatom/framework";
-import { forumThreadClient } from "#shared/forum-client";
+import { threadClient } from "#shared/forum-client";
 
 type UpdateThreadRating = Omit<z.infer<typeof createReactionSchema>, "type">;
 
 export const threadReactionsAction = reatomAsync(async (ctx, id: string) => {
   return await ctx.schedule(async () => {
-    const res = await forumThreadClient.thread["get-thread-user-reactions"][":id"].$get({ param: { id }, });
+    const res = await threadClient.thread["get-thread-user-reactions"][":id"].$get({ param: { id }, });
     const data = await res.json();
 
     if ("error" in data) throw new Error(data.error)
@@ -44,7 +44,7 @@ export const addReactionAction = reatomAsync(async (ctx, values: UpdateThreadRat
   const { emoji, id } = values;
 
   return await ctx.schedule(async () => {
-    const res = await forumReactionClient.reaction["create-reaction"].$post({
+    const res = await reactionClient.reaction["create-reaction"].$post({
       json: { emoji, id, type: "thread" },
     });
 

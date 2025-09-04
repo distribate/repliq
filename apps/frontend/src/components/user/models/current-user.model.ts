@@ -1,6 +1,6 @@
 import type { UserDetailed } from '@repo/types/entities/user-type.ts';
 import { atom, Ctx, CtxSpy } from '@reatom/core';
-import { forumUserClient } from '#shared/forum-client.ts';
+import { userClient } from '#shared/forum-client.ts';
 import { withSsr } from '#lib/ssr';
 import { withInit } from '@reatom/framework';
 
@@ -33,7 +33,7 @@ export const userGlobalOptionsAtom = atom<typeof userGlobalOptionsInitial>(userG
 export async function getUserInformation(
   init?: RequestInit
 ): Promise<UserDetailed> {
-  const res = await forumUserClient.user["get-me"].$get({}, { init })
+  const res = await userClient.user["get-me"].$get({}, { init })
   const data = await res.json()
 
   if ("error" in data) throw new Error(data.error)
@@ -58,7 +58,7 @@ export const getUser = (ctx: CtxSpy | Ctx): UserDetailed => {
 }
 
 export async function getUserGlobalOptions(args?: RequestInit) {
-  const res = await forumUserClient.user["get-user-global-options"].$get({}, { init: { ...args } })
+  const res = await userClient.user["get-user-global-options"].$get({}, { init: { ...args } })
   const data = await res.json()
   if ("error" in data) throw new Error(data.error)
   return data.data;

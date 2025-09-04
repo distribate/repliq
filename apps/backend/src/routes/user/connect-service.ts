@@ -36,7 +36,7 @@ type DisconnectServicePayload = {
 }
 
 export const connectServiceSSE = new Hono()
-  .get("/connect-service/sse", async (ctx) => {
+  .get("/sse", async (ctx) => {
     const nickname = getNickname()
 
     const nc = getNatsConnection()
@@ -78,7 +78,7 @@ export const connectServiceSSE = new Hono()
   })
 
 export const connectServiceRoute = new Hono()
-  .post("/connect", zValidator("query", connectServiceRouteSchema), async (ctx) => {
+  .post("/", zValidator("query", connectServiceRouteSchema), async (ctx) => {
     const data = connectServiceRouteSchema.parse(ctx.req.query())
     const nickname = getNickname()
 

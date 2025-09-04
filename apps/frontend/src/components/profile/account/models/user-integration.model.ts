@@ -1,7 +1,7 @@
 import { reatomAsync, withDataAtom, withStatusesAtom } from "@reatom/async"
 import { atom } from "@reatom/core"
 import { logger } from "@repo/shared/utils/logger.ts"
-import { forumUserClient } from "#shared/forum-client"
+import { userClient } from "#shared/forum-client"
 import { toast } from "sonner"
 
 export type Integration =
@@ -13,7 +13,7 @@ export const connectionIsPendingAtom = atom(false, "connectionIsPending")
 
 export const usersConnectedServiceAction = reatomAsync(async (ctx) => {
   return await ctx.schedule(async () => {
-    const res = await forumUserClient.user["get-profiles"].$get()
+    const res = await userClient.user["get-profiles"].$get()
     const data = await res.json()
     if ("error" in data) throw new Error(data.error);
     return data.data
@@ -47,7 +47,7 @@ export const disconnectIntegrationAction = reatomAsync(async (ctx, type: Integra
 
   return await ctx.schedule(async () => {
     // @ts-expect-error
-    const res = await forumUserClient.user["disconnect-profile"].$post({ json: { type } })
+    const res = await userClient.user["disconnect-profile"].$post({ json: { type } })
     const data = await res.json()
     if ("error" in data) throw new Error(data.error)
     return data
@@ -81,7 +81,7 @@ export const connectIntegrationAction = reatomAsync(async (ctx, type: Integratio
   connectionIsPendingAtom(ctx, true)
 
   return await ctx.schedule(async () => {
-    const res = await forumUserClient.user["connect-profile"].$post({ json: { type } })
+    const res = await userClient.user["connect-profile"].$post({ json: { type } })
     const data = await res.json()
 
     if ("error" in data) throw new Error(data.error)

@@ -6,7 +6,7 @@ import {
 } from "#components/search/models/search-page.model";
 import { SEARCH_PAGE_LIMIT } from "@repo/shared/constants/limits.ts";
 import { reatomAsync, withStatusesAtom } from "@reatom/async";
-import { forumSearchClient } from "#shared/forum-client";
+import { searchClient } from "#shared/forum-client";
 
 type GetSearchResults = {
   query: string;
@@ -32,7 +32,7 @@ export type SearchThread = {
 async function getSearchThreads({
   query, limit
 }: Omit<GetSearchResults, "type">) {
-  const res = await forumSearchClient.search["get-search"].$get({
+  const res = await searchClient.search["get-search"].$get({
     query: { type: "thread", query, limit: `${limit}` }
   })
   const data = await res.json()
@@ -45,7 +45,7 @@ async function getSearchThreads({
 async function getSearchUsers({
   query, limit
 }: Omit<GetSearchResults, "type">) {
-  const res = await forumSearchClient.search["get-search"].$get({
+  const res = await searchClient.search["get-search"].$get({
     query: { type: "user", query, limit: `${limit}` }
   })
   const data = await res.json()

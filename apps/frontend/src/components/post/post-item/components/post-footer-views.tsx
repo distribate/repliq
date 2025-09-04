@@ -6,9 +6,9 @@ type PostFooterViewsProps = Pick<UserPostItem, "views_count">;
 
 export const PostFooterViews = ({ views_count }: PostFooterViewsProps) => {
   return (
-    <div className="flex items-center gap-1">
-      <Eye size={18} className="text-shark-300" />
-      <Typography textSize="small" textColor="gray">
+    <div className="flex items-center gap-1 cursor-pointer text-shark-300">
+      <Eye size={18} />
+      <Typography className="text-lg">
         {views_count}
       </Typography>
     </div>

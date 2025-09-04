@@ -1,5 +1,5 @@
 import { forumDB } from "#shared/database/forum-db.ts";
-import type { InitiatorRecipientType } from "#types/initiator-recipient-type.ts";
+
 import type { UserDetailed, UserShorted } from "@repo/types/entities/user-type";
 
 export type GetUserType = "shorted" | "detailed"

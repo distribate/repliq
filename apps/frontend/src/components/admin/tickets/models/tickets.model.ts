@@ -1,12 +1,12 @@
 import { reatomAsync, withDataAtom, withStatusesAtom } from "@reatom/async"
-import { forumAdminClient } from "#shared/forum-client"
+import { adminClient } from "#shared/forum-client"
 import { sleep } from "@reatom/framework"
 
 export const ticketsAction = reatomAsync(async (ctx) => {
 	await ctx.schedule(() => sleep(140));
 
 	return await ctx.schedule(async () => {
-		const res = await forumAdminClient.private["get-tickets"].$get()
+		const res = await adminClient.private["get-tickets"].$get()
 		const data = await res.json()
 
 		if ("error" in data) throw new Error(data.error)

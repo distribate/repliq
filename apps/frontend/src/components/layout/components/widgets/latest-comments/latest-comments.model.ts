@@ -1,9 +1,9 @@
 import { reatomResource, withCache, withDataAtom, withStatusesAtom } from "@reatom/async"
-import { forumCommentClient } from "#shared/forum-client"
+import { commentClient } from "#shared/forum-client"
 
 export const latestCommentsResource = reatomResource(async (ctx) => {
   return await ctx.schedule(async () => {
-    const res = await forumCommentClient.comment["get-last-comments"].$get(
+    const res = await commentClient.comment["get-last-comments"].$get(
       {}, { init: { signal: ctx.controller.signal } }
     )
     

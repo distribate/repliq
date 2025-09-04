@@ -1,7 +1,7 @@
 import { toast } from "sonner";
 import { mainCategoriesResource } from "#components/categories/components/main/models/categories.model";
 import { reatomAsync, withStatusesAtom } from "@reatom/async";
-import { forumThreadClient } from "#shared/forum-client";
+import { threadClient } from "#shared/forum-client";
 import { Descendant } from "slate";
 import { ThreadDetailed } from "@repo/types/entities/thread-type";
 import { atom } from "@reatom/core";
@@ -20,7 +20,7 @@ export const threadControlValuesAtom = atom<ThreadControlValues | null>(null, "t
 export const threadControlAtom = atom<ThreadControl>({ isValid: false }, "threadControl").pipe(withReset())
 
 async function removeThread(id: string) {
-  const res = await forumThreadClient.thread["remove-thread"][":id"].$delete({ param: { id } });
+  const res = await threadClient.thread["remove-thread"][":id"].$delete({ param: { id } });
   const data = await res.json();
   if ("error" in data) throw new Error(data.error)
   return data.status;
@@ -34,7 +34,7 @@ async function updateThread({
 }) {
   const { description, title, content, properties } = values;
 
-  const res = await forumThreadClient.thread["update-thread-settings"].$post({
+  const res = await threadClient.thread["update-thread-settings"].$post({
     json: {
       threadId,
       new_description: description,

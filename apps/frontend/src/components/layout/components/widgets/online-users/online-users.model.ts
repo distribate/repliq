@@ -1,10 +1,10 @@
 import { reatomAsync, withDataAtom, withStatusesAtom } from "@reatom/async"
 import { currentUserAtom } from "#components/user/models/current-user.model"
-import { forumSharedClient } from "#shared/forum-client"
+import { sharedClient } from "#shared/forum-client"
 
 export const onlineUsersAction = reatomAsync(async (ctx) => {
   return await ctx.schedule(async () => {
-    const res = await forumSharedClient.shared["get-online-users"].$get()
+    const res = await sharedClient.shared["get-online-users"].$get()
     const data = await res.json()
     if ("error" in data) throw new Error(data.error)
 
