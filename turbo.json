@@ -12,9 +12,7 @@
       ],
       "outputs": [
         "build/**",
-        "dist/**",
-        ".next/**",
-        "!.next/cache/**"
+        "dist/**"
       ]
     },
     "start": {
@@ -22,7 +20,11 @@
       "persistent": true
     },
     "lint": {},
-    "type-check": {},
+    "type-check": {
+      "dependsOn": [
+        "^type-check"
+      ]
+    },
     "dev": {
       "cache": false,
       "persistent": true

@@ -1,4 +1,4 @@
-import { CollectionNavigation, CollectionType, collectionTypeAtom } from '#components/collection/components/navigation/collection-navigation'
+import { CollectionNavigation, CollectionType, collectionTypeAtom } from '#components/collection/navigation/collection-navigation'
 import { AtomState } from '@reatom/core'
 import { useUpdate } from '@reatom/npm-react'
 import { Typography } from '@repo/ui/src/components/typography'
@@ -8,9 +8,9 @@ import { reatomComponent } from "@reatom/npm-react"
 import { ReactNode } from "react"
 import { clientOnly } from "vike-react/clientOnly"
 
-const MyTickets = clientOnly(() => import("#components/collection/components/my-tickets/components/my-tickets").then(m => m.MyTickets))
-const SavedThreads = clientOnly(() => import("#components/collection/components/my-threads/components/my-threads").then(m => m.SavedThreads))
-const MyThreads = clientOnly(() => import("#components/collection/components/my-threads/components/my-threads").then(m => m.MyThreads))
+const MyTickets = clientOnly(() => import("#components/collection/my-tickets/components/my-tickets").then(m => m.MyTickets))
+const MySavedThreads = clientOnly(() => import("#components/collection/my-saved-threads/components/my-saved-threads").then(m => m.MySavedThreads))
+const MyThreads = clientOnly(() => import("#components/collection/my-threads/components/my-threads").then(m => m.MyThreads))
 
 const Sync = () => {
   const search = usePageContext().urlParsed.search
@@ -33,7 +33,7 @@ export type CollectionParams = {
 
 const COMPONENTS: Record<CollectionType, ReactNode> = {
   threads: <MyThreads />,
-  saved_threads: <SavedThreads />,
+  saved_threads: <MySavedThreads />,
   tickets: <MyTickets />
 }
 
@@ -47,12 +47,12 @@ const CollectionList = reatomComponent(({ ctx }) => {
   )
 }, "CollectionList")
 
-export default function CollectionRouteComponent() {
+export default function Page() {
   return (
     <div className="flex flex-col items-center justify-center w-full min-h-dvh">
       <Sync />
       <div className="flex flex-col items-start gap-4 h-full w-full">
-        <Typography className="text-3xl font-bold">
+        <Typography className="page-title">
           Коллекции
         </Typography>
         <CollectionNavigation />

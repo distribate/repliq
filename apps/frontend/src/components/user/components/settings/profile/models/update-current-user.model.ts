@@ -7,6 +7,7 @@ import * as z from "zod";
 import { userDetailsSchema } from '@repo/types/schemas/user/edit-user-details-schema';
 import { currentUserAtom, currentUserNicknameAtom } from "#components/user/models/current-user.model";
 import { batch } from "@reatom/core";
+import { validateResponse } from "#shared/api/validation";
 
 type UpdateUserSettings = Omit<z.infer<typeof editUserSettingsBodySchema>, "userId">
 
@@ -18,11 +19,7 @@ export const updateCurrentUserAction = reatomAsync(async (ctx, { criteria, value
       { json: { criteria, value } }
     )
 
-    const data = await res.json()
-
-    if ("error" in data) throw new Error(data.error)
-      
-    return data.data;
+    return validateResponse<typeof res>(res);
   })
 }, {
   name: "updateCurrentUserAction",
@@ -59,12 +56,7 @@ export const updateCurrentUserAction = reatomAsync(async (ctx, { criteria, value
 export const updateCurrentUserSettingsAction = reatomAsync(async (ctx, json: UpdateUserSettings) => {
   return await ctx.schedule(async () => {
     const res = await userClient.user['edit-user-settings'].$post({ json });
-    
-    const data = await res.json();
-
-    if ("error" in data) throw new Error(data.error)
-
-    return data.data
+    return validateResponse<typeof res>(res);
   })
 }, {
   name: "updateCurrentUserSettingsAction",

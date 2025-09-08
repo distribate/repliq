@@ -78,7 +78,7 @@ const SyncReferrerParam = () => {
   return null;
 }
 
-export default function AuthPage() {
+export default function Page() {
   return (
     <div className="flex flex-col min-h-[90dvh] w-full items-center justify-center gap-12 px-2 relative">
       <SyncReferrerParam />

@@ -1,4 +1,4 @@
-import { myThreadsAction } from "#components/collection/components/my-threads/models/my-threads.model"
+import { myThreadsAction } from "#components/collection/my-threads/models/my-threads.model"
 import { onConnect, onDisconnect } from "@reatom/framework";
 import { reatomComponent } from "@reatom/npm-react"
 import { Button } from "@repo/ui/src/components/button";
@@ -98,7 +98,7 @@ const ThreadsList = reatomComponent(({ ctx }) => {
   )
 }, "ThreadsList")
 
-export default function StudioThreadsPage() {
+export default function Page() {
   return (
     <div className="flex flex-col gap-4 w-full overflow-x-auto min-w-[900px]">
       <ThreadsList />

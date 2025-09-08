@@ -6,7 +6,7 @@ import { reatomContext, useUpdate } from '@reatom/npm-react'
 import { isSsr, useCreateCtx } from "#lib/reatom";
 import { usePageContext } from "vike-react/usePageContext";
 import { snapshotAtom } from "#lib/ssr";
-import { pageContextAtom } from "#lib/sync";
+import { pageContextAtom } from "#lib/context-sync";
 
 const SyncPageContext = () => {
   const pageContext = usePageContext();
@@ -15,7 +15,7 @@ const SyncPageContext = () => {
 }
 
 function initSnapshot(
-  ctx: Ctx, 
+  ctx: Ctx,
   snapshot: AtomState<typeof snapshotAtom>
 ) {
   snapshotAtom(ctx, snapshot);

@@ -11,14 +11,14 @@ export const getUserNotificationsSchema = z.object({
 })
 
 export const getUserNotificationsRoute = new Hono()
-  .get("/get-user-notifications", zValidator("query", getUserNotificationsSchema), async (ctx) => {
+  .get("/notifications", zValidator("query", getUserNotificationsSchema), async (ctx) => {
     const result = getUserNotificationsSchema.parse(ctx.req.query());
     const nickname = getNickname()
 
     try {
-      const notifications = await getUserNotifications({ nickname, ...result });
+      const data = await getUserNotifications({ nickname, ...result });
 
-      return ctx.json(notifications, 200);
+      return ctx.json({ data }, 200);
     } catch (e) {
       return ctx.json({ error: throwError(e) }, 500);
     }

@@ -8,17 +8,23 @@ export const getCategoryThreadsSchema = z.object({
   limit: z.string().transform(Number).optional(),
   cursor: z.string().optional(),
   ascending: z.string().transform((val) => val === "true").optional(),
+  searchQuery: z.string().optional(),
+  type: z.enum(["created_at", "views_count"])
 })
 
 export const getCategoryThreadsRoute = new Hono()
-  .get("/get-category-threads/:id", zValidator("query", getCategoryThreadsSchema), async (ctx) => {
+  .get("/threads/:id", zValidator("query", getCategoryThreadsSchema), async (ctx) => {
     const id = ctx.req.param("id");
-    const { limit, cursor, ascending } = getCategoryThreadsSchema.parse(ctx.req.query());
+    const result = getCategoryThreadsSchema.parse(ctx.req.query());
 
     try {
-      const threads = await getThreadsCategories({ id, limit, cursor, ascending });
+      const data = await getThreadsCategories(id, result);
 
-      return ctx.json({ data: threads }, 200);
+      if (result.searchQuery && result.searchQuery.length >= 1) {
+        ctx.res.headers.set("Cache-Control", "public, max-age=20") 
+      }
+
+      return ctx.json({ data }, 200);
     } catch (e) {
       return ctx.json({ error: throwError(e) }, 500);
     }

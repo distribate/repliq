@@ -6,8 +6,8 @@ export function publishLoginNotify({ browser, ip, nickname }: NotifyLoginReceive
   const nc = getNatsConnection()
 
   const payload = JSON.stringify({
-    payload: { browser: browser ?? "Unknown", ip: ip ?? "Unknown", nickname },
-    type: "login"
+    type: "login",
+    payload: { browser: browser ?? "Unknown", ip: ip ?? "Unknown", nickname }
   })
 
   return nc.publish(USER_NOTIFICATIONS_SUBJECT, payload)

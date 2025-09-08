@@ -1,47 +1,43 @@
-import { threadsAction } from '../models/profile-threads.model.ts';
-import { ProfileThreadsFiltering } from '#components/profile/threads/components/profile-threads-filtering.tsx';
+import { isExistAtom, profileThreadsAction, profileThreadsDataAtom } from '../models/profile-threads.model.ts';
 import { ProfileThreadsListCard } from '#components/profile/threads/components/profile-threads-list-card.tsx';
-import { profileThreadsSettingsAtom } from '#components/profile/threads/models/profile-threads-settings.model.ts';
+import { profileThreadsViewAtom } from '#components/profile/threads/models/profile-threads-settings.model.ts';
 import { SomethingError } from '#components/templates/components/something-error.tsx';
 import { ContentNotFound } from '#components/templates/components/content-not-found.tsx';
 import { SectionSkeleton } from '#components/templates/components/section-skeleton.tsx';
 import { reatomComponent } from '@reatom/npm-react';
-import { requestedUserParamAtom } from '#components/profile/main/models/requested-user.model.ts';
-import { onConnect } from '@reatom/framework';
 import { cva } from 'class-variance-authority';
 
-const wrapperVariants = cva(`gap-4 w-full h-full`, {
+const wrapperVariants = cva(`w-full h-full gap-2`, {
   variants: {
     variant: {
       list: "flex flex-col",
-      grid: "grid-cols-2 grid lg:grid-cols-3 auto-rows-auto"
+      grid: "grid grid-cols-2 lg:grid-cols-3 auto-rows-auto"
     }
   }
 })
 
-const ProfileThreadsList = reatomComponent(({ ctx, }) => {
-  const threads = ctx.spy(threadsAction.dataAtom)
-  const profileThreadsViewState = ctx.spy(profileThreadsSettingsAtom)
+export const ProfileThreadsList = reatomComponent(({ ctx, }) => {
+  const data = ctx.spy(profileThreadsDataAtom)
 
-  if (ctx.spy(threadsAction.statusesAtom).isPending) {
+  if (ctx.spy(profileThreadsAction.statusesAtom).isPending) {
     return <SectionSkeleton />
   }
-  
-  if (ctx.spy(threadsAction.statusesAtom).isRejected) {
+
+  if (ctx.spy(profileThreadsAction.statusesAtom).isRejected) {
     return <SomethingError />;
   }
 
-  const isExist = threads && threads.length >= 1
+  const isExist = ctx.spy(isExistAtom)
 
-  if (!isExist) {
+  if (!isExist || !data) {
     return <ContentNotFound title="Треды не найдены" />;
   }
 
-  const variant = profileThreadsViewState.viewType;
+  const view = ctx.spy(profileThreadsViewAtom)
 
   return (
-    <div className={wrapperVariants({ variant })}>
-      {threads.map((thread) =>
+    <div className={wrapperVariants({ variant: view })}>
+      {data.map((thread) =>
         <ProfileThreadsListCard
           key={thread.id}
           id={thread.id}
@@ -53,14 +49,3 @@ const ProfileThreadsList = reatomComponent(({ ctx, }) => {
     </div>
   );
 }, "ProfileThreadsList")
-
-onConnect(threadsAction, (ctx) => threadsAction(ctx, ctx.get(requestedUserParamAtom)!))
-
-export const ProfileThreads = () => {
-  return (
-    <div className="flex flex-col gap-4 w-full h-full">
-      <ProfileThreadsFiltering />
-      <ProfileThreadsList />
-    </div>
-  );
-};

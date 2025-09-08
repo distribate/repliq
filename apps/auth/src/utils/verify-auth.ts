@@ -10,10 +10,12 @@ type Payload = {
   tokenId: string
 }
 
-export async function verifyAuth(token: string) {
+const CF_TURNSTILE_TOKEN = Bun.env.CF_TURNSTILE_TOKEN
+
+export async function verifyAuth(inputToken: string) {
   try {
     const verifyRes = await ky.post("https://challenges.cloudflare.com/turnstile/v0/siteverify", {
-      json: { secret: Bun.env.CF_TURNSTILE_TOKEN, response: token },
+      json: { secret: CF_TURNSTILE_TOKEN, response: inputToken },
     });
 
     if (!verifyRes.ok) {

@@ -4,6 +4,7 @@ import { reatomAsync, withStatusesAtom } from '@reatom/async';
 import { atom } from '@reatom/core';
 import { userClient } from "#shared/forum-client";
 import dayjs from "@repo/shared/constants/dayjs-instance";
+import { validateResponse } from '#shared/api/validation';
 
 type UserStatus = {
   status: "online" | "offline";
@@ -53,12 +54,8 @@ userStatusParamAtom.onChange((ctx, state) => {
 
 export const userStatusAction = reatomAsync(async (ctx, nickname: string) => {
   return await ctx.schedule(async () => {
-    const res = await userClient.user["get-user-status"][":nickname"].$get({ param: { nickname } })
-    const data = await res.json()
-
-    if ("error" in data) throw new Error(data.error)
-
-    return data.data;
+    const res = await userClient.user["user-status"][":nickname"].$get({ param: { nickname } })
+    return validateResponse<typeof res>(res);
   })
 }, {
   name: "userStatusAction",

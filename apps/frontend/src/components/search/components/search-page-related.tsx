@@ -6,7 +6,7 @@ import { Avatar } from "#components/user/components/avatar/components/avatar";
 import { UserNickname } from "#components/user/components/name/nickname";
 import { reatomComponent } from "@reatom/npm-react";
 import { CustomLink } from "#shared/components/link";
-import { FriendButton } from "#components/friend/components/friend-button/components/friend-button";
+import { FriendButton } from "#components/friend/components/friend-button";
 import { SearchThreadsCategories } from "./search-threads-categories";
 import { createIdLink } from "#lib/create-link";
 import { searchPageTypeAtom } from "../models/search-page.model";

@@ -1,5 +1,5 @@
 import { CustomLink } from "#shared/components/link"
-import { availableCategoriesAction } from "#components/thread/create-thread/models/thread-form.model"
+import { availableCategoriesAction } from "#components/thread/components/thread-create/models/thread-form.model"
 import { reatomComponent } from "@reatom/npm-react"
 import { Typography } from "@repo/ui/src/components/typography"
 import { onConnect } from "@reatom/framework"

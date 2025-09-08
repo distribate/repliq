@@ -3,17 +3,6 @@ import { Typography } from "@repo/ui/src/components/typography"
 import { PropsWithChildren } from "react"
 import { CustomLink } from "#shared/components/link"
 
-export default function StudioLayout({ children }: PropsWithChildren) {
-  return (
-    <div className="flex flex-col md:flex-row items-start w-full gap-6 h-full">
-      <StudioNavigation />
-      <div className="flex w-full md:w-3/4 h-full">
-        {children}
-      </div>
-    </div>
-  )
-}
-
 const StudioNavigation = () => {
   const pathname = usePageContext().urlPathname
 
@@ -43,6 +32,17 @@ const StudioNavigation = () => {
             Треды
           </Typography>
         </CustomLink>
+      </div>
+    </div>
+  )
+}
+
+export default function Layout({ children }: PropsWithChildren) {
+  return (
+    <div className="flex flex-col md:flex-row items-start w-full gap-6 h-full">
+      <StudioNavigation />
+      <div className="flex w-full md:w-3/4 h-full">
+        {children}
       </div>
     </div>
   )

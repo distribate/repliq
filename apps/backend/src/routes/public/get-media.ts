@@ -13,7 +13,7 @@ async function getLink(type: string) {
 }
 
 export const getMediaRoute = new Hono()
-  .get("/get-media/:type", async (ctx) => {
+  .get("/media/:type", async (ctx) => {
     const type = ctx.req.param("type")
 
     if (!["discord", "telegram"].includes(type)) {

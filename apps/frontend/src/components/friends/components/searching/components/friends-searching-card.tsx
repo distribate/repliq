@@ -1,10 +1,8 @@
 import { Avatar } from "#components/user/components/avatar/components/avatar";
 import { Typography } from "@repo/ui/src/components/typography.tsx";
 import { UserNickname } from "#components/user/components/name/nickname";
-import { Button } from "@repo/ui/src/components/button.tsx";
 import { CustomLink } from "#shared/components/link";
 import { createIdLink } from "#lib/create-link";
-import { navigate } from "vike/client/router";
 import { AtomState } from "@reatom/core";
 import { recommendedFriendsAction } from "#components/friends/models/recommended-friends.model";
 

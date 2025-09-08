@@ -7,6 +7,7 @@ import { reatomTimer } from '@reatom/timer'
 import { toast } from 'sonner'
 import { es } from '#components/notifications/components/notifications-wrapper'
 import { logger } from '@repo/shared/utils/logger.ts'
+import { validateResponse } from '#shared/api/validation'
 
 export type Connect = {
   type: "connect" | "cancel" | "disconnect"
@@ -109,11 +110,7 @@ export const connectAction = reatomAsync(async (ctx, type: Connect["type"], serv
       { query: { service, type } }, { init: { signal: ctx.controller.signal } }
     )
 
-    const data = await res.json()
-
-    if ("error" in data) throw new Error(data.error)
-
-    return data
+    return validateResponse<typeof res>(res);
   })
 }, {
   name: "connectAction",
@@ -123,7 +120,7 @@ export const connectAction = reatomAsync(async (ctx, type: Connect["type"], serv
       connectDialogIsOpenAtom(ctx, false)
     }
   },
-  onFulfill: (ctx, res) => {
+  onFulfill: async (ctx, res) => {
     if (!res) return;
 
     const variables = ctx.get(connectActionVariablesAtom)
@@ -132,7 +129,7 @@ export const connectAction = reatomAsync(async (ctx, type: Connect["type"], serv
     const { type, service } = variables
 
     if (type === 'connect') {
-      connectUrlAtom(ctx, res.data)
+      connectUrlAtom(ctx, res)
       connectTimer.startTimer(ctx, 5 * 60)
       eventSourceAtom(ctx, es(CONNECT_SERVICE_SSE_URL))
     }
@@ -178,7 +175,7 @@ export const userSocialsResource = reatomResource(async (ctx) => {
   if (!nickname) return;
 
   return await ctx.schedule(async () => {
-    const res = await userClient.user["get-user-socials"].$get(
+    const res = await userClient.user["user-socials"].$get(
       { param: { nickname } }, { init: { signal: ctx.controller.signal } }
     )
 

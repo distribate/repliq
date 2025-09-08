@@ -12,7 +12,7 @@ import { createIdLink } from "#lib/create-link.ts";
 import { friendCardVariant } from "#components/friend/components/friend-card/friend-card-layout.tsx";
 import { AtomState } from "@reatom/core";
 import { SectionSkeleton } from "#components/templates/components/section-skeleton.tsx";
-import { onDisconnect } from "@reatom/framework";
+import { spawn } from "@reatom/framework";
 
 type FriendIncomindCardProps = NonNullable<AtomState<typeof incomingRequestsAtom>>[number]
 
@@ -20,7 +20,7 @@ const FriendIncomingCard = reatomComponent<FriendIncomindCardProps>(({
   ctx, avatar, initiator, id: request_id, name_color
 }) => {
   const handle = (type: "accept" | "reject") => {
-    controlIncomingRequestAction(ctx, { type, request_id, recipient: initiator })
+    void spawn(ctx, async (spawnCtx) => controlIncomingRequestAction(spawnCtx, { type, request_id, recipient: initiator }))
   }
 
   return (
@@ -59,8 +59,6 @@ const FriendIncomingCard = reatomComponent<FriendIncomindCardProps>(({
     </div>
   );
 }, "FriendIncomingCard")
-
-onDisconnect(incomingRequestsAtom, (ctx) => incomingRequestsAtom.reset(ctx))
 
 export const FriendsIncomingList = reatomComponent(({ ctx }) => {
   const data = ctx.spy(incomingRequestsAtom)

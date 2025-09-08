@@ -7,12 +7,12 @@ import { userPreferenceAndPrivateValidation } from '#utils/validate-user-prefere
 import { getNickname } from '#utils/get-nickname-from-storage.ts';
 
 export const getUserThreadsSchema = z.object({
-  querySearch: z.string().optional(),
+  searchQuery: z.string().optional(),
   cursor: z.string().optional(),
 })
 
 export const getUserThreadsRoute = new Hono()
-  .get("/get-user-threads/:nickname", zValidator("query", getUserThreadsSchema), async (ctx) => {
+  .get("/user-threads/:nickname", zValidator("query", getUserThreadsSchema), async (ctx) => {
     const recipient = ctx.req.param("nickname");
     const initiator = getNickname()
     const result = getUserThreadsSchema.parse(ctx.req.query());
@@ -26,9 +26,9 @@ export const getUserThreadsRoute = new Hono()
     }
 
     try {
-      const threads = await getUserThreads({ nickname: recipient, ...result });
+      const data = await getUserThreads(recipient, result);
 
-      return ctx.json(threads, 200);
+      return ctx.json({ data }, 200);
     } catch (e) {
       return ctx.json({ error: throwError(e) }, 500);
     }

@@ -1,7 +1,7 @@
 import { ImageUp } from "lucide-react";
 import { Typography } from "@repo/ui/src/components/typography.tsx";
 import { HoverCardItem } from "@repo/ui/src/components/hover-card.tsx";
-import { DynamicModal } from "../../../modals/dynamic-modal/components/dynamic-modal.tsx";
+import { DynamicModal } from "../../../../shared/components/dynamic-modal.tsx";
 import { ChangeEvent, useRef } from "react";
 import { Skeleton } from "@repo/ui/src/components/skeleton.tsx";
 import { reatomComponent } from "@reatom/npm-react";
@@ -50,10 +50,10 @@ const CoverImagesList = reatomComponent(({ ctx }) => {
         <img
           src={url}
           alt={name}
-          height={900}
           width={1200}
+          height={900}
           loading="lazy"
-          className="h-80 max-h-80 object-cover group-hover:brightness-50"
+          className="h-64 max-h-64 object-cover group-hover:brightness-50"
         />
       </div>
     ))

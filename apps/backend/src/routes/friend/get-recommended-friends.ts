@@ -136,7 +136,7 @@ async function getRandomUsers(nickname: string): Promise<Fof[]> {
 const LIMIT_FRIENDS_FOR_FOFF = 2
 
 export const getRecommendedFriendsRoute = new Hono()
-  .get("/get-recommended-friends", async (ctx) => {
+  .get("/recommended-friends", async (ctx) => {
     const nickname = getNickname()
 
     try {
@@ -156,7 +156,6 @@ export const getRecommendedFriendsRoute = new Hono()
           data = await getRandomUsers(nickname)
         }
       } catch (e) {
-        logger.error(e)
         data = await getRandomUsers(nickname)
       }
 

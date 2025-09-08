@@ -4,7 +4,7 @@ import { Hono } from "hono";
 import { createCommentRoute } from "./create-comment";
 import { replyCommentRoute } from "./reply-comment";
 import { disableCommentsRoute } from "./disable-comments";
-import { getLastCommentsRoute } from "./get-last-comments";
+import { getLatestCommentsRoute } from "./get-latest-comments";
 import { removeCommentRoute } from "./remove-comment";
 
 export const comment = new Hono()
@@ -14,5 +14,5 @@ export const comment = new Hono()
   .route("/", createCommentRoute)
   .route("/", replyCommentRoute)
   .route("/", disableCommentsRoute)
-  .route("/", getLastCommentsRoute)
+  .route("/", getLatestCommentsRoute)
   .route("/", removeCommentRoute)

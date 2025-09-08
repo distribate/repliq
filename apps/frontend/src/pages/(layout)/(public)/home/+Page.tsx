@@ -1,21 +1,17 @@
 import { reatomComponent } from "@reatom/npm-react"
 import { isAuthenticatedAtom } from '#components/auth/models/auth.model';
-import { LatestCommentsSkeleton } from '#components/templates/components/main-page-skeleton';
-import { MainCategories } from "#components/categories/components/main/components/main-categories-list";
+import { LatestThreadsByCategories } from "#components/category/latest-threads/components/latest-threads";
 import { Button } from "@repo/ui/src/components/button";
 import { Typography } from "@repo/ui/src/components/typography";
 import { CustomLink } from "#shared/components/link";
-import { OnlineUsers } from "#components/layout/components/widgets/online-users/online-users";
+import { OnlineUsers } from "#components/widgets/online-users/components/online-users";
 import { IconBrandThreads, IconPhoneCall, IconPlus } from "@tabler/icons-react";
-import { clientOnly } from "vike-react/clientOnly";
 import { globalPreferencesAtom } from "#components/user/components/settings/main/models/update-global-preferences.model";
-
-const Comments = clientOnly(() => import('#components/layout/components/widgets/latest-comments/latest-comments').then((m) => m.LatestComments))
-const Alert = clientOnly(() => import('#components/layout/components/widgets/alert/alert-widget').then((m) => m.Alert))
+import { LatestComments } from "#components/widgets/latest-comments/components/latest-comments";
+import { Alert } from "#components/widgets/alert/components/alert-widget";
+import { SOFTWARE_OWNER_LINK } from "#shared/constants/links";
 
 const Alerts = reatomComponent(({ ctx }) => {
-  if (!ctx.spy(isAuthenticatedAtom)) return null;
-
   const { alerts: alertsShowing } = ctx.spy(globalPreferencesAtom)
 
   if (alertsShowing === 'hide') return null;
@@ -26,12 +22,6 @@ const Alerts = reatomComponent(({ ctx }) => {
     </div>
   )
 }, "Alerts")
-
-const LatestComments = reatomComponent(({ ctx }) => {
-  if (!ctx.spy(isAuthenticatedAtom)) return null;
-
-  return <Comments fallback={<LatestCommentsSkeleton />} />
-}, "LatestComments")
 
 const About = () => {
   return (
@@ -54,7 +44,7 @@ const About = () => {
             </Typography>
           </CustomLink>
         </div>
-        <a href="https://github.com/distribate" target="_blank" rel="noreferrer">
+        <a href={SOFTWARE_OWNER_LINK} target="_blank" rel="noreferrer">
           Forum software by distribate
         </a>
       </div>
@@ -75,15 +65,17 @@ const CreateThreadButton = () => {
   )
 }
 
-export default function HomePage() {
+const Home = reatomComponent(({ ctx }) => {
+  const isAuthenticated = ctx.spy(isAuthenticatedAtom)
+
   return (
     <main className="flex flex-col w-full gap-2 h-full">
-      <Alerts />
+      {isAuthenticated && <Alerts />}
       <div className="flex xl:flex-row gap-2 flex-col w-full h-full">
         <div className="hidden xl:flex flex-col gap-2 w-full xl:w-1/4 h-full">
           <div className="flex flex-col gap-4 p-2 sm:p-4 w-full h-full rounded-lg overflow-hidden bg-primary-color">
             <CreateThreadButton />
-            <LatestComments />
+            {isAuthenticated && <LatestComments />}
           </div>
           <OnlineUsers />
           <About />
@@ -92,10 +84,10 @@ export default function HomePage() {
           <div className="xl:hidden block">
             <CreateThreadButton />
           </div>
-          <MainCategories />
+          <LatestThreadsByCategories />
           <div className="xl:hidden flex flex-col gap-2 w-full xl:w-1/4 h-full">
             <div className="flex flex-col gap-4 p-2 sm:p-4 w-full h-full rounded-lg overflow-hidden bg-primary-color">
-              <LatestComments />
+              {isAuthenticated &&<LatestComments />}
             </div>
             <OnlineUsers />
             <About />
@@ -104,4 +96,8 @@ export default function HomePage() {
       </div>
     </main>
   )
+})
+
+export default function Page() {
+  return <Home />
 }

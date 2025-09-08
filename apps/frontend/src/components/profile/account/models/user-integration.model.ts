@@ -1,8 +1,9 @@
 import { reatomAsync, withDataAtom, withStatusesAtom } from "@reatom/async"
 import { atom } from "@reatom/core"
-import { logger } from "@repo/shared/utils/logger.ts"
 import { userClient } from "#shared/forum-client"
 import { toast } from "sonner"
+import { log } from "#lib/utils"
+import { validateResponse } from "#shared/api/validation"
 
 export type Integration =
   | "minecraft"
@@ -13,10 +14,8 @@ export const connectionIsPendingAtom = atom(false, "connectionIsPending")
 
 export const usersConnectedServiceAction = reatomAsync(async (ctx) => {
   return await ctx.schedule(async () => {
-    const res = await userClient.user["get-profiles"].$get()
-    const data = await res.json()
-    if ("error" in data) throw new Error(data.error);
-    return data.data
+    const res = await userClient.user["profiles"].$get()
+    return validateResponse<typeof res>(res);
   })
 }, {
   name: "usersConnectedServiceAction",
@@ -48,9 +47,7 @@ export const disconnectIntegrationAction = reatomAsync(async (ctx, type: Integra
   return await ctx.schedule(async () => {
     // @ts-expect-error
     const res = await userClient.user["disconnect-profile"].$post({ json: { type } })
-    const data = await res.json()
-    if ("error" in data) throw new Error(data.error)
-    return data
+    return validateResponse<typeof res>(res);
   })
 }, {
   name: "disconnectIntegrationAction",
@@ -62,7 +59,7 @@ export const disconnectIntegrationAction = reatomAsync(async (ctx, type: Integra
       return;
     }
 
-    logger.info(res.data)
+    log("disconnectIntegrationAction", res.data)
 
     toast.success("Профиль успешно отключен")
   },
@@ -82,11 +79,7 @@ export const connectIntegrationAction = reatomAsync(async (ctx, type: Integratio
 
   return await ctx.schedule(async () => {
     const res = await userClient.user["connect-profile"].$post({ json: { type } })
-    const data = await res.json()
-
-    if ("error" in data) throw new Error(data.error)
-
-    return data
+    return validateResponse<typeof res>(res);
   })
 }, {
   name: "connectIntegrationAction",
@@ -98,7 +91,7 @@ export const connectIntegrationAction = reatomAsync(async (ctx, type: Integratio
   onFulfill: (_, res) => {
     if (!res) return;
 
-    logger.info(res.data)
+    log("connectIntegrationAction", res.profile_id)
 
     toast.success("Профиль успешно подключен")
   },

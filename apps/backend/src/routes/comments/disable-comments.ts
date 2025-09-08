@@ -30,7 +30,9 @@ async function disableThreadComments(id: string) {
     .returning(["is_comments"])
     .executeTakeFirstOrThrow()
 
-  return query;
+  return {
+    isComments: query.is_comments
+  }
 }
 
 export const disableCommentsRoute = new Hono()
@@ -53,7 +55,12 @@ export const disableCommentsRoute = new Hono()
             return ctx.json({ error: "Failed" }, 400)
           }
 
-          return ctx.json({ data: post, status: "Success" }, 200)
+          const postData = {
+            data: post, 
+            status: "Success"
+          }
+
+          return ctx.json({ data: postData }, 200)
         case "thread":
           const thread = await disableThreadComments(postId)
 
@@ -61,7 +68,12 @@ export const disableCommentsRoute = new Hono()
             return ctx.json({ error: "Failed" }, 400)
           }
 
-          return ctx.json({ data: thread, status: "Success" }, 200)
+          const threadData = {
+            data: thread, 
+            status: "Success" 
+          }
+
+          return ctx.json({ data: threadData }, 200)
       }
     } catch (e) {
       return ctx.json({ error: throwError(e) }, 400)

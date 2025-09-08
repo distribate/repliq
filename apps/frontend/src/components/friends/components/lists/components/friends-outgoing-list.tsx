@@ -7,7 +7,7 @@ import { Button } from "@repo/ui/src/components/button.tsx";
 import { UserNickname } from "#components/user/components/name/nickname.tsx";
 import { reatomComponent } from "@reatom/npm-react";
 import { outgoingRequestsAction, outgoingRequestsAtom } from "#components/friends/models/friends-requests.model.ts";
-import { AtomState, onDisconnect, spawn } from "@reatom/framework";
+import { AtomState, spawn } from "@reatom/framework";
 import { CustomLink } from "#shared/components/link.tsx";
 import { createIdLink } from "#lib/create-link.ts";
 import { friendCardVariant } from "#components/friend/components/friend-card/friend-card-layout.tsx";
@@ -64,8 +64,6 @@ const FriendOutgoingCard = reatomComponent<FriendOutgoingCardProps>(({
     </div>
   );
 }, "FriendOutgoingCard")
-
-onDisconnect(outgoingRequestsAtom, (ctx) => outgoingRequestsAtom.reset(ctx))
 
 export const FriendsOutgoingList = reatomComponent(({ ctx }) => {
   const data = ctx.spy(outgoingRequestsAtom)

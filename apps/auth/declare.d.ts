@@ -1,36 +1,25 @@
 declare module "bun" {
   interface Env {
-    AUTH_BACKEND_PORT: number;
+    MAIN_POSTGRES_HOST: string;
+    MAIN_POSTGRES_USER: string;
+    MAIN_POSTGRES_PORT: number;
+    MAIN_POSTGRES_PASSWORD: string;
+    MAIN_POSTGRES_DB: string;
+    MAIN_POSTGRES_TENANT_ID: string;
 
-    SECRET_TOKEN: string;
+    NATS_AUTH_TOKEN: string;
 
-    AUTHORIZATION_POSTGRES_PASSWORD: string;
-    AUTHORIZATION_POSTGRES_PORT: number;
-    AUTHORIZATION_POSTGRES_DB: string;
-    AUTHORIZATION_POSTGRES_USER: string;
-
-    LUCKPERMS_POSTGRES_PORT: number;
-    LUCKPERMS_POSTGRES_PASSWORD: string;
-    LUCKPERMS_POSTGRES_DB: string;
-    LUCKPERMS_POSTGRES_USER: string;
-
-    POSTGRES_USER: string;
-    POSTGRES_PORT: number;
-    POSTGRES_PASSWORD: string;
-    POSTGRES_DB: string;
-    POSTGRES_TENANT_ID: string;
-
-    SUPABASE_SERVICE_ROLE_KEY: string;
-    NEXT_PUBLIC_SUPABASE_URL: string
-    
     LOCATION_TOKEN: string;
     CF_TURNSTILE_TOKEN: string;
+
+    SUPABASE_SERVICE_ROLE_KEY: string;
+    SUPABASE_URL: string    
 
     REDIS_HOST: string;
     REDIS_USER_PASSWORD: string;
     REDIS_USER: string;
     REDIS_PORT: number;
+
+    PORT: number;
   }
 }
-
-declare module "*.txt"

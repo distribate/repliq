@@ -1,4 +1,4 @@
-import { logRouting } from "#lib/helpers";
+import { logRouting } from "#lib/utils";
 import { defineGlobalState } from "#lib/validation";
 import { PageContextServer } from "vike/types";
 

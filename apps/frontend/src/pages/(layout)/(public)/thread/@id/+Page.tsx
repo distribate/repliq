@@ -1,24 +1,27 @@
-import { ThreadMore } from '#components/thread/thread-more/components/thread-more'
-import { ThreadsRecommendations } from '#components/thread/thread-recommendations/components/thread-recommendations'
-import { ThreadCommentsSection } from '#components/thread/thread-comments/components/thread-comments'
+import { ThreadMore } from '#components/thread/components/thread-more/thread-more'
+import { ThreadsRecommendations } from '#components/thread/components/thread-recs/components/thread-recommendations'
+import { ThreadCommentsSection } from '#components/thread/components/thread-comments/components/thread-comments'
 import { useUpdate } from '@reatom/npm-react'
 import { defineThread, threadAtom, threadPropertiesAtom } from '#components/thread/models/thread.model'
 import { useData } from 'vike-react/useData'
 import { Data } from './+data'
 import { Typography } from "@repo/ui/src/components/typography"
 import { ContextMenu, ContextMenuContent, ContextMenuTrigger } from "@repo/ui/src/components/context-menu"
-import { ThreadReactions } from "#components/thread/thread-reactions/components/thread-reactions"
-import { ThreadSave } from "#components/thread/thread-save/components/thread-save"
+import { ThreadReactions } from "#components/thread/components/thread-reactions/components/thread-reactions"
+import { ThreadSave } from "#components/thread/components/thread-save/components/thread-save"
 import { reatomComponent } from "@reatom/npm-react"
 import { isAuthenticatedAtom } from "#components/auth/models/auth.model"
 import { clientOnly } from "vike-react/clientOnly"
-import { ThreadContent } from "#components/thread/thread-content/components/thread-content"
 import { Skeleton } from "@repo/ui/src/components/skeleton"
 import { SectionSkeleton } from '#components/templates/components/section-skeleton'
-import { ThreadImages } from '#components/thread/thread-images/components/thread-images'
+import { ThreadImages } from '#components/thread/components/thread-images/thread-images'
 
 const ThreadContextMenu = clientOnly(() =>
-  import("#components/thread/thread-context-menu/thread-context-menu").then(m => m.ThreadContextMenu)
+  import("#components/thread/components/thread-menu/thread-context-menu").then(m => m.ThreadContextMenu)
+)
+
+const ThreadContent = clientOnly(() =>
+  import("#components/thread/components/thread-content/thread-content").then(m => m.ThreadContent)
 )
 
 const DefineThread = () => {
@@ -26,25 +29,6 @@ const DefineThread = () => {
   useUpdate((ctx) => defineThread(ctx, data), [target])
   return null
 }
-
-export default function ThreadPage() {
-  return (
-    <>
-      <DefineThread />
-      <Page />
-    </>
-  )
-}
-
-const ThreadImagesSkeleton = ({ images_count }: { images_count: number }) => {
-  return (
-    <div className="grid grid-cols-3 grid-rows-1 gap-2 items-start w-full">
-      {[...Array(images_count)].map((_, i) => (
-        <Skeleton key={i} className="w-full h-[200px]" />
-      ))}
-    </div>
-  );
-};
 
 const ThreadDetails = reatomComponent(({ ctx }) => {
   const thread = ctx.spy(threadAtom)
@@ -55,6 +39,7 @@ const ThreadDetails = reatomComponent(({ ctx }) => {
 
   const { updated_at } = thread
   const { is_updated, is_saved } = properties
+
   const isEdited = is_updated && updated_at;
 
   return (
@@ -91,10 +76,10 @@ const ThreadTrigger = reatomComponent(({ ctx }) => {
           {thread.title}
         </Typography>
       </div>
-      <ThreadContent />
+      <ThreadContent fallback={<Skeleton className="w-full h-64" />} />
       {thread.images && (
         <ThreadImages
-  
+
         />
       )}
       <ThreadDetails />
@@ -102,7 +87,7 @@ const ThreadTrigger = reatomComponent(({ ctx }) => {
   )
 }, "Thread")
 
-const Thread = reatomComponent(({ ctx }) => {
+const ThreadMain = reatomComponent(({ ctx }) => {
   const isAuthenticated = ctx.spy(isAuthenticatedAtom)
 
   if (!isAuthenticated) {
@@ -121,31 +106,38 @@ const Thread = reatomComponent(({ ctx }) => {
   )
 }, "Thread")
 
-const Page = reatomComponent(({ ctx }) => {
+const Thread = reatomComponent(({ ctx }) => {
   const thread = ctx.spy(threadAtom);
 
   if (!thread) {
-    return (
-      <SectionSkeleton />
-    )
+    return <SectionSkeleton />
   }
-  
+
   return (
     <div className="flex xl:flex-row flex-col gap-2 items-start h-full w-full relative">
       <div
         className="flex flex-col order-first w-full gap-2
           xl:min-w-3/4 xl:w-3/4 xl:max-w-3/4 items-start h-full justify-start"
       >
-        <Thread />
+        <ThreadMain />
         <ThreadMore />
         <ThreadCommentsSection />
       </div>
       <div
-        className="flex flex-col order-last gap-y-4 h-fit relative top-0 overflow-hidden
-            lg:min-w-1/4 xl:w-1/4 w-full xl:max-w-1/4 xl:sticky"
+        className="flex flex-col order-last gap-y-4 h-fit relative top-0 overflow-hidden 
+          lg:min-w-1/4 xl:w-1/4 w-full xl:max-w-1/4 xl:sticky"
       >
         <ThreadsRecommendations />
       </div>
     </div>
   )
 }, "Page")
+
+export default function Page() {
+  return (
+    <>
+      <DefineThread />
+      <Thread />
+    </>
+  )
+}

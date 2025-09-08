@@ -3,7 +3,7 @@ import { Hono } from "hono";
 import { getCategories } from '#lib/queries/categories/get-categories.ts';
 
 export const getCategoriesRoute = new Hono()
-  .get("/get-categories", async (ctx) => {
+  .get("/categories", async (ctx) => {
     try {
       const categories = await getCategories();
 

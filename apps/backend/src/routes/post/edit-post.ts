@@ -28,7 +28,7 @@ async function editPost({ postId, content }: EditPost) {
 }
 
 export const editPostRoute = new Hono()
-  .post("/edit-post", zValidator("json", editPostSchema), async (ctx) => {
+  .post("/edit", zValidator("json", editPostSchema), async (ctx) => {
     const { id: postId, content } = editPostSchema.parse(await ctx.req.json())
     const nickname = getNickname()
 
@@ -45,7 +45,12 @@ export const editPostRoute = new Hono()
         return ctx.json({ error: "Failed" }, 400)
       }
 
-      return ctx.json({ data: post, status: "Success" }, 200)
+      const data = {
+        data: post,
+        status: "Success"
+      }
+
+      return ctx.json({ data }, 200)
     } catch (e) {
       return ctx.json({ error: throwError(e) }, 400)
     }

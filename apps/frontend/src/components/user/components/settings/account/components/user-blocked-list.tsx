@@ -9,7 +9,7 @@ import { Separator } from "@repo/ui/src/components/separator.tsx";
 import { Typography } from "@repo/ui/src/components/typography.tsx";
 import { Ellipsis } from "lucide-react";
 import { HoverCardItem } from "@repo/ui/src/components/hover-card.tsx";
-import { UserCardModal } from '#components/modals/custom/components/user-card-modal.tsx';
+import { UserCardModal } from '#components/modals/custom/user-card-modal.tsx';
 import { deleteFromBlockedAction } from "../models/user-blocked.model.ts";
 import { createIdLink } from "#lib/create-link.ts";
 import { navigate } from "vike/client/router";

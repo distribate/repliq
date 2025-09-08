@@ -3,7 +3,7 @@ import { userProfileStatsAction } from "../models/user-stats.model";
 import { Dialog, DialogContent, DialogTrigger } from "@repo/ui/src/components/dialog";
 import { Button } from "@repo/ui/src/components/button";
 import { ProfileStatsMeta, ProfileViewsDetails } from "@repo/types/routes-types/get-user-profile-stats-types";
-import { BuyDonateModal } from "#components/modals/custom/components/buy-donate-modal";
+import { BuyDonateModal } from "#components/modals/custom/buy-donate-modal";
 import { Avatar } from "#components/user/components/avatar/components/avatar";
 import { HTMLAttributes } from "react";
 import dayjs from "@repo/shared/constants/dayjs-instance"
@@ -14,6 +14,7 @@ import { CustomLink } from "#shared/components/link";
 import { createIdLink } from "#lib/create-link";
 import { getUser } from "#components/user/models/current-user.model";
 import { navigate } from "vike/client/router";
+import { prefetch } from 'vike/client/router'
 
 type AccountStatSectionProps = {
   title: string,
@@ -110,12 +111,15 @@ export const ProfileAccountStatsPlayers = ({
 export const ProfileAccountStatsDetails = reatomComponent(({ ctx }) => {
   const profileStats = ctx.spy(userProfileStatsAction.dataAtom)
 
-  const handleRedirect = () => {
+  const handleRedirect = async () => {
     if (!profileStats?.details) {
       return;
     }
 
-    navigate("/dashboard/profile")
+    const link = "/dashboard/profile"
+
+    prefetch(link)
+    await navigate(link)
   }
 
   return (

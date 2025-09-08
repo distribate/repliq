@@ -8,7 +8,7 @@ import { friendPinSchema } from "@repo/types/schemas/friend/friend-pin-schema.ts
 import { validatePinnedFriendsLength } from '#lib/validators/validate-pinned-friends-length.ts';
 
 export const createFriendPinRoute = new Hono()
-  .post("/create-friend-pin", zValidator("json", friendPinSchema), async (ctx) => {
+  .post("/pin", zValidator("json", friendPinSchema), async (ctx) => {
     const result = friendPinSchema.parse(await ctx.req.json());
     const nickname = getNickname()
 
@@ -27,7 +27,11 @@ export const createFriendPinRoute = new Hono()
             return ctx.json({ error: "Error creating friend pin" }, 404)
           }
 
-          return ctx.json({ status: "Friend pinned" }, 200)
+          const pinData = {
+            data: true,
+          }
+
+          return ctx.json({ data: pinData }, 200)
         case "unpin":
           const deletePin = await deleteFriendPin({ ...result, initiator: nickname })
 
@@ -35,7 +39,11 @@ export const createFriendPinRoute = new Hono()
             return ctx.json({ error: "Error deleting friend pin" }, 404)
           }
 
-          return ctx.json({ status: "Friend unpinned" }, 200)
+          const unpinData = {
+            data: true,
+          }
+
+          return ctx.json({ data: unpinData }, 200)
       }
     } catch (e) {
       return ctx.json({ error: throwError(e) }, 400)

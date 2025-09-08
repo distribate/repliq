@@ -1,4 +1,4 @@
-import { logRouting } from "#lib/helpers";
+import { logRouting } from "#lib/utils";
 import { PageContextServer } from "vike/types";
 
 // Default +data hook

@@ -1,18 +1,11 @@
 import { Skeleton } from '@repo/ui/src/components/skeleton.tsx';
 import { ContentNotFound } from '#components/templates/components/content-not-found.tsx';
-import {
-  ProfilePostsListCard,
-} from '#components/profile/posts/components/profile-posts-list-card.tsx';
+import { ProfilePostsListCard } from '#components/profile/posts/components/profile-posts-list-card.tsx';
 import { Separator } from '@repo/ui/src/components/separator.tsx';
-import { useInView } from 'react-intersection-observer';
-import { useEffect } from 'react';
 import { SomethingError } from '#components/templates/components/something-error.tsx';
 import { SectionSkeleton } from '#components/templates/components/section-skeleton.tsx';
 import { reatomComponent } from '@reatom/npm-react';
-import { requestedUserParamAtom } from '#components/profile/main/models/requested-user.model.ts';
-import { updatePostsAction } from '../models/update-posts.model';
-import { postsAction, postsDataAtom, postsMetaAtom } from '../models/posts.model';
-import { ProfilePostsFiltering } from './profile-posts-filtering';
+import { postsAction, postsDataAtom, postsNotPinnedDataAtom, postsPinnedDataAtom, ProfilePostsViewer, updatePostsAction } from '../models/posts.model';
 
 const PostsSkeleton = () => {
   return (
@@ -23,49 +16,45 @@ const PostsSkeleton = () => {
   );
 };
 
-const ProfilePostsList = reatomComponent(({ ctx }) => {
-  const { ref, inView } = useInView({ triggerOnce: false, threshold: 1 });
+const ProfilePinnedPosts = reatomComponent(({ ctx }) => {
+  const data = ctx.spy(postsPinnedDataAtom)[0] // only 1 post
 
-  const postsData = ctx.spy(postsDataAtom)
-  const postsMeta = ctx.spy(postsMetaAtom)
-  const isLoadingUpdated = ctx.spy(updatePostsAction.statusesAtom).isPending
-  const nickname = ctx.spy(requestedUserParamAtom)
-  const hasMore = postsMeta?.hasNextPage;
-
-  useEffect(() => {
-    if (nickname && inView && hasMore) {
-      updatePostsAction(ctx, { nickname, type: "update-cursor" })
-    };
-  }, [inView, hasMore, nickname]);
-
-  if (ctx.spy(postsAction.statusesAtom).isPending) return <SectionSkeleton />;
-  if (ctx.spy(postsAction.statusesAtom).isRejected) return <SomethingError />;
-
-  if (!postsData || !postsData.length) return <ContentNotFound title="Посты не найдены" />;
-
-  const posts = postsData.filter(p => !p.isPinned);
-  const pinnedPost = postsData.find(p => p.isPinned);
+  if (!data) return null;
 
   return (
-    <div className="flex flex-col gap-4 w-full h-full">
-      {pinnedPost && (
-        <>
-          <ProfilePostsListCard {...pinnedPost} />
-          <Separator />
-        </>
-      )}
-      {posts.map(p => <ProfilePostsListCard key={p.id} {...p} />)}
-      {isLoadingUpdated && <PostsSkeleton />}
-      {hasMore && <div ref={ref} className="h-[1px] w-full" />}
+    <>
+      <ProfilePostsListCard {...data} />
+      <Separator />
+    </>
+  )
+}, "ProfilePinnedPosts")
+
+const ProfileNotPinnedPosts = reatomComponent(({ ctx }) => {
+  const data = ctx.spy(postsNotPinnedDataAtom)
+
+  return data.map(post => <ProfilePostsListCard key={post.id} {...post} />)
+}, "ProfileNotPinnedPosts")
+
+export const ProfilePostsList = reatomComponent(({ ctx }) => {
+  const data = ctx.spy(postsDataAtom);
+
+  if (ctx.spy(postsAction.statusesAtom).isPending) {
+    return <SectionSkeleton />;
+  }
+
+  if (ctx.spy(postsAction.statusesAtom).isRejected) {
+    return <SomethingError />;
+  }
+
+  if (!data || !data.length) {
+    return <ContentNotFound title="Посты не найдены" />;
+  }
+
+  return (
+    <div className="flex flex-col gap-2 w-full h-full">
+      <ProfilePinnedPosts />
+      <ProfileNotPinnedPosts />
+      {ctx.spy(updatePostsAction.statusesAtom).isPending && <PostsSkeleton />}
     </div>
   );
 }, "ProfilePostsList")
-
-export const ProfilePosts = () => {
-  return (
-    <div className="flex flex-col gap-4 w-full h-full">
-      <ProfilePostsFiltering />
-      <ProfilePostsList />
-    </div>
-  );
-};

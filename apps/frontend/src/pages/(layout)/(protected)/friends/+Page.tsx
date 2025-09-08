@@ -9,13 +9,14 @@ import { onConnect, onDisconnect } from '@reatom/framework'
 import { FriendsFilteringSearch } from '#components/friends/components/filtering/components/friends-filtering-search'
 import { friendsCountAction } from '#components/friends/models/friends-count.model'
 import { reatomComponent } from '@reatom/npm-react'
-import { navigationVariant } from '#components/collection/components/navigation/collection-navigation'
+import { navigationVariant } from '#components/collection/navigation/collection-navigation'
 import { NavigationBadge } from '#ui/navigation-badge'
 import { friendsListTypeAtom } from '#components/friends/components/filtering/models/friends-filtering.model'
 import { ReactNode } from 'react'
+import { resetFriends } from '#components/friends/models/friends.model'
 
 onConnect(friendsCountAction.dataAtom, friendsCountAction)
-onDisconnect(friendsCountAction.dataAtom, (ctx) => friendsCountAction.dataAtom.reset(ctx))
+onDisconnect(friendsCountAction.dataAtom, resetFriends)
 
 const NAVIGATION = [
   { title: "Мои друзья", value: "all" },
@@ -59,7 +60,7 @@ const FriendsNavigation = () => {
   )
 }
 
-export default function FriendsRouteComponent() {
+export default function Page() {
   return (
     <div className="flex flex-col gap-4 items-start lg:flex-row w-full relative">
       <div className="flex flex-col gap-2 lg:w-4/6 h-full bg-primary-color rounded-xl p-2 sm:p-4 w-full">

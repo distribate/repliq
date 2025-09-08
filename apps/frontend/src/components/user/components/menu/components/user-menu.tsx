@@ -16,7 +16,7 @@ const SettingsModal = clientOnly(
   async () => (await import("#components/modals/user-settings/components/user-settings-modal")).UserSettingsModal
 )
 const LogoutModal = clientOnly(
-  async () => (await import("#components/modals/action-confirmation/components/logout/components/logout-modal.tsx")).LogoutModal
+  async () => (await import("#components/modals/with-confirm/logout/components/logout-modal")).LogoutModal
 )
 
 const Admin = reatomComponent(({ ctx }) => {

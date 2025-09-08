@@ -3,17 +3,15 @@ import { selectedVariant } from "#ui/selected-wrapper";
 import { LayoutGrid } from "lucide-react";
 import { VIEW_COMPONENTS_TYPE } from "#components/friends/components/filtering/constants/view-components-type";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@repo/ui/src/components/dropdown-menu.tsx";
-import { ChangeEvent } from "react";
 import { Input, InputProps } from "@repo/ui/src/components/input.tsx";
-import {
-  profileThreadsSettingsAtom,
-} from "#components/profile/threads/models/profile-threads-settings.model";
 import { reatomComponent } from "@reatom/npm-react";
 import { requestedUserParamAtom } from "#components/profile/main/models/requested-user.model";
 import { action, sleep, withConcurrency } from "@reatom/framework";
+import { profileThreadsSearchQueryAtom, profileThreadsViewAtom } from "../models/profile-threads-settings.model";
+import { updateProfileThreadsAction } from "../models/profile-threads.model";
 
 const ProfileThreadsFilteringView = reatomComponent(({ ctx }) => {
-  const profileThreadsViewState = ctx.spy(profileThreadsSettingsAtom)
+  const view = ctx.spy(profileThreadsViewAtom)
 
   return (
     <DropdownMenu>
@@ -31,13 +29,13 @@ const ProfileThreadsFilteringView = reatomComponent(({ ctx }) => {
             {VIEW_COMPONENTS_TYPE.map(({ value, title, icon: Icon }) => (
               <DropdownMenuItem
                 key={value}
-                onClick={() => profileThreadsSettingsAtom(ctx, (state) => ({ ...state, viewType: value }))}
+                onClick={() => profileThreadsViewAtom(ctx, value)}
                 className="items-center gap-1"
               >
                 <Icon size={16} className="text-shark-300" />
                 <Typography
                   state={
-                    value === profileThreadsViewState.viewType
+                    value === view
                       ? "active"
                       : "default"
                   }
@@ -53,12 +51,16 @@ const ProfileThreadsFilteringView = reatomComponent(({ ctx }) => {
   );
 }, "ProfileThreadsFilteringView")
 
-const onChange = action(async (ctx, e: ChangeEvent<HTMLInputElement>) => {
-  const { value } = e.target;
+const onChange = action(async (ctx, e: React.ChangeEvent<HTMLInputElement>) => {
+  const value = e.target.value;
 
   await ctx.schedule(() => sleep(300))
 
-  profileThreadsSettingsAtom(ctx, (state) => ({ ...state, querySearch: value }))
+  profileThreadsSearchQueryAtom(ctx, value)
+
+  await ctx.schedule(() => sleep(40))
+
+  updateProfileThreadsAction(ctx, "update-filter")
 }).pipe(withConcurrency())
 
 const ProfileThreadsFilteringSearch = reatomComponent<InputProps>(({ ctx, ...props }) => {
@@ -83,7 +85,8 @@ export const ProfileThreadsFiltering = reatomComponent(({ ctx }) => {
           Треды {nickname}
         </Typography>
       </div>
-      <div className="flex items-center gap-4 w-fit">
+      <div className="flex items-center gap-2 w-fit">
+        <ProfileThreadsFilteringSearch />
         <div className="w-fit">
           <ProfileThreadsFilteringView />
         </div>

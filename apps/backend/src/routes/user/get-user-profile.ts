@@ -46,7 +46,7 @@ const SHORTED_MAP: Record<Exclude<NonNullable<UserProfileStatus>, "banned">, Get
 }
 
 export const getUserProfileRoute = new Hono()
-  .get("/get-user-profile/:nickname", async (ctx) => {
+  .get("/user-profile/:nickname", async (ctx) => {
     const recipient = ctx.req.param("nickname")
     const initiator = getNickname(true)
     const isExists = await validateExistsUser(recipient)
@@ -85,7 +85,7 @@ export const getUserProfileRoute = new Hono()
         profiles: []
       }
 
-      logger.info(`Gived full profile an ${recipient} for non-auth user`)
+      logger.info(`full profile an ${recipient} for non-auth user`)
 
       return ctx.json({ data }, 200);
     }
@@ -115,7 +115,7 @@ export const getUserProfileRoute = new Hono()
 
       const userExistsProfiles = await forumDB
         .selectFrom("users_profiles")
-        .select(["user_id", "type"])
+        .select(["type", "value"])
         .where("user_id", "=", user.id)
         .execute()
 
@@ -140,11 +140,11 @@ export const getUserProfileRoute = new Hono()
       const data = {
         ...rest,
         details: { status, account_type: account_status },
-        profiles: userExistsProfiles as { type: "minecraft", user_id: string }[]
+        profiles: userExistsProfiles as { type: "minecraft", value: string }[]
       }
 
-      !isProduction && logger.info(`Gived full profile an ${recipient} for ${initiator}`)
-
+      !isProduction && logger.info(`full profile an ${recipient} for ${initiator}`)
+      
       return ctx.json({ data }, 200);
     } catch (e) {
       return ctx.json({ error: throwError(e) }, 500)

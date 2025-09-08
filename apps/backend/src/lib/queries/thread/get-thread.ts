@@ -102,7 +102,10 @@ async function getThreadByUser(id: string, nickname: string) {
   }
 }
 
-export async function getThread({ id, nickname }: { id: string, nickname?: string }): Promise<ThreadDetailed | null> {
+export async function getThread(
+  id: string, 
+  { nickname }: { nickname?: string }
+): Promise<ThreadDetailed | null> {
   async function getOwner() {
     if (!nickname) return null
 

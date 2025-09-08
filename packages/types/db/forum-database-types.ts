@@ -588,6 +588,14 @@ export interface PostsComments {
   post_id: string;
 }
 
+export interface PostsReactions {
+  created_at: Generated<Timestamp>;
+  emoji: string;
+  id: string;
+  nickname: string;
+  post_id: string;
+}
+
 export interface PostsUsers {
   created_at: Generated<Timestamp>;
   nickname: string;
@@ -885,6 +893,7 @@ export interface UsersProfiles {
   id: Int8;
   type: Generated<string>;
   user_id: string;
+  value: string;
 }
 
 export interface UsersPunish {
@@ -1005,6 +1014,7 @@ export interface DB {
   "pgsodium.valid_key": PgsodiumValidKey;
   posts: Posts;
   posts_comments: PostsComments;
+  posts_reactions: PostsReactions;
   posts_users: PostsUsers;
   posts_views: PostsViews;
   profile_views: ProfileViews;

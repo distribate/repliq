@@ -60,7 +60,7 @@ export const createCommentRoute = new Hono()
     try {
       const data = await createComment({ ...result, nickname })
 
-      return ctx.json(data, 200);
+      return ctx.json({ data }, 200);
     } catch (e) {
       return ctx.json({ error: throwError(e) }, 500);
     }

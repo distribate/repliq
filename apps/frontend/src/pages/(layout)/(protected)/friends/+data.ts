@@ -1,6 +1,6 @@
-import { logRouting } from "#lib/helpers";
+import { logRouting } from "#lib/utils";
 import { validatePage } from "#lib/validation";
-import { wrapTitle } from "#lib/wrap-title";
+import { wrapTitle } from "#lib/utils";
 import { useConfig } from "vike-react/useConfig";
 import { PageContextServer } from "vike/types";
 

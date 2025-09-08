@@ -23,7 +23,7 @@ async function getReports() {
 }
 
 export const getReportsRoute = new Hono()
-  .get("/get-reports", async (ctx) => {
+  .get("/reports", async (ctx) => {
     try {
       const data = await getReports();
 

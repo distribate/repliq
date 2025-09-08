@@ -9,13 +9,12 @@ import { reatomAsync, withStatusesAtom } from "@reatom/async";
 import { searchClient } from "#shared/forum-client";
 
 type GetSearchResults = {
-  query: string;
   limit: number;
 } & (
-  | { type: "threads"; threadsType: Pick<SearchPageQuery, "type">["type"] }
-  | { type: "users" }
-  | { type: "all" }
-)
+    | { type: "threads"; threadsType: Pick<SearchPageQuery, "type">["type"] }
+    | { type: "users" }
+    | { type: "all" }
+  )
 
 export type SearchUser = {
   nickname: string,
@@ -29,25 +28,29 @@ export type SearchThread = {
   id: string
 }
 
-async function getSearchThreads({
-  query, limit
-}: Omit<GetSearchResults, "type">) {
-  const res = await searchClient.search["get-search"].$get({
-    query: { type: "thread", query, limit: `${limit}` }
+async function getSearchThreads(
+  searchQuery: string,
+  { limit }: Omit<GetSearchResults, "type">
+) {
+  const res = await searchClient.search.$get({
+    query: { type: "thread", query: searchQuery, limit: `${limit}` }
   })
+
   const data = await res.json()
 
-  if ("error" in data) return null
+  if ("error" in data) throw new Error(data.error)
 
   return data.data as SearchThread[]
 }
 
-async function getSearchUsers({
-  query, limit
-}: Omit<GetSearchResults, "type">) {
-  const res = await searchClient.search["get-search"].$get({
-    query: { type: "user", query, limit: `${limit}` }
+async function getSearchUsers(
+  searchQuery: string,
+  { limit }: Omit<GetSearchResults, "type">
+) {
+  const res = await searchClient.search.$get({
+    query: { type: "user", query: searchQuery, limit: `${limit}` }
   })
+
   const data = await res.json()
 
   if ("error" in data) return null
@@ -55,33 +58,34 @@ async function getSearchUsers({
   return data.data as SearchUser[]
 }
 
-export async function getSearchResults({
-  type, query, limit
-}: GetSearchResults & { limit: number }): Promise<SearchResultsAll | null> {
+export async function getSearchResults(
+  searchQuery: string,
+  { type, limit }: GetSearchResults & { limit: number }
+): Promise<SearchResultsAll | null> {
   switch (type) {
     case "all":
       const [threads, users] = await Promise.all([
-        getSearchThreads({ query, limit }),
-        getSearchUsers({ query, limit })
-      ]) 
+        getSearchThreads(searchQuery, { limit }),
+        getSearchUsers(searchQuery, { limit })
+      ])
 
       const data = [...threads ?? [], ...users ?? []]
-      
+
       return data;
     case "threads":
-      return getSearchThreads({ query, limit });
+      return getSearchThreads(searchQuery, { limit });
     case "users":
-      return getSearchUsers({ query, limit })
+      return getSearchUsers(searchQuery, { limit })
     default:
       return null;
   }
 }
 
-export const handleSearchAction = reatomAsync(async (ctx, query: string) => {
+export const handleSearchAction = reatomAsync(async (ctx, searchQuery: string) => {
   const type = ctx.get(searchPageTypeAtom)
 
   return await ctx.schedule(() =>
-    getSearchResults({ type, query, limit: SEARCH_PAGE_LIMIT, threadsType: "user" })
+    getSearchResults(searchQuery, { type, limit: SEARCH_PAGE_LIMIT, threadsType: "user" })
   )
 }, {
   name: "handleSearchAction",

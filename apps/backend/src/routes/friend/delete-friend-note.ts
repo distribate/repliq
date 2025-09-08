@@ -24,7 +24,7 @@ const getFriendId = async ({
 }
 
 export const deleteFriendNoteRoute = new Hono()
-  .delete("/delete-friend-note", zValidator("json", deleteFriendNoteSchema), async (ctx) => {
+  .delete("/remove-note", zValidator("json", deleteFriendNoteSchema), async (ctx) => {
     const { friend_id, recipient } = deleteFriendNoteSchema.parse(await ctx.req.json());
     const nickname = getNickname()
 
@@ -39,7 +39,11 @@ export const deleteFriendNoteRoute = new Hono()
         return ctx.json({ error: "Error deleting friend note" }, 404)
       }
 
-      return ctx.json({ status: "Friend note deleted" }, 200);
+      const data = {
+       data: true
+      }
+
+      return ctx.json({ data }, 200);
     } catch (e) {
       return ctx.json({ error: throwError(e) }, 400)
     }

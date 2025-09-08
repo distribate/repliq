@@ -3,10 +3,11 @@ import { userClient } from "#shared/forum-client";
 import { withReset } from '@reatom/framework';
 import { VariantProps } from 'class-variance-authority';
 import { coverAreaVariants } from '../../header/components/cover-area';
-import { logger } from '@repo/shared/utils/logger.ts';
 import { currentUserNicknameAtom } from '#components/user/models/current-user.model';
 import { withHistory } from '#lib/with-history';
 import type { UserDetailed, UserShorted } from "@repo/types/entities/user-type";
+import { log } from '#lib/utils';
+import { validateResponse } from '#shared/api/validation';
 
 type RequestedUserDetails = Pick<UserDetailed["preferences"],
   "game_stats_visible" | "real_name_visible" | "accept_friend_request" | "show_game_location" | "cover_outline_visible"
@@ -21,7 +22,7 @@ function isUserDetailed(user: UserShorted | UserDetailed): user is UserDetailed 
 
 type RequestedUserCoverDetails = {
   backgroundColor: Pick<VariantProps<typeof coverAreaVariants>, "backgroundColor">["backgroundColor"]
-  outline: string
+  outline: string | null
 }
 
 type Details = {
@@ -31,7 +32,7 @@ type Details = {
   },
   profiles: Array<{
     type: "minecraft" | string,
-    user_id: string
+    value: string
   }>
 }
 
@@ -52,14 +53,15 @@ export const requestedUserProfileBlockedAtom = atom<RequestedUserBlocked | null>
 export const requestedUserCoverImageAtom = atom<string | null>(null, "requestedUserCoverImage").pipe(withReset())
 export const requestedUserCoverDetailsAtom = atom<RequestedUserCoverDetails | null>(null, "requestedUserCoverDetails").pipe(withReset())
 export const requestedUserAccountTypeAtom = atom<Pick<UserDetailed, "account_status">["account_status"]>(null, "requestedUserAccountType").pipe(withReset())
-export const requestedUserMinecraftProfileIsExistsAtom = atom(false, "requestedUserMinecraftProfileIsExists").pipe(withReset())
+
+export const requestedUserProfilesAtom = atom<RequestedUserFull["profiles"]>([], "requestedUserProfiles")
 
 requestedUserPreferencesAtom.onChange((ctx, target) => {
   if (!target) return;
 
   const backgroundColor = ctx.get(requestedUserCoverImageAtom) ? "transparent" : "gray"
   const is_donate = ctx.get(requestedUserAtom)?.is_donate
-  const outline = (is_donate && target.cover_outline_visible) ? "#FFFFFF" : "default"
+  const outline = (is_donate && target.cover_outline_visible) ? "#FFFFFF" : null
 
   requestedUserCoverDetailsAtom(ctx, { outline, backgroundColor })
 })
@@ -120,9 +122,10 @@ export const defineUser = action((ctx, target: RequestedUserFull) => {
     }
 
     batch(ctx, () => {
-      requestedUserMinecraftProfileIsExistsAtom(ctx, user.profiles.some(target => target.type === 'minecraft'))
       requestedUserProfileStatusAtom(ctx, status)
-      requestedUserCoverImageAtom(ctx, user.cover_image)
+      requestedUserCoverImageAtom(ctx, user.cover_image);
+
+      requestedUserProfilesAtom(ctx, user.profiles)
     })
 
     // #full variant of user
@@ -156,36 +159,36 @@ export const defineUser = action((ctx, target: RequestedUserFull) => {
       })
     }
   } else {
-    logger.error("Unexpected payload type", payload);
+    console.error("Unexpected payload type", payload);
   }
 }, "defineUser")
 
 export async function getUserProfile(nickname: string, init?: RequestInit) {
-  const res = await userClient.user["get-user-profile"][":nickname"].$get({ param: { nickname } }, { init })
-  const data = await res.json()
-  if ("error" in data) throw new Error(data.error)
-
-  return data.data
+  const res = await userClient.user["user-profile"][":nickname"].$get({ param: { nickname } }, { init })
+  return validateResponse<typeof res>(res);
 }
 
 export const isParamChanged = (
   ctx: Ctx,
   param: Atom<string | null> & { history: Atom<[current: string | null, ...past: (string | null)[]]> },
-  target: string | null,
-  fn: Function
+  current: string,
+  fn: () => void
 ) => {
-  if (!target) return;
+  if (!current) return;
+
   const prev = ctx.get(param.history)[1]
-  if (prev !== undefined && target !== prev) { fn() }
+
+  if (prev !== undefined && current !== prev) fn()
 }
 
-requestedUserAtom.onChange((_, v) => import.meta.env.DEV && logger.info("requestedUserAtom", v))
-requestedUserIsSameAtom.onChange((_, v) => import.meta.env.DEV && logger.info("requestedUserIsSameAtom", v))
-requestedUserPreferencesAtom.onChange((_, v) => import.meta.env.DEV && logger.info("requestedUserPreferencesAtom", v))
-requestedUserGameStatsVisibleAtom.onChange((_, v) => import.meta.env.DEV && logger.info("requestedUserGameStatsVisibleAtom", v))
-requestedUserSectionIsPrivatedAtom.onChange((_, v) => import.meta.env.DEV && logger.info("requestedUsersectionIsPrivatedAtom", v))
-requestedUserProfileStatusAtom.onChange((_, v) => import.meta.env.DEV && logger.info("requestedUserProfileStatusAtom", v))
-requestedUserProfileBlockedAtom.onChange((_, v) => import.meta.env.DEV && logger.info("requestedUserProfileBlockedAtom", v))
-requestedUserCoverImageAtom.onChange((_, v) => import.meta.env.DEV && logger.info("requestedUserCoverImageAtom", v))
-requestedUserCoverDetailsAtom.onChange((_, v) => import.meta.env.DEV && logger.info("requestedUserCoverDetailsAtom", v))
-requestedUserAccountTypeAtom.onChange((_, v) => import.meta.env.DEV && logger.info("requestedUserAccountTypeAtom", v))
+requestedUserAtom.onChange((_, v) => log("requestedUserAtom", v))
+requestedUserParamAtom.onChange((_, v) => log("requestedUserParamAtom", v))
+requestedUserIsSameAtom.onChange((_, v) => log("requestedUserIsSameAtom", v))
+requestedUserPreferencesAtom.onChange((_, v) => log("requestedUserPreferencesAtom", v))
+requestedUserGameStatsVisibleAtom.onChange((_, v) => log("requestedUserGameStatsVisibleAtom", v))
+requestedUserSectionIsPrivatedAtom.onChange((_, v) => log("requestedUsersectionIsPrivatedAtom", v))
+requestedUserProfileStatusAtom.onChange((_, v) => log("requestedUserProfileStatusAtom", v))
+requestedUserProfileBlockedAtom.onChange((_, v) => log("requestedUserProfileBlockedAtom", v))
+requestedUserCoverImageAtom.onChange((_, v) => log("requestedUserCoverImageAtom", v))
+requestedUserCoverDetailsAtom.onChange((_, v) => log("requestedUserCoverDetailsAtom", v))
+requestedUserAccountTypeAtom.onChange((_, v) => log("requestedUserAccountTypeAtom", v))

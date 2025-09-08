@@ -1,15 +1,15 @@
 import { PropsWithChildren } from "react";
-import { navigationVariant } from "#components/collection/components/navigation/collection-navigation";
+import { navigationVariant } from "#components/collection/navigation/collection-navigation";
 import { NavigationBadge } from "#ui/navigation-badge";
 import { reatomComponent } from "@reatom/npm-react";
 import { usePageContext } from "vike-react/usePageContext";
 import { navigate } from "vike/client/router"
+import { prefetch } from 'vike/client/router'
 
 const NAVIGATION = [
   { title: "Главная", value: "/admin" },
   { title: "Репорты", value: "/admin/reports" },
   { title: "Тикеты", value: "/admin/tickets" },
-  // { title: "Cтатистика", value: "/admin/stats" },
   { title: "Конфиг", value: "/admin/configs" }
 ] as const;
 
@@ -17,11 +17,16 @@ const NavigationItem = reatomComponent<{ navigation: typeof NAVIGATION[number] }
   const pathname = usePageContext().urlPathname;
   const isActive = pathname === navigation.value ? "active" : "inactive"
 
+  const handle = async () => {
+    prefetch(navigation.value)
+    await navigate(navigation.value)
+  }
+
   return (
     <NavigationBadge
       title={navigation.title}
       data-state={isActive}
-      onClick={() => navigate(navigation.value)}
+      onClick={handle}
     />
   )
 }, "NavigationItem")
@@ -36,7 +41,7 @@ const AdminNavigation = () => {
   );
 };
 
-export default function AdminLayout({ children }: PropsWithChildren) {
+export default function Layout({ children }: PropsWithChildren) {
   return (
     <div className="flex flex-col gap-4 rounded-lg w-full min-h-dvh">
       <AdminNavigation />

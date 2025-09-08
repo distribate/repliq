@@ -1,4 +1,4 @@
-import { threadReactionsAction } from "#components/thread/thread-reactions/models/thread-reactions.model";
+import { threadReactionsAction } from "#components/thread/components/thread-reactions/models/thread-reactions.model";
 import { currentUserNicknameAtom } from "#components/user/models/current-user.model";
 import { action, atom, batch } from "@reatom/core";
 import { withReset } from "@reatom/framework";
@@ -6,13 +6,11 @@ import { withHistory } from '#lib/with-history';
 import { threadClient } from "#shared/forum-client";
 import { ThreadDetailed, ThreadOwner } from "@repo/types/entities/thread-type";
 import { Value } from "@udecode/plate";
+import { validateResponse } from "#shared/api/validation";
 
 export async function getThreadModel(id: string, { headers }: RequestInit) {
-  const res = await threadClient.thread['get-thread'][':id'].$get({ param: { id } }, { init: { headers } });
-  const data = await res.json();
-  if ('error' in data) throw new Error(data.error)
-
-  return data.data;
+  const res = await threadClient.thread["main"][':id'].$get({ param: { id } }, { init: { headers } });
+  return validateResponse<typeof res>(res)
 }
 
 export const threadContentfallback = [

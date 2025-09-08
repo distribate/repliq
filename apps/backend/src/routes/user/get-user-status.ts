@@ -20,7 +20,7 @@ async function getUserStatus(nickname: string) {
 }
 
 export const getUserStatusRoute = new Hono()
-  .get("/get-user-status/:nickname", async (ctx) => {
+  .get("/user-status/:nickname", async (ctx) => {
     const nickname = ctx.req.param("nickname")
 
     try {

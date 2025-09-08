@@ -21,7 +21,7 @@ async function getImagesLibrary() {
 }
 
 export const getImagesLibraryRoute = new Hono()
-  .get("/get-images-library", async (ctx) => {
+  .get("/library/images", async (ctx) => {
     try {
       const images = await getImagesLibrary()
 

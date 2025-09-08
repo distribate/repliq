@@ -13,10 +13,10 @@ export type Friend = {
 
 export type GetFriendsResponse = {
   data: Friend[]
-  meta: Partial<{
+  meta: {
     hasNextPage: boolean
     hasPrevPage: boolean
-    endCursor: string;
-    startCursor: string;
-  }>
+    endCursor: string | undefined;
+    startCursor: string | undefined;
+  }
 }

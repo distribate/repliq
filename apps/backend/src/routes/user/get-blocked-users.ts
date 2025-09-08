@@ -11,7 +11,7 @@ const getBlockedUsersSchema = z.object({
 })
 
 export const getUserIsBlockedRoute = new Hono()
-  .get("/get-user-is-blocked/:nickname", async (ctx) => {
+  .get("/user-is-blocked/:nickname", async (ctx) => {
     const nickname = getNickname()
     const recipient = ctx.req.param("nickname")
 
@@ -25,14 +25,14 @@ export const getUserIsBlockedRoute = new Hono()
   })
 
 export const getBlockedUsersRoute = new Hono()
-  .get("/get-blocked-users", zValidator("query", getBlockedUsersSchema), async (ctx) => {
+  .get("/blocked-users", zValidator("query", getBlockedUsersSchema), async (ctx) => {
     const nickname = getNickname()
     const result = getBlockedUsersSchema.parse(ctx.req.query())
 
     try {
-      const blockedUsers = await getBlockedUsers({ ...result, nickname })
+      const data = await getBlockedUsers(nickname, result)
 
-      return ctx.json(blockedUsers, 200)
+      return ctx.json({ data }, 200)
     } catch (e) {
       return ctx.json({ error: throwError(e) }, 500)
     }

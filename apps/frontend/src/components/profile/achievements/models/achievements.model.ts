@@ -1,8 +1,8 @@
 import { isParamChanged, requestedUserParamAtom } from "#components/profile/main/models/requested-user.model"
+import { log } from "#lib/utils"
 import { reatomAsync, withErrorAtom, withStatusesAtom } from "@reatom/async"
 import { atom, batch, Ctx } from "@reatom/core"
 import { withReset } from "@reatom/framework"
-import { logger } from "@repo/shared/utils/logger.ts"
 import ky from "ky"
 
 type AchievementsData = Array<{
@@ -27,7 +27,7 @@ function resetAchievements(ctx: Ctx) {
 
 requestedUserParamAtom.onChange((ctx, state) => isParamChanged(ctx, requestedUserParamAtom, state, () => {
   resetAchievements(ctx)
-  logger.info("achievements reset for", state)
+  log("achievements reset for", state)
 }))
 
 export const achievementsAction = reatomAsync(async (ctx) => {

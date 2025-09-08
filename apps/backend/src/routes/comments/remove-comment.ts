@@ -16,7 +16,7 @@ type RemoveComment = z.infer<typeof removeCommentSchema> & {
 
 async function removeComment({ parent_type, comment_id }: RemoveComment) {
   return forumDB.transaction().execute(async (trx) => {
-    const comment = await trx
+    const { id } = await trx
       .deleteFrom("comments")
       // @ts-expect-error
       .where("id", "=", comment_id)
@@ -24,9 +24,11 @@ async function removeComment({ parent_type, comment_id }: RemoveComment) {
       .returning("id")
       .executeTakeFirstOrThrow()
 
-    if (comment.id) {
-      return { data: comment, status: "Created" }
+    if (id) {
+      return { data: id, status: "Created" }
     }
+
+    throw new Error("Error create comment")
   })
 }
 
@@ -36,13 +38,9 @@ export const removeCommentRoute = new Hono()
     const result = removeCommentSchema.parse(await ctx.req.json());
 
     try {
-      const deletedComment = await removeComment({ ...result, nickname })
+      const data = await removeComment({ ...result, nickname })
 
-      if (!deletedComment) {
-        return ctx.json({ error: "Error creating comment" }, 400);
-      }
-
-      return ctx.json({ data: deletedComment }, 200);
+      return ctx.json({ data }, 200);
     } catch (e) {
       return ctx.json({ error: throwError(e) }, 500);
     }

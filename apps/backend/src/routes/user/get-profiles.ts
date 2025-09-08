@@ -29,7 +29,7 @@ async function getProfiles(nickname: string) {
 }
 
 export const getProfilesRoute = new Hono()
-  .get("/get-profiles", async (ctx) => {
+  .get("/profiles", async (ctx) => {
     const nickname = getNickname()
 
     try {

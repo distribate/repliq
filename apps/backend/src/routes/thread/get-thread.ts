@@ -18,12 +18,12 @@ async function createThreadView(nickname: string, thread_id: string) {
 }
 
 export const getThreadRoute = new Hono()
-  .get("/get-thread/:id", async (ctx) => {
+  .get("/main/:id", async (ctx) => {
     const id = ctx.req.param("id");
     const nickname = getNickname(true)
 
     try {
-      const data = await getThread({ id, nickname });
+      const data = await getThread(id, { nickname });
 
       if (!data) {
         return ctx.json({ error: "Thread not found" }, 404)

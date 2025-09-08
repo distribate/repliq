@@ -39,7 +39,7 @@ type EndData = {
 }
 
 export const getUserSummaryRoute = new Hono()
-  .get("/get-user-summary/:nickname", async (ctx) => {
+  .get("/user-summary/:nickname", async (ctx) => {
     const recipient = ctx.req.param("nickname");
     const initiator = getNickname()
 
@@ -68,7 +68,7 @@ export const getUserSummaryRoute = new Hono()
         const isPrivated = userStatus === 'private';
         
         if (isBlocked) {
-          const end: EndData = {
+          const data: EndData = {
             data: {
               ...userData,
               details: null
@@ -76,11 +76,11 @@ export const getUserSummaryRoute = new Hono()
             status: "blocked"
           }
 
-          return ctx.json(end, 200);
+          return ctx.json({ data }, 200);
         }
 
         if (isPrivated) {
-          const end: EndData = {
+          const data: EndData = {
             data: {
               ...userData,
               details: null
@@ -88,7 +88,7 @@ export const getUserSummaryRoute = new Hono()
             status: "private", 
           }
 
-          return ctx.json(end, 200)
+          return ctx.json({ data }, 200)
         }
       }
 
@@ -97,7 +97,7 @@ export const getUserSummaryRoute = new Hono()
         getUserFriendsCount(recipient)
       ]);
 
-      const end: EndData = {
+      const data: EndData = {
         data: {
           ...userData,
           details: {
@@ -113,7 +113,7 @@ export const getUserSummaryRoute = new Hono()
         status: "default"
       }
 
-      return ctx.json(end, 200)
+      return ctx.json({ data }, 200)
     } catch (e) {
       return ctx.json({ error: throwError(e) }, 500);
     }

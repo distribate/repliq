@@ -3,6 +3,7 @@ import { toast } from "sonner";
 import { userActiveSessionsAction } from "#components/modals/user-settings/models/user-sessions.model.ts";
 import { reatomAsync, withStatusesAtom } from "@reatom/async";
 import { navigate } from "vike/client/router";
+import { prefetch } from 'vike/client/router'
 
 type TerminateSession =
   | { type: "single", selectedSessionId: string }
@@ -30,9 +31,10 @@ export const terminateSessionAction = reatomAsync(async (ctx, values: TerminateS
       return toast.error(e.message);
     }
   },
-  onFulfill: (ctx, { status, meta }) => {
+  onFulfill: async (ctx, { status, meta }) => {
     if (meta.is_current) {
-      ctx.schedule(() => navigate("/auth"))
+      prefetch("/auth");
+      await ctx.schedule(() => navigate("/auth"))
     }
 
     userActiveSessionsAction(ctx)

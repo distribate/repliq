@@ -1,5 +1,5 @@
 import { bold, Bot, format } from "gramio";
-import { validateRequest } from "../../utils/validate-request.ts";
+import { validateAdminRequest } from "../../utils/validate-request.ts";
 import { forumDB } from "../../shared/database/forum-db"
 import { pushNotificationOnClient } from "#utils/push-notifications-on-client.ts";
 
@@ -18,7 +18,7 @@ export function alertCommand(bot: Bot) {
     if (!ctx.from) return;
 
     const userId = ctx.from.id
-    const isAdmin = await validateRequest(userId);
+    const isAdmin = await validateAdminRequest(userId);
 
     if (!isAdmin) {
       return ctx.reply('У вас нет доступа к этой команде');

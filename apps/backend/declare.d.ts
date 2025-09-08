@@ -1,22 +1,12 @@
 declare module "bun" {
   interface Env {
-    PORT: number;
     MAIN_DATABASE_URL: string;
-
-    SECRET_TOKEN: string;
-
-    POSTGRES_USER: string;
-    POSTGRES_DB: string;
-    POSTGRES_PORT: number;
-    POSTGRES_PASSWORD: string;
-    POSTGRES_TENANT_ID: string;
-    POSTGRES_HOST: string;
-
-    LUCKPERMS_POSTGRES_DB: string;
-    LUCKPERMS_POSTGRES_PASSWORD: string;
-    LUCKPERMS_POSTGRES_USER: string;
-    LUCKPERMS_POSTGRES_PORT: string;
-
+    MAIN_POSTGRES_USER: string;
+    MAIN_POSTGRES_DB: string;
+    MAIN_POSTGRES_PORT: number;
+    MAIN_POSTGRES_PASSWORD: string;
+    MAIN_POSTGRES_TENANT_ID: string;
+    MAIN_POSTGRES_HOST: string;
     AUTHORIZATION_POSTGRES_HOST: string;
     AUTHORIZATION_POSTGRES_DB: string
     AUTHORIZATION_POSTGRES_PASSWORD: string
@@ -33,22 +23,20 @@ declare module "bun" {
     REDIS_USER: string;
     REDIS_PORT: number;
 
-    LOGGER_BOT_TOKEN: string
-    FASBERRY_BOT_TOKEN: string
-    REPLIQ_BOT_TOKEN: string;
     REPLIQ_BOT_USERNAME: string;
+    LOGGER_BOT_TOKEN: string
+    REPLIQ_BOT_TOKEN: string;
 
-    ADMIN_TELEGRAM_USER_ID: string
+    PORT: number;
+    BOTS_IS_ENABLED: string
   }
 }
 
 export { };
 
 declare global {
-  type InitiatorRecipientType = {
+  interface InitiatorRecipientType {
     initiator: string;
     recipient: string;
   };
 }
-
-declare module "*.db"

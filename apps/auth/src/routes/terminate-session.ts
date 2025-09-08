@@ -1,9 +1,7 @@
 import { Hono } from "hono";
 import * as z from "zod";
 import { zValidator } from "@hono/zod-validator";
-import { deleteSessionToken } from "../utils/delete-session-token";
 import type { Env } from "../types/env-type";
-import { DEFAULT_SESSION_EXPIRE } from "../shared/constants/session-expire";
 import { throwError } from "#utils/throw-error.ts";
 import { authMiddleware, conditionalLogout, destroySession } from "../utils/auth";
 
@@ -48,9 +46,9 @@ export const terminateSessionRoute = new Hono<Env>()
 
         const selectedSessionToken = "";
 
-        const [terminatedSession, _] = await Promise.all([
+        const [terminatedSession] = await Promise.all([
           destroySession(selectedSessionToken),
-          deleteSessionToken(sessionToken as string)
+          // deleteSessionToken(sessionToken as string)
         ])
 
         return ctx.json({

@@ -1,7 +1,7 @@
 import { Typography } from '@repo/ui/src/components/typography.tsx'
 import { reatomComponent } from '@reatom/npm-react'
 import { userGlobalOptionsAtom } from '#components/user/models/current-user.model'
-import { CreateThreadForm } from '#components/thread/create-thread/components/form-thread'
+import { CreateThreadForm } from '#components/thread/components/thread-create/components/form-thread'
 import { IconX } from '@tabler/icons-react'
 import { Button } from '@repo/ui/src/components/button'
 
@@ -24,7 +24,7 @@ const Prevent = () => {
   )
 }
 
-const Page = reatomComponent(({ ctx }) => {
+const CreateThread = reatomComponent(({ ctx }) => {
   const canCreateThreads = ctx.spy(userGlobalOptionsAtom).can_create_threads
 
   if (!canCreateThreads) {
@@ -36,10 +36,8 @@ const Page = reatomComponent(({ ctx }) => {
       <CreateThreadForm />
     </div>
   )
-}, "CreateThreadRouteComponent")
+}, "CreateThread")
 
-export default function CreateThreadPage() {
-  return (
-    <Page />
-  )
+export default function Page() {
+  return <CreateThread />
 }

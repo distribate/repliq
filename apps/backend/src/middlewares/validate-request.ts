@@ -1,6 +1,7 @@
 import { getCookie } from "hono/cookie";
 import { createMiddleware } from "hono/factory";
 import { getRedisClient } from "#shared/redis/init.ts";
+import { log } from "#utils/log.ts";
 
 export const SESSION_KEY = "forum_session"
 
@@ -24,23 +25,23 @@ type ValidateMode = "prevent" | undefined;
 export const validateRequest = (mode: ValidateMode = undefined) => createMiddleware(async (ctx, next) => {
   const sessionToken: string | undefined = getCookie(ctx, SESSION_KEY)
 
-  console.log("validateRequest.path", ctx.req.path)
+  log("validateRequest.path", ctx.req.path)
   
   if (mode === "prevent" && !sessionToken) {
-    console.log("validateRequest.prevent.sessionToken", sessionToken)
+    log("validateRequest.prevent.sessionToken", sessionToken)
     return ctx.json({ error: "Unauthorized" }, 401);
   }
 
   const nickname = await getNickname(sessionToken);
-  console.log("validateRequest.nickname", nickname)
+  log("validateRequest.nickname", nickname)
 
   if (mode === "prevent" && !nickname) {
-    console.log("validateRequest.prevent.nickname", nickname)
+    log("validateRequest.prevent.nickname", nickname)
     return ctx.json({ error: "Unauthorized" }, 401);
   }
 
   ctx.set("nickname", nickname);
-  console.log("validateRequest.nickname", nickname)
+  log("validateRequest.nickname", nickname)
 
   await next();
 })

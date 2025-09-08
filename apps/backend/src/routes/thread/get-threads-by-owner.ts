@@ -16,7 +16,6 @@ const getThreadsByOwnerSchema = z.object({
 })
 
 type GetThreadsByOwnerParams = z.infer<typeof getThreadsByOwnerSchema> & {
-  nickname: string,
   initiator: string
 }
 
@@ -98,10 +97,11 @@ export async function getRandomThreads(exclude: string): Promise<RecommendedThre
   return newData
 }
 
-async function getThreadsByOwner({
-  exclude, cursor, limit = 12, nickname, initiator
-}: GetThreadsByOwnerParams): Promise<Rec> {
-  let recipient: string = nickname;
+async function getThreadsByOwner(
+  owner: string,
+  { exclude, cursor, limit = 12, initiator }: GetThreadsByOwnerParams
+): Promise<Rec> {
+  let recipient: string = owner;
 
   const isFriend = await getFriendship({ initiator, recipient })
 
@@ -125,7 +125,7 @@ async function getThreadsByOwner({
     const randomFriend = await forumDB
       .selectFrom("users_friends")
       .select("user_2")
-      .where("user_1", "=", nickname)
+      .where("user_1", "=", recipient)
       .executeTakeFirst();
 
     if (randomFriend && randomFriend.user_2) {
@@ -247,7 +247,7 @@ async function getThreadsByOwner({
 }
 
 export const getThreadsByOwnerRoute = new Hono()
-  .get("/get-threads-by-owner/:nickname", zValidator("query", getThreadsByOwnerSchema), async (ctx) => {
+  .get("/by-owner/:nickname", zValidator("query", getThreadsByOwnerSchema), async (ctx) => {
     const recipient = ctx.req.param("nickname");
     const { exclude, limit, cursor } = getThreadsByOwnerSchema.parse(ctx.req.query());
 
@@ -256,13 +256,23 @@ export const getThreadsByOwnerRoute = new Hono()
     if (!initiator) {
       const threads = await getRandomThreads(exclude)
 
-      return ctx.json({ data: threads, meta: null }, 200)
+      const data = {
+        data: threads,
+        meta: {
+          hasNextPage: false,
+          hasPrevPage: false,
+          startCursor: undefined,
+          endCursor: undefined
+        }
+      }
+
+      return ctx.json({ data }, 200)
     }
 
     try {
-      const threads = await getThreadsByOwner({ exclude, cursor, limit, nickname: recipient, initiator });
+      const data = await getThreadsByOwner(recipient, { exclude, cursor, limit, initiator });
 
-      return ctx.json<Rec>(threads, 200)
+      return ctx.json<{ data: Rec }>({ data }, 200)
     } catch (e) {
       return ctx.json({ error: throwError(e) }, 500)
     }

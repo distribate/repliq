@@ -5,7 +5,7 @@ import { Hono } from "hono";
 import { validateThreadOwner } from "#lib/validators/validate-thread-owner.ts";
 
 export const removeThreadRoute = new Hono()
-  .delete("/remove-thread/:id", async (ctx) => {
+  .delete("/remove/:id", async (ctx) => {
     const id = ctx.req.param("id")
     const nickname = getNickname()
 
@@ -22,7 +22,11 @@ export const removeThreadRoute = new Hono()
         return ctx.json({ error: "Error deleting thread" }, 404)
       }
 
-      return ctx.json({ status: "Success" }, 200)
+      const data = {
+        status: "Success"
+      }
+
+      return ctx.json({ data }, 200)
     } catch (error) {
       return ctx.json({ error: throwError(error) }, 500);
     }

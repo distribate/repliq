@@ -15,7 +15,7 @@ async function deleteUserFromBlocked({
     .deleteFrom('users_blocked')
     .where("initiator", "=", initiator)
     .where("recipient", "=", recipient)
-    .execute();
+    .executeTakeFirst();
 }
 
 export const deleteUserFromBlockedSchema = z.object({
@@ -57,7 +57,7 @@ export const controlUserBlockedRoute = new Hono()
         case "unblock":
           const deleted = await deleteUserFromBlocked({ ...result, initiator })
 
-          if (!deleted[0].numDeletedRows) {
+          if (!deleted.numDeletedRows) {
             return ctx.json({ error: "Error deleting user from blocked" }, 404);
           }
 

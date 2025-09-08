@@ -1,6 +1,5 @@
 import { Typography } from "@repo/ui/src/components/typography";
 import { UserProfileGameAchievements } from "../../achievements/components/profile-game-ach";
-import { requestedUserParamAtom } from "../../main/models/requested-user.model";
 import { Button } from "@repo/ui/src/components/button";
 import { reatomComponent, useUpdate } from "@reatom/npm-react";
 import { Skeleton } from "@repo/ui/src/components/skeleton";
@@ -21,13 +20,13 @@ const minecraftAvatarAtom = (nickname: string) => atom((ctx) => {
   };
 }, `minecraft-avatar.${nickname}`)
 
-const minecraftAvatarAction = reatomAsync(async (ctx, target: string) => {
-  if (ctx.get(minecraftAvatarsUrlsAtom)[target] !== undefined) return
+const minecraftAvatarAction = reatomAsync(async (ctx, nickname: string) => {
+  if (ctx.get(minecraftAvatarsUrlsAtom)[nickname] !== undefined) return
 
-  minecraftAvatarsStatusesAtom(ctx, (state) => ({ ...state, [target]: true }))
+  minecraftAvatarsStatusesAtom(ctx, (state) => ({ ...state, [nickname]: true }))
 
   const url = await ctx.schedule(async () => {
-    const res = ky.get(`https://api.fasberry.su/minecraft/server/skin/${target}`, {
+    const res = ky.get(`https://api.fasberry.su/minecraft/server/skin/${nickname}`, {
       searchParams: { type: 'head' }
     })
 
@@ -36,15 +35,15 @@ const minecraftAvatarAction = reatomAsync(async (ctx, target: string) => {
     return text
   });
 
-  return { url, target };
+  return { url, nickname };
 }, {
   name: "minecraftAvatarAction",
   onFulfill: (ctx, res) => {
     if (!res) return;
 
     batch(ctx, () => {
-      minecraftAvatarsUrlsAtom(ctx, (state) => ({ ...state, [res.target]: res.url! }));
-      minecraftAvatarsStatusesAtom(ctx, (state) => ({ ...state, [res.target]: false }));
+      minecraftAvatarsUrlsAtom(ctx, (state) => ({ ...state, [res.nickname]: res.url! }));
+      minecraftAvatarsStatusesAtom(ctx, (state) => ({ ...state, [res.nickname]: false }));
     })
   },
   onReject: (ctx, e) => {
@@ -98,10 +97,7 @@ const MinecraftAvatarImage = reatomComponent<{
   )
 }, "MinecraftAvatarImage")
 
-const MinecraftProfileAvatar = reatomComponent(({ ctx }) => {
-  const nickname = ctx.get(requestedUserParamAtom)
-  if (!nickname) return
-
+const MinecraftProfileAvatar = reatomComponent<{ nickname: string }>(({ ctx, nickname }) => {
   const link = `${INTEGRATION_URL}/player/${nickname}`
 
   return (
@@ -127,15 +123,15 @@ const MinecraftProfileAvatar = reatomComponent(({ ctx }) => {
   )
 }, "MinecraftProfileAvatar")
 
-export const Minecraft = () => {
+export const Minecraft = ({ nickname }: { nickname: string }) => {
   return (
     <div className="flex flex-col first:order-first first:xl:order-last xl:flex-row w-full gap-4">
       <UserProfileGameAchievements />
       <div className="flex xl:hidden order-first xl:order-last items-center justify-center gap-4 flex-col w-fit self-center h-1/3">
-        <MinecraftProfileAvatar />
+        <MinecraftProfileAvatar nickname={nickname} />
       </div>
       <div className="hidden xl:flex items-center justify-center h-full gap-4 flex-col w-1/5">
-        <MinecraftProfileAvatar />
+        <MinecraftProfileAvatar nickname={nickname} />
       </div>
     </div>
   )

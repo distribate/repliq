@@ -1,21 +1,20 @@
 import dayjs from "@repo/shared/constants/dayjs-instance";
-import { isViewAtom, notificationsAction, notificationsDataAtom, resetNotifications } from "#components/notifications/models/notifications.model";
+import { isExistAtom, notificationsAction, notificationsDataAtom, NotificationsViewer, resetNotifications } from "#components/notifications/models/notifications.model";
 import { Typography } from "@repo/ui/src/components/typography";
 import { checkNotificationAction } from "#components/notifications/models/notifications.model";
 import { Skeleton } from "@repo/ui/src/components/skeleton";
 import { userClient } from "#shared/forum-client";
 import type { InferResponseType } from "hono/client";
 import { updateNotificationsAction } from "#components/notifications/models/notifications.model";
-import { useInView } from "react-intersection-observer";
 import { ContentNotFound } from "#components/templates/components/content-not-found";
-import { atom, onConnect, onDisconnect } from "@reatom/framework";
-import { reatomComponent, useUpdate } from "@reatom/npm-react";
+import { onConnect, onDisconnect } from "@reatom/framework";
+import { reatomComponent } from "@reatom/npm-react";
 import { IconInfoSquareRounded } from "@tabler/icons-react";
 import { SectionSkeleton } from "#components/templates/components/section-skeleton";
 
-const client = userClient.user["get-user-notifications"].$get
+const client = userClient.user["notification"]["notifications"].$get
 
-type NotificationCardProps = InferResponseType<typeof client, 200>["data"][number]
+type NotificationCardProps = InferResponseType<typeof client, 200>["data"]["data"][number]
 
 const NotificationCard = reatomComponent<NotificationCardProps>(({
   ctx, created_at, id, message, read
@@ -56,22 +55,6 @@ const NotificationsSkeleton = () => {
   )
 }
 
-const Viewer = reatomComponent(({ ctx }) => {
-  const { inView, ref } = useInView({ triggerOnce: false, threshold: 1 });
-
-  useUpdate((ctx) => isViewAtom(ctx, inView), [inView])
-
-  const isExist = ctx.spy(isExistAtom)
-  if (!isExist) return null;
-
-  return <div ref={ref} className="h-[1px] w-full" />
-}, "Viewer")
-
-const isExistAtom = atom((ctx) => {
-  const target = ctx.spy(notificationsDataAtom)
-  return target ? target.length >= 1 : false
-}, "isExistAtom")
-
 const UpdatedSkeleton = reatomComponent(({ ctx }) => {
   if (!ctx.spy(updateNotificationsAction.statusesAtom).isPending) {
     return null;
@@ -109,7 +92,7 @@ export const NotificationsList = () => {
   return (
     <div className="flex flex-col items-start gap-4 w-full">
       <List />
-      <Viewer />
+      <NotificationsViewer />
     </div>
   )
 }

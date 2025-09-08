@@ -2,7 +2,6 @@ import { Hono } from 'hono';
 import { registerRoute } from './routes/register.ts';
 import { invalidateSessionRoute } from './routes/invalidate-session.ts';
 import { showRoutes } from 'hono/dev';
-import { exceptionHandler } from './helpers/exception-handler.ts';
 import { logger as honoLogger } from 'hono/logger';
 import { initNats } from '@repo/config-nats/nats-client.ts';
 import { csrf } from 'hono/csrf';
@@ -11,19 +10,17 @@ import { loginRoute } from './routes/login.ts';
 import { terminateSessionRoute } from './routes/terminate-session.ts';
 import { getSessionsRoute } from './routes/get-sessions.ts';
 import { validateSessionRoute } from './routes/validate-session.ts';
-import { timeoutMiddleware } from './middlewares/timeout-middleware.ts';
-import { corsMiddleware } from './middlewares/cors-middleware.ts';
-import { rateLimiterMiddleware } from './middlewares/rate-limiter.ts';
-import { logger } from "@repo/shared/utils/logger.ts"
+import { timeout } from './middlewares/timeout-middleware.ts';
+import { cors } from './middlewares/cors-middleware.ts';
+import { rateLimiter } from './middlewares/rate-limiter.ts';
 import { timing } from 'hono/timing'
 import type { Env } from './types/env-type.ts';
 import { initRedis } from './shared/redis/init.ts';
 import { INTERNAl_FILES, loadInternalFiles } from './shared/constants/internal-files.ts';
 import { isProduction } from '#helpers/is-production.ts';
+import { initSupabase } from '#shared/supabase/supabase-client.ts';
 
-await initNats()
-initRedis()
-await loadInternalFiles(INTERNAl_FILES);
+const port = Bun.env.PORT
 
 export const auth = new Hono()
   .route("/", validateSessionRoute)
@@ -38,18 +35,29 @@ const root = new Hono()
 
 const app = new Hono<Env>()
   .basePath('/auth')
-  .use(corsMiddleware())
+  .use(cors())
   .use(csrf({ origin: originList }))
-  .use(rateLimiterMiddleware())
+  .use(rateLimiter())
   .use(timing())
-  .use(timeoutMiddleware())
+  .use(timeout())
   .use(honoLogger())
-  .onError(exceptionHandler)
+  .onError((error, ctx) => ctx.json({ error: error.message ?? "Internal Server Error" }, 500))
   .route("/", root)
   .route("/", auth)
+  
+async function start() {
+  await initNats()
 
-!isProduction && showRoutes(app, { verbose: false });
+  initRedis()
+  
+  await initSupabase()
+  await loadInternalFiles(INTERNAl_FILES);
 
-Bun.serve({ port: Bun.env.AUTH_BACKEND_PORT, fetch: app.fetch });
+  isProduction && showRoutes(app, { verbose: false });
+  
+  Bun.serve({ port, fetch: app.fetch });
+  
+  console.log(`\x1B[35m[App]\x1B[0m ${port}`)
+}
 
-logger.success(`Repliq Auth Backend started on ${Bun.env.AUTH_BACKEND_PORT}`)
+start()

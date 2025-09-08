@@ -13,7 +13,6 @@ import { subscribeCollectStats } from '#subscribers/sub-collect-stats.ts';
 import { subscribeReceiveNotify } from '#subscribers/sub-receive-notify.ts';
 import { subscribeAdminLog } from '#subscribers/sub-admin-log.ts';
 import { subscribeDisconnectService } from '#subscribers/sub-disconnect-service.ts';
-import { watcher } from '#utils/kv-watcher.ts';
 import { timing } from 'hono/timing'
 import { initNats } from '@repo/config-nats/nats-client';
 import { initRedis } from '#shared/redis/init.ts';
@@ -28,12 +27,16 @@ import { report } from './routes/report';
 import { admin } from './routes/admin';
 import { shared } from './routes/public';
 import { category } from './routes/categories';
-import { reaction } from './routes/reaction';
 import { search } from './routes/search';
-import { sse } from './routes/sse';
 import { root } from './routes/root';
+import { friend } from './routes/friend';
 
-const port = Bun.env.PORT
+const PORT = Bun.env.PORT
+const BOTS_IS_ENABLED = parseBoolean(Bun.env.BOTS_IS_ENABLED)
+
+function parseBoolean(v: string | boolean): boolean {
+  return typeof v === "boolean" ? v : v.toLowerCase() === "true";
+}
 
 const SUBSCRIPTIONS = new Map<string, () => Subscription>([
   ["users-status", subscribeUserStatus],
@@ -58,18 +61,16 @@ const app = new Hono<Env>()
   .route("/", comment)
   .route("/", search)
   .route("/", shared)
-  .route("/", sse)
   .route("/", thread)
   .route("/", post)
-  .route("/", reaction)
   .route("/", report)
   .route('/', user)
+  .route("/", friend)
   .onError((err, ctx) => ctx.json({ error: err.message }, 500))
   .notFound((ctx) => ctx.json({ error: "Not Found" }, 404))
 
 async function startNats() {
   await initNats()
-  await watcher()
 
   for (const [k, cb] of SUBSCRIPTIONS) {
     cb()
@@ -80,14 +81,18 @@ async function startNats() {
 async function start() {
   await initSupabase()
   await startNats()
-  await startBots()
+
+  if (BOTS_IS_ENABLED) {
+    await startBots()
+  }
+
   initRedis()
 
   isProduction && showRoutes(app, { verbose: false });
 
-  Bun.serve({ port, fetch: app.fetch })
+  Bun.serve({ port: PORT, fetch: app.fetch })
 
-  console.log(`\x1B[35m[App]\x1B[0m ${port}`)
+  console.log(`\x1B[35m[App]\x1B[0m ${PORT}`)
 }
 
 start()

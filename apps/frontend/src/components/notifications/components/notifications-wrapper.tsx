@@ -5,7 +5,7 @@ import { config, ping, updateEvent } from "@repo/shared/constants/sse-events";
 import { ConfigEventsData, NotificationsEventsPayload } from "@repo/types/entities/notifications-events-type";
 import { toast } from "sonner";
 
-const URL = `${import.meta.env.PUBLIC_ENV__API_PREFIX_URL}/notifications/connect`
+const URL = `${import.meta.env.PUBLIC_ENV__API_PREFIX_URL}/user/notification/connect`
 
 export const es = (url: string) => new EventSource(url, { withCredentials: true });
 

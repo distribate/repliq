@@ -106,7 +106,7 @@ async function getUserProfileStats<T extends boolean>({
 }
 
 export const getUserProfileStatsRoute = new Hono()
-  .get("/get-user-profile-stats", async (ctx) => {
+  .get("/user-profile-stats", async (ctx) => {
     const nickname = getNickname()
 
     const isDonate = await getUserDonate(nickname)

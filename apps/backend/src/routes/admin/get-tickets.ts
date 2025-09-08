@@ -21,7 +21,7 @@ async function getTickets() {
 }
 
 export const getTicketsRoute = new Hono()
-  .get("/get-tickets", async (ctx) => {
+  .get("/tickets", async (ctx) => {
     try {
       const data = await getTickets();
 

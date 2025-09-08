@@ -1,16 +1,15 @@
-import { userClient } from "#shared/forum-client";
-import { reatomAsync, withDataAtom, withStatusesAtom } from "@reatom/async";
-
-async function getRecommendedFriends(init?: RequestInit) {
-  const res = await userClient.user["get-recommended-friends"].$get({}, { init });
-  const data = await res.json();
-  if ("error" in data) throw new Error(data.error)
- 
-  return data.data
-}
+import { validateResponse } from "#shared/api/validation";
+import { friendClient } from "#shared/forum-client";
+import { reatomAsync, withCache, withDataAtom, withStatusesAtom } from "@reatom/async";
 
 export const recommendedFriendsAction = reatomAsync(async (ctx) => {
-  return await ctx.schedule(() => getRecommendedFriends({ signal: ctx.controller.signal }))
+  return await ctx.schedule(async () => {
+    const res = await friendClient.friend["recommended-friends"].$get(
+      {}, { init: { signal: ctx.controller.signal } }
+    );
+
+    return validateResponse<typeof res>(res)
+  })
 }, {
   name: "recommendedFriendsAction",
   onReject: (_, e) => {
@@ -18,4 +17,4 @@ export const recommendedFriendsAction = reatomAsync(async (ctx) => {
       console.error(e.message)
     }
   }
-}).pipe(withDataAtom(), withStatusesAtom())
+}).pipe(withDataAtom(), withStatusesAtom(), withCache({ swr: false }))

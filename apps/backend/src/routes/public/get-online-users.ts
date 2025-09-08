@@ -21,7 +21,7 @@ async function getOnlineUsers(limit: number = DEFAULT_LIMIT) {
 }
 
 export const getOnlineUsersRoute = new Hono()
-  .get("/get-online-users", async (ctx) => {
+  .get("/online-users", async (ctx) => {
     try {
       const data = await getOnlineUsers();
 

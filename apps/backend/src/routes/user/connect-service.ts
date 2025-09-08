@@ -21,7 +21,7 @@ const connectServiceRouteSchema = z.object({
 const getToken = (i: string) => `token-${i}`
 const getRateToken = (i: string) => `ratelimit-${i}`
 
-const BOT_URL = `https://t.me/${process.env.REPLIQ_BOT_USERNAME}`
+const BOT_URL = `https://t.me/${Bun.env.REPLIQ_BOT_USERNAME}`
 
 type ConnectServicePayload = {
   service: string,

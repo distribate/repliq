@@ -1,4 +1,4 @@
-import { logoutModalIsOpenAtom } from "#components/modals/action-confirmation/components/logout/models/logout.model";
+import { logoutModalIsOpenAtom } from "#components/modals/with-confirm/logout/models/logout.model";
 import { toggleGlobalDialogAction } from "#components/modals/user-settings/models/user-settings.model";
 import { CustomLink } from "#shared/components/link";
 import { Avatar } from "#components/user/components/avatar/components/avatar";
@@ -133,11 +133,11 @@ const Settings = reatomComponent(({ ctx }) => {
   )
 }, "Settings")
 
-export default function MenuPage() {
+export default function Page() {
   return (
     <>
       <div className="flex flex-col gap-4 w-full h-full">
-        <Typography className="text-3xl font-bold">
+        <Typography className="page-title">
           Меню
         </Typography>
         <ProfileBadge />

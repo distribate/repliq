@@ -5,4 +5,5 @@ export const getUserFriendsSchema = z.object({
   cursor: z.string().optional(),
   limit: z.string().transform(Number).optional(),
   sort_type: z.enum(["donate_weight", "created_at"]),
+  searchQuery: z.string().optional()
 });

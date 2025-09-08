@@ -11,7 +11,7 @@ import { publishCreateFriendRequest } from '#publishers/pub-create-friend-reques
 import { pushNotificationOnClient } from '#utils/push-notifications-on-client.ts';
 
 export const createFriendRequestRoute = new Hono()
-  .post("/create-friend-request", zValidator("json", createFriendRequestSchema), async (ctx) => {
+  .post("/create-request", zValidator("json", createFriendRequestSchema), async (ctx) => {
     const { recipient } = createFriendRequestSchema.parse(await ctx.req.json());
     const nickname = getNickname()
 
@@ -62,7 +62,14 @@ export const createFriendRequestRoute = new Hono()
         data: { initiator: nickname, recipient }
       })
 
-      return ctx.json({ request_id: res.id, status: "Friend request sent" }, 200);
+      const data = {
+        data: {
+          request_id: res.id, 
+        },
+        status: "Friend request sent"
+      }
+
+      return ctx.json({ data }, 200);
     } catch (e) {
       return ctx.json({ error: throwError(e) }, 400);
     }

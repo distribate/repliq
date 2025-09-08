@@ -1,14 +1,10 @@
-import { ProfileAccountStatsCharts } from '#components/dashboard/components/profile-account-stats-charts'
+import { AccountStatsCharts } from '#components/dashboard/components/account-stats-charts'
 import { ProfileAccountStatsMeta, ProfileAccountStatsPlayers } from '#components/profile/account/components/profile-account-stats-list'
 import { userProfileStatsAction } from '#components/profile/account/models/user-stats.model'
 import { reatomComponent } from '@reatom/npm-react'
 import { Typography } from '@repo/ui/src/components/typography'
 
-export default function DashboardProfileRouteComponent() {
-  return <Page/>
-}
-
-const Page = reatomComponent(({ ctx }) => {
+const DashboardProfile = reatomComponent(({ ctx }) => {
   const profileStats = ctx.spy(userProfileStatsAction.dataAtom)
 
   const details = profileStats?.details
@@ -48,10 +44,14 @@ const Page = reatomComponent(({ ctx }) => {
           </div>
         </div>
         <div className="flex flex-col w-full">
-          {charts && <ProfileAccountStatsCharts charts={charts} />}
+          {charts && <AccountStatsCharts charts={charts} />}
         </div>
         {details && <ProfileAccountStatsPlayers details={details} />}
       </div>
     </div>
   )
-}, "RouteComponent")
+}, "DashboardProfile")
+
+export default function Page() {
+  return <DashboardProfile />
+}

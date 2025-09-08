@@ -3,12 +3,12 @@ import { Typography } from "@repo/ui/src/components/typography.tsx";
 import { Avatar } from '#components/user/components/avatar/components/avatar.tsx';
 import { UserNickname } from "#components/user/components/name/nickname.tsx";
 import { UserDonate } from "#components/user/components/donate/components/donate.tsx";
-import dayjs from "@repo/shared/constants/dayjs-instance.ts";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@repo/ui/src/components/tabs.tsx";
-import { FriendButton } from "#components/friend/components/friend-button/components/friend-button.tsx";
+import { FriendButton } from "#components/friend/components/friend-button/index.tsx";
 import { reatomComponent } from "@reatom/npm-react";
 import { closeSummaryCardAction, userCardAction } from "../models/user-main-card.model.ts";
 import { WindowLoader } from "@repo/ui/src/components/window-loader.tsx";
+import dayjs from "@repo/shared/constants/dayjs-instance.ts";
 
 const UserSummaryCardPrivated = () => {
   return (
@@ -42,10 +42,10 @@ const UserSummaryCardLimited = ({
 }
 
 const UserStats = reatomComponent(({ ctx }) => {
-  const user = ctx.spy(userCardAction.dataAtom)?.data
+  const user = ctx.spy(userCardAction.dataAtom)
   if (!user) return null;
 
-  const details = user.details
+  const details = user.data.details
   if (!details) return null
 
   const { friends_count, threads_count } = details
@@ -259,12 +259,12 @@ export const UserSummaryCard = reatomComponent(({ ctx }) => {
   return (
     <div
       className="flex items-center justify-center py-2 
-        overflow-y-auto max-h-[440px] sm:h-[512px] relative w-full overflow-x-hidden rounded-xl bg-shark-900"
+        overflow-y-auto max-h-[440px] sm:max-h-2/3 sm:min-h-[600px] sm:h-full relative w-full overflow-hidden rounded-xl bg-shark-950"
     >
       {isLoading ? (
         <WindowLoader />
       ) : (
-        <div className="flex flex-col h-full w-full items-center">
+        <div className="flex flex-col h-full w-full items-center overflow-y-auto">
           <UserHead />
           <UserSummaryWrapper />
         </div>

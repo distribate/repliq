@@ -1,21 +1,18 @@
 import { ContentNotFound } from "#components/templates/components/content-not-found";
-import { friendsSortAtom } from "#components/profile/friends/models/friends-sort.model";
-// import { ProfileFriendsFiltering } from "#components/profile/friends/components/profile-friends-filtering.tsx";
-import { type Friend } from '@repo/types/schemas/friend/friend-types';
 import { SomethingError } from "#components/templates/components/something-error";
 import { SectionSkeleton } from "#components/templates/components/section-skeleton";
 import { Avatar } from "#components/user/components/avatar/components/avatar";
 import { UserNickname } from "#components/user/components/name/nickname";
 import { UserDonate } from "#components/user/components/donate/components/donate";
-import { UserCardModal } from "#components/modals/custom/components/user-card-modal";
+import { UserCardModal } from "#components/modals/custom/user-card-modal";
 import { Typography } from "@repo/ui/src/components/typography";
 import { reatomComponent } from "@reatom/npm-react";
-import { friendsAction, friendsDataAtom } from "../models/profile-friends.model";
+import { isExistAtom, profileFriendsAction, profileFriendsDataAtom } from "../models/profile-friends.model";
 import { CustomLink } from "#shared/components/link";
 import { createIdLink } from "#lib/create-link";
+import { AtomState } from "@reatom/core";
 
-const filterFriendsByNickname = (data: Friend[], querySearch: string) =>
-  data.filter(item => item.nickname.startsWith(querySearch));
+type Friend = NonNullable<AtomState<typeof profileFriendsDataAtom>>[number]
 
 const FriendProfileCard = ({ nickname, name_color, avatar, is_donate, description }: Friend) => {
   return (
@@ -47,58 +44,42 @@ const FriendProfileCard = ({ nickname, name_color, avatar, is_donate, descriptio
           />
           {is_donate && <UserDonate />}
         </div>
-        {description && <p className="text-shark-300 truncate">{description}</p>}
+        {description && (
+          <Typography className="text-shark-300 truncate">
+            {description}
+          </Typography>
+        )}
       </div>
     </div>
   );
 };
 
-type FilteredNotFoundProps = Partial<{
-  value: string;
-}>;
-
-const FilteredNotFound = ({ value }: FilteredNotFoundProps) => {
+const FilteredNotFound = ({ value }: { value?: string }) => {
   if (!value) return;
 
   return <Typography>Ничего не нашлось по запросу {`"${value}"`}</Typography>;
 };
 
-const ProfileFriendsList = reatomComponent(({ ctx }) => {
-  const data = ctx.spy(friendsDataAtom) as Friend[]
-  const isLoading = ctx.spy(friendsAction.statusesAtom).isPending
-  const isError = ctx.spy(friendsAction.statusesAtom).isRejected
+export const ProfileFriendsList = reatomComponent(({ ctx }) => {
+  const data = ctx.spy(profileFriendsDataAtom)
 
-  if (isLoading) return <SectionSkeleton />;
-  if (isError) return <SomethingError />;
-
-  if (!data || !data.length) {
-    return <ContentNotFound title="Друзья не найдены" />
+  if (ctx.spy(profileFriendsAction.statusesAtom).isPending) {
+    return <SectionSkeleton />;
   }
 
-  const searchQuery = ctx.spy(friendsSortAtom).searchQuery
+  if (ctx.spy(profileFriendsAction.statusesAtom).isRejected) {
+    return <SomethingError />;
+  }
 
-  const filteredfriends = searchQuery && searchQuery.length > 0
-    ? filterFriendsByNickname(data, searchQuery)
-    : data;
+  const isExist = ctx.spy(isExistAtom)
 
-  if (filteredfriends && !filteredfriends.length) {
-    return <FilteredNotFound value={searchQuery} />;
+  if (!data || !isExist) {
+    return <ContentNotFound title="Друзья не найдены" />
   }
 
   return (
     <div className="grid auto-rows-auto grid-cols-1 lg:grid-cols-3 gap-2 w-full">
-      {filteredfriends.map(friend =>
-        <FriendProfileCard key={friend.nickname} {...friend} />
-      )}
+      {data.map(friend => <FriendProfileCard key={friend.nickname} {...friend} />)}
     </div>
   );
 }, "ProfileFriendsList")
-
-export const ProfileFriends = () => {
-  return (
-    <div className="flex flex-col gap-4 w-full h-full">
-      {/* <ProfileFriendsFiltering /> */}
-      <ProfileFriendsList />
-    </div>
-  );
-}

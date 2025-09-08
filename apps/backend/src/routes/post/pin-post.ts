@@ -40,7 +40,7 @@ async function checkIsPinned(nickname: string): Promise<boolean> {
 }
 
 export const pinPostRoute = new Hono()
-  .post("/pin-post", zValidator("json", pinPostSchema), async (ctx) => {
+  .post("/pin", zValidator("json", pinPostSchema), async (ctx) => {
     const { id: postId, value } = pinPostSchema.parse(await ctx.req.json())
     const nickname = getNickname()
 
@@ -63,7 +63,12 @@ export const pinPostRoute = new Hono()
         return ctx.json({ error: "Failed" }, 400)
       }
 
-      return ctx.json({ data: pinned, status: "Success" }, 200)
+      const data = {
+        data: pinned, 
+        status: "Success"
+      }
+
+      return ctx.json({ data }, 200)
     } catch (e) {
       return ctx.json({ error: throwError(e) }, 400)
     }

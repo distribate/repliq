@@ -8,23 +8,25 @@ import { userPreferenceAndPrivateValidation } from '#utils/validate-user-prefere
 import { forumDB } from '#shared/database/forum-db.ts';
 
 async function createPostsView(
-  v: { nickname: string, post_id: string }[]
+  values: { nickname: string, post_id: string }[]
 ) {
   return forumDB
     .insertInto("posts_views")
-    .values(v)
-    .onConflict((oc) => oc.columns(["nickname", "post_id"]).doNothing())
+    .values(values)
+    .onConflict((oc) => oc
+      .columns(["nickname", "post_id"]).doNothing()
+    )
     .execute()
 }
 
 export const getUserPostsRoute = new Hono()
-  .get('/get-user-posts/:nickname', zValidator('query', getUserPostsSchema), async (ctx) => {
-    const requestedUserNickname = ctx.req.param("nickname");
-    const { filteringType, ascending, cursor, searchQuery } = getUserPostsSchema.parse(ctx.req.query());
+  .get('/user-posts/:nickname', zValidator('query', getUserPostsSchema), async (ctx) => {
+    const recipient = ctx.req.param("nickname");
     const initiator = getNickname()
+    const result = getUserPostsSchema.parse(ctx.req.query());
 
     const isValid = await userPreferenceAndPrivateValidation({
-      initiator, recipient: requestedUserNickname
+      initiator, recipient
     })
 
     if (!isValid) {
@@ -32,15 +34,17 @@ export const getUserPostsRoute = new Hono()
     }
 
     try {
-      const posts = await getUserPosts({
-        filteringType, ascending, cursor, currentUserNickname: initiator, requestedUserNickname, searchQuery
-      });
+      const data = await getUserPosts(recipient, { ...result, currentUserNickname: initiator });
 
-      if (posts && posts.data.length >= 1) {
-        createPostsView(posts.data.map(v => ({ nickname: initiator, post_id: v.id })))
+      const posts = data.data
+
+      if (posts && posts.length >= 1) {
+        const viewedPosts = posts.map(post => ({ nickname: initiator, post_id: post.id }));
+
+        createPostsView(viewedPosts)
       }
 
-      return ctx.json(posts, 200);
+      return ctx.json({ data }, 200);
     } catch (e) {
       return ctx.json({ error: throwError(e) }, 500);
     }

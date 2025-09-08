@@ -5,6 +5,7 @@ import { withLocalStorage } from "@reatom/persist-web-storage";
 import { reatomArray, reatomAsync, sleep, withReset } from "@reatom/framework";
 import { threadRelatedAction, usersRelatedAction } from "./search-related.model";
 import { withHistory } from "#lib/with-history";
+import { log } from "#lib/utils";
 
 export type SearchResultsAll = Array<SearchUser | SearchThread>;
 export type SearchResult = SearchUser | SearchThread;
@@ -41,9 +42,11 @@ export const deleteEntryFromHistoryAction = action((ctx, target: string) => {
 
 export const processSelectEntryAction = action(async (ctx, target: SearchUser | SearchThread) => {
   updateSearchHistoryAction(ctx, target)
-  await sleep(200)
+
+  await ctx.schedule(() => sleep(200))
+
   searchPageQueryAtom.reset(ctx)
-})
+}, "processSelectEntryAction")
 
 export const updateSearchHistoryAction = action((ctx, target: SearchUser | SearchThread) => {
   const newEntry =
@@ -72,7 +75,7 @@ export const updateSearchHistoryAction = action((ctx, target: SearchUser | Searc
       ? nextState.slice(1)
       : nextState;
   });
-})
+}, "updateSearchHistoryAction")
 
 export const searchPageAtom = atom<SearchPageQuery>(initial, "searchPage")
 export const searchPageResultsAtom = atom<Array<SearchThread | SearchUser> | null>(null, "searchPageResults").pipe(withReset())
@@ -80,7 +83,8 @@ export const searchPageQueryAtom = atom<string>("", "searchPageQuery").pipe(with
 export const searchPageTypeAtom = atom<SearchPageType>("all", "searchPage").pipe(withHistory())
 
 export const searchPageHistoryAtom = reatomArray<SearchUser | SearchThread>([], "searchPageHistory").pipe(
-  withLocalStorage("search-history"), withReset()
+  withLocalStorage("search-history"), 
+  withReset()
 )
 
 export const defineSearchRelatedAction = reatomAsync(async (ctx) => {
@@ -107,7 +111,7 @@ const defineNewResultsAction = action((ctx) => {
 
 searchPageTypeAtom.onChange((ctx, state) => {
   defineNewResultsAction(ctx)
-  console.log(`${ctx.get(searchPageTypeAtom.history)[1]} -> ${state}`)
+  log(`${ctx.get(searchPageTypeAtom.history)[1]} -> ${state}`)
 })
 
 searchPageQueryAtom.onChange((async (ctx, state) => {

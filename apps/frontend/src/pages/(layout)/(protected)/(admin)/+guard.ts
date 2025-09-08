@@ -1,4 +1,4 @@
-import { logRouting } from "#lib/helpers";
+import { logRouting } from "#lib/utils";
 import { validateAdmin } from "#lib/validation";
 import { render } from "vike/abort";
 import { PageContextServer } from "vike/types";

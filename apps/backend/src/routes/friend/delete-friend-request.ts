@@ -6,7 +6,7 @@ import { getNickname } from "#utils/get-nickname-from-storage.ts";
 import { deleteFriendRequestSchema } from "@repo/types/schemas/friend/delete-friend-request-schema.ts";
 
 export const deleteFriendRequestRoute = new Hono()
-  .post("/delete-friend-request", zValidator("json", deleteFriendRequestSchema), async (ctx) => {
+  .post("/remove-request", zValidator("json", deleteFriendRequestSchema), async (ctx) => {
     const { request_id } = deleteFriendRequestSchema.parse(await ctx.req.json());
     const nickname = getNickname()
 
@@ -19,9 +19,13 @@ export const deleteFriendRequestRoute = new Hono()
         return ctx.json({ error: "Error deleting friend request" }, 404);
       }
 
-      return ctx.json({ status: "Friend request deleted" }, 200);
+      const data = {
+        data: true,
+        status: "Friend request deleted"
+      }
+
+      return ctx.json({ data }, 200);
     } catch (e) {
       return ctx.json({ error: throwError(e) }, 400);
     }
-  }
-);
+  });

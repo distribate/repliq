@@ -64,7 +64,7 @@ async function deleteCoverImage(nickname: string) {
 }
 
 export const deleteCoverImageRoute = new Hono()
-  .delete("/delete-cover-image", async (ctx) => {
+  .delete("/remove", async (ctx) => {
     const nickname = getNickname()
 
     try {

@@ -5,7 +5,7 @@ import { Hono } from "hono";
 import type { UserDetailed } from '@repo/types/entities/user-type';
 
 export const getMeRoute = new Hono()
-  .get("/get-me", async (ctx) => {
+  .get("/me", async (ctx) => {
     const nickname = getNickname()
 
     try {

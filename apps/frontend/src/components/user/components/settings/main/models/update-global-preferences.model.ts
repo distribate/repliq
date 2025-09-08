@@ -6,10 +6,12 @@ import { withCookie } from "@reatom/persist-web-storage"
 
 type KeyType = "intro" | "alerts"
 
+type VisibilityKey = "show" | "hide"
+
 type GlobalPreferences = {
-  alerts: "show" | "hide",
+  alerts: VisibilityKey,
   autoSaveThreads: boolean,
-  intro: "show" | "hide"
+  intro: VisibilityKey
 }
 
 const initial: GlobalPreferences = {
@@ -18,12 +20,14 @@ const initial: GlobalPreferences = {
   autoSaveThreads: true
 }
 
+const GLOBAL_PREFERENCES_KEY = "preferences"
+
 export const globalPreferencesAtom = atom<GlobalPreferences>(initial, "globalPreferences").pipe(
-  withCookie({ maxAge: 999999999 })("preferences")
+  withCookie({ maxAge: 999999999 })(GLOBAL_PREFERENCES_KEY)
 )
 
-const visibilityMessages: Record<KeyType, {
-  msg: Record<"show" | "hide", {
+const VISIBILITY_MESSAGES: Record<KeyType, {
+  msg: Record<VisibilityKey, {
     title: string,
     description: string
   }>
@@ -31,72 +35,69 @@ const visibilityMessages: Record<KeyType, {
   "intro": {
     msg: {
       "show": {
-        title: "Интро снова отображается.",
-        description: "Вы можете его скрыть в настройках."
+        title: "Интро снова отображается",
+        description: "Вы можете его скрыть в настройках"
       },
       "hide": {
-        title: "Интро скрыто.",
-        description: "Вы можете снова включить его в настройках."
+        title: "Интро скрыто",
+        description: "Вы можете снова включить его в настройках"
       }
     }
   },
   "alerts": {
     msg: {
       "show": {
-        title: "Объявления снова отображаются.",
-        description: "Вы можете их скрыть в настройках."
+        title: "Объявления снова отображаются",
+        description: "Вы можете их скрыть в настройках"
       },
       "hide": {
-        title: "Объявления скрыты.",
-        description: "Вы можете их включить в настройках."
+        title: "Объявления скрыты",
+        description: "Вы можете их включить в настройках"
       }
     }
   }
 }
 
-const updateVisibilityVariablesAtom = atom<KeyType | null>(null, "updateVisibilityVariables")
-
 export const updateVisibilityAction = reatomAsync(async (ctx, key: KeyType) => {
-  updateVisibilityVariablesAtom(ctx, key)
   const target = ctx.get(globalPreferencesAtom)[key]
-
-  return target === 'hide' ? 'show' : 'hide'
+  
+  return {
+    result: target === 'hide' ? 'show' : 'hide' as VisibilityKey,
+    key
+  }
 }, {
   name: "updateVisibilityAction",
-  onFulfill: async (ctx, res) => {
-    const variable = ctx.get(updateVisibilityVariablesAtom)
-    if (!variable) return;
-
-    switch (variable) {
+  onFulfill: async (ctx, { result, key }) => {
+    switch (key) {
       case "alerts":
-        globalPreferencesAtom(ctx, (state) => ({ ...state, alerts: res }))
+        globalPreferencesAtom(ctx, (state) => ({ ...state, alerts: result }))
 
-        switch (res) {
+        switch (result) {
           case "hide":
-            toast.info(visibilityMessages.alerts.msg.hide.title, {
-              description: visibilityMessages.alerts.msg.hide.description,
+            toast.info(VISIBILITY_MESSAGES.alerts.msg.hide.title, {
+              description: VISIBILITY_MESSAGES.alerts.msg.hide.description,
             });
             break;
           case "show":
-            toast.info(visibilityMessages.alerts.msg.show.title, {
-              description: visibilityMessages.alerts.msg.show.description,
+            toast.info(VISIBILITY_MESSAGES.alerts.msg.show.title, {
+              description: VISIBILITY_MESSAGES.alerts.msg.show.description,
             });
             break;
         }
         break;
 
       case "intro":
-        globalPreferencesAtom(ctx, (state) => ({ ...state, intro: res }))
+        globalPreferencesAtom(ctx, (state) => ({ ...state, intro: result }))
 
-        switch (res) {
+        switch (result) {
           case "hide":
-            toast.info(visibilityMessages.intro.msg.hide.title, {
-              description: visibilityMessages.intro.msg.hide.description,
+            toast.info(VISIBILITY_MESSAGES.intro.msg.hide.title, {
+              description: VISIBILITY_MESSAGES.intro.msg.hide.description,
             });
             break;
           case "show":
-            toast.info(visibilityMessages.intro.msg.show.title, {
-              description: visibilityMessages.intro.msg.show.description,
+            toast.info(VISIBILITY_MESSAGES.intro.msg.show.title, {
+              description: VISIBILITY_MESSAGES.intro.msg.show.description,
             });
             break;
           default:
@@ -106,6 +107,6 @@ export const updateVisibilityAction = reatomAsync(async (ctx, key: KeyType) => {
   }
 }).pipe(withStatusesAtom())
 
-export const updateThreadsSettingAction = action(async (ctx) => {
+export const updateHistoryThreadsOptionAction = action(async (ctx) => {
   globalPreferencesAtom(ctx, (state) => ({ ...state, autoSaveThreads: !state.autoSaveThreads }))
-}, "updateThreadsSettingAction")
+}, "updateHistoryThreadsOptionAction")

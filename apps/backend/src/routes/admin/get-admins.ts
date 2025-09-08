@@ -3,7 +3,7 @@ import { throwError } from "#utils/throw-error.ts";
 import { Hono } from "hono";
 
 export const getAdminsRoute = new Hono()
-  .get("/get-admins", async (ctx) => {
+  .get("/admins", async (ctx) => {
     try {
       const data = await forumDB
         .selectFrom("admins")

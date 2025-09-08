@@ -11,13 +11,13 @@ type UserDetails = Pick<Updateable<Users>,
 
 type UpdateUserDetails = {
   criteria: keyof Partial<UserDetails>,
-  value: string | null | number,
-  nickname: string
+  value: string | null | number
 }
 
-export const updateUserDetails = async ({
-  criteria, nickname, value
-}: UpdateUserDetails) => {
+export const updateUserDetails = async (
+  nickname: string,
+  { criteria, value }: UpdateUserDetails
+) => {
   let query = forumDB.updateTable("users")
 
   query = query

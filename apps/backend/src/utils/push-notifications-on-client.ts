@@ -21,13 +21,25 @@ export const pushNotificationOnClient = ({
 
   switch (event) {
     case "create-friend-request":
-      payloadData = { message: `Игрок ${data.initiator} хочет добавить вас в друзья`, status: "info" }
+      payloadData = { 
+        message: `${data.initiator} хочет добавить вас в друзья`, 
+        status: "info" 
+      }
+
       break;
     case "accept-friend-request":
-      payloadData = { message: `Игрок ${data.initiator} принял вашу заявку в друзья`, status: "success" }
+      payloadData = { 
+        message: `${data.initiator} принял вашу заявку в друзья`, 
+        status: "success" 
+      }
+
       break;
     case "global":
-      payloadData = { message: data.message, status: "info" }
+      payloadData = { 
+        message: data.message, 
+        status: "info"
+      }
+      
       break;
     default:
       break;

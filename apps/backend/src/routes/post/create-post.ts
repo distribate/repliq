@@ -40,7 +40,7 @@ const createPostSchema = z.object({
 })
 
 export const createPostRoute = new Hono()
-  .post("/create-post", zValidator("json", createPostSchema), async (ctx) => {
+  .post("/create", zValidator("json", createPostSchema), async (ctx) => {
     const nickname = getNickname()
     const { content, isComments, isPinned, visibility } = createPostSchema.parse(await ctx.req.json())
 
@@ -59,7 +59,12 @@ export const createPostRoute = new Hono()
         return ctx.json({ error: "Failed" }, 400)
       }
 
-      return ctx.json({ data: createdPost, status: "Success" }, 200)
+      const data = {
+        data: createdPost, 
+        status: "Success"
+      }
+
+      return ctx.json({ data }, 200)
     } catch (e) {
       return ctx.json({ error: throwError(e) }, 400)
     }

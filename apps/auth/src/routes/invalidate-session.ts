@@ -44,7 +44,7 @@ export const invalidateSessionRoute = new Hono()
 
       deleteCookiesToken(ctx)
 
-      return ctx.json({ status: "Success" }, 200)
+      return ctx.json({ data: { status: "Success" } }, 200)
     } catch (e) {
       return ctx.json({ error: throwError(e) }, 500)
     }

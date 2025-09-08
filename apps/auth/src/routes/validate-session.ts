@@ -30,7 +30,9 @@ export const validateSessionRoute = new Hono<Env>()
         path: "/",
       })
 
-      return ctx.json({ data: true }, 200)
+      const data = Boolean(session)
+      
+      return ctx.json({ data }, 200)
     } catch (e) {
       return ctx.json({ error: throwError(e) }, 500)
     }

@@ -3,7 +3,7 @@ import { throwError } from "#utils/throw-error.ts";
 import { Hono } from "hono";
 
 export const getPublicStatsRoute = new Hono()
-  .get("/get-public-stats", async (ctx) => {
+  .get("/public-stats", async (ctx) => {
     try {
       const [threads, users, posts] = await Promise.all([
         forumDB

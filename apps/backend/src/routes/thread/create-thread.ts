@@ -10,7 +10,7 @@ import { validateThreadsTimeout } from '#lib/validators/validate-threads-timeout
 import { validateThreadImagesLength } from '#lib/validators/validate-thread-images-length.ts';
 
 export const createThreadRoute = new Hono()
-  .post("/create-thread", async (ctx) => {
+  .post("/create", async (ctx) => {
     const nickname = getNickname()
     const isValid = await validateThreadsTimeout(nickname)
 

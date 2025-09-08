@@ -1,68 +1,63 @@
 import { atom } from "@reatom/core";
 import { reatomAsync, withStatusesAtom } from "@reatom/async";
 import { withReset } from "@reatom/framework";
-import { userClient } from "#shared/forum-client";
-import { logger } from "@repo/shared/utils/logger.ts";
+import { friendClient } from "#shared/forum-client";
+import { log } from "#lib/utils";
+import { validateResponse } from "#shared/api/validation";
 
-type FriendRequestEntity = {
-  id: string,
-  initiator: string,
-  recipient: string,
-  created_at: string,
-  avatar: string | null
-  name_color: string
-}
+export type FriendRequestPayload = Awaited<ReturnType<typeof getRequestsByType>>;
 
-export const incomingRequestsAtom = atom<FriendRequestEntity[] | null>(null, "incomingRequests").pipe(withReset())
-export const outgoingRequestsAtom = atom<FriendRequestEntity[] | null>(null, "outgoingRequests").pipe(withReset())
+export type FriendRequestPayloadData = FriendRequestPayload["data"]
+export type FriendRequestPayloadMeta = FriendRequestPayload["meta"]
+
+export const incomingRequestsAtom = atom<FriendRequestPayloadData | null>(null, "incomingRequests").pipe(withReset())
+export const outgoingRequestsAtom = atom<FriendRequestPayloadData | null>(null, "outgoingRequests").pipe(withReset())
 
 async function getRequestsByType(
   type: "incoming" | "outgoing",
   init?: RequestInit
-): Promise<FriendRequestEntity[] | null> {
-  const res = await userClient.user["get-friends-requests"].$get({ query: { type } }, { init });
-  const data = await res.json();
-  if ("error" in data) throw new Error(data.error)
-
-  return data.data
+) {
+  const res = await friendClient.friend["friends-requests"].$get({ query: { type } }, { init });
+  return validateResponse<typeof res>(res)
 }
 
 export const incomingRequestsAction = reatomAsync(async (ctx) => {
-  const cache = ctx.get(incomingRequestsAtom)
-
-  if (cache) {
-    return cache
+  const cache = {
+    data: ctx.get(incomingRequestsAtom)
   }
+
+  if (cache.data) return cache
 
   return await ctx.schedule(() => getRequestsByType("incoming", { signal: ctx.controller.signal }))
 }, {
   name: "incomingRequestsAction",
-  onReject: (_, e) => {
+  onFulfill: (ctx, res) => {
+    if (!res) return;
+    incomingRequestsAtom(ctx, res.data)
+  },
+   onReject: (_, e) => {
     if (e instanceof Error) {
       console.error(e.message)
     }
   },
-  onFulfill: (ctx, res) => {
-    if (!res) return;
-    incomingRequestsAtom(ctx, res)
-  }
 }).pipe(withStatusesAtom())
 
 export const outgoingRequestsAction = reatomAsync(async (ctx) => {
-  const cache = ctx.get(outgoingRequestsAtom)
-
-  if (cache) {
-    return cache
+  const cache = {
+    data: ctx.get(outgoingRequestsAtom)
   }
 
+  if (cache.data) return cache
+  
   return await ctx.schedule(() => getRequestsByType("outgoing", { signal: ctx.controller.signal }))
 }, {
   name: "outgoingRequestsAction",
   onFulfill: (ctx, res) => {
-    if (!res) return
-    outgoingRequestsAtom(ctx, res)
+    if (!res) return;
+    
+    outgoingRequestsAtom(ctx, res.data)
   }
 }).pipe(withStatusesAtom())
 
-incomingRequestsAtom.onChange((_, v) => import.meta.env.DEV && logger.info("incomingRequestsAtom", v))
-outgoingRequestsAtom.onChange((_, v) => import.meta.env.DEV && logger.info("outgoingRequestsAtom", v))
+incomingRequestsAtom.onChange((_, v) => log("incomingRequestsAtom", v))
+outgoingRequestsAtom.onChange((_, v) => log("outgoingRequestsAtom", v))

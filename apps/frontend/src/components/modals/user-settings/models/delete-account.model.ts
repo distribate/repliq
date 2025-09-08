@@ -4,6 +4,7 @@ import { sleep, withReset } from "@reatom/framework"
 import { userClient } from "#shared/forum-client"
 import { toast } from "sonner"
 import { toggleGlobalDialogAction } from "./user-settings.model"
+import { validateResponse } from "#shared/api/validation"
 
 export const deleteAccountIsAcceptedAtom = atom(false, "deleteAccountIsAccepted")
 export const deleteAccountPasswordAtom = atom("", "password").pipe(withReset())
@@ -21,9 +22,7 @@ export const deleteAccountAction = reatomAsync(async (ctx) => {
 
   return await ctx.schedule(async () => {
     const res = await userClient.user["delete-account"].$post({ json: { password } })
-    const data = await res.json()
-    if ("error" in data) throw new Error(data.error)
-    return data.status
+    return validateResponse<typeof res>(res)
   })
 }, {
   name: "deleteAccountAction",

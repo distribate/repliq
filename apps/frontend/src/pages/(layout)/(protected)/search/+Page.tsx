@@ -124,7 +124,7 @@ const SyncSearchParams = () => {
   return null;
 }
 
-export default function SearchRouteComponent() {
+export default function Page() {
   return (
     <div className="flex flex-col gap-6 w-full min-h-dvh h-full p-1">
       <SyncSearchParams />

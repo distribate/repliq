@@ -16,6 +16,7 @@ import {
 } from "./messages";
 import { logger } from "@repo/shared/utils/logger.ts";
 import { withSsr } from "#lib/ssr";
+import { isProduction } from "#lib/utils";
 
 type AuthValues = {
   nickname: string;
@@ -137,7 +138,7 @@ export const authAction = reatomAsync(async (ctx) => {
   const type = ctx.get(authTypeAtom)
   const turnstileIsOpen = ctx.get(turnstileIsOpenAtom)
 
-  if (process.env.NODE_ENV === 'production' && !turnstileIsOpen) {
+  if (isProduction && !turnstileIsOpen) {
     toast.info(NOT_TOKEN_MESSAGES.title, { description: NOT_TOKEN_MESSAGES.description })
 
     turnstileIsOpenAtom(ctx, true)
@@ -145,7 +146,7 @@ export const authAction = reatomAsync(async (ctx) => {
   }
 
   const token = ctx.get(tokenAtom)
-  if (process.env.NODE_ENV === 'production' && !token) return
+  if (isProduction && !token) return
 
   if (type === 'login') {
     const values: SignInValues = {
@@ -187,15 +188,20 @@ export const authAction = reatomAsync(async (ctx) => {
 
     const type = ctx.get(authTypeAtom)
 
+    const { status } = res;
+
     batch(ctx, () => {
-      statusAtom(ctx, res.status)
+      statusAtom(ctx, status)
       turnstileIsOpenAtom(ctx, false)
     })
 
     if (type === 'login') {
       const nickname = ctx.get(nicknameAtom)
 
-      ctx.schedule(() => window.location.replace(createIdLink("user", nickname)))
+      ctx.schedule(() => window.location.replace(createIdLink("user", nickname)));
+
+      tokenAtom.reset(ctx)
+      tokenIsValidAtom.reset(ctx)
     }
 
     if (type === 'register') {
@@ -209,7 +215,7 @@ export const authAction = reatomAsync(async (ctx) => {
 }).pipe(withStatusesAtom())
 
 export const changeAuthTypeAction = action(async (ctx) => {
-  ctx.schedule(() => window.location.replace(createIdLink("auth")))
+  ctx.schedule(() => window.location.replace("/auth"))
 })
 
 export function resetAuth(ctx: Ctx) {
@@ -220,14 +226,12 @@ export function resetAuth(ctx: Ctx) {
     passwordAtom.reset(ctx)
     findoutAtom.reset(ctx)
     acceptRulesAtom.reset(ctx)
-    tokenAtom.reset(ctx)
 
     resetStatus(ctx)
 
     authIsValidAtom.reset(ctx)
     loginIsValidAtom.reset(ctx)
     passwordIsValidAtom.reset(ctx)
-    tokenIsValidAtom.reset(ctx)
     findoutIsValidAtom.reset(ctx)
 
     nicknameErrorAtom.reset(ctx)

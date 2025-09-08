@@ -1,27 +1,32 @@
 import { Input, InputProps } from "@repo/ui/src/components/input.tsx";
 import { Typography } from "@repo/ui/src/components/typography.tsx";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@repo/ui/src/components/dropdown-menu.tsx";
-import {
-  postsFilteringAtom,
-  PostsFilteringQuery,
-} from "#components/profile/posts/models/filter-posts.model";
+import { postsSearchQueryAtom, postsTypeAtom } from "#components/profile/posts/models/filter-posts.model";
 import { selectedVariant } from "#ui/selected-wrapper";
 import { ArrowDownNarrowWide } from "lucide-react";
 import { reatomComponent } from "@reatom/npm-react";
 import { requestedUserParamAtom } from "#components/profile/main/models/requested-user.model";
-import { updatePostsAction } from "../models/update-posts.model";
 import { action } from "@reatom/core";
 import { sleep, withConcurrency } from "@reatom/framework";
+import { updatePostsAction } from "../models/posts.model";
 
-const onChange = action(async (ctx, e) => {
-  const { value } = e.taregt;
+const onChange = action(async (ctx, e: React.ChangeEvent<HTMLInputElement>) => {
+  const value = e.target.value;
 
-  await ctx.schedule(() => sleep(800))
+  await ctx.schedule(() => sleep(300))
 
   const filtered = value.replace(/ {3,}/g, "  ")
+  postsSearchQueryAtom(ctx, filtered)
 
-  postsFilteringAtom(ctx, (state: PostsFilteringQuery) => ({ ...state, searchQuery: filtered }))
+  await ctx.schedule(() => sleep(40));
+
+  updatePostsAction(ctx, "update-filter")
 }).pipe(withConcurrency())
+
+const POSTS_SORT = [
+  { title: "По дате публикации", value: "created_at" },
+  { title: "По кол-ву просмотров", value: "views_count" },
+] as const;
 
 const ProfilePostsFilteringSearch = reatomComponent<InputProps>(({ ctx, ...props }) => {
   return (
@@ -35,31 +40,13 @@ const ProfilePostsFilteringSearch = reatomComponent<InputProps>(({ ctx, ...props
   );
 }, "ProfilePostsFilteringSearch");
 
-type PostSort = {
-  title: string;
-  value: Pick<PostsFilteringQuery, "filteringType">["filteringType"];
-};
-
-const POSTS_SORT: PostSort[] = [
-  { title: "По дате публикации", value: "created_at" },
-  { title: "По кол-ву просмотров", value: "views_count" },
-];
+const updateViewAction = action((ctx, type: typeof POSTS_SORT[number]["value"]) => {
+  postsTypeAtom(ctx, type)
+  updatePostsAction(ctx, "update-filter");
+}, "updateViewAction")
 
 const ProfilePostsFilteringView = reatomComponent(({ ctx }) => {
-  const filteringState = ctx.spy(postsFilteringAtom)
-  const nickname = ctx.spy(requestedUserParamAtom)
-
-  const handleSortType = (type: Pick<PostSort, "value">["value"]) => {
-    if (!nickname) return;
-
-    postsFilteringAtom(ctx, (state: PostsFilteringQuery) => ({
-      ...state, filteringType: type, cursor: undefined,
-    }))
-
-    updatePostsAction(ctx, { nickname, type: "update-filter" });
-  };
-
-  const currentFilteringType = filteringState.filteringType;
+  const currentFilteringType = ctx.spy(postsTypeAtom)
 
   return (
     <DropdownMenu>
@@ -77,7 +64,7 @@ const ProfilePostsFilteringView = reatomComponent(({ ctx }) => {
             {POSTS_SORT.map(({ value, title }) => (
               <DropdownMenuItem
                 key={value}
-                onClick={() => handleSortType(value)}
+                onClick={() => updateViewAction(ctx, value)}
                 className="items-center gap-1"
               >
                 <Typography
@@ -99,20 +86,14 @@ export const ProfilePostsFiltering = reatomComponent(({ ctx }) => {
   if (!nickname) return;
 
   return (
-    <div className="flex w-full justify-between h-14 items-center">
+    <div className="flex w-full justify-between items-center">
       <div className="flex items-center gap-1 w-fit">
-        <Typography
-          textColor="shark_white"
-          textSize="big"
-          className="font-semibold"
-        >
+        <Typography textColor="shark_white" textSize="big" className="font-semibold">
           Посты {nickname}
         </Typography>
       </div>
-      <div className="flex items-center gap-4 w-fit">
-        {/* <FilteringSearchWrapper>
-          <ProfilePostsFilteringSearch />
-        </FilteringSearchWrapper> */}
+      <div className="flex items-center gap-2 w-fit">
+        <ProfilePostsFilteringSearch />
         <div className="w-fit">
           <ProfilePostsFilteringView />
         </div>

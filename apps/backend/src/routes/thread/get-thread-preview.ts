@@ -24,7 +24,7 @@ async function getThreadPreview(threadId: string): Promise<ThreadPreview | null>
 }
 
 export const getThreadPreviewRoute = new Hono()
-  .get("/get-thread-preview/:id", async (ctx) => {
+  .get("/preview/:id", async (ctx) => {
     const id = ctx.req.param("id");
 
     try {

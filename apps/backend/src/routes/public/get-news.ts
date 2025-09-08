@@ -10,10 +10,22 @@ import * as z from "zod";
 
 type GetNews = z.infer<typeof getNewsSchema>;
 
-async function getNews({ ascending, cursor, limit = 2, searchQuery }: GetNews) {
+type NewsType = 'announcement' | 'update' | 'feature' | 'bugfix' | "default";
+
+const DEFAULT_LIMIT = 16;
+
+async function getNews({
+  ascending, cursor, limit = DEFAULT_LIMIT, searchQuery
+}: Omit<GetNews, "type">) {
   let query = sqliteDB
     .selectFrom("news")
-    .select(["id", "title", "description", "imageUrl", "created_at"])
+    .select([
+      "id",
+      "created_at",
+      "title",
+      "description",
+      "imageUrl",
+    ])
     .limit(limit)
 
   if (searchQuery) {
@@ -31,17 +43,17 @@ async function getNews({ ascending, cursor, limit = 2, searchQuery }: GetNews) {
       }
     ],
     // @ts-expect-error
-    parseCursor: (cursor) => {
-      return {
-        created_at: new Date(cursor.created_at),
-      }
-    },
+    parseCursor: (cursor) => ({
+      created_at: new Date(cursor.created_at)
+    }),
   })
 
   const news = res.rows.map((news) => ({
     ...news,
     created_at: news.created_at.toString(),
-    imageUrl: news.imageUrl ? getPublicUrl(STATIC_IMAGES_BUCKET, news.imageUrl) : null
+    imageUrl: news.imageUrl ? getPublicUrl(STATIC_IMAGES_BUCKET, news.imageUrl) : null,
+    type: "default" as NewsType,
+    tags: []
   }))
 
   return {
@@ -55,8 +67,8 @@ async function getNews({ ascending, cursor, limit = 2, searchQuery }: GetNews) {
   }
 }
 
-export const getNewsRoute = new Hono()
-  .get("/get-news", zValidator("query", getNewsSchema), async (ctx) => {
+export const getUpdatesRoute = new Hono()
+  .get("/news", zValidator("query", getNewsSchema), async (ctx) => {
     const result = getNewsSchema.parse(ctx.req.query());
 
     try {

@@ -5,7 +5,10 @@ import { Hono } from "hono";
 async function getCategory(id: string) {
   const query = await forumDB
     .selectFrom("category")
-    .select(["title", "description"])
+    .select([
+      "title", 
+      "description"
+    ])
     .where("id", "=", id)
     .executeTakeFirstOrThrow()
 
@@ -13,7 +16,7 @@ async function getCategory(id: string) {
 }
 
 export const getCategoryRoute = new Hono()
-  .get("/get-category/:id", async (ctx) => {
+  .get("/main/:id", async (ctx) => {
     const id = ctx.req.param("id");
 
     try {

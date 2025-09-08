@@ -1,6 +1,6 @@
 import { reatomComponent } from "@reatom/npm-react";
 import { donateTipTypeAtom, validateDonateTipCheckedAction } from "../models/donate-badge.model.ts";
-import { BuyDonateModal } from "#components/modals/custom/components/buy-donate-modal.tsx"
+import { BuyDonateModal } from "#components/modals/custom/buy-donate-modal.tsx"
 
 const DonateTip = reatomComponent(({ ctx }) => {
   const type = ctx.spy(donateTipTypeAtom)

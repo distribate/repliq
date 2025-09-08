@@ -80,7 +80,7 @@ const getLatestThreadsSchema = z.object({
 })
 
 export const getLatestThreadsRoute = new Hono()
-  .get("/get-latest-threads", zValidator("query", getLatestThreadsSchema), async (ctx) => {
+  .get("/latest-threads", zValidator("query", getLatestThreadsSchema), async (ctx) => {
     const result = getLatestThreadsSchema.parse(ctx.req.query());
 
     try {

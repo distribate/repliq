@@ -6,6 +6,7 @@ import * as z from "zod"
 import { action, atom, batch } from "@reatom/core";
 import { sleep, withConcurrency } from "@reatom/framework";
 import { userGlobalOptionsAtom } from "#components/user/models/current-user.model";
+import { validateResponse } from "#shared/api/validation";
 
 export const CREATE_ISSUE_LIMITATIONS: Record<string, string> = {
   "daily_limit": "Сообщение можно создать только раз в сутки"
@@ -47,12 +48,8 @@ export const createIssueAction = reatomAsync(async (ctx) => {
   const type = ctx.get(issueTypeAtom)
 
   return await ctx.schedule(async () => {
-    const res = await userClient.user["create-issue"].$post({ json: { title, description, type } })
-    const data = await res.json()
-
-    if ("error" in data) throw new Error(data.error)
-
-    return data
+    const res = await userClient.user["issue"]["create"].$post({ json: { title, description, type } })
+    return validateResponse<typeof res>(res)
   })
 }, {
   name: "createIssueAction",

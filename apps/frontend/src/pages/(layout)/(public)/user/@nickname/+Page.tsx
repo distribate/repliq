@@ -19,26 +19,13 @@ const Banned = clientOnly(() => import("#components/templates/components/user-ba
 const Deleted = clientOnly(() => import("#components/templates/components/user-deleted").then(m => m.UserDeleted))
 const Privated = clientOnly(() => import("#components/templates/components/profile-privated").then(m => m.ProfilePrivated));
 
-const DefineUser = () => {
+const Sync = () => {
   const { data, nickname: target } = useData<Data>();
   useUpdate((ctx) => defineUser(ctx, data), [target])
   return null
 }
 
-export default function UserPage() {
-  return (
-    <>
-      <DefineUser />
-      <div className="flex flex-col gap-6 w-full h-full relative">
-        <UserCoverLayout>
-          <Page />
-        </UserCoverLayout>
-      </div>
-    </>
-  )
-}
-
-const Page = reatomComponent(({ ctx }) => {
+const Profile = reatomComponent(({ ctx }) => {
   const isAuthenticated = ctx.spy(isAuthenticatedAtom)
   const templateTitle = "Для просмотра профиля необходимо авторизоваться."
 
@@ -69,4 +56,17 @@ const Page = reatomComponent(({ ctx }) => {
   }
 
   return <ProfileContentTabs />
-}, "RouteComponent")
+}, "Profile")
+
+export default function Page() {
+  return (
+    <>
+      <Sync />
+      <div className="flex flex-col gap-6 w-full h-full relative">
+        <UserCoverLayout>
+          <Profile />
+        </UserCoverLayout>
+      </div>
+    </>
+  )
+}

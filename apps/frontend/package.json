@@ -9,7 +9,7 @@
     "build": "vike build",
     "start": "vike preview --host",
     "lint": "eslint .",
-    "type-check": "tsc --noEmit"
+    "type-check": "tsup src/**/*.ts --dts --format esm --out-dir dist/types --clean"
   },
   "dependencies": {
     "@bprogress/core": "1.3.4",

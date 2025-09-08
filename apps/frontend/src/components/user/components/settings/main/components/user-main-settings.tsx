@@ -18,13 +18,13 @@ import { UserNickname } from "#components/user/components/name/nickname";
 import { reatomComponent, useUpdate } from "@reatom/npm-react";
 import { DialogClose } from "@repo/ui/src/components/dialog";
 import { CustomLink } from "#shared/components/link";
-import { BuyDonateModal } from "#components/modals/custom/components/buy-donate-modal";
+import { BuyDonateModal } from "#components/modals/custom/buy-donate-modal";
 import { settingsSettingsTypeAtom } from "#components/modals/user-settings/models/user-settings.model";
 import { getUser } from "#components/user/models/current-user.model";
 import { avatarOnChange, updateAvatarAction, updateAvatarAtom } from "#components/user/components/settings/main/models/cover-avatar.model";
 import { useRef } from "react";
 import { WindowLoader } from "@repo/ui/src/components/window-loader";
-import { logoutModalIsOpenAtom } from "#components/modals/action-confirmation/components/logout/models/logout.model";
+import { logoutModalIsOpenAtom } from "#components/modals/with-confirm/logout/models/logout.model";
 
 const Sync = ({ target }: { target: string }) => {
   useUpdate((ctx) => userStatusAction(ctx, target), [target])

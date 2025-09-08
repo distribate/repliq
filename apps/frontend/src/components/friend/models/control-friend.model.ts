@@ -1,9 +1,10 @@
 import { myFriendsDataAtom, myFriendsPinnedDataAtom } from "#components/friends/models/friends.model";
-import { userClient } from "#shared/forum-client";
+import { friendClient } from "#shared/forum-client";
 import { reatomAsync, withStatusesAtom } from "@reatom/async";
 import { atom, batch } from "@reatom/core";
 import { toast } from "sonner";
 import { withReset } from "@reatom/framework";
+import { validateResponse } from "#shared/api/validation";
 
 export type ControlFriendRequests = {
   recipient: string;
@@ -23,8 +24,6 @@ type NoteOptions = {
   nickname: string;
   friend_id: string;
 };
-
-const setFriendNoteActionVariablesAtom = atom<SetFriendNote | null>(null, "setFriendNoteActionVariables")
 
 export const NOTE_MAX_LENGTH = 64
 
@@ -49,27 +48,25 @@ noteDialogIsOpenAtom.onChange((ctx, state) => {
   noteValueAtom(ctx, newValue)
 })
 
-export const setFriendNoteAction = reatomAsync(async (ctx, { friend_id, recipient }: Omit<SetFriendNote, "note">) => {
+export const setFriendNoteAction = reatomAsync(async (ctx, values: Omit<SetFriendNote, "note">) => {
   const note = ctx.get(noteValueAtom)
+  
+  const { friend_id, recipient } = values
 
   if (note.length < 1) {
     setFriendUnnoteAction(ctx, { friend_id, recipient })
     return;
   }
 
-  setFriendNoteActionVariablesAtom(ctx, { friend_id, note, recipient })
-
-  return await ctx.schedule(async () => {
-    const res = await userClient.user["create-friend-note"].$post({
+  const result =  await ctx.schedule(async () => {
+    const res = await friendClient.friend["create-note"].$post({
       json: { recipient, friend_id, message: note }
     })
 
-    const data = await res.json();
-
-    if ("error" in data) throw new Error(data.error)
-
-    return { status: data.status, note: data.data }
+    return validateResponse<typeof res>(res)
   })
+
+  return { result, values }
 }, {
   name: "setFriendNoteAction",
   onReject: (_, e) => {
@@ -80,8 +77,7 @@ export const setFriendNoteAction = reatomAsync(async (ctx, { friend_id, recipien
   onFulfill: (ctx, res) => {
     if (!res) return;
 
-    const variables = ctx.get(setFriendNoteActionVariablesAtom)
-    if (!variables) return;
+    const { result, values: { friend_id } } = res;
 
     batch(ctx, () => {
       noteDialogIsOpenAtom(ctx, false)
@@ -90,29 +86,28 @@ export const setFriendNoteAction = reatomAsync(async (ctx, { friend_id, recipien
       myFriendsDataAtom(ctx, (state) => {
         if (!state) state = []
 
+        const newNote = result.data
+
         return state.map(
-          friend => friend.friend_id === variables.friend_id ? { ...friend, note: res.note } : friend
+          friend => friend.friend_id === friend_id ? { ...friend, note: newNote } : friend
         )
       })
     })
   }
 }).pipe(withStatusesAtom())
 
-const setFriendUnnoteActionVariablesAtom = atom<ControlFriendProperties | null>(null, "setFriendUnnoteActionVariables")
+export const setFriendUnnoteAction = reatomAsync(async (ctx, values: ControlFriendProperties) => {
+  const { recipient, friend_id } = values;
 
-export const setFriendUnnoteAction = reatomAsync(async (ctx, { friend_id, recipient }: ControlFriendProperties) => {
-  setFriendUnnoteActionVariablesAtom(ctx, { friend_id, recipient })
-  return await ctx.schedule(async () => {
-    const res = await userClient.user["delete-friend-note"].$delete({
+  const result = await ctx.schedule(async () => {
+    const res = await friendClient.friend["remove-note"].$delete({
       json: { recipient, friend_id }
     })
 
-    const data = await res.json();
-
-    if ("error" in data) throw new Error(data.error)
-
-    return data.status
+    return validateResponse<typeof res>(res)
   })
+
+  return { result, values }
 }, {
   name: "setFriendUnnoteAction",
   onReject: (_, e) => {
@@ -121,38 +116,38 @@ export const setFriendUnnoteAction = reatomAsync(async (ctx, { friend_id, recipi
     }
   },
   onFulfill: (ctx, res) => {
-    const variables = ctx.get(setFriendUnnoteActionVariablesAtom)
-    if (!variables) return;
+    const { result, values: { friend_id } } = res
 
-    myFriendsDataAtom(ctx, (state) => {
-      if (!state) state = []
-      return state.map(friend =>
-        friend.friend_id === variables.friend_id ? { ...friend, note: null } : friend
-      )
-    })
+    if (result.data) {
+      myFriendsDataAtom(ctx, (state) => {
+        if (!state) state = []
+  
+        return state.map(friend =>
+          friend.friend_id === friend_id ? { ...friend, note: null } : friend
+        )
+      })
+    } else {
+      toast.error("Warning")
+    }
   }
 }).pipe(withStatusesAtom())
 
-const setFriendPinActionVariablesAtom = atom<ControlFriendProperties | null>(null, "setFriendPinActionVariables")
-
-export const setFriendPinAction = reatomAsync(async (ctx, { recipient, friend_id }: ControlFriendProperties) => {
+export const setFriendPinAction = reatomAsync(async (ctx, values: ControlFriendProperties) => {
   if (ctx.get(myFriendsPinnedDataAtom).length === 1) {
     throw new Error("pin-limit")
   }
 
-  setFriendPinActionVariablesAtom(ctx, { recipient, friend_id });
-  
-  return await ctx.schedule(async () => {
-    const res = await userClient.user["create-friend-pin"].$post({
+  const { recipient, friend_id } = values
+
+  const result = await ctx.schedule(async () => {
+    const res = await friendClient.friend["pin"].$post({
       json: { recipient, friend_id, type: "pin" }
     })
 
-    const data = await res.json();
-
-    if ("error" in data) throw new Error(data.error)
-
-    return data.status
+    return validateResponse<typeof res>(res)
   })
+
+  return { result, values }
 }, {
   name: "setFriendPinAction",
   onReject: (_, e) => {
@@ -165,34 +160,34 @@ export const setFriendPinAction = reatomAsync(async (ctx, { recipient, friend_id
     }
   },
   onFulfill: (ctx, res) => {
-    const variables = ctx.get(setFriendPinActionVariablesAtom)
-    if (!variables) return;
+    const { result, values: { friend_id } } = res;
 
-    myFriendsDataAtom(ctx, (state) => {
-      if (!state) state = [];
+    if (result) {
+      myFriendsDataAtom(ctx, (state) => {
+        if (!state) state = [];
 
-      return state.map(friend =>
-        friend.friend_id === variables.friend_id ? { ...friend, is_pinned: true } : friend
-      )
-    })
+        return state.map(friend =>
+          friend.friend_id === friend_id ? { ...friend, is_pinned: true } : friend
+        )
+      })
+    } else {
+      toast.error("Warning")
+    }
   }
 }).pipe(withStatusesAtom())
 
-const setFriendUnpinActionVariablesAtom = atom<ControlFriendProperties | null>(null, "setFriendUnpinActionVariables")
+export const setFriendUnpinAction = reatomAsync(async (ctx, values: ControlFriendProperties) => {
+  const { friend_id, recipient } = values;
 
-export const setFriendUnpinAction = reatomAsync(async (ctx, { friend_id, recipient }: ControlFriendProperties) => {
-  setFriendUnpinActionVariablesAtom(ctx, { friend_id, recipient })
-  return await ctx.schedule(async () => {
-    const res = await userClient.user["create-friend-pin"].$post({
+  const result = await ctx.schedule(async () => {
+    const res = await friendClient.friend["pin"].$post({
       json: { recipient, friend_id, type: "unpin" }
     })
 
-    const data = await res.json();
-
-    if ("error" in data) throw new Error(data.error)
-
-    return data.status
+    return validateResponse<typeof res>(res)
   })
+
+  return { result, values }
 }, {
   name: "setFriendUnpinAction",
   onReject: (_, e) => {
@@ -201,15 +196,18 @@ export const setFriendUnpinAction = reatomAsync(async (ctx, { friend_id, recipie
     }
   },
   onFulfill: (ctx, res) => {
-    const variables = ctx.get(setFriendUnpinActionVariablesAtom)
-    if (!variables) return;
+    const { result, values: { friend_id } } = res;
 
-    myFriendsDataAtom(ctx, (state) => {
-      if (!state) state = []
+    if (result.data) {
+      myFriendsDataAtom(ctx, (state) => {
+        if (!state) state = []
 
-      return state.map(friend =>
-        friend.friend_id === variables.friend_id ? { ...friend, is_pinned: false } : friend
-      )
-    })
+        return state.map(friend =>
+          friend.friend_id === friend_id ? { ...friend, is_pinned: false } : friend
+        )
+      })
+    } else {
+      toast.error("Warning")
+    }
   }
 }).pipe(withStatusesAtom())

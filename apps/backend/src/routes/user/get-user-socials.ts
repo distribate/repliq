@@ -4,7 +4,7 @@ import { getNickname } from "#utils/get-nickname-from-storage.ts";
 import { Hono } from "hono";
 
 export const getUserSocialsRoute = new Hono()
-  .get("/get-user-socials", async (ctx) => {
+  .get("/user-socials", async (ctx) => {
     const nickname = getNickname()
 
     try {

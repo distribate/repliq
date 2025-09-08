@@ -1,11 +1,11 @@
-import { ForumStats } from "#components/layout/components/widgets/forum-stats/components/forum-stats";
+import { ForumStats } from "#components/widgets/forum-stats/components/forum-stats";
 import { Typography } from "@repo/ui/src/components/typography";
 
-export default function AboutPage() {
+export default function Page() {
   return (
     <div className="flex flex-col gap-6 w-full h-full">
       <div className="flex flex-col gap-2 rounded-xl p-4 w-full h-fit bg-primary-color">
-        <Typography className="text-3xl font-bold text-shark-50">
+        <Typography className="page-title text-shark-50">
           О нас
         </Typography>
         <Typography className="text-xl font-semibold text-shark-200">

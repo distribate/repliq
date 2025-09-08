@@ -5,55 +5,65 @@ import { Typography } from "@repo/ui/src/components/typography";
 import { reatomComponent } from '@reatom/npm-react';
 import {
   requestedUserSectionIsPrivatedAtom,
-  requestedUserGameStatsVisibleAtom,
   requestedUserIsSameAtom,
-  requestedUserMinecraftProfileIsExistsAtom,
   requestedUserParamAtom,
-  isParamChanged
+  isParamChanged,
+  requestedUserProfilesAtom,
 } from '#components/profile/main/models/requested-user.model';
 import { SectionPrivatedTrigger } from '#components/templates/components/section-privated-trigger';
 import { clientOnly } from "vike-react/clientOnly";
 import { atom } from "@reatom/core";
 import { withReset } from "@reatom/framework";
 import { IconApps, IconBrandThreads, IconCardboardsFilled, IconPencilShare, IconUsers } from "@tabler/icons-react";
+import { cva } from "class-variance-authority";
 
 const Account = clientOnly(() => import("#components/profile/account/components/profile-account.tsx").then(m => m.UserProfileAccount))
 const Friends = clientOnly(() => import("#components/profile/friends/components/profile-friends.tsx").then(m => m.UserProfileFriends))
 const Threads = clientOnly(() => import("#components/profile/threads/components/profile-threads.tsx").then(m => m.UserProfileThreads))
 const Minecraft = clientOnly(() => import("#components/profile/integrations/minecraft/minecraft").then(m => m.Minecraft));
 
+const iconVariant = cva(`group-data-[state=active]:text-shark-950 group-data-[state=inactive]:text-shark-300`)
+
+const IntegrationsTrigger = reatomComponent(({ ctx }) => {
+  return (
+    <>
+      <TabsTrigger value="minecraft" className="group gap-2">
+        <IconApps
+          size={20}
+          className={iconVariant()}
+        />
+        <Typography className="font-semibold">Интеграции</Typography>
+      </TabsTrigger>
+      {ctx.spy(requestedUserSectionIsPrivatedAtom) && <SectionPrivatedTrigger />}
+    </>
+  )
+}, "IntegrationsTrigger")
+
 const TabsListContent = reatomComponent(({ ctx }) => {
   return (
     <>
       <TabsTrigger value="posts" className="group gap-2">
-        <IconPencilShare size={20} className="group-data-[state=active]:text-shark-950 group-data-[state=inactive]:text-shark-300" />
+        <IconPencilShare size={20} className={iconVariant()} />
         <Typography className="font-semibold">Посты</Typography>
       </TabsTrigger>
       <TabsTrigger value="threads" className="group gap-2">
-        <IconBrandThreads size={20} className="group-data-[state=active]:text-shark-950 group-data-[state=inactive]:text-shark-300" />
+        <IconBrandThreads size={20} className={iconVariant()} />
         <Typography className="font-semibold">Треды</Typography>
       </TabsTrigger>
       <TabsTrigger value="friends" className="group gap-2">
-        <IconUsers size={20} className="group-data-[state=active]:text-shark-950 group-data-[state=inactive]:text-shark-300" />
+        <IconUsers size={20} className={iconVariant()} />
         <Typography className="font-semibold">Друзья</Typography>
       </TabsTrigger>
-      {ctx.spy(requestedUserMinecraftProfileIsExistsAtom) && (
-        ctx.spy(requestedUserGameStatsVisibleAtom) && (
-          <>
-            <Separator orientation="vertical" className="hidden lg:block" />
-            <TabsTrigger value="minecraft" className="group gap-2">
-              <IconApps size={20} className="group-data-[state=active]:text-shark-950 group-data-[state=inactive]:text-shark-300" />
-              <Typography className="font-semibold">Minecraft</Typography>
-            </TabsTrigger>
-            {ctx.spy(requestedUserSectionIsPrivatedAtom) && <SectionPrivatedTrigger />}
-          </>
-        )
+      {ctx.spy(requestedUserProfilesIsExistAtom) && (
+        <>
+          <IntegrationsTrigger />
+        </>
       )}
       {ctx.spy(requestedUserIsSameAtom) && (
         <>
           <Separator orientation="vertical" className="hidden lg:block" />
           <TabsTrigger value="account" className="group gap-2">
-            <IconCardboardsFilled size={20} className="group-data-[state=active]:text-shark-950 group-data-[state=inactive]:text-shark-300" />
+            <IconCardboardsFilled size={20} className={iconVariant()} />
             <Typography className="font-semibold">Аккаунт</Typography>
           </TabsTrigger>
           {ctx.spy(requestedUserSectionIsPrivatedAtom) && <SectionPrivatedTrigger />}
@@ -69,7 +79,29 @@ requestedUserParamAtom.onChange((ctx, state) => isParamChanged(ctx, requestedUse
   profileContentTabValueAtom.reset(ctx)
 }))
 
+const INTEGRATIONS: Record<string, (id: string) => React.ReactNode> = {
+  "minecraft": (id: string) => <Minecraft nickname={id} />
+}
+
+const requestedUserProfilesIsExistAtom = atom((ctx) => {
+  return ctx.spy(requestedUserProfilesAtom).length >= 1
+}, "requestedUserProfilesIsExistAtom")
+
+const Integrations = reatomComponent(({ ctx }) => {
+  const values = ctx.spy(requestedUserProfilesAtom);
+
+  return (
+    values.map((item) => (
+      <TabsContent key={item.type} value={item.type}>
+        {INTEGRATIONS[item.type](item.value)}
+      </TabsContent>
+    ))
+  )
+}, "Integrations")
+
 export const ProfileContentTabs = reatomComponent(({ ctx }) => {
+  const integrationsIsExist = ctx.spy(requestedUserProfilesIsExistAtom)
+
   return (
     <div className="flex flex-col lg:flex-row w-full gap-12 h-full lg:px-16 relative z-[4]">
       <Tabs
@@ -97,11 +129,7 @@ export const ProfileContentTabs = reatomComponent(({ ctx }) => {
           <TabsContent value="friends">
             <Friends />
           </TabsContent>
-          {ctx.spy(requestedUserMinecraftProfileIsExistsAtom) && (
-            <TabsContent value="minecraft">
-              <Minecraft />
-            </TabsContent>
-          )}
+          {integrationsIsExist && <Integrations />}
           {ctx.spy(requestedUserIsSameAtom) && (
             <TabsContent value="account">
               <Account />

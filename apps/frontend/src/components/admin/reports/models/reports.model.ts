@@ -3,23 +3,16 @@ import { action, atom, AtomState } from "@reatom/core"
 import { sleep, withReset } from "@reatom/framework"
 import { adminClient } from "#shared/forum-client"
 import { toast } from "sonner"
+import { validateResponse } from "#shared/api/validation"
 
 export type Report = NonNullable<AtomState<typeof reportsAction.dataAtom>>[number]
 
 export const reportsAction = reatomAsync(async (ctx) => {
   await ctx.schedule(() => sleep(140));
 
-  // @ts-ignore
   return await ctx.schedule(async () => {
-    const res = await adminClient.private["get-reports"].$get(
-      {}, { init: { signal: ctx.controller.signal } }
-    )
-
-    const data = await res.json()
-
-    if ("error" in data) throw new Error(data.error)
-
-    return data.data
+    const res = await adminClient.private["reports"].$get({}, { init: { signal: ctx.controller.signal } })
+    return validateResponse<typeof res>(res);
   })
 }, {
   name: "reportsAction",
@@ -56,7 +49,7 @@ export const selectedReportDialogIsOpenAtom = atom(false, "selectedReportDialogI
 
 selectedReportDialogIsOpenAtom.onChange(async (ctx, state) => {
   if (!state) {
-    await sleep(100)
+    await ctx.schedule(() => sleep(100))
     selectedReportAtom.reset(ctx)
   }
 })

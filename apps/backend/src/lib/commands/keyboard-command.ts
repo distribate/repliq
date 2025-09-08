@@ -1,6 +1,6 @@
 import { Bot } from "gramio"
 import { stateToKeyboard } from "../../shared/bots/keyboards.ts"
-import { validateRequest } from "../../utils/validate-request.ts"
+import { validateAdminRequest } from "../../utils/validate-request.ts"
 
 export function keyboardCommand(bot: Bot) {
   bot.command("keyboard", async (ctx) => {
@@ -9,7 +9,7 @@ export function keyboardCommand(bot: Bot) {
     }
 
     const userId = ctx.from.id
-    const isAdmin = await validateRequest(userId);
+    const isAdmin = await validateAdminRequest(userId);
 
     if (!isAdmin) {
       return ctx.reply('У вас нет доступа к этой команде');

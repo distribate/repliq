@@ -1,25 +1,34 @@
 import { CreatePostSection } from '#components/profile/posts/components/create-post-section';
 import { ProfileWrapper } from '#ui/profile-wrapper';
 import { reatomComponent } from '@reatom/npm-react';
-import { requestedUserIsSameAtom } from '#components/profile/main/models/requested-user.model';
-import { onConnect } from '@reatom/framework';
-import { postsAction } from '../models/posts.model';
-import { ProfilePosts } from './profile-posts-list';
+import { atom, onConnect } from '@reatom/framework';
+import { postsAction, ProfilePostsViewer } from '../models/posts.model';
 import { userGlobalOptionsAtom } from '#components/user/models/current-user.model';
 import { SectionSkeleton } from '#components/templates/components/section-skeleton';
+import { ProfilePostsFiltering } from './profile-posts-filtering';
+import { ProfilePostsList } from './profile-posts-list';
+import { requestedUserIsSameAtom } from '#components/profile/main/models/requested-user.model';
 
-onConnect(postsAction, postsAction)
+onConnect(postsAction, postsAction);
+
+const createPostSectionIsVisibleAtom = atom((ctx) => {
+  return ctx.spy(userGlobalOptionsAtom).can_create_posts && ctx.spy(requestedUserIsSameAtom)
+}, "createPostSectionIsVisible")
 
 export const UserProfilePosts = reatomComponent(({ ctx }) => {
   if (ctx.spy(postsAction.statusesAtom).isPending) return <SectionSkeleton />
 
-  const can_create_posts = ctx.spy(userGlobalOptionsAtom).can_create_posts
-
-  const isVisible = can_create_posts && ctx.spy(requestedUserIsSameAtom)
+  const canCreatePosts = ctx.spy(createPostSectionIsVisibleAtom)
 
   return (
-    <ProfileWrapper header={isVisible && <CreatePostSection />}>
-      <ProfilePosts />
+    <ProfileWrapper header={canCreatePosts && <CreatePostSection />}>
+      <div className="flex flex-col gap-4 w-full h-full">
+        <ProfilePostsFiltering />
+        <div className="flex flex-col w-full h-full">
+          <ProfilePostsList />
+          <ProfilePostsViewer />
+        </div>
+      </div>
     </ProfileWrapper>
   );
 }, "UserProfilePosts")

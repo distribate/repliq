@@ -1,4 +1,4 @@
-import { buyDonateModalIsOpenAtom } from "#components/modals/custom/components/buy-donate.model";
+import { buyDonateModalIsOpenAtom } from "#components/modals/custom/buy-donate.model";
 import { currentUserAtom } from "#components/user/models/current-user.model";
 import { action, atom } from "@reatom/core";
 import { withLocalStorage } from "@reatom/persist-web-storage";

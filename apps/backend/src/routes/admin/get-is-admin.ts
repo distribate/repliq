@@ -4,7 +4,7 @@ import { throwError } from "#utils/throw-error.ts";
 import { Hono } from "hono";
 
 export const getIsAdminRoute = new Hono()
-  .get("/get-is-admin", async (ctx) => {
+  .get("/is-admin", async (ctx) => {
     const nickname = getNickname()
 
     try {

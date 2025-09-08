@@ -37,7 +37,7 @@ const getLatestRegUsersSchema = z.object({
 })
 
 export const getLatestRegUsersRoute = new Hono()
-  .get("/get-latest-reg-users", zValidator("query", getLatestRegUsersSchema), async (ctx) => {
+  .get("/latest-reg-users", zValidator("query", getLatestRegUsersSchema), async (ctx) => {
     const { limit } = getLatestRegUsersSchema.parse(ctx.req.query());
 
     try {

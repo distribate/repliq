@@ -8,11 +8,11 @@ import { getAvailableCategoriesRoute } from "./get-available-categories";
 import { getCategoryRoute } from "./get-category";
 
 export const category = new Hono()
-  .basePath('/categories')
+  .basePath('/category')
   .route("/", getLatestCategoryThreadsRoute)
-  .use(validateRequest("prevent"))
-  .use(userStatus())
+  .route("/", getCategoryRoute)
   .route("/", getCategoriesRoute)
   .route("/", getCategoryThreadsRoute)
+  .use(validateRequest("prevent"))
+  .use(userStatus())
   .route("/", getAvailableCategoriesRoute)
-  .route("/", getCategoryRoute)

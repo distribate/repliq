@@ -5,13 +5,12 @@ import { Hono } from "hono";
 import { getNickname } from "#utils/get-nickname-from-storage.ts";
 import { publishAcceptFriendRequest } from '#publishers/pub-accept-friend-request.ts';
 import { validateFriendsLength } from '#lib/validators/validate-friends-length.ts';
+import { forumDB } from "#shared/database/forum-db.ts";
+import { pushNotificationOnClient } from "#utils/push-notifications-on-client.ts";
 
 const acceptFriendRequestSchema = z.object({
   request_id: z.string()
 })
-
-import { forumDB } from "#shared/database/forum-db.ts";
-import { pushNotificationOnClient } from "#utils/push-notifications-on-client.ts";
 
 type AcceptFriendRequestTransaction = {
   initiator: string,
@@ -46,7 +45,7 @@ async function acceptFriendRequestTransaction({
 }
 
 export const acceptFriendRequestRoute = new Hono()
-  .post("/accept-friend-request", zValidator("json", acceptFriendRequestSchema), async (ctx) => {
+  .post("/accept-request", zValidator("json", acceptFriendRequestSchema), async (ctx) => {
     const { request_id } = acceptFriendRequestSchema.parse(await ctx.req.json());
     const nickname = getNickname()
 
@@ -70,7 +69,14 @@ export const acceptFriendRequestRoute = new Hono()
         data: { recipient: user_1, initiator: user_2 }
       })
 
-      return ctx.json({ friend_id: id, status: "Friend request accepted" }, 200);
+      const data = {
+        data: {
+          friend_id: id, 
+        },
+        status: "Friend request accepted"
+      }
+
+      return ctx.json({ data }, 200);
     } catch (e) {
       return ctx.json({ error: throwError(e) }, 400);
     }

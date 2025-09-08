@@ -52,7 +52,7 @@ export async function defineGlobalState(pageContext: PageContext): Promise<void>
 
   let isAuthenticated = false;
 
-  const ctx = createCtx();
+  const ctx = createCtx({ restrictMultipleContexts: false });
 
   if (pageContext.isPrerendering) {
     function prerenderState() {
@@ -117,7 +117,7 @@ export function validatePage({ snapshot }: PageContext) {
 }
 
 export async function validateAdmin({ headers }: RequestInit): Promise<boolean> {
-  const res = await userClient.user["get-is-admin"].$get({}, { init: { headers } })
+  const res = await userClient.user["is-admin"].$get({}, { init: { headers } })
   const data: WrappedResponse<boolean> = await res.json() 
 
   if ("error" in data) throw new Error(data.error)

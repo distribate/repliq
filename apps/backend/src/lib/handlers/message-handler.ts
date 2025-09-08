@@ -3,7 +3,7 @@ import { Bot, type DeriveDefinitions, type MessageContext } from "gramio"
 import { sendAdminsList } from "./main-handler.ts"
 import { stateToKeyboard } from "../../shared/bots/keyboards.ts"
 import { tempAdmins, userStates } from "../../shared/bots/maps.ts"
-import { validateRequest } from "../../utils/validate-request.ts"
+import { validateAdminRequest } from "../../utils/validate-request.ts"
 
 export const restrictedCommands = [
   "Управление",
@@ -33,7 +33,7 @@ export const handler = async (ctx: Context, next: () => void) => {
   const commandText = isCommand ? ctx.text.slice(1) : ctx.text;
 
   if (isCommand && restrictedCommands.includes(commandText)) {
-    const isAdmin = await validateRequest(userId);
+    const isAdmin = await validateAdminRequest(userId);
 
     if (!isAdmin) {
       return ctx.reply('У вас нет доступа к этой команде');

@@ -32,11 +32,11 @@ async function createReplyTransaction({
         parent_id
       })
       .returning(eb => [
-        'id', 
-        'nickname', 
-        'content', 
-        'created_at', 
-        'updated_at', 
+        'id',
+        'nickname',
+        'content',
+        'created_at',
+        'updated_at',
         'is_updated',
         eb.selectFrom('users')
           .select('users.avatar')
@@ -68,7 +68,7 @@ export const replyCommentRoute = new Hono()
     try {
       const data = await createReplyTransaction({ ...result, nickname })
 
-      return ctx.json(data, 200)
+      return ctx.json({ data }, 200)
     } catch (e) {
       return ctx.json({ error: throwError(e) }, 500);
     }

@@ -22,7 +22,7 @@ export async function updateNotification({
 }
 
 export const checkNotificationRoute = new Hono()
-  .post("/check-notification", zValidator("json", checkNotificationSchema), async (ctx) => {
+  .post("/check", zValidator("json", checkNotificationSchema), async (ctx) => {
     const nickname = getNickname()
     const { notification_id: notificationId } = checkNotificationSchema.parse(await ctx.req.json());
 

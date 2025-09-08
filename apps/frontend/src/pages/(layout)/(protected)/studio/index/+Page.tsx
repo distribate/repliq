@@ -1,4 +1,4 @@
-export default function StudioIndexPage() {
+export default function Page() {
   return (
     <>
       

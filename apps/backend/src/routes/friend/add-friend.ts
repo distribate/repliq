@@ -11,7 +11,7 @@ const addFriendSchema = z.object({
 })
 
 export const addFriendRoute = new Hono()
-  .post("/add-friend", zValidator("json", addFriendSchema), async (ctx) => {
+  .post("/add", zValidator("json", addFriendSchema), async (ctx) => {
     const { initiator, recipient } = addFriendSchema.parse(await ctx.req.json())
 
     const isValid = await getUserFriendPreference(recipient)
@@ -33,7 +33,9 @@ export const addFriendRoute = new Hono()
         return ctx.json({ error: "Error sending friend request" }, 404)
       }
 
-      const data = createRequest.id
+      const data = {
+        request_id: createRequest.id
+      }
 
       return ctx.json({ data }, 200)
     } catch (e) {

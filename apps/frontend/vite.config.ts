@@ -4,7 +4,7 @@ import vike from "vike/plugin";
 import tsconfigPaths from 'vite-tsconfig-paths';
 import Sonda from 'sonda/vite';
 
-const isDebug = true
+const isDebug = false
 
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd())
@@ -21,7 +21,7 @@ export default defineConfig(({ mode }) => {
       })
     ],
     build: {
-      sourcemap: isDebug
+      sourcemap: true
     },
     optimizeDeps: {
       include: ['react', 'react-dom'],

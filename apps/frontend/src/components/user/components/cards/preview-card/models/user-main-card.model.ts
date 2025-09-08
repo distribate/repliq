@@ -2,8 +2,9 @@ import { reatomAsync, withDataAtom, withErrorAtom, withStatusesAtom } from "@rea
 import { action, atom, batch, Ctx } from "@reatom/core";
 import { createIdLink } from "#lib/create-link";
 import { userClient } from "#shared/forum-client";
-import { navigate } from "vike/client/router";
+import { navigate, prefetch } from "vike/client/router";
 import { withReset } from "@reatom/framework";
+import { validateResponse } from "#shared/api/validation";
 
 export const selectedUserCardAtom = atom<string | null>(null, "selectedUserCard").pipe(withReset())
 export const userCardDialogIsOpenAtom = atom(false, "userCardDialogIsOpen")
@@ -21,14 +22,18 @@ userCardDialogIsOpenAtom.onChange(async (ctx, state) => {
   }
 });
 
-export const closeSummaryCardAction = action((ctx, type?: "link") => {
+export const closeSummaryCardAction = action(async (ctx, type?: "link") => {
   userCardDialogIsOpenAtom(ctx, false)
 
   if (type) {
-    const target = ctx.get(selectedUserCardAtom) as string;
+    const nickname = ctx.get(selectedUserCardAtom) as string;
 
     if (type === 'link') {
-      ctx.schedule(() => navigate(createIdLink("user", target)))
+      const target = createIdLink("user", nickname);
+
+      prefetch(target);
+
+      await ctx.schedule(() => navigate(target))
     }
   }
 
@@ -37,15 +42,13 @@ export const closeSummaryCardAction = action((ctx, type?: "link") => {
 
 export const userCardAction = reatomAsync(async (ctx, nickname: string) => {
   return await ctx.schedule(async () => {
-    const res = await userClient.user["get-user-summary"][":nickname"].$get(
-      { param: { nickname } }, { init: { signal: ctx.controller.signal } }
-    );
+    const res = await userClient.user["user-summary"][":nickname"].$get({
+      param: { nickname }
+    }, {
+      init: { signal: ctx.controller.signal }
+    });
 
-    const data = await res.json();
-
-    if ("error" in data) throw new Error(data.error)
-
-    return data
+    return validateResponse<typeof res>(res);
   })
 }, {
   name: "userCardAction",

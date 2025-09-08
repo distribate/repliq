@@ -3,6 +3,7 @@ import { atom, Ctx, CtxSpy } from '@reatom/core';
 import { userClient } from '#shared/forum-client.ts';
 import { withSsr } from '#lib/ssr';
 import { withInit } from '@reatom/framework';
+import { validateResponse } from '#shared/api/validation';
 
 export const currentUserNicknameAtom = atom<string | null>(null, "currentUserNickname").pipe(
   withInit((ctx, _) => ctx.get(currentUserAtom)?.nickname ?? null)
@@ -33,12 +34,8 @@ export const userGlobalOptionsAtom = atom<typeof userGlobalOptionsInitial>(userG
 export async function getUserInformation(
   init?: RequestInit
 ): Promise<UserDetailed> {
-  const res = await userClient.user["get-me"].$get({}, { init })
-  const data = await res.json()
-
-  if ("error" in data) throw new Error(data.error)
-
-  return data.data
+  const res = await userClient.user["me"].$get({}, { init })
+  return validateResponse<typeof res>(res);
 }
 
 export const getUser = (ctx: CtxSpy | Ctx): UserDetailed => {
@@ -58,8 +55,6 @@ export const getUser = (ctx: CtxSpy | Ctx): UserDetailed => {
 }
 
 export async function getUserGlobalOptions(args?: RequestInit) {
-  const res = await userClient.user["get-user-global-options"].$get({}, { init: { ...args } })
-  const data = await res.json()
-  if ("error" in data) throw new Error(data.error)
-  return data.data;
+  const res = await userClient.user["user-global-options"].$get({}, { init: { ...args } })
+  return validateResponse<typeof res>(res);
 }

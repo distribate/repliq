@@ -1,5 +1,5 @@
 import { CURRENT_USER_ATOM_KEY } from "#components/user/models/current-user.model";
-import { logRouting } from "#lib/helpers";
+import { logRouting } from "#lib/utils";
 import { createIdLink } from "#lib/create-link";
 import { UserDetailed } from "@repo/types/entities/user-type";
 import { redirect } from "vike/abort";

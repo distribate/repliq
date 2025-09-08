@@ -76,7 +76,7 @@ async function getSearchUsers({ query, limit }: GetSearch) {
 }
 
 export const getSearchRoute = new Hono()
-  .get("/get-search", zValidator("query", getSearchSchema), async (ctx) => {
+  .get("/", zValidator("query", getSearchSchema), async (ctx) => {
     const { type, ...result } = getSearchSchema.parse(ctx.req.query())
 
     try {

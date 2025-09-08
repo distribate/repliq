@@ -7,15 +7,15 @@ import { getUserIsFriend } from './get-user-is-friend';
 import { executeWithCursorPagination } from 'kysely-paginate';
 
 type GetPosts = z.infer<typeof getUserPostsSchema> & {
-  requestedUserNickname: string;
   currentUserNickname: string,
 }
 
-export async function getUserPosts({
-  ascending, filteringType, currentUserNickname, requestedUserNickname, cursor, searchQuery
-}: GetPosts): Promise<GetUserPostsResponse | null> {
+export async function getUserPosts(
+  recipient: string,
+  { ascending, filteringType, currentUserNickname, cursor, searchQuery }: GetPosts
+): Promise<GetUserPostsResponse> {
   const isFriend = await getUserIsFriend({
-    recipient: requestedUserNickname, initiator: currentUserNickname
+    recipient, initiator: currentUserNickname
   });
 
   const direction = ascending ? "asc" : "desc";
@@ -52,9 +52,9 @@ export async function getUserPosts({
       isPinned: boolean;
       isUpdated: boolean;
     }>()
-    .where("posts_users.nickname", "=", requestedUserNickname)
+    .where("posts_users.nickname", "=", recipient)
     .where((eb) => {
-      if (requestedUserNickname === currentUserNickname) {
+      if (recipient === currentUserNickname) {
         return eb.or([
           eb("visibility", "=", "only"),
           eb("visibility", "=", "friends"),
@@ -89,13 +89,19 @@ export async function getUserPosts({
     query = query.orderBy("views_count", direction)
   }
 
-  let res = await executeWithCursorPagination(query, {
+  const res = await executeWithCursorPagination(query, {
     perPage: 8,
     after: cursor,
     fields: [
-      { key: "created_at", direction, expression: "posts.created_at" }
+      {
+        key: "created_at",
+        direction,
+        expression: "posts.created_at"
+      }
     ],
-    parseCursor: (cursor) => ({ created_at: new Date(cursor.created_at) })
+    parseCursor: (cursor) => ({
+      created_at: new Date(cursor.created_at)
+    })
   });
 
   return {

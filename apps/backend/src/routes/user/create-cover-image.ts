@@ -9,7 +9,7 @@ import { forumDB } from "#shared/database/forum-db.ts";
 import { createCoverImageSchema } from "@repo/types/schemas/user/create-cover-image-schema.ts"
 import { USER_IMAGES_BUCKET } from "@repo/shared/constants/buckets";
 import { logger } from "@repo/shared/utils/logger.ts";
-import { KONG_PREFIX_URL } from "./upload-avatar";
+import { KONG_PREFIX_URL } from "./create-avatar";
 import type { Transaction } from "kysely";
 import type { DB } from "@repo/types/db/forum-database-types";
 
@@ -159,7 +159,7 @@ const MAX_FILE_SIZE = 4; // MB
 const MAX_FILE_SIZE_BYTES = MAX_FILE_SIZE * 1024 * 1024;
 
 export const createCoverImageRoute = new Hono()
-  .post("/create-cover-image", async (ctx) => {
+  .post("/create", async (ctx) => {
     const nickname = getNickname()
     const body = new Uint8Array(await ctx.req.arrayBuffer());
 
@@ -191,9 +191,14 @@ export const createCoverImageRoute = new Hono()
     }
 
     try {
-      const data = await createCoverImage(nickname, { type, file: coverImageFile, fileName });
+      const url = await createCoverImage(nickname, { type, file: coverImageFile, fileName });
 
-      return ctx.json({ data, status: "Success" }, 200);
+      const data = {
+        url,
+        status: "Success" 
+      }
+
+      return ctx.json({ data }, 200);
     } catch (e) {
       return ctx.json({ error: throwError(e) }, 500);
     }

@@ -5,28 +5,31 @@ import { IconSparkles } from '@tabler/icons-react'
 import { getUser } from '#components/user/models/current-user.model'
 import { PropsWithChildren } from 'react'
 import { usePageContext } from 'vike-react/usePageContext'
-import { URL_FOR_REPLIQ } from '#shared/constants/donate'
 import { onConnect } from '@reatom/framework'
 import { userProfileStatsAction } from '#components/profile/account/models/user-stats.model'
+import { BuyDonateModal } from '#components/modals/custom/buy-donate-modal'
+import { Button } from '@repo/ui/src/components/button'
+import { buyDonateModalIsOpenAtom } from '#components/modals/custom/buy-donate.model'
 
-const NoAccessDashboard = () => {
+const NoAccessDashboard = reatomComponent(({ ctx }) => {
   return (
     <div className="flex flex-col gap-4 items-center justify-center w-full md:h-[80vh]">
       <IconSparkles size={128} className="text-green-500" />
       <Typography className="text-2xl text-center font-semibold w-full lg:w-[60%]">
         Приобретите Repliq+, чтобы открыть доступ к полной статистике профиля и тредов!
       </Typography>
-      <CustomLink
-        to={URL_FOR_REPLIQ}
+      <BuyDonateModal />
+      <Button
         className="flex items-center justify-center w-fit py-2 bg-green-600 px-6 rounded-lg"
+        onClick={() => buyDonateModalIsOpenAtom(ctx, true)}
       >
         <Typography className="text-xl font-semibold">
           Приобрести
         </Typography>
-      </CustomLink>
+      </Button>
     </div>
   )
-}
+}, "NoAccessDashboard")
 
 const DashboardNavigation = () => {
   const pathname = usePageContext().urlPathname
@@ -72,7 +75,15 @@ const DashboardNavigation = () => {
   )
 }
 
-const Page = reatomComponent<PropsWithChildren>(({ ctx, children }) => {
+onConnect(userProfileStatsAction.dataAtom, (ctx) => {
+  const is_donate = getUser(ctx).is_donate
+
+  if (is_donate) {
+    userProfileStatsAction(ctx)
+  }
+})
+
+const Wrapper = reatomComponent<PropsWithChildren>(({ ctx, children }) => {
   const is_donate = getUser(ctx).is_donate
   const isValid = is_donate === true
 
@@ -86,20 +97,12 @@ const Page = reatomComponent<PropsWithChildren>(({ ctx, children }) => {
       </div>
     </div>
   )
-}, "RouteComponent")
+}, "Wrapper")
 
-onConnect(userProfileStatsAction.dataAtom, (ctx) => {
-  const is_donate = getUser(ctx).is_donate
-
-  if (is_donate) {
-    userProfileStatsAction(ctx)
-  }
-})
-
-export default function DashboardRouteComponent({ children }: PropsWithChildren) {
+export default function Layout({ children }: PropsWithChildren) {
   return (
-    <Page>
+    <Wrapper>
       {children}
-    </Page>
+    </Wrapper>
   )
 }

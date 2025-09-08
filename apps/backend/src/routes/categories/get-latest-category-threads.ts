@@ -3,7 +3,7 @@ import { getLatestCategoryThreads } from "#lib/queries/categories/get-latest-cat
 import { Hono } from "hono";
 
 export const getLatestCategoryThreadsRoute = new Hono()
-  .get("/get-latest-category-threads", async (ctx) => {
+  .get("/latest-threads", async (ctx) => {
     try {
       const data = await getLatestCategoryThreads();
 

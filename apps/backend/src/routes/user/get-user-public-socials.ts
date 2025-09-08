@@ -9,7 +9,7 @@ async function getUserPublicSocials(nickname: string) {
 }
 
 export const getUserPublicSocialsRoute = new Hono()
-  .get("/get-user-public-socials/:nickname", async (ctx) => {
+  .get("/user-public-socials/:nickname", async (ctx) => {
     const recipient = ctx.req.param("nickname")
     const initiator = getNickname()
 

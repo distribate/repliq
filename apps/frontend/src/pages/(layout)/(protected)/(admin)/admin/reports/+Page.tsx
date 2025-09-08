@@ -1,7 +1,5 @@
-import { AdminReportsList } from "#components/admin/reports/components/admin-reports-list";
+import { AdminReports } from "#components/admin/reports/components/admin-reports";
 
-export default function AdminReportsPage() {
-  return (
-    <AdminReportsList />
-  )
+export default function Page() {
+  return <AdminReports />
 }

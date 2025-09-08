@@ -4,7 +4,7 @@ import { userClient } from "#shared/forum-client"
 
 export const userProfileStatsAction = reatomAsync(async (ctx) => {
   return await ctx.schedule(async () => {
-    const res = await userClient.user["get-user-profile-stats"].$get();
+    const res = await userClient.user["user-profile-stats"].$get();
     const data = await res.json();
 
     if ("error" in data) throw new Error(data.error)
@@ -18,4 +18,4 @@ export const userProfileStatsAction = reatomAsync(async (ctx) => {
       console.error(e.message)
     }
   }
-}).pipe(withStatusesAtom(), withDataAtom(), withCache())
+}).pipe(withStatusesAtom(), withDataAtom(), withCache({ swr: false }))

@@ -13,7 +13,7 @@ async function getUserSettings(nickname: string) {
 }
 
 export const getUserSettingsRoute = new Hono()
-  .get("/get-user-settings", async (ctx) => {
+  .get("/user-settings", async (ctx) => {
     const nickname = getNickname();
 
     try {

@@ -11,11 +11,11 @@ interface AppGlobal {
 const appGlobal = globalThis as unknown as AppGlobal;
 
 const config: PoolConfig = {
-  host: "127.0.0.1",
-  database: Bun.env.POSTGRES_DB!,
-  password: Bun.env.POSTGRES_PASSWORD!,
-  port: Number(Bun.env.POSTGRES_PORT!),
-  user: `${Bun.env.POSTGRES_USER}.${Bun.env.POSTGRES_TENANT_ID}`,
+  host: isProduction ? Bun.env.MAIN_POSTGRES_HOST : "127.0.0.1",
+  database: Bun.env.MAIN_POSTGRES_DB,
+  password: Bun.env.MAIN_POSTGRES_PASSWORD,
+  port: Number(Bun.env.MAIN_POSTGRES_PORT),
+  user: `${Bun.env.MAIN_POSTGRES_USER}.${Bun.env.MAIN_POSTGRES_TENANT_ID}`,
   max: isProduction ? 16 : 8,
   idleTimeoutMillis: 30000,
   connectionTimeoutMillis: 10000,

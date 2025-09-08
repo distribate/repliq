@@ -1,14 +1,14 @@
 import { Typography } from "@repo/ui/src/components/typography.tsx";
-import { currentSessionAtom, GetUserActiveSessionsResponse, userActiveSessionsAction } from "#components/modals/user-settings/models/user-sessions.model";
-import { TerminateAllSessionsModal } from "../../../../../modals/user-settings/components/terminate-all-sessions-modal";
+import { currentSessionAtom, userActiveSessionsAction, UserActiveSessionsPayload } from "#components/modals/user-settings/models/user-sessions.model";
+import { TerminateAllSessionsModal } from "#components/modals/user-settings/components/terminate-all-sessions-modal";
 import dayjs from "@repo/shared/constants/dayjs-instance";
-import { TerminateSessionModal } from "../../../../../modals/user-settings/components/terminate-session-modal";
+import { TerminateSessionModal } from "#components/modals/user-settings/components/terminate-session-modal";
 import { reatomComponent } from "@reatom/npm-react";
 import { IconDevices } from "@tabler/icons-react";
 
 export const UserSessionBlock = ({
   is_current, browser, location, session_id, created_at
-}: GetUserActiveSessionsResponse[0]) => {
+}: UserActiveSessionsPayload[number]) => {
   const formattedCreated = dayjs(created_at).format("DD-MMM-YYYY")
 
   return (

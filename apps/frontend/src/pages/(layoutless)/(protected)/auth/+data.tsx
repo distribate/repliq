@@ -1,5 +1,5 @@
-import { logRouting } from "#lib/helpers"
-import { wrapTitle } from "#lib/wrap-title"
+import { logRouting } from "#lib/utils"
+import { wrapTitle } from "#lib/utils"
 import { useConfig } from "vike-react/useConfig"
 
 function metadata() {
@@ -7,8 +7,8 @@ function metadata() {
     title: wrapTitle("Авторизация"),
     Head: (
       <>
-        <link rel="canonical" href={`https://fasberry.su/auth`} />
-        <meta property="og:url" content={`https://fasberry.su/auth`} />
+        <link rel="canonical" href={`https://repliq.fasberry.su/auth`} />
+        <meta property="og:url" content={`https://repliq.fasberry.su/auth`} />
       </>
     )
   }

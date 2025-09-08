@@ -2,15 +2,16 @@ import { toast } from "sonner";
 import { ControlFriendProperties, ControlFriendRequests } from "#components/friend/models/control-friend.model";
 import { friendsCountAction } from "#components/friends/models/friends-count.model.ts";
 import { reatomAsync, withStatusesAtom } from "@reatom/async";
-import { atom, batch } from "@reatom/core";
+import { atom, batch, Ctx } from "@reatom/core";
 import { incomingRequestsAtom, outgoingRequestsAtom } from "#components/friends/models/friends-requests.model.ts";
-import { userClient } from '#shared/forum-client.ts';
-import { friendStatusesAtom } from "../components/friend-button/models/friend-status.model";
+import { friendClient } from '#shared/forum-client.ts';
+import { friendStatusesAtom } from "./friend-status.model";
 import { myFriendsAction, myFriendsDataAtom } from "#components/friends/models/friends.model";
-import { withReset } from "@reatom/framework";
-import { currentUserAtom, currentUserNicknameAtom } from "#components/user/models/current-user.model";
-import { pageContextAtom } from "#lib/sync";
-import dayjs from "dayjs";
+import { sleep, withReset } from "@reatom/framework";
+import { currentUserAtom } from "#components/user/models/current-user.model";
+import { pageContextAtom } from "#lib/context-sync";
+import { validateResponse } from "#shared/api/validation";
+import dayjs from "@repo/shared/constants/dayjs-instance";
 
 type ControlIncomingRequest = ControlFriendRequests & { type: "reject" | "accept" }
 type ControlOutgoingRequest = ControlFriendRequests & { type: "reject" | "create" }
@@ -33,182 +34,187 @@ const friendRequestStatus: Record<string, string> = {
   "Friend deleted": "Пользователь удален из друзей"
 } as const;
 
-const controlIncomingRequestVariablesAtom = atom<ControlIncomingRequest | null>(null, "acceptIncomingRequestVariables")
-const controlOutgoingRequestVariablesAtom = atom<ControlOutgoingRequest | null>(null, "controlOutgoingRequestVariables")
-const removeFriendActionVariablesAtom = atom<ControlFriendProperties | null>(null, "removeFriendActionVariables")
+export const removeFriendDialogIsOpenAtom = atom(false, "removeFriendDialogIsOpen")
+export const removeFriendOptionsAtom = atom<{ nickname: string, friend_id: string } | null>(null, "removeFriendOptions").pipe(withReset())
 
 async function deleteFriendRequest({ request_id }: Pick<ControlFriendRequest, "request_id">) {
-  const res = await userClient.user["delete-friend-request"].$post({ json: { request_id } })
-  const data = await res.json();
-  if ("error" in data) throw new Error(data.error)
-
-  return {
-    request_id: null,
-    status: data.status
-  }
+  const res = await friendClient.friend["remove-request"].$post({ json: { request_id } })
+  return validateResponse<typeof res>(res);
 }
 
 async function createFriendRequest({ recipient }: Pick<ControlFriendRequest, "recipient">) {
-  const res = await userClient.user["create-friend-request"].$post({ json: { recipient } })
-  const data = await res.json();
-  if ("error" in data) throw new Error(data.error)
-
-  return {
-    request_id: data.request_id,
-    status: data.status
-  }
+  const res = await friendClient.friend["create-request"].$post({ json: { recipient } })
+  return validateResponse<typeof res>(res);
 }
 
 async function acceptFriendRequest({ request_id }: Pick<ControlFriendRequest, "request_id">) {
-  const res = await userClient.user["accept-friend-request"].$post({ json: { request_id } })
-  const data = await res.json();
-  if ("error" in data) throw new Error(data.error)
-
-  return {
-    status: data.status,
-    friend_id: data.friend_id
-  }
+  const res = await friendClient.friend["accept-request"].$post({ json: { request_id } })
+  return validateResponse<typeof res>(res);
 }
 
-export const controlOutgoingRequestAction = reatomAsync(async (ctx, options: ControlOutgoingRequest) => {
-  controlOutgoingRequestVariablesAtom(ctx, options)
+async function updateFriends(ctx: Ctx) {
+  myFriendsDataAtom.reset(ctx);
+  await myFriendsAction(ctx)
+}
 
-  switch (options.type) {
-    case "create":
-      return await ctx.schedule(() => createFriendRequest({ recipient: options.recipient }));
-    case "reject":
-      return await ctx.schedule(() => deleteFriendRequest({ request_id: options.request_id }))
+export const controlOutgoingRequestAction = reatomAsync(async (ctx, values: ControlOutgoingRequest) => {
+  const event = {
+    "create": async () => createFriendRequest({ recipient: values.recipient }),
+    "reject": async () => deleteFriendRequest({ request_id: values.request_id })
   }
+
+  const result = await ctx.schedule(() => event[values.type]())
+
+  return { result, values }
 }, {
   name: "controlOutgoingRequestAction",
-  onReject: (_, e) => {
-    if (e instanceof Error) {
-      const description = friendRequestStatus[e.message] ?? e.message;
-      toast.error("Произошла ошибка", { description });
-    }
-  },
-  onFulfill: async (ctx, data) => {
+  onFulfill: async (ctx, res) => {
+    const {
+      result: { data, status },
+      values: { request_id, type, recipient }
+    } = res;
+
     const pageContext = ctx.get(pageContextAtom)
-    const variables = ctx.get(controlOutgoingRequestVariablesAtom)
+    if (!pageContext) return;
 
-    if (!variables || !pageContext) return;
-
-    toast.success(friendRequestStatus[data.status]);
-
-    if (variables.type === 'reject') {
+    if (type === 'reject') {
       if (pageContext.urlPathname === '/friends') {
         outgoingRequestsAtom(ctx, (state) => {
-          if (!state) state = []
-          return state.filter(target => target.recipient !== variables.recipient)
+          if (!state) state = [];
+
+          const newList = state.filter(target => target.recipient !== recipient)
+          console.log("controlOutgoingRequestAction.reject.newList", newList)
+
+          return newList
         })
 
         friendsCountAction.dataAtom(ctx, (state) => {
           if (!state) return null;
 
-          return {
+          const newMeta = {
             ...state,
             requestsCount: {
               ...state.requestsCount,
               outgoing: state.requestsCount.outgoing - 1
             }
           }
+
+          console.log("controlOutgoingRequestAction.reject.newMeta", newMeta)
+
+          return newMeta
         })
-      } else {
-        friendStatusesAtom(ctx, (state) => ({
-          ...state,
-          [variables.recipient]: {
-            request_id: null,
-            status: "not-friend",
-            friend_id: null
-          }
-        }))
       }
+
+      friendStatusesAtom(ctx, (state) => ({
+        ...state,
+        [recipient]: {
+          request_id: null,
+          status: "not-friend",
+          friend_id: null
+        }
+      }))
     }
 
-    if (variables.type === 'create') {
+    if (type === 'create') {
       if (pageContext.urlPathname === '/friends') {
-        batch(ctx, () => {
+        const currentUser = ctx.get(currentUserAtom)
+        if (!currentUser) throw new Error('Current user is not defined')
+
+        const newOutgoingRequest = {
+          id: request_id,
+          initiator: currentUser.nickname,
+          recipient,
+          created_at: dayjs().toString(),
+          avatar: currentUser.avatar,
+          name_color: currentUser.name_color
+        }
+
+        batch(ctx, async () => {
           outgoingRequestsAtom(ctx, (state) => {
             if (!state) state = []
 
-            const newRequest = {
-              id: data.request_id!,
-              initiator: ctx.get(currentUserNicknameAtom)!,
-              recipient: variables.recipient,
-              created_at: dayjs().toString(),
-              avatar: ctx.get(currentUserAtom)?.avatar ?? null,
-              name_color: ctx.get(currentUserAtom)?.name_color ?? "#FFFFFF"
-            }
+            const newRequests = [...state, newOutgoingRequest]
+            console.log("controlOutgoingRequestAction.create.newRequests", newRequests);
 
-            return [...state, newRequest]
+            return newRequests
           })
 
           friendsCountAction.dataAtom(ctx, (state) => {
             if (!state) return null;
 
-            return {
+            const newMeta = {
               ...state,
               requestsCount: {
                 ...state.requestsCount,
                 outgoing: state.requestsCount.outgoing + 1
               }
             }
+
+            console.log("controlOutgoingRequestAction.create.newMeta", newMeta);
+
+            return newMeta
           })
 
-          myFriendsAction(ctx)
+          await updateFriends(ctx)
         })
-      } else {
-        friendStatusesAtom(ctx, (state) => ({
-          ...state,
-          [variables.recipient]: {
-            request_id: data.request_id,
-            status: "reject-request",
-            friend_id: null
-          }
-        }))
       }
+
+      friendStatusesAtom(ctx, (state) => ({
+        ...state,
+        [recipient]: {
+          request_id,
+          status: "reject-request",
+          friend_id: null
+        }
+      }))
     }
-  }
-}).pipe(withStatusesAtom())
 
-export const controlIncomingRequestAction = reatomAsync(async (ctx, options: ControlIncomingRequest) => {
-  controlIncomingRequestVariablesAtom(ctx, options)
-
-  switch (options.type) {
-    case "accept":
-      return await ctx.schedule(() => acceptFriendRequest({ request_id: options.request_id }))
-    case "reject":
-      return await ctx.schedule(() => deleteFriendRequest({ request_id: options.request_id }))
-  }
-}, {
-  name: "controlIncomingRequestAction",
+    toast.success(friendRequestStatus[status]);
+  },
   onReject: (_, e) => {
     if (e instanceof Error) {
       const description = friendRequestStatus[e.message] ?? e.message;
       toast.error("Произошла ошибка", { description });
     }
   },
-  onFulfill: (ctx, data) => {
+}).pipe(withStatusesAtom())
+
+export const controlIncomingRequestAction = reatomAsync(async (ctx, values: ControlIncomingRequest) => {
+  const event = {
+    "accept": async () => acceptFriendRequest({ request_id: values.request_id }),
+    "reject": async () => deleteFriendRequest({ request_id: values.request_id })
+  }
+
+  const result = await ctx.schedule(() => event[values.type]())
+
+  return { result, values }
+}, {
+  name: "controlIncomingRequestAction",
+  onFulfill: (ctx, res) => {
+    const {
+      result: { data, status },
+      values: { recipient, request_id, type }
+    } = res;
+
     const pageContext = ctx.get(pageContextAtom)
-    const variables = ctx.get(controlIncomingRequestVariablesAtom);
+    if (!pageContext) return;
 
-    if (!variables || !pageContext) return;
-
-    toast.success(friendRequestStatus[data.status]);
-
-    if (variables.type === 'accept') {
+    if (type === 'accept') {
       if (pageContext.urlPathname === '/friends') {
-        batch(ctx, () => {
+        batch(ctx, async () => {
           incomingRequestsAtom(ctx, (state) => {
             if (!state) state = []
 
-            return state.filter(target => target.recipient !== variables.recipient)
+            const newRequests = state.filter(target => target.id !== request_id)
+            console.log("controlIncomingRequestAction.accept.newRequests", newRequests)
+
+            return newRequests
           })
 
           friendsCountAction.dataAtom(ctx, (state) => {
             if (!state) return null;
 
-            return {
+            const newMeta = {
               ...state,
               friendsCount: state.friendsCount + 1,
               requestsCount: {
@@ -216,110 +222,142 @@ export const controlIncomingRequestAction = reatomAsync(async (ctx, options: Con
                 incoming: state.requestsCount.incoming - 1
               }
             }
+
+            console.log("controlIncomingRequestAction.accept.newMeta", newMeta)
+
+            return newMeta
           })
-          
-          myFriendsAction(ctx)
+
+          await updateFriends(ctx)
         })
-      } else {
-        if ("friend_id" in data) {
-          friendStatusesAtom(ctx, (state) => ({
-            ...state,
-            [variables.recipient]: {
-              friend_id: data.friend_id!,
-              status: "friend",
-              request_id: null
-            }
-          }))
-        }
+      }
+
+      if (typeof data === 'object' && "friend_id" in data) {
+        friendStatusesAtom(ctx, (state) => ({
+          ...state,
+          [recipient]: {
+            friend_id: data.friend_id,
+            status: "friend",
+            request_id: null
+          }
+        }))
       }
     }
 
-    if (variables.type === 'reject') {
+    if (type === 'reject') {
       if (pageContext.urlPathname === '/friends') {
         incomingRequestsAtom(ctx, (state) => {
           if (!state) state = []
 
-          return state.filter(target => target.recipient !== variables.recipient)
+          const newRequests = state.filter(target => target.recipient !== recipient)
+          console.log("controlIncomingRequestAction.reject.newRequests", newRequests)
+
+          return newRequests
         })
 
         friendsCountAction.dataAtom(ctx, (state) => {
           if (!state) return null;
 
-          return {
+          const newMeta = {
             ...state,
             requestsCount: {
               ...state.requestsCount,
               incoming: state.requestsCount.incoming - 1
             }
           }
+
+          console.log("controlIncomingRequestAction.reject.newMeta", newMeta)
+
+          return newMeta
         })
-      } else {
-        friendStatusesAtom(ctx, (state) => ({
-          ...state,
-          [variables.recipient]: {
-            friend_id: null,
-            status: "not-friend",
-            request_id: null
-          }
-        }))
       }
-    }
-  }
-}).pipe(withStatusesAtom())
 
-export const removeFriendIsOpenAtom = atom(false, "removeFriendIsOpen")
-export const removeFriendOptionsAtom = atom<{ nickname: string, friend_id: string } | null>(null, "removeFriendOptions").pipe(withReset())
-
-removeFriendOptionsAtom.onChange((ctx, state) => {
-  if (!state) {
-    removeFriendOptionsAtom.reset(ctx)
-  }
-})
-
-export const removeFriendAction = reatomAsync(async (ctx, options: ControlFriendProperties) => {
-  removeFriendActionVariablesAtom(ctx, options)
-  return await ctx.schedule(async () => {
-    const res = await userClient.user["delete-friend"].$delete({
-      json: { friend_id: options.friend_id }
-    })
-
-    const data = await res.json();
-
-    if ("error" in data) throw new Error(data.error)
-
-    return data.status
-  })
-}, {
-  name: "removeFriendAction",
-  onReject: (_, e) => {
-    if (e instanceof Error) {
-      const description = friendRequestStatus[e.message] ?? e.message;
-      toast.error("Произошла ошибка", { description });
-    }
-  },
-  onFulfill: (ctx, status) => {
-    const pageContext = ctx.get(pageContextAtom)
-    const variables = ctx.get(removeFriendActionVariablesAtom)
-
-    if (!variables || !pageContext) return;
-
-    toast.success(friendRequestStatus[status]);
-
-    if (pageContext.urlPathname === '/friends') {
-      myFriendsDataAtom(ctx, (state) => {
-        if (!state) state = []
-        return state.filter(target => target.nickname !== variables.recipient)
-      })
-      friendsCountAction(ctx)
-    } else {
       friendStatusesAtom(ctx, (state) => ({
         ...state,
-        [variables.recipient]: {
+        [recipient]: {
           friend_id: null,
           status: "not-friend",
           request_id: null
         }
       }))
     }
-  }
+
+    toast.success(friendRequestStatus[status]);
+  },
+  onReject: (_, e) => {
+    if (e instanceof Error) {
+      const description = friendRequestStatus[e.message] ?? e.message;
+      toast.error("Произошла ошибка", { description });
+    }
+  },
+}).pipe(withStatusesAtom())
+
+export const removeFriendAction = reatomAsync(async (ctx, values: ControlFriendProperties) => {
+  const result = await ctx.schedule(async () => {
+    const res = await friendClient.friend["remove"].$delete({
+      json: { friend_id: values.friend_id }
+    })
+
+    return validateResponse<typeof res>(res);
+  })
+
+  return { result, values }
+}, {
+  name: "removeFriendAction",
+  onFulfill: async (ctx, res) => {
+    const {
+      result: { data, status },
+      values: { recipient }
+    } = res
+
+    const pageContext = ctx.get(pageContextAtom)
+    if (!pageContext) return;
+
+    if (pageContext.urlPathname === '/friends') {
+      myFriendsDataAtom(ctx, (state) => {
+        if (!state) state = []
+
+        const newList = state.filter(target => target.nickname !== recipient);
+        console.log("removeFriendAction.newList", newList)
+
+        return newList
+      })
+
+      friendsCountAction.dataAtom(ctx, (state) => {
+        if (!state) return null;
+
+        const newMeta = {
+          ...state,
+          friendsCount: state.friendsCount - 1,
+        }
+
+        console.log("removeFriendAction.newMeta", newMeta)
+
+        return newMeta
+      })
+    }
+
+    friendStatusesAtom(ctx, (state) => ({
+      ...state,
+      [recipient]: {
+        friend_id: null,
+        status: "not-friend",
+        request_id: null
+      }
+    }))
+
+    removeFriendDialogIsOpenAtom(ctx, false)
+
+    await ctx.schedule(() => sleep(300))
+
+    removeFriendOptionsAtom.reset(ctx)
+
+    toast.success(friendRequestStatus[status]);
+  },
+  onReject: (_, e) => {
+    if (e instanceof Error) {
+      const description = friendRequestStatus[e.message] ?? e.message;
+      toast.error("Произошла ошибка", { description });
+    }
+  },
 }).pipe(withStatusesAtom())

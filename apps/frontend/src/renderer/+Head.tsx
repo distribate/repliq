@@ -1,4 +1,7 @@
+import { isDevelopment } from "#lib/utils";
 import { KEYWORDS } from "@repo/shared/constants/meta";
+
+import "../editor.css"
 
 const title = [
   `Repliq — Форум нового поколения`
@@ -38,7 +41,7 @@ const Scripts = () => {
   return (
     <>
       <script src="/connect-worker.js" />
-      {import.meta.env.PROD && (
+      {isDevelopment && (
         <script src="/metrika.js" async />
       )}
     </>
@@ -56,8 +59,17 @@ const Links = () => {
 
       <link rel="preconnect" href="https://fonts.googleapis.com" />
       <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+      <link rel="preconnect" href="https://api.fasberry.su/forum" />
+
       <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300..700&display=swap" rel="stylesheet" />
-      <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap" rel="stylesheet"/>
+      <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap" rel="stylesheet" />
+
+      <link
+        rel="preload"
+        as="image"
+        href="/logotype.png"
+        type="image/png"
+      />
     </>
   )
 }

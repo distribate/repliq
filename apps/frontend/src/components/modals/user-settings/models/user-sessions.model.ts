@@ -1,26 +1,20 @@
 import { authClient } from "#shared/auth-client";
-import type { InferResponseType } from "hono/client"
 import { atom } from "@reatom/core";
 import { reatomAsync, withCache, withDataAtom, withStatusesAtom } from "@reatom/async";
+import { validateResponse } from "#shared/api/validation";
 
-const client = authClient["get-sessions"].$get
-
-export type GetUserActiveSessionsResponse = InferResponseType<typeof client, 200>["data"]
+export type UserActiveSessionsPayload = Awaited<ReturnType<typeof getUserSessions>>;
 
 const getUserSessions = async () => {
   const res = await authClient["get-sessions"].$get()
-  const data = await res.json()
-
-  if (!data || 'error' in data) return null;
-
-  return data.data
+  return validateResponse<typeof res>(res)
 }
 
-export const currentSessionAtom = atom<GetUserActiveSessionsResponse[0] | null>(null, "currentSession")
+export const currentSessionAtom = atom<UserActiveSessionsPayload[number] | null>(null, "currentSession")
 
 export const userActiveSessionsAction = reatomAsync(async (ctx) => {
   return await ctx.schedule(() => getUserSessions())
-}, "userActiveSessionsAction").pipe(withDataAtom(), withStatusesAtom(), withCache())
+}, "userActiveSessionsAction").pipe(withDataAtom(), withStatusesAtom(), withCache({ swr: false }))
 
 userActiveSessionsAction.dataAtom.onChange((ctx, state) => {
   if (!state) return;

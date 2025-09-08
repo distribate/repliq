@@ -12,7 +12,7 @@ export const getFriendRequests = async ({
 }: GetFriendRequests) => {
   const query = forumDB
     .selectFrom('friends_requests')
-    .innerJoin("users", "users.nickname", type === "incoming" ? "friends_requests.recipient" : "friends_requests.initiator")
+    .innerJoin("users", "users.nickname", type === "incoming" ? "friends_requests.initiator" : "friends_requests.recipient")
     .select([
       "friends_requests.id",
       "friends_requests.created_at",

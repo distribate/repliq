@@ -3,7 +3,7 @@ import { Switch } from "@repo/ui/src/components/switch.tsx";
 import { UserSettingOption } from "#ui/user-setting-option";
 import { UserSettingsBack } from "#components/modals/user-settings/components/user-settings-back";
 import { reatomComponent } from "@reatom/npm-react";
-import { globalPreferencesAtom, updateThreadsSettingAction, updateVisibilityAction } from "#components/user/components/settings/main/models/update-global-preferences.model";
+import { globalPreferencesAtom, updateHistoryThreadsOptionAction, updateVisibilityAction } from "#components/user/components/settings/main/models/update-global-preferences.model";
 import { updateCurrentUserSettingsAction } from "#components/user/components/settings/profile/models/update-current-user.model";
 import { IconBellShare, IconFlag2, IconHistory, IconStepInto } from "@tabler/icons-react";
 import { getUser } from "#components/user/models/current-user.model";
@@ -44,7 +44,7 @@ const HistoryThreadsSetting = reatomComponent(({ ctx }) => {
       <Switch
         checked={autoSaveThreads}
         defaultChecked={autoSaveThreads}
-        onCheckedChange={_ => updateThreadsSettingAction(ctx)}
+        onCheckedChange={_ => updateHistoryThreadsOptionAction(ctx)}
       />
     </UserSettingOption>
   )

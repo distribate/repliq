@@ -7,15 +7,7 @@ import { createIdLink } from '#lib/create-link'
 import { Typography } from '@repo/ui/src/components/typography'
 import { getUser } from "#components/user/models/current-user.model";
 
-export default function DashboardPage() {
-  return (
-    <>
-      <Page />
-    </>
-  )
-}
-
-const Page = reatomComponent(({ ctx }) => {
+const DashboardIndex = reatomComponent(({ ctx }) => {
   const { avatar, nickname } = getUser(ctx)
   const profileStats = ctx.spy(userProfileStatsAction.dataAtom)
 
@@ -58,3 +50,7 @@ const Page = reatomComponent(({ ctx }) => {
     </div>
   )
 }, "RouteComponent")
+
+export default function Page() {
+  return <DashboardIndex />
+}

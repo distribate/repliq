@@ -1,11 +1,11 @@
-import { PostItemHeader } from "#components/post/post-item/components/post-header.tsx";
-import { PostItemBody } from "#components/post/post-item/components/post-body.tsx";
-import { PostFooter } from "#components/post/post-item/components/post-footer.tsx";
+import { PostItemHeader } from "#components/post/components/post-head/post-head";
+import { PostItemBody } from "#components/post/components/post-body/post-body";
+import { PostFooter } from "#components/post/components/post-footer/post-footer";
 import type { UserPostItem } from '@repo/types/routes-types/get-user-posts-types.ts';
 import { lazy, Suspense } from "react";
 
 const PostControl = lazy(() =>
-  import("#components/post/post-item/components/post-control.tsx").then((m) => ({ default: m.PostControl }))
+  import("#components/post/components/post-control/post-control").then((m) => ({ default: m.PostControl }))
 );
 
 type ProfilePostsListCardProps = Pick<UserPostItem,
@@ -38,17 +38,10 @@ export const ProfilePostsListCard = ({
             isPinned={isPinned}
           />
           <Suspense>
-            <PostControl
-              id={id}
-              nickname={nickname}
-            />
+            <PostControl id={id} nickname={nickname} />
           </Suspense>
         </div>
-        <PostItemBody
-          id={id}
-          nickname={nickname}
-          content={content}
-        />
+        <PostItemBody id={id} nickname={nickname} content={content} />
       </div>
       <PostFooter
         id={id}

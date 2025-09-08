@@ -1,7 +1,9 @@
 import type { Context } from "hono";
 
-function convertIPv6ToIPv4(ipv6: string): string | null {
-  const match = ipv6.match(/^::ffff:(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})$/);
+const REGEXP = /^::ffff:(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})$/
+
+function v6Tov4(v6: string): string | null {
+  const match = v6.match(REGEXP);
   return match ? match[1] : null;
 }
 
@@ -14,7 +16,7 @@ export function getClientIp(ctx: Context): string | null {
     const realIp = ctx.req.header("x-real-ip")
 
     if (realIp) {
-      ip = convertIPv6ToIPv4(realIp);
+      ip = v6Tov4(realIp);
     }
   } else {
     ip = forwarded

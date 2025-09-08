@@ -2,13 +2,13 @@ import { forumDB } from '#shared/database/forum-db.ts'
 import { executeWithCursorPagination } from 'kysely-paginate';
 
 type GetBlockedUsers = {
-  nickname: string,
   cursor?: string
 }
 
-export const getBlockedUsers = async ({
-  nickname, cursor
-}: GetBlockedUsers) => {
+export const getBlockedUsers = async (
+  nickname: string,
+  { cursor }: GetBlockedUsers
+) => {
   let query = forumDB
     .selectFrom("users_blocked")
     .innerJoin('users', 'users_blocked.recipient', 'users.nickname')

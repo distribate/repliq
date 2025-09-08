@@ -1,60 +1,129 @@
-import type { GetUserPostsResponse } from '@repo/types/routes-types/get-user-posts-types.ts';
-import { atom, Ctx } from '@reatom/core';
-import { reatomAsync, withStatusesAtom } from '@reatom/async';
+import { atom, batch, Ctx } from '@reatom/core';
+import { AsyncCtx, reatomAsync, withAbort, withStatusesAtom } from '@reatom/async';
 import { withReset } from '@reatom/framework';
 import { isParamChanged, requestedUserParamAtom } from '#components/profile/main/models/requested-user.model.ts';
 import { userClient } from '#shared/forum-client.ts';
-import { z } from 'zod';
+import * as z from 'zod';
 import { getUserPostsSchema } from '@repo/types/schemas/posts/user-posts-schema.ts';
-import { logger } from '@repo/shared/utils/logger.ts';
-import { postsFilteringAtom } from './filter-posts.model';
+import { log } from '#lib/utils';
+import { createFabric } from '#shared/models/infinity-scroll.model';
+import { postsAscendingAtom, postsCursorAtom, postsSearchQueryAtom, postsTypeAtom } from './filter-posts.model';
+import { validateResponse } from '#shared/api/validation';
 
-export const postsDataAtom = atom<GetUserPostsResponse["data"] | null>([], "posts").pipe(withReset())
-export const postsMetaAtom = atom<GetUserPostsResponse["meta"] | null>(null, "postsMeta").pipe(withReset())
+type PostsPayload = NonNullable<Awaited<ReturnType<typeof getPosts>>>
+
+export type PostsPayloadData = PostsPayload["data"]
+export type PostsPayloadMeta = PostsPayload["meta"]
+
+export const postsDataAtom = atom<PostsPayloadData | null>(null, "postsData").pipe(withReset())
+export const postsMetaAtom = atom<PostsPayloadMeta | null>(null, "postsMeta").pipe(withReset())
+
+export const postsPinnedDataAtom = atom<PostsPayloadData>([], "postsPinnedData")
+export const postsNotPinnedDataAtom = atom<PostsPayloadData>([], "postsNotPinnedData")
+
+postsDataAtom.onChange((ctx, state) => {
+  if (!state?.length) return
+
+  const { pinned, notPinned } = state.reduce(
+    (acc, post) => {
+      post.isPinned ? acc.pinned.push(post) : acc.notPinned.push(post)
+      return acc
+    },
+    { pinned: [] as PostsPayloadData, notPinned: [] as PostsPayloadData }
+  )
+
+  batch(ctx, () => {
+    postsPinnedDataAtom(ctx, pinned)
+    postsNotPinnedDataAtom(ctx, notPinned)
+  })
+})
 
 function resetPosts(ctx: Ctx) {
-  postsDataAtom.reset(ctx)
-  postsMetaAtom.reset(ctx)
+  batch(ctx, () => {
+    postsDataAtom.reset(ctx)
+    postsMetaAtom.reset(ctx)
+  })
 }
 
-requestedUserParamAtom.onChange((ctx, state) => isParamChanged(ctx, requestedUserParamAtom, state, () => { 
-  resetPosts(ctx); 
-  logger.info("posts reset for", state) 
+requestedUserParamAtom.onChange((ctx, state) => isParamChanged(ctx, requestedUserParamAtom, state, () => {
+  resetPosts(ctx);
+  log("posts reset for", state)
 }))
 
-type GetPosts = Omit<z.infer<typeof getUserPostsSchema>, 'currentUserNickname'> & {
-  nickname: string;
-}
+type PostsOpts = Omit<z.infer<typeof getUserPostsSchema>, 'currentUserNickname'>
 
-export async function getPosts({
-  nickname, ascending = false, filteringType, cursor, searchQuery
-}: GetPosts) {
-  const res = await userClient.user['get-user-posts'][':nickname'].$get({
-    query: {
-      ascending: ascending.toString(), filteringType, cursor, searchQuery
-    },
+async function getPosts(
+  nickname: string,
+  { ascending = false, filteringType, cursor, searchQuery }: PostsOpts,
+  init?: RequestInit
+) {
+  const res = await userClient.user['user-posts'][':nickname'].$get({
     param: { nickname },
+    query: {
+      ascending: ascending.toString(),
+      filteringType,
+      cursor,
+      searchQuery
+    },
+  }, {
+    init
   });
 
-  const data = await res.json();
-
-  if (!data || 'error' in data) return null
-
-  return data;
+  return validateResponse<typeof res>(res);
 }
 
 export const postsAction = reatomAsync(async (ctx) => {
-  const target = ctx.get(requestedUserParamAtom)
-  if (!target) return;
+  const nickname = ctx.get(requestedUserParamAtom)
+  log("postsAction executed", nickname)
+  if (!nickname) return;
 
-  return await ctx.schedule(() => getPosts({ nickname: target, filteringType: "created_at" }))
+  return await ctx.schedule(() => postsFn(ctx, nickname))
 }, {
   name: "postsAction",
   onFulfill: (ctx, res) => {
     if (!res) return;
 
-    postsFilteringAtom(ctx, (state) => ({ ...state, cursor: res.meta.endCursor }))
-    postsDataAtom(ctx, res.data)
-    postsMetaAtom(ctx, res.meta)
+    batch(ctx, () => {
+      postsDataAtom(ctx, res.data)
+      postsMetaAtom(ctx, res.meta)
+    })
   }
-}).pipe(withStatusesAtom())
+}).pipe(withStatusesAtom(), withAbort())
+
+async function postsFn(ctx: AsyncCtx, nickname: string) {
+  const opts = {
+    filteringType: ctx.get(postsTypeAtom),
+    ascending: ctx.get(postsAscendingAtom),
+    cursor: ctx.get(postsCursorAtom),
+    searchQuery: ctx.get(postsSearchQueryAtom)
+  }
+
+  const result = await ctx.schedule(
+    () => getPosts(nickname, opts, { signal: ctx.controller.signal })
+  );
+
+  return result
+}
+
+const postsFabric = createFabric<PostsPayloadData[number], PostsPayloadMeta>({
+  name: 'profilePosts',
+  key: "id",
+  fn: (ctx) => {
+    const nickname = ctx.get(requestedUserParamAtom)
+    if (!nickname) throw new Error("Nickname is not defined")
+    return postsFn(ctx, nickname)
+  },
+  atoms: {
+    dataAtom: postsDataAtom,
+    metaAtom: postsMetaAtom,
+    cursorAtom: postsCursorAtom,
+  },
+  viewerOpts: {
+    threshold: 1
+  },
+});
+
+export const updatePostsAction = postsFabric.update;
+export const ProfilePostsViewer = postsFabric.Viewer;
+export const isViewAtom = postsFabric.isViewAtom
+export const isExistAtom = postsFabric.isExistAtom

@@ -1,7 +1,7 @@
-import { atom, Ctx } from "@reatom/core"
+import { atom, batch, Ctx } from "@reatom/core"
 import { withReset } from "@reatom/framework"
 import { action } from "@reatom/core"
-import { logger } from "@repo/shared/utils/logger.ts"
+import { log } from "#lib/utils"
 
 export type SettingsType = "main" | "profile" | "account" | "other" 
 // | "lands"
@@ -17,12 +17,12 @@ export const settingsSettingsTypeAtom = atom<SettingsType>("main", "settingsSett
 export const settingsCurrentDialogAtom = atom<SettingsDialog | null>(null, "settingsCurrentDialog").pipe(withReset())
 export const settingsIsGlobalDialogAtom = atom(false, "settingsIsGlobalDialog").pipe(withReset())
 
-settingsSettingsTypeAtom.onChange((_, state) => logger.info("settingsSettingsTypeAtom", state))
-settingsCurrentDialogAtom.onChange((_, state) => logger.info("settingsCurrentDialogAtom", state))
-settingsIsGlobalDialogAtom.onChange((_, state) => logger.info("settingsIsGlobalDialogAtom", state))
+settingsSettingsTypeAtom.onChange((_, state) => log("settingsSettingsTypeAtom", state))
+settingsCurrentDialogAtom.onChange((_, state) => log("settingsCurrentDialogAtom", state))
+settingsIsGlobalDialogAtom.onChange((_, state) => log("settingsIsGlobalDialogAtom", state))
 
 export const navigateToDialogAction = action((ctx, to: SettingsDialog | SettingsType) => {
-  logger.info("navigateToDialogAction", to)
+  log("navigateToDialogAction", to)
 
   const toUpdated = to as SettingsDialog
 
@@ -47,9 +47,11 @@ export const navigateToBackAction = action((ctx) => {
       settingsSettingsTypeAtom(ctx, "profile")
     }
   } else {
-    settingsSettingsTypeAtom.reset(ctx)
-    settingsCurrentDialogAtom.reset(ctx)
-    settingsIsGlobalDialogAtom(ctx, true)
+    batch(ctx, () => {
+      settingsSettingsTypeAtom.reset(ctx)
+      settingsCurrentDialogAtom.reset(ctx)
+      settingsIsGlobalDialogAtom(ctx, true)
+    })
   }
 }, "navigateToBackAction")
 
@@ -62,7 +64,9 @@ export const toggleGlobalDialogAction = action((ctx, { value, reset }: { value: 
 }, "toggleGlobalDialogAction")
 
 function settingsReset(ctx: Ctx) {
-  settingsIsGlobalDialogAtom.reset(ctx)
-  settingsSettingsTypeAtom.reset(ctx)
-  settingsCurrentDialogAtom.reset(ctx)
+  batch(ctx, () => {
+    settingsIsGlobalDialogAtom.reset(ctx)
+    settingsSettingsTypeAtom.reset(ctx)
+    settingsCurrentDialogAtom.reset(ctx)
+  })
 }

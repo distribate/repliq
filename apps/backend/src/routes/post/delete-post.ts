@@ -36,8 +36,8 @@ async function deletePost({ postId, nickname }: DeletePost) {
   return query;
 }
 
-export const deletePostRoute = new Hono()
-  .delete("/delete-post", zValidator("json", deletePostSchema), async (ctx) => {
+export const removePostRoute = new Hono()
+  .delete("/remove", zValidator("json", deletePostSchema), async (ctx) => {
     const nickname = getNickname()
     const { id: postId } = deletePostSchema.parse(await ctx.req.json())
 
@@ -54,7 +54,7 @@ export const deletePostRoute = new Hono()
         return ctx.json({ error: "Failed" }, 404)
       }
 
-      return ctx.json({ status: "Success" }, 200)
+      return ctx.json({ data: { status: "Success" } }, 200)
     } catch (e) {
       return ctx.json({ error: throwError(e) }, 500);
     }

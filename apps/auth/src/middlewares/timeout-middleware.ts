@@ -1,4 +1,8 @@
-import { timeout } from "hono/timeout";
+import { timeout as timeoutMiddleware } from "hono/timeout";
 import { createMiddleware } from "hono/factory";
 
-export const timeoutMiddleware = () => createMiddleware(timeout(10000));
+const TIMEOUT_TIME = 10000
+
+export const timeout = () => createMiddleware(
+  timeoutMiddleware(TIMEOUT_TIME)
+);

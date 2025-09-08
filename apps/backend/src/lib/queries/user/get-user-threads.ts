@@ -4,10 +4,7 @@ import { sql, type Expression, type SqlBool } from 'kysely';
 import { executeWithCursorPagination } from 'kysely-paginate';
 import * as z from "zod";
 
-type GetUserThreads = {
-  nickname: string
-  cursor?: string;
-} & Pick<z.infer<typeof getUserThreadsSchema>, "querySearch">
+type GetUserThreads = z.infer<typeof getUserThreadsSchema>
 
 export async function getUserThreadsCount(nickname: string) {
   const query = await forumDB
@@ -24,28 +21,23 @@ export async function getUserThreadsCount(nickname: string) {
   return query.count
 }
 
-export const getUserThreads = async ({
-  nickname, querySearch, cursor
-}: GetUserThreads) => {
-  const query = forumDB
+export const getUserThreads = async (
+  nickname: string,
+  { searchQuery, cursor }: GetUserThreads
+) => {
+  let query = forumDB
     .selectFrom("threads_users")
     .innerJoin("threads", "threads.id", "threads_users.thread_id")
     .selectAll("threads")
     .select([
       sql<number>`(SELECT COUNT(*) FROM comments WHERE parent_type = 'thread' AND CAST(parent_id AS uuid) = threads.id)`.as('comments_count')
     ])
-    .where((eb) => {
-      const filters: Expression<SqlBool>[] = [];
-
-      filters.push(eb("threads_users.nickname", "=", nickname))
-
-      if (querySearch) {
-        filters.push(eb("threads.title", "ilike", `%${querySearch}%`))
-      }
-
-      return eb.and(filters)
-    })
+    .where("threads_users.nickname", "=", nickname)
     .groupBy("threads.id")
+
+  if (searchQuery && searchQuery.length >= 1) {
+    query = query.where("threads.title", "ilike", `%${searchQuery}%`)
+  }
 
   const res = await executeWithCursorPagination(query, {
     perPage: 16,
@@ -56,11 +48,9 @@ export const getUserThreads = async ({
         expression: "threads.created_at",
       }
     ],
-    parseCursor: (cursor) => {
-      return {
-        created_at: new Date(cursor.created_at),
-      }
-    },
+    parseCursor: (cursor) => ({
+      created_at: new Date(cursor.created_at)
+    }),
   })
 
   return {

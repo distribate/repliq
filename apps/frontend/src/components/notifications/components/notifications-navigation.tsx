@@ -1,7 +1,7 @@
 import { NavigationBadge } from "#ui/navigation-badge"
 import { notificationsTypeAtom } from "#components/notifications/models/notifications.model"
 import { reatomComponent } from "@reatom/npm-react"
-import { navigationVariant } from "#components/collection/components/navigation/collection-navigation";
+import { navigationVariant } from "#components/collection/navigation/collection-navigation";
 
 const NAVIGATION = [
   { title: "Системные", value: "system", },

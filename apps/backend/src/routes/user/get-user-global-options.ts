@@ -54,7 +54,7 @@ async function getUserStatusAndPermissions(nickname: string) {
 }
 
 export const getUserGlobalOptionsRoute = new Hono()
-  .get("/get-user-global-options", async (ctx) => {
+  .get("/user-global-options", async (ctx) => {
     const nickname = getNickname();
 
     try {

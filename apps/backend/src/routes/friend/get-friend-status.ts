@@ -18,7 +18,7 @@ type FriendData = {
 }
 
 export const getFriendStatusRoute = new Hono()
-  .get("/get-friend-status/:nickname", async (ctx) => {
+  .get("/status/:nickname", async (ctx) => {
     const recipient = ctx.req.param("nickname");
 
     const initiator = getNickname()
@@ -39,18 +39,24 @@ export const getFriendStatusRoute = new Hono()
 
       if (friendObject) {
         friendData = {
-          status: "friend", friend_id: friendObject.id, request_id: null
+          status: "friend", 
+          friend_id: friendObject.id, 
+          request_id: null
         }
       } else {
         const friendRequest = await getUserFriendRequest({ initiator, recipient })
 
         if (friendRequest) {
           friendData = {
-            status: friendRequest.status, friend_id: null, request_id: friendRequest.request_id
+            status: friendRequest.status, 
+            friend_id: null, 
+            request_id: friendRequest.request_id
           }
         } else {
           friendData = {
-            status: "not-friend", friend_id: null, request_id: null
+            status: "not-friend", 
+            friend_id: null, 
+            request_id: null
           }
         }
       }

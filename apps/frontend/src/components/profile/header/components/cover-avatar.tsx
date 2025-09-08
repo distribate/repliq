@@ -8,7 +8,7 @@ import { Button } from "@repo/ui/src/components/button";
 import { Typography } from "@repo/ui/src/components/typography";
 import { AvatarsList } from "#components/user/components/avatar/components/avatars-list";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@repo/ui/src/components/dropdown-menu";
-import { deleteAvatar, openUserCoverAvatarDialog, prefetchUserAvatarsAction, userCoverAvatarDialogIsOpenAtom, userCoverAvatarTargetAtom, userCoverSelectedAvatarAtom } from "../models/avatar.model";
+import { deleteAvatar, openUserCoverAvatarDialog, prefetchUserAvatarsAction, setAvatarAsMain, userCoverAvatarDialogIsOpenAtom, userCoverAvatarTargetAtom, userCoverSelectedAvatarAtom } from "../models/avatar.model";
 import { IconDotsVertical, IconTrash, IconUser } from "@tabler/icons-react";
 
 const userCoverAvatarVariants = cva(
@@ -81,8 +81,8 @@ const AvatarOptions = reatomComponent<{ target: string }>(({ ctx, target }) => {
         <DropdownMenuItem asChild>
           <Button
             className="w-full"
-            onClick={() => deleteAvatar(ctx, target)}
-            disabled={ctx.spy(deleteAvatar.statusesAtom).isPending}
+            onClick={() => setAvatarAsMain(ctx, target)}
+            disabled={ctx.spy(setAvatarAsMain.statusesAtom).isPending}
           >
             <IconUser size={24} />
             <Typography className="text-base font-semibold">

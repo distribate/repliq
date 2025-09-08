@@ -4,18 +4,15 @@ import { reatomAsync, withCache, withDataAtom, withStatusesAtom } from "@reatom/
 import { batch } from "@reatom/core"
 import { requestedUserAtom } from "#components/profile/main/models/requested-user.model"
 import { userCoverSelectedAvatarAtom } from "#components/profile/header/models/avatar.model"
+import { validateResponse } from "#shared/api/validation"
 
 export const userAvatars = reatomAsync(async (ctx, nickname: string) => {
   return await ctx.schedule(async () => {
-    const res = await userClient.user["get-user-avatars"][":nickname"].$get(
+    const res = await userClient.user["user-avatars"][":nickname"].$get(
       { param: { nickname } }, { init: { signal: ctx.controller.signal } }
     )
 
-    const data = await res.json()
-
-    if ("error" in data) throw new Error(data.error)
-
-    return data.data
+    return validateResponse<typeof res>(res);
   })
 }, {
   name: "userAvatars",

@@ -9,15 +9,16 @@ import { currentUserAtom } from '#components/user/models/current-user.model';
 import { batch } from '@reatom/core';
 import type { InferResponseType } from "hono/client"
 import ky from 'ky';
-import { fileArrayToUint8Array } from "#components/thread/create-thread/models/create-thread.model";
+import { fileArrayToUint8Array } from "#components/thread/components/thread-create/models/create-thread.model";
+import { validateResponse } from "#shared/api/validation";
 
-const inferredClient = userClient.user["create-cover-image"].$post
+const inferredClient = userClient.user["cover-image"]["create"].$post
 
 type CreateCoverImage = Omit<z.infer<typeof createCoverImageSchema>, "file"> & {
   file?: File;
 }
 
-const url = userClient.user["create-cover-image"].$url();
+const url = userClient.user["cover-image"]["create"].$url();
 
 const client = ky.extend({
   headers: { 'Content-Type': 'application/cbor' },
@@ -71,10 +72,8 @@ async function createCoverImage({ file, type, fileName }: CreateCoverImage) {
 
 export const deleteBackgroundImageAction = reatomAsync(async (ctx) => {
   return await ctx.schedule(async () => {
-    const res = await userClient.user["delete-cover-image"].$delete()
-    const data = await res.json()
-    if ("error" in data) throw new Error(data.error)
-    return data
+    const res = await userClient.user["cover-image"]["remove"].$delete()
+    return validateResponse<typeof res>(res);
   })
 }, {
   name: "deleteBackgroundImageAction",
@@ -107,23 +106,21 @@ export const uploadBackgroundImageAction = reatomAsync(async (ctx, values: Creat
   onFulfill: (ctx, res) => {
     toast.success("Фон обновлен");
 
+    const url = res.data.url;
+
     batch(ctx, () => {
-      requestedUserCoverImageAtom(ctx, res.data)
-      currentUserAtom(ctx, (state) => state ? ({ ...state, cover_image: res.data }) : null)
+      requestedUserCoverImageAtom(ctx, url)
+      currentUserAtom(ctx, (state) => state ? ({ ...state, cover_image: url }) : null)
     })
   }
 }).pipe(withStatusesAtom())
 
 export const imagesLibraryAction = reatomResource(async (ctx) => {
   return await ctx.schedule(async () => {
-    const res = await sharedClient.shared["get-images-library"].$get(
+    const res = await sharedClient.shared["library"]["images"].$get(
       {}, { init: { signal: ctx.controller.signal } }
     );
 
-    const data = await res.json()
-
-    if ('error' in data) throw new Error(data.error)
-
-    return data.data
+    return validateResponse<typeof res>(res);
   })
 }, "imagesLibraryAction").pipe(withDataAtom(), withStatusesAtom(), withCache())

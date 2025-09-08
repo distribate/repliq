@@ -20,20 +20,20 @@ const getAvailableCategories = async () => {
 }
 
 export const getAvailableCategoriesRoute = new Hono()
-.get("/get-available-categories", async (ctx) => {
+  .get("/available-categories", async (ctx) => {
 
-  try {
-    let categories = await getAvailableCategories()
+    try {
+      let categories = await getAvailableCategories()
 
-    categories = categories.map(category => ({
-      ...category,
-      emoji: getPublicUrl(STATIC_IMAGES_BUCKET, category.emoji)
-    }))
+      categories = categories.map(category => ({
+        ...category,
+        emoji: getPublicUrl(STATIC_IMAGES_BUCKET, category.emoji)
+      }))
 
-    ctx.header("Cache-Control", "public, max-age=300")
+      ctx.header("Cache-Control", "public, max-age=300")
 
-    return ctx.json({ data: categories }, 200)
-  } catch (e) {
-    return ctx.json({ error: throwError(e) }, 500);
-  }
-})
+      return ctx.json({ data: categories }, 200)
+    } catch (e) {
+      return ctx.json({ error: throwError(e) }, 500);
+    }
+  })

@@ -2,17 +2,14 @@ import { ContentNotFound } from "#components/templates/components/content-not-fo
 import { FriendsListLayout } from "./friends-list-layout.tsx";
 import { FriendCard } from "#components/friend/components/friend-card/friend-card.tsx";
 import {
+  FriendsViewer,
   myFriendsAction,
   myFriendsDataAtom,
-  myFriendsMetaAtom,
   myFriendsNotPinnedDataAtom,
   myFriendsPinnedDataAtom,
-  resetMyFriends
+  updateFriendsAction
 } from "#components/friends/models/friends.model.ts";
-import { updateFriendsAction } from "#components/friends/models/update-friends.model.ts";
-import { useInView } from "react-intersection-observer";
-import { reatomComponent, useUpdate } from "@reatom/npm-react";
-import { atom, onDisconnect } from "@reatom/framework";
+import { reatomComponent } from "@reatom/npm-react";
 import { SectionSkeleton } from "#components/templates/components/section-skeleton.tsx";
 import { Skeleton } from "@repo/ui/src/components/skeleton.tsx";
 
@@ -51,29 +48,6 @@ const FriendsAllListSkeleton = () => {
   );
 };
 
-
-onDisconnect(myFriendsDataAtom, (ctx) => resetMyFriends(ctx))
-
-const isViewAtom = atom(false, "isView")
-
-isViewAtom.onChange((ctx, state) => {
-  if (!state) return;
-
-  const hasMore = ctx.get(myFriendsMetaAtom)?.hasNextPage
-
-  if (hasMore) {
-    updateFriendsAction(ctx, "update-cursor");
-  }
-})
-
-const Viewer = () => {
-  const { inView, ref } = useInView({ triggerOnce: false, threshold: 1 });
-
-  useUpdate((ctx) => isViewAtom(ctx, inView), [inView])
-
-  return <div ref={ref} className="h-[1px] w-full" />
-}
-
 const UpdatedSkeleton = reatomComponent(({ ctx }) => {
   const isLoadingUpdated = ctx.spy(updateFriendsAction.statusesAtom).isPending
   if (!isLoadingUpdated) return null;
@@ -97,7 +71,7 @@ const List = reatomComponent(({ ctx }) => {
       {pinnedData.map(friend => <FriendCard key={friend.nickname} {...friend} />)}
       {notPinnedData.map(friend => <FriendCard key={friend.nickname} {...friend} />)}
       <UpdatedSkeleton />
-      <Viewer />
+      <FriendsViewer />
     </>
   )
 }, "List")

@@ -27,7 +27,7 @@ const Prevent = () => {
   )
 }
 
-const Page = reatomComponent(({ ctx }) => {
+const CreateTicket = reatomComponent(({ ctx }) => {
   const canCreateIssue = ctx.spy(userGlobalOptionsAtom).can_create_issue
 
   if (!canCreateIssue) {
@@ -44,10 +44,8 @@ const Page = reatomComponent(({ ctx }) => {
       <CreateIssueForm />
     </div>
   )
-}, "Page")
+}, "CreateTicket")
 
-export default function CreateTicketRouteComponent() {
-  return (
-    <Page />
-  )
+export default function Page() {
+  return <CreateTicket />
 }

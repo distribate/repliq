@@ -1,12 +1,11 @@
 import { ArrowRight } from "lucide-react"
 import { CustomLink } from "#shared/components/link"
 import { Button } from "@repo/ui/src/components/button"
-import { Footer } from "#components/layout/components/default/footer"
-import { ForumStats, Stat, transformData } from "#components/layout/components/widgets/forum-stats/components/forum-stats"
+import { Footer } from "#components/layout/footer/footer"
+import { Stat, transformData } from "#components/widgets/forum-stats/components/forum-stats"
 import { IconBrandThreads, IconDownload, IconSparkles, IconUserCheck, IconUsersGroup } from "@tabler/icons-react"
 import { AnimatePresence, motion } from "motion/react"
 import { useEffect, useState } from "react"
-import { usePageContext } from "vike-react/usePageContext"
 import { useData } from "vike-react/useData"
 import { Data } from "./+data"
 
@@ -203,7 +202,7 @@ const InstallAppButton = () => {
   )
 }
 
-export default function LandingPage() {
+export default function Page() {
   const { data } = useData<Data>();
 
   const stats = transformData(data);
@@ -232,7 +231,7 @@ export default function LandingPage() {
           <div
             className="flex flex-col sm:flex-row justify-center items-center mb-12"
           >
-            <CustomLink to="/auth">
+            <CustomLink to="/home">
               <Button
                 size="lg"
                 className="rounded-xl font-semibold text-shark-950 hover:text-shark-50  hover:bg-green-600 bg-shark-50 text-xl py-3 h-auto"

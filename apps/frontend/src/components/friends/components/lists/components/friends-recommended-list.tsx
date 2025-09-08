@@ -2,11 +2,7 @@ import { FriendsSearchingCard } from "#components/friends/components/searching/c
 import { Typography } from "@repo/ui/src/components/typography";
 import { reatomComponent } from "@reatom/npm-react";
 import { recommendedFriendsAction } from "#components/friends/models/recommended-friends.model";
-import { onConnect, onDisconnect } from "@reatom/framework";
 import { SectionSkeleton } from "#components/templates/components/section-skeleton";
-
-onConnect(recommendedFriendsAction.dataAtom, recommendedFriendsAction)
-onDisconnect(recommendedFriendsAction.dataAtom, (ctx) => recommendedFriendsAction.dataAtom.reset(ctx))
 
 const FriendsRecommendedIndividual = reatomComponent(({ ctx }) => {
   const data = ctx.spy(recommendedFriendsAction.dataAtom)

@@ -35,7 +35,7 @@ async function getPostViewers(id: string) {
 }
 
 export const getPostViewersRoute = new Hono()
-  .get("/get-post-viewers/:id", async (ctx) => {
+  .get("/viewers/:id", async (ctx) => {
     const id = ctx.req.param("id");
     const nickname = getNickname()
 
