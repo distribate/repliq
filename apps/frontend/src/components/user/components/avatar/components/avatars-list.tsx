@@ -1,10 +1,10 @@
 import { reatomComponent } from "@reatom/npm-react";
 import { requestedUserAtom } from "#components/profile/main/models/requested-user.model";
-import { userCoverSelectedAvatarAtom } from "#components/profile/header/models/avatar.model";
+import { userAvatarSelectedAtom, userAvatarsSelectedAtom } from "#components/user/components/avatar/models/avatar.model";
 import { userAvatars } from "../models/user-avatars.model";
 import { Skeleton } from "@repo/ui/src/components/skeleton";
 
-export const AvatarsList = reatomComponent(({ ctx }) => {
+export const AvatarsList = reatomComponent<{ nickname: string }>(({ ctx, nickname }) => {
   const init = ctx.spy(requestedUserAtom)?.avatar;
   if (!init) return null;
 
@@ -18,12 +18,13 @@ export const AvatarsList = reatomComponent(({ ctx }) => {
     )
   }
 
-  const data = ctx.spy(userAvatars.dataAtom);
-  const avatars = !data ? [init] : data.avatars;
+  const data = ctx.spy(userAvatarsSelectedAtom);
+  
+  const avatars = !data ? [init] : data;
 
   return (
     avatars.map((avatar, idx) => (
-      <div key={idx} onClick={() => userCoverSelectedAvatarAtom(ctx, avatar)} className="flex-shrink-0">
+      <div key={idx} onClick={() => userAvatarSelectedAtom(ctx, avatar)} className="flex-shrink-0">
         <img
           src={avatar}
           loading="lazy"

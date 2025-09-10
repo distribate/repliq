@@ -2,7 +2,7 @@ import { Avatar } from "#components/user/components/avatar/components/avatar";
 import { Typography } from "@repo/ui/src/components/typography.tsx";
 import { UserNickname } from "#components/user/components/name/nickname";
 import { CustomLink } from "#shared/components/link";
-import { createIdLink } from "#lib/create-link";
+import { createIdLink } from "#shared/helpers/create-link";
 import { AtomState } from "@reatom/core";
 import { recommendedFriendsAction } from "#components/friends/models/recommended-friends.model";
 

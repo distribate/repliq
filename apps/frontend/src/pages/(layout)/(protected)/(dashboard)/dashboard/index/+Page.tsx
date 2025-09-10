@@ -3,7 +3,7 @@ import { CustomLink } from '#shared/components/link'
 import { Avatar } from '#components/user/components/avatar/components/avatar'
 import { UserNickname } from '#components/user/components/name/nickname'
 import { reatomComponent } from '@reatom/npm-react'
-import { createIdLink } from '#lib/create-link'
+import { createIdLink } from '#shared/helpers/create-link'
 import { Typography } from '@repo/ui/src/components/typography'
 import { getUser } from "#components/user/models/current-user.model";
 

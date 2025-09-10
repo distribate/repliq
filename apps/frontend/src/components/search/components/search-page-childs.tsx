@@ -6,7 +6,7 @@ import { Typography } from "@repo/ui/src/components/typography";
 import { processSelectEntryAction } from "../models/search-page.model";
 import { reatomComponent } from "@reatom/npm-react";
 import { SearchThread, SearchUser } from "../models/search.model";
-import { createIdLink } from "#lib/create-link"
+import { createIdLink } from "#shared/helpers/create-link"
 
 export const SearchPageThread = reatomComponent<SearchThread>(({ ctx, title, id }) => {
   return (

@@ -4,8 +4,8 @@ import { handleSearchAction, SearchThread, SearchUser } from "./search.model";
 import { withLocalStorage } from "@reatom/persist-web-storage";
 import { reatomArray, reatomAsync, sleep, withReset } from "@reatom/framework";
 import { threadRelatedAction, usersRelatedAction } from "./search-related.model";
-import { withHistory } from "#lib/with-history";
-import { log } from "#lib/utils";
+import { withHistory } from "#shared/helpers/with-history";
+import { log } from "#shared/utils/log";
 
 export type SearchResultsAll = Array<SearchUser | SearchThread>;
 export type SearchResult = SearchUser | SearchThread;

@@ -4,9 +4,9 @@ import { withReset } from '@reatom/framework';
 import { VariantProps } from 'class-variance-authority';
 import { coverAreaVariants } from '../../header/components/cover-area';
 import { currentUserNicknameAtom } from '#components/user/models/current-user.model';
-import { withHistory } from '#lib/with-history';
+import { withHistory } from '#shared/helpers/with-history';
 import type { UserDetailed, UserShorted } from "@repo/types/entities/user-type";
-import { log } from '#lib/utils';
+import { log } from '#shared/utils/log';
 import { validateResponse } from '#shared/api/validation';
 
 type RequestedUserDetails = Pick<UserDetailed["preferences"],

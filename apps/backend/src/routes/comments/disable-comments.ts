@@ -3,7 +3,7 @@ import { zValidator } from "@hono/zod-validator"
 import { throwError } from "#utils/throw-error.ts"
 import { Hono } from "hono"
 import * as z from "zod"
-import { getNickname } from "#utils/get-nickname-from-storage.ts"
+import { getNickname } from "#lib/modules/context.ts"
 import { validatePostOwner } from "#lib/validators/validate-post-owner.ts"
 
 const disableCommentsSchema = z.object({

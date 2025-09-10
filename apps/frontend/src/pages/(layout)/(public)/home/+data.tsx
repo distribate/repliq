@@ -1,11 +1,10 @@
-import { logRouting } from "#lib/utils"
-import { wrapTitle } from "#lib/utils"
+import { logRouting } from "#shared/utils/log"
 import { useConfig } from 'vike-react/useConfig'
 import { PageContextServer } from "vike/types"
 
 function metadata() {
   return {
-    title: wrapTitle("Главная")
+    title: "Главная"
   } 
 }
 

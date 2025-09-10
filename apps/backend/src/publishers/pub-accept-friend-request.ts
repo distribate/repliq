@@ -4,16 +4,16 @@ import type { UsersFriends } from "@repo/types/db/forum-database-types"
 
 type PublishAcceptFriendRequestType = Pick<UsersFriends, "user_1" | "user_2">
 
-export function publishAcceptFriendRequest({
-  user_1, user_2
-}: PublishAcceptFriendRequestType) {
+export function publishAcceptFriendRequest({ user_1, user_2 }: PublishAcceptFriendRequestType) {
   const nc = getNatsConnection()
 
-  return nc.publish(USER_NOTIFICATIONS_SUBJECT, JSON.stringify({
+  const payload = {
     type: "accept-friend-request",
     payload: {
       recipient: user_2,
       initiator: user_1,
     }
-  }))
+  }
+
+  return nc.publish(USER_NOTIFICATIONS_SUBJECT, JSON.stringify(payload))
 }

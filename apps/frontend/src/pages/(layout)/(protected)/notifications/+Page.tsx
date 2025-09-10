@@ -1,5 +1,5 @@
 import { Typography } from '@repo/ui/src/components/typography'
-import { NotificationsList } from '#components/notifications/components/notifications-list'
+import { Notifications } from '#components/notifications/components/notifications-list'
 import { NotificationsNavigation } from '#components/notifications/components/notifications-navigation'
 
 export default function Page() {
@@ -10,7 +10,7 @@ export default function Page() {
           Уведомления
         </Typography>
         <NotificationsNavigation />
-        <NotificationsList />
+        <Notifications />
       </div>
     </div>
   )

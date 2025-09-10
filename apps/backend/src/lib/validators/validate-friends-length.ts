@@ -1,4 +1,4 @@
-import { FRIENDS_LIMIT } from "#shared/constants/user-limits.ts";
+import { FRIENDS_LIMIT } from "#shared/constants/user-limitations.ts";
 import { forumDB } from "#shared/database/forum-db.ts";
 
 export async function validateFriendsLength(nickname: string) {

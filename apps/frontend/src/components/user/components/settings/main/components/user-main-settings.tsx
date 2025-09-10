@@ -13,7 +13,7 @@ import {
 import { UserSettingOption } from "#ui/user-setting-option"
 import { Separator } from "@repo/ui/src/components/separator"
 import { Typography } from "@repo/ui/src/components/typography"
-import { userStatusAction, userStatusAtom } from "#components/user/components/avatar/models/user-status.model";
+import { userActivityStatusAction, userActivityStatusAtom } from "#components/user/components/avatar/models/user-status.model";
 import { UserNickname } from "#components/user/components/name/nickname";
 import { reatomComponent, useUpdate } from "@reatom/npm-react";
 import { DialogClose } from "@repo/ui/src/components/dialog";
@@ -21,19 +21,25 @@ import { CustomLink } from "#shared/components/link";
 import { BuyDonateModal } from "#components/modals/custom/buy-donate-modal";
 import { settingsSettingsTypeAtom } from "#components/modals/user-settings/models/user-settings.model";
 import { getUser } from "#components/user/models/current-user.model";
-import { avatarOnChange, updateAvatarAction, updateAvatarAtom } from "#components/user/components/settings/main/models/cover-avatar.model";
 import { useRef } from "react";
 import { WindowLoader } from "@repo/ui/src/components/window-loader";
 import { logoutModalIsOpenAtom } from "#components/modals/with-confirm/logout/models/logout.model";
+import { spawn } from "@reatom/framework";
+import { cva } from "class-variance-authority";
+import { avatarOnChange, createAvatar, resetUploadedChanges, uploadedAvatarUrlAtom } from "#components/user/components/avatar/models/avatar.model";
 
 const Sync = ({ target }: { target: string }) => {
-  useUpdate((ctx) => userStatusAction(ctx, target), [target])
+  useUpdate((ctx) => userActivityStatusAction(ctx, target), [target])
   return null;
 }
 
+const updateAvatarVariant = cva(
+  `absolute inset-0 duration-150 ease-in-out rounded-sm bg-black/50 backdrop-blur-md z-[1] group-hover:opacity-100 opacity-0`
+)
+
 const UpdateAvatar = reatomComponent(({ ctx }) => {
   const ref = useRef<HTMLInputElement | null>(null)
-  const isPending = ctx.spy(updateAvatarAction.statusesAtom).isPending
+  const isPending = ctx.spy(createAvatar.statusesAtom).isPending
 
   if (isPending) {
     return (
@@ -43,10 +49,19 @@ const UpdateAvatar = reatomComponent(({ ctx }) => {
     )
   }
 
+  const uploadedAvatar = ctx.spy(uploadedAvatarUrlAtom)
+
+  const handle = () => {
+    void spawn(ctx, async (spawnCtx) => createAvatar(spawnCtx))
+  }
+
   return (
     <>
-      <div className="absolute inset-0 duration-300 rounded-sm bg-black/50 backdrop-blur-md z-[1] group-hover:opacity-100 opacity-0">
-        <div onClick={() => ref?.current?.click()} className="flex cursor-pointer justify-center items-center w-full h-full">
+      <div className={updateAvatarVariant()}>
+        <div
+          className="flex cursor-pointer justify-center items-center w-full h-full"
+          onClick={() => ref?.current?.click()}
+        >
           <IconUpload size={26} />
           <input
             type="file"
@@ -57,18 +72,18 @@ const UpdateAvatar = reatomComponent(({ ctx }) => {
           />
         </div>
       </div>
-      {ctx.spy(updateAvatarAtom) && (
+      {uploadedAvatar && (
         <div className="flex w-full items-center justify-center gap-2 absolute z-[1]  -bottom-4">
           <div className="flex items-center justify-center cursor-pointer hover:bg-shark-100 bg-shark-50 rounded-md p-1">
             <IconCheck
-              onClick={() => updateAvatarAction(ctx)}
               className="text-green-500"
+              onClick={handle}
             />
           </div>
           <div className="flex items-center justify-center cursor-pointer hover:bg-shark-100 bg-shark-50 rounded-md p-1">
             <IconX
-              onClick={() => updateAvatarAtom.reset(ctx)}
               className="text-red-500"
+              onClick={() => resetUploadedChanges(ctx)}
             />
           </div>
         </div>
@@ -79,11 +94,11 @@ const UpdateAvatar = reatomComponent(({ ctx }) => {
 
 const MainAvatar = reatomComponent(({ ctx }) => {
   const { nickname, name_color, avatar } = getUser(ctx);
-  const userStatus = ctx.spy(userStatusAtom)
+  const userStatus = ctx.spy(userActivityStatusAtom)
 
   const isOnline = userStatus?.status === 'online';
 
-  const uploadedAvatar = ctx.spy(updateAvatarAtom)
+  const uploadedAvatar = ctx.spy(uploadedAvatarUrlAtom)
   const avatarUrl = uploadedAvatar === null ? avatar : uploadedAvatar
 
   return (
@@ -96,7 +111,9 @@ const MainAvatar = reatomComponent(({ ctx }) => {
             <img src={avatarUrl} className="object-cover rounded-lg max-h-[104px] max-w-[104px]" height={104} width={104} />
           ) : (
             <div className="flex items-center bg-shark-700 justify-center h-[104px] w-[104px] rounded-lg">
-              <span className="text-xl">{nickname[0].toUpperCase()}</span>
+              <span className="text-xl">
+                {nickname[0].toUpperCase()}
+              </span>
             </div>
           )}
         </div>
@@ -163,9 +180,9 @@ const Options = reatomComponent(({ ctx }) => {
           <UserSettingOption title="Задать вопрос" icon={{ value: IconBubblePlus }} />
         </DialogClose>
       </CustomLink>
-      <CustomLink to="/changelog">
+      <CustomLink to="/news">
         <DialogClose className="w-full">
-          <UserSettingOption title="Обновления" icon={{ value: IconStatusChange }} />
+          <UserSettingOption title="Новости" icon={{ value: IconStatusChange }} />
         </DialogClose>
       </CustomLink>
       <Logout />

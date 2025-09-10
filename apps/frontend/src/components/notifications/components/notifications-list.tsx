@@ -1,10 +1,15 @@
 import dayjs from "@repo/shared/constants/dayjs-instance";
-import { isExistAtom, notificationsAction, notificationsDataAtom, NotificationsViewer, resetNotifications } from "#components/notifications/models/notifications.model";
+import { 
+  isExistAtom, 
+  notificationsAction, 
+  notificationsDataAtom, 
+  NotificationsPayloadData, 
+  NotificationsViewer, 
+  resetNotifications 
+} from "#components/notifications/models/notifications.model";
 import { Typography } from "@repo/ui/src/components/typography";
 import { checkNotificationAction } from "#components/notifications/models/notifications.model";
 import { Skeleton } from "@repo/ui/src/components/skeleton";
-import { userClient } from "#shared/forum-client";
-import type { InferResponseType } from "hono/client";
 import { updateNotificationsAction } from "#components/notifications/models/notifications.model";
 import { ContentNotFound } from "#components/templates/components/content-not-found";
 import { onConnect, onDisconnect } from "@reatom/framework";
@@ -12,9 +17,7 @@ import { reatomComponent } from "@reatom/npm-react";
 import { IconInfoSquareRounded } from "@tabler/icons-react";
 import { SectionSkeleton } from "#components/templates/components/section-skeleton";
 
-const client = userClient.user["notification"]["notifications"].$get
-
-type NotificationCardProps = InferResponseType<typeof client, 200>["data"]["data"][number]
+type NotificationCardProps = NotificationsPayloadData[number]
 
 const NotificationCard = reatomComponent<NotificationCardProps>(({
   ctx, created_at, id, message, read
@@ -63,7 +66,7 @@ const UpdatedSkeleton = reatomComponent(({ ctx }) => {
   return <NotificationsSkeleton />
 }, "UpdatedSkeleton")
 
-const List = reatomComponent(({ ctx }) => {
+const NotificationsList = reatomComponent(({ ctx }) => {
   const data = ctx.spy(notificationsDataAtom)
   const isExist = ctx.spy(isExistAtom)
 
@@ -76,22 +79,22 @@ const List = reatomComponent(({ ctx }) => {
   }
 
   return (
-    <>
+    <div className="flex flex-col gap-2 w-full h-full">
       {data.map((notification) => (
         <NotificationCard key={notification.id} {...notification} />
       ))}
       <UpdatedSkeleton />
-    </>
+    </div>
   )
-}, "List")
+}, "NotificationsList")
 
 onConnect(notificationsDataAtom, notificationsAction)
 onDisconnect(notificationsDataAtom, (ctx) => resetNotifications(ctx));
 
-export const NotificationsList = () => {
+export const Notifications = () => {
   return (
-    <div className="flex flex-col items-start gap-4 w-full">
-      <List />
+    <div className="flex flex-col items-start w-full">
+      <NotificationsList />
       <NotificationsViewer />
     </div>
   )

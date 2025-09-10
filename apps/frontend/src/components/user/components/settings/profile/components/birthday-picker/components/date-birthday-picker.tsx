@@ -31,7 +31,7 @@ function areDatesEqual(date1: Date, date2: Date): boolean {
 }
 
 export const DateBirthdayPicker = reatomComponent<BirthdayPicker>(({ ctx, init }) => {
-  // @ts-ignore
+  // @ts-expect-error
   const initDate = getInitialDate(init ? init : new Date());
   const [date, setDate] = useState<dayjs.Dayjs>(initDate);
   const [month, setMonth] = useState<dayjs.Dayjs>(initDate);

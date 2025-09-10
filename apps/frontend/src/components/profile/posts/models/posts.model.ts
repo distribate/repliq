@@ -5,7 +5,7 @@ import { isParamChanged, requestedUserParamAtom } from '#components/profile/main
 import { userClient } from '#shared/forum-client.ts';
 import * as z from 'zod';
 import { getUserPostsSchema } from '@repo/types/schemas/posts/user-posts-schema.ts';
-import { log } from '#lib/utils';
+import { log } from '#shared/utils/log';
 import { createFabric } from '#shared/models/infinity-scroll.model';
 import { postsAscendingAtom, postsCursorAtom, postsSearchQueryAtom, postsTypeAtom } from './filter-posts.model';
 import { validateResponse } from '#shared/api/validation';

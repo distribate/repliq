@@ -1,5 +1,5 @@
 import { forumDB } from "#shared/database/forum-db.ts"
-import { getNickname } from "#utils/get-nickname-from-storage.ts"
+import { getNickname } from "#lib/modules/context.ts"
 import { zValidator } from "@hono/zod-validator"
 import { Kvm } from "@nats-io/kv"
 import { getNatsConnection } from "@repo/config-nats/nats-client"
@@ -12,6 +12,7 @@ import { Hono } from "hono"
 import { streamSSE } from "hono/streaming"
 import { nanoid } from "nanoid"
 import * as z from "zod"
+import { REPLIQ_BOT_USERNAME } from "#shared/env/index.ts"
 
 const connectServiceRouteSchema = z.object({
   type: z.enum(["connect", "disconnect", "cancel"]),
@@ -21,7 +22,7 @@ const connectServiceRouteSchema = z.object({
 const getToken = (i: string) => `token-${i}`
 const getRateToken = (i: string) => `ratelimit-${i}`
 
-const BOT_URL = `https://t.me/${Bun.env.REPLIQ_BOT_USERNAME}`
+const BOT_URL = `https://t.me/${REPLIQ_BOT_USERNAME}`
 
 type ConnectServicePayload = {
   service: string,

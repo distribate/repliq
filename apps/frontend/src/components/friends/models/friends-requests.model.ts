@@ -2,7 +2,7 @@ import { atom } from "@reatom/core";
 import { reatomAsync, withStatusesAtom } from "@reatom/async";
 import { withReset } from "@reatom/framework";
 import { friendClient } from "#shared/forum-client";
-import { log } from "#lib/utils";
+import { log } from "#shared/utils/log";
 import { validateResponse } from "#shared/api/validation";
 
 export type FriendRequestPayload = Awaited<ReturnType<typeof getRequestsByType>>;

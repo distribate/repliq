@@ -1,5 +1,5 @@
 import { AdminsList } from "#components/admin/configs/admins/components/admins";
-import { getStaticObject } from "#lib/utils";
+import { getStaticObject } from "#shared/utils/storage";
 import { Typography } from "@repo/ui/src/components/typography";
 
 const SECTIONS = [

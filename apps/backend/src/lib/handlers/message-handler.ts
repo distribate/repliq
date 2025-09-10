@@ -3,7 +3,7 @@ import { Bot, type DeriveDefinitions, type MessageContext } from "gramio"
 import { sendAdminsList } from "./main-handler.ts"
 import { stateToKeyboard } from "../../shared/bots/keyboards.ts"
 import { tempAdmins, userStates } from "../../shared/bots/maps.ts"
-import { validateAdminRequest } from "../../utils/validate-request.ts"
+import { validateAdminRequest } from "../validators/validate-admin-request.ts"
 
 export const restrictedCommands = [
   "Управление",

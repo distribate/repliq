@@ -1,7 +1,7 @@
 import { publishStats } from "#publishers/pub-collect-stats.ts";
 import { getCookie } from "hono/cookie";
 import { createMiddleware } from "hono/factory";
-import { getNickname, SESSION_KEY } from "./validate-request";
+import { getNickname, SESSION_KEY } from "./require-auth";
 
 export const collectStats = () => createMiddleware(async (ctx, next) => {
   const userAgent = ctx.req.header("User-Agent")

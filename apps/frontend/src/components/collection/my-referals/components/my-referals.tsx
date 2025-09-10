@@ -8,7 +8,7 @@ import { Typography } from "@repo/ui/src/components/typography"
 import { myReferalsAction } from "../models/my-referals.model"
 import { reatomComponent } from "@reatom/npm-react"
 import { CustomLink } from "#shared/components/link"
-import { createIdLink } from "#lib/create-link"
+import { createIdLink } from "#shared/helpers/create-link"
 import { MINECRAFT_SITE_DOMAIN } from "@repo/shared/constants/origin-list"
 import { onConnect, onDisconnect } from "@reatom/framework"
 

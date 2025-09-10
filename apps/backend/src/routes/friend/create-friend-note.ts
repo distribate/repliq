@@ -1,6 +1,6 @@
 import { throwError } from '#utils/throw-error.ts';
 import { createFriendNote } from "#lib/queries/friend/create-friend-note.ts";
-import { getNickname } from "#utils/get-nickname-from-storage.ts";
+import { getNickname } from "#lib/modules/context.ts";
 import { zValidator } from "@hono/zod-validator";
 import { Hono } from "hono";
 import { addFriendNoteSchema } from "@repo/types/schemas/friend/create-friend-note-schema.ts";

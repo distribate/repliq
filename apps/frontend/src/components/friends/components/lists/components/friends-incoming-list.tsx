@@ -8,7 +8,7 @@ import { Typography } from "@repo/ui/src/components/typography.tsx";
 import { reatomComponent } from "@reatom/npm-react";
 import { incomingRequestsAction, incomingRequestsAtom } from "#components/friends/models/friends-requests.model.ts";
 import { CustomLink } from "#shared/components/link.tsx";
-import { createIdLink } from "#lib/create-link.ts";
+import { createIdLink } from "#shared/helpers/create-link.ts";
 import { friendCardVariant } from "#components/friend/components/friend-card/friend-card-layout.tsx";
 import { AtomState } from "@reatom/core";
 import { SectionSkeleton } from "#components/templates/components/section-skeleton.tsx";

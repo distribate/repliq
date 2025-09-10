@@ -4,7 +4,7 @@ import { reatomComponent } from "@reatom/npm-react"
 import { Button } from "@repo/ui/src/components/button";
 import { IconBrandThreads, IconImageInPicture, IconPencil, IconTrash } from "@tabler/icons-react";
 import dayjs from "@repo/shared/constants/dayjs-instance"
-import { createIdLink } from "#lib/create-link";
+import { createIdLink } from "#shared/helpers/create-link";
 import { CustomLink } from "#shared/components/link";
 import { SectionSkeleton } from "#components/templates/components/section-skeleton";
 

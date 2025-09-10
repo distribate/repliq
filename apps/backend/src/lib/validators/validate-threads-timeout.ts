@@ -1,4 +1,4 @@
-import { DEFAULT_MAX_THREADS_PER_DAY } from "#shared/constants/user-limits.ts";
+import { DEFAULT_MAX_THREADS_PER_DAY } from "#shared/constants/user-limitations.ts";
 import { forumDB } from "#shared/database/forum-db.ts";
 
 export async function validateThreadsTimeout(nickname: string) {

@@ -17,13 +17,11 @@ import { KEYS } from 'platejs';
 import { useEditorReadOnly } from 'platejs/react';
 
 import { AlignToolbarButton } from './align-toolbar-button';
-import { CommentToolbarButton } from './comment-toolbar-button';
 import { EmojiToolbarButton } from './emoji-toolbar-button';
 import { ExportToolbarButton } from './export-toolbar-button';
 import { FontColorToolbarButton } from './font-color-toolbar-button';
 import { FontSizeToolbarButton } from './font-size-toolbar-button';
 import { RedoToolbarButton, UndoToolbarButton } from './history-toolbar-button';
-import { ImportToolbarButton } from './import-toolbar-button';
 import {
   IndentToolbarButton,
   OutdentToolbarButton,
@@ -37,7 +35,6 @@ import {
   TodoListToolbarButton,
 } from './list-toolbar-button';
 import { MarkToolbarButton } from './mark-toolbar-button';
-import { MediaToolbarButton } from './media-toolbar-button';
 import { ModeToolbarButton } from './mode-toolbar-button';
 import { MoreToolbarButton } from './more-toolbar-button';
 import { TableToolbarButton } from './table-toolbar-button';
@@ -61,8 +58,6 @@ export function FixedToolbarButtons() {
             <ExportToolbarButton>
               <ArrowUpToLineIcon />
             </ExportToolbarButton>
-
-            <ImportToolbarButton />
           </ToolbarGroup>
 
           <ToolbarGroup>
@@ -82,14 +77,14 @@ export function FixedToolbarButtons() {
 
             <MarkToolbarButton
               nodeType={KEYS.underline}
-              tooltip="Underline (⌘+U)"
+              tooltip="Подчеркивание (⌘+U)"
             >
               <UnderlineIcon />
             </MarkToolbarButton>
 
             <MarkToolbarButton
               nodeType={KEYS.strikethrough}
-              tooltip="Strikethrough (⌘+⇧+M)"
+              tooltip="Зачеркивание (⌘+⇧+M)"
             >
               <StrikethroughIcon />
             </MarkToolbarButton>
@@ -125,12 +120,12 @@ export function FixedToolbarButtons() {
             <EmojiToolbarButton />
           </ToolbarGroup>
 
-          <ToolbarGroup>
+          {/* <ToolbarGroup>
             <MediaToolbarButton nodeType={KEYS.img} />
             <MediaToolbarButton nodeType={KEYS.video} />
             <MediaToolbarButton nodeType={KEYS.audio} />
             <MediaToolbarButton nodeType={KEYS.file} />
-          </ToolbarGroup>
+          </ToolbarGroup> */}
 
           <ToolbarGroup>
             <LineHeightToolbarButton />
@@ -150,7 +145,7 @@ export function FixedToolbarButtons() {
         <MarkToolbarButton nodeType={KEYS.highlight} tooltip="Highlight">
           <HighlighterIcon />
         </MarkToolbarButton>
-        <CommentToolbarButton />
+        {/* <CommentToolbarButton /> */}
       </ToolbarGroup>
 
       <ToolbarGroup>

@@ -26,7 +26,8 @@ export const subscribeDisconnectService = () => {
       const text = format`Телеграм-аккаунт был отвязан от пользователя ${bold(payload.nickname)}.`
 
       try {
-        await repliqBot.api.sendMessage({ chat_id: Number(payload.serviceId), text })
+        const chat_id = Number(payload.serviceId)
+        await repliqBot.api.sendMessage({ chat_id, text })
       } catch (e) {
         if (e instanceof Error) {
           logger.error(e.message)

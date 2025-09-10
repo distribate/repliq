@@ -1,4 +1,11 @@
-import { IconBrandThreads, IconDeviceDesktopAnalytics, IconEyeClosed, IconMoodSpark, IconPalette, IconStar } from "@tabler/icons-react";
+import { 
+  IconBrandThreads, 
+  IconDeviceDesktopAnalytics, 
+  IconEyeClosed, 
+  IconMoodSpark, 
+  IconPalette, 
+  IconStar 
+} from "@tabler/icons-react";
 
 export const DONATE_FEATURES = [
   {
@@ -32,5 +39,3 @@ export const DONATE_FEATURES = [
     icon: IconStar
   }
 ]
-
-export const URL_FOR_REPLIQ = `/store?target=repliq+`

@@ -7,7 +7,7 @@ import { UserNickname } from "#components/user/components/name/nickname"
 import { Separator } from "@repo/ui/src/components/separator"
 import { myTicketsAction } from "../models/my-tickets.model"
 import { CustomLink } from "#shared/components/link"
-import { createIdLink } from "#lib/create-link"
+import { createIdLink } from "#shared/helpers/create-link"
 import { reatomComponent } from "@reatom/npm-react"
 import { IconCheck, IconLoader } from "@tabler/icons-react"
 import { onConnect, onDisconnect } from "@reatom/framework"
@@ -16,7 +16,7 @@ onConnect(myTicketsAction.dataAtom, myTicketsAction)
 onDisconnect(myTicketsAction.dataAtom, (ctx) => myTicketsAction.dataAtom.reset(ctx))
 
 export const MyTickets = reatomComponent(({ ctx }) => {
-  const data = ctx.spy(myTicketsAction.dataAtom)
+  const data = ctx.spy(myTicketsAction.dataAtom)?.data
 
   if (ctx.spy(myTicketsAction.statusesAtom).isPending) {
     return (

@@ -8,7 +8,7 @@ import type { UserDetailed } from "@repo/types/entities/user-type";
 import { Avatar } from "#components/user/components/avatar/components/avatar";
 import { reatomComponent } from "@reatom/npm-react";
 import { CustomLink } from "#shared/components/link";
-import { createIdLink } from "#lib/create-link";
+import { createIdLink } from "#shared/helpers/create-link";
 import { selectedVariant } from "#ui/selected-wrapper";
 import { setFriendUnnoteAction } from "#components/friend/models/control-friend.model";
 import { IconX } from "@tabler/icons-react";

@@ -14,19 +14,11 @@ import {
 import dayjs from "@repo/shared/constants/dayjs-instance";
 import { RealNameChange } from "./real-name-change.tsx";
 import { ReactNode } from "react";
-import { Skeleton } from "@repo/ui/src/components/skeleton";
 import { parseDateOrTimestamp } from "#components/user/components/settings/profile/components/birthday-picker/helpers/birthday-picker.ts";
 import { IconBorderCorners, IconGiftFilled, IconKeyframeFilled, IconLabel, IconUserSquare } from "@tabler/icons-react";
 import { getUser } from "#components/user/models/current-user.model.ts";
-import { clientOnly } from "vike-react/clientOnly";
-
-const ColorPicker = clientOnly(() =>
-  import("#components/user/components/settings/profile/components/nickname-color-picker.tsx").then(m => m.NicknameColorPicker)
-)
-
-const DatePicker = clientOnly(() =>
-  import("#components/user/components/settings/profile/components/birthday-picker/components/date-birthday-picker.tsx").then(m => m.DateBirthdayPicker)
-)
+import { DateBirthdayPicker } from "./birthday-picker/components/date-birthday-picker.tsx";
+import { NicknameColorPicker as ColorPicker } from "./nickname-color-picker.tsx";
 
 type HexToRgbaProps = {
   hex: string
@@ -47,7 +39,6 @@ const NicknameColorPicker = reatomComponent(({ ctx }) => {
     <ColorPicker
       nickname={nickname}
       name_color={name_color}
-      fallback={<Skeleton className="h-24 w-full" />}
     />
   );
 }, "NicknameColorPicker")
@@ -131,14 +122,15 @@ const DateBirthday = reatomComponent(({ ctx }) => {
   const birthday = getUser(ctx).birthday;
   const initDate = parseDateOrTimestamp(birthday ?? null) as string | null;
 
-  return <DatePicker init={initDate ?? null} />
+  return (
+    <DateBirthdayPicker init={initDate ?? null} />
+  )
 }, "DateBirthday")
 
 const PROFILE_SETTINGS_SECTION: Record<ProfileDialog, ReactNode> = {
   birthday: <DateBirthday />,
   "real-name": <RealNameChange />,
   "name-color": <NicknameColorPicker />,
-  "favorite-item": null,
   visibility: <ProfileVisibilityChange />,
 }
 
@@ -175,8 +167,8 @@ export const UserProfileSettings = reatomComponent(({ ctx }) => {
             <RealnameOption />
             {isAccess && (
               <>
-                <Separator className="relative bg-authentic-background brightness-150 mb-2">
-                  <Typography className="absolute z-2 -top-0 left-0 text-authentic-background text-[14px]">
+                <Separator className="relative bg-blue-500 brightness-150 mb-2">
+                  <Typography className="absolute z-2 -top-0 left-0 text-blue-500 text-sm">
                     only Repliq+
                   </Typography>
                 </Separator>

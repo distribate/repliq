@@ -1,5 +1,3 @@
-
-
 import { DatePlugin } from '@platejs/date/react';
 
 import { DateElement } from '#plate/components/ui/date-node';

@@ -1,5 +1,5 @@
-import { logRouting } from "#lib/utils";
-import { validatePage } from "#lib/validation";
+import { logRouting } from "#shared/utils/log";
+import { validatePage } from "#shared/lib/validation";
 import { PageContextServer } from "vike/types";
 
 // Default +data hook

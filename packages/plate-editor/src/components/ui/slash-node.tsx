@@ -175,19 +175,19 @@ const groups: Group[] = [
     })),
   },
   {
-    group: 'Inline',
+    group: 'Строчный',
     items: [
       {
         focusEditor: true,
         icon: <CalendarIcon />,
         keywords: ['time'],
-        label: 'Date',
+        label: 'Дата',
         value: KEYS.date,
       },
       {
         focusEditor: false,
         icon: <RadicalIcon />,
-        label: 'Inline Equation',
+        label: 'Строчное уравнение',
         value: KEYS.inlineEquation,
       },
     ].map((item) => ({

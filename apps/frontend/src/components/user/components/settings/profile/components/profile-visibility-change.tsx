@@ -34,7 +34,7 @@ const PROFILE_VISIBILITY_VARIANTS = [
 export const ProfileVisibilityChange = reatomComponent(({ ctx }) => {
   const profile_visibility = getUser(ctx).preferences.profile_visibility
 
-  const handleProfileVisibility = (value: "all" | "friends") => {
+  const handle = (value: "all" | "friends") => {
     if (profile_visibility === value) return;
 
     void spawn(ctx, async (spawnCtx) => updateCurrentUserSettingsAction(spawnCtx, {
@@ -50,8 +50,9 @@ export const ProfileVisibilityChange = reatomComponent(({ ctx }) => {
       <div className="flex items-center justify-center *:h-[146px] *:cursor-pointer w-full">
         {PROFILE_VISIBILITY_VARIANTS.map((variant) => (
           <div
+            key={variant.value}
             className={sectionVariant({ variant: profile_visibility === variant.value ? "active" : "inactive" })}
-            onClick={() => handleProfileVisibility(variant.value)}
+            onClick={() => handle(variant.value)}
           >
             <variant.icon
               size={116}

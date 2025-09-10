@@ -15,13 +15,12 @@ const allNotificationsSchema = z.enum([
 
 type AllNotifications = z.infer<typeof allNotificationsSchema>;
 
-type GetUserNotifications = z.infer<typeof getUserNotificationsSchema> & {
-  nickname: string
-}
+type GetUserNotifications = z.infer<typeof getUserNotificationsSchema>
 
-export async function getUserNotifications({
-  nickname, type, cursor
-}: GetUserNotifications) {
+export async function getUserNotifications(
+  nickname: string,
+  { type, cursor }: GetUserNotifications
+) {
   let query = forumDB
     .selectFrom('notifications')
     .select((eb) => [

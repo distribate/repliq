@@ -3,7 +3,7 @@ import { throwError } from '#utils/throw-error.ts';
 import { getBlockedUsers } from '#lib/queries/user/get-blocked-users.ts';
 import { z } from 'zod';
 import { zValidator } from '@hono/zod-validator';
-import { getNickname } from '#utils/get-nickname-from-storage.ts';
+import { getNickname } from '#lib/modules/context.ts';
 import { getUserIsBlocked } from '#lib/queries/user/get-user-is-blocked.ts';
 
 const getBlockedUsersSchema = z.object({

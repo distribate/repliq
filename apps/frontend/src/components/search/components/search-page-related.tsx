@@ -8,7 +8,7 @@ import { reatomComponent } from "@reatom/npm-react";
 import { CustomLink } from "#shared/components/link";
 import { FriendButton } from "#components/friend/components/friend-button";
 import { SearchThreadsCategories } from "./search-threads-categories";
-import { createIdLink } from "#lib/create-link";
+import { createIdLink } from "#shared/helpers/create-link";
 import { searchPageTypeAtom } from "../models/search-page.model";
 import { cva } from "class-variance-authority";
 import { UserDonate } from "#components/user/components/donate/components/donate";

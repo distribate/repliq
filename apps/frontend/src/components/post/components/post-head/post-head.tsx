@@ -4,7 +4,7 @@ import { UserNickname } from "#components/user/components/name/nickname";
 import dayjs from "@repo/shared/constants/dayjs-instance.ts";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@repo/ui/src/components/tooltip";
 import { CustomLink } from "#shared/components/link";
-import { createIdLink } from "#lib/create-link";
+import { createIdLink } from "#shared/helpers/create-link";
 import { IconPin } from "@tabler/icons-react";
 import type { UserPostItem } from '@repo/types/routes-types/get-user-posts-types.ts';
 import { UserDetailed } from "@repo/types/entities/user-type";

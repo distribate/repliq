@@ -1,5 +1,4 @@
 import { getStats } from "#components/widgets/forum-stats/models/forum-stats.model";
-import { wrapTitle } from "#lib/utils";
 import { useConfig } from "vike-react/useConfig";
 import { PageContextServer } from "vike/types";
 
@@ -7,7 +6,7 @@ export type Data = Awaited<ReturnType<typeof data>>
 
 function metadata() {
   return {
-    title: wrapTitle("Repliq")
+    title: "Repliq - социальная платформа"
   }
 }
 

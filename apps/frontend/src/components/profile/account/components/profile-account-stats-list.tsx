@@ -11,7 +11,7 @@ import { Separator } from "@repo/ui/src/components/separator";
 import { reatomComponent } from "@reatom/npm-react";
 import { onConnect } from "@reatom/framework";
 import { CustomLink } from "#shared/components/link";
-import { createIdLink } from "#lib/create-link";
+import { createIdLink } from "#shared/helpers/create-link";
 import { getUser } from "#components/user/models/current-user.model";
 import { navigate } from "vike/client/router";
 import { prefetch } from 'vike/client/router'

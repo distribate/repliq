@@ -7,10 +7,16 @@
   "compilerOptions": {
     "allowImportingTsExtensions": true,
     "skipLibCheck": true,
+    "skipDefaultLibCheck": true,
+    "composite": true,
+    "isolatedModules": true,
     "strict": true,
+    "verbatimModuleSyntax": true,
     "noFallthroughCasesInSwitch": true,
     "forceConsistentCasingInFileNames": true,
-    "types": ["bun-types"] 
+    "types": [
+      "bun-types"
+    ]
   },
   "exclude": [
     "node_modules",

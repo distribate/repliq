@@ -1,6 +1,6 @@
 import { Bot } from "gramio"
 import { stateToKeyboard } from "../../shared/bots/keyboards.ts"
-import { validateAdminRequest } from "../../utils/validate-request.ts"
+import { validateAdminRequest } from "../validators/validate-admin-request.ts"
 
 export function keyboardCommand(bot: Bot) {
   bot.command("keyboard", async (ctx) => {

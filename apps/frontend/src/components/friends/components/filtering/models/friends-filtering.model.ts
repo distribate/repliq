@@ -2,7 +2,7 @@ import { friendsCountAction } from "#components/friends/models/friends-count.mod
 import { incomingRequestsAction, outgoingRequestsAction } from "#components/friends/models/friends-requests.model";
 import { myFriendsAction, myFriendsDataAtom } from "#components/friends/models/friends.model";
 import { recommendedFriendsAction } from "#components/friends/models/recommended-friends.model";
-import { log } from "#lib/utils";
+import { log } from "#shared/utils/log";
 import { action, atom, Ctx } from "@reatom/core";
 import { sleep, withInit, withReset } from "@reatom/framework";
 

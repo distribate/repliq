@@ -1,9 +1,7 @@
 import { createClient } from "@supabase/supabase-js";
+import { SUPABASE_SERVICE_ROLE_KEY, SUPABASE_URL } from "../env";
 
-const URL = Bun.env.SUPABASE_URL;
-const ROLE_KEY = Bun.env.SUPABASE_SERVICE_ROLE_KEY;
-
-export const supabase = createClient(URL, ROLE_KEY);
+export const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);
 
 export async function initSupabase() {
   const { data: buckets, error } = await supabase.storage.listBuckets()

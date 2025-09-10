@@ -1,6 +1,6 @@
 import { CURRENT_USER_ATOM_KEY } from "#components/user/models/current-user.model";
-import { logRouting } from "#lib/utils";
-import { createIdLink } from "#lib/create-link";
+import { logRouting } from "#shared/utils/log";
+import { createIdLink } from "#shared/helpers/create-link";
 import { UserDetailed } from "@repo/types/entities/user-type";
 import { redirect } from "vike/abort";
 import { PageContextServer } from "vike/types";

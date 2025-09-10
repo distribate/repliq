@@ -11,7 +11,7 @@ import { Ellipsis } from "lucide-react";
 import { HoverCardItem } from "@repo/ui/src/components/hover-card.tsx";
 import { UserCardModal } from '#components/modals/custom/user-card-modal.tsx';
 import { deleteFromBlockedAction } from "../models/user-blocked.model.ts";
-import { createIdLink } from "#lib/create-link.ts";
+import { createIdLink } from "#shared/helpers/create-link.ts";
 import { navigate } from "vike/client/router";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from "@repo/ui/src/components/dropdown-menu.tsx";
 import { SectionSkeleton } from "#components/templates/components/section-skeleton.tsx";

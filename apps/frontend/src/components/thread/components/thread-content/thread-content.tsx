@@ -20,7 +20,7 @@ export const ThreadContent = reatomComponent(({ ctx }) => {
     <div className="flex w-full overflow-hidden max-w-full h-full">
       <Plate editor={editor} readOnly={true}>
         <EditorContainer className="*:p-0 gap-2">
-          <Editor variant="default" />
+          <Editor variant="none" />
         </EditorContainer>
       </Plate>
     </div>

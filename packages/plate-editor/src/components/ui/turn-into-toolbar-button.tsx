@@ -1,5 +1,3 @@
-
-
 import * as React from 'react';
 
 import type { DropdownMenuProps } from '@radix-ui/react-dropdown-menu';
@@ -35,84 +33,84 @@ export const turnIntoItems = [
   {
     icon: <PilcrowIcon />,
     keywords: ['paragraph'],
-    label: 'Text',
+    label: 'Текст',
     value: KEYS.p,
   },
   {
     icon: <Heading1Icon />,
     keywords: ['title', 'h1'],
-    label: 'Heading 1',
+    label: 'Заголовок 1',
     value: 'h1',
   },
   {
     icon: <Heading2Icon />,
     keywords: ['subtitle', 'h2'],
-    label: 'Heading 2',
+    label: 'Заголовок 2',
     value: 'h2',
   },
   {
     icon: <Heading3Icon />,
     keywords: ['subtitle', 'h3'],
-    label: 'Heading 3',
+    label: 'Заголовок 3',
     value: 'h3',
   },
   {
     icon: <Heading4Icon />,
     keywords: ['subtitle', 'h4'],
-    label: 'Heading 4',
+    label: 'Заголовок 4',
     value: 'h4',
   },
   {
     icon: <Heading5Icon />,
     keywords: ['subtitle', 'h5'],
-    label: 'Heading 5',
+    label: 'Заголовок 5',
     value: 'h5',
   },
   {
     icon: <Heading6Icon />,
     keywords: ['subtitle', 'h6'],
-    label: 'Heading 6',
+    label: 'Заголовок 6',
     value: 'h6',
   },
   {
     icon: <ListIcon />,
     keywords: ['unordered', 'ul', '-'],
-    label: 'Bulleted list',
+    label: 'Маркированный список',
     value: KEYS.ul,
   },
   {
     icon: <ListOrderedIcon />,
     keywords: ['ordered', 'ol', '1'],
-    label: 'Numbered list',
+    label: 'Нумерованный список',
     value: KEYS.ol,
   },
   {
     icon: <SquareIcon />,
     keywords: ['checklist', 'task', 'checkbox', '[]'],
-    label: 'To-do list',
+    label: 'To-do список',
     value: KEYS.listTodo,
   },
   {
     icon: <ChevronRightIcon />,
     keywords: ['collapsible', 'expandable'],
-    label: 'Toggle list',
+    label: 'Toggle список',
     value: KEYS.toggle,
   },
   {
     icon: <FileCodeIcon />,
     keywords: ['```'],
-    label: 'Code',
+    label: 'Код',
     value: KEYS.codeBlock,
   },
   {
     icon: <QuoteIcon />,
     keywords: ['citation', 'blockquote', '>'],
-    label: 'Quote',
+    label: 'Цитата',
     value: KEYS.blockquote,
   },
   {
     icon: <Columns3Icon />,
-    label: '3 columns',
+    label: '3 столбца',
     value: 'action_three_columns',
   },
 ];

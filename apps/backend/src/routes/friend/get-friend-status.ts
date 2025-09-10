@@ -1,7 +1,7 @@
 import { throwError } from '#utils/throw-error.ts';
 import { getFriendObject, getUserFriendRequest } from "#lib/queries/friend/get-friend-status.ts";
 import { getUserFriendPreference } from "#lib/queries/user/get-user-friend-preference.ts";
-import { getNickname } from "#utils/get-nickname-from-storage.ts";
+import { getNickname } from "#lib/modules/context.ts";
 import { Hono } from "hono";
 
 type FriendStatus =

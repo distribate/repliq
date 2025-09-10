@@ -1,12 +1,13 @@
 import type { DB } from "@repo/types/db/forum-database-types";
 import { forumDB } from "#shared/database/forum-db.ts";
 import { supabase } from "#shared/supabase/supabase-client.ts";
-import { getNickname } from "#utils/get-nickname-from-storage.ts";
+import { getNickname } from "#lib/modules/context.ts";
 import { throwError } from "#utils/throw-error.ts";
 import { logger } from "@repo/shared/utils/logger.ts";
 import { Hono } from "hono";
 import { sql, Transaction } from "kysely";
 import { nanoid } from "nanoid";
+import { SUPABASE_URL } from "#shared/env/index.ts";
 
 const AVATAR_FILE_SIZE_LIMIT = 2 // MB
 const AVATARS_PER_USER = 5
@@ -107,7 +108,7 @@ export async function deleteAvatar(
   return update;
 }
 
-export const KONG_PREFIX_URL = `https://kong.fasberry.su/storage/v1/object`
+export const KONG_PREFIX_URL = `${SUPABASE_URL}/storage/v1/object`
 
 async function createAvatar(
   nickname: string,

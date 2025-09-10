@@ -1,7 +1,7 @@
 import type { UserDetailed } from '@repo/types/entities/user-type.ts';
 import { atom, Ctx, CtxSpy } from '@reatom/core';
 import { userClient } from '#shared/forum-client.ts';
-import { withSsr } from '#lib/ssr';
+import { withSsr } from '#shared/lib/ssr';
 import { withInit } from '@reatom/framework';
 import { validateResponse } from '#shared/api/validation';
 

@@ -1,6 +1,6 @@
 import { isParamChanged } from "#components/profile/main/models/requested-user.model";
 import { threadParamAtom } from "#components/thread/models/thread.model";
-import { log } from "#lib/utils";
+import { log } from "#shared/utils/log";
 import { atom, batch, Ctx } from "@reatom/core";
 import { withReset } from "@reatom/framework";
 

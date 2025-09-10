@@ -1,9 +1,8 @@
 import { serializeNodes } from "#components/thread/components/thread-create/models/thread-form.model"
 import { getThreadModel } from "#components/thread/models/thread.model"
-import { logRouting } from "#lib/utils"
-import { createIdLink } from "#lib/create-link"
+import { logRouting } from "#shared/utils/log"
+import { createIdLink } from "#shared/helpers/create-link"
 import { logger } from "@repo/shared/utils/logger.ts"
-import { wrapTitle } from "#lib/utils"
 import { KEYWORDS } from "@repo/shared/constants/meta"
 import { ThreadDetailed } from "@repo/types/entities/thread-type"
 import { useConfig } from "vike-react/useConfig"
@@ -24,12 +23,12 @@ function metadata(thread: ThreadDetailed) {
   const url = `https://repliq.fasberry.su${createIdLink("thread", thread.id)}`
 
   return {
-    title: wrapTitle(title),
+    title,
     description,
     Head: (
       <>
         <meta name="keywords" content={keywords.concat(', ' + KEYWORDS)} />
-        <meta property="og:title" content={wrapTitle(title)} />
+        <meta property="og:title" content={title} />
         <meta property="og:description" content={description} />
         <meta property="og:url" content={url} />
         <meta property="og:image" content={image} />
@@ -38,7 +37,7 @@ function metadata(thread: ThreadDetailed) {
         <meta property="og:image:alt" content="image" />
         <meta property="og:image:type" content="image/png" />
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content={wrapTitle(title)} />
+        <meta name="twitter:title" content={title} />
         <meta name="twitter:description" content={description} />
         <meta name="twitter:image" content={image} />
       </>

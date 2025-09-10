@@ -7,8 +7,7 @@ import { cn } from "@repo/shared/utils/cn";
 import { reatomAsync } from '@reatom/async';
 import { atom, batch } from '@reatom/framework';
 import ky from 'ky';
-
-const INTEGRATION_URL = import.meta.env.PUBLIC_ENV__INTEGRATION_URL_FASBERRY
+import { INTEGRATIONS_FASBERRY_URL } from "#shared/env";
 
 const minecraftAvatarsUrlsAtom = atom<Record<string, string>>({}, "avatarsUrlsAtom");
 const minecraftAvatarsStatusesAtom = atom<Record<string, boolean>>({}, "avatarsStatusesAtom");
@@ -98,7 +97,7 @@ const MinecraftAvatarImage = reatomComponent<{
 }, "MinecraftAvatarImage")
 
 const MinecraftProfileAvatar = reatomComponent<{ nickname: string }>(({ ctx, nickname }) => {
-  const link = `${INTEGRATION_URL}/player/${nickname}`
+  const link = `${INTEGRATIONS_FASBERRY_URL}/player/${nickname}`
 
   return (
     <>

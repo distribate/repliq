@@ -1,5 +1,3 @@
-
-
 import { createPlatePlugin } from 'platejs/react';
 
 import { FloatingToolbar } from '#plate/components/ui/floating-toolbar';

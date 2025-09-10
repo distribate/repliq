@@ -1,14 +1,14 @@
 import { getNatsConnection } from "@repo/config-nats/nats-client"
 import { LOGS_ADMIN_SUBJECT } from "@repo/shared/constants/nats-subjects"
-import { sendInLoggerBot } from "../utils/send-logs"
+import { sendInLoggerBot } from "../lib/modules/send-logs"
 import * as z from "zod"
 import { format, FormattableString } from "gramio"
-import dayjs from "@repo/shared/constants/dayjs-instance"
 import { logger } from "@repo/shared/utils/logger.ts"
+import dayjs from "@repo/shared/constants/dayjs-instance"
 
 const payloadType = z.enum([
-  "register"
-  // ...
+  "register",
+  "login"
 ])
 
 const payloadSchema = z.object({
@@ -17,16 +17,20 @@ const payloadSchema = z.object({
     nickname: z.string()
   })
 })
-// .check((ctx) => {
-//   if (ctx.value.type === "register" && !ctx.value.data.nickname) {
-//     ctx.issues.push({
-//       input: "",
-//       code: "custom",
-//       path: ["data", "nickname"],
-//       message: "Nickname is required",
-//     });
-//   }
-// })
+
+function getRegisterMessage(nickname: string) {
+  return format`
+  #auth #register
+  ${nickname} зарегистрировался в ${dayjs().format("HH:mm:ss YYYY-MM-DD")}
+  `
+}
+
+function getLoginMessage(nickname: string) {
+  return format`
+  #auth #login
+  ${nickname} авторизовался в ${dayjs().format("HH:mm:ss YYYY-MM-DD")}
+  `
+}
 
 export const subscribeAdminLog = () => {
   const nc = getNatsConnection()
@@ -38,29 +42,32 @@ export const subscribeAdminLog = () => {
         return;
       }
 
-      const result = payloadSchema.safeParse(msg.json())
+      const result = payloadSchema.safeParse(msg.json());
       
-      if (!result.success) return;
+      if (!result.success) {
+        console.error(result.error)
+        return;
+      }
       
-      let message: FormattableString | null = null
-
       const { type, data } = result.data
 
       try {
+        let text: FormattableString | null = null;
+
         switch (type) {
           case "register":
-            message = format`
-              #reg 
-              
-              ${data.nickname} зарегистрировался в ${dayjs().format("HH:mm:ss YYYY-MM-DD")}
-            `
-
-            await sendInLoggerBot({ text: message, type: "admins" })
-
+            text = getRegisterMessage(data.nickname)
+            break;
+          case "login":
+            text = getLoginMessage(data.nickname)
             break;
           default:
             break
         }
+
+        if (!text) return;
+
+        await sendInLoggerBot({ text, type: "admins" })
       } catch (e) {
         if (e instanceof Error) {
           logger.error(e.message)

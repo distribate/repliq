@@ -50,6 +50,7 @@ async function getNews({
 
   const news = res.rows.map((news) => ({
     ...news,
+    id: news.id!,
     created_at: news.created_at.toString(),
     imageUrl: news.imageUrl ? getPublicUrl(STATIC_IMAGES_BUCKET, news.imageUrl) : null,
     type: "default" as NewsType,
@@ -72,9 +73,9 @@ export const getUpdatesRoute = new Hono()
     const result = getNewsSchema.parse(ctx.req.query());
 
     try {
-      const news = await getNews(result);
+      const data = await getNews(result);
 
-      return ctx.json(news, 200)
+      return ctx.json({ data }, 200)
     } catch (e) {
       return ctx.json({ error: throwError(e) }, 500);
     }

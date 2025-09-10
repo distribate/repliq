@@ -14,7 +14,7 @@ import { reatomComponent } from "@reatom/npm-react";
 import { atom } from "@reatom/core";
 import { CustomLink } from "#shared/components/link";
 import { ThreadControl } from "#components/thread/components/thread-control/components/thread-control";
-import { createIdLink } from "#lib/create-link";
+import { createIdLink } from "#shared/helpers/create-link";
 import { IconEye } from "@tabler/icons-react";
 
 const ThreadTag = ({ tag }: { tag: string; }) => {

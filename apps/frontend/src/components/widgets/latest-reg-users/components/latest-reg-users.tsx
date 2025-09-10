@@ -6,7 +6,7 @@ import { LatestRegUsersPayload, latestUsersAction } from "../models/latest-reg-u
 import { UserCardModal } from "#components/modals/custom/user-card-modal";
 import { Avatar } from "#components/user/components/avatar/components/avatar";
 import { CustomLink } from "#shared/components/link";
-import { createIdLink } from "#lib/create-link";
+import { createIdLink } from "#shared/helpers/create-link";
 
 onConnect(latestUsersAction.dataAtom, (ctx) => latestUsersAction(ctx, { limit: 6 }))
 

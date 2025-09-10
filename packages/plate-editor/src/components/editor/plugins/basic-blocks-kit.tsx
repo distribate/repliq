@@ -1,5 +1,3 @@
-
-
 import {
   BlockquotePlugin,
   H1Plugin,
@@ -11,7 +9,6 @@ import {
   HorizontalRulePlugin,
 } from '@platejs/basic-nodes/react';
 import { ParagraphPlugin } from 'platejs/react';
-
 import { BlockquoteElement } from '#plate/components/ui/blockquote-node';
 import {
   H1Element,

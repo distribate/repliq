@@ -48,8 +48,6 @@ async function getMyFriends(
 }
 
 export function resetFriends(ctx: Ctx) {
-  console.log("friends reset")
-
   function resetMyFriendsData(ctx: Ctx) {
     myFriendsDataAtom.reset(ctx);
     myFriendsMetaAtom.reset(ctx);

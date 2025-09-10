@@ -1,7 +1,7 @@
 import { throwError } from '#utils/throw-error.ts';
 import { createFriendPin } from "#lib/queries/friend/create-friend-pin.ts";
 import { deleteFriendPin } from "#lib/queries/friend/delete-friend-pin.ts";
-import { getNickname } from "#utils/get-nickname-from-storage.ts";
+import { getNickname } from "#lib/modules/context.ts";
 import { zValidator } from "@hono/zod-validator";
 import { Hono } from "hono";
 import { friendPinSchema } from "@repo/types/schemas/friend/friend-pin-schema.ts";

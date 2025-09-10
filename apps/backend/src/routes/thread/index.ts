@@ -1,8 +1,6 @@
-import { validateRequest } from "#middlewares/validate-request.ts";
 import { Hono } from "hono";
 import { getThreadsByOwnerRoute } from "./get-threads-by-owner";
 import { getThreadRoute } from "./get-thread";
-import { userStatus } from "#middlewares/user-status.ts";
 import { getThreadPreviewRoute } from "./get-thread-preview";
 import { removeThreadRoute } from "./remove-thread";
 import { updateThreadSettingsRoute } from "./update-thread-settings";
@@ -12,15 +10,17 @@ import { createThreadRoute } from "./create-thread";
 import { getLatestThreadsRoute } from "./get-latest-threads";
 import { saveThreadRoute, unsaveThreadRoute } from "./save-thread";
 import { createThreadReactionRoute } from "./create-thread-reaction";
+import { userActivityStatus } from "#middlewares/user-activity-status.ts";
+import { requireAuth } from "#middlewares/require-auth.ts";
 
 export const thread = new Hono()
   .basePath('/thread')
-  .use(validateRequest())
+  .use(requireAuth())
   .route("/", getThreadRoute)
   .route("/", getThreadsByOwnerRoute)
   .route("/", getThreadReactionsRoute)
-  .use(validateRequest("prevent"))
-  .use(userStatus())
+  .use(requireAuth("prevent"))
+  .use(userActivityStatus())
   .route("/", getThreadPreviewRoute)
   .route("/", removeThreadRoute)
   .route("/", updateThreadSettingsRoute)

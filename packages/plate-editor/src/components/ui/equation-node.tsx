@@ -1,6 +1,5 @@
-
-
 import * as React from 'react';
+
 import TextareaAutosize, {
   type TextareaAutosizeProps,
 } from 'react-textarea-autosize';
@@ -70,7 +69,7 @@ export function EquationElement(props: PlateElementProps<TEquationElement>) {
             ) : (
               <div className="flex h-7 w-full items-center gap-2 text-sm whitespace-nowrap text-muted-foreground">
                 <RadicalIcon className="size-6 text-muted-foreground/80" />
-                <div>Add a Tex equation</div>
+                <div>Добавить уравнение Tex</div>
               </div>
             )}
           </div>
@@ -137,9 +136,9 @@ export function InlineEquationElement(
               'after:absolute after:inset-0 after:-top-0.5 after:-left-1 after:z-1 after:h-[calc(100%)+4px] after:w-[calc(100%+8px)] after:rounded-sm after:content-[""]',
               'h-6',
               ((element.texExpression.length > 0 && open) || selected) &&
-                'after:bg-brand/15',
+              'after:bg-brand/15',
               element.texExpression.length === 0 &&
-                'text-muted-foreground after:bg-neutral-500/10'
+              'text-muted-foreground after:bg-neutral-500/10'
             )}
             contentEditable={false}
           >
@@ -153,7 +152,7 @@ export function InlineEquationElement(
             {element.texExpression.length === 0 && (
               <span>
                 <RadicalIcon className="mr-1 inline-block h-[19px] w-4 py-[1.5px] align-text-bottom" />
-                New equation
+                Новое уравнение
               </span>
             )}
           </div>
@@ -228,7 +227,7 @@ const EquationPopoverContent = ({
       />
 
       <Button variant="secondary" className="px-3" onClick={onClose}>
-        Done <CornerDownLeftIcon className="size-3.5" />
+        Готово <CornerDownLeftIcon className="size-3.5" />
       </Button>
     </PopoverContent>
   );

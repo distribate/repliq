@@ -9,7 +9,7 @@ import { ThreadCommentItemContent } from "./thread-comment-item-content.tsx";
 import { reatomComponent } from "@reatom/npm-react";
 import { highlightActiveAtom, selectedCommentAtom } from "../models/scroll-to-replied.model.ts";
 import { CustomLink } from "#shared/components/link.tsx";
-import { createIdLink } from "#lib/create-link.ts";
+import { createIdLink } from "#shared/helpers/create-link.ts";
 import { clientOnly } from "vike-react/clientOnly";
 
 const ThreadCommentMoreActions = clientOnly(() =>

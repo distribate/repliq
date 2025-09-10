@@ -5,9 +5,9 @@ import { action, atom, batch } from '@reatom/core'
 import { sleep, withReset } from '@reatom/framework'
 import { reatomTimer } from '@reatom/timer'
 import { toast } from 'sonner'
-import { es } from '#components/notifications/components/notifications-wrapper'
 import { logger } from '@repo/shared/utils/logger.ts'
 import { validateResponse } from '#shared/api/validation'
+import { es } from '#shared/constants/es'
 
 export type Connect = {
   type: "connect" | "cancel" | "disconnect"

@@ -5,39 +5,48 @@ import { reatomComponent } from "@reatom/npm-react";
 import { action, atom, reatomAsync, sleep, spawn, withConcurrency, withInit } from "@reatom/framework";
 import { updateCurrentUserAction } from "../models/update-current-user.model";
 import { getUser } from "#components/user/models/current-user.model";
+import { toast } from "sonner";
 
 const realNameAtom = atom<string | null>(null, "realName").pipe(
   withInit((ctx) => getUser(ctx)?.real_name ?? null)
 )
 
-const onChange = action(async (ctx, e) => {
-  const { value } = e.target;
+const onChange = action(async (ctx, e: React.ChangeEvent<HTMLInputElement>) => {
+  const value = e.target.value;
+  const currentName = getUser(ctx).real_name;
 
-  await ctx.schedule(() => sleep(800))
-
-  if (value.length >= 46) {
-    return
+  function validateName(): boolean {
+    if (value.length >= 46) return false
+    if (value === currentName) return false;
+    return true;
   }
+  
+  const isValid = validateName();
+  if (!isValid) return;
 
-  if (value === getUser(ctx).real_name) return;
+  await ctx.schedule(() => sleep(600))
 
   realNameAtom(ctx, value.length < 1 ? null : value)
+
+  await ctx.schedule(() => sleep(40))
+
   autoSaveAction(ctx)
-}, "onChange").pipe(withConcurrency())
+}, "realNameOnChange").pipe(withConcurrency())
 
 const autoSaveAction = reatomAsync(async (ctx) => {
-  await sleep(50)
-
   const value = ctx.get(realNameAtom)
 
-  void spawn(ctx, async (spawnCtx) =>
-    updateCurrentUserAction(spawnCtx, { criteria: "real_name", value })
-  );
+  return await ctx.schedule(() => updateCurrentUserAction(ctx, { criteria: "real_name", value }))
 }, {
   name: "autoSaveAction",
   onReject: (_, e) => {
     if (e instanceof Error) {
       console.error(e.message)
+    }
+  },
+  onFulfill: (ctx, res) => {
+    if ("real_name" in res) {
+      toast.success("Изменения сохранены")
     }
   }
 })

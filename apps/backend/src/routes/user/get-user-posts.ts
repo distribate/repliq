@@ -3,9 +3,9 @@ import { zValidator } from '@hono/zod-validator';
 import { throwError } from '#utils/throw-error.ts';
 import { getUserPosts } from '#lib/queries/user/get-user-posts.ts';
 import { getUserPostsSchema } from '@repo/types/schemas/posts/user-posts-schema.ts';
-import { getNickname } from '#utils/get-nickname-from-storage.ts';
-import { userPreferenceAndPrivateValidation } from '#utils/validate-user-preference-private.ts';
+import { getNickname } from '#lib/modules/context.ts';
 import { forumDB } from '#shared/database/forum-db.ts';
+import { userPreferenceAndPrivateValidation } from '#lib/validators/validate-user-preference-private.ts';
 
 async function createPostsView(
   values: { nickname: string, post_id: string }[]

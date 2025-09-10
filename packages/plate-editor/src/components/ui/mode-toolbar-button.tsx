@@ -1,5 +1,3 @@
-
-
 import * as React from 'react';
 
 import { SuggestionPlugin } from '@platejs/suggestion/react';
@@ -38,10 +36,10 @@ export function ModeToolbarButton(props: DropdownMenuProps) {
       icon: <PenIcon />,
       label: 'Editing',
     },
-    suggestion: {
-      icon: <PencilLineIcon />,
-      label: 'Suggestion',
-    },
+    // suggestion: {
+    //   icon: <PencilLineIcon />,
+    //   label: 'Suggestion',
+    // },
     viewing: {
       icon: <EyeIcon />,
       label: 'Viewing',
@@ -102,14 +100,14 @@ export function ModeToolbarButton(props: DropdownMenuProps) {
             {item.viewing.label}
           </DropdownMenuRadioItem>
 
-          <DropdownMenuRadioItem
+          {/* <DropdownMenuRadioItem
             className="pl-2 *:first:[span]:hidden *:[svg]:text-muted-foreground"
             value="suggestion"
           >
             <Indicator />
             {item.suggestion.icon}
             {item.suggestion.label}
-          </DropdownMenuRadioItem>
+          </DropdownMenuRadioItem> */}
         </DropdownMenuRadioGroup>
       </DropdownMenuContent>
     </DropdownMenu>

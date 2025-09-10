@@ -1,8 +1,7 @@
 import { getUserProfile, RequestedUserFull } from "#components/profile/main/models/requested-user.model"
-import { logRouting } from "#lib/utils"
-import { createIdLink } from "#lib/create-link"
+import { logRouting } from "#shared/utils/log"
+import { createIdLink } from "#shared/helpers/create-link"
 import { logger } from "@repo/shared/utils/logger.ts"
-import { wrapTitle } from "#lib/utils"
 import { KEYWORDS } from "@repo/shared/constants/meta"
 import { useConfig } from "vike-react/useConfig"
 import { render } from "vike/abort"
@@ -15,15 +14,15 @@ function metadata({ nickname, ...user }: RequestedUserFull) {
 
   const description = `Профиль ${nickname}. ${user.description ? `О себе: ${user.description}` : null}`
   const keywords = `Repliq profile, ${nickname} profile, ${nickname}, пользователь ${nickname}`
-  const url = `https://fasberry.su${createIdLink("user", nickname)}`
+  const url = `https://repliq.fasberry.su${createIdLink("user", nickname)}`
 
   return {
-    title: wrapTitle(nickname),
+    title: nickname,
     description,
     Head: (
       <>
         <meta name="keywords" content={keywords.concat(', ' + KEYWORDS)} />
-        <meta property="og:title" content={wrapTitle(nickname)} />
+        <meta property="og:title" content={nickname} />
         <meta property="og:description" content={description} />
         <meta property="og:url" content={url} />
         <meta property="og:image" content={image} />
@@ -32,7 +31,7 @@ function metadata({ nickname, ...user }: RequestedUserFull) {
         <meta property="og:image:alt" content="image" />
         <meta property="og:image:type" content="image/png" />
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content={wrapTitle(nickname)} />
+        <meta name="twitter:title" content={nickname} />
         <meta name="twitter:description" content={description} />
         <meta name="twitter:image" content={image} />
       </>

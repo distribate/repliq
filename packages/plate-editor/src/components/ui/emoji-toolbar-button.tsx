@@ -1,5 +1,3 @@
-
-
 import * as React from 'react';
 
 import type { Emoji } from '@emoji-mart/data';
@@ -118,8 +116,8 @@ export function EmojiPicker({
   return (
     <div
       className={cn(
-        'flex flex-col rounded-xl bg-popover text-popover-foreground',
-        'h-[23rem] w-80 border shadow-md'
+        'flex flex-col rounded-xl bg-shark-900 text-popover-foreground',
+        'h-[23rem] w-80 shadow-md'
       )}
     >
       <EmojiPickerNavigation

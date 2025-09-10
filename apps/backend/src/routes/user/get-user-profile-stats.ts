@@ -1,11 +1,11 @@
 import { throwError } from '#utils/throw-error.ts';
 import { Hono } from "hono";
 import type { ProfileStatsCharts, ProfileStatsDetailed, ProfileStatsMeta } from "@repo/types/routes-types/get-user-profile-stats-types.ts";
-import { prepareHourlyChartData, prepareMonthlyChartData } from "#utils/prepare-charts-data.ts";
-import { getNickname } from "#utils/get-nickname-from-storage.ts";
+import { getNickname } from "#lib/modules/context.ts";
 import { getUserDonate } from "#lib/queries/user/get-user-donate.ts";
 import { getUserProfileViews, getUserProflieViewsDetails } from "#lib/queries/user/get-user-profile-views.ts";
 import { getUsersProfileViewsRank } from "#lib/queries/user/get-users-profile-views-rank.ts";
+import { prepareHourlyChartData, prepareMonthlyChartData } from '#lib/modules/prepare-charts-data.ts';
 
 type GetUserProfileStats = {
   nickname: string,

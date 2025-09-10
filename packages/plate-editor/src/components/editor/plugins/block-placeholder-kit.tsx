@@ -1,5 +1,3 @@
-
-
 import { KEYS } from 'platejs';
 import { BlockPlaceholderPlugin } from 'platejs/react';
 
@@ -9,7 +7,7 @@ export const BlockPlaceholderKit = [
       className:
         'before:absolute before:cursor-text before:text-muted-foreground/80 before:content-[attr(placeholder)]',
       placeholders: {
-        [KEYS.p]: 'Type something...',
+        [KEYS.p]: 'Напишите что-нибудь',
       },
       query: ({ path }) => {
         return path.length === 1;

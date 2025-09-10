@@ -1,23 +1,42 @@
+import { getLastActivityZsetKey } from "#lib/modules/user-activity-status.ts";
 import { forumDB } from "#shared/database/forum-db.ts";
+import { getRedisClient } from "#shared/redis/init.ts";
 import { throwError } from "#utils/throw-error.ts";
 import { Hono } from "hono";
 
 const ONLINE_USERS_TIME = 5 * 60 * 1000
 const DEFAULT_LIMIT = 7
 
-async function getOnlineUsers(limit: number = DEFAULT_LIMIT) {
-  const query = await forumDB
-    .selectFrom("users_status")
-    .innerJoin("users", "users.nickname", "users_status.nickname")
-    .select([
-      "users_status.nickname",
-      "users.avatar"
-    ])
-    .where("users_status.created_at", ">", new Date(Date.now() - ONLINE_USERS_TIME))
-    .limit(limit)
+type OnlineUser = { 
+  nickname: string, 
+  avatar: string | null 
+}
+
+export async function getOnlineUsers(): Promise<OnlineUser[]> {
+  const redis = getRedisClient();
+  const now = Date.now();
+  const minScore = now - ONLINE_USERS_TIME;
+
+  const onlineNicknames = await redis.zrangebyscore(
+    getLastActivityZsetKey,
+    minScore,
+    '+inf',         
+    'LIMIT', 0, DEFAULT_LIMIT
+  );
+
+  if (onlineNicknames.length === 0) return [];
+
+  const users = await forumDB
+    .selectFrom("users")
+    .select(["nickname", "avatar"])
+    .where("nickname", "in", onlineNicknames)
     .execute();
 
-  return query;
+  const nicknameIdx = Object.fromEntries(onlineNicknames.map((n, i) => [n, i]));
+
+  users.sort((a, b) => nicknameIdx[a.nickname] - nicknameIdx[b.nickname]);
+
+  return users;
 }
 
 export const getOnlineUsersRoute = new Hono()

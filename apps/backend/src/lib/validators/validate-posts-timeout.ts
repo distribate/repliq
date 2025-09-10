@@ -1,4 +1,4 @@
-import { DEFAULT_MAX_POSTS_PER_DAY, MAX_POSTS_PER_MINUTE } from "#shared/constants/user-limits.ts";
+import { DEFAULT_MAX_POSTS_PER_DAY, MAX_POSTS_PER_MINUTE } from "#shared/constants/user-limitations.ts";
 import { forumDB } from "#shared/database/forum-db.ts";
 
 export async function validatePostsTimeout(nickname: string): Promise<"timeout" | null> {

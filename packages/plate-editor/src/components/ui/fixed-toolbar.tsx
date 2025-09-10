@@ -1,5 +1,3 @@
-
-
 import { cn } from '#plate/lib/utils.ts';
 
 import { Toolbar } from './toolbar';

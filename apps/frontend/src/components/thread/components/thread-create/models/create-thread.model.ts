@@ -4,7 +4,6 @@ import { reatomAsync, withStatusesAtom } from "@reatom/async";
 import { threadClient } from "#shared/forum-client";
 import { createThreadSchema as initial } from "@repo/types/schemas/thread/create-thread-schema.ts";
 import * as z from "zod";
-import ky from "ky";
 import { encode } from "cbor-x";
 import { CreateThreadResponse } from "@repo/types/routes-types/create-thread-types";
 import {
@@ -19,9 +18,11 @@ import {
   threadFormTitleAtom,
   threadFormVisibilityAtom
 } from "./thread-form.model";
-import { createIdLink } from "#lib/create-link";
+import { createIdLink } from "#shared/helpers/create-link";
 import { atom } from "@reatom/core";
-import { navigate } from "vike/client/router";
+import { navigate, prefetch } from "vike/client/router";
+import { client } from "#shared/api/client";
+import { log } from "#shared/utils/log";
 
 const blobUrlToFile = (blobUrl: string): Promise<File> => {
   return new Promise((resolve) => {
@@ -51,8 +52,6 @@ export const contentLimitAtom = atom((ctx) => {
   return images && images.length > 0 ? THREAD_CONTENT_LIMIT_DEFAULT[1] : THREAD_CONTENT_LIMIT_DEFAULT[2]
 }, "contentLimit")
 
-contentLimitAtom.onChange((_, state) => console.log("contentLimitAtom", state))
-
 export const fileArrayToUint8Array = async (files: File[] | null) => {
   if (!files) return null;
 
@@ -65,6 +64,8 @@ export const fileArrayToUint8Array = async (files: File[] | null) => {
 
   return uint8ArrayFiles;
 };
+
+const url = threadClient.thread["create"].$url()
 
 export const createThreadAction = reatomAsync(async (ctx) => {
   const title = ctx.get(threadFormTitleAtom)
@@ -81,31 +82,26 @@ export const createThreadAction = reatomAsync(async (ctx) => {
 
   const content = JSON.stringify(nodes)
 
-  let rawImages: File[] = [];
+  let images: Uint8Array<ArrayBuffer>[] | null = null;
 
-  if (files && files.length > 0) {
-    rawImages = [];
-
-    for (let i = 0; i < rawImages.length; i++) {
-      const rawImageItem = await blobUrlToFile(files[i]);
-
-      rawImages.push(rawImageItem);
-    }
+  if (files) {
+    const rawImages = await Promise.all(files.map((f) => blobUrlToFile(f)));
+    console.log(rawImages)
+    images = await fileArrayToUint8Array(rawImages);
   }
 
+  console.log(files, images)
+
+  const structure: z.infer<typeof createThreadSchemaRequest> = {
+    category_id, title, visibility, content, description, tags, permission, is_comments, images
+  };
+
+  const body = new Uint8Array(encode(structure))
+
   return await ctx.schedule(async () => {
-    const url = threadClient.thread["create"].$url()
-    const images = await fileArrayToUint8Array(rawImages)
-
-    const structure: z.infer<typeof createThreadSchemaRequest> = {
-      category_id, title, visibility, content, description, tags, permission, is_comments, images
-    };
-
-    const res = await ky.post(url, {
-      // @ts-expect-error
-      body: encode(structure),
-      headers: { 'Content-Type': 'application/cbor' },
-      credentials: "include"
+    const res = await client.post(url, {
+      body,
+      headers: { 'Content-Type': 'application/cbor' }
     })
 
     const data = await res.json<CreateThreadResponse>();
@@ -121,16 +117,20 @@ export const createThreadAction = reatomAsync(async (ctx) => {
       if (e.message === 'form-error') {
         toast.error("Форма должна быть заполнена")
       }
-      
+
       console.error(e.message)
     }
   },
-  onFulfill: (ctx, res) => {
+  onFulfill: async (ctx, res) => {
     if (!res) return
 
     const images = ctx.get(threadFormImagesAtom)
 
     if (res.status === 'Created') {
+      const link = createIdLink("thread", res.data.id)
+
+      prefetch(link)
+
       toast.success("Тред создан");
 
       if (images) {
@@ -141,7 +141,9 @@ export const createThreadAction = reatomAsync(async (ctx) => {
 
       createThreadFormReset(ctx)
 
-      ctx.schedule(() => navigate(createIdLink("thread", res.data.id)))
+      await ctx.schedule(() => navigate(link))
     }
   }
 }).pipe(withStatusesAtom())
+
+contentLimitAtom.onChange((_, v) => log("contentLimitAtom", v))

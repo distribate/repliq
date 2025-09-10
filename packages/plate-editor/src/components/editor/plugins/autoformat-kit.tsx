@@ -1,5 +1,3 @@
-
-
 import type { AutoformatRule } from '@platejs/autoformat';
 
 import {

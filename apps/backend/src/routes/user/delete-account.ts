@@ -1,7 +1,7 @@
 import bcrypt from 'bcryptjs';
 import { Hono } from "hono";
 import { throwError } from "#utils/throw-error.ts";
-import { getNickname } from "#utils/get-nickname-from-storage.ts";
+import { getNickname } from "#lib/modules/context.ts";
 import { forumDB } from "#shared/database/forum-db.ts";
 import * as z from "zod";
 import { zValidator } from "@hono/zod-validator";

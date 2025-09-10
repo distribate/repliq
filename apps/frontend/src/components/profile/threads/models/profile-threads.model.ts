@@ -1,7 +1,7 @@
 import { AsyncCtx, reatomAsync, withErrorAtom, withStatusesAtom } from '@reatom/async';
 import { userClient } from '#shared/forum-client';
 import { isParamChanged, requestedUserParamAtom } from '#components/profile/main/models/requested-user.model';
-import { log } from '#lib/utils';
+import { log } from '#shared/utils/log';
 import { validateResponse } from '#shared/api/validation';
 import { profileThreadsSearchQueryAtom } from './profile-threads-settings.model';
 import { atom, batch, Ctx } from '@reatom/core';

@@ -1,5 +1,3 @@
-
-
 import { LinkPlugin } from '@platejs/link/react';
 
 import { LinkElement } from '#plate/components/ui/link-node';

@@ -31,6 +31,8 @@
     "isolatedModules": true,
     "resolveJsonModule": true,
     "skipLibCheck": true,
+    "skipDefaultLibCheck": true,
+    "composite": true,
     "allowImportingTsExtensions": true,
     "allowJs": true,
     "forceConsistentCasingInFileNames": true,

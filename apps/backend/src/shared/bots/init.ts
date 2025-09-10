@@ -5,6 +5,7 @@ import { connectUserCommand } from "../../lib/commands/connect-command.ts"
 import { messageHandler } from "../../lib/handlers/message-handler.ts";
 import { logger } from "@repo/shared/utils/logger.ts";
 import type { TelegramBotCommand } from "gramio";
+import { LOGGER_BOT_TOKEN, REPLIQ_BOT_TOKEN } from '#shared/env/index.ts';
 
 const repliqBotCmds: TelegramBotCommand[] = [
   { command: "/connect", description: "Привязать аккаунт" },
@@ -16,14 +17,14 @@ const servicedBotCmds: TelegramBotCommand[] = [
   { command: "/notify", description: "Alert for all online users on forum" }
 ]
 
-export const repliqBot = new Bot(process.env.REPLIQ_BOT_TOKEN as string)
+export const repliqBot = new Bot(REPLIQ_BOT_TOKEN)
   .onStart(async () => {
     console.log('\x1B[35m[Telegram bot]\x1B[0m Repliq bot started')
 
     repliqBot.api.setMyCommands({ commands: repliqBotCmds })
   })
 
-export const servicedBot = new Bot(process.env.LOGGER_BOT_TOKEN as string)
+export const servicedBot = new Bot(LOGGER_BOT_TOKEN as string)
   .onStart(async () => {
     console.log('\x1B[35m[Telegram bot]\x1B[0m Serviced bot started')
 

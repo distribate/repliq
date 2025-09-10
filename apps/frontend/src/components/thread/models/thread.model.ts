@@ -2,7 +2,7 @@ import { threadReactionsAction } from "#components/thread/components/thread-reac
 import { currentUserNicknameAtom } from "#components/user/models/current-user.model";
 import { action, atom, batch } from "@reatom/core";
 import { withReset } from "@reatom/framework";
-import { withHistory } from '#lib/with-history';
+import { withHistory } from '#shared/helpers/with-history';
 import { threadClient } from "#shared/forum-client";
 import { ThreadDetailed, ThreadOwner } from "@repo/types/entities/thread-type";
 import { Value } from "@udecode/plate";

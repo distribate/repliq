@@ -1,3 +1,1 @@
-import { wrapTitle } from "#lib/utils";
-
-export default wrapTitle("Создать тикет")
+export default "Создать тикет"

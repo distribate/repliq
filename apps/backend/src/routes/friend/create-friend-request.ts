@@ -3,12 +3,12 @@ import { createFriendRequest } from "#lib/queries/friend/create-friend-request.t
 import { getFriendship } from "#lib/queries/friend/get-friendship.ts";
 import { getUserBlockStatus } from "#lib/queries/user/get-user-block-status.ts";
 import { getUserFriendPreference } from "#lib/queries/user/get-user-friend-preference.ts";
-import { getNickname } from "#utils/get-nickname-from-storage.ts";
+import { getNickname } from "#lib/modules/context.ts";
 import { zValidator } from "@hono/zod-validator";
 import { Hono } from "hono";
 import { createFriendRequestSchema } from "@repo/types/schemas/friend/create-friend-request-schema.ts";
 import { publishCreateFriendRequest } from '#publishers/pub-create-friend-request.ts';
-import { pushNotificationOnClient } from '#utils/push-notifications-on-client.ts';
+import { pushNotificationOnClient } from '#lib/modules/push-notifications-on-client.ts';
 
 export const createFriendRequestRoute = new Hono()
   .post("/create-request", zValidator("json", createFriendRequestSchema), async (ctx) => {

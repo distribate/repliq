@@ -1,5 +1,3 @@
-
-
 import * as React from 'react';
 
 import { formatCodeBlock, isLangSupported } from '@platejs/code-block';
@@ -117,7 +115,7 @@ function CodeBlockCombobox() {
             onValueChange={(value) => setSearchValue(value)}
             placeholder="Search language..."
           />
-          <CommandEmpty>No language found.</CommandEmpty>
+          <CommandEmpty>Язык не найден.</CommandEmpty>
 
           <CommandList className="h-[344px] overflow-y-auto">
             <CommandGroup>

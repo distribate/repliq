@@ -9,7 +9,7 @@ import { Typography } from "@repo/ui/src/components/typography";
 import { reatomComponent } from "@reatom/npm-react";
 import { isExistAtom, profileFriendsAction, profileFriendsDataAtom } from "../models/profile-friends.model";
 import { CustomLink } from "#shared/components/link";
-import { createIdLink } from "#lib/create-link";
+import { createIdLink } from "#shared/helpers/create-link";
 import { AtomState } from "@reatom/core";
 
 type Friend = NonNullable<AtomState<typeof profileFriendsDataAtom>>[number]

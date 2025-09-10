@@ -1,6 +1,5 @@
 import { Category, getCategory } from "#components/category/threads/models/category.model";
-import { logRouting } from "#lib/utils";
-import { wrapTitle } from "#lib/utils";
+import { logRouting } from "#shared/utils/log";
 import { useConfig } from "vike-react/useConfig";
 import { PageContextServer } from "vike/types";
 
@@ -10,7 +9,7 @@ function metadata(
   { title, description }: Category
 ) {
   return {
-    title: wrapTitle(title),
+    title,
     description: description
   }
 }

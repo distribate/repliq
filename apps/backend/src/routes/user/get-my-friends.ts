@@ -1,5 +1,5 @@
 import { forumDB } from "#shared/database/forum-db.ts";
-import { getNickname } from "#utils/get-nickname-from-storage.ts";
+import { getNickname } from "#lib/modules/context.ts";
 import { throwError } from "#utils/throw-error.ts";
 import { getUserFriendsSchema } from "@repo/types/schemas/user/get-user-friends-schema";
 import { Hono } from "hono";

@@ -1,5 +1,3 @@
-
-
 import * as React from 'react';
 
 import type { TLinkElement } from 'platejs';
@@ -198,7 +196,7 @@ function LinkOpenButton() {
       onMouseOver={(e) => {
         e.stopPropagation();
       }}
-      aria-label="Open link in a new tab"
+      aria-label="Открыть ссылку в новой вкладке"
       target="_blank"
     >
       <ExternalLink width={18} />

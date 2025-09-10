@@ -13,8 +13,8 @@
     "format": "prettier --write \"**/*.{ts,tsx,md}\""
   },
   "dependencies": {
-    "better-sqlite3": "^12.2.0",
-    "drizzle-kit": "latest",
+    "better-sqlite3": "12.2.0",
+    "drizzle-kit": "0.31.4",
     "drizzle-orm": "0.44.2"
   },
   "devDependencies": {
@@ -22,7 +22,6 @@
     "eslint": "8.57.1",
     "prettier": "3.4.2",
     "prettier-plugin-tailwindcss": "0.5.14",
-    "tsup": "^8.5.0",
     "turbo": "2.5.3"
   },
   "engines": {

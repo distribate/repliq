@@ -1,10 +1,10 @@
-import { userStatus } from "#middlewares/user-status.ts";
-import { validateRequest } from "#middlewares/validate-request.ts";
 import { Hono } from "hono";
 import { getSearchRoute } from "./get-search";
+import { requireAuth } from "#middlewares/require-auth.ts";
+import { userActivityStatus } from "#middlewares/user-activity-status.ts";
 
 export const search = new Hono()
   .basePath('/search')
-  .use(validateRequest("prevent"))
-  .use(userStatus())
+  .use(requireAuth("prevent"))
+  .use(userActivityStatus())
   .route("/", getSearchRoute)

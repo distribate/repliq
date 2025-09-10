@@ -1,8 +1,5 @@
 {
 	"extends": "@repo/config-typescript/base.json",
-	"include": [
-		".", "../../apps/forum-frontend/src/shared/auth-client.ts", "../../apps/forum-frontend/src/shared/init.ts",
-	],
 	"exclude": [
 		"node_modules",
 		"dist"

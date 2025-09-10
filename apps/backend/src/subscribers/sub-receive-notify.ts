@@ -1,44 +1,81 @@
 import { getNatsConnection } from "@repo/config-nats/nats-client";
-import type { Issues } from "@repo/types/db/forum-database-types";
 import { USER_NOTIFICATIONS_SUBJECT } from "@repo/shared/constants/nats-subjects";
+import type { Selectable } from "kysely"
+import type { Issues } from "@repo/types/db/forum-database-types";
 import type {
   NotifyIssueReceived,
   NotifyLoginReceived,
   NotifyRegisterReceived,
   NotifyVoteReceived
 } from "@repo/types/entities/notify-types"
-import { issueMessage, loginMessage, registerMessage, voteMessage } from "../messages/notifications.ts";
+import { issueMessage, loginMessage, registerMessage, voteMessage } from "../shared/messages/notifications.ts";
 import { forumDB } from "../shared/database/forum-db";
 import { repliqBot } from "../shared/bots/init.ts";
 import { format } from "gramio";
 import { logger } from "@repo/shared/utils/logger.ts";
 import { servicedBot } from "../shared/bots/init.ts"
-import type { Selectable } from "kysely"
 import { getAdmins } from "../lib/queries/get-admins"
 
-type Notify =
-  | { type: "login", payload: NotifyLoginReceived }
-  | { type: "issue", payload: NotifyIssueReceived }
-  | { type: "vote", payload: NotifyVoteReceived }
-  | { type: "register", payload: NotifyRegisterReceived }
+type NotifyMap = {
+  login: NotifyLoginReceived;
+  issue: NotifyIssueReceived;
+  vote: NotifyVoteReceived;
+  register: NotifyRegisterReceived;
+};
+
+type Notify = { [K in keyof NotifyMap]: { type: K; payload: NotifyMap[K] } }[keyof NotifyMap];
 
 type NotifyPreference = "notify_in_telegram"
 
-const validateUserNotifyPreference = async ({ 
-  nickname, preference 
-}: { nickname: string, preference: NotifyPreference }) => {
+type CreateNotification = {
+  nickname: string
+  message: string
+  type: string
+}
+
+function createHandlers<H extends {
+  [K in Notify["type"]]: (msg: Extract<Notify, { type: K }>) => Promise<void> | void;
+}>(h: H): H {
+  return h;
+}
+
+async function validateUserNotifyPreference({
+  nickname, preference
+}: { nickname: string, preference: NotifyPreference }): Promise<boolean> {
   const query = await forumDB
     .selectFrom("users_settings")
     .select(preference)
     .where("nickname", "=", nickname)
-    .executeTakeFirst()
+    .executeTakeFirstOrThrow()
 
-  return query ? query[preference] : false
+  return query[preference]
 }
 
-const notifyInTelegram = async (values: NotifyLoginReceived) => {
-  let isValid = await validateUserNotifyPreference({ 
-    nickname: values.nickname, preference: "notify_in_telegram" 
+function getNotifyMessage(values: NotifyLoginReceived) {
+  return format`
+    👣 Кто-то вошел в ваш аккаунт!
+    
+    Если это были не вы, обратитесь в службу поддержки!
+
+    IP: ${values.ip}
+    Browser: ${values.browser}
+  `
+}
+
+function getNotifyIssueMessage(issue: Selectable<Issues>) {
+  return format`
+  ${issue.title}
+  Описание: ${issue.description}
+  Создана: ${issue.created_at}
+  Создал: ${issue.nickname}
+  Тип: ${issue.type}
+`
+}
+
+async function notifyInTelegram(values: NotifyLoginReceived): Promise<void> {
+  const isValid = await validateUserNotifyPreference({
+    nickname: values.nickname,
+    preference: "notify_in_telegram"
   })
 
   if (!isValid) return;
@@ -52,26 +89,10 @@ const notifyInTelegram = async (values: NotifyLoginReceived) => {
 
   if (!tgId) return;
 
-  const id = tgId.value
+  const text = getNotifyMessage(values);
+  const chat = await repliqBot.api.getChat({ chat_id: tgId.value })
 
-  const text = format`
-    👣 Кто-то вошел в ваш аккаунт!
-    
-    Если это были не вы, обратитесь в службу поддержки!
-
-    IP: ${values.ip}
-    Browser: ${values.browser}
-  `
-
-  const chat = await repliqBot.api.getChat({ chat_id: id })
-
-  await repliqBot.api.sendMessage({ text, chat_id: id })
-}
-
-type CreateNotification = {
-  nickname: string
-  message: string
-  type: string
+  await repliqBot.api.sendMessage({ text, chat_id: chat.id })
 }
 
 async function createNotification({ nickname, message, type }: CreateNotification) {
@@ -84,26 +105,55 @@ async function createNotification({ nickname, message, type }: CreateNotificatio
   return query;
 }
 
-const notifyIssueReceived = async (issue: Selectable<Issues>) => {
+async function notifyIssueReceived(issue: Selectable<Issues>) {
+  const text = getNotifyIssueMessage(issue);
   const admins = await getAdmins()
-
-  const message = format`
-  ${issue.title}
-  Описание: ${issue.description}
-  Создана: ${issue.created_at}
-  Создал: ${issue.nickname}
-  Тип: ${issue.type}
-`
 
   for (const { telegram_id } of admins) {
     if (!telegram_id) continue
 
-    await servicedBot.api.sendMessage({
-      chat_id: telegram_id,
-      text: message
-    })
+    await servicedBot.api.sendMessage({ chat_id: telegram_id, text })
   }
 }
+
+async function createAuthNotification(payload: Pick<NotifyLoginReceived, "nickname">, message: string) {
+  return createNotification({ nickname: payload.nickname, message, type: "auth" });
+};
+
+async function createIssue(payload: NotifyIssueReceived) {
+  const notification = await createNotification({
+    nickname: payload.nickname,
+    message: issueMessage(payload),
+    type: "issue",
+  });
+
+  const configIssueMessage = `Заявка ${payload.title} создана пользователем ${payload.nickname}`;
+
+  await notifyIssueReceived({
+    nickname: notification.nickname,
+    title: configIssueMessage,
+    description: notification.message,
+    created_at: notification.created_at,
+    id: notification.id,
+    type: notification.type as Issues["type"],
+  });
+}
+
+const handlers = createHandlers({
+  login: async ({ payload }) => {
+    notifyInTelegram(payload);
+    await createAuthNotification(payload, loginMessage(payload))
+  },
+  register: async ({ payload }) => {
+    await createAuthNotification(payload, registerMessage(payload));
+  },
+  vote: async ({ payload }) => {
+    await createNotification({ nickname: payload.nickname, message: voteMessage, type: "vote" });
+  },
+  issue: async ({ payload }) => {
+    await createIssue(payload)
+  }
+})
 
 export const subscribeReceiveNotify = () => {
   const nc = getNatsConnection()
@@ -115,51 +165,26 @@ export const subscribeReceiveNotify = () => {
         return;
       }
 
-      const message = msg.json<Notify>()
-
       try {
+        const message = msg.json<Notify>();
+
         switch (message.type) {
           case "login":
-            notifyInTelegram(message.payload)
-
-            return await createNotification({
-              nickname: message.payload.nickname,
-              message: loginMessage(message.payload),
-              type: "auth"
-            })
-          case "register":
-            return await createNotification({
-              nickname: message.payload.nickname,
-              message: registerMessage(message.payload),
-              type: "auth"
-            })
-          case "vote":
-            return await createNotification({
-              nickname: message.payload.nickname,
-              message: voteMessage,
-              type: "vote"
-            })
+            await handlers.login(message);
+            break;
           case "issue":
-            const notification = await createNotification({
-              nickname: message.payload.nickname,
-              message: issueMessage(message.payload),
-              type: "issue"
-            })
-
-            const configIssueMessage = `Заявка ${message.payload.title} создана пользователем ${message.payload.nickname}`
-
-            return await notifyIssueReceived({
-              nickname: notification.nickname,
-              title: configIssueMessage,
-              description: notification.message,
-              created_at: notification.created_at,
-              id: notification.id,
-              type: notification.type as Issues["type"],
-            })
+            await handlers.issue(message);
+            break;
+          case "vote":
+            await handlers.vote(message);
+            break;
+          case "register":
+            await handlers.register(message);
+            break;
         }
       } catch (e) {
         if (e instanceof Error) {
-          logger.error(e.message)
+          logger.error(e.message);
         }
       }
     }

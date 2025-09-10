@@ -1,4 +1,4 @@
-import { getNickname } from "#utils/get-nickname-from-storage.ts";
+import { getNickname } from "#lib/modules/context.ts";
 import { validateAdmin } from "#lib/validators/validate-admin.ts";
 import { throwError } from "#utils/throw-error.ts";
 import { Hono } from "hono";

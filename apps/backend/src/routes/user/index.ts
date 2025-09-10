@@ -1,7 +1,5 @@
 import { Hono } from "hono";
 import { getUserProfileRoute } from "./get-user-profile";
-import { userStatus } from "#middlewares/user-status.ts";
-import { validateRequest } from "#middlewares/validate-request.ts";
 import { getMeRoute } from "./get-me";
 import { getProfilesRoute } from "./get-profiles";
 import { connectProfileRoute } from "./connect-profile";
@@ -14,7 +12,7 @@ import { removeAvatarRoute } from "./remove-avatar";
 import { createAvatarRoute } from "./create-avatar";
 import { deleteCoverImageRoute } from "./delete-cover-image";
 import { getUserSummaryRoute } from "./get-user-summary";
-import { getUserStatusRoute } from "./get-user-status";
+import { getUserActivityStatusRoute } from "./get-user-status";
 import { getUserAvatarsRoute } from "./get-user-avatars";
 import { getUserReferalsRoute } from "./get-user-referals";
 import { getUserTicketsRoute } from "./get-user-tickets";
@@ -34,6 +32,8 @@ import { getIsAdminRoute } from "#routes/admin/get-is-admin.ts";
 import { getMyFriendsMetaRoute, getMyFriendsRoute } from "./get-my-friends";
 import { notifications } from "../notifications";
 import { editAvatarRoute } from "./edit-avatar";
+import { requireAuth } from "#middlewares/require-auth.ts";
+import { userActivityStatus } from "#middlewares/user-activity-status.ts";
 
 const avatar = new Hono()
   .basePath("/avatar")
@@ -48,10 +48,10 @@ const coverImage = new Hono()
 
 export const user = new Hono()
   .basePath('/user')
-  .use(validateRequest())
+  .use(requireAuth())
   .route("/", getUserProfileRoute)
-  .use(validateRequest("prevent"))
-  .use(userStatus())
+  .use(requireAuth("prevent"))
+  .use(userActivityStatus())
   .route("/", getMeRoute)
   .route("/", getProfilesRoute)
   .route("/", connectProfileRoute)
@@ -65,7 +65,7 @@ export const user = new Hono()
   .route("/", getUserSummaryRoute)
   .route("/", getUserAvatarsRoute)
   // #current user info routes
-  .route("/", getUserStatusRoute)
+  .route("/", getUserActivityStatusRoute)
   .route("/", getUserReferalsRoute)
   .route("/", getUserTicketsRoute)
   .route("/", getSavedThreadsRoute)

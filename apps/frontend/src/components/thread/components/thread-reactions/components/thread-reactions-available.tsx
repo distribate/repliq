@@ -1,4 +1,5 @@
 import { addThreadReactionAction } from "#components/thread/components/thread-reactions/models/thread-reactions.model";
+import { spawn } from "@reatom/framework";
 import { reatomComponent } from "@reatom/npm-react";
 import { REACTIONS } from "@repo/shared/constants/emojis";
 import { ContextMenuItem } from "@repo/ui/src/components/context-menu";
@@ -13,7 +14,9 @@ export const ThreadReactionsAvailable = reatomComponent<ThreadReactionsAvailable
 }) => {
   const scrollRef = useRef<HTMLDivElement | null>(null);
 
-  const handleAddReaction = (emoji: string) => addThreadReactionAction(ctx, { emoji, id });
+  const handleAddReaction = (emoji: string) => {
+    void spawn(ctx, async (spawnCtx) => addThreadReactionAction(spawnCtx, { emoji, id }))
+  }
 
   const handleWheel = (e: React.WheelEvent) => {
     if (scrollRef.current) {
@@ -32,7 +35,7 @@ export const ThreadReactionsAvailable = reatomComponent<ThreadReactionsAvailable
         <ContextMenuItem key={key} onClick={() => handleAddReaction(key)} className="!p-0">
           <div
             className="flex rounded-md hover:scale-[1.2] text-[20px] hover:duration-150
-           duration-150 ease-in-out cursor-pointer p-1 items-center justify-center"
+              duration-150 ease-in-out cursor-pointer p-1 items-center justify-center"
           >
             {value}
           </div>

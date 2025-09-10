@@ -1,6 +1,6 @@
 import { throwError } from '#utils/throw-error.ts';
 import { Hono } from "hono";
-import { getNickname } from "#utils/get-nickname-from-storage.ts";
+import { getNickname } from "#lib/modules/context.ts";
 import type { ThreadDetailed } from "@repo/types/entities/thread-type";
 import { getThread } from '#lib/queries/thread/get-thread.ts';
 import { forumDB } from '#shared/database/forum-db.ts';

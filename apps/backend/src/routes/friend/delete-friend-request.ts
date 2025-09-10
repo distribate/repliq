@@ -2,7 +2,7 @@ import { throwError } from '#utils/throw-error.ts';
 import { zValidator } from "@hono/zod-validator";
 import { Hono } from "hono";
 import { deleteFriendRequest } from "#lib/queries/friend/delete-friend-request.ts";
-import { getNickname } from "#utils/get-nickname-from-storage.ts";
+import { getNickname } from "#lib/modules/context.ts";
 import { deleteFriendRequestSchema } from "@repo/types/schemas/friend/delete-friend-request-schema.ts";
 
 export const deleteFriendRequestRoute = new Hono()
@@ -15,12 +15,10 @@ export const deleteFriendRequestRoute = new Hono()
         request_id, recipient: nickname
       });
 
-      if (!res.numDeletedRows) {
-        return ctx.json({ error: "Error deleting friend request" }, 404);
-      }
-
       const data = {
-        data: true,
+        data: {
+          request_id: res.id
+        },
         status: "Friend request deleted"
       }
 

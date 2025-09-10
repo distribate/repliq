@@ -4,7 +4,7 @@ import { UserAdvancedSettings } from "#components/user/components/settings/advan
 import { 
   settingsIsGlobalDialogAtom, 
   settingsSettingsTypeAtom, 
-  SettingsType, 
+  SettingsDialog, 
   toggleGlobalDialogAction 
 } from "#components/modals/user-settings/models/user-settings.model";
 import { UserAccountSettings } from "../../../user/components/settings/account/components/user-account-settings";
@@ -12,7 +12,7 @@ import { reatomComponent } from "@reatom/npm-react";
 import { UserProfileSettings } from "#components/user/components/settings/profile/components/user-profile-settings";
 import { UserMainSettings } from "#components/user/components/settings/main/components/user-main-settings";
 
-const SETTINGS_SECTIONS: Record<SettingsType, ReactNode> = {
+const SETTINGS_SECTIONS: Record<SettingsDialog, ReactNode> = {
   main: <UserMainSettings />,
   account: <UserAccountSettings />,
   profile: <UserProfileSettings />,
@@ -20,7 +20,7 @@ const SETTINGS_SECTIONS: Record<SettingsType, ReactNode> = {
 }
 
 export const UserSettingsModal = reatomComponent(({ ctx }) => {
-  const current = ctx.spy(settingsSettingsTypeAtom)
+  const current = ctx.spy(settingsSettingsTypeAtom) as SettingsDialog
   const global = ctx.spy(settingsIsGlobalDialogAtom)
 
   const handleEscKeyDown = (e: KeyboardEvent) => {

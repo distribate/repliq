@@ -17,5 +17,6 @@ export async function deleteFriendRequest({
       eb('initiator', '=', recipient),
       eb('recipient', '=', recipient),
     ]))
-    .executeTakeFirst();
+    .returning("id")
+    .executeTakeFirstOrThrow();
 }

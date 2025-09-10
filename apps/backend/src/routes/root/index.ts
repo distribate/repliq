@@ -1,11 +1,11 @@
-import { validateRequest } from "#middlewares/validate-request.ts";
+import { requireAuth } from "#middlewares/require-auth.ts";
 import { getHealthRoute } from "#routes/public/get-health.ts";
 import { connectServiceRoute, connectServiceSSE } from "#routes/user/connect-service.ts";
 import { Hono } from "hono";
 
 const connectService = new Hono()
   .basePath("/connect-service")
-  .use(validateRequest("prevent"))
+  .use(requireAuth("prevent"))
   .route("/", connectServiceRoute)
   .route("/", connectServiceSSE)
 

@@ -1,5 +1,3 @@
-
-
 import * as React from 'react';
 
 import type { DropdownMenuProps } from '@radix-ui/react-dropdown-menu';
@@ -157,16 +155,16 @@ export function ExportToolbarButton(props: DropdownMenuProps) {
       <DropdownMenuContent align="start">
         <DropdownMenuGroup>
           <DropdownMenuItem onSelect={exportToHtml}>
-            Export as HTML
+            Экспортировать как HTML
           </DropdownMenuItem>
           <DropdownMenuItem onSelect={exportToPdf}>
-            Export as PDF
+            Экспортировать как PDF
           </DropdownMenuItem>
           <DropdownMenuItem onSelect={exportToImage}>
-            Export as Image
+            Экспортировать как изображение
           </DropdownMenuItem>
           <DropdownMenuItem onSelect={exportToMarkdown}>
-            Export as Markdown
+            Экспортировать как Markdown
           </DropdownMenuItem>
         </DropdownMenuGroup>
       </DropdownMenuContent>

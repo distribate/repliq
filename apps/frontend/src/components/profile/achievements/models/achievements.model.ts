@@ -1,5 +1,5 @@
 import { isParamChanged, requestedUserParamAtom } from "#components/profile/main/models/requested-user.model"
-import { log } from "#lib/utils"
+import { log } from "#shared/utils/log"
 import { reatomAsync, withErrorAtom, withStatusesAtom } from "@reatom/async"
 import { atom, batch, Ctx } from "@reatom/core"
 import { withReset } from "@reatom/framework"

@@ -1,5 +1,5 @@
-import { getNickname } from "#utils/get-nickname-from-storage.ts";
-import { userPreferenceAndPrivateValidation } from "#utils/validate-user-preference-private.ts";
+import { userPreferenceAndPrivateValidation } from "#lib/validators/validate-user-preference-private.ts";
+import { getNickname } from "#lib/modules/context.ts";
 import { throwError } from "#utils/throw-error.ts";
 import { Hono } from "hono";
 

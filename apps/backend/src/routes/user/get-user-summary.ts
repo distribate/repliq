@@ -1,5 +1,5 @@
 import { throwError } from '#utils/throw-error.ts';
-import { getNickname } from "#utils/get-nickname-from-storage.ts";
+import { getNickname } from "#lib/modules/context.ts";
 import { Hono } from "hono";
 import { getUserRelation } from "#lib/queries/user/get-user-relation.ts";
 import { getUserFriendsCount } from "#lib/queries/user/get-user-friends.ts";

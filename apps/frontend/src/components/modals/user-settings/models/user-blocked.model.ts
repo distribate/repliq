@@ -4,7 +4,10 @@ import { reatomAsync, withDataAtom, withStatusesAtom } from '@reatom/async';
 
 export const userBlockedAction = reatomAsync(async (ctx) => {
   return await ctx.schedule(async () => {
-    const res = await userClient.user["get-blocked-users"].$get({ query: { cursor: undefined } })
+    const res = await userClient.user["blocked-users"].$get(
+      { query: { cursor: undefined } },
+      { init: { signal: ctx.controller.signal } }
+    )
 
     return validateResponse<typeof res>(res)
   })

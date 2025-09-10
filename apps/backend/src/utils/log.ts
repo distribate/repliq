@@ -1,6 +1,8 @@
+import { isDevelopment } from "#shared/env/index.ts";
+
 export function log(
   message: string,
   ...args: unknown[]
 ) {
-  process.env.NODE_ENV === 'development' && console.log(message, args)
+  isDevelopment && console.log(message, ...args);
 }

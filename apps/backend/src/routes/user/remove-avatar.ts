@@ -1,4 +1,4 @@
-import { getNickname } from "#utils/get-nickname-from-storage.ts";
+import { getNickname } from "#lib/modules/context.ts";
 import { throwError } from "#utils/throw-error.ts";
 import { Hono } from "hono";
 import { deleteAvatar } from "./create-avatar";

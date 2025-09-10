@@ -3,7 +3,7 @@ declare module "bun" {
     MAIN_DATABASE_URL: string;
     MAIN_POSTGRES_USER: string;
     MAIN_POSTGRES_DB: string;
-    MAIN_POSTGRES_PORT: number;
+    MAIN_POSTGRES_PORT: string;
     MAIN_POSTGRES_PASSWORD: string;
     MAIN_POSTGRES_TENANT_ID: string;
     MAIN_POSTGRES_HOST: string;
@@ -21,14 +21,25 @@ declare module "bun" {
     REDIS_HOST: string;
     REDIS_USER_PASSWORD: string;
     REDIS_USER: string;
-    REDIS_PORT: number;
+    REDIS_PORT: string;
 
     REPLIQ_BOT_USERNAME: string;
     LOGGER_BOT_TOKEN: string
     REPLIQ_BOT_TOKEN: string;
 
-    PORT: number;
+    PORT: string;
     BOTS_IS_ENABLED: string
+
+    SQLITE_PATH: string;
+
+    NODEMAILER_HOST: string;
+    NODEMAILER_PORT: string;
+    NODEMAILER_USER: string;
+    NODEMAILER_PASSWORD: string;
+
+    AXIOM_DOMAIN: string;
+    AXIOM_TOKEN: string;
+    AXIOM_DATASET: string;
   }
 }
 

@@ -1,12 +1,20 @@
 import { PropsWithChildren, ReactNode } from 'react';
-import { Notifications } from '#components/notifications/components/notifications-wrapper';
 import { Toaster } from '#shared/components/toast';
 import { AtomState, Ctx, connectLogger as logger } from '@reatom/framework'
 import { reatomContext, useUpdate } from '@reatom/npm-react'
-import { isSsr, useCreateCtx } from "#lib/reatom";
+import { isSsr, useCreateCtx } from "#shared/lib/reatom";
 import { usePageContext } from "vike-react/usePageContext";
-import { snapshotAtom } from "#lib/ssr";
-import { pageContextAtom } from "#lib/context-sync";
+import { snapshotAtom } from "#shared/lib/ssr";
+import { pageContextAtom } from "#shared/lib/context-sync";
+import { connectNotificationsAction } from "#shared/models/notifications.model";
+import { isDevelopment } from '#shared/env';
+import { ErrorBoundary } from '#shared/components/error-boundary';
+
+import '@bprogress/core/css';
+
+import '../ui.css';
+import '../editor.css';
+import '../global.css';
 
 const SyncPageContext = () => {
   const pageContext = usePageContext();
@@ -20,7 +28,7 @@ function initSnapshot(
 ) {
   snapshotAtom(ctx, snapshot);
 
-  if (isSsr && import.meta.env.DEV) {
+  if (isSsr && isDevelopment) {
     logger(ctx)
   }
 }
@@ -38,12 +46,19 @@ const ReatomProvider = ({ children }: { children: ReactNode }) => {
   )
 }
 
+const ConnectNotifications = () => {
+  useUpdate(connectNotificationsAction, [])
+  return null;
+}
+
 export default function Layout({ children }: PropsWithChildren) {
   return (
     <ReatomProvider>
-      <Toaster />
-      <Notifications />
-      {children}
+      <ErrorBoundary>
+        <Toaster />
+        <ConnectNotifications />
+        {children}
+      </ErrorBoundary>
     </ReatomProvider>
   )
 }

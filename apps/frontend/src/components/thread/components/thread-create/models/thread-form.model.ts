@@ -12,32 +12,6 @@ import { FastAverageColor } from 'fast-average-color';
 import { Node } from "slate";
 import { validateResponse } from "#shared/api/validation";
 
-export const deserializeNodes = (value: string) => {
-  return value.split("\n").map((line) => {
-    return { children: [{ text: line }] };
-  });
-};
-
-export const serializeNodes = (value: any[]) =>
-  value.map((n) => Node.string(n)).join("\n");
-
-export const availableCategoriesAction = reatomAsync(async (ctx) => {
-  return await ctx.schedule(async () => {
-    const res = await categoriesClient.category["available-categories"].$get(
-      {}, { init: { signal: ctx.controller.signal } }
-    )
-
-    return validateResponse<typeof res>(res)
-  })
-}, {
-  name: "availableCategoriesAction",
-  onReject: (_, e) => {
-    if (e instanceof Error) {
-      console.error(e.message)
-    }
-  }
-}).pipe(withDataAtom(), withStatusesAtom(), withCache({ swr: false }))
-
 type CreateThread = Omit<z.infer<typeof createThreadSchema>,
   | "content" | "images" | "category_id" | "tags" | "visibility"
 >
@@ -157,13 +131,11 @@ export const addImagesAction = action(async (ctx, e: React.ChangeEvent<HTMLInput
   const updatedImages: string[] = existsImages ? [...existsImages, ...newImagesUrls] : newImagesUrls;
 
   for (let i = 0; i < newImagesUrls.length; i++) {
-    const absoluteIndex = newImages?.length ? newImages.length + i : i;
+    const absoluteIdx = newImages?.length ? newImages.length + i : i;
 
-    const color = (
-      await fac.getColorAsync(newImagesUrls[i])
-    ).hex;
+    const { hex } = await fac.getColorAsync(newImagesUrls[i])
 
-    bgColorAtom.set(ctx, absoluteIndex, color);
+    bgColorAtom.set(ctx, absoluteIdx, hex);
   }
 
   threadFormImagesAtom(ctx, updatedImages)
@@ -218,3 +190,29 @@ export function createThreadFormReset(ctx: Ctx) {
     threadFormIsValidAtom.reset(ctx)
   })
 }
+
+export const availableCategoriesAction = reatomAsync(async (ctx) => {
+  return await ctx.schedule(async () => {
+    const res = await categoriesClient.category["available-categories"].$get(
+      {}, { init: { signal: ctx.controller.signal } }
+    )
+
+    return validateResponse<typeof res>(res)
+  })
+}, {
+  name: "availableCategoriesAction",
+  onReject: (_, e) => {
+    if (e instanceof Error) {
+      console.error(e.message)
+    }
+  }
+}).pipe(withDataAtom(), withStatusesAtom(), withCache({ swr: false }))
+
+export const deserializeNodes = (value: string) => {
+  return value.split("\n").map((line) => {
+    return { children: [{ text: line }] };
+  });
+};
+
+export const serializeNodes = (value: any[]) =>
+  value.map((n) => Node.string(n)).join("\n");

@@ -127,17 +127,19 @@ export async function getUser<T extends GetUserType>({
   };
 
   if (type === "shorted" && !isIdentity) {
-    const { nickname, description, avatar, name_color, is_donate, account_status } = userWithoutSensitiveInfo;
+    const { nickname, description, avatar, cover_image, name_color, is_donate, account_status } = userWithoutSensitiveInfo;
 
     return {
       nickname,
       description,
       name_color,
       avatar,
+      cover_image,
       account_status,
       is_donate,
       preferences: {
-        cover_outline_visible, show_game_location
+        cover_outline_visible, 
+        show_game_location
       },
     } as T extends "shorted" ? UserShorted : UserDetailed;
   }

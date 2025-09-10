@@ -23,7 +23,7 @@ const EmptyAvatar = ({ nickname }: Pick<AvatarProps, "nickname">) => {
     >
       <div className="flex items-center justify-center w-full h-full">
         <span className="text-xl uppercase font-bold text-shark-50">
-          {nickname[0]}
+          {nickname ? nickname[0] : ""}
         </span>
       </div>
     </div>

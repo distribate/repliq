@@ -11,7 +11,7 @@ export function FileElementStatic(props: SlateElementProps<TFileElement>) {
   return (
     <SlateElement className="my-px rounded-sm" {...props}>
       <a
-        className="group relative m-0 flex cursor-pointer items-center rounded px-0.5 py-[3px] hover:bg-muted"
+        className="group relative m-0 flex cursor-pointer items-center rounded px-0.5 py-[3px] hover:bg-shark-800/60"
         contentEditable={false}
         download={name}
         href={url}

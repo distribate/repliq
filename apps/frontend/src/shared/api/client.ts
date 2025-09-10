@@ -1,7 +1,7 @@
 import ky from "ky";
-import { mainBaseUrl } from "./init";
+import { MAIN_BASE_URL } from "#shared/env";
 
 export const client = ky.create({
-  prefixUrl: mainBaseUrl,
+  prefixUrl: MAIN_BASE_URL,
   credentials: "include"
 })

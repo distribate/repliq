@@ -7,7 +7,7 @@ import { PostFooterViews } from "#components/post/components/post-footer/post-fo
 import { UserPostItem } from '@repo/types/routes-types/get-user-posts-types.ts';
 import { reatomComponent, useUpdate } from "@reatom/npm-react";
 import { CustomLink } from "#shared/components/link";
-import { createIdLink } from "#lib/create-link";
+import { createIdLink } from "#shared/helpers/create-link";
 import { HoverCard, HoverCardContent, HoverCardTrigger } from "@repo/ui/src/components/hover-card";
 import { Sheet, SheetClose, SheetContent, SheetTitle, SheetTrigger } from "@repo/ui/src/components/sheet";
 import { IconX } from "@tabler/icons-react";

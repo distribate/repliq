@@ -1,59 +1,17 @@
-import { reatomAsync, withCache, withStatusesAtom } from "@reatom/async";
-import { atom, batch, onConnect } from "@reatom/framework";
+import { onConnect } from "@reatom/framework";
 import { reatomComponent } from "@reatom/npm-react";
 import { Bug, Newspaper, Sparkles, Zap } from "lucide-react"
 import { SectionSkeleton } from "#components/templates/components/section-skeleton";
 import { IconClock } from "@tabler/icons-react";
 import { ContentNotFound } from "#components/templates/components/content-not-found";
-import { sharedClient } from "#shared/forum-client";
-import dayjs from "@repo/shared/constants/dayjs-instance"
 import { Typography } from "@repo/ui/src/components/typography";
+import { isExistAtom, newsAction, newsDataAtom, NewsPayloadData, NewsViewer } from "#components/news/models/news.model";
+import dayjs from "@repo/shared/constants/dayjs-instance"
 
-type NewsPayload = Awaited<ReturnType<typeof newsAction>>;
-type NewsItem = NewsPayload["data"][number]
-
-const newsDataAtom = atom<NewsPayload["data"] | null>(null, "newsData")
-const newsMetaAtom = atom<NewsPayload["meta"] | null>(null, "newsMeta")
+type NewsItem = NewsPayloadData[number]
 
 const getTypeIcon = (type: NewsItem["type"]) => TYPE_ICON[type] ?? TYPE_ICON['default']
 const getTypeColor = (type: NewsItem["type"]) => TYPE_COLORS[type] ?? TYPE_COLORS["default"]
-
-const newsAction = reatomAsync(async (ctx) => {
-  return await ctx.schedule(async () => {
-    const res = await sharedClient.shared["updates"]["news"].$get({
-      query: {
-        cursor: undefined,
-        ascending: "false",
-        limit: "16",
-      }
-    }, {
-      init: {
-        signal: ctx.controller.signal
-      }
-    })
-
-    const data = await res.json()
-
-    if ("error" in data) throw new Error(data.error)
-
-    return data
-  })
-}, {
-  name: "newsAction",
-  onFulfill: (ctx, res) => {
-    if (!res) return;
-
-    batch(ctx, () => {
-      newsDataAtom(ctx, res.data)
-      newsMetaAtom(ctx, res.meta)
-    })
-  },
-  onReject: (_, e) => {
-    if (e instanceof Error) {
-      console.error(e.message)
-    }
-  }
-}).pipe(withStatusesAtom(), withCache())
 
 const TYPE_ICON: Record<NewsItem["type"], typeof Bug> = {
   'announcement': Newspaper,
@@ -118,13 +76,15 @@ onConnect(newsDataAtom, newsAction)
 
 const NewsList = reatomComponent(({ ctx }) => {
   const data = ctx.spy(newsDataAtom);
-  const isEmpty = data && data.length === 0;
+  const isExist = ctx.spy(isExistAtom)
 
   if (ctx.spy(newsAction.statusesAtom).isPending) {
     return <SectionSkeleton />
   }
 
-  if (!data || isEmpty) return <ContentNotFound title="Новостей еще нет" />
+  if (!data || !isExist) {
+    return <ContentNotFound title="Новостей еще нет" />
+  }
 
   return (
     <div className="flex flex-col gap-4 w-full h-fit">
@@ -139,7 +99,10 @@ export default function Page() {
       <Typography className="page-title">
         Новости и обновления
       </Typography>
-      <NewsList />
+      <div className="flex flex-col w-full h-full">
+        <NewsList />
+        <NewsViewer />
+      </div>
     </div>
   )
 }

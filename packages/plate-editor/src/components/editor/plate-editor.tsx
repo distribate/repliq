@@ -129,20 +129,6 @@ const value = [
     ],
     type: 'p',
   },
-  // {
-  //   children: [
-  //     {
-  //       text: 'Block-level suggestions are also supported for broader feedback.',
-  //     },
-  //   ],
-  //   suggestion: {
-  //     suggestionId: 'suggestionBlock1',
-  //     type: 'block',
-  //     userId: 'charlie',
-  //   },
-  //   type: 'p',
-  // },
-  // AI Section
   {
     children: [{ text: 'AI-Powered Editing' }],
     type: 'h2',

@@ -1,7 +1,7 @@
 import { throwError } from '#utils/throw-error.ts';
 import { getUserNotifications } from "#lib/queries/user/get-user-notifications.ts";
 import { Hono } from "hono";
-import { getNickname } from '#utils/get-nickname-from-storage.ts';
+import { getNickname } from '#lib/modules/context.ts';
 import * as z from "zod";
 import { zValidator } from '@hono/zod-validator';
 
@@ -12,11 +12,11 @@ export const getUserNotificationsSchema = z.object({
 
 export const getUserNotificationsRoute = new Hono()
   .get("/notifications", zValidator("query", getUserNotificationsSchema), async (ctx) => {
+    const nickname = getNickname();
     const result = getUserNotificationsSchema.parse(ctx.req.query());
-    const nickname = getNickname()
 
     try {
-      const data = await getUserNotifications({ nickname, ...result });
+      const data = await getUserNotifications(nickname, result);
 
       return ctx.json({ data }, 200);
     } catch (e) {

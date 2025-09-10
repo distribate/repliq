@@ -1,5 +1,3 @@
-
-
 import * as React from 'react';
 
 import type { TColumnElement } from 'platejs';
@@ -115,7 +113,7 @@ const ColumnDragHandle = React.memo(function ColumnDragHandle() {
           </Button>
         </TooltipTrigger>
 
-        <TooltipContent>Drag to move column</TooltipContent>
+        <TooltipContent>Перетащите, чтобы переместить</TooltipContent>
       </Tooltip>
     </TooltipProvider>
   );

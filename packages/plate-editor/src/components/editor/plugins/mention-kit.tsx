@@ -1,5 +1,3 @@
-
-
 import { MentionInputPlugin, MentionPlugin } from '@platejs/mention/react';
 
 import {

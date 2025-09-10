@@ -5,7 +5,7 @@ import { Avatar } from "#components/user/components/avatar/components/avatar";
 import { currentUserAtom, userGlobalOptionsAtom } from "#components/user/models/current-user.model";
 import { UserNickname } from "#components/user/components/name/nickname";
 import { reatomComponent } from "@reatom/npm-react";
-import { createIdLink } from "#lib/create-link";
+import { createIdLink } from "#shared/helpers/create-link";
 import { Separator } from "@repo/ui/src/components/separator";
 import { Typography } from "@repo/ui/src/components/typography";
 import { IconArrowRight, IconBookmark, IconBrandThreads, IconLayoutDashboard, IconLibrary, IconLogout, IconPlus, IconSettings, IconUsersGroup } from "@tabler/icons-react";

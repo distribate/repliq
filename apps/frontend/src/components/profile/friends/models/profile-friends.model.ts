@@ -1,6 +1,6 @@
 import { FriendsOpts } from "#components/friends/models/friends.model"
 import { isParamChanged, requestedUserParamAtom } from "#components/profile/main/models/requested-user.model"
-import { log } from "#lib/utils"
+import { log } from "#shared/utils/log"
 import { validateResponse } from "#shared/api/validation"
 import { userClient } from "#shared/forum-client"
 import { createFabric } from "#shared/models/infinity-scroll.model"

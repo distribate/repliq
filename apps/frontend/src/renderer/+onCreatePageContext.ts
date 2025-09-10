@@ -1,5 +1,5 @@
-import { logRouting } from "#lib/utils";
-import { defineGlobalState } from "#lib/validation";
+import { logRouting } from "#shared/utils/log";
+import { defineGlobalState } from "#shared/lib/validation";
 import { PageContextServer } from "vike/types";
 
 export const onCreatePageContext = async (pageContext: PageContextServer) => {

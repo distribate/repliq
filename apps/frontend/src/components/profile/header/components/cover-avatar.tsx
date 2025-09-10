@@ -1,17 +1,26 @@
 import { requestedUserAtom, requestedUserIsSameAtom } from "#components/profile/main/models/requested-user.model";
-import { reatomComponent } from "@reatom/npm-react";
+import { reatomComponent, useUpdate } from "@reatom/npm-react";
 import { Avatar } from "#components/user/components/avatar/components/avatar";
 import { cva, VariantProps } from "class-variance-authority";
-import { HTMLAttributes, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Dialog, DialogClose, DialogContent, DialogTitle, DialogTrigger } from "@repo/ui/src/components/dialog";
 import { Button } from "@repo/ui/src/components/button";
 import { Typography } from "@repo/ui/src/components/typography";
 import { AvatarsList } from "#components/user/components/avatar/components/avatars-list";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@repo/ui/src/components/dropdown-menu";
-import { deleteAvatar, openUserCoverAvatarDialog, prefetchUserAvatarsAction, setAvatarAsMain, userCoverAvatarDialogIsOpenAtom, userCoverAvatarTargetAtom, userCoverSelectedAvatarAtom } from "../models/avatar.model";
+import { 
+  deleteAvatar, 
+  openUserCoverAvatarDialog, 
+  prefetchUserAvatarsAction, 
+  setAvatarAsMain, 
+  userAvatarDialogIsOpenAtom, 
+  userAvatarSelectedAtom, 
+  userAvatarsNicknameAtom, 
+  userAvatarsSelectedAtom 
+} from "../../../user/components/avatar/models/avatar.model";
 import { IconDotsVertical, IconTrash, IconUser } from "@tabler/icons-react";
 
-const userCoverAvatarVariants = cva(
+export const userCoverAvatarVariants = cva(
   `flex items-center group relative justify-center md:size-[160px] size-[112px]`, {
   variants: {
     variant: {
@@ -20,13 +29,6 @@ const userCoverAvatarVariants = cva(
     }
   }
 })
-
-type UserCoverAvatarProps = HTMLAttributes<HTMLDivElement>
-  & VariantProps<typeof userCoverAvatarVariants>
-
-export const UserCoverAvatarWrapper = ({ variant, className, ...props }: UserCoverAvatarProps) => {
-  return <div className={userCoverAvatarVariants({ variant, className })} {...props} />
-}
 
 function preloadImage(url: string): Promise<void> {
   return new Promise((resolve, reject) => {
@@ -39,27 +41,31 @@ function preloadImage(url: string): Promise<void> {
 }
 
 const SelectedAvatar = reatomComponent(({ ctx }) => {
+  const nickname = ctx.get(userAvatarsNicknameAtom)
+  if (!nickname) return null;
+  
+  const data = ctx.spy(userAvatarSelectedAtom);
+  if (!data) return null;
+  
   const isOwner = ctx.spy(requestedUserIsSameAtom)
-
-  const data = ctx.spy(userCoverSelectedAvatarAtom);
-
+  
   return (
     <div className="relative">
       <Avatar
         url={data}
         className="*:w-full *:h-full"
-        nickname={""}
+        nickname={nickname}
       />
       {isOwner && (
         <div className="absolute right-2 top-2">
-          <AvatarOptions target={data} />
+          <AvatarOptions avatarUrl={data} />
         </div>
       )}
     </div>
   )
 }, "SelectedAvatar")
 
-const AvatarOptions = reatomComponent<{ target: string }>(({ ctx, target }) => {
+const AvatarOptions = reatomComponent<{ avatarUrl: string }>(({ ctx, avatarUrl }) => {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger className="items-center flex justify-center w-8 h-8 bg-shark-950/80 rounded-lg">
@@ -69,7 +75,7 @@ const AvatarOptions = reatomComponent<{ target: string }>(({ ctx, target }) => {
         <DropdownMenuItem asChild>
           <Button
             className="flex justify-start gap-2 w-full"
-            onClick={() => deleteAvatar(ctx, target)}
+            onClick={() => deleteAvatar(ctx, avatarUrl)}
             disabled={ctx.spy(deleteAvatar.statusesAtom).isPending}
           >
             <IconTrash size={24} />
@@ -81,7 +87,7 @@ const AvatarOptions = reatomComponent<{ target: string }>(({ ctx, target }) => {
         <DropdownMenuItem asChild>
           <Button
             className="w-full"
-            onClick={() => setAvatarAsMain(ctx, target)}
+            onClick={() => setAvatarAsMain(ctx, avatarUrl)}
             disabled={ctx.spy(setAvatarAsMain.statusesAtom).isPending}
           >
             <IconUser size={24} />
@@ -95,12 +101,9 @@ const AvatarOptions = reatomComponent<{ target: string }>(({ ctx, target }) => {
   )
 }, "AvatarOptions")
 
-const listVariant = cva(`
-  flex sm:justify-center justify-start items-center gap-2 [&::-webkit-scrollbar]:h-1.5 overflow-x-auto overflow-y-hidden sm:w-full 
-  h-24 max-h-24
-`)
-
-export const UserCoverAvatar = reatomComponent<UserCoverAvatarProps>(({ ctx, className, variant }) => {
+export const UserCoverAvatar = reatomComponent<{ 
+  className: string, variant: VariantProps<typeof userCoverAvatarVariants>["variant"] 
+}>(({ ctx, className, variant }) => {
   const cancelledRef = useRef(false)
   const [isError, setIsError] = useState(false);
 
@@ -108,6 +111,8 @@ export const UserCoverAvatar = reatomComponent<UserCoverAvatarProps>(({ ctx, cla
   if (!user) return null;
 
   const { avatar, nickname } = user;
+
+  useUpdate((ctx) => userAvatarsNicknameAtom(ctx, nickname), [nickname])
 
   useEffect(() => {
     if (!avatar) return;
@@ -129,14 +134,12 @@ export const UserCoverAvatar = reatomComponent<UserCoverAvatarProps>(({ ctx, cla
   }
 
   return (
-    <UserCoverAvatarWrapper variant={variant} className={className}>
-      <Dialog open={ctx.spy(userCoverAvatarDialogIsOpenAtom)} onOpenChange={handle}>
+    <div className={userCoverAvatarVariants({ variant, className })}>
+      <Dialog open={ctx.spy(userAvatarDialogIsOpenAtom)} onOpenChange={handle}>
         <DialogTrigger
           asChild
           className="cursor-pointer"
-          onMouseUp={() => {
-            prefetchUserAvatarsAction(ctx, nickname)
-          }}
+          onMouseEnter={() => prefetchUserAvatarsAction(ctx, nickname)}
         >
           <Avatar
             url={isError ? null : avatar}
@@ -149,7 +152,7 @@ export const UserCoverAvatar = reatomComponent<UserCoverAvatarProps>(({ ctx, cla
         </DialogTrigger>
         <DialogContent
           withClose={false}
-          className="flex flex-col gap-2 overflow-visible !p-0 lg:!min-w-fit bg-transparent items-center justify-center"
+          className="flex flex-col gap-2 overflow-visible !p-0 lg:!min-w-fit !bg-transparent items-center justify-center"
         >
           <DialogTitle className="hidden"></DialogTitle>
           <div className="flex flex-col gap-4 w-full aspect-square sm:w-[clamp(290px,37.5vw,960px)]">
@@ -159,7 +162,7 @@ export const UserCoverAvatar = reatomComponent<UserCoverAvatarProps>(({ ctx, cla
                 sm:justify-center items-center gap-2 pb-1.5 [&::-webkit-scrollbar]:h-1.5 
                 overflow-x-auto overflow-y-hidden sm:w-full h-26 max-h-26"
             >
-              <AvatarsList />
+              <AvatarsList nickname={nickname} />
             </div>
           </div>
           <DialogClose asChild>
@@ -171,6 +174,6 @@ export const UserCoverAvatar = reatomComponent<UserCoverAvatarProps>(({ ctx, cla
           </DialogClose>
         </DialogContent>
       </Dialog>
-    </UserCoverAvatarWrapper>
+    </div>
   )
 }, "UserCoverAvatar")

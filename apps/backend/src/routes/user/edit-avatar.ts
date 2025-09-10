@@ -3,7 +3,7 @@ import { zValidator } from "@hono/zod-validator";
 import { Hono } from "hono";
 import { throwError } from "#utils/throw-error.ts";
 import { forumDB } from "#shared/database/forum-db.ts";
-import { getNickname } from "#utils/get-nickname-from-storage.ts";
+import { getNickname } from "#lib/modules/context.ts";
 
 const editAvatarRouteSchema = z.object({
   type: z.enum(["set-as-main"])
@@ -41,7 +41,7 @@ async function setAsMain(
 
   return {
     avatars: update.avatars,
-    avatar: update.avatars[2]
+    avatar: update.avatars[update.avatars.length - 1]
   }
 }
 

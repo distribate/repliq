@@ -3,7 +3,7 @@ import { Hono } from "hono"
 import * as z from "zod"
 import dayjs from "@repo/shared/constants/dayjs-instance"
 import { forumDB } from "#shared/database/forum-db.ts"
-import { getNickname } from "#utils/get-nickname-from-storage.ts"
+import { getNickname } from "#lib/modules/context.ts"
 
 const createUserRestrictSchema = z.object({
   type: z.enum(["posts", "threads"]),

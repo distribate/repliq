@@ -1,7 +1,5 @@
-import { isDevelopment } from "#lib/utils";
+import { isDevelopment } from "#shared/env";
 import { KEYWORDS } from "@repo/shared/constants/meta";
-
-import "../editor.css"
 
 const title = [
   `Repliq — Форум нового поколения`

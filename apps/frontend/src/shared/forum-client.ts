@@ -1,6 +1,5 @@
 import { hc } from 'hono/client';
 import { fetchOptions } from './init.ts';
-import { mainBaseUrl } from './api/init.ts';
 import type {
   UserAppType,
   ThreadAppType,
@@ -14,15 +13,16 @@ import type {
   RootAppType,
   FriendAppType
 } from 'backend/src/types/routes-types.ts';
+import { MAIN_BASE_URL } from './env/index.ts';
 
-export const searchClient = hc<SearchAppType>(mainBaseUrl, fetchOptions)
-export const sharedClient = hc<SharedAppType>(mainBaseUrl, fetchOptions)
-export const commentClient = hc<CommentAppType>(mainBaseUrl, fetchOptions)
-export const userClient = hc<UserAppType>(mainBaseUrl, fetchOptions)
-export const threadClient = hc<ThreadAppType>(mainBaseUrl, fetchOptions)
-export const categoriesClient = hc<CategoriesAppType>(mainBaseUrl, fetchOptions)
-export const adminClient = hc<AdminAppType>(mainBaseUrl, fetchOptions)
-export const postClient = hc<PostAppType>(mainBaseUrl, fetchOptions)
-export const reportClient = hc<ReportAppType>(mainBaseUrl, fetchOptions)
-export const rootClient = hc<RootAppType>(mainBaseUrl, fetchOptions)
-export const friendClient = hc<FriendAppType>(mainBaseUrl, fetchOptions)
+export const searchClient = hc<SearchAppType>(MAIN_BASE_URL, fetchOptions)
+export const sharedClient = hc<SharedAppType>(MAIN_BASE_URL, fetchOptions)
+export const commentClient = hc<CommentAppType>(MAIN_BASE_URL, fetchOptions)
+export const userClient = hc<UserAppType>(MAIN_BASE_URL, fetchOptions)
+export const threadClient = hc<ThreadAppType>(MAIN_BASE_URL, fetchOptions)
+export const categoriesClient = hc<CategoriesAppType>(MAIN_BASE_URL, fetchOptions)
+export const adminClient = hc<AdminAppType>(MAIN_BASE_URL, fetchOptions)
+export const postClient = hc<PostAppType>(MAIN_BASE_URL, fetchOptions)
+export const reportClient = hc<ReportAppType>(MAIN_BASE_URL, fetchOptions)
+export const rootClient = hc<RootAppType>(MAIN_BASE_URL, fetchOptions)
+export const friendClient = hc<FriendAppType>(MAIN_BASE_URL, fetchOptions)

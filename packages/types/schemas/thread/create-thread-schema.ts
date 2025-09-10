@@ -23,7 +23,7 @@ export const threadDescriptionSchema = z
   )
   .nullable()
 
-export const threadTagsSchema = z.string().array().nullable()
+export const threadTagsSchema = z.string().min(1).array().nullable()
 
 export const threadPermissionSchema = z.boolean()
 

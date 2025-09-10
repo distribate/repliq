@@ -1,11 +1,10 @@
-@import "../../../packages/ui/ui.css";
 @import "tailwindcss";
 
 @config "../tailwind.config.ts";
 
 @layer base {
   :root {
-    --bprogress-color: theme("colors.shark.400")
+    --bprogress-color: theme("colors.shark.400") !important;
   }
 
   body {

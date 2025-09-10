@@ -1,6 +1,6 @@
 import { throwError } from '#utils/throw-error.ts';
 import { getUserInfo } from "#lib/queries/user/get-user-info.ts";
-import { getNickname } from "#utils/get-nickname-from-storage.ts";
+import { getNickname } from "#lib/modules/context.ts";
 import { Hono } from "hono";
 import type { UserDetailed } from '@repo/types/entities/user-type';
 

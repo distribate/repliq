@@ -1,5 +1,3 @@
-
-
 import * as React from 'react';
 
 import type * as DropdownMenuPrimitive from '@radix-ui/react-dropdown-menu';
@@ -177,7 +175,7 @@ function TableFloatingToolbar({
         {...props}
       >
         <Toolbar
-          className="scrollbar-hide flex w-auto max-w-[80vw] flex-row overflow-x-auto rounded-md border bg-popover p-1 shadow-md print:hidden"
+          className="scrollbar-hide flex w-auto max-w-[80vw] flex-row overflow-x-auto rounded-md bg-shark-900 p-1 shadow-md print:hidden"
           contentEditable={false}
         >
           <ToolbarGroup>

@@ -5,7 +5,7 @@ import { FormThreadDescription } from "./form-thread-description.tsx";
 import { FormThreadTitle } from "./form-thread-title.tsx";
 import { FormThreadAdditional } from "./form-thread-additional.tsx";
 import { Typography } from "@repo/ui/src/components/typography.tsx";
-import React, { lazy, Suspense, useRef } from "react";
+import { lazy, Suspense, useRef } from "react";
 import { Info } from "lucide-react";
 import { Separator } from "@repo/ui/src/components/separator.tsx";
 import { FormThreadStep } from "./form-thread-stepper.tsx";
@@ -14,7 +14,8 @@ import { FormThreadContent } from "./form-thread-content.tsx";
 import { addImagesAction, threadFormIsCommentAtom, threadFormIsValidAtom } from "../models/thread-form.model.ts";
 import { Switch } from "@repo/ui/src/components/switch.tsx";
 import { FormField } from "@repo/ui/src/components/form-field.tsx";
-import { IconHelpCircle, IconImageInPicture } from "@tabler/icons-react";
+import { IconImageInPicture } from "@tabler/icons-react";
+import { spawn } from "@reatom/framework";
 
 const FormThreadPreviewImages = lazy(() => import("./form-thread-preview-images.tsx").then(m => ({ default: m.FormThreadPreviewImages })));
 
@@ -144,9 +145,16 @@ const CreateThreadButton = reatomComponent(({ ctx }) => {
   const isDisabled = !ctx.spy(threadFormIsValidAtom)
   const isPending = ctx.spy(createThreadAction.statusesAtom).isPending
 
+  const handle = () => {
+    void spawn(ctx, async (spawnCtx) => createThreadAction(spawnCtx))
+  }
+
   return (
     <Button
-      className="bg-shark-50 self-end w-fit" disabled={isDisabled || isPending} pending={isPending}
+      className="bg-shark-50 self-end w-fit" 
+      disabled={isDisabled || isPending} 
+      pending={isPending}
+      onClick={handle}
     >
       <Typography textSize="medium" className="text-shark-950 font-semibold">
         Опубликовать
@@ -156,13 +164,8 @@ const CreateThreadButton = reatomComponent(({ ctx }) => {
 }, "CreateThreadButton")
 
 export const CreateThreadForm = reatomComponent(({ ctx }) => {
-  const handle = (e: React.FormEvent) => {
-    e.preventDefault(); 
-    createThreadAction(ctx)
-  }
-
   return (
-    <form onSubmit={handle} className="flex 2xl:flex-row flex-col items-start gap-4 w-full">
+    <form className="flex 2xl:flex-row flex-col items-start gap-4 w-full">
       <div className="flex flex-col gap-y-4 w-full 2xl:w-3/4 2xl:max-w-3/4 overflow-hidden">
         <div className="flex flex-col rounded-lg bg-primary-color p-4 gap-6 w-full">
           <FormThreadHead />

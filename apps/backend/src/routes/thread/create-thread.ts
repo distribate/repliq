@@ -1,5 +1,5 @@
 import { throwError } from '#utils/throw-error.ts';
-import { getNickname } from "#utils/get-nickname-from-storage.ts";
+import { getNickname } from "#lib/modules/context.ts";
 import { Hono } from "hono";
 import * as z from "zod";
 import { createThreadSchema } from "@repo/types/schemas/thread/create-thread-schema";
@@ -44,6 +44,8 @@ export const createThreadRoute = new Hono()
       return new File([ib], fileName, { type: "image/png" });
     }) : null;
 
+    console.log(result.data.images, images)
+    
     if (images) {
       images = await validateThreadImagesLength(nickname, images as File[])
     }

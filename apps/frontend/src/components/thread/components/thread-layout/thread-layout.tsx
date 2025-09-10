@@ -3,7 +3,7 @@ import { PropsWithChildren } from "react";
 import { ThreadDetailed } from "@repo/types/entities/thread-type.ts";
 import { reatomComponent } from "@reatom/npm-react";
 import { CustomLink } from "#shared/components/link.tsx";
-import { createIdLink } from "#lib/create-link.ts";
+import { createIdLink } from "#shared/helpers/create-link.ts";
 
 type ThreadLayout = PropsWithChildren & Pick<ThreadDetailed, "id" | "owner" | "title">;
 

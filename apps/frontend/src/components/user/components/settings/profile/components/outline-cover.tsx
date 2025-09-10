@@ -4,17 +4,10 @@ import { spawn } from '@reatom/framework';
 import { updateCurrentUserSettingsAction } from '../models/update-current-user.model';
 import { getUser } from '#components/user/models/current-user.model';
 
-{/* <div className="flex flex-col gap-y-2 w-full p-2">
-<Typography textSize="small" textColor="shark_white">
-  Обводка вокруг профиля - уникальная возможность выделиться
-  среди других пользователей.
-</Typography>
-</div> */}
-
 export const OutlineCover = reatomComponent(({ ctx }) => {
   const cover_outline_visible= getUser(ctx).preferences.cover_outline_visible
 
-  const handleCoverOutlineVisibility = (value: boolean) => {
+  const handle = (value: boolean) => {
     if (value === cover_outline_visible) return;
 
     void spawn(ctx, async (spawnCtx) => updateCurrentUserSettingsAction(spawnCtx, {
@@ -26,7 +19,7 @@ export const OutlineCover = reatomComponent(({ ctx }) => {
     <Switch
       checked={cover_outline_visible}
       defaultChecked={cover_outline_visible}
-      onCheckedChange={v => handleCoverOutlineVisibility(v)}
+      onCheckedChange={v => handle(v)}
     />
   );
 }, "OutlineCover")

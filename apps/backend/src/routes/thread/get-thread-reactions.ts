@@ -1,7 +1,7 @@
 import { throwError } from '#utils/throw-error.ts';
 import { getThreadReactions } from "#lib/queries/thread/get-thread-reactions.ts";
 import { getThreadUserReactions } from "#lib/queries/thread/get-thread-user-reactions.ts";
-import { getNickname } from "#utils/get-nickname-from-storage.ts";
+import { getNickname } from "#lib/modules/context.ts";
 import { Hono } from "hono";
 
 export const getThreadReactionsRoute = new Hono()

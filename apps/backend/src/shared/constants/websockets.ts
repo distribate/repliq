@@ -1,2 +1,0 @@
-export const WEBSOCKET_PING_INTERVAL = 30000
-export const WEBSOCKET_TOKEN_LENGTH = 8

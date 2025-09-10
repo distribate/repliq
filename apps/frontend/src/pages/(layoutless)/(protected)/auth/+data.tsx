@@ -1,10 +1,9 @@
-import { logRouting } from "#lib/utils"
-import { wrapTitle } from "#lib/utils"
+import { logRouting } from "#shared/utils/log"
 import { useConfig } from "vike-react/useConfig"
 
 function metadata() {
   return {
-    title: wrapTitle("Авторизация"),
+    title: "Авторизация",
     Head: (
       <>
         <link rel="canonical" href={`https://repliq.fasberry.su/auth`} />

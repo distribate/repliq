@@ -1,7 +1,7 @@
 import { userClient } from "#shared/forum-client";
 import { reatomAsync, withDataAtom } from "@reatom/async";
 import { currentUserNicknameAtom } from "#components/user/models/current-user.model";
-import { log } from "#lib/utils";
+import { log } from "#shared/utils/log";
 import { validateResponse } from "#shared/api/validation";
 
 export async function getFriendsCount(

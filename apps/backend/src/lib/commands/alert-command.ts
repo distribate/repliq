@@ -1,16 +1,12 @@
 import { bold, Bot, format } from "gramio";
-import { validateAdminRequest } from "../../utils/validate-request.ts";
-import { forumDB } from "../../shared/database/forum-db"
-import { pushNotificationOnClient } from "#utils/push-notifications-on-client.ts";
+import { validateAdminRequest } from "../validators/validate-admin-request.ts";
+import { pushNotificationOnClient } from "#lib/modules/push-notifications-on-client.ts";
+import { getRedisClient } from "#shared/redis/init.ts";
 
 async function getOnlineUsersCount() {
-  const query = await forumDB
-    .selectFrom("users_status")
-    .select("id")
-    .where("created_at", ">", new Date(Date.now() - 5 * 60 * 1000))
-    .execute()
-
-  return query.length
+  const redis = getRedisClient();
+  const count = await redis.zcard("users:last_activity_zset");
+  return count
 }
 
 export function alertCommand(bot: Bot) {

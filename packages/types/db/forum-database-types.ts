@@ -931,12 +931,6 @@ export interface UsersSettings {
   user_id: string;
 }
 
-export interface UsersStatus {
-  created_at: Generated<Timestamp>;
-  id: Generated<Int8>;
-  nickname: string;
-}
-
 export interface UsersSubs {
   id: Generated<Int8>;
   nickname: string;
@@ -1055,7 +1049,6 @@ export interface DB {
   users_saved_threads: UsersSavedThreads;
   users_security: UsersSecurity;
   users_settings: UsersSettings;
-  users_status: UsersStatus;
   users_subs: UsersSubs;
   "vault.decrypted_secrets": VaultDecryptedSecrets;
   "vault.secrets": VaultSecrets;

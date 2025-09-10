@@ -7,7 +7,10 @@
   "compilerOptions": {
     "allowImportingTsExtensions": true,
     "skipLibCheck": true,
+    "skipDefaultLibCheck": true,
+    "composite": true,
     "strict": true,
+    "verbatimModuleSyntax": true,
     "noFallthroughCasesInSwitch": true,
     "forceConsistentCasingInFileNames": true,
     "types": [

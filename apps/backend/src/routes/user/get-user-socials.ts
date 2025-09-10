@@ -1,6 +1,6 @@
 import { throwError } from '#utils/throw-error.ts';
 import { getUserSocials } from "#lib/queries/user/get-user-socials.ts";
-import { getNickname } from "#utils/get-nickname-from-storage.ts";
+import { getNickname } from "#lib/modules/context.ts";
 import { Hono } from "hono";
 
 export const getUserSocialsRoute = new Hono()

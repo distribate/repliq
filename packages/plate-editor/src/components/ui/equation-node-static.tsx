@@ -45,7 +45,7 @@ export function EquationElementStatic(
         ) : (
           <div className="flex h-7 w-full items-center gap-2 text-sm whitespace-nowrap text-muted-foreground">
             <RadicalIcon className="size-6 text-muted-foreground/80" />
-            <div>Add a Tex equation</div>
+            <div>Добавить уравнение Tex</div>
           </div>
         )}
       </div>
@@ -82,7 +82,7 @@ export function InlineEquationElementStatic(
           'after:absolute after:inset-0 after:-top-0.5 after:-left-1 after:z-1 after:h-[calc(100%)+4px] after:w-[calc(100%+8px)] after:rounded-sm after:content-[""]',
           'h-6',
           props.element.texExpression.length === 0 &&
-            'text-muted-foreground after:bg-neutral-500/10'
+          'text-muted-foreground after:bg-neutral-500/10'
         )}
       >
         <span

@@ -1,5 +1,3 @@
-
-
 import type { LucideProps } from 'lucide-react';
 
 export function BorderAllIcon(props: LucideProps) {

@@ -1,12 +1,8 @@
 import { getNatsConnection } from "@repo/config-nats/nats-client";
 import { USER_NOTIFICATIONS_SUBJECT } from "@repo/shared/constants/nats-subjects";
+import type { NotifyIssueReceived } from "@repo/types/entities/notify-types";
 
-type PublishIssuePayload = {
-  title: string;
-  nickname: string;
-}
-
-export function publishIssuePayload({ nickname, title }: PublishIssuePayload) {
+export function publishIssuePayload({ nickname, title }: NotifyIssueReceived) {
   const nc = getNatsConnection()
 
   const payload = JSON.stringify({

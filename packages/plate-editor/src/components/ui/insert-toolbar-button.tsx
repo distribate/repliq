@@ -1,5 +1,3 @@
-
-
 import * as React from 'react';
 
 import type { DropdownMenuProps } from '@radix-ui/react-dropdown-menu';
@@ -61,42 +59,42 @@ const groups: Group[] = [
     items: [
       {
         icon: <PilcrowIcon />,
-        label: 'Paragraph',
+        label: 'Параграф',
         value: KEYS.p,
       },
       {
         icon: <Heading1Icon />,
-        label: 'Heading 1',
+        label: 'Заголовок 1',
         value: 'h1',
       },
       {
         icon: <Heading2Icon />,
-        label: 'Heading 2',
+        label: 'Заголовок 2',
         value: 'h2',
       },
       {
         icon: <Heading3Icon />,
-        label: 'Heading 3',
+        label: 'Заголовок 3',
         value: 'h3',
       },
       {
         icon: <TableIcon />,
-        label: 'Table',
+        label: 'Таблица',
         value: KEYS.table,
       },
       {
         icon: <FileCodeIcon />,
-        label: 'Code',
+        label: 'Код',
         value: KEYS.codeBlock,
       },
       {
         icon: <QuoteIcon />,
-        label: 'Quote',
+        label: 'Цитата',
         value: KEYS.blockquote,
       },
       {
         icon: <MinusIcon />,
-        label: 'Divider',
+        label: 'Разделитель',
         value: KEYS.hr,
       },
     ].map((item) => ({
@@ -111,22 +109,22 @@ const groups: Group[] = [
     items: [
       {
         icon: <ListIcon />,
-        label: 'Bulleted list',
+        label: 'Маркированный список',
         value: KEYS.ul,
       },
       {
         icon: <ListOrderedIcon />,
-        label: 'Numbered list',
+        label: 'Нумерованный список',
         value: KEYS.ol,
       },
       {
         icon: <SquareIcon />,
-        label: 'To-do list',
+        label: 'Список дел',
         value: KEYS.listTodo,
       },
       {
         icon: <ChevronRightIcon />,
-        label: 'Toggle list',
+        label: 'Переключить список',
         value: KEYS.toggle,
       },
     ].map((item) => ({
@@ -136,43 +134,43 @@ const groups: Group[] = [
       },
     })),
   },
+  // {
+  //   group: 'Media',
+  //   items: [
+  //     {
+  //       icon: <ImageIcon />,
+  //       label: 'Изображение',
+  //       value: KEYS.img,
+  //     },
+  //     {
+  //       icon: <FilmIcon />,
+  //       label: 'Стороннее',
+  //       value: KEYS.mediaEmbed,
+  //     },
+  //   ].map((item) => ({
+  //     ...item,
+  //     onSelect: (editor, value) => {
+  //       insertBlock(editor, value);
+  //     },
+  //   })),
+  // },
   {
-    group: 'Media',
-    items: [
-      {
-        icon: <ImageIcon />,
-        label: 'Image',
-        value: KEYS.img,
-      },
-      {
-        icon: <FilmIcon />,
-        label: 'Embed',
-        value: KEYS.mediaEmbed,
-      },
-    ].map((item) => ({
-      ...item,
-      onSelect: (editor, value) => {
-        insertBlock(editor, value);
-      },
-    })),
-  },
-  {
-    group: 'Advanced blocks',
+    group: 'Продвинутые блоки',
     items: [
       {
         icon: <TableOfContentsIcon />,
-        label: 'Table of contents',
+        label: 'Оглавление',
         value: KEYS.toc,
       },
       {
         icon: <Columns3Icon />,
-        label: '3 columns',
+        label: '3 колонки',
         value: 'action_three_columns',
       },
       {
         focusEditor: false,
         icon: <RadicalIcon />,
-        label: 'Equation',
+        label: 'Уравнение',
         value: KEYS.equation,
       },
     ].map((item) => ({
@@ -183,23 +181,23 @@ const groups: Group[] = [
     })),
   },
   {
-    group: 'Inline',
+    group: 'Строчный',
     items: [
       {
         icon: <Link2Icon />,
-        label: 'Link',
+        label: 'Ссылка',
         value: KEYS.link,
       },
       {
         focusEditor: true,
         icon: <CalendarIcon />,
-        label: 'Date',
+        label: 'Дата',
         value: KEYS.date,
       },
       {
         focusEditor: false,
         icon: <RadicalIcon />,
-        label: 'Inline Equation',
+        label: 'Строчное уравнение',
         value: KEYS.inlineEquation,
       },
     ].map((item) => ({

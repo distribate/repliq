@@ -5,7 +5,7 @@ import { PropsWithChildren } from "react";
 import { Typography } from "@repo/ui/src/components/typography";
 import { reatomComponent } from "@reatom/npm-react";
 import { requestedUserAccountTypeAtom, requestedUserAtom } from "#components/profile/main/models/requested-user.model";
-import { UserCoverAvatarWrapper } from "./cover-avatar";
+import { userCoverAvatarVariants } from "./cover-avatar";
 import { UserNickname } from "#components/user/components/name/nickname";
 
 const UserDescription = reatomComponent<{ description: string }>(({ ctx, description }) => {
@@ -36,11 +36,11 @@ const DeletedAccountCover = reatomComponent(({ ctx }) => {
             group-data-[variant=compact]:flex-row flex-col group-data-[variant=compact]:justify-between
             group-data-[variant=full]:lg:flex-row group-data-[variant=full]:lg:items-start"
         >
-          <UserCoverAvatarWrapper variant={variant}>
+          <div className={userCoverAvatarVariants({ variant })}>
             <div className="flex items-center bg-shark-800 justify-center w-full h-full rounded-md">
               <span>DELETED</span>
             </div>
-          </UserCoverAvatarWrapper>
+          </div>
           <div className="flex flex-col lg:items-start items-center self-end justify-between h-1/2 gap-y-1">
             <div className="flex flex-col lg:items-start items-center truncate">
               <div className="flex items-center gap-1">

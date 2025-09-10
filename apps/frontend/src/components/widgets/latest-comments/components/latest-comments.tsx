@@ -5,7 +5,7 @@ import { reatomComponent } from "@reatom/npm-react"
 import { Skeleton } from "@repo/ui/src/components/skeleton"
 import { Typography } from "@repo/ui/src/components/typography"
 import { latestCommentsResource } from "../models/latest-comments.model"
-import { createIdLink } from "#lib/create-link"
+import { createIdLink } from "#shared/helpers/create-link"
 import { AtomState } from "@reatom/core"
 
 type CommentItemProps = NonNullable<AtomState<typeof latestCommentsResource.dataAtom>>[number]

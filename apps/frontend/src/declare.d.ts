@@ -15,6 +15,7 @@ declare namespace NodeJS {
     readonly PUBLIC_ENV__TURNSTILE_KEY: string;
     readonly PUBLIC_ENV__API_PREFIX_URL: string
     readonly PUBLIC_ENV__AUTH_API_PREFIX_URL: string;
+    readonly PUBLIC_ENV__STORAGE_PREFIX_URL: string;
   }
 }
 

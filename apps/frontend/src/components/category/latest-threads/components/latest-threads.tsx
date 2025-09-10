@@ -8,7 +8,7 @@ import { reatomComponent } from '@reatom/npm-react';
 import { latestThreadsByCategoriesAction } from '../models/latest-threads.model';
 import { CustomLink } from "#shared/components/link";
 import { ThreadByCategoryItem } from '../../threads/components/category-threads';
-import { createIdLink } from '#lib/create-link';
+import { createIdLink } from '#shared/helpers/create-link';
 import { clientOnly } from 'vike-react/clientOnly';
 
 const ThreadNotFound = clientOnly(() =>

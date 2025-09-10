@@ -1,7 +1,7 @@
 import { zValidator } from "@hono/zod-validator";
 import { Hono } from "hono";
 import { throwError } from '#utils/throw-error.ts';
-import { getNickname } from "#utils/get-nickname-from-storage.ts";
+import { getNickname } from "#lib/modules/context.ts";
 import { deleteFriend } from "#lib/queries/friend/delete-friend.ts";
 import { deleteFriendSchema } from "@repo/types/schemas/friend/delete-friend-schema.ts";
 

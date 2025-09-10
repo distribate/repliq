@@ -1,6 +1,6 @@
 import { throwError } from '#utils/throw-error.ts';
 import { getFriendRequests } from "#lib/queries/friend/get-friend-requests.ts";
-import { getNickname } from "#utils/get-nickname-from-storage.ts";
+import { getNickname } from "#lib/modules/context.ts";
 import { zValidator } from "@hono/zod-validator";
 import { Hono } from "hono";
 import { getFriendsRequestSchema } from "@repo/types/schemas/friend/get-friends-requests-schema.ts";

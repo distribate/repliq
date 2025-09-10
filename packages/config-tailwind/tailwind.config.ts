@@ -10,6 +10,7 @@ module.exports = {
       "./src/**/*.{js,ts,tsx}",
       "../../packages/ui/src/**/*.{ts,tsx}",
       "../../packages/components/src/**/*.{ts,tsx}",
+      "../../packages/plate-editor/src/**/*.{ts,tsx}"
     ],
   },
   theme: {

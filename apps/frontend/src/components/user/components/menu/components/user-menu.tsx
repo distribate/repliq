@@ -7,7 +7,7 @@ import { ReactNode } from "react";
 import { reatomComponent } from "@reatom/npm-react";
 import { CustomLink } from "#shared/components/link";
 import { toggleGlobalDialogAction } from "#components/modals/user-settings/models/user-settings.model";
-import { createIdLink } from "#lib/create-link";
+import { createIdLink } from "#shared/helpers/create-link";
 import { IconLayoutDashboard, IconLibrary, IconSettings, IconUserSquare } from "@tabler/icons-react";
 import { getUser, userGlobalOptionsAtom } from "#components/user/models/current-user.model";
 import { clientOnly } from "vike-react/clientOnly";

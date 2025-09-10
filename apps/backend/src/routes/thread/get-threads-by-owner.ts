@@ -1,6 +1,6 @@
 import { getFriendship } from "#lib/queries/friend/get-friendship.ts";
 import { forumDB } from "#shared/database/forum-db.ts";
-import { getNickname } from "#utils/get-nickname-from-storage.ts";
+import { getNickname } from "#lib/modules/context.ts";
 import { getPublicUrl } from "#utils/get-public-url.ts";
 import { zValidator } from "@hono/zod-validator";
 import { throwError } from "#utils/throw-error.ts";

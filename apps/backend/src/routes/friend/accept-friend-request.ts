@@ -2,11 +2,11 @@ import * as z from "zod";
 import { throwError } from '#utils/throw-error.ts';
 import { zValidator } from "@hono/zod-validator";
 import { Hono } from "hono";
-import { getNickname } from "#utils/get-nickname-from-storage.ts";
+import { getNickname } from "#lib/modules/context.ts";
 import { publishAcceptFriendRequest } from '#publishers/pub-accept-friend-request.ts';
 import { validateFriendsLength } from '#lib/validators/validate-friends-length.ts';
 import { forumDB } from "#shared/database/forum-db.ts";
-import { pushNotificationOnClient } from "#utils/push-notifications-on-client.ts";
+import { pushNotificationOnClient } from "#lib/modules/push-notifications-on-client.ts";
 
 const acceptFriendRequestSchema = z.object({
   request_id: z.string()

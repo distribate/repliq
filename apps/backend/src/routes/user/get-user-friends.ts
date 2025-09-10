@@ -3,9 +3,9 @@ import { throwError } from '#utils/throw-error.ts';
 import { getUserFriends } from "#lib/queries/user/get-user-friends.ts";
 import { zValidator } from "@hono/zod-validator";
 import { Hono } from "hono";
-import { getNickname } from "#utils/get-nickname-from-storage.ts";
-import { userPreferenceAndPrivateValidation } from "#utils/validate-user-preference-private.ts";
+import { getNickname } from "#lib/modules/context.ts";
 import { forumDB } from "#shared/database/forum-db.ts";
+import { userPreferenceAndPrivateValidation } from "#lib/validators/validate-user-preference-private.ts";
 
 export async function getUserFriendsCount(nickname: string): Promise<number> {
   const query = await forumDB

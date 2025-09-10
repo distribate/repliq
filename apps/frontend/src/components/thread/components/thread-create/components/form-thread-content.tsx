@@ -35,10 +35,10 @@ export const FormThreadContent = () => {
             </span>
           </TabsTrigger>
         </TabsList>
-        <TabsContent value="edit">
+        <TabsContent value="edit" className="rounded-lg overflow-hidden">
           <FormThreadEditor />
         </TabsContent>
-        <TabsContent value="preview">
+        <TabsContent value="preview" className="rounded-lg overflow-hidden">
           Превью в разработке...
         </TabsContent>
       </Tabs>

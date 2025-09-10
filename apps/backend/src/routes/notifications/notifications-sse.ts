@@ -2,7 +2,7 @@ import { getNatsConnection } from "@repo/config-nats/nats-client";
 import { Hono } from "hono";
 import { streamSSE } from "hono/streaming";
 import { updateEvent, config, ping } from "@repo/shared/constants/sse-events"
-import { getNickname } from "#utils/get-nickname-from-storage.ts";
+import { getNickname } from "#lib/modules/context.ts";
 import type { NotificationsEventsPayload, ConfigEventsData } from "@repo/types/entities/notifications-events-type";
 import { forumDB } from "#shared/database/forum-db.ts";
 

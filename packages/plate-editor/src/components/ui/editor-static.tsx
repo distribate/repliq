@@ -27,7 +27,6 @@ export const editorVariants = cva(
         true: 'ring-2 ring-ring ring-offset-2',
       },
       variant: {
-        ai: 'w-full px-0 text-base md:text-sm',
         aiChat:
           'max-h-[min(70vh,320px)] w-full max-w-[700px] overflow-y-auto px-5 py-3 text-base md:text-sm',
         default:

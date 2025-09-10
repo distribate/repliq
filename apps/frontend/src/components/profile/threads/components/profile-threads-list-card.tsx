@@ -4,7 +4,7 @@ import { profileThreadsViewAtom, } from "#components/profile/threads/models/prof
 import { Button } from "@repo/ui/src/components/button";
 import { reatomComponent } from "@reatom/npm-react";
 import { CustomLink } from "#shared/components/link";
-import { createIdLink } from "#lib/create-link";
+import { createIdLink } from "#shared/helpers/create-link";
 import dayjs from "@repo/shared/constants/dayjs-instance.ts";
 import { IconBrandThreads } from "@tabler/icons-react";
 

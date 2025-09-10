@@ -2,7 +2,6 @@ import { Typography } from "@repo/ui/src/components/typography.tsx";
 import { addTagAction, deleteTagAction, tagValueAtom, threadFormTagsAtom } from "../models/thread-form.model.ts";
 import { THREAD_TAGS_LIMIT } from "@repo/shared/constants/limits.ts";
 import { reatomComponent } from "@reatom/npm-react";
-import { useEffect } from "react";
 import { IconX } from "@tabler/icons-react";
 import { Textarea } from "@repo/ui/src/components/textarea.tsx";
 import { atom } from "@reatom/core";
@@ -43,26 +42,21 @@ const tagsIsValidAtom = atom((ctx) => {
 }, "tagsIsValidAtom")
 
 const SelectedTagsTextarea = reatomComponent(({ ctx }) => {
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Enter") {
-        e.preventDefault()
-        addTagAction(ctx)
-      }
-    };
-
-    window.addEventListener("keydown", handleKeyDown);
-
-    return () => {
-      window.removeEventListener("keydown", handleKeyDown);
-    };
-  }, []);
-
   const isValid = ctx.spy(tagsIsValidAtom)
+
+  const onKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    if ((e.nativeEvent as any).isComposing) return;
+
+    if (e.key === "Enter") {
+      e.preventDefault();    
+      e.stopPropagation();
+      addTagAction(ctx);
+    }
+  };
 
   if (!isValid) {
     return (
-      <Typography className="text-red-500 text-[15px]">
+      <Typography className="text-red-500 text-sm">
         Максимальное количество тегов
       </Typography>
     )
@@ -74,6 +68,7 @@ const SelectedTagsTextarea = reatomComponent(({ ctx }) => {
       value={ctx.spy(tagValueAtom)}
       placeholder="Введите ключевое слово"
       onChange={e => tagValueAtom(ctx, e.target.value)}
+      onKeyDown={onKeyDown}
       maxLength={512}
     />
   )

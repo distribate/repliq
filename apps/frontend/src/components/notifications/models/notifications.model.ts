@@ -8,7 +8,7 @@ import { validateResponse } from "#shared/api/validation"
 
 export type NotificationsPayload = Awaited<ReturnType<typeof notificationsAction>>;
 
-type NotificationsPayloadData = NotificationsPayload["data"]
+export type NotificationsPayloadData = NotificationsPayload["data"]
 type NotificationsPayloadMeta = NotificationsPayload["meta"]
 
 type NotificationsOpts = {
@@ -22,16 +22,14 @@ export const notificationsAscendingAtom = atom(false, "notificationsAscending")
 export const notificationsLimitAtom = atom(16, "notificationsLimit")
 
 export const notificationsTypeAtom = atom<"system" | "requests" | "news">("system", "notificationsType")
-export const notificationsCursorAtom = atom<string | undefined>(undefined, "notificationsCursor")
+export const notificationsCursorAtom = atom<string | undefined>(undefined, "notificationsCursor").pipe(withReset())
 
 notificationsTypeAtom.onChange((ctx, state) => {
-  notificationsCursorAtom(ctx, undefined)
+  notificationsCursorAtom.reset(ctx)
   updateNotificationsAction(ctx, "update-filter")
 })
 
-notificationsMetaAtom.onChange((ctx, target) => {
-  notificationsCursorAtom(ctx, target?.endCursor)
-})
+notificationsMetaAtom.onChange((ctx, target) => notificationsCursorAtom(ctx, target?.endCursor))
 
 export function resetNotifications(ctx: Ctx) {
   batch(ctx, () => {
@@ -76,27 +74,25 @@ export const checkNotificationAction = reatomAsync(async (ctx, notificationId: s
   const currentNotification = currentNotifications?.find(notification => notification.id === notificationId)
   if (currentNotification?.read)  return
 
-  const result = await ctx.schedule(async () => {
+  return await ctx.schedule(async () => {
     const res = await userClient.user["notification"]["check"].$post(
       { json: { notification_id: notificationId } }
     )
 
     return validateResponse<typeof res>(res)
   })
-
-  return { result, notificationId }
 }, {
   name: "checkNotificationAction",
   onFulfill: (ctx, res) => {
     if (!res) return;
 
-    const { result, notificationId } = res;
+    const { notification_id: updatedNotificationId } = res;
 
     const currentNotifications = ctx.get(notificationsDataAtom)
     if (!currentNotifications) return;
 
     const updatedNotifications = [...currentNotifications];
-    const indexToUpdate = updatedNotifications.findIndex(notification => notification.id === notificationId);
+    const indexToUpdate = updatedNotifications.findIndex(notification => notification.id === updatedNotificationId);
 
     if (indexToUpdate !== -1) {
       updatedNotifications[indexToUpdate] = {

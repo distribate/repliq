@@ -3,7 +3,7 @@ import { publishIssuePayload } from "#publishers/pub-issue-payload.ts";
 import { zValidator } from "@hono/zod-validator";
 import { Hono } from "hono";
 import { createIssueSchema } from "@repo/types/schemas/issue/create-issue-schema.ts";
-import { getNickname } from "#utils/get-nickname-from-storage.ts";
+import { getNickname } from "#lib/modules/context.ts";
 import { forumDB } from "#shared/database/forum-db.ts"
 import * as z from "zod"
 

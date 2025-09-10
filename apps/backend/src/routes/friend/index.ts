@@ -9,13 +9,13 @@ import { getFriendStatusRoute } from "./get-friend-status";
 import { getFriendRequestsRoute } from "./get-friend-requests";
 import { createFriendPinRoute } from "./create-friend-pin";
 import { getRecommendedFriendsRoute } from "./get-recommended-friends";
-import { validateRequest } from "#middlewares/validate-request.ts";
-import { userStatus } from "#middlewares/user-status.ts";
+import { userActivityStatus } from "#middlewares/user-activity-status.ts";
+import { requireAuth } from "#middlewares/require-auth.ts";
 
 export const friend = new Hono()
   .basePath("/friend")
-  .use(validateRequest("prevent"))
-  .use(userStatus())
+  .use(requireAuth("prevent"))
+  .use(userActivityStatus())
   .route("/", createFriendRequestRoute)
   .route("/", deleteFriendRequestRoute)
   .route("/", acceptFriendRequestRoute)

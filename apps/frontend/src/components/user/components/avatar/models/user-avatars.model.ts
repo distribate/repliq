@@ -1,19 +1,21 @@
-import { currentUserNicknameAtom } from "#components/user/models/current-user.model"
 import { userClient } from "#shared/forum-client"
-import { reatomAsync, withCache, withDataAtom, withStatusesAtom } from "@reatom/async"
-import { batch } from "@reatom/core"
-import { requestedUserAtom } from "#components/profile/main/models/requested-user.model"
-import { userCoverSelectedAvatarAtom } from "#components/profile/header/models/avatar.model"
+import { AsyncCtx, reatomAsync, withCache, withDataAtom, withStatusesAtom } from "@reatom/async"
 import { validateResponse } from "#shared/api/validation"
+import { log } from "#shared/utils/log"
+
+export type UserAvatarsPayload = NonNullable<Awaited<ReturnType<typeof getUserAvatars>>>
+
+async function getUserAvatars(ctx: AsyncCtx, nickname: string) {
+  const res = await userClient.user["user-avatars"][":nickname"].$get(
+    { param: { nickname } },
+    { init: { signal: ctx.controller.signal } }
+  )
+
+  return validateResponse<typeof res>(res);
+}
 
 export const userAvatars = reatomAsync(async (ctx, nickname: string) => {
-  return await ctx.schedule(async () => {
-    const res = await userClient.user["user-avatars"][":nickname"].$get(
-      { param: { nickname } }, { init: { signal: ctx.controller.signal } }
-    )
-
-    return validateResponse<typeof res>(res);
-  })
+  return await ctx.schedule(async () => getUserAvatars(ctx, nickname))
 }, {
   name: "userAvatars",
   onReject: (_, e) => {
@@ -23,16 +25,5 @@ export const userAvatars = reatomAsync(async (ctx, nickname: string) => {
   }
 }).pipe(withDataAtom(), withStatusesAtom(), withCache({ swr: false }))
 
-userAvatars.dataAtom.onChange((ctx, state) => {
-  if (!state) return;
-
-  const currentUser = ctx.get(currentUserNicknameAtom)
-  if (!currentUser) return;
-
-  const newAvatar = state.avatars[state.avatars.length - 1];
-
-  batch(ctx, () => {
-    userCoverSelectedAvatarAtom(ctx, newAvatar);
-    requestedUserAtom(ctx, (state) => state ? ({ ...state, avatar: newAvatar }) : null)
-  })
-})
+userAvatars.dataAtom.onChange((_, v) => log("userAvatars.dataAtom", v))
+userAvatars.cacheAtom.onChange((_, v) => log("userAvatars.cacheAtom", v))

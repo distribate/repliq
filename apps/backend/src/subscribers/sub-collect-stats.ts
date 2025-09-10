@@ -1,6 +1,7 @@
-import { COLLECT_STATS_SUBJECT, type StatsPayload } from "#publishers/pub-collect-stats.ts";
+import type { StatsPayload } from "#publishers/pub-collect-stats.ts";
 import { forumDB } from "#shared/database/forum-db.ts";
 import { getNatsConnection } from "@repo/config-nats/nats-client"
+import { COLLECT_STATS_SUBJECT } from "@repo/shared/constants/nats-subjects";
 import { logger } from "@repo/shared/utils/logger.ts";
 import { sql } from "kysely";
 
@@ -14,7 +15,7 @@ export const subscribeCollectStats = () => {
         return
       }
 
-      const payload = JSON.parse(new TextDecoder().decode(msg.data)) as StatsPayload
+      const payload: StatsPayload = JSON.parse(new TextDecoder().decode(msg.data))
 
       let isStatsUpdated = false;
 

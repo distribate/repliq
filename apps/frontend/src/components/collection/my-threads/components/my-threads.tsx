@@ -2,7 +2,7 @@ import { Typography } from "@repo/ui/src/components/typography";
 import { myThreadsAction } from "../models/my-threads.model";
 import { reatomComponent } from "@reatom/npm-react";
 import { CustomLink } from "#shared/components/link";
-import { createIdLink } from "#lib/create-link";
+import { createIdLink } from "#shared/helpers/create-link";
 import { cva } from "class-variance-authority";
 import { AtomState } from "@reatom/core";
 import { IconPhotoScan } from "@tabler/icons-react";

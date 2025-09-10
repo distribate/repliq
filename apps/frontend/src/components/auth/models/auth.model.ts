@@ -5,7 +5,7 @@ import { reatomAsync, withStatusesAtom } from "@reatom/async";
 import { authClient } from "#shared/auth-client";
 import { findoutSchema, registerSchema, nicknameSchema, passwordSchema } from '@repo/types/schemas/auth/create-session-schema.ts';
 import * as z from "zod";
-import { createIdLink } from "#lib/create-link";
+import { createIdLink } from "#shared/helpers/create-link";
 import {
   LOGIN_MESSAGES,
   NOT_ACCEPT_RULES_MESSAGE,
@@ -15,8 +15,8 @@ import {
   SUCCESS_REGISTER_MESSAGES
 } from "./messages";
 import { logger } from "@repo/shared/utils/logger.ts";
-import { withSsr } from "#lib/ssr";
-import { isProduction } from "#lib/utils";
+import { withSsr } from "#shared/lib/ssr";
+import { isProduction } from "#shared/env";
 
 type AuthValues = {
   nickname: string;

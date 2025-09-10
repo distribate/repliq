@@ -1,14 +1,14 @@
 {
   "extends": "@repo/config-typescript/base.json",
   "include": [
-    "."
+    "tailwind.config.ts",
+    "declare.d.ts"
   ],
   "compilerOptions": {
     "moduleResolution": "NodeNext"
   },
   "exclude": [
     "dist",
-    "build",
     "node_modules"
   ]
 }

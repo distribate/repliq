@@ -1,5 +1,5 @@
-import { logRouting } from "#lib/utils";
-import { validateAdmin } from "#lib/validation";
+import { logRouting } from "#shared/utils/log";
+import { validateAdmin } from "#shared/lib/validation";
 import { render } from "vike/abort";
 import { PageContextServer } from "vike/types";
 

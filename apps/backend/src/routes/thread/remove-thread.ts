@@ -1,6 +1,6 @@
 import { throwError } from '#utils/throw-error.ts';
 import { removeThread } from "#lib/queries/thread/remove-thread.ts";
-import { getNickname } from "#utils/get-nickname-from-storage.ts";
+import { getNickname } from "#lib/modules/context.ts";
 import { Hono } from "hono";
 import { validateThreadOwner } from "#lib/validators/validate-thread-owner.ts";
 

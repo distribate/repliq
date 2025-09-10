@@ -1,14 +1,14 @@
-import { userStatus } from "#middlewares/user-status.ts";
-import { validateRequest } from "#middlewares/validate-request.ts";
 import { Hono } from "hono";
 import { getReportRoute } from "./get-report";
 import { createReportRoute } from "./create-report";
 import { approveReportRoute } from "./approve-report";
+import { userActivityStatus } from "#middlewares/user-activity-status.ts";
+import { requireAuth } from "#middlewares/require-auth.ts";
 
 export const report = new Hono()
   .basePath('/report')
-  .use(validateRequest("prevent"))
-  .use(userStatus())
+  .use(requireAuth("prevent"))
+  .use(userActivityStatus())
   .route("/", getReportRoute)
   .route("/", createReportRoute)
   .route("/", approveReportRoute)

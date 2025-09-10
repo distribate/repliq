@@ -3,8 +3,8 @@ import * as z from "zod";
 import { zValidator } from '@hono/zod-validator';
 import { throwError } from '#utils/throw-error.ts';
 import { getUserThreads } from '#lib/queries/user/get-user-threads.ts';
-import { userPreferenceAndPrivateValidation } from '#utils/validate-user-preference-private.ts';
-import { getNickname } from '#utils/get-nickname-from-storage.ts';
+import { getNickname } from '#lib/modules/context.ts';
+import { userPreferenceAndPrivateValidation } from '#lib/validators/validate-user-preference-private.ts';
 
 export const getUserThreadsSchema = z.object({
   searchQuery: z.string().optional(),
