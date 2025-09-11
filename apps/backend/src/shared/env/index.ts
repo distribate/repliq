@@ -21,7 +21,7 @@ export const MAIN_POSTGRES_PASSWORD = process.env.MAIN_POSTGRES_PASSWORD
 
 export const REDIS_HOST = process.env.REDIS_HOST
 export const REDIS_PORT = process.env.REDIS_PORT
-export const REDIS_PASSWORD = process.env.REDIS_USER_PASSWORD
+export const REDIS_PASSWORD = process.env.REDIS_PASSWORD
 export const REDIS_USER = process.env.REDIS_USER
 
 export const SQLITE_PATH = process.env.SQLITE_PATH
@@ -34,3 +34,7 @@ export const NODEMAILER_PASSWORD = process.env.NODEMAILER_PASSWORD
 export const AXIOM_DOMAIN = process.env.AXIOM_DOMAIN
 export const AXIOM_TOKEN = process.env.AXIOM_TOKEN
 export const AXIOM_DATASET = process.env.AXIOM_DATASET
+
+export const SERVER_TOKEN = process.env.SERVER_TOKEN
+
+export const SERVICE_CHAT_ID = process.env.SERVICE_CHAT_ID

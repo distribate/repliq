@@ -1,24 +1,66 @@
-import { defineConfig, loadEnv } from "vite";
+import { defineConfig, loadEnv, Plugin } from "vite";
 import react from "@vitejs/plugin-react";
 import vike from "vike/plugin";
 import tsconfigPaths from 'vite-tsconfig-paths';
 import Sonda from 'sonda/vite';
 
-const isDebug = false
+function onPreview(
+  { prefixUrl, token }: { prefixUrl: string, token: string }
+): Plugin {
+  const name = "on-preview";
+
+  if (typeof Bun !== "undefined") {
+    console.log("Running in Bun:", Bun.version);
+  } else if (typeof process !== "undefined" && process.versions?.node) {
+    console.log("Running in Node.js:", process.versions.node);
+  } else {
+    console.log("Unknown runtime");
+  }
+
+  return {
+    name,
+    configurePreviewServer(server) {
+      server.httpServer.on("listening", async () => {
+        try {
+          const payload = {
+            type: "on-preview",
+            created_at: new Date(),
+            data: null
+          };
+
+          const res = await fetch(`${prefixUrl}/notify`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json", "TOKEN": token },
+            body: JSON.stringify(payload),
+          });
+
+          if (!res.ok) {
+            console.log(`[${name}]:`, await res.json())
+          }
+
+          console.log(`[${name}]: Request sent after preview start:`, res.statusText);
+        } catch (e) {
+          console.error(`[${name}]: Failed to send request:`, e);
+        }
+      });
+    }
+  }
+}
 
 export default defineConfig(({ mode }) => {
-  const env = loadEnv(mode, process.cwd())
+  const env = loadEnv(mode, process.cwd(), ['VITE_', "PUBLIC_"])
   const host = env.VITE_APP_HOST
   const port = Number(env.VITE_APP_PORT)
+  const token = env.VITE_SERVER_TOKEN;
+  const prefixUrl = env.PUBLIC_ENV__API_PREFIX_URL;
 
   return {
     plugins: [
       vike(),
       react(),
       tsconfigPaths(),
-      Sonda({
-        enabled: isDebug
-      })
+      Sonda({ enabled: false }),
+      onPreview({ prefixUrl, token })
     ],
     build: {
       sourcemap: false,

@@ -1,7 +1,7 @@
 import { isAuthenticatedAtom } from "#components/auth/models/auth.model";
 import { es } from "#shared/constants/es";
 import { MAIN_BASE_URL } from "#shared/env";
-import { throwAppError } from "#shared/models/error.model";
+// import { throwAppError } from "#shared/models/error.model";
 import { action, atom } from "@reatom/core";
 import { config, ping, updateEvent } from "@repo/shared/constants/sse-events";
 import { ConfigEventsData, NotificationsEventsPayload } from "@repo/types/entities/notifications-events-type";
@@ -22,9 +22,9 @@ notificationsEsAtom.onChange((ctx, state) => {
     }
   })
 
-  state.addEventListener("error", (e) => { 
-    throwAppError(ctx, "Notifications is disconnected")
-  })
+  // state.addEventListener("error", (e) => { 
+  //   throwAppError(ctx, "Notifications is disconnected")
+  // })
 
   state.addEventListener(ping, () => { });
 

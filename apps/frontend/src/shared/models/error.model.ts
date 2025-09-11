@@ -12,16 +12,5 @@ export const throwAppError = action((ctx, message: string) => {
   appErrorAtom(ctx, error)
 }, "throwAppError")
 
-appIsErrorAtom.onChange((ctx, state) => {
-  if (state) {
-    const error = ctx.get(appErrorAtom);
-    if (!error) return;
-
-    setTimeout(() => {
-      throw new Error(error.message)
-    }, 0);
-  }
-})
-
 appIsErrorAtom.onChange((_, v) => log("appIsErrorAtom", v))
 appErrorAtom.onChange((_, v) => log("appErrorAtom", v))

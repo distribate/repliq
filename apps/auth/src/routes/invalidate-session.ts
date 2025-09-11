@@ -6,7 +6,7 @@ import { sha256 } from "@oslojs/crypto/sha2";
 import type { Context } from "hono";
 import { SESSION_DOMAIN, SESSION_KEY } from "../shared/constants/session-details";
 import { destroySession, getSession } from "../utils/auth";
-import { isProduction } from "#helpers/is-production.ts";
+import { isProduction } from "#shared/env/index.ts";
 
 export function deleteCookiesToken(ctx: Context) {
   setCookie(ctx, SESSION_KEY, "", {

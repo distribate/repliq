@@ -2,7 +2,7 @@ import type { Context } from "hono"
 import { verifyAuth } from "../../utils/verify-auth"
 import { getClientIp } from "../../utils/get-client-ip"
 import { validateIpRestricts } from "../../utils/validate-ip-restricts"
-import { isProduction } from "#helpers/is-production.ts"
+import { isProduction } from "#shared/env/index.ts"
 
 type ValidateAuthenticationRequest = {
   ctx: Context, 

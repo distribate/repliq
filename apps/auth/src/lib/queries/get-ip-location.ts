@@ -1,3 +1,4 @@
+import { LOCATION_TOKEN } from '#shared/env/index.ts';
 import { logger } from '@repo/shared/utils/logger.ts';
 import ky from 'ky';
 
@@ -60,7 +61,7 @@ export async function getIpLocation(ip: string) {
     const res = await ky(`https://api.findip.net/${ip}/`, {
       throwHttpErrors: false,
       searchParams: {
-        token: Bun.env.LOCATION_TOKEN!
+        token: LOCATION_TOKEN
       },
       timeout: 2000
     });

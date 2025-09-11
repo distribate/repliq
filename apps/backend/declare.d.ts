@@ -19,7 +19,7 @@ declare module "bun" {
     SUPABASE_URL: string
 
     REDIS_HOST: string;
-    REDIS_USER_PASSWORD: string;
+    REDIS_PASSWORD: string;
     REDIS_USER: string;
     REDIS_PORT: string;
 
@@ -40,6 +40,10 @@ declare module "bun" {
     AXIOM_DOMAIN: string;
     AXIOM_TOKEN: string;
     AXIOM_DATASET: string;
+
+    SERVER_TOKEN: string;
+
+    SERVICE_CHAT_ID: string
   }
 }
 

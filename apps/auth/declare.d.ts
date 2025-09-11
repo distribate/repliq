@@ -2,7 +2,7 @@ declare module "bun" {
   interface Env {
     MAIN_POSTGRES_HOST: string;
     MAIN_POSTGRES_USER: string;
-    MAIN_POSTGRES_PORT: number;
+    MAIN_POSTGRES_PORT: string;
     MAIN_POSTGRES_PASSWORD: string;
     MAIN_POSTGRES_DB: string;
     MAIN_POSTGRES_TENANT_ID: string;
@@ -16,10 +16,10 @@ declare module "bun" {
     SUPABASE_URL: string    
 
     REDIS_HOST: string;
-    REDIS_USER_PASSWORD: string;
+    REDIS_PASSWORD: string;
     REDIS_USER: string;
-    REDIS_PORT: number;
+    REDIS_PORT: string;
 
-    PORT: number;
+    PORT: string;
   }
 }

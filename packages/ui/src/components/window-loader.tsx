@@ -4,8 +4,8 @@ import { HTMLAttributes } from "react"
 const windowLoaderVariants = cva("windows-loading-spinner", {
   variants: {
     size: {
-      default: "w-[3rem] h-[3rem]",
-      small: "w-[24px] h-[24px]"
+      default: "w-12 h-12",
+      small: "w-6 h-6"
     }
   },
   defaultVariants: {

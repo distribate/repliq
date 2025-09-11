@@ -1,7 +1,6 @@
 import { Slot } from "@radix-ui/react-slot";
 import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@repo/shared/utils/cn.ts";
-import { ButtonHTMLAttributes } from "react";
 import { WindowLoader } from "./window-loader.tsx";
 
 const buttonVariants = cva(
@@ -47,19 +46,20 @@ const buttonVariants = cva(
 );
 
 export interface ButtonProps
-  extends ButtonHTMLAttributes<HTMLButtonElement>,
+  extends React.ComponentProps<"button">,
   VariantProps<typeof buttonVariants> {
   asChild?: boolean;
   pending?: boolean;
 }
 
-const Button = ({ 
-  className, effect, variant, rounded, size, pending, state, asChild = false, ...props 
+const Button = ({
+  className, effect, variant, rounded, size, pending, state, asChild = false, ...props
 }: ButtonProps) => {
   const Comp = asChild ? Slot : "button";
 
   return (
     <Comp
+      data-slot="button"
       className={cn(buttonVariants({ variant, state, effect, rounded, size, className }))}
       {...props}
     >

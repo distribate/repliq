@@ -15,6 +15,7 @@
     "@repo/config-typescript": "*",
     "@repo/types": "*",
     "clsx": "2.1.1",
+    "tailwind-merge": "3.3.1",
     "typescript": "^5.4.5"
   }
 }

@@ -17,8 +17,6 @@
   },
   "dependencies": {
     "@hono/zod-validator": "0.7.2",
-    "@nats-io/jetstream": "3.0.0-35",
-    "@nats-io/kv": "3.0.0-30",
     "@nats-io/transport-node": "3.0.0-32",
     "@oslojs/crypto": "1.0.1",
     "@oslojs/encoding": "1.1.0",
@@ -37,7 +35,6 @@
   "devDependencies": {
     "@repo/config-eslint": "*",
     "@repo/config-nats": "*",
-    "@repo/config-tailwind": "*",
     "@repo/config-typescript": "*",
     "@repo/types": "*",
     "@types/bcryptjs": "2.4.6",

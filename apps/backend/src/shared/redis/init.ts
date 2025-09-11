@@ -7,7 +7,7 @@ export function initRedis() {
   if (redis) return;
 
   redis = new Redis({
-    host: isProduction ? REDIS_HOST : "localhost",
+    host: isProduction ? REDIS_HOST : "127.0.0.1",
     port: Number(REDIS_PORT),
     password: REDIS_PASSWORD,
     username: REDIS_USER

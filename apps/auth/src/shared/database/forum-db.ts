@@ -1,7 +1,15 @@
 import { Kysely, PostgresDialect } from 'kysely';
 import type { DB as forumDBType } from "@repo/types/db/forum-database-types";
 import { Pool, type PoolConfig } from 'pg';
-import { isProduction } from '#helpers/is-production.ts';
+import { 
+  isProduction, 
+  MAIN_POSTGRES_DB, 
+  MAIN_POSTGRES_HOST, 
+  MAIN_POSTGRES_PASSWORD, 
+  MAIN_POSTGRES_PORT, 
+  MAIN_POSTGRES_TENANT_ID, 
+  MAIN_POSTGRES_USER 
+} from '../env';
 
 interface AppGlobal {
   pgPool?: Pool;
@@ -11,11 +19,11 @@ interface AppGlobal {
 const appGlobal = globalThis as unknown as AppGlobal;
 
 const config: PoolConfig = {
-  host: isProduction ? Bun.env.MAIN_POSTGRES_HOST : "127.0.0.1",
-  database: Bun.env.MAIN_POSTGRES_DB,
-  password: Bun.env.MAIN_POSTGRES_PASSWORD,
-  port: Number(Bun.env.MAIN_POSTGRES_PORT),
-  user: `${Bun.env.MAIN_POSTGRES_USER}.${Bun.env.MAIN_POSTGRES_TENANT_ID}`,
+  host: isProduction ? MAIN_POSTGRES_HOST : "127.0.0.1",
+  database: MAIN_POSTGRES_DB,
+  password: MAIN_POSTGRES_PASSWORD,
+  port: Number(MAIN_POSTGRES_PORT),
+  user: `${MAIN_POSTGRES_USER}.${MAIN_POSTGRES_TENANT_ID}`,
   max: isProduction ? 16 : 8,
   idleTimeoutMillis: 30000,
   connectionTimeoutMillis: 10000,

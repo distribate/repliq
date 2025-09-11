@@ -1,3 +1,5 @@
+import { appErrorAtom, appIsErrorAtom } from "#shared/models/error.model";
+import { reatomComponent } from "@reatom/npm-react";
 import { Button } from "@repo/ui/src/components/button";
 import { ErrorInfo, PropsWithChildren } from "react"
 import { ErrorBoundary as Boundary, FallbackProps } from "react-error-boundary";
@@ -25,12 +27,24 @@ const logError = (error: Error, { componentStack, digest }: ErrorInfo) => {
   console.error("Error", error.message, digest, componentStack)
 };
 
+const ThrowErrorComponent = reatomComponent(({ ctx }) => {
+  const isError = ctx.spy(appIsErrorAtom);
+  const error = ctx.spy(appErrorAtom);
+
+  if (isError && error) {
+    throw new Error(error.message);
+  }
+
+  return null
+}, "ThrowErrorComponent")
+
 export const ErrorBoundary = ({ children }: PropsWithChildren) => {
   return (
     <Boundary
       fallbackRender={fallbackRender}
       onError={logError}
     >
+      <ThrowErrorComponent />
       {children}
     </Boundary>
   )

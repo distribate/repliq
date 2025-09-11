@@ -13,7 +13,7 @@ import type { Selectable } from 'kysely';
 import type { Users } from '@repo/types/db/forum-database-types.ts';
 import bcrypt from 'bcryptjs';
 import type { Session } from "../utils/auth.ts";
-import { isProduction } from "#helpers/is-production.ts";
+import { isProduction } from "#shared/env/index.ts";
 
 export type SessionValidationResult =
   | { session: Session; user: Selectable<Pick<Users, "id" | "nickname">> }

@@ -1,7 +1,7 @@
 import { createCtx, Ctx } from "@reatom/core"
 import { useRef } from "react"
 
-export const isSsr = typeof window !== 'undefined'
+export const isSsr = typeof window === 'undefined'
 
 export interface Fn<Args extends any[] = any[], Return = any> {
   (...a: Args): Return

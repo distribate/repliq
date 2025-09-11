@@ -42,17 +42,17 @@ const IntegrationsTrigger = reatomComponent(({ ctx }) => {
 const TabsListContent = reatomComponent(({ ctx }) => {
   return (
     <>
-      <TabsTrigger value="posts" className="group gap-2">
+      <TabsTrigger value="posts" className="group gap-2 font-semibold">
         <IconPencilShare size={20} className={iconVariant()} />
-        <Typography className="font-semibold">Посты</Typography>
+        Посты
       </TabsTrigger>
-      <TabsTrigger value="threads" className="group gap-2">
+      <TabsTrigger value="threads" className="group gap-2 font-semibold">
         <IconBrandThreads size={20} className={iconVariant()} />
-        <Typography className="font-semibold">Треды</Typography>
+        Треды
       </TabsTrigger>
-      <TabsTrigger value="friends" className="group gap-2">
+      <TabsTrigger value="friends" className="group gap-2 font-semibold">
         <IconUsers size={20} className={iconVariant()} />
-        <Typography className="font-semibold">Друзья</Typography>
+        Друзья
       </TabsTrigger>
       {ctx.spy(requestedUserProfilesIsExistAtom) && (
         <>
@@ -62,9 +62,9 @@ const TabsListContent = reatomComponent(({ ctx }) => {
       {ctx.spy(requestedUserIsSameAtom) && (
         <>
           <Separator orientation="vertical" className="hidden lg:block" />
-          <TabsTrigger value="account" className="group gap-2">
+          <TabsTrigger value="account" className="group gap-2 font-semibold">
             <IconCardboardsFilled size={20} className={iconVariant()} />
-            <Typography className="font-semibold">Аккаунт</Typography>
+            Аккаунт
           </TabsTrigger>
           {ctx.spy(requestedUserSectionIsPrivatedAtom) && <SectionPrivatedTrigger />}
         </>
@@ -111,12 +111,12 @@ export const ProfileContentTabs = reatomComponent(({ ctx }) => {
         className="flex flex-col gap-6 w-full h-full"
       >
         <TabsList
-          className="md:hidden flex *:rounded-xl rounded-xl 
-            items-center no-scrollbar gap-1 justify-start overflow-x-auto w-full"
+          className="md:hidden flex *:rounded-lg rounded-lg 
+            items-center gap-1 justify-start overflow-x-auto w-full"
         >
           <TabsListContent />
         </TabsList>
-        <TabsList className="hidden *:rounded-xl rounded-xl gap-2 md:flex justify-start w-fit">
+        <TabsList className="hidden *:rounded-lg rounded-lg gap-2 md:flex justify-start w-fit">
           <TabsListContent />
         </TabsList>
         <div className="flex flex-col lg:flex-row items-start grow *:w-full w-full">

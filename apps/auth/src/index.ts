@@ -14,13 +14,11 @@ import { timeout } from './middlewares/timeout-middleware.ts';
 import { cors } from './middlewares/cors-middleware.ts';
 import { rateLimiter } from './middlewares/rate-limiter.ts';
 import { timing } from 'hono/timing'
-import type { Env } from './types/env-type.ts';
 import { initRedis } from './shared/redis/init.ts';
 import { INTERNAl_FILES, loadInternalFiles } from './shared/constants/internal-files.ts';
-import { isProduction } from '#helpers/is-production.ts';
 import { initSupabase } from '#shared/supabase/supabase-client.ts';
-
-const port = Bun.env.PORT
+import { isProduction, PORT as port } from '#shared/env/index.ts';
+import type { Env } from './types/env-type.ts';
 
 export const auth = new Hono()
   .route("/", validateSessionRoute)
@@ -41,19 +39,21 @@ const app = new Hono<Env>()
   .use(timing())
   .use(timeout())
   .use(honoLogger())
-  .onError((error, ctx) => ctx.json({ error: error.message ?? "Internal Server Error" }, 500))
   .route("/", root)
   .route("/", auth)
+  .onError((error, ctx) => ctx.json({ error: error.message ?? "Internal Server Error" }, 500))
   
 async function start() {
   await initNats()
+  await initSupabase()
 
   initRedis()
   
-  await initSupabase()
   await loadInternalFiles(INTERNAl_FILES);
 
-  isProduction && showRoutes(app, { verbose: false });
+  if (isProduction) {
+    showRoutes(app, { verbose: false });
+  }
   
   Bun.serve({ port, fetch: app.fetch });
   

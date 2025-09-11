@@ -1,4 +1,4 @@
-import { Hono, type Context } from 'hono';
+import { Hono } from 'hono';
 import { zValidator } from '@hono/zod-validator';
 import { createUserTransaction } from '../lib/transactions/create-user-transaction.ts';
 import { throwError } from '#utils/throw-error.ts';
@@ -37,10 +37,6 @@ export const registerRoute = new Hono()
 
       return ctx.json({ status: "Success" }, 201);
     } catch (e) {
-      if (e instanceof Error) {
-        logger.error(e.message)
-      }
-
       return ctx.json({ error: throwError(e) }, 500);
     }
   });

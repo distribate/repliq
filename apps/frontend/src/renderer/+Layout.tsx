@@ -12,8 +12,6 @@ import { ErrorBoundary } from '#shared/components/error-boundary';
 
 import '@bprogress/core/css';
 
-import '../ui.css';
-import '../editor.css';
 import '../global.css';
 
 const SyncPageContext = () => {
@@ -22,21 +20,26 @@ const SyncPageContext = () => {
   return null;
 }
 
-function initSnapshot(
-  ctx: Ctx,
-  snapshot: AtomState<typeof snapshotAtom>
-) {
+async function initDevtools(ctx: Ctx) {
+  const { createDevtools } = await import('@reatom/devtools')
+  globalThis.DEVTOOLS = createDevtools({ ctx })
+}
+
+function init(ctx: Ctx, snapshot: AtomState<typeof snapshotAtom>) {
   snapshotAtom(ctx, snapshot);
 
-  if (isSsr && isDevelopment) {
-    logger(ctx)
+  if (isDevelopment) {
+    if (!isSsr) {
+      logger(ctx)
+      initDevtools(ctx);
+    }
   }
 }
 
 const ReatomProvider = ({ children }: { children: ReactNode }) => {
   const { snapshot } = usePageContext();
 
-  const ctx = useCreateCtx((ctx) => initSnapshot(ctx, snapshot))
+  const ctx = useCreateCtx((ctx) => init(ctx, snapshot))
 
   return (
     <reatomContext.Provider value={ctx}>

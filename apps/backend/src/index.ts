@@ -79,13 +79,17 @@ async function start() {
     await startBots()
   }
 
-  await startCron();
+  function startOT() {
+    sdk.start()
+    console.log("\x1B[35m[OpenTelemetry]\x1B[0m SDK started")
+  }
 
+  await startCron();
+  startOT();
+  
   if (isProduction) {
     showRoutes(app, { verbose: false });
   }
-  
-  sdk.start()
   
   Bun.serve({ port, fetch: app.fetch })
 

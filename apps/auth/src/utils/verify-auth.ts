@@ -1,3 +1,4 @@
+import { TURNSTILE_KEY } from "#shared/env/index.ts";
 import { logger } from "@repo/shared/utils/logger.ts";
 import ky from "ky"
 
@@ -10,12 +11,10 @@ type Payload = {
   tokenId: string
 }
 
-const CF_TURNSTILE_TOKEN = Bun.env.CF_TURNSTILE_TOKEN
-
 export async function verifyAuth(inputToken: string) {
   try {
     const verifyRes = await ky.post("https://challenges.cloudflare.com/turnstile/v0/siteverify", {
-      json: { secret: CF_TURNSTILE_TOKEN, response: inputToken },
+      json: { secret: TURNSTILE_KEY, response: inputToken },
     });
 
     if (!verifyRes.ok) {

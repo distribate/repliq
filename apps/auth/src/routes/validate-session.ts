@@ -4,7 +4,7 @@ import { getCookie, setCookie } from "hono/cookie";
 import { SESSION_DOMAIN, SESSION_KEY } from "../shared/constants/session-details";
 import type { Env } from "../types/env-type";
 import { getSession } from "../utils/auth";
-import { isProduction } from "#helpers/is-production.ts";
+import { isProduction } from "#shared/env/index.ts";
 
 export const validateSessionRoute = new Hono<Env>()
   .get("/validate-session", async (ctx) => {
