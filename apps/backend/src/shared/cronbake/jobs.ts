@@ -1,5 +1,6 @@
 import { cleanupOldEntries } from "#lib/modules/user-activity-status.ts";
-import { getBaker } from "./init";
+import { updatePublicState } from "#routes/public/get-public-stats.ts";
+import { getBaker } from ".";
 
 type CronJob = {
   fn: () => Promise<void>;
@@ -11,6 +12,10 @@ const CRON_JOBS: Record<string, CronJob> = {
     fn: cleanupOldEntries,
     cron: "0 */5 * * * *",
   },
+  "update-public-stats": {
+    fn: updatePublicState,
+    cron: "0 */30 * * * *"
+  }
 };
 
 export async function startJobs() {
@@ -20,15 +25,18 @@ export async function startJobs() {
     baker.add({
       name,
       cron: job.cron,
+      immediate: true,
       callback: async () => {
-        try {
-          await job.fn();
-        } catch (err) {
-          console.error(`\x1B[35m[Baker]\x1B[0m [${name}] Ошибка выполнения задачи:`, err);
-        }
+        await job.fn();
       },
       onError(error) {
-        console.error(`\x1B[35m[Baker]\x1B[0m [${name}] Error:`, error);
+        console.error(`\x1B[35m[Baker]\x1B[0m [${name}] Job error:`, error);
+      },
+      onTick: () => {
+        console.log(`\x1B[35m[Baker]\x1B[0m [${name}] Job started`);
+      },
+      onComplete: () => {
+        console.log(`\x1B[35m[Baker]\x1B[0m [${name}] Job completed`);
       },
     });
 
@@ -37,5 +45,5 @@ export async function startJobs() {
 
   baker.bakeAll();
 
-  console.log(`[Baker] Started ${Object.keys(CRON_JOBS).length} jobs`);
+  console.log(`\x1B[35m[Baker]\x1B[0m Started ${Object.keys(CRON_JOBS).length} jobs`);
 }

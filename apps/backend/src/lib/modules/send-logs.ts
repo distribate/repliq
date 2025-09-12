@@ -1,5 +1,5 @@
 import { forumDB } from '#shared/database/forum-db.ts';
-import { servicedBot } from '../../shared/bots/init.ts';
+import { servicedBot } from '../../shared/bots/index.ts';
 
 type SendLoggerBot = {
   type: "admins" | "log",

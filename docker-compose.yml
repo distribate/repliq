@@ -533,6 +533,31 @@ services:
     volumes:
       - ./data/fasberry-supabase/volumes/pooler/pooler.exs:/etc/pooler/pooler.exs:ro
 
+  mailserver:
+    image: mailserver/docker-mailserver:latest
+    hostname: mail
+    domainname: fasberry.com 
+    container_name: mailserver
+    ports:
+      - "25:25"      # SMTP
+      - "465:465"    # SMTPS (secure)
+      - "587:587"    # Submission (STARTTLS)
+      - "993:993"    # IMAPS
+    volumes:
+      - ./data/mail/maildata:/var/mail
+      - ./data/mail/mailstate:/var/mail-state
+      - ./data/mail/config/:/tmp/docker-mailserver/
+    environment:
+      - ENABLE_SPAMASSASSIN=1
+      - ENABLE_CLAMAV=1
+      - ENABLE_FAIL2BAN=1
+      - ENABLE_POSTGREY=0
+      - ONE_DIR=1
+      - DMS_DEBUG=0
+    cap_add:
+      - NET_ADMIN
+      - SYS_PTRACE
+
 networks:
   shared-network:
     external: true

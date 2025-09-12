@@ -1,7 +1,7 @@
 import { getCookie } from "hono/cookie";
 import { createMiddleware } from "hono/factory";
 import { SESSION_KEY } from "../shared/constants/session-details";
-import { getRedisClient } from "../shared/redis/init";
+import { getRedisClient } from "../shared/redis";
 import { encodeBase32LowerCaseNoPadding } from "@oslojs/encoding";
 
 export const SESSION_TTL = 60 * 60 * 24 * 30; // 30 days

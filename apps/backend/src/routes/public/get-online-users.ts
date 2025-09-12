@@ -1,6 +1,6 @@
 import { getLastActivityZsetKey } from "#lib/modules/user-activity-status.ts";
 import { forumDB } from "#shared/database/forum-db.ts";
-import { getRedisClient } from "#shared/redis/init.ts";
+import { getRedisClient } from "#shared/redis/index.ts";
 import { throwError } from "#utils/throw-error.ts";
 import { Hono } from "hono";
 

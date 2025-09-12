@@ -1,4 +1,7 @@
-import { supabase } from "#shared/supabase/supabase-client.ts";
+import { getSupabaseClient } from "#shared/supabase/index.ts";
 
-export const getPublicUrl = (bucket: string, url: string) =>
-  supabase.storage.from(bucket).getPublicUrl(url).data.publicUrl
+export const getPublicUrl = (bucket: string, url: string) => {
+  const supabase = getSupabaseClient();
+
+  return supabase.storage.from(bucket).getPublicUrl(url).data.publicUrl
+}

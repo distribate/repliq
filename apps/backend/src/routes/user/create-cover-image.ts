@@ -1,5 +1,5 @@
 import * as z from "zod";
-import { supabase } from "#shared/supabase/supabase-client.ts";
+import { getSupabaseClient } from "#shared/supabase/index.ts";
 import { getNickname } from "#lib/modules/context.ts";
 import { throwError } from "#utils/throw-error.ts";
 import { Hono } from "hono";
@@ -49,6 +49,8 @@ export async function deletePrevCoverImage(
     const type = getUserImageType(url)
 
     if (type === 'custom') {
+      const supabase = getSupabaseClient();
+
       const prefix = `/public/${ROOT_COVER_PATH}/`;
       const index = url.indexOf(prefix);
       const target = url.slice(index + prefix.length);
@@ -88,6 +90,8 @@ async function createCoverImage(
     if (!file) throw new Error("File is required");
 
     return forumDB.transaction().execute(async (trx) => {
+      const supabase = getSupabaseClient();
+      
       const deleted = await deletePrevCoverImage(nickname, trx)
 
       const id = nanoid(3);

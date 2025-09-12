@@ -1,10 +1,12 @@
-import { supabase } from "#shared/supabase/supabase-client.ts"
+import { getSupabaseClient } from "#shared/supabase/index.ts"
 import { getPublicUrl } from "#utils/get-public-url.ts"
 import { throwError } from "#utils/throw-error.ts"
 import { Hono } from "hono"
 import { USER_IMAGES_BUCKET } from "@repo/shared/constants/buckets"
 
 async function getImagesLibrary() {
+   const supabase = getSupabaseClient();
+   
   const { data, error } = await supabase
     .storage
     .from(USER_IMAGES_BUCKET).list("default", { limit: 16, offset: 0 })

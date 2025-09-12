@@ -1,5 +1,5 @@
 import { extname } from "node:path";
-import { supabase } from "../supabase/supabase-client";
+import { getSupabaseClient } from "../supabase";
 
 export const textSets: Record<string, Set<string>> = {};
 export const fileBlobs: Record<string, File> = {};
@@ -27,6 +27,8 @@ export const INTERNAl_FILES: FileEntry[] = [
 ]
 
 export async function loadInternalFiles(entries: FileEntry[]) {
+  const supabase = getSupabaseClient();
+  
   for (const { key: filename, value: callback } of entries) {
     const { data: blob, error } = await supabase.storage
       .from("internal")

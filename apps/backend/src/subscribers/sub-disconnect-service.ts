@@ -2,7 +2,7 @@ import { getNatsConnection } from "@repo/config-nats/nats-client"
 import { bold, format } from "gramio"
 import { logger } from "@repo/shared/utils/logger.ts"
 import { DISCONNECT_SOCIAL_SUBJECT } from "@repo/shared/constants/nats-subjects"
-import { repliqBot } from "../shared/bots/init.ts"
+import { repliqBot } from "../shared/bots/index.ts"
 
 type DisconnectServicePayload = { 
   serviceId: string, 

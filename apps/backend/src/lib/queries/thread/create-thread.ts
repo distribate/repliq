@@ -1,5 +1,5 @@
 import { JsonValue } from "#helpers/json-value.ts"
-import { supabase } from "#shared/supabase/supabase-client.ts"
+import { getSupabaseClient } from "#shared/supabase/index.ts"
 import type { Transaction } from "kysely"
 import type { DB } from "@repo/types/db/forum-database-types";
 import * as z from "zod";
@@ -55,6 +55,8 @@ async function addThreadsImages({
 async function uploadThreadImages({
   images, thread_id
 }: UploadThreadImages) {
+  const supabase = getSupabaseClient();
+  
   const uploadPromises = images.map((image, index) => {
     const imageName = `${thread_id}-${index}`;
 

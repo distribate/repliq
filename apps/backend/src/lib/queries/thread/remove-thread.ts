@@ -1,5 +1,5 @@
 import { forumDB } from "#shared/database/forum-db.ts";
-import { supabase } from "#shared/supabase/supabase-client.ts";
+import { getSupabaseClient } from "#shared/supabase/index.ts";
 import type { DB } from "@repo/types/db/forum-database-types.ts";
 import type { Transaction } from "kysely";
 
@@ -17,7 +17,7 @@ async function deleteComments(id: string, trx: Transaction<DB>) {
   return true;
 }
 
-async function removeThreadImages(id: string, trx: Transaction<DB>) {
+async function removeThreadImages(id: string, trx: Transaction<DB>) {  
   let finished: boolean = false;
 
   const threadImages = await trx
@@ -27,6 +27,8 @@ async function removeThreadImages(id: string, trx: Transaction<DB>) {
     .execute();
 
   if (threadImages && threadImages.length >= 1) {
+    const supabase = getSupabaseClient();
+
     threadImages.forEach(async (image) => {
       await supabase.storage.from("threads").remove([`/${image.image_url}`]);
     })

@@ -1,4 +1,4 @@
-import { getRedisClient } from "#shared/redis/init.ts";
+import { getRedisClient } from "#shared/redis/index.ts";
 
 export type ActivityStatusPayload = number;
 

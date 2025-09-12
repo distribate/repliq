@@ -1,7 +1,7 @@
 import { bold, Bot, format } from "gramio";
 import { validateAdminRequest } from "../validators/validate-admin-request.ts";
 import { pushNotificationOnClient } from "#lib/modules/push-notifications-on-client.ts";
-import { getRedisClient } from "#shared/redis/init.ts";
+import { getRedisClient } from "#shared/redis/index.ts";
 
 async function getOnlineUsersCount() {
   const redis = getRedisClient();

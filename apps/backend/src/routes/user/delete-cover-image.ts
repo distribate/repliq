@@ -1,5 +1,5 @@
 import { forumDB } from "#shared/database/forum-db.ts"
-import { supabase } from "#shared/supabase/supabase-client.ts";
+import { getSupabaseClient } from "#shared/supabase/index.ts";
 import { getNickname } from "#lib/modules/context.ts"
 import { throwError } from "#utils/throw-error.ts"
 import { logger } from "@repo/shared/utils/logger.ts";
@@ -41,6 +41,8 @@ async function deleteCoverImage(nickname: string) {
     }
 
     if (type === 'custom') {
+      const supabase = getSupabaseClient()
+      
       const prefix = '/public/user_images/';
       const index = url.indexOf(prefix);
       const target = url.slice(index + prefix.length);

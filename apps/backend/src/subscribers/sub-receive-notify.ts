@@ -8,12 +8,11 @@ import type {
   NotifyRegisterReceived,
   NotifyVoteReceived
 } from "@repo/types/entities/notify-types"
-import { issueMessage, loginMessage, registerMessage, voteMessage } from "../shared/messages/notifications.ts";
 import { forumDB } from "../shared/database/forum-db";
-import { repliqBot } from "../shared/bots/init.ts";
+import { repliqBot } from "../shared/bots/index.ts";
 import { format } from "gramio";
 import { logger } from "@repo/shared/utils/logger.ts";
-import { servicedBot } from "../shared/bots/init.ts"
+import { servicedBot } from "../shared/bots/index.ts"
 
 type NotifyMap = {
   login: NotifyLoginReceived;
@@ -70,6 +69,21 @@ function getNotifyIssueMessage(issue: Selectable<Issues>) {
   Тип: ${issue.type}
 `
 }
+
+const loginMessage = (payload: NotifyLoginReceived) => `Кто-то вошел в ваш аккаунт. ${payload.browser ? payload.browser.slice(0, 64) : "Unknown"} 
+  / ${payload.ip ? payload.ip.slice(0, 64) : "Unknown"}`
+
+const registerMessage = (payload: NotifyRegisterReceived) => `Добро пожаловать, ${payload.nickname}! Надеюсь тебе понравится на проекте 😏`
+
+const issueMessage = (payload: NotifyIssueReceived) => {
+  const slicedTitle = payload.title.length > 16
+    ? payload.title.slice(0, 16) + "..."
+    : payload.title;
+
+  return `Ваша заявка ${slicedTitle} была создана`
+}
+
+const voteMessage = `Спасибо за голос! Награда отправлена 🤖`
 
 async function notifyInTelegram(values: NotifyLoginReceived): Promise<void> {
   const isValid = await validateUserNotifyPreference({

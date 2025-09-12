@@ -4,7 +4,7 @@ import { SERVER_TOKEN, SERVICE_CHAT_ID } from "#shared/env/index.ts";
 import { Hono } from "hono";
 import { zValidator } from "@hono/zod-validator";
 import { format } from "gramio";
-import { servicedBot } from "#shared/bots/init.ts";
+import { servicedBot } from "#shared/bots/index.ts";
 
 const notifySchema = z.object({
   created_at: z.string().or(z.date()),

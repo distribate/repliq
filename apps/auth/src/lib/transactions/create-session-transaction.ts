@@ -1,7 +1,7 @@
 import { publishLoginNotify } from "../../publishers/pub-login-notify";
 import { encodeHexLowerCase } from "@oslojs/encoding";
 import { sha256 } from "@oslojs/crypto/sha2";
-import { getRedisClient } from "../../shared/redis/init.ts";
+import { getRedisClient } from "../../shared/redis/index.ts";
 import { 
   destroySession, 
   generateSessionToken, 

@@ -1,6 +1,6 @@
 import { getCookie } from "hono/cookie";
 import { createMiddleware } from "hono/factory";
-import { getRedisClient } from "#shared/redis/init.ts";
+import { getRedisClient } from "#shared/redis/index.ts";
 import { log } from "#utils/log.ts";
 
 export const SESSION_KEY = "forum_session"

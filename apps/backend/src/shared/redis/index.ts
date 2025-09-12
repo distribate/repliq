@@ -1,20 +1,21 @@
 import Redis from 'ioredis';
 import { isProduction, REDIS_HOST, REDIS_PASSWORD, REDIS_PORT, REDIS_USER } from '#shared/env/index.ts';
 
-let redis: Redis | null = null;
+let redis: Redis
 
-export function initRedis() {
-  if (redis) return;
+export async function startRedis() {
+  if (redis) return redis;
 
   redis = new Redis({
     host: isProduction ? REDIS_HOST : "127.0.0.1",
     port: Number(REDIS_PORT),
     password: REDIS_PASSWORD,
-    username: REDIS_USER
+    username: REDIS_USER,
+    lazyConnect: true
   });
 
   redis.on("connect", () => {
-    console.log("\x1B[35m[Redis]\x1B[0m Client is connected");
+    console.log("\x1B[35m[Redis]\x1B[0m Connected");
   });
 
   redis.on("error", (err) => {
@@ -22,13 +23,15 @@ export function initRedis() {
   });
 
   redis.on("ready", () => {
-    console.log("\x1B[35m[Redis]\x1B[0m Client is ready to use");
+    console.log("\x1B[35m[Redis]\x1B[0m Ready to use");
   });
+
+  await redis.connect();
+
+  console.log("\x1B[35m[Redis]\x1B[0m Start complete");
 }
 
-export const getRedisClient = (): Redis => {
-  if (!redis) {
-    throw new Error('\x1B[35m[Redis]\x1B[0m Client is not initialized');
-  }
+export function getRedisClient() {
+  if (!redis) throw new Error('\x1B[35m[Redis]\x1B[0m Not initialized');
   return redis;
 }

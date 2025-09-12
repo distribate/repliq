@@ -23,3 +23,8 @@ export const sdk = new NodeSDK({
   resource: resource, // Attach the defined resource to provide additional context
   instrumentations: [getNodeAutoInstrumentations()], // Automatically instrument common Node.js modules
 });
+
+export function startOtel() {
+  sdk.start()
+  console.log("\x1B[35m[OpenTelemetry]\x1B[0m SDK started")
+}

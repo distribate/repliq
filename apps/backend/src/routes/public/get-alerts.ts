@@ -13,7 +13,11 @@ const getAlertRouteSchema = z.object({
 
 const DEFAULT_ALERTS_LIMIT = 6
 
-const getAlerts = async ({ limit = DEFAULT_ALERTS_LIMIT, cursor, ascending }: z.infer<typeof getAlertRouteSchema>) => {
+type Opts = z.infer<typeof getAlertRouteSchema>
+
+const getAlerts = async ({
+  limit = DEFAULT_ALERTS_LIMIT, cursor, ascending 
+}: Opts) => {
   const direction = ascending ? "asc" : "desc";
 
   const query = sqliteDB

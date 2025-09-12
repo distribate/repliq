@@ -3,7 +3,6 @@ import { registerRoute } from './routes/register.ts';
 import { invalidateSessionRoute } from './routes/invalidate-session.ts';
 import { showRoutes } from 'hono/dev';
 import { logger as honoLogger } from 'hono/logger';
-import { initNats } from '@repo/config-nats/nats-client.ts';
 import { csrf } from 'hono/csrf';
 import { originList } from '@repo/shared/constants/origin-list.ts';
 import { loginRoute } from './routes/login.ts';
@@ -14,11 +13,12 @@ import { timeout } from './middlewares/timeout-middleware.ts';
 import { cors } from './middlewares/cors-middleware.ts';
 import { rateLimiter } from './middlewares/rate-limiter.ts';
 import { timing } from 'hono/timing'
-import { initRedis } from './shared/redis/init.ts';
 import { INTERNAl_FILES, loadInternalFiles } from './shared/constants/internal-files.ts';
-import { initSupabase } from '#shared/supabase/supabase-client.ts';
 import { isProduction, PORT as port } from '#shared/env/index.ts';
 import type { Env } from './types/env-type.ts';
+import { startRedis } from './shared/redis/index.ts';
+import { startSupabase } from '#shared/supabase/index.ts';
+import { startNats } from '#shared/nats/index.ts';
 
 export const auth = new Hono()
   .route("/", validateSessionRoute)
@@ -43,18 +43,20 @@ const app = new Hono<Env>()
   .route("/", auth)
   .onError((error, ctx) => ctx.json({ error: error.message ?? "Internal Server Error" }, 500))
   
-async function start() {
-  await initNats()
-  await initSupabase()
-
-  initRedis()
-  
+async function startServices() {
+  await startNats()
+  await startSupabase()
+  await startRedis()
   await loadInternalFiles(INTERNAl_FILES);
+}
 
+async function start() {
   if (isProduction) {
     showRoutes(app, { verbose: false });
   }
   
+  await startServices()
+
   Bun.serve({ port, fetch: app.fetch });
   
   console.log(`\x1B[35m[App]\x1B[0m ${port}`)

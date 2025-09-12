@@ -1,6 +1,6 @@
 import type { DB } from "@repo/types/db/forum-database-types";
 import { forumDB } from "#shared/database/forum-db.ts";
-import { supabase } from "#shared/supabase/supabase-client.ts";
+import { getSupabaseClient } from "#shared/supabase/index.ts";
 import { getNickname } from "#lib/modules/context.ts";
 import { throwError } from "#utils/throw-error.ts";
 import { logger } from "@repo/shared/utils/logger.ts";
@@ -24,6 +24,8 @@ async function uploadFile(
   meta: { fileName: string, extension: string },
   file: globalThis.File
 ) {
+  const supabase = getSupabaseClient();
+
   const res = await supabase
     .storage
     .from(bucket)
@@ -70,6 +72,8 @@ export async function deleteAvatar(
   const updatedLastAvatar = updatedAvatars.length > 0 ? updatedAvatars[updatedAvatars.length - 1] : null;
 
   if (updatedLastAvatar) {
+    const supabase = getSupabaseClient();
+    
     const url = target;
     const prefix = '/public/';
     const index = url.indexOf(prefix);
