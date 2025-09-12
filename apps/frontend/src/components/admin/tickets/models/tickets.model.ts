@@ -1,5 +1,5 @@
 import { reatomAsync, withDataAtom, withStatusesAtom } from "@reatom/async"
-import { adminClient } from "#shared/forum-client"
+import { adminClient } from "#shared/api/forum-client"
 import { validateResponse } from "#shared/api/validation"
 
 export type TicketsPayload = Awaited<ReturnType<typeof ticketsAction>>

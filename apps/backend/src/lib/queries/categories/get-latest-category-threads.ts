@@ -9,6 +9,7 @@ type CategoryThreads = {
   threads: Array<ThreadPreview>;
 };
 
+// todo: refactor comment and replies 
 export async function getLatestCategoryThreads(): Promise<CategoryThreads[] | null> {
   const threadsByCategory = await forumDB
     .selectFrom("category")
@@ -94,10 +95,12 @@ export async function getLatestCategoryThreads(): Promise<CategoryThreads[] | nu
     return acc;
   }, {} as { [categoryId: number]: CategoryThreads });
 
-  return Object
+  const data = Object
     .values(result)
     .map(category => ({
       ...category,
       threads: category.threads.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime()),
     }));
+
+  return data
 }

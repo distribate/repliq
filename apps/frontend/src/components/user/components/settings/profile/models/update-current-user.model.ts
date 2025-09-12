@@ -1,6 +1,6 @@
 import { requestedUserAtom } from "#components/profile/main/models/requested-user.model";
 import { reatomAsync, withStatusesAtom } from "@reatom/async";
-import { userClient } from "#shared/forum-client";
+import { userClient } from "#shared/api/forum-client";
 import { editUserSettingsBodySchema } from "@repo/types/schemas/user/edit-user-settings-schema";
 import { toast } from "sonner";
 import * as z from "zod";

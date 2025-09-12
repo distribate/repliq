@@ -1,4 +1,4 @@
-import { categoriesClient } from '#shared/forum-client.ts';
+import { categoriesClient } from '#shared/api/forum-client';
 import { AsyncCtx, reatomAsync, withStatusesAtom } from '@reatom/async';
 import { atom, batch, Ctx } from '@reatom/core';
 import { categoryIdAtom } from './category.model';

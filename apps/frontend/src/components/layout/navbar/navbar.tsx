@@ -68,7 +68,7 @@ export const Logotype = () => {
       to="/home"
       className="flex items-center gap-2 justify-center w-full select-none"
     >
-      <img src="/logotype.png" width={32} height={32} alt="" className="min-w-10 min-h-10" draggable={false} />
+      <img src="/logotype.webp" width={32} height={32} alt="" className="min-w-10 min-h-10" draggable={false} />
       <div className="hidden md:block w-fit">
         <Typography className="tracking-tight text-2xl font-bold truncate space-grotesk">
           Repliq

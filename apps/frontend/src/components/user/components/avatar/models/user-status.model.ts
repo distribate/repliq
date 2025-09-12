@@ -2,7 +2,7 @@ import { withHistory } from '#shared/helpers/with-history';
 import { withReset } from '@reatom/framework';
 import { reatomAsync, withStatusesAtom } from '@reatom/async';
 import { atom } from '@reatom/core';
-import { userClient } from "#shared/forum-client";
+import { userClient } from "#shared/api/forum-client";
 import { validateResponse } from '#shared/api/validation';
 import dayjs from "@repo/shared/constants/dayjs-instance";
 

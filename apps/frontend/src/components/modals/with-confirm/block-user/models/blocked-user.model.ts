@@ -2,7 +2,7 @@ import { requestedUserProfileBlockedAtom, requestedUserProfileStatusAtom } from 
 import { reatomAsync, withDataAtom, withStatusesAtom } from "@reatom/async";
 import { atom, batch } from "@reatom/core";
 import { withReset } from "@reatom/framework";
-import { userClient } from "#shared/forum-client";
+import { userClient } from "#shared/api/forum-client";
 import { toast } from "sonner";
 import { validateResponse } from "#shared/api/validation";
 

@@ -1,5 +1,5 @@
 import { reatomResource, withCache, withDataAtom, withStatusesAtom } from "@reatom/async"
-import { commentClient } from "#shared/forum-client"
+import { commentClient } from "#shared/api/forum-client"
 import { validateResponse } from "#shared/api/validation"
 
 export const latestCommentsResource = reatomResource(async (ctx) => {

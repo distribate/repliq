@@ -1,6 +1,6 @@
 import { reatomAsync, withDataAtom, withStatusesAtom } from "@reatom/async"
 import { currentUserAtom } from "#components/user/models/current-user.model"
-import { sharedClient } from "#shared/forum-client"
+import { sharedClient } from "#shared/api/forum-client"
 import { validateResponse } from "#shared/api/validation"
 
 export type OnlineUsersPayload = Awaited<ReturnType<typeof onlineUsersAction>>

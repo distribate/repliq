@@ -1,5 +1,5 @@
 import { validateResponse } from "#shared/api/validation";
-import { sharedClient } from "#shared/forum-client";
+import { sharedClient } from "#shared/api/forum-client";
 import { createFabric } from "#shared/models/infinity-scroll.model";
 import { atom, batch } from "@reatom/core";
 import { AsyncCtx, reatomAsync, withCache, withReset, withStatusesAtom } from "@reatom/framework";

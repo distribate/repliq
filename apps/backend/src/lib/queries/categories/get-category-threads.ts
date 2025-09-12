@@ -68,15 +68,13 @@ export async function getThreadsCategories(
       }
     })
 
-    const { rows, hasNextPage, hasPrevPage, startCursor, endCursor } = res;
-
     return {
-      data: rows,
+      data: res.rows,
       meta: {
-        hasNextPage,
-        hasPrevPage,
-        startCursor,
-        endCursor
+        hasNextPage: res.hasNextPage ?? false,
+        hasPrevPage: res.hasPrevPage ?? false,
+        startCursor: res.startCursor,
+        endCursor: res.endCursor
       }
     }
   }
@@ -97,18 +95,16 @@ export async function getThreadsCategories(
       }
     })
 
-    const { rows, hasNextPage, hasPrevPage, startCursor, endCursor } = res;
-
     return {
-      data: rows,
+      data: res.rows,
       meta: {
-        hasNextPage,
-        hasPrevPage,
-        startCursor,
-        endCursor
+        hasNextPage: res.hasNextPage ?? false,
+        hasPrevPage: res.hasPrevPage ?? false,
+        startCursor: res.startCursor,
+        endCursor: res.endCursor
       }
     }
   }
 
-  throw new Error()
+  throw new Error("Type is not defined", type)
 }

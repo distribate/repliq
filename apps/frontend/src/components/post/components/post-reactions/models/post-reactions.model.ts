@@ -1,6 +1,6 @@
 import { log } from "#shared/utils/log";
 import { validateResponse } from "#shared/api/validation";
-import { postClient } from "#shared/forum-client";
+import { postClient } from "#shared/api/forum-client";
 import { applyDiff, ReactionsDiff, TargetReactions, UpdateReaction, UserReactions } from "#shared/models/reactions.model";
 import { reatomAsync } from "@reatom/async";
 import { atom } from "@reatom/core";

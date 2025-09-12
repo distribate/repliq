@@ -10,7 +10,6 @@ import { BlockPlaceholderKit } from './plugins/block-placeholder-kit';
 import { CalloutKit } from './plugins/callout-kit';
 import { CodeBlockKit } from './plugins/code-block-kit';
 import { ColumnKit } from './plugins/column-kit';
-// import { CursorOverlayKit } from './plugins/cursor-overlay-kit';
 import { DateKit } from './plugins/date-kit';
 import { DndKit } from './plugins/dnd-kit';
 import { DocxKit } from './plugins/docx-kit';
@@ -21,7 +20,6 @@ import { LineHeightKit } from './plugins/line-height-kit';
 import { LinkKit } from './plugins/link-kit';
 import { ListKit } from './plugins/list-kit';
 import { MarkdownKit } from './plugins/markdown-kit';
-import { MathKit } from './plugins/math-kit';
 import { MentionKit } from './plugins/mention-kit';
 import { SlashKit } from './plugins/slash-kit';
 import { TableKit } from './plugins/table-kit';
@@ -37,7 +35,6 @@ export const EditorKit = [
   ...TocKit,
   ...CalloutKit,
   ...ColumnKit,
-  ...MathKit,
   ...DateKit,
   ...LinkKit,
   ...MentionKit,

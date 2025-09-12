@@ -2,7 +2,7 @@ import { action, atom, batch, Ctx } from "@reatom/core";
 import { withComputed, withInit, withReset } from "@reatom/framework";
 import { toast } from "sonner";
 import { reatomAsync, withStatusesAtom } from "@reatom/async";
-import { authClient } from "#shared/auth-client";
+import { authClient } from "#shared/api/auth-client";
 import { findoutSchema, registerSchema, nicknameSchema, passwordSchema } from '@repo/types/schemas/auth/create-session-schema.ts';
 import * as z from "zod";
 import { createIdLink } from "#shared/helpers/create-link";

@@ -61,7 +61,7 @@ const Forms = reatomComponent(({ ctx }) => {
 const Logotype = reatomComponent(({ ctx }) => {
   return (
     <CustomLink to="/" className="overflow-hidden select-none">
-      <img src="/logotype.png" alt="Repliq" width={128} height={128} draggable={false} className="" />
+      <img src="/logotype.webp" alt="Repliq" width={128} height={128} draggable={false} className="" />
     </CustomLink>
   )
 }, "Logotype")

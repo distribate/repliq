@@ -1,11 +1,16 @@
 import { BottomBar } from "#components/layout/bottombar/bottombar";
 import { Navbar } from "#components/layout/navbar/navbar";
+import { withSsr } from "#shared/lib/ssr";
 import { action, atom } from "@reatom/core";
 import { sleep } from "@reatom/framework";
 import { reatomComponent, useUpdate } from "@reatom/npm-react";
 import { PropsWithChildren } from "react";
 
-const appIsInitAtom = atom(false, 'appIsInitAtom')
+import "../../editor.css"
+
+const appIsInitAtom = atom(false, 'appIsInitAtom').pipe(
+  withSsr("appIsInitAtom")
+)
 
 const MainLayout = ({ children }: PropsWithChildren) => {
   return (
@@ -35,9 +40,9 @@ const SplashScreen = () => {
   return (
     <div className="fullscreen-section">
       <img
-        src="/logotype.png"
-        loading="eager"
+        src="/logotype.webp"
         alt="Repliq"
+        fetchPriority="high"
         className="min-w-42 min-h-42 max-w-64 max-h-64 aspect-square animate-heartbeat-then-fade"
       />
     </div>

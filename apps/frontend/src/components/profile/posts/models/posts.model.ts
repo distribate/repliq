@@ -2,7 +2,7 @@ import { atom, batch, Ctx } from '@reatom/core';
 import { AsyncCtx, reatomAsync, withAbort, withStatusesAtom } from '@reatom/async';
 import { withReset } from '@reatom/framework';
 import { isParamChanged, requestedUserParamAtom } from '#components/profile/main/models/requested-user.model.ts';
-import { userClient } from '#shared/forum-client.ts';
+import { userClient } from '#shared/api/forum-client';
 import * as z from 'zod';
 import { getUserPostsSchema } from '@repo/types/schemas/posts/user-posts-schema.ts';
 import { log } from '#shared/utils/log';

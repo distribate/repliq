@@ -1,4 +1,4 @@
-import { userClient } from "#shared/forum-client.ts";
+import { userClient } from "#shared/api/forum-client";
 import { reatomAsync, withStatusesAtom } from "@reatom/async";
 import { atom } from "@reatom/core";
 import { withVariables } from "#shared/helpers/with-variables"

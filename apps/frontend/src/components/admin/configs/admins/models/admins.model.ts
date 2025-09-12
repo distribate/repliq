@@ -1,5 +1,5 @@
 import { validateResponse } from "#shared/api/validation"
-import { adminClient } from "#shared/forum-client"
+import { adminClient } from "#shared/api/forum-client"
 import { reatomAsync, withDataAtom, withStatusesAtom } from "@reatom/async"
 
 export const adminsListAction = reatomAsync(async (ctx) => {

@@ -1,5 +1,5 @@
 import { threadPropertiesAtom } from "#components/thread/models/thread.model"
-import { threadClient } from "#shared/forum-client"
+import { threadClient } from "#shared/api/forum-client"
 import { reatomAsync, withStatusesAtom } from "@reatom/async"
 import { atom } from "@reatom/core"
 import { sleep } from "@reatom/framework"

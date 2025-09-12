@@ -9,7 +9,7 @@ import { toast } from "sonner";
 import { GetThreadCommentsResponse } from "@repo/types/entities/thread-comments-types.ts";
 import { threadCommentsAction, threadCommentsDataAtom } from "#components/thread/components/thread-comments/models/thread-comments.model.ts";
 import { reatomAsync, withStatusesAtom } from "@reatom/async";
-import { commentClient } from "#shared/forum-client";
+import { commentClient } from "#shared/api/forum-client.ts";
 import type { replyCommentBodySchema } from "@repo/types/routes-types/reply-comment.ts"
 import * as z from "zod";
 import { COMMENT_LIMIT } from "@repo/shared/constants/limits";

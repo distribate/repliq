@@ -13,7 +13,7 @@ import type {
   RootAppType,
   FriendAppType
 } from 'backend/src/types/routes-types.ts';
-import { MAIN_BASE_URL } from './env/index.ts';
+import { MAIN_BASE_URL } from '../env/index.ts';
 
 export const searchClient = hc<SearchAppType>(MAIN_BASE_URL, fetchOptions)
 export const sharedClient = hc<SharedAppType>(MAIN_BASE_URL, fetchOptions)

@@ -1,4 +1,4 @@
-import { authClient } from "#shared/auth-client";
+import { authClient } from "#shared/api/auth-client";
 import { atom } from "@reatom/core";
 import { reatomAsync, withCache, withDataAtom, withStatusesAtom } from "@reatom/async";
 import { validateResponse } from "#shared/api/validation";

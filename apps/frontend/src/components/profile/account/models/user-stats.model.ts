@@ -1,6 +1,6 @@
 import { reatomAsync, withCache, withDataAtom, withStatusesAtom } from "@reatom/async";
 import { ProfileStatsDetailed } from "@repo/types/routes-types/get-user-profile-stats-types";
-import { userClient } from "#shared/forum-client"
+import { userClient } from "#shared/api/forum-client"
 
 export const userProfileStatsAction = reatomAsync(async (ctx) => {
   return await ctx.schedule(async () => {

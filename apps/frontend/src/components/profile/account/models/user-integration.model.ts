@@ -1,6 +1,6 @@
 import { reatomAsync, withDataAtom, withStatusesAtom } from "@reatom/async"
 import { atom } from "@reatom/core"
-import { userClient } from "#shared/forum-client"
+import { userClient } from "#shared/api/forum-client"
 import { toast } from "sonner"
 import { log } from "#shared/utils/log"
 import { validateResponse } from "#shared/api/validation"

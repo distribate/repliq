@@ -3,12 +3,10 @@ import react from "@vitejs/plugin-react";
 import vike from "vike/plugin";
 import tsconfigPaths from 'vite-tsconfig-paths';
 import Sonda from 'sonda/vite';
+import tailwindcss from '@tailwindcss/vite'
+import { viteStaticCopy } from 'vite-plugin-static-copy'
 
-function onPreview(
-  { prefixUrl, token }: { prefixUrl: string, token: string }
-): Plugin {
-  const name = "on-preview";
-
+function checkRuntime() {
   if (typeof Bun !== "undefined") {
     console.log("Running in Bun:", Bun.version);
   } else if (typeof process !== "undefined" && process.versions?.node) {
@@ -16,6 +14,12 @@ function onPreview(
   } else {
     console.log("Unknown runtime");
   }
+}
+
+function onPreview(
+  { prefixUrl, token }: { prefixUrl: string, token: string }
+): Plugin {
+  const name = "on-preview";
 
   return {
     name,
@@ -56,23 +60,40 @@ export default defineConfig(({ mode }) => {
 
   return {
     plugins: [
+      tailwindcss(),
       vike(),
       react(),
       tsconfigPaths(),
       Sonda({ enabled: false }),
-      onPreview({ prefixUrl, token })
+      onPreview({ prefixUrl, token }),
+      viteStaticCopy({
+        targets: [
+          {
+            src: 'dist/client/assets/sw.*.js',
+            dest: '.',
+            rename: 'worker.js'
+          }
+        ]
+      })
     ],
     build: {
-      sourcemap: false,
+      target: "esnext",
+      sourcemap: true,
       rollupOptions: {
         output: {
           manualChunks(id) {
             if (id.includes('node_modules')) {
               return id.toString().split('node_modules/')[1].split('/')[0].toString();
             }
-          }
+          },
+        },
+        input: {
+          sw: './src/sw.ts'
         }
       }
+    },
+    worker: {
+      format: 'es'
     },
     optimizeDeps: {
       include: ['react', 'react-dom'],

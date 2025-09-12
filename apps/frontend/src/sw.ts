@@ -1,0 +1,1 @@
+import "./lib/service-worker/index.ts"

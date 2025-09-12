@@ -1,7 +1,7 @@
 import { toast } from "sonner";
 import { THREAD_CONTENT_LIMIT_DEFAULT } from "@repo/shared/constants/limits.ts";
 import { reatomAsync, withStatusesAtom } from "@reatom/async";
-import { threadClient } from "#shared/forum-client";
+import { threadClient } from "#shared/api/forum-client";
 import { createThreadSchema as initial } from "@repo/types/schemas/thread/create-thread-schema.ts";
 import * as z from "zod";
 import { encode } from "cbor-x";

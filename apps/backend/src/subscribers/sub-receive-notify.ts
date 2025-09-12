@@ -14,7 +14,6 @@ import { repliqBot } from "../shared/bots/init.ts";
 import { format } from "gramio";
 import { logger } from "@repo/shared/utils/logger.ts";
 import { servicedBot } from "../shared/bots/init.ts"
-import { getAdmins } from "../lib/queries/get-admins"
 
 type NotifyMap = {
   login: NotifyLoginReceived;
@@ -107,12 +106,21 @@ async function createNotification({ nickname, message, type }: CreateNotificatio
 
 async function notifyIssueReceived(issue: Selectable<Issues>) {
   const text = getNotifyIssueMessage(issue);
-  const admins = await getAdmins()
 
-  for (const { telegram_id } of admins) {
-    if (!telegram_id) continue
+  const admins = await forumDB
+    .selectFrom("admins")
+    .innerJoin("users", "admins.user_id", "users.id")
+    .select([
+      "admins.user_id",
+      "admins.telegram_id",
+      "users.nickname"
+    ])
+    .execute()
 
-    await servicedBot.api.sendMessage({ chat_id: telegram_id, text })
+  for (const { telegram_id: chat_id } of admins) {
+    if (!chat_id) continue
+
+    await servicedBot.api.sendMessage({ chat_id, text })
   }
 }
 

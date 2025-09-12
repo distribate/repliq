@@ -1,5 +1,5 @@
 import { atom } from "@reatom/core"
-import { categoriesClient } from "#shared/forum-client"
+import { categoriesClient } from "#shared/api/forum-client"
 import { validateResponse } from "#shared/api/validation"
 
 export const categoryIdAtom = atom<string>("", "categoryIdAtom")

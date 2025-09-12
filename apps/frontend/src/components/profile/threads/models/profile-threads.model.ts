@@ -1,5 +1,5 @@
 import { AsyncCtx, reatomAsync, withErrorAtom, withStatusesAtom } from '@reatom/async';
-import { userClient } from '#shared/forum-client';
+import { userClient } from '#shared/api/forum-client';
 import { isParamChanged, requestedUserParamAtom } from '#components/profile/main/models/requested-user.model';
 import { log } from '#shared/utils/log';
 import { validateResponse } from '#shared/api/validation';

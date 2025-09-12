@@ -4,7 +4,7 @@ import { friendsCountAction } from "#components/friends/models/friends-count.mod
 import { reatomAsync, withStatusesAtom } from "@reatom/async";
 import { atom, batch, Ctx } from "@reatom/core";
 import { incomingRequestsAtom, outgoingRequestsAtom } from "#components/friends/models/friends-requests.model.ts";
-import { friendClient } from '#shared/forum-client.ts';
+import { friendClient } from '#shared/api/forum-client';
 import { friendStatusesAtom } from "./friend-status.model";
 import { myFriendsAction, myFriendsDataAtom } from "#components/friends/models/friends.model";
 import { sleep, withReset } from "@reatom/framework";

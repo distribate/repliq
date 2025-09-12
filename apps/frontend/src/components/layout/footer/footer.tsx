@@ -87,7 +87,7 @@ const CompactFooter = () => {
 const Logotype = () => {
   return (
     <CustomLink to="/" className="flex items-end gap-1">
-      <img src="/logotype.png" alt="" width={32} height={32} loading="lazy" />
+      <img src="/logotype.webp" alt="" width={32} height={32} loading="lazy" />
       <Typography textSize="very_big" className="space-grotesk">
         Repliq
       </Typography>

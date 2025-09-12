@@ -1,6 +1,6 @@
 import { toast } from "sonner";
 import { reatomAsync, withDataAtom, withStatusesAtom } from "@reatom/framework";
-import { threadClient } from "#shared/forum-client";
+import { threadClient } from "#shared/api/forum-client";
 import { validateResponse } from "#shared/api/validation";
 import { log } from "#shared/utils/log";
 import { applyDiff, ReactionsDiff, UpdateReaction } from "#shared/models/reactions.model";

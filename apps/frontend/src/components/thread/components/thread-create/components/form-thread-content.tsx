@@ -1,8 +1,11 @@
+import { Skeleton } from '@repo/ui/src/components/skeleton'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@repo/ui/src/components/tabs.tsx'
 import { Typography } from '@repo/ui/src/components/typography.tsx'
 import { cva } from 'class-variance-authority'
 import { Edit, Eye } from 'lucide-react'
-import { FormThreadEditor } from './form-thread-editor'
+import { clientOnly } from 'vike-react/clientOnly'
+
+const FormThreadEditor = clientOnly(() => import('./form-thread-editor').then(m => m.FormThreadEditor))
 
 const tabVariant = cva(`
   flex group items-center justify-center 
@@ -36,7 +39,7 @@ export const FormThreadContent = () => {
           </TabsTrigger>
         </TabsList>
         <TabsContent value="edit" className="rounded-lg overflow-hidden">
-          <FormThreadEditor />
+          <FormThreadEditor fallback={<Skeleton className="h-44 w-full"/>} />
         </TabsContent>
         <TabsContent value="preview" className="rounded-lg overflow-hidden">
           Превью в разработке...

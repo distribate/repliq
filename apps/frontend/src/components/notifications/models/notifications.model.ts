@@ -1,6 +1,6 @@
 import { atom, batch, Ctx } from "@reatom/core"
 import { AsyncCtx, reatomAsync, withStatusesAtom } from "@reatom/async"
-import { userClient } from "#shared/forum-client"
+import { userClient } from "#shared/api/forum-client"
 import { userGlobalOptionsAtom } from "#components/user/models/current-user.model"
 import { withReset } from "@reatom/framework"
 import { createFabric } from "#shared/models/infinity-scroll.model"

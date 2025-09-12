@@ -2,7 +2,7 @@ import { reportAtom, reportDescriptionAtom, reportDialogIsOpenAtom } from "#comp
 import { toast } from "sonner";
 import { currentUserNicknameAtom } from "#components/user/models/current-user.model.ts";
 import { ReportType } from "@repo/types/db/forum-database-types";
-import { reportClient } from "#shared/forum-client";
+import { reportClient } from "#shared/api/forum-client";
 import { reatomAsync, withStatusesAtom } from "@reatom/async";
 import { validateResponse } from "#shared/api/validation";
 

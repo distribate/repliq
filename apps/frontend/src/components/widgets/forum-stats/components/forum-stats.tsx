@@ -36,7 +36,7 @@ export function transformData(input: AtomState<typeof publicStatsResource.dataAt
 
 const STAT_TITLE_MAP: Record<string, string> = {
   "threads": "Тредов",
-  "users": "Пользователей",
+  "users": "Юзеров",
   "posts": "Постов"
 } as const;
 

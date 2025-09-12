@@ -167,12 +167,6 @@ const groups: Group[] = [
         label: '3 колонки',
         value: 'action_three_columns',
       },
-      {
-        focusEditor: false,
-        icon: <RadicalIcon />,
-        label: 'Уравнение',
-        value: KEYS.equation,
-      },
     ].map((item) => ({
       ...item,
       onSelect: (editor, value) => {
@@ -193,12 +187,6 @@ const groups: Group[] = [
         icon: <CalendarIcon />,
         label: 'Дата',
         value: KEYS.date,
-      },
-      {
-        focusEditor: false,
-        icon: <RadicalIcon />,
-        label: 'Строчное уравнение',
-        value: KEYS.inlineEquation,
       },
     ].map((item) => ({
       ...item,

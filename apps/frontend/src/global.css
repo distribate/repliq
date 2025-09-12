@@ -1,13 +1,30 @@
 @import "tailwindcss";
 @import 'tw-animate-css';
 
+@import "@bprogress/core/css";
+
 @import "../../../packages/ui/src/ui.css";
 
 @source "../../../packages/ui/src/**/*.{js,ts,jsx,tsx}";
-@source "../../../packages/plate-editor/src/**/*.{js,ts,jsx,tsx}";
 
 @plugin "tailwindcss-react-aria-components";
 @plugin "tailwind-scrollbar";
+
+@font-face {
+  font-family: 'Space Grotesk';
+  font-style: normal;
+  font-display: swap;
+  font-weight: 400 700;
+  src: url('/fonts/SpaceGrotesk.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Open Sans';
+  font-style: normal;
+  font-display: swap;
+  font-weight: 400 700;
+  src: url('/fonts/OpenSans.woff2') format('woff2');
+}
 
 @theme {
   --color-*: initial;

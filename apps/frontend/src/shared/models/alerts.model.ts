@@ -1,6 +1,6 @@
 import { AsyncCtx, reatomAsync, withCache, withDataAtom, withErrorAtom, withStatusesAtom } from '@reatom/async';
 import { atom } from '@reatom/core';
-import { sharedClient } from "#shared/forum-client"
+import { sharedClient } from "#shared/api/forum-client"
 import { validateResponse } from '#shared/api/validation';
 
 export type AlertsPayload = Awaited<ReturnType<typeof getAlerts>>

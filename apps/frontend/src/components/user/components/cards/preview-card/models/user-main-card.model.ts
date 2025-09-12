@@ -1,7 +1,7 @@
 import { reatomAsync, withDataAtom, withErrorAtom, withStatusesAtom } from "@reatom/async";
 import { action, atom, batch, Ctx } from "@reatom/core";
 import { createIdLink } from "#shared/helpers/create-link";
-import { userClient } from "#shared/forum-client";
+import { userClient } from "#shared/api/forum-client";
 import { navigate, prefetch } from "vike/client/router";
 import { withReset } from "@reatom/framework";
 import { validateResponse } from "#shared/api/validation";

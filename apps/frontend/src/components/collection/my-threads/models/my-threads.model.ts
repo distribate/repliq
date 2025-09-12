@@ -1,5 +1,5 @@
 import { reatomAsync, withDataAtom, withStatusesAtom } from "@reatom/async";
-import { userClient } from "#shared/forum-client";
+import { userClient } from "#shared/api/forum-client";
 import { validateResponse } from "#shared/api/validation";
 
 export const myThreadsAction = reatomAsync(async (ctx) => {

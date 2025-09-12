@@ -1,5 +1,5 @@
 import { myFriendsDataAtom, myFriendsPinnedDataAtom } from "#components/friends/models/friends.model";
-import { friendClient } from "#shared/forum-client";
+import { friendClient } from "#shared/api/forum-client";
 import { reatomAsync, withStatusesAtom } from "@reatom/async";
 import { atom, batch } from "@reatom/core";
 import { toast } from "sonner";

@@ -7,7 +7,7 @@ import { THREAD_TAGS_LIMIT } from "@repo/shared/constants/limits";
 import { ChangeEvent } from "react";
 import { THREAD_IMAGES_LIMIT_DEFAULT } from "@repo/shared/constants/limits";
 import { currentUserAtom } from "#components/user/models/current-user.model";
-import { categoriesClient } from "#shared/forum-client";
+import { categoriesClient } from "#shared/api/forum-client";
 import { FastAverageColor } from 'fast-average-color';
 import { Node } from "slate";
 import { validateResponse } from "#shared/api/validation";

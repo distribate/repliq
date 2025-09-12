@@ -55,18 +55,16 @@
     "@repo/config-eslint": "*",
     "@repo/config-typescript": "*",
     "@repo/types": "*",
-    "@tailwindcss/postcss": "4.1.12",
+    "@tailwindcss/vite": "4.1.13",
     "@types/react": "19.1.8",
     "@types/react-dom": "19.1.6",
     "@vitejs/plugin-react": "5.0.0",
-    "autoprefixer": "10.4.18",
     "class-variance-authority": "0.7.0",
     "clsx": "2.1.1",
     "eslint": "8.57.1",
     "eslint-plugin-react-hooks": "5.0.0",
     "eslint-plugin-react-refresh": "0.4.16",
     "globals": "15.14.0",
-    "postcss": "8.4.35",
     "sonda": "0.9.0",
     "tailwind-scrollbar": "4.0.2",
     "tailwindcss": "4.1.12",
@@ -75,6 +73,7 @@
     "typescript": "^5.4.5",
     "typescript-eslint": "8.41.0",
     "vite": "7.1.2",
+    "vite-plugin-static-copy": "^3.1.2",
     "vite-tsconfig-paths": "5.1.4"
   }
 }

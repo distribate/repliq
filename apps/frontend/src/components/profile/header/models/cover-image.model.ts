@@ -3,7 +3,7 @@ import { reatomAsync, reatomResource, withCache, withDataAtom, withStatusesAtom 
 import { toast } from "sonner";
 import { createCoverImageSchema } from "@repo/types/schemas/user/create-cover-image-schema.ts"
 import { requestedUserCoverImageAtom } from "#components/profile/main/models/requested-user.model";
-import { sharedClient, userClient } from "#shared/forum-client"
+import { sharedClient, userClient } from "#shared/api/forum-client"
 import { encode } from "cbor-x"
 import { currentUserAtom } from '#components/user/models/current-user.model';
 import { batch } from '@reatom/core';

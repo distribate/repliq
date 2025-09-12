@@ -1,6 +1,6 @@
 import { toast } from "sonner";
 import { reatomAsync, withStatusesAtom } from "@reatom/async";
-import { userClient } from "#shared/forum-client"
+import { userClient } from "#shared/api/forum-client"
 import { createIssueSchema } from "@repo/types/schemas/issue/create-issue-schema"
 import * as z from "zod"
 import { action, atom, batch } from "@reatom/core";

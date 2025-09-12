@@ -1,7 +1,7 @@
 import { atom } from "@reatom/core";
 import { reatomAsync, withStatusesAtom } from "@reatom/async";
 import { withReset } from "@reatom/framework";
-import { friendClient } from "#shared/forum-client";
+import { friendClient } from "#shared/api/forum-client";
 import { log } from "#shared/utils/log";
 import { validateResponse } from "#shared/api/validation";
 

@@ -1,4 +1,4 @@
-import { threadClient } from "#shared/forum-client";
+import { threadClient } from "#shared/api/forum-client";
 import { reatomAsync, withCache, withDataAtom, withStatusesAtom } from "@reatom/async";
 import { getLatestRegUsers } from "#components/widgets/latest-reg-users/models/latest-reg-users.model";
 import { validateResponse } from "#shared/api/validation";

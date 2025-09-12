@@ -1,5 +1,5 @@
 import { reatomResource, withCache, withDataAtom, withStatusesAtom } from "@reatom/async";
-import { sharedClient } from "#shared/forum-client";
+import { sharedClient } from "#shared/api/forum-client";
 import { validateResponse } from "#shared/api/validation";
 
 export async function getStats(init?: RequestInit) {

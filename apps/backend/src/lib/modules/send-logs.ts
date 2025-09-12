@@ -1,9 +1,9 @@
+import { forumDB } from '#shared/database/forum-db.ts';
 import { servicedBot } from '../../shared/bots/init.ts';
-import { type AdminsWithDetails, getAdmins } from '../queries/get-admins.ts';
 
 type SendLoggerBot = {
   type: "admins" | "log",
-  text: any
+  text: string
 }
 
 export async function sendInLoggerBot({
@@ -11,10 +11,18 @@ export async function sendInLoggerBot({
 }: SendLoggerBot) {
   switch (type) {
     case "admins":
-      const adminsData = await getAdmins()
+      const data = await forumDB
+        .selectFrom("admins")
+        .innerJoin("users", "admins.user_id", "users.id")
+        .select([
+          "admins.user_id",
+          "admins.telegram_id",
+          "users.nickname"
+        ])
+        .execute();
 
-      const admins = adminsData.filter(
-        (item): item is AdminsWithDetails => item.telegram_id !== null
+      const admins = data.filter(
+        (item): item is typeof data[number] => item.telegram_id !== null
       )
 
       for (const { telegram_id } of admins) {

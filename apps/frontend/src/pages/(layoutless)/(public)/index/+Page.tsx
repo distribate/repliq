@@ -211,7 +211,7 @@ export default function Page() {
     <div className="min-h-screen landing-background">
       <div
         className="absolute bg-center min-h-[1400px] h-full w-full !px-0"
-        style={{ backgroundImage: `url("/images/rays.png")` }}
+        style={{ backgroundImage: `url("/images/rays.webp")` }}
       >
       </div>
       <section id="hero" className="container pt-12 mx-auto py-20 sm:py-28 relative px-2">

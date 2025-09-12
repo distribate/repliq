@@ -1,7 +1,7 @@
 import { reatomAsync, withStatusesAtom } from "@reatom/async"
 import { atom } from "@reatom/core"
 import { sleep, withReset } from "@reatom/framework"
-import { userClient } from "#shared/forum-client"
+import { userClient } from "#shared/api/forum-client"
 import { toast } from "sonner"
 import { toggleGlobalDialogAction } from "./user-settings.model"
 import { validateResponse } from "#shared/api/validation"

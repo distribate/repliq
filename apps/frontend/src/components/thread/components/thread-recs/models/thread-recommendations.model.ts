@@ -1,7 +1,7 @@
 import { threadOwnerAtom, threadParamAtom } from "#components/thread/models/thread.model"
 import { reatomAsync, withStatusesAtom } from "@reatom/async"
 import { atom, AtomState, Ctx, sleep, withReset } from "@reatom/framework"
-import { threadClient } from "#shared/forum-client"
+import { threadClient } from "#shared/api/forum-client"
 import { isParamChanged } from "#components/profile/main/models/requested-user.model"
 import { validateResponse } from "#shared/api/validation"
 

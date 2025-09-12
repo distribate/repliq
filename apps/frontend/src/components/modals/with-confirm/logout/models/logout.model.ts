@@ -1,5 +1,5 @@
 import { validateResponse } from "#shared/api/validation";
-import { authClient } from "#shared/auth-client";
+import { authClient } from "#shared/api/auth-client";
 import { reatomAsync, withStatusesAtom } from "@reatom/async";
 import { atom } from "@reatom/core";
 import { toast } from "sonner";

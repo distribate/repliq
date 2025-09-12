@@ -1,18 +1,26 @@
 import { forumDB } from "#shared/database/forum-db.ts";
 import { executeWithCursorPagination } from "kysely-paginate";
 
-type GetFriendRequests = {
-  nickname: string;
+type Opts = {
   type: "incoming" | "outgoing",
   cursor?: string
 }
 
-export const getFriendRequests = async ({
-  nickname, type, cursor
-}: GetFriendRequests) => {
+function getDirection(asc: boolean): "asc" | "desc" {
+  return asc ? "asc" : "desc"
+}
+
+export const getFriendRequests = async (
+  nickname: string,
+  { type, cursor }: Opts
+) => {
+  const direction = getDirection(false);
+
+  const target = type === "incoming" ? "friends_requests.initiator" : "friends_requests.recipient"
+
   const query = forumDB
     .selectFrom('friends_requests')
-    .innerJoin("users", "users.nickname", type === "incoming" ? "friends_requests.initiator" : "friends_requests.recipient")
+    .innerJoin("users", "users.nickname", target)
     .select([
       "friends_requests.id",
       "friends_requests.created_at",
@@ -23,21 +31,17 @@ export const getFriendRequests = async ({
     ])
     .where(type === "incoming" ? "recipient" : "initiator", '=', nickname)
 
-  const res = await executeWithCursorPagination(query, { 
+  const res = await executeWithCursorPagination(query, {
     perPage: 16,
     after: cursor,
     fields: [
       {
-        key: "created_at",
-        direction: "desc",
-        expression: "created_at",
+        key: "created_at", expression: "created_at", direction
       }
     ],
-    parseCursor: (cursor) => {
-      return {
-        created_at: new Date(cursor.created_at),
-      }
-    },
+    parseCursor: (cursor) => ({
+      created_at: new Date(cursor.created_at)
+    }),
   })
 
   return {

@@ -1,5 +1,5 @@
 import { validateResponse } from '#shared/api/validation';
-import { userClient } from '#shared/forum-client.ts';
+import { userClient } from '#shared/api/forum-client';
 import { reatomAsync, withDataAtom, withStatusesAtom } from '@reatom/async';
 
 export const userBlockedAction = reatomAsync(async (ctx) => {

@@ -1,5 +1,5 @@
 import { reatomAsync, withDataAtom, withStatusesAtom } from '@reatom/async';
-import { sharedClient } from "#shared/forum-client.ts";
+import { sharedClient } from "#shared/api/forum-client";
 import { validateResponse } from '#shared/api/validation';
 
 export type LatestRegUsersPayload = Awaited<ReturnType<typeof getLatestRegUsers>>

@@ -14,12 +14,13 @@
     "lib": [
       "DOM",
       "DOM.Iterable",
-      "ES2022"
+      "ES2022",
+      "WebWorker"
     ],
     "types": [
       "vite/client",
       "vike-react",
-      "bun-types"
+      "bun-types",
     ],
     "module": "esnext",
     "noPropertyAccessFromIndexSignature": false,

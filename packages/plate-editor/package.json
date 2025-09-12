@@ -83,7 +83,6 @@
     "remark-math": "6.0.0",
     "slate-dom": "0.118.1",
     "sonner": "2.0.3",
-    "tailwind-scrollbar-hide": "4.0.0",
     "zod": "4.0.15"
   },
   "devDependencies": {
@@ -91,7 +90,6 @@
     "@eslint/js": "9.13.0",
     "@repo/config-eslint": "*",
     "@repo/config-typescript": "*",
-    "@tailwindcss/postcss": "4.1.12",
     "@types/react": "19.1.8",
     "@types/react-dom": "19.1.6",
     "class-variance-authority": "0.7.0",

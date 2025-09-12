@@ -1,6 +1,6 @@
 import { reatomAsync, withDataAtom, withStatusesAtom } from "@reatom/async"
 import { currentUserAtom } from "#components/user/models/current-user.model"
-import { userClient } from "#shared/forum-client"
+import { userClient } from "#shared/api/forum-client"
 import { validateResponse } from "#shared/api/validation"
 
 export const myTicketsAction = reatomAsync(async (ctx) => {

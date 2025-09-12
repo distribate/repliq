@@ -1,5 +1,5 @@
 import { validateResponse } from "#shared/api/validation";
-import { friendClient } from "#shared/forum-client";
+import { friendClient } from "#shared/api/forum-client";
 import { reatomAsync, withCache, withDataAtom, withStatusesAtom } from "@reatom/async";
 
 export const recommendedFriendsAction = reatomAsync(async (ctx) => {

@@ -1,7 +1,7 @@
 import { reatomAsync, withDataAtom, withStatusesAtom } from "@reatom/async"
 import { action, atom, AtomState } from "@reatom/core"
 import { sleep, withReset } from "@reatom/framework"
-import { adminClient } from "#shared/forum-client"
+import { adminClient } from "#shared/api/forum-client"
 import { toast } from "sonner"
 import { validateResponse } from "#shared/api/validation"
 

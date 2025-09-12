@@ -67,7 +67,7 @@
       "url": "/home",
       "icons": [
         {
-          "src": "/logotype.png",
+          "src": "/logotype.webp",
           "sizes": "96x96"
         }
       ]
@@ -79,7 +79,7 @@
       "url": "/profile",
       "icons": [
         {
-          "src": "/logotype.png",
+          "src": "/logotype.webp",
           "sizes": "96x96"
         }
       ]

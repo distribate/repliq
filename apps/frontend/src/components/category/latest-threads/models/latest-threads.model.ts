@@ -1,5 +1,5 @@
 import { reatomAsync, withCache, withDataAtom, withStatusesAtom } from "@reatom/async";
-import { categoriesClient } from "#shared/forum-client";
+import { categoriesClient } from "#shared/api/forum-client";
 import { validateResponse } from "#shared/api/validation";
 
 export const latestThreadsByCategoriesAction = reatomAsync(async (ctx) => {

@@ -1,6 +1,6 @@
 import { threadCommentsDataAtom } from '#components/thread/components/thread-comments/models/thread-comments.model';
 import { validateResponse } from '#shared/api/validation';
-import { commentClient } from '#shared/forum-client';
+import { commentClient } from '#shared/api/forum-client';
 import { atom, Ctx, reatomAsync, reatomMap, withReset, withStatusesAtom } from '@reatom/framework';
 
 type CommentActions = {

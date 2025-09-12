@@ -1,4 +1,4 @@
-import { userClient } from "#shared/forum-client"
+import { userClient } from "#shared/api/forum-client"
 import { AsyncCtx, reatomAsync, withCache, withDataAtom, withStatusesAtom } from "@reatom/async"
 import { validateResponse } from "#shared/api/validation"
 import { log } from "#shared/utils/log"

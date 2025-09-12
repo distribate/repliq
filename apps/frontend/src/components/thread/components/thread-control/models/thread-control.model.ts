@@ -1,7 +1,7 @@
 import { toast } from "sonner";
 import { latestThreadsByCategoriesAction } from "#components/category/latest-threads/models/latest-threads.model";
 import { reatomAsync, withStatusesAtom } from "@reatom/async";
-import { threadClient } from "#shared/forum-client";
+import { threadClient } from "#shared/api/forum-client";
 import { Descendant } from "slate";
 import { ThreadDetailed } from "@repo/types/entities/thread-type";
 import { atom } from "@reatom/core";

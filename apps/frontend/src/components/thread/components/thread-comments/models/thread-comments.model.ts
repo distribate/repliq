@@ -2,7 +2,7 @@ import { GetThreadCommentsResponse } from '@repo/types/entities/thread-comments-
 import { atom, batch, Ctx } from '@reatom/core';
 import { reatomAsync, withErrorAtom, withStatusesAtom } from '@reatom/async';
 import { threadParamAtom } from '#components/thread/models/thread.model';
-import { threadClient } from '#shared/forum-client.ts';
+import { threadClient } from '#shared/api/forum-client';
 import { getCommentsSchema } from "@repo/types/schemas/comment/get-comments-schema.ts";
 import * as z from "zod";
 import { withReset } from '@reatom/framework';

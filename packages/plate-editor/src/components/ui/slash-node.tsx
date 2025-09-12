@@ -184,12 +184,6 @@ const groups: Group[] = [
         label: 'Дата',
         value: KEYS.date,
       },
-      {
-        focusEditor: false,
-        icon: <RadicalIcon />,
-        label: 'Строчное уравнение',
-        value: KEYS.inlineEquation,
-      },
     ].map((item) => ({
       ...item,
       onSelect: (editor, value) => {

@@ -2,7 +2,7 @@ import * as z from "zod";
 import { atom, batch, Ctx } from "@reatom/core";
 import { reatomAsync, withStatusesAtom } from "@reatom/async";
 import { withReset } from "@reatom/framework";
-import { userClient } from "#shared/forum-client";
+import { userClient } from "#shared/api/forum-client";
 import { getUserFriendsSchema } from "@repo/types/schemas/user/get-user-friends-schema";
 import { AsyncCtx } from "@reatom/async";
 import { createFabric } from "#shared/models/infinity-scroll.model";

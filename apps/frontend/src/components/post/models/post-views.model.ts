@@ -1,5 +1,5 @@
 import { validateResponse } from '#shared/api/validation';
-import { postClient } from '#shared/forum-client';
+import { postClient } from '#shared/api/forum-client';
 import { reatomAsync, withCache, withStatusesAtom } from '@reatom/async';
 import { atom, batch } from '@reatom/core';
 import { withReset } from '@reatom/framework';

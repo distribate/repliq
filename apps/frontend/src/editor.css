@@ -1,0 +1,3 @@
+@import "../../../packages/plate-editor/src/editor.css";
+
+@source "../../../packages/plate-editor/src/**/*.{js,ts,jsx,tsx}";
