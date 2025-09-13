@@ -3,6 +3,7 @@ import { createMiddleware } from "hono/factory";
 import { SESSION_KEY } from "../shared/constants/session-details";
 import { getRedisClient } from "../shared/redis";
 import { encodeBase32LowerCaseNoPadding } from "@oslojs/encoding";
+import type { Context } from "hono";
 
 export const SESSION_TTL = 60 * 60 * 24 * 30; // 30 days
 const REFRESH_THRESHOLD = 60 * 60 * 24 * 15; // 15 days
@@ -161,7 +162,7 @@ export async function conditionalLogout(currentSessionToken: string): Promise<bo
 }
 
 export const authMiddleware = () => createMiddleware(async (ctx, next) => {
-  const token = getCookie(ctx)[SESSION_KEY]
+  const token = getSessionToken(ctx)
 
   if (!token) {
     return ctx.json({ error: "Unauthorized: token is not defined" }, 401)
@@ -179,3 +180,7 @@ export const authMiddleware = () => createMiddleware(async (ctx, next) => {
 
   await next()
 })
+
+export function getSessionToken(ctx: Context) {
+  return getCookie(ctx, SESSION_KEY)
+}

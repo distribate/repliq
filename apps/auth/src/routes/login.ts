@@ -2,7 +2,7 @@ import { throwError } from "#utils/throw-error.ts";
 import { Hono } from "hono";
 import { zValidator } from "@hono/zod-validator";
 import { createSessionBodySchema } from "@repo/types/schemas/auth/create-session-schema";
-import { createSessionTransaction } from "../lib/transactions/create-session-transaction.ts";
+import { createSession } from "../lib/transactions/create-session-transaction.ts";
 import { setCookie } from "hono/cookie";
 import { getClientIp } from "../utils/get-client-ip.ts";
 import { SESSION_DOMAIN, SESSION_KEY } from "../shared/constants/session-details.ts";
@@ -14,6 +14,7 @@ import type { Users } from '@repo/types/db/forum-database-types.ts';
 import bcrypt from 'bcryptjs';
 import type { Session } from "../utils/auth.ts";
 import { isProduction } from "#shared/env/index.ts";
+import { publishLoginNotify } from "#publishers/pub-login-notify.ts";
 
 export type SessionValidationResult =
   | { session: Session; user: Selectable<Pick<Users, "id" | "nickname">> }
@@ -22,13 +23,8 @@ export type SessionValidationResult =
 export const loginRoute = new Hono()
   .post("/login", zValidator("json", createSessionBodySchema), async (ctx) => {
     const { nickname, password, token: cfToken } = createSessionBodySchema.parse(await ctx.req.json())
-    const { browser, os, cpu, device, ua } = UAParser(ctx.req.header("User-Agent"))
 
-    try {
-      await validateAuthenticationRequest({ ctx, token: cfToken })
-    } catch (e) {
-      console.error(e)
-    }
+    await validateAuthenticationRequest({ ctx, token: cfToken })
 
     const existsUser = await validateExistsUser({ nickname, withCredentials: true })
     const user = existsUser.data
@@ -47,33 +43,33 @@ export const loginRoute = new Hono()
       return ctx.json({ error: "Invalid password" }, 401);
     }
 
-    const ip = getClientIp(ctx)
+    const ip: string | null = getClientIp(ctx)
 
     if (!ip) {
       return ctx.json({ error: "Invalid ip" }, 401);
     }
-
+    
     try {
-      const createdSession = await createSessionTransaction({
+      const { browser, os, cpu, device, ua } = UAParser(ctx.req.header("User-Agent"))
+
+      const created = await createSession({
         nickname, browser: browser.name, cpu: cpu.architecture, device: device.model, os: os.name, ua, ip
       })
 
-      if (createdSession) {
-        const expires = createdSession.expires_at
+      publishLoginNotify({ browser: browser.name, ip, nickname })
 
-        setCookie(ctx, SESSION_KEY, createdSession.token, {
-          httpOnly: true,
-          sameSite: isProduction ? "None" : "Lax",
-          secure: isProduction,
-          expires,
-          path: "/",
-          domain: isProduction ? SESSION_DOMAIN : "localhost"
-        })
+      const { token, expires_at: expires } = created
 
-        return ctx.json({ status: "Success" }, 200)
-      }
+      setCookie(ctx, SESSION_KEY, token, {
+        httpOnly: true,
+        sameSite: isProduction ? "None" : "Lax",
+        secure: isProduction,
+        expires,
+        path: "/",
+        domain: isProduction ? SESSION_DOMAIN : "localhost"
+      })
 
-      return ctx.json({ error: "Session not created" }, 500)
+      return ctx.json({ status: "Success" }, 200)
     } catch (e) {
       return ctx.json({ error: throwError(e) }, 500)
     }

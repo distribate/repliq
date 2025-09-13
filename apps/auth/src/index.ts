@@ -41,8 +41,9 @@ const app = new Hono<Env>()
   .use(honoLogger())
   .route("/", root)
   .route("/", auth)
+  .notFound((ctx) => ctx.json({ error: "Not Found" }, 404))
   .onError((error, ctx) => ctx.json({ error: error.message ?? "Internal Server Error" }, 500))
-  
+
 async function startServices() {
   await startNats()
   await startSupabase()
@@ -54,11 +55,11 @@ async function start() {
   if (isProduction) {
     showRoutes(app, { verbose: false });
   }
-  
+
   await startServices()
 
   Bun.serve({ port, fetch: app.fetch });
-  
+
   console.log(`\x1B[35m[App]\x1B[0m ${port}`)
 }
 

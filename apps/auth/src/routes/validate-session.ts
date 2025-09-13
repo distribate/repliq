@@ -3,12 +3,12 @@ import { Hono } from "hono";
 import { getCookie, setCookie } from "hono/cookie";
 import { SESSION_DOMAIN, SESSION_KEY } from "../shared/constants/session-details";
 import type { Env } from "../types/env-type";
-import { getSession } from "../utils/auth";
+import { getSession, getSessionToken } from "../utils/auth";
 import { isProduction } from "#shared/env/index.ts";
 
 export const validateSessionRoute = new Hono<Env>()
   .get("/validate-session", async (ctx) => {
-    const token = getCookie(ctx)[SESSION_KEY]
+    const token = getSessionToken(ctx)
 
     if (!token) {
       return ctx.json({ data: false }, 200)

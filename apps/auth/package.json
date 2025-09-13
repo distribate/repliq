@@ -24,7 +24,7 @@
     "@repo/shared": "*",
     "@supabase/supabase-js": "2.45.6",
     "bcryptjs": "2.4.3",
-    "hono": "4.9.1",
+    "hono": "4.9.7",
     "hono-rate-limiter": "0.4.2",
     "ioredis": "5.6.1",
     "ky": "1.8.1",

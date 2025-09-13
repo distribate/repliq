@@ -1,4 +1,3 @@
-import { publishLoginNotify } from "../../publishers/pub-login-notify";
 import { encodeHexLowerCase } from "@oslojs/encoding";
 import { sha256 } from "@oslojs/crypto/sha2";
 import { getRedisClient } from "../../shared/redis/index.ts";
@@ -14,7 +13,7 @@ import {
   type Session
 } from "../../utils/auth.ts";
 
-type CreateSessionTransaction = {
+type CreateSession = {
   nickname: string
 } & {
   ip: string;
@@ -25,11 +24,9 @@ type CreateSessionTransaction = {
   os: string | undefined;
 }
 
-type CreateSession = CreateSessionTransaction
-
-export async function createSession({
-  nickname, browser, ip, cpu, os, ua, device
-}: CreateSession) {
+export async function createSession(
+  { nickname, browser, ip, cpu, os, ua, device }: CreateSession
+) {
   const redis = getRedisClient()
   const now = Date.now();
   const token = generateSessionToken();
@@ -69,22 +66,9 @@ export async function createSession({
   await redis.lpush(userKey, token);
 
   return {
-    browser: payload.browser,
     ip,
     token,
     expires_at: new Date(Date.now() + SESSION_TTL * 1000),
     nickname
   }
-}
-
-export const createSessionTransaction = async ({
-  nickname, browser, cpu, ip, os, ua, device
-}: CreateSessionTransaction) => {
-  const session = await createSession({
-    nickname, browser, cpu, ip, os, ua, device
-  });
-
-  publishLoginNotify({ browser: session.browser, ip, nickname })
-
-  return session;
 }

@@ -1,7 +1,6 @@
 import type { DB } from '@repo/types/db/forum-database-types.ts';
 import type { Transaction } from "kysely";
 import { forumDB } from "../../shared/database/forum-db";
-import { publishRegisterNotify } from '../../publishers/pub-register-notify';
 import { validateRefferalsLength } from '../validators/validate-refferals-length';
 
 type CreateUserOpts = {
@@ -91,10 +90,6 @@ async function createUserSettings({ nickname, trx, user_id }: CreateUserSettings
     .executeTakeFirstOrThrow();
 }
 
-function notifyAboutRegister({ nickname, created_at }: { nickname: string, created_at: Date }) {
-  publishRegisterNotify(nickname)
-}
-
 export const createUserTransaction = async ({
   nickname, referrer, findout, password
 }: CreateUserTrx) => {
@@ -116,9 +111,9 @@ export const createUserTransaction = async ({
     return { nickname, created_at: createdUser.created_at }
   })
 
-  if (!query) return;
-
-  notifyAboutRegister(query)
+  if (!query) {
+    throw new Error("Error creating user")
+  }
 
   return query;
 }

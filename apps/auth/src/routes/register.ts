@@ -6,13 +6,11 @@ import { validatePasswordSafe } from '../lib/validators/validate-password-safe.t
 import { registerSchema } from '@repo/types/schemas/auth/create-session-schema.ts';
 import { validateAuthenticationRequest } from '../lib/validators/validate-authentication-request.ts';
 import { validateExistsUser } from '../lib/validators/validate-exists-user.ts';
-import { logger } from '@repo/shared/utils/logger.ts';
+import { publishRegisterNotify } from '#publishers/pub-register-notify.ts';
 
 export const registerRoute = new Hono()
   .post('/register', zValidator('json', registerSchema), async (ctx) => {    
-    const {
-      password, findout, referrer, nickname, token
-    } = registerSchema.parse(await ctx.req.json());
+    const { password, findout, referrer, nickname, token } = registerSchema.parse(await ctx.req.json());
 
     await validateAuthenticationRequest({ ctx, token })
 
@@ -22,18 +20,16 @@ export const registerRoute = new Hono()
       return ctx.json({ error: "User already exists" }, 400)
     }
 
-    const isPasswordSafe = validatePasswordSafe(password)
+    const passwordIsSafe = validatePasswordSafe(password)
 
-    if (!isPasswordSafe) {
+    if (!passwordIsSafe) {
       return ctx.json({ error: 'Unsafe password' }, 401);
     }
 
     try {
       const result = await createUserTransaction({ findout, nickname, referrer, password })
 
-      if (!result || !result.nickname) {
-        return ctx.json({ error: 'Error in creating user' }, 400);
-      }
+      publishRegisterNotify(result.nickname)
 
       return ctx.json({ status: "Success" }, 201);
     } catch (e) {

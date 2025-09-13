@@ -4,7 +4,7 @@ export type NotifyBase = {
 
 export type NotifyLoginReceived = NotifyBase & {
   ip: string,
-  browser: string,
+  browser?: string,
 }
 
 export type NotifyRegisterReceived = NotifyBase & {
