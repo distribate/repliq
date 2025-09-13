@@ -20,11 +20,11 @@ export const getCategoryRoute = new Hono()
     const id = ctx.req.param("id");
 
     try {
-      const category = await getCategory(id)
+      const data = await getCategory(id)
 
       ctx.header("Cache-Control", "public, max-age=300")
       
-      return ctx.json({ data: category }, 200)
+      return ctx.json({ data }, 200)
     } catch (e) {
       return ctx.json({ error: throwError(e) }, 500);
     }

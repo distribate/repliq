@@ -23,8 +23,8 @@ const WL_URLS = [
 const BL_HOSTS = ["localhost", "127.0.0.1"]
 
 const BL_ASSETS = [
-  "/assets/chunks/", 
-  "/assets/entries/", 
+  "/assets/chunks/",
+  "/assets/entries/",
   "/assets/static/"
 ]
 
@@ -53,7 +53,12 @@ async function networkFirst(request: Request, cacheName = RUNTIME_CACHE_NAME, ti
     clearTimeout(id);
 
     if (response && response.ok) {
-      cache.put(request, response.clone()).catch(() => {/* ignore put errors */ });
+      const url = new URL(request.url);
+
+      if (!BL_ASSETS.some(p => url.pathname.startsWith(p))) {
+        cache.put(request, response.clone()).catch(() => {/* ignore put errors */ });
+      }
+
       return response;
     }
 
@@ -78,9 +83,12 @@ async function cacheFirst(request: Request, cacheName = CACHE_NAME): Promise<Res
     const resp = await fetch(request);
 
     if (resp && resp.ok) {
-      cache.put(request, resp.clone()).catch(() => {/* ignore */ });
+      const url = new URL(request.url);
+      
+      if (!BL_ASSETS.some(p => url.pathname.startsWith(p))) {
+        cache.put(request, resp.clone()).catch(() => {/* ignore */ });
+      }
     }
-
     return resp;
   } catch {
     const fallback = await cache.match(request);
@@ -145,11 +153,17 @@ ctx.addEventListener('fetch', (event) => {
   }
 
   if (BL_ASSETS.some(p => url.pathname.startsWith(p))) {
-    event.respondWith(networkFirst(req).catch(e => {
-      log('SW', 'assets networkFirst failed', e);
-      return new Response('', { status: 504, statusText: 'Gateway Timeout' });
-    }));
+    event.respondWith((async () => {
+      try {
+        const resp = await fetch(req, { cache: 'no-store' });
 
+        return resp;
+      } catch (e) {
+        log('SW', 'asset fetch failed (no-cache)', e);
+        return new Response('', { status: 504, statusText: 'Gateway Timeout' });
+      }
+    })());
+    
     return;
   }
 

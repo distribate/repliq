@@ -1,7 +1,7 @@
 import type { Context } from "hono"
-import { verifyAuth } from "../../utils/verify-auth"
+import { validateRequest } from "./validate-request"
 import { getClientIp } from "../../utils/get-client-ip"
-import { validateIpRestricts } from "../../utils/validate-ip-restricts"
+import { validateIpRestricts } from "./validate-ip-restricts"
 import { isProduction } from "#shared/env/index.ts"
 
 type ValidateAuthenticationRequest = {
@@ -14,7 +14,7 @@ export const validateAuthenticationRequest = async ({ ctx, token }: ValidateAuth
     return ctx.json({ error: "Token is not provided" }, 400)
   }
 
-  const isVerified = await verifyAuth(token!)
+  const isVerified = await validateRequest(token!)
 
   if (isVerified === "no-verified") {
     return ctx.json({ error: "Invalid token" }, 400)

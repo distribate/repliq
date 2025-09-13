@@ -8,11 +8,9 @@ export const getIsAdminRoute = new Hono()
     const nickname = getNickname()
 
     try {
-      const isAdmin = await validateAdmin(nickname)
+      const data = await validateAdmin(nickname)
 
-      ctx.header("Cache-Control", "public, max-age=120")
-
-      return ctx.json({ data: isAdmin }, 200)
+      return ctx.json({ data }, 200)
     } catch (e) {
       return ctx.json({ error: throwError(e) }, 500);
     }

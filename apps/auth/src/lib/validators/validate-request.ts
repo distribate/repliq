@@ -11,7 +11,7 @@ type Payload = {
   tokenId: string
 }
 
-export async function verifyAuth(inputToken: string) {
+export async function validateRequest(inputToken: string) {
   try {
     const verifyRes = await ky.post("https://challenges.cloudflare.com/turnstile/v0/siteverify", {
       json: { secret: TURNSTILE_KEY, response: inputToken },

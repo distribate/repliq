@@ -3,7 +3,7 @@ import { throwError } from "#utils/throw-error.ts";
 import { Hono } from "hono";
 
 async function getTickets() {
-  const query = await forumDB
+  return forumDB
     .selectFrom("issues")
     .innerJoin("users", "users.nickname", "issues.nickname")
     .select([
@@ -13,11 +13,10 @@ async function getTickets() {
       "issues.nickname",
       "issues.type",
       "issues.title",
-      "users.avatar as avatar"
+      "users.avatar",
+      "users.name_color"
     ])
     .execute()
-
-  return query;
 }
 
 export const getTicketsRoute = new Hono()

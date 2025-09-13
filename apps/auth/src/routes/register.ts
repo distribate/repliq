@@ -2,7 +2,7 @@ import { Hono } from 'hono';
 import { zValidator } from '@hono/zod-validator';
 import { createUserTransaction } from '../lib/transactions/create-user-transaction.ts';
 import { throwError } from '#utils/throw-error.ts';
-import { validatePasswordSafe } from '../utils/validate-password-safe.ts';
+import { validatePasswordSafe } from '../lib/validators/validate-password-safe.ts';
 import { registerSchema } from '@repo/types/schemas/auth/create-session-schema.ts';
 import { validateAuthenticationRequest } from '../lib/validators/validate-authentication-request.ts';
 import { validateExistsUser } from '../lib/validators/validate-exists-user.ts';

@@ -524,7 +524,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/code-frame@npm:^7.27.1":
+"@babel/code-frame@npm:^7.0.0, @babel/code-frame@npm:^7.27.1":
   version: 7.27.1
   resolution: "@babel/code-frame@npm:7.27.1"
   dependencies:
@@ -1297,16 +1297,6 @@ __metadata:
   version: 9.13.0
   resolution: "@eslint/js@npm:9.13.0"
   checksum: 10c0/672257bffe17777b8a98bd80438702904cc7a0b98b9c2e426a8a10929198b3553edf8a3fc20feed4133c02e7c8f7331a0ef1b23e5dab8e4469f7f1791beff1e0
-  languageName: node
-  linkType: hard
-
-"@excalidraw/excalidraw@npm:0.16.4":
-  version: 0.16.4
-  resolution: "@excalidraw/excalidraw@npm:0.16.4"
-  peerDependencies:
-    react: ^17.0.2 || ^18.2.0
-    react-dom: ^17.0.2 || ^18.2.0
-  checksum: 10c0/a6ce3797b3a0a10e521422ef076757d75ed71a0510d8389d7dab6a8aef4c560e06fdaa415ed3892faa8c221e915a9165f3f05649c98975e855365cf607341c50
   languageName: node
   linkType: hard
 
@@ -3402,19 +3392,6 @@ __metadata:
     react: ">=18.0.0"
     react-dom: ">=18.0.0"
   checksum: 10c0/7df010df64dde825e4409ef6e76a0ed1983f93384c098dbc23012ca3e3f38a096aa6f12c9807439466a605e912b8d0d387a180ec8dcaf4856243bf3ac2899489
-  languageName: node
-  linkType: hard
-
-"@platejs/excalidraw@npm:49.0.0":
-  version: 49.0.0
-  resolution: "@platejs/excalidraw@npm:49.0.0"
-  dependencies:
-    "@excalidraw/excalidraw": "npm:0.16.4"
-  peerDependencies:
-    platejs: ">=49.0.0"
-    react: ">=18.0.0"
-    react-dom: ">=18.0.0"
-  checksum: 10c0/4e79fea1ee1d473099eaeecc3f064d8ef6841d100f0e1d4ab6c13f9b568df4fe7740e93f8cef7e12656cd9632d7c5f92bf1c8d08a62d5d7d4afe80be8b6cbcc3
   languageName: node
   linkType: hard
 
@@ -6862,7 +6839,6 @@ __metadata:
     "@platejs/dnd": "npm:49.2.10"
     "@platejs/docx": "npm:49.0.0"
     "@platejs/emoji": "npm:49.0.0"
-    "@platejs/excalidraw": "npm:49.0.0"
     "@platejs/floating": "npm:49.0.0"
     "@platejs/indent": "npm:49.0.0"
     "@platejs/juice": "npm:49.0.0"
@@ -6947,8 +6923,8 @@ __metadata:
   resolution: "@repo/types@workspace:packages/types"
   dependencies:
     dotenv-cli: "npm:7.4.4"
-    kysely: "npm:0.27.4"
-    kysely-codegen: "npm:0.17.0"
+    kysely: "npm:0.28.6"
+    kysely-codegen: "npm:0.19.0"
     zod: "npm:4.0.15"
   languageName: unknown
   linkType: soft
@@ -8845,7 +8821,8 @@ __metadata:
     hono: "npm:4.9.1"
     hono-rate-limiter: "npm:0.4.2"
     ioredis: "npm:5.6.1"
-    kysely: "npm:0.27.4"
+    ky: "npm:1.8.1"
+    kysely: "npm:0.28.6"
     pg: "npm:8.13.1"
     typescript: "npm:^5.4.5"
     ua-parser-js: "npm:2.0.3"
@@ -8892,8 +8869,8 @@ __metadata:
     hono-rate-limiter: "npm:0.4.2"
     ioredis: "npm:5.6.1"
     ky: "npm:1.8.1"
-    kysely: "npm:0.27.4"
-    kysely-bun-sqlite: "npm:^0.4.0"
+    kysely: "npm:0.28.6"
+    kysely-bun-sqlite: "npm:0.4.0"
     kysely-paginate: "npm:0.3.1"
     nanoid: "npm:5.0.7"
     nodemailer: "npm:6.10.0"
@@ -9601,6 +9578,23 @@ __metadata:
   languageName: node
   linkType: hard
 
+"cosmiconfig@npm:^9.0.0":
+  version: 9.0.0
+  resolution: "cosmiconfig@npm:9.0.0"
+  dependencies:
+    env-paths: "npm:^2.2.1"
+    import-fresh: "npm:^3.3.0"
+    js-yaml: "npm:^4.1.0"
+    parse-json: "npm:^5.2.0"
+  peerDependencies:
+    typescript: ">=4.9.5"
+  peerDependenciesMeta:
+    typescript:
+      optional: true
+  checksum: 10c0/1c1703be4f02a250b1d6ca3267e408ce16abfe8364193891afc94c2d5c060b69611fdc8d97af74b7e6d5d1aac0ab2fb94d6b079573146bc2d756c2484ce5f0ee
+  languageName: node
+  linkType: hard
+
 "cronbake@npm:^0.3.0":
   version: 0.3.0
   resolution: "cronbake@npm:0.3.0"
@@ -10128,12 +10122,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"dotenv-expand@npm:^11.0.6":
-  version: 11.0.7
-  resolution: "dotenv-expand@npm:11.0.7"
+"dotenv-expand@npm:^12.0.2":
+  version: 12.0.3
+  resolution: "dotenv-expand@npm:12.0.3"
   dependencies:
     dotenv: "npm:^16.4.5"
-  checksum: 10c0/d80b8a7be085edf351270b96ac0e794bc3ddd7f36157912939577cb4d33ba6492ebee349d59798b71b90e36f498d24a2a564fb4aa00073b2ef4c2a3a49c467b1
+  checksum: 10c0/0824bdc74fc816a28b0744b7853a23e046602e9616c82121dfdae21ebc13c6e89afeb773e794e97c35d48be2be0a990fbca721ee3869a49c04210a58a3cf296f
   languageName: node
   linkType: hard
 
@@ -10148,6 +10142,13 @@ __metadata:
   version: 16.6.1
   resolution: "dotenv@npm:16.6.1"
   checksum: 10c0/15ce56608326ea0d1d9414a5c8ee6dcf0fffc79d2c16422b4ac2268e7e2d76ff5a572d37ffe747c377de12005f14b3cc22361e79fc7f1061cce81f77d2c973dc
+  languageName: node
+  linkType: hard
+
+"dotenv@npm:^17.2.1":
+  version: 17.2.2
+  resolution: "dotenv@npm:17.2.2"
+  checksum: 10c0/be66513504590aff6eccb14167625aed9bd42ce80547f4fe5d195860211971a7060949b57108dfaeaf90658f79e40edccd3f233f0a978bff507b5b1565ae162b
   languageName: node
   linkType: hard
 
@@ -10404,7 +10405,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"env-paths@npm:^2.2.0":
+"env-paths@npm:^2.2.0, env-paths@npm:^2.2.1":
   version: 2.2.1
   resolution: "env-paths@npm:2.2.1"
   checksum: 10c0/285325677bf00e30845e330eec32894f5105529db97496ee3f598478e50f008c5352a41a30e5e72ec9de8a542b5a570b85699cd63bd2bc646dbcb9f311d83bc4
@@ -10415,6 +10416,15 @@ __metadata:
   version: 2.0.3
   resolution: "err-code@npm:2.0.3"
   checksum: 10c0/b642f7b4dd4a376e954947550a3065a9ece6733ab8e51ad80db727aaae0817c2e99b02a97a3d6cecc648a97848305e728289cf312d09af395403a90c9d4d8a66
+  languageName: node
+  linkType: hard
+
+"error-ex@npm:^1.3.1":
+  version: 1.3.2
+  resolution: "error-ex@npm:1.3.2"
+  dependencies:
+    is-arrayish: "npm:^0.2.1"
+  checksum: 10c0/ba827f89369b4c93382cfca5a264d059dfefdaa56ecc5e338ffa58a6471f5ed93b71a20add1d52290a4873d92381174382658c885ac1a2305f7baca363ce9cce
   languageName: node
   linkType: hard
 
@@ -11657,7 +11667,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"import-fresh@npm:^3.2.1":
+"import-fresh@npm:^3.2.1, import-fresh@npm:^3.3.0":
   version: 3.3.1
   resolution: "import-fresh@npm:3.3.1"
   dependencies:
@@ -11790,6 +11800,13 @@ __metadata:
     is-alphabetical: "npm:^2.0.0"
     is-decimal: "npm:^2.0.0"
   checksum: 10c0/4b35c42b18e40d41378293f82a3ecd9de77049b476f748db5697c297f686e1e05b072a6aaae2d16f54d2a57f85b00cbbe755c75f6d583d1c77d6657bd0feb5a2
+  languageName: node
+  linkType: hard
+
+"is-arrayish@npm:^0.2.1":
+  version: 0.2.1
+  resolution: "is-arrayish@npm:0.2.1"
+  checksum: 10c0/e7fb686a739068bb70f860b39b67afc62acc62e36bb61c5f965768abce1873b379c563e61dd2adad96ebb7edf6651111b385e490cf508378959b0ed4cac4e729
   languageName: node
   linkType: hard
 
@@ -12097,6 +12114,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"json-parse-even-better-errors@npm:^2.3.0":
+  version: 2.3.1
+  resolution: "json-parse-even-better-errors@npm:2.3.1"
+  checksum: 10c0/140932564c8f0b88455432e0f33c4cb4086b8868e37524e07e723f4eaedb9425bdc2bafd71bd1d9765bd15fd1e2d126972bc83990f55c467168c228c24d665f3
+  languageName: node
+  linkType: hard
+
 "json-schema-traverse@npm:^0.4.1":
   version: 0.4.1
   resolution: "json-schema-traverse@npm:0.4.1"
@@ -12210,7 +12234,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"kysely-bun-sqlite@npm:^0.4.0":
+"kysely-bun-sqlite@npm:0.4.0":
   version: 0.4.0
   resolution: "kysely-bun-sqlite@npm:0.4.0"
   dependencies:
@@ -12221,28 +12245,30 @@ __metadata:
   languageName: node
   linkType: hard
 
-"kysely-codegen@npm:0.17.0":
-  version: 0.17.0
-  resolution: "kysely-codegen@npm:0.17.0"
+"kysely-codegen@npm:0.19.0":
+  version: 0.19.0
+  resolution: "kysely-codegen@npm:0.19.0"
   dependencies:
     chalk: "npm:4.1.2"
-    dotenv: "npm:^16.4.5"
-    dotenv-expand: "npm:^11.0.6"
+    cosmiconfig: "npm:^9.0.0"
+    dotenv: "npm:^17.2.1"
+    dotenv-expand: "npm:^12.0.2"
     git-diff: "npm:^2.0.6"
     micromatch: "npm:^4.0.8"
     minimist: "npm:^1.2.8"
     pluralize: "npm:^8.0.0"
+    zod: "npm:^4.1.5"
   peerDependencies:
-    "@libsql/kysely-libsql": ^0.3.0
-    "@tediousjs/connection-string": ^0.5.0
-    better-sqlite3: ">=7.6.2"
-    kysely: ^0.27.0
-    kysely-bun-sqlite: ^0.3.2
-    kysely-bun-worker: ^0.5.3
-    mysql2: ^2.3.3 || ^3.0.0
-    pg: ^8.8.0
-    tarn: ^3.0.0
-    tedious: ^18.0.0
+    "@libsql/kysely-libsql": ">=0.3.0 <0.5.0"
+    "@tediousjs/connection-string": ">=0.5.0 <0.6.0"
+    better-sqlite3: ">=7.6.2 <13.0.0"
+    kysely: ">=0.27.0 <1.0.0"
+    kysely-bun-sqlite: ">=0.3.2 <1.0.0"
+    kysely-bun-worker: ">=1.2.0 <2.0.0"
+    mysql2: ">=2.3.3 <4.0.0"
+    pg: ">=8.8.0 <9.0.0"
+    tarn: ">=3.0.0 <4.0.0"
+    tedious: ">=18.0.0 <20.0.0"
   peerDependenciesMeta:
     "@libsql/kysely-libsql":
       optional: true
@@ -12266,7 +12292,7 @@ __metadata:
       optional: true
   bin:
     kysely-codegen: dist/cli/bin.js
-  checksum: 10c0/9e780972aa5301f9df43e1e9018ef5aa5a26e6eed14af28fa1a5cdde5e8d0a2c7a6a46633eaa5dabfad4cda68d53b9612626692b4e45997ae33af288f87c6944
+  checksum: 10c0/07308e3c548a0b67d9b91fff41ae8474d409dccf77cbc629100f3519ea4d70aa9397d24150461b24233304adfca6dda41532d081c7b4ea410ae66ff5796ebe76
   languageName: node
   linkType: hard
 
@@ -12279,10 +12305,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"kysely@npm:0.27.4":
-  version: 0.27.4
-  resolution: "kysely@npm:0.27.4"
-  checksum: 10c0/05d223dca3f69778e28511d30cfff485e8e035a43fb01b24f1624b87f850cd6f87e33dcc04e752f7454ac8aed2743d982dabe3be6bc402c63568d020d5b0dd1d
+"kysely@npm:0.28.6":
+  version: 0.28.6
+  resolution: "kysely@npm:0.28.6"
+  checksum: 10c0/2c09ab4fac76dec0f8dbc54a77a189439ec7ba1d43945ead2033e5be2ecb2f244c1a5dd8725d799d290a404c1671bdaa5e42f550099a7fc4e0f74f903e3e981c
   languageName: node
   linkType: hard
 
@@ -12412,6 +12438,13 @@ __metadata:
     lightningcss-win32-x64-msvc:
       optional: true
   checksum: 10c0/1e1ad908f3c68bf39d964a6735435a8dd5474fb2765076732d64a7b6aa2af1f084da65a9462443a9adfebf7dcfb02fb532fce1d78697f2a9de29c8f40f09aee3
+  languageName: node
+  linkType: hard
+
+"lines-and-columns@npm:^1.1.6":
+  version: 1.2.4
+  resolution: "lines-and-columns@npm:1.2.4"
+  checksum: 10c0/3da6ee62d4cd9f03f5dc90b4df2540fb85b352081bee77fe4bbcd12c9000ead7f35e0a38b8d09a9bb99b13223446dd8689ff3c4959807620726d788701a83d2d
   languageName: node
   linkType: hard
 
@@ -13871,6 +13904,18 @@ __metadata:
     is-decimal: "npm:^2.0.0"
     is-hexadecimal: "npm:^2.0.0"
   checksum: 10c0/a13906b1151750b78ed83d386294066daf5fb559e08c5af9591b2d98cc209123103016a01df776f65f8219ad26652d6d6b210d0974d452049cddfc53a8916c34
+  languageName: node
+  linkType: hard
+
+"parse-json@npm:^5.2.0":
+  version: 5.2.0
+  resolution: "parse-json@npm:5.2.0"
+  dependencies:
+    "@babel/code-frame": "npm:^7.0.0"
+    error-ex: "npm:^1.3.1"
+    json-parse-even-better-errors: "npm:^2.3.0"
+    lines-and-columns: "npm:^1.1.6"
+  checksum: 10c0/77947f2253005be7a12d858aedbafa09c9ae39eb4863adf330f7b416ca4f4a08132e453e08de2db46459256fb66afaac5ee758b44fe6541b7cdaf9d252e59585
   languageName: node
   linkType: hard
 
@@ -17159,6 +17204,13 @@ __metadata:
   version: 3.25.76
   resolution: "zod@npm:3.25.76"
   checksum: 10c0/5718ec35e3c40b600316c5b4c5e4976f7fee68151bc8f8d90ec18a469be9571f072e1bbaace10f1e85cf8892ea12d90821b200e980ab46916a6166a4260a983c
+  languageName: node
+  linkType: hard
+
+"zod@npm:^4.1.5":
+  version: 4.1.8
+  resolution: "zod@npm:4.1.8"
+  checksum: 10c0/5eae39da09d7bd0564a30dfd2348811e4e2e7dd15955d8f3444f8e196f35e5422b1482eda234b722fafb0738f4a8b718adb042b860936bfdd2cc19cdbdac8a9a
   languageName: node
   linkType: hard
 
