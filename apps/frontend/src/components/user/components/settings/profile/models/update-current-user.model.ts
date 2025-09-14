@@ -1,4 +1,4 @@
-import { requestedUserAtom } from "#components/profile/main/models/requested-user.model";
+import { requestedUserAtom } from "#components/profile/models/requested-user.model";
 import { reatomAsync, withStatusesAtom } from "@reatom/async";
 import { userClient } from "#shared/api/forum-client";
 import { editUserSettingsBodySchema } from "@repo/types/schemas/user/edit-user-settings-schema";

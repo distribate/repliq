@@ -142,8 +142,8 @@ export const addImagesAction = action(async (ctx, e: React.ChangeEvent<HTMLInput
 }, "addImagesAction")
 
 export const deleteImageAction = action((
-  ctx, 
-  e: React.MouseEvent<HTMLButtonElement, MouseEvent> | React.ChangeEvent<HTMLInputElement>, 
+  ctx,
+  e: React.MouseEvent<HTMLButtonElement, MouseEvent> | React.ChangeEvent<HTMLInputElement>,
   index: number
 ) => {
   e.preventDefault();
@@ -193,9 +193,13 @@ export function createThreadFormReset(ctx: Ctx) {
 
 export const availableCategoriesAction = reatomAsync(async (ctx) => {
   return await ctx.schedule(async () => {
-    const res = await categoriesClient.category["available-categories"].$get(
-      {}, { init: { signal: ctx.controller.signal } }
-    )
+    const res = await categoriesClient.category["categories"].$get({
+      query: {
+        type: "available"
+      }
+    }, {
+      init: { signal: ctx.controller.signal }
+    })
 
     return validateResponse<typeof res>(res)
   })

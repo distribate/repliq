@@ -4,7 +4,7 @@ import { reatomAsync, withErrorAtom, withStatusesAtom } from "@reatom/async";
 import { postClient } from "#shared/api/forum-client.ts";
 import { postContentSchema, postFormContentAtom, postFormResetAction, postFormVisibilityAtom, VisibilityPost } from "./post-form.model.ts";
 import * as z from "zod";
-import { postsDataAtom, PostsPayloadData } from "#components/profile/posts/models/posts.model.ts";
+import { postsDataAtom, PostsPayloadData } from "#components/profile/components/posts/models/posts.model.ts";
 import { batch } from "@reatom/core";
 import { validateResponse } from "#shared/api/validation.ts";
 

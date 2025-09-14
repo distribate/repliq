@@ -1,4 +1,4 @@
-import { isParamChanged } from "#components/profile/main/models/requested-user.model";
+import { isParamChanged } from "#components/profile/models/requested-user.model";
 import { threadParamAtom } from "#components/thread/models/thread.model";
 import { log } from "#shared/utils/log";
 import { atom, batch, Ctx } from "@reatom/core";

@@ -1,7 +1,7 @@
 import { CreateReport } from "./create-report.model";
 import { action, atom } from "@reatom/core";
 import { withReset } from "@reatom/framework";
-import { postsDataAtom } from "#components/profile/posts/models/posts.model";
+import { postsDataAtom } from "#components/profile/components/posts/models/posts.model";
 import { threadCommentsDataAtom } from "#components/thread/components/thread-comments/models/thread-comments.model";
 import { toast } from "sonner";
 

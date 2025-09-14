@@ -1,6 +1,6 @@
 import { Typography } from "@repo/ui/src/components/typography.tsx";
 import dayjs from "@repo/shared/constants/dayjs-instance.ts";
-import { CoverArea } from "#components/profile/header/components/cover-area";
+import { HeadArea } from "#components/profile/components/head/components/head-area";
 import { reatomAsync, withDataAtom, withStatusesAtom } from "@reatom/async";
 import { reatomComponent, useUpdate } from "@reatom/npm-react";
 import { atom, onConnect } from "@reatom/framework";
@@ -41,9 +41,9 @@ const Details = reatomComponent(({ ctx }) => {
 
   return (
     <div className="flex flex-col w-full h-full">
-      <CoverArea variant="full" backgroundColor="gray" outline="default">
+      <HeadArea backgroundColor="gray" outline="default">
         <div className="z-[2] absolute w-full h-full right-0 top-0 bottom-0 left-0 bg-black/40" />
-      </CoverArea>
+      </HeadArea>
       <div className="flex flex-col gap-4 justify-center items-center py-12 px-2">
         <div className="flex flex-col items-center gap-2 w-full">
           <Typography textSize="very_big" textColor="shark_white">

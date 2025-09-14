@@ -4,7 +4,7 @@ import { NotificationsNavigation } from '#components/notifications/components/no
 
 export default function Page() {
   return (
-    <div className="flex flex-col items-center justify-center w-full min-h-dvh">
+    <div className="flex flex-col items-center justify-center bg-primary-color rounded-xl p-2 sm:p-4 w-full min-h-dvh">
       <div className="flex flex-col items-start gap-4 h-full w-full">
         <Typography className="page-title">
           Уведомления

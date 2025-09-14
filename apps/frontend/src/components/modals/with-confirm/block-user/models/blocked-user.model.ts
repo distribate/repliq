@@ -1,4 +1,4 @@
-import { requestedUserProfileBlockedAtom, requestedUserProfileStatusAtom } from "#components/profile/main/models/requested-user.model";
+import { requestedUserProfileBlockedAtom, requestedUserProfileStatusAtom } from "#components/profile/models/requested-user.model";
 import { reatomAsync, withDataAtom, withStatusesAtom } from "@reatom/async";
 import { atom, batch } from "@reatom/core";
 import { withReset } from "@reatom/framework";

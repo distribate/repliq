@@ -20,7 +20,7 @@ export const MyTickets = reatomComponent(({ ctx }) => {
 
   if (ctx.spy(myTicketsAction.statusesAtom).isPending) {
     return (
-      <div className="flex flex-col h-full gap-4 p-4 w-full">
+      <div className="flex flex-col h-full gap-4 w-full">
         <Skeleton className="h-20 w-full" />
         <Skeleton className="h-20 w-full" />
         <Skeleton className="h-20 w-full" />
@@ -30,7 +30,7 @@ export const MyTickets = reatomComponent(({ ctx }) => {
 
   if (!data || !data.length) {
     return (
-      <div className="flex flex-col h-full items-center justify-center gap-4 p-4 w-full">
+      <div className="flex flex-col h-full items-center justify-center gap-4 w-full">
         <Typography textColor="shark_white" textSize="very_big" className="font-semibold">
           У вас нет тикетов
         </Typography>

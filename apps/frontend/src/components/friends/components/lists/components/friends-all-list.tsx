@@ -55,7 +55,7 @@ const UpdatedSkeleton = reatomComponent(({ ctx }) => {
   return <FriendsAllListSkeleton />
 }, "UpdatedSkeleton")
 
-const List = reatomComponent(({ ctx }) => {
+const FriendsAllList = reatomComponent(({ ctx }) => {
   const data = ctx.spy(myFriendsDataAtom);
   const isExist = data && data.length >= 1
 
@@ -74,16 +74,16 @@ const List = reatomComponent(({ ctx }) => {
       <FriendsViewer />
     </>
   )
-}, "List")
+}, "FriendsAllList")
 
-export const FriendsAllList = reatomComponent(({ ctx }) => {
+export const FriendsAll = reatomComponent(({ ctx }) => {
   if (ctx.spy(myFriendsAction.statusesAtom).isPending) {
     return <SectionSkeleton />
   }
 
   return (
     <FriendsListLayout>
-      <List />
+      <FriendsAllList />
     </FriendsListLayout>
   );
-}, "FriendsAllList")
+}, "FriendsAll")

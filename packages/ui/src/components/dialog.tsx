@@ -45,10 +45,10 @@ function DialogOverlay({
 function DialogContent({
   className,
   children,
-  showClose = true,
+  withClose = true,
   ...props
 }: React.ComponentProps<typeof DialogPrimitive.Content> & {
-  showClose?: boolean
+  withClose?: boolean
 }) {
   return (
     <DialogPortal data-slot="dialog-portal">
@@ -69,7 +69,7 @@ function DialogContent({
         {...props}
       >
         {children}
-        {showClose && (
+        {withClose && (
           <DialogPrimitive.Close
             data-slot="dialog-close"
             className="absolute right-2 z-[2] hover:bg-red-600 p-2 top-2 rounded-lg opacity-70

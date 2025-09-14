@@ -9,7 +9,6 @@ import { pageContextAtom } from "#shared/lib/context-sync";
 import { connectNotificationsAction } from "#shared/models/notifications.model";
 import { isDevelopment } from '#shared/env';
 import { ErrorBoundary } from '#shared/components/error-boundary';
-import { initServiceWorker } from '#lib/service-worker/init';
 
 import '../global.css';
 
@@ -53,15 +52,9 @@ const Notifications = () => {
   return null;
 }
 
-const ServiceWorker = () => {
-  useUpdate(initServiceWorker, [])
-  return null;
-}
-
 export default function Layout({ children }: PropsWithChildren) {
   return (
     <ReatomProvider>
-      <ServiceWorker />
       <ErrorBoundary>
         <Toaster />
         <Notifications />

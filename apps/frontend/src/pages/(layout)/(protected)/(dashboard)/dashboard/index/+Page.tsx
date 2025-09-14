@@ -1,4 +1,4 @@
-import { userProfileStatsAction } from '#components/profile/account/models/user-stats.model'
+import { userProfileStatsAction } from '#components/profile/components/account/models/user-stats.model'
 import { CustomLink } from '#shared/components/link'
 import { Avatar } from '#components/user/components/avatar/components/avatar'
 import { UserNickname } from '#components/user/components/name/nickname'
@@ -6,12 +6,15 @@ import { reatomComponent } from '@reatom/npm-react'
 import { createIdLink } from '#shared/helpers/create-link'
 import { Typography } from '@repo/ui/src/components/typography'
 import { getUser } from "#components/user/models/current-user.model";
+import { Skeleton } from '@repo/ui/src/components/skeleton'
 
 const DashboardIndex = reatomComponent(({ ctx }) => {
   const { avatar, nickname } = getUser(ctx)
   const profileStats = ctx.spy(userProfileStatsAction.dataAtom)
 
   const meta = profileStats?.meta
+
+  const isLoading = ctx.spy(userProfileStatsAction.statusesAtom).isPending
 
   return (
     <div className="flex flex-col gap-4 w-full h-full">
@@ -31,9 +34,11 @@ const DashboardIndex = reatomComponent(({ ctx }) => {
           Аналитика
         </Typography>
         <div className="flex bg-shark-900 p-2 rounded-lg items-end gap-2 w-full">
-          <Typography className="text-5xl text-shark-50 font-bold">
-            {meta?.views_all}
-          </Typography>
+          {isLoading ? <Skeleton className="w-12 h-12" /> : (
+            <Typography className="text-5xl text-shark-50 font-bold">
+              {meta?.views_all}
+            </Typography>
+          )}
           <Typography className="text-shark-300 text-base">
             просмотров профиля
           </Typography>

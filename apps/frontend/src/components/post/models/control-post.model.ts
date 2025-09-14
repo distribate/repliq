@@ -1,6 +1,6 @@
 import { reatomAsync, withStatusesAtom } from "@reatom/async";
 import { commentClient, postClient } from "#shared/api/forum-client";
-import { postsDataAtom } from "#components/profile/posts/models/posts.model";
+import { postsDataAtom } from "#components/profile/components/posts/models/posts.model";
 import { editPostsControlAtom } from "./post-control.model";
 import { toast } from "sonner";
 import { batch } from "@reatom/core";

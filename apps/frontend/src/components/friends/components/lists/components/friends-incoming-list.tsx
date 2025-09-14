@@ -60,7 +60,7 @@ const FriendIncomingCard = reatomComponent<FriendIncomindCardProps>(({
   );
 }, "FriendIncomingCard")
 
-export const FriendsIncomingList = reatomComponent(({ ctx }) => {
+export const FriendsIncoming = reatomComponent(({ ctx }) => {
   const data = ctx.spy(incomingRequestsAtom)
   const isExist = data && data.length >= 1;
 
@@ -77,4 +77,4 @@ export const FriendsIncomingList = reatomComponent(({ ctx }) => {
       {data.map((user) => <FriendIncomingCard key={user.initiator} {...user} />)}
     </FriendsListLayout>
   )
-}, "FriendsIncomingList")
+}, "FriendsIncoming")

@@ -6,7 +6,7 @@ import { threadClient } from '#shared/api/forum-client';
 import { getCommentsSchema } from "@repo/types/schemas/comment/get-comments-schema.ts";
 import * as z from "zod";
 import { withReset } from '@reatom/framework';
-import { isParamChanged } from '#components/profile/main/models/requested-user.model';
+import { isParamChanged } from '#components/profile/models/requested-user.model';
 import { isAuthenticatedAtom } from '#components/auth/models/auth.model';
 import { validateResponse } from '#shared/api/validation';
 

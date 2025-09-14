@@ -1,5 +1,5 @@
 import { isAuthenticatedAtom } from "#components/auth/models/auth.model"
-import { requestedUserAtom, requestedUserIsSameAtom, requestedUserParamAtom } from "#components/profile/main/models/requested-user.model"
+import { requestedUserAtom, requestedUserIsSameAtom, requestedUserParamAtom } from "#components/profile/models/requested-user.model"
 import { userAvatars, type UserAvatarsPayload } from "#components/user/components/avatar/models/user-avatars.model"
 import { currentUserAtom } from "#components/user/models/current-user.model"
 import { log } from "#shared/utils/log"

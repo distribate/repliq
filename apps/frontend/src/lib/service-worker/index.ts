@@ -1,9 +1,13 @@
 /// <reference lib="webworker" />
 export type { };
 
+import { precacheAndRoute } from 'workbox-precaching'
+
 declare let self: ServiceWorkerGlobalScope;
 
-import { log } from "#shared/utils/log";
+precacheAndRoute(self.__WB_MANIFEST)
+
+const log = (...args: any[]) => console.log('[SW]', ...args)
 
 const ctx = self as unknown as ServiceWorkerGlobalScope;
 

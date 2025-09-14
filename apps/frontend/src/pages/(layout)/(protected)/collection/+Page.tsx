@@ -49,7 +49,7 @@ const CollectionList = reatomComponent(({ ctx }) => {
 
 export default function Page() {
   return (
-    <div className="flex flex-col items-center justify-center w-full min-h-dvh">
+    <div className="flex flex-col items-center bg-primary-color rounded-xl p-2 sm:p-4 justify-center w-full min-h-dvh">
       <Sync />
       <div className="flex flex-col items-start gap-4 h-full w-full">
         <Typography className="page-title">

@@ -1,4 +1,4 @@
-import { getUserProfile, RequestedUserFull } from "#components/profile/main/models/requested-user.model"
+import { getUserProfile, RequestedUserFull } from "#components/profile/models/requested-user.model"
 import { logRouting } from "#shared/utils/log"
 import { createIdLink } from "#shared/helpers/create-link"
 import { logger } from "@repo/shared/utils/logger.ts"

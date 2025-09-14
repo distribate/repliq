@@ -1,6 +1,6 @@
 import { AccountStatsCharts } from '#components/dashboard/components/account-stats-charts'
-import { ProfileAccountStatsMeta, ProfileAccountStatsPlayers } from '#components/profile/account/components/profile-account-stats-list'
-import { userProfileStatsAction } from '#components/profile/account/models/user-stats.model'
+import { AccountStatsMeta, AccountStatsPlayers } from '#components/dashboard/components/account-stats-players'
+import { userProfileStatsAction } from '#components/profile/components/account/models/user-stats.model'
 import { reatomComponent } from '@reatom/npm-react'
 import { Typography } from '@repo/ui/src/components/typography'
 
@@ -40,13 +40,13 @@ const DashboardProfile = reatomComponent(({ ctx }) => {
             <Typography textColor="shark_white" className="text-[18px] font-semibold">
               Общая информация
             </Typography>
-            {meta && <ProfileAccountStatsMeta meta={meta} />}
+            {meta && <AccountStatsMeta meta={meta} />}
           </div>
         </div>
         <div className="flex flex-col w-full">
           {charts && <AccountStatsCharts charts={charts} />}
         </div>
-        {details && <ProfileAccountStatsPlayers details={details} />}
+        {details && <AccountStatsPlayers details={details} />}
       </div>
     </div>
   )

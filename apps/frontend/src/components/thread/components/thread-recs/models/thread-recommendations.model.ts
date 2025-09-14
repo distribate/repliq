@@ -2,7 +2,7 @@ import { threadOwnerAtom, threadParamAtom } from "#components/thread/models/thre
 import { reatomAsync, withStatusesAtom } from "@reatom/async"
 import { atom, AtomState, Ctx, sleep, withReset } from "@reatom/framework"
 import { threadClient } from "#shared/api/forum-client"
-import { isParamChanged } from "#components/profile/main/models/requested-user.model"
+import { isParamChanged } from "#components/profile/models/requested-user.model"
 import { validateResponse } from "#shared/api/validation"
 
 type ThreadRecommendationsPayload = NonNullable<ReturnType<Awaited<typeof threadRecommendationsAction>["onFulfill"]>>

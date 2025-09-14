@@ -11,7 +11,7 @@ export const getFriendRequestsRoute = new Hono()
     const nickname = getNickname();
 
     try {
-      const data = await getFriendRequests({ nickname, type, cursor });
+      const data = await getFriendRequests(nickname, { type, cursor });
 
       return ctx.json({ data }, 200);
     } catch (e) {

@@ -5,7 +5,7 @@ import { ReportCreateModal } from "#components/modals/with-confirm/report/compon
 import { editPostsControlAtom } from "#components/post/models/post-control.model";
 import { Cloud } from "lucide-react";
 import { reatomComponent } from "@reatom/npm-react";
-import { postsDataAtom } from "#components/profile/posts/models/posts.model";
+import { postsDataAtom } from "#components/profile/components/posts/models/posts.model";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@repo/ui/src/components/dropdown-menu";
 import { moreVariant } from "#ui/more-wrapper";
 import { deletePostAction, disablePostCommentsAction, pinPostAction } from "../../models/control-post.model";

@@ -4,7 +4,10 @@ import vike from "vike/plugin";
 import tsconfigPaths from 'vite-tsconfig-paths';
 import Sonda from 'sonda/vite';
 import tailwindcss from '@tailwindcss/vite'
-import { viteStaticCopy } from 'vite-plugin-static-copy'
+import { type ManifestOptions, VitePWA } from 'vite-plugin-pwa'
+import manifestJSON from "./src/lib/service-worker/site.webmanifest" with { type: "json" }
+
+const manifest = manifestJSON as Partial<ManifestOptions>;
 
 function checkRuntime() {
   if (typeof Bun !== "undefined") {
@@ -65,15 +68,21 @@ export default defineConfig(({ mode }) => {
       react(),
       tsconfigPaths(),
       Sonda({ enabled: false }),
-      onPreview({ prefixUrl, token }),
-      viteStaticCopy({
-        targets: [
-          {
-            src: 'dist/client/assets/sw.*.js',
-            dest: '.',
-            rename: 'worker.js'
-          }
-        ]
+      // onPreview({ prefixUrl, token }),
+      VitePWA({
+        injectRegister: "script-defer",
+        registerType: 'autoUpdate', 
+        strategies: 'injectManifest', 
+        srcDir: 'src', 
+        filename: 'sw.ts',
+        includeAssets: [
+          'favicon-96x96.png',
+          'apple-touch-icon.png',
+          'web-app-manifest-192x192.png',
+          'web-app-manifest-512x512.png',
+          'site.webmanifest'
+        ],
+        manifest
       })
     ],
     build: {
@@ -86,9 +95,6 @@ export default defineConfig(({ mode }) => {
               return id.toString().split('node_modules/')[1].split('/')[0].toString();
             }
           },
-        },
-        input: {
-          sw: './src/sw.ts'
         }
       }
     },

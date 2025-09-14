@@ -1,5 +1,5 @@
 import { reatomComponent } from "@reatom/npm-react";
-import { requestedUserAtom } from "#components/profile/main/models/requested-user.model";
+import { requestedUserAtom } from "#components/profile/models/requested-user.model";
 import { userAvatarSelectedAtom, userAvatarsSelectedAtom } from "#components/user/components/avatar/models/avatar.model";
 import { userAvatars } from "../models/user-avatars.model";
 import { Skeleton } from "@repo/ui/src/components/skeleton";
