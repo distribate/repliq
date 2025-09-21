@@ -4,10 +4,7 @@ import vike from "vike/plugin";
 import tsconfigPaths from 'vite-tsconfig-paths';
 import Sonda from 'sonda/vite';
 import tailwindcss from '@tailwindcss/vite'
-import { type ManifestOptions, VitePWA } from 'vite-plugin-pwa'
-import manifestJSON from "./src/lib/service-worker/site.webmanifest" with { type: "json" }
-
-const manifest = manifestJSON as Partial<ManifestOptions>;
+import { VitePWA } from 'vite-plugin-pwa'
 
 function checkRuntime() {
   if (typeof Bun !== "undefined") {
@@ -81,8 +78,7 @@ export default defineConfig(({ mode }) => {
           'web-app-manifest-192x192.png',
           'web-app-manifest-512x512.png',
           'site.webmanifest'
-        ],
-        manifest
+        ]
       })
     ],
     build: {

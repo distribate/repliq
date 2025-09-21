@@ -6,8 +6,6 @@ import { sleep } from "@reatom/framework";
 import { reatomComponent, useUpdate } from "@reatom/npm-react";
 import { PropsWithChildren } from "react";
 
-import "../../editor.css"
-
 const appIsInitAtom = atom(false, 'appIsInitAtom').pipe(
   withSsr("appIsInitAtom")
 )

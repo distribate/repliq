@@ -3,9 +3,15 @@ import { throwError } from "#utils/throw-error.ts";
 import { Hono } from "hono";
 import { forumDB } from "#shared/database/forum-db.ts";
 import { validatePostOwner } from "#lib/validators/validate-post-owner.ts";
+import { executeWithCursorPagination } from "kysely-paginate";
+import * as z from "zod";
+import { zValidator } from "@hono/zod-validator";
 
-async function getPostViewers(id: string) {
-  const query = await forumDB
+async function getPostViewers(
+  id: string, 
+  { cursor }: z.infer<typeof getPostViewersRouteSchema>
+) {
+  const query = forumDB
     .selectFrom("posts_views")
     .innerJoin("users", "users.nickname", "posts_views.nickname")
     .leftJoin("users_subs", "users.nickname", "users_subs.nickname")
@@ -24,20 +30,42 @@ async function getPostViewers(id: string) {
     .limit(16)
     .where("post_id", "=", id)
     .orderBy("posts_views.created_at", "desc")
-    .execute()
+
+  const res = await executeWithCursorPagination(query, {
+    after: cursor,
+    perPage: 16,
+    fields: [
+      {
+        expression: "created_at",
+        key: "created_at",
+        direction: "asc"
+      }
+    ],
+    parseCursor: (cursor) => ({
+      created_at: new Date(cursor.created_at)
+    })
+  })
 
   return {
-    data: query,
+    data: res.rows,
     meta: {
-      count: query.length
+      hasNextPage: res.hasNextPage ?? false,
+      hasPrevPage: res.hasPrevPage ?? false,
+      endCursor: res.endCursor,
+      startCursor: res.startCursor,
     }
   };
 }
 
+const getPostViewersRouteSchema = z.object({
+  cursor: z.string().optional()
+})
+
 export const getPostViewersRoute = new Hono()
-  .get("/viewers/:id", async (ctx) => {
+  .get("/viewers/:id", zValidator("query", getPostViewersRouteSchema), async (ctx) => {
     const id = ctx.req.param("id");
     const nickname = getNickname()
+    const result = getPostViewersRouteSchema.parse(ctx.req.query())
 
     const isValid = await validatePostOwner({ nickname, postId: id })
 
@@ -46,7 +74,7 @@ export const getPostViewersRoute = new Hono()
     }
 
     try {
-      const viewers = await getPostViewers(id)
+      const viewers = await getPostViewers(id, result)
 
       return ctx.json({ data: viewers }, 200)
     } catch (e) {

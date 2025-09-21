@@ -11,30 +11,14 @@ type ControlPost = {
   nickname: string;
 };
 
-async function pinPost({ id, value }: { id: string; value: boolean }) {
-  const res = await postClient.post["pin"].$post({ json: { id, value } })
-  return validateResponse<typeof res>(res);
-}
-
-async function editPost({ content, id }: { id: string, content: string }) {
-  const res = await postClient.post["edit"].$post({ json: { id, content } })
-  return validateResponse<typeof res>(res);
-}
-
-async function disablePostComments({ id }: { id: string }) {
-  const res = await commentClient.comment["disable-comments"].$post({ json: { id, type: "post" } })
-  return validateResponse<typeof res>(res);
-}
-
-async function deletePost({ id }: { id: string }) {
-  const res = await postClient.post["remove"].$delete({ json: { id } })
-  return validateResponse<typeof res>(res);
-}
-
 export const pinPostAction = reatomAsync(async (ctx, values: ControlPost & { currentState: boolean }) => {
-  const { id, currentState } = values;
+  const { id, currentState: value } = values;
 
-  const result = await ctx.schedule(() => pinPost({ id, value: !currentState }))
+  const result = await ctx.schedule(async () => {
+    const res = await postClient.post["pin"].$post({ json: { id, value } })
+
+    return validateResponse<typeof res>(res);
+  })
 
   return { result, id }
 }, {
@@ -66,7 +50,11 @@ export const pinPostAction = reatomAsync(async (ctx, values: ControlPost & { cur
 export const editPostContentAction = reatomAsync(async (ctx, values: ControlPost & { content: string }) => {
   const { id, content } = values;
 
-  const result = await ctx.schedule(() => editPost({ id, content }))
+  const result = await ctx.schedule(async () => {
+    const res = await postClient.post["edit"].$post({ json: { id, content } })
+
+    return validateResponse<typeof res>(res);
+  })
 
   return { result, id }
 }, {
@@ -106,7 +94,11 @@ export const editPostContentAction = reatomAsync(async (ctx, values: ControlPost
 export const deletePostAction = reatomAsync(async (ctx, values: ControlPost) => {
   const { id } = values;
 
-  const result = await ctx.schedule(() => deletePost({ id }))
+  const result = await ctx.schedule(async () => {
+    const res = await postClient.post["remove"].$delete({ json: { id } })
+
+    return validateResponse<typeof res>(res);
+  })
 
   return { result, id }
 }, {
@@ -140,7 +132,11 @@ export const deletePostAction = reatomAsync(async (ctx, values: ControlPost) => 
 export const disablePostCommentsAction = reatomAsync(async (ctx, values: ControlPost) => {
   const { id } = values;
 
-  const result = await ctx.schedule(() => disablePostComments({ id }))
+  const result = await ctx.schedule(async () => {
+    const res = await commentClient.comment["disable-comments"].$post({ json: { id, type: "post" } })
+
+    return validateResponse<typeof res>(res);
+  })
 
   return { result, id }
 }, {

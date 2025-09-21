@@ -3,8 +3,10 @@
 
 @import "@bprogress/core/css";
 
+@import "../../../packages/plate-editor/src/editor.css";
 @import "../../../packages/ui/src/ui.css";
 
+@source "../../../packages/plate-editor/src/**/*.{js,ts,jsx,tsx}";
 @source "../../../packages/ui/src/**/*.{js,ts,jsx,tsx}";
 
 @plugin "tailwindcss-react-aria-components";

@@ -17,8 +17,16 @@ async function getThreadComments(
 
   const query = forumDB
     .selectFrom('comments')
-    .leftJoin('comments_replies', 'comments.id', 'comments_replies.initiator_comment_id')
-    .leftJoin('comments as replied_comment', 'comments_replies.recipient_comment_id', 'replied_comment.id')
+    .leftJoin(
+      'comments_replies', 
+      'comments.id', 
+      'comments_replies.initiator_comment_id'
+    )
+    .leftJoin(
+      'comments as replied_comment', 
+      'comments_replies.recipient_comment_id', 
+      'replied_comment.id'
+    )
     .select([
       'comments.id as comment_id',
       'comments.created_at as comment_created_at',
@@ -28,6 +36,7 @@ async function getThreadComments(
       'comments.is_updated as comment_is_updated',
       'comments_replies.initiator_comment_id as reply_initiator_comment_id',
       'comments_replies.recipient_comment_id as reply_recipient_comment_id',
+
       'replied_comment.id as replied_comment_id',
       'replied_comment.created_at as replied_comment_created_at',
       'replied_comment.nickname as replied_comment_nickname',
@@ -42,11 +51,7 @@ async function getThreadComments(
     perPage: THREAD_COMMENTS_LIMIT,
     after: cursor,
     fields: [
-      {
-        key: "comment_created_at",
-        expression: "comments.created_at",
-        direction
-      },
+      { key: "comment_created_at", expression: "comments.created_at", direction },
     ],
     parseCursor: (cursor) => ({
       comment_created_at: new Date(cursor.comment_created_at)
@@ -55,28 +60,26 @@ async function getThreadComments(
 
   const commentsMap = new Map<number, CommentWithReplies>();
 
-  res.rows.forEach(async (row) => {
+  for (const row of res.rows) {
     const commentId = Number(row.comment_id);
-    const createdAt = row.comment_created_at.toString();
-    const initialCommentUpdatedAt = row.comment_updated_at ? row.comment_updated_at.toString() : null;
 
     if (!commentsMap.has(commentId)) {
       commentsMap.set(commentId, {
         id: commentId,
-        created_at: createdAt,
+        created_at: row.comment_created_at.toString(),
         user: {
           nickname: row.comment_nickname,
-          avatar: null
+          avatar: null,
         },
         content: row.comment_content,
-        updated_at: initialCommentUpdatedAt,
+        updated_at: row.comment_updated_at?.toString() ?? null,
         is_updated: row.comment_is_updated,
         replied: null,
       });
     }
 
     if (row.replied_comment_id) {
-      const repliedComment = {
+      const repliedComment: CommentWithReplies["replied"] = {
         id: Number(row.replied_comment_id),
         created_at: row.replied_comment_created_at!.toString(),
         user: {
@@ -84,39 +87,34 @@ async function getThreadComments(
           avatar: null,
         },
         content: row.replied_comment_content!,
-        updated_at: row.replied_comment_updated_at ? row.replied_comment_updated_at.toString() : null,
+        updated_at: row.replied_comment_updated_at?.toString() ?? null,
         is_updated: row.replied_comment_is_updated ?? false,
       };
 
-      const comment = commentsMap.get(commentId);
-
-      if (comment) {
-        comment.replied = repliedComment;
-      }
+      commentsMap.get(commentId)!.replied = repliedComment;
     }
-  });
-
-  let data = Array.from(commentsMap.values())
-
-  let creatorNicknames: string[] = []
-
-  if (res) {
-    creatorNicknames = [...new Set(data.map(a => a.user.nickname!))];
   }
 
-  const users = await forumDB
-    .selectFrom("users")
-    .select(["nickname", "avatar"])
-    .where("users.nickname", "in", creatorNicknames)
-    .execute();
+  let data = Array.from(commentsMap.values());
 
-  const usersByNickname = new Map(users.map(user => [user.nickname, user]));
+  const creatorNicknames = new Set(data.map((c) => c.user.nickname));
 
-  data = data.map(comment => {
-    const user = usersByNickname.get(comment.user.nickname)!;
+  let users: { nickname: string; avatar: string | null }[] = [];
 
-    return { ...comment, user };
-  });
+  if (creatorNicknames.size > 0) {
+    users = await forumDB
+      .selectFrom("users")
+      .select(["nickname", "avatar"])
+      .where("users.nickname", "in", Array.from(creatorNicknames))
+      .execute();
+  }
+  
+  const usersByNickname = new Map(users.map((u) => [u.nickname, u]));
+
+  data = data.map((comment) => ({
+    ...comment,
+    user: usersByNickname.get(comment.user.nickname) ?? comment.user,
+  }));
 
   return {
     data,

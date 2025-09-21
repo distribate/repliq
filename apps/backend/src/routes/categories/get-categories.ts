@@ -13,6 +13,7 @@ type CategoryModel = {
   threads_count: number;
   emoji: string;
   color: string;
+  description: string | null;
 };
 
 const getCategoriesRouteSchema = z.object({
@@ -26,31 +27,41 @@ async function getCategories({
 }: Opts): Promise<CategoryModel[]> {
   let query = forumDB
     .selectFrom("category")
-    .innerJoin("threads", "category.id", "threads.category_id")
+    .leftJoin("threads", "category.id", "threads.category_id")
     .select(eb => [
       "category.title",
       "category.color",
       "category.emoji",
-      eb.fn.count<number>("threads.id").as("threads_count"),
-      eb.case()
-        .when(eb.fn.count("threads.id"), ">", eb.val(0))
-        .then(eb.val(true))
-        .else(eb.val(false))
-        .end()
-        .as("has_threads"),
+      "category.description",
+      eb.fn.sum<number>(
+        eb.case()
+          .when('threads.id', 'is not', null)
+          .then(1)
+          .else(0)
+          .end()
+      ).as('threads_count'),
       eb.cast<number>('category.id', 'int8').as('id')
     ])
     .orderBy("category.id", "asc")
-    .groupBy("category.id")
-    
-  if (type) {
-    query = query.where("available", "=", true)
+    .groupBy([
+      "category.id",
+      "category.color",
+      "category.emoji",
+      "category.description",
+      "category.title",
+    ])
+
+  switch (type) {
+    case "available":
+      query = query.where("available", "=", true)
+      break;
   }
 
   const data = await query.execute()
 
   return data.map(category => ({
     ...category,
+    has_threads: category.threads_count >= 1,
     emoji: getPublicUrl(STATIC_IMAGES_BUCKET, category.emoji)
   }))
 }
